@@ -179,7 +179,7 @@ class Perm5Test : public CppUnit::TestFixture {
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The first-generation code constructor fails for "
-                    "the permutation " << name.str() << ".";
+                    "the permutation " << p << " = " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 

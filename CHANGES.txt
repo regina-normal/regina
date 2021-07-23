@@ -380,11 +380,8 @@ Version 6.1  [ TODO ]
             - Almost everything in the permutation classes is now constexpr.
             - Routines index() and atIndex() are now deprecated.
               Use orderedSnIndex() and orderedSn[...] instead.
-        Class Perm<2>:
+        Class Perm<2>, Perm<3>:
             - New (and trivial) routine isConjugacyMinimal().
-            - New ++ and < operators.
-        Class Perm<3>:
-            - New routine isConjugacyMinimal().
             - New ++ and < operators.
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.
@@ -398,7 +395,7 @@ Version 6.1  [ TODO ]
             - Renamed permCode(), setPermCode(), fromPermCode(), isPermCode()
               to permCode1(), setPermCode1(), fromPermCode1(), isPermCode1().
               The old names are now deprecated.
-        Class Perm<5>:
+        Class Perm<5>, Perm<6>:
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
             - New ++ and < operators.
@@ -414,6 +411,8 @@ Version 6.1  [ TODO ]
               The old names are now deprecated.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
+            - Perm<6> now gains most of the extra functionality that Perm<2..5>
+              already had over the generic higher-order Perm<n> class.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
         Class Polynomial:

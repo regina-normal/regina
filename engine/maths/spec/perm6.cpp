@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,53 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include <sstream>
+#include "maths/perm.h"
 
-void addBinom(pybind11::module_& m);
-void addMatrixOps(pybind11::module_& m);
-void addCyclotomic(pybind11::module_& m);
-void addInteger(pybind11::module_& m);
-void addLargeInteger(pybind11::module_& m);
-void addLaurent(pybind11::module_& m);
-void addLaurent2(pybind11::module_& m);
-void addVectorInt(pybind11::module_& m);
-void addVectorLarge(pybind11::module_& m);
-void addMatrix2(pybind11::module_& m);
-void addMatrixBool(pybind11::module_& m);
-void addMatrixInt(pybind11::module_& m);
-void addPerm2(pybind11::module_& m);
-void addPerm3(pybind11::module_& m);
-void addPerm4(pybind11::module_& m);
-void addPerm5(pybind11::module_& m);
-void addPerm6(pybind11::module_& m);
-void addPerm(pybind11::module_& m);
-void addPolynomial(pybind11::module_& m);
-void addPrimes(pybind11::module_& m);
-void addRational(pybind11::module_& m);
-void addNumberTheory(pybind11::module_& m);
+namespace regina {
 
-void addMathsClasses(pybind11::module_& m) {
-    addBinom(m);
-    addMatrixOps(m);
-    addCyclotomic(m);
-    addInteger(m);
-    addLargeInteger(m);
-    addLaurent(m);
-    addLaurent2(m);
-    addVectorInt(m);
-    addVectorLarge(m);
-    addMatrix2(m);
-    addMatrixBool(m);
-    addMatrixInt(m);
-    addPerm2(m);
-    addPerm3(m);
-    addPerm4(m);
-    addPerm5(m);
-    addPerm6(m);
-    addPerm(m);
-    addPolynomial(m);
-    addPrimes(m);
-    addRational(m);
-    addNumberTheory(m);
+std::string Perm<6>::str() const {
+    char ans[7];
+    for (int i = 0; i < 6; i++)
+        ans[i] = static_cast<char>('0' + (*this)[i]);
+    ans[6] = 0;
+
+    return ans;
 }
+
+std::string Perm<6>::trunc(unsigned len) const {
+    char ans[7];
+    for (unsigned i = 0; i < len; ++i)
+        ans[i] = static_cast<char>('0' + (*this)[i]);
+    ans[len] = 0;
+    return ans;
+}
+
+} // namespace regina
 

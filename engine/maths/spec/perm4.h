@@ -444,8 +444,6 @@ class Perm<4> {
          * \pre The array \a image contains four elements, which are
          * 0, 1, 2 and 3 in some order.
          *
-         * \ifacespython Not present.
-         *
          * @param image the array of images.
          */
         constexpr Perm(const int* image);

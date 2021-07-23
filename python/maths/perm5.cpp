@@ -84,6 +84,20 @@ void addPerm5(pybind11::module_& m) {
         .def(pybind11::init<int, int>())
         .def(pybind11::init<int, int, int, int, int>())
         .def(pybind11::init<int, int, int, int, int, int, int, int, int, int>())
+        .def(pybind11::init([](pybind11::list l) {
+            if (l.size() != 5)
+                throw pybind11::index_error(
+                    "Initialisation list has the wrong length");
+            int image[5];
+            try {
+                for (long i = 0; i < 5; i++)
+                    image[i] = l[i].cast<int>();
+            } catch (pybind11::cast_error const &) {
+                throw std::invalid_argument(
+                    "List element not convertible to int");
+            }
+            return new Perm<5>(image);
+        }))
         .def(pybind11::init<const Perm<5>&>())
         .def("permCode1", &Perm<5>::permCode1)
         .def("permCode2", &Perm<5>::permCode2)

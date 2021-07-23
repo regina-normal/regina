@@ -166,7 +166,7 @@ class PermTest : public CppUnit::TestFixture {
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The internal code constructor fails for "
-                    "the permutation " << name.str() << ".";
+                    "the permutation " << p << " = " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -584,7 +584,7 @@ class PermTest : public CppUnit::TestFixture {
 
 void addPerm(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(PermTest<6>::suite());
-    // runner.addTest(PermTest<7>::suite());
+    runner.addTest(PermTest<7>::suite());
     runner.addTest(PermTest<8>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<9>::suite()); // 4-bit images, 64-bit code
     // runner.addTest(PermTest<10>::suite());

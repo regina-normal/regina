@@ -131,20 +131,23 @@ enum PermCodeType {
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  These codes are constructed as follows:
  *
- * - For 6 &le; \a n &le; 16, the code is essentially a packed array
+ * - For 7 &le; \a n &le; 16, the code is essentially a packed array
  *   that holds the images of 0,...,<i>n</i>-1 in a single native integer type.
  *   More precisely, the internal code is an unsigned integer of type \a Code,
  *   whose lowest \a imageBits bits represent the image of 0, whose next
  *   lowest \a imageBits bits represent the image of 1, and so on.
  *
- * - For \a n &le; 5, the code is an index into a hard-coded list of
+ * - For \a n &le; 6, the code is an index into a hard-coded list of
  *   all possible permutations (i.e., an index into the symmetric group
  *   <i>S<sub>n</sub></i>).  For details, see the documentation for
- *   the specialisations Perm<2>, Perm<3>, Perm<4> and Perm<5> respectively.
+ *   the specialisations Perm<2>, Perm<3>, Perm<4>, Perm<5> and Perm<6>
+ *   respectively.
  *
  * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
- * and also offers some extra functionality.  For \a n &ge; 6,
+ * and also offers some extra functionality.  For \a n = 6, this template
+ * is again specialised and highly optimised, and it offers some extra
+ * functionality but not as much as Perm<5> and below.  For \a n &ge; 7,
  * this template is generic and most operations require more time (in
  * particular, there are no harded-coded lookup tables).
  *
@@ -157,8 +160,8 @@ enum PermCodeType {
  */
 template <int n>
 class Perm {
-    static_assert(n >= 6 && n <= 16,
-        "The generic Perm<n> template is only available for 6 <= n <= 16.");
+    static_assert(n >= 7 && n <= 16,
+        "The generic Perm<n> template is only available for 7 <= n <= 16.");
 
     public:
         /**
@@ -166,8 +169,8 @@ class Perm {
          * to store the image of a single integer.
          *
          * This constant refers to the "image packing" codes that are
-         * used for \a n &ge; 6, as described in the Perm class notes.
-         * For \a n &le; 5 the permutation codes are constructed in a
+         * used for \a n &ge; 7, as described in the Perm class notes.
+         * For \a n &le; 6 the permutation codes are constructed in a
          * different way, and so this constant is not present.
          *
          * The full permutation code packs \a n such images together,
@@ -188,7 +191,7 @@ class Perm {
          *
          * This typedef is present for all values of \a n, though its
          * precise size depends on how the permutation code is constructed.
-         * For \a n = 4 and 5, it is a deprecated typedef that refers to
+         * For \a n = 4, 5 and 6, it is a deprecated typedef that refers to
          * older (first-generation) permutation codes that are no longer used.
          */
         typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype Code;
@@ -228,8 +231,8 @@ class Perm {
              * Returns the permutation at the given index in the array Sn.
              * See Perm<n>::Sn for details.
              *
-             * For \a n &le; 5, this operator is very fast (and constant time).
-             * However, for \a n &ge; 6 it is not constant time; the current
+             * For \a n &le; 6, this operator is very fast (and constant time).
+             * However, for \a n &ge; 7 it is not constant time; the current
              * implementation is quadratic in \a n.
              *
              * @param index an index between 0 and <i>n</i>!-1 inclusive.
@@ -246,8 +249,8 @@ class Perm {
              * Returns the permutation at the given index in the array
              * orderedSn.  See Perm<n>::orderedSn for details.
              *
-             * For \a n &le; 5, this operator is very fast (and constant time).
-             * However, for \a n &ge; 6 it is not constant time; the current
+             * For \a n &le; 6, this operator is very fast (and constant time).
+             * However, for \a n &ge; 7 it is not constant time; the current
              * implementation is quadratic in \a n.
              *
              * @param index an index between 0 and <i>n</i>!-1 inclusive.
@@ -277,8 +280,8 @@ class Perm {
          * alternates between even and odd permutations, whereas \a orderedSn
          * stores permutations in lexicographical order.
          *
-         * \warning For \a n &le; 5, the square bracket operator is a
-         * very fast constant-time routine.  However, for \a n &ge; 6,
+         * \warning For \a n &le; 6, the square bracket operator is a
+         * very fast constant-time routine.  However, for \a n &ge; 7,
          * this is not constant time; the current implementation is
          * quadratic in \a n.
          */
@@ -303,8 +306,8 @@ class Perm {
          * stores permutations in lexicographical order, whereas \a Sn
          * alternates between even and odd permutations.
          *
-         * \warning For \a n &le; 5, the square bracket operator is a
-         * very fast constant-time routine.  However, for \a n &ge; 6,
+         * \warning For \a n &le; 6, the square bracket operator is a
+         * very fast constant-time routine.  However, for \a n &ge; 7,
          * this is not constant time; the current implementation is
          * quadratic in \a n.
          */
@@ -739,6 +742,7 @@ template <> class Perm<2>;
 template <> class Perm<3>;
 template <> class Perm<4>;
 template <> class Perm<5>;
+template <> class Perm<6>;
 
 /*@}*/
 

@@ -277,8 +277,6 @@ class Perm<2> {
          * \pre The array \a image contains two elements, which are
          * 0 and 1 in some order.
          *
-         * \ifacespython Not present.
-         *
          * @param image the array of images.
          */
         constexpr Perm(const int* image);

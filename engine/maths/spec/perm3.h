@@ -354,8 +354,6 @@ class Perm<3> {
          * \pre The array \a image contains three elements, which are
          * 0, 1 and 2 in some order.
          *
-         * \ifacespython Not present.
-         *
          * @param image the array of images.
          */
         constexpr Perm(const int* image);

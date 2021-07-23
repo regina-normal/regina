@@ -527,8 +527,6 @@ class Perm<5> {
          * \pre The array \a image contains five elements, which are
          * 0, 1, 2, 3 and 4 in some order.
          *
-         * \ifacespython Not present.
-         *
          * @param image the array of images.
          */
         constexpr Perm(const int* image);

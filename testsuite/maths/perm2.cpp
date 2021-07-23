@@ -168,7 +168,7 @@ class Perm2Test : public CppUnit::TestFixture {
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The internal code constructor fails for "
-                    "the permutation " << name.str() << ".";
+                    "the permutation " << p << " = " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 

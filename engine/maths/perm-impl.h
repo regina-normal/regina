@@ -53,13 +53,14 @@
 #include "maths/spec/perm3.h"
 #include "maths/spec/perm4.h"
 #include "maths/spec/perm5.h"
+#include "maths/spec/perm6.h"
 
 namespace regina {
 
 template <int k>
 inline constexpr Perm<2> Perm<2>::contract(Perm<k> p) {
-    static_assert(k >= 6, "The generic implementation of Perm<2>::contract<k> "
-        "requires k >= 6.");
+    static_assert(k >= 7, "The generic implementation of Perm<2>::contract<k> "
+        "requires k >= 7.");
 
     return Perm<2>(static_cast<Code>(p.permCode() % 2 ? 1 : 0));
 }
@@ -77,6 +78,11 @@ inline constexpr Perm<2> Perm<2>::contract(Perm<4> p) {
 template <>
 inline constexpr Perm<2> Perm<2>::contract(Perm<5> p) {
     return Perm<2>(static_cast<Code>(p.permCode2() < 24 ? 0 : 1));
+}
+
+template <>
+inline constexpr Perm<2> Perm<2>::contract(Perm<6> p) {
+    return Perm<2>(static_cast<Code>(p.permCode2() < 120 ? 0 : 1));
 }
 
 inline void Perm<2>::clear(unsigned from) {
@@ -168,6 +174,73 @@ inline void Perm<5>::clear(unsigned from) {
     else if (from == 3) {
         if (imageTable[code2_][3] == 4)
             code2_ = code2_ ^ 1;
+    }
+}
+
+template <>
+inline constexpr Perm<6> Perm<6>::extend(Perm<2> p) {
+    return Perm<6>(static_cast<Code2>(p.permCode() == 0 ? 0 : 121));
+}
+
+template <>
+inline constexpr Perm<6> Perm<6>::extend(Perm<3> p) {
+    Perm<6> p6(static_cast<Code2>(p.permCode()));
+    // Now p6 acts on {3,4,5} in the way that p acts on {0,1,2}.
+
+    return Perm<6>(static_cast<Code2>(451 /* 345012 */)) *
+        p6 * Perm<6>(static_cast<Code2>(451 /* 345012 */));
+}
+
+template <>
+inline constexpr Perm<6> Perm<6>::extend(Perm<4> p) {
+    Perm<6> p6(static_cast<Code2>(p.permCode2()));
+    // Now p6 acts on {2,3,4,5} in the way that p acts on {0,1,2,3}.
+
+    return Perm<6>(static_cast<Code2>(576 /* 450123 */)) *
+        p6 * Perm<6>(static_cast<Code2>(304 /* 234501 */));
+}
+
+template <>
+inline constexpr Perm<6> Perm<6>::extend(Perm<5> p) {
+    Perm<6> p6(static_cast<Code2>(p.permCode2()));
+    // Now p6 acts on {1,2,3,4,5} in the way that p acts on {0,1,2,3,4}.
+
+    return Perm<6>(static_cast<Code2>(601 /* 501234 */)) *
+        p6 * Perm<6>(static_cast<Code2>(153 /* 123450 */));
+}
+
+template <int k>
+constexpr Perm<6> Perm<6>::contract(Perm<k> p) {
+    static_assert(k > 6, "Perm<6>::contract<k> requires k > 6.");
+
+    return Perm<6>(p[0], p[1], p[2], p[3], p[4], p[5]);
+}
+
+inline void Perm<6>::clear(unsigned from) {
+    switch (from) {
+        case 0:
+        case 1:
+            code2_ = 0;
+            break;
+        case 2:
+            // Test if 0 -> 0.
+            code2_ = (code2_ < 120 ? 0 /* 012345 */ : 121 /* 102345 */);
+            break;
+        case 3:
+            // Calculate the target ordered S6 index.
+            // When rounded down to the nearest multiple of 6,
+            // the code should be: 0, 24, 120, 144, 240 or 264.
+            // What we want is:    0, 25, 121, 144, 240 or 265.
+            code2_ -= (code2_ % 6);
+            if (code2_ == 24 || code2_ == 120 || code2_ == 264)
+                code2_ ^= 1;
+            break;
+        case 4:
+            if ((*this)[4] == 5)
+                code2_ = code2_ ^ 1;
+            break;
+        default:
+            break;
     }
 }
 

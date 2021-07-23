@@ -38,20 +38,18 @@
 
 using regina::Perm;
 
-class Perm3Test : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(Perm3Test);
+class Perm6Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(Perm6Test);
 
-    CPPUNIT_TEST(permCode);
+    CPPUNIT_TEST(permCode2);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
-    CPPUNIT_TEST(swaps);
-    CPPUNIT_TEST(products);
     CPPUNIT_TEST(exhaustive);
+    CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(clear);
-    CPPUNIT_TEST(S2);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(increment);
@@ -65,13 +63,14 @@ class Perm3Test : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void permCode() {
-            for (int i = 0; i < 6; i++) {
-                auto code = Perm<3>::S3[i].permCode();
+        void permCode2() {
+            for (int i = 0; i < 720; i++) {
+                auto code = Perm<6>::S6[i].permCode2();
                 if (code != i) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i
-                        << " has incorrect permutation code " << code << ".";
+                        << " has incorrect second-generation code "
+                        << code << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -79,12 +78,12 @@ class Perm3Test : public CppUnit::TestFixture {
 
         void sign() {
             int expected;
-            for (int i = 0; i < 6; ++i) {
+            for (int i = 0; i < 720; ++i) {
                 expected = (i % 2 == 0 ? 1 : -1);
-                if (Perm<3>::S3[i].sign() != expected) {
+                if (Perm<6>::S6[i].sign() != expected) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " was found to have "
-                        "sign " << Perm<3>::S3[i].sign()
+                        "sign " << Perm<6>::S6[i].sign()
                         << " instead of " << expected << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -92,35 +91,35 @@ class Perm3Test : public CppUnit::TestFixture {
         }
 
         void index() {
-            for (int i = 0; i < 6; ++i) {
-                Perm osn = Perm<3>::orderedS3[i];
-                Perm sn = Perm<3>::S3[i];
+            for (int i = 0; i < 720; ++i) {
+                Perm osn = Perm<6>::orderedS6[i];
+                Perm sn = Perm<6>::S6[i];
 
-                if (sn.S3Index() != i) {
+                if (sn.S6Index() != i) {
                     std::ostringstream msg;
-                    msg << "Permutation S3[" << i << "] gives an "
-                        "incorrect S3 index of "
-                        << sn.S3Index() << ".";
+                    msg << "Permutation S6[" << i << "] gives an "
+                        "incorrect S6 index of "
+                        << sn.S6Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (osn.orderedS3Index() != i) {
+                if (osn.orderedS6Index() != i) {
                     std::ostringstream msg;
-                    msg << "Permutation orderedS3[" << i << "] gives an "
-                        "incorrect orderedS3 index of "
-                        << osn.orderedS3Index() << ".";
+                    msg << "Permutation orderedS6[" << i << "] gives an "
+                        "incorrect orderedS6 index of "
+                        << osn.orderedS6Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (sn.sign() != (i % 2 == 0 ? 1 : -1)) {
                     std::ostringstream msg;
-                    msg << "Permutation S3[" << i << "] has the wrong sign.";
+                    msg << "Permutation S6[" << i << "] has the wrong sign.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (sn != osn) {
-                    if (sn.orderedS3Index() != (i ^ 1) ||
-                            osn.S3Index() != (i ^ 1)) {
+                    if (sn.orderedS6Index() != (i ^ 1) ||
+                            osn.S6Index() != (i ^ 1)) {
                         std::ostringstream msg;
-                        msg << "Permutation S3/orderedS3[" << i << "] "
+                        msg << "Permutation S6/orderedS6[" << i << "] "
                             "differ by more than the last index bit.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -128,57 +127,77 @@ class Perm3Test : public CppUnit::TestFixture {
             }
         }
 
-        bool looksLikeIdentity(const Perm<3>& p) {
-            return (p.isIdentity() && p == Perm<3>() &&
-                p.permCode() == 0 && p.str() == "012");
+        bool looksLikeIdentity(const Perm<6>& p) {
+            return (p.isIdentity() && p == Perm<6>() &&
+                p.permCode1() == 181896 && p.permCode2() == 0 &&
+                p.str() == "012345");
         }
 
-        bool looksEqual(const Perm<3>& p, const Perm<3>& q) {
+        bool looksEqual(const Perm<6>& p, const Perm<6>& q) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode());
+                p.permCode1() == q.permCode1() &&
+                p.permCode2() == q.permCode2());
         }
 
-        bool looksEqual(const Perm<3>& p, const Perm<3>& q,
+        bool looksEqual(const Perm<6>& p, const Perm<6>& q,
                 const std::string& qStr) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode() && p.str() == qStr);
+                p.permCode1() == q.permCode1() &&
+                p.permCode2() == q.permCode2() && p.str() == qStr);
         }
 
-        bool looksDistinct(const Perm<3>& p, const Perm<3>& q) {
+        bool looksDistinct(const Perm<6>& p, const Perm<6>& q) {
             return (p != q && (! (p == q)) && p.str() != q.str() &&
-                p.permCode() != q.permCode());
+                p.permCode1() != q.permCode1() &&
+                p.permCode2() != q.permCode2());
         }
 
-        int expectedSign(const Perm<3>& p) {
+        int expectedSign(const Perm<6>& p) {
             // Count the number of reorderings.
             int reorderings = 0;
 
             int a, b;
-            for (a = 0; a < 3; ++a)
-                for (b = a + 1; b < 3; ++b)
+            for (a = 0; a < 6; ++a)
+                for (b = a + 1; b < 6; ++b)
                     if (p[a] > p[b])
                         ++reorderings;
 
             return ((reorderings % 2 == 0) ? 1 : -1);
         }
 
-        void testPerm(int a, int b, int c) {
-            Perm<3> p(a, b, c);
+        void testPerm(int a, int b, int c, int d, int e, int f) {
+            Perm<6> p(a, b, c, d, e, f);
 
             std::ostringstream name;
-            name << a << b << c;
+            name << a << b << c << d << e << f;
 
-            Perm<3> p1 = Perm<3>::fromPermCode(p.permCode());
+            Perm<6> p1 = Perm<6>::fromPermCode1(p.permCode1());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The internal code constructor fails for "
+                msg << "The first-generation code constructor fails for "
                     "the permutation " << p << " = " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
+            Perm<6> p1b = Perm<6>::fromPermCode2(p.permCode2());
+            if (! looksEqual(p1b, p, name.str())) {
+                std::ostringstream msg;
+                msg << "The second-generation code constructor fails for "
+                    "the permutation " << name.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Perm<6> p2(3, d, 2, c, 4, e, 5, f, 0, a, 1, b);
+            if (! looksEqual(p2, p, name.str())) {
+                std::ostringstream msg;
+                msg << "The 12-argument constructor fails for "
+                    "the permutation " << name.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             {
-                int arr[3] = { a, b, c };
-                Perm<3> parr(arr);
+                int arr[6] = { a, b, c, d, e, f };
+                Perm<6> parr(arr);
                 if (! looksEqual(parr, p, name.str())) {
                     std::ostringstream msg;
                     msg << "The array constructor fails for "
@@ -188,9 +207,9 @@ class Perm3Test : public CppUnit::TestFixture {
             }
 
             {
-                int arrA[3] = { 1, 2, 0 };
-                int arrB[3] = { b, c, a };
-                Perm<3> parr2(arrA, arrB);
+                int arrA[6] = { 2, 5, 3, 0, 4, 1 };
+                int arrB[6] = { c, f, d, a, e, b };
+                Perm<6> parr2(arrA, arrB);
                 if (! looksEqual(parr2, p, name.str())) {
                     std::ostringstream msg;
                     msg << "The two-array constructor fails for "
@@ -199,7 +218,7 @@ class Perm3Test : public CppUnit::TestFixture {
                 }
             }
 
-            Perm<3> p3(p);
+            Perm<6> p3(p);
             if (! looksEqual(p3, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The copy constructor fails for "
@@ -207,12 +226,12 @@ class Perm3Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            Perm<3> p4(2, 0, 1);
-            if (! (a == 2 && b == 0 && c == 1)) {
+            Perm<6> p4(4, 2, 3, 0, 5, 1);
+            if (! (a == 4 && b == 2 && c == 3 && d == 0 && e == 5 && f == 1)) {
                 if (! looksDistinct(p4, p)) {
                     std::ostringstream msg;
                     msg << "The equality/inequality tests fail for "
-                        "the permutations 201 and " << name.str() << ".";
+                        "the permutations 423051 and " << name.str() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -225,49 +244,92 @@ class Perm3Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            Perm<3> p5(2, 0, 1);
-            p5.setPermCode(p3.permCode());
+            Perm<6> p5(4, 2, 3, 0, 5, 1);
+            p5.setPermCode1(p3.permCode1());
             if (! looksEqual(p5, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The setPermCode() / permCode() routines fail for "
+                msg << "The setPermCode1() / permCode1() routines fail for "
                     "the permutation " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! Perm<3>::isPermCode(p.permCode())) {
+            Perm<6> p6(4, 2, 3, 0, 5, 1);
+            p6.setPermCode2(p3.permCode2());
+            if (! looksEqual(p6, p, name.str())) {
                 std::ostringstream msg;
-                msg << "Routine isPermCode() suggests that the permutation "
+                msg << "The setPermCode2() / permCode2() routines fail for "
+                    "the permutation " << name.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! Perm<6>::isPermCode1(p.permCode1())) {
+                std::ostringstream msg;
+                msg << "Routine isPermCode1() suggests that the permutation "
                     << name.str() << " has an invalid permutation code.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(p * Perm<3>(), p)) {
+            if (! Perm<6>::isPermCode2(p.permCode2())) {
+                std::ostringstream msg;
+                msg << "Routine isPermCode2() suggests that the permutation "
+                    << name.str() << " has an invalid permutation code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (Perm<6>::isPermCode1(0))
+                CPPUNIT_FAIL("Routine isPermCode1() suggests that 0 is a "
+                    "valid first-generation code (which it is not).");
+
+            if (! Perm<6>::isPermCode2(0))
+                CPPUNIT_FAIL("Routine isPermCode2() suggests that 0 is not a "
+                    "valid second-generation code (which it is).");
+
+            if (! looksEqual(p * Perm<6>(), p)) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by the identity does not give " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(Perm<3>() * p, p)) {
+            if (! looksEqual(Perm<6>() * p, p)) {
                 std::ostringstream msg;
                 msg << "Multiplying the identity by permutation " << name.str()
                     << " does not give " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(p * Perm<3>::fromPermCode(Perm<3>::code102),
-                    Perm<3>(b, a, c))) {
+            if (! looksEqual(p * Perm<6>(0, 1), Perm<6>(b, a, c, d, e, f))) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by (0 <--> 1) does not give the expected result.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(p * Perm<3>::fromPermCode(Perm<3>::code021),
-                    Perm<3>(a, c, b))) {
+            if (! looksEqual(p * Perm<6>(1, 2), Perm<6>(a, c, b, d, e, f))) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by (1 <--> 2) does not give the expected result.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! looksEqual(p * Perm<6>(2, 3), Perm<6>(a, b, d, c, e, f))) {
+                std::ostringstream msg;
+                msg << "Multiplying permutation " << name.str()
+                    << " by (2 <--> 3) does not give the expected result.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! looksEqual(p * Perm<6>(3, 4), Perm<6>(a, b, c, e, d, f))) {
+                std::ostringstream msg;
+                msg << "Multiplying permutation " << name.str()
+                    << " by (3 <--> 4) does not give the expected result.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! looksEqual(p * Perm<6>(4, 5), Perm<6>(a, b, c, d, f, e))) {
+                std::ostringstream msg;
+                msg << "Multiplying permutation " << name.str()
+                    << " by (4 <--> 5) does not give the expected result.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -285,8 +347,9 @@ class Perm3Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            Perm<3> inv = p.inverse();
-            if (inv[a] != 0 || inv[b] != 1 || inv[c] != 2) {
+            Perm<6> inv = p.inverse();
+            if (inv[a] != 0 || inv[b] != 1 || inv[c] != 2 ||
+                    inv[d] != 3 || inv[e] != 4 || inv[f] != 5) {
                 std::ostringstream msg;
                 msg << "The inverse of permutation " << name.str()
                     << " does not appear to be correct.";
@@ -301,7 +364,8 @@ class Perm3Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (p[0] != a || p[1] != b || p[2] != c) {
+            if (p[0] != a || p[1] != b || p[2] != c ||
+                    p[3] != d || p[4] != e || p[5] != f) {
                 std::ostringstream msg;
                 msg << "The element images for permutation " << name.str()
                     << " do not appear to be correct.";
@@ -309,20 +373,49 @@ class Perm3Test : public CppUnit::TestFixture {
             }
 
             if (p.preImageOf(a) != 0 || p.preImageOf(b) != 1 ||
-                    p.preImageOf(c) != 2) {
+                    p.preImageOf(c) != 2 || p.preImageOf(d) != 3 ||
+                    p.preImageOf(e) != 4 || p.preImageOf(f) != 5) {
                 std::ostringstream msg;
                 msg << "The element preimages for permutation " << name.str()
                     << " do not appear to be correct.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (a != 0 || b != 1 || c != 2) {
+            if (a != 0 || b != 1 || c != 2 || d != 3 || e != 4 || f != 5) {
+                Perm<6> id;
+                if (p.compareWith(id) != 1 || id.compareWith(p) != -1) {
+                    std::ostringstream msg;
+                    msg << "Permutation " << name.str()
+                        << " is not reported to be lexicographically "
+                           "larger than the identity permutation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
                 if (p.isIdentity()) {
                     std::ostringstream msg;
                     msg << "Permutation " << name.str()
                         << " is reported to be the identity permutation.";
                     CPPUNIT_FAIL(msg.str());
                 }
+            }
+
+            if (a != 5 || b != 4 || c != 3 || d != 2 || e != 1 || f != 0) {
+                Perm<6> last(5, 4, 3, 2, 1, 0);
+                if (p.compareWith(last) != -1 || last.compareWith(p) != 1) {
+                    std::ostringstream msg;
+                    msg << "Permutation " << name.str()
+                        << " is not reported to be lexicographically "
+                           "smaller than 543210.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if (p.compareWith(p) != 0) {
+                std::ostringstream msg;
+                msg << "Permutation " << name.str()
+                    << " is not reported to be lexicographically "
+                       "identical to itself.";
+                CPPUNIT_FAIL(msg.str());
             }
 
             if (p.str() != name.str()) {
@@ -333,60 +426,63 @@ class Perm3Test : public CppUnit::TestFixture {
             }
         }
 
-        void swaps() {
-            for (int i = 0; i < 3; ++i)
-                for (int j = 0; j < 3; ++j) {
-                    Perm<3> p(i, j);
+        void exhaustive() {
+            Perm<6> id;
+            if (! looksLikeIdentity(id))
+                CPPUNIT_FAIL("The default Perm<6> constructor does not "
+                    "appear to give the identity permutation.");
 
-                    if (p[i] != j) {
-                        std::ostringstream msg;
-                        msg << "The (" << i << ", " << j << ") swap "
-                            "gives the wrong image for " << i << ".";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-                    if (p[j] != i) {
-                        std::ostringstream msg;
-                        msg << "The (" << i << ", " << j << ") swap "
-                            "gives the wrong image for " << j << ".";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-                    if (i != j) {
-                        if (p[3-i-j] != 3-i-j) {
-                            std::ostringstream msg;
-                            msg << "The (" << i << ", " << j << ") swap "
-                                "gives the wrong image for " << 3-i-j << ".";
-                            CPPUNIT_FAIL(msg.str());
-                        }
-                    } else {
-                        if (p[(i+1)%3] != (i+1)%3) {
-                            std::ostringstream msg;
-                            msg << "The (" << i << ", " << j << ") swap "
-                                "gives the wrong image for " << (i+1)%3 << ".";
-                            CPPUNIT_FAIL(msg.str());
-                        }
-                        if (p[(i+2)%3] != (i+2)%3) {
-                            std::ostringstream msg;
-                            msg << "The (" << i << ", " << j << ") swap "
-                                "gives the wrong image for " << (i+2)%3 << ".";
-                            CPPUNIT_FAIL(msg.str());
+            for (int i = 0; i < 6; ++i) {
+                Perm<6> p(i, i);
+                if (! looksLikeIdentity(p)) {
+                    std::ostringstream msg;
+                    msg << "The permutation that swaps " << i
+                        << " with itself does not appear to be the identity.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            // Test all possible permutations.
+            int tested = 0;
+            int a, b, c, d, e, f;
+            for (a = 0; a < 6; ++a) {
+                for (b = 0; b < 6; ++b) {
+                    if (b == a)
+                        continue;
+                    for (c = 0; c < 6; ++c) {
+                        if (c == a || c == b)
+                            continue;
+                        for (d = 0; d < 6; ++d) {
+                            if (d == a || d == b || d == c)
+                                continue;
+                            for (e = 0; e < 6; ++e) {
+                                if (e == a || e == b || e == c || e == d)
+                                    continue;
+                                f = (15 - a - b - c - d - e);
+                                testPerm(a, b, c, d, e, f);
+                                ++tested;
+                            }
                         }
                     }
                 }
+            }
+
+            if (tested != 720)
+                CPPUNIT_FAIL("All 720 permutations in S(6) were not tested.");
         }
 
         void products() {
-            // A direct test.
-            unsigned i, j, k;
-            Perm<3> p, q, r;
+            unsigned i, j, x;
+            Perm<6> p, q, r;
 
-            for (i = 0; i < 6; ++i) {
-                p = Perm<3>::S3[i];
-                for (j = 0; j < 6; ++j) {
-                    q = Perm<3>::S3[j];
+            for (i = 0; i < 720; ++i) {
+                p = Perm<6>::S6[i];
+                for (j = 0; j < 720; ++j) {
+                    q = Perm<6>::S6[j];
 
                     r = p * q;
-                    for (k = 0; k < 3; ++k) {
-                        if (r[k] != p[q[k]]) {
+                    for (x = 0; x < 6; ++x) {
+                        if (r[x] != p[q[x]]) {
                             std::ostringstream msg;
                             msg << "Multiplication fails for the product "
                                 << p.str() << " * " << q.str() << ".";
@@ -395,69 +491,14 @@ class Perm3Test : public CppUnit::TestFixture {
                     }
                 }
             }
-
-            // An indirect test (using Perm<4> to verify).
-            int a, b, c, d, e, f;
-            for (a = 0; a < 3; ++a)
-                for (b = 0; b < 3; ++b) {
-                    if (b == a)
-                        continue;
-                    c = 3 - a - b;
-                    Perm<3> x(a, b, c);
-
-                    for (d = 0; d < 3; ++d)
-                        for (e = 0; e < 3; ++e) {
-                            if (e == d)
-                                continue;
-                            f = 3 - d - e;
-                            Perm<3> y(d, e, f);
-
-                            Perm<3> product3 = x * y;
-                            regina::Perm<4> product4 =
-                                regina::Perm<4>(a, b, c, 3) *
-                                regina::Perm<4>(d, e, f, 3);
-
-                            if (product3[0] != product4[0] ||
-                                    product3[1] != product4[1] ||
-                                    product3[2] != product4[2]) {
-                                std::ostringstream msg;
-                                msg << "The product is incorrect for "
-                                    << x.str() << " * " << y.str() << ".";
-                                CPPUNIT_FAIL(msg.str());
-                            }
-                        }
-                }
-        }
-
-        void exhaustive() {
-            Perm<3> id;
-            if (! looksLikeIdentity(id))
-                CPPUNIT_FAIL("The default Perm<3> constructor does not "
-                    "appear to give the identity permutation.");
-
-            // Test all possible permutations.
-            int tested = 0;
-            int a, b, c;
-            for (a = 0; a < 3; ++a) {
-                for (b = 0; b < 3; ++b) {
-                    if (b == a)
-                        continue;
-                    c = (3 - a - b);
-                    testPerm(a, b, c);
-                    ++tested;
-                }
-            }
-
-            if (tested != 6)
-                CPPUNIT_FAIL("All 6 permutations in S(3) were not tested.");
         }
 
         void compareWith() {
             unsigned i, j;
-            Perm<3> p, q;
+            Perm<6> p, q;
 
-            for (i = 0; i < 6; ++i) {
-                p = Perm<3>::orderedS3[i];
+            for (i = 0; i < 720; ++i) {
+                p = Perm<6>::orderedS6[i];
                 if (p.compareWith(p) != 0) {
                     std::ostringstream msg;
                     msg << "Routine compareWith() does not conclude that "
@@ -466,10 +507,10 @@ class Perm3Test : public CppUnit::TestFixture {
                 }
             }
 
-            for (i = 0; i < 6; ++i) {
-                p = Perm<3>::orderedS3[i];
-                for (j = i + 1; j < 6; ++j) {
-                    q = Perm<3>::orderedS3[j];
+            for (i = 0; i < 720; ++i) {
+                p = Perm<6>::orderedS6[i];
+                for (j = i + 1; j < 720; ++j) {
+                    q = Perm<6>::orderedS6[j];
 
                     if (p.compareWith(q) != -1) {
                         std::ostringstream msg;
@@ -488,9 +529,9 @@ class Perm3Test : public CppUnit::TestFixture {
         }
 
         void reverse() {
-            for (int i = 0; i < 6; i++) {
-                Perm<3> p = Perm<3>::S3[i];
-                Perm<3> r = p.reverse();
+            for (int i = 0; i < 720; i++) {
+                Perm<6> p = Perm<6>::S6[i];
+                Perm<6> r = p.reverse();
 
                 if (! looksEqual(p, r.reverse())) {
                     std::ostringstream msg;
@@ -518,73 +559,92 @@ class Perm3Test : public CppUnit::TestFixture {
         }
 
         void aliases() {
-            unsigned i;
+            for (unsigned i = 0; i < 720; ++i)
+                if (Perm<6>::S6[i] != Perm<6>::Sn[i])
+                    CPPUNIT_FAIL("Arrays S6 and Sn disagree for Perm<6>.");
+        }
 
-            for (i = 0; i < 6; ++i)
-                if (Perm<3>::S3[i] != Perm<3>::Sn[i])
-                    CPPUNIT_FAIL("Arrays S3 and Sn disagree for Perm<3>.");
+        template <int from>
+        void clearFrom() {
+            // Requires 2 <= from <= n-2.
+            Perm<6> rev = Perm<6>().reverse();
 
-            for (i = 0; i < 2; ++i)
-                if (Perm<3>::S2[i] != Perm<3>::Sn_1[i])
-                    CPPUNIT_FAIL("Arrays S2 and Sn_1 disagree for Perm<3>.");
+            unsigned i, j;
+            for (i = 0; i < Perm<from>::nPerms; ++i)
+                for (j = 0; j < Perm<6 - from>::nPerms; ++j) {
+                    Perm<6> left = Perm<6>::extend(regina::Perm<from>::Sn[i]);
+                    Perm<6> right = rev *
+                        Perm<6>::extend(regina::Perm<6 - from>::Sn[j]) * rev;
+                    Perm<6> p = left * right;
+                    p.clear(from);
+                    if (! looksEqual(p, left)) {
+                        std::ostringstream msg;
+                        msg << "Clearing from position " << from
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
         }
 
         void clear() {
-            Perm<3> rev = Perm<3>().reverse();
+            Perm<6> rev = Perm<6>().reverse();
+            unsigned i, j;
 
-            for (unsigned j = 0; j < Perm<3>::nPerms; ++j) {
-                Perm<3> p = Perm<3>::Sn[j];
-                p.clear(0);
-                if (! looksLikeIdentity(p))
-                    CPPUNIT_FAIL("Wrong result for clear(0).");
+            for (i = 0; i < Perm<6>::nPerms; ++i) {
+                Perm<6> p = Perm<6>::Sn[i];
+                p.clear(6);
+                if (! looksEqual(p, Perm<6>::Sn[i])) {
+                    std::ostringstream msg;
+                    msg << "Clearing from position 6 "
+                        "gives the wrong result.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
-            for (unsigned j = 0; j < Perm<2>::nPerms; ++j) {
-                Perm<3> p = rev *
-                    Perm<3>::extend(regina::Perm<2>::Sn[j]) * rev;
+            for (i = 0; i < Perm<5>::nPerms; ++i) {
+                Perm<6> left = Perm<6>::extend(regina::Perm<5>::Sn[i]);
+                Perm<6> p = left;
+                p.clear(5);
+                if (! looksEqual(p, left)) {
+                    std::ostringstream msg;
+                    msg << "Clearing from position 5 "
+                        "gives the wrong result.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            clearFrom<4>();
+            clearFrom<3>();
+            clearFrom<2>();
+
+            for (j = 0; j < Perm<5>::nPerms; ++j) {
+                Perm<6> p = rev *
+                    Perm<6>::extend(regina::Perm<5>::Sn[j]) * rev;
                 p.clear(1);
-                if (! looksLikeIdentity(p))
-                    CPPUNIT_FAIL("Wrong result for clear(1).");
+                if (! looksLikeIdentity(p)) {
+                    std::ostringstream msg;
+                    msg << "Clearing from position 1 "
+                        "gives the wrong result.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
-            for (unsigned i = 0; i < Perm<2>::nPerms; ++i) {
-                Perm<3> left = Perm<3>::extend(regina::Perm<2>::Sn[i]);
-                Perm<3> p = left;
-                p.clear(2);
-                if (! looksEqual(p, left))
-                    CPPUNIT_FAIL("Wrong result for clear(2).");
-            }
-            for (unsigned i = 0; i < Perm<3>::nPerms; ++i) {
-                Perm<3> p = Perm<3>::Sn[i];
-                p.clear(3);
-                if (! looksEqual(p, Perm<3>::Sn[i]))
-                    CPPUNIT_FAIL("Wrong result for clear(3).");
-            }
-        }
-
-        void S2() {
-            for (unsigned i = 0; i < 2; ++i) {
-                if (! looksEqual(Perm<3>::S2[i],
-                        Perm<3>::extend(Perm<2>::S2[i])))
-                    CPPUNIT_FAIL("S2 permutations do not match "
-                        "Perm<2> extensions.");
-                if (! looksEqual(Perm<3>::Sn_1[i],
-                        Perm<3>::extend(Perm<2>::S2[i])))
-                    CPPUNIT_FAIL("S2 permutations do not match "
-                        "Perm<2> extensions.");
-                if (Perm<2>::S2[i] != Perm<2>::contract(Perm<3>::S2[i]))
-                    CPPUNIT_FAIL("Contracted S2 permutations do not "
-                        "match Perm<2>.");
-                if (Perm<2>::S2[i] != Perm<2>::contract(Perm<3>::Sn_1[i]))
-                    CPPUNIT_FAIL("Contracted S2 permutations do not "
-                        "match Perm<2>.");
+            for (j = 0; j < Perm<6>::nPerms; ++j) {
+                Perm<6> p = Perm<6>::Sn[j];
+                p.clear(0);
+                if (! looksLikeIdentity(p)) {
+                    std::ostringstream msg;
+                    msg << "Clearing from position 0 "
+                        "gives the wrong result.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
         }
 
         void rot() {
             int i, j;
-            for (i = 0; i < 3; ++i) {
-                Perm<3> p = Perm<3>::rot(i);
-                for (j = 0; j < 3; ++j)
-                    if (p[j] != (i + j) % 3) {
+            for (i = 0; i < 6; ++i) {
+                Perm<6> p = Perm<6>::rot(i);
+                for (j = 0; j < 6; ++j)
+                    if (p[j] != (i + j) % 6) {
                         std::ostringstream msg;
                         msg << "Rotation " << i << ", position " << j
                             << " gives the wrong image " << p[j] << ".";
@@ -594,13 +654,13 @@ class Perm3Test : public CppUnit::TestFixture {
         }
 
         void conjugacy() {
-            for (int i = 0; i < 6; ++i) {
-                Perm<3> p = Perm<3>::Sn[i];
+            for (int i = 0; i < 720; ++i) {
+                Perm<6> p = Perm<6>::Sn[i];
 
                 // Manually decide if p is conjugacy minimal.
                 bool min = true;
-                for (int j = 0; j < 6; ++j) {
-                    Perm<3> q = Perm<3>::Sn[j];
+                for (int j = 0; j < 720; ++j) {
+                    Perm<6> q = Perm<6>::Sn[j];
                     if ((q * p * q.inverse()).SnIndex() < i) {
                         min = false;
                         break;
@@ -618,8 +678,8 @@ class Perm3Test : public CppUnit::TestFixture {
 
         void increment() {
             int i = 0;
-            Perm<3> p;
-            Perm<3> q;
+            Perm<6> p;
+            Perm<6> q;
 
             do {
                 if (p != q) {
@@ -637,8 +697,8 @@ class Perm3Test : public CppUnit::TestFixture {
                 ++i; ++p; ++q;
             } while (! p.isIdentity());
 
-            if (i != 6) {
-                CPPUNIT_FAIL("Increment does not wrap around after 120 steps.");
+            if (i != 720) {
+                CPPUNIT_FAIL("Increment does not wrap around after 720 steps.");
             }
             if (! q.isIdentity()) {
                 CPPUNIT_FAIL("Preincrement and postincrement do not "
@@ -647,7 +707,7 @@ class Perm3Test : public CppUnit::TestFixture {
         }
 };
 
-void addPerm3(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Perm3Test::suite());
+void addPerm6(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Perm6Test::suite());
 }
 

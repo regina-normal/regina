@@ -40,98 +40,107 @@ using regina::Perm;
 using regina::python::ConstArray;
 
 namespace {
-    ConstArray<decltype(Perm<3>::S3)>
-        Perm3_S3_arr(Perm<3>::S3, 6);
-    ConstArray<decltype(Perm<3>::orderedS3)>
-        Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
-    ConstArray<decltype(Perm<3>::S2)>
-        Perm3_S2_arr(Perm<3>::S2, 2);
+    ConstArray<decltype(Perm<6>::S6)>
+        Perm6_S6_arr(Perm<6>::S6, 720);
+    ConstArray<decltype(Perm<6>::orderedS6)>
+        Perm6_orderedS6_arr(Perm<6>::orderedS6, 720);
 
     template <int k>
-    struct Perm3_contract {
+    struct Perm6_contract {
         template <class C, typename... options>
         static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<3>::contract<k>);
-            Perm3_contract<k+1>::add_bindings(c);
+            c.def_static("contract", &Perm<6>::contract<k>);
+            Perm6_contract<k+1>::add_bindings(c);
         }
     };
 
     template <>
-    struct Perm3_contract<16> {
+    struct Perm6_contract<16> {
         template <class C, typename... options>
         static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<3>::contract<16>);
+            c.def_static("contract", &Perm<6>::contract<16>);
         }
     };
 }
 
-void addPerm3(pybind11::module_& m) {
-    decltype(Perm3_S3_arr)::wrapClass(m, "ConstArray_Perm3_S3");
-    decltype(Perm3_orderedS3_arr)::wrapClass(m, "ConstArray_Perm3_orderedS3");
-    decltype(Perm3_S2_arr)::wrapClass(m, "ConstArray_Perm3_S2");
+void addPerm6(pybind11::module_& m) {
+    decltype(Perm6_S6_arr)::wrapClass(m, "ConstArray_Perm6_S6");
+    decltype(Perm6_orderedS6_arr)::wrapClass(m, "ConstArray_Perm6_orderedS6");
 
-    auto c = pybind11::class_<Perm<3>>(m, "Perm3")
+    auto c = pybind11::class_<Perm<6>>(m, "Perm6")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
-        .def(pybind11::init<int, int, int>())
+        .def(pybind11::init<int, int, int, int, int, int>())
+        .def(pybind11::init<int, int, int, int, int, int,
+                            int, int, int, int, int, int>())
         .def(pybind11::init([](pybind11::list l) {
-            if (l.size() != 3)
+            if (l.size() != 6)
                 throw pybind11::index_error(
                     "Initialisation list has the wrong length");
-            int image[3];
+            int image[6];
             try {
-                for (long i = 0; i < 3; i++)
+                for (long i = 0; i < 6; i++)
                     image[i] = l[i].cast<int>();
             } catch (pybind11::cast_error const &) {
                 throw std::invalid_argument(
                     "List element not convertible to int");
             }
-            return new Perm<3>(image);
+            return new Perm<6>(image);
         }))
-        .def(pybind11::init<const Perm<3>&>())
-        .def("permCode", &Perm<3>::permCode)
-        .def("setPermCode", &Perm<3>::setPermCode)
-        .def_static("fromPermCode", &Perm<3>::fromPermCode)
-        .def_static("isPermCode", &Perm<3>::isPermCode)
+        .def(pybind11::init<const Perm<6>&>())
+        .def("permCode1", &Perm<6>::permCode1)
+        .def("permCode2", &Perm<6>::permCode2)
+        .def("permCode", &Perm<6>::permCode1) // deprecated
+        .def("setPermCode1", &Perm<6>::setPermCode1)
+        .def("setPermCode2", &Perm<6>::setPermCode2)
+        .def("setPermCode", &Perm<6>::setPermCode1) // deprecated
+        .def_static("fromPermCode1", &Perm<6>::fromPermCode1)
+        .def_static("fromPermCode2", &Perm<6>::fromPermCode2)
+        .def_static("fromPermCode", &Perm<6>::fromPermCode1) // deprecated
+        .def_static("isPermCode1", &Perm<6>::isPermCode1)
+        .def_static("isPermCode2", &Perm<6>::isPermCode2)
+        .def_static("isPermCode", &Perm<6>::isPermCode1) // deprecated
         .def(pybind11::self * pybind11::self)
-        .def("inverse", &Perm<3>::inverse)
-        .def("reverse", &Perm<3>::reverse)
-        .def("sign", &Perm<3>::sign)
-        .def("__getitem__", &Perm<3>::operator[])
-        .def("preImageOf", &Perm<3>::preImageOf)
-        .def("compareWith", &Perm<3>::compareWith)
-        .def("isIdentity", &Perm<3>::isIdentity)
+        .def("inverse", &Perm<6>::inverse)
+        .def("reverse", &Perm<6>::reverse)
+        .def("sign", &Perm<6>::sign)
+        .def("__getitem__", &Perm<6>::operator[])
+        .def("preImageOf", &Perm<6>::preImageOf)
+        .def("compareWith", &Perm<6>::compareWith)
+        .def("isIdentity", &Perm<6>::isIdentity)
         .def(pybind11::self < pybind11::self)
-        .def_static("rot", &Perm<3>::rot)
+        .def_static("rot", &Perm<6>::rot)
         // index and atIndex are deprecated, so do not call them directly.
         .def_static("atIndex",
-            [](Perm<3>::Index i) { return Perm<3>::orderedSn[i]; })
-        .def("index", &Perm<3>::orderedSnIndex)
-        .def_static("rand", (Perm<3> (*)(bool))(&Perm<3>::rand),
+            [](Perm<6>::Index i) { return Perm<6>::orderedSn[i]; })
+        .def("index", &Perm<6>::orderedSnIndex)
+        .def_static("rand", (Perm<6> (*)(bool))(&Perm<6>::rand),
             pybind11::arg("even") = false)
-        .def("trunc", &Perm<3>::trunc)
-        .def("trunc2", &Perm<3>::trunc2)
-        .def("clear", &Perm<3>::clear)
-        .def("S3Index", &Perm<3>::S3Index)
-        .def("SnIndex", &Perm<3>::SnIndex)
-        .def("orderedS3Index", &Perm<3>::orderedS3Index)
-        .def("orderedSnIndex", &Perm<3>::orderedS3Index)
-        .def("isConjugacyMinimal", &Perm<3>::isConjugacyMinimal)
-        .def_static("extend", &Perm<3>::extend<2>)
+        .def("trunc", &Perm<6>::trunc)
+        .def("clear", &Perm<6>::clear)
+        .def("S6Index", (int (Perm<6>::*)() const) &Perm<6>::S6Index)
+        .def("SnIndex", &Perm<6>::SnIndex)
+        .def("orderedS6Index", &Perm<6>::orderedS6Index)
+        .def("orderedSnIndex", &Perm<6>::orderedS6Index)
+        .def("isConjugacyMinimal", &Perm<6>::isConjugacyMinimal)
+        .def_static("extend", &Perm<6>::extend<2>)
+        .def_static("extend", &Perm<6>::extend<3>)
+        .def_static("extend", &Perm<6>::extend<4>)
+        .def_static("extend", &Perm<6>::extend<5>)
         .def_property_readonly_static("codeType",
-            [](pybind11::object /* self */) { return Perm<3>::codeType; })
+            [](pybind11::object /* self */) { return Perm<6>::codeType; })
+        .def_property_readonly_static("imageBits",
+            [](pybind11::object /* self */) { return Perm<6>::imageBits; })
         .def_property_readonly_static("nPerms",
-            [](pybind11::object /* self */) { return Perm<3>::nPerms; })
+            [](pybind11::object /* self */) { return Perm<6>::nPerms; })
         .def_property_readonly_static("nPerms_1",
-            [](pybind11::object /* self */) { return Perm<3>::nPerms_1; })
-        .def_readonly_static("S3", &Perm3_S3_arr)
-        .def_readonly_static("Sn", &Perm3_S3_arr)
-        .def_readonly_static("orderedS3", &Perm3_orderedS3_arr)
-        .def_readonly_static("orderedSn", &Perm3_orderedS3_arr)
-        .def_readonly_static("S2", &Perm3_S2_arr)
-        .def_readonly_static("Sn_1", &Perm3_S2_arr)
+            [](pybind11::object /* self */) { return Perm<6>::nPerms_1; })
+        .def_readonly_static("S6", &Perm6_S6_arr)
+        .def_readonly_static("Sn", &Perm6_S6_arr)
+        .def_readonly_static("orderedS6", &Perm6_orderedS6_arr)
+        .def_readonly_static("orderedSn", &Perm6_orderedS6_arr)
     ;
-    Perm3_contract<4>::add_bindings(c);
+    Perm6_contract<7>::add_bindings(c);
     regina::python::add_output_basic(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
 }
