@@ -70,7 +70,7 @@ void testPerm() {
     static_assert(Perm<n>().reverse() * Perm<n>().reverse() == Perm<n>());
     static_assert(Perm<n>::rot(1) * Perm<n>::rot(1) == Perm<n>::rot(2 % n));
 
-    if constexpr (n == 4 || n == 5) {
+    if constexpr (n == 4 || n == 5 || n == 6) {
         static_assert(Perm<n>::fromPermCode1(swap.permCode1()) == swap);
         static_assert(Perm<n>::isPermCode1(swap.permCode1()));
 
@@ -162,4 +162,6 @@ template void testConvert<4, 6>();
 template void testConvert<4, 16>();
 template void testConvert<5, 6>();
 template void testConvert<5, 16>();
+template void testConvert<6, 7>();
 template void testConvert<6, 16>();
+template void testConvert<7, 16>();
