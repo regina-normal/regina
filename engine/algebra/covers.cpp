@@ -36,6 +36,88 @@
 
 namespace regina {
 
+namespace {
+    // The S_n indices representing conjugacy minimal permutations,
+    // currently computed for n <= 6.
+    constexpr int allMinimalPerms[] = {
+        0, 1, 2, 6, 9, 27, 32, 127, 128, 146, 153
+    };
+    constexpr int nMinimalPerms[] = { 1, 1, 2, 3, 5, 7, 11 };
+
+    // The maximum size of an automorphism group for a conjugacy minimal
+    // permutation, excluding the case where the automorphism group is
+    // all of S_n.
+    constexpr int maxMinimalAutGroup[] = { 0, 0, 0, 3, 8, 12, 48 };
+
+    // The (-1)-terminated automorphism group corresponding to each
+    // conjugacy minimal permutation, or an empty list if the automorphism
+    // group is all of S_n.
+    template <int n> constexpr int
+        minimalAutGroup[nMinimalPerms[n]][maxMinimalAutGroup[n] + 1];
+    template <> constexpr int minimalAutGroup<2>[][4] = {
+        /* 0 */ { -1 },
+        /* 1 */ { -1 },
+    };
+    template <> constexpr int minimalAutGroup<3>[][4] = {
+        /* 0 */ { -1, 0, 0, 0 },
+        /* 1 */ { 0, 1, -1, 0 },
+        /* 2 */ { 0, 2, 4, -1 }
+    };
+    template <> constexpr int minimalAutGroup<4>[][9] = {
+        /* 0 */ { -1, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 1 */ { 0, 1, 6, 7, -1, 0, 0, 0, 0 },
+        /* 2 */ { 0, 2, 4, -1, 0, 0, 0, 0, 0 },
+        /* 6 */ { 0, 1, 6, 7, 16, 17, 22, 23, -1 },
+        /* 9 */ { 0, 9, 16, 19, -1, 0, 0, 0, 0 }
+    };
+    template <> constexpr int minimalAutGroup<5>[][13] = {
+        /* 0 */ { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 1 */ { 0, 1, 6, 7, 24, 25, 30, 31, 48, 49, 54, 55, -1 },
+        /* 2 */ { 0, 2, 4, 25, 27, 29, -1, 0, 0, 0, 0, 0, 0 },
+        /* 6 */ { 0, 1, 6, 7, 16, 17, 22, 23, -1, 0, 0, 0, 0 },
+        /* 9 */ { 0, 9, 16, 19, -1, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 27 */ { 0, 2, 4, 25, 27, 29, -1, 0, 0, 0, 0, 0, 0 },
+        /* 32 */ { 0, 32, 64, 90, 96, -1, 0, 0, 0, 0, 0, 0, 0 }
+    };
+    template <> constexpr int minimalAutGroup<6>[][49] = {
+        /* 0 */ { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 1 */ { 0, 1, 6, 7, 24, 25, 30, 31, 48, 49, 54, 55, 120, 121, 126,
+                  127, 144, 145, 150, 151, 168, 169, 174, 175, 240, 241, 246,
+                  247, 264, 265, 270, 271, 288, 289, 294, 295, 360, 361, 366,
+                  367, 384, 385, 390, 391, 408, 409, 414, 415, -1 },
+        /* 2 */ { 0, 2, 4, 25, 27, 29, 121, 123, 125, 144, 146, 148, 240, 242,
+                  244, 265, 267, 269, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 6 */ { 0, 1, 6, 7, 16, 17, 22, 23, 120, 121, 126, 127, 136, 137,
+                  142, 143, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 9 */ { 0, 9, 16, 19, 121, 128, 137, 138, -1, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 27 */ { 0, 2, 4, 25, 27, 29, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 32 */ { 0, 32, 64, 90, 96, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 127 */ { 0, 1, 6, 7, 16, 17, 22, 23, 120, 121, 126, 127, 136, 137,
+                    142, 143, 288, 289, 294, 295, 304, 305, 310, 311, 408, 409,
+                    414, 415, 424, 425, 430, 431, 576, 577, 582, 583, 592, 593,
+                    598, 599, 696, 697, 702, 703, 712, 713, 718, 719, -1 },
+        /* 128 */ { 0, 9, 16, 19, 121, 128, 137, 138, -1, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        /* 146 */ { 0, 2, 4, 144, 146, 148, 240, 242, 244, 451, 453, 455, 595,
+                    597, 599, 691, 693, 695, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        /* 153 */ { 0, 153, 304, 451, 576, 601, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+        };
+}
+
 void GroupPresentation::minimaxGenerators(unsigned long* genRange) {
     if (relations_.size() == 0) {
         // Nothing to relabel, and the genRange array has size zero.
@@ -174,6 +256,10 @@ size_t GroupPresentation::enumerateCoversInternal(
     Perm<index>* rep = new Perm<index>[nGenerators_];
     Perm<index>* repInv = new Perm<index>[nGenerators_];
 
+    size_t* nAut = new size_t[nGenerators_];
+    Perm<index> (*aut)[maxMinimalAutGroup[index] + 1] =
+        new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1];
+
     size_t pos = 0; // The generator whose current rep we are about to try.
     while (true) {
         bool backtrack = false;
@@ -205,32 +291,49 @@ size_t GroupPresentation::enumerateCoversInternal(
         // Note: for index 2, *everything* is conjugacy minimal.
         if constexpr (index > 2) {
             if (! backtrack) {
-                if (pos == 0) {
-                    if (! rep[0].isConjugacyMinimal())
+                if (pos == 0 || nAut[pos - 1] == 0) {
+                    // Currently the automorphism group for the entire
+                    // set of reps chosen before now is all of S_index.
+                    // This means that rep[pos] needs to be conjugacy minimal.
+                    if (rep[pos].isConjugacyMinimal()) {
+                        if (rep[pos].isIdentity()) {
+                            // The automorphism group remains all of S_index.
+                            nAut[pos] = 0;
+                        } else {
+                            // Set up the automorphism group for this rep
+                            // by explicitly listing the automorphisms.
+                            int idx = 0;
+                            while (allMinimalPerms[idx] != rep[pos].SnIndex())
+                                ++idx;
+
+                            nAut[pos] = 0;
+                            while (minimalAutGroup<index>[idx][nAut[pos]]
+                                    >= 0) {
+                                aut[pos][nAut[pos]] = Perm<index>::Sn[
+                                    minimalAutGroup<index>[idx][nAut[pos]]];
+                                ++nAut[pos];
+                            }
+                        }
+                    } else {
                         backtrack = true;
+                    }
                 } else {
-                    // TODO: We can make this faster.
-                    Perm<index> p;
-                    do {
-                        unsigned long g;
-                        for (g = 0; g < pos; ++g) {
-                            if (p * rep[g] * p.inverse() != rep[g]) {
-                                // This does not preserve the previous reps.
-                                break;
-                            }
+                    // The previous reps are together conjugacy minimal,
+                    // and we have their automorphism group stored.
+                    nAut[pos] = 0;
+                    for (int a = 0; a < nAut[pos - 1]; ++a) {
+                        Perm<index> p = aut[pos - 1][a];
+                        Perm<index> conj = p * rep[pos] * p.inverse();
+                        if (conj < rep[pos]) {
+                            // Not conjugacy minimal.
+                            backtrack = true;
+                            break;
+                        } else if (conj == rep[pos]) {
+                            // This remains part of our automorphism
+                            // group going forwards.
+                            aut[pos][nAut[pos]++] = p;
                         }
-                        if (g == pos) {
-                            // We didn't break from the previous loop.
-                            // Now see how this permutation affects the
-                            // current rep that we have just chosen.
-                            if ((p * rep[pos] * p.inverse()) < rep[pos]) {
-                                // Not conjugacy minimal.
-                                backtrack = true;
-                                break;
-                            }
-                        }
-                        ++p;
-                    } while (! p.isIdentity());
+                    }
                 }
             }
         }
@@ -366,6 +469,8 @@ size_t GroupPresentation::enumerateCoversInternal(
 
 finished:
 
+    delete[] aut;
+    delete[] nAut;
     delete[] repInv;
     delete[] rep;
     delete[] relnRange;
