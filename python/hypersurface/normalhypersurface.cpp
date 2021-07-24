@@ -95,7 +95,16 @@ void addNormalHypersurface(pybind11::module_& m) {
             }
             return new NormalHypersurface(t, v);
         }))
-        .def("clone", &NormalHypersurface::clone)
+        .def("clone", [](const NormalHypersurface& s) {
+            // Since clone() is deprecated, we reimplement it here to
+            // avoid noisy compiler warnings.
+            // Here we use the copy constructor, which has the side-effect of
+            // cloning the surface name also (which the C++ clone() does not).
+            // To ensure no change in behaviour, we revert the name change here.
+            NormalHypersurface* ans = new NormalHypersurface(s);
+            ans->setName(std::string());
+            return ans;
+        })
         .def("swap", &NormalHypersurface::swap)
         .def("doubleHypersurface", &NormalHypersurface::doubleHypersurface)
         .def("tetrahedra", &NormalHypersurface::tetrahedra)
@@ -127,8 +136,11 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def("locallyCompatible", &NormalHypersurface::locallyCompatible)
         .def("vector", &NormalHypersurface::vector,
             pybind11::return_value_policy::reference_internal)
-        .def("rawVector", &NormalHypersurface::rawVector,
-            pybind11::return_value_policy::reference_internal)
+        .def("rawVector", [](const NormalHypersurface& s) {
+            // Since rawVector() is deprecated, we reimplement it
+            // ourselves here to avoid noisy compiler warnings.
+            return s.vector().coords();
+        }, pybind11::return_value_policy::reference_internal)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

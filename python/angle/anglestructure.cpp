@@ -43,7 +43,11 @@ void addAngleStructure(pybind11::module_& m) {
         .def(pybind11::init<const AngleStructure&>())
         .def(pybind11::init<const AngleStructure&,
             const regina::Triangulation<3>&>())
-        .def("clone", &AngleStructure::clone)
+        .def("clone", [](const AngleStructure& a) {
+            // Since clone() is deprecated, we reimplement it here to
+            // avoid noisy compiler warnings.
+            return new AngleStructure(a);
+        })
         .def("swap", &AngleStructure::swap)
         .def("angle", &AngleStructure::angle)
         .def("triangulation", &AngleStructure::triangulation)

@@ -113,10 +113,9 @@ Container* readSigList(const char *filename,
 
 /**
  * A deprecated weaker version of readSigList(), which reads a list of
- * isomorphism signatures for 3-manifold or 4-manifold triangulations from
- * the given text file.
+ * isomorphism signatures for triangulations from the given text file.
  *
- * Unlike readSigList() (which is much more general), this function can only
+ * Unlike readSigList() (which is more general), this function can only
  * work with 2-manifold, 3-manifold and 4-manifold triangulations.
  *
  * Also, unlike readSigList(), this is not a template function.  Instead of
@@ -126,8 +125,8 @@ Container* readSigList(const char *filename,
  *
  * See readSigList() for further details on what this routine does.
  *
- * \deprecated Use readSigList<Triangulation<3>> or
- * readSigList<Triangulation<4>> instead.
+ * \deprecated Use readSigList<Triangulation<2>>, readSigList<Triangulation<3>>
+ * or readSigList<Triangulation<4>> instead.
  *
  * @param filename the name of the text file from which to read.
  * @param dimension either 2, 3 or 4, indicating whether isomorphism
