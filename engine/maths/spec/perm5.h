@@ -76,8 +76,8 @@ namespace regina {
  * codes have changed as of Regina 6.1:
  *
  * - \e First-generation codes were used internally in Regina 6.0 and earlier.
- *   These codes were integers whose lowest three bits represented the
- *   image of 0, whose next lowest three bits represented the image of 1,
+ *   These are <i>image packs</i>: integers whose lowest three bits represent
+ *   the image of 0, whose next lowest three bits represent the image of 1,
  *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
  *   and isPermCode1() continue to work with first-generation codes for
  *   backward compatibility.  Likewise, the XML data file format
@@ -242,19 +242,35 @@ class Perm<5> {
         static constexpr Index nPerms_1 = 24;
 
         /**
-         * Indicates the number of bits used by a first-generation
-         * permutation code to store the image of a single integer.
+         * Indicates the number of bits used in an image pack to store the
+         * image of a single integer.
          *
-         * The full first-generation code packs 5 such images together, and
-         * so uses 5 * \a imageBits bits in total.
+         * A full image pack combines 5 such images together, and so uses
+         * 5 * \a imageBits bits in total.
          */
         static constexpr int imageBits = 3;
 
         /**
          * Indicates the native unsigned integer type used to store a
+         * single image pack.  See the class notes for more information
+         * on image packs, and how they are used to build the old
+         * first-generation permutation codes.
+         */
+        typedef uint16_t ImagePack;
+
+        /**
+         * A bitmask whose lowest \a imageBits bits are 1, and whose
+         * remaining higher order bits are all 0.  This may be useful when
+         * creating or analysing image packs.
+         */
+        static constexpr ImagePack imageMask =
+                (static_cast<ImagePack>(1) << imageBits) - 1;
+
+        /**
+         * Indicates the native unsigned integer type used to store a
          * first-generation permutation code.
          */
-        typedef uint16_t Code1;
+        typedef ImagePack Code1;
 
         /**
          * Indicates the native unsigned integer type used to store a
@@ -777,6 +793,48 @@ class Perm<5> {
          * first-generation permutation code.
          */
         [[deprecated]] static constexpr bool isPermCode(Code1 code);
+
+        /**
+         * Returns the image pack that represents this permutation.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build the old first-generation permutation codes.
+         *
+         * For Perm<5>, this routine is identical to permCode1().
+         *
+         * @return the image pack for this permutation.
+         */
+        constexpr ImagePack imagePack() const;
+
+        /**
+         * Creates a permutation from the given image pack.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build the old first-generation permutation codes.
+         *
+         * For Perm<5>, this routine is identical to fromPermCode1().
+         *
+         * \pre The argument \a pack is a valid image pack; see isImagePack()
+         * for details.
+         *
+         * @param pack an image pack that describes a permutation.
+         * @return the permutation represented by the given image pack.
+         */
+        static constexpr Perm fromImagePack(ImagePack pack);
+
+        /**
+         * Determines whether the given argument is the image pack of
+         * some 5-element permutation.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build the old first-generation permutation codes.
+         *
+         * For Perm<5>, this routine is identical to isPermCode1().
+         *
+         * @param pack the candidate image pack to test.
+         * @return \c true if and only if \a pack is a valid image pack.
+         */
+        static constexpr bool isImagePack(ImagePack pack);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -1597,6 +1655,18 @@ inline constexpr bool Perm<5>::isPermCode2(Code2 code) {
 
 inline constexpr bool Perm<5>::isPermCode(Code1 code) {
     return isPermCode1(code);
+}
+
+inline constexpr Perm<5>::ImagePack Perm<5>::imagePack() const {
+    return permCode1();
+}
+
+inline constexpr Perm<5> Perm<5>::fromImagePack(ImagePack pack) {
+    return fromPermCode1(pack);
+}
+
+inline constexpr bool Perm<5>::isImagePack(ImagePack pack) {
+    return isPermCode1(pack);
 }
 
 inline constexpr Perm<5> Perm<5>::operator *(const Perm<5>& q) const {

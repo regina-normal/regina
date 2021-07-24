@@ -375,8 +375,11 @@ Version 6.1  [ TODO ]
               and member functions SnIndex() and orderedSnIndex().
             - New static routine rot().
             - New class constant codeType.
-            - For classes whose permutation codes are packed image sequences
-              (n > 5), added a helper class constant imageMask.
+            - For all classes that support packed image sequences in any form
+              (n >= 4), added type ImagePack; constants imageBits, imageMask;
+              and routines imagePack(), fromImagePack(), isImagePack().  For
+              n >= 7 these are aliases for the permutation code routines; for
+              n = 4,5,6 they are aliases for the first-generation code routines.
             - Almost everything in the permutation classes is now constexpr.
             - Routines index() and atIndex() are now deprecated.
               Use orderedSnIndex() and orderedSn[...] instead.
@@ -387,6 +390,8 @@ Version 6.1  [ TODO ]
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
             - New ++ and < operators.
+            - New constant imageBits for consistency with higher order
+              permutation classes.
             - Added a new typedef Code2; this is identical to Code, but
               it allows you to express more clearly in your source code
               which generation of code is being used.

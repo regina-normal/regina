@@ -261,10 +261,9 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //       transformation c_i \mapsto d_i = dim-c_i
 
             // We construct a permutation code from the individual images.
-            static_assert(Perm<dim + 1>::codeType == PERM_CODE_IMAGES);
 
-            typedef typename Perm<dim + 1>::Code Code;
-            Code code = 0;
+            typedef typename Perm<dim + 1>::ImagePack ImagePack;
+            ImagePack code = 0;
             int shift = 0;
 
             // reverse ordering
@@ -280,7 +279,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 if (val <= remaining) {
                   --k;
                   // lexDim-k -> dim-max
-                  code |= (static_cast<Code>(dim-max) << shift);
+                  code |= (static_cast<ImagePack>(dim-max) << shift);
                   shift += Perm<dim + 1>::imageBits;
                   remaining = remaining - val;
                   done = true;
@@ -291,7 +290,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             while (k > 0) {
               --k;
               // lexDim-k -> dim-k
-              code |= (static_cast<Code>(dim-k) << shift);
+              code |= (static_cast<ImagePack>(dim-k) << shift);
               shift += Perm<dim + 1>::imageBits;
             }
 
@@ -310,14 +309,14 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 continue;
               }
               // next index -> i
-              code |= (static_cast<Code>(i) << shift);
+              code |= (static_cast<ImagePack>(i) << shift);
               shift += Perm<dim + 1>::imageBits;
             }
 
             if constexpr (lexNumbering)
-                return Perm<dim + 1>::fromPermCode(code);
+                return Perm<dim + 1>::fromImagePack(code);
             else
-                return Perm<dim + 1>::fromPermCode(code).reverse();
+                return Perm<dim + 1>::fromImagePack(code).reverse();
         }
 
         static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
@@ -440,23 +439,22 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
                 return Perm<dim + 1>::rot(face);
             } else {
                 // Construct a permutation code from the individual images.
-                static_assert(Perm<dim + 1>::codeType == PERM_CODE_IMAGES);
 
-                typedef typename Perm<dim + 1>::Code Code;
-                Code code = face; // 0 -> face
+                typedef typename Perm<dim + 1>::ImagePack ImagePack;
+                ImagePack code = face; // 0 -> face
 
                 int shift = Perm<dim + 1>::imageBits;
                 for (int i = dim; i >= static_cast<int>(face) + 1; --i) {
                     // dim - i + 1 -> i;
-                    code |= (static_cast<Code>(i) << shift);
+                    code |= (static_cast<ImagePack>(i) << shift);
                     shift += Perm<dim + 1>::imageBits;
                 }
                 for (int i = static_cast<int>(face) - 1; i >= 0; --i) {
                     // dim - i -> i
-                    code |= (static_cast<Code>(i) << shift);
+                    code |= (static_cast<ImagePack>(i) << shift);
                     shift += Perm<dim + 1>::imageBits;
                 }
-                return Perm<dim + 1>::fromPermCode(code);
+                return Perm<dim + 1>::fromImagePack(code);
             }
         }
 
@@ -484,26 +482,25 @@ class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> 
         // The following routines are documented in FaceNumberingAPI.
         static constexpr Perm<dim + 1> ordering(unsigned face) {
             // Construct a permutation code from the individual images.
-            static_assert(Perm<dim + 1>::codeType == PERM_CODE_IMAGES);
 
-            typedef typename Perm<dim + 1>::Code Code;
-            Code code = 0;
+            typedef typename Perm<dim + 1>::ImagePack ImagePack;
+            ImagePack code = 0;
 
             int shift = 0;
             for (int i = 0; i < face; ++i) {
                 // i -> i
-                code |= (static_cast<Code>(i) << shift);
+                code |= (static_cast<ImagePack>(i) << shift);
                 shift += Perm<dim + 1>::imageBits;
             }
             for (int i = face + 1; i <= dim; ++i) {
                 // i - 1 -> i
-                code |= (static_cast<Code>(i) << shift);
+                code |= (static_cast<ImagePack>(i) << shift);
                 shift += Perm<dim + 1>::imageBits;
             }
             // dim -> face
-            code |= (static_cast<Code>(face) << shift);
+            code |= (static_cast<ImagePack>(face) << shift);
 
-            return Perm<dim + 1>::fromPermCode(code);
+            return Perm<dim + 1>::fromImagePack(code);
 
         }
 

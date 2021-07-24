@@ -131,11 +131,11 @@ enum PermCodeType {
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  These codes are constructed as follows:
  *
- * - For 7 &le; \a n &le; 16, the code is essentially a packed array
- *   that holds the images of 0,...,<i>n</i>-1 in a single native integer type.
- *   More precisely, the internal code is an unsigned integer of type \a Code,
- *   whose lowest \a imageBits bits represent the image of 0, whose next
- *   lowest \a imageBits bits represent the image of 1, and so on.
+ * - For 7 &le; \a n &le; 16, the code is an <i>image pack</i>: essentially a
+ *   packed array that holds the images of 0,...,<i>n</i>-1 in a single native
+ *   integer type.  More precisely, this is an unsigned integer of type
+ *   \a ImagePack, whose lowest \a imageBits bits represent the image of 0,
+ *   whose next lowest \a imageBits bits represent the image of 1, and so on.
  *   This scheme is consistent with the old first-generation codes for
  *   \a n = 4,5,6, which are still supported but no longer used internally.
  *
@@ -167,16 +167,11 @@ class Perm {
 
     public:
         /**
-         * Indicates the number of bits used by the permutation code
-         * to store the image of a single integer.
+         * Indicates the number of bits used in an image pack to store the
+         * image of a single integer.
          *
-         * This constant refers to the "image packing" codes that are
-         * used for \a n &ge; 7, as described in the Perm class notes.
-         * For \a n &le; 6 the permutation codes are constructed in a
-         * different way, and so this constant is not present.
-         *
-         * The full permutation code packs \a n such images together,
-         * and so uses \a n * \a imageBits bits in total.
+         * A full image pack combines \a n such images together, and so uses
+         * \a n * \a imageBits bits in total.
          */
         static constexpr int imageBits = regina::bitsRequired(n);
 
@@ -188,6 +183,22 @@ class Perm {
         typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::type Index;
 
         /**
+         * Indicates the native unsigned integer type used to store a
+         * single image pack.  See the class notes for more information
+         * on image packs, and how they are used as permutation codes
+         * for \a n &ge; 7.
+         */
+        typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype ImagePack;
+
+        /**
+         * A bitmask whose lowest \a imageBits bits are 1, and whose
+         * remaining higher order bits are all 0.  This may be useful when
+         * creating or analysing image packs.
+         */
+        static constexpr ImagePack imageMask =
+            (static_cast<ImagePack>(1) << Perm<n>::imageBits) - 1;
+
+        /**
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          *
@@ -196,7 +207,7 @@ class Perm {
          * For \a n = 4, 5 and 6, it is a deprecated typedef that refers to
          * older (first-generation) permutation codes that are no longer used.
          */
-        typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype Code;
+        typedef ImagePack Code;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -215,14 +226,6 @@ class Perm {
          * the size of the symmetric group <i>S</i><sub><i>n</i>-1</sub>.
          */
         static constexpr Index nPerms_1 = factorial(n-1);
-
-        /**
-         * A bitmask whose lowest \a imageBits bits are 1, and whose
-         * remaining higher order bits are all 0.
-         * This may be useful when creating or analysing permutation codes.
-         */
-        static constexpr Code imageMask =
-            (static_cast<Code>(1) << Perm<n>::imageBits) - 1;
 
     private:
         /**
@@ -425,6 +428,48 @@ class Perm {
          * internal permutation code.
          */
         static constexpr bool isPermCode(Code newCode);
+
+        /**
+         * Returns the image pack that represents this permutation.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build permutation codes.
+         *
+         * For \a n &ge; 7, this routine is identical to permCode().
+         *
+         * @return the image pack for this permutation.
+         */
+        constexpr ImagePack imagePack() const;
+
+        /**
+         * Creates a permutation from the given image pack.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build permutation codes.
+         *
+         * For \a n &ge; 7, this routine is identical to fromPermCode().
+         *
+         * \pre The argument \a pack is a valid image pack; see isImagePack()
+         * for details.
+         *
+         * @param pack an image pack that describes a permutation.
+         * @return the permutation represented by the given image pack.
+         */
+        static constexpr Perm fromImagePack(ImagePack pack);
+
+        /**
+         * Determines whether the given argument is the image pack of
+         * some <i>n</i>-element permutation.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build permutation codes.
+         *
+         * For \a n &ge; 7, this routine is identical to isPermCode().
+         *
+         * @param pack the candidate image pack to test.
+         * @return \c true if and only if \a pack is a valid image pack.
+         */
+        static constexpr bool isImagePack(ImagePack pack);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -890,6 +935,21 @@ constexpr bool Perm<n>::isPermCode(Code code) {
     for (int i = 0; i < n; ++i)
         mask |= (1 << ((code >> (imageBits * i)) & imageMask));
     return (mask + 1 == (1 << n));
+}
+
+template <int n>
+inline constexpr typename Perm<n>::ImagePack Perm<n>::imagePack() const {
+    return permCode();
+}
+
+template <int n>
+inline constexpr Perm<n> Perm<n>::fromImagePack(ImagePack pack) {
+    return fromPermCode(pack);
+}
+
+template <int n>
+inline constexpr bool Perm<n>::isImagePack(ImagePack pack) {
+    return isPermCode(pack);
 }
 
 template <int n>

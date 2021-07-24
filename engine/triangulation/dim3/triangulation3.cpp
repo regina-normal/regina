@@ -226,7 +226,7 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
             adjTet = t->adjacentTetrahedron(face);
             if (adjTet) {
                 out << adjTet->index() << ' '
-                    << static_cast<int>(t->adjacentGluing(face).permCode1())
+                    << static_cast<int>(t->adjacentGluing(face).imagePack())
                     << ' ';
             } else
                 out << "-1 -1 ";

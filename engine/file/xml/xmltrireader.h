@@ -385,26 +385,31 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
         return;
 
     long simpIndex;
-    typename Perm<dim + 1>::Code permCode;
     Perm<dim + 1> perm;
     Simplex<dim>* adjSimp;
     int adjFacet;
     for (int k = 0; k <= dim; ++k) {
         if (! valueOf(tokens[2 * k], simpIndex))
             continue;
-        if (! valueOf(tokens[2 * k + 1], permCode))
-            continue;
-
         if (simpIndex < 0 || simpIndex >= static_cast<long>(tri_->size()))
             continue;
-        if constexpr (dim == 3 || dim == 4) {
-            if (! Perm<dim + 1>::isPermCode1(permCode))
+
+        if constexpr (dim == 2) {
+            // In dimension 2, we store permutations as indices into S3.
+            typename Perm<dim + 1>::Index permCode;
+            if (! valueOf(tokens[2 * k + 1], permCode))
                 continue;
-            perm.setPermCode1(permCode);
+            if (permCode < 0 || permCode >= Perm<dim + 1>::nPerms)
+                continue;
+            perm = Perm<dim + 1>::Sn[permCode];
         } else {
-            if (! Perm<dim + 1>::isPermCode(permCode))
+            // All other dimensions store permutations as image packs.
+            typename Perm<dim + 1>::ImagePack permCode;
+            if (! valueOf(tokens[2 * k + 1], permCode))
                 continue;
-            perm.setPermCode(permCode);
+            if (! Perm<dim + 1>::isImagePack(permCode))
+                continue;
+            perm = Perm<dim + 1>::fromImagePack(permCode);
         }
 
         adjSimp = tri_->simplices()[simpIndex];

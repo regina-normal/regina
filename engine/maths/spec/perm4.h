@@ -77,8 +77,8 @@ namespace regina {
  * codes have changed as of Regina 4.6.1:
  *
  * - \e First-generation codes were used internally in Regina 4.6 and earlier.
- *   These codes were characters whose lowest two bits represented the
- *   image of 0, whose next lowest two bits represented the image of 1,
+ *   These are <i>image packs</i>: characters whose lowest two bits represent
+ *   the image of 0, whose next lowest two bits represent the image of 1,
  *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
  *   and isPermCode1() continue to work with first-generation codes for
  *   backward compatibility.  Likewise, the XML data file format
@@ -212,13 +212,38 @@ class Perm<4> {
 
         /**
          * Indicates the native unsigned integer type used to store a
+         * single image pack.  See the class notes for more information
+         * on image packs, and how they are used to build the old
+         * first-generation permutation codes.
+         */
+        typedef uint8_t ImagePack;
+
+        /**
+         * Indicates the number of bits used in an image pack to store the
+         * image of a single integer.
+         *
+         * A full image pack combines 4 such images together, and so uses
+         * 4 * \a imageBits bits in total.
+         */
+        static constexpr int imageBits = 2;
+
+        /**
+         * A bitmask whose lowest \a imageBits bits are 1, and whose
+         * remaining higher order bits are all 0.  This may be useful when
+         * creating or analysing image packs.
+         */
+        static constexpr ImagePack imageMask =
+                (static_cast<ImagePack>(1) << imageBits) - 1;
+
+        /**
+         * Indicates the native unsigned integer type used to store a
          * first-generation permutation code.
          *
          * Although types \a Code1 and \a Code2 are identical, they are
          * provided as separate typedefs to help communicate in your
          * source code which type of code is being used.
          */
-        typedef uint8_t Code1;
+        typedef ImagePack Code1;
 
         /**
          * Indicates the native unsigned integer type used to store a
@@ -692,6 +717,48 @@ class Perm<4> {
          * first-generation permutation code.
          */
         [[deprecated]] static constexpr bool isPermCode(Code1 code);
+
+        /**
+         * Returns the image pack that represents this permutation.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build the old first-generation permutation codes.
+         *
+         * For Perm<4>, this routine is identical to permCode1().
+         *
+         * @return the image pack for this permutation.
+         */
+        constexpr ImagePack imagePack() const;
+
+        /**
+         * Creates a permutation from the given image pack.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build the old first-generation permutation codes.
+         *
+         * For Perm<4>, this routine is identical to fromPermCode1().
+         *
+         * \pre The argument \a pack is a valid image pack; see isImagePack()
+         * for details.
+         *
+         * @param pack an image pack that describes a permutation.
+         * @return the permutation represented by the given image pack.
+         */
+        static constexpr Perm fromImagePack(ImagePack pack);
+
+        /**
+         * Determines whether the given argument is the image pack of
+         * some 4-element permutation.
+         *
+         * See the class notes for more information on image packs, and how
+         * they are used to build the old first-generation permutation codes.
+         *
+         * For Perm<4>, this routine is identical to isPermCode1().
+         *
+         * @param pack the candidate image pack to test.
+         * @return \c true if and only if \a pack is a valid image pack.
+         */
+        static constexpr bool isImagePack(ImagePack pack);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -1344,6 +1411,18 @@ inline constexpr bool Perm<4>::isPermCode2(Code2 code) {
 
 inline constexpr bool Perm<4>::isPermCode(Code1 code) {
     return isPermCode1(code);
+}
+
+inline constexpr Perm<4>::ImagePack Perm<4>::imagePack() const {
+    return permCode1();
+}
+
+inline constexpr Perm<4> Perm<4>::fromImagePack(ImagePack pack) {
+    return fromPermCode1(pack);
+}
+
+inline constexpr bool Perm<4>::isImagePack(ImagePack pack) {
+    return isPermCode1(pack);
 }
 
 inline constexpr Perm<4> Perm<4>::operator *(const Perm<4>& q) const {

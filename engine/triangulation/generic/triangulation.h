@@ -561,7 +561,7 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
             adj = s->adjacentSimplex(facet);
             if (adj) {
                 out << adj->index() << ' '
-                    << s->adjacentGluing(facet).permCode() << ' ';
+                    << s->adjacentGluing(facet).imagePack() << ' ';
             } else
                 out << "-1 -1 ";
         }

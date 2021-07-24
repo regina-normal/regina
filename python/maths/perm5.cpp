@@ -111,6 +111,9 @@ void addPerm5(pybind11::module_& m) {
         .def_static("isPermCode1", &Perm<5>::isPermCode1)
         .def_static("isPermCode2", &Perm<5>::isPermCode2)
         .def_static("isPermCode", &Perm<5>::isPermCode1) // deprecated
+        .def("imagePack", &Perm<5>::imagePack)
+        .def_static("fromImagePack", &Perm<5>::fromImagePack)
+        .def_static("isImagePack", &Perm<5>::isImagePack)
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Perm<5>::inverse)
         .def("reverse", &Perm<5>::reverse)
@@ -144,6 +147,8 @@ void addPerm5(pybind11::module_& m) {
             [](pybind11::object /* self */) { return Perm<5>::codeType; })
         .def_property_readonly_static("imageBits",
             [](pybind11::object /* self */) { return Perm<5>::imageBits; })
+        .def_property_readonly_static("imageMask",
+            [](pybind11::object /* self */) { return Perm<5>::imageMask; })
         .def_property_readonly_static("nPerms",
             [](pybind11::object /* self */) { return Perm<5>::nPerms; })
         .def_property_readonly_static("nPerms_1",
