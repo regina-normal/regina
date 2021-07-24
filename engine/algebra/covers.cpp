@@ -54,7 +54,7 @@ namespace {
     // group is all of S_n.
     template <int n> constexpr int
         minimalAutGroup[nMinimalPerms[n]][maxMinimalAutGroup[n] + 1];
-    template <> constexpr int minimalAutGroup<2>[][4] = {
+    template <> constexpr int minimalAutGroup<2>[][1] = {
         /* 0 */ { -1 },
         /* 1 */ { -1 },
     };
@@ -115,7 +115,7 @@ namespace {
         /* 153 */ { 0, 153, 304, 451, 576, 601, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-        };
+    };
 }
 
 void GroupPresentation::minimaxGenerators(unsigned long* genRange) {
