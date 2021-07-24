@@ -52,11 +52,13 @@ namespace {
     // The (-1)-terminated automorphism group corresponding to each
     // conjugacy minimal permutation, or an empty list if the automorphism
     // group is all of S_n.
+    // The code that generated these arrays can be found in aut.py, in the same
+    // directory as this source file.
     template <int n> constexpr int
         minimalAutGroup[nMinimalPerms[n]][maxMinimalAutGroup[n] + 1];
     template <> constexpr int minimalAutGroup<2>[][1] = {
         /* 0 */ { -1 },
-        /* 1 */ { -1 },
+        /* 1 */ { -1 }
     };
     template <> constexpr int minimalAutGroup<3>[][4] = {
         /* 0 */ { -1, 0, 0, 0 },
