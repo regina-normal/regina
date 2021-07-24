@@ -2862,7 +2862,7 @@ class Perm<6> {
             { 633, 105, 21, 5, 1, 0 }
         };
 
-    private:
+    protected:
         /**
          * Creates a permutation from the given second-generation
          * permutation code.
@@ -2875,6 +2875,7 @@ class Perm<6> {
          */
         constexpr Perm<6>(Code2 code);
 
+    private:
         /**
          * Returns the index into the Perm<6>::S6 array of the permutation that
          * maps (0,...,5) to (<i>a</i>,...,<i>f</i>) respectively.

@@ -688,7 +688,7 @@ class Perm<2> {
          */
         constexpr bool isConjugacyMinimal() const;
 
-    private:
+    protected:
         /**
          * Creates a permutation from the given internal code.
          *

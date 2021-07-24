@@ -1230,7 +1230,7 @@ class Perm<4> {
          */
         static constexpr Code2 S3Table[6] = { 0, 3, 8, 7, 12, 15 };
 
-    private:
+    protected:
         /**
          * Creates a permutation from the given second-generation
          * permutation code.
@@ -1243,6 +1243,7 @@ class Perm<4> {
          */
         constexpr Perm<4>(Code2 code);
 
+    private:
         /**
          * Returns the index into the Perm<4>::S4 array of the permutation that
          * maps (0,1,2,3) to (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>) respectively.

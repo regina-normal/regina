@@ -847,7 +847,7 @@ class Perm<3> {
             { 5, 4, 3, 2, 1, 0 }
         };
 
-    private:
+    protected:
         /**
          * Creates a permutation from the given internal code.
          *
@@ -859,6 +859,7 @@ class Perm<3> {
          */
         constexpr Perm<3>(Code code);
 
+    private:
         /**
          * Converts between an index into Perm<3>::S3 and an index into
          * Perm<3>::orderedS3.  This conversion works in either direction.

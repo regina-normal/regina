@@ -753,7 +753,7 @@ class Perm {
         template <int k>
         static constexpr Perm contract(Perm<k> p);
 
-    private:
+    protected:
         /**
          * Creates a permutation from the given internal code.
          *
