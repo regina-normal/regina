@@ -382,6 +382,8 @@ template size_t GroupPresentation::enumerateCoversInternal<4>(
         std::function<void(GroupPresentation&)>&& action);
 template size_t GroupPresentation::enumerateCoversInternal<5>(
         std::function<void(GroupPresentation&)>&& action);
+template size_t GroupPresentation::enumerateCoversInternal<6>(
+        std::function<void(GroupPresentation&)>&& action);
 
 } // namespace regina
 

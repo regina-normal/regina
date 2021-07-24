@@ -170,10 +170,11 @@ void addGroupPresentation(pybind11::module_& m) {
                 case 3: return p.enumerateCovers<3>(action);
                 case 4: return p.enumerateCovers<4>(action);
                 case 5: return p.enumerateCovers<5>(action);
+                case 6: return p.enumerateCovers<6>(action);
             }
             PyErr_SetString(PyExc_ValueError,
                 "The index passed to enumerateCovers() must be between "
-                "2 and 5 inclusive.");
+                "2 and 6 inclusive.");
             return 0;
         })
         .def("toTeX", &GroupPresentation::toTeX)

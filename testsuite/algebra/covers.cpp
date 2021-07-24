@@ -178,20 +178,21 @@ class CoversTest : public CppUnit::TestFixture {
 
         void trivial() {
             // No covers:
-            compareResults<5>(regina::Example<3>::sphere());
+            compareResults<6>(regina::Example<3>::sphere());
         }
 
         void manifolds() {
             // Cover only for degree 5:
-            compareResults<5>(regina::Example<3>::poincareHomologySphere());
+            compareResults<6>(regina::Example<3>::poincareHomologySphere());
 
             // Cover (which is trivial) only for degree 3:
-            compareResults<5>(regina::Example<3>::lens(3, 1));
+            compareResults<6>(regina::Example<3>::lens(3, 1));
 
             // Many covers for degree 5:
-            compareResults<5>(regina::Example<3>::weeks());
+            compareResults<6>(regina::Example<3>::weeks());
 
-            // Many, many covers for degree 5:
+            // Many, many covers for degree 5 (and too slow to put degree 6
+            // in the test suite):
             Triangulation<3>* ws = regina::Example<3>::weberSeifert();
             verifyResults<2>(ws, { }, false);
             verifyResults<3>(ws, { }, false);
@@ -217,12 +218,15 @@ class CoversTest : public CppUnit::TestFixture {
         }
 
         void knots() {
-            compareResults<5>(regina::ExampleLink::trefoilRight());
-            compareResults<5>(regina::ExampleLink::conway());
+            compareResults<6>(regina::ExampleLink::trefoilRight());
+            compareResults<6>(regina::ExampleLink::conway());
 
             // The following invariants have been verified with SnapPea,
             // but SnapPea is a little slow to compute them so here we
             // just check the results directly when the index grows large.
+            //
+            // For now we stop at index 5; the index 6 cases take about
+            // half a second each on my machine.
 
             Link* link19 = regina::Link::fromKnotSig(
                 "tabcadefghdijklmnoipkjplmefqrghbcsonqrsvvvvvvb-VzgZBa");
@@ -249,17 +253,17 @@ class CoversTest : public CppUnit::TestFixture {
 
         void freeAbelian() {
             // Free abelian (and indeed just free) on one generator:
-            compareResults<5>(regina::Example<3>::s2xs1());
-            compareResults<5>(regina::ExampleLink::unknot());
+            compareResults<6>(regina::Example<3>::s2xs1());
+            compareResults<6>(regina::ExampleLink::unknot());
 
             // Free abelian on two generators:
             // Build a torus, coned in both directions, to give an ideal
             // triangulation of TxI.
-            compareResults<5>(regina::Triangulation<3>::fromIsoSig(
+            compareResults<6>(regina::Triangulation<3>::fromIsoSig(
                 "eLMkbbdddpuapu"), "T x I");
 
             // Free abelian on three generators:
-            compareResults<3>(regina::Triangulation<3>::fromIsoSig(
+            compareResults<6>(regina::Triangulation<3>::fromIsoSig(
                 "gvLQQedfedffrwawrhh"), "T x S1");
         }
 
@@ -292,13 +296,14 @@ class CoversTest : public CppUnit::TestFixture {
             // which is indexed as expected[index - 2][rank - 1].
             // An array value of 0 means the result is beyond the end of
             // our hard-coded list of results for that particular index.
-            static constexpr size_t maxIndex = 5;
+            static constexpr size_t maxIndex = 6;
             static constexpr size_t maxRank = 9;
             static constexpr size_t expected[maxIndex - 1][maxRank] = {
                 { 1, 3, 7, 15, 31, 63, 127, 255, 511 },
                 { 1, 7, 41, 235, 1361, 7987, 47321, 281995, 0 },
                 { 1, 26, 604, 14120, 334576, 7987616, 191318464, 0, 0 },
-                { 1, 97, 13753, 1712845, 207009649, 0, 0, 0, 0 }
+                { 1, 97, 13753, 1712845, 207009649, 0, 0, 0, 0 },
+                { 1, 624, 504243, 371515454, 0, 0, 0, 0, 0 }
             };
 
             if (index < 2 || index > maxIndex) {
@@ -372,6 +377,8 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyFree<4>(rank);
             for (int rank = 0; rank <= 3; ++rank)
                 verifyFree<5>(rank);
+            for (int rank = 0; rank <= 2; ++rank)
+                verifyFree<6>(rank);
         }
 
         template <int index>
@@ -447,6 +454,8 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyCyclic<4>(order);
             for (int order = 1; order <= 13; ++order)
                 verifyCyclic<5>(order);
+            for (int order = 1; order <= 13; ++order)
+                verifyCyclic<6>(order);
         }
 };
 
