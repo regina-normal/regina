@@ -36,6 +36,7 @@
 #include "../constarray.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::Perm;
 using regina::python::ConstArray;
 
@@ -88,6 +89,7 @@ void addPerm6(pybind11::module_& m) {
             return new Perm<6>(image);
         }))
         .def(pybind11::init<const Perm<6>&>())
+        .def_static("precompute", &Perm<6>::precompute)
         .def("permCode1", &Perm<6>::permCode1)
         .def("permCode2", &Perm<6>::permCode2)
         .def("permCode", &Perm<6>::permCode1) // deprecated
@@ -104,6 +106,10 @@ void addPerm6(pybind11::module_& m) {
         .def_static("fromImagePack", &Perm<6>::fromImagePack)
         .def_static("isImagePack", &Perm<6>::isImagePack)
         .def(pybind11::self * pybind11::self)
+        .def("cachedComp", overload_cast<const Perm<6>&>(
+            &Perm<6>::cachedComp))
+        .def("cachedComp", overload_cast<const Perm<6>&, const Perm<6>&>(
+            &Perm<6>::cachedComp))
         .def("inverse", &Perm<6>::inverse)
         .def("reverse", &Perm<6>::reverse)
         .def("sign", &Perm<6>::sign)

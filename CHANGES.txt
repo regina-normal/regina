@@ -418,6 +418,8 @@ Version 6.1  [ TODO ]
               (in particular, composition and inverses).
             - Perm<6> now gains most of the extra functionality that Perm<2..5>
               already had over the generic higher-order Perm<n> class.
+            - Perm<6> also gains functions precompute() and cachedComp() for
+              users to generate and use lookup tables of products at runtime.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
         Class Polynomial:

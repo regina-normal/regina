@@ -30,10 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
+#include <mutex>
 #include <sstream>
 #include "maths/perm.h"
 
 namespace regina {
+
+namespace {
+    std::mutex precomputeMutex;
+}
+
+void Perm<6>::precompute() {
+    std::lock_guard<std::mutex> lock(precomputeMutex);
+    if (! products_) {
+        products_ = new Code[Perm<n>::nPerms][Perm<n>::nPerms];
+        for (Code i = 0; i < Perm<n>::nPerms; ++i)
+            for (Code j = 0; j < Perm<n>::nPerms; ++j)
+                products_[i][j] =
+                    (Perm<n>::fromPermCode2(i) *
+                     Perm<n>::fromPermCode2(j)).permCode2();
+    }
+}
 
 std::string Perm<6>::str() const {
     char ans[7];

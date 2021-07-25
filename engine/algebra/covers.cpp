@@ -229,8 +229,18 @@ size_t GroupPresentation::enumerateCoversInternal(
         // TODO: Hard-code this result and return.
     }
 
-    // Give ourselves scope to change to a different permutation class later.
-    typedef Perm<index> UsePerm;
+    // Do we want to use precomputed product tables that are generated
+    // at runtime?
+    //
+    // Note that for index <= 5 the Perm<index> class already uses lookup
+    // tables out-of-the-box and so there is no need for us to manage this
+    // ourselves here.  For index >= 7 the Perm<index> class does not (yet)
+    // have a runtime precomputation facility built in.
+    static constexpr bool cacheProducts = (index == 6);
+
+    if constexpr (cacheProducts) {
+        Perm<6>::precompute();
+    }
 
     // Relabel and reorder generators and relations so that we can check
     // relations as early as possible and backtrack if they break.
@@ -260,14 +270,14 @@ size_t GroupPresentation::enumerateCoversInternal(
     // The representative for generator i will be rep[i].
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
-    UsePerm* rep = new UsePerm[nGenerators_];
+    Perm<index>* rep = new Perm<index>[nGenerators_];
 #ifdef REGINA_COVERS_CACHE_INVERSES
-    UsePerm* repInv = new UsePerm[nGenerators_];
+    Perm<index>* repInv = new Perm<index>[nGenerators_];
 #endif
 
     size_t* nAut = new size_t[nGenerators_];
-    UsePerm (*aut)[maxMinimalAutGroup[index] + 1] =
-        new UsePerm[nGenerators_][maxMinimalAutGroup[index] + 1];
+    Perm<index> (*aut)[maxMinimalAutGroup[index] + 1] =
+        new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1];
 
     size_t pos = 0; // The generator whose current rep we are about to try.
     while (true) {
@@ -279,19 +289,31 @@ size_t GroupPresentation::enumerateCoversInternal(
         if (! backtrack) {
             for (size_t r = (pos == 0 ? 0 : relnRange[pos - 1]);
                     r < relnRange[pos]; ++r) {
-                UsePerm comb;
+                Perm<index> comb;
                 for (const auto& t : relations_[r].terms()) {
                     if (t.exponent > 0) {
                         for (long i = 0; i < t.exponent; ++i)
-                            comb = rep[t.generator] * comb;
+                            if constexpr (cacheProducts) {
+                                comb = rep[t.generator].cachedComp(comb);
+                            } else {
+                                comb = rep[t.generator] * comb;
+                            }
                     } else if (t.exponent < 0) {
 #ifdef REGINA_COVERS_CACHE_INVERSES
                         for (long i = 0; i > t.exponent; --i)
-                            comb = repInv[t.generator] * comb;
+                            if constexpr (cacheProducts) {
+                                comb = repInv[t.generator].cachedComp(comb);
+                            } else {
+                                comb = repInv[t.generator] * comb;
+                            }
 #else
-                        UsePerm inv = rep[t.generator].inverse();
+                        Perm<index> inv = rep[t.generator].inverse();
                         for (long i = 0; i > t.exponent; --i)
-                            comb = inv * comb;
+                            if constexpr (cacheProducts) {
+                                comb = inv.cachedComp(comb);
+                            } else {
+                                comb = inv * comb;
+                            }
 #endif
                     }
                 }
@@ -324,7 +346,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                             nAut[pos] = 0;
                             while (minimalAutGroup<index>[idx][nAut[pos]]
                                     >= 0) {
-                                aut[pos][nAut[pos]] = UsePerm::Sn[
+                                aut[pos][nAut[pos]] = Perm<index>::Sn[
                                     minimalAutGroup<index>[idx][nAut[pos]]];
                                 ++nAut[pos];
                             }
@@ -336,9 +358,14 @@ size_t GroupPresentation::enumerateCoversInternal(
                     // The previous reps are together conjugacy minimal,
                     // and we have their automorphism group stored.
                     nAut[pos] = 0;
+                    Perm<index> conj;
                     for (int a = 0; a < nAut[pos - 1]; ++a) {
-                        UsePerm p = aut[pos - 1][a];
-                        UsePerm conj = p * rep[pos] * p.inverse();
+                        Perm<index> p = aut[pos - 1][a];
+                        if constexpr (cacheProducts) {
+                            conj = p.cachedComp(rep[pos], p.inverse());
+                        } else {
+                            conj = p * rep[pos] * p.inverse();
+                        }
                         if (conj < rep[pos]) {
                             // Not conjugacy minimal.
                             backtrack = true;
@@ -430,7 +457,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                         for (int start = 0; start < index; ++start) {
                             GroupExpression e;
                             int sheet = start;
-                            UsePerm p;
+                            Perm<index> p;
                             unsigned long gen;
                             for (const auto& t : r.terms()) {
                                 if (t.exponent > 0) {
@@ -443,7 +470,8 @@ size_t GroupPresentation::enumerateCoversInternal(
                                     }
                                 } else if (t.exponent < 0) {
 #ifndef REGINA_COVERS_CACHE_INVERSES
-                                    UsePerm inv = rep[t.generator].inverse();
+                                    Perm<index> inv =
+                                        rep[t.generator].inverse();
 #endif
                                     for (long i = 0; i > t.exponent; --i) {
 #ifdef REGINA_COVERS_CACHE_INVERSES

@@ -280,7 +280,27 @@ class Perm<6> {
             /**< The internal second-generation permutation code
                  representing this permutation. */
 
+    private:
+        static Code2 (*products_)[720];
+            /**< The precomputed table of products, or \c null if this
+                 has not yet been generated.  This is a 720-by-720 array,
+                 whose indices and values all represent indices into S6. */
+
     public:
+        /**
+         * Performs the precomputation necessary for using the optimised
+         * cachedComp() routines.
+         *
+         * This \e must be called before calling cachedComp().
+         *
+         * This only needs to be done once in the lifetime of the program.
+         * If you do try to call precompute() a second time then it will
+         * do nothing and return immediately.
+         *
+         * This routine is thread-safe.
+         */
+        static void precompute();
+
         /**
          * Creates the identity permutation.
          */
@@ -631,10 +651,76 @@ class Perm<6> {
          * resulting permutation will be <i>p o q</i>, satisfying
          * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
-         * @param q the permutation with which to compose this.
+         * For permutations of five and fewer objects, composition is
+         * extremely fast because it uses hard-coded lookup tables.
+         * However, for Perm<6> these tables would grow too large and so
+         * Regina adopts a hybrid approach: it uses "partial tables" which
+         * are significantly smaller, combined with a small amount of
+         * computation.
+         *
+         * If you do need your compositions to be as fast as possible,
+         * with no computation required at all, then you can:
+         *
+         * - call precompute() to precompute a full 720-by-720 lookup table
+         *   in advance (this will consume roughly 1MB of memory); and then
+         *
+         * - call cachedComp() instead of the * operator to compute your
+         *   compositions.
+         *
+         * @param q the permutation to compose this with.
          * @return the composition of both permutations.
          */
         constexpr Perm<6> operator * (const Perm<6>& q) const;
+
+        /**
+         * Returns the composition of this and the given permutation,
+         * using fast precomputed lookup tables.
+         *
+         * The advantage of this routine is speed: calling cachedComp()
+         * is a single lookup, whereas the * operator requires two
+         * lookups and a few steps of mathematical computation.
+         *
+         * The disadvantages of this routine are that (1) you must remember
+         * to call precompute() in advance, and (2) the resulting lookup table
+         * will consume roughly 1MB of memory for the lifetime of your program.
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling <tt>(*this) * q</tt>.
+         *
+         * \pre You \e must have called the routine precompute() at least once
+         * in the lifetime of this program before using cachedComp().
+         * Otherwise this routine will almost certainly crash your program.
+         *
+         * @param q the permutation to compose this with.
+         * @return the composition of both permutations.
+         */
+        Perm<6> cachedComp(const Perm<6>& q) const;
+
+        /**
+         * Returns the composition of this and the given two permutations,
+         * using fast precomputed lookup tables.
+         *
+         * The advantage of this routine is speed: calling cachedComp()
+         * with two arguments requires just two lookups, whereas using
+         * the * operator twice would involve four lookups and a handful
+         * of steps of mathematical computation.
+         *
+         * The disadvantages of this routine are that (1) you must remember
+         * to call precompute() in advance, and (2) the resulting lookup table
+         * will consume roughly 1MB of memory for the lifetime of your program.
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling <tt>(*this) * q * r</tt>.
+         *
+         * \pre You \e must have called the routine precompute() at least once
+         * in the lifetime of this program before using cachedComp().
+         * Otherwise this routine will almost certainly crash your program.
+         *
+         * @param q the first permutation to compose this with.
+         * @param r the second permutation to compose this with.
+         * @return the composition of both permutations.
+         */
+        Perm<6> cachedComp(const Perm<6>& q, const Perm<6>& r) const;
 
         /**
          * Finds the inverse of this permutation.
@@ -3072,6 +3158,14 @@ inline constexpr Perm<6> Perm<6>::operator *(const Perm<6>& q) const {
     Code2 right = ((left & 1) ? (code2_ % 24 ^ 1) : (code2_ % 24));
     Code2 ans = productTableLeft[left][productTableRight[right][q.code2_ >> 1]];
     return Perm<6>(((code2_ ^ q.code2_) & 1) ? (ans ^ 1) : ans);
+}
+
+inline Perm<6> Perm<6>::cachedComp(const Perm<6>& q) const {
+    return Perm<6>(products_[code2_][q.code2_]);
+}
+
+inline Perm<6> Perm<6>::cachedComp(const Perm<6>& q, const Perm<6>& r) const {
+    return Perm<6>(products_[code2_][products_[q.code2_][r.code2_]]);
 }
 
 inline constexpr Perm<6> Perm<6>::inverse() const {
