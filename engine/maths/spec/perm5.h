@@ -500,7 +500,7 @@ class Perm<5> {
          */
         static constexpr S2Lookup S2 {};
 
-    private:
+    protected:
         Code2 code2_;
             /**< The internal second-generation permutation code
                  representing this permutation. */

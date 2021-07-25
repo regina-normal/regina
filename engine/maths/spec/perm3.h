@@ -315,7 +315,7 @@ class Perm<3> {
             code210 = 5
         };
 
-    private:
+    protected:
         Code code_;
             /**< The internal code representing this permutation. */
 

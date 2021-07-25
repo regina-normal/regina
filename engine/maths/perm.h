@@ -318,10 +318,11 @@ class Perm {
          */
         static constexpr OrderedSnLookup orderedSn {};
 
-    private:
+    protected:
         Code code_;
             /**< The internal code representing this permutation. */
 
+    private:
         /**
          * Internal helper routine.  This routine recursively computes the
          * private constant idCode_ at compile time.

@@ -251,7 +251,7 @@ class Perm<2> {
          */
         static constexpr S2Lookup S1 {};
 
-    private:
+    protected:
         Code code_;
             /**< The internal code representing this permutation. */
 

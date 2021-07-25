@@ -275,7 +275,7 @@ class Perm<6> {
          */
         static constexpr OrderedS6Lookup orderedS6 {};
 
-    private:
+    protected:
         Code2 code2_;
             /**< The internal second-generation permutation code
                  representing this permutation. */
