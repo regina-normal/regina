@@ -107,9 +107,9 @@ void addPerm6(pybind11::module_& m) {
         .def_static("isImagePack", &Perm<6>::isImagePack)
         .def(pybind11::self * pybind11::self)
         .def("cachedComp", overload_cast<const Perm<6>&>(
-            &Perm<6>::cachedComp))
+            &Perm<6>::cachedComp, pybind11::const_))
         .def("cachedComp", overload_cast<const Perm<6>&, const Perm<6>&>(
-            &Perm<6>::cachedComp))
+            &Perm<6>::cachedComp, pybind11::const_))
         .def("inverse", &Perm<6>::inverse)
         .def("reverse", &Perm<6>::reverse)
         .def("sign", &Perm<6>::sign)
