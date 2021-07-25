@@ -34,6 +34,8 @@
 #include "maths/perm.h"
 #include "maths/matrix.h"
 
+#define REGINA_COVERS_CACHE_INVERSES
+
 namespace regina {
 
 namespace {
@@ -259,7 +261,9 @@ size_t GroupPresentation::enumerateCoversInternal(
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
     UsePerm* rep = new UsePerm[nGenerators_];
+#ifdef REGINA_COVERS_CACHE_INVERSES
     UsePerm* repInv = new UsePerm[nGenerators_];
+#endif
 
     size_t* nAut = new size_t[nGenerators_];
     UsePerm (*aut)[maxMinimalAutGroup[index] + 1] =
@@ -281,8 +285,14 @@ size_t GroupPresentation::enumerateCoversInternal(
                         for (long i = 0; i < t.exponent; ++i)
                             comb = rep[t.generator] * comb;
                     } else if (t.exponent < 0) {
+#ifdef REGINA_COVERS_CACHE_INVERSES
                         for (long i = 0; i > t.exponent; --i)
                             comb = repInv[t.generator] * comb;
+#else
+                        UsePerm inv = rep[t.generator].inverse();
+                        for (long i = 0; i > t.exponent; --i)
+                            comb = inv * comb;
+#endif
                     }
                 }
                 if (! comb.isIdentity()) {
@@ -432,8 +442,15 @@ size_t GroupPresentation::enumerateCoversInternal(
                                         sheet = rep[t.generator][sheet];
                                     }
                                 } else if (t.exponent < 0) {
+#ifndef REGINA_COVERS_CACHE_INVERSES
+                                    UsePerm inv = rep[t.generator].inverse();
+#endif
                                     for (long i = 0; i > t.exponent; --i) {
+#ifdef REGINA_COVERS_CACHE_INVERSES
                                         sheet = repInv[t.generator][sheet];
+#else
+                                        sheet = inv[sheet];
+#endif
                                         gen = rewrite[
                                             t.generator * index + sheet];
                                         if (gen < sub.nGenerators_)
@@ -462,7 +479,9 @@ size_t GroupPresentation::enumerateCoversInternal(
         if (backtrack) {
             while (true) {
                 ++rep[pos];
+#ifdef REGINA_COVERS_CACHE_INVERSES
                 repInv[pos] = rep[pos].inverse();
+#endif
                 if (! rep[pos].isIdentity())
                     break;
                 if (pos == 0)
@@ -476,7 +495,9 @@ finished:
 
     delete[] aut;
     delete[] nAut;
+#ifdef REGINA_COVERS_CACHE_INVERSES
     delete[] repInv;
+#endif
     delete[] rep;
     delete[] relnRange;
     delete[] genRange;
