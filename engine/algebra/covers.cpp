@@ -227,6 +227,9 @@ size_t GroupPresentation::enumerateCoversInternal(
         // TODO: Hard-code this result and return.
     }
 
+    // Give ourselves scope to change to a different permutation class later.
+    typedef Perm<index> UsePerm;
+
     // Relabel and reorder generators and relations so that we can check
     // relations as early as possible and backtrack if they break.
     //
@@ -255,12 +258,12 @@ size_t GroupPresentation::enumerateCoversInternal(
     // The representative for generator i will be rep[i].
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
-    Perm<index>* rep = new Perm<index>[nGenerators_];
-    Perm<index>* repInv = new Perm<index>[nGenerators_];
+    UsePerm* rep = new UsePerm[nGenerators_];
+    UsePerm* repInv = new UsePerm[nGenerators_];
 
     size_t* nAut = new size_t[nGenerators_];
-    Perm<index> (*aut)[maxMinimalAutGroup[index] + 1] =
-        new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1];
+    UsePerm (*aut)[maxMinimalAutGroup[index] + 1] =
+        new UsePerm[nGenerators_][maxMinimalAutGroup[index] + 1];
 
     size_t pos = 0; // The generator whose current rep we are about to try.
     while (true) {
@@ -272,7 +275,7 @@ size_t GroupPresentation::enumerateCoversInternal(
         if (! backtrack) {
             for (size_t r = (pos == 0 ? 0 : relnRange[pos - 1]);
                     r < relnRange[pos]; ++r) {
-                Perm<index> comb;
+                UsePerm comb;
                 for (const auto& t : relations_[r].terms()) {
                     if (t.exponent > 0) {
                         for (long i = 0; i < t.exponent; ++i)
@@ -311,7 +314,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                             nAut[pos] = 0;
                             while (minimalAutGroup<index>[idx][nAut[pos]]
                                     >= 0) {
-                                aut[pos][nAut[pos]] = Perm<index>::Sn[
+                                aut[pos][nAut[pos]] = UsePerm::Sn[
                                     minimalAutGroup<index>[idx][nAut[pos]]];
                                 ++nAut[pos];
                             }
@@ -324,8 +327,8 @@ size_t GroupPresentation::enumerateCoversInternal(
                     // and we have their automorphism group stored.
                     nAut[pos] = 0;
                     for (int a = 0; a < nAut[pos - 1]; ++a) {
-                        Perm<index> p = aut[pos - 1][a];
-                        Perm<index> conj = p * rep[pos] * p.inverse();
+                        UsePerm p = aut[pos - 1][a];
+                        UsePerm conj = p * rep[pos] * p.inverse();
                         if (conj < rep[pos]) {
                             // Not conjugacy minimal.
                             backtrack = true;
@@ -417,7 +420,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                         for (int start = 0; start < index; ++start) {
                             GroupExpression e;
                             int sheet = start;
-                            Perm<index> p;
+                            UsePerm p;
                             unsigned long gen;
                             for (const auto& t : r.terms()) {
                                 if (t.exponent > 0) {
