@@ -43,12 +43,10 @@ namespace {
 void Perm<6>::precompute() {
     std::lock_guard<std::mutex> lock(precomputeMutex);
     if (! products_) {
-        products_ = new Code[Perm<n>::nPerms][Perm<n>::nPerms];
-        for (Code i = 0; i < Perm<n>::nPerms; ++i)
-            for (Code j = 0; j < Perm<n>::nPerms; ++j)
-                products_[i][j] =
-                    (Perm<n>::fromPermCode2(i) *
-                     Perm<n>::fromPermCode2(j)).permCode2();
+        products_ = new Code2[720][720];
+        for (Code2 i = 0; i < 720; ++i)
+            for (Code2 j = 0; j < 720; ++j)
+                products_[i][j] = (Perm<6>(i) * Perm<6>(j)).code2_;
     }
 }
 
