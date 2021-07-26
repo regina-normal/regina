@@ -53,7 +53,10 @@ void addNormalHypersurface(pybind11::module_& m) {
             return v[index];
         }, pybind11::return_value_policy::reference_internal)
         .def("set", &NormalHypersurfaceVector::set)
-        .def(pybind11::self += pybind11::self)
+        // We cannot just use pybind11::self += pybind11:;self, because
+        // in that case pybind11 seems to want to return by value.
+        .def("__iadd__", &NormalHypersurfaceVector::operator +=,
+            pybind11::return_value_policy::reference_internal)
         .def("scaleDown", &NormalHypersurfaceVector::scaleDown)
         .def("isCompact", &NormalHypersurfaceVector::isCompact)
         .def("isVertexLinking", &NormalHypersurfaceVector::isVertexLinking)
