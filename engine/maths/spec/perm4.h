@@ -1463,7 +1463,7 @@ inline constexpr Perm<4> Perm<4>::inverse() const {
     return Perm<4>(invS4[code_]);
 }
 
-constexpr Perm<4> Perm<4>::pow(long exp) const {
+inline constexpr Perm<4> Perm<4>::pow(long exp) const {
     // Maximum order is 4.
     switch (orderTable[code_]) {
         case 1:

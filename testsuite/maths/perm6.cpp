@@ -46,12 +46,14 @@ class Perm6Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(products);
+    CPPUNIT_TEST(cachedProducts);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(order);
     CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(cachedPow);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(increment);
@@ -60,6 +62,7 @@ class Perm6Test : public CppUnit::TestFixture {
 
     public:
         void setUp() {
+            Perm<6>::precompute();
         }
 
         void tearDown() {
@@ -495,6 +498,28 @@ class Perm6Test : public CppUnit::TestFixture {
             }
         }
 
+        void cachedProducts() {
+            unsigned i, j, x;
+            Perm<6> p, q, r;
+
+            for (i = 0; i < 720; ++i) {
+                p = Perm<6>::S6[i];
+                for (j = 0; j < 720; ++j) {
+                    q = Perm<6>::S6[j];
+
+                    r = p.cachedComp(q);
+                    for (x = 0; x < 6; ++x) {
+                        if (r[x] != p[q[x]]) {
+                            std::ostringstream msg;
+                            msg << "Multiplication fails for the product "
+                                << p.str() << " * " << q.str() << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
+            }
+        }
+
         void compareWith() {
             unsigned i, j;
             Perm<6> p, q;
@@ -697,6 +722,48 @@ class Perm6Test : public CppUnit::TestFixture {
                         if (! looksEqual(pow, q)) {
                             std::ostringstream msg;
                             msg << "pow(" << p << ", " << j
+                                << ") is not " << q << "." << std::endl;
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } while (j > -2 * int(p.order()));
+                }
+            }
+        }
+
+        void cachedPow() {
+            int i, j;
+            for (i = 0; i < Perm<6>::nPerms; ++i) {
+                Perm<6> p = Perm<6>::Sn[i];
+
+                if (! p.cachedPow(0).isIdentity()) {
+                    std::ostringstream msg;
+                    msg << "cachedPow(" << p << ", 0) is not the identity."
+                        << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+                {
+                    Perm<6> q;
+                    j = 0;
+                    do {
+                        Perm<6> pow = p.cachedPow(++j);
+                        q = q * p;
+                        if (! looksEqual(pow, q)) {
+                            std::ostringstream msg;
+                            msg << "cachedPow(" << p << ", " << j
+                                << ") is not " << q << "." << std::endl;
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } while (j < 2 * p.order());
+                }
+                {
+                    Perm<6> q;
+                    j = 0;
+                    do {
+                        Perm<6> pow = p.cachedPow(--j);
+                        q = q * p.inverse();
+                        if (! looksEqual(pow, q)) {
+                            std::ostringstream msg;
+                            msg << "cachedPow(" << p << ", " << j
                                 << ") is not " << q << "." << std::endl;
                             CPPUNIT_FAIL(msg.str());
                         }

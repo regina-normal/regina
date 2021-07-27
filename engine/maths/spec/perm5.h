@@ -1711,7 +1711,7 @@ inline constexpr Perm<5> Perm<5>::inverse() const {
     return Perm<5>(invS5[code2_]);
 }
 
-constexpr Perm<5> Perm<5>::pow(long exp) const {
+inline constexpr Perm<5> Perm<5>::pow(long exp) const {
     // Maximum order is 6, from cycles: (..)(...)
     // Normalise exp to be in the range ( -order/2, +order/2 ].
     int ord = order();
@@ -1726,7 +1726,10 @@ constexpr Perm<5> Perm<5>::pow(long exp) const {
         case 1: return *this;
         case -1: return inverse();
         case 2: return Perm<5>(productTable[code2_][code2_]);
-        case -2: return Perm<5>(productTable[invS5[code2_]][invS5[code2_]]);
+        case -2: {
+            Code2 inv = invS5[code2_];
+            return Perm<5>(productTable[inv][inv]);
+        }
         default /* 3 */:
             return Perm<5>(productTable[productTable[code2_][code2_]][code2_]);
     }

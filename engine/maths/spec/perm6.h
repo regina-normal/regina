@@ -289,9 +289,9 @@ class Perm<6> {
     public:
         /**
          * Performs the precomputation necessary for using the optimised
-         * cachedComp() routines.
+         * cachedComp() and cachedPow() routines.
          *
-         * This \e must be called before calling cachedComp().
+         * This \e must be called before calling cachedComp() or cachedPow().
          *
          * This only needs to be done once in the lifetime of the program.
          * If you do try to call precompute() a second time then it will
@@ -734,10 +734,50 @@ class Perm<6> {
          *
          * This routine runs in constant time.
          *
+         * For Perm<6>, this routine makes use of the "partial" product tables,
+         * which (as seen with the composition operator) require some small
+         * amount of extra computation to use.  If you need your powers to be
+         * as fast as possible, you can instead:
+         *
+         * - call precompute() to precompute a full 720-by-720 product table
+         *   in advance (this will consume roughly 1MB of memory); and then
+         *
+         * - call cachedPow() instead of pow() to make full use of this table,
+         *   which will remove some (but not all) of the mathematical overhead
+         *   from this routine.
+         *
          * @param exp the exponent; this may be positive, zero or negative.
          * @return this permutation raised to the power of \a exp.
          */
         constexpr Perm<6> pow(long exp) const;
+
+        /**
+         * Computes the given power of this permutation, using fast
+         * precomputed lookup tables.
+         *
+         * This routine runs in constant time.
+         *
+         * The advantage of this routine is speed: calling cachedPow() removes
+         * some (but not all) of the mathematical overhead required by pow().
+         *
+         * The disadvantages of this routine are that (1) you must remember
+         * to call precompute() in advance, and (2) the resulting lookup table
+         * will consume roughly 1MB of memory for the lifetime of your program.
+         * Note that this is the same lookup table used by cachedComp(), so if
+         * you are already using cachedComp() then there is no extra cost for
+         * using this routine also.
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling pow(exp).
+         *
+         * \pre You \e must have called the routine precompute() at least once
+         * in the lifetime of this program before using cachedPow().
+         * Otherwise this routine will almost certainly crash your program.
+         *
+         * @param exp the exponent; this may be positive, zero or negative.
+         * @return this permutation raised to the power of \a exp.
+         */
+        Perm<6> cachedPow(long exp) const;
 
         /**
          * Returns the order of this permutation.
@@ -3235,7 +3275,7 @@ inline constexpr Perm<6> Perm<6>::inverse() const {
     return Perm<6>(invS6[code2_]);
 }
 
-constexpr Perm<6> Perm<6>::pow(long exp) const {
+inline constexpr Perm<6> Perm<6>::pow(long exp) const {
     // Maximum order is 6, from cycles: (.)(..)(...) or (......)
     // Normalise exp to be in the range ( -order/2, +order/2 ].
     int ord = order();
@@ -3250,8 +3290,35 @@ constexpr Perm<6> Perm<6>::pow(long exp) const {
         case 1: return *this;
         case -1: return inverse();
         case 2: return (*this) * (*this);
-        case -2: return inverse() * inverse();
+        case -2: {
+            Perm<6> inv = inverse();
+            return inv * inv;
+        }
         default /* 3 */: return (*this) * (*this) * (*this);
+    }
+}
+
+inline Perm<6> Perm<6>::cachedPow(long exp) const {
+    // Maximum order is 6, from cycles: (.)(..)(...) or (......)
+    // Normalise exp to be in the range ( -order/2, +order/2 ].
+    int ord = order();
+    exp %= ord;
+    if (exp < 0)
+        exp += ord;
+    if ((exp << 1) > ord)
+        exp -= ord;
+
+    switch (exp) {
+        case 0: return Perm<6>();
+        case 1: return *this;
+        case -1: return inverse();
+        case 2: return Perm<6>(products_[code2_][code2_]);
+        case -2: {
+            Code2 inv = invS6[code2_];
+            return Perm<6>(products_[inv][inv]);
+        }
+        default /* 3 */:
+            return Perm<6>(products_[products_[code2_][code2_]][code2_]);
     }
 }
 
