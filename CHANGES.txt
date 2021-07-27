@@ -386,10 +386,12 @@ Version 6.1  [ TODO ]
         Class Perm<2>, Perm<3>:
             - New (and trivial) routine isConjugacyMinimal().
             - New ++ and < operators.
+            - New routines pow() and order().
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
             - New ++ and < operators.
+            - New routines pow() and order().
             - New constant imageBits for consistency with higher order
               permutation classes.
             - Added a new typedef Code2; this is identical to Code, but
@@ -404,6 +406,7 @@ Version 6.1  [ TODO ]
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
             - New ++ and < operators.
+            - New routines pow() and order().
             - Changed the internal representation; as a result there are new
               routines permCode2(), fromPermCode2(), setPermCode2() and
               isPermCode2(), and a new type Code2.  The old first-generation

@@ -455,6 +455,27 @@ class Perm<3> {
         constexpr Perm<3> inverse() const;
 
         /**
+         * Computes the given power of this permutation.
+         *
+         * This routine runs in constant time.
+         *
+         * @param exp the exponent; this may be positive, zero or negative.
+         * @return this permutation raised to the power of \a exp.
+         */
+        constexpr Perm<3> pow(long exp) const;
+
+        /**
+         * Returns the order of this permutation.
+         *
+         * In other words; this routine returns the smallest positive
+         * integer \a k for which the <i>k</i>th power of this
+         * permutation is the identity.
+         *
+         * @return the order of this permutation.
+         */
+        constexpr int order() const;
+
+        /**
          * Finds the reverse of this permutation.
          *
          * Here \e reverse means that we reverse the images of 0,1,2.
@@ -847,6 +868,13 @@ class Perm<3> {
             { 5, 4, 3, 2, 1, 0 }
         };
 
+        /**
+         * Contains the orders of the permutations in the array \a S3.
+         */
+        static constexpr int orderTable[6] = {
+            1, 2, 3, 2, 3, 2
+        };
+
     protected:
         /**
          * Creates a permutation from the given internal code.
@@ -960,6 +988,30 @@ inline constexpr Perm<3> Perm<3>::operator * (const Perm<3>& q) const {
 
 inline constexpr Perm<3> Perm<3>::inverse() const {
     return Perm<3>(invS3[code_]);
+}
+
+inline constexpr Perm<3> Perm<3>::pow(long exp) const {
+    if (code_ & 1) {
+        // This is a pair swap.
+        return (exp & 1 ? *this : Perm<3>());
+    } else if (code_ == 0) {
+        // This is the identity.
+        return Perm<3>();
+    } else {
+        // This is a 3-cycle.
+        switch (exp % 3) {
+            case 0:
+                return Perm<3>();
+            case 1: case -2:
+                return *this;
+            default:
+                return Perm<3>(code_ ^ 6 /* swaps 2 <-> 4 */);
+        }
+    }
+}
+
+inline constexpr int Perm<3>::order() const {
+    return orderTable[code_];
 }
 
 inline constexpr Perm<3> Perm<3>::reverse() const {

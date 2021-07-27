@@ -788,6 +788,27 @@ class Perm<4> {
         constexpr Perm<4> inverse() const;
 
         /**
+         * Computes the given power of this permutation.
+         *
+         * This routine runs in constant time.
+         *
+         * @param exp the exponent; this may be positive, zero or negative.
+         * @return this permutation raised to the power of \a exp.
+         */
+        constexpr Perm<4> pow(long exp) const;
+
+        /**
+         * Returns the order of this permutation.
+         *
+         * In other words; this routine returns the smallest positive
+         * integer \a k for which the <i>k</i>th power of this
+         * permutation is the identity.
+         *
+         * @return the order of this permutation.
+         */
+        constexpr int order() const;
+
+        /**
          * Finds the reverse of this permutation.
          *
          * Here \e reverse means that we reverse the images of 0,...,3.
@@ -1225,6 +1246,14 @@ class Perm<4> {
         };
 
         /**
+         * Contains the orders of the permutations in the array \a S4.
+         */
+        static constexpr int orderTable[24] = {
+            1, 2, 3, 2, 3, 2, 2, 2, 3, 4, 3, 4,
+            3, 4, 3, 2, 2, 4, 3, 4, 3, 2, 2, 4
+        };
+
+        /**
          * Contains the S4 indices of the elements of S3, where the
          * element 3 maps to itself.
          */
@@ -1432,6 +1461,33 @@ inline constexpr Perm<4> Perm<4>::operator *(const Perm<4>& q) const {
 
 inline constexpr Perm<4> Perm<4>::inverse() const {
     return Perm<4>(invS4[code_]);
+}
+
+constexpr Perm<4> Perm<4>::pow(long exp) const {
+    // Maximum order is 4.
+    switch (orderTable[code_]) {
+        case 1:
+            return Perm<4>();
+        case 2:
+            return (exp & 1 ? *this : Perm<4>());
+        case 3:
+            switch (exp % 3) {
+                case 0:          return Perm<4>();
+                case 1: case -2: return *this;
+                default:         return inverse();
+            }
+        default:
+            switch (exp % 4) {
+                case 0:          return Perm<4>();
+                case 1: case -3: return *this;
+                case 3: case -1: return inverse();
+                default:         return Perm<4>(productTable[code_][code_]);
+            }
+    }
+}
+
+inline constexpr int Perm<4>::order() const {
+    return orderTable[code_];
 }
 
 inline constexpr Perm<4> Perm<4>::reverse() const {

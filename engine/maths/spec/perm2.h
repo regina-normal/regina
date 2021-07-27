@@ -379,6 +379,27 @@ class Perm<2> {
         constexpr Perm<2> inverse() const;
 
         /**
+         * Computes the given power of this permutation.
+         *
+         * This routine runs in constant time.
+         *
+         * @param exp the exponent; this may be positive, zero or negative.
+         * @return this permutation raised to the power of \a exp.
+         */
+        constexpr Perm<2> pow(long exp) const;
+
+        /**
+         * Returns the order of this permutation.
+         *
+         * In other words; this routine returns the smallest positive
+         * integer \a k for which the <i>k</i>th power of this
+         * permutation is the identity.
+         *
+         * @return the order of this permutation.
+         */
+        constexpr int order() const;
+
+        /**
          * Finds the reverse of this permutation.
          *
          * Here \e reverse means that we reverse the images of 0 and 1.
@@ -748,6 +769,14 @@ inline constexpr Perm<2> Perm<2>::operator * (const Perm<2>& q) const {
 
 inline constexpr Perm<2> Perm<2>::inverse() const {
     return *this;
+}
+
+inline constexpr Perm<2> Perm<2>::pow(long exp) const {
+    return (exp & 1 ? *this : Perm<2>());
+}
+
+inline constexpr int Perm<2>::order() const {
+    return (code_ + 1);
 }
 
 inline constexpr Perm<2> Perm<2>::reverse() const {

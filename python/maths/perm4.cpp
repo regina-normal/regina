@@ -111,6 +111,8 @@ void addPerm4(pybind11::module_& m) {
         .def_static("isImagePack", &Perm<4>::isImagePack)
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Perm<4>::inverse)
+        .def("pow", &Perm<4>::pow)
+        .def("order", &Perm<4>::order)
         .def("reverse", &Perm<4>::reverse)
         .def("sign", &Perm<4>::sign)
         .def("__getitem__", &Perm<4>::operator[])

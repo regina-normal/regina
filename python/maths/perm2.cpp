@@ -89,6 +89,8 @@ void addPerm2(pybind11::module_& m) {
         .def_static("isPermCode", &Perm<2>::isPermCode)
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Perm<2>::inverse)
+        .def("pow", &Perm<2>::pow)
+        .def("order", &Perm<2>::order)
         .def("reverse", &Perm<2>::reverse)
         .def("sign", &Perm<2>::sign)
         .def("__getitem__", &Perm<2>::operator[])

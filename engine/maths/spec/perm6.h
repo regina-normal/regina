@@ -730,6 +730,27 @@ class Perm<6> {
         constexpr Perm<6> inverse() const;
 
         /**
+         * Computes the given power of this permutation.
+         *
+         * This routine runs in constant time.
+         *
+         * @param exp the exponent; this may be positive, zero or negative.
+         * @return this permutation raised to the power of \a exp.
+         */
+        constexpr Perm<6> pow(long exp) const;
+
+        /**
+         * Returns the order of this permutation.
+         *
+         * In other words; this routine returns the smallest positive
+         * integer \a k for which the <i>k</i>th power of this
+         * permutation is the identity.
+         *
+         * @return the order of this permutation.
+         */
+        constexpr int order() const;
+
+        /**
          * Finds the reverse of this permutation.
          *
          * Here \e reverse means that we reverse the images of 0,...,4.
@@ -2948,6 +2969,48 @@ class Perm<6> {
             { 633, 105, 21, 5, 1, 0 }
         };
 
+        /**
+         * Contains the orders of the permutations in the array \a S6.
+         */
+        static constexpr int orderTable[720] = {
+            1, 2, 3, 2, 3, 2, 2, 2, 3, 4, 3, 4, 3, 4, 3, 2, 2, 4, 3, 4,
+            3, 2, 2, 4, 2, 2, 2, 6, 2, 6, 3, 6, 5, 4, 5, 4, 5, 4, 3, 4,
+            5, 6, 5, 4, 3, 4, 5, 6, 3, 6, 5, 4, 5, 4, 2, 2, 3, 4, 3, 4,
+            2, 6, 5, 4, 5, 6, 2, 6, 5, 4, 5, 6, 5, 4, 3, 4, 5, 6, 3, 4,
+            3, 2, 2, 4, 5, 4, 2, 6, 5, 6, 5, 6, 5, 6, 2, 4, 5, 4, 3, 4,
+            5, 6, 3, 4, 3, 2, 2, 4, 5, 4, 2, 6, 5, 6, 5, 6, 5, 6, 2, 4,
+            2, 2, 2, 6, 2, 6, 2, 2, 4, 6, 4, 6, 4, 6, 2, 6, 4, 2, 4, 6,
+            2, 6, 4, 2, 3, 6, 3, 6, 3, 6, 4, 4, 5, 6, 5, 6, 5, 6, 5, 4,
+            4, 6, 5, 6, 5, 4, 4, 6, 4, 4, 5, 6, 5, 6, 3, 6, 5, 4, 5, 4,
+            3, 6, 5, 6, 4, 6, 3, 6, 5, 6, 4, 6, 5, 6, 5, 4, 4, 6, 5, 4,
+            3, 4, 5, 6, 5, 6, 4, 6, 3, 6, 4, 6, 3, 6, 5, 6, 5, 6, 5, 4,
+            4, 6, 5, 4, 3, 4, 5, 6, 5, 6, 4, 6, 3, 6, 4, 6, 3, 6, 5, 6,
+            3, 6, 3, 6, 3, 6, 4, 4, 5, 6, 5, 6, 5, 6, 5, 4, 4, 6, 5, 6,
+            5, 4, 4, 6, 2, 2, 2, 6, 2, 6, 3, 6, 5, 4, 5, 4, 5, 4, 3, 4,
+            5, 6, 5, 4, 3, 4, 5, 6, 2, 2, 4, 6, 4, 6, 4, 4, 5, 6, 5, 6,
+            5, 6, 4, 6, 3, 6, 5, 6, 4, 6, 3, 6, 4, 6, 2, 6, 4, 2, 5, 6,
+            5, 4, 4, 6, 3, 6, 5, 6, 4, 6, 4, 6, 3, 6, 5, 6, 4, 6, 2, 6,
+            4, 2, 5, 6, 5, 4, 4, 6, 3, 6, 5, 6, 4, 6, 4, 6, 3, 6, 5, 6,
+            4, 4, 5, 6, 5, 6, 3, 6, 5, 4, 5, 4, 3, 6, 5, 6, 4, 6, 3, 6,
+            5, 6, 4, 6, 3, 6, 5, 4, 5, 4, 2, 2, 3, 4, 3, 4, 2, 6, 5, 4,
+            5, 6, 2, 6, 5, 4, 5, 6, 4, 4, 5, 6, 5, 6, 2, 2, 4, 6, 4, 6,
+            4, 6, 5, 6, 3, 6, 4, 6, 5, 6, 3, 6, 5, 6, 3, 6, 4, 6, 4, 6,
+            5, 6, 3, 6, 2, 6, 5, 4, 5, 6, 4, 2, 4, 6, 4, 6, 5, 6, 3, 6,
+            4, 6, 4, 6, 5, 6, 3, 6, 2, 6, 5, 4, 5, 6, 4, 2, 4, 6, 4, 6,
+            5, 6, 5, 4, 4, 6, 5, 4, 3, 4, 5, 6, 5, 6, 4, 6, 3, 6, 4, 6,
+            3, 6, 5, 6, 5, 4, 3, 4, 5, 6, 3, 4, 3, 2, 2, 4, 5, 4, 2, 6,
+            5, 6, 5, 6, 5, 6, 2, 4, 5, 6, 5, 4, 4, 6, 4, 6, 2, 6, 4, 2,
+            5, 6, 3, 6, 4, 6, 3, 6, 4, 6, 5, 6, 4, 6, 5, 6, 3, 6, 5, 6,
+            3, 6, 4, 6, 5, 4, 2, 6, 5, 6, 4, 6, 4, 2, 4, 6, 3, 6, 4, 6,
+            5, 6, 3, 6, 4, 6, 5, 6, 5, 6, 5, 6, 2, 4, 4, 6, 4, 6, 4, 2,
+            5, 6, 5, 4, 4, 6, 5, 4, 3, 4, 5, 6, 5, 6, 4, 6, 3, 6, 4, 6,
+            3, 6, 5, 6, 5, 4, 3, 4, 5, 6, 3, 4, 3, 2, 2, 4, 5, 4, 2, 6,
+            5, 6, 5, 6, 5, 6, 2, 4, 5, 6, 5, 4, 4, 6, 4, 6, 2, 6, 4, 2,
+            5, 6, 3, 6, 4, 6, 3, 6, 4, 6, 5, 6, 4, 6, 5, 6, 3, 6, 5, 6,
+            3, 6, 4, 6, 5, 4, 2, 6, 5, 6, 4, 6, 4, 2, 4, 6, 3, 6, 4, 6,
+            5, 6, 3, 6, 4, 6, 5, 6, 5, 6, 5, 6, 2, 4, 4, 6, 4, 6, 4, 2
+        };
+
     protected:
         /**
          * Creates a permutation from the given second-generation
@@ -3170,6 +3233,30 @@ inline Perm<6> Perm<6>::cachedComp(const Perm<6>& q, const Perm<6>& r) const {
 
 inline constexpr Perm<6> Perm<6>::inverse() const {
     return Perm<6>(invS6[code2_]);
+}
+
+constexpr Perm<6> Perm<6>::pow(long exp) const {
+    // Maximum order is 6, from cycles: (.)(..)(...) or (......)
+    // Normalise exp to be in the range ( -order/2, +order/2 ].
+    int ord = order();
+    exp %= ord;
+    if (exp < 0)
+        exp += ord;
+    if ((exp << 1) > ord)
+        exp -= ord;
+
+    switch (exp) {
+        case 0: return Perm<6>();
+        case 1: return *this;
+        case -1: return inverse();
+        case 2: return (*this) * (*this);
+        case -2: return inverse() * inverse();
+        default /* 3 */: return (*this) * (*this) * (*this);
+    }
+}
+
+inline constexpr int Perm<6>::order() const {
+    return orderTable[code2_];
 }
 
 inline constexpr Perm<6> Perm<6>::reverse() const {

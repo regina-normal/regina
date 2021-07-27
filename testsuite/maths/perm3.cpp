@@ -52,6 +52,8 @@ class Perm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(S2);
+    CPPUNIT_TEST(order);
+    CPPUNIT_TEST(pow);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(increment);
@@ -576,6 +578,70 @@ class Perm3Test : public CppUnit::TestFixture {
                 if (Perm<2>::S2[i] != Perm<2>::contract(Perm<3>::Sn_1[i]))
                     CPPUNIT_FAIL("Contracted S2 permutations do not "
                         "match Perm<2>.");
+            }
+        }
+
+        void order() {
+            int i, j;
+            for (i = 0; i < Perm<3>::nPerms; ++i) {
+                Perm<3> p = Perm<3>::Sn[i];
+
+                j = 0;
+                Perm<3> q;
+                do {
+                    q = q * p;
+                    ++j;
+                } while (! q.isIdentity());
+
+                if (j != p.order()) {
+                    std::ostringstream msg;
+                    msg << "Permutation " << p << "^" << j << " is the "
+                        "identity, but the reported order is " << p.order()
+                        << "." << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void pow() {
+            int i, j;
+            for (i = 0; i < Perm<3>::nPerms; ++i) {
+                Perm<3> p = Perm<3>::Sn[i];
+
+                if (! p.pow(0).isIdentity()) {
+                    std::ostringstream msg;
+                    msg << "pow(" << p << ", 0) is not the identity."
+                        << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+                {
+                    Perm<3> q;
+                    j = 0;
+                    do {
+                        Perm<3> pow = p.pow(++j);
+                        q = q * p;
+                        if (! looksEqual(pow, q)) {
+                            std::ostringstream msg;
+                            msg << "pow(" << p << ", " << j
+                                << ") is not " << q << "." << std::endl;
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } while (j < 2 * p.order());
+                }
+                {
+                    Perm<3> q;
+                    j = 0;
+                    do {
+                        Perm<3> pow = p.pow(--j);
+                        q = q * p.inverse();
+                        if (! looksEqual(pow, q)) {
+                            std::ostringstream msg;
+                            msg << "pow(" << p << ", " << j
+                                << ") is not " << q << "." << std::endl;
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } while (j > -2 * int(p.order()));
+                }
             }
         }
 
