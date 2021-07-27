@@ -34,8 +34,6 @@
 #include "maths/perm.h"
 #include "maths/matrix.h"
 
-#define REGINA_COVERS_CACHE_INVERSES
-
 namespace regina {
 
 namespace {
@@ -271,9 +269,7 @@ size_t GroupPresentation::enumerateCoversInternal(
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
     Perm<index>* rep = new Perm<index>[nGenerators_];
-#ifdef REGINA_COVERS_CACHE_INVERSES
     Perm<index>* repInv = new Perm<index>[nGenerators_];
-#endif
 
     size_t* nAut = new size_t[nGenerators_];
     Perm<index> (*aut)[maxMinimalAutGroup[index] + 1] =
@@ -291,30 +287,33 @@ size_t GroupPresentation::enumerateCoversInternal(
                     r < relnRange[pos]; ++r) {
                 Perm<index> comb;
                 for (const auto& t : relations_[r].terms()) {
-                    if (t.exponent > 0) {
-                        for (long i = 0; i < t.exponent; ++i)
-                            if constexpr (cacheProducts) {
+                    // Pull out exponents +/-1, since in practice these are
+                    // common and we can avoid the (small) overhead of pow().
+                    if constexpr (cacheProducts) {
+                        switch (t.exponent) {
+                            case 1:
                                 comb = rep[t.generator].cachedComp(comb);
-                            } else {
-                                comb = rep[t.generator] * comb;
-                            }
-                    } else if (t.exponent < 0) {
-#ifdef REGINA_COVERS_CACHE_INVERSES
-                        for (long i = 0; i > t.exponent; --i)
-                            if constexpr (cacheProducts) {
+                                break;
+                            case -1:
                                 comb = repInv[t.generator].cachedComp(comb);
-                            } else {
+                                break;
+                            default:
+                                comb = rep[t.generator].cachedPow(t.exponent).
+                                    cachedComp(comb);
+                                break;
+                        }
+                    } else {
+                        switch (t.exponent) {
+                            case 1:
+                                comb = rep[t.generator] * comb;
+                                break;
+                            case -1:
                                 comb = repInv[t.generator] * comb;
-                            }
-#else
-                        Perm<index> inv = rep[t.generator].inverse();
-                        for (long i = 0; i > t.exponent; --i)
-                            if constexpr (cacheProducts) {
-                                comb = inv.cachedComp(comb);
-                            } else {
-                                comb = inv * comb;
-                            }
-#endif
+                                break;
+                            default:
+                                comb = rep[t.generator].pow(t.exponent) * comb;
+                                break;
+                        }
                     }
                 }
                 if (! comb.isIdentity()) {
@@ -469,16 +468,8 @@ size_t GroupPresentation::enumerateCoversInternal(
                                         sheet = rep[t.generator][sheet];
                                     }
                                 } else if (t.exponent < 0) {
-#ifndef REGINA_COVERS_CACHE_INVERSES
-                                    Perm<index> inv =
-                                        rep[t.generator].inverse();
-#endif
                                     for (long i = 0; i > t.exponent; --i) {
-#ifdef REGINA_COVERS_CACHE_INVERSES
                                         sheet = repInv[t.generator][sheet];
-#else
-                                        sheet = inv[sheet];
-#endif
                                         gen = rewrite[
                                             t.generator * index + sheet];
                                         if (gen < sub.nGenerators_)
@@ -507,9 +498,7 @@ size_t GroupPresentation::enumerateCoversInternal(
         if (backtrack) {
             while (true) {
                 ++rep[pos];
-#ifdef REGINA_COVERS_CACHE_INVERSES
                 repInv[pos] = rep[pos].inverse();
-#endif
                 if (! rep[pos].isIdentity())
                     break;
                 if (pos == 0)
@@ -523,9 +512,7 @@ finished:
 
     delete[] aut;
     delete[] nAut;
-#ifdef REGINA_COVERS_CACHE_INVERSES
     delete[] repInv;
-#endif
     delete[] rep;
     delete[] relnRange;
     delete[] genRange;
