@@ -72,7 +72,10 @@ void addNormalSurface(pybind11::module_& m) {
             return v[index];
         }, pybind11::return_value_policy::reference_internal)
         .def("set", &NormalSurfaceVector::set)
-        .def(pybind11::self += pybind11::self)
+        // We cannot just use pybind11::self += pybind11:;self, because
+        // in that case pybind11 seems to want to return by value.
+        .def("__iadd__", &NormalSurfaceVector::operator +=,
+            pybind11::return_value_policy::reference_internal)
         .def("scaleDown", &NormalSurfaceVector::scaleDown)
         .def("allowsAlmostNormal", &NormalSurfaceVector::allowsAlmostNormal)
         .def("allowsSpun", &NormalSurfaceVector::allowsSpun)
