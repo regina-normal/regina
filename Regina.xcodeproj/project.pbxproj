@@ -39,6 +39,9 @@
 		0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD319B7D8950085F3CC /* regina-doc-320.png */; };
 		0503DCD819B7E3AD0085F3CC /* DocumentListController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */; };
 		0503DCDB19B7E4F10085F3CC /* CensusListController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0503DCDA19B7E4F10085F3CC /* CensusListController.mm */; };
+		05048A2126B274650088C978 /* perm6.h in Headers */ = {isa = PBXBuildFile; fileRef = 05048A1F26B274650088C978 /* perm6.h */; };
+		05048A2226B274650088C978 /* perm6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05048A2026B274650088C978 /* perm6.cpp */; };
+		05048A2326B274650088C978 /* perm6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05048A2026B274650088C978 /* perm6.cpp */; };
 		0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0506EC1C19F65B43003E455B /* iPhone.storyboard */; };
 		0507C5A71C54495D00D1C86C /* eltmovedialog4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */; };
 		0507C5A81C54497200D1C86C /* eltmovedialog4.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* eltmovedialog4.h */; };
@@ -2500,6 +2503,8 @@
 		0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DocumentListController.mm; sourceTree = "<group>"; };
 		0503DCD919B7E4F10085F3CC /* CensusListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CensusListController.h; sourceTree = "<group>"; };
 		0503DCDA19B7E4F10085F3CC /* CensusListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CensusListController.mm; sourceTree = "<group>"; };
+		05048A1F26B274650088C978 /* perm6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm6.h; sourceTree = "<group>"; };
+		05048A2026B274650088C978 /* perm6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm6.cpp; sourceTree = "<group>"; };
 		0506EC1C19F65B43003E455B /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog4.cpp; sourceTree = "<group>"; };
 		0507C5A41C54494E00D1C86C /* eltmovedialog4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog4.h; sourceTree = "<group>"; };
@@ -6278,6 +6283,8 @@
 				053CAB2A1DA710FE00A92F98 /* perm4.h */,
 				052F9CEE180600FA00FAE4DF /* perm5.cpp */,
 				053CAB2B1DA710FE00A92F98 /* perm5.h */,
+				05048A2026B274650088C978 /* perm6.cpp */,
+				05048A1F26B274650088C978 /* perm6.h */,
 			);
 			path = spec;
 			sourceTree = "<group>";
@@ -7665,6 +7672,7 @@
 				054208C21DF0D2740018AB24 /* simplesurfacebundle.h in Headers */,
 				052F9F8D180600FB00FAE4DF /* kernel_prototypes.h in Headers */,
 				052FA08D180600FB00FAE4DF /* boolset.h in Headers */,
+				05048A2126B274650088C978 /* perm6.h in Headers */,
 				059D023925BB08B7004150F7 /* retriangulate.h in Headers */,
 				05B7002925AC2305003BAF5C /* automorph.h in Headers */,
 				05431F721C40F3C9009BC072 /* integer.h in Headers */,
@@ -9068,6 +9076,7 @@
 				05A066B31DFA67D50047872E /* blockedsfs.cpp in Sources */,
 				05F6D3B91C52CD5F007307F0 /* NewTri4Controller.mm in Sources */,
 				05249F411DBC1722001FE29E /* snappeatriangulation.cpp in Sources */,
+				05048A2326B274650088C978 /* perm6.cpp in Sources */,
 				052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */,
 				05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */,
 				052FA227180612DD00FAE4DF /* holonomy.c in Sources */,
@@ -10072,6 +10081,7 @@
 				052F9F6C180600FB00FAE4DF /* canonize.c in Sources */,
 				05A067141DFA68190047872E /* layeredchain.cpp in Sources */,
 				05C1BEB01DCA7CA9007C946B /* boundary8.cpp in Sources */,
+				05048A2226B274650088C978 /* perm6.cpp in Sources */,
 				05F0A0441DBF0B5E00117BFC /* simplify.cpp in Sources */,
 				05A73CA019B2EF5A0099C617 /* matrix_conversion.c in Sources */,
 				05F0A0481DBF0B5E00117BFC /* subdivide.cpp in Sources */,
