@@ -883,6 +883,17 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this will be the expression <tt>g1^2 g2</tt>.
          */
         const GroupExpression& relation(size_t index) const;
+        /**
+         * Returns the list of all relations in this group presentation.
+         *
+         * \ifacespython This routine returns a python list of copied
+         * GroupExpression objects.  In particular, modifying this
+         * list or the relations within it will not modify the group
+         * presentation from which they came.
+         *
+         * @return the list of relations.
+         */
+        const std::vector<GroupExpression>& relations() const;
 
         /**
          * Tests whether all of the relations for the group are indeed words
@@ -1880,6 +1891,11 @@ inline size_t GroupPresentation::countRelations() const {
 
 inline const GroupExpression& GroupPresentation::relation(size_t index) const {
     return relations_[index];
+}
+
+inline const std::vector<GroupExpression>& GroupPresentation::relations()
+        const {
+    return relations_;
 }
 
 inline void GroupPresentation::writeTextShort(std::ostream& out) const {

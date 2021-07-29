@@ -130,6 +130,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("countRelations", &GroupPresentation::countRelations)
         .def("relation", &GroupPresentation::relation,
             pybind11::return_value_policy::reference_internal)
+        .def("relations", &GroupPresentation::relations)
         .def("isValid", &GroupPresentation::isValid)
         .def("intelligentSimplify", &GroupPresentation::intelligentSimplify)
         .def("intelligentSimplifyDetail",
