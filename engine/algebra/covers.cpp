@@ -120,17 +120,9 @@ namespace {
     };
 }
 
-void GroupPresentation::minimaxGenerators(unsigned long* genRange) {
-    if (relations_.size() == 0) {
-        // Nothing to relabel, and the genRange array has size zero.
-        return;
-    }
-
-    if (nGenerators_ == 0) {
+void GroupPresentation::minimaxGenerators() {
+    if (relations_.size() == 0 || nGenerators_ == 0) {
         // Nothing to relabel.
-        // We do need to note that every relation uses no generators at all.
-        if (genRange)
-            std::fill(genRange, genRange + relations_.size(), 0);
         return;
     }
 
@@ -189,8 +181,14 @@ void GroupPresentation::minimaxGenerators(unsigned long* genRange) {
                 ++gensUsed;
             }
 
-        if (genRange)
-            genRange[rowsUsed] = gensUsed;
+        // If relation #rowsUsed is empty, then gensUsed == 0.
+        // If relation #rowsUsed is non-empty, then the highest numbered
+        // generator that it uses is now precisely (gensUsed-1).
+        // Cycle the relation around so that its last term uses its
+        // highest numbered generator.
+        if (gensUsed)
+            while (relations_[useRow].terms().last().generator != gensUsed - 1)
+                relations_[useRow].cycleLeft();
     }
 
     // Now do the actual relabelling.

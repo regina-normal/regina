@@ -1692,17 +1692,16 @@ class GroupPresentation : public Output<GroupPresentation> {
          * precise algorithm (and hence the precise reordering/relabelling)
          * is subject to change in future versions of Regina.
          *
-         * If the argument \a genRange is non-null, then this array will
-         * be filled so that genRange[i] is one more than the maximum
-         * generator label that appears amongst all relations 0,...,<i>i</i>
-         * after the relabelling has taken place.
+         * It is guaranteed that, after this routine finishes, the maximum
+         * generator label used in each relation is a (non-strict) monotonic
+         * increasing function of the relation number (with all empty
+         * relations appearing at the beginning of the relation list).
          *
-         * @param genRange an array whose size is at least the number of
-         * relations, which will be filled as described above.  The contents
-         * of this array will be ignored, and will be overwritten.
-         * This argument may be \c null if you do not need this data.
+         * This routine will also cycle the relations around so that
+         * the last term of each relation uses the relation's corresponding
+         * maximum generator label.
          */
-        void minimaxGenerators(unsigned long* genRange = nullptr);
+        void minimaxGenerators();
 };
 
 /**
