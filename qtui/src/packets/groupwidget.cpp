@@ -182,15 +182,13 @@ void GroupWidget::refresh(const regina::GroupPresentation* group) {
     fundRels_->clear();
     if (alphabetic) {
         // Generators are a, b, ...
-        for (long i = 0; i < nRels; ++i) {
+        for (const auto& r : group_->relations()) {
             QString rel;
-            const std::list<regina::GroupExpressionTerm>& terms(
-                group_->relation(i).terms());
+            const std::list<regina::GroupExpressionTerm>& terms(r.terms());
             if (terms.empty())
                 rel = "1";
             else {
-                std::list<regina::GroupExpressionTerm>::const_iterator it;
-                for (it = terms.begin(); it != terms.end(); ++it) {
+                for (auto it = terms.begin(); it != terms.end(); ++it) {
                     if (it != terms.begin())
                         rel += ' ';
                     if (it->exponent == 0)
@@ -212,9 +210,8 @@ void GroupWidget::refresh(const regina::GroupPresentation* group) {
     } else {
         // Generators are g0, g1, ...
         // This is the default text that comes from the calculation engine.
-        for (long i = 0; i < nRels; ++i)
-            new QListWidgetItem(QString(group_->relation(i).str().c_str()),
-                fundRels_);
+        for (const auto& r : group_->relations())
+            new QListWidgetItem(QString(r.str().c_str()), fundRels_);
     }
 }
 

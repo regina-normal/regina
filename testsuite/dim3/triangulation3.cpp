@@ -1981,13 +1981,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             size_t rel = pi1->countRelations();
 
             regina::MatrixInt m(rel, gen);
-            size_t i, j;
-            for (i = 0; i < rel; ++i) {
+            for (size_t i = 0; i < rel; ++i) {
                 const regina::GroupExpression& r = pi1->relation(i);
-                for (j = 0; j < r.countTerms(); ++j) {
-                    const regina::GroupExpressionTerm& t = r.term(j);
+                for (const auto& t : r.terms())
                     m.entry(i, t.generator) += t.exponent;
-                }
             }
             delete pi1;
 

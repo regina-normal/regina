@@ -318,12 +318,9 @@ void GAPRunner::processOutput(const QString& output) {
 }
 
 QString GAPRunner::origGroupRelns() {
-    unsigned long nRels = origGroup.countRelations();
     bool empty = true;
-
     QString ans = "[ ";
-    for (unsigned long i = 0; i < nRels; i++) {
-        const regina::GroupExpression& reln(origGroup.relation(i));
+    for (const auto& reln : origGroup.relations()) {
         if (reln.terms().empty())
             continue;
 
@@ -334,7 +331,6 @@ QString GAPRunner::origGroupRelns() {
         empty = false;
     }
     ans += " ]";
-
     return ans;
 }
 

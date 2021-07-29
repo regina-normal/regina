@@ -265,16 +265,14 @@ bool HomGroupPresentation::invert() {
     return false;
 }
 
-bool HomGroupPresentation::verify() const
-{
- for (unsigned long i=0; i<domain_.countRelations(); i++)
-  {
-   const GroupExpression& reli( domain_.relation(i) );
-   GroupExpression imgRel( evaluate(reli) );
-   range_.simplifyWord(imgRel);
-   if (!imgRel.isTrivial()) return false;
-  }
- return true;
+bool HomGroupPresentation::verify() const {
+    for (const auto& r : domain_.relations()) {
+        GroupExpression imgRel( evaluate(r) );
+        range_.simplifyWord(imgRel);
+        if (!imgRel.isTrivial())
+            return false;
+    }
+    return true;
 }
 
 bool HomGroupPresentation::verifyIsomorphism() const
