@@ -118,6 +118,279 @@ namespace {
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
     };
+
+    struct TermData {
+        long gen;
+        long exp;
+
+        TermData() = default;
+        TermData(const TermData&) = default;
+        TermData(TermData&&) = default;
+        TermData& operator = (const TermData&) = default;
+        TermData& operator = (TermData&&) = default;
+
+        bool operator < (const TermData& rhs) const {
+            return gen < rhs.gen || (gen == rhs.gen && exp < rhs.exp);
+        }
+    };
+
+    struct ExpressionData {
+        std::vector<TermData> terms;
+
+        ExpressionData() = default;
+        ExpressionData(const ExpressionData&) = default;
+        ExpressionData(ExpressionData&&) = default;
+        ExpressionData& operator = (const ExpressionData&) = default;
+        ExpressionData& operator = (ExpressionData&&) = default;
+
+        void swap(ExpressionData& rhs) {
+            terms.swap(rhs.terms);
+        }
+
+        bool singleTerm() const {
+            return terms.size() == 1 && terms.front().exp == 1;
+        }
+
+        bool operator < (const ExpressionData& rhs) const {
+            return terms.size() < rhs.terms.size() ||
+                (terms.size() == rhs.terms.size() && terms < rhs.terms);
+        }
+    };
+
+    struct Formula {
+        std::vector<TermData> terms;
+        bool isRelation;
+
+        Formula() = default;
+        Formula(const Formula&) = default;
+        Formula(Formula&&) = default;
+        Formula& operator = (const Formula&) = default;
+        Formula& operator = (Formula&&) = default;
+    };
+
+    template <int index>
+    struct RelationScheme {
+        size_t nGen;
+        std::vector<Formula> formulae;
+        size_t* compCount; // length nGenerators + 1
+        Perm<index>* rep;
+        Perm<index>* computed;
+
+        // Do we want to use precomputed product tables that are generated
+        // at runtime?
+        //
+        // Note that for index <= 5 the Perm<index> class already uses lookup
+        // tables out-of-the-box and so there is no need for us to manage this
+        // ourselves here.  For index >= 7 the Perm<index> class does not (yet)
+        // have a runtime precomputation facility built in.
+        static constexpr bool cacheProducts = (index == 6);
+
+        RelationScheme(const GroupPresentation& g) {
+            if constexpr (cacheProducts) {
+                Perm<index>::precompute();
+            }
+
+            nGen = g.countGenerators();
+            compCount = new size_t[nGen + 1];
+
+            long nSeen = nGen;
+
+            // Work out all the pieces we need to compute.
+            // Initially we will give these temporary indices;
+            // everything will be reindexed later when we have decided
+            // on an order of computation.
+            //
+            // As we walk through each relation, currExp[i] holds the
+            // maximum length sub-expression ending at the current
+            // position, using only generators of index <= i, and
+            // *excluding* all trailing terms with generators of index < i.
+            //
+            ExpressionData* currExp = new ExpressionData[nGen];
+
+            std::map<ExpressionData, std::pair<long, bool>>* foundExp =
+                new std::map<ExpressionData, std::pair<long, bool>>[nGen];
+
+            long depth;
+            for (const auto& r : g.relations()) {
+                depth = nGen; // the last generator seen
+                long prev;
+
+                for (const auto& t : r.terms()) {
+                    if (t.generator < depth) {
+                        depth = t.generator;
+                        currExp[depth].terms.push_back({ depth, t.exponent });
+                    } else {
+                        while (depth < t.generator) {
+                            if (currExp[depth].singleTerm()) {
+                                prev = currExp[depth].terms.front().gen;
+                                currExp[depth].terms.clear();
+                            } else {
+                                // We use a swap and a move to avoid a
+                                // deep copy of currExp[depth].
+                                // A side-effect is that this clears out
+                                // currExp[depth].terms (which we want to do).
+                                ExpressionData tmp;
+                                tmp.swap(currExp[depth]);
+                                auto result = foundExp[depth].emplace(
+                                    std::move(tmp),
+                                    std::make_pair(nSeen, false));
+                                if (result.second) {
+                                    // This was a new term that we
+                                    // hadn't seen before.
+                                    prev = nSeen++;
+                                } else {
+                                    // We already have plans to compute
+                                    // this same expression.
+                                    // Fetch its corresponding index.
+                                    prev = result.first->second.first;
+                                }
+                            }
+                            ++depth;
+                            currExp[depth].terms.push_back({ prev, 1 });
+                        }
+                        currExp[depth].terms.push_back({ depth, t.exponent });
+                    }
+                }
+
+                // We are guaranteed that the last term in the relation uses
+                // the highest generator index that appears in the relation.
+                //
+                // This means that currExp[depth] is the entire relation.
+                //
+                // Again we use a swap and a move to avoid a deep copy
+                // of currExp[depth], and this also clears currExp[depth].terms.
+                ExpressionData tmp;
+                tmp.swap(currExp[depth]);
+                auto result = foundExp[depth].emplace(std::move(tmp),
+                    std::make_pair(nSeen, true));
+                if (result.second)
+                    ++nSeen;
+                else {
+                    // We already have plans to compute this same expression.
+                    // Mark it as a relation.
+                    result.first->second.second = true;
+                }
+            }
+
+            // Reindex all the expressions, using the order that has been
+            // generated by the maps, in order of increasing depth.
+            // Note that, by construction, each expression only uses other
+            // expressions at a lower depth, which means with smaller indices.
+            long* reindex = new long[nSeen];
+            long newIndex = nGen;
+            for (depth = 0; depth < nGen; ++depth)
+                for (const auto& exp : foundExp[depth])
+                    reindex[exp.second.first] = newIndex++;
+            for (depth = 0; depth < nGen; ++depth) {
+                for (auto& exp : foundExp[depth]) {
+                    Formula f;
+                    f.terms.reserve(exp.first.terms.size());
+                    for (auto& t : exp.first.terms)
+                        if (t.gen < nGen)
+                            f.terms.push_back(t);
+                        else
+                            f.terms.push_back({ reindex[t.gen], t.exp });
+                    f.isRelation = exp.second.second;
+                    formulae.push_back(std::move(f));
+                }
+            }
+
+            compCount[0] = 0;
+            for (depth = 0; depth < nGen; ++depth)
+                compCount[depth + 1] = compCount[depth] +
+                    foundExp[depth].size();
+
+            delete[] reindex;
+            delete[] foundExp;
+            delete[] currExp;
+
+            rep = new Perm<index>[nGen];
+            computed = new Perm<index>[compCount[nGen]];
+        }
+        ~RelationScheme() {
+            delete[] compCount;
+            delete[] rep;
+            delete[] computed;
+        }
+        bool computePiece(size_t piece) {
+            // 0 <= piece < compCount[nGen]
+            // Compute and cache one individual piece.
+            // Return false if it is a relation and not identity.
+            Perm<index> comb;
+            for (const auto& t : formulae[piece].terms) {
+                Perm<index> gen = (t.gen < nGen ?
+                    rep[t.gen] : computed[t.gen - nGen]);
+                // Pull out exponents +/-1, since in practice these are
+                // common and we can avoid the (small) overhead of pow().
+                if constexpr (cacheProducts) {
+                    switch (t.exp) {
+                        case 1:
+                            comb = gen.cachedComp(comb);
+                            break;
+                        case -1:
+                            comb = gen.inverse().cachedComp(comb);
+                            break;
+                        default:
+                            comb = gen.cachedPow(t.exp).cachedComp(comb);
+                            break;
+                    }
+                } else {
+                    switch (t.exp) {
+                        case 1:
+                            comb = gen * comb;
+                            break;
+                        case -1:
+                            comb = gen.inverse() * comb;
+                            break;
+                        default:
+                            comb = gen.pow(t.exp) * comb;
+                            break;
+                    }
+                }
+            }
+            if (formulae[piece].isRelation && ! comb.isIdentity())
+                return false;
+            else {
+                computed[piece] = comb;
+                return true;
+            }
+        }
+
+        bool computeFor(size_t gen) {
+            // 0 <= n < nGen
+            for (size_t i = compCount[gen]; i < compCount[gen + 1]; ++i)
+                if (! computePiece(i))
+                    return false;
+            return true;
+        }
+        void dump(std::ostream& out) {
+            // If the total number of generators and computed pieces exceeds 26,
+            // this routine will (in its current form) output junk (since it
+            // outputs alphabetic generator symbols).  Since this is a private
+            // routine that is never called, we will leave it like this for now.
+            out << "#gen: " << nGen << std::endl;
+            out << "compCount:";
+            for (int i = 0; i <= nGen; ++i)
+                out << ' ' << compCount[i];
+            out << std::endl;
+
+            out << "Formulae:" << std::endl;
+            for (int i = 0; i < compCount[nGen]; ++i) {
+                out << char('a' + nGen + i);
+                if (formulae[i].isRelation)
+                    out << "[*]";
+                out << " :=";
+                for (const auto& t : formulae[i].terms) {
+                    out << ' ';
+                    if (t.exp == 1)
+                        out << char('a' + t.gen);
+                    else
+                        out << char('a' + t.gen) << '^' << t.exp;
+                }
+                out << std::endl;
+            }
+        }
+    };
 }
 
 void GroupPresentation::minimaxGenerators() {
@@ -194,7 +467,8 @@ void GroupPresentation::minimaxGenerators() {
         // now precisely (gensUsed-1).
         // Cycle the relation around so that its last term uses its
         // highest numbered generator.
-        while (relations_[rowsUsed].terms().last().generator != gensUsed - 1)
+        while (relations_[rowsUsed].terms().back().generator !=
+                relabelInv[gensUsed - 1])
             relations_[rowsUsed].cycleLeft();
     }
 
@@ -232,49 +506,18 @@ size_t GroupPresentation::enumerateCoversInternal(
         // TODO: Hard-code this result and return.
     }
 
-    // Do we want to use precomputed product tables that are generated
-    // at runtime?
-    //
-    // Note that for index <= 5 the Perm<index> class already uses lookup
-    // tables out-of-the-box and so there is no need for us to manage this
-    // ourselves here.  For index >= 7 the Perm<index> class does not (yet)
-    // have a runtime precomputation facility built in.
-    static constexpr bool cacheProducts = (index == 6);
-
-    if constexpr (cacheProducts) {
-        Perm<6>::precompute();
-    }
-
     // Relabel and reorder generators and relations so that we can check
     // relations as early as possible and backtrack if they break.
-    //
-    // The minimaxGenerators function will fill the genRange array with
-    // information on how many generators are used after each relation
-    // is brought into the overall collection.
-    unsigned long* genRange = (relations_.empty() ? nullptr :
-        new unsigned long[relations_.size()]);
-    minimaxGenerators(genRange);
+    minimaxGenerators();
 
-    // Work out how many of the initial relations contain only generators
-    // 0..g inclusive, for each g.
-    size_t* relnRange = new size_t[nGenerators_];
-    if (relations_.empty())
-        std::fill(relnRange, relnRange + nGenerators_, 0);
-    else {
-        size_t r = 0;
-        for (unsigned long g = 0; g < nGenerators_; ++g) {
-            while (r < relations_.size() && genRange[r] <= g + 1)
-                ++r;
-            relnRange[g] = r;
-        }
-    }
+    // Make a plan for how we will incrementally test consistency with
+    // the group relations.
+    RelationScheme<index> scheme(*this);
 
     // Prepare to choose an S(index) representative for each generator.
-    // The representative for generator i will be rep[i].
+    // The representative for generator i will be scheme.rep[i].
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
-    Perm<index>* rep = new Perm<index>[nGenerators_];
-    Perm<index>* repInv = new Perm<index>[nGenerators_];
 
     size_t* nAut = new size_t[nGenerators_];
     Perm<index> (*aut)[maxMinimalAutGroup[index] + 1] =
@@ -288,44 +531,8 @@ size_t GroupPresentation::enumerateCoversInternal(
         // yet checked, and that containly only generators whose reps
         // have been chosen so far.
         if (! backtrack) {
-            for (size_t r = (pos == 0 ? 0 : relnRange[pos - 1]);
-                    r < relnRange[pos]; ++r) {
-                Perm<index> comb;
-                for (const auto& t : relations_[r].terms()) {
-                    // Pull out exponents +/-1, since in practice these are
-                    // common and we can avoid the (small) overhead of pow().
-                    if constexpr (cacheProducts) {
-                        switch (t.exponent) {
-                            case 1:
-                                comb = rep[t.generator].cachedComp(comb);
-                                break;
-                            case -1:
-                                comb = repInv[t.generator].cachedComp(comb);
-                                break;
-                            default:
-                                comb = rep[t.generator].cachedPow(t.exponent).
-                                    cachedComp(comb);
-                                break;
-                        }
-                    } else {
-                        switch (t.exponent) {
-                            case 1:
-                                comb = rep[t.generator] * comb;
-                                break;
-                            case -1:
-                                comb = repInv[t.generator] * comb;
-                                break;
-                            default:
-                                comb = rep[t.generator].pow(t.exponent) * comb;
-                                break;
-                        }
-                    }
-                }
-                if (! comb.isIdentity()) {
-                    backtrack = true;
-                    break;
-                }
-            }
+            if (! scheme.computeFor(pos))
+                backtrack = true;
         }
 
         // Check that the reps are conjugacy minimal, so far.
@@ -336,15 +543,16 @@ size_t GroupPresentation::enumerateCoversInternal(
                     // Currently the automorphism group for the entire
                     // set of reps chosen before now is all of S_index.
                     // This means that rep[pos] needs to be conjugacy minimal.
-                    if (rep[pos].isConjugacyMinimal()) {
-                        if (rep[pos].isIdentity()) {
+                    if (scheme.rep[pos].isConjugacyMinimal()) {
+                        if (scheme.rep[pos].isIdentity()) {
                             // The automorphism group remains all of S_index.
                             nAut[pos] = 0;
                         } else {
                             // Set up the automorphism group for this rep
                             // by explicitly listing the automorphisms.
                             int idx = 0;
-                            while (allMinimalPerms[idx] != rep[pos].SnIndex())
+                            while (allMinimalPerms[idx] !=
+                                    scheme.rep[pos].SnIndex())
                                 ++idx;
 
                             nAut[pos] = 0;
@@ -365,16 +573,16 @@ size_t GroupPresentation::enumerateCoversInternal(
                     Perm<index> conj;
                     for (int a = 0; a < nAut[pos - 1]; ++a) {
                         Perm<index> p = aut[pos - 1][a];
-                        if constexpr (cacheProducts) {
-                            conj = p.cachedComp(rep[pos], p.inverse());
+                        if constexpr (RelationScheme<index>::cacheProducts) {
+                            conj = p.cachedComp(scheme.rep[pos], p.inverse());
                         } else {
-                            conj = p * rep[pos] * p.inverse();
+                            conj = p * scheme.rep[pos] * p.inverse();
                         }
-                        if (conj < rep[pos]) {
+                        if (conj < scheme.rep[pos]) {
                             // Not conjugacy minimal.
                             backtrack = true;
                             break;
-                        } else if (conj == rep[pos]) {
+                        } else if (conj == scheme.rep[pos]) {
                             // This remains part of our automorphism
                             // group going forwards.
                             aut[pos][nAut[pos]++] = p;
@@ -417,7 +625,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                 while (nFound < index && stackSize > 0) {
                     int from = stack[--stackSize];
                     for (unsigned long i = 0; i < nGenerators_; ++i) {
-                        int to = rep[i][from];
+                        int to = scheme.rep[i][from];
                         if (! seen[to]) {
                             seen[to] = true;
                             stack[stackSize++] = to;
@@ -470,11 +678,12 @@ size_t GroupPresentation::enumerateCoversInternal(
                                             t.generator * index + sheet];
                                         if (gen < sub.nGenerators_)
                                             e.addTermLast(gen, 1);
-                                        sheet = rep[t.generator][sheet];
+                                        sheet = scheme.rep[t.generator][sheet];
                                     }
                                 } else if (t.exponent < 0) {
                                     for (long i = 0; i > t.exponent; --i) {
-                                        sheet = repInv[t.generator][sheet];
+                                        sheet = scheme.rep[t.generator]
+                                            .preImageOf(sheet);
                                         gen = rewrite[
                                             t.generator * index + sheet];
                                         if (gen < sub.nGenerators_)
@@ -502,9 +711,8 @@ size_t GroupPresentation::enumerateCoversInternal(
 
         if (backtrack) {
             while (true) {
-                ++rep[pos];
-                repInv[pos] = rep[pos].inverse();
-                if (! rep[pos].isIdentity())
+                ++scheme.rep[pos];
+                if (! scheme.rep[pos].isIdentity())
                     break;
                 if (pos == 0)
                     goto finished;
@@ -517,10 +725,6 @@ finished:
 
     delete[] aut;
     delete[] nAut;
-    delete[] repInv;
-    delete[] rep;
-    delete[] relnRange;
-    delete[] genRange;
     return nReps;
 }
 
