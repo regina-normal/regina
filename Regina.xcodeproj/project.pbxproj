@@ -8154,9 +8154,6 @@
 				050F5E701B9BD50C00C1F681 /* Copy Engine and Utilities */,
 				052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */,
 				057ED8FC2581B49E004F0068 /* Embed Frameworks */,
-				052DB59E1D9E587C00EDEA68 /* Sign Utilities */,
-				0514CAE31D9C9A5800EDB2E6 /* Sign Qt */,
-				05B9295C259C148700A4503B /* Prepare and Sign Python */,
 			);
 			buildRules = (
 				0514CAF01D9CE54A00EDB2E6 /* PBXBuildRule */,
@@ -8313,7 +8310,6 @@
 						ProvisioningStyle = Automatic;
 					};
 					0564A1DE1811D6F8002CC2AE = {
-						DevelopmentTeam = 67JTSH67LZ;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
@@ -8429,20 +8425,6 @@
 			shellPath = /bin/sh;
 			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py sageSetup.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
 		};
-		0514CAE31D9C9A5800EDB2E6 /* Sign Qt */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Sign Qt";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n/usr/bin/codesign --force --sign 'Apple Development:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
-		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -8456,20 +8438,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ninstall_name_tool -change @rpath/libgmp.dylib @loader_path/../../../Frameworks/libgmp.dylib \"${module}\"\ninstall_name_tool -change @rpath/libgmpxx.dylib @loader_path/../../../Frameworks/libgmpxx.dylib \"${module}\"\ninstall_name_tool -change @rpath/libjansson.dylib @loader_path/../../../Frameworks/libjansson.dylib \"${module}\"\ninstall_name_tool -change @rpath/libtokyocabinet.dylib @loader_path/../../../Frameworks/libtokyocabinet.dylib \"${module}\"\n\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
-		};
-		052DB59E1D9E587C00EDEA68 /* Sign Utilities */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Sign Utilities";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in censuslookup dgt regconcat regconvert regfiledump regfiletype retriangulate sigcensus tricensus trisetcmp; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8559,24 +8527,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  # Assume we are bundled our own python3.\n  pyx=\"-py3\"\nelse\n  # We are working with the system python, which\n  # we assume is python2.\n  pyx=\"-py2\"\nfi\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.{py,session}; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
-		};
-		05B9295C259C148700A4503B /* Prepare and Sign Python */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Prepare and Sign Python";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "# We have work to do if we bundle our own copy of Python.\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  fwDir=\"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/${REGINA_PYTHON_FRAMEWORK}.framework\n  versionPath=`find \"$fwDir\"/Versions -type d -depth 1`\n  version=`basename \"$versionPath\"`\n  \n  # Sanity checks:\n  if [ ! -e \"$versionPath/${REGINA_PYTHON_FRAMEWORK}\" ]; then\n    echo \"ERROR: Missing framework library from $versionPath\"\n    exit 1\n  fi\n  if [ ! -d \"$versionPath/Resources/Python.app\" ]; then\n    echo \"ERROR: Missing Python.app from $versionPath\"\n    exit 1\n  fi\n  \n  # Remove the broken symlink to headers that Xcode removed.\n  if [ -d \"$versionPath\"/include ]; then\n    rm \"$versionPath\"/include/python$version\n    rmdir \"$versionPath\"/include\n  fi\n  \n  # Change the Python bundle IDs to be specific to Regina.\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Info.plist\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Python.app/Contents/Info.plist\n  \n  # From here on we re-sign *everything* with our own signature,\n  # inside-out, one file at a time.\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/${REGINA_PYTHON_FRAMEWORK}\n\n  # Executables need hardened runtime (for website distribution)\n  # and sandboxing (for App Store distribution).\n  for i in bin/python$version Resources/Python.app/Contents/MacOS/Python; do\n    file=\"$versionPath\"/$i\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --prefix net.sourceforge.regina.py. \\\n      --entitlements \"${SRCROOT}\"/python/bundle/Python.entitlements \\\n      --options runtime \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  for file in \"$versionPath\"/lib/python$version/lib-dynload/*.so; do\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --preserve-metadata=identifier,entitlements \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  # Strip out some problematic things if we are sandboxed:\n  if ( grep sandbox \"${SRCROOT}\"/python/bundle/Python.entitlements >/dev/null ); then\n    # .../bin/pythonX.Y will crash. We don't need it anyway, and we\n    # shouldn't pretend to offer the user a generic python that is sandboxed.\n    if [ -d \"$versionPath\"/bin ]; then\n      rm \"$versionPath\"/bin/python*\n      rm \"$versionPath\"/bin/pydoc*\n      rm \"$versionPath\"/bin/2to3*\n      rmdir \"$versionPath\"/bin\n    fi\n    \n    # Remove modules that contain \"private API calls\" that Apple disallows:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_curses.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_curses_panel.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_tkinter.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_lzma.*\n    rm -rf \"$versionPath\"/lib/python$version/curses\n    rm -rf \"$versionPath\"/lib/python$version/tkinter\n    rm -f \"$versionPath\"/lib/python$version/lzma.py\n    \n    # Remove SSL so we are not exporting encryption:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_ssl.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_hashlib.*\n    rm -f \"$versionPath\"/lib/python$version/ssl.py\n    rm -f \"$versionPath\"/lib/python$version/hashlib.py\n    \n    # Remove readline, which locks up in a sandboxed environment:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/readline.*\n  fi\n\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --options runtime \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/Resources/Python.app\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"\nfi\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -11327,10 +11277,10 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 6.1.0;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -11380,10 +11330,10 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 6.1.0;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
