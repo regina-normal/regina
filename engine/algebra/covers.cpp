@@ -167,28 +167,35 @@ void GroupPresentation::minimaxGenerators() {
             relations_[useRow].swap(relations_[rowsUsed]);
         }
 
-        // Make plans to relabel those previously-unseen generators that
-        // appear in useRow to use the next available generator labels.
-        for (size_t g = gensUsed; g < nGenerators_; ++g)
-            if (inc.entry(rowsUsed, relabelInv[g])) {
-                // Whatever was being relabelled to g should now be
-                // relabelled to gensUsed.
-                if (g != gensUsed) {
-                    std::swap(relabelInv[g], relabelInv[gensUsed]);
-                    std::swap(relabel[relabelInv[g]],
-                        relabel[relabelInv[gensUsed]]);
-                }
-                ++gensUsed;
-            }
+        if (gensUsed == 0 && best == 0) {
+            // This relation is empty (as are all those above it).
+            continue;
+        }
 
-        // If relation #rowsUsed is empty, then gensUsed == 0.
-        // If relation #rowsUsed is non-empty, then the highest numbered
-        // generator that it uses is now precisely (gensUsed-1).
+        // This relation is non-empty (as are all those below it).
+        if (best > 0) {
+            // This relation brings in new, previously unseen generator(s).
+            // Make plans to relabel those new generators to use the
+            // next available generator labels.
+            for (size_t g = gensUsed; g < nGenerators_; ++g)
+                if (inc.entry(rowsUsed, relabelInv[g])) {
+                    // Whatever was being relabelled to g should now be
+                    // relabelled to gensUsed.
+                    if (g != gensUsed) {
+                        std::swap(relabelInv[g], relabelInv[gensUsed]);
+                        std::swap(relabel[relabelInv[g]],
+                            relabel[relabelInv[gensUsed]]);
+                    }
+                    ++gensUsed;
+                }
+        }
+
+        // The highest numbered generator that relation #rowsUsed uses is
+        // now precisely (gensUsed-1).
         // Cycle the relation around so that its last term uses its
         // highest numbered generator.
-        if (gensUsed)
-            while (relations_[useRow].terms().last().generator != gensUsed - 1)
-                relations_[useRow].cycleLeft();
+        while (relations_[rowsUsed].terms().last().generator != gensUsed - 1)
+            relations_[rowsUsed].cycleLeft();
     }
 
     // Now do the actual relabelling.
