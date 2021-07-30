@@ -130,6 +130,25 @@ namespace {
         Formula& operator = (const Formula&) = default;
         Formula& operator = (Formula&&) = default;
 
+        void tryReplace(const Formula& inner, unsigned long index) {
+            if (inner.terms.size() == 0)
+                return;
+
+            size_t from = 0;
+            while (from + inner.terms.size() <= terms.size()) {
+                if (std::equal(inner.terms.begin(), inner.terms.end(),
+                        terms.begin() + from)) {
+                    if (inner.terms.size() > 1) {
+                        std::move(terms.begin() + from + inner.terms.size(),
+                            terms.end(), terms.begin() + from + 1);
+                        terms.resize(terms.size() + 1 - inner.terms.size());
+                    }
+                    terms[from] = { index, 1 };
+                }
+                ++from;
+            }
+        }
+
         struct Compare {
             bool operator ()(const Formula& a, const Formula& b) const {
                 if (a.isRelation && ! b.isRelation)
@@ -274,7 +293,6 @@ namespace {
                     reindex[exp.second] = newIndex++;
             }
             for (depth = 0; depth < nGen; ++depth) {
-                // Again: relations first.
                 for (auto& exp : foundExp[depth]) {
                     Formula f(exp.first.isRelation);
                     f.terms.reserve(exp.first.terms.size());
@@ -292,6 +310,18 @@ namespace {
             for (depth = 0; depth < nGen; ++depth)
                 compCount[depth + 1] = compCount[depth] +
                     foundExp[depth].size();
+
+            // See if we can use earlier relations in the computations
+            // of later ones.  Work from longer relations down to shorter,
+            // since we want to make sure we can do big substitutions if
+            // any are possible.
+            long outer, inner;
+            for (outer = static_cast<long>(formulae.size()) - 1; outer >= 0;
+                    --outer) {
+                for (inner = outer - 1; inner >= 0; --inner) {
+                    formulae[outer].tryReplace(formulae[inner], inner + nGen);
+                }
+            }
 
             delete[] reindex;
             delete[] foundExp;
