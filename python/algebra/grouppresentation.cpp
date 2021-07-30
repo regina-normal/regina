@@ -178,6 +178,7 @@ void addGroupPresentation(pybind11::module_& m) {
                 "2 and 6 inclusive.");
             return 0;
         })
+        .def("incidence", &GroupPresentation::incidence)
         .def("toTeX", &GroupPresentation::toTeX)
         .def("compact", &GroupPresentation::compact)
         .def("writeTeX", [](const GroupPresentation& p) {

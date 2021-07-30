@@ -148,6 +148,7 @@ Version 6.1  [ TODO ]
             - Added member and global swap() functions.
         Class GroupPresentation:
             - Added new routine enumerateCovers().
+            - Added new routine incidence().
             - Added move constructors and move assignment operators.
             - New constructor to create free groups.
             - Functions abelianisation() and markedAbelianisation() now
