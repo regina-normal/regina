@@ -119,29 +119,6 @@ namespace {
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
     };
 
-    struct ExpressionData {
-        std::vector<GroupExpressionTerm> terms;
-
-        ExpressionData() = default;
-        ExpressionData(const ExpressionData&) = default;
-        ExpressionData(ExpressionData&&) = default;
-        ExpressionData& operator = (const ExpressionData&) = default;
-        ExpressionData& operator = (ExpressionData&&) = default;
-
-        void swap(ExpressionData& rhs) {
-            terms.swap(rhs.terms);
-        }
-
-        bool singleTerm() const {
-            return terms.size() == 1 && terms.front().exponent == 1;
-        }
-
-        bool operator < (const ExpressionData& rhs) const {
-            return terms.size() < rhs.terms.size() ||
-                (terms.size() == rhs.terms.size() && terms < rhs.terms);
-        }
-    };
-
     struct Formula {
         std::vector<GroupExpressionTerm> terms;
         bool isRelation;
@@ -151,6 +128,13 @@ namespace {
         Formula(Formula&&) = default;
         Formula& operator = (const Formula&) = default;
         Formula& operator = (Formula&&) = default;
+
+        struct Compare {
+            bool operator ()(const std::vector<GroupExpressionTerm>& a,
+                    const std::vector<GroupExpressionTerm>& b) const {
+                return a.size() < b.size() || (a.size() == b.size() && a < b);
+            }
+        };
     };
 
     template <int index>
@@ -190,10 +174,13 @@ namespace {
             // position, using only generators of index <= i, and
             // *excluding* all trailing terms with generators of index < i.
             //
-            ExpressionData* currExp = new ExpressionData[nGen];
+            std::vector<GroupExpressionTerm>* currExp =
+                new std::vector<GroupExpressionTerm>[nGen];
 
-            std::map<ExpressionData, std::pair<long, bool>>* foundExp =
-                new std::map<ExpressionData, std::pair<long, bool>>[nGen];
+            typedef std::map<std::vector<GroupExpressionTerm>,
+                             std::pair<long, bool>, Formula::Compare>
+                             ExpressionMap;
+            ExpressionMap* foundExp = new ExpressionMap[nGen];
 
             unsigned long depth;
             for (const auto& r : g.relations()) {
@@ -203,18 +190,21 @@ namespace {
                 for (const auto& t : r.terms()) {
                     if (t.generator < depth) {
                         depth = t.generator;
-                        currExp[depth].terms.push_back({ depth, t.exponent });
+                        currExp[depth].push_back({ depth, t.exponent });
                     } else {
                         while (depth < t.generator) {
-                            if (currExp[depth].singleTerm()) {
-                                prev = currExp[depth].terms.front().generator;
-                                currExp[depth].terms.clear();
+                            if (currExp[depth].size() == 1 &&
+                                    currExp[depth].front().exponent == 1) {
+                                // This expression is just a single symbol.
+                                // Reuse that symbol.
+                                prev = currExp[depth].front().generator;
+                                currExp[depth].clear();
                             } else {
                                 // We use a swap and a move to avoid a
                                 // deep copy of currExp[depth].
                                 // A side-effect is that this clears out
-                                // currExp[depth].terms (which we want to do).
-                                ExpressionData tmp;
+                                // currExp[depth] (which we want to do).
+                                std::vector<GroupExpressionTerm> tmp;
                                 tmp.swap(currExp[depth]);
                                 auto result = foundExp[depth].emplace(
                                     std::move(tmp),
@@ -231,9 +221,9 @@ namespace {
                                 }
                             }
                             ++depth;
-                            currExp[depth].terms.push_back({ prev, 1 });
+                            currExp[depth].push_back({ prev, 1 });
                         }
-                        currExp[depth].terms.push_back({ depth, t.exponent });
+                        currExp[depth].push_back({ depth, t.exponent });
                     }
                 }
 
@@ -243,8 +233,8 @@ namespace {
                 // This means that currExp[depth] is the entire relation.
                 //
                 // Again we use a swap and a move to avoid a deep copy
-                // of currExp[depth], and this also clears currExp[depth].terms.
-                ExpressionData tmp;
+                // of currExp[depth], and this also clears currExp[depth].
+                std::vector<GroupExpressionTerm> tmp;
                 tmp.swap(currExp[depth]);
                 auto result = foundExp[depth].emplace(std::move(tmp),
                     std::make_pair(nSeen, true));
@@ -269,8 +259,8 @@ namespace {
             for (depth = 0; depth < nGen; ++depth) {
                 for (auto& exp : foundExp[depth]) {
                     Formula f;
-                    f.terms.reserve(exp.first.terms.size());
-                    for (auto& t : exp.first.terms)
+                    f.terms.reserve(exp.first.size());
+                    for (auto& t : exp.first)
                         if (t.generator < nGen)
                             f.terms.push_back(t);
                         else
