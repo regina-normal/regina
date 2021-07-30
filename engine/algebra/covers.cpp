@@ -267,18 +267,33 @@ namespace {
                         reindex[exp.second.first] = newIndex++;
             }
             for (depth = 0; depth < nGen; ++depth) {
-                for (auto& exp : foundExp[depth]) {
-                    Formula f;
-                    f.terms.reserve(exp.first.size());
-                    for (auto& t : exp.first)
-                        if (t.generator < nGen)
-                            f.terms.push_back(t);
-                        else
-                            f.terms.push_back(
-                                { reindex[t.generator], t.exponent });
-                    f.isRelation = exp.second.second;
-                    formulae.push_back(std::move(f));
-                }
+                // Again: relations first.
+                for (auto& exp : foundExp[depth])
+                    if (exp.second.second) {
+                        Formula f;
+                        f.terms.reserve(exp.first.size());
+                        for (auto& t : exp.first)
+                            if (t.generator < nGen)
+                                f.terms.push_back(t);
+                            else
+                                f.terms.push_back(
+                                    { reindex[t.generator], t.exponent });
+                        f.isRelation = true;
+                        formulae.push_back(std::move(f));
+                    }
+                for (auto& exp : foundExp[depth])
+                    if (! exp.second.second) {
+                        Formula f;
+                        f.terms.reserve(exp.first.size());
+                        for (auto& t : exp.first)
+                            if (t.generator < nGen)
+                                f.terms.push_back(t);
+                            else
+                                f.terms.push_back(
+                                    { reindex[t.generator], t.exponent });
+                        f.isRelation = false;
+                        formulae.push_back(std::move(f));
+                    }
             }
 
             compCount[0] = 0;
