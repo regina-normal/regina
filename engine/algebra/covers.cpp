@@ -119,6 +119,22 @@ namespace {
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
     };
 
+    /**
+     * A class similar in nature to GroupExpression, which is used by
+     * RelationScheme to represent both group relations and also contiguous
+     * subexpressions within relations.
+     *
+     * The differences between Formula and GroupExpression include:
+     *
+     * - Formula uses a vector, because using a contiguous block of memory is
+     *   more important here than the ability to spice formulae together.
+     *
+     * - Formula uses not only the group generators with indices 0 <= i < nGen,
+     *   but also additional subexpressions that can be computed separately
+     *   and cached.  These subexpressions (which are represented by their
+     *   own Formula objects) are indicated by terms whose "generators" have
+     *   indices i >= nGen.
+     */
     struct Formula {
         std::vector<GroupExpressionTerm> terms;
         bool isRelation;
@@ -130,14 +146,35 @@ namespace {
         Formula& operator = (const Formula&) = default;
         Formula& operator = (Formula&&) = default;
 
+        /**
+         * Looks for occurrences of the formula \a inner as a contiguous
+         * subexpression of this formula.  If it finds any such occurrences,
+         * it replaces each with a single term of the form index^1.
+         *
+         * This routine will happily replace multiple occurrences of \a inner,
+         * but only when these occurrences are non-overlapping.
+         *
+         * As an exception, if \a inner is empty, this routine will *not*
+         * make any replacements.
+         *
+         * This routine runs in quadratic time (since it processes each
+         * replacement separately, and each such replacement involves
+         * repacking the vector of terms).  We do not worry too much
+         * about this, because the time spent doing this replacements is
+         * insignificant compared to the "real" work of enumerateCovers().
+         */
         void tryReplace(const Formula& inner, unsigned long index) {
             if (inner.terms.size() == 0)
                 return;
 
-            size_t from = 0;
-            while (from + inner.terms.size() <= terms.size()) {
+            for (size_t from = 0; from + inner.terms.size() <= terms.size();
+                    ++from) {
                 if (std::equal(inner.terms.begin(), inner.terms.end(),
                         terms.begin() + from)) {
+                    // We have found a replacement.
+                    // Move everything *after* the occurrence of inner
+                    // forward, leaving a gap of just one term which we
+                    // then set to index^1.
                     if (inner.terms.size() > 1) {
                         std::move(terms.begin() + from + inner.terms.size(),
                             terms.end(), terms.begin() + from + 1);
@@ -145,10 +182,24 @@ namespace {
                     }
                     terms[from] = { index, 1 };
                 }
-                ++from;
             }
         }
 
+        /**
+         * An ordering on formulae, which RelationScheme uses to determine in
+         * which order we should compute subexpressions at the same depth.
+         *
+         * Here we prioritise relations above all (since proving that a
+         * relation does not hold allows us to backtrack immediately
+         * when enumerating covers).  After this, we prioritise shorter
+         * expressions (since later we will try to detect occurrences of
+         * shorter expressions within longer ones).
+         *
+         * Note that "depth" here refers to the largest index generator
+         * that appears in the formula, once all cached subexpressions
+         * are expanded in terms of the original generators of the group
+         * presentation.
+         */
         struct Compare {
             bool operator ()(const Formula& a, const Formula& b) const {
                 if (a.isRelation && ! b.isRelation)
@@ -169,13 +220,14 @@ namespace {
         Perm<index>* rep;
         Perm<index>* computed;
 
-        // Do we want to use precomputed product tables that are generated
-        // at runtime?
+        // Do we want to use precomputed permutation product tables that are
+        // generated at runtime?
         //
         // Note that for index <= 5 the Perm<index> class already uses lookup
         // tables out-of-the-box and so there is no need for us to manage this
         // ourselves here.  For index >= 7 the Perm<index> class does not (yet)
-        // have a runtime precomputation facility built in.
+        // have a runtime precomputation facility built in.  So this leaves
+        // index == 6 as the only case where this is relevant.
         static constexpr bool cacheProducts = (index == 6);
 
         RelationScheme(const GroupPresentation& g) {
