@@ -221,12 +221,15 @@ class CoversTest : public CppUnit::TestFixture {
             compareResults<6>(regina::ExampleLink::trefoilRight());
             compareResults<6>(regina::ExampleLink::conway());
 
-            // The following invariants have been verified with SnapPea,
-            // but SnapPea is a little slow to compute them so here we
-            // just check the results directly when the index grows large.
+            // Each of the following invariants have been verified with SnapPea
+            // and/or GAP.  However, SnapPea is slow to compute them for large
+            // indices, so for index >= 4 we hard-code the expected results.
             //
-            // For now we stop at index 5; the index 6 cases take about
-            // half a second each on my machine.
+            // Actually, we are commenting out the index 6 tests
+            // entirely for link19 and link20, since Regina is also too
+            // slow with these to use in the test suite.  Note that
+            // almost all the running time is being spent computing
+            // abelianisations (i.e., Smith normal forms of matrices).
 
             Link* link19 = regina::Link::fromKnotSig(
                 "tabcadefghdijklmnoipkjplmefqrghbcsonqrsvvvvvvb-VzgZBa");
@@ -236,6 +239,12 @@ class CoversTest : public CppUnit::TestFixture {
                 { "2 Z + Z_2" , "Z + Z_9 + Z_39411" }, false);
             verifyResults<5>(link19,
                 { "2 Z", "3 Z", "Z + 2 Z_6691" }, false);
+#if 0
+            verifyResults<6>(link19,
+                { "2 Z + Z_157 + Z_628", "2 Z + Z_2 + Z_12", "2 Z + Z_4379",
+                  "2 Z + Z_8758", "Z + 2 Z_2 + Z_314 + Z_1375006",
+                  "Z + 2 Z_4 + Z_1819388", "Z + Z_628 + Z_324048" }, false);
+#endif
             delete link19;
 
             Link* link20 = regina::Link::fromKnotSig(
@@ -248,6 +257,20 @@ class CoversTest : public CppUnit::TestFixture {
                 { "2 Z", "2 Z + Z_2", "3 Z + 2 Z_2", "3 Z + 2 Z_2",
                   "3 Z + Z_2 + Z_6", "3 Z + Z_2 + Z_6", "3 Z + Z_3",
                   "4 Z + Z_4", "Z + 2 Z_15061", "Z + Z_6 + Z_8638440" }, false);
+#if 0
+            verifyResults<6>(link20,
+                { "2 Z + 2 Z_12", "2 Z + 2 Z_3", "2 Z + 2 Z_3", "2 Z + 2 Z_3",
+                  "2 Z + 3 Z_2 + Z_36", "2 Z + 3 Z_2 + Z_36",
+                  "2 Z + Z_2 + Z_114", "2 Z + Z_2 + Z_12", "2 Z + Z_2 + Z_12",
+                  "2 Z + Z_2 + Z_132", "2 Z + Z_2 + Z_248 + Z_8680",
+                  "2 Z + Z_2 + Z_36", "2 Z + Z_2 + Z_4 + Z_8",
+                  "2 Z + Z_2 + Z_4 + Z_8", "2 Z + Z_3", "2 Z + Z_3 + Z_36",
+                  "2 Z + Z_4", "2 Z + Z_456", "2 Z + Z_6 + Z_48",
+                  "2 Z + Z_6 + Z_48", "3 Z", "4 Z", "4 Z + Z_2", "4 Z + Z_2",
+                  "4 Z + Z_2", "4 Z + Z_2", "4 Z + Z_2", "5 Z", "5 Z",
+                  "Z + 2 Z_2 + Z_248 + Z_40176",
+                  "Z + 2 Z_2 + Z_496 + Z_1818832", "Z + Z_56161980" }, false);
+#endif
             delete link20;
         }
 
