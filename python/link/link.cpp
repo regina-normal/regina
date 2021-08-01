@@ -205,6 +205,7 @@ void addLink(pybind11::module_& m) {
         .def("knowsBracket", &Link::knowsBracket)
         .def("knowsJones", &Link::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly)
+        .def("fundamentalGroup", &Link::fundamentalGroup)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal)
         .def("useTreeDecomposition", &Link::useTreeDecomposition)

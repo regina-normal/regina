@@ -32,6 +32,7 @@
 
 #include "link.h"
 #include "maths/numbertheory.h"
+#include "triangulation/dim3.h"
 #include <algorithm>
 #include <sstream>
 
@@ -519,6 +520,72 @@ void Link::resolve(Crossing* c) {
         crossings_.erase(crossings_.begin() + c->index());
         delete c;
     }
+}
+
+GroupPresentation Link::fundamentalGroup() const {
+    if (components_.empty()) {
+        // The complement is just S^3.
+        return GroupPresentation();
+    }
+
+    if (components_.size() > 1) {
+        // For now we do not compute link groups directly from the presentation.
+        Triangulation<3>* comp = complement();
+        GroupPresentation ans = comp->fundamentalGroup();
+        delete comp;
+        return ans;
+    }
+
+    if (crossings_.size() == 0) {
+        // This is the unknot.
+        return GroupPresentation(1);
+    }
+
+    // We have a knot with a non-zero number of crossings.
+    // Build the Wirtinger presentation.
+    //
+    // For this, we need to number the "over-segments" - coniguous sections
+    // of the knot that consist entirely of over-crossings.
+    // Construct a map from arc IDs to "over-segment" IDs.
+    int* strandToSection = new int[2 * crossings_.size()];
+    int currArc = 0;
+
+    // We start our traversal from an under-crossing, since we are
+    // guaranteed that this is the beginning of an over-segment.
+    StrandRef start = components_.front();
+    if (start.strand() > 0)
+        start.jump();
+
+    StrandRef s = start;
+    do {
+        strandToSection[s.id()] = currArc;
+        ++s;
+        if (s.strand() == 0) {
+            // We just passed under a crossing.
+            ++currArc;
+        }
+    } while (s != start);
+
+    // Now build the presentation.
+    GroupPresentation g(crossings_.size());
+    for (Crossing* c : crossings_) {
+        GroupExpression exp;
+        if (c->sign() > 0) {
+            exp.addTermLast(strandToSection[c->upper().id()], 1);
+            exp.addTermLast(strandToSection[c->lower().id()], 1);
+            exp.addTermLast(strandToSection[c->upper().id()], -1);
+            exp.addTermLast(strandToSection[c->lower().prev().id()], -1);
+        } else {
+            exp.addTermLast(strandToSection[c->upper().id()], 1);
+            exp.addTermLast(strandToSection[c->lower().prev().id()], 1);
+            exp.addTermLast(strandToSection[c->upper().id()], -1);
+            exp.addTermLast(strandToSection[c->lower().id()], -1);
+        }
+        g.addRelation(std::move(exp));
+    }
+
+    delete[] strandToSection;
+    return g;
 }
 
 std::string Link::brief() const {

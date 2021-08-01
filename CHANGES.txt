@@ -226,6 +226,8 @@ Version 6.1  [ TODO ]
             - Added member and global swap() functions.
         Class Link:
             - New routines writheOfComponent() and selfFrame().
+            - New routine fundamentalGroup() to produce the Wirtinger
+              presentation of a knot group.
             - New routines pd(), pdData(), pd(std::ostream&) and fromPD() to
               work with planar diagram codes.  The "magic" constructor that
               takes a string can now also work with planar diagram codes.

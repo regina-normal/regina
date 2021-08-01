@@ -45,6 +45,7 @@
 #include <optional>
 #include <vector>
 #include "regina-core.h"
+#include "algebra/grouppresentation.h"
 #include "maths/integer.h"
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
@@ -2326,6 +2327,26 @@ class Link : public Packet {
          * @return \c true if and only if this property is already known.
          */
         bool knowsHomfly() const;
+
+        /**
+         * Returns the fundamental group of the complement of this link.
+         *
+         * If this is a knot (as opposed to a multiple-component link), then
+         * this routine builds the Wirtinger presentation, where all relations
+         * are some variant of the form <tt>xy=yz</tt>.  It will leave the
+         * presentation in exactly this form, in case this is what you want.
+         *
+         * In particular, this routine will \e not simplify the group
+         * presentation.  If you would prefer fewer generators, then you will
+         * need to call GroupPresentation::intelligentSimplify() yourself.
+         *
+         * Currently the fundamental group is \e not cached; instead it
+         * is recomputed every time this function is called.  This
+         * behaviour may change in future versions of Regina.
+         *
+         * @return the fundamental group of the link complement.
+         */
+        GroupPresentation fundamentalGroup() const;
 
         /**
          * Returns a nice tree decomposition of the planar 4-valent
