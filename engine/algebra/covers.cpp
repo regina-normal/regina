@@ -567,6 +567,33 @@ namespace {
         }
     };
 
+    /**
+     * This is another helper class for enumerateCovers().  Its purpose
+     * is to use the group relations to derive relations between the
+     * \e signs of the permutations that represent the group generators.
+     *
+     * If we are able to identify k independent relations between the signs,
+     * then this should allow us to cut the size of the resulting search
+     * tree down by a factor of 2^k (not accounting for whatever other
+     * backtracking or pruning we might be doing).
+     *
+     * The idea is to treat the group relations as linear relations on Z_2,
+     * and to reduce the resulting matrix of relations so we obtain k formulae
+     * of the form sign(rep[i]) = sign(rep[a_0]) + ... + sign(rep[a_j]),
+     * where a_0 < ... < a_j < i, and where each of these k formulae
+     * describes a different generator i.
+     *
+     * Importantly, it is easy to compute and fix the signs of permutations,
+     * since the Perm<index> classes that we are using both store and iterate
+     * over permutations using indices into the symmetric group S_index, and
+     * these indices are even/odd for even/odd signed permutations respectively.
+     *
+     * The class constructor sets up the array constraint[0..(nGen-1)].
+     * Each member constraint[i] is null if we have no equation describing
+     * the sign of rep[i], or if we do have such an equation then it is
+     * the list of indices a_0, ..., a_j whose representatives' signs
+     * can be multiplied to obtain the sign of rep[i].
+     */
     struct SignScheme {
         size_t nGen;
         std::vector<unsigned long>** constraint;
@@ -584,8 +611,11 @@ namespace {
                 return;
             }
 
-            Matrix<int> signMatrix(g.countRelations(), nGen);
-            signMatrix.initialise(0);
+            // Build a matrix that expresses the group relations as
+            // linear equations over Z_2.  If m.entry(r, g) is true then
+            // this means relation #r uses generator #g when written over Z_2.
+            Matrix<bool> m(g.countRelations(), nGen);
+            m.initialise(false);
 
             unsigned long row, col;
 
@@ -593,67 +623,86 @@ namespace {
             for (const auto& r : g.relations()) {
                 for (const auto& t : r.terms())
                     if (t.exponent % 2)
-                        signMatrix.entry(row, t.generator) ^= 1;
+                        m.entry(row, t.generator) = ! m.entry(row, t.generator);
                 ++row;
             }
 
-            // TODO: Check this matrix reduction VERY CAREFULLY
-
             // Put the matrix in a variant of row echelon form, where
             // the (jagged) upper right half of the matrix is all zeroes.
-            // All the zero rows will end up at the top.
+            // The column containing the rightmost true entry should be
+            // an increasing function of the row index (and strictly
+            // increasing once we get past the empty rows, which will
+            // all appear at the top).
 
             // The algorithm works from right to left and bottom to top.
-            unsigned long rowsRemain = signMatrix.rows();
-            unsigned long colsRemain = signMatrix.columns();
+            unsigned long rowsRemain = m.rows();
+            unsigned long colsRemain = m.columns();
             while (rowsRemain > 0 && colsRemain > 0) {
+                // Columns [0 .. colsRemain) are still completely unstructured.
+                // Columns [colsRemain ...) contain a jagged "staircase" that
+                // heads into the bottom right corner of the matrix; this
+                // staircase begins at or below row #rowsRemain, the matrix
+                // is completely empty above the staircase, and for those
+                // columns of the staircase that contain the last entry
+                // in each row [rowsRemain ...), the entire column *below*
+                // this last entry is empty also.
+
                 --colsRemain;
 
                 // Identify the first non-zero entry in column #colsRemain.
                 for (row = 0; row < rowsRemain; ++row)
-                    if (signMatrix.entry(row, colsRemain))
+                    if (m.entry(row, colsRemain))
                         break;
 
                 if (row == rowsRemain) {
-                    // The column is entirely zero.  Nothing to do.
+                    // The column is entirely zero above rowsRemain.
+                    // Nothing to do.  Go back and move left again to
+                    // the previous column.
                     continue;
                 }
 
-                // Swap rows if necessary so this first non-zero entry is in
-                // the last unprocessed row.
+                // We found a non-zero entry.
                 --rowsRemain;
+
+                // Make sure it appears in the last unprocessed row, i.e.,
+                // row #rowsRemain.
                 if (row < rowsRemain) {
-                    signMatrix.swapRows(row, rowsRemain);
+                    m.swapRows(row, rowsRemain);
                 }
 
-                // Now our non-zero entry is in row #rowsRemain.
+                // Now our non-zero entry is at (rowsRemain, colsRemain).
                 // Use row operations to zero out all other entries in
                 // this column.
-                for (row = 0; row < signMatrix.rows(); ++row)
-                    if (row != rowsRemain && signMatrix.entry(row, colsRemain))
-                        for (col = 0; col < signMatrix.columns(); ++col)
-                            signMatrix.entry(row, col) ^=
-                                signMatrix.entry(rowsRemain, col);
+                for (row = 0; row < m.rows(); ++row)
+                    if (row != rowsRemain && m.entry(row, colsRemain))
+                        for (col = 0; col < m.columns(); ++col)
+                            if (m.entry(rowsRemain, col))
+                                m.entry(row, col) = ! m.entry(row, col);
 
                 // Row #rowsRemain now gives us a way to constraint the sign of
                 // generator #colsRemain in terms of lower-indexed generators.
+                // This is one of the relationships that we are looking for.
                 //
-                // For now, create the vector and stash the row number as its
-                // first entry.  We will come back and construct the full
-                // relations once the full matrix reduction is complete.
+                // However: the earlier entries in this row might still
+                // change as we continue our matrix reduction.
+                // For now, just create the vector and stash the row number as
+                // its only entry.  We will come back and construct the full
+                // relation once the matrix reduction is complete.
                 constraint[colsRemain] = new std::vector<unsigned long>();
                 constraint[colsRemain]->push_back(rowsRemain);
             }
 
-            // Now we can go ahead and reconstruct the sign relations.
+            // Now we are finished with our matrix reduction, we can go ahead
+            // and reconstruct the sign relations.
             for (col = 0; col < nGen; ++col)
                 if (constraint[col]) {
+                    // We have an equation for the sign of rep[col].
                     row = constraint[col]->front();
                     constraint[col]->pop_back();
                     constraint[col]->reserve(nGen - 1);
 
                     for (unsigned long i = 0; i < col; ++i)
-                        if (signMatrix.entry(row, i))
+                        if (m.entry(row, i))
                             constraint[col]->push_back(i);
                 }
         }
