@@ -162,6 +162,7 @@ void addGroupPresentation(pybind11::module_& m) {
             pybind11::arg("moreUtf8") = false)
         .def("relatorLength", &GroupPresentation::relatorLength)
         .def("abelianisation", &GroupPresentation::abelianisation)
+        .def("abelianRank", &GroupPresentation::abelianRank)
         .def("markedAbelianisation", &GroupPresentation::markedAbelianisation)
         .def("enumerateCovers", [](const GroupPresentation& p, int index,
                 const std::function<void(GroupPresentation&)>& action)

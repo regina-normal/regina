@@ -152,6 +152,7 @@ Version 6.1  [ TODO ]
             - New constructor to create free groups.
             - Functions abelianisation() and markedAbelianisation() now
               return groups by value (which can then be moved from).
+            - New routine abelianRank().
             - New routine relations().
             - Function addRelation() now takes its argument by value.
             - Added member and global swap() functions.

@@ -327,6 +327,26 @@ AbelianGroup GroupPresentation::abelianisation() const {
     return g;
 }
 
+unsigned GroupPresentation::abelianRank() const {
+    if (nGenerators_ == 0)
+        return 0;
+    if (relations_.empty()) {
+        // We have a free group, which becomes a free abelian group.
+        return nGenerators_;
+    }
+
+    MatrixInt m(relations_.size(), nGenerators_);
+
+    size_t row = 0;
+    for (const auto& r : relations_) {
+        for (const auto& t : r.terms())
+            m.entry(row, t.generator) += t.exponent;
+        ++row;
+    }
+
+    return m.rowEchelonForm();
+}
+
 MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
     // create presentation matrices to pass to MarkedAbelianGroup(M, N)
     MatrixInt N(countGenerators(), countRelations() );
