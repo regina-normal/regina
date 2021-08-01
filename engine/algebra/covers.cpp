@@ -566,6 +566,104 @@ namespace {
             }
         }
     };
+
+    struct SignScheme {
+        size_t nGen;
+        std::vector<unsigned long>** constraint;
+
+        SignScheme(const GroupPresentation& g) : nGen(g.countGenerators()) {
+            if (nGen == 0) {
+                constraint = nullptr;
+                return;
+            }
+
+            constraint = new std::vector<unsigned long>*[nGen];
+            std::fill(constraint, constraint + nGen, nullptr);
+
+            if (g.countRelations() == 0) {
+                return;
+            }
+
+            Matrix<int> signMatrix(g.countRelations(), nGen);
+            signMatrix.initialise(0);
+
+            unsigned long row, col;
+
+            row = 0;
+            for (const auto& r : g.relations()) {
+                for (const auto& t : r.terms())
+                    if (t.exponent % 2)
+                        signMatrix.entry(row, t.generator) ^= 1;
+                ++row;
+            }
+
+            // TODO: Check this matrix reduction VERY CAREFULLY
+
+            // Put the matrix in a variant of row echelon form, where
+            // the (jagged) upper right half of the matrix is all zeroes.
+            // All the zero rows will end up at the top.
+
+            // The algorithm works from right to left and bottom to top.
+            unsigned long rowsRemain = signMatrix.rows();
+            unsigned long colsRemain = signMatrix.columns();
+            while (rowsRemain > 0 && colsRemain > 0) {
+                --colsRemain;
+
+                // Identify the first non-zero entry in column #colsRemain.
+                for (row = 0; row < rowsRemain; ++row)
+                    if (signMatrix.entry(row, colsRemain))
+                        break;
+
+                if (row == rowsRemain) {
+                    // The column is entirely zero.  Nothing to do.
+                    continue;
+                }
+
+                // Swap rows if necessary so this first non-zero entry is in
+                // the last unprocessed row.
+                --rowsRemain;
+                if (row < rowsRemain) {
+                    signMatrix.swapRows(row, rowsRemain);
+                }
+
+                // Now our non-zero entry is in row #rowsRemain.
+                // Use row operations to zero out all other entries in
+                // this column.
+                for (row = 0; row < signMatrix.rows(); ++row)
+                    if (row != rowsRemain && signMatrix.entry(row, colsRemain))
+                        for (col = 0; col < signMatrix.columns(); ++col)
+                            signMatrix.entry(row, col) ^=
+                                signMatrix.entry(rowsRemain, col);
+
+                // Row #rowsRemain now gives us a way to constraint the sign of
+                // generator #colsRemain in terms of lower-indexed generators.
+                //
+                // For now, create the vector and stash the row number as its
+                // first entry.  We will come back and construct the full
+                // relations once the full matrix reduction is complete.
+                constraint[colsRemain] = new std::vector<unsigned long>();
+                constraint[colsRemain]->push_back(rowsRemain);
+            }
+
+            // Now we can go ahead and reconstruct the sign relations.
+            for (col = 0; col < nGen; ++col)
+                if (constraint[col]) {
+                    row = constraint[col]->front();
+                    constraint[col]->pop_back();
+                    constraint[col]->reserve(nGen - 1);
+
+                    for (unsigned long i = 0; i < col; ++i)
+                        if (signMatrix.entry(row, i))
+                            constraint[col]->push_back(i);
+                }
+        }
+
+        ~SignScheme() {
+            for (size_t i = 0; i < nGen; ++i)
+                delete constraint[i];
+            delete[] constraint;
+        }
+    };
 }
 
 void GroupPresentation::minimaxGenerators() {
@@ -689,6 +787,10 @@ size_t GroupPresentation::enumerateCoversInternal(
     // the group relations.
     RelationScheme<index> scheme(*this);
 
+    // Work out what constraints the group relations impose on the signs
+    // of the chosen representative permutations.
+    SignScheme signs(*this);
+
     // Prepare to choose an S(index) representative for each generator.
     // The representative for generator i will be scheme.rep[i].
     // All representatives will be initialised to the identity.
@@ -699,6 +801,9 @@ size_t GroupPresentation::enumerateCoversInternal(
         new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1];
 
     size_t pos = 0; // The generator whose current rep we are about to try.
+    // Note: if we are constraining the sign of rep[0], then it must be
+    // constrained to even permutations (so 0 is still the correct starting
+    // point).
     while (true) {
         bool backtrack = false;
 
@@ -880,13 +985,28 @@ size_t GroupPresentation::enumerateCoversInternal(
                 --pos;
                 backtrack = true;
             } else {
+                if (signs.constraint[pos]) {
+                    // We have just moved onto the next generator, and
+                    // its sign is constrained.  Work out if the sign
+                    // needs to be positive or negative.
+                    int sign = 0;
+                    for (auto g : *signs.constraint[pos])
+                        if (scheme.rep[g].sign() < 0)
+                            sign ^= 1;
+                    if (sign != 0)
+                        ++scheme.rep[pos];
+                }
                 continue;
             }
         }
 
         if (backtrack) {
             while (true) {
+                // Move on to the next permutation, or if we are constraining
+                // the sign of rep[pos] then increment *twice*.
                 ++scheme.rep[pos];
+                if (signs.constraint[pos] && ! scheme.rep[pos].isIdentity())
+                    ++scheme.rep[pos];
                 if (! scheme.rep[pos].isIdentity())
                     break;
                 if (pos == 0)
