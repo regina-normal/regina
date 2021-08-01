@@ -2296,5 +2296,47 @@ Matrix<bool> GroupPresentation::incidence() const {
     return inc;
 }
 
+std::string GroupPresentation::gap(const std::string& groupVariable) const {
+    std::ostringstream out;
+    size_t g;
+
+    out << groupVariable << " := CallFuncList(function() local F";
+    for (g = 0; g < nGenerators_; ++g)
+        out << ", x" << g;
+    out << "; F := FreeGroup(";
+    for (g = 0; g < nGenerators_; ++g) {
+        if (g > 0)
+            out << ", ";
+        out << "\"x" << g << '\"';
+    }
+    out << "); ";
+    for (g = 0; g < nGenerators_; ++g)
+        out << 'x' << g << " := F." << (g+1) << "; ";
+    out << "return F/[";
+    bool firstReln = true;
+    for (const auto& r : relations_) {
+        if (r.terms().empty())
+            continue;
+
+        if (firstReln)
+            firstReln = false;
+        else
+            out << ", ";
+
+        bool firstGen = true;
+        for (const auto& t : r.terms()) {
+            if (firstGen)
+                firstGen = false;
+            else
+                out << '*';
+            out << 'x' << t.generator;
+            if (t.exponent != 1)
+                out << '^' << t.exponent;
+        }
+    }
+    out << "]; end,[]);";
+    return out.str();
+}
+
 } // namespace regina
 

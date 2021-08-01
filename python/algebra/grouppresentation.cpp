@@ -187,6 +187,8 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("writeTextCompact", [](const GroupPresentation& p) {
             p.writeTextCompact(std::cout);
         })
+        .def("gap", &GroupPresentation::gap,
+            pybind11::arg("groupVariable") = "g")
     ;
     regina::python::add_output(c3);
     regina::python::add_eq_operators(c3);

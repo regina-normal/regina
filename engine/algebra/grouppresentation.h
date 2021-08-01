@@ -1506,6 +1506,26 @@ class GroupPresentation : public Output<GroupPresentation> {
          */
         void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Returns a sequence of GAP commands that create this group.
+         *
+         * GAP is a widely-used computational algebra system, and can be
+         * downloaded from http://gap-system.org/ .
+         *
+         * Other than the variable for the group itself, the commands
+         * returned will not use or modify any other GAP variables with the
+         * current GAP scope.
+         *
+         * The string that is returned will be presented as a single
+         * (possibly very long) GAP function call, and will not contain
+         * any newlines.
+         *
+         * @param groupVariable the name of the GAP variable to which
+         * this group will be assigned.
+         * @return a sequence of commands to create this group in GAP.
+         */
+        std::string gap(const std::string& groupVariable = "g") const;
+
 #ifdef __DOXYGEN
         /**
          * A SageMath-only routine that returns a copy of this group
