@@ -2341,12 +2341,11 @@ class Link : public Packet {
          * default), this routine will attempt to simplify the group
          * presentation before returning.
          *
-         * \warning Ad-hoc experimentation suggests that Regina may have
-         * trouble simplifying Wirtinger presentations effectively.  If you
-         * are finding the resulting group presentations too large for your
-         * liking, you could also try calling complement() and computing the
-         * fundamental group of the resulting 3-manifold triangulation, which
-         * can sometimes result in a better presentation of the same group.
+         * \note If you are finding the resulting group presentation too large
+         * for your liking even after simplification, then you could also try
+         * calling complement() and computing the fundamental group of the
+         * resulting 3-manifold triangulation.  Sometimes the presentation
+         * obtained via the complement is better, and sometimes it is worse.
          *
          * Currently this group is \e not cached; instead it is reconstructed
          * every time this function is called.  This behaviour may change in
