@@ -1099,11 +1099,11 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Computes the rank of the abelianisation of this group.
          * This is the number of \a Z summands in the abelianisation
-         * (i.e., it ignores torsion).
+         * (i.e., ignoring any torsion summands).
          *
          * This is much less informative than computing the full
-         * abelianisation, but it can be significantly faster (since it
-         * involves a simple matrix rank computation as opposed to a
+         * abelianisation, but in some cases it might be significantly faster
+         * (since it involves just a matrix rank computation as opposed to a
          * Smith normal form).
          *
          * The result of this routine should be the same as the output
