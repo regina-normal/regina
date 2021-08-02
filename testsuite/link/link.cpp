@@ -2775,6 +2775,14 @@ class LinkTest : public CppUnit::TestFixture {
                     << fromLink.detail() << fromComp.detail() << std::endl;
                 CPPUNIT_FAIL(msg.str());
             }
+
+            if (fromLink.abelianRank() != link->countComponents()) {
+                std::ostringstream msg;
+                msg << link->label() << ": link group has abelian rank "
+                    << fromLink.abelianRank() << " instead of the "
+                    "expected " << link->countComponents() << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 
         void group() {

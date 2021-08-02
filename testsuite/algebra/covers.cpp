@@ -93,10 +93,21 @@ class CoversTest : public CppUnit::TestFixture {
         template <int degree>
         std::vector<std::string> viaRegina(const Triangulation<3>& tri) {
             std::vector<std::string> covers;
-
             tri.fundamentalGroup().enumerateCovers<degree>([&](
                     GroupPresentation& g) {
-                covers.push_back(g.abelianisation().str());
+                AbelianGroup ab = g.abelianisation();
+                covers.push_back(ab.str());
+
+                // Since we are already computing abelianisations, and since
+                // their ranks can differ between covers of the same index,
+                // this is a good place to verify abelianRank().
+                if (ab.rank() != g.abelianRank()) {
+                    std::ostringstream msg;
+                    msg << "Found a group presentation whose "
+                        "abelianisation does not match abelianRank():\n"
+                        << g.detail(); // newline already included
+                    CPPUNIT_FAIL(msg.str());
+                }
             });
             std::sort(covers.begin(), covers.end());
             return covers;

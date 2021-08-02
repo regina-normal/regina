@@ -344,7 +344,8 @@ unsigned GroupPresentation::abelianRank() const {
         ++row;
     }
 
-    return m.rowEchelonForm();
+    // Matrix::rowEchelonForm() returns the rank of the relations matrix.
+    return nGenerators_ - m.rowEchelonForm();
 }
 
 MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
