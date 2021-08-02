@@ -2329,24 +2329,32 @@ class Link : public Packet {
         bool knowsHomfly() const;
 
         /**
-         * Returns the fundamental group of the complement of this link.
+         * Returns the group of this link; that is, the fundamental group of
+         * the link exterior.
          *
-         * If this is a knot (as opposed to a multiple-component link), then
-         * this routine builds the Wirtinger presentation, where all relations
-         * are some variant of the form <tt>xy=yz</tt>.  It will leave the
-         * presentation in exactly this form, in case this is what you want.
+         * This routine builds the Wirtinger presentation, where all relations
+         * are some variant of the form <tt>xy=yz</tt>.
          *
-         * In particular, this routine will \e not simplify the group
-         * presentation.  If you would prefer fewer generators, then you will
-         * need to call GroupPresentation::intelligentSimplify() yourself.
+         * If you pass \a simplify as \c false, it will leave the presentation
+         * in exactly this form (i.e., the Wirtinger presentation), and not
+         * simplify it further.  If you pass \a simplify as \c true (the
+         * default), this routine will attempt to simplify the group
+         * presentation before returning.
          *
-         * Currently the fundamental group is \e not cached; instead it
-         * is recomputed every time this function is called.  This
-         * behaviour may change in future versions of Regina.
+         * \warning Ad-hoc experimentation suggests that Regina may have
+         * trouble simplifying Wirtinger presentations effectively.  If you
+         * are finding the resulting group presentations too large for your
+         * liking, you could also try calling complement() and computing the
+         * fundamental group of the resulting 3-manifold triangulation, which
+         * can sometimes result in a better presentation of the same group.
          *
-         * @return the fundamental group of the link complement.
+         * Currently this group is \e not cached; instead it is reconstructed
+         * every time this function is called.  This behaviour may change in
+         * future versions of Regina.
+         *
+         * @return the group of this link.
          */
-        GroupPresentation fundamentalGroup() const;
+        GroupPresentation group(bool simplify = true) const;
 
         /**
          * Returns a nice tree decomposition of the planar 4-valent

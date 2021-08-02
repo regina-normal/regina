@@ -80,6 +80,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(pdCode);
     CPPUNIT_TEST(rewrite);
     CPPUNIT_TEST(swapping);
+    CPPUNIT_TEST(group);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -2713,6 +2714,103 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(
                     "std::iter_swap() did not swap properties correctly.");
             }
+        }
+
+        template <int index>
+        std::vector<std::string> covers(const regina::GroupPresentation& g) {
+            std::vector<std::string> ans;
+            g.enumerateCovers<index>([&](const regina::GroupPresentation& c) {
+                ans.push_back(c.abelianisation().str());
+            });
+
+            std::sort(ans.begin(), ans.end());
+            return ans;
+        }
+
+        bool lookIsomorphic(const regina::GroupPresentation& a,
+                const regina::GroupPresentation& b) {
+            // Here we assume that both groups have been simplified.
+
+            // For trivial, cyclic or free groups, we expect the
+            // presentations to be identical.
+            if (a.countGenerators() == 0 || b.countGenerators() == 0)
+                return a.countGenerators() == b.countGenerators();
+
+            if (a.countGenerators() == 1 || b.countGenerators() == 1)
+                return a.countGenerators() == b.countGenerators() &&
+                    a.relations() == b.relations();
+
+            if (a.countRelations() == 0 || b.countRelations() == 0)
+                return a.countRelations() == b.countRelations() &&
+                    a.countGenerators() == b.countGenerators();
+
+            // Both groups have >= 2 generators and >= 1 relation.
+
+            // Check the abelian invariants and some low-index covers.
+            if (a.abelianisation() != b.abelianisation())
+                return false;
+            if (covers<2>(a) != covers<2>(b))
+                return false;
+            if (covers<3>(a) != covers<3>(b))
+                return false;
+            if (covers<4>(a) != covers<4>(b))
+                return false;
+            if (covers<5>(a) != covers<5>(b))
+                return false;
+
+            return true;
+        }
+
+        void verifyGroup(const Link* link) {
+            regina::GroupPresentation fromLink = link->group();
+
+            Triangulation<3>* comp = link->complement();
+            regina::GroupPresentation fromComp = comp->fundamentalGroup();
+            delete comp;
+
+            if (! lookIsomorphic(fromLink, fromComp)) {
+                std::ostringstream msg;
+                msg << link->label() << ": link group does not appear "
+                    "isomorphic to the complement's fundamental group.\n"
+                    << fromLink.detail() << fromComp.detail() << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void group() {
+            // The empty link:
+            verifyGroup(empty);
+
+            // Single-component knots:
+            verifyGroup(unknot0);
+            verifyGroup(unknot1);
+            verifyGroup(unknot3);
+            verifyGroup(unknotMonster);
+            // verifyGroup(unknotGordian);
+            verifyGroup(trefoilLeft);
+            verifyGroup(trefoilRight);
+            verifyGroup(trefoil_r1x2);
+            verifyGroup(trefoil_r1x6);
+            verifyGroup(figureEight);
+            verifyGroup(figureEight_r1x2);
+            verifyGroup(conway);
+            verifyGroup(kinoshitaTerasaka);
+            verifyGroup(gst);
+            verifyGroup(rht_rht);
+            verifyGroup(rht_lht);
+
+            // Links with multiple components:
+            verifyGroup(unlink2_0);
+            verifyGroup(unlink3_0);
+            verifyGroup(unlink2_r2);
+            verifyGroup(unlink2_r1r1);
+            verifyGroup(hopf);
+            verifyGroup(whitehead);
+            verifyGroup(borromean);
+            verifyGroup(trefoil_unknot0);
+            verifyGroup(trefoil_unknot1);
+            verifyGroup(trefoil_unknot_overlap);
+            verifyGroup(adams6_28);
         }
 };
 
