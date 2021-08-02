@@ -390,6 +390,8 @@ Version 6.1  [ TODO ]
             - New (and trivial) routine isConjugacyMinimal().
             - New ++ and < operators.
             - New routines pow() and order().
+            - Perm<3> gains a six-argument constructor, similar to those
+              in Perm<4..6>.
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().

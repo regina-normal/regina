@@ -375,6 +375,22 @@ class Perm<3> {
         constexpr Perm(const int* a, const int* b);
 
         /**
+         * Creates a permutation mapping (<i>a0</i>,<i>b0</i>,<i>c0</i>) to
+         * (<i>a1</i>,<i>b1</i>,<i>c1</i>) respectively.
+         *
+         * \pre {<i>a0</i>,<i>b0</i>,<i>c0</i>} =
+         * {<i>a1</i>,<i>b1</i>,<i>c1</i>} = {0,1,2}.
+         *
+         * @param a0 the desired preimage of <i>a1</i>.
+         * @param b0 the desired preimage of <i>b1</i>.
+         * @param c0 the desired preimage of <i>c1</i>.
+         * @param a1 the desired image of <i>a0</i>.
+         * @param b1 the desired image of <i>b0</i>.
+         * @param c1 the desired image of <i>c0</i>.
+         */
+        constexpr Perm(int a0, int a1, int b0, int b1, int c0, int c1);
+
+        /**
          * Creates a permutation that is a clone of the given
          * permutation.
          *
@@ -954,6 +970,24 @@ inline constexpr Perm<3>::Perm(const int* a, const int* b) : code_(0) {
     image[a[0]] = b[0];
     image[a[1]] = b[1];
     image[a[2]] = b[2];
+
+    switch (image[0]) {
+        case 0:
+            code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
+        case 1:
+            code_ = static_cast<Code>(image[1] == 2 ? 2 : 3); break;
+        case 2:
+            code_ = static_cast<Code>(image[1] == 0 ? 4 : 5); break;
+    }
+}
+
+inline constexpr Perm<3>::Perm(int a0, int a1, int b0, int b1, int c0, int c1) :
+        code_(0) {
+    // TODO: When we move to C++20, we can get rid of the zero initialisers.
+    int image[3] = { 0, 0, 0 };
+    image[a0] = a1;
+    image[b0] = b1;
+    image[c0] = c1;
 
     switch (image[0]) {
         case 0:

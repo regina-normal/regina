@@ -74,6 +74,7 @@ void addPerm3(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
         .def(pybind11::init<int, int, int>())
+        .def(pybind11::init<int, int, int, int, int, int>())
         .def(pybind11::init([](pybind11::list l) {
             if (l.size() != 3)
                 throw pybind11::index_error(
