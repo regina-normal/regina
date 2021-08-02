@@ -45,18 +45,21 @@ template <> inline unsigned long identityImagePack<5> = 18056;
 template <> inline unsigned long identityImagePack<6> = 181896;
 
 template <int n> const char* identityString;
+template <> inline const char* identityString<2> = "01";
 template <> inline const char* identityString<3> = "012";
 template <> inline const char* identityString<4> = "0123";
 template <> inline const char* identityString<5> = "01234";
 template <> inline const char* identityString<6> = "012345";
 
 template <int n> Perm<n> lastPerm;
+template <> inline Perm<2> lastPerm<2> { 1, 0 };
 template <> inline Perm<3> lastPerm<3> { 2, 1, 0 };
 template <> inline Perm<4> lastPerm<4> { 3, 2, 1, 0 };
 template <> inline Perm<5> lastPerm<5> { 4, 3, 2, 1, 0 };
 template <> inline Perm<6> lastPerm<6> { 5, 4, 3, 2, 1, 0 };
 
 template <int n> int miscPermImg[n];
+template <> inline int miscPermImg<2>[2] = { 1, 0 };
 template <> inline int miscPermImg<3>[3] = { 2, 0, 1 };
 template <> inline int miscPermImg<4>[4] = { 2, 3, 1, 0 };
 template <> inline int miscPermImg<5>[5] = { 4, 2, 3, 0, 1 };
@@ -68,7 +71,6 @@ template <> inline int miscPermImg<6>[6] = { 4, 2, 3, 0, 5, 1 };
  */
 template <int n>
 class SmallPermTest : public CppUnit::TestFixture {
-    static_assert(n >= 3);
     static_assert(Perm<n>::codeType == regina::PERM_CODE_INDEX);
 
     private:
@@ -266,11 +268,17 @@ class SmallPermTest : public CppUnit::TestFixture {
                 }
             }
 
-            {
+            if constexpr (n > 2) {
                 // Test the n-argument and 2n-argument constructors.
                 // This involves some template magic to convert an
                 // integer array into a sequence of constructor arguments
                 // whose length depends on n.
+
+                // Note that Perm<2> does not have the usual 2-argument
+                // constructor that takes { image(0), image(1) }, since
+                // this would be confused with the pair swap constructor.
+                // Perm<2> is likewise missing the 4-argument constructor
+                // { a, image(a), b, image(b) } as well.
 
                 std::array<int, n> args1;
                 std::copy(img, img + n, args1.begin());
@@ -762,31 +770,43 @@ class SmallPermTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-            for (typename Perm<n-1>::Index i = 0; i < Perm<n-1>::nPerms; ++i) {
-                Perm<n> left = Perm<n>::extend(regina::Perm<n-1>::Sn[i]);
-                Perm<n> p = left;
-                p.clear(n - 1);
-                if (! looksEqual(p, left)) {
-                    std::ostringstream msg;
-                    msg << "Clearing from position " << (n - 1)
-                        << " gives the wrong result.";
-                    CPPUNIT_FAIL(msg.str());
+            if constexpr (n > 2) {
+                for (typename Perm<n-1>::Index i = 0; i < Perm<n-1>::nPerms;
+                        ++i) {
+                    Perm<n> left = Perm<n>::extend(regina::Perm<n-1>::Sn[i]);
+                    Perm<n> p = left;
+                    p.clear(n - 1);
+                    if (! looksEqual(p, left)) {
+                        std::ostringstream msg;
+                        msg << "Clearing from position " << (n - 1)
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
-            }
 
-            if constexpr (n > 3) {
-                clearFrom(); // tests clear<2..(n-2)>().
-            }
+                if constexpr (n > 3) {
+                    clearFrom(); // tests clear<2..(n-2)>().
+                }
 
-            for (typename Perm<n-1>::Index j = 0; j < Perm<n-1>::nPerms; ++j) {
-                Perm<n> p = rev *
-                    Perm<n>::extend(Perm<n-1>::Sn[j]) * rev;
-                p.clear(1);
-                if (! looksLikeIdentity(p)) {
-                    std::ostringstream msg;
-                    msg << "Clearing from position 1 "
-                        "gives the wrong result.";
-                    CPPUNIT_FAIL(msg.str());
+                for (typename Perm<n-1>::Index j = 0; j < Perm<n-1>::nPerms;
+                        ++j) {
+                    Perm<n> p = rev *
+                        Perm<n>::extend(Perm<n-1>::Sn[j]) * rev;
+                    p.clear(1);
+                    if (! looksLikeIdentity(p)) {
+                        std::ostringstream msg;
+                        msg << "Clearing from position 1 "
+                            "gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            } else {
+                // The n == 2 case: clear(1) can only send id -> id.
+                Perm<n> id;
+                id.clear(1);
+                if (! looksLikeIdentity(id)) {
+                    CPPUNIT_FAIL("Clearing from position 1 "
+                        "gives the wrong result.");
                 }
             }
             for (Index j = 0; j < nPerms; ++j) {
