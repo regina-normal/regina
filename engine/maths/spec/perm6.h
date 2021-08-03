@@ -3223,7 +3223,7 @@ inline constexpr bool Perm<6>::isPermCode1(Code1 code) {
     for (int i = 0; i < 6; i++)
         mask |= (1 << ((code >> (3 * i)) & 7));
             // mask |= (1 << imageOf(i));
-    return (mask == 63);
+    return (mask == 63 && (code >> 18) == 0);
 }
 
 inline constexpr bool Perm<6>::isPermCode2(Code2 code) {

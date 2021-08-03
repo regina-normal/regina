@@ -943,7 +943,13 @@ constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
         mask |= (1 << ((code >> (imageBits * i)) & imageMask));
-    return (mask + 1 == (1 << n));
+    if constexpr (n < 16) {
+        return (mask + 1 == (1 << n) && (code >> (imageBits * n)) == 0);
+    } else {
+        // There are no "spare bits" beyond the 16 * 4 bits used in the code.
+        // This means no need to check if any unwanted extra bits are set.
+        return (mask + 1 == (1 << n));
+    }
 }
 
 template <int n>

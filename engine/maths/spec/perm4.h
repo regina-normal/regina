@@ -1427,6 +1427,8 @@ inline constexpr Perm<4> Perm<4>::fromPermCode(Code1 code) {
 }
 
 inline constexpr bool Perm<4>::isPermCode1(Code1 code) {
+    // There are no "spare" bits since Code1 is uint8_t, which means there is
+    // no need to check that only the first 8 bits are in use.
     unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));

@@ -1912,7 +1912,7 @@ inline constexpr bool Perm<7>::isPermCode1(Code1 code) {
     for (int i = 0; i < 7; i++)
         mask |= (1 << ((code >> (3 * i)) & 7));
             // mask |= (1 << imageOf(i));
-    return (mask == 127);
+    return (mask == 127 && (code >> 21) == 0);
 }
 
 inline constexpr bool Perm<7>::isPermCode2(Code2 code) {
