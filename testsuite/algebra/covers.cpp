@@ -193,17 +193,17 @@ class CoversTest : public CppUnit::TestFixture {
         }
 
         void manifolds() {
-            // Cover only for degree 5:
-            compareResults<6>(regina::Example<3>::poincareHomologySphere());
+            // No covers until we hit degree 5 and beyond:
+            compareResults<7>(regina::Example<3>::poincareHomologySphere());
 
             // Cover (which is trivial) only for degree 3:
-            compareResults<6>(regina::Example<3>::lens(3, 1));
+            compareResults<7>(regina::Example<3>::lens(3, 1));
 
-            // Many covers for degree 5:
-            compareResults<6>(regina::Example<3>::weeks());
+            // Several covers for degree 5 and a few for degree 7:
+            compareResults<7>(regina::Example<3>::weeks());
 
-            // Many, many covers for degree 5 (and too slow to put degree 6
-            // in the test suite):
+            // Many, many covers for degree 5 (and a bit too slow to put
+            // degree 6 in the test suite: takes half a second on my machine):
             Triangulation<3>* ws = regina::Example<3>::weberSeifert();
             verifyResults<2>(ws, { }, false);
             verifyResults<3>(ws, { }, false);
@@ -229,18 +229,32 @@ class CoversTest : public CppUnit::TestFixture {
         }
 
         void knots() {
-            compareResults<6>(regina::ExampleLink::trefoilRight());
-            compareResults<6>(regina::ExampleLink::conway());
+            compareResults<7>(regina::ExampleLink::trefoilRight());
 
             // Each of the following invariants have been verified with SnapPea
             // and/or GAP.  However, SnapPea is slow to compute them for large
-            // indices, so for index >= 4 we hard-code the expected results.
+            // indices, so in those cases we have done the verification offline
+            // and just hard-coded the expected results here.
             //
-            // Actually, we are commenting out the index 6 tests
-            // entirely for link19 and link20, since Regina is also too
-            // slow with these to use in the test suite.  Note that
-            // almost all the running time is being spent computing
-            // abelianisations (i.e., Smith normal forms of matrices).
+            // We do not include index 7 tests for link19 or link20, since
+            // these definitely slow down the test suite more than we'd like.
+
+            Link* conway = regina::ExampleLink::conway();
+            compareResults<5>(conway, false);
+            verifyResults<6>(conway,
+                { "2 Z", "2 Z + Z_12", "2 Z + Z_2 + Z_4", "2 Z + Z_3",
+                  "2 Z + Z_3", "2 Z + Z_3", "2 Z + Z_3", "2 Z + Z_3",
+                  "2 Z + Z_30", "2 Z + Z_6", "2 Z + Z_6", "3 Z", "3 Z + Z_2",
+                  "3 Z + Z_2", "Z", "Z + Z_108" }, false );
+            verifyResults<7>(conway,
+                { "2 Z", "2 Z", "2 Z + Z_2", "3 Z", "3 Z", "3 Z", "3 Z", "3 Z",
+                  "3 Z", "3 Z", "3 Z", "3 Z + 2 Z_2", "3 Z + 2 Z_2",
+                  "3 Z + 2 Z_2", "3 Z + 2 Z_2", "3 Z + 2 Z_2", "3 Z + Z_2",
+                  "3 Z + Z_2", "3 Z + Z_2", "3 Z + Z_2", "3 Z + Z_6", "4 Z",
+                  "Z", "Z + 2 Z_2 + Z_4 + Z_12", "Z + 2 Z_2 + Z_4 + Z_12",
+                  "Z + 2 Z_2 + Z_8 + Z_40", "Z + 2 Z_2 + Z_8 + Z_40",
+                  "Z + Z_139", "Z + Z_1838", "Z + Z_2782" }, false);
+            delete conway;
 
             Link* link19 = regina::Link::fromKnotSig(
                 "tabcadefghdijklmnoipkjplmefqrghbcsonqrsvvvvvvb-VzgZBa");
@@ -250,12 +264,10 @@ class CoversTest : public CppUnit::TestFixture {
                 { "2 Z + Z_2" , "Z + Z_9 + Z_39411" }, false);
             verifyResults<5>(link19,
                 { "2 Z", "3 Z", "Z + 2 Z_6691" }, false);
-#if 0
             verifyResults<6>(link19,
                 { "2 Z + Z_157 + Z_628", "2 Z + Z_2 + Z_12", "2 Z + Z_4379",
                   "2 Z + Z_8758", "Z + 2 Z_2 + Z_314 + Z_1375006",
                   "Z + 2 Z_4 + Z_1819388", "Z + Z_628 + Z_324048" }, false);
-#endif
             delete link19;
 
             Link* link20 = regina::Link::fromKnotSig(
@@ -268,7 +280,6 @@ class CoversTest : public CppUnit::TestFixture {
                 { "2 Z", "2 Z + Z_2", "3 Z + 2 Z_2", "3 Z + 2 Z_2",
                   "3 Z + Z_2 + Z_6", "3 Z + Z_2 + Z_6", "3 Z + Z_3",
                   "4 Z + Z_4", "Z + 2 Z_15061", "Z + Z_6 + Z_8638440" }, false);
-#if 0
             verifyResults<6>(link20,
                 { "2 Z + 2 Z_12", "2 Z + 2 Z_3", "2 Z + 2 Z_3", "2 Z + 2 Z_3",
                   "2 Z + 3 Z_2 + Z_36", "2 Z + 3 Z_2 + Z_36",
@@ -281,25 +292,131 @@ class CoversTest : public CppUnit::TestFixture {
                   "4 Z + Z_2", "4 Z + Z_2", "4 Z + Z_2", "5 Z", "5 Z",
                   "Z + 2 Z_2 + Z_248 + Z_40176",
                   "Z + 2 Z_2 + Z_496 + Z_1818832", "Z + Z_56161980" }, false);
-#endif
             delete link20;
         }
 
+        template <int index>
+        void verifyFreeAbelian(int rank) {
+            // Every finite index subgroup of a free abelian group of
+            // rank n is also a free abelian group of rank n.
+            //
+            // For rank 1, there is exactly one subgroup up to conjugacy.
+            // For ranks 2 and above, we can get the expected number of
+            // subgroups up to conjugacy from the OEIS.
+            //
+            // For index 1, 2, ..., 10:
+            //     rank 2 (A000203): 1, 3, 4, 7, 6, 12, 8, 15, 13, 18
+            //     rank 3 (A001001): 1, 7, 13, 35, 31, 91, 57, 155, 130, 217
+            //     rank 4 (A038991): 1, 15, 40, 155, 156,
+            //                       600, 400, 1395, 1210, 2340
+            //     rank 5 (A038992): 1, 31, 121, 651, 781,
+            //                       3751, 2801, 11811, 11011, 24211
+            //     rank 6 (A038993): 1, 63, 364, 2667, 3906,
+            //                       22932, 19608, 97155, 99463, 246078
+            //     rank 7 (A038994): 1, 127, 1093, 10795, 19531,
+            //                       138811, 137257, 788035, 896260, 2480437
+            //     rank 8 (A038995): 1, 255, 3280, 43435, 97656,
+            //                       836400, 960800, 6347715, 8069620, 24902280
+            //     rank 9 (A038996): 1, 511, 9841, 174251, 488281, 5028751,
+            //                       6725601, 50955971, 72636421, 249511591
+            //
+            // We just hard-code the expected results in an array,
+            // which is indexed as expected[rank - 1][index - 2].
+            static constexpr size_t maxIndex = 10;
+            static constexpr size_t maxRank = 6; // enough for our tests
+            static constexpr size_t expected[maxRank][maxIndex - 1] = {
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 3, 4, 7, 6, 12, 8, 15, 13, 18 },
+                { 7, 13, 35, 31, 91, 57, 155, 130, 217 },
+                { 15, 40, 155, 156, 600, 400, 1395, 1210, 2340 },
+                { 31, 121, 651, 781, 3751, 2801, 11811, 11011, 24211 },
+                { 63, 364, 2667, 3906, 22932, 19608, 97155, 99463, 246078 }
+            };
+
+            if (index < 2 || index > maxIndex) {
+                std::ostringstream msg;
+                msg << "Index " << index << " is out of range for this test.";
+                CPPUNIT_FAIL(msg.str());
+                // We cannot continue below, but CPPUNIT_FAIL throws an
+                // exception so this is fine.
+            }
+            if (rank < 1 || rank > maxRank) {
+                std::ostringstream msg;
+                msg << "Rank " << rank << " is out of range for this test.";
+                CPPUNIT_FAIL(msg.str());
+                // We cannot continue below, but CPPUNIT_FAIL throws an
+                // exception so this is fine.
+            }
+
+            // Build the group presentation.
+            GroupPresentation freeAbelian(rank);
+            for (int i = 0; i < rank; ++i)
+                for (int j = i + 1; j < rank; ++j) {
+                    regina::GroupExpression reln;
+                    reln.addTermLast(i, 1);
+                    reln.addTermLast(j, 1);
+                    reln.addTermLast(i, -1);
+                    reln.addTermLast(j, -1);
+                    freeAbelian.addRelation(std::move(reln));
+                }
+
+            // Now: go compute.
+            size_t expectedCount = expected[rank - 1][index - 2];
+
+            bool badCover = false;
+            size_t nFound = 0;
+            size_t ans = freeAbelian.enumerateCovers<index>([&](
+                    GroupPresentation& g) {
+                g.intelligentSimplify();
+
+                // Of course the group itself should be free abelian, but we
+                // call abelianisation() since that is guaranteed to show
+                // the correct rank, whereas the presentation on its own
+                // could be too messy for Regina to recognise.
+                auto ab = g.abelianisation();
+                if (! ab.isFree(rank))
+                    badCover = true;
+
+                ++nFound;
+            });
+
+            if (badCover) {
+                std::ostringstream msg;
+                msg << "Free abelian(" << rank << ") yielded an index " << index
+                    << " subgroup that is not free of rank " << rank << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (ans != nFound) {
+                std::ostringstream msg;
+                msg << "Free abelian(" << rank << ") yielded inconsistent "
+                    "numbers of subgroups for index " << index << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (ans != expectedCount) {
+                std::ostringstream msg;
+                msg << "Free abelian(" << rank << ") yielded " << ans
+                    << "subgroups for index " << index
+                    << " instead of the expected "
+                    << expectedCount << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void freeAbelian() {
-            // Free abelian (and indeed just free) on one generator:
-            compareResults<7>(regina::Example<3>::s2xs1());
-            compareResults<7>(regina::ExampleLink::unknot());
-
-            // Free abelian on two generators:
-            // Build a torus, coned in both directions, to give an ideal
-            // triangulation of TxI.
-            compareResults<7>(regina::Triangulation<3>::fromIsoSig(
-                "eLMkbbdddpuapu"), "T x I");
-
-            // Free abelian on three generators (here we stop at index 6 to
-            // avoid consuming too much time):
-            compareResults<6>(regina::Triangulation<3>::fromIsoSig(
-                "gvLQQedfedffrwawrhh"), "T x S1");
+            // The upper bounds on the ranks below were chosen according to
+            // what would finish quickly enough to be part of the test suite.
+            for (int rank = 1; rank <= 6; ++rank)
+                verifyFreeAbelian<2>(rank);
+            for (int rank = 1; rank <= 6; ++rank)
+                verifyFreeAbelian<3>(rank);
+            for (int rank = 1; rank <= 5; ++rank)
+                verifyFreeAbelian<4>(rank);
+            for (int rank = 1; rank <= 5; ++rank)
+                verifyFreeAbelian<5>(rank);
+            for (int rank = 1; rank <= 4; ++rank)
+                verifyFreeAbelian<6>(rank);
+            for (int rank = 1; rank <= 4; ++rank)
+                verifyFreeAbelian<7>(rank);
         }
 
         template <int index>
