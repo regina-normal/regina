@@ -223,10 +223,10 @@ Equality type : EqualityType.BY_REFERENCE
 ConstArray_Perm6_orderedS6 : class
 Equality type : EqualityType.BY_REFERENCE
 
-ConstArray_Perm7_Sn : class
+ConstArray_Perm7_S7 : class
 Equality type : EqualityType.BY_REFERENCE
 
-ConstArray_Perm7_orderedSn : class
+ConstArray_Perm7_orderedS7 : class
 Equality type : EqualityType.BY_REFERENCE
 
 ConstArray_Perm8_Sn : class
