@@ -1431,7 +1431,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \tparam index the number \a k in the description above; in other
          * words, the index of the resulting subgroups.  Currently this
-         * must be between 2 and 6 inclusive; this range is chosen because
+         * must be between 2 and 7 inclusive; this range is chosen because
          * those are the \a k for which Regina's permutation class Perm<k>
          * is highly optimised.
          * @param action a function (or other callable object) to call

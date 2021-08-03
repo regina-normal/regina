@@ -189,7 +189,7 @@ class CoversTest : public CppUnit::TestFixture {
 
         void trivial() {
             // No covers:
-            compareResults<6>(regina::Example<3>::sphere());
+            compareResults<7>(regina::Example<3>::sphere());
         }
 
         void manifolds() {
@@ -287,16 +287,17 @@ class CoversTest : public CppUnit::TestFixture {
 
         void freeAbelian() {
             // Free abelian (and indeed just free) on one generator:
-            compareResults<6>(regina::Example<3>::s2xs1());
-            compareResults<6>(regina::ExampleLink::unknot());
+            compareResults<7>(regina::Example<3>::s2xs1());
+            compareResults<7>(regina::ExampleLink::unknot());
 
             // Free abelian on two generators:
             // Build a torus, coned in both directions, to give an ideal
             // triangulation of TxI.
-            compareResults<6>(regina::Triangulation<3>::fromIsoSig(
+            compareResults<7>(regina::Triangulation<3>::fromIsoSig(
                 "eLMkbbdddpuapu"), "T x I");
 
-            // Free abelian on three generators:
+            // Free abelian on three generators (here we stop at index 6 to
+            // avoid consuming too much time):
             compareResults<6>(regina::Triangulation<3>::fromIsoSig(
                 "gvLQQedfedffrwawrhh"), "T x S1");
         }
@@ -330,14 +331,15 @@ class CoversTest : public CppUnit::TestFixture {
             // which is indexed as expected[index - 2][rank - 1].
             // An array value of 0 means the result is beyond the end of
             // our hard-coded list of results for that particular index.
-            static constexpr size_t maxIndex = 6;
+            static constexpr size_t maxIndex = 7;
             static constexpr size_t maxRank = 9;
             static constexpr size_t expected[maxIndex - 1][maxRank] = {
                 { 1, 3, 7, 15, 31, 63, 127, 255, 511 },
                 { 1, 7, 41, 235, 1361, 7987, 47321, 281995, 0 },
                 { 1, 26, 604, 14120, 334576, 7987616, 191318464, 0, 0 },
                 { 1, 97, 13753, 1712845, 207009649, 0, 0, 0, 0 },
-                { 1, 624, 504243, 371515454, 0, 0, 0, 0, 0 }
+                { 1, 624, 504243, 371515454, 0, 0, 0, 0, 0 },
+                { 1, 4163, 24824785, 0, 0, 0, 0, 0, 0 }
             };
 
             if (index < 2 || index > maxIndex) {
@@ -413,6 +415,8 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyFree<5>(rank);
             for (int rank = 0; rank <= 2; ++rank)
                 verifyFree<6>(rank);
+            for (int rank = 0; rank <= 2; ++rank)
+                verifyFree<7>(rank);
         }
 
         template <int index>
@@ -480,16 +484,18 @@ class CoversTest : public CppUnit::TestFixture {
         }
 
         void cyclic() {
-            for (int order = 1; order <= 13; ++order)
+            for (int order = 1; order <= 15; ++order)
                 verifyCyclic<2>(order);
-            for (int order = 1; order <= 13; ++order)
+            for (int order = 1; order <= 15; ++order)
                 verifyCyclic<3>(order);
-            for (int order = 1; order <= 13; ++order)
+            for (int order = 1; order <= 15; ++order)
                 verifyCyclic<4>(order);
-            for (int order = 1; order <= 13; ++order)
+            for (int order = 1; order <= 15; ++order)
                 verifyCyclic<5>(order);
-            for (int order = 1; order <= 13; ++order)
+            for (int order = 1; order <= 15; ++order)
                 verifyCyclic<6>(order);
+            for (int order = 1; order <= 15; ++order)
+                verifyCyclic<7>(order);
         }
 };
 

@@ -173,10 +173,11 @@ void addGroupPresentation(pybind11::module_& m) {
                 case 4: return p.enumerateCovers<4>(action);
                 case 5: return p.enumerateCovers<5>(action);
                 case 6: return p.enumerateCovers<6>(action);
+                case 7: return p.enumerateCovers<7>(action);
             }
             PyErr_SetString(PyExc_ValueError,
                 "The index passed to enumerateCovers() must be between "
-                "2 and 6 inclusive.");
+                "2 and 7 inclusive.");
             return 0;
         })
         .def("incidence", &GroupPresentation::incidence)
