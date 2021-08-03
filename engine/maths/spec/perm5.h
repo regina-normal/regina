@@ -1848,7 +1848,7 @@ inline constexpr int Perm<5>::S5Index(int a, int b, int c, int d, int e) {
     // First compute the ordered S5 index.
     int ans = 24 * a +
               6 * (b - (b > a ? 1 : 0)) +
-              2 * (c - ((c > b ? 1 : 0) + (c > a ? 1 : 0))) +
+              2 * ((c > d ? 1 : 0) + (c > e ? 1 : 0)) +
                   (d > e ? 1 : 0);
 
     // Then switch to the plain (unordered) S5 index.

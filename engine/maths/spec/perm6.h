@@ -3438,7 +3438,7 @@ inline constexpr int Perm<6>::S6Index(int a, int b, int c, int d, int e,
     int ans = 120 * a +
               24 * (b - (b > a ? 1 : 0)) +
               6 * (c - ((c > b ? 1 : 0) + (c > a ? 1 : 0))) +
-              2 * (d - ((d > c ? 1 : 0) + (d > b ? 1 : 0) + (d > a ? 1 : 0))) +
+              2 * ((d > e ? 1 : 0) + (d > f ? 1 : 0)) +
                   (e > f ? 1 : 0);
 
     // Then switch to the plain (unordered) S6 index.
