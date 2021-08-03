@@ -76,7 +76,7 @@ namespace regina {
  * objects to and from the engine.  For Perm<2>, the internal code is 0 for
  * the identity permutation, or 1 for the (unique) non-identity permutation.
  * This is consistent with the second-generation codes used in classes
- * Perm<4>, Perm<5> and Perm<6>.
+ * Perm<4>,...,Perm<7>.
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *

@@ -30,35 +30,46 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include "testsuite/maths/permtest.h"
+#include "testsuite/maths/testmaths.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+using regina::Perm;
 
-void addBinomial(CppUnit::TextUi::TestRunner& runner);
-void addCyclotomic(CppUnit::TextUi::TestRunner& runner);
-void addMatrix(CppUnit::TextUi::TestRunner& runner);
-void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
-void addInteger(CppUnit::TextUi::TestRunner& runner);
-void addLaurent(CppUnit::TextUi::TestRunner& runner);
-void addLaurent2(CppUnit::TextUi::TestRunner& runner);
-void addPerm(CppUnit::TextUi::TestRunner& runner);
-void addPerm2(CppUnit::TextUi::TestRunner& runner);
-void addPerm3(CppUnit::TextUi::TestRunner& runner);
-void addPerm4(CppUnit::TextUi::TestRunner& runner);
-void addPerm5(CppUnit::TextUi::TestRunner& runner);
-void addPerm6(CppUnit::TextUi::TestRunner& runner);
-void addPerm7(CppUnit::TextUi::TestRunner& runner);
-void addPolynomial(CppUnit::TextUi::TestRunner& runner);
-void addPrimes(CppUnit::TextUi::TestRunner& runner);
-void addRational(CppUnit::TextUi::TestRunner& runner);
-void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
-void addPermConv(CppUnit::TextUi::TestRunner& runner);
+class Perm7Test : public SmallPermTest<7> {
+    CPPUNIT_TEST_SUITE(Perm7Test);
+
+    // Generic inherited tests:
+    CPPUNIT_TEST(permCode);
+    CPPUNIT_TEST(sign);
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(exhaustive);
+    CPPUNIT_TEST(swaps);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(cachedProducts);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(order);
+    CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(cachedPow);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(increment);
+
+    // Tests specific to Perm<7>:
+    CPPUNIT_TEST(aliases);
+
+    CPPUNIT_TEST_SUITE_END();
+
+    public:
+        void aliases() {
+            for (Perm<7>::Index i = 0; i < Perm<7>::nPerms; ++i)
+                if (Perm<7>::S7[i] != Perm<7>::Sn[i])
+                    CPPUNIT_FAIL("Arrays S7 and Sn disagree for Perm<7>.");
+        }
+};
+
+void addPerm7(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Perm7Test::suite());
+}
 

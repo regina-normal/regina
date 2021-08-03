@@ -381,8 +381,8 @@ Version 6.1  [ TODO ]
             - For all classes that support packed image sequences in any form
               (n >= 4), added type ImagePack; constants imageBits, imageMask;
               and routines imagePack(), fromImagePack(), isImagePack().  For
-              n >= 7 these are aliases for the permutation code routines; for
-              n = 4,5,6 they are aliases for the first-generation code routines.
+              n >= 8 these are aliases for the permutation code routines; for
+              n = 4..7 they are aliases for the first-generation code routines.
             - Almost everything in the permutation classes is now constexpr.
             - Routines index() and atIndex() are now deprecated.
               Use orderedSnIndex() and orderedSn[...] instead.
@@ -407,7 +407,7 @@ Version 6.1  [ TODO ]
             - Renamed permCode(), setPermCode(), fromPermCode(), isPermCode()
               to permCode1(), setPermCode1(), fromPermCode1(), isPermCode1().
               The old names are now deprecated.
-        Class Perm<5>, Perm<6>:
+        Class Perm<5>, Perm<6>, Perm<7>:
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
             - New ++ and < operators.
@@ -424,10 +424,13 @@ Version 6.1  [ TODO ]
               The old names are now deprecated.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
-            - Perm<6> now gains most of the extra functionality that Perm<2..5>
+            - Perm<6,7> now gain most of the extra functionality that Perm<2..5>
               already had over the generic higher-order Perm<n> class.
-            - Perm<6> also gains functions precompute() and cachedComp() for
-              users to generate and use lookup tables of products at runtime.
+            - Perm<6> also gains functions precompute(), cachedComp() and
+              cachedPow() for users to generate and use lookup tables of
+              products at runtime.
+            - Perm<7> likewise gains precompute(), cachedComp(), cachedPow()
+              and cachedOrder().
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
         Class Polynomial:

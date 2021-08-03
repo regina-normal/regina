@@ -6,6 +6,7 @@ SET ( FILES
   perm4.cpp
   perm5.cpp
   perm6.cpp
+  perm7.cpp
   )
 
 # Prepend folder name
@@ -23,5 +24,6 @@ if (${REGINA_INSTALL_DEV})
     perm4.h
     perm5.h
     perm6.h
+    perm7.h
     DESTINATION "${INCLUDEDIR}/maths/spec" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

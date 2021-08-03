@@ -43,6 +43,7 @@ template <int n> unsigned long identityImagePack;
 template <> inline unsigned long identityImagePack<4> = 228;
 template <> inline unsigned long identityImagePack<5> = 18056;
 template <> inline unsigned long identityImagePack<6> = 181896;
+template <> inline unsigned long identityImagePack<7> = 1754760;
 
 template <int n> const char* identityString;
 template <> inline const char* identityString<2> = "01";
@@ -50,6 +51,7 @@ template <> inline const char* identityString<3> = "012";
 template <> inline const char* identityString<4> = "0123";
 template <> inline const char* identityString<5> = "01234";
 template <> inline const char* identityString<6> = "012345";
+template <> inline const char* identityString<7> = "0123456";
 
 template <int n> Perm<n> lastPerm;
 template <> inline Perm<2> lastPerm<2> { 1, 0 };
@@ -57,6 +59,7 @@ template <> inline Perm<3> lastPerm<3> { 2, 1, 0 };
 template <> inline Perm<4> lastPerm<4> { 3, 2, 1, 0 };
 template <> inline Perm<5> lastPerm<5> { 4, 3, 2, 1, 0 };
 template <> inline Perm<6> lastPerm<6> { 5, 4, 3, 2, 1, 0 };
+template <> inline Perm<7> lastPerm<7> { 6, 5, 4, 3, 2, 1, 0 };
 
 template <int n> int miscPermImg[n];
 template <> inline int miscPermImg<2>[2] = { 1, 0 };
@@ -64,6 +67,7 @@ template <> inline int miscPermImg<3>[3] = { 2, 0, 1 };
 template <> inline int miscPermImg<4>[4] = { 2, 3, 1, 0 };
 template <> inline int miscPermImg<5>[5] = { 4, 2, 3, 0, 1 };
 template <> inline int miscPermImg<6>[6] = { 4, 2, 3, 0, 5, 1 };
+template <> inline int miscPermImg<7>[7] = { 4, 6, 2, 3, 0, 5, 1 };
 
 /**
  * Inherited by the "small" permutation test classes, corresponding to
@@ -74,8 +78,8 @@ class SmallPermTest : public CppUnit::TestFixture {
     static_assert(Perm<n>::codeType == regina::PERM_CODE_INDEX);
 
     private:
-        static constexpr bool requiresPrecompute = (n == 6);
-        static constexpr bool usesCode2 = (n >= 4 && n <= 6);
+        static constexpr bool requiresPrecompute = (n == 6 || n == 7);
+        static constexpr bool usesCode2 = (n >= 4 && n <= 7);
         typedef typename Perm<n>::Index Index;
         static constexpr Index nPerms = Perm<n>::nPerms;
 

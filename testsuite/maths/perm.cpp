@@ -583,7 +583,6 @@ class PermTest : public CppUnit::TestFixture {
 };
 
 void addPerm(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(PermTest<7>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<8>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<9>::suite()); // 4-bit images, 64-bit code
     // runner.addTest(PermTest<10>::suite());
