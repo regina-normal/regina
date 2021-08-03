@@ -1020,6 +1020,9 @@ void GroupPresentation::minimaxGenerators() {
 template <int index>
 size_t GroupPresentation::enumerateCoversInternal(
         std::function<void(GroupPresentation&)>&& action) {
+    static_assert(2 <= index && index <= 7,
+        "Currently enumerateCovers() is only available for 2 <= index <= 7.");
+
     if (nGenerators_ == 0) {
         // We have the trivial group.
         // There is only one trivial representation, and it is not transitive.
