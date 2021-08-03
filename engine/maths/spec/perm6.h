@@ -793,9 +793,9 @@ class Perm<6> {
         /**
          * Finds the reverse of this permutation.
          *
-         * Here \e reverse means that we reverse the images of 0,...,4.
+         * Here \e reverse means that we reverse the images of 0,...,5.
          * In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[4 - i]</tt> for all \a i.
+         * reverse of \a p, then <tt>p[i] == q[5 - i]</tt> for all \a i.
          */
         constexpr Perm<6> reverse() const;
 
@@ -1068,7 +1068,7 @@ class Perm<6> {
 
         /**
          * Deprecated routine that returns the <i>i</i>th permutation on
-         * five elements, where permutations are numbered lexicographically.
+         * six elements, where permutations are numbered lexicographically.
          *
          * \deprecated Use orderedSn[\a i] instead.
          *

@@ -36,7 +36,7 @@
 
 namespace regina {
 
-Perm<6>::Code2 (*Perm<6>::products_)[720];
+Perm<6>::Code2 (*Perm<6>::products_)[720] = nullptr;
 
 namespace {
     std::mutex precomputeMutex;

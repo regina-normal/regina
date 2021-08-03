@@ -179,6 +179,13 @@ class Perm {
          * Denotes a native signed integer type large enough to count all
          * permutations on \a n elements.  In other words, this is a
          * native signed integer type large enough to store (<i>n</i>!).
+         *
+         * \note This type is not hyper-optimised: for very small \a n where
+         * Index is hard-coded this is just an \c int, and for larger \a n
+         * where Index is derived it is actually large enough to hold an
+         * entire image pack.  If at any stage there are plans to optimise this
+         * type, be careful of the special case of \a n = 8, where (8!) can be
+         * stored in an \e unsigned 16-bit type but not a signed 16-bit type.
          */
         typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::type Index;
 
@@ -1105,7 +1112,7 @@ Perm<n> Perm<n>::rand(bool even) {
 template <int n>
 template <class URBG>
 Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
-    // Note: This generic implementation of Perm covers 6 <= n <= 16.
+    // Note: This generic implementation of Perm covers 7 <= n <= 16.
     // The corresponding index types require 16, 32 or 64 bits.
     //
     // A slight messiness here is that std::uniform_int_distribution
