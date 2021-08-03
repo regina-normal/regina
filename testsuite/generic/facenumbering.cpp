@@ -204,7 +204,7 @@ void addFaceNumbering(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(FaceNumberingTest<4, 2>::suite());
     runner.addTest(FaceNumberingTest<4, 3>::suite());
 
-    // Generic implementations:
+    // Generic face numbering but specialised permutation templates:
     runner.addTest(FaceNumberingTest<5, 0>::suite());
     runner.addTest(FaceNumberingTest<5, 1>::suite());
     runner.addTest(FaceNumberingTest<5, 2>::suite());
@@ -225,6 +225,16 @@ void addFaceNumbering(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(FaceNumberingTest<7, 4>::suite());
     runner.addTest(FaceNumberingTest<7, 5>::suite());
     runner.addTest(FaceNumberingTest<7, 6>::suite());
+
+    // Generic face numbering *and* permutation templates:
+    runner.addTest(FaceNumberingTest<8, 0>::suite());
+    runner.addTest(FaceNumberingTest<8, 1>::suite());
+    runner.addTest(FaceNumberingTest<8, 2>::suite());
+    runner.addTest(FaceNumberingTest<8, 3>::suite());
+    runner.addTest(FaceNumberingTest<8, 4>::suite());
+    runner.addTest(FaceNumberingTest<8, 5>::suite());
+    runner.addTest(FaceNumberingTest<8, 6>::suite());
+    runner.addTest(FaceNumberingTest<8, 7>::suite());
 
     runner.addTest(FaceNumberingTest<15, 0>::suite());
     runner.addTest(FaceNumberingTest<15, 1>::suite());
