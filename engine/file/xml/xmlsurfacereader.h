@@ -39,6 +39,7 @@
 #define __REGINA_XMLSURFACEREADER_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "file/xml/xmlpacketreader.h"
 #include "surfaces/normalsurfaces.h"
@@ -57,7 +58,7 @@ namespace regina {
  */
 class XMLNormalSurfaceReader : public XMLElementReader {
     private:
-        NormalSurface* surface_;
+        std::optional<NormalSurface> surface_;
             /**< The normal surface currently being read. */
         const Triangulation<3>* tri;
             /**< The triangulation in which this surface lives. */
@@ -79,12 +80,11 @@ class XMLNormalSurfaceReader : public XMLElementReader {
             NormalCoords newCoords);
 
         /**
-         * Returns the normal surface that has been read.
+         * Returns a reference to the normal surface that has been read.
          *
-         * @return the newly allocated normal surface, or 0 if an error
-         * occurred.
+         * @return the normal surface, or no value if an error occurred.
          */
-        NormalSurface* surface();
+        std::optional<NormalSurface>& surface();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -135,10 +135,10 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
 
 inline XMLNormalSurfaceReader::XMLNormalSurfaceReader(
         const Triangulation<3>* newTri, NormalCoords newCoords) :
-        surface_(0), tri(newTri), coords(newCoords), vecLen(-1) {
+        tri(newTri), coords(newCoords), vecLen(-1) {
 }
 
-inline NormalSurface* XMLNormalSurfaceReader::surface() {
+inline std::optional<NormalSurface>& XMLNormalSurfaceReader::surface() {
     return surface_;
 }
 

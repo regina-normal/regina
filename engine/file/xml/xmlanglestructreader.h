@@ -39,6 +39,7 @@
 #define __REGINA_XMLANGLESTRUCTREADER_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "file/xml/xmlpacketreader.h"
 #include "angle/anglestructures.h"
@@ -57,7 +58,7 @@ namespace regina {
  */
 class XMLAngleStructureReader : public XMLElementReader {
     private:
-        AngleStructure* angles;
+        std::optional<AngleStructure> angles;
             /**< The angle structure currently being read. */
         Triangulation<3>* tri;
             /**< The triangulation on which this angle structure is placed. */
@@ -73,12 +74,11 @@ class XMLAngleStructureReader : public XMLElementReader {
         XMLAngleStructureReader(Triangulation<3>* newTri);
 
         /**
-         * Returns the angle structure that has been read.
+         * Returns a reference to the angle structure that has been read.
          *
-         * @return the newly allocated angle structure, or 0 if an error
-         * occurred.
+         * @return the angle structure, or no value if an error occurred.
          */
-        AngleStructure* structure();
+        std::optional<AngleStructure>& structure();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -130,10 +130,10 @@ class XMLAngleStructuresReader : public XMLPacketReader {
 // Inline functions for XMLAngleStructureReader
 
 inline XMLAngleStructureReader::XMLAngleStructureReader(
-        Triangulation<3>* newTri) : angles(0), tri(newTri), vecLen(-1) {
+        Triangulation<3>* newTri) : tri(newTri), vecLen(-1) {
 }
 
-inline AngleStructure* XMLAngleStructureReader::structure() {
+inline std::optional<AngleStructure>& XMLAngleStructureReader::structure() {
     return angles;
 }
 

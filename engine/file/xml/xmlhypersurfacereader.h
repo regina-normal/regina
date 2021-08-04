@@ -39,6 +39,7 @@
 #define __REGINA_XMLHYPERSURFACEREADER_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "file/xml/xmlpacketreader.h"
@@ -58,7 +59,7 @@ namespace regina {
  */
 class XMLNormalHypersurfaceReader : public XMLElementReader {
     private:
-        NormalHypersurface* surface_;
+        std::optional<NormalHypersurface> surface_;
             /**< The normal hypersurface currently being read. */
         const Triangulation<4>* tri_;
             /**< The triangulation in which this hypersurface lives. */
@@ -80,12 +81,11 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
             HyperCoords coords);
 
         /**
-         * Returns the normal hypersurface that has been read.
+         * Returns a reference to the normal hypersurface that has been read.
          *
-         * @return the newly allocated normal hypersurface, or 0 if an error
-         * occurred.
+         * @return the normal hypersurface, or no value if an error occurred.
          */
-        NormalHypersurface* hypersurface();
+        std::optional<NormalHypersurface>& hypersurface();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -137,10 +137,11 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
 
 inline XMLNormalHypersurfaceReader::XMLNormalHypersurfaceReader(
         const Triangulation<4>* tri, HyperCoords coords) :
-        surface_(0), tri_(tri), coords_(coords), vecLen_(-1) {
+        tri_(tri), coords_(coords), vecLen_(-1) {
 }
 
-inline NormalHypersurface* XMLNormalHypersurfaceReader::hypersurface() {
+inline std::optional<NormalHypersurface>&
+        XMLNormalHypersurfaceReader::hypersurface() {
     return surface_;
 }
 

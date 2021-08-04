@@ -79,7 +79,7 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
         return;
     }
 
-    surface_ = new NormalHypersurface(*tri_, vec);
+    surface_ = NormalHypersurface(*tri_, vec);
     if (! name_.empty())
         surface_->setName(name_);
 }
@@ -142,9 +142,8 @@ void XMLNormalHypersurfacesReader::endContentSubElement(
         XMLElementReader* subReader) {
     if (list_)
         if (subTagName == "hypersurface")
-            if (NormalHypersurface* s =
-                    dynamic_cast<XMLNormalHypersurfaceReader*>(subReader)->
-                    hypersurface())
+            if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+                    subReader)->hypersurface())
                 list_->surfaces_.push_back(std::move(*s));
 }
 

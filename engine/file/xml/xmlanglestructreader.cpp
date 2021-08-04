@@ -71,7 +71,7 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
         return;
     }
 
-    angles = new AngleStructure(*tri, vec);
+    angles = AngleStructure(*tri, vec);
 }
 
 XMLElementReader* XMLAngleStructureReader::startSubElement(
@@ -112,8 +112,8 @@ void XMLAngleStructuresReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "struct")
-        if (AngleStructure* s =
-                dynamic_cast<XMLAngleStructureReader*>(subReader)->structure())
+        if (auto& s = dynamic_cast<XMLAngleStructureReader*>(subReader)->
+                structure())
             list->structures_.push_back(std::move(*s));
 }
 

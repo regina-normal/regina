@@ -519,12 +519,9 @@ inline void XMLTriangulationReaderBase<dim>::AbelianGroupPropertyReader::
         endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "abeliangroup") {
-        AbelianGroup* ans = dynamic_cast<XMLAbelianGroupReader*>(subReader)->
-            group();
-        if (ans) {
+        auto& ans = dynamic_cast<XMLAbelianGroupReader*>(subReader)->group();
+        if (ans)
             prop_ = std::move(*ans);
-            delete ans;
-        }
     }
 }
 
@@ -552,12 +549,10 @@ inline void XMLTriangulationReaderBase<dim>::GroupPresentationPropertyReader::
         endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "group") {
-        GroupPresentation* ans = dynamic_cast<
-            XMLGroupPresentationReader*>(subReader)->group();
-        if (ans) {
+        auto& ans = dynamic_cast<XMLGroupPresentationReader*>(subReader)->
+            group();
+        if (ans)
             prop_ = std::move(*ans);
-            delete ans;
-        }
     }
 }
 
