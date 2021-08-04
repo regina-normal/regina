@@ -153,17 +153,15 @@ void Tri4HomologyFundUI::refresh() {
         fgMsg->show();
     } else {
         fgMsg->hide();
-        fgGroup->refresh(&tri->fundamentalGroup());
+        fgGroup->refresh(tri->fundamentalGroup());
         fgGroup->show();
     }
 }
 
 void Tri4HomologyFundUI::fundGroupSimplified() {
-    regina::GroupPresentation* simp = fgGroup->takeSimplifiedGroup();
-    if (simp) {
+    auto simp = fgGroup->takeSimplifiedGroup();
+    if (simp)
         tri->simplifiedFundamentalGroup(std::move(*simp));
-        delete simp;
-    }
 }
 
 void Tri4HomologyFundUI::refreshLabels() {

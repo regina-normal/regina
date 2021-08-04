@@ -40,7 +40,7 @@
 #include <QDialog>
 #include <QProcess>
 #include <map>
-#include <memory>
+#include <optional>
 
 class MessageLayer;
 class QDialogButtonBox;
@@ -84,7 +84,7 @@ class GAPRunner : public QDialog {
          * Group information.
          */
         const regina::GroupPresentation& origGroup;
-        std::unique_ptr<regina::GroupPresentation> newGroup;
+        std::optional<regina::GroupPresentation> newGroup;
 
     public:
         /**
@@ -98,14 +98,14 @@ class GAPRunner : public QDialog {
          * Returns the new simplified group.
          *
          * This routine may only be called once!
-         * When called, ownership of the simplified group will be
-         * transferred to the calling routine.  Further calls to this
-         * routine will result in a null pointer being returned.
+         * When called, the data from the simplified group will be moved into
+         * the return value.  Further calls to this routine will result
+         * in undefined behaviour.
          *
-         * If no simplified group has been created, a null pointer will
+         * If no simplified group has been created, then no value will
          * be returned.
          */
-        std::unique_ptr<regina::GroupPresentation> simplifiedGroup();
+        std::optional<regina::GroupPresentation> simplifiedGroup();
 
     protected slots:
         /**
@@ -133,7 +133,8 @@ class GAPRunner : public QDialog {
         void processOutput(const QString& output);
         QString origGroupRelns();
         QString origGroupReln(const regina::GroupExpression& reln);
-        regina::GroupExpression* parseRelation(const QString& reln);
+        std::optional<regina::GroupExpression> parseRelation(
+            const QString& reln);
 
         /**
          * Display an error to the user and cancel the operation.
