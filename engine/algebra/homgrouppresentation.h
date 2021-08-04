@@ -39,6 +39,7 @@
 #define __REGINA_HOMGROUPPRESENTATION_H
 #endif
 
+#include <optional>
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
@@ -84,8 +85,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         std::vector<GroupExpression> map_;
             /**< A map whose ith element is the image in the range
                  of the ith generator from the domain. */
-        std::vector<GroupExpression>* inv_;
-            /**< Null unless this is a declared isomorphism, in which case
+        std::optional<std::vector<GroupExpression>> inv_;
+            /**< No value unless this is a declared isomorphism, in which case
                  this will be a map whose ith element is the image in the
                  domain of the ith generator from the range. */
 
@@ -146,44 +147,35 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
 
         /**
          * Creates a clone of the given homomorphism.
-         *
-         * @param src the homomorphism to clone.
          */
-        HomGroupPresentation(const HomGroupPresentation& src);
+        HomGroupPresentation(const HomGroupPresentation& src) = default;
 
         /**
          * Moves the contents of the given homomorphism into this new
          * homomorphism.  This is a fast (constant time) operation.
          *
-         * The homomorphism that was passed (\a src) will no longer be usable.
-         *
-         * @param src the homomorphism to move.
+         * The homomorphism that was passed will no longer be usable.
          */
-        HomGroupPresentation(HomGroupPresentation&& src) noexcept;
-
-        /**
-         * Destroys the group homomorphism.
-         */
-        ~HomGroupPresentation();
+        HomGroupPresentation(HomGroupPresentation&& src) noexcept = default;
 
         /**
          * Sets this to be a clone of the given homomorphism.
          *
-         * @param src the homomorphism to copy.
          * @return a reference to this homomorphism.
          */
-        HomGroupPresentation& operator = (const HomGroupPresentation& src);
+        HomGroupPresentation& operator = (const HomGroupPresentation&) =
+            default;
 
         /**
          * Moves the contents of the given homomorphism to this homomorphism.
          * This is a fast (constant time) operation.
          *
-         * The homomorphism that was passed (\a src) will no longer be usable.
+         * The homomorphism that was passed will no longer be usable.
          *
-         * @param src the homomorphism to move.
          * @return a reference to this homomorphism.
          */
-        HomGroupPresentation& operator = (HomGroupPresentation&& src) noexcept;
+        HomGroupPresentation& operator = (HomGroupPresentation&&) noexcept =
+            default;
 
         /**
          * Swaps the contents of this and the given homomorphism.
@@ -461,8 +453,7 @@ inline HomGroupPresentation::HomGroupPresentation(
             std::vector<GroupExpression> map ) :
         domain_(std::move(domain)),
         range_(std::move(range)),
-        map_(std::move(map)),
-        inv_(nullptr) {
+        map_(std::move(map)) {
 }
 
 inline HomGroupPresentation::HomGroupPresentation(
@@ -473,48 +464,14 @@ inline HomGroupPresentation::HomGroupPresentation(
         domain_(std::move(domain)),
         range_(std::move(range)),
         map_(std::move(map)),
-        inv_(new std::vector<GroupExpression>(std::move(inv))) {
-}
-
-inline HomGroupPresentation::HomGroupPresentation(
-        const HomGroupPresentation& cloneMe) :
-        domain_(cloneMe.domain_),
-        range_(cloneMe.range_),
-        map_(cloneMe.map_) {
-    if (cloneMe.inv_)
-        inv_ = new std::vector<GroupExpression>(*cloneMe.inv_);
-    else
-        inv_ = nullptr;
-}
-
-inline HomGroupPresentation::HomGroupPresentation(
-        HomGroupPresentation&& src) noexcept :
-        domain_(std::move(src.domain_)),
-        range_(std::move(src.range_)),
-        map_(std::move(src.map_)),
-        inv_(src.inv_) /* pointer */ {
-    src.inv_ = nullptr;
-}
-
-inline HomGroupPresentation::~HomGroupPresentation() {
-    delete inv_;
-}
-
-inline HomGroupPresentation& HomGroupPresentation::operator = (
-        HomGroupPresentation&& src) noexcept {
-    domain_ = std::move(src.domain_);
-    range_ = std::move(src.range_);
-    map_ = std::move(src.map_);
-    std::swap(inv_, src.inv_); // pointer
-    // Let src dispose of the original inv_ in its own destructor.
-    return *this;
+        inv_(std::move(inv)) {
 }
 
 inline void HomGroupPresentation::swap(HomGroupPresentation& other) noexcept {
     domain_.swap(other.domain_);
     range_.swap(other.range_);
     map_.swap(other.map_);
-    std::swap(inv_, other.inv_); // pointer
+    inv_.swap(other.inv_);
 }
 
 inline const GroupPresentation& HomGroupPresentation::domain() const {
@@ -526,7 +483,7 @@ inline const GroupPresentation& HomGroupPresentation::range() const {
 }
 
 inline bool HomGroupPresentation::knowsInverse() const {
-    return inv_;
+    return inv_.has_value();
 }
 
 inline GroupExpression HomGroupPresentation::evaluate(unsigned long i) const {

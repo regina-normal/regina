@@ -42,34 +42,13 @@ HomGroupPresentation::HomGroupPresentation(
             const GroupPresentation& groupForIdentity) :
         domain_(groupForIdentity), range_(groupForIdentity),
         map_(groupForIdentity.countGenerators()),
-        inv_(new std::vector<GroupExpression>(
-            groupForIdentity.countGenerators())) {
+        inv_(std::in_place, groupForIdentity.countGenerators()) {
     unsigned long i = 0;
-    for (auto& e : map_)
+    for (GroupExpression& e : map_)
         e.addTermFirst(i++, 1);
     i = 0;
-    for (auto& e : *inv_)
+    for (GroupExpression& e : *inv_)
         e.addTermFirst(i++, 1);
-}
-
-HomGroupPresentation& HomGroupPresentation::operator = (
-        const HomGroupPresentation& src) {
-    domain_ = src.domain_;
-    range_ = src.range_;
-    map_ = src.map_;
-
-    if (src.inv_) {
-        if (inv_)
-            *inv_ = *src.inv_;
-        else
-            inv_ = new std::vector<GroupExpression>(*src.inv_);
-    } else {
-        if (inv_) {
-            delete inv_;
-            inv_ = nullptr;
-        }
-    }
-    return *this;
 }
 
 HomMarkedAbelianGroup HomGroupPresentation::markedAbelianisation() const {
@@ -139,12 +118,12 @@ bool HomGroupPresentation::smallCancellation() {
     }
 
     map_ = std::move(newMap);
-    for (auto& e : map_)
+    for (GroupExpression& e : map_)
         retval |= range_.simplifyWord(e);
 
     if (inv_) {
         *inv_ = std::move(newInvMap);
-        for (auto& e : *inv_)
+        for (GroupExpression& e : *inv_)
             retval |= domain_.simplifyWord(e);
     }
 
@@ -203,12 +182,12 @@ bool HomGroupPresentation::intelligentNielsen()
  }
 
  map_ = std::move(newMap);
- for (auto& e : map_)
+ for (GroupExpression& e : map_)
      retval |= range_.simplifyWord(e);
 
  if (inv_) {
      *inv_ = std::move(newInvMap);
-     for (auto& e : *inv_)
+     for (GroupExpression& e : *inv_)
          retval |= domain_.simplifyWord(e);
  }
 
@@ -244,12 +223,12 @@ bool HomGroupPresentation::intelligentSimplify()
 
  // step 3: rewrite this map, and simplify
  map_ = std::move(newMap);
- for (auto& e : map_)
+ for (GroupExpression& e : map_)
      retval |= range_.simplifyWord(e);
 
  if (inv_) {
      *inv_ = std::move(newInvMap);
-     for (auto& e : *inv_)
+     for (GroupExpression& e : *inv_)
          retval |= domain_.simplifyWord(e);
  }
 

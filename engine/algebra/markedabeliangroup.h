@@ -39,8 +39,8 @@
 #define __REGINA_MARKEDABELIANGROUP_H
 #endif
 
+#include <optional>
 #include <vector>
-#include <memory>
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/matrix.h"
@@ -759,17 +759,17 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
             Normal form.  We also truncate off the trivial Z/Z factors so that
             reducedMatrix will not have the same dimensions as matrix. This
             means the torsion factors appear first, followed by the free
-            factors.  This is \c null if it has not yet been computed. */
-        MatrixInt* reducedMatrix_;
-        /** pointer to kernel of map, or \c null if not yet computed. */
-        MarkedAbelianGroup* kernel_;
-        /** pointer to coKernel of map, or \c null if not yet computed. */
-        MarkedAbelianGroup* coKernel_;
-        /** pointer to image, or \c null if not yet computed. */
-        MarkedAbelianGroup* image_;
+            factors.  This is no value if it has not yet been computed. */
+        std::optional<MatrixInt> reducedMatrix_;
+        /** pointer to kernel of map, or no value if not yet computed. */
+        std::optional<MarkedAbelianGroup> kernel_;
+        /** pointer to coKernel of map, or no value if not yet computed. */
+        std::optional<MarkedAbelianGroup> coKernel_;
+        /** pointer to image, or no value if not yet computed. */
+        std::optional<MarkedAbelianGroup> image_;
         /** pointer to a lattice which describes the kernel of the
-            homomorphism, or \c null if not yet computed. */
-        MatrixInt* reducedKernelLattice;
+            homomorphism, or no value if not yet computed. */
+        std::optional<MatrixInt> reducedKernelLattice_;
 
         /** compute the ReducedKernelLattice if not yet done */
         void computeReducedKernelLattice();
@@ -815,45 +815,36 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
 
         /**
          * Creates a clone of the given homomorphism.
-         *
-         * @param src the homomorphism to clone.
          */
-        HomMarkedAbelianGroup(const HomMarkedAbelianGroup& src);
+        HomMarkedAbelianGroup(const HomMarkedAbelianGroup&) = default;
 
         /**
          * Moves the contents of the given homomorphism into this new
          * homomorphism.  This is a fast (constant time) operation.
          *
-         * The homomorphism that was passed (\a src) will no longer be usable.
-         *
-         * @param src the homomorphism to move.
+         * The homomorphism that was passed will no longer be usable.
          */
-        HomMarkedAbelianGroup(HomMarkedAbelianGroup&& src) noexcept;
-
-        /**
-         * Destroys this homomorphism.
-         */
-        ~HomMarkedAbelianGroup();
+        HomMarkedAbelianGroup(HomMarkedAbelianGroup&& src) noexcept
+            = default;
 
         /**
          * Sets this to be a clone of the given homomorphism.
          *
-         * @param src the homomorphism to copy.
          * @return a reference to this homomorphism.
          */
-        HomMarkedAbelianGroup& operator = (const HomMarkedAbelianGroup& src);
+        HomMarkedAbelianGroup& operator = (const HomMarkedAbelianGroup&)
+            = default;
 
         /**
          * Moves the contents of the given homomorphism to this homomorphism.
          * This is a fast (constant time) operation.
          *
-         * The homomorphism that was passed (\a src) will no longer be usable.
+         * The homomorphism that was passed will no longer be usable.
          *
-         * @param src the homomorphism to move.
          * @return a reference to this homomorphism.
          */
-        HomMarkedAbelianGroup& operator = (HomMarkedAbelianGroup&& src)
-            noexcept;
+        HomMarkedAbelianGroup& operator = (HomMarkedAbelianGroup&&) noexcept
+            = default;
 
         /**
          * Swaps the contents of this and the given homomorphism.
@@ -1222,17 +1213,8 @@ inline void swap(MarkedAbelianGroup& a, MarkedAbelianGroup& b) noexcept {
 
 inline HomMarkedAbelianGroup::HomMarkedAbelianGroup(
         MarkedAbelianGroup dom, MarkedAbelianGroup ran, MatrixInt mat) :
-        domain_(std::move(dom)), range_(std::move(ran)), matrix(std::move(mat)),
-        reducedMatrix_(nullptr), kernel_(nullptr), coKernel_(nullptr),
-        image_(nullptr), reducedKernelLattice(nullptr) {
-}
-
-inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
-    delete reducedMatrix_;
-    delete kernel_;
-    delete coKernel_;
-    delete image_;
-    delete reducedKernelLattice;
+        domain_(std::move(dom)), range_(std::move(ran)),
+        matrix(std::move(mat)) {
 }
 
 inline const MarkedAbelianGroup& HomMarkedAbelianGroup::domain() const {

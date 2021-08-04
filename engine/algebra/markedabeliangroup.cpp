@@ -730,9 +730,7 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
         MarkedAbelianGroup tmpDom, MarkedAbelianGroup tmpRan) :
         domain_(std::move(tmpDom)), range_(std::move(tmpRan)),
         matrix(range_.M().columns(), domain_.M().columns()),
-        reducedMatrix_(new MatrixInt(std::move(tmpRedMat))),
-        kernel_(nullptr), coKernel_(nullptr),
-        image_(nullptr), reducedKernelLattice(nullptr) {
+        reducedMatrix_(std::move(tmpRedMat)) {
     // If using mod p coeff, p != 0: 
     //
     // we build up the CC map in reverse from the way we computed
@@ -840,107 +838,22 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
 }
 
 
-HomMarkedAbelianGroup::HomMarkedAbelianGroup(const HomMarkedAbelianGroup& g):
-        domain_(g.domain_), range_(g.range_), matrix(g.matrix) {
-    if (g.reducedMatrix_) { reducedMatrix_ = new MatrixInt(*g.reducedMatrix_); }
-     else reducedMatrix_ = nullptr;
-    if (g.kernel_) { kernel_ = new MarkedAbelianGroup(*g.kernel_); }
-     else kernel_ = nullptr;
-    if (g.coKernel_) { coKernel_ = new MarkedAbelianGroup(*g.coKernel_); }
-     else coKernel_ = nullptr;
-    if (g.image_) { image_ = new MarkedAbelianGroup(*g.image_); }
-     else image_ = nullptr;
-    if (g.reducedKernelLattice) { reducedKernelLattice = 
-       new MatrixInt(*g.reducedKernelLattice); } 
-     else reducedKernelLattice = nullptr;
-}
-
-HomMarkedAbelianGroup::HomMarkedAbelianGroup(HomMarkedAbelianGroup&& g)
-        noexcept :
-        domain_(std::move(g.domain_)),
-        range_(std::move(g.range_)),
-        matrix(std::move(g.matrix)),
-        reducedMatrix_(g.reducedMatrix_),
-        kernel_(g.kernel_),
-        coKernel_(g.coKernel_),
-        image_(g.image_),
-        reducedKernelLattice(g.reducedKernelLattice) {
-    g.reducedMatrix_ = nullptr;
-    g.kernel_ = nullptr;
-    g.coKernel_ = nullptr;
-    g.image_ = nullptr;
-    g.reducedKernelLattice = nullptr;
-}
-
-HomMarkedAbelianGroup& HomMarkedAbelianGroup::operator =(
-        const HomMarkedAbelianGroup& g) {
-    domain_ = g.domain_;
-    range_ = g.range_;
-    matrix = g.matrix;
-
-    delete reducedMatrix_;
-    if (g.reducedMatrix_)
-        reducedMatrix_ = new MatrixInt(*g.reducedMatrix_);
-    else
-        reducedMatrix_ = nullptr;
-
-    delete kernel_;
-    if (g.kernel_)
-        kernel_ = new MarkedAbelianGroup(*g.kernel_);
-    else
-        kernel_ = nullptr;
-
-    delete coKernel_;
-    if (g.coKernel_)
-        coKernel_ = new MarkedAbelianGroup(*g.coKernel_);
-    else
-        coKernel_ = nullptr;
-
-    delete image_;
-    if (g.image_)
-        image_ = new MarkedAbelianGroup(*g.image_);
-    else
-        image_ = nullptr;
-
-    delete reducedKernelLattice;
-    if (g.reducedKernelLattice)
-        reducedKernelLattice = new MatrixInt(*g.reducedKernelLattice);
-    else
-        reducedKernelLattice = nullptr;
-
-    return *this;
-}
-
-HomMarkedAbelianGroup& HomMarkedAbelianGroup::operator =(
-        HomMarkedAbelianGroup&& g) noexcept {
-    domain_ = std::move(g.domain_);
-    range_ = std::move(g.range_);
-    matrix = std::move(g.matrix);
-    std::swap(reducedMatrix_, g.reducedMatrix_);
-    std::swap(kernel_, g.kernel_);
-    std::swap(coKernel_, g.coKernel_);
-    std::swap(image_, g.image_);
-    std::swap(reducedKernelLattice, g.reducedKernelLattice);
-    // Let g dispose of the original data in its own destructor.
-    return *this;
-}
-
 void HomMarkedAbelianGroup::swap(HomMarkedAbelianGroup& other) noexcept {
     domain_.swap(other.domain_);
     range_.swap(other.range_);
     matrix.swap(other.matrix);
-    std::swap(reducedMatrix_, other.reducedMatrix_);
-    std::swap(kernel_, other.kernel_);
-    std::swap(coKernel_, other.coKernel_);
-    std::swap(image_, other.image_);
-    std::swap(reducedKernelLattice, other.reducedKernelLattice);
+    reducedMatrix_.swap(other.reducedMatrix_);
+    kernel_.swap(other.kernel_);
+    coKernel_.swap(other.coKernel_);
+    image_.swap(other.image_);
+    reducedKernelLattice_.swap(other.reducedKernelLattice_);
 }
 
 void HomMarkedAbelianGroup::computeReducedMatrix()
 {
  if (!reducedMatrix_)
   {
-   reducedMatrix_ = new MatrixInt( range_.minNumberOfGenerators(),
+   reducedMatrix_ = MatrixInt( range_.minNumberOfGenerators(),
     domain_.minNumberOfGenerators() );
 
    for (unsigned long j=0; j<reducedMatrix_->columns(); j++)
@@ -961,7 +874,7 @@ void HomMarkedAbelianGroup::computeReducedMatrix()
 }
 
 void HomMarkedAbelianGroup::computeReducedKernelLattice() {
-    if (!reducedKernelLattice) {
+    if (!reducedKernelLattice_) {
         computeReducedMatrix();
         const MatrixInt& redMatrix(*reducedMatrix_);
 
@@ -973,14 +886,14 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
             else
                 dcL[i]=Integer::zero;
 
-        reducedKernelLattice = new MatrixInt(preImageOfLattice(redMatrix, dcL));
+        reducedKernelLattice_ = MatrixInt(preImageOfLattice(redMatrix, dcL));
     }
 }
 
 void HomMarkedAbelianGroup::computeKernel() {
     if (!kernel_) {
         computeReducedKernelLattice();
-        MatrixInt dcLpreimage( *reducedKernelLattice );
+        MatrixInt dcLpreimage( *reducedKernelLattice_ );
 
         MatrixInt R, Ri, C, Ci;
         metricalSmithNormalForm( dcLpreimage, &R, &Ri, &C, &Ci );
@@ -998,7 +911,7 @@ void HomMarkedAbelianGroup::computeKernel() {
                         R.entry(i,k) * C.entry(k,j) ) / dcLpreimage.entry(k,k);
                 }
 
-        kernel_ = new MarkedAbelianGroup(MatrixInt(1, dcLpreimage.columns()),
+        kernel_ = MarkedAbelianGroup(MatrixInt(1, dcLpreimage.columns()),
             std::move(workMat));
     }
 }
@@ -1019,7 +932,7 @@ void HomMarkedAbelianGroup::computeCokernel() {
             ccrelators.entry(i,i+reducedMatrix_->columns())=
                 range_.invariantFactor(i);
 
-        coKernel_ = new MarkedAbelianGroup(MatrixInt(1, reducedMatrix_->rows()),
+        coKernel_ = MarkedAbelianGroup(MatrixInt(1, reducedMatrix_->rows()),
             std::move(ccrelators));
     }
 }
@@ -1028,7 +941,7 @@ void HomMarkedAbelianGroup::computeCokernel() {
 void HomMarkedAbelianGroup::computeImage() {
     if (!image_) {
         computeReducedKernelLattice();
-        const MatrixInt& dcLpreimage( *reducedKernelLattice );
+        const MatrixInt& dcLpreimage( *reducedKernelLattice_ );
 
         MatrixInt imgCCm(1, dcLpreimage.rows() );
         MatrixInt imgCCn(dcLpreimage.rows(),
@@ -1042,7 +955,7 @@ void HomMarkedAbelianGroup::computeImage() {
                 imgCCn.entry(i,j+domain_.countInvariantFactors()) =
                     dcLpreimage.entry(i,j);
 
-        image_ = new MarkedAbelianGroup(std::move(imgCCm), std::move(imgCCn));
+        image_ = MarkedAbelianGroup(std::move(imgCCm), std::move(imgCCn));
     }
 }
 
