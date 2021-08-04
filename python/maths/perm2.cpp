@@ -94,7 +94,8 @@ void addPerm2(pybind11::module_& m) {
         .def("reverse", &Perm<2>::reverse)
         .def("sign", &Perm<2>::sign)
         .def("__getitem__", &Perm<2>::operator[])
-        .def("preImageOf", &Perm<2>::preImageOf)
+        .def("pre", &Perm<2>::pre)
+        .def("preImageOf", &Perm<2>::pre) // deprecated
         .def("compareWith", &Perm<2>::compareWith)
         .def("isIdentity", &Perm<2>::isIdentity)
         .def(pybind11::self < pybind11::self)

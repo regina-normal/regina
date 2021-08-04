@@ -650,7 +650,7 @@ namespace {
     }
 
     inline void Block::attachVertexNbd(Tetrahedron<3>* nbd, int vertex) {
-        link_[vertex]->join(linkVertices_[vertex].preImageOf(vertex),
+        link_[vertex]->join(linkVertices_[vertex].pre(vertex),
             nbd, linkVertices_[vertex]);
     }
 

@@ -316,7 +316,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                     outerTetEmb = outerPent->tetrahedronMapping(facet);
 
                     outerTetDisc.tetIndex = outerTet->index();
-                    outerTetDisc.type = outerTetEmb.preImageOf(type);
+                    outerTetDisc.type = outerTetEmb.pre(type);
                     outerTetDisc.number = pieceNumber;
 
                     discData = &tetData[outerTetDisc.tetIndex]->data(
@@ -365,7 +365,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                 outerTet = outerPent->tetrahedron(facet);
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
                 outerTetDisc.tetIndex = outerTet->index();
-                outerTetDisc.type = outerTetEmb.preImageOf(e1);
+                outerTetDisc.type = outerTetEmb.pre(e1);
                 outerTetDisc.number = pieceNumber +
                     tetrahedra(pent, e1).longValue();
 
@@ -387,7 +387,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                 outerTet = outerPent->tetrahedron(facet);
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
                 outerTetDisc.tetIndex = outerTet->index();
-                outerTetDisc.type = outerTetEmb.preImageOf(e0);
+                outerTetDisc.type = outerTetEmb.pre(e0);
                 outerTetDisc.number = pieceNumber +
                     tetrahedra(pent, e0).longValue();
 
@@ -413,7 +413,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
                 outerTetDisc.tetIndex = outerTet->index();
                 outerTetDisc.type = 4 + quadSeparating
-                    [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
+                    [outerTetEmb.pre(e0)][outerTetEmb.pre(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the
                 // outer tetrahedron.  Prisms are numbered away from
                 // edge e0-e1 of the pentachoron.
@@ -465,7 +465,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
                 outerTetDisc.tetIndex = outerTet->index();
                 outerTetDisc.type = 4 + quadSeparating
-                    [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
+                    [outerTetEmb.pre(e0)][outerTetEmb.pre(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the
                 // outer tetrahedron.  Prisms are numbered away from
                 // edge e0-e1 of the pentachoron.
@@ -516,7 +516,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
                 outerTetDisc.tetIndex = outerTet->index();
                 outerTetDisc.type = 4 + quadSeparating
-                    [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
+                    [outerTetEmb.pre(e0)][outerTetEmb.pre(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the
                 // outer tetrahedron.  Prisms are numbered away from
                 // edge e0-e1 of the pentachoron.

@@ -432,7 +432,19 @@ class Perm<2> {
          * should be 0 or 1.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be 0 or 1.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -789,6 +801,10 @@ inline constexpr int Perm<2>::sign() const {
 
 inline constexpr int Perm<2>::operator[](int source) const {
     return source ^ code_;
+}
+
+inline constexpr int Perm<2>::pre(int image) const {
+    return image ^ code_;
 }
 
 inline constexpr int Perm<2>::preImageOf(int image) const {

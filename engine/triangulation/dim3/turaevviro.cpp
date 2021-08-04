@@ -1308,13 +1308,13 @@ namespace {
                 p = emb.vertices();
 
                 ++v[3 * tet->triangle(p[2])->index() +
-                    tet->triangleMapping(p[2]).preImageOf(p[0])];
+                    tet->triangleMapping(p[2]).pre(p[0])];
                 ++v[3 * tet->triangle(p[2])->index() +
-                    tet->triangleMapping(p[2]).preImageOf(p[1])];
+                    tet->triangleMapping(p[2]).pre(p[1])];
                 --v[3 * tet->triangle(p[3])->index() +
-                    tet->triangleMapping(p[3]).preImageOf(p[0])];
+                    tet->triangleMapping(p[3]).pre(p[0])];
                 --v[3 * tet->triangle(p[3])->index() +
-                    tet->triangleMapping(p[3]).preImageOf(p[1])];
+                    tet->triangleMapping(p[3]).pre(p[1])];
             }
         }
 

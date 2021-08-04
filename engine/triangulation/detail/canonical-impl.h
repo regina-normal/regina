@@ -104,8 +104,8 @@ struct CanonicalHelper {
             origTriBest = bestInv.simpImage(simplex);
 
             for (facet = 0; facet <= dim; ++facet) {
-                origFacet = current.facetPerm(origTri).preImageOf(facet);
-                origFacetBest = best.facetPerm(origTriBest).preImageOf(facet);
+                origFacet = current.facetPerm(origTri).pre(facet);
+                origFacetBest = best.facetPerm(origTriBest).pre(facet);
 
                 // Check out the adjacency along simplex/facet.
                 adjTri = tri->simplex(origTri)->adjacentSimplex(origFacet);

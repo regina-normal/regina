@@ -522,7 +522,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                         }
                         // Which facet of the old simplex is the destination
                         // of the gluing (using our own numbering scheme)?
-                        destFacet = oldVertices[l].preImageOf(
+                        destFacet = oldVertices[l].pre(
                             adjGluing[i][j][j < dim - k ? j : i + dim - k]);
 
                         if (j == l && oldFacet < destFacet) {

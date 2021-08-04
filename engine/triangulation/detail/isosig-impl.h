@@ -174,7 +174,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
         s = simplex(simpSrc);
 
         for (facetImg = 0; facetImg <= dim; ++facetImg) {
-            facetSrc = vertexMap[simpSrc].preImageOf(facetImg);
+            facetSrc = vertexMap[simpSrc].pre(facetImg);
 
             // INVARIANTS (held while we stay within a single component):
             // - nextUnusedSimp > simpImg

@@ -96,7 +96,7 @@ Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
             if (! adj)
                 continue;
 
-            faceInLink = pent->tetrahedronMapping(v).preImageOf(exitTet);
+            faceInLink = pent->tetrahedronMapping(v).pre(exitTet);
             if (ans->tetrahedron(i)->adjacentTetrahedron(faceInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.

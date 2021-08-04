@@ -498,7 +498,7 @@ class SmallPermTest : public CppUnit::TestFixture {
                 }
 
             for (int i = 0; i < n; ++i)
-                if (p.preImageOf(img[i]) != i) {
+                if (p.pre(img[i]) != i) {
                     std::ostringstream msg;
                     msg << "The element preimages for permutation "
                         << name.str() << " do not appear to be correct.";

@@ -1058,7 +1058,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                                 } else if (t.exponent < 0) {
                                     for (long i = 0; i > t.exponent; --i) {
                                         sheet = scheme.rep[t.generator]
-                                            .preImageOf(sheet);
+                                            .pre(sheet);
                                         gen = rewrite[
                                             t.generator * index + sheet];
                                         if (gen < sub.nGenerators_)

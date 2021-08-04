@@ -90,7 +90,7 @@ Triangulation<2>* Face<4, 1>::buildLinkDetail(bool labels,
             if (! adj)
                 continue;
 
-            edgeInLink = pent->triangleMapping(e).preImageOf(exitTet);
+            edgeInLink = pent->triangleMapping(e).pre(exitTet);
             if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.

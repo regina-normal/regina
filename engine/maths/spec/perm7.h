@@ -879,7 +879,19 @@ class Perm<7> {
          * should be between 0 and 6 inclusive.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be between 0 and 6 inclusive.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -2064,6 +2076,10 @@ inline constexpr int Perm<7>::operator[](int src) const {
         int img = Perm<6>::Sn[(code2_ % 720) ^ (slice & 1)][src - 1];
         return (img < slice ? img : img + 1);
     }
+}
+
+inline constexpr int Perm<7>::pre(int image) const {
+    return inverse()[image];
 }
 
 inline constexpr int Perm<7>::preImageOf(int image) const {

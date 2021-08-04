@@ -540,7 +540,19 @@ class Perm {
          * should be between 0 and <i>n</i>-1 inclusive.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be between 0 and <i>n</i>-1 inclusive.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -1008,12 +1020,17 @@ inline constexpr int Perm<n>::operator[](int source) const {
 }
 
 template <int n>
-inline constexpr int Perm<n>::preImageOf(int image) const {
+inline constexpr int Perm<n>::pre(int image) const {
     for (int i = 0; i < n; ++i)
         if (((code_ >> (imageBits * i)) & imageMask) == image)
             return i;
     // We should never reach this point.
     return -1;
+}
+
+template <int n>
+inline constexpr int Perm<n>::preImageOf(int image) const {
+    return pre(image);
 }
 
 template <int n>

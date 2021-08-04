@@ -443,7 +443,7 @@ bool Triangulation<4>::idealToFinite() {
                     for (unsigned long l=1; l<4; l++) {
                         p0.triIdx = (k+l) % 4;
                         Perm<5> triInc( aTet->triangleMapping( (k+l) % 4 ) );
-                        p0.vtxIdx = triInc.preImageOf( k );
+                        p0.vtxIdx = triInc.pre( k );
                         // figure out gluing map, would seem to depend on 
                         // p1.vtxIdx non-trivially.
                         // p0.vtxIdx= 0, 20    0->triInc[1] 1->p0.triIdx 2->triInc[2] 3->k 4->4
@@ -484,7 +484,7 @@ bool Triangulation<4>::idealToFinite() {
                 Perm<5> incPerm0, incPerm1; // relating the pent facets to the
                 unsigned long glueT(0); // ambient pent. glue across this tet in
                 // pen p0. for tri2 we are gluing a CCt only if either:
-                //  (1) triInc2.preImageOf( eMap[3] )==0 or
+                //  (1) triInc2.pre( eMap[3] )==0 or
                 //  (2) triInc2[1] non-ideal
                 //  (3) *both* triInc2[2] and triInc2[0] nonideal
                 if (eMap[3]==triInc2[0] ) { // id vtx 0 in tri2 adj
@@ -584,7 +584,7 @@ bool Triangulation<4>::idealToFinite() {
                 for (unsigned long k=1; k<5; k++) { // gluing for tet j+k % 5.
                     Perm<5> tetInc( aPen->tetrahedronMapping( (j+k) % 5 ) );
                     p1.tetIdx = (j+k) % 5;
-                    p1.triIdx = tetInc.preImageOf( j ); // the ideal triangle
+                    p1.triIdx = tetInc.pre( j ); // the ideal triangle
 #ifdef DEBUG // test to check if p0 and p1 exist 
                     if (newPens.find(p0)==newPens.end()) 
                         std::cerr<<"idealToFinite (10) p0 DNE";
@@ -612,8 +612,8 @@ bool Triangulation<4>::idealToFinite() {
             //  are incident to the triangle 012.
             Perm<5> tet0inc( aPen->tetrahedronMapping( triInc[3] ) );
             Perm<5> tet1inc( aPen->tetrahedronMapping( triInc[4] ) );
-            unsigned long tri0idx( tet0inc.preImageOf( triInc[4] ) );
-            unsigned long tri1idx( tet1inc.preImageOf( triInc[3] ) );
+            unsigned long tri0idx( tet0inc.pre( triInc[4] ) );
+            unsigned long tri1idx( tet1inc.pre( triInc[3] ) );
             // check if the triangle has any ideal vertices
             bool tIv(false);
             for (unsigned long k=0; k<3; k++)

@@ -1532,8 +1532,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     }
 
                     Vertex<3>* match = vLink->tetrahedron(k)->vertex(
-                        p->tetrahedronMapping(perm[j]).preImageOf(
-                        perm[1-j]));
+                        p->tetrahedronMapping(perm[j]).pre(perm[1-j]));
 
                     if (! e->hasBadIdentification()) {
                         if (! match->buildLink()->isIsomorphicTo(*link)) {

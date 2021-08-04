@@ -128,7 +128,8 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("reverse", &Perm<n>::reverse)
         .def("sign", &Perm<n>::sign)
         .def("__getitem__", &Perm<n>::operator[])
-        .def("preImageOf", &Perm<n>::preImageOf)
+        .def("pre", &Perm<n>::pre)
+        .def("preImageOf", &Perm<n>::pre) // deprecated
         .def("compareWith", &Perm<n>::compareWith)
         .def("isIdentity", &Perm<n>::isIdentity)
         .def_static("rot", &Perm<n>::rot)

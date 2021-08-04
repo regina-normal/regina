@@ -266,7 +266,7 @@ std::string Triangulation<3>::dehydrate() const {
 
         for (faceIndex = 0; faceIndex < 4; faceIndex++) {
             // Likewise for faces.
-            face = vertexMap[tet].preImageOf(faceIndex);
+            face = vertexMap[tet].pre(faceIndex);
 
             // INVARIANTS (held while tet < nTets):
             // - nextUnused > tetIndex

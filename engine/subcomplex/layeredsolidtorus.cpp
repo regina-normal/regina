@@ -206,11 +206,11 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
         // See which edges of the current top tetrahedron are being
         // layered upon.
         layerOnEdge[0] = Edge<3>::edgeNumber
-            [adjPerm[0].preImageOf(Edge<3>::edgeVertex[adjEdge][0])]
-            [adjPerm[0].preImageOf(Edge<3>::edgeVertex[adjEdge][1])];
+            [adjPerm[0].pre(Edge<3>::edgeVertex[adjEdge][0])]
+            [adjPerm[0].pre(Edge<3>::edgeVertex[adjEdge][1])];
         layerOnEdge[1] = Edge<3>::edgeNumber
-            [adjPerm[1].preImageOf(Edge<3>::edgeVertex[adjEdge][0])]
-            [adjPerm[1].preImageOf(Edge<3>::edgeVertex[adjEdge][1])];
+            [adjPerm[1].pre(Edge<3>::edgeVertex[adjEdge][0])]
+            [adjPerm[1].pre(Edge<3>::edgeVertex[adjEdge][1])];
         if (layerOnEdge[0] != layerOnEdge[1] &&
                 layerOnEdge[0] + layerOnEdge[1] != 5)
             break;

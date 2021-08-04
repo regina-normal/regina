@@ -526,7 +526,19 @@ class Perm<3> {
          * should be between 0 and 2 inclusive.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be between 0 and 2 inclusive.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -1059,6 +1071,10 @@ inline constexpr int Perm<3>::sign() const {
 
 inline constexpr int Perm<3>::operator[](int source) const {
     return imageTable[code_][source];
+}
+
+inline constexpr int Perm<3>::pre(int image) const {
+    return imageTable[invS3[code_]][image];
 }
 
 inline constexpr int Perm<3>::preImageOf(int image) const {

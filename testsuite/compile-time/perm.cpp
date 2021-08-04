@@ -59,7 +59,7 @@ void testPerm() {
     static_assert(swap.compareWith(Perm<n>(swap)) == 0);
 
     static_assert(swap[pos] == pos-1);
-    static_assert(swap.preImageOf(pos) == pos-1);
+    static_assert(swap.pre(pos) == pos-1);
     static_assert(Perm<n>().sign() == 1);
     static_assert(swap.sign() == -1);
 

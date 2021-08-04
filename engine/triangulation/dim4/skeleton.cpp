@@ -129,8 +129,7 @@ void Triangulation<4>::calculateVertexLinks() {
                 // tetrahedron.  Make the gluing.
                 adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
                 tet[index]->join(
-                    std::get<3>(pent->mappings_)[vertexIdx].
-                        preImageOf(exitFacet),
+                    std::get<3>(pent->mappings_)[vertexIdx].pre(exitFacet),
                     tet[5 * adjPentIdx + adjVertexIdx],
                     Perm<4>::contract(
                         std::get<3>(adjPent->mappings_)[adjVertexIdx].inverse() *

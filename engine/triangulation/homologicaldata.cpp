@@ -328,7 +328,7 @@ void HomologicalData::computeChainComplexes() {
             A2->entry( tri->countEdges() + sIEEOF.index(
                 3*tri->tetrahedron(
                 sIEFOT[i]/4 )->triangle( (sIEFOT[i] + j) % 4)->index() +
-                p1.preImageOf(sIEFOT[i] % 4) ) ,
+                p1.pre(sIEFOT[i] % 4) ) ,
                 tri->countTriangles()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
     }
@@ -472,7 +472,7 @@ void HomologicalData::computeChainComplexes() {
         for (j=0;j<vtet->degree();j++)
             for (k=0;k<6;k++) {
                 ind2=vtet->embedding(j).tetrahedron()->edgeMapping(k).
-                    preImageOf( vtet->embedding(j).vertex() );
+                    pre( vtet->embedding(j).vertex() );
                 if ( ind2<2 ) {
                     // edge k of tetrahedron j, moreover we know that
                     // the vertex of the edge corresponds to ind2
@@ -647,10 +647,9 @@ void HomologicalData::computeChainComplexes() {
             stage1edgeNum = tri->countEdges() + sIEEOF.index(
                 3*tri->triangle(dNBF[j]) ->
                 embedding(0).tetrahedron() ->
-                triangle(stage1TriToUse)->index() + P3.preImageOf(stage1v) );
+                triangle(stage1TriToUse)->index() + P3.pre(stage1v) );
             stage1posOr = ( ( static_cast<unsigned>(
-                P3[(P3.preImageOf(stage1v)+1) % 3]) !=
-                stage1vi ) ? true : false );
+                P3[(P3.pre(stage1v)+1) % 3]) != stage1vi ) ? true : false );
         }
         bool stage3nec = false;
         unsigned stage3v = 0;
@@ -681,10 +680,9 @@ void HomologicalData::computeChainComplexes() {
             stage3edgeNum = tri->countEdges() + sIEEOF.index(
                 3*tri->triangle(dNBF[j]) ->
                 embedding(1).tetrahedron() ->
-                triangle(stage3TriToUse)->index() + P3.preImageOf(stage3v) );
+                triangle(stage3TriToUse)->index() + P3.pre(stage3v) );
             stage3posOr = ( ( static_cast<unsigned>(
-                P3[(P3.preImageOf(stage3v)+1) % 3]) ==
-                stage3vi ) ? true : false );
+                P3[(P3.pre(stage3v)+1) % 3]) == stage3vi ) ? true : false );
         }
 
         unsigned stage2startdata = 0;
@@ -696,8 +694,8 @@ void HomologicalData::computeChainComplexes() {
 
         if (stage1nec) // set up stage2startdata
         {
-            stage2startdata = 3*P1.preImageOf( stage1v ) +
-                P1.preImageOf((tri->triangle(dNBF[j]) ->
+            stage2startdata = 3*P1.pre( stage1v ) +
+                P1.pre((tri->triangle(dNBF[j]) ->
                 embedding(0).tetrahedron() ->
                 edgeMapping( Edge<3>::edgeNumber[stage1v][stage1vi] ))[3] );
         } else {
@@ -706,37 +704,35 @@ void HomologicalData::computeChainComplexes() {
             // b) neither stage 0 or 1 was called and this may or may
             // not be an ideal vertex
             if (stage0nec) { // this is the non-ideal situation
-                stage2startdata = 3*P1.preImageOf( stage0choice ) +
-                        ((P1.preImageOf( stage0choice )+1) % 3);
+                stage2startdata = 3*P1.pre( stage0choice ) +
+                        ((P1.pre( stage0choice )+1) % 3);
             } else {
                 // this is the starting point... back to using vert0 info...
                 if (vert0Num != vert0id)
-                    stage2startdata = 3*P1.preImageOf( vert0Num ) +
-                        P1.preImageOf( vert0id );
+                    stage2startdata = 3*P1.pre( vert0Num ) + P1.pre( vert0id );
                 else
-                    stage2startdata = 3*P1.preImageOf( vert0Num ) +
-                        ((P1.preImageOf( vert0Num ) + 1) % 3);
+                    stage2startdata = 3*P1.pre( vert0Num ) +
+                        ((P1.pre( vert0Num ) + 1) % 3);
             }
         }
 
         if (stage3nec) // set up stage2enddata
         {
-            stage2enddata = 3*P2.preImageOf( stage3v ) +
-                P2.preImageOf((tri->triangle(dNBF[j]) ->
+            stage2enddata = 3*P2.pre( stage3v ) +
+                P2.pre((tri->triangle(dNBF[j]) ->
                 embedding(1).tetrahedron() ->
                 edgeMapping( Edge<3>::edgeNumber[stage3v][stage3vi] ))[3] );
         } else {
             if (stage4nec) { // this is the non-ideal situation
-                stage2enddata = 3*P2.preImageOf( stage4choice ) +
-                        ((P2.preImageOf( stage4choice ) + 1) % 3);
+                stage2enddata = 3*P2.pre( stage4choice ) +
+                        ((P2.pre( stage4choice ) + 1) % 3);
             } else {
                 // this is the starting point... back to using vert1 info...
                 if (vert1Num != vert1id)
-                    stage2enddata = 3*P2.preImageOf( vert1Num ) +
-                        P2.preImageOf( vert1id );
+                    stage2enddata = 3*P2.pre( vert1Num ) + P2.pre( vert1id );
                 else
-                    stage2enddata = 3*P2.preImageOf( vert1Num ) +
-                        ((P2.preImageOf( vert1Num ) + 1) % 3);
+                    stage2enddata = 3*P2.pre( vert1Num ) +
+                        ((P2.pre( vert1Num ) + 1) % 3);
             }
         }
         // now cycle through pairs of adjacent vertices on the triangle
@@ -879,7 +875,7 @@ void HomologicalData::computeChainComplexes() {
                 (sIEFOT[i] + j) % 4);
             Bd2->entry( sBNIE.size() + sIEEOF.index(3*
                 tri->tetrahedron(sIEFOT[i]/4 )->triangle(
-                (sIEFOT[i] + j) % 4)->index() + p1.preImageOf(sIEFOT[i] % 4) ) ,
+                (sIEFOT[i] + j) % 4)->index() + p1.pre(sIEFOT[i] % 4) ) ,
                 sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
     }

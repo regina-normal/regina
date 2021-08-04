@@ -307,7 +307,7 @@ class PermTest : public CppUnit::TestFixture {
             }
 
             for (i = 0; i < n; ++i)
-                if (p.preImageOf(p[i]) != i) {
+                if (p.pre(p[i]) != i) {
                     std::ostringstream msg;
                     msg << "The element preimages for permutation "
                         << name.str() << " do not appear to be correct.";

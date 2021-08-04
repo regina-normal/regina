@@ -825,7 +825,19 @@ class Perm<6> {
          * should be between 0 and 5 inclusive.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be between 0 and 5 inclusive.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -3337,6 +3349,10 @@ inline constexpr int Perm<6>::sign() const {
 
 inline constexpr int Perm<6>::operator[](int source) const {
     return (code1Table[code2_] >> (3 * source)) & 0x07;
+}
+
+inline constexpr int Perm<6>::pre(int image) const {
+    return (code1Table[invS6[code2_]] >> (3 * image)) & 0x07;
 }
 
 inline constexpr int Perm<6>::preImageOf(int image) const {

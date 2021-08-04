@@ -96,7 +96,7 @@ Triangulation<2>* Vertex<3>::buildLinkDetail(bool labels,
             if (! adj)
                 continue;
 
-            edgeInLink = tet->triangleMapping(v).preImageOf(exitTri);
+            edgeInLink = tet->triangleMapping(v).pre(exitTri);
             if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.
