@@ -1250,6 +1250,12 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * - building the cover that corresponds to each representation,
          *   using the SnapPea function <tt>construct_cover()</tt>.
          *
+         * If you are only interested in the corresponding index \a k subgroups
+         * of the fundamental group and not the triangulated covers themselves,
+         * then you may wish to consider the native Regina function
+         * GroupPresentation::enumerateCovers() instead.  That function is
+         * highly optimised, and should be considerably faster as \a k grows.
+         *
          * Each covering space is produced once up to equivalence; here
          * equivalent covers correspond to conjugate representations of
          * the fundamental group.
@@ -1316,10 +1322,15 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
-         * \a action argument may be a pure Python function.  However, its
-         * form is more restricted: the arguments \a args are removed, so you
-         * must simply call it as enumerateCovers(sheets, type, action).
+         * \ifacespython There are two versions of this function available
+         * in Python.  The first form is
+         * <tt>enumerateCovers(sheets, type, action)</tt>, which mirrors the
+         * C++ function: it takes \a action which may be a pure Python function,
+         * it returns the number of covers found, but it does \e not take an
+         * addition argument list (\a args).  The second form is
+         * <tt>enumerateCovers(sheets, type)</tt>, which returns a Python list
+         * containing all of the triangulated covers, each given as a
+         * pair (SnapPeaTriangulation, SnapPeaTriangulation::CoverType).
          *
          * @param sheets the number of sheets in the covers to produce
          * (i.e., the number \a k in the description above); this must

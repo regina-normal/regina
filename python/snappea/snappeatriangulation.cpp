@@ -33,6 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/complex.h"
 #include "../pybind11/functional.h"
+#include "../pybind11/stl.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "utilities/safeptr.h"
@@ -114,6 +115,20 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
                 const std::function<void(SnapPeaTriangulation&,
                     SnapPeaTriangulation::CoverType)>& action) {
             return tri.enumerateCovers(sheets, type, action);
+        })
+        .def("enumerateCovers", [](const SnapPeaTriangulation& tri,
+                int sheets, SnapPeaTriangulation::CoverEnumerationType type) {
+            pybind11::list ans;
+            tri.enumerateCovers(sheets, type, [&](SnapPeaTriangulation& c,
+                    SnapPeaTriangulation::CoverType t) {
+                SnapPeaTriangulation* result = new SnapPeaTriangulation;
+                result->swap(c);
+                pybind11::tuple pair(2);
+                pair[0] = pybind11::cast(result);
+                pair[1] = t;
+                ans.append(pair);
+            });
+            return ans;
         })
         .def_static("kernelMessagesEnabled",
             &SnapPeaTriangulation::kernelMessagesEnabled)

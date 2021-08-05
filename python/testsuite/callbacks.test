@@ -165,3 +165,25 @@ testCovers(link, 4)
 testCovers(link, 5)
 print()
 
+########################################################################
+# Test SnapPeaTriangulation::enumerateCovers() object lifetimes:
+########################################################################
+
+class Watcher(PacketListener):
+    def __init__(self, packet):
+        PacketListener.__init__(self)
+        packet.listen(self)
+    def packetToBeDestroyed(self, packet):
+        print('Destroying packet')
+
+s = ExampleSnapPea.whiteheadLink()
+c = s.enumerateCovers(3, SnapPeaTriangulation.CoverEnumerationType.all_covers)
+
+watchers = [ Watcher(s) ] + [ Watcher(i[0]) for i in c ]
+
+print('Destroying covers')
+c = None
+print('Destroying original')
+s = None
+print('Done')
+

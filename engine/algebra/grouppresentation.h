@@ -1424,7 +1424,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \ifacespython There are two versions of this function available in
          * Python.  The first form is <tt>enumerateCovers(index, action)</tt>,
-         * which which mirrors the C++ function: it takes \a action which may
+         * which mirrors the C++ function: it takes \a action which may
          * be a pure Python function, it returns the number of representations
          * found, but it does \e not take an addition argument list (\a args).
          * The second form is <tt>enumerateCovers(index)</tt>, which returns
