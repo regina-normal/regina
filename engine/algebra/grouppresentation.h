@@ -1422,12 +1422,15 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
-         * \a action argument may be a pure Python function.  However, its
-         * form is more restricted.  The template parameter \a index becomes
-         * the first argument to the function, and the arguments \a args are
-         * removed entirely.  This means that Python users should call this
-         * function as enumerateCovers(index, action).
+         * \ifacespython There are two versions of this function available in
+         * Python.  The first form is <tt>enumerateCovers(index, action)</tt>,
+         * which which mirrors the C++ function: it takes \a action which may
+         * be a pure Python function, it returns the number of representations
+         * found, but it does \e not take an addition argument list (\a args).
+         * The second form is <tt>enumerateCovers(index)</tt>, which returns
+         * a Python list containing all of the corresponding subgroups, each
+         * given as a GroupPresentation.  In both forms, the template
+         * parameter \a index becomes the first argument to the Python function.
          *
          * \tparam index the number \a k in the description above; in other
          * words, the index of the resulting subgroups.  Currently this

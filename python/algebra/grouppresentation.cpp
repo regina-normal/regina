@@ -164,6 +164,25 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("abelianisation", &GroupPresentation::abelianisation)
         .def("abelianRank", &GroupPresentation::abelianRank)
         .def("markedAbelianisation", &GroupPresentation::markedAbelianisation)
+        .def("enumerateCovers", [](const GroupPresentation& p, int index) {
+            std::vector<GroupPresentation> ans;
+            auto push = [&](GroupPresentation& result) {
+                ans.push_back(result);
+            };
+            switch (index) {
+                case 2: p.enumerateCovers<2>(push); break;
+                case 3: p.enumerateCovers<3>(push); break;
+                case 4: p.enumerateCovers<4>(push); break;
+                case 5: p.enumerateCovers<5>(push); break;
+                case 6: p.enumerateCovers<6>(push); break;
+                case 7: p.enumerateCovers<7>(push); break;
+                default:
+                    PyErr_SetString(PyExc_ValueError,
+                        "The index passed to enumerateCovers() must be between "
+                        "2 and 7 inclusive.");
+            }
+            return ans;
+        })
         .def("enumerateCovers", [](const GroupPresentation& p, int index,
                 const std::function<void(GroupPresentation&)>& action)
                 -> size_t {
