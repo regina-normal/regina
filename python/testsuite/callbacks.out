@@ -14,6 +14,10 @@ Poincaré homology sphere -> collect, height = 1, threads = 1
 Poincaré homology sphere -> collect, height = 1, threads = 2
     fvPQcdecedekrsnrs
     gvLQQcdfeeffnjqsspp
+Poincaré homology sphere vs Poincaré homology sphere -> isomorphisms, stop after 5
+    search terminated early, count: 5
+Poincaré homology sphere vs Poincaré homology sphere -> subcomplexes, stop after 5
+    search terminated early, count: 5
 
 Weeks manifold -> display, height = 0, threads = 1
     jLvAMPQadfgghhiiijaqgjqxims 9
@@ -27,6 +31,32 @@ Weeks manifold -> collect, height = 0, threads = 1
     jLvAMPQadfgghhiiijaqgjqxims
 Weeks manifold -> collect, height = 0, threads = 2
     jLvAMPQadfgghhiiijaqgjqxims
+Weeks manifold vs Weeks manifold -> isomorphisms, display
+0 -> 0 (0123)
+1 -> 1 (0123)
+2 -> 2 (0123)
+3 -> 3 (0123)
+4 -> 4 (0123)
+5 -> 5 (0123)
+6 -> 6 (0123)
+7 -> 7 (0123)
+8 -> 8 (0123)
+
+Weeks manifold vs Weeks manifold -> subcomplexes, display
+0 -> 0 (0123)
+1 -> 1 (0123)
+2 -> 2 (0123)
+3 -> 3 (0123)
+4 -> 4 (0123)
+5 -> 5 (0123)
+6 -> 6 (0123)
+7 -> 7 (0123)
+8 -> 8 (0123)
+
+Weeks manifold vs Weeks manifold -> isomorphisms, stop after 5
+    search ran to completion, count: 1
+Weeks manifold vs Weeks manifold -> subcomplexes, stop after 5
+    search ran to completion, count: 1
 
 Cappell-Shaneson knot complement -> display, height = 0, threads = 1
     cMkabbb+aAa3blb 2
@@ -56,6 +86,39 @@ Cappell-Shaneson knot complement -> collect, height = 2, threads = 2
     eLMQcbbdccddaaaa1bHbibvafb
     eLMQcbccddddHaJbyaXbPbSava
     eLMQcbccddddMaobya1bPbRava
+Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> isomorphisms, display
+0 -> 0 (01234)
+1 -> 1 (01234)
+
+0 -> 1 (43210)
+1 -> 0 (43210)
+
+Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> subcomplexes, display
+0 -> 0 (01234)
+1 -> 1 (01234)
+
+0 -> 1 (43210)
+1 -> 0 (43210)
+
+Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> isomorphisms, stop after 5
+    search ran to completion, count: 2
+Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> subcomplexes, stop after 5
+    search ran to completion, count: 2
+
+LST(1,2,3) vs L(8,3) -> isomorphisms, display
+LST(1,2,3) vs L(8,3) -> subcomplexes, display
+0 -> 0 (2310)
+
+0 -> 0 (3201)
+
+0 -> 1 (0123)
+
+0 -> 1 (1032)
+
+LST(1,2,3) vs L(8,3) -> isomorphisms, stop after 5
+    search ran to completion, count: 0
+LST(1,2,3) vs L(8,3) -> subcomplexes, stop after 5
+    search ran to completion, count: 4
 
 Trefoil -> display, height = 0, threads = 1
     dabcabcv- 3

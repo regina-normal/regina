@@ -1955,12 +1955,9 @@ class Triangulation4Test : public TriangulationTest<4> {
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
 
-            std::list<Isomorphism<3>*> autos;
-            tri->findAllIsomorphisms(*tri, back_inserter(autos));
-
-            for (Isomorphism<3>* aut : autos) {
+            tri->findAllIsomorphisms(*tri, [tri](const Isomorphism<3>& aut) {
                 Triangulation<4>* b =
-                    Example<4>::bundleWithMonodromy(*tri, *aut);
+                    Example<4>::bundleWithMonodromy(*tri, aut);
 
                 if (! b->isValid()) {
                     std::ostringstream msg;
@@ -2018,8 +2015,8 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // finite sheeted cover.
 
                 delete b;
-                delete aut;
-            }
+                return false;
+            });
         }
 
         void bundleWithMonodromy() {

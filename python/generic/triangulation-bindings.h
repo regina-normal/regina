@@ -31,12 +31,14 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "triangulation/generic.h"
 #include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
+using regina::Isomorphism;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
@@ -157,16 +159,28 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
         .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo)
         .def("isContainedIn", &Triangulation<dim>::isContainedIn)
+        .def("findAllIsomorphisms", &Triangulation<dim>::template
+                findAllIsomorphisms<
+                const std::function<bool(const Isomorphism<dim>)>&>)
         .def("findAllIsomorphisms", [](const Triangulation<dim>& t,
                 const Triangulation<dim>& other) {
-            std::list<regina::Isomorphism<dim>*> isos;
-            t.findAllIsomorphisms(other, back_inserter(isos));
+            std::vector<Isomorphism<dim>> isos;
+            t.findAllIsomorphisms(other, [&](const Isomorphism<dim>& iso) {
+                isos.push_back(iso);
+                return false;
+            });
             return isos;
         })
+        .def("findAllSubcomplexesIn", &Triangulation<dim>::template
+                findAllSubcomplexesIn<
+                const std::function<bool(const Isomorphism<dim>)>&>)
         .def("findAllSubcomplexesIn", [](const Triangulation<dim>& t,
                 const Triangulation<dim>& other) {
-            std::list<regina::Isomorphism<dim>*> isos;
-            t.findAllSubcomplexesIn(other, back_inserter(isos));
+            std::vector<Isomorphism<dim>> isos;
+            t.findAllSubcomplexesIn(other, [&](const Isomorphism<dim>& iso) {
+                isos.push_back(iso);
+                return false;
+            });
             return isos;
         })
         .def("makeCanonical", &Triangulation<dim>::makeCanonical)
@@ -175,7 +189,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             return t.isoSig();
         })
         .def("isoSigDetail", [](const Triangulation<dim>& t) {
-            typename regina::Isomorphism<dim>* iso;
+            Isomorphism<dim>* iso;
             std::string sig = t.isoSig(&iso);
             return pybind11::make_tuple(sig, iso);
         })

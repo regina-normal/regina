@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "subcomplex/satblock.h"
 #include "triangulation/dim3.h"
-#include "utilities/listoncall.h"
+#include <list>
 
 namespace regina {
 
@@ -126,69 +126,79 @@ class SatBlockStarter {
  * triangulations of Seifert fibred spaces.
  *
  * This class provides a list of saturated blocks that can be used as
- * starting points for recognising triangulations; see the
- * SatBlockStarter class notes for details.
+ * starting points for recognising triangulations; see the SatBlockStarter
+ * class notes for details.  This list is hard-coded and global (it is
+ * created only once, when the first object of this class is created).
  *
- * More importantly, this list is global and hard-coded.  The only
- * access to the list is through the static routines begin() and end().
- *
- * Creating the list of starter blocks is expensive, and so this is not
- * done until the first time that begin() is called.  This way, if the list
- * is never used then the work is never done.  As a consequence however,
- * you must be sure to call begin() before calling end() (which is the
- * usual way in which iterator loops are structured in code).
+ * To iterate over starter blocks, create an object of this class (which is
+ * lightweight) and either use it in a C++11 range-based \c for loop, or
+ * else use the begin() and end() iterators manually.
  *
  * Be aware that this list makes no claims to be exhaustive; it is
  * expected to grow as future versions of Regina are released.
  *
+ * This class is thread-safe.
+ *
  * \ifacespython Not present.
  */
-class SatBlockStarterSet : private ListOnCall<SatBlockStarter> {
+class SatBlockStarterSet {
     public:
         /**
          * An iterator over the starter blocks in this list.  This operates
          * as a forward iterator in a manner consistent with the standard C++
-         * library.
+         * library.  It does not allow either the list or the blocks
+         * that it contains to be changed.
          */
-        typedef ListOnCall<SatBlockStarter>::iterator iterator;
+        typedef std::list<const SatBlockStarter*>::const_iterator iterator;
 
     private:
-        static const SatBlockStarterSet blocks;
+        static std::list<const SatBlockStarter*> blocks;
             /**< The hard-coded list of starter blocks. */
 
     public:
         /**
+         * Creates a lightweight object for iterating through starter blocks.
+         *
+         * The underlying hard-coded list will be created if this has
+         * not been done yet.
+         *
+         * This routine is thread-safe.
+         */
+        SatBlockStarterSet();
+
+        /**
+         * A default copy constructor.
+         *
+         * This constructor does nothing, since objects of this class
+         * contain no data, and since calling this constructor implies
+         * that the global initialisation work has already been done.
+         */
+        SatBlockStarterSet(const SatBlockStarterSet&) = default;
+
+        /**
+         * A default assignment operator.
+         *
+         * This operator does nothing, since objects of this class
+         * contain no data, and since calling this operator implies
+         * that the global initialisation work has already been done.
+         */
+        SatBlockStarterSet& operator = (const SatBlockStarterSet&) = default;
+
+        /**
          * Returns an iterator pointing to the first block in the
          * hard-coded list.
          *
-         * The very first time this routine is called, the list will be
-         * filled with items (and as such the call will be expensive).
-         * Every subsequent call will be very cheap.
-         *
          * @return an iterator pointing to the first starter block.
          */
-        static iterator begin();
+        iterator begin();
 
         /**
          * Returns an iterator pointing past the end of the hard-coded list
          * (i.e., just after the last item).
          *
-         * \pre The begin() routine has been called at least once.
-         *
          * @return a past-the-end iterator.
          */
-        static iterator end();
-
-    protected:
-        void initialise() override;
-
-    private:
-        /**
-         * Creates a new list of starter blocks.  This routine is
-         * private since the only list that should exist is the global
-         * hard-coded list.
-         */
-        SatBlockStarterSet();
+        iterator end();
 };
 
 /**
@@ -340,15 +350,12 @@ inline const SatBlock* SatBlockStarter::block() const {
 
 // Inline functions for SatBlockStarterSet
 
-inline SatBlockStarterSet::SatBlockStarterSet() {
-}
-
 inline SatBlockStarterSet::iterator SatBlockStarterSet::begin() {
-    return blocks.ListOnCall<SatBlockStarter>::begin();
+    return blocks.begin();
 }
 
 inline SatBlockStarterSet::iterator SatBlockStarterSet::end() {
-    return blocks.ListOnCall<SatBlockStarter>::end();
+    return blocks.end();
 }
 
 // Inline functions for SatBlockStarterSearcher

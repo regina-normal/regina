@@ -232,10 +232,10 @@ bool TriangulationBase<dim>::makeCanonical() {
 }
 
 template <int dim>
-template <typename OutputIterator>
-size_t TriangulationBase<dim>::findIsomorphisms(
-        const Triangulation<dim>& other, OutputIterator output,
-        bool complete, bool firstOnly) const {
+template <typename Action, typename... Args>
+bool TriangulationBase<dim>::findIsomorphisms(
+        const Triangulation<dim>& other, bool complete, Action&& action,
+        Args&&... args) const {
     ensureSkeleton();
     other.ensureSkeleton();
 
@@ -243,8 +243,8 @@ size_t TriangulationBase<dim>::findIsomorphisms(
     if (simplices_.empty()) {
         if (complete && ! other.simplices_.empty())
             return 0;
-        *output++ = new Isomorphism<dim>(0);
-        return 1;
+
+        return action(Isomorphism<dim>(0), std::forward<Args>(args)...);
     }
 
     // Basic property checks.
@@ -254,7 +254,6 @@ size_t TriangulationBase<dim>::findIsomorphisms(
     // Start searching for the isomorphism.
     // From the tests above, we are guaranteed that both triangulations
     // have at least one triangle.
-    size_t nResults = 0;
     size_t nSimplices = simplices_.size();
     size_t nDestSimplices = other.simplices_.size();
     size_t nComponents = components().size();
@@ -300,19 +299,16 @@ size_t TriangulationBase<dim>::findIsomorphisms(
         // startSimp[comp] and startPerm[comp].
         if (comp == static_cast<long>(nComponents)) {
             // We have an isomorphism!!!
-            if (firstOnly) {
-                // Move iso into the output list, to avoid a deep copy.
-                *output++ = new Isomorphism<dim>(std::move(iso));
+
+            // The action takes a const reference to iso, since iso is our
+            // "scratch space" and will keep on changing as we keep searching.
+            if (action(iso, std::forward<Args>(args)...)) {
+                // The action has asked us to terminate the search.
                 delete[] whichComp;
                 delete[] startSimp;
                 delete[] startPerm;
-                return 1;
-            } else
-                nResults++;
-
-            // Make a deep copy of iso, since iso is our "scratch space"
-            // and will keep on changing as we keep searching.
-            *output++ = new Isomorphism<dim>(iso);
+                return true;
+            }
 
             // Back down to the previous component, and clear the
             // mapping for that previous component so we can make way
@@ -491,7 +487,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
     delete[] whichComp;
     delete[] startSimp;
     delete[] startPerm;
-    return nResults;
+    return false;
 }
 
 template <int dim>

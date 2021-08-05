@@ -40,6 +40,7 @@
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
+using regina::Isomorphism;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
@@ -124,16 +125,26 @@ void addTriangulation4(pybind11::module_& m) {
         .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo)
         .def("makeCanonical", &Triangulation<4>::makeCanonical)
         .def("isContainedIn", &Triangulation<4>::isContainedIn)
+        .def("findAllIsomorphisms", &Triangulation<4>::findAllIsomorphisms<
+                const std::function<bool(const Isomorphism<4>)>&>)
         .def("findAllIsomorphisms", [](const Triangulation<4>& t,
                 const Triangulation<4>& other) {
-            std::list<regina::Isomorphism<4>*> isos;
-            t.findAllIsomorphisms(other, back_inserter(isos));
+            std::vector<Isomorphism<4>> isos;
+            t.findAllIsomorphisms(other, [&](const Isomorphism<4>& iso) {
+                isos.push_back(iso);
+                return false;
+            });
             return isos;
         })
+        .def("findAllSubcomplexesIn", &Triangulation<4>::findAllSubcomplexesIn<
+                const std::function<bool(const Isomorphism<4>)>&>)
         .def("findAllSubcomplexesIn", [](const Triangulation<4>& t,
                 const Triangulation<4>& other) {
-            std::list<regina::Isomorphism<4>*> isos;
-            t.findAllSubcomplexesIn(other, back_inserter(isos));
+            std::vector<Isomorphism<4>> isos;
+            t.findAllSubcomplexesIn(other, [&](const Isomorphism<4>& iso) {
+                isos.push_back(iso);
+                return false;
+            });
             return isos;
         })
         .def("isEmpty", &Triangulation<4>::isEmpty)
@@ -247,7 +258,7 @@ void addTriangulation4(pybind11::module_& m) {
             return t.isoSig();
         })
         .def("isoSigDetail", [](const Triangulation<4>& t) {
-            regina::Isomorphism<4>* iso;
+            Isomorphism<4>* iso;
             std::string sig = t.isoSig(&iso);
             return pybind11::make_tuple(sig, iso);
         })

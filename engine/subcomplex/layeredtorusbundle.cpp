@@ -66,13 +66,13 @@ LayeredTorusBundle* LayeredTorusBundle::isLayeredTorusBundle(
         Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
-        return 0;
+        return nullptr;
     if (tri->countVertices() > 1)
-        return 0;
+        return nullptr;
     if (tri->countComponents() > 1)
-        return 0;
+        return nullptr;
     if (tri->size() < 6)
-        return 0;
+        return nullptr;
 
     // We have a 1-vertex 1-component closed triangulation with at least
     // six tetrahedra.
@@ -114,55 +114,44 @@ LayeredTorusBundle* LayeredTorusBundle::isLayeredTorusBundle(
     if ((ans = hunt(tri, core_T_p)))
         return ans;
 
-    return 0;
+    return nullptr;
 }
 
 LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
         const TxICore& core) {
-    std::list<Isomorphism<3>*> isos;
-    if (! core.core().findAllSubcomplexesIn(*tri, back_inserter(isos)))
-        return 0;
+    LayeredTorusBundle* ans = nullptr;
+    core.core().findAllSubcomplexesIn(*tri,
+            [&ans, &core, tri](const Isomorphism<3>& iso) {
+        // Look for the corresponding layering.
+        Matrix2 matchReln;
 
-    // Run through each isomorphism and look for the corresponding layering.
-    Matrix2 matchReln;
-    for (std::list<Isomorphism<3>*>::const_iterator it = isos.begin();
-            it != isos.end(); it++) {
         // Apply the layering to the lower boundary and see if it
         // matches nicely with the upper.
         Layering layering(
-            tri->tetrahedron((*it)->tetImage(core.bdryTet(1,0))),
-            (*it)->facePerm(core.bdryTet(1,0)) * core.bdryRoles(1,0),
-            tri->tetrahedron((*it)->tetImage(core.bdryTet(1,1))),
-            (*it)->facePerm(core.bdryTet(1,1)) * core.bdryRoles(1,1));
+            tri->tetrahedron(iso.tetImage(core.bdryTet(1,0))),
+            iso.facePerm(core.bdryTet(1,0)) * core.bdryRoles(1,0),
+            tri->tetrahedron(iso.tetImage(core.bdryTet(1,1))),
+            iso.facePerm(core.bdryTet(1,1)) * core.bdryRoles(1,1));
         layering.extend();
 
         if (layering.matchesTop(
-                tri->tetrahedron((*it)->tetImage(core.bdryTet(0,0))),
-                (*it)->facePerm(core.bdryTet(0,0)) * core.bdryRoles(0,0),
-                tri->tetrahedron((*it)->tetImage(core.bdryTet(0,1))),
-                (*it)->facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
+                tri->tetrahedron(iso.tetImage(core.bdryTet(0,0))),
+                iso.facePerm(core.bdryTet(0,0)) * core.bdryRoles(0,0),
+                tri->tetrahedron(iso.tetImage(core.bdryTet(0,1))),
+                iso.facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
             // It's a match!
-            LayeredTorusBundle* ans = new LayeredTorusBundle(core);
-            ans->coreIso_ = *it;
+            ans = new LayeredTorusBundle(core);
+            ans->coreIso_ = new Isomorphism<3>(iso);
             ans->reln_ = core.bdryReln(0) * matchReln *
                 core.bdryReln(1).inverse();
-
-            // Delete the remaining isomorphisms that we never even
-            // looked at.
-            for (it++; it != isos.end(); it++)
-                delete *it;
-
-            return ans;
+            return true;
         }
 
-        // No match.  Delete this isomorphism; we won't need it any more.
-        delete *it;
-        continue;
-    }
-
-    // Nothing found.
-    return 0;
+        // No match.
+        return false;
+    });
+    return ans;
 }
 
 Manifold* LayeredTorusBundle::manifold() const {

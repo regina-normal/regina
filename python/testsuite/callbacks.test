@@ -66,6 +66,22 @@ def displayCover(tri, type):
     print('    ' + str(type) + ': ' + t.homology().str())
 
 ########################################################################
+# Callback actions that we pass to isomorphism searches:
+########################################################################
+
+isoCount = None
+def stopAfter5Iso(iso):
+    # A callback that uses a global variable, and that also uses the
+    # return value to terminate the search.
+    global isoCount
+    isoCount = isoCount + 1
+    return (isoCount >= 5)
+
+def displayIso(iso):
+    print(iso.detail())
+    return False
+
+########################################################################
 # Full tests that we can run on a triangulation or link:
 ########################################################################
 
@@ -110,6 +126,31 @@ def testCovers(link, sheets):
     tri = SnapPeaTriangulation(link.complement())
     tri.enumerateCovers(sheets, SnapPeaTriangulation.all_covers, displayCover)
 
+def testIso(inner, outer, countOnly = False):
+    comp = inner.label() + ' vs ' + outer.label()
+    if not countOnly:
+        print(comp + ' -> isomorphisms, display')
+        inner.findAllIsomorphisms(outer, displayIso)
+        print(comp + ' -> subcomplexes, display')
+        inner.findAllSubcomplexesIn(outer, displayIso)
+
+    global isoCount
+    print(comp + ' -> isomorphisms, stop after 5')
+    isoCount = 0
+    ans = inner.findAllIsomorphisms(outer, stopAfter5Iso)
+    if ans:
+        print('    search terminated early, count:', isoCount)
+    else:
+        print('    search ran to completion, count:', isoCount)
+    print(comp + ' -> subcomplexes, stop after 5')
+
+    isoCount = 0
+    ans = inner.findAllSubcomplexesIn(outer, stopAfter5Iso)
+    if ans:
+        print('    search terminated early, count:', isoCount)
+    else:
+        print('    search ran to completion, count:', isoCount)
+
 ########################################################################
 # Individual test cases:
 ########################################################################
@@ -121,6 +162,7 @@ testStopAfter10(tri, 1, 1)
 testStopAfter10(tri, 1, 2)
 testCollect(tri, 1, 1)
 testCollect(tri, 1, 2)
+testIso(tri, tri, True)
 print()
 
 tri = Example3.weeks()
@@ -130,6 +172,7 @@ testStopAfter10(tri, 1, 1)
 testStopAfter10(tri, 1, 2)
 testCollect(tri, 0, 1)
 testCollect(tri, 0, 2)
+testIso(tri, tri)
 print()
 
 tri = Example4.cappellShaneson()
@@ -139,6 +182,12 @@ testStopAfter10(tri, 2, 1)
 testStopAfter10(tri, 2, 2)
 testCollect(tri, 2, 1)
 testCollect(tri, 2, 2)
+testIso(tri, tri)
+print()
+
+inner = Example3.lst(1,2)
+outer = Example3.lens(8,3)
+testIso(inner, outer)
 print()
 
 link = ExampleLink.trefoil()

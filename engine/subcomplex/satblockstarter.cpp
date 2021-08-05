@@ -30,64 +30,72 @@
  *                                                                        *
  **************************************************************************/
 
+#include <mutex>
 #include "subcomplex/satblockstarter.h"
 #include "subcomplex/satblocktypes.h"
 
 namespace regina {
 
-const SatBlockStarterSet SatBlockStarterSet::blocks;
+namespace {
+    std::mutex starterBlocksMutex;
+}
 
-void SatBlockStarterSet::initialise() {
-    SatBlockStarter* starter;
+std::list<const SatBlockStarter*> SatBlockStarterSet::blocks;
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatTriPrism::insertBlock(starter->triangulation_, true);
-    insert(starter);
+SatBlockStarterSet::SatBlockStarterSet() {
+    std::scoped_lock lock(starterBlocksMutex);
+    if (blocks.empty()) {
+        SatBlockStarter* s;
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatCube::insertBlock(starter->triangulation_);
-    insert(starter);
+        s = new SatBlockStarter;
+        s->block_ = SatTriPrism::insertBlock(s->triangulation_, true);
+        blocks.push_back(s);
 
-    // Try various reflector strips of small length.
-    starter = new SatBlockStarter;
-    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
-        1, false);
-    insert(starter);
+        s = new SatBlockStarter;
+        s->block_ = SatCube::insertBlock(s->triangulation_);
+        blocks.push_back(s);
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
-        1, true);
-    insert(starter);
+        // Try various reflector strips of small length.
+        s = new SatBlockStarter;
+        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
+            1, false);
+        blocks.push_back(s);
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
-        2, false);
-    insert(starter);
+        s = new SatBlockStarter;
+        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
+            1, true);
+        blocks.push_back(s);
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
-        2, true);
-    insert(starter);
+        s = new SatBlockStarter;
+        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
+            2, false);
+        blocks.push_back(s);
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
-        3, false);
-    insert(starter);
+        s = new SatBlockStarter;
+        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
+            2, true);
+        blocks.push_back(s);
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
-        3, true);
-    insert(starter);
+        s = new SatBlockStarter;
+        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
+            3, false);
+        blocks.push_back(s);
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
-        4, false);
-    insert(starter);
+        s = new SatBlockStarter;
+        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
+            3, true);
+        blocks.push_back(s);
 
-    starter = new SatBlockStarter;
-    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
-        4, true);
-    insert(starter);
+        s = new SatBlockStarter;
+        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
+            4, false);
+        blocks.push_back(s);
+
+        s = new SatBlockStarter;
+        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
+            4, true);
+        blocks.push_back(s);
+    }
 }
 
 void SatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
@@ -96,62 +104,43 @@ void SatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
         usedTets.clear();
 
     // Hunt for a starting block.
-    unsigned long i;
-    SatBlockStarterSet::iterator it;
-    std::list<Isomorphism<3>*> isos;
-    std::list<Isomorphism<3>*>::iterator isoIt;
-    SatBlock* starter;
-    for (it = SatBlockStarterSet::begin(); it != SatBlockStarterSet::end();
-            it++) {
+    for (const SatBlockStarter* model : SatBlockStarterSet()) {
         // Look for this particular starting block.
         // Get trivialities out of the way first.
-        if (tri->isOrientable() && ! (*it)->triangulation().isOrientable())
+        if (tri->isOrientable() && ! model->triangulation().isOrientable())
             continue;
-        if (tri->size() < (*it)->triangulation().size())
+        if (tri->size() < model->triangulation().size())
             continue;
 
         // Find all isomorphisms of the starter block within the given
         // triangulation.
-        if (! (*it)->triangulation().findAllSubcomplexesIn(*tri,
-                back_inserter(isos)))
-            continue;
-
-        // Run through each isomorphism in the list and see if it leads
-        // somewhere useful.
-        //
-        // All of the isomorphisms in this list _must_ be destroyed at
-        // some point before we loop back to the next starter block.
-        for (isoIt = isos.begin(); isoIt != isos.end(); isoIt++) {
-            starter = (*it)->block()->clone();
-            starter->transform(&(*it)->triangulation(), *isoIt, tri);
+        // In the lambda below, all our captures are pointers (hence [=]).
+        bool terminate = model->triangulation().findAllSubcomplexesIn(*tri,
+                [=](const Isomorphism<3>& iso) {
+            // See if this isomorphism leads somewhere useful.
+            SatBlock* starter = model->block()->clone();
+            starter->transform(&model->triangulation(), &iso, tri);
 
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.
-            for (i = 0; i < (*it)->triangulation().size(); i++)
-                usedTets.insert(tri->tetrahedron((*isoIt)->tetImage(i)));
+            for (unsigned long i = 0; i < model->triangulation().size(); i++)
+                usedTets.insert(tri->tetrahedron(iso.tetImage(i)));
 
             // And process!
             // Note that useStarterBlock() passes ownership of the starter
             // block elsewhere.
             if (! useStarterBlock(starter)) {
                 // The search ends now.
-                // Don't forget to destroy all remaining isomorphisms.
                 usedTets.clear();
-
-                while (isoIt != isos.end())
-                    delete *isoIt++;
-
-                return;
+                return true;
             }
 
             // Keep on searching.
-            // Destroy this isomorphism and make things ready for the next one.
             usedTets.clear();
-            delete *isoIt;
-        }
-
-        // Make sure the list is empty again for the next time around.
-        isos.clear();
+            return false;
+        });
+        if (terminate)
+            return;
     }
 
     // Search over.  Nothing here to see.

@@ -260,11 +260,11 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            std::list<Isomorphism<3>*> isos;
-            std::list<Isomorphism<3>*>::iterator it;
-            unsigned long count;
-
-            count = t2.findAllSubcomplexesIn(t, back_inserter(isos));
+            unsigned long count = 0;
+            t2.findAllSubcomplexesIn(t, [&count](const Isomorphism<3>&){
+                ++count;
+                return false;
+            });
             if (count != symmetries) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name << " has "
@@ -272,17 +272,6 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                     << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (isos.size() != count) {
-                std::ostringstream msg;
-                msg << "Triangulation " << name <<
-                    " has a mismatched symmetry count (" << count
-                    << " != " << isos.size() << ").";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            for (it = isos.begin(); it != isos.end(); ++it)
-                delete *it;
-            isos.clear();
 
             // Some of these tests cannot be run on the standalone tetrahedron.
             bool standalone = (t.size() == 1 && t.countTriangles() == 4);

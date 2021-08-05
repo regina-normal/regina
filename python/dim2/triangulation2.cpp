@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "algebra/grouppresentation.h"
 #include "triangulation/dim2.h"
@@ -38,6 +39,7 @@
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
+using regina::Isomorphism;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
@@ -110,18 +112,28 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("isIdenticalTo", &Triangulation<2>::isIdenticalTo)
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo)
+        .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<
+                const std::function<bool(const Isomorphism<2>)>&>)
         .def("findAllIsomorphisms", [](const Triangulation<2>& t,
                 const Triangulation<2>& other) {
-            std::list<regina::Isomorphism<2>*> isos;
-            t.findAllIsomorphisms(other, back_inserter(isos));
+            std::vector<Isomorphism<2>> isos;
+            t.findAllIsomorphisms(other, [&](const Isomorphism<2>& iso) {
+                isos.push_back(iso);
+                return false;
+            });
             return isos;
         })
         .def("makeCanonical", &Triangulation<2>::makeCanonical)
         .def("isContainedIn", &Triangulation<2>::isContainedIn)
+        .def("findAllSubcomplexesIn", &Triangulation<2>::findAllSubcomplexesIn<
+                const std::function<bool(const Isomorphism<2>)>&>)
         .def("findAllSubcomplexesIn", [](const Triangulation<2>& t,
                 const Triangulation<2>& other) {
-            std::list<regina::Isomorphism<2>*> isos;
-            t.findAllSubcomplexesIn(other, back_inserter(isos));
+            std::vector<Isomorphism<2>> isos;
+            t.findAllSubcomplexesIn(other, [&](const Isomorphism<2>& iso) {
+                isos.push_back(iso);
+                return false;
+            });
             return isos;
         })
         .def("isEmpty", &Triangulation<2>::isEmpty)
@@ -168,7 +180,7 @@ void addTriangulation2(pybind11::module_& m) {
             return t.isoSig();
         })
         .def("isoSigDetail", [](const Triangulation<2>& t) {
-            regina::Isomorphism<2>* iso;
+            Isomorphism<2>* iso;
             std::string sig = t.isoSig(&iso);
             return pybind11::make_tuple(sig, iso);
         })

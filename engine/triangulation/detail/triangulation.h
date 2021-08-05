@@ -1387,35 +1387,55 @@ class TriangulationBase :
          *
          * This routine behaves identically to isIsomorphicTo(), except that
          * instead of returning just one isomorphism, all such isomorphisms
-         * are returned.
+         * will be found and processed.  See the isIsomorphicTo() notes for
+         * details on this.
          *
-         * See the isIsomorphicTo() notes for additional information.
+         * For each isomorphism that is found, this routine will call
+         * \a action (which must be a function or some other callable object).
          *
-         * The isomorphisms that are found will be written to the given
-         * output iterator.  This iterator must accept objects of type
-         * Isomorphism<dim>*.  As an example, \a output might be a
-         * back_insert_iterator for a std::vector<Isomorphism<dim>*>.
+         * - The first argument to \a action must be of type
+         *   <tt>(const Isomorphism<dim>&)</tt>; this will be a reference
+         *   to the isomorphism that was found.  If \a action wishes to keep
+         *   the isomorphism, it should take a copy (not a reference), since
+         *   the isomorphism will be changed and then eventually destroyed
+         *   after \a action returns.
          *
-         * The isomorphisms that are written to the given output iterator
-         * will be newly created, and the caller of this routine is
-         * responsible for destroying them.
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
          *
-         * \ifacespython The \a output argument is not present.
-         * Instead, this routine returns a python list containing all of
-         * the isomorphisms that were found.
+         * - \a action must return a \c bool.  A return value of \c false
+         *   indicates that the search for isomorphisms should continue,
+         *   and a return value of \c true indicates that the search
+         *   should terminate immediately.
+         *
+         * - This triangulation \e must remain constant while the search
+         *   runs (i.e., \a action must not modify the triangulation).
          *
          * \warning For large dimensions, this routine can become
          * extremely slow: its running time includes a factor of
          * (<i>dim</i>+1)!.
          *
+         * \ifacespython There are two versions of this function
+         * available in Python.  The first form is
+         * <tt>findAllIsomorphisms(other, action)<tt>, which mirrors the C++
+         * function: it takes \a action which may be a pure Python function,
+         * the return value indicates whether \a action ever terminated the
+         * search, but it does \e not take an additonal argument list (\a args).
+         * The second form is <tt>findAllIsomorphisms(other)</tt>, which
+         * returns a Python list containing all of the isomorphisms that were
+         * found.
+         *
          * @param other the triangulation to compare with this one.
-         * @param output the output iterator to which the isomorphisms
-         * will be written.
-         * @return the number of isomorphisms that were found.
+         * @param action a function (or other callable object) to call
+         * for each isomorphism that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial isomorphism argument.
+         * @return \c true if \a action ever terminated the search by returning
+         * \c true, or \c false if the search was allowed to run to completion.
          */
-        template <typename OutputIterator>
-        size_t findAllIsomorphisms(const Triangulation<dim>& other,
-            OutputIterator output) const;
+        template <typename Action, typename... Args>
+        bool findAllIsomorphisms(const Triangulation<dim>& other,
+            Action&& action, Args&&... args) const;
 
         /**
          * Finds all ways in which an isomorphic copy of this triangulation
@@ -1425,34 +1445,56 @@ class TriangulationBase :
          * This routine behaves identically to isContainedIn(), except
          * that instead of returning just one isomorphism (which may be
          * boundary incomplete and need not be onto), all such isomorphisms
-         * are returned.
+         * will be found and processed.  See the isContainedIn() notes for
+         * details on this.
          *
-         * See the isContainedIn() notes for additional information.
+         * For each isomorphism that is found, this routine will call
+         * \a action (which must be a function or some other callable object).
          *
-         * The isomorphisms that are found will be written to the given
-         * output iterator.  This iterator must accept objects of type
-         * Isomorphism<dim>*.  As an example, \a output might be a
-         * back_insert_iterator for a std::vector<Isomorphism<dim>*>.
+         * - The first argument to \a action must be of type
+         *   <tt>(const Isomorphism<dim>&)</tt>; this will be a reference
+         *   to the isomorphism that was found.  If \a action wishes to keep
+         *   the isomorphism, it should take a copy (not a reference), since
+         *   the isomorphism will be changed and then eventually destroyed
+         *   after \a action returns.
          *
-         * The isomorphisms that are written to the given output iterator
-         * will be newly created, and the caller of this routine is
-         * responsible for destroying them.
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return a \c bool.  A return value of \c false
+         *   indicates that the search for isomorphisms should continue,
+         *   and a return value of \c true indicates that the search
+         *   should terminate immediately.
+         *
+         * - This triangulation \e must remain constant while the search
+         *   runs (i.e., \a action must not modify the triangulation).
          *
          * \warning For large dimensions, this routine can become
          * extremely slow: its running time includes a factor of
          * (<i>dim</i>+1)!.
          *
-         * \ifacespython Not present.
+         * \ifacespython There are two versions of this function
+         * available in Python.  The first form is
+         * <tt>findAllSubcomplexesIn(other, action)<tt>, which mirrors the C++
+         * function: it takes \a action which may be a pure Python function,
+         * the return value indicates whether \a action ever terminated the
+         * search, but it does \e not take an additonal argument list (\a args).
+         * The second form is <tt>findAllSubcomplexesIn(other)</tt>, which
+         * returns a Python list containing all of the isomorphisms that were
+         * found.
          *
          * @param other the triangulation in which to search for
          * isomorphic copies of this triangulation.
-         * @param output the output iterator to which the isomorphisms
-         * will be written.
-         * @return the number of isomorphisms that were found.
+         * @param action a function (or other callable object) to call
+         * for each isomorphism that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial isomorphism argument.
+         * @return \c true if \a action ever terminated the search by returning
+         * \c true, or \c false if the search was allowed to run to completion.
          */
-        template <typename OutputIterator>
-        size_t findAllSubcomplexesIn(const Triangulation<dim>& other,
-            OutputIterator output) const;
+        template <typename Action, typename... Args>
+        bool findAllSubcomplexesIn(const Triangulation<dim>& other,
+            Action&& action, Args&&... args) const;
 
         /*@}*/
         /**
@@ -1972,35 +2014,27 @@ class TriangulationBase :
          * regarding boundary complete and boundary incomplete
          * isomorphisms.
          *
-         * The isomorphisms that are found will be written to the given
-         * output iterator.  This iterator must accept objects of type
-         * Isomorphism<dim>*.  As an example, \a output might be a
-         * back_insert_iterator for a std::vector<Isomorphism<dim>*>.
-         *
-         * The isomorphisms that are written to the given output iterator
-         * will be newly created, and the caller of this routine is
-         * responsible for destroying them.
-         *
-         * If \a firstOnly is passed as \c true, only the first
-         * isomorphism found (if any) will be returned, after which the
-         * routine will return immediately.  Otherwise all isomorphisms
-         * will be returned.
+         * For each isomorphism that is found, this routine will call
+         * \a action, passing a const reference to the isomorphism as well as
+         * the given argument list \a args.  See the documentation for
+         * findAllIsomorphisms() and findAllSubcomplexesIn() for details on
+         * how \a action should behave.
          *
          * @param other the triangulation in which to search for an
          * isomorphic copy of this triangulation.
-         * @param output the output iterator to which the isomorphisms
-         * will be written.
          * @param complete \c true if isomorphisms must be
          * onto and boundary complete, or \c false if neither of these
          * restrictions should be imposed.
-         * @param firstOnly \c true if only one isomorphism should be
-         * returned (if any), or \c false if all isomorphisms should be
-         * returned.
-         * @return the total number of isomorphisms found.
+         * @param action a function (or other callable object) to call
+         * for each isomorphism that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial isomorphism argument.
+         * @return \c true if \a action ever terminated the search by returning
+         * \c true, or \c false if the search was allowed to run to completion.
          */
-        template <typename OutputIterator>
-        size_t findIsomorphisms(const Triangulation<dim>& other,
-                OutputIterator output, bool complete, bool firstOnly) const;
+        template <typename Action, typename... Args>
+        bool findIsomorphisms(const Triangulation<dim>& other,
+                bool complete, Action&& action, Args&&... args) const;
 
         /**
          * Internal to findIsomorphisms().
@@ -2483,41 +2517,41 @@ bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
 template <int dim>
 inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isIsomorphicTo(
         const Triangulation<dim>& other) const {
-    Isomorphism<dim>* result;
-    if (findIsomorphisms(other, &result, true, true)) {
-        // result now points to a new isomorphism.
-        std::optional<Isomorphism<dim>> ans = std::move(*result);
-        delete result;
-        return ans;
-    } else
-        return std::nullopt;
+    std::optional<Isomorphism<dim>> ans;
+    findIsomorphisms(other, true, [&ans](const Isomorphism<dim>& iso) {
+        ans = iso;
+        return true; // stop searching
+    });
+    return ans;
 }
 
 template <int dim>
 inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isContainedIn(
         const Triangulation<dim>& other) const {
-    Isomorphism<dim>* result;
-    if (findIsomorphisms(other, &result, false, true)) {
-        // result now points to a new isomorphism.
-        std::optional<Isomorphism<dim>> ans = std::move(*result);
-        delete result;
-        return ans;
-    } else
-        return std::nullopt;
+    std::optional<Isomorphism<dim>> ans;
+    findIsomorphisms(other, false, [&ans](const Isomorphism<dim>& iso) {
+        ans = iso;
+        return true; // stop searching
+    });
+    return ans;
 }
 
 template <int dim>
-template <typename OutputIterator>
-inline size_t TriangulationBase<dim>::findAllIsomorphisms(
-        const Triangulation<dim>& other, OutputIterator output) const {
-    return findIsomorphisms(other, output, true, false);
+template <typename Action, typename... Args>
+inline bool TriangulationBase<dim>::findAllIsomorphisms(
+        const Triangulation<dim>& other, Action&& action, Args&&... args)
+        const {
+    return findIsomorphisms(other, true, std::forward<Action>(action),
+        std::forward<Args>(args)...);
 }
 
 template <int dim>
-template <typename OutputIterator>
-inline size_t TriangulationBase<dim>::findAllSubcomplexesIn(
-        const Triangulation<dim>& other, OutputIterator output) const {
-    return findIsomorphisms(other, output, false, false);
+template <typename Action, typename... Args>
+inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
+        const Triangulation<dim>& other, Action&& action, Args&&... args)
+        const {
+    return findIsomorphisms(other, false, std::forward<Action>(action),
+        std::forward<Args>(args)...);
 }
 
 template <int dim>

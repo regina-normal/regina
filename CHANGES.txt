@@ -244,6 +244,9 @@ Version 6.1  [ TODO ]
               actions that take a knot signature as well as a full knot
               diagram.  This function is now also available through Python,
               and can take a pure Python function as its action argument.
+        Class ListOnCall:
+            - Removed, since this class was not thread-safe and did not add
+              anything non-trivial.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class LPConstraintBase and all subclasses:
@@ -452,6 +455,11 @@ Version 6.1  [ TODO ]
             - Added a global swap() to complement the member swap().
         Class Returns, ReturnsTraits:
             - Removed completely.
+        Class SatBlockStarterSet:
+            - Now requires a (lightweight) object to work with instead
+              of using static routines only.  This makes the class
+              suitable for use with C++11 range-based for loops.
+            - This class is now thread-safe.
         Class SimpleSurfaceBundle:
             - Class constants are now constexpr.
         Class Simplex<dim>:
@@ -508,6 +516,11 @@ Version 6.1  [ TODO ]
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
               The old names are kept as deprecated aliases.
+            - Routines findAllIsomorphisms() and findAllSubcomplexesIn()
+              no longer take an output iterator; instead they take a callback
+              action and an argument list.  Python supports both this new
+              callback form as well as the old form that returned a Python
+              list of isomorphisms.
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).
