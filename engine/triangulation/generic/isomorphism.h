@@ -461,7 +461,7 @@ template <int dim>
 Isomorphism<dim>& Isomorphism<dim>::operator = (const Isomorphism<dim>& src) {
     if (nSimplices_ != src.nSimplices_) {
         delete[] simpImage_;
-        delete facetPerm_;
+        delete[] facetPerm_;
 
         nSimplices_ = src.nSimplices_;
 
