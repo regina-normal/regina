@@ -163,6 +163,9 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
             testRecognition("fapaadecedenbokbo", "P(0)", "S3/P120");
             testRecognition("jhnafaabdgfghhiiihkagrkvskr",
                 "B(T7:1 | -1,0 | -3,-1)", "T x I / [ -4,-3 | -1,-1 ]");
+            testRecognition("knncgaabcgifjhhjijmgtnnasgana",
+                "Plugged Torus Bundle [T7:1 | Tri, Mob(v)]",
+                "SFS [A: (2,1)] / [ -1,-2 | 0,1 ]");
             testRecognition("jlkijaaabdefghhiifanavrumvb",
                 "Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 3, 4)]",
                 "SFS [RP2/n2: (3,1) (4,3)]");
