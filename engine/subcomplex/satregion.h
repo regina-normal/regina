@@ -198,11 +198,7 @@ struct SatBlockSpec {
  */
 class SatRegion : public Output<SatRegion> {
     private:
-        typedef std::vector<SatBlockSpec> BlockSet;
-            /**< The data structure used to store the list of
-                 constituent blocks. */
-
-        BlockSet blocks_;
+        std::vector<SatBlockSpec> blocks_;
             /**< The set of blocks from which this region is formed,
                  along with details of how they are oriented within this
                  larger region. */

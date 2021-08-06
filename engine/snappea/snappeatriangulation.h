@@ -1127,7 +1127,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *
          * @author William Pettersson and Stephan Tillmann
          *
-         * @return a newly allocated matrix with (2 * \a number_of_cusps) rows
+         * @return a matrix with (2 * \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above,
          * or no value if this is a null triangulation.
          */

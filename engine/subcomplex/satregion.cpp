@@ -34,7 +34,6 @@
 #include "subcomplex/satblockstarter.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
-#include "utilities/ptrutils.h"
 #include <set>
 #include <sstream>
 
@@ -69,21 +68,20 @@ SatRegion::SatRegion(SatBlock* starter) :
 }
 
 SatRegion::~SatRegion() {
-    for (BlockSet::iterator it = blocks_.begin(); it != blocks_.end(); it++)
-        delete it->block;
+    for (SatBlockSpec& b : blocks_)
+        delete b.block;
 }
 
 const SatAnnulus& SatRegion::boundaryAnnulus(unsigned long which,
         bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
-    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
-            it++)
-        for (ann = 0; ann < it->block->nAnnuli(); ann++)
-            if (! it->block->hasAdjacentBlock(ann)) {
+    for (const SatBlockSpec& b : blocks_)
+        for (ann = 0; ann < b.block->nAnnuli(); ann++)
+            if (! b.block->hasAdjacentBlock(ann)) {
                 if (which == 0) {
-                    blockRefVert = it->refVert;
-                    blockRefHoriz = it->refHoriz;
-                    return it->block->annulus(ann);
+                    blockRefVert = b.refVert;
+                    blockRefHoriz = b.refHoriz;
+                    return b.block->annulus(ann);
                 }
 
                 which--;
@@ -100,15 +98,14 @@ void SatRegion::boundaryAnnulus(unsigned long which,
         SatBlock*& block, unsigned& annulus,
         bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
-    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
-            it++)
-        for (ann = 0; ann < it->block->nAnnuli(); ann++)
-            if (! it->block->hasAdjacentBlock(ann)) {
+    for (const SatBlockSpec& b : blocks_)
+        for (ann = 0; ann < b.block->nAnnuli(); ann++)
+            if (! b.block->hasAdjacentBlock(ann)) {
                 if (which == 0) {
-                    block = it->block;
+                    block = b.block;
                     annulus = ann;
-                    blockRefVert = it->refVert;
-                    blockRefHoriz = it->refHoriz;
+                    blockRefVert = b.refVert;
+                    blockRefHoriz = b.refHoriz;
                     return;
                 }
 
@@ -155,8 +152,7 @@ SFSpace* SatRegion::createSFS(bool reflect) const {
         untwisted /* untwisted punctures */, twisted /* twisted punctures */,
         0 /* untwisted reflectors */, twistedBlocks_ /* twisted reflectors */);
 
-    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
-            it++)
+    for (auto it = blocks_.begin(); it != blocks_.end(); it++)
         it->block->adjustSFS(*sfs, ! regXor(reflect,
             regXor(it->refVert, it->refHoriz)));
 
@@ -185,7 +181,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     unsigned annBdryTriangles;
 
     // Try to push past the boundary annuli of all blocks present and future.
-    // We rely on a vector data type for BlockSet here, since this
+    // We rely on a vector data type for blocks_ here, since this
     // will keep the loop doing exactly what it should do even if new
     // blocks are added and blockFound.size() increases.
     for (unsigned long pos = 0; pos < blocks_.size(); pos++) {
@@ -308,7 +304,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
 }
 
 long SatRegion::blockIndex(const SatBlock* block) const {
-    BlockSet::const_iterator it;
+    std::vector<SatBlockSpec>::const_iterator it;
     unsigned long id;
 
     for (id = 0, it = blocks_.begin(); it != blocks_.end(); it++, id++)
@@ -319,7 +315,6 @@ long SatRegion::blockIndex(const SatBlock* block) const {
 }
 
 void SatRegion::calculateBaseEuler() {
-    BlockSet::const_iterator it;
     unsigned ann;
 
     long faces = blocks_.size();
@@ -327,9 +322,9 @@ void SatRegion::calculateBaseEuler() {
     long edgesBdry = 0;
     long edgesInternalDoubled = 0;
 
-    for (it = blocks_.begin(); it != blocks_.end(); it++)
-        for (ann = 0; ann < it->block->nAnnuli(); ann++)
-            if (it->block->hasAdjacentBlock(ann))
+    for (const SatBlockSpec& b : blocks_)
+        for (ann = 0; ann < b.block->nAnnuli(); ann++)
+            if (b.block->hasAdjacentBlock(ann))
                 edgesInternalDoubled++;
             else
                 edgesBdry++;
@@ -343,13 +338,13 @@ void SatRegion::calculateBaseEuler() {
     std::set<Edge<3>*> baseVerticesBdry;
     SatAnnulus annData;
 
-    for (it = blocks_.begin(); it != blocks_.end(); it++)
-        for (ann = 0; ann < it->block->nAnnuli(); ann++) {
-            annData = it->block->annulus(ann);
+    for (const SatBlockSpec& b : blocks_)
+        for (ann = 0; ann < b.block->nAnnuli(); ann++) {
+            annData = b.block->annulus(ann);
             baseVerticesAll.insert(annData.tet[0]->edge(
                 Edge<3>::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
 
-            if (! it->block->hasAdjacentBlock(ann)) {
+            if (! b.block->hasAdjacentBlock(ann)) {
                 baseVerticesBdry.insert(annData.tet[0]->edge(
                     Edge<3>::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
                 baseVerticesBdry.insert(annData.tet[1]->edge(
@@ -369,19 +364,22 @@ void SatRegion::calculateBaseEuler() {
 }
 
 void SatRegion::writeBlockAbbrs(std::ostream& out, bool tex) const {
-    typedef std::multiset<const SatBlock*, LessDeref<SatBlock> >
-        OrderedBlockSet;
-    OrderedBlockSet blockOrder;
+    // The list of blocks should be cheap to copy, since it would
+    // typically be a vector storing a small number of relatively
+    // lightweight SatBlockSpec objects.
+    std::vector<SatBlockSpec> sorted(blocks_);
+    std::sort(sorted.begin(), sorted.end(),
+            [](const SatBlockSpec& a, const SatBlockSpec& b) {
+        return (*a.block) < (*b.block);
+    });
 
-    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
-            it++)
-        blockOrder.insert(it->block);
-
-    for (OrderedBlockSet::const_iterator it = blockOrder.begin();
-            it != blockOrder.end(); it++) {
-        if (it != blockOrder.begin())
+    bool first = true;
+    for (const SatBlockSpec& b : sorted) {
+        if (first)
+            first = false;
+        else
             out << ", ";
-        (*it)->writeAbbr(out, tex);
+        b.block->writeAbbr(out, tex);
     }
 }
 
@@ -389,7 +387,7 @@ void SatRegion::writeDetail(std::ostream& out, const std::string& title)
         const {
     out << title << ":\n";
 
-    BlockSet::const_iterator it;
+    std::vector<SatBlockSpec>::const_iterator it;
     unsigned long id, nAnnuli, ann;
     bool ref, back;
 

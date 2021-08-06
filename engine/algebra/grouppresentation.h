@@ -49,7 +49,6 @@
 
 #include "regina-core.h"
 #include "core/output.h"
-#include "utilities/ptrutils.h"
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"

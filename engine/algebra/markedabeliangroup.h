@@ -44,7 +44,6 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/matrix.h"
-#include "utilities/ptrutils.h"
 
 namespace regina {
 

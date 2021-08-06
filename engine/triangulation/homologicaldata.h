@@ -44,7 +44,6 @@
 #include "algebra/markedabeliangroup.h"
 #include "maths/rational.h"
 #include "triangulation/dim3.h"
-#include "utilities/ptrutils.h"
 #include <algorithm>
 #include <vector>
 #include <cstddef>
