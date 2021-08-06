@@ -585,6 +585,8 @@ Version 6.1  [ TODO ]
               and Face<dim, subdim>::allowsInvalidFaces instead.
         Function binomSmall(), binomMedium():
             - Both these functions are now inline and constexpr.
+        Function clonePtr():
+            - Removed completely.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
         Function forCoords(), forFilter(), forPacket():

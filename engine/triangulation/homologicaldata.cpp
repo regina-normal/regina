@@ -42,62 +42,62 @@ namespace regina {
 
 
 void HomologicalData::writeTextShort(std::ostream& out) const {
-    if (mHomology0.get()) {
+    if (mHomology0_) {
         out<<"H_0(M) = ";
-        mHomology0->writeTextShort(out);
+        mHomology0_->writeTextShort(out);
         out<<" ";
     }
-    if (mHomology1.get()) {
+    if (mHomology1_) {
         out<<"H_1(M) = ";
-        mHomology1->writeTextShort(out);
+        mHomology1_->writeTextShort(out);
         out<<" ";
     }
-    if (mHomology2.get()) {
+    if (mHomology2_) {
         out<<"H_2(M) = ";
-        mHomology2->writeTextShort(out);
+        mHomology2_->writeTextShort(out);
         out<<" ";
     }
-    if (mHomology3.get()) {
+    if (mHomology3_) {
         out<<"H_3(M) = ";
-        mHomology3->writeTextShort(out);
+        mHomology3_->writeTextShort(out);
         out<<" ";
     }
 
-    if (bHomology0.get()) {
+    if (bHomology0_) {
         out<<"H_0(BM) = ";
-        bHomology0->writeTextShort(out);
+        bHomology0_->writeTextShort(out);
         out<<" ";
     }
-    if (bHomology1.get()) {
+    if (bHomology1_) {
         out<<"H_1(BM) = ";
-        bHomology1->writeTextShort(out);
+        bHomology1_->writeTextShort(out);
         out<<" ";
     }
-    if (bHomology2.get()) {
+    if (bHomology2_) {
         out<<"H_2(BM) = ";
-        bHomology2->writeTextShort(out);
+        bHomology2_->writeTextShort(out);
         out<<" ";
     }
 
-    if (bmMap0.get()) {
+    if (bmMap0_) {
         out<<"H_0(BM) --> H_0(M) = ";
-        bmMap0->writeTextShort(out);
+        bmMap0_->writeTextShort(out);
         out<<" ";
     }
-    if (bmMap1.get()) {
+    if (bmMap1_) {
         out<<"H_1(BM) --> H_1(M) = ";
-        bmMap1->writeTextShort(out);
+        bmMap1_->writeTextShort(out);
         out<<" ";
     }
-    if (bmMap2.get()) {
+    if (bmMap2_) {
         out<<"H_2(BM) --> H_2(M) = ";
-        bmMap2->writeTextShort(out);
+        bmMap2_->writeTextShort(out);
         out<<" ";
     }
 
-    if (dmTomMap1.get()) {
+    if (dmTomMap1_) {
         out<<"PD map = ";
-        dmTomMap1->writeTextShort(out);
+        dmTomMap1_->writeTextShort(out);
         out<<" ";
     }
     if (torsionFormComputed) {
@@ -113,20 +113,20 @@ void HomologicalData::writeTextShort(std::ostream& out) const {
 
 void HomologicalData::computeccIndexing() {
     // Only do this if we haven't already done it.
-    if (ccIndexingComputed)
+    if (ccIndexingComputed_)
         return;
 
     // Off we go...
 
     unsigned long i=0;
-    for (Vertex<3>* v : tri->vertices()) {
+    for (Vertex<3>* v : tri_.vertices()) {
         if (!(v->isIdeal()))
             sNIV.push_back(i);
         i++;
     } // sNIV
 
     unsigned long j=0;
-    for (Edge<3>* e : tri->edges()) {
+    for (Edge<3>* e : tri_.edges()) {
         for (i=0;i<2;i++) {
             if (e->vertex(i)->isIdeal())
                 sIEOE.push_back(2*j+i);
@@ -135,7 +135,7 @@ void HomologicalData::computeccIndexing() {
     }
 
     j=0; // sIEOE
-    for (Triangle<3>* t : tri->triangles()) {
+    for (Triangle<3>* t : tri_.triangles()) {
         for (i=0;i<3;i++) {
             if (t->vertex(i)->isIdeal())
                 sIEEOF.push_back(3*j+i);
@@ -144,7 +144,7 @@ void HomologicalData::computeccIndexing() {
     }
 
     j=0; // sIEEOF
-    for (Tetrahedron<3>* tet : tri->tetrahedra()) {
+    for (Tetrahedron<3>* tet : tri_.tetrahedra()) {
         for (i=0;i<4;i++)  {
             if (tet->vertex(i)->isIdeal()) {
                 sIEFOT.push_back(4*j+i);
@@ -154,53 +154,53 @@ void HomologicalData::computeccIndexing() {
     }
 
     j=0;// sIEFOT
-    for (Vertex<3>* v : tri->vertices()) { // dNINBV
+    for (Vertex<3>* v : tri_.vertices()) { // dNINBV
         if ((!(v->isIdeal())) && (!(v->isBoundary())))
             dNINBV.push_back(j);
         j++;
     }
     j=0;
-    for (Edge<3>* e : tri->edges()) {
+    for (Edge<3>* e : tri_.edges()) {
         if (!(e->isBoundary()))
             dNBE.push_back(j);
         j++;
     }
     j=0; // dNBE
-    for (Triangle<3>* t : tri->triangles()) {
+    for (Triangle<3>* t : tri_.triangles()) {
         if (!(t->isBoundary()))
             dNBF.push_back(j);
         j++;
     }
 
     i=0;
-    for (Vertex<3>* v : tri->vertices()) { // sBNIV
+    for (Vertex<3>* v : tri_.vertices()) { // sBNIV
         if ( (!(v->isIdeal())) && (v->isBoundary()))
             sBNIV.push_back(i);
         i++;
     }
     i=0;
-    for (Edge<3>* e : tri->edges()) { // sBNIE
+    for (Edge<3>* e : tri_.edges()) { // sBNIE
         if (e->isBoundary())
             sBNIE.push_back(i);
         i++;
     }
     i=0;
-    for (Triangle<3>* t : tri->triangles()) { // sBNIF
+    for (Triangle<3>* t : tri_.triangles()) { // sBNIF
         if (t->isBoundary())
             sBNIF.push_back(i);
         i++;
     }
 
-    ccIndexingComputed = true;
+    ccIndexingComputed_ = true;
 
     // standard (0..3)-cells:
     numStandardCells[0] = sNIV.size() + sIEOE.size();
-    numStandardCells[1] = tri->countEdges() + sIEEOF.size();
-    numStandardCells[2] = tri->countTriangles() + sIEFOT.size();
-    numStandardCells[3] = tri->size();
+    numStandardCells[1] = tri_.countEdges() + sIEEOF.size();
+    numStandardCells[2] = tri_.countTriangles() + sIEFOT.size();
+    numStandardCells[3] = tri_.size();
 
     // dual (0..3)-cells:
-    numDualCells[0] = tri->size();
+    numDualCells[0] = tri_.size();
     numDualCells[1] = dNBF.size();
     numDualCells[2] = dNBE.size();
     numDualCells[3] = dNINBV.size();
@@ -218,33 +218,33 @@ void HomologicalData::computeChainComplexes() {
 
     // Off we go...
 
-    if (!ccIndexingComputed) computeccIndexing();
+    if (!ccIndexingComputed_) computeccIndexing();
 
     chainComplexesComputed = true;
 
     // need to convert this so that it does not use tri
-    B0_.reset(new MatrixInt(1, numDualCells[0]));
-    B1.reset(new MatrixInt(numDualCells[0], numDualCells[1]));
-    B2.reset(new MatrixInt(numDualCells[1], numDualCells[2]));
-    B3.reset(new MatrixInt(numDualCells[2], numDualCells[3]));
-    B4.reset(new MatrixInt(numDualCells[3], 1));
+    B0_ = MatrixInt(1, numDualCells[0]);
+    B1_ = MatrixInt(numDualCells[0], numDualCells[1]);
+    B2_ = MatrixInt(numDualCells[1], numDualCells[2]);
+    B3_ = MatrixInt(numDualCells[2], numDualCells[3]);
+    B4_ = MatrixInt(numDualCells[3], 1);
 
-    A0.reset(new MatrixInt(1, numStandardCells[0]));
-    A1.reset(new MatrixInt(numStandardCells[0], numStandardCells[1]));
-    A2.reset(new MatrixInt(numStandardCells[1], numStandardCells[2]));
-    A3.reset(new MatrixInt(numStandardCells[2], numStandardCells[3]));
-    A4.reset(new MatrixInt(numStandardCells[3], 1));
+    A0_ = MatrixInt(1, numStandardCells[0]);
+    A1_ = MatrixInt(numStandardCells[0], numStandardCells[1]);
+    A2_ = MatrixInt(numStandardCells[1], numStandardCells[2]);
+    A3_ = MatrixInt(numStandardCells[2], numStandardCells[3]);
+    A4_ = MatrixInt(numStandardCells[3], 1);
 
-    H1map.reset(new MatrixInt(numStandardCells[1], numDualCells[1]));
+    H1map_ = MatrixInt(numStandardCells[1], numDualCells[1]);
 
-    Bd0.reset(new MatrixInt(1, numBdryCells[0]));
-    Bd1.reset(new MatrixInt(numBdryCells[0], numBdryCells[1]));
-    Bd2.reset(new MatrixInt(numBdryCells[1], numBdryCells[2]));
-    Bd3.reset(new MatrixInt(numBdryCells[2], 1));
+    Bd0_ = MatrixInt(1, numBdryCells[0]);
+    Bd1_ = MatrixInt(numBdryCells[0], numBdryCells[1]);
+    Bd2_ = MatrixInt(numBdryCells[1], numBdryCells[2]);
+    Bd3_ = MatrixInt(numBdryCells[2], 1);
 
-    B0Incl.reset(new MatrixInt(numStandardCells[0], numBdryCells[0]));
-    B1Incl.reset(new MatrixInt(numStandardCells[1], numBdryCells[1]));
-    B2Incl.reset(new MatrixInt(numStandardCells[2], numBdryCells[2]));
+    B0Incl_ = MatrixInt(numStandardCells[0], numBdryCells[0]);
+    B1Incl_ = MatrixInt(numStandardCells[1], numBdryCells[1]);
+    B2Incl_ = MatrixInt(numStandardCells[2], numBdryCells[2]);
 
     long int temp;
     unsigned long i,j;
@@ -252,58 +252,58 @@ void HomologicalData::computeChainComplexes() {
     Perm<4> p1;
 
     // This fills out matrix A1
-    for (i=0;i<tri->countEdges();i++) {
+    for (i=0;i<tri_.countEdges();i++) {
         // these are the standard edges
-        temp=sNIV.index(tri->edge(i)->vertex(0)->index());
-        (A1->entry( ((temp==(-1)) ?
+        temp=sNIV.index(tri_.edge(i)->vertex(0)->index());
+        (A1_->entry( ((temp==(-1)) ?
             (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
-        temp=sNIV.index(tri->edge(i)->vertex(1)->index());
-        (A1->entry( ((temp==(-1)) ?
+        temp=sNIV.index(tri_.edge(i)->vertex(1)->index());
+        (A1_->entry( ((temp==(-1)) ?
             (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
     } // ok
 
     for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
         // sIEEOF[i] /3 is the triangle index, and sIEEOF[i] % 3 tells us
         // the vertex of this triangle
-        p1=tri->triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 1) % 3);
+        p1=tri_.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1) {
-            A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )+1), tri->countEdges()+i)-=1;
+            A1_->entry(sNIV.size() + sIEOE.index(2*(
+                tri_.triangle(sIEEOF[i]/3)->
+                edge(p1[2])->index() )+1), tri_.countEdges()+i)-=1;
         } else {
-            A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )) , tri->countEdges()+i)-=1;
+            A1_->entry(sNIV.size() + sIEOE.index(2*(
+                tri_.triangle(sIEEOF[i]/3)->
+                edge(p1[2])->index() )) , tri_.countEdges()+i)-=1;
         }
-        p1=tri->triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 2) % 3);
+        p1=tri_.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
-            A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )) , tri->countEdges()+i)+=1;
+            A1_->entry(sNIV.size() + sIEOE.index(2*(
+                tri_.triangle(sIEEOF[i]/3)->
+                edge(p1[2])->index() )) , tri_.countEdges()+i)+=1;
         } else {
-            A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )+1) , tri->countEdges()+i)+=1;
+            A1_->entry(sNIV.size() + sIEOE.index(2*(
+                tri_.triangle(sIEEOF[i]/3)->
+                edge(p1[2])->index() )+1) , tri_.countEdges()+i)+=1;
         }
     }
     // that handles matrix A1.
 
     // start filling out A2...
-    for (i=0;i<tri->countTriangles();i++) {
+    for (i=0;i<tri_.countTriangles();i++) {
         // put boundary edges into A2..
         for (j=0;j<6;j++) {
             // run through the 6 possible boundary edges of the triangle
             // the first 3 are standard, the last three are the ideal
             // edges (if they exist)
             if ( (j/3) == 0) {
-                p1=tri->triangle(i)->edgeMapping(j % 3);
-                A2->entry(
-                    tri->triangle(i)->edge(j % 3)->index() ,i) +=
+                p1=tri_.triangle(i)->edgeMapping(j % 3);
+                A2_->entry(
+                    tri_.triangle(i)->edge(j % 3)->index() ,i) +=
                     ( (p1.sign()==1) ? +1 : -1 );
             } else {
                 // check triangle i vertex j % 3 is ideal
-                if (tri->triangle(i)->vertex(j % 3)->isIdeal())
-                    A2->entry( tri->countEdges() +
+                if (tri_.triangle(i)->vertex(j % 3)->isIdeal())
+                    A2_->entry( tri_.countEdges() +
                         sIEEOF.index((3*i) + (j % 3)), i) += 1;
             }
         }
@@ -323,28 +323,28 @@ void HomologicalData::computeChainComplexes() {
         // sIEFOT[i] + 1,2,3 % 4)^{-1} applied to sIEFOT[i] % 4 is the
         // vertex of this triangle.
         for (j=1;j<4;j++) {
-            p1=tri->tetrahedron( sIEFOT[i]/4 )->triangleMapping(
+            p1=tri_.tetrahedron( sIEFOT[i]/4 )->triangleMapping(
                 (sIEFOT[i] + j) % 4);
-            A2->entry( tri->countEdges() + sIEEOF.index(
-                3*tri->tetrahedron(
+            A2_->entry( tri_.countEdges() + sIEEOF.index(
+                3*tri_.tetrahedron(
                 sIEFOT[i]/4 )->triangle( (sIEFOT[i] + j) % 4)->index() +
                 p1.pre(sIEFOT[i] % 4) ) ,
-                tri->countTriangles()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+                tri_.countTriangles()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
     }
     // end A2
 
     // start A3
-    for (i=0;i<tri->size();i++) {
+    for (i=0;i<tri_.size();i++) {
         for (j=0;j<4;j++) {
             // first go through standard faces 0 through 3
-            p1=tri->tetrahedron(i)->triangleMapping(j);
-            A3->entry( tri->tetrahedron(i)->triangle(j)->index(), i) +=
+            p1=tri_.tetrahedron(i)->triangleMapping(j);
+            A3_->entry( tri_.tetrahedron(i)->triangle(j)->index(), i) +=
                 ( (p1.sign()==1) ? 1 : -1 );
             // then ideal faces 0 through 3, if they exist
-            if (tri->tetrahedron(i)->vertex(j)->isIdeal()==1) {
+            if (tri_.tetrahedron(i)->vertex(j)->isIdeal()==1) {
                 // this part is in error.
-                A3->entry( tri->countTriangles() +
+                A3_->entry( tri_.countTriangles() +
                     sIEFOT.index((4*i) + j), i) += 1;
             }
         }
@@ -355,17 +355,17 @@ void HomologicalData::computeChainComplexes() {
     // start B1: for each dual edge == non-boundary triangle,
     //              find the tetrahedra that bound it
     for (i=0;i<dNBF.size();i++) {
-        B1->entry(
-            tri->triangle(dNBF[i])->embedding(1).tetrahedron()->index(), i)+=1;
-        B1->entry(
-            tri->triangle(dNBF[i])->embedding(0).tetrahedron()->index(), i)-=1;
+        B1_->entry(
+            tri_.triangle(dNBF[i])->embedding(1).tetrahedron()->index(), i)+=1;
+        B1_->entry(
+            tri_.triangle(dNBF[i])->embedding(0).tetrahedron()->index(), i)-=1;
     }
     // end B1
 
     // start B2: for each dual triangle == non-boundary edge,
     // find dual edges it bounds == link of tetrahedra that contain it
     for (i=0;i<dNBE.size();i++) {
-        for (auto& emb : *tri->edge(dNBE[i])) {
+        for (auto& emb : *tri_.edge(dNBE[i])) {
             p1=emb.vertices();
             // the face of the tetrahedron corresponding to vertex 2 is
             // what we want to orient... but we need to decide on its
@@ -373,7 +373,7 @@ void HomologicalData::computeChainComplexes() {
             // embedding(0).tetrahedron() is the current tet, and
             // embedding(0).triangle() is this current face p1[2]...
 
-            B2->entry( dNBF.index(
+            B2_->entry( dNBF.index(
                 emb.tetrahedron()->triangle(p1[2])->index() ) ,i)+=
                     ( ( emb.tetrahedron() ==
                         emb.tetrahedron()->triangle(
@@ -397,7 +397,7 @@ void HomologicalData::computeChainComplexes() {
 
     for (i=0;i<dNINBV.size();i++) {
         // dNINBV[i] is the vertices.index() of this vertex.
-        Vertex<3>* vtet = tri->vertex(dNINBV[i]);
+        Vertex<3>* vtet = tri_.vertex(dNINBV[i]);
         tetor.resize(vtet->degree(),0);
 
         std::vector<std::pair<long, bool> > unorientedlist;
@@ -405,7 +405,7 @@ void HomologicalData::computeChainComplexes() {
         // with marked vertices.
         // Indices into the vector are 4*tetindex + vertex no.
         // Values are (index into vtet's list of embeddings, already oriented).
-        unorientedlist.resize(4 * tri->size());
+        unorientedlist.resize(4 * tri_.size());
 
         for (j=0;j<vtet->degree();j++) {
             // unoriented list stores the tetrahedra adjacent to the vertex
@@ -499,7 +499,7 @@ void HomologicalData::computeChainComplexes() {
 
         std::set<long>::const_iterator it;
         for (it = edge_adjacency.begin(); it != edge_adjacency.end(); ++it) {
-            B3->entry( dNBE.index((*it)/4) , i) +=
+            B3_->entry( dNBE.index((*it)/4) , i) +=
                 ( ( ((*it) % 2)==0 ) ? 1 : -1 );
         }
     }
@@ -513,7 +513,7 @@ void HomologicalData::computeChainComplexes() {
     // regular 0-cell associated to a dual 0-cell must be contained in
     // the same ideal simplex.
 
-    std::vector<unsigned long> zeroCellMap(tri->size());
+    std::vector<unsigned long> zeroCellMap(tri_.size());
     // zeroCellMap[i] describes the vertex of tetrahedra[i] that the dual
     // 0-cell is sent to. It will be stored as
     // 4*(vertex number 0,1,2,3) + 0,1,2,3 (equal to prev. number if
@@ -523,7 +523,7 @@ void HomologicalData::computeChainComplexes() {
         // cycle through the vertices, take the first non-ideal one if
         // it exists.
         j=0;
-        while ( j<4 && tri->tetrahedron(i)->vertex(j)->isIdeal())
+        while ( j<4 && tri_.tetrahedron(i)->vertex(j)->isIdeal())
             j++;
         if (j<4) zeroCellMap[i]=4*j+j;
         else zeroCellMap[i]=1;
@@ -537,29 +537,29 @@ void HomologicalData::computeChainComplexes() {
     // the triangle corresponding to the dual 1-cell once. (and no other
     // triangles).
 
-    for (j=0; j<H1map->columns(); j++) // H1map.columns()==dNBF.size() 
-        // while H1map.rows() is edges.size()+sIEEOF.size()
+    for (j=0; j<H1map_->columns(); j++) // H1map_.columns()==dNBF.size() 
+        // while H1map_.rows() is edges.size()+sIEEOF.size()
     {
         // now we have to decide where dual edge j == ideal triangulation
         // triangle j is sent.
 
-        unsigned tet0TriIndex = tri->triangle(dNBF[j])->embedding(0).triangle(); 
-        unsigned tet1TriIndex = tri->triangle(dNBF[j])->embedding(1).triangle(); 
+        unsigned tet0TriIndex = tri_.triangle(dNBF[j])->embedding(0).triangle(); 
+        unsigned tet1TriIndex = tri_.triangle(dNBF[j])->embedding(1).triangle(); 
 
         unsigned vert0Num = zeroCellMap[
-            tri->triangle(dNBF[j]) -> embedding(0).tetrahedron()->index()]/4;
+            tri_.triangle(dNBF[j]) -> embedding(0).tetrahedron()->index()]/4;
             // vertex number of start vertex in tet0
         unsigned vert1Num = zeroCellMap[
-            tri->triangle(dNBF[j]) -> embedding(1).tetrahedron()->index()]/4;
+            tri_.triangle(dNBF[j]) -> embedding(1).tetrahedron()->index()]/4;
             // vertex number of end vertex in tet1.
         unsigned vert0id = zeroCellMap[
-            tri->triangle(dNBF[j]) -> embedding(0).tetrahedron()->index()]%4;
+            tri_.triangle(dNBF[j]) -> embedding(0).tetrahedron()->index()]%4;
             // not equal to vert0Num if and only if vert0 is ideal.
         unsigned vert1id = zeroCellMap[
-            tri->triangle(dNBF[j]) -> embedding(1).tetrahedron()->index()]%4;
+            tri_.triangle(dNBF[j]) -> embedding(1).tetrahedron()->index()]%4;
             // not equal to vert1Num if and only if vert1 is ideal.
-        Perm<4> P1 = tri->triangle(dNBF[j])->embedding(0).vertices();
-        Perm<4> P2 = tri->triangle(dNBF[j])->embedding(1).vertices();
+        Perm<4> P1 = tri_.triangle(dNBF[j])->embedding(0).vertices();
+        Perm<4> P2 = tri_.triangle(dNBF[j])->embedding(1).vertices();
         Perm<4> P3;
         // the permutation from the start simplex vertices
         // to the end simplex.
@@ -582,10 +582,10 @@ void HomologicalData::computeChainComplexes() {
                 stage0choice = vert0id;
             } // ideal
 
-            stage0edgeNum = tri->triangle(dNBF[j]) ->
+            stage0edgeNum = tri_.triangle(dNBF[j]) ->
                 embedding(0).tetrahedron() ->
                 edge( Edge<3>::edgeNumber[vert0Num][stage0choice] )->index();
-            stage0posOr = ( static_cast<unsigned>(tri->triangle(dNBF[j]) ->
+            stage0posOr = ( static_cast<unsigned>(tri_.triangle(dNBF[j]) ->
                 embedding(0).tetrahedron()->edgeMapping(
                 Edge<3>::edgeNumber[vert0Num][stage0choice])[1]) == stage0choice) ?
                 true : false ;
@@ -608,10 +608,10 @@ void HomologicalData::computeChainComplexes() {
                 stage4choice = vert1id;
             }
 
-            stage4edgeNum = tri->triangle(dNBF[j]) ->
+            stage4edgeNum = tri_.triangle(dNBF[j]) ->
                 embedding(1).tetrahedron() ->
                 edge( Edge<3>::edgeNumber[vert1Num][stage4choice] )->index();
-            stage4posOr = ( static_cast<unsigned>(tri->triangle(dNBF[j]) ->
+            stage4posOr = ( static_cast<unsigned>(tri_.triangle(dNBF[j]) ->
                 embedding(1).tetrahedron()->edgeMapping(
                 Edge<3>::edgeNumber[vert1Num][stage4choice])[1]) == vert1Num ) ?
                 true : false ;
@@ -625,7 +625,7 @@ void HomologicalData::computeChainComplexes() {
         bool stage1posOr = false;
         unsigned stage1TriToUse = 0;
 
-        if (stage0nec && tri->triangle(dNBF[j]) ->
+        if (stage0nec && tri_.triangle(dNBF[j]) ->
                 embedding(0).tetrahedron() ->
                 vertex(stage0choice)->isIdeal() ) {
             stage1v = stage0choice;
@@ -639,13 +639,13 @@ void HomologicalData::computeChainComplexes() {
                 stage1nec = true;
             }
         if (stage1nec) { // we need to decide which triangle to use...
-            stage1TriToUse = tri->triangle(dNBF[j]) ->
+            stage1TriToUse = tri_.triangle(dNBF[j]) ->
                 embedding(0).tetrahedron()->edgeMapping(
                 Edge<3>::edgeNumber[stage1v][tet0TriIndex] )[2];
-            P3 = tri->triangle(dNBF[j])->embedding(0).tetrahedron()->
+            P3 = tri_.triangle(dNBF[j])->embedding(0).tetrahedron()->
                 triangleMapping(stage1TriToUse);
-            stage1edgeNum = tri->countEdges() + sIEEOF.index(
-                3*tri->triangle(dNBF[j]) ->
+            stage1edgeNum = tri_.countEdges() + sIEEOF.index(
+                3*tri_.triangle(dNBF[j]) ->
                 embedding(0).tetrahedron() ->
                 triangle(stage1TriToUse)->index() + P3.pre(stage1v) );
             stage1posOr = ( ( static_cast<unsigned>(
@@ -658,7 +658,7 @@ void HomologicalData::computeChainComplexes() {
         bool stage3posOr = false;
         unsigned stage3TriToUse = 0;
 
-        if (stage4nec && tri->triangle(dNBF[j]) ->
+        if (stage4nec && tri_.triangle(dNBF[j]) ->
                 embedding(1).tetrahedron() ->
                 vertex(stage4choice)->isIdeal() ) { // ideal case
             stage3v = stage4choice;
@@ -672,13 +672,13 @@ void HomologicalData::computeChainComplexes() {
                 stage3nec = true;
             }
         if (stage3nec) { // we need to decide which triangle to use...
-            stage3TriToUse = tri->triangle(dNBF[j]) ->
+            stage3TriToUse = tri_.triangle(dNBF[j]) ->
                 embedding(1).tetrahedron()->edgeMapping(
                 Edge<3>::edgeNumber[stage3v][tet1TriIndex] )[2];
-            P3 = tri->triangle(dNBF[j])->embedding(1).tetrahedron()->
+            P3 = tri_.triangle(dNBF[j])->embedding(1).tetrahedron()->
                 triangleMapping(stage3TriToUse);
-            stage3edgeNum = tri->countEdges() + sIEEOF.index(
-                3*tri->triangle(dNBF[j]) ->
+            stage3edgeNum = tri_.countEdges() + sIEEOF.index(
+                3*tri_.triangle(dNBF[j]) ->
                 embedding(1).tetrahedron() ->
                 triangle(stage3TriToUse)->index() + P3.pre(stage3v) );
             stage3posOr = ( ( static_cast<unsigned>(
@@ -695,7 +695,7 @@ void HomologicalData::computeChainComplexes() {
         if (stage1nec) // set up stage2startdata
         {
             stage2startdata = 3*P1.pre( stage1v ) +
-                P1.pre((tri->triangle(dNBF[j]) ->
+                P1.pre((tri_.triangle(dNBF[j]) ->
                 embedding(0).tetrahedron() ->
                 edgeMapping( Edge<3>::edgeNumber[stage1v][stage1vi] ))[3] );
         } else {
@@ -719,7 +719,7 @@ void HomologicalData::computeChainComplexes() {
         if (stage3nec) // set up stage2enddata
         {
             stage2enddata = 3*P2.pre( stage3v ) +
-                P2.pre((tri->triangle(dNBF[j]) ->
+                P2.pre((tri_.triangle(dNBF[j]) ->
                 embedding(1).tetrahedron() ->
                 edgeMapping( Edge<3>::edgeNumber[stage3v][stage3vi] ))[3] );
         } else {
@@ -766,19 +766,19 @@ void HomologicalData::computeChainComplexes() {
                     break;
                 }
                 // main alg here.
-                if (( currV/3  == prevV/3 ) && (tri->triangle(dNBF[j])->
+                if (( currV/3  == prevV/3 ) && (tri_.triangle(dNBF[j])->
                         vertex(currV/3)->isIdeal()) )  // ideal edge
                 {
-                    H1map->entry( tri->countEdges() +
+                    H1map_->entry( tri_.countEdges() +
                         sIEEOF.index(3*dNBF[j] + (currV/3)) , j ) += 1;
                 }
                 if ( currV/3  != prevV/3 ) // regular edge
                 {
-                    H1map->entry(tri->triangle(dNBF[j])->edge(((currV/3) + 1) % 3 )->index(), j) 
+                    H1map_->entry(tri_.triangle(dNBF[j])->edge(((currV/3) + 1) % 3 )->index(), j) 
                       += ( 
                            ( 
                              static_cast<unsigned>( 
-                              tri->triangle(dNBF[j])->edgeMapping(((currV/3) + 1) % 3)[1]
+                              tri_.triangle(dNBF[j])->edgeMapping(((currV/3) + 1) % 3)[1]
                                                   ) == currV/3
                            ) 
                          ? +1 : -1 );
@@ -788,14 +788,14 @@ void HomologicalData::computeChainComplexes() {
             }
         // now we fill out the matrix.
         if (stage0nec)
-            H1map->entry( stage0edgeNum, j ) += ( stage0posOr ? 1 : -1 );
+            H1map_->entry( stage0edgeNum, j ) += ( stage0posOr ? 1 : -1 );
         if (stage1nec)
-            H1map->entry( stage1edgeNum, j ) += ( stage1posOr ? 1 : -1 );
+            H1map_->entry( stage1edgeNum, j ) += ( stage1posOr ? 1 : -1 );
 
         if (stage3nec)
-            H1map->entry( stage3edgeNum, j ) += ( stage3posOr ? 1 : -1 );
+            H1map_->entry( stage3edgeNum, j ) += ( stage3posOr ? 1 : -1 );
         if (stage4nec)
-            H1map->entry( stage4edgeNum, j ) += ( stage4posOr ? 1 : -1 );
+            H1map_->entry( stage4edgeNum, j ) += ( stage4posOr ? 1 : -1 );
 
     }
 
@@ -803,33 +803,33 @@ void HomologicalData::computeChainComplexes() {
     // cols==sBNIE.size()+sIEEOF.size()
     for (i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
         // temp == -1 when the boundary edge end is ideal.
-        temp=sBNIV.index(tri->edge(sBNIE[i])->vertex(0)->index());
-        (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
-        temp=sBNIV.index(tri->edge(sBNIE[i])->vertex(1)->index());
-        (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
+        temp=sBNIV.index(tri_.edge(sBNIE[i])->vertex(0)->index());
+        (Bd1_->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
+        temp=sBNIV.index(tri_.edge(sBNIE[i])->vertex(1)->index());
+        (Bd1_->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
     } // ok
 
     for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
         // sIEEOF[i] /3 is the triangle index, and sIEEOF[i] % 3 tells us
         // the vertex of this triangle
-        p1=tri->triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 1) % 3);
+        p1=tri_.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1) {
-            Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->triangle(sIEEOF[i]/3)->
+            Bd1_->entry(sBNIV.size() + sIEOE.index(2*(
+                tri_.triangle(sIEEOF[i]/3)->
                 edge(p1[2])->index() )+1), sBNIE.size()+i)-=1;
         } else {
-            Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->triangle(sIEEOF[i]/3)->
+            Bd1_->entry(sBNIV.size() + sIEOE.index(2*(
+                tri_.triangle(sIEEOF[i]/3)->
                 edge(p1[2])->index() )) , sBNIE.size()+i)-=1;
         }
-        p1=tri->triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 2) % 3);
+        p1=tri_.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
-            Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->triangle(sIEEOF[i]/3)->
+            Bd1_->entry(sBNIV.size() + sIEOE.index(2*(
+                tri_.triangle(sIEEOF[i]/3)->
                 edge(p1[2])->index() )) , sBNIE.size()+i)+=1;
         } else {
-            Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->triangle(sIEEOF[i]/3)->
+            Bd1_->entry(sBNIV.size() + sIEOE.index(2*(
+                tri_.triangle(sIEEOF[i]/3)->
                 edge(p1[2])->index() )+1) , sBNIE.size()+i)+=1;
         }
     }
@@ -844,14 +844,14 @@ void HomologicalData::computeChainComplexes() {
             // the first 3 are standard, the last three are the ideal
             // edges (if they exist)
             if ( (j/3) == 0) {
-                p1=tri->triangle(sBNIF[i])->edgeMapping(j % 3);
-                Bd2->entry( sBNIE.index( tri->triangle(
+                p1=tri_.triangle(sBNIF[i])->edgeMapping(j % 3);
+                Bd2_->entry( sBNIE.index( tri_.triangle(
                     sBNIF[i])->edge(j % 3)->index() ) ,i) +=
                     ( (p1.sign()==1) ? +1 : -1 );
             } else {
                 // check triangle i vertex j % 3 is ideal
-                if (tri->triangle(sBNIF[i])->vertex(j % 3)->isIdeal())
-                    Bd2->entry( sBNIF.size() + sIEEOF.index(
+                if (tri_.triangle(sBNIF[i])->vertex(j % 3)->isIdeal())
+                    Bd2_->entry( sBNIF.size() + sIEEOF.index(
                         (3*i) + (j % 3)), i) += 1;
             }
         }
@@ -871,10 +871,10 @@ void HomologicalData::computeChainComplexes() {
         //     sIEFOT[i] + 1,2,3 % 4)^{-1}
         // applied to sIEFOT[i] % 4 is the vertex of this triangle.
         for (j=1;j<4;j++) {
-            p1=tri->tetrahedron( sIEFOT[i]/4 )->triangleMapping(
+            p1=tri_.tetrahedron( sIEFOT[i]/4 )->triangleMapping(
                 (sIEFOT[i] + j) % 4);
-            Bd2->entry( sBNIE.size() + sIEEOF.index(3*
-                tri->tetrahedron(sIEFOT[i]/4 )->triangle(
+            Bd2_->entry( sBNIE.size() + sIEEOF.index(3*
+                tri_.tetrahedron(sIEFOT[i]/4 )->triangle(
                 (sIEFOT[i] + j) % 4)->index() + p1.pre(sIEFOT[i] % 4) ) ,
                 sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
@@ -883,191 +883,191 @@ void HomologicalData::computeChainComplexes() {
 
     // fill out b0Incl
     // boundary 0-cells:
-    for (i=0;i<B0Incl->columns();i++)
-        B0Incl->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
+    for (i=0;i<B0Incl_->columns();i++)
+        B0Incl_->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
                 sNIV.size() + i - sBNIV.size() ) ,i)+=1;
     // fill out b1Incl
-    for (i=0;i<B1Incl->columns();i++)
+    for (i=0;i<B1Incl_->columns();i++)
         // each boundary edge corresponds to a triangulation edge
-        B1Incl->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
-                tri->countEdges() + i - sBNIE.size() ) ,i)+=1;
+        B1Incl_->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
+                tri_.countEdges() + i - sBNIE.size() ) ,i)+=1;
     // fill out b2Incl
-    for (i=0;i<B2Incl->columns();i++)
-        B2Incl->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
-                tri->countTriangles() + i - sBNIF.size() ) ,i)+=1;
+    for (i=0;i<B2Incl_->columns();i++)
+        B2Incl_->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
+                tri_.countTriangles() + i - sBNIF.size() ) ,i)+=1;
 }
 
 const MarkedAbelianGroup& HomologicalData::homology(unsigned q) {
     if (q==0) {
-        if (!mHomology0.get()) {
+        if (!mHomology0_) {
             computeChainComplexes();
-            mHomology0.reset(new MarkedAbelianGroup(*A0,*A1));
+            mHomology0_ = MarkedAbelianGroup(*A0_,*A1_);
         }
-        return *mHomology0;
+        return *mHomology0_;
     } else if (q==1) {
-        if (!mHomology1.get()) {
+        if (!mHomology1_) {
             computeChainComplexes();
-            mHomology1.reset(new MarkedAbelianGroup(*A1,*A2));
+            mHomology1_ = MarkedAbelianGroup(*A1_,*A2_);
         }
-        return *mHomology1;
+        return *mHomology1_;
     } else if (q==2) {
-        if (!mHomology2.get()) {
+        if (!mHomology2_) {
             computeChainComplexes();
-            mHomology2.reset(new MarkedAbelianGroup(*A2,*A3));
+            mHomology2_ = MarkedAbelianGroup(*A2_,*A3_);
         }
-        return *mHomology2;
+        return *mHomology2_;
     } else {
         // Assume q == 3.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!mHomology3.get()) {
+        if (!mHomology3_) {
             computeChainComplexes();
-            mHomology3.reset(new MarkedAbelianGroup(*A3,*A4));
+            mHomology3_ = MarkedAbelianGroup(*A3_,*A4_);
         }
-        return *mHomology3;
+        return *mHomology3_;
     }
     // the A's should probably be redone as an array of pointers...
 }
 
 const MarkedAbelianGroup& HomologicalData::bdryHomology(unsigned q) {
     if (q==0) {
-        if (!bHomology0.get()) {
+        if (!bHomology0_) {
             computeChainComplexes();
-            bHomology0.reset(new MarkedAbelianGroup(*Bd0,*Bd1));
+            bHomology0_ = MarkedAbelianGroup(*Bd0_,*Bd1_);
         }
-        return *bHomology0;
+        return *bHomology0_;
     } else if (q==1) {
-        if (!bHomology1.get()) {
+        if (!bHomology1_) {
             computeChainComplexes();
-            bHomology1.reset(new MarkedAbelianGroup(*Bd1,*Bd2));
+            bHomology1_ = MarkedAbelianGroup(*Bd1_,*Bd2_);
         }
-        return *bHomology1;
+        return *bHomology1_;
     } else {
         // Assume q == 2.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!bHomology2.get()) {
+        if (!bHomology2_) {
             computeChainComplexes();
-            bHomology2.reset(new MarkedAbelianGroup(*Bd2,*Bd3));
+            bHomology2_ = MarkedAbelianGroup(*Bd2_,*Bd3_);
         }
-        return *bHomology2;
+        return *bHomology2_;
     }
 }
 
 const MarkedAbelianGroup& HomologicalData::dualHomology(unsigned q) {
     if (q==0) {
-        if (!dmHomology0.get()) {
+        if (!dmHomology0_) {
             computeChainComplexes();
-            dmHomology0.reset(new MarkedAbelianGroup(*B0_,*B1));
+            dmHomology0_ = MarkedAbelianGroup(*B0_,*B1_);
         }
-        return *dmHomology0;
+        return *dmHomology0_;
     } else if (q==1) {
-        if (!dmHomology1.get()) {
+        if (!dmHomology1_) {
             computeChainComplexes();
-            dmHomology1.reset(new MarkedAbelianGroup(*B1,*B2));
+            dmHomology1_ = MarkedAbelianGroup(*B1_,*B2_);
         }
-        return *dmHomology1;
+        return *dmHomology1_;
     } else if (q==2) {
-        if (!dmHomology2.get()) {
+        if (!dmHomology2_) {
             computeChainComplexes();
-            dmHomology2.reset(new MarkedAbelianGroup(*B2,*B3));
+            dmHomology2_ = MarkedAbelianGroup(*B2_,*B3_);
         }
-        return *dmHomology2;
+        return *dmHomology2_;
     } else {
         // Assume q == 3.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!dmHomology3.get()) {
+        if (!dmHomology3_) {
             computeChainComplexes();
-            dmHomology3.reset(new MarkedAbelianGroup(*B3,*B4));
+            dmHomology3_ = MarkedAbelianGroup(*B3_,*B4_);
         }
-        return *dmHomology3;
+        return *dmHomology3_;
     }
 }
 
 void HomologicalData::computeHomology() {
     computeChainComplexes();
-    if (!mHomology0.get())
-        mHomology0.reset(new MarkedAbelianGroup(*A0,*A1));
-    if (!mHomology1.get())
-        mHomology1.reset(new MarkedAbelianGroup(*A1,*A2));
-    if (!mHomology2.get())
-        mHomology2.reset(new MarkedAbelianGroup(*A2,*A3));
-    if (!mHomology3.get())
-        mHomology3.reset(new MarkedAbelianGroup(*A3,*A4));
+    if (!mHomology0_)
+        mHomology0_ = MarkedAbelianGroup(*A0_,*A1_);
+    if (!mHomology1_)
+        mHomology1_ = MarkedAbelianGroup(*A1_,*A2_);
+    if (!mHomology2_)
+        mHomology2_ = MarkedAbelianGroup(*A2_,*A3_);
+    if (!mHomology3_)
+        mHomology3_ = MarkedAbelianGroup(*A3_,*A4_);
 }
 
 void HomologicalData::computeBHomology() {
     computeChainComplexes();
-    if (!bHomology0.get())
-        bHomology0.reset(new MarkedAbelianGroup(*Bd0,*Bd1));
-    if (!bHomology1.get())
-        bHomology1.reset(new MarkedAbelianGroup(*Bd1,*Bd2));
-    if (!bHomology2.get())
-        bHomology2.reset(new MarkedAbelianGroup(*Bd2,*Bd3));
+    if (!bHomology0_)
+        bHomology0_ = MarkedAbelianGroup(*Bd0_,*Bd1_);
+    if (!bHomology1_)
+        bHomology1_ = MarkedAbelianGroup(*Bd1_,*Bd2_);
+    if (!bHomology2_)
+        bHomology2_ = MarkedAbelianGroup(*Bd2_,*Bd3_);
 }
 
 void HomologicalData::computeDHomology() {
     computeChainComplexes();
-    if (!dmHomology0.get())
-        dmHomology0.reset(new MarkedAbelianGroup(*B0_,*B1));
-    if (!dmHomology1.get())
-        dmHomology1.reset(new MarkedAbelianGroup(*B1,*B2));
-    if (!dmHomology2.get())
-        dmHomology2.reset(new MarkedAbelianGroup(*B2,*B3));
-    if (!dmHomology3.get())
-        dmHomology3.reset(new MarkedAbelianGroup(*B3,*B4));
+    if (!dmHomology0_)
+        dmHomology0_ = MarkedAbelianGroup(*B0_,*B1_);
+    if (!dmHomology1_)
+        dmHomology1_ = MarkedAbelianGroup(*B1_,*B2_);
+    if (!dmHomology2_)
+        dmHomology2_ = MarkedAbelianGroup(*B2_,*B3_);
+    if (!dmHomology3_)
+        dmHomology3_ = MarkedAbelianGroup(*B3_,*B4_);
 }
 
 const HomMarkedAbelianGroup& HomologicalData::h1CellAp() {
-    if (!dmTomMap1.get()) {
+    if (!dmTomMap1_) {
         computeHomology();
         computeDHomology();
-        dmTomMap1.reset(new HomMarkedAbelianGroup(
-            *dmHomology1, *mHomology1, *H1map ));
+        dmTomMap1_ = HomMarkedAbelianGroup(
+            *dmHomology1_, *mHomology1_, *H1map_ );
     }
-    return (*dmTomMap1);
+    return *dmTomMap1_;
 }
 
 const HomMarkedAbelianGroup& HomologicalData::bdryHomologyMap(unsigned q) {
     if (q==0) {
-        if (!bmMap0.get()) {
+        if (!bmMap0_) {
             computeHomology();
             computeBHomology();
-            bmMap0.reset(new HomMarkedAbelianGroup(
-                *bHomology0, *mHomology0, *B0Incl ));
+            bmMap0_ = HomMarkedAbelianGroup(
+                *bHomology0_, *mHomology0_, *B0Incl_ );
         }
-        return *bmMap0;
+        return *bmMap0_;
     } else if (q==1) {
-        if (!bmMap1.get()) {
+        if (!bmMap1_) {
             computeHomology();
             computeBHomology();
-            bmMap1.reset(new HomMarkedAbelianGroup(
-                *bHomology1, *mHomology1, *B1Incl ));
+            bmMap1_ = HomMarkedAbelianGroup(
+                *bHomology1_, *mHomology1_, *B1Incl_ );
         }
-        return *bmMap1;
+        return *bmMap1_;
     } else {
         // Assume q == 2.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!bmMap2.get()) {
+        if (!bmMap2_) {
             computeHomology();
             computeBHomology();
-            bmMap2.reset(new HomMarkedAbelianGroup(
-                *bHomology2, *mHomology2, *B2Incl ));
+            bmMap2_ = HomMarkedAbelianGroup(
+                *bHomology2_, *mHomology2_, *B2Incl_ );
         }
-        return *bmMap2;
+        return *bmMap2_;
     }
 }
 
 void HomologicalData::computeBIncl() {
     computeHomology();
     computeBHomology();
-    if (!bmMap0.get())
-        bmMap0.reset(new HomMarkedAbelianGroup(
-            *bHomology0, *mHomology0, *B0Incl));
-    if (!bmMap1.get())
-        bmMap1.reset(new HomMarkedAbelianGroup(
-            *bHomology1, *mHomology1, *B1Incl));
-    if (!bmMap2.get())
-        bmMap2.reset(new HomMarkedAbelianGroup(
-            *bHomology2, *mHomology2, *B2Incl));
+    if (!bmMap0_)
+        bmMap0_ = HomMarkedAbelianGroup(
+            *bHomology0_, *mHomology0_, *B0Incl_);
+    if (!bmMap1_)
+        bmMap1_ = HomMarkedAbelianGroup(
+            *bHomology1_, *mHomology1_, *B1Incl_);
+    if (!bmMap2_)
+        bmMap2_ = HomMarkedAbelianGroup(
+            *bHomology2_, *mHomology2_, *B2Incl_);
 }
 
 
@@ -1079,7 +1079,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     // dual h1 --> standard h1 isomorphism:
     const HomMarkedAbelianGroup& h1CellApComputed(h1CellAp());
     // min number of torsion gens:
-    unsigned long niv(dmHomology1->countInvariantFactors());
+    unsigned long niv(dmHomology1_->countInvariantFactors());
     // for holding prime decompositions.:
     std::vector<std::pair<Integer, unsigned long> > tFac;
 
@@ -1106,7 +1106,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     unsigned long i, j, k, l;
 
     for (i=0; i<niv; i++) {
-        tI = dmHomology1->invariantFactor(i);
+        tI = dmHomology1_->invariantFactor(i);
         tFac = Primes::primePowerDecomp(tI);
 
         for (j=0; j<tFac.size(); j++) {
@@ -1124,7 +1124,7 @@ void HomologicalData::computeTorsionLinkingForm() {
             // now the corresponding vector...
             // this will have to be fac1i * vector corresponding to
             // invariantFactor(i).
-            tV = dmHomology1->torsionRep(i);
+            tV = dmHomology1_->torsionRep(i);
 
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
 
@@ -1218,7 +1218,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     //           ppList[j] bounds, so find a chain with that boundary and
     //           put its info in a matrix.
 
-    MatrixInt ON(mHomology1->N());
+    MatrixInt ON(mHomology1_->N());
     MatrixInt R, Ri, C, Ci;
     smithNormalForm(ON, R, Ri, C, Ci);
     // boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
@@ -1289,9 +1289,9 @@ void HomologicalData::computeTorsionLinkingForm() {
                     Rational(
                         boundingMat.entry(dNBF[k],i)*pvList[j][k]*
                         Integer(
-                            tri->triangle(dNBF[k])->embedding(0).
+                            tri_.triangle(dNBF[k])->embedding(0).
                                 tetrahedron()->orientation()*
-                            tri->triangle(dNBF[k])->embedding(0).
+                            tri_.triangle(dNBF[k])->embedding(0).
                                 vertices().sign() ), ppList[i] );
             }
             tN=torsionLinkingFormPresentationMat.entry(i,j).numerator();
@@ -1650,7 +1650,7 @@ void HomologicalData::computeTorsionLinkingForm() {
                 torsionRankString.append(" ");
     }
 
-    if (tri->isOrientable()) {
+    if (tri_.isOrientable()) {
         torsionSigmaString.assign("");
         if (twoTorSigmaV.size()==0) torsionSigmaString.append("no 2-torsion");
         else for (i=0; i<twoTorSigmaV.size(); i++) {
@@ -1660,7 +1660,7 @@ void HomologicalData::computeTorsionLinkingForm() {
         }
     else torsionSigmaString.assign("manifold is non-orientable");
 
-    if (tri->isOrientable()) {
+    if (tri_.isOrientable()) {
         torsionLegendreString.assign("");
         if (oddTorLegSymV.size()==0)
             torsionLegendreString.append("no odd p-torsion");
@@ -1689,12 +1689,12 @@ void HomologicalData::computeEmbeddabilityString() {
     if (! embeddabilityString.empty())
         return;
 
-    if (tri->isEmpty())
+    if (tri_.isEmpty())
       {
         // special-case the empty triangulation
         embeddabilityString = "Manifold is empty.";
       }
-    else if (tri->isOrientable())
+    else if (tri_.isOrientable())
       { // orientable -- we need the torsion linking form
         computeTorsionLinkingForm();
 
@@ -1702,7 +1702,7 @@ void HomologicalData::computeEmbeddabilityString() {
         { // no boundary : orientable
             if (torRankV.size()==0) 
             { // no torsion : no boundary, orientable
-                if (tri->knowsThreeSphere() && tri->isThreeSphere())
+                if (tri_.knowsThreeSphere() && tri_.isThreeSphere())
                     embeddabilityString = "This manifold is S^3.";
                 else if (dualHomology(1).isTrivial())
                     embeddabilityString = "Manifold is a homology 3-sphere.";
@@ -1819,7 +1819,7 @@ void HomologicalData::computeEmbeddabilityString() {
      { // triangulation is NOT orientable, therefore can not embed
        // in any rational homology 3-sphere.  So we look at the
        // orientation cover...
-       Triangulation<3> orTri(*tri, false);
+       Triangulation<3> orTri(tri_, false);
        orTri.makeDoubleCover();
        HomologicalData covHomol(orTri);
         // break up into two cases, boundary and no boundary...
@@ -1847,7 +1847,7 @@ bool HomologicalData::formIsHyperbolic() {
     if (torsionFormComputed)
         return torsionLinkingFormIsHyperbolic;
 
-    unsigned long nif=tri->homology().countInvariantFactors();
+    unsigned long nif=tri_.homology().countInvariantFactors();
     if (nif == 0)
         return true;
 
@@ -1857,8 +1857,8 @@ bool HomologicalData::formIsHyperbolic() {
     // check invariant factors agree in pairs, if so call
     // computeTorsionLinkingForm
     for (unsigned long i=0;i<(nif/2);i++) {
-        if (tri->homology().invariantFactor(2*i) <
-                tri->homology().invariantFactor((2*i)+1))
+        if (tri_.homology().invariantFactor(2*i) <
+                tri_.homology().invariantFactor((2*i)+1))
             return false;
     }
 

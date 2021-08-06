@@ -46,9 +46,9 @@
 #include "triangulation/dim3.h"
 #include "utilities/ptrutils.h"
 #include <algorithm>
-#include <memory>
 #include <vector>
 #include <cstddef>
+#include <optional>
 
 namespace regina {
 
@@ -208,88 +208,88 @@ private:
      * triangulation as reference.
      * This is the triangulation that it is initialized by.
      */
-    std::unique_ptr<Triangulation<3>> tri;
+    Triangulation<3> tri_;
 
     /**
      * Pointer to the 0-th homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> mHomology0;
+    std::optional<MarkedAbelianGroup> mHomology0_;
     /**
      * Pointer to the 1st homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> mHomology1;
+    std::optional<MarkedAbelianGroup> mHomology1_;
     /**
      * Pointer to the 2nd homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> mHomology2;
+    std::optional<MarkedAbelianGroup> mHomology2_;
     /**
      * Pointer to the 3rd homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> mHomology3;
+    std::optional<MarkedAbelianGroup> mHomology3_;
 
     /**
      * Pointer to the 0-th boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> bHomology0;
+    std::optional<MarkedAbelianGroup> bHomology0_;
     /**
      * Pointer to the 1st boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> bHomology1;
+    std::optional<MarkedAbelianGroup> bHomology1_;
     /**
      * Pointer to the 2nd boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> bHomology2;
+    std::optional<MarkedAbelianGroup> bHomology2_;
 
     /**
      * Pointer to the boundary inclusion on 0-th homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<HomMarkedAbelianGroup> bmMap0;
+    std::optional<HomMarkedAbelianGroup> bmMap0_;
     /**
      * Pointer to the boundary inclusion on 1st homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<HomMarkedAbelianGroup> bmMap1;
+    std::optional<HomMarkedAbelianGroup> bmMap1_;
     /**
      * Pointer to the boundary inclusion on 2nd homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<HomMarkedAbelianGroup> bmMap2;
+    std::optional<HomMarkedAbelianGroup> bmMap2_;
 
     /**
      * Pointer to the 0-th homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> dmHomology0;
+    std::optional<MarkedAbelianGroup> dmHomology0_;
     /**
      * Pointer to the 1st homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> dmHomology1;
+    std::optional<MarkedAbelianGroup> dmHomology1_;
     /**
      * Pointer to the 2nd homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> dmHomology2;
+    std::optional<MarkedAbelianGroup> dmHomology2_;
     /**
      * Pointer to the 3rd homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> dmHomology3;
+    std::optional<MarkedAbelianGroup> dmHomology3_;
 
     /**
      * Pointer to the cellular approx of the identity H1(M) --> H1(M)
      * from dual to standard cellular coordinates, or 0 if it has not yet
      * been computed.
      */
-    std::unique_ptr<HomMarkedAbelianGroup> dmTomMap1;
+    std::optional<HomMarkedAbelianGroup> dmTomMap1_;
 
     // below here and the public declaration go the internal bits of
     // data that are not publicly accessible...
@@ -297,7 +297,7 @@ private:
     // the chain complexes for the regular cellular homology
 
     /** true if the indexing of the chain complexes is complete */
-    bool ccIndexingComputed;
+    bool ccIndexingComputed_;
 
     /** number of standard cells in dimension 0, 1, 2, 3. */
     unsigned long numStandardCells[4];
@@ -333,49 +333,49 @@ private:
 
     /** 0th term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<MatrixInt> A0;
+    std::optional<MatrixInt> A0_;
     /** 1st term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<MatrixInt> A1;
+    std::optional<MatrixInt> A1_;
     /** 2nd term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<MatrixInt> A2;
+    std::optional<MatrixInt> A2_;
     /** 3rd term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<MatrixInt> A3;
+    std::optional<MatrixInt> A3_;
     /** 4th term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<MatrixInt> A4;
+    std::optional<MatrixInt> A4_;
 
     /** 0-th term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B0_; // B0 is #defined in some system headers :/
+    std::optional<MatrixInt> B0_; // B0 is #defined in some system headers :/
     /** 1st term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B1;
+    std::optional<MatrixInt> B1_;
     /** 2nd term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B2;
+    std::optional<MatrixInt> B2_;
     /** 3rd term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B3;
+    std::optional<MatrixInt> B3_;
     /** 4th term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B4;
+    std::optional<MatrixInt> B4_;
 
     /** 0th term in chain complex for boundary cellular homology */
-    std::unique_ptr<MatrixInt> Bd0;
+    std::optional<MatrixInt> Bd0_;
     /** 1st term in chain complex for boundary cellular homology */
-    std::unique_ptr<MatrixInt> Bd1;
+    std::optional<MatrixInt> Bd1_;
     /** 2nd term in chain complex for boundary cellular homology */
-    std::unique_ptr<MatrixInt> Bd2;
+    std::optional<MatrixInt> Bd2_;
     /** 3rd term in chain complex for boundary cellular homology */
-    std::unique_ptr<MatrixInt> Bd3;
+    std::optional<MatrixInt> Bd3_;
 
     /** Chain map from C_0 boundary to C_0 manifold, standard coords */
-    std::unique_ptr<MatrixInt> B0Incl;
+    std::optional<MatrixInt> B0Incl_;
     /** Chain map from C_1 boundary to C_1 manifold, standard coords */
-    std::unique_ptr<MatrixInt> B1Incl;
+    std::optional<MatrixInt> B1Incl_;
     /** Chain map from C_2 boundary to C_2 manifold, standard coords */
-    std::unique_ptr<MatrixInt> B2Incl;
+    std::optional<MatrixInt> B2Incl_;
 
     /** Isomorphism from C_1 dual to C_1 standard */
-    std::unique_ptr<MatrixInt> H1map;
+    std::optional<MatrixInt> H1map_;
 
     /** Call this routine to demand the indexing of the chain complexes. */
     void computeccIndexing();
@@ -767,9 +767,9 @@ inline HomologicalData::HomologicalData(const Triangulation<3>& input):
 
         // We clone the properties of input, since the embeddability
         // string wants to know whether input is the 3-sphere.
-        tri(new Triangulation<3>(input)),
+        tri_(input),
 
-        ccIndexingComputed(false),
+        ccIndexingComputed_(false),
         chainComplexesComputed(false),
 
         torsionFormComputed(false),
@@ -785,47 +785,47 @@ inline HomologicalData::HomologicalData(const Triangulation<3>& input):
 // copy constructor
 inline HomologicalData::HomologicalData(const HomologicalData& g) :
 
-        tri(clonePtr(g.tri)),
+        tri_(g.tri_),
 
-        mHomology0(clonePtr(g.mHomology0)),
-        mHomology1(clonePtr(g.mHomology1)),
-        mHomology2(clonePtr(g.mHomology2)),
-        mHomology3(clonePtr(g.mHomology3)),
+        mHomology0_(g.mHomology0_),
+        mHomology1_(g.mHomology1_),
+        mHomology2_(g.mHomology2_),
+        mHomology3_(g.mHomology3_),
 
-        bHomology0(clonePtr(g.bHomology0)),
-        bHomology1(clonePtr(g.bHomology1)),
-        bHomology2(clonePtr(g.bHomology2)),
+        bHomology0_(g.bHomology0_),
+        bHomology1_(g.bHomology1_),
+        bHomology2_(g.bHomology2_),
 
-        bmMap0(clonePtr(g.bmMap0)),
-        bmMap1(clonePtr(g.bmMap1)),
-        bmMap2(clonePtr(g.bmMap2)),
+        bmMap0_(g.bmMap0_),
+        bmMap1_(g.bmMap1_),
+        bmMap2_(g.bmMap2_),
 
-        dmHomology0(clonePtr(g.dmHomology0)),
-        dmHomology1(clonePtr(g.dmHomology1)),
-        dmHomology2(clonePtr(g.dmHomology2)),
-        dmHomology3(clonePtr(g.dmHomology3)),
+        dmHomology0_(g.dmHomology0_),
+        dmHomology1_(g.dmHomology1_),
+        dmHomology2_(g.dmHomology2_),
+        dmHomology3_(g.dmHomology3_),
 
-        dmTomMap1(clonePtr(g.dmTomMap1)),
+        dmTomMap1_(g.dmTomMap1_),
 
-        ccIndexingComputed(g.ccIndexingComputed),
+        ccIndexingComputed_(g.ccIndexingComputed_),
 
         chainComplexesComputed(g.chainComplexesComputed),
-        A0(clonePtr(g.A0)), A1(clonePtr(g.A1)), A2(clonePtr(g.A2)),
-        A3(clonePtr(g.A3)), A4(clonePtr(g.A4)),
-        B0_(clonePtr(g.B0_)), B1(clonePtr(g.B1)), B2(clonePtr(g.B2)),
-        B3(clonePtr(g.B3)), B4(clonePtr(g.B4)),
-        Bd0(clonePtr(g.Bd0)), Bd1(clonePtr(g.Bd1)),
-        Bd2(clonePtr(g.Bd2)), Bd3(clonePtr(g.Bd3)),
-        B0Incl(clonePtr(g.B0Incl)),
-        B1Incl(clonePtr(g.B1Incl)),
-        B2Incl(clonePtr(g.B2Incl)),
-        H1map(clonePtr(g.H1map)),
+        A0_(g.A0_), A1_(g.A1_), A2_(g.A2_),
+        A3_(g.A3_), A4_(g.A4_),
+        B0_(g.B0_), B1_(g.B1_), B2_(g.B2_),
+        B3_(g.B3_), B4_(g.B4_),
+        Bd0_(g.Bd0_), Bd1_(g.Bd1_),
+        Bd2_(g.Bd2_), Bd3_(g.Bd3_),
+        B0Incl_(g.B0Incl_),
+        B1Incl_(g.B1Incl_),
+        B2Incl_(g.B2Incl_),
+        H1map_(g.H1map_),
 
         torsionFormComputed(g.torsionFormComputed),
         embeddabilityString(g.embeddabilityString)
 {
     // More complex initialisation:
-    if (ccIndexingComputed) {
+    if (ccIndexingComputed_) {
         // Numbers of cells, dual cells and standard boundary cells
         std::copy(g.numStandardCells, g.numStandardCells + 4, numStandardCells);
         std::copy(g.numDualCells, g.numDualCells + 4, numDualCells);
