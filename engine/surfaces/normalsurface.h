@@ -789,7 +789,7 @@ class NormalSurfaceVector : public ShortOutput<NormalSurfaceVector> {
          *
          * @param triangulation the triangulation upon which these
          * validity constraints will be based.
-         * @return a newly allocated set of constraints.
+         * @return the corresponding set of validity constraints.
          */
         #ifdef __DOXYGEN
             static EnumConstraints makeEmbeddedConstraints(
