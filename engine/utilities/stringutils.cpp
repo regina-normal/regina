@@ -39,17 +39,6 @@
 
 namespace regina {
 
-char* duplicate(const std::string& str) {
-    char* ans = new char[str.length() + 1];
-
-    char* pos = ans;
-    for (std::string::const_iterator it = str.begin(); it != str.end(); it++)
-        *(pos++) = *it;
-    *pos = 0;
-
-    return ans;
-}
-
 bool startsWith(const std::string& str, const std::string& prefix) {
     if (str.length() < prefix.length())
         return false;

@@ -590,6 +590,8 @@ Version 6.1  [ TODO ]
         Function clonePtr():
             - Removed completely: C++ has evolved a lot since 2007 and
               these functions no longer make sense to keep around.
+        Function duplicate():
+            - Removed completely; just use strdup() instead.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
         Function forCoords(), forFilter(), forPacket():

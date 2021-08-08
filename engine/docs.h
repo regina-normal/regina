@@ -284,11 +284,11 @@ namespace regina {
  *    Python module \a regina.  For example, the C++ class
  *    regina::Triangulation<3> becomes the Python class regina.Triangulation3.
  *
- *  - Regina's most important C++ classes and functions are wrapped
- *    in Python.  However, not all classes and functions are wrapped.
+ *  - Most of Regina's C++ classes and functions are wrapped in Python.
+ *    However, not all classes and functions are wrapped.
  *    If a class or function is not available in Python then you will
  *    see a bold <b>Python:</b> note indicating this.  See for instance
- *    the class Bitmask, or the function duplicate().
+ *    the class Bitmask, or the function base64Encode().
  *
  *  - Most of Regina's classes and functions have the same interface
  *    in both C++ and Python, but occasionally there are differences.

@@ -55,19 +55,6 @@ class IntegerBase;
  */
 
 /**
- * Creates a new C string that is a duplicate of the given C++ string.
- *
- * The deallocation of the new C string is the responsibility of
- * the caller of this routine.
- *
- * \ifacespython Not present.
- *
- * @param str the C++ string to duplicate.
- * @return the new duplicate C string.
- */
-char* duplicate(const std::string& str);
-
-/**
  * Determines whether the given C++ string begins with the given prefix.
  *
  * \ifacespython Not present.
