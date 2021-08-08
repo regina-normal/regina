@@ -277,22 +277,23 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
         }
     }
 
-    std::list< GroupPresentation* > fpDecomp( identifyFreeProduct() );
+    std::list<GroupPresentation> fpDecomp(identifyFreeProduct());
     if (fpDecomp.size()>1) {
-      out<<"FreeProduct( ";
-      for (std::list< GroupPresentation* >::iterator i=fpDecomp.begin();
-            i!=fpDecomp.end(); i++) {
-        std::string facStr( (*i)->recogniseGroup(moreUtf8) );
-        if (facStr.length()>0) {
-         if (i!=fpDecomp.begin()) out<<", ";
-         out<<facStr;
-         }
-        else { // TODO: put in something here for this case.
+        out<<"FreeProduct( ";
+        bool first = true;
+        for (const GroupPresentation& factor : fpDecomp) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            std::string facStr(factor.recogniseGroup(moreUtf8));
+            if (facStr.empty())
+                out << "Unknown";
+            else
+                out << facStr;
         }
-        delete (*i);
-     }
-     out<<" )";
-     return out.str();
+        out << " )";
+        return out.str();
     }
 
     // TODO: let's put in the undergraduate test for finiteness, that every
@@ -1331,8 +1332,7 @@ GroupExpression::relabellingsThisToOther( const GroupExpression &other,
     return retval;
 }
 
-std::list< GroupPresentation* >
-GroupPresentation::identifyFreeProduct() const
+std::list<GroupPresentation> GroupPresentation::identifyFreeProduct() const
 {
     // let's create a list of generators not used in the relators, then
     // generators that appear in a common generator, or recursively related
@@ -1382,20 +1382,17 @@ GroupPresentation::identifyFreeProduct() const
     } // i loop
 
     if ( (equivRel.size()+unRelated.size()) < 2)
-        return std::list< GroupPresentation* >();
+        return std::list< GroupPresentation >();
     // build return value. We'll have subgroup free products, and a free group
     // provided unRelated is non-empty.
 
-    std::list< GroupPresentation* > retval;
+    std::list<GroupPresentation> retval;
     if (unRelated.size()>0) {
-        GroupPresentation* newGrp( new GroupPresentation );
-        newGrp->addGenerator( unRelated.size() );
-        retval.push_back( newGrp );
+        retval.push_back(GroupPresentation(unRelated.size()));
     }
     for (std::list< std::set< unsigned long > >::iterator I=equivRel.begin();
             I!=equivRel.end(); I++) {
-        GroupPresentation* newGrp( new GroupPresentation );
-        newGrp->addGenerator( I->size() );
+        GroupPresentation newGrp( I->size() );
         std::map< unsigned long, unsigned long > downMap; // old to new map
         unsigned long count(0);
         for (std::set< unsigned long >::iterator J=I->begin(); J!=I->end(); J++) {
@@ -1410,10 +1407,10 @@ GroupPresentation::identifyFreeProduct() const
                 GroupExpression newRel;
                 for (const auto& et : r.terms())
                     newRel.addTermLast( downMap[ et.generator ], et.exponent );
-                newGrp->addRelation( std::move(newRel) );
+                newGrp.addRelation( std::move(newRel) );
             }
         } // end relations i loop
-        retval.push_back( newGrp );
+        retval.push_back( std::move(newGrp) );
     }
     return retval;
 } // end identifyFreeProduct()

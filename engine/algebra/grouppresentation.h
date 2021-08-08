@@ -1601,11 +1601,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \apinotfinal Reconsider how the end-user should see this routine.
          *
-         * @return a list of newly allocated group presentations giving
-         * the factors of this free product, or an empty list if this
-         * routine fails (i.e., the result is inconclusive).
+         * @return a list of group presentations giving the factors of this
+         * free product, or an empty list if this routine fails (i.e., the
+         * result is inconclusive).
          */
-        std::list< GroupPresentation* > identifyFreeProduct() const;
+        std::list<GroupPresentation> identifyFreeProduct() const;
 
         /**
          * A structure internal to the small cancellation simplification
