@@ -75,9 +75,11 @@ class DoubleDescription {
          * Determines the extremal rays of the intersection of the
          * <i>n</i>-dimensional non-negative orthant with the given linear
          * subspace.  The resulting rays will be of the class \a RayClass,
-         * will be newly allocated, and will be written to the given output
-         * iterator.  Their deallocation is the responsibility of whoever
-         * called this routine.
+         * will be newly allocated, and will be passed into the given action
+         * function one at a time.  The action function must take
+         * responsibility for their eventual deallocation; an example of
+         * such a function could be a lambda that pushes the ray onto some
+         * list of results.
          *
          * The non-negative orthant is an <i>n</i>-dimensional cone with
          * its vertex at the origin.  The extremal rays of this cone are
@@ -115,9 +117,10 @@ class DoubleDescription {
          * Vector<T>, where \a T is one of Regina's arbitrary-precision
          * integer classes (Integer or LargeInteger).
          *
-         * @param results the output iterator to which the resulting extremal
-         * rays will be written; this must accept objects of type
-         * <tt>RayClass*</tt>.
+         * @param action a function (or other callable object) that will be
+         * called for each extremal ray.  This function must take a single
+         * argument of type <tt>RayClass*</tt>, and it is responsible for
+         * eventually deallocating the ray that was passed.
          * @param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
@@ -132,8 +135,8 @@ class DoubleDescription {
          * The remaining rows will be sorted using the PosOrder class
          * before they are processed.
          */
-        template <class RayClass, class OutputIterator>
-        static void enumerateExtremalRays(OutputIterator results,
+        template <class RayClass, typename Action>
+        static void enumerateExtremalRays(Action&& action,
             const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker = nullptr, unsigned long initialRows = 0);
 
@@ -320,8 +323,8 @@ class DoubleDescription {
          * where \a f is the number of original facets in the given range.
          * \pre The given range of facets is not empty.
          */
-        template <class RayClass, class BitmaskType, class OutputIterator>
-        static void enumerateUsingBitmask(OutputIterator results,
+        template <class RayClass, class BitmaskType, typename Action>
+        static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker, unsigned long initialRows);
 

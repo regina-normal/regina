@@ -293,79 +293,6 @@ class AngleStructures : public Packet {
          */
         void calculateSpanTaut() const;
 
-        /**
-         * An output iterator used to insert angle structures into an
-         * AngleStructures list.
-         *
-         * Objects of type <tt>VectorInt*</tt> can be assigned to this
-         * iterator, whereupon a surrounding AngleStructure will be
-         * automatically created.
-         */
-        struct StructureInserter : public std::iterator<
-                std::output_iterator_tag, VectorInt*> {
-            AngleStructures* list;
-                /**< The list into which angle structures will be inserted. */
-            const Triangulation<3>& owner;
-                /**< The triangulation on which the angle structures to
-                 *   be inserted lie. */
-
-            /**
-             * Creates a new output iterator.  The member variables of
-             * this iterator will be initialised according to the
-             * parameters passed to this constructor.
-             *
-             * @param newList the list into which angle structures will
-             * be inserted.
-             * @param newOwner the triangulation on which the structures
-             * to be inserted lie.
-             */
-            StructureInserter(AngleStructures& newList,
-                const Triangulation<3>& newOwner);
-            /**
-             * Creates a new output iterator that is a clone of the
-             * given iterator.
-             *
-             * @param cloneMe the output iterator to clone.
-             */
-            StructureInserter(const StructureInserter& cloneMe) = default;
-
-            /**
-             * Appends the angle structure corresponding to the given
-             * vector to the end of the appropriate structure list.
-             *
-             * The given vector will be owned by the newly created
-             * angle structure and will be deallocated with the
-             * other angle structures in this list when the list is
-             * eventually destroyed.
-             *
-             * @param vector the vector of the angle structure to insert.
-             * @return this output iterator.
-             */
-            StructureInserter& operator =(VectorInt* vector);
-
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            StructureInserter& operator *();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            StructureInserter& operator ++();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            StructureInserter& operator ++(int);
-
-            StructureInserter& operator =(const StructureInserter& cloneMe)
-                = delete;
-        };
-
     private:
         /**
          * The main code that actually performs the angle structure
@@ -439,33 +366,6 @@ inline bool AngleStructures::dependsOnParent() const {
 
 inline AngleStructures::AngleStructures(bool tautOnly) :
         tautOnly_(tautOnly) {
-}
-
-inline AngleStructures::StructureInserter::StructureInserter(
-        AngleStructures& newList, const Triangulation<3>& newOwner) :
-        list(&newList), owner(newOwner) {
-}
-
-inline AngleStructures::StructureInserter&
-        AngleStructures::StructureInserter::operator =(
-        VectorInt* vector) {
-    list->structures_.push_back(AngleStructure(owner, vector));
-    return *this;
-}
-
-inline AngleStructures::StructureInserter&
-        AngleStructures::StructureInserter::operator *() {
-    return *this;
-}
-
-inline AngleStructures::StructureInserter&
-        AngleStructures::StructureInserter::operator ++() {
-    return *this;
-}
-
-inline AngleStructures::StructureInserter&
-        AngleStructures::StructureInserter::operator ++(int) {
-    return *this;
 }
 
 } // namespace regina

@@ -80,9 +80,11 @@ class HilbertPrimal {
          * points in the intersection of the <i>n</i>-dimensional
          * non-negative orthant with some linear subspace.
          * The resulting basis elements will be of the class \a RayClass,
-         * will be newly allocated, and will be written to the given output
-         * iterator.  Their deallocation is the responsibility of whoever
-         * called this routine.
+         * will be newly allocated, and will be passed into the given action
+         * function one at a time.  The action function must take
+         * responsibility for their eventual deallocation; an example of
+         * such a function could be a lambda that pushes the basis
+         * element onto some list of results.
          *
          * The intersection of the non-negative orthant with this linear
          * subspace is a pointed polyhedral cone with apex at the origin,
@@ -131,9 +133,10 @@ class HilbertPrimal {
          * present implementation updates percentage progress very infrequently,
          * and may take a very long time to honour cancellation requests.
          *
-         * @param results the output iterator to which the resulting basis
-         * elements will be written; this must accept objects of type
-         * <tt>RayClass*</tt>.
+         * @param action a function (or other callable object) that will be
+         * called for each basis element.  This function must take a single
+         * argument of type <tt>RayClass*</tt>, and it is responsible for
+         * eventually deallocating the basis element that was passed.
          * @param raysBegin an iterator pointing to the beginning of the
          * list of extremal rays.
          * @param raysEnd an iterator pointing past the end of the
@@ -143,8 +146,8 @@ class HilbertPrimal {
          * @param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
          */
-        template <class RayClass, class RayIterator, class OutputIterator>
-        static void enumerateHilbertBasis(OutputIterator results,
+        template <class RayClass, class RayIterator, typename Action>
+        static void enumerateHilbertBasis(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const EnumConstraints* constraints,
             ProgressTracker* tracker = nullptr);
@@ -169,8 +172,8 @@ class HilbertPrimal {
          * number of columns in \a subspace).
          */
         template <class RayClass, class BitmaskType,
-            class RayIterator, class OutputIterator>
-        static void enumerateUsingBitmask(OutputIterator results,
+            class RayIterator, typename Action>
+        static void enumerateUsingBitmask(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const EnumConstraints* constraints, ProgressTracker* tracker);
 

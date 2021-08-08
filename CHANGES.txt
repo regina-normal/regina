@@ -98,6 +98,8 @@ Version 6.1  [ TODO ]
         Class DoubleDescription:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
+            - The main enumeration routine no longer takes an output iterator;
+              instead it takes a callable object (e.g., a lambda).
         Class EnableIf<condition, T, defaultValue>:
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
@@ -171,6 +173,8 @@ Version 6.1  [ TODO ]
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
+            - The main enumeration routine no longer takes an output iterator;
+              instead it takes a callable object (e.g., a lambda).
         Class HomGroupPresentation:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.

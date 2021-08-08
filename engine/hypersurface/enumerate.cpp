@@ -124,10 +124,14 @@ void NormalHypersurfaces::Enumerator<Coords>::fillVertexDD() {
         EnumConstraints c = makeEmbeddedConstraints(
             *triang_, list_->coords_);
         DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-            HypersurfaceInserter(*list_, *triang_), eqns_, &c, tracker_);
+            [this](NormalHypersurfaceVector* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+            }, eqns_, &c, tracker_);
     } else {
         DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-            HypersurfaceInserter(*list_, *triang_), eqns_, nullptr, tracker_);
+            [this](NormalHypersurfaceVector* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+            }, eqns_, nullptr, tracker_);
     }
 }
 
@@ -190,12 +194,14 @@ void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
         HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-            HypersurfaceInserter(*list_, *triang_),
-            vtx->beginVectors(), vtx->endVectors(), &c, tracker_);
+            [this](NormalHypersurfaceVector* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+            }, vtx->beginVectors(), vtx->endVectors(), &c, tracker_);
     } else {
         HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-            HypersurfaceInserter(*list_, *triang_),
-            vtx->beginVectors(), vtx->endVectors(), nullptr, tracker_);
+            [this](NormalHypersurfaceVector* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+            }, vtx->beginVectors(), vtx->endVectors(), nullptr, tracker_);
     }
 
     delete vtx;
@@ -211,10 +217,14 @@ void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalDual() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
         HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-            HypersurfaceInserter(*list_, *triang_), eqns_, &c, tracker_);
+            [this](NormalHypersurfaceVector* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+            }, eqns_, &c, tracker_);
     } else {
         HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-            HypersurfaceInserter(*list_, *triang_), eqns_, nullptr, tracker_);
+            [this](NormalHypersurfaceVector* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+            }, eqns_, nullptr, tracker_);
     }
 }
 

@@ -984,92 +984,6 @@ class NormalSurfaces : public Packet {
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out) const override;
 
-        /**
-         * An output iterator used to insert surfaces into an
-         * NormalSurfaces.
-         *
-         * Objects of type <tt>NormalSurfaceVector*</tt> can be assigned to
-         * this iterator, whereupon a surrounding NormalSurface
-         * will be automatically created.
-         *
-         * \warning The behaviour of this class has changed!
-         * As of Regina 4.6, this class happily inserts every surface or
-         * vector that it is given.  In previous versions it checked
-         * almost normal surface vectors for multiple octagonal discs;
-         * this check has been removed to support conversions between
-         * quad-oct space and standard almost normal space, and to support
-         * the enumeration of \e all almost normal surfaces (as opposed to
-         * just vertex surfaces).  Such checks are now left to the user
-         * interface (and indeed are now optional, at the user's discretion).
-         */
-        struct SurfaceInserter : public std::iterator<
-                std::output_iterator_tag, NormalSurfaceVector*> {
-            NormalSurfaces* list;
-                /**< The list into which surfaces will be inserted. */
-            const Triangulation<3>& owner;
-                /**< The triangulation in which the surfaces to be
-                 *   inserted are contained. */
-
-            /**
-             * Creates a new output iterator.  The member variables of
-             * this iterator will be initialised according to the
-             * parameters passed to this constructor.
-             *
-             * @param newList the list into which surfaces will be inserted.
-             * @param newOwner the triangulation in which the surfaces
-             * to be inserted are contained.
-             */
-            SurfaceInserter(NormalSurfaces& newList,
-                const Triangulation<3>& newOwner);
-            /**
-             * Creates a new output iterator that is a clone of the
-             * given iterator.
-             *
-             * @param cloneMe the output iterator to clone.
-             */
-            SurfaceInserter(const SurfaceInserter& cloneMe) = default;
-
-            /**
-             * Appends the normal surface corresponding to the given
-             * vector to the end of the appropriate surface list.
-             *
-             * The given vector will be owned by the newly created
-             * normal surface and will be deallocated with the other
-             * surfaces in this list when the list is eventually destroyed.
-             *
-             * \warning The behaviour of this routine has changed!
-             * As of Regina 4.6, this routine no longer checks for
-             * multiple octagonal discs.  See the SurfaceInserter
-             * class notes for details.
-             *
-             * @param vector the vector of the normal surface to insert.
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator =(NormalSurfaceVector* vector);
-
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator *();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator ++();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator ++(int);
-
-            SurfaceInserter& operator =(const SurfaceInserter& cloneMe) =
-                delete;
-        };
-
     private:
         /**
          * A helper class containing constants, typedefs and operations
@@ -1561,33 +1475,6 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::beginVectors() const {
 
 inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors() const {
     return VectorIterator(surfaces_.end());
-}
-
-inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
-        NormalSurfaces& newList, const Triangulation<3>& newOwner) :
-        list(&newList), owner(newOwner) {
-}
-
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator =(
-        NormalSurfaceVector* vector) {
-    list->surfaces_.push_back(NormalSurface(owner, vector));
-    return *this;
-}
-
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator *() {
-    return *this;
-}
-
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator ++() {
-    return *this;
-}
-
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator ++(int) {
-    return *this;
 }
 
 inline NormalSurfaces::NormalSurfaces(NormalCoords coords,

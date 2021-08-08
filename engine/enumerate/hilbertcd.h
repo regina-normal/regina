@@ -78,9 +78,11 @@ class HilbertCD {
          * points in the intersection of the <i>n</i>-dimensional
          * non-negative orthant with some linear subspace.
          * The resulting basis elements will be of the class \a RayClass,
-         * will be newly allocated, and will be written to the given output
-         * iterator.  Their deallocation is the responsibility of whoever
-         * called this routine.
+         * will be newly allocated, and will be passed into the given action
+         * function one at a time.  The action function must take
+         * responsibility for their eventual deallocation; an example of
+         * such a function could be a lambda that pushes the basis
+         * element onto some list of results.
          *
          * The non-negative orthant is an <i>n</i>-dimensional cone with
          * its vertex at the origin.  The extremal rays of this cone are
@@ -116,9 +118,10 @@ class HilbertCD {
          * constraints.  Consider using the much faster HilbertPrimal or
          * HilbertDual instead.
          *
-         * @param results the output iterator to which the resulting basis
-         * elements will be written; this must accept objects of type
-         * <tt>RayClass*</tt>.
+         * @param action a function (or other callable object) that will be
+         * called for each basis element.  This function must take a single
+         * argument of type <tt>RayClass*</tt>, and it is responsible for
+         * eventually deallocating the basis element that was passed.
          * @param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
@@ -127,8 +130,8 @@ class HilbertCD {
          * @param constraints a set of validity constraints as described
          * above, or \c null if no additional constraints should be imposed.
          */
-        template <class RayClass, class OutputIterator>
-        static void enumerateHilbertBasis(OutputIterator results,
+        template <class RayClass, typename Action>
+        static void enumerateHilbertBasis(Action&& action,
             const MatrixInt& subspace, const EnumConstraints* constraints);
 
         // Mark this class as non-constructible.
@@ -192,8 +195,8 @@ class HilbertCD {
          * where \a n is the dimension of the Euclidean space (i.e., the
          * number of columns in \a subspace).
          */
-        template <class RayClass, class BitmaskType, class OutputIterator>
-        static void enumerateUsingBitmask(OutputIterator results,
+        template <class RayClass, class BitmaskType, typename Action>
+        static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const EnumConstraints* constraints);
 };
 

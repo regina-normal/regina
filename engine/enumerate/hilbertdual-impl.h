@@ -53,8 +53,8 @@
 
 namespace regina {
 
-template <class RayClass, class OutputIterator>
-void HilbertDual::enumerateHilbertBasis(OutputIterator results,
+template <class RayClass, typename Action>
+void HilbertDual::enumerateHilbertBasis(Action&& action,
         const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     static_assert(
@@ -75,33 +75,40 @@ void HilbertDual::enumerateHilbertBasis(OutputIterator results,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned> >(results,
+            Bitmask2<unsigned long long, unsigned> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
             Bitmask2<unsigned long long, unsigned long> >(
-            results, subspace, constraints, tracker, initialRows);
+            std::forward<Action>(action),
+            subspace, constraints, tracker, initialRows);
     else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else
-        enumerateUsingBitmask<RayClass, Bitmask>(results,
+        enumerateUsingBitmask<RayClass, Bitmask>(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
 }
 
-template <class RayClass, class BitmaskType, class OutputIterator>
-void HilbertDual::enumerateUsingBitmask(OutputIterator results,
+template <class RayClass, class BitmaskType, typename Action>
+void HilbertDual::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     typedef typename RayClass::Element IntegerType;
@@ -118,7 +125,7 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
         for (unsigned i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
             ans->set(i, IntegerType::one);
-            *results++ = ans;
+            action(ans);
         }
 
         if (tracker)
@@ -197,7 +204,7 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
         ans = new RayClass(dim);
         for (i = 0; i < dim; ++i)
             ans->set(i, (**it)[i]);
-        *results++ = ans;
+        action(ans);
 
         delete *it;
     }

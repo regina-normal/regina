@@ -53,8 +53,8 @@
 
 namespace regina {
 
-template <class RayClass, class OutputIterator>
-void HilbertCD::enumerateHilbertBasis(OutputIterator results,
+template <class RayClass, typename Action>
+void HilbertCD::enumerateHilbertBasis(Action&& action,
         const MatrixInt& subspace, const EnumConstraints* constraints) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
@@ -72,33 +72,33 @@ void HilbertCD::enumerateHilbertBasis(OutputIterator results,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned> >(results,
-            subspace, constraints);
+            Bitmask2<unsigned long long, unsigned> >(
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
             Bitmask2<unsigned long long, unsigned long> >(
-            results, subspace, constraints);
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(
+            std::forward<Action>(action), subspace, constraints);
     else
-        enumerateUsingBitmask<RayClass, Bitmask>(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask>(
+            std::forward<Action>(action), subspace, constraints);
 }
 
-template <class RayClass, class BitmaskType, class OutputIterator>
-void HilbertCD::enumerateUsingBitmask(OutputIterator results,
+template <class RayClass, class BitmaskType, typename Action>
+void HilbertCD::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const EnumConstraints* constraints) {
     typedef typename RayClass::Element IntegerType;
 
@@ -275,7 +275,7 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
 
     // Output basis elements.
     for (bit = basis.begin(); bit != basis.end(); ++bit) {
-        *results++ = new RayClass(**bit);
+        action(new RayClass(**bit));
         delete *bit;
     }
 }

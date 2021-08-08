@@ -485,79 +485,6 @@ class NormalHypersurfaces : public Packet {
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out) const override;
 
-        /**
-         * An output iterator used to insert hypersurfaces into an
-         * NormalHypersurfaces.
-         *
-         * Objects of type <tt>NormalHypersurfaceVector*</tt> can be assigned
-         * to this iterator, whereupon a surrounding NormalHypersurface
-         * will be automatically created.
-         */
-        struct HypersurfaceInserter : public std::iterator<
-                std::output_iterator_tag, NormalHypersurfaceVector*> {
-            NormalHypersurfaces* list_;
-                /**< The list into which hypersurfaces will be inserted. */
-            const Triangulation<4>& owner_;
-                /**< The triangulation in which the hypersurfaces to be
-                 *   inserted are contained. */
-
-            /**
-             * Creates a new output iterator.  The member variables of
-             * this iterator will be initialised according to the
-             * parameters passed to this constructor.
-             *
-             * @param list the list into which hypersurfaces will be inserted.
-             * @param owner the triangulation in which the hypersurfaces
-             * to be inserted are contained.
-             */
-            HypersurfaceInserter(NormalHypersurfaces& list,
-                const Triangulation<4>& owner);
-            /**
-             * Creates a new output iterator that is a clone of the
-             * given iterator.
-             *
-             * @param cloneMe the output iterator to clone.
-             */
-            HypersurfaceInserter(const HypersurfaceInserter& cloneMe) = default;
-
-            /**
-             * Appends the normal hypersurface corresponding to the given
-             * vector to the end of the appropriate hypersurface list.
-             *
-             * The given vector will be owned by the newly created
-             * normal hypersurface and will be deallocated with the other
-             * hypersurfaces in this list when the list is eventually
-             * destroyed.
-             *
-             * @param vector the vector of the normal hypersurface to insert.
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator = (
-                NormalHypersurfaceVector* vector);
-
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator *();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator ++();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator ++(int);
-
-            HypersurfaceInserter& operator = (
-                const HypersurfaceInserter& cloneMe) = delete;
-        };
-
     private:
         /**
          * Contains the code responsible for all normal hypersurface
@@ -857,33 +784,6 @@ inline NormalHypersurfaces::VectorIterator
 inline NormalHypersurfaces::VectorIterator
         NormalHypersurfaces::endVectors() const {
     return VectorIterator(surfaces_.end());
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
-        NormalHypersurfaces& list, const Triangulation<4>& owner) :
-        list_(&list), owner_(owner) {
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator =(
-        NormalHypersurfaceVector* vector) {
-    list_->surfaces_.push_back(NormalHypersurface(owner_, vector));
-    return *this;
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator *() {
-    return *this;
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator ++() {
-    return *this;
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator ++(int) {
-    return *this;
 }
 
 inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,

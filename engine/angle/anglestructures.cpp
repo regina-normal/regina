@@ -115,8 +115,9 @@ void AngleStructures::enumerateInternal(Triangulation<3>& triang,
 
         // Find the angle structures.
         DoubleDescription::enumerateExtremalRays<VectorInt>(
-            StructureInserter(*this, triang), eqns, nullptr /* constraints */,
-            tracker);
+            [this, &triang](VectorInt* v) {
+                structures_.push_back(AngleStructure(triang, v));
+            }, eqns, nullptr /* constraints */, tracker);
 
         // All done!
         if (! (tracker && tracker->isCancelled()))
@@ -157,8 +158,9 @@ AngleStructures* AngleStructures::enumerateTautDD(Triangulation<3>& owner) {
 
     // Find the angle structures.
     DoubleDescription::enumerateExtremalRays<VectorInt>(
-        StructureInserter(*ans, owner), eqns, constraints,
-        nullptr /* tracker */);
+        [ans, &owner](VectorInt* v) {
+            ans->structures_.push_back(AngleStructure(owner, v));
+        }, eqns, constraints, nullptr /* tracker */);
 
     // All done!
     owner.insertChildLast(ans);
