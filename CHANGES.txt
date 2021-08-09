@@ -466,6 +466,16 @@ Version 6.1  [ TODO ]
               of using static routines only.  This makes the class
               suitable for use with C++11 range-based for loops.
             - This class is now thread-safe.
+        Class SigCensus:
+            - New typedef SigIsoList to replace the old global SigIsoList.
+            - Function run() now takes no arguments, and returns the total
+              number of signatures found.
+            - The old global formSigCensus() is now a static member function
+              formCensus(), which uses a type-safe template-based mechanism
+              for callbacks instead of function pointers with void* arguments.
+        Class SigIsoList:
+            - Renamed to SigCensus::IsoList.  The old name has been kept
+              as a deprecated typedef.
         Class Signature:
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
@@ -612,6 +622,11 @@ Version 6.1  [ TODO ]
             - Completely rewritten to take advantage of C++14 generic lambdas.
               Any code that used these functions will need to be completely
               rewritten (but should now become substantially simpler).
+        Function formSigCensus:
+            - Replaced with SigCensus::formCensus(), which also uses a
+              type-safe template-based mechanism for callbacks instead of a
+              function pointer with a single void* argument.  The old function
+              is removed completely.
         Function makeAngleEquations():
             - Now takes a const reference (not a const pointer), and returns
               a MatrixInt by value (not by newly allocated pointer).

@@ -39,6 +39,7 @@
 #define __REGINA_SIGCENSUS_H
 #endif
 
+#include <functional>
 #include <list>
 #include "regina-core.h"
 #include "split/signature.h"
@@ -52,23 +53,6 @@ namespace regina {
  */
 
 /**
- * A list of partial isomorphisms on splitting surface signatures.
- */
-typedef std::list<SigPartialIsomorphism*> SigIsoList;
-
-/**
- * A routine used to do arbitrary processing upon a splitting surface
- * signature and its automorphisms.  Such routines are used to process
- * signatures found when running a signature census.
- *
- * The first parameter passed should be a splitting surface signature.
- * The second parameter should be a list of all automorphisms of this signature.
- * The third parameter may contain arbitrary data as passed to
- * formSigCensus().
- */
-typedef void (*UseSignature)(const Signature&, const SigIsoList&, void *);
-
-/**
  * A utility class used by formSigCensus().  Other routines should never
  * refer to this class directly.  It is used to store temporary
  * information when forming the census.
@@ -76,6 +60,12 @@ typedef void (*UseSignature)(const Signature&, const SigIsoList&, void *);
  * \ifacespython Not present.
  */
 class SigCensus {
+    public:
+        /**
+         * A list of partial isomorphisms on splitting surface signatures.
+         */
+        typedef std::list<SigPartialIsomorphism> IsoList;
+
     private:
         Signature sig;
             /**< The signature being constructed. */
@@ -83,20 +73,92 @@ class SigCensus {
             /**< The first symbol that has not yet been used. */
         unsigned* used;
             /**< The number of times each symbol has been used so far. */
-        SigIsoList* automorph;
+        IsoList* automorph;
             /**< List <tt>automorph[k]</tt> represents all automorphisms
                  of the first \a k cycle groups of the partially formed
                  signature. */
 
-        UseSignature use;
-            /**< The argument passed to formSigCensus(). */
-        void* useArgs;
-            /**< The argument passed to formSigCensus(). */
+        std::function<void(const Signature&, const IsoList&)> action_;
+            /**< The action that was passed to formSigCensus(), also
+                 encapsulating all of its user-supplied arguments. */
 
-        unsigned long totalFound;
+        size_t totalFound;
             /**< The total number of signatures found so far. */
 
     public:
+        /**
+         * Forms a census of all splitting surface signatures of the given
+         * order.  The order of a signature is the number of quads in the
+         * corresponding splitting surface.
+         *
+         * Each signature will be produced precisely once up to equivalence.
+         * Signatures are considered equivalent if they are related by some
+         * combination of:
+         * - relabelling symbols;
+         * - rotating an individual cycle;
+         * - inverting an individual cycle (i.e., reversing the cycle and
+         *   changing the case of each symbol in the cycle);
+         * - reversing all cycles without changing the case of any symbols.
+         *
+         * Each signature produced will have its cycles ordered by decreasing
+         * length.  Each cycle will have at least half of its symbols
+         * lower-case.
+         *
+         * For each signature that is generated, this routine will call
+         * \a action (which must be a function or some other callable object).
+         *
+         * - The first argument to \a action must be a const reference to a
+         *   Signature.  This will be the signature that was found.
+         *
+         * - The second argument to \a action must be a const reference to a
+         *   Signature::IsoList.  This will be the list of all automorphisms of
+         *   the signature that was found.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
+         *
+         * \warning Currently upper-case symbols in signatures are not supported
+         * by this routine; only signatures whose symbols are all lower-case
+         * will be produced.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
+         * \todo \feature Add support for symbols of differing case.
+         *
+         * \ifacespython Not present.
+         *
+         * @param order the order of signatures to generate.
+         * @param action a function (or other callable object) to call for each
+         * signature that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial signature and automorphism
+         * arguments.
+         * @return the total number of non-equivalent signatures that were
+         * found.
+         */
+        template <typename Action, typename... Args>
+        static size_t formCensus(unsigned order, Action&& action,
+            Args&&... args);
+
+        // Make this class non-copyable.
+        SigCensus(const SigCensus&) = delete;
+        SigCensus& operator = (const SigCensus&) = delete;
+
+    private:
+        /**
+         * Creates a new structure to form a signature census.
+         * All parameters are taken directly from formSigCensus().
+         *
+         * \pre order is at least 1.
+         */
+        template <typename Action, typename... Args>
+        SigCensus(unsigned order, Action&& action, Args&&... args);
+
         /**
          * Deallocates any memory used specifically by this structure.
          */
@@ -107,30 +169,10 @@ class SigCensus {
          * copy of this routine should be running at any given time for
          * a particular SigCensus.
          *
-         * @param param this parameter is ignored.
-         * @return 0.
+         * @return the total number of non-equivalent signatures that were
+         * found.
          */
-        void* run(void* param);
-
-        // Make this class non-copyable.
-        SigCensus(const SigCensus&) = delete;
-        SigCensus& operator = (const SigCensus&) = delete;
-
-    private:
-        /**
-         * Creates a new structure to form a signature census.
-         * All parameters not explained are taken directly from
-         * formSigCensus().
-         *
-         * \pre order is at least 1.
-         */
-        SigCensus(unsigned order, UseSignature newUse, void* newUseArgs);
-
-        /**
-         * Empty the list <tt>automorph[sig.nCycleGroups]</tt> and
-         * destroy the corresponding partial isomorphisms.
-         */
-        void clearTopAutomorphisms();
+        size_t run();
 
         /**
          * Extend the automorphisms in list
@@ -159,61 +201,34 @@ class SigCensus {
          * that make up the signature at which the new cycle will begin.
          */
         void tryCycle(unsigned cycleLen, bool newCycleGroup, unsigned startPos);
-
-    friend unsigned long formSigCensus(unsigned order, UseSignature use,
-        void* useArgs);
 };
 
 /**
- * Forms a census of all splitting surface signatures of the given order.
- * The order of a signature is the number of quads in the corresponding
- * splitting surface.
+ * Deprecated typedef for a list of partial isomorphisms on splitting
+ * surface signatures.
  *
- * Each signature will be produced precisely once up to equivalence.
- * Signatures are considered equivalent if they are related by some
- * combination of:
- * - relabelling symbols;
- * - rotating an individual cycle;
- * - inverting an individual cycle (i.e., reversing the cycle and
- *   changing the case of each symbol in the cycle);
- * - reversing all cycles without changing the case of any symbols.
- *
- * Each signature produced will have its cycles ordered by decreasing
- * length.  Each cycle will have at least half of its symbols lower-case.
- *
- * For each signature that is generated, routine \a use (as passed to this
- * function) will be called with that signature and its automorphisms as
- * arguments.
- *
- * \warning Currently upper-case symbols in signatures are not supported
- * by this routine; only signatures whose symbols are all lower-case will
- * be produced.
- *
- * \todo \feature Add support for symbols of differing case.
- *
- * \ifacespython Not present.
- *
- * @param order the order of signatures to generate.
- * @param use the function to call upon each signature that is found.
- * The first parameter passed to this function will be a splitting
- * surface signature.  The second parameter will be a list of all its
- * automorphisms.  The third parameter will be parameter \a useArgs as
- * was passed to this routine.
- * @param useArgs the pointer to pass as the final parameter for the
- * function \a use which will be called upon each signature found.
- * @return the total number of non-equivalent signatures that were found.
+ * \deprecated This has been renamed to SigCensus::IsoList.
  */
-unsigned long formSigCensus(unsigned order, UseSignature use,
-    void* useArgs = nullptr);
+typedef SigCensus::IsoList SigIsoList [[deprecated]];
 
 /*@}*/
 
 // Inline functions for SigCensus
 
-inline SigCensus::SigCensus(unsigned order, UseSignature newUse,
-        void* newUseArgs) : sig(order), used(new unsigned[order]),
-        automorph(new SigIsoList[order + 2]), use(newUse),
-        useArgs(newUseArgs) {
+template <typename Action, typename... Args>
+inline size_t SigCensus::formCensus(unsigned order, Action&& action,
+        Args&&... args) {
+    return SigCensus(order, std::forward<Action>(action),
+        std::forward<Args>(args)...).run();
+}
+
+template <typename Action, typename... Args>
+inline SigCensus::SigCensus(unsigned order, Action&& action, Args&&... args) :
+        sig(order), used(new unsigned[order]),
+        automorph(new IsoList[order + 2]),
+        action_(std::bind(std::forward<Action>(action),
+            std::placeholders::_1, std::placeholders::_2,
+            std::forward<Args>(args)...)) {
 }
 
 inline SigCensus::~SigCensus() {

@@ -42,12 +42,6 @@ void usage(const char* progName) {
     exit(1);
 }
 
-void printSignature(const regina::Signature& sig,
-        const regina::SigIsoList&, void*) {
-    sig.writeCycles(std::cout, "", "", ".");
-    std::cout << '\n';
-}
-
 int main(int argc, char* argv[]) {
     if (argc != 2)
         usage(argv[0]);
@@ -60,7 +54,13 @@ int main(int argc, char* argv[]) {
         usage(argv[0]);
     }
 
-    unsigned long result = formSigCensus(order, printSignature, 0);
+    size_t result = regina::SigCensus::formCensus(order,
+            [](const regina::Signature& sig,
+               const regina::SigCensus::IsoList&) {
+        sig.writeCycles(std::cout, "", "", ".");
+        std::cout << '\n';
+    });
+
     std::cout << "Total signatures: " << result << '\n';
 
     return 0;
