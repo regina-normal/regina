@@ -178,13 +178,12 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
-            Signature* sig = Signature::parse(sigStr);
-            if (sig == 0)
+            auto sig = Signature::parse(sigStr);
+            if (! sig)
                 return;
 
             Triangulation<3>* triNew = sig->triangulate();
-            delete sig;
-            if (triNew == 0)
+            if (! triNew)
                 return;
 
             tri.insertTriangulation(*triNew);

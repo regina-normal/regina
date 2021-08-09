@@ -66,13 +66,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
     public:
         Triangulation<3>* generateFromSig(const std::string& sigStr) {
-            Signature* sig = Signature::parse(sigStr);
-            if (sig == 0)
-                return 0;
-
-            Triangulation<3>* triNew = sig->triangulate();
-            delete sig;
-            return triNew;
+            auto sig = Signature::parse(sigStr);
+            if (sig)
+                return sig->triangulate();
+            else
+                return nullptr;
         }
 
         void setUp() {

@@ -225,13 +225,12 @@ class Triangulation3Test : public TriangulationTest<3> {
 
     public:
         void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
-            Signature* sig = Signature::parse(sigStr);
-            if (sig == 0)
+            auto sig = Signature::parse(sigStr);
+            if (! sig)
                 return;
 
             Triangulation<3>* triNew = sig->triangulate();
-            delete sig;
-            if (triNew == 0)
+            if (! triNew)
                 return;
 
             tri.insertTriangulation(*triNew);
@@ -240,16 +239,15 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         Triangulation<3>* generateFromSig(const std::string& sigStr) {
-            Signature* sig = Signature::parse(sigStr);
-            if (sig == 0)
-                return 0;
+            auto sig = Signature::parse(sigStr);
+            if (! sig)
+                return nullptr;
 
             Triangulation<3>* triNew = sig->triangulate();
             if (! triNew)
-                return 0;
+                return nullptr;
 
             triNew->setLabel(sigStr);
-            delete sig;
             return triNew;
         }
 

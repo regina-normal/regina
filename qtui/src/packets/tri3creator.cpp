@@ -543,7 +543,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         }
 
         std::string sigString = reSignature.cap(1).toUtf8().constData();
-        regina::Signature* sig = regina::Signature::parse(sigString);
+        auto sig = regina::Signature::parse(sigString);
         if (! sig) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
@@ -555,7 +555,6 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
             return 0;
         }
         Triangulation<3>* ans = sig->triangulate();
-        delete sig;
         ans->setLabel(sigString);
         return ans;
     } else if (typeId == TRI_EXAMPLE) {

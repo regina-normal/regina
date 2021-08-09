@@ -39,6 +39,7 @@
 #define __REGINA_SIGNATURE_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
@@ -91,6 +92,10 @@ class SigPartialIsomorphism;
  * For further details on splitting surfaces and their signatures, consult
  * <i>Minimal triangulations and normal surfaces</i>, Burton, PhD thesis,
  * available from the Regina website.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class Signature : public ShortOutput<Signature> {
     private:
@@ -120,15 +125,67 @@ class Signature : public ShortOutput<Signature> {
 
     public:
         /**
-         * Creates a new signature that is a clone of the given signature.
+         * Creates a new copy of the given signature.
          *
-         * @param sig the signature to clone.
+         * @param sig the signature to copy.
          */
         Signature(const Signature& sig);
+
+        /**
+         * Moves the given signature into this new signature.
+         * This is a fast (constant time) operation.
+         *
+         * The signature that is passed (\a src) will no longer be usable.
+         *
+         * @param src the signature to move.
+         */
+        Signature(Signature&& src) noexcept;
+
         /**
          * Destroys this signature.
          */
         ~Signature();
+
+        /**
+         * Copies the given signature into this signature.
+         *
+         * It does not matter if this and the given signature use different
+         * number of symbols, cycles and/or cycle groups; if so then
+         * this signature will be adjusted accordingly.
+         *
+         * This operator induces a deep copy of \a sig.
+         *
+         * @param sig the signature to copy.
+         * @return a reference to this signature.
+         */
+        Signature& operator = (const Signature& sig);
+
+        /**
+         * Moves the given signature into this signature.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given signature use different
+         * number of symbols, cycles and/or cycle groups; if so then
+         * this signature will be adjusted accordingly.
+         *
+         * The signature that is passed (\a src) will no longer be usable.
+         *
+         * @param src the signature to move.
+         * @return a reference to this signature.
+         */
+        Signature& operator = (Signature&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given signature.
+         *
+         * It does not matter if this and the given signature use different
+         * number of symbols, cycles and/or cycle groups; if so then
+         * both signatures will be adjusted accordingly.
+         *
+         * @param other the signature whose contents are to be swapped
+         * with this.
+         */
+        void swap(Signature& other) noexcept;
 
         /**
          * Returns the order of this signature.  The order is the number
@@ -152,10 +209,10 @@ class Signature : public ShortOutput<Signature> {
          *
          * @param sig a string representation of a splitting surface
          * signature.
-         * @return a corresponding newly created signature, or 0 if the
+         * @return a corresponding newly created signature, or no value if the
          * given string was invalid.
          */
-        static Signature* parse(const std::string& sig);
+        static std::optional<Signature> parse(const std::string& sig);
         /**
          * Returns a newly created 3-manifold triangulation corresponding to
          * this splitting surface signature.
@@ -191,7 +248,7 @@ class Signature : public ShortOutput<Signature> {
          * <tt>sig1.order()</tt> mapping old labels 0,1,...
          * (representing letters A,B,...) to new labels (which must also be
          * 0,1,..., possibly in a different order).  This parameter may
-         * be 0 if no relabelling is to be used.
+         * be \c null if no relabelling is to be used.
          *
          * @param sig2 the signature containing the second cycle to examine.
          * @param cycle2 specifies which cycle to examine in signature
@@ -209,7 +266,7 @@ class Signature : public ShortOutput<Signature> {
          * <tt>sig2.order()</tt> mapping old labels 0,1,...
          * (representing letters A,B,...) to new labels (which must also be
          * 0,1,..., possibly in a different order).  This parameter may
-         * be 0 if no relabelling is to be used.
+         * be \c null if no relabelling is to be used.
          *
          * @return -1, 1 or 0 if the transformed first cycle is
          * lexicographically less than, greater than or equal to the
@@ -247,9 +304,6 @@ class Signature : public ShortOutput<Signature> {
          */
         void writeTextShort(std::ostream& out) const;
 
-        // Make this class non-assignable.
-        Signature& operator = (const Signature&) = delete;
-
     private:
         /**
          * Creates a new completely uninitialised signature.
@@ -277,6 +331,17 @@ class Signature : public ShortOutput<Signature> {
     friend class regina::SigCensus;
 };
 
+/**
+ * Swaps the contents of the given signatures.
+ *
+ * This global routine simply calls Signature::swap(); it is provided
+ * so that Signature meets the C++ Swappable requirements.
+ *
+ * @param a the first signature whose contents should be swapped.
+ * @param b the second signature whose contents should be swapped.
+ */
+void swap(Signature& a, Signature& b) noexcept;
+
 /*@}*/
 
 // Inline functions for Signature
@@ -292,6 +357,46 @@ inline Signature::Signature(unsigned newOrder) : order_(newOrder),
     cycleStart[0] = cycleGroupStart[0] = 0;
 }
 
+inline Signature::Signature(Signature&& src) noexcept :
+        order_(src.order_),
+        label(src.label),
+        labelInv(src.labelInv),
+        nCycles(src.nCycles),
+        cycleStart(src.cycleStart),
+        nCycleGroups(src.nCycleGroups),
+        cycleGroupStart(src.cycleGroupStart) {
+    src.label = nullptr;
+    src.labelInv = nullptr;
+    src.cycleStart = nullptr;
+    src.cycleGroupStart = nullptr;
+}
+
+inline Signature& Signature::operator = (Signature&& src) noexcept {
+    // Integers to copy across:
+    order_ = src.order_;
+    nCycles = src.nCycles;
+    nCycleGroups = src.nCycleGroups;
+
+    // Arrays to swap, so that src can dispose of the original contents
+    // in its own destructor:
+    std::swap(label, src.label);
+    std::swap(labelInv, src.labelInv);
+    std::swap(cycleStart, src.cycleStart);
+    std::swap(cycleGroupStart, src.cycleGroupStart);
+
+    return *this;
+}
+
+inline void Signature::swap(Signature& other) noexcept {
+    std::swap(order_, other.order_);
+    std::swap(label, other.label);
+    std::swap(labelInv, other.labelInv);
+    std::swap(nCycles, other.nCycles);
+    std::swap(cycleStart, other.cycleStart);
+    std::swap(nCycleGroups, other.nCycleGroups);
+    std::swap(cycleGroupStart, other.cycleGroupStart);
+}
+
 inline Signature::~Signature() {
     delete[] label;
     delete[] labelInv;
@@ -305,6 +410,10 @@ inline unsigned Signature::order() const {
 
 inline void Signature::writeTextShort(std::ostream& out) const {
     writeCycles(out, "(", ")", "");
+}
+
+inline void swap(Signature& a, Signature& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

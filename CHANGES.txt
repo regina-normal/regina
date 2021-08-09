@@ -466,6 +466,16 @@ Version 6.1  [ TODO ]
               of using static routines only.  This makes the class
               suitable for use with C++11 range-based for loops.
             - This class is now thread-safe.
+        Class Signature:
+            - Added a copy assignment operator.
+            - Added move constructors and move assignment operators.
+            - Added member and global swap() functions.
+            - Function parse() now returns a std::optional<Signature>,
+              not a pointer which may be null.
+        Class SigPartialIsomorphism:
+            - Added a copy assignment operator.
+            - Added move constructors and move assignment operators.
+            - Added member and global swap() functions.
         Class SimpleSurfaceBundle:
             - Class constants are now constexpr.
         Class Simplex<dim>:

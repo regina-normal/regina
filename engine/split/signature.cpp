@@ -65,7 +65,37 @@ Signature::Signature(const Signature& sig) : order_(sig.order_),
         cycleGroupStart);
 }
 
-Signature* Signature::parse(const std::string& str) {
+Signature& Signature::operator = (const Signature& sig) {
+    if (order_ != sig.order_) {
+        delete[] label;
+        delete[] labelInv;
+        order_ = sig.order_;
+        label = new unsigned[2 * order_];
+        labelInv = new bool[2 * order_];
+    }
+
+    if (nCycles != sig.nCycles) {
+        delete[] cycleStart;
+        nCycles = sig.nCycles;
+        cycleStart = new unsigned[nCycles + 1];
+    }
+
+    if (nCycleGroups != sig.nCycleGroups) {
+        delete[] cycleGroupStart;
+        nCycleGroups = sig.nCycleGroups;
+        cycleGroupStart = new unsigned[nCycleGroups + 1];
+    }
+
+    std::copy(sig.label, sig.label + 2 * order_, label);
+    std::copy(sig.labelInv, sig.labelInv + 2 * order_, labelInv);
+    std::copy(sig.cycleStart, sig.cycleStart + nCycles + 1, cycleStart);
+    std::copy(sig.cycleGroupStart, sig.cycleGroupStart + nCycleGroups + 1,
+        cycleGroupStart);
+
+    return *this;
+}
+
+std::optional<Signature> Signature::parse(const std::string& str) {
     // See if the string looks correctly formed.
     // Note that we're not yet counting the individual frequency of each
     // letter, just the overall number of letters.
@@ -90,9 +120,9 @@ Signature* Signature::parse(const std::string& str) {
         }
 
     if (static_cast<int>(nAlpha) != 2 * (largestLetter + 1))
-        return 0;
+        return std::nullopt;
     if (nAlpha == 0)
-        return 0;
+        return std::nullopt;
 
     // Looks fine so far.
     // Build the signature and cycle structure (but not cycle groups yet).
@@ -132,7 +162,7 @@ Signature* Signature::parse(const std::string& str) {
                 delete[] labelInv;
                 delete[] cycleStart;
                 delete[] freq;
-                return 0;
+                return std::nullopt;
             }
             label[whichPos] = letterIndex;
             labelInv[whichPos] = (str[pos] >= 'A' && str[pos] <= 'Z');
@@ -148,23 +178,22 @@ Signature* Signature::parse(const std::string& str) {
     }
 
     // We now have a valid signature!
-    Signature* sig = new Signature();
-    sig->order_ = order;
-    sig->label = label;
-    sig->labelInv = labelInv;
-    sig->nCycles = nCycles;
-    sig->cycleStart = cycleStart;
+    Signature sig;
+    sig.order_ = order;
+    sig.label = label;
+    sig.labelInv = labelInv;
+    sig.nCycles = nCycles;
+    sig.cycleStart = cycleStart;
 
     // Fill in the rest of the data members.
-    sig->nCycleGroups = 0;
-    sig->cycleGroupStart = new unsigned[nCycles];
+    sig.nCycleGroups = 0;
+    sig.cycleGroupStart = new unsigned[nCycles];
     for (pos = 0; pos < nCycles; pos++)
-        if (pos == 0 || sig->cycleStart[pos + 1] - sig->cycleStart[pos] !=
-                sig->cycleStart[pos] - sig->cycleStart[pos - 1]) {
+        if (pos == 0 || sig.cycleStart[pos + 1] - sig.cycleStart[pos] !=
+                sig.cycleStart[pos] - sig.cycleStart[pos - 1]) {
             // New cycle group.
-            sig->cycleGroupStart[sig->nCycleGroups] =
-                static_cast<unsigned>(pos);
-            sig->nCycleGroups++;
+            sig.cycleGroupStart[sig.nCycleGroups] = static_cast<unsigned>(pos);
+            sig.nCycleGroups++;
         }
 
     return sig;

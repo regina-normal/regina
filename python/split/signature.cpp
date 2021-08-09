@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "split/signature.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -40,6 +41,7 @@ using regina::Signature;
 void addSignature(pybind11::module_& m) {
     auto c = pybind11::class_<Signature>(m, "Signature")
         .def(pybind11::init<const Signature&>())
+        .def("swap", &Signature::swap)
         .def("order", &Signature::order)
         .def_static("parse", &Signature::parse)
         .def("triangulate", &Signature::triangulate)
@@ -51,5 +53,7 @@ void addSignature(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(Signature&, Signature&))(regina::swap));
 }
 

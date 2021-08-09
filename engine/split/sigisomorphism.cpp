@@ -38,9 +38,10 @@ namespace regina {
 SigPartialIsomorphism::SigPartialIsomorphism(
         const SigPartialIsomorphism& iso) : nLabels(iso.nLabels),
         nCycles(iso.nCycles),
-        labelImage(iso.nLabels ? new unsigned[iso.nLabels] : 0),
-        cyclePreImage(iso.nCycles ? new unsigned[iso.nCycles] : 0),
-        cycleStart(iso.nCycles ? new unsigned[iso.nCycles] : 0), dir(iso.dir) {
+        labelImage(iso.nLabels ? new unsigned[iso.nLabels] : nullptr),
+        cyclePreImage(iso.nCycles ? new unsigned[iso.nCycles] : nullptr),
+        cycleStart(iso.nCycles ? new unsigned[iso.nCycles] : nullptr),
+        dir(iso.dir) {
     if (iso.nLabels)
         std::copy(iso.labelImage, iso.labelImage + iso.nLabels, labelImage);
     if (iso.nCycles) {
@@ -54,9 +55,10 @@ SigPartialIsomorphism::SigPartialIsomorphism(
         const SigPartialIsomorphism& base,
         unsigned newLabels, unsigned newCycles) : nLabels(newLabels),
         nCycles(newCycles),
-        labelImage(newLabels ? new unsigned[newLabels] : 0),
-        cyclePreImage(newCycles ? new unsigned[newCycles] : 0),
-        cycleStart(newCycles ? new unsigned[newCycles] : 0), dir(base.dir) {
+        labelImage(newLabels ? new unsigned[newLabels] : nullptr),
+        cyclePreImage(newCycles ? new unsigned[newCycles] : nullptr),
+        cycleStart(newCycles ? new unsigned[newCycles] : nullptr),
+        dir(base.dir) {
     if (base.nLabels)
         std::copy(base.labelImage, base.labelImage + base.nLabels, labelImage);
     if (base.nCycles) {
@@ -64,6 +66,29 @@ SigPartialIsomorphism::SigPartialIsomorphism(
             cyclePreImage);
         std::copy(base.cycleStart, base.cycleStart + base.nCycles, cycleStart);
     }
+}
+
+SigPartialIsomorphism& SigPartialIsomorphism::operator = (
+        const SigPartialIsomorphism& src) {
+    if (nLabels != src.nLabels) {
+        delete[] labelImage;
+        nLabels = src.nLabels;
+        labelImage = new unsigned[nLabels];
+    }
+    if (nCycles != src.nCycles) {
+        delete[] cyclePreImage;
+        delete[] cycleStart;
+        nCycles = src.nCycles;
+        cyclePreImage = new unsigned[nCycles];
+        cycleStart = new unsigned[nCycles];
+    }
+
+    std::copy(src.labelImage, src.labelImage + nLabels, labelImage);
+    std::copy(src.cyclePreImage, src.cyclePreImage + nCycles, cyclePreImage);
+    std::copy(src.cycleStart, src.cycleStart + nCycles, src.cycleStart);
+
+    dir = src.dir;
+    return *this;
 }
 
 void SigPartialIsomorphism::makeCanonical(const Signature& sig,
@@ -130,7 +155,7 @@ int SigPartialIsomorphism::compareWith(const Signature& sig,
         else
             result = Signature::cycleCmp(sig, cyclePreImage[c],
                 cycleStart[cyclePreImage[c]], dir, labelImage,
-                sig, c, 0, 1, 0);
+                sig, c, 0, 1, nullptr);
         if (result < 0)
             return -1;
         if (result > 0)

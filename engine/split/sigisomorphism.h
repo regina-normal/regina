@@ -71,6 +71,10 @@ namespace regina {
  * source isomorphism (for some <i>g</i>).  If only a subset of symbols
  * are mapped, that subset must be symbols 0,1,...,<i>k</i> for some <i>k</i>.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \ifacespython Not present.
  */
 class SigPartialIsomorphism {
@@ -106,17 +110,70 @@ class SigPartialIsomorphism {
         SigPartialIsomorphism(int newDir);
 
         /**
-         * Creates a new partial isomorphism that is a clone of the given
-         * partial isomorphism.
+         * Creates a copy of the given partial isomorphism.
          *
-         * @param iso the partial isomorphism to clone.
+         * @param iso the partial isomorphism to copy.
          */
         SigPartialIsomorphism(const SigPartialIsomorphism& iso);
+
+        /**
+         * Moves the given partial isomorphism into this new partial
+         * isomorphism.  This is a fast (constant time) operation.
+         *
+         * The partial isomorphism that is passed (\a src) will no longer be
+         * usable.
+         *
+         * @param src the partial isomorphism to move.
+         */
+        SigPartialIsomorphism(SigPartialIsomorphism&& src) noexcept;
 
         /**
          * Destroys this partial isomorphism.
          */
         ~SigPartialIsomorphism();
+
+        /**
+         * Copies the given partial isomorphism into this partial isomorphism.
+         *
+         * It does not matter if this and the given partial isomorphism work
+         * with different numbers of symbols or different cycle structures; if
+         * they do then this partial isomorphism will be adjusted accordingly.
+         *
+         * This operator induces a deep copy of \a src.
+         *
+         * @param src the partial isomorphism to copy.
+         * @return a reference to this partial isomorphism.
+         */
+        SigPartialIsomorphism& operator = (const SigPartialIsomorphism& src);
+
+        /**
+         * Moves the given partial isomorphism into this new partial
+         * isomorphism.  This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given partial isomorphism work
+         * with different numbers of symbols or different cycle structures; if
+         * they do then this partial isomorphism will be adjusted accordingly.
+         *
+         * The partial isomorphism that is passed (\a src) will no longer be
+         * usable.
+         *
+         * @param src the partial isomorphism to move.
+         * @return a reference to this partial isomorphism.
+         */
+        SigPartialIsomorphism& operator = (SigPartialIsomorphism&& src)
+            noexcept;
+
+        /**
+         * Swaps the contents of this and the given partial isomorphism.
+         *
+         * It does not matter if this and the given partial isomorphism work
+         * with different numbers of symbols or different cycle structures;
+         * if they do then they will both be adjusted accordingly.
+         *
+         * @param other the partial isomorphism whose contents are to be
+         * swapped with this.
+         */
+        void swap(SigPartialIsomorphism& other) noexcept;
 
         /**
          * Rearranges the cycle images so that this isomorphism when
@@ -165,10 +222,6 @@ class SigPartialIsomorphism {
         int compareWith(const Signature& sig,
             const SigPartialIsomorphism* other,
             unsigned fromCycleGroup = 0) const;
-
-        // Make this class non-assignable.
-        SigPartialIsomorphism& operator = (const SigPartialIsomorphism&) =
-            delete;
 
     private:
         /**
@@ -243,19 +296,61 @@ class SigPartialIsomorphism {
     friend class regina::SigCensus;
 };
 
+/**
+ * Swaps the contents of the given partial isomorphisms.
+ *
+ * This global routine simply calls SigPartialIsomorphism::swap(); it is
+ * provided so that SigPartialIsomorphism meets the C++ Swappable requirements.
+ *
+ * @param a the first partial isomorphism whose contents should be swapped.
+ * @param b the second partial isomorphism whose contents should be swapped.
+ */
+void swap(SigPartialIsomorphism& a, SigPartialIsomorphism& b) noexcept;
+
 /*@}*/
 
 // Inline functions for SigPartialIsomorphism
 
-inline SigPartialIsomorphism::SigPartialIsomorphism(int newDir) : nLabels(0),
-        nCycles(0), labelImage(0), cyclePreImage(0), cycleStart(0),
-        dir(newDir) {
+inline SigPartialIsomorphism::SigPartialIsomorphism(int newDir) :
+        nLabels(0), nCycles(0), labelImage(nullptr), cyclePreImage(nullptr),
+        cycleStart(nullptr), dir(newDir) {
+}
+
+inline SigPartialIsomorphism::SigPartialIsomorphism(SigPartialIsomorphism&& src)
+        noexcept :
+        nLabels(src.nLabels), nCycles(src.nCycles), labelImage(src.labelImage),
+        cyclePreImage(src.cyclePreImage), cycleStart(src.cycleStart),
+        dir(src.dir) {
+    src.labelImage = nullptr;
+    src.cyclePreImage = nullptr;
+    src.cycleStart = nullptr;
 }
 
 inline SigPartialIsomorphism::~SigPartialIsomorphism() {
-    if (labelImage) delete[] labelImage;
-    if (cyclePreImage) delete[] cyclePreImage;
-    if (cycleStart) delete[] cycleStart;
+    delete[] labelImage;
+    delete[] cyclePreImage;
+    delete[] cycleStart;
+}
+
+inline SigPartialIsomorphism& SigPartialIsomorphism::operator = (
+        SigPartialIsomorphism&& src) noexcept {
+    nLabels = src.nLabels;
+    nCycles = src.nCycles;
+    std::swap(labelImage, src.labelImage);
+    std::swap(cyclePreImage, src.cyclePreImage);
+    std::swap(cycleStart, src.cycleStart);
+    dir = src.dir;
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
+}
+
+inline void SigPartialIsomorphism::swap(SigPartialIsomorphism& other) noexcept {
+    std::swap(nLabels, other.nLabels);
+    std::swap(nCycles, other.nCycles);
+    std::swap(labelImage, other.labelImage);
+    std::swap(cyclePreImage, other.cyclePreImage);
+    std::swap(cycleStart, other.cycleStart);
+    std::swap(dir, other.dir);
 }
 
 inline SigPartialIsomorphism::ShorterCycle::ShorterCycle(
@@ -268,6 +363,10 @@ inline bool SigPartialIsomorphism::ShorterCycle::operator ()
     return (Signature::cycleCmp(sig, cycle1, iso.cycleStart[cycle1],
         iso.dir, iso.labelImage, sig, cycle2, iso.cycleStart[cycle2],
         iso.dir, iso.labelImage) < 0);
+}
+
+inline void swap(SigPartialIsomorphism& a, SigPartialIsomorphism& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina
