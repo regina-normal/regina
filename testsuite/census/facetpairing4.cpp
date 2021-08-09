@@ -43,7 +43,7 @@ using regina::BoolSet;
  * Simply increment the given count when a face pairing is found.
  */
 void countFacetPairings(const FacetPairing<4>& pair,
-        const FacetPairing<4>::IsoList&, unsigned& count) {
+        FacetPairing<4>::IsoList, unsigned& count) {
     ++count;
 }
 

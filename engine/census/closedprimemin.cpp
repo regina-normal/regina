@@ -47,9 +47,9 @@ const char ClosedPrimeMinSearcher::coneNoTwist[12] = {
 };
 
 ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3>&& pairing,
-        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        FacetPairing<3>::IsoList&& autos, bool orientableOnly,
         ActionWrapper&& action) :
-        CompactSearcher(std::move(pairing), autos, orientableOnly,
+        CompactSearcher(std::move(pairing), std::move(autos), orientableOnly,
             PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
             std::move(action)) {
     // Initialise internal arrays, specifically those relating to face

@@ -88,9 +88,9 @@ namespace {
     }
 
     void foundFacetPairing3(const FacetPairing<3>& pairing,
-            const FacetPairing<3>::IsoList& autos,
+            FacetPairing<3>::IsoList autos,
             Triangulation3TestFunction f, BoolSet finite, bool minimal) {
-        GluingPermSearcher<3>::findAllPerms(pairing, &autos,
+        GluingPermSearcher<3>::findAllPerms(pairing, std::move(autos),
             false /* orientable only */,
             ! finite.hasFalse() /* finite only */,
             (minimal ?
@@ -112,9 +112,9 @@ namespace {
     }
 
     void foundFacetPairing4(const FacetPairing<4>& pairing,
-            const FacetPairing<4>::IsoList& autos,
+            FacetPairing<4>::IsoList autos,
             Triangulation4TestFunction f, BoolSet finite) {
-        GluingPermSearcher<4>::findAllPerms(pairing, &autos,
+        GluingPermSearcher<4>::findAllPerms(pairing, std::move(autos),
             false /* orientable only */,
             ! finite.hasFalse() /* finite only */,
             &foundGluingPerms4, f, finite);

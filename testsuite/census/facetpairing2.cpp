@@ -68,7 +68,7 @@ class FacetPairing2Test : public CppUnit::TestFixture {
                 count = 0;
                 FacetPairing<2>::findAllPairings(nTri, false, 0,
                         [this](const FacetPairing<2>&,
-                               const FacetPairing<2>::IsoList&) {
+                               FacetPairing<2>::IsoList) {
                     ++count;
                 });
 

@@ -38,22 +38,14 @@
 namespace regina {
 
 GluingPermSearcher<3>::GluingPermSearcher(
-        FacetPairing<3>&& pairing, const FacetPairing<3>::IsoList* autos,
+        FacetPairing<3>&& pairing, FacetPairing<3>::IsoList&& autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         ActionWrapper&& action) :
-        GluingPerms<3>(std::move(pairing)),
+        GluingPerms<3>(std::move(pairing)), autos_(std::move(autos)),
         // pairing is no longer usable, must use pairing_ instead
-        autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         whichPurge_(whichPurge), action_(std::move(action)), started(false),
         orientation(new int[pairing_.size()]) {
-    // Generate the list of face pairing automorphisms if necessary.
-    // This will require us to remove the const for a wee moment.
-    if (autosNew) {
-        const_cast<GluingPermSearcher<3>*>(this)->autos_ =
-            new FacetPairing<3>::IsoList(pairing_.findAutomorphisms());
-    }
-
     // Initialise arrays.
     unsigned nTets = size();
 
@@ -75,11 +67,6 @@ GluingPermSearcher<3>::GluingPermSearcher(
 GluingPermSearcher<3>::~GluingPermSearcher() {
     delete[] orientation;
     delete[] order;
-    if (autosNew) {
-        // We made them, so we'd better remove the const again and
-        // delete them.
-        delete const_cast<FacetPairing<3>::IsoList*>(autos_);
-    }
 }
 
 void GluingPermSearcher<3>::runSearch(long maxDepth) {
@@ -251,14 +238,9 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
 
 GluingPermSearcher<3>::GluingPermSearcher(std::istream& in,
         ActionWrapper&& action) :
-        GluingPerms<3>(in), autos_(0), autosNew(false),
+        GluingPerms<3>(in), autos_(pairing_.findAutomorphisms()),
         action_(std::move(action)), orientation(0), order(0), orderSize(0),
         orderElt(0) {
-    // Recontruct the face pairing automorphisms.
-    const_cast<GluingPermSearcher<3>*>(this)->autos_ =
-        new FacetPairing<3>::IsoList(pairing_.findAutomorphisms());
-    autosNew = true;
-
     // Keep reading.
     char c;
 
@@ -318,7 +300,7 @@ bool GluingPermSearcher<3>::isCanonical() const {
     FacetSpec<3> face, faceDest, faceImage;
     int ordering;
 
-    for (const auto& iso : *autos_) {
+    for (const auto& iso : autos_) {
         // Compare the current set of gluing permutations with its
         // preimage under each face pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.

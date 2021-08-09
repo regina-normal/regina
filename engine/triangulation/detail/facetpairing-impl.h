@@ -580,10 +580,6 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         /**< How many (deliberately) unmatched facets do we currently have? */
     int usedFacets = 0;
         /**< How many facets have we already determined matchings for? */
-    IsoList allAutomorphisms;
-        /**< The set of all automorphisms of the current facet pairing.
-             This is only ever used when we find a candidate face pairing,
-             and it is cleared immediately after the action is called. */
 
     // Run through and find all possible matchings.
     FacetSpec<dim> oldTrying, tmpFacet;
@@ -738,10 +734,10 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // Have we got a solution?
         if (trying.simp == static_cast<int>(size_)) {
             // Deal with the solution!
+            IsoList allAutomorphisms;
             if (isCanonicalInternal(allAutomorphisms)) {
                 action(static_cast<FacetPairing<dim>&>(*this),
-                    allAutomorphisms, std::forward<Args>(args)...);
-                allAutomorphisms.clear();
+                    std::move(allAutomorphisms), std::forward<Args>(args)...);
             }
 
             // Head back down to the previous gluing and undo it, ready

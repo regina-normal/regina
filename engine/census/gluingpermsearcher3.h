@@ -164,13 +164,10 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
             /**< The type used to hold the user's action function and
                  arguments when enumerating gluing permutations. */
 
-        const FacetPairing<3>::IsoList* autos_;
+        const FacetPairing<3>::IsoList autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying face pairing. */
-        bool autosNew;
-            /**< Did we create the isomorphism list autos_ ourselves (in
-                 which case we must destroy it also)? */
         bool orientableOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to orientable triangulations? */
@@ -285,9 +282,8 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * of permutation sets.  These are used by runSearch(), which produces
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given face pairing,
-         * and will generally be the set of all such automorphisms.  This
-         * parameter may be 0, in which case the set of all automorphisms
-         * of the given face pairing will be generated and used.
+         * and will generally be the set of all such automorphisms (which
+         * you can generate via <tt>pairing.findAutomorphisms()</tt>).
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
@@ -312,8 +308,8 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          */
         template <typename Action, typename... Args>
         GluingPermSearcher(FacetPairing<3> pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                bool finiteOnly, int whichPurge,
                 Action&& action, Args&&... args);
 
         /**
@@ -453,8 +449,8 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          */
         template <typename Action, typename... Args>
         static void findAllPerms(FacetPairing<3> pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                bool finiteOnly, int whichPurge,
                 Action&& action, Args&&... args);
 
         /**
@@ -490,10 +486,9 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * @return the newly created search manager.
          */
         template <typename Action, typename... Args>
-        static GluingPermSearcher<3>* bestSearcher(
-                FacetPairing<3> pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
+        static GluingPermSearcher<3>* bestSearcher(FacetPairing<3> pairing,
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                bool finiteOnly, int whichPurge,
                 Action&& action, Args&&... args);
 
         /**
@@ -546,12 +541,12 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          *
          * See the public input stream constructor for further details.
          *
-         * We will eventually be storing both \a pairing and \a action, and so
-         * we insist on rvalue references so these can be moved instead of
-         * copied.
+         * We will eventually be storing \a pairing, \a autos and \a action,
+         * and so we insist on rvalue references so these can be moved instead
+         * of copied.
          */
         GluingPermSearcher(FacetPairing<3>&& pairing,
-            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            FacetPairing<3>::IsoList&& autos, bool orientableOnly,
             bool finiteOnly, int whichPurge, ActionWrapper&& action);
 
         /**
@@ -1155,9 +1150,8 @@ class EulerSearcher : public GluingPermSearcher<3> {
          */
         template <typename Action, typename... Args>
         EulerSearcher(int useEuler, FacetPairing<3> pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, int whichPurge,
-                Action&& action, Args&&... args);
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                int whichPurge, Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1209,12 +1203,12 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * See the public input stream constructor for further details.
          *
-         * We will eventually be storing both \a pairing and \a action, and so
-         * we insist on rvalue references so these can be moved instead of
-         * copied.
+         * We will eventually be storing \a pairing, \a autos and \a action,
+         * and so we insist on rvalue references so these can be moved instead
+         * of copied.
          */
         EulerSearcher(int useEuler, FacetPairing<3>&& pairing,
-            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            FacetPairing<3>::IsoList&& autos, bool orientableOnly,
             int whichPurge, ActionWrapper&& action);
 
         /**
@@ -1988,8 +1982,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * std::cref.
          */
         template <typename Action, typename... Args>
-        CompactSearcher(FacetPairing<3> pairing,
-                const FacetPairing<3>::IsoList* autos,
+        CompactSearcher(FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
                 bool orientableOnly, int whichPurge,
                 Action&& action, Args&&... args);
 
@@ -2043,12 +2036,12 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * See the public input stream constructor for further details.
          *
-         * We will eventually be storing both \a pairing and \a action, and so
-         * we insist on rvalue references so these can be moved instead of
-         * copied.
+         * We will eventually be storing \a pairing, \a autos and \a action,
+         * and so we insist on rvalue references so these can be moved instead
+         * of copied.
          */
         CompactSearcher(FacetPairing<3>&& pairing,
-            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            FacetPairing<3>::IsoList&& autos, bool orientableOnly,
             int whichPurge, ActionWrapper&& action);
 
         /**
@@ -2547,8 +2540,8 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          */
         template <typename Action, typename... Args>
         ClosedPrimeMinSearcher(FacetPairing<3> pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, Action&& action, Args&&... args);
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2601,12 +2594,12 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          *
          * See the public input stream constructor for further details.
          *
-         * We will eventually be storing both \a pairing and \a action, and so
-         * we insist on rvalue references so these can be moved instead of
-         * copied.
+         * We will eventually be storing \a pairing, \a autos and \a action,
+         * and so we insist on rvalue references so these can be moved instead
+         * of copied.
          */
         ClosedPrimeMinSearcher(FacetPairing<3>&& pairing,
-            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            FacetPairing<3>::IsoList&& autos, bool orientableOnly,
             ActionWrapper&& action);
 
         /**
@@ -2730,8 +2723,8 @@ class HyperbolicMinSearcher : public EulerSearcher {
          */
         template <typename Action, typename... Args>
         HyperbolicMinSearcher(FacetPairing<3> pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, Action&& action, Args&&... args);
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2778,12 +2771,12 @@ class HyperbolicMinSearcher : public EulerSearcher {
          *
          * See the public input stream constructor for further details.
          *
-         * We will eventually be storing both \a pairing and \a action, and so
-         * we insist on rvalue references so these can be moved instead of
-         * copied.
+         * We will eventually be storing \a pairing, \a autos and \a action,
+         * and so we insist on rvalue references so these can be moved instead
+         * of copied.
          */
         HyperbolicMinSearcher(FacetPairing<3>&& pairing,
-            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            FacetPairing<3>::IsoList&& autos, bool orientableOnly,
             ActionWrapper&& action);
 
         /**
@@ -2849,10 +2842,10 @@ class HyperbolicMinSearcher : public EulerSearcher {
 
 template <typename Action, typename... Args>
 inline GluingPermSearcher<3>::GluingPermSearcher(FacetPairing<3> pairing,
-        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        FacetPairing<3>::IsoList autos, bool orientableOnly,
         bool finiteOnly, int whichPurge, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
-        GluingPermSearcher<3>(std::move(pairing), autos,
+        GluingPermSearcher<3>(std::move(pairing), std::move(autos),
             orientableOnly, finiteOnly, whichPurge,
             ActionWrapper(
                 std::bind(std::forward<Action>(action),
@@ -2910,7 +2903,7 @@ inline GluingPermSearcher<3>* GluingPermSearcher<3>::readTaggedData(
 
 template <typename Action, typename... Args>
 inline GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
-        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         Action&& action, Args&&... args) {
     // Use an optimised algorithm if possible.
@@ -2921,32 +2914,32 @@ inline GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
                 (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {
             // Closed prime minimal P2-irreducible triangulations with >= 3
             // tetrahedra.
-            return new ClosedPrimeMinSearcher(std::move(pairing), autos,
-                orientableOnly, std::forward<Action>(action),
+            return new ClosedPrimeMinSearcher(std::move(pairing),
+                std::move(autos), orientableOnly, std::forward<Action>(action),
                 std::forward<Args>(args)...);
         }
-        return new CompactSearcher(std::move(pairing), autos, orientableOnly,
-            whichPurge, std::forward<Action>(action),
+        return new CompactSearcher(std::move(pairing), std::move(autos),
+            orientableOnly, whichPurge, std::forward<Action>(action),
             std::forward<Args>(args)...);
     }
 
     if (pairing.isClosed() && ((whichPurge & PURGE_NON_MINIMAL_HYP) ==
             PURGE_NON_MINIMAL_HYP))
-        return new HyperbolicMinSearcher(std::move(pairing), autos,
+        return new HyperbolicMinSearcher(std::move(pairing), std::move(autos),
             orientableOnly, std::forward<Action>(action),
             std::forward<Args>(args)...);
 
-    return new GluingPermSearcher<3>(std::move(pairing), autos, orientableOnly,
-        finiteOnly, whichPurge, std::forward<Action>(action),
+    return new GluingPermSearcher<3>(std::move(pairing), std::move(autos),
+        orientableOnly, finiteOnly, whichPurge, std::forward<Action>(action),
         std::forward<Args>(args)...);
 }
 
 template <typename Action, typename... Args>
 inline void GluingPermSearcher<3>::findAllPerms(FacetPairing<3> pairing,
-        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        FacetPairing<3>::IsoList autos, bool orientableOnly,
         bool finiteOnly, int whichPurge, Action&& action, Args&&... args) {
-    GluingPermSearcher<3>* searcher = bestSearcher(std::move(pairing), autos,
-        orientableOnly, finiteOnly, whichPurge,
+    GluingPermSearcher<3>* searcher = bestSearcher(std::move(pairing),
+        std::move(autos), orientableOnly, finiteOnly, whichPurge,
         std::forward<Action>(action), std::forward<Args>(args)...);
     searcher->runSearch();
     delete searcher;
@@ -2966,11 +2959,11 @@ inline EulerSearcher::TetEdgeState::TetEdgeState() :
 
 template <typename Action, typename... Args>
 inline EulerSearcher::EulerSearcher(int useEuler,
-        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, int whichPurge, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
-        EulerSearcher(useEuler, std::move(pairing), autos, orientableOnly,
-            whichPurge,
+        EulerSearcher(useEuler, std::move(pairing), std::move(autos),
+            orientableOnly, whichPurge,
             ActionWrapper(
                 std::bind(std::forward<Action>(action),
                 std::placeholders::_1, std::forward<Args>(args)...))) {
@@ -3127,10 +3120,11 @@ inline CompactSearcher::TetEdgeState::TetEdgeState() :
 
 template <typename Action, typename... Args>
 inline CompactSearcher::CompactSearcher(
-        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, int whichPurge, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
-        CompactSearcher(std::move(pairing), autos, orientableOnly, whichPurge,
+        CompactSearcher(std::move(pairing), std::move(autos), orientableOnly,
+            whichPurge,
             ActionWrapper(
                 std::bind(std::forward<Action>(action),
                 std::placeholders::_1, std::forward<Args>(args)...))) {
@@ -3278,10 +3272,11 @@ inline bool CompactSearcher::vtxBdryLength2(
 
 template <typename Action, typename... Args>
 inline ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(
-        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
-        ClosedPrimeMinSearcher(std::move(pairing), autos, orientableOnly,
+        ClosedPrimeMinSearcher(std::move(pairing), std::move(autos),
+            orientableOnly,
             ActionWrapper(
                 std::bind(std::forward<Action>(action),
                 std::placeholders::_1, std::forward<Args>(args)...))) {
@@ -3311,10 +3306,11 @@ inline char ClosedPrimeMinSearcher::dataTag() const {
 
 template <typename Action, typename... Args>
 inline HyperbolicMinSearcher::HyperbolicMinSearcher(
-        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
-        HyperbolicMinSearcher(std::move(pairing), autos, orientableOnly,
+        HyperbolicMinSearcher(std::move(pairing), std::move(autos),
+            orientableOnly,
             ActionWrapper(
                 std::bind(std::forward<Action>(action),
                 std::placeholders::_1, std::forward<Args>(args)...))) {

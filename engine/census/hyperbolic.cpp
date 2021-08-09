@@ -38,9 +38,9 @@
 namespace regina {
 
 HyperbolicMinSearcher::HyperbolicMinSearcher(FacetPairing<3>&& pairing,
-        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        FacetPairing<3>::IsoList&& autos, bool orientableOnly,
         ActionWrapper&& action) :
-        EulerSearcher(0, std::move(pairing), autos, orientableOnly,
+        EulerSearcher(0, std::move(pairing), std::move(autos), orientableOnly,
             PURGE_NON_MINIMAL_HYP, std::move(action)) {
 }
 

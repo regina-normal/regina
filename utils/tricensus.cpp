@@ -88,7 +88,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>&, regina::Packet*);
 
 template <int dim>
 void findAllPerms(const regina::FacetPairing<dim>&,
-    const typename regina::FacetPairing<dim>::IsoList&,
+    typename regina::FacetPairing<dim>::IsoList,
     bool, bool, int, regina::Packet*);
 
 template <int dim>
@@ -100,9 +100,9 @@ int runCensus();
 // Differences between censuses of 2, 3 and 4-manifolds:
 template <>
 inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
-        const regina::FacetPairing<2>::IsoList& autos, bool orientableOnly,
+        regina::FacetPairing<2>::IsoList autos, bool orientableOnly,
         bool finiteOnly, int /* usePurge */, regina::Packet* dest) {
-    regina::GluingPermSearcher<2>::findAllPerms(p, &autos,
+    regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
         orientableOnly, foundGluingPerms<2>, dest);
 }
 
@@ -113,9 +113,9 @@ inline bool mightBeMinimal<2>(regina::Triangulation<2>* tri) {
 
 template <>
 inline void findAllPerms<3>(const regina::FacetPairing<3>& p,
-        const regina::FacetPairing<3>::IsoList& autos, bool orientableOnly,
+        regina::FacetPairing<3>::IsoList autos, bool orientableOnly,
         bool finiteOnly, int usePurge, regina::Packet* dest) {
-    regina::GluingPermSearcher<3>::findAllPerms(p, &autos,
+    regina::GluingPermSearcher<3>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
 }
 
@@ -126,9 +126,9 @@ inline bool mightBeMinimal<3>(regina::Triangulation<3>* tri) {
 
 template <>
 inline void findAllPerms<4>(const regina::FacetPairing<4>& p,
-        const regina::FacetPairing<4>::IsoList& autos, bool orientableOnly,
+        regina::FacetPairing<4>::IsoList autos, bool orientableOnly,
         bool finiteOnly, int /* usePurge */, regina::Packet* dest) {
-    regina::GluingPermSearcher<4>::findAllPerms(p, &autos,
+    regina::GluingPermSearcher<4>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
 }
 
@@ -189,7 +189,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
  */
 template <int dim>
 void foundFacePairing(const regina::FacetPairing<dim>& pairing,
-        const typename regina::FacetPairing<dim>::IsoList& autos,
+        typename regina::FacetPairing<dim>::IsoList autos,
         regina::Packet* container) {
     std::cout << pairing.str() << std::endl;
     regina::Packet* subContainer;
@@ -202,7 +202,7 @@ void foundFacePairing(const regina::FacetPairing<dim>& pairing,
     } else {
         subContainer = static_cast<regina::Packet*>(container);
     }
-    findAllPerms<dim>(pairing, autos,
+    findAllPerms<dim>(pairing, std::move(autos),
         ! orientability.hasFalse(), ! finiteness.hasFalse(),
         whichPurge, subContainer);
 }
@@ -540,7 +540,7 @@ int runCensus() {
 
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
                 [](const regina::FacetPairing<dim>& pair,
-                   const typename regina::FacetPairing<dim>::IsoList&) {
+                   typename regina::FacetPairing<dim>::IsoList) {
             if (dumpStream.get())
                 (*dumpStream) << pair.toTextRep() << std::endl;
             else

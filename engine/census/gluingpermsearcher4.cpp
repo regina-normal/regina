@@ -197,21 +197,13 @@ bool GluingPermSearcher<4>::PentTriangleState::readData(std::istream& in,
 }
 
 GluingPermSearcher<4>::GluingPermSearcher(
-        FacetPairing<4>&& pairing, const FacetPairing<4>::IsoList* autos,
+        FacetPairing<4>&& pairing, FacetPairing<4>::IsoList&& autos,
         bool orientableOnly, bool finiteOnly, ActionWrapper&& action) :
-        GluingPerms<4>(std::move(pairing)),
+        GluingPerms<4>(std::move(pairing)), autos_(std::move(autos)),
         // pairing is no longer usable, must use pairing_ instead
-        autos_(autos), autosNew_(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         action_(std::move(action)), started_(false),
         orientation_(new int[pairing_.size()]) {
-    // Generate the list of facet pairing automorphisms if necessary.
-    // This will require us to remove the const for a wee moment.
-    if (autosNew_) {
-        const_cast<GluingPermSearcher<4>*>(this)->autos_ =
-            new FacetPairing<4>::IsoList(pairing_.findAutomorphisms());
-    }
-
     // Initialise arrays.
     unsigned nPent = size();
 
@@ -263,11 +255,6 @@ GluingPermSearcher<4>::~GluingPermSearcher() {
 
     delete[] orientation_;
     delete[] order_;
-    if (autosNew_) {
-        // We made them, so we'd better remove the const again and
-        // delete them.
-        delete const_cast<FacetPairing<4>::IsoList*>(autos_);
-    }
 }
 
 void GluingPermSearcher<4>::runSearch(long maxDepth) {
@@ -574,16 +561,11 @@ void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
 
 GluingPermSearcher<4>::GluingPermSearcher(std::istream& in,
         ActionWrapper&& action) :
-        GluingPerms<4>(in), autos_(0), autosNew_(false),
+        GluingPerms<4>(in), autos_(pairing_.findAutomorphisms()),
         action_(std::move(action)), orientation_(0),
         order_(0), orderSize_(0), orderElt_(0),
         nEdgeClasses_(0), edgeState_(0), edgeStateChanged_(0),
         nTriangleClasses_(0), triState_(0), triStateChanged_(0) {
-    // Recontruct the facet pairing automorphisms.
-    const_cast<GluingPermSearcher<4>*>(this)->autos_ =
-        new FacetPairing<4>::IsoList(pairing_.findAutomorphisms());
-    autosNew_ = true;
-
     // Keep reading.
     char c;
 
@@ -690,7 +672,7 @@ bool GluingPermSearcher<4>::isCanonical() const {
     FacetSpec<4> facet, facetDest, facetImage;
     int ordering;
 
-    for (const auto& iso : *autos_) {
+    for (const auto& iso : autos_) {
         // Compare the current set of gluing permutations with its
         // preimage under each facet pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.

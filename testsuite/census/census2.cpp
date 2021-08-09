@@ -115,8 +115,8 @@ class Census2Test : public CppUnit::TestFixture {
         }
 
         static void foundPairing(const FacetPairing<2>& pairing,
-                const FacetPairing<2>::IsoList& autos, CensusSpec* spec) {
-            GluingPermSearcher<2>::findAllPerms(pairing, &autos,
+                FacetPairing<2>::IsoList autos, CensusSpec* spec) {
+            GluingPermSearcher<2>::findAllPerms(pairing, std::move(autos),
                 ! spec->orbl_.hasFalse(), foundPerms, spec);
         }
 

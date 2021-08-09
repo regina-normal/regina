@@ -43,7 +43,7 @@ using regina::BoolSet;
  * Simply increment the given count when a face pairing is found.
  */
 void countFacePairings(const FacetPairing<3>& pair,
-        const FacetPairing<3>::IsoList&, unsigned& count) {
+        FacetPairing<3>::IsoList, unsigned& count) {
     ++count;
 }
 
@@ -197,7 +197,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
                 BadGraphs bad;
                 FacetPairing<3>::findAllPairings(nTets, false, 0,
                         [&bad](const FacetPairing<3>& pair,
-                               const FacetPairing<3>::IsoList&) {
+                               FacetPairing<3>::IsoList) {
                     if (pair.hasTripleEdge())
                         bad.tripleEdge++;
                     if (pair.hasBrokenDoubleEndedChain())

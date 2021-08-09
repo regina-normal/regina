@@ -238,8 +238,8 @@ class Census3Test : public CppUnit::TestFixture {
         }
 
         static void foundPairing(const FacetPairing<3>& pairing,
-                const FacetPairing<3>::IsoList& autos, CensusSpec* spec) {
-            GluingPermSearcher<3>::findAllPerms(pairing, &autos,
+                FacetPairing<3>::IsoList autos, CensusSpec* spec) {
+            GluingPermSearcher<3>::findAllPerms(pairing, std::move(autos),
                 ! spec->orbl_.hasFalse(), ! spec->finite_.hasFalse(),
                 spec->purge_, foundPerms, spec);
         }

@@ -90,13 +90,10 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
             /**< The type used to hold the user's action function and
                  arguments when enumerating gluing permutations. */
 
-        const FacetPairing<2>::IsoList* autos_;
+        const FacetPairing<2>::IsoList autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying edge pairing. */
-        bool autosNew;
-            /**< Did we create the isomorphism list autos_ ourselves (in
-                 which case we must destroy it also)? */
         bool orientableOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to orientable triangulations? */
@@ -181,9 +178,8 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * of permutation sets.  These are used by runSearch(), which produces
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given edge pairing,
-         * and will generally be the set of all such automorphisms.  This
-         * parameter may be 0, in which case the set of all automorphisms
-         * of the given edge pairing will be generated and used.
+         * and will generally be the set of all such automorphisms (which
+         * you can generate via <tt>pairing.findAutomorphisms()</tt>).
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
@@ -194,8 +190,8 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          */
         template <typename Action, typename... Args>
         GluingPermSearcher(FacetPairing<2> pairing,
-                const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, Action&& action, Args&&... args);
+                FacetPairing<2>::IsoList autos, bool orientableOnly,
+                Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -334,8 +330,8 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          */
         template <typename Action, typename... Args>
         static void findAllPerms(FacetPairing<2> pairing,
-                const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, Action&& action, Args&&... args);
+                FacetPairing<2>::IsoList autos, bool orientableOnly,
+                Action&& action, Args&&... args);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -371,7 +367,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          */
         template <typename Action, typename... Args>
         static GluingPermSearcher<2>* bestSearcher(FacetPairing<2> pairing,
-                const FacetPairing<2>::IsoList* autos, bool orientableOnly,
+                FacetPairing<2>::IsoList autos, bool orientableOnly,
                 Action&& action, Args&&... args);
 
         /**
@@ -424,12 +420,12 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          *
          * See the public input stream constructor for further details.
          *
-         * We will eventually be storing both \a pairing and \a action, and so
-         * we insist on rvalue references so these can be moved instead of
-         * copied.
+         * We will eventually be storing \a pairing, \a autos and \a action,
+         * and so we insist on rvalue references so these can be moved instead
+         * of copied.
          */
         GluingPermSearcher(FacetPairing<2>&& pairing,
-                const FacetPairing<2>::IsoList* autos,
+                FacetPairing<2>::IsoList&& autos,
                 bool orientableOnly, ActionWrapper&& action);
 
         /**
@@ -471,10 +467,11 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
 
 template <typename Action, typename... Args>
 inline GluingPermSearcher<2>::GluingPermSearcher(
-        FacetPairing<2> pairing, const FacetPairing<2>::IsoList* autos,
+        FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
         bool orientableOnly, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
-        GluingPermSearcher<2>(std::move(pairing), autos, orientableOnly,
+        GluingPermSearcher<2>(std::move(pairing), std::move(autos),
+            orientableOnly,
             ActionWrapper(std::bind(std::forward<Action>(action),
                 std::placeholders::_1, std::forward<Args>(args)...))) {
 }
@@ -520,22 +517,23 @@ inline GluingPermSearcher<2>* GluingPermSearcher<2>::readTaggedData(
 
 template <typename Action, typename... Args>
 inline GluingPermSearcher<2>* GluingPermSearcher<2>::bestSearcher(
-        FacetPairing<2> pairing, const FacetPairing<2>::IsoList* autos,
+        FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
         bool orientableOnly, Action&& action, Args&&... args) {
     // We only have one algorithm for now.
     // If we ever get to the point of choosing, we should change
     // findAllPerms() to call bestSearcher() also.
-    return new GluingPermSearcher<2>(std::move(pairing), autos, orientableOnly,
-        std::forward<Action>(action), std::forward<Args>(args)...);
+    return new GluingPermSearcher<2>(std::move(pairing), std::move(autos),
+        orientableOnly, std::forward<Action>(action),
+        std::forward<Args>(args)...);
 }
 
 template <typename Action, typename... Args>
 void GluingPermSearcher<2>::findAllPerms(FacetPairing<2> pairing,
-        const FacetPairing<2>::IsoList* autos, bool orientableOnly,
+        FacetPairing<2>::IsoList autos, bool orientableOnly,
         Action&& action, Args&&... args) {
     // We don't call bestSearcher() because at present there is only one
     // algorithm.  Just use it.
-    GluingPermSearcher<2>(std::move(pairing), autos, orientableOnly,
+    GluingPermSearcher<2>(std::move(pairing), std::move(autos), orientableOnly,
         std::forward<Action>(action), std::forward<Args>(args)...).
         runSearch();
 }

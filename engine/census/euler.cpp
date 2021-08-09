@@ -195,10 +195,11 @@ bool EulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
 }
 
 EulerSearcher::EulerSearcher(int useEuler, FacetPairing<3>&& pairing,
-        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        FacetPairing<3>::IsoList&& autos, bool orientableOnly,
         int whichPurge, ActionWrapper&& action) :
-        GluingPermSearcher<3>(std::move(pairing), autos, orientableOnly,
-            true /* finiteOnly */, whichPurge, std::move(action)),
+        GluingPermSearcher<3>(std::move(pairing), std::move(autos),
+            orientableOnly, true /* finiteOnly */, whichPurge,
+            std::move(action)),
         euler_(useEuler) {
     // Initialise the internal arrays to accurately reflect the underlying
     // face pairing.

@@ -537,9 +537,10 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * - The first argument to \a action must be a const reference to a
          *   FacetPairing<dim>.  This will be the facet pairing that was found.
          *
-         * - The second argument to \a action must be a const reference to a
-         *   FacetPairing<dim>::IsoList.  This will be the list of all
-         *   automorphisms of the facet pairing that was found.
+         * - The second argument to \a action must be a
+         *   FacetPairing<dim>::IsoList (this will be passed by value using
+         *   move semantics).  This will be the list of all automorphisms
+         *   of the facet pairing that was found.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
