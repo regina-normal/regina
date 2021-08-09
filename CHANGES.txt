@@ -116,6 +116,18 @@ Version 6.1  [ TODO ]
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.
             - Simplified the underlying web of template specialisations.
+        Class FacetPairing<dim>, FacetPairingBase<dim>:
+            - Added a copy assignment operator.
+            - Added move constructors and move assignment operators.
+            - Added member swap(), and for FacetPairing<dim> a global swap().
+            - Routine fromTextRep() now returns a std::optional by value,
+              not a newly allocated pointer that could be null.
+            - Type IsoList now stores isomorphisms by value, not by pointer.
+            - Routine findAutomorphisms() now returns a list by value, instead
+              of filling a given list.
+            - Routine findAllPairings() now uses a type-safe template-based
+              mechanism for its callback function, instead of a function
+              pointer with void* arguments.
         Class FailedPrecondition:
             - New exception class.
         Class FaithfulAssignment:
@@ -468,11 +480,11 @@ Version 6.1  [ TODO ]
             - This class is now thread-safe.
         Class SigCensus:
             - New typedef SigIsoList to replace the old global SigIsoList.
-            - Function run() now takes no arguments, and returns the total
-              number of signatures found.
             - The old global formSigCensus() is now a static member function
               formCensus(), which uses a type-safe template-based mechanism
               for callbacks instead of function pointers with void* arguments.
+            - Function run() is now private.  The only way to access
+              this class is through the static routine formCensus().
         Class SigIsoList:
             - Renamed to SigCensus::IsoList.  The old name has been kept
               as a deprecated typedef.

@@ -54,14 +54,6 @@
 namespace regina::detail {
 
 template <int dim>
-FacetPairingBase<dim>::FacetPairingBase(
-        const FacetPairingBase<dim>& cloneMe) :
-        size_(cloneMe.size_),
-        pairs_(new FacetSpec<dim>[cloneMe.size_ * (dim + 1)]) {
-    std::copy(cloneMe.pairs_, cloneMe.pairs_ + (size_ * (dim + 1)), pairs_);
-}
-
-template <int dim>
 FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
         size_(tri.size()),
         pairs_(new FacetSpec<dim>[tri.size() * (dim + 1)]) {
@@ -189,38 +181,32 @@ std::string FacetPairingBase<dim>::toTextRep() const {
 }
 
 template <int dim>
-FacetPairing<dim>* FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
+std::optional<FacetPairing<dim>> FacetPairingBase<dim>::fromTextRep(
+        const std::string& rep) {
     std::vector<std::string> tokens;
     unsigned nTokens = basicTokenise(back_inserter(tokens), rep);
 
     if (nTokens == 0 || nTokens % (2 * (dim + 1)) != 0)
-        return 0;
+        return std::nullopt;
 
     long nSimp = nTokens / (2 * (dim + 1));
-    FacetPairing<dim>* ans = new FacetPairing<dim>(nSimp);
+    FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
     long val;
     for (long i = 0; i < nSimp * (dim + 1); ++i) {
-        if (! valueOf(tokens[2 * i], val)) {
-            delete ans;
-            return 0;
-        }
-        if (val < 0 || val > nSimp) {
-            delete ans;
-            return 0;
-        }
+        if (! valueOf(tokens[2 * i], val))
+            return std::nullopt;
+        if (val < 0 || val > nSimp)
+            return std::nullopt;
         ans->pairs_[i].simp = val;
 
         if (! valueOf(tokens[2 * i + 1], val)) {
-            delete ans;
-            return 0;
+            return std::nullopt;
         }
-        if (val < 0 || val >= (dim + 1)) {
-            delete ans;
-            return 0;
-        }
+        if (val < 0 || val >= (dim + 1))
+            return std::nullopt;
         ans->pairs_[i].facet = val;
     }
 
@@ -238,10 +224,8 @@ FacetPairing<dim>* FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
         break;
     }
 
-    if (broken) {
-        delete ans;
-        return 0;
-    }
+    if (broken)
+        return std::nullopt;
 
     // All is well.
     return ans;
@@ -281,12 +265,11 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     // special-case the situation in which there are no facet gluings at all.
     if (isUnmatched(0, 0)) {
         // We must have just one simplex with no facet gluings at all.
-        Isomorphism<dim>* ans;
         for (int i = 0; i < Perm<dim+1>::nPerms; ++i) {
-            ans = new Isomorphism<dim>(1);
-            ans->simpImage(0) = 0;
-            ans->facetPerm(0) = Perm<dim+1>::orderedSn[i];
-            list.push_back(ans);
+            Isomorphism<dim> ans(1);
+            ans.simpImage(0) = 0;
+            ans.facetPerm(0) = Perm<dim+1>::orderedSn[i];
+            list.push_back(std::move(ans));
         }
         return true;
     }
@@ -330,8 +313,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
         // If firstFace doesn't glue to the same simplex but this
         // facet does, we're not in canonical form.
         if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
-            for (auto iso : list)
-                delete iso;
             list.clear();
             delete[] image;
             delete[] preImage;
@@ -367,14 +348,14 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
 
             if (trying.isPastEnd(size_, true)) {
                 // We have a complete automorphism!
-                Isomorphism<dim>* ans = new Isomorphism<dim>(size_);
+                Isomorphism<dim> ans(size_);
                 for (i = 0; i < size_; i++) {
-                    ans->simpImage(i) = image[i * (dim + 1)].simp;
+                    ans.simpImage(i) = image[i * (dim + 1)].simp;
                     for (j = 0; j <= dim; ++j)
                         permImg[j] = image[i * (dim + 1) + j].facet;
-                    ans->facetPerm(i) = Perm<dim+1>(permImg);
+                    ans.facetPerm(i) = Perm<dim+1>(permImg);
                 }
-                list.push_back(ans);
+                list.push_back(std::move(ans));
                 stepDown = true;
             } else {
                 // Move to the next candidate.
@@ -406,8 +387,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                             continue;
                         if (isUnmatched(trying) && (! isUnmatched(pre))) {
                             // We're not in canonical form.
-                            for (auto iso : list)
-                                delete iso;
                             list.clear();
                             delete[] image;
                             delete[] preImage;
@@ -497,8 +476,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                         stepDown = true;
                     } else if (fPre < fImg) {
                         // Whapow, we're not in canonical form.
-                        for (auto iso : list)
-                            delete iso;
                         list.clear();
                         delete[] image;
                         delete[] preImage;
@@ -553,18 +530,17 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
 }
 
 template <int dim>
+template <typename Action, typename... Args>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
-        int nBdryFacets, Use use, void* useArgs) {
+        int nBdryFacets, Action&& action, Args&&... args) {
     // Bail if it's obvious that nothing will happen.
     if (boundary == BoolSet() || size_ == 0) {
-        use(0, 0, useArgs);
         return;
     }
     if (boundary.hasTrue() && nBdryFacets >= 0 &&
             (nBdryFacets % 2 != ((dim+1) * static_cast<int>(size_)) % 2 ||
             nBdryFacets > (dim - 1) * static_cast<int>(size_) + 2
             || (nBdryFacets == 0 && ! boundary.hasFalse()))) {
-        use(0, 0, useArgs);
         return;
     }
 
@@ -582,7 +558,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
     IsoList allAutomorphisms;
         /**< The set of all automorphisms of the current facet pairing.
              This is only ever used when we find a candidate face pairing,
-             and it is cleared immediately after use() is called. */
+             and it is cleared immediately after the action is called. */
 
     // Run through and find all possible matchings.
     FacetSpec<dim> oldTrying, tmpFacet;
@@ -738,10 +714,8 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         if (trying.simp == static_cast<int>(size_)) {
             // Deal with the solution!
             if (isCanonicalInternal(allAutomorphisms)) {
-                use(static_cast<FacetPairing<dim>*>(this),
-                    &allAutomorphisms, useArgs);
-                for (auto a : allAutomorphisms)
-                    delete a;
+                action(static_cast<FacetPairing<dim>&>(*this),
+                    allAutomorphisms, std::forward<Args>(args)...);
                 allAutomorphisms.clear();
             }
 
@@ -797,7 +771,6 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         }
     }
 
-    use(0, 0, useArgs);
     return;
 }
 

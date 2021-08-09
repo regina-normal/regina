@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/facepair.h"
 #include "triangulation/facetpairing3.h"
 #include "triangulation/dim3.h"
@@ -45,6 +46,7 @@ void addFacetPairing3(pybind11::module_& m) {
     auto c = pybind11::class_<FacetPairing<3>>(m, "FacetPairing3")
         .def(pybind11::init<const FacetPairing<3>&>())
         .def(pybind11::init<const Triangulation<3>&>())
+        .def("swap", &FacetPairing<3>::swap)
         .def("size", &FacetPairing<3>::size)
         .def("dest", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::dest, pybind11::const_),
@@ -97,5 +99,8 @@ void addFacetPairing3(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(FacetPairing<3>&, FacetPairing<3>&))(regina::swap));
 }
 

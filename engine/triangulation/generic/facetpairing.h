@@ -74,6 +74,10 @@ namespace regina {
  * In order to use this specialised class, you will need to include the
  * corresponding header triangulation/facetpairing3.h.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., FacetPairing2 and FacetPairing3 for dimensions 2 and 3).
@@ -91,11 +95,21 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
 
     public:
         /**
-         * Creates a new clone of the given facet pairing.
+         * Creates a new copy of the given facet pairing.
          *
-         * @param cloneMe the facet pairing to clone.
+         * @param src the facet pairing to clone.
          */
-        FacetPairing(const FacetPairing& cloneMe);
+        FacetPairing(const FacetPairing& src) = default;
+
+        /**
+         * Moves the given facet pairing into this facet pairing.
+         * This is a fast (constant time) operation.
+         *
+         * The facet pairing that is passed (\a src) will no longer be usable.
+         *
+         * @param src the facet pairing to move.
+         */
+        FacetPairing(FacetPairing&& src) noexcept = default;
 
         /**
          * Creates the dual graph of the given triangulation.
@@ -109,6 +123,35 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * be constructed.
          */
         FacetPairing(const Triangulation<dim>& tri);
+
+        /**
+         * Copies the given facet pairing into this facet pairing.
+         *
+         * It does not matter if this and the given facet pairing use
+         * different numbers of top-dimensional simpilices; if they do
+         * then this facet pairing will be resized accordingly.
+         *
+         * This operator induces a deep copy of \a src.
+         *
+         * @param src the facet pairing to copy.
+         * @return a reference to this facet pairing.
+         */
+        FacetPairing& operator = (const FacetPairing& src) = default;
+
+        /**
+         * Moves the given facet pairing into this facet pairing.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given facet pairing use
+         * different numbers of top-dimensional simpilices; if they do
+         * then this facet pairing will be resized accordingly.
+         *
+         * The facet pairing that is passed (\a src) will no longer be usable.
+         *
+         * @param src the facet pairing to move.
+         * @return a reference to this facet pairing.
+         */
+        FacetPairing& operator = (FacetPairing&& src) noexcept = default;
 
     private:
         /**
@@ -126,14 +169,21 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
     friend class detail::FacetPairingBase<dim>;
 };
 
+/**
+ * Swaps the contents of the given facet pairings.
+ *
+ * This global routine simply calls FacetPairing<dim>::swap(); it is provided
+ * so that FacetPairing<dim> meets the C++ Swappable requirements.
+ *
+ * @param a the first facet pairing whose contents should be swapped.
+ * @param b the second facet pairing whose contents should be swapped.
+ */
+template <int dim>
+void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept;
+
 /*@}*/
 
 // Inline functions for FacetPairing
-
-template <int dim>
-inline FacetPairing<dim>::FacetPairing(const FacetPairing& cloneMe) :
-        detail::FacetPairingBase<dim>(cloneMe) {
-}
 
 template <int dim>
 inline FacetPairing<dim>::FacetPairing(const Triangulation<dim>& tri) :
@@ -143,6 +193,11 @@ inline FacetPairing<dim>::FacetPairing(const Triangulation<dim>& tri) :
 template <int dim>
 inline FacetPairing<dim>::FacetPairing(size_t size) :
         detail::FacetPairingBase<dim>(size) {
+}
+
+template <int dim>
+inline void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

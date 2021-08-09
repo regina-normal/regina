@@ -61,17 +61,30 @@ class FacePair;
  * This 3-dimensional specialisation contains some extra functionality.
  * In particular, it provides routines for finding informative subgraphs
  * within the dual graph.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 template <>
 class FacetPairing<3> : public detail::FacetPairingBase<3> {
     public:
         /**
-         * Creates a new face pairing that is a clone of the given face
-         * pairing.
+         * Creates a new copy of the given face pairing.
          *
-         * @param cloneMe the face pairing to clone.
+         * @param src the face pairing to clone.
          */
-        FacetPairing(const FacetPairing& cloneMe);
+        FacetPairing(const FacetPairing& src) = default;
+
+        /**
+         * Moves the given face pairing into this face pairing.
+         * This is a fast (constant time) operation.
+         *
+         * The face pairing that is passed (\a src) will no longer be usable.
+         *
+         * @param src the face pairing to move.
+         */
+        FacetPairing(FacetPairing&& src) noexcept = default;
 
         /**
          * Creates the face pairing of the given 3-manifold triangulation.
@@ -84,6 +97,35 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * constructed.
          */
         FacetPairing(const Triangulation<3>& tri);
+
+        /**
+         * Copies the given face pairing into this face pairing.
+         *
+         * It does not matter if this and the given face pairing use
+         * different numbers of tetrahedra; if they do then this
+         * face pairing will be resized accordingly.
+         *
+         * This operator induces a deep copy of \a src.
+         *
+         * @param src the facet pairing to copy.
+         * @return a reference to this face pairing.
+         */
+        FacetPairing& operator = (const FacetPairing& src) = default;
+
+        /**
+         * Moves the given face pairing into this facet pairing.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given face pairing use
+         * different numbers of tetrahedra; if they do then this
+         * face pairing will be resized accordingly.
+         *
+         * The face pairing that is passed (\a src) will no longer be usable.
+         *
+         * @param src the face pairing to move.
+         * @return a reference to this face pairing.
+         */
+        FacetPairing& operator = (FacetPairing&& src) noexcept = default;
 
         /**
          * Follows a chain as far as possible from the given point.
@@ -510,10 +552,6 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
 /*@}*/
 
 // Inline functions for FacetPairing<3>
-
-inline FacetPairing<3>::FacetPairing(const FacetPairing& cloneMe) :
-        detail::FacetPairingBase<3>(cloneMe) {
-}
 
 inline FacetPairing<3>::FacetPairing(const Triangulation<3>& tri) :
         detail::FacetPairingBase<3>(tri) {
