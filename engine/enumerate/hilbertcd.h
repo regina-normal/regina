@@ -79,10 +79,7 @@ class HilbertCD {
          * non-negative orthant with some linear subspace.
          * The resulting basis elements will be of the class \a RayClass,
          * will be newly allocated, and will be passed into the given action
-         * function one at a time.  The action function must take
-         * responsibility for their eventual deallocation; an example of
-         * such a function could be a lambda that pushes the basis
-         * element onto some list of results.
+         * function one at a time.
          *
          * The non-negative orthant is an <i>n</i>-dimensional cone with
          * its vertex at the origin.  The extremal rays of this cone are
@@ -108,6 +105,13 @@ class HilbertCD {
          * EnumConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
+         *
+         * For each of the resulting basis elements, this routine will call
+         * \a action (which must be a function or some other callable object).
+         * This action should return \c void, and must take exactly one
+         * argument: a pointer to RayClass, which will be the newly allocated
+         * basis element.  The action is responsible for ensuring that this
+         * basis element is (eventually) deallocated.
          *
          * \pre The template argument RayClass is derived from (or equal to)
          * Vector<T>, where \a T is one of Regina's arbitrary-precision

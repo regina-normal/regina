@@ -81,10 +81,7 @@ class HilbertPrimal {
          * non-negative orthant with some linear subspace.
          * The resulting basis elements will be of the class \a RayClass,
          * will be newly allocated, and will be passed into the given action
-         * function one at a time.  The action function must take
-         * responsibility for their eventual deallocation; an example of
-         * such a function could be a lambda that pushes the basis
-         * element onto some list of results.
+         * function one at a time.
          *
          * The intersection of the non-negative orthant with this linear
          * subspace is a pointed polyhedral cone with apex at the origin,
@@ -112,6 +109,13 @@ class HilbertPrimal {
          * been declared via ProgressTracker::newStage() before this routine
          * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
+         *
+         * For each of the resulting basis elements, this routine will call
+         * \a action (which must be a function or some other callable object).
+         * This action should return \c void, and must take exactly one
+         * argument: a pointer to RayClass, which will be the newly allocated
+         * basis element.  The action is responsible for ensuring that this
+         * basis element is (eventually) deallocated.
          *
          * \pre If \a constraints is passed, then the given list of
          * extremal rays contains \e only those extremal rays that satisfy
