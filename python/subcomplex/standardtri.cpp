@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
 #include "subcomplex/standardtri.h"

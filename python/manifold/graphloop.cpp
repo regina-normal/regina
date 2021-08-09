@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "manifold/graphloop.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
