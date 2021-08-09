@@ -38,19 +38,18 @@
 namespace regina {
 
 GluingPermSearcher<2>::GluingPermSearcher(
-        const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
-        bool orientableOnly, GluingPermSearcher<2>::Use use, void* useArgs) :
-        GluingPerms<2>(pairing), autos_(autos), autosNew(autos == 0),
-        orientableOnly_(orientableOnly), use_(use), useArgs_(useArgs),
-        started(false),
-        orientation(new int[pairing->size()]) {
+        FacetPairing<2>&& pairing, const FacetPairing<2>::IsoList* autos,
+        bool orientableOnly, ActionWrapper&& action) :
+        GluingPerms<2>(std::move(pairing)),
+        // pairing is no longer usable, must use pairing_ instead
+        autos_(autos), autosNew(autos == 0),
+        orientableOnly_(orientableOnly), action_(std::move(action)),
+        started(false), orientation(new int[pairing_.size()]) {
     // Generate the list of edge pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew) {
         const_cast<GluingPermSearcher<2>*>(this)->autos_ =
-            new FacetPairing<2>::IsoList();
-        pairing->findAutomorphisms(
-            const_cast<FacetPairing<2>::IsoList&>(*autos_));
+            new FacetPairing<2>::IsoList(pairing_.findAutomorphisms());
     }
 
     // Initialise arrays.
@@ -66,8 +65,8 @@ GluingPermSearcher<2>::GluingPermSearcher(
 
     FacetSpec<2> edge, adj;
     for (edge.setFirst(); ! edge.isPastEnd(nTris, true); edge++)
-        if (! pairing->isUnmatched(edge))
-            if (edge < pairing->dest(edge))
+        if (! pairing_.isUnmatched(edge))
+            if (edge < pairing_.dest(edge))
                 order[orderSize++] = edge;
 }
 
@@ -77,29 +76,8 @@ GluingPermSearcher<2>::~GluingPermSearcher() {
     if (autosNew) {
         // We made them, so we'd better remove the const again and
         // delete them.
-        FacetPairing<2>::IsoList* autos =
-            const_cast<FacetPairing<2>::IsoList*>(autos_);
-        for (auto a : *autos)
-            delete a;
-        delete autos;
+        delete const_cast<FacetPairing<2>::IsoList*>(autos_);
     }
-}
-
-GluingPermSearcher<2>* GluingPermSearcher<2>::bestSearcher(
-        const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
-        bool orientableOnly, GluingPermSearcher<2>::Use use, void* useArgs) {
-    // We only have one algorithm for now.
-    return new GluingPermSearcher<2>(pairing, autos, orientableOnly,
-        use, useArgs);
-}
-
-void GluingPermSearcher<2>::findAllPerms(const FacetPairing<2>* pairing,
-        const FacetPairing<2>::IsoList* autos, bool orientableOnly,
-        GluingPermSearcher<2>::Use use, void* useArgs) {
-    GluingPermSearcher<2>* searcher = bestSearcher(pairing, autos,
-        orientableOnly, use, useArgs);
-    searcher->runSearch();
-    delete searcher;
 }
 
 void GluingPermSearcher<2>::runSearch(long maxDepth) {
@@ -116,9 +94,8 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
         started = true;
 
         // Do we in fact have no permutation at all to choose?
-        if (maxDepth == 0 || pairing_->dest(0, 0).isBoundary(nTriangles)) {
-            use_(this, useArgs_);
-            use_(0, useArgs_);
+        if (maxDepth == 0 || pairing_.dest(0, 0).isBoundary(nTriangles)) {
+            action_(*this);
             return;
         }
 
@@ -129,8 +106,7 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
     // Is it a partial search that has already finished?
     if (orderElt == orderSize) {
         if (isCanonical())
-            use_(this, useArgs_);
-        use_(0, useArgs_);
+            action_(*this);
         return;
     }
 
@@ -143,7 +119,7 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
 
     while (orderElt >= minOrder) {
         edge = order[orderElt];
-        adj = (*pairing_)[edge];
+        adj = pairing_[edge];
 
         // TODO: Check for cancellation.
 
@@ -186,7 +162,7 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             if (isCanonical())
-                use_(this, useArgs_);
+                action_(*this);
 
             // Back to the previous face.
             orderElt--;
@@ -196,9 +172,9 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
             // We've moved onto a new edge.
             // Be sure to get the orientation right.
             edge = order[orderElt];
-            if (orientableOnly_ && pairing_->dest(edge).facet > 0) {
+            if (orientableOnly_ && pairing_.dest(edge).facet > 0) {
                 // permIndex(edge) will be set to -1 or -2 as appropriate.
-                adj = (*pairing_)[edge];
+                adj = pairing_[edge];
                 if (orientation[edge.simp] == orientation[adj.simp])
                     permIndex(edge) = 1;
                 else
@@ -214,7 +190,7 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
                 // We haven't found an entire triangulation, but we've
                 // gone as far as we need to.
                 // Process it, then step back.
-                use_(this, useArgs_);
+                action_(*this);
 
                 // Back to the previous edge.
                 permIndex(edge) = -1;
@@ -224,34 +200,11 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
     }
 
     // And the search is over.
-    use_(0, useArgs_);
 }
 
 void GluingPermSearcher<2>::dumpTaggedData(std::ostream& out) const {
     out << dataTag() << std::endl;
     dumpData(out);
-}
-
-GluingPermSearcher<2>* GluingPermSearcher<2>::readTaggedData(std::istream& in,
-        GluingPermSearcher<2>::Use use, void* useArgs) {
-    // Read the class marker.
-    char c;
-    in >> c;
-    if (in.eof())
-        return 0;
-
-    GluingPermSearcher<2>* ans;
-    if (c == GluingPermSearcher<2>::dataTag_)
-        ans = new GluingPermSearcher<2>(in, use, useArgs);
-    else
-        return 0;
-
-    if (ans->inputError()) {
-        delete ans;
-        return 0;
-    }
-
-    return ans;
 }
 
 void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
@@ -281,17 +234,13 @@ void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
 }
 
 GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
-        GluingPermSearcher<2>::Use use, void* useArgs) :
+        ActionWrapper&& action) :
         GluingPerms<2>(in), autos_(0), autosNew(false),
-        use_(use), useArgs_(useArgs), orientation(0),
-        order(0), orderSize(0), orderElt(0) {
-    if (inputError_)
-        return;
-
+        action_(std::move(action)), orientation(0), order(0), orderSize(0),
+        orderElt(0) {
     // Recontruct the face pairing automorphisms.
     const_cast<GluingPermSearcher<2>*>(this)->autos_ =
-        new FacetPairing<2>::IsoList();
-    pairing_->findAutomorphisms(const_cast<FacetPairing<2>::IsoList&>(*autos_));
+        new FacetPairing<2>::IsoList(pairing_.findAutomorphisms());
     autosNew = true;
 
     // Keep reading.
@@ -302,20 +251,20 @@ GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
         orientableOnly_ = true;
     else if (c == '.')
         orientableOnly_ = false;
-    else {
-        inputError_ = true; return;
-    }
+    else
+        throw InvalidInput("Invalid orientability tag "
+            "while attempting to read GluingPermSearcher<2>");
 
     in >> c;
     if (c == 's')
         started = true;
     else if (c == '.')
         started = false;
-    else {
-        inputError_ = true; return;
-    }
+    else
+        throw InvalidInput("Invalid started tag "
+            "while attempting to read GluingPermSearcher<2>");
 
-    int nTris = pairing_->size();
+    int nTris = pairing_.size();
     int t;
 
     orientation = new int[nTris];
@@ -327,35 +276,35 @@ GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
     for (t = 0; t < orderSize; t++) {
         in >> order[t].simp >> order[t].facet;
         if (order[t].simp >= nTris || order[t].simp < 0 ||
-                order[t].facet >= 3 || order[t].facet < 0) {
-            inputError_ = true; return;
-        }
+                order[t].facet >= 3 || order[t].facet < 0)
+            throw InvalidInput("Edge gluing out of range "
+                "while attempting to read GluingPermSearcher<2>");
     }
 
     // Did we hit an unexpected EOF?
     if (in.eof())
-        inputError_ = true;
+        throw InvalidInput("Unexpected end of input stream "
+            "while attempting to read GluingPermSearcher<2>");
 }
 
 bool GluingPermSearcher<2>::isCanonical() const {
     FacetSpec<2> edge, edgeDest, edgeImage;
     int ordering;
 
-    for (FacetPairing<2>::IsoList::const_iterator it = autos_->begin();
-            it != autos_->end(); it++) {
+    for (const auto& iso : *autos_) {
         // Compare the current set of gluing permutations with its
         // preimage under each edge pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
         for (edge.setFirst(); edge.simp <
-                static_cast<int>(pairing_->size()); edge++) {
-            edgeDest = pairing_->dest(edge);
-            if (pairing_->isUnmatched(edge) || edgeDest < edge)
+                static_cast<int>(pairing_.size()); edge++) {
+            edgeDest = pairing_.dest(edge);
+            if (pairing_.isUnmatched(edge) || edgeDest < edge)
                 continue;
 
-            edgeImage = (**it)[edge];
+            edgeImage = iso[edge];
             ordering = gluingPerm(edge).compareWith(
-                (*it)->edgePerm(edgeDest.simp).inverse() * gluingPerm(edgeImage)
-                * (*it)->edgePerm(edge.simp));
+                iso.edgePerm(edgeDest.simp).inverse() * gluingPerm(edgeImage)
+                * iso.edgePerm(edge.simp));
             if (ordering < 0) {
                 // This permutation set is closer.
                 break;

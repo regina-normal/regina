@@ -224,30 +224,24 @@ class Census3Test : public CppUnit::TestFixture {
                     purge_(purge), minimal_(minimal), count_(0) {}
         };
 
-        static void foundPerms(const GluingPermSearcher<3>* perms, void* spec) {
-            if (perms) {
-                CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Triangulation<3>* tri = perms->triangulate();
-                if (tri->isValid() &&
-                        (! (s->minimal_ &&
-                            tri->simplifyToLocalMinimum(false))) &&
-                        (! (s->orbl_ == true && ! tri->isOrientable())) &&
-                        (! (s->orbl_ == false && tri->isOrientable())) &&
-                        (! (s->finite_ == true && tri->isIdeal())) &&
-                        (! (s->finite_ == false && ! tri->isIdeal())))
-                    ++s->count_;
-                delete tri;
-            }
+        static void foundPerms(const GluingPerms<3>& perms, CensusSpec* spec) {
+            Triangulation<3>* tri = perms.triangulate();
+            if (tri->isValid() &&
+                    (! (spec->minimal_ &&
+                        tri->simplifyToLocalMinimum(false))) &&
+                    (! (spec->orbl_ == true && ! tri->isOrientable())) &&
+                    (! (spec->orbl_ == false && tri->isOrientable())) &&
+                    (! (spec->finite_ == true && tri->isIdeal())) &&
+                    (! (spec->finite_ == false && ! tri->isIdeal())))
+                ++spec->count_;
+            delete tri;
         }
 
-        static void foundPairing(const FacetPairing<3>* pairing,
-                const FacetPairing<3>::IsoList* autos, void* spec) {
-            if (pairing) {
-                CensusSpec* s = static_cast<CensusSpec*>(spec);
-                GluingPermSearcher<3>::findAllPerms(pairing, autos,
-                    ! s->orbl_.hasFalse(), ! s->finite_.hasFalse(),
-                    s->purge_, foundPerms, spec);
-            }
+        static void foundPairing(const FacetPairing<3>& pairing,
+                const FacetPairing<3>::IsoList& autos, CensusSpec* spec) {
+            GluingPermSearcher<3>::findAllPerms(pairing, &autos,
+                ! spec->orbl_.hasFalse(), ! spec->finite_.hasFalse(),
+                spec->purge_, foundPerms, spec);
         }
 
         static void rawCountsCompare(unsigned minTets, unsigned maxTets,

@@ -82,7 +82,7 @@ namespace regina {
 template <int dim>
 class GluingPerms {
     protected:
-        const FacetPairing<dim>* pairing_;
+        const FacetPairing<dim> pairing_;
             /**< The facet pairing that this permutation set complements.
                  This is guaranteed to be the minimal representative of
                  its facet pairing isomorphism class. */
@@ -94,10 +94,6 @@ class GluingPerms {
                  indexToGluing() for conversions).  If a permutation has not
                  yet been selected (e.g., if this permutation set is still
                  under construction) then this index is -1. */
-
-        bool inputError_;
-            /**< Has an error occurred during construction from an
-                 input stream? */
 
     public:
         /**
@@ -113,10 +109,9 @@ class GluingPerms {
          * stream.  This routine reads data in the format written by
          * dumpData().
          *
-         * If the data found in the input stream is invalid or
-         * incorrectly formatted, the routine inputError() will return
-         * \c true but the contents of this object will be otherwise
-         * undefined.
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
          *
          * \warning The data format is liable to change between
          * Regina releases.  Data in this format should be used on a
@@ -132,21 +127,6 @@ class GluingPerms {
         virtual ~GluingPerms();
 
         /**
-         * Was an error found during construction from an input stream?
-         *
-         * This routine returns \c true if an input stream constructor was
-         * used to create this object but the data in the input stream
-         * was invalid or incorrectly formatted.
-         *
-         * If a different constructor was called (i.e., no input stream
-         * was used), then this routine will always return \c false.
-         *
-         * @return \c true if an error occurred during construction from
-         * an input stream, or \c false otherwise.
-         */
-        bool inputError() const;
-
-        /**
          * Returns the total number of simplices under consideration.
          *
          * @return the number of simplices under consideration.
@@ -159,7 +139,7 @@ class GluingPerms {
          *
          * @return the corresponding simplex facet pairing.
          */
-        const FacetPairing<dim>* facetPairing() const;
+        const FacetPairing<dim>& facetPairing() const;
 
         /**
          * Returns the gluing permutation associated with the given
@@ -249,7 +229,7 @@ class GluingPerms {
          * @param pairing the specific pairing of simplex facets
          * that this permutation set will complement.
          */
-        GluingPerms(const FacetPairing<dim>* pairing);
+        GluingPerms(FacetPairing<dim>&& pairing);
 
         /**
          * Returns the index into array Perm<dim+1>::Sn_1 describing how the
@@ -439,11 +419,9 @@ class GluingPerms {
 // Inline functions for GluingPerms
 
 template <int dim>
-inline GluingPerms<dim>::GluingPerms(
-        const FacetPairing<dim>* pairing) :
-        pairing_(pairing),
-        permIndices_(new int[pairing->size() * (dim + 1)]),
-        inputError_(false) {
+inline GluingPerms<dim>::GluingPerms(FacetPairing<dim>&& pairing) :
+        pairing_(std::move(pairing)), // note: pairing is now unusable
+        permIndices_(new int[pairing_.size() * (dim + 1)]) {
 }
 
 template <int dim>
@@ -452,18 +430,12 @@ inline GluingPerms<dim>::~GluingPerms() {
 }
 
 template <int dim>
-inline bool GluingPerms<dim>::inputError() const {
-    return inputError_;
-}
-
-template <int dim>
 inline unsigned GluingPerms<dim>::size() const {
-    return pairing_->size();
+    return pairing_.size();
 }
 
 template <int dim>
-inline const FacetPairing<dim>* GluingPerms<dim>::facetPairing()
-        const {
+inline const FacetPairing<dim>& GluingPerms<dim>::facetPairing() const {
     return pairing_;
 }
 
@@ -504,14 +476,14 @@ inline const int& GluingPerms<dim>::permIndex(
 template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         const FacetSpec<dim>& source, int index) const {
-    return Perm<dim+1>(pairing_->dest(source).facet, dim) *
+    return Perm<dim+1>(pairing_.dest(source).facet, dim) *
         Perm<dim+1>::Sn_1[index] * Perm<dim+1>(source.facet, dim);
 }
 
 template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         unsigned simp, unsigned facet, int index) const {
-    return Perm<dim+1>(pairing_->dest(simp, facet).facet, dim) *
+    return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
         Perm<dim+1>::Sn_1[index] * Perm<dim+1>(facet, dim);
 }
 

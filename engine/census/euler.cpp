@@ -194,11 +194,11 @@ bool EulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
     return true;
 }
 
-EulerSearcher::EulerSearcher(int useEuler, const FacetPairing<3>* pairing,
+EulerSearcher::EulerSearcher(int useEuler, FacetPairing<3>&& pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        int whichPurge, GluingPermSearcher<3>::Use use, void* useArgs) :
-        GluingPermSearcher<3>(pairing, autos, orientableOnly,
-            true /* finiteOnly */, whichPurge, use, useArgs),
+        int whichPurge, ActionWrapper&& action) :
+        GluingPermSearcher<3>(std::move(pairing), autos, orientableOnly,
+            true /* finiteOnly */, whichPurge, std::move(action)),
         euler_(useEuler) {
     // Initialise the internal arrays to accurately reflect the underlying
     // face pairing.
@@ -267,9 +267,8 @@ void EulerSearcher::runSearch(long maxDepth) {
         started = true;
 
         // Do we in fact have no permutation at all to choose?
-        if (maxDepth == 0 || pairing_->dest(0, 0).isBoundary(nTets)) {
-            use_(this, useArgs_);
-            use_(0, useArgs_);
+        if (maxDepth == 0 || pairing_.dest(0, 0).isBoundary(nTets)) {
+            action_(*this);
             return;
         }
 
@@ -280,8 +279,7 @@ void EulerSearcher::runSearch(long maxDepth) {
     // Is it a partial search that has already finished?
     if (orderElt == orderSize) {
         if (isCanonical())
-            use_(this, useArgs_);
-        use_(0, useArgs_);
+            action_(*this);
         return;
     }
 
@@ -294,7 +292,7 @@ void EulerSearcher::runSearch(long maxDepth) {
     int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
-        adj = (*pairing_)[face];
+        adj = pairing_[face];
 
         // TODO (long-term): Check for cancellation.
 
@@ -361,7 +359,7 @@ void EulerSearcher::runSearch(long maxDepth) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             if (isCanonical())
-                use_(this, useArgs_);
+                action_(*this);
 
             // Back to the previous face.
             orderElt--;
@@ -377,9 +375,9 @@ void EulerSearcher::runSearch(long maxDepth) {
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly_ && pairing_->dest(face).facet > 0) {
+            if (orientableOnly_ && pairing_.dest(face).facet > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
-                adj = (*pairing_)[face];
+                adj = pairing_[face];
                 if (orientation[face.simp] == orientation[adj.simp])
                     permIndex(face) = 1;
                 else
@@ -395,7 +393,7 @@ void EulerSearcher::runSearch(long maxDepth) {
                 // We haven't found an entire triangulation, but we've
                 // gone as far as we need to.
                 // Process it, then step back.
-                use_(this, useArgs_);
+                action_(*this);
 
                 // Back to the previous face.
                 permIndex(face) = -1;
@@ -489,8 +487,6 @@ void EulerSearcher::runSearch(long maxDepth) {
                     << edgeStateChanged[i] << " at end of search!"
                     << std::endl;
     }
-
-    use_(0, useArgs_);
 }
 
 void EulerSearcher::dumpData(std::ostream& out) const {
@@ -526,70 +522,67 @@ void EulerSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-EulerSearcher::EulerSearcher(std::istream& in,
-        GluingPermSearcher<3>::Use use, void* useArgs) :
-        GluingPermSearcher<3>(in, use, useArgs),
+EulerSearcher::EulerSearcher(std::istream& in, ActionWrapper&& action) :
+        GluingPermSearcher<3>(in, std::move(action)),
         nVertexClasses(0), vertexState(0), vertexStateChanged(0),
         nEdgeClasses(0), edgeState(0), edgeStateChanged(0) {
-    if (inputError_)
-        return;
-
     in >> euler_;
-    if (euler_ > 2) {
-        inputError_ = true; return;
-    }
+    if (euler_ > 2)
+        throw InvalidInput("Euler characteristic out of range "
+            "while attempting to read EulerSearcher");
 
     unsigned nTets = size();
     unsigned i;
 
     in >> nVertexClasses;
-    if (nVertexClasses > 4 * nTets) {
-        inputError_ = true; return;
-    }
+    if (nVertexClasses > 4 * nTets)
+        throw InvalidInput("Vertex classes out of range "
+            "while attempting to read EulerSearcher");
 
     vertexState = new TetVertexState[4 * nTets];
     for (i = 0; i < 4 * nTets; i++)
-        if (! vertexState[i].readData(in, 4 * nTets)) {
-            inputError_ = true; return;
-        }
+        if (! vertexState[i].readData(in, 4 * nTets))
+            throw InvalidInput("Invalid vertex state "
+                "while attempting to read EulerSearcher");
 
     vertexStateChanged = new int[8 * nTets];
     for (i = 0; i < 8 * nTets; i++) {
         in >> vertexStateChanged[i];
-        if (vertexStateChanged[i] >= 4 * static_cast<int>(nTets)) {
-            inputError_ = true; return;
-        }
+        if (vertexStateChanged[i] >= 4 * static_cast<int>(nTets))
+            throw InvalidInput("Invalid vertex state changed "
+                "while attempting to read EulerSearcher");
     }
 
     in >> nEdgeClasses;
-    if (nEdgeClasses > 6 * nTets) {
-        inputError_ = true; return;
-    }
+    if (nEdgeClasses > 6 * nTets)
+        throw InvalidInput("Edge classes out of range "
+            "while attempting to read EulerSearcher");
 
     edgeState = new TetEdgeState[6 * nTets];
     for (i = 0; i < 6 * nTets; i++)
-        if (! edgeState[i].readData(in, nTets)) {
-            inputError_ = true; return;
-        }
+        if (! edgeState[i].readData(in, nTets))
+            throw InvalidInput("Invalid edge state "
+                "while attempting to read EulerSearcher");
 
     edgeStateChanged = new int[8 * nTets];
     for (i = 0; i < 8 * nTets; i++) {
         in >> edgeStateChanged[i];
         if (edgeStateChanged[i] < -1 ||
-                 edgeStateChanged[i] >= 6 * static_cast<int>(nTets)) {
-            inputError_ = true; return;
-        }
+                 edgeStateChanged[i] >= 6 * static_cast<int>(nTets))
+            throw InvalidInput("Invalid edge state changed "
+                "while attempting to read EulerSearcher");
     }
 
     // Did we hit an unexpected EOF?
     if (in.eof())
-        inputError_ = true;
+        throw InvalidInput("Unexpected end of input stream "
+            "while attempting to read EulerSearcher");
 }
 
 int EulerSearcher::mergeVertexClasses() {
     // Merge all three vertex pairs for the current face.
     FacetSpec<3> face = order[orderElt];
-    FacetSpec<3> adj = (*pairing_)[face];
+    FacetSpec<3> adj = pairing_[face];
 
     int retVal = 0;
 
@@ -909,7 +902,7 @@ int EulerSearcher::mergeVertexClasses() {
 void EulerSearcher::splitVertexClasses() {
     // Split all three vertex pairs for the current face.
     FacetSpec<3> face = order[orderElt];
-    FacetSpec<3> adj = (*pairing_)[face];
+    FacetSpec<3> adj = pairing_[face];
 
     int v, w;
     int vIdx, wIdx;
@@ -1007,7 +1000,7 @@ void EulerSearcher::splitVertexClasses() {
 
 bool EulerSearcher::mergeEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
-    FacetSpec<3> adj = (*pairing_)[face];
+    FacetSpec<3> adj = pairing_[face];
 
     bool retVal = false;
 

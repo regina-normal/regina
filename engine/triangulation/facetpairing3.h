@@ -99,6 +99,25 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
         FacetPairing(const Triangulation<3>& tri);
 
         /**
+         * Reads a new facet pairing from the given input stream.  This
+         * routine reads data in the format written by toTextRep().
+         *
+         * This routine will skip any initial whitespace in the given input
+         * stream.  Once it finds its first non-whitespace character,
+         * it will read the \e entire line from the input stream and expect
+         * that line to containin the text representation of a facet pairing.
+         *
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
+         *
+         * \ifacespython Not present.
+         *
+         * @param in the input stream from which to read.
+         */
+        FacetPairing(std::istream& in);
+
+        /**
          * Copies the given face pairing into this face pairing.
          *
          * It does not matter if this and the given face pairing use
@@ -555,6 +574,10 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
 
 inline FacetPairing<3>::FacetPairing(const Triangulation<3>& tri) :
         detail::FacetPairingBase<3>(tri) {
+}
+
+inline FacetPairing<3>::FacetPairing(std::istream& in) :
+        detail::FacetPairingBase<3>(in) {
 }
 
 inline FacetPairing<3>::FacetPairing(size_t size) :

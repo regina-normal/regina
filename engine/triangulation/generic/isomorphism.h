@@ -190,6 +190,9 @@ class Isomorphism :
         /**
          * Swaps the contents of this and the given isomorphism.
          *
+         * It does not matter if this and the given isomorphism use different
+         * numbers of simplices; if so then they will be adjusted accordingly.
+         *
          * @param other the isomorphism whose contents are to be swapped with
          * this.
          */

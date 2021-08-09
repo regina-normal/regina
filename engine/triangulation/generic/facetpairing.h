@@ -125,6 +125,25 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
         FacetPairing(const Triangulation<dim>& tri);
 
         /**
+         * Reads a new facet pairing from the given input stream.  This
+         * routine reads data in the format written by toTextRep().
+         *
+         * This routine will skip any initial whitespace in the given input
+         * stream.  Once it finds its first non-whitespace character,
+         * it will read the \e entire line from the input stream and expect
+         * that line to containin the text representation of a facet pairing.
+         *
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
+         *
+         * \ifacespython Not present.
+         *
+         * @param in the input stream from which to read.
+         */
+        FacetPairing(std::istream& in);
+
+        /**
          * Copies the given facet pairing into this facet pairing.
          *
          * It does not matter if this and the given facet pairing use
@@ -188,6 +207,11 @@ void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept;
 template <int dim>
 inline FacetPairing<dim>::FacetPairing(const Triangulation<dim>& tri) :
         detail::FacetPairingBase<dim>(tri) {
+}
+
+template <int dim>
+inline FacetPairing<dim>::FacetPairing(std::istream& in) :
+        detail::FacetPairingBase<dim>(in) {
 }
 
 template <int dim>

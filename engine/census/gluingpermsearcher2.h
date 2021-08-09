@@ -40,10 +40,12 @@
 #define __REGINA_GLUINGPERMSEARCHER2_H
 #endif
 
+#include <functional>
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -79,30 +81,15 @@ namespace regina {
 template <>
 class GluingPermSearcher<2> : public GluingPerms<2> {
     public:
-        /**
-         * A routine that can do arbitrary processing upon a set of gluing
-         * permutations.  Such routines are used to process permutation
-         * sets that are found when running census-building routines such as
-         * findAllPerms().
-         *
-         * The first parameter passed will be a set of gluing permutations
-         * (as this class derives from GluingPerms<2>).  This set of gluing
-         * permutations must not be deallocated by this routine, since it may
-         * be used again later by the caller.  The second parameter may contain
-         * arbitrary data; typically this will be the data passed to the
-         * relevant search routine, such as findAllPerms() or the
-         * GluingPermSearcher class constructor.
-         *
-         * Note that the first parameter passed might be \c null to signal that
-         * gluing permutation generation has finished.
-         */
-        typedef void (*Use)(const GluingPermSearcher<2>*, void*);
-
         static constexpr char dataTag_ = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
     protected:
+        typedef std::function<void(const GluingPerms<2>&)> ActionWrapper;
+            /**< The type used to hold the user's action function and
+                 arguments when enumerating gluing permutations. */
+
         const FacetPairing<2>::IsoList* autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
@@ -113,12 +100,11 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
         bool orientableOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to orientable triangulations? */
-        GluingPermSearcher<2>::Use use_;
-            /**< A routine to call each time a gluing permutation set is
-                 found during the search. */
-        void* useArgs_;
-            /**< Additional user-supplied data to be passed as the second
-                 argument to the \a use_ routine. */
+        ActionWrapper action_;
+            /**< The action to perform each time a gluing permutation set is
+                 found during the search.  This incorporates the user's
+                 callback function along with any extra arguments that
+                 the user wants passed to it. */
 
         bool started;
             /**< Has the search started yet?  This helps distinguish
@@ -164,8 +150,18 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * searching, and is the preferred entry point for end users.
          *
          * The arguments to this constructor describe the search
-         * parameters in detail, as well as what should be done with
-         * each gluing permutation set that is found.
+         * parameters in detail.
+         *
+         * For each facet pairing that is generated, this routine will call
+         * \a action (which must be a function or some other callable object).
+         *
+         * - The first argument to \a action must be a const reference to a
+         *   GluingPerms<2>.  This will be the permutation set that was found.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
          *
          * \pre The given edge pairing is connected, i.e., it is possible
          * to reach any triangle from any other triangle via a
@@ -173,6 +169,11 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * \pre The given edge pairing is in canonical form as described
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
          *
          * @param pairing the specific pairing of triangle edges
          * that the generated permutation sets will complement.
@@ -186,18 +187,15 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
-         * @param use the function to call upon each permutation set that
-         * is found.  The first parameter passed to this function will be
-         * a gluing permutation set.  The second parameter will be
-         * parameter \a useArgs as was passed to this routine.
-         * @param useArgs the pointer to pass as the final parameter for
-         * the function \a use which will be called upon each permutation
-         * set found.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        GluingPermSearcher(const FacetPairing<2>* pairing,
+        template <typename Action, typename... Args>
+        GluingPermSearcher(FacetPairing<2> pairing,
                 const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = nullptr);
+                bool orientableOnly, Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -208,20 +206,27 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param in the input stream from which to read.
-         * @param use as for the main GluingPermSearcher<2> constructor.
-         * @param useArgs as for the main GluingPermSearcher<2> constructor.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        GluingPermSearcher(std::istream& in,
-            GluingPermSearcher<2>::Use use, void* useArgs = nullptr);
+        template <typename Action, typename... Args>
+        GluingPermSearcher(std::istream& in, Action&& action, Args&&... args);
 
         /**
          * Destroys this search manager and all supporting data
@@ -239,13 +244,9 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * once up to equivalence, where equivalence is defined by the
          * given set of automorphisms of the given edge pairing.
          *
-         * For each permutation set that is generated, routine \a use_ (as
-         * passed to the class constructor) will be called with that
-         * permutation set as an argument.
-         *
-         * Once the generation of permutation sets has finished, routine
-         * \a use_ will be called once more, this time with \c null as its
-         * first (permutation set) argument.
+         * For each permutation set \a p that is generated, the function
+         * or callable object \a action_ (as passed to the class constructor)
+         * will be called with a const reference to \a p as its first argument.
          *
          * Subclasses corresponding to more specialised search criteria
          * should override this routine to use a better optimised algorithm
@@ -257,7 +258,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * produce a series of partially-complete GluingPermSearcher<2>
          * objects.  These partial searches may then be restarted by
          * calling runSearch() once more (usually after being frozen or
-         * passed on to a different processor).  If necessary, the \a use_
+         * passed on to a different processor).  If necessary, the \a action_
          * routine may call completePermSet() to distinguish between
          * a complete set of gluing permutations and a partial search state.
          *
@@ -279,7 +280,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * gluing permutation set or just a partially completed search
          * state.
          *
-         * This may assist the \a use_ routine when running partial
+         * This may assist the \a action_ routine when running partial
          * depth-based searches.  See runSearch() for further details.
          *
          * @return \c true if a complete gluing permutation set is held,
@@ -325,11 +326,16 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * \pre The given edge pairing is in canonical form as described
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
          */
-        static void findAllPerms(const FacetPairing<2>* pairing,
+        template <typename Action, typename... Args>
+        static void findAllPerms(FacetPairing<2> pairing,
                 const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = nullptr);
+                bool orientableOnly, Action&& action, Args&&... args);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -356,13 +362,17 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @return the newly created search manager.
          */
-        static GluingPermSearcher<2>* bestSearcher(
-                const FacetPairing<2>* pairing,
-                const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = nullptr);
+        template <typename Action, typename... Args>
+        static GluingPermSearcher<2>* bestSearcher(FacetPairing<2> pairing,
+                const FacetPairing<2>::IsoList* autos, bool orientableOnly,
+                Action&& action, Args&&... args);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -382,23 +392,59 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * and it is the responsibility of the caller of this routine to
          * destroy it after use.
          *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<2> constructor.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param in the input stream from which to read.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
+        template <typename Action, typename... Args>
         static GluingPermSearcher<2>* readTaggedData(std::istream& in,
-                GluingPermSearcher<2>::Use use, void* useArgs = nullptr);
+                Action&& action, Args&&... args);
 
         // Make this class non-copyable.
         // The base class GluingPerms already makes it non-assignable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
 
     protected:
+        /**
+         * A de-templatised version of the main public constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing both \a pairing and \a action, and so
+         * we insist on rvalue references so these can be moved instead of
+         * copied.
+         */
+        GluingPermSearcher(FacetPairing<2>&& pairing,
+                const FacetPairing<2>::IsoList* autos,
+                bool orientableOnly, ActionWrapper&& action);
+
+        /**
+         * A de-templatised version of the public input stream constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing \a action, and so we insist on
+         * an rvalue reference so this can be moved instead of copied.
+         */
+        GluingPermSearcher(std::istream& in, ActionWrapper&& action);
+
         /**
          * Compares the current set of gluing permutations with its
          * preimage under each automorphism of the underlying edge pairing,
@@ -423,12 +469,75 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
 
 // Inline functions for GluingPermSearcher<2>
 
+template <typename Action, typename... Args>
+inline GluingPermSearcher<2>::GluingPermSearcher(
+        FacetPairing<2> pairing, const FacetPairing<2>::IsoList* autos,
+        bool orientableOnly, Action&& action, Args&&... args) :
+        // Delegate to a de-templatised constructor.
+        GluingPermSearcher<2>(std::move(pairing), autos, orientableOnly,
+            ActionWrapper(std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
+template <typename Action, typename... Args>
+inline GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
+        Action&& action, Args&&... args) :
+        // Delegate to a de-templatised constructor.
+        GluingPermSearcher<2>(in,
+            ActionWrapper(std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
 inline bool GluingPermSearcher<2>::completePermSet() const {
     return (orderElt == orderSize);
 }
 
 inline char GluingPermSearcher<2>::dataTag() const {
     return GluingPermSearcher<2>::dataTag_;
+}
+
+template <typename Action, typename... Args>
+inline GluingPermSearcher<2>* GluingPermSearcher<2>::readTaggedData(
+        std::istream& in, Action&& action, Args&&... args) {
+    // Read the class marker.
+    char c;
+    in >> c;
+    if (in.eof())
+        return nullptr;
+
+    try {
+        switch (c) {
+            case GluingPermSearcher<2>::dataTag_:
+                return new GluingPermSearcher<2>(in,
+                    std::forward<Action>(action), std::forward<Args>(args)...);
+            default:
+                return nullptr;
+        }
+    } catch (const InvalidInput&) {
+        return nullptr;
+    }
+}
+
+template <typename Action, typename... Args>
+inline GluingPermSearcher<2>* GluingPermSearcher<2>::bestSearcher(
+        FacetPairing<2> pairing, const FacetPairing<2>::IsoList* autos,
+        bool orientableOnly, Action&& action, Args&&... args) {
+    // We only have one algorithm for now.
+    // If we ever get to the point of choosing, we should change
+    // findAllPerms() to call bestSearcher() also.
+    return new GluingPermSearcher<2>(std::move(pairing), autos, orientableOnly,
+        std::forward<Action>(action), std::forward<Args>(args)...);
+}
+
+template <typename Action, typename... Args>
+void GluingPermSearcher<2>::findAllPerms(FacetPairing<2> pairing,
+        const FacetPairing<2>::IsoList* autos, bool orientableOnly,
+        Action&& action, Args&&... args) {
+    // We don't call bestSearcher() because at present there is only one
+    // algorithm.  Just use it.
+    GluingPermSearcher<2>(std::move(pairing), autos, orientableOnly,
+        std::forward<Action>(action), std::forward<Args>(args)...).
+        runSearch();
 }
 
 } // namespace regina

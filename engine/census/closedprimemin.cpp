@@ -46,12 +46,12 @@ const char ClosedPrimeMinSearcher::coneNoTwist[12] = {
     1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1
 };
 
-ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
+ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3>&& pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        GluingPermSearcher<3>::Use use, void* useArgs) :
-        CompactSearcher(pairing, autos, orientableOnly,
+        ActionWrapper&& action) :
+        CompactSearcher(std::move(pairing), autos, orientableOnly,
             PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
-            use, useArgs) {
+            std::move(action)) {
     // Initialise internal arrays, specifically those relating to face
     // orderings and properties of chains, to accurately reflect the
     // underlying face pairing.
@@ -101,7 +101,7 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
         if (orderAssigned[face.simp * 4 + face.facet])
             continue;
 
-        adj = (*pairing)[face];
+        adj = pairing_[face];
         if (adj.simp != face.simp)
             continue;
 
@@ -126,9 +126,9 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     for (i = 0; i < nChains; i++) {
         tet = order[i].simp;
         faces = FacePair(order[i].facet,
-            (*pairing)[order[i]].facet).complement();
-        dest1 = pairing->dest(tet, faces.lower());
-        dest2 = pairing->dest(tet, faces.upper());
+            pairing_[order[i]].facet).complement();
+        dest1 = pairing_.dest(tet, faces.lower());
+        dest2 = pairing_.dest(tet, faces.upper());
 
         // Currently tet and faces refer to the two faces of the base
         // tetrahedron that are pointing outwards.
@@ -160,8 +160,8 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
             faces = faces.complement();
             tet = dest1.simp;
 
-            dest1 = pairing->dest(tet, faces.lower());
-            dest2 = pairing->dest(tet, faces.upper());
+            dest1 = pairing_.dest(tet, faces.lower());
+            dest2 = pairing_.dest(tet, faces.upper());
 
             orderDone += 2;
         }
@@ -175,17 +175,17 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     for (face.setFirst(); ! face.isPastEnd(nTets, true); ++face)
         if (! orderAssigned[face.simp * 4 + face.facet]) {
             order[orderDone] = face;
-            if (face.facet < 3 && pairing->dest(face.simp, face.facet + 1).
-                    simp == pairing->dest(face).simp)
+            if (face.facet < 3 && pairing_.dest(face.simp, face.facet + 1).
+                    simp == pairing_.dest(face).simp)
                 orderType[orderDone] = EDGE_DOUBLE_FIRST;
-            else if (face.facet > 0 && pairing->dest(face.simp, face.facet - 1).
-                    simp == pairing->dest(face).simp)
+            else if (face.facet > 0 && pairing_.dest(face.simp, face.facet - 1).
+                    simp == pairing_.dest(face).simp)
                 orderType[orderDone] = EDGE_DOUBLE_SECOND;
             else
                 orderType[orderDone] = EDGE_MISC;
             orderDone++;
 
-            adj = (*pairing)[face];
+            adj = pairing_[face];
             orderAssigned[face.simp * 4 + face.facet] = true;
             orderAssigned[adj.simp * 4 + adj.facet] = true;
         }
@@ -207,11 +207,11 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     Perm<4> trial1, trial2;
     for (i = 0; i < nChainEdges; i++) {
         if (orderType[i] == EDGE_CHAIN_END) {
-            faces = FacePair(order[i].facet, pairing->dest(order[i]).facet);
+            faces = FacePair(order[i].facet, pairing_.dest(order[i]).facet);
             comp = faces.complement();
 
             // order[i].facet == faces.lower(),
-            // pairing->dest(order[i]).facet == faces.upper().
+            // pairing_.dest(order[i]).facet == faces.upper().
             chainPermIndices[2 * i] = gluingToIndex(order[i],
                 Perm<4>(faces.lower(), faces.upper(),
                        faces.upper(), comp.lower(),
@@ -225,14 +225,14 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
         } else if (orderType[i] == EDGE_CHAIN_INTERNAL_FIRST) {
             faces = FacePair(order[i].facet, order[i + 1].facet);
             comp = faces.complement();
-            facesAdj = FacePair(pairing->dest(order[i]).facet,
-                pairing->dest(order[i + 1]).facet);
+            facesAdj = FacePair(pairing_.dest(order[i]).facet,
+                pairing_.dest(order[i + 1]).facet);
             compAdj = facesAdj.complement();
 
             // order[i].facet == faces.lower(),
             // order[i + 1].facet == faces.upper(),
-            // pairing->dest(order[i]).facet == facesAdj.lower().
-            // pairing->dest(order[i + 1]).facet == facesAdj.upper().
+            // pairing_.dest(order[i]).facet == facesAdj.lower().
+            // pairing_.dest(order[i + 1]).facet == facesAdj.upper().
             trial1 = Perm<4>(faces.lower(), facesAdj.lower(),
                             faces.upper(), compAdj.lower(),
                             comp.lower(), compAdj.upper(),
@@ -289,8 +289,8 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     // Only allow degree three edges if the face pairing graph supports
     // a (1,3,4) layered solid torus.  We can test this easily using the
     // precondition that the face pairing graph must be in canonical form.
-    if (pairing->dest(0, 0).simp == 0 && pairing->dest(0, 2).simp == 1 &&
-            pairing->dest(0, 3).simp == 1)
+    if (pairing_.dest(0, 0).simp == 0 && pairing_.dest(0, 2).simp == 1 &&
+            pairing_.dest(0, 3).simp == 1)
         highDegLimit = 3;
     else
         highDegLimit = 4;
@@ -317,13 +317,12 @@ void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
         // Begin by testing for face pairings that can never lead to such a
         // triangulation.
-        if (pairing_->hasTripleEdge() ||
-                pairing_->hasBrokenDoubleEndedChain() ||
-                pairing_->hasOneEndedChainWithDoubleHandle() ||
-                pairing_->hasOneEndedChainWithStrayBigon() ||
-                pairing_->hasWedgedDoubleEndedChain() ||
-                pairing_->hasTripleOneEndedChain()) {
-            use_(0, useArgs_);
+        if (pairing_.hasTripleEdge() ||
+                pairing_.hasBrokenDoubleEndedChain() ||
+                pairing_.hasOneEndedChainWithDoubleHandle() ||
+                pairing_.hasOneEndedChainWithStrayBigon() ||
+                pairing_.hasWedgedDoubleEndedChain() ||
+                pairing_.hasTripleOneEndedChain()) {
             return;
         }
 
@@ -335,8 +334,7 @@ void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
     // Is it a partial search that has already finished?
     if (orderElt == static_cast<int>(nTets) * 2) {
         if (isCanonical())
-            use_(this, useArgs_);
-        use_(0, useArgs_);
+            action_(*this);
         return;
     }
 
@@ -364,7 +362,7 @@ void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
     int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
-        adj = (*pairing_)[face];
+        adj = pairing_[face];
 
         // TODO (long-term): Check for cancellation.
 
@@ -515,7 +513,7 @@ void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             if (isCanonical())
-                use_(this, useArgs_);
+                action_(*this);
 
             // Back to the previous face.
             orderElt--;
@@ -531,9 +529,9 @@ void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly_ && pairing_->dest(face).facet > 0) {
+            if (orientableOnly_ && pairing_.dest(face).facet > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
-                adj = (*pairing_)[face];
+                adj = pairing_[face];
                 if (orientation[face.simp] == orientation[adj.simp])
                     permIndex(face) = 1;
                 else
@@ -549,7 +547,7 @@ void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 // We haven't found an entire triangulation, but we've
                 // gone as far as we need to.
                 // Process it, then step back.
-                use_(this, useArgs_);
+                action_(*this);
 
                 // Back to the previous face.
                 permIndex(face) = -1;
@@ -645,8 +643,6 @@ void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 << " at end of search!" << std::endl;
 #endif
     }
-
-    use_(0, useArgs_);
 }
 
 void ClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
@@ -678,12 +674,9 @@ void ClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
 }
 
 ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in,
-        GluingPermSearcher<3>::Use use, void* useArgs) :
-        CompactSearcher(in, use, useArgs),
+        ActionWrapper&& action) :
+        CompactSearcher(in, std::move(action)),
         orderType(0), nChainEdges(0), chainPermIndices(0) {
-    if (inputError_)
-        return;
-
     unsigned nTets = size();
     int i;
 
@@ -693,16 +686,17 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in,
 
     in >> nChainEdges;
     /* Unnecessary since nChainEdges is unsigned.
-    if (nChainEdges < 0) {
-        inputError_ = true; return;
-    } */
+    if (nChainEdges < 0)
+        throw InvalidInput("Chain edges out of range "
+            "while attempting to read ClosedPrimeMinSearcher");
+    */
     if (nChainEdges) {
         chainPermIndices = new int[nChainEdges * 2];
         for (i = 0; i < 2 * static_cast<int>(nChainEdges); i++) {
             in >> chainPermIndices[i];
-            if (chainPermIndices[i] < 0 || chainPermIndices[i] >= 6) {
-                inputError_ = true; return;
-            }
+            if (chainPermIndices[i] < 0 || chainPermIndices[i] >= 6)
+                throw InvalidInput("Chain permutation index out of range "
+                    "while attempting to read ClosedPrimeMinSearcher");
         }
     }
 
@@ -710,19 +704,20 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in,
     in >> highDegLimit >> highDegSum >> highDegBound;
     if (highDegLimit < 3 || highDegLimit > 4 || highDegSum < 0 ||
             highDegSum > 6 * static_cast<int>(nTets) || highDegBound !=
-                (6 - highDegLimit) * static_cast<int>(nTets) - highDegLimit) {
-        inputError_ = true; return;
-    }
+                (6 - highDegLimit) * static_cast<int>(nTets) - highDegLimit)
+        throw InvalidInput("High degree edge data out of range "
+            "while attempting to read ClosedPrimeMinSearcher");
 #endif
 
     // Did we hit an unexpected EOF?
     if (in.eof())
-        inputError_ = true;
+        throw InvalidInput("Unexpected end of input stream "
+            "while attempting to read ClosedPrimeMinSearcher");
 }
 
 int ClosedPrimeMinSearcher::mergeEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
-    FacetSpec<3> adj = (*pairing_)[face];
+    FacetSpec<3> adj = pairing_[face];
 
     int retVal = 0;
 
@@ -765,7 +760,7 @@ int ClosedPrimeMinSearcher::mergeEdgeClasses() {
                 retVal |= ECLASS_LOWDEG;
             else if (edgeState[eRep].size == 3) {
                 // Flag as LOWDEG only if three distinct tetrahedra are used.
-                middleTet = pairing_->dest(face.simp, v2).simp;
+                middleTet = pairing_.dest(face.simp, v2).simp;
                 if (face.simp != adj.simp && adj.simp != middleTet &&
                         middleTet != face.simp)
                     retVal |= ECLASS_LOWDEG;

@@ -141,6 +141,25 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         FacetPairingBase(const Triangulation<dim>& tri);
 
         /**
+         * Reads a new facet pairing from the given input stream.  This
+         * routine reads data in the format written by toTextRep().
+         *
+         * This routine will skip any initial whitespace in the given input
+         * stream.  Once it finds its first non-whitespace character,
+         * it will read the \e entire line from the input stream and expect
+         * that line to containin the text representation of a facet pairing.
+         *
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
+         *
+         * \ifacespython Not present.
+         *
+         * @param in the input stream from which to read.
+         */
+        FacetPairingBase(std::istream& in);
+
+        /**
          * Deallocates any memory used by this structure.
          */
         ~FacetPairingBase();

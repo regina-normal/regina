@@ -65,6 +65,23 @@ class FailedPrecondition : public std::exception {
         }
 };
 
+/**
+ * An exception thrown when a function reads unexpected or incomplete
+ * data from an input stream.
+ */
+class InvalidInput : public std::exception {
+    private:
+        std::string msg_; /**< Details of the error. */
+
+    public:
+        InvalidInput(const std::string msg) : msg_(msg) {
+        }
+
+        const char * what() const noexcept override {
+            return msg_.c_str();
+        }
+};
+
 /*@}*/
 
 } // namespace regina

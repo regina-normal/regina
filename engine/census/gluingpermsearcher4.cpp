@@ -197,21 +197,19 @@ bool GluingPermSearcher<4>::PentTriangleState::readData(std::istream& in,
 }
 
 GluingPermSearcher<4>::GluingPermSearcher(
-        const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
-        bool orientableOnly, bool finiteOnly,
-        GluingPermSearcher<4>::Use use, void* useArgs) :
-        GluingPerms<4>(pairing), autos_(autos), autosNew_(autos == 0),
+        FacetPairing<4>&& pairing, const FacetPairing<4>::IsoList* autos,
+        bool orientableOnly, bool finiteOnly, ActionWrapper&& action) :
+        GluingPerms<4>(std::move(pairing)),
+        // pairing is no longer usable, must use pairing_ instead
+        autos_(autos), autosNew_(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
-        use_(use), useArgs_(useArgs),
-        started_(false),
-        orientation_(new int[pairing->size()]) {
+        action_(std::move(action)), started_(false),
+        orientation_(new int[pairing_.size()]) {
     // Generate the list of facet pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew_) {
         const_cast<GluingPermSearcher<4>*>(this)->autos_ =
-            new FacetPairing<4>::IsoList();
-        pairing->findAutomorphisms(
-            const_cast<FacetPairing<4>::IsoList&>(*autos_));
+            new FacetPairing<4>::IsoList(pairing_.findAutomorphisms());
     }
 
     // Initialise arrays.
@@ -227,8 +225,8 @@ GluingPermSearcher<4>::GluingPermSearcher(
 
     FacetSpec<4> facet, adj;
     for (facet.setFirst(); ! facet.isPastEnd(nPent, true); facet++)
-        if (! pairing->isUnmatched(facet))
-            if (facet < pairing->dest(facet))
+        if (! pairing_.isUnmatched(facet))
+            if (facet < pairing_.dest(facet))
                 order_[orderSize_++] = facet;
 
     // ---------- Tracking of edge / triangle equivalence classes ----------
@@ -268,30 +266,8 @@ GluingPermSearcher<4>::~GluingPermSearcher() {
     if (autosNew_) {
         // We made them, so we'd better remove the const again and
         // delete them.
-        FacetPairing<4>::IsoList* autos =
-            const_cast<FacetPairing<4>::IsoList*>(autos_);
-        for (auto a : *autos)
-            delete a;
-        delete autos;
+        delete const_cast<FacetPairing<4>::IsoList*>(autos_);
     }
-}
-
-GluingPermSearcher<4>* GluingPermSearcher<4>::bestSearcher(
-        const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
-        bool orientableOnly, bool finiteOnly,
-        GluingPermSearcher<4>::Use use, void* useArgs) {
-    // Do everything by brute force for now.
-    return new GluingPermSearcher<4>(pairing, autos,
-        orientableOnly, finiteOnly, use, useArgs);
-}
-
-void GluingPermSearcher<4>::findAllPerms(const FacetPairing<4>* pairing,
-        const FacetPairing<4>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, GluingPermSearcher<4>::Use use, void* useArgs) {
-    GluingPermSearcher<4>* searcher = bestSearcher(pairing, autos,
-        orientableOnly, finiteOnly, use, useArgs);
-    searcher->runSearch();
-    delete searcher;
 }
 
 void GluingPermSearcher<4>::runSearch(long maxDepth) {
@@ -308,9 +284,8 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
         started_ = true;
 
         // Do we in fact have no permutation at all to choose?
-        if (maxDepth == 0 || pairing_->dest(0, 0).isBoundary(nPentachora)) {
-            use_(this, useArgs_);
-            use_(0, useArgs_);
+        if (maxDepth == 0 || pairing_.dest(0, 0).isBoundary(nPentachora)) {
+            action_(*this);
             return;
         }
 
@@ -321,8 +296,7 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
     // Is it a partial search that has already finished?
     if (orderElt_ == orderSize_) {
         if (isCanonical())
-            use_(this, useArgs_);
-        use_(0, useArgs_);
+            action_(*this);
         return;
     }
 
@@ -335,7 +309,7 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
 
     while (orderElt_ >= minOrder) {
         facet = order_[orderElt_];
-        adj = (*pairing_)[facet];
+        adj = pairing_[facet];
 
         // TODO: Check for cancellation.
 
@@ -408,7 +382,7 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             if (isCanonical())
-                use_(this, useArgs_);
+                action_(*this);
 
             // Back to the previous facet.
             orderElt_--;
@@ -426,9 +400,9 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
             // We've moved onto a new facet.
             // Be sure to get the orientation right.
             facet = order_[orderElt_];
-            if (orientableOnly_ && pairing_->dest(facet).facet > 0) {
+            if (orientableOnly_ && pairing_.dest(facet).facet > 0) {
                 // permIndex(facet) will be set to -1 or -2 as appropriate.
-                adj = (*pairing_)[facet];
+                adj = pairing_[facet];
                 if (orientation_[facet.simp] == orientation_[adj.simp])
                     permIndex(facet) = 1;
                 else
@@ -444,7 +418,7 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
                 // We haven't found an entire triangulation, but we've
                 // gone as far as we need to.
                 // Process it, then step back.
-                use_(this, useArgs_);
+                action_(*this);
 
                 // Back to the previous facet.
                 permIndex(facet) = -1;
@@ -538,35 +512,11 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
                     << std::endl;
     }
 #endif
-
-    use_(0, useArgs_);
 }
 
 void GluingPermSearcher<4>::dumpTaggedData(std::ostream& out) const {
     out << dataTag() << std::endl;
     dumpData(out);
-}
-
-GluingPermSearcher<4>* GluingPermSearcher<4>::readTaggedData(std::istream& in,
-        GluingPermSearcher<4>::Use use, void* useArgs) {
-    // Read the class marker.
-    char c;
-    in >> c;
-    if (in.eof())
-        return 0;
-
-    GluingPermSearcher<4>* ans;
-    if (c == GluingPermSearcher<4>::dataTag_)
-        ans = new GluingPermSearcher<4>(in, use, useArgs);
-    else
-        return 0;
-
-    if (ans->inputError()) {
-        delete ans;
-        return 0;
-    }
-
-    return ans;
 }
 
 void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
@@ -623,20 +573,15 @@ void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
 }
 
 GluingPermSearcher<4>::GluingPermSearcher(std::istream& in,
-        GluingPermSearcher<4>::Use use, void* useArgs) :
+        ActionWrapper&& action) :
         GluingPerms<4>(in), autos_(0), autosNew_(false),
-        use_(use), useArgs_(useArgs), orientation_(0),
+        action_(std::move(action)), orientation_(0),
         order_(0), orderSize_(0), orderElt_(0),
         nEdgeClasses_(0), edgeState_(0), edgeStateChanged_(0),
         nTriangleClasses_(0), triState_(0), triStateChanged_(0) {
-    if (inputError_)
-        return;
-
     // Recontruct the facet pairing automorphisms.
     const_cast<GluingPermSearcher<4>*>(this)->autos_ =
-        new FacetPairing<4>::IsoList();
-    pairing_->findAutomorphisms(const_cast<FacetPairing<4>::IsoList&>(
-        *autos_));
+        new FacetPairing<4>::IsoList(pairing_.findAutomorphisms());
     autosNew_ = true;
 
     // Keep reading.
@@ -647,29 +592,29 @@ GluingPermSearcher<4>::GluingPermSearcher(std::istream& in,
         orientableOnly_ = true;
     else if (c == '.')
         orientableOnly_ = false;
-    else {
-        inputError_ = true; return;
-    }
+    else
+        throw InvalidInput("Invalid orientability tag "
+            "while attempting to read GluingPermSearcher<3>");
 
     in >> c;
     if (c == 'f')
         finiteOnly_ = true;
     else if (c == '.')
         finiteOnly_ = false;
-    else {
-        inputError_ = true; return;
-    }
+    else
+        throw InvalidInput("Invalid finiteness tag "
+            "while attempting to read GluingPermSearcher<3>");
 
     in >> c;
     if (c == 's')
         started_ = true;
     else if (c == '.')
         started_ = false;
-    else {
-        inputError_ = true; return;
-    }
+    else
+        throw InvalidInput("Invalid started tag "
+            "while attempting to read GluingPermSearcher<3>");
 
-    int nPent = pairing_->size();
+    int nPent = pairing_.size();
     int p;
 
     orientation_ = new int[nPent];
@@ -681,84 +626,84 @@ GluingPermSearcher<4>::GluingPermSearcher(std::istream& in,
     for (p = 0; p < orderSize_; ++p) {
         in >> order_[p].simp >> order_[p].facet;
         if (order_[p].simp >= nPent || order_[p].simp < 0 ||
-                order_[p].facet >= 5 || order_[p].facet < 0) {
-            inputError_ = true; return;
-        }
+                order_[p].facet >= 5 || order_[p].facet < 0)
+            throw InvalidInput("Facet gluing out of range "
+                "while attempting to read GluingPermSearcher<3>");
     }
 
     // Did we hit an unexpected EOF?
-    if (in.eof()) {
-        inputError_ = true; return;
-    }
+    if (in.eof())
+        throw InvalidInput("Unexpected end of input stream "
+            "while attempting to read GluingPermSearcher<4>");
 
     // ---------- Tracking of edge / triangle equivalence classes ----------
 
     unsigned i;
 
     in >> nEdgeClasses_;
-    if (nEdgeClasses_ > 10 * nPent) {
-        inputError_ = true; return;
-    }
+    if (nEdgeClasses_ > 10 * nPent)
+        throw InvalidInput("Edge classes out of range "
+            "while attempting to read GluingPermSearcher<4>");
 
     edgeState_ = new PentEdgeState[10 * nPent];
     for (i = 0; i < 10 * nPent; ++i)
-        if (! edgeState_[i].readData(in, 10 * nPent)) {
-            inputError_ = true; return;
-        }
+        if (! edgeState_[i].readData(in, 10 * nPent))
+            throw InvalidInput("Invalid edge state "
+                "while attempting to read GluingPermSearcher<3>");
 
     edgeStateChanged_ = new int[25 * nPent];
     for (i = 0; i < 25 * nPent; ++i) {
         in >> edgeStateChanged_[i];
         if (edgeStateChanged_[i] < -1 ||
-                 edgeStateChanged_[i] >= 10 * static_cast<int>(nPent)) {
-            inputError_ = true; return;
-        }
+                 edgeStateChanged_[i] >= 10 * static_cast<int>(nPent))
+            throw InvalidInput("Invalid edge state changed "
+                "while attempting to read GluingPermSearcher<3>");
     }
 
     in >> nTriangleClasses_;
-    if (nTriangleClasses_ > 10 * nPent) {
-        inputError_ = true; return;
-    }
+    if (nTriangleClasses_ > 10 * nPent)
+        throw InvalidInput("Triangle classes out of range "
+            "while attempting to read GluingPermSearcher<4>");
 
     triState_ = new PentTriangleState[10 * nPent];
     for (i = 0; i < 10 * nPent; ++i)
-        if (! triState_[i].readData(in, 10 * nPent)) {
-            inputError_ = true; return;
-        }
+        if (! triState_[i].readData(in, 10 * nPent))
+            throw InvalidInput("Invalid triangle state "
+                "while attempting to read GluingPermSearcher<3>");
 
     triStateChanged_ = new int[25 * nPent / 2];
     for (i = 0; i < 25 * nPent / 2; ++i) {
         in >> triStateChanged_[i];
         if (triStateChanged_[i] < -1 ||
-                 triStateChanged_[i] >= 10 * static_cast<int>(nPent)) {
-            inputError_ = true; return;
-        }
+                 triStateChanged_[i] >= 10 * static_cast<int>(nPent))
+            throw InvalidInput("Invalid triangle state changed "
+                "while attempting to read GluingPermSearcher<3>");
     }
 
     // Did we hit an unexpected EOF?
     if (in.eof())
-        inputError_ = true;
+        throw InvalidInput("Unexpected end of input stream "
+            "while attempting to read GluingPermSearcher<4>");
 }
 
 bool GluingPermSearcher<4>::isCanonical() const {
     FacetSpec<4> facet, facetDest, facetImage;
     int ordering;
 
-    for (FacetPairing<4>::IsoList::const_iterator it = autos_->begin();
-            it != autos_->end(); ++it) {
+    for (const auto& iso : *autos_) {
         // Compare the current set of gluing permutations with its
         // preimage under each facet pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
         for (facet.setFirst(); facet.simp <
-                static_cast<int>(pairing_->size()); facet++) {
-            facetDest = pairing_->dest(facet);
-            if (pairing_->isUnmatched(facet) || facetDest < facet)
+                static_cast<int>(pairing_.size()); facet++) {
+            facetDest = pairing_.dest(facet);
+            if (pairing_.isUnmatched(facet) || facetDest < facet)
                 continue;
 
-            facetImage = (**it)[facet];
+            facetImage = iso[facet];
             ordering = gluingPerm(facet).compareWith(
-                (*it)->facetPerm(facetDest.simp).inverse()
-                * gluingPerm(facetImage) * (*it)->facetPerm(facet.simp));
+                iso.facetPerm(facetDest.simp).inverse()
+                * gluingPerm(facetImage) * iso.facetPerm(facet.simp));
             if (ordering < 0) {
                 // This permutation set is closer.
                 break;
@@ -807,11 +752,11 @@ bool GluingPermSearcher<4>::badTriangleLink(const FacetSpec<4>& facet) const {
             current = current * Perm<5>(3, 4);
 
             // Push across a facet.
-            if (pairing_->isUnmatched(pent, current[4])) {
+            if (pairing_.isUnmatched(pent, current[4])) {
                 incomplete = true;
                 break;
             }
-            adj = pairing_->dest(pent, current[4]);
+            adj = pairing_.dest(pent, current[4]);
 
             if (permIndex(pent, current[4]) >= 0) {
                 current = gluingPerm(pent, current[4]) * current;
@@ -837,7 +782,7 @@ bool GluingPermSearcher<4>::badTriangleLink(const FacetSpec<4>& facet) const {
 bool GluingPermSearcher<4>::mergeEdgeClasses() {
     // Merge all six edge pairs for the current facet.
     FacetSpec<4> facet = order_[orderElt_];
-    FacetSpec<4> adj = (*pairing_)[facet];
+    FacetSpec<4> adj = pairing_[facet];
 
     bool retVal = false;
 
@@ -1147,7 +1092,7 @@ bool GluingPermSearcher<4>::mergeEdgeClasses() {
 
 void GluingPermSearcher<4>::splitEdgeClasses() {
     FacetSpec<4> facet = order_[orderElt_];
-    FacetSpec<4> adj = (*pairing_)[facet];
+    FacetSpec<4> adj = pairing_[facet];
 
     int v1, v2, v3, w1, w2, w3;
     int e, f;
@@ -1256,7 +1201,7 @@ void GluingPermSearcher<4>::splitEdgeClasses() {
 
 bool GluingPermSearcher<4>::mergeTriangleClasses() {
     FacetSpec<4> facet = order_[orderElt_];
-    FacetSpec<4> adj = (*pairing_)[facet];
+    FacetSpec<4> adj = pairing_[facet];
 
     bool retVal = false;
 
@@ -1412,7 +1357,7 @@ void GluingPermSearcher<4>::edgeBdryNext(int edgeID, int pent, int edge,
                     // to either the pentachoron triangle we are currently
                     // working with or its adjacent partner.
                     int ghostTriangle = (bdryFacet == order_[orderElt_].facet ?
-                        (*pairing_)[order_[orderElt_]].facet :
+                        pairing_[order_[orderElt_]].facet :
                         order_[orderElt_].facet);
                     if (edgeLinkNextFacet[edge][bdryFacet] == ghostTriangle) {
                         next[0] = edgeState_[edgeID].bdryNext[0];

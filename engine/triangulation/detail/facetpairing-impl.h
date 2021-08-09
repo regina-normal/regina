@@ -49,6 +49,7 @@
 #include <vector>
 #include "triangulation/generic/facetpairing.h"
 #include "maths/perm.h"
+#include "utilities/exception.h"
 #include "utilities/stringutils.h"
 
 namespace regina::detail {
@@ -73,6 +74,30 @@ FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
             ++index;
         }
     }
+}
+
+template <int dim>
+FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
+        size_(0), pairs_(nullptr) {
+    // Skip initial whitespace to find the facet pairing.
+    std::string line;
+    while (true) {
+        std::getline(in, line);
+        if (in.eof()) {
+            throw InvalidInput("Unexpected end of input stream "
+                "while attempting to read a FacetPairing");
+        }
+        line = regina::stripWhitespace(line);
+        if (line.length() > 0)
+            break;
+    }
+
+    auto ans = fromTextRep(line);
+    if (ans)
+        *this = *ans;
+    else
+        throw InvalidInput(
+            "Incorrect formatted FacetPairing text representation");
 }
 
 template <int dim>
@@ -200,24 +225,24 @@ std::optional<FacetPairing<dim>> FacetPairingBase<dim>::fromTextRep(
             return std::nullopt;
         if (val < 0 || val > nSimp)
             return std::nullopt;
-        ans->pairs_[i].simp = val;
+        ans.pairs_[i].simp = val;
 
         if (! valueOf(tokens[2 * i + 1], val)) {
             return std::nullopt;
         }
         if (val < 0 || val >= (dim + 1))
             return std::nullopt;
-        ans->pairs_[i].facet = val;
+        ans.pairs_[i].facet = val;
     }
 
     // Run a sanity check.
     FacetSpec<dim> destFacet;
     bool broken = false;
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
-        destFacet = ans->dest(f);
+        destFacet = ans.dest(f);
         if (destFacet.simp == nSimp && destFacet.facet != 0)
             broken = true;
-        else if (destFacet.simp < nSimp && ! (ans->dest(destFacet) == f))
+        else if (destFacet.simp < nSimp && ! (ans.dest(destFacet) == f))
             broken = true;
         else
             continue;

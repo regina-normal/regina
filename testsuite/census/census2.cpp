@@ -105,25 +105,19 @@ class Census2Test : public CppUnit::TestFixture {
                 orbl_(orbl), minimal_(minimal), count_(0) {}
         };
 
-        static void foundPerms(const GluingPermSearcher<2>* perms, void* spec) {
-            if (perms) {
-                CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Triangulation<2>* tri = perms->triangulate();
-                if ((! (s->minimal_ && ! tri->isMinimal())) &&
-                        (! (s->orbl_ == true && ! tri->isOrientable())) &&
-                        (! (s->orbl_ == false && tri->isOrientable())))
-                    ++s->count_;
-                delete tri;
-            }
+        static void foundPerms(const GluingPerms<2>& perms, CensusSpec* spec) {
+            Triangulation<2>* tri = perms.triangulate();
+            if ((! (spec->minimal_ && ! tri->isMinimal())) &&
+                    (! (spec->orbl_ == true && ! tri->isOrientable())) &&
+                    (! (spec->orbl_ == false && tri->isOrientable())))
+                ++spec->count_;
+            delete tri;
         }
 
-        static void foundPairing(const FacetPairing<2>* pairing,
-                const FacetPairing<2>::IsoList* autos, void* spec) {
-            if (pairing) {
-                CensusSpec* s = static_cast<CensusSpec*>(spec);
-                GluingPermSearcher<2>::findAllPerms(pairing, autos,
-                    ! s->orbl_.hasFalse(), foundPerms, spec);
-            }
+        static void foundPairing(const FacetPairing<2>& pairing,
+                const FacetPairing<2>::IsoList& autos, CensusSpec* spec) {
+            GluingPermSearcher<2>::findAllPerms(pairing, &autos,
+                ! spec->orbl_.hasFalse(), foundPerms, spec);
         }
 
 

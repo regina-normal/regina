@@ -40,10 +40,12 @@
 #define __REGINA_GLUINGPERMSEARCHER3_H
 #endif
 
+#include <functional>
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing3.h"
+#include "utilities/exception.h"
 #include "utilities/qitmask.h"
 
 /**
@@ -105,25 +107,6 @@ namespace regina {
 template <>
 class GluingPermSearcher<3> : public GluingPerms<3> {
     public:
-        /**
-         * A routine that can do arbitrary processing upon a set of gluing
-         * permutations.  Such routines are used to process permutation
-         * sets that are found when running census-building routines such as
-         * findAllPerms().
-         *
-         * The first parameter passed will be a set of gluing permutations
-         * (as this class derives from GluingPerms<3>).  This set of gluing
-         * permutations must not be deallocated by this routine, since it may
-         * be used again later by the caller.  The second parameter may contain
-         * arbitrary data; typically this will be the data passed to the
-         * relevant search routine, such as findAllPerms() or the
-         * GluingPermSearcher class constructor.
-         *
-         * Note that the first parameter passed might be \c null to signal that
-         * gluing permutation generation has finished.
-         */
-        typedef void (*Use)(const GluingPermSearcher<3>*, void*);
-
         static constexpr char dataTag_ = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
@@ -177,6 +160,10 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
         };
 
     protected:
+        typedef std::function<void(const GluingPerms<3>&)> ActionWrapper;
+            /**< The type used to hold the user's action function and
+                 arguments when enumerating gluing permutations. */
+
         const FacetPairing<3>::IsoList* autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
@@ -195,12 +182,11 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
                  avoid constructing?  This should be a bitwise OR of constants
                  from the PurgeFlags enumeration.  See the constructor
                  documentation for further details on this search parameter. */
-        GluingPermSearcher<3>::Use use_;
-            /**< A routine to call each time a gluing permutation set is
-                 found during the search. */
-        void* useArgs_;
-            /**< Additional user-supplied data to be passed as the second
-                 argument to the \a use_ routine. */
+        ActionWrapper action_;
+            /**< The action to perform each time a gluing permutation set is
+                 found during the search.  This incorporates the user's
+                 callback function along with any extra arguments that
+                 the user wants passed to it. */
 
         bool started;
             /**< Has the search started yet?  This helps distinguish
@@ -246,8 +232,18 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * searching, and is the preferred entry point for end users.
          *
          * The arguments to this constructor describe the search
-         * parameters in detail, as well as what should be done with
-         * each gluing permutation set that is found.
+         * parameters in detail.
+         *
+         * For each facet pairing that is generated, this routine will call
+         * \a action (which must be a function or some other callable object).
+         *
+         * - The first argument to \a action must be a const reference to a
+         *   GluingPerms<3>.  This will be the permutation set that was found.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
          *
          * Parameter \a whichPurge may be used to avoid constructing
          * permutation sets that correspond to triangulations satisfying
@@ -278,6 +274,11 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param pairing the specific pairing of tetrahedron faces
          * that the generated permutation sets will complement.
          * @param autos the collection of isomorphisms that define equivalence
@@ -304,18 +305,16 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * constraints may be avoided.  Note that not all such
          * permutation sets will be avoided, but enough are avoided that
          * the performance increase is noticeable.
-         * @param use the function to call upon each permutation set that
-         * is found.  The first parameter passed to this function will be
-         * a gluing permutation set.  The second parameter will be
-         * parameter \a useArgs as was passed to this routine.
-         * @param useArgs the pointer to pass as the final parameter for
-         * the function \a use which will be called upon each permutation
-         * set found.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        GluingPermSearcher(const FacetPairing<3>* pairing,
+        template <typename Action, typename... Args>
+        GluingPermSearcher(FacetPairing<3> pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+                Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -326,20 +325,27 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param in the input stream from which to read.
-         * @param use as for the main GluingPermSearcher<3> constructor.
-         * @param useArgs as for the main GluingPermSearcher<3> constructor.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        GluingPermSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        template <typename Action, typename... Args>
+        GluingPermSearcher(std::istream& in, Action&& action, Args&&... args);
 
         /**
          * Destroys this search manager and all supporting data
@@ -357,13 +363,9 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * once up to equivalence, where equivalence is defined by the
          * given set of automorphisms of the given face pairing.
          *
-         * For each permutation set that is generated, routine \a use_ (as
-         * passed to the class constructor) will be called with that
-         * permutation set as an argument.
-         *
-         * Once the generation of permutation sets has finished, routine
-         * \a use_ will be called once more, this time with \c null as its
-         * first (permutation set) argument.
+         * For each permutation set \a p that is generated, the function
+         * or callable object \a action_ (as passed to the class constructor)
+         * will be called with a const reference to \a p as its first argument.
          *
          * Subclasses corresponding to more specialised search criteria
          * should override this routine to use a better optimised algorithm
@@ -375,7 +377,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * produce a series of partially-complete GluingPermSearcher<3>
          * objects.  These partial searches may then be restarted by
          * calling runSearch() once more (usually after being frozen or
-         * passed on to a different processor).  If necessary, the \a use_
+         * passed on to a different processor).  If necessary, the \a action_
          * routine may call completePermSet() to distinguish between
          * a complete set of gluing permutations and a partial search state.
          *
@@ -397,7 +399,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * gluing permutation set or just a partially completed search
          * state.
          *
-         * This may assist the \a use_ routine when running partial
+         * This may assist the \a action_ routine when running partial
          * depth-based searches.  See runSearch() for further details.
          *
          * @return \c true if a complete gluing permutation set is held,
@@ -443,11 +445,17 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * \pre The given face pairing is in canonical form as described
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
          */
-        static void findAllPerms(const FacetPairing<3>* pairing,
+        template <typename Action, typename... Args>
+        static void findAllPerms(FacetPairing<3> pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+                Action&& action, Args&&... args);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -474,13 +482,19 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @return the newly created search manager.
          */
+        template <typename Action, typename... Args>
         static GluingPermSearcher<3>* bestSearcher(
-                const FacetPairing<3>* pairing,
+                FacetPairing<3> pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+                Action&& action, Args&&... args);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -500,23 +514,59 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * and it is the responsibility of the caller of this routine to
          * destroy it after use.
          *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param in the input stream from which to read.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
+        template <typename Action, typename... Args>
         static GluingPermSearcher<3>* readTaggedData(std::istream& in,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+                Action&& action, Args&&... args);
 
         // Make this class non-copyable.
         // The base class GluingPerms already makes it non-assignable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
 
     protected:
+        /**
+         * A de-templatised version of the main public constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing both \a pairing and \a action, and so
+         * we insist on rvalue references so these can be moved instead of
+         * copied.
+         */
+        GluingPermSearcher(FacetPairing<3>&& pairing,
+            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            bool finiteOnly, int whichPurge, ActionWrapper&& action);
+
+        /**
+         * A de-templatised version of the public input stream constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing \a action, and so we insist on
+         * an rvalue reference so this can be moved instead of copied.
+         */
+        GluingPermSearcher(std::istream& in, ActionWrapper&& action);
+
         /**
          * Compares the current set of gluing permutations with its
          * preimage under each automorphism of the underlying face pairing,
@@ -1093,15 +1143,21 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param useEuler the Euler characteristic that vertex links must
          * have.  For boundary vertices, this is the Euler characteristic
          * of the closed surface that would be obtained if the puncture in
          * the vertex link were filled.
          */
-        EulerSearcher(int useEuler, const FacetPairing<3>* pairing,
+        template <typename Action, typename... Args>
+        EulerSearcher(int useEuler, FacetPairing<3> pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+                Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1112,21 +1168,27 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
-         *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param in the input stream from which to read.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        EulerSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        template <typename Action, typename... Args>
+        EulerSearcher(std::istream& in, Action&& action, Args&&... args);
 
         /**
          * Destroys this search manager and all supporting data
@@ -1139,6 +1201,35 @@ class EulerSearcher : public GluingPermSearcher<3> {
         virtual void runSearch(long maxDepth = -1) override;
 
     protected:
+        /**
+         * A de-templatised version of the main public constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing both \a pairing and \a action, and so
+         * we insist on rvalue references so these can be moved instead of
+         * copied.
+         */
+        EulerSearcher(int useEuler, FacetPairing<3>&& pairing,
+            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            int whichPurge, ActionWrapper&& action);
+
+        /**
+         * A de-templatised version of the public input stream constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing \a action, and so we insist on
+         * an rvalue reference so this can be moved instead of copied.
+         */
+        EulerSearcher(std::istream& in, ActionWrapper&& action);
+
         // Overridden methods:
         virtual char dataTag() const override;
 
@@ -1890,11 +1981,17 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * \pre The given face pairing is in canonical form as described
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
          */
-        CompactSearcher(const FacetPairing<3>* pairing,
+        template <typename Action, typename... Args>
+        CompactSearcher(FacetPairing<3> pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+                Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1905,21 +2002,27 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
-         *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param in the input stream from which to read.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        CompactSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        template <typename Action, typename... Args>
+        CompactSearcher(std::istream& in, Action&& action, Args&&... args);
 
         /**
          * Destroys this search manager and all supporting data
@@ -1932,6 +2035,35 @@ class CompactSearcher : public GluingPermSearcher<3> {
         virtual void runSearch(long maxDepth = -1) override;
 
     protected:
+        /**
+         * A de-templatised version of the main public constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing both \a pairing and \a action, and so
+         * we insist on rvalue references so these can be moved instead of
+         * copied.
+         */
+        CompactSearcher(FacetPairing<3>&& pairing,
+            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            int whichPurge, ActionWrapper&& action);
+
+        /**
+         * A de-templatised version of the public input stream constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing \a action, and so we insist on
+         * an rvalue reference so this can be moved instead of copied.
+         */
+        CompactSearcher(std::istream& in, ActionWrapper&& action);
+
         // Overridden methods:
         virtual char dataTag() const override;
 
@@ -2407,11 +2539,16 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          * \pre The given face pairing has no boundary faces and has at
          * least three tetrahedra.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
          */
-        ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
+        template <typename Action, typename... Args>
+        ClosedPrimeMinSearcher(FacetPairing<3> pairing,
                 const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<3>::Use use,
-                void* useArgs = nullptr);
+                bool orientableOnly, Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2422,21 +2559,28 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
-         *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param in the input stream from which to read.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
+        template <typename Action, typename... Args>
         ClosedPrimeMinSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+            Action&& action, Args&&... args);
 
         /**
          * Destroys this search manager and all supporting data
@@ -2449,6 +2593,35 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
         virtual void runSearch(long maxDepth = -1) override;
 
     protected:
+        /**
+         * A de-templatised version of the main public constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing both \a pairing and \a action, and so
+         * we insist on rvalue references so these can be moved instead of
+         * copied.
+         */
+        ClosedPrimeMinSearcher(FacetPairing<3>&& pairing,
+            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            ActionWrapper&& action);
+
+        /**
+         * A de-templatised version of the public input stream constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing \a action, and so we insist on
+         * an rvalue reference so this can be moved instead of copied.
+         */
+        ClosedPrimeMinSearcher(std::istream& in, ActionWrapper&& action);
+
         // Overridden methods:
         virtual char dataTag() const override;
 
@@ -2549,11 +2722,16 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          * \pre The given face pairing has no boundary faces.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
          */
-        HyperbolicMinSearcher(const FacetPairing<3>* pairing,
+        template <typename Action, typename... Args>
+        HyperbolicMinSearcher(FacetPairing<3> pairing,
                 const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<3>::Use use,
-                void* useArgs = nullptr);
+                bool orientableOnly, Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2564,27 +2742,63 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
-         *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap then in std::ref or
+         * std::cref.
+         *
          * @param in the input stream from which to read.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
+        template <typename Action, typename... Args>
         HyperbolicMinSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+            Action&& action, Args&&... args);
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const override;
         virtual void runSearch(long maxDepth = -1) override;
 
     protected:
+        /**
+         * A de-templatised version of the main public constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing both \a pairing and \a action, and so
+         * we insist on rvalue references so these can be moved instead of
+         * copied.
+         */
+        HyperbolicMinSearcher(FacetPairing<3>&& pairing,
+            const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+            ActionWrapper&& action);
+
+        /**
+         * A de-templatised version of the public input stream constructor.
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * See the public input stream constructor for further details.
+         *
+         * We will eventually be storing \a action, and so we insist on
+         * an rvalue reference so this can be moved instead of copied.
+         */
+        HyperbolicMinSearcher(std::istream& in, ActionWrapper&& action);
+
         // Overridden methods:
         virtual char dataTag() const override;
 
@@ -2633,12 +2847,109 @@ class HyperbolicMinSearcher : public EulerSearcher {
 
 // Inline functions for GluingPermSearcher<3>
 
+template <typename Action, typename... Args>
+inline GluingPermSearcher<3>::GluingPermSearcher(FacetPairing<3> pairing,
+        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        bool finiteOnly, int whichPurge, Action&& action, Args&&... args) :
+        // Delegate to a de-templatised constructor.
+        GluingPermSearcher<3>(std::move(pairing), autos,
+            orientableOnly, finiteOnly, whichPurge,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
+template <typename Action, typename... Args>
+inline GluingPermSearcher<3>::GluingPermSearcher(std::istream& in,
+        Action&& action, Args&&...  args) :
+        // Delegate to a de-templatised constructor.
+        GluingPermSearcher<3>(in,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
 inline bool GluingPermSearcher<3>::completePermSet() const {
     return (orderElt == orderSize);
 }
 
 inline char GluingPermSearcher<3>::dataTag() const {
     return GluingPermSearcher<3>::dataTag_;
+}
+
+template <typename Action, typename... Args>
+inline GluingPermSearcher<3>* GluingPermSearcher<3>::readTaggedData(
+        std::istream& in, Action&& action, Args&&... args) {
+    // Read the class marker.
+    char c;
+    in >> c;
+    if (in.eof())
+        return nullptr;
+
+    try {
+        switch (c) {
+            case GluingPermSearcher<3>::dataTag_:
+                return new GluingPermSearcher<3>(in,
+                    std::forward<Action>(action), std::forward<Args>(args)...);
+            case CompactSearcher::dataTag_:
+                return new CompactSearcher(in,
+                    std::forward<Action>(action), std::forward<Args>(args)...);
+            case ClosedPrimeMinSearcher::dataTag_:
+                return new ClosedPrimeMinSearcher(in,
+                    std::forward<Action>(action), std::forward<Args>(args)...);
+            case HyperbolicMinSearcher::dataTag_:
+                return new HyperbolicMinSearcher(in,
+                    std::forward<Action>(action), std::forward<Args>(args)...);
+            default:
+                return nullptr;
+        }
+    } catch (const InvalidInput&) {
+        return nullptr;
+    }
+}
+
+template <typename Action, typename... Args>
+inline GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
+        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        bool orientableOnly, bool finiteOnly, int whichPurge,
+        Action&& action, Args&&... args) {
+    // Use an optimised algorithm if possible.
+    if (finiteOnly) {
+        if (pairing.isClosed() && pairing.size() >= 3 &&
+                (whichPurge & PURGE_NON_MINIMAL) &&
+                (whichPurge & PURGE_NON_PRIME) &&
+                (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {
+            // Closed prime minimal P2-irreducible triangulations with >= 3
+            // tetrahedra.
+            return new ClosedPrimeMinSearcher(std::move(pairing), autos,
+                orientableOnly, std::forward<Action>(action),
+                std::forward<Args>(args)...);
+        }
+        return new CompactSearcher(std::move(pairing), autos, orientableOnly,
+            whichPurge, std::forward<Action>(action),
+            std::forward<Args>(args)...);
+    }
+
+    if (pairing.isClosed() && ((whichPurge & PURGE_NON_MINIMAL_HYP) ==
+            PURGE_NON_MINIMAL_HYP))
+        return new HyperbolicMinSearcher(std::move(pairing), autos,
+            orientableOnly, std::forward<Action>(action),
+            std::forward<Args>(args)...);
+
+    return new GluingPermSearcher<3>(std::move(pairing), autos, orientableOnly,
+        finiteOnly, whichPurge, std::forward<Action>(action),
+        std::forward<Args>(args)...);
+}
+
+template <typename Action, typename... Args>
+inline void GluingPermSearcher<3>::findAllPerms(FacetPairing<3> pairing,
+        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        bool finiteOnly, int whichPurge, Action&& action, Args&&... args) {
+    GluingPermSearcher<3>* searcher = bestSearcher(std::move(pairing), autos,
+        orientableOnly, finiteOnly, whichPurge,
+        std::forward<Action>(action), std::forward<Args>(args)...);
+    searcher->runSearch();
+    delete searcher;
 }
 
 // Inline functions for EulerSearcher
@@ -2651,6 +2962,28 @@ inline EulerSearcher::TetVertexState::TetVertexState() :
 inline EulerSearcher::TetEdgeState::TetEdgeState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp(0),
         hadEqualRank(false) {
+}
+
+template <typename Action, typename... Args>
+inline EulerSearcher::EulerSearcher(int useEuler,
+        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        bool orientableOnly, int whichPurge, Action&& action, Args&&... args) :
+        // Delegate to a de-templatised constructor.
+        EulerSearcher(useEuler, std::move(pairing), autos, orientableOnly,
+            whichPurge,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
+template <typename Action, typename... Args>
+inline EulerSearcher::EulerSearcher(std::istream& in,
+        Action&& action, Args&&...  args) :
+        // Delegate to a de-templatised constructor.
+        EulerSearcher(in,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
 }
 
 inline EulerSearcher::~EulerSearcher() {
@@ -2741,7 +3074,7 @@ inline void EulerSearcher::vtxBdryNext(int vertexID,
                     // to either the tetrahedron face we are currently
                     // working with or its adjacent partner.
                     int ghostFace = (bdryFace == order[orderElt].facet ?
-                        (*pairing_)[order[orderElt]].facet :
+                        pairing_[order[orderElt]].facet :
                         order[orderElt].facet);
                     if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
                         next[0] = vertexState[vertexID].bdryNext[0];
@@ -2790,6 +3123,27 @@ inline CompactSearcher::TetVertexState::TetVertexState() :
 inline CompactSearcher::TetEdgeState::TetEdgeState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp(0),
         hadEqualRank(false) {
+}
+
+template <typename Action, typename... Args>
+inline CompactSearcher::CompactSearcher(
+        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        bool orientableOnly, int whichPurge, Action&& action, Args&&... args) :
+        // Delegate to a de-templatised constructor.
+        CompactSearcher(std::move(pairing), autos, orientableOnly, whichPurge,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
+template <typename Action, typename... Args>
+inline CompactSearcher::CompactSearcher(std::istream& in,
+        Action&& action, Args&&...  args) :
+        // Delegate to a de-templatised constructor.
+        CompactSearcher(in,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
 }
 
 inline CompactSearcher::~CompactSearcher() {
@@ -2880,7 +3234,7 @@ inline void CompactSearcher::vtxBdryNext(int vertexID,
                     // to either the tetrahedron face we are currently
                     // working with or its adjacent partner.
                     int ghostFace = (bdryFace == order[orderElt].facet ?
-                        (*pairing_)[order[orderElt]].facet :
+                        pairing_[order[orderElt]].facet :
                         order[orderElt].facet);
                     if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
                         next[0] = vertexState[vertexID].bdryNext[0];
@@ -2922,6 +3276,27 @@ inline bool CompactSearcher::vtxBdryLength2(
 
 // Inline functions for ClosedPrimeMinSearcher
 
+template <typename Action, typename... Args>
+inline ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(
+        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        bool orientableOnly, Action&& action, Args&&... args) :
+        // Delegate to a de-templatised constructor.
+        ClosedPrimeMinSearcher(std::move(pairing), autos, orientableOnly,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
+template <typename Action, typename... Args>
+inline ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in,
+        Action&& action, Args&&...  args) :
+        // Delegate to a de-templatised constructor.
+        ClosedPrimeMinSearcher(in,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
 inline ClosedPrimeMinSearcher::~ClosedPrimeMinSearcher() {
     delete[] orderType;
     if (chainPermIndices)
@@ -2933,6 +3308,32 @@ inline char ClosedPrimeMinSearcher::dataTag() const {
 }
 
 // Inline functions for HyperbolicMinSearcher
+
+template <typename Action, typename... Args>
+inline HyperbolicMinSearcher::HyperbolicMinSearcher(
+        FacetPairing<3> pairing, const FacetPairing<3>::IsoList* autos,
+        bool orientableOnly, Action&& action, Args&&... args) :
+        // Delegate to a de-templatised constructor.
+        HyperbolicMinSearcher(std::move(pairing), autos, orientableOnly,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
+template <typename Action, typename... Args>
+inline HyperbolicMinSearcher::HyperbolicMinSearcher(std::istream& in,
+        Action&& action, Args&&...  args) :
+        // Delegate to a de-templatised constructor.
+        HyperbolicMinSearcher(in,
+            ActionWrapper(
+                std::bind(std::forward<Action>(action),
+                std::placeholders::_1, std::forward<Args>(args)...))) {
+}
+
+inline HyperbolicMinSearcher::HyperbolicMinSearcher(std::istream& in,
+        ActionWrapper&& action) :
+        EulerSearcher(in, std::move(action)) {
+}
 
 inline char HyperbolicMinSearcher::dataTag() const {
     return HyperbolicMinSearcher::dataTag_;
