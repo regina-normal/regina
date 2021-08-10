@@ -30,15 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
+#include "../pybind11/stl.h"
+#include "split/sigcensus.h"
+#include "../helpers.h"
 
-void addSignature(pybind11::module_& m);
-void addSigIsomorphism(pybind11::module_& m);
-void addSigCensus(pybind11::module_& m);
+using regina::SigCensus;
 
-void addSplitClasses(pybind11::module_& m) {
-    addSignature(m);
-    addSigIsomorphism(m);
-    addSigCensus(m);
+void addSigCensus(pybind11::module_& m) {
+    auto c = pybind11::class_<SigCensus>(m, "SigCensus")
+        .def_static("formCensus", [](unsigned order,
+                const std::function<void(const regina::Signature&,
+                    const regina::SigCensus::IsoList&)>& action) {
+            SigCensus::formCensus(order, action);
+        });
+    ;
+    regina::python::no_eq_operators(c);
 }
 

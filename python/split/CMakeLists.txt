@@ -2,6 +2,8 @@
 
 # Files to compile
 SET ( FILES
+  sigcensus.cpp
+  sigisomorphism.cpp
   signature.cpp
   pysplit.cpp
   )

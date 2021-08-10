@@ -74,8 +74,6 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
- *
- * \ifacespython Not present.
  */
 class SigPartialIsomorphism {
     private:

@@ -56,8 +56,6 @@ namespace regina {
  * A utility class used by formSigCensus().  Other routines should never
  * refer to this class directly.  It is used to store temporary
  * information when forming the census.
- *
- * \ifacespython Not present.
  */
 class SigCensus {
     public:
@@ -130,7 +128,10 @@ class SigCensus {
          *
          * \todo \feature Add support for symbols of differing case.
          *
-         * \ifacespython Not present.
+         * \ifacespython This function is available, and \a action may be a
+         * pure Python function.  However, \a action cannot take any additional
+         * arguments beyond the signature and its automorphisms (and
+         * therefore the additional \a args list is omitted here).
          *
          * @param order the order of signatures to generate.
          * @param action a function (or other callable object) to call for each
@@ -145,6 +146,11 @@ class SigCensus {
         static size_t formCensus(unsigned order, Action&& action,
             Args&&... args);
 
+        /**
+         * Deallocates any memory used by this structure.
+         */
+        ~SigCensus();
+
         // Make this class non-copyable.
         SigCensus(const SigCensus&) = delete;
         SigCensus& operator = (const SigCensus&) = delete;
@@ -158,11 +164,6 @@ class SigCensus {
          */
         template <typename Action, typename... Args>
         SigCensus(unsigned order, Action&& action, Args&&... args);
-
-        /**
-         * Deallocates any memory used specifically by this structure.
-         */
-        ~SigCensus();
 
         /**
          * Runs a complete signature census generation.  At most one

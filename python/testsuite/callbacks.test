@@ -227,6 +227,17 @@ FacetPairing5.findAllPairings(2, BoolSet(False), 0, displayPairing)
 print()
 
 ########################################################################
+# Test splitting surface signature enumeration:
+########################################################################
+
+def displaySig(s, autos):
+    print('    ' + s.str(), ' -> automorphisms: ', len(autos))
+
+print('Enumerating splitting surface signatures:')
+SigCensus.formCensus(3, displaySig)
+print()
+
+########################################################################
 # Test SnapPeaTriangulation::enumerateCovers() object lifetimes:
 ########################################################################
 

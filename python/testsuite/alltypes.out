@@ -1595,6 +1595,12 @@ Equality type : EqualityType.BY_REFERENCE
 Script : class
 Equality type : EqualityType.BY_REFERENCE
 
+SigCensus : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+SigPartialIsomorphism : class
+Equality type : EqualityType.BY_REFERENCE
+
 Signature : class
 Equality type : EqualityType.BY_REFERENCE
 

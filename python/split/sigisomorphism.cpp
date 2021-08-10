@@ -30,15 +30,29 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "split/sigisomorphism.h"
+#include "../helpers.h"
 
-void addSignature(pybind11::module_& m);
-void addSigIsomorphism(pybind11::module_& m);
-void addSigCensus(pybind11::module_& m);
+using regina::SigPartialIsomorphism;
 
-void addSplitClasses(pybind11::module_& m) {
-    addSignature(m);
-    addSigIsomorphism(m);
-    addSigCensus(m);
+void addSigIsomorphism(pybind11::module_& m) {
+    auto c = pybind11::class_<SigPartialIsomorphism>(m, "SigPartialIsomorphism")
+        .def(pybind11::init<int>())
+        .def(pybind11::init<const SigPartialIsomorphism&>())
+        .def("swap", &SigPartialIsomorphism::swap)
+        .def("makeCanonical", &SigPartialIsomorphism::makeCanonical,
+            pybind11::arg(), pybind11::arg("fromCycleGroup") = 0)
+        .def("compareWith", &SigPartialIsomorphism::compareWith,
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("fromCycleGroup") = 0)
+        .def("compareWithIdentity", &SigPartialIsomorphism::compareWithIdentity,
+            pybind11::arg(), pybind11::arg("fromCycleGroup") = 0)
+    ;
+    // TODO regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(SigPartialIsomorphism&, SigPartialIsomorphism&))(
+        regina::swap));
 }
 
