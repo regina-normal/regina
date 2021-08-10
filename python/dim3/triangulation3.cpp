@@ -35,6 +35,7 @@
 #include "../pybind11/stl.h"
 #include "algebra/grouppresentation.h"
 #include "angle/anglestructure.h"
+#include "link/link.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
 #include "triangulation/dim3.h"
@@ -97,6 +98,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const Triangulation<3>&, bool>())
+        .def(pybind11::init<const regina::Link&>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init([](const regina::python::SnapPyObject& obj) {
             return new Triangulation<3>(obj.string_);

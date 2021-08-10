@@ -607,6 +607,29 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         SnapPeaTriangulation(const Triangulation<3>& tri, bool ignored = false);
 
         /**
+         * Creates a new ideal SnapPea triangulation representing the
+         * complement of the given link in the 3-sphere.
+         *
+         * This is the same triangulation that would be produced by calling
+         * Link::complement() to build a native Triangulation<3>, and then
+         * passing the resulting triangulation to the constructor
+         * SnapPeaTriangulation(const Triangulation<3>&).
+         *
+         * Be aware that the peripheral curves are chosen by SnapPea
+         * according to the method outlined in the constructor
+         * SnapPeaTriangulation(const Triangulation<3>&); in particular,
+         * this is done with no knowledge of the original link diagram.
+         *
+         * Also, be aware that this could be a null SnapPea triangulation
+         * (if, for whatever reason, SnapPea is unable to do the conversion
+         * from the intermediate native Regina triangulation).  As always,
+         * you can (and should) test this by calling isNull().
+         *
+         * @param link the link whose complement we should build.
+         */
+        SnapPeaTriangulation(const Link& link);
+
+        /**
          * Destroys this triangulation.  All internal SnapPea data will
          * also be destroyed.
          */

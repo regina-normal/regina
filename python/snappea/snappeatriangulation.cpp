@@ -34,6 +34,7 @@
 #include "../pybind11/complex.h"
 #include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
+#include "link/link.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "utilities/safeptr.h"
@@ -62,6 +63,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def(pybind11::init<const SnapPeaTriangulation&>())
         .def(pybind11::init<const Triangulation<3>&, bool>(),
             pybind11::arg(), pybind11::arg("ignored") = false)
+        .def(pybind11::init<const regina::Link&>())
         .def("swap", &SnapPeaTriangulation::swap)
         .def("isNull", &SnapPeaTriangulation::isNull)
         .def("name", &SnapPeaTriangulation::name)

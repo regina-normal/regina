@@ -37,6 +37,7 @@
 #include <sstream>
 #include <stack>
 
+#include "link/link.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
@@ -59,6 +60,13 @@ Triangulation<3>::Triangulation(const std::string& description) :
     }
 
     delete attempt;
+}
+
+Triangulation<3>::Triangulation(const Link& link) :
+        strictAngleStructure_(false), generalAngleStructure_(false) {
+    Triangulation<3>* ans = link.complement();
+    swap(*ans);
+    delete ans;
 }
 
 void Triangulation<3>::clearAllProperties() {

@@ -552,6 +552,7 @@ Version 6.1  [ TODO ]
         Class SnapPeaCensusManifold, SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
         Class SnapPeaTriangulation:
+            - New constructor that takes a link and builds its complement.
             - Added member and global swap() functions.
             - Added new routine enumerateCovers(), which combines SnapPea's
               find_representations() and construct_cover().
@@ -587,6 +588,7 @@ Version 6.1  [ TODO ]
               not by newly allocated pointer.  Now throws an exception (instead
               of returning null) if the coordinate preconditions are not met.
         Class Triangulation<dim>:
+            - New constructor that takes a link and builds its complement.
             - New alias fromSig(), which is is identical to fromIsoSig().
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a

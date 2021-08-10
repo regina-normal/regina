@@ -65,6 +65,7 @@ namespace regina {
 
 class AngleStructure;
 class GroupPresentation;
+class Link;
 class NormalSurface;
 class ProgressTracker;
 class ProgressTrackerOpen;
@@ -238,6 +239,20 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * should have all properties marked as unknown.
          */
         Triangulation(const Triangulation& copy, bool cloneProps);
+        /**
+         * Creates a new ideal triangulation representing the complement
+         * of the given link in the 3-sphere.
+         *
+         * This is the same triangulation that is produced by
+         * Link::complement(); see that routine for further details.
+         *
+         * The triangulation will be simplified, but be aware that it
+         * might still contain internal vertices (i.e., vertices whose
+         * links are spheres).  This should, however, be a rare occurrence.
+         *
+         * @param link the link whose complement we should build.
+         */
+        Triangulation(const Link& link);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.

@@ -34,6 +34,7 @@
 #include <cstring>
 #include <mutex>
 
+#include "link/link.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "snappea/snappeatriangulation.h"
@@ -215,6 +216,13 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
 
     sync();
     listen(this);
+}
+
+SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) {
+    Triangulation<3>* c = link.complement();
+    SnapPeaTriangulation ans(*c);
+    swap(ans);
+    delete c;
 }
 
 SnapPeaTriangulation::~SnapPeaTriangulation() {
