@@ -56,18 +56,21 @@ my $all = `find . $types | xargs cat | wc -l`;
 my $snappea = `find engine/snappea/kernel $types | xargs cat | wc -l`;
 my $snappy = `find engine/snappea/snappy $types | xargs cat | wc -l`;
 my $normaliz = `find engine/libnormaliz $types | xargs cat | wc -l`;
+my $pybind11 = `find python/pybind11 $types | xargs cat | wc -l`;
 
 # Convert strings to integers:
 $all = $all + 0;
 $snappea = $snappea + 0;
 $snappy = $snappy + 0;
 $normaliz = $normaliz + 0;
+$pybind11 = $pybind11 + 0;
 
-my $regina = $all - $snappea - $snappy - $normaliz;
+my $regina = $all - $snappea - $snappy - $normaliz - $pybind11;
 
 print "Gross lines: $all\n";
 print "- Regina:    $regina\n";
 print "- SnapPea:   $snappea\n";
 print "- SnapPy:    $snappy\n";
 print "- Normaliz:  $normaliz\n";
+print "- pybind11:  $pybind11\n";
 exit 0;
