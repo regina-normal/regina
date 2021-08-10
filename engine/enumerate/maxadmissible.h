@@ -85,13 +85,13 @@ class MaxAdmissible {
          * of the cone.  These should be computed beforehand; for instance,
          * using the routine DoubleDescription::enumerateExtremalRays().
          *
-         * The return value is the set of all maximal admissible faces, stored
-         * in a newly allocated vector.  Each face \a F is described by a
-         * bitmask.  Specifically: if we are working in R^n, then each face is
-         * described by a bitmask \a b of length n, where <tt>b[i]</tt>
-         * is \c false if every point \a x in \a F has <tt>x[i]=0</tt>,
-         * and <tt>b[i]</tt> is \c true if every point \a x in the relative
-         * interior of \a F has <tt>x[i] &gt; 0</tt>.
+         * The return value is a vector containing all maximal admissible
+         * faces.  Each face \a F is described by a bitmask.  Specifically:
+         * if we are working in R^n, then each face is described by a bitmask
+         * \a b of length n, where <tt>b[i]</tt> is \c false if every point
+         * \a x in \a F has <tt>x[i]=0</tt>, and <tt>b[i]</tt> is \c true if
+         * every point \a x in the relative interior of \a F has
+         * <tt>x[i] &gt; 0</tt>.
          *
          * \pre The template argument RayIterator should be an iterator type
          * that, when dereferenced, can be treated as a vector of integers.
@@ -118,11 +118,11 @@ class MaxAdmissible {
          * @param constraints a set of validity constraints as described
          * above.  This may be 0 to indicate no constraints (in which
          * case there will be just one maximal admissible face).
-         * @return a newly allocated list containing one bitmask
-         * representing each maximal admissible face, as described above.
+         * @return a vector containing one bitmask representing each
+         * maximal admissible face, as described above.
          */
         template <class BitmaskType, class RayIterator>
-        static std::vector<BitmaskType>* enumerate(
+        static std::vector<BitmaskType> enumerate(
                 RayIterator beginExtremalRays, RayIterator endExtremalRays,
                 const EnumConstraints* constraints);
 

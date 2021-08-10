@@ -50,12 +50,12 @@
 namespace regina {
 
 template <class BitmaskType, class RayIterator>
-std::vector<BitmaskType>* MaxAdmissible::enumerate(
+std::vector<BitmaskType> MaxAdmissible::enumerate(
         RayIterator beginExtremalRays, RayIterator endExtremalRays,
         const EnumConstraints* constraints) {
     if (beginExtremalRays == endExtremalRays) {
         // Input is empty, so output is empty.
-        return new std::vector<BitmaskType>();
+        return std::vector<BitmaskType>();
     }
 
     size_t dim = (*beginExtremalRays).size();
@@ -89,7 +89,7 @@ std::vector<BitmaskType>* MaxAdmissible::enumerate(
     std::list<BitmaskType> faces(rays.begin(), rays.end());
 
     // Create the final set of faces to return.
-    std::vector<BitmaskType>* maxFaces = new std::vector<BitmaskType>();
+    std::vector<BitmaskType> maxFaces;
 
     // Keep expanding the faces using additional extremal rays until we can
     // expand no more.
@@ -152,7 +152,7 @@ std::vector<BitmaskType>* MaxAdmissible::enumerate(
                     nextDim.push_back(comb);
             }
             if (isMax)
-                maxFaces->push_back(*f);
+                maxFaces.push_back(*f);
         }
         std::swap(nextDim, faces);
         nextDim.clear();

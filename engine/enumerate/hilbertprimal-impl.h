@@ -128,7 +128,7 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
     // First enumerate all maximal admissible faces.
     if (tracker)
         tracker->setPercent(10);
-    std::vector<BitmaskType>* maxFaces = MaxAdmissible::enumerate<BitmaskType>(
+    std::vector<BitmaskType> maxFaces = MaxAdmissible::enumerate<BitmaskType>(
         raysBegin, raysEnd, constraints);
 
     // Now use normaliz to process each face.
@@ -137,17 +137,16 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
 
     std::set<std::vector<mpz_class> > finalBasis;
     std::vector<const Vector<IntegerType>*> face;
-    typename std::vector<BitmaskType>::const_iterator mit;
     RayIterator rit;
     unsigned i;
     std::vector<std::vector<mpz_class> >::const_iterator hlit;
     std::set<std::vector<mpz_class> >::const_iterator hsit;
     std::vector<mpz_class>::const_iterator hvit;
-    for (mit = maxFaces->begin(); mit != maxFaces->end(); ++mit) {
+    for (const auto& m : maxFaces) {
         // Locate the extremal rays that generate this face.
         std::vector<std::vector<mpz_class> > input;
         for (rit = raysBegin; rit != raysEnd; ++rit)
-            if (inFace(*rit, *mit)) {
+            if (inFace(*rit, m)) {
                 input.push_back(std::vector<mpz_class>());
                 std::vector<mpz_class>& v(input.back());
                 v.reserve(dim);
@@ -195,7 +194,6 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
     }
 
     // All done!
-    delete maxFaces;
     if (tracker)
         tracker->setPercent(100);
 }
