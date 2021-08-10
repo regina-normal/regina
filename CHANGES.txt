@@ -80,6 +80,17 @@ Version 6.1  [ TODO ]
             - Added eulerChar().
         Class CensusDB:
             - Added member and global swap() functions.
+        Class Census, CensusHit, CensusHits, CensusHitIterator:
+            - CensusHit objects can now be passed around by value: they
+              now have copy/move construction and assignment, local and
+              global swap() functions, and comparison (== and !=) operators.
+            - The CensusHits and CensusHitIterator classes are removed
+              completely.  Instead, Census::lookup() now returns a std::list
+              of CensusHit objects.
+            - CensusHit has no next() function.
+            - CensusHit::db() now returns by reference, not pointer.
+            - CensusDB::lookup() now takes a callback action to perform
+              on each hit, not a CensusHits pointer.
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the
               aliases vertices(), edges(), etc. no longer return a

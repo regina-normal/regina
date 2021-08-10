@@ -22,6 +22,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     census.h
+    census-impl.h
     gluingperms.h
     gluingperms-impl.h
     gluingpermsearcher.h

@@ -60,7 +60,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
          */
         regina::Triangulation<3>* tri;
         std::string name;
-        std::unique_ptr<regina::CensusHits> hits;
+        std::list<regina::CensusHit> hits;
 
         /**
          * Internal components

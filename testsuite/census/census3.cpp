@@ -41,7 +41,6 @@
 using regina::BoolSet;
 using regina::Census;
 using regina::CensusHit;
-using regina::CensusHits;
 using regina::FacetPairing;
 using regina::GluingPerms;
 using regina::GluingPermSearcher;
@@ -68,60 +67,54 @@ class Census3Test : public CppUnit::TestFixture {
         }
 
         void verifyLookupNone(const char* isoSig) {
-            CensusHits* hits = Census::lookup(isoSig);
-            if (! (hits->empty() && hits->count() == 0 && ! hits->first())) {
+            auto hits = Census::lookup(isoSig);
+            if (! hits.empty()) {
                 std::ostringstream msg;
                 msg << "Census lookup for " << isoSig
                     << " should return no matches.";
                 CPPUNIT_FAIL(msg.str());
             }
-            delete hits;
         }
 
         void verifyLookup(const char* isoSig, const char* name) {
-            CensusHits* hits = Census::lookup(isoSig);
-            if (hits->empty() || hits->count() != 1 || (! hits->first()) ||
-                    hits->first()->next()) {
+            auto hits = Census::lookup(isoSig);
+            if (hits.size() != 1) {
                 std::ostringstream msg;
                 msg << "Census lookup for " << isoSig
                     << " should return exactly one match.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (hits->first()->name() != name) {
+            if (hits.front().name() != name) {
                 std::ostringstream msg;
                 msg << "Census lookup for " << isoSig << " returned "
-                    << hits->first()->name() << " instead of " << name << ".";
+                    << hits.front().name() << " instead of " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-            delete hits;
         }
 
         void verifyLookup(const char* isoSig, const char* name1,
                 const char* name2) {
-            CensusHits* hits = Census::lookup(isoSig);
-            if (hits->empty() || hits->count() != 2 || (! hits->first()) ||
-                    (! hits->first()->next()) ||
-                    hits->first()->next()->next()) {
+            auto hits = Census::lookup(isoSig);
+            if (hits.size() != 2) {
                 std::ostringstream msg;
                 msg << "Census lookup for " << isoSig
                     << " should return exactly two matches.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (hits->first()->name() != name1) {
+            if (hits.front().name() != name1) {
                 std::ostringstream msg;
                 msg << "Census lookup for " << isoSig << " returned "
-                    << hits->first()->name() << " instead of " << name1
+                    << hits.front().name() << " instead of " << name1
                     << " for hit #1.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (hits->first()->next()->name() != name2) {
+            if (hits.back().name() != name2) {
                 std::ostringstream msg;
                 msg << "Census lookup for " << isoSig << " returned "
-                    << hits->first()->name() << " instead of " << name2
+                    << hits.back().name() << " instead of " << name2
                     << " for hit #2.";
                 CPPUNIT_FAIL(msg.str());
             }
-            delete hits;
         }
 
         void lookup() {

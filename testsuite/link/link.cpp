@@ -871,15 +871,11 @@ class LinkTest : public CppUnit::TestFixture {
             std::string sig = c->isoSig();
             delete c;
 
-            regina::CensusHits* hits = regina::Census::lookup(sig);
-            for (auto hit : *hits) {
-                if (hit->name().substr(0, prefix.size()) == prefix) {
-                    delete hits;
+            auto hits = regina::Census::lookup(sig);
+            for (const auto& hit : hits) {
+                if (hit.name().substr(0, prefix.size()) == prefix)
                     return;
-                }
             }
-
-            delete hits;
 
             std::ostringstream msg;
             msg << l->label() << " complement: isosig " << sig

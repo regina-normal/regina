@@ -730,25 +730,24 @@ void Tri3SurfacesUI::refresh() {
     }
 
     if (tri->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        hits = std::unique_ptr<regina::CensusHits>(
-            regina::Census::lookup(tri->isoSig()));
-        if (hits->empty()) {
+        hits = regina::Census::lookup(tri->isoSig());
+        if (hits.empty()) {
             census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
-        } else if (hits->count() == 1) {
+        } else if (hits.size() == 1) {
             census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
-                .arg(QString(hits->first()->name().c_str()).toHtmlEscaped()));
+                .arg(QString(hits.front().name().c_str()).toHtmlEscaped()));
         } else {
             QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
-                .arg(hits->count());
-            for (auto hit : *hits) {
+                .arg(hits.size());
+            for (const auto& hit : hits) {
                 ans += "<br>";
-                ans += QString(hit->name().c_str()).toHtmlEscaped();
+                ans += QString(hit.name().c_str()).toHtmlEscaped();
             }
             ans += "</qt>";
             census->setText(ans);
         }
     } else {
-        hits.reset();
+        hits.clear();
         
         // The triangulation is too large to be found in the census.
         // Avoid the overhead of calling isoSig().
@@ -867,7 +866,7 @@ void Tri3SurfacesUI::contextManifold(const QPoint& pos) {
 }
 
 void Tri3SurfacesUI::contextCensus(const QPoint& pos) {
-    if (! (hits.get() && ! hits->empty()))
+    if (hits.empty())
         return;
     
     QMenu m(tr("Context menu"), census);
@@ -884,12 +883,11 @@ void Tri3SurfacesUI::copyManifold() {
 void Tri3SurfacesUI::copyCensus() {
     QString ans;
     
-    if (hits->count() == 1) {
-        ans = hits->first()->name().c_str();
+    if (hits.size() == 1) {
+        ans = hits.front().name().c_str();
     } else {
-        for (const regina::CensusHit* hit = hits->first() ; hit;
-            hit = hit->next()) {
-            ans += hit->name().c_str();
+        for (const auto& hit : hits) {
+            ans += hit.name().c_str();
             ans += "\n";
         }
     }

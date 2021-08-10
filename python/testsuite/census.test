@@ -36,7 +36,7 @@ from __future__ import print_function
 def search(sig):
 	print('SEARCH:', sig)
 	hits = Census.lookup(sig)
-	print('Hits:', hits.count())
+	print('Hits:', len(hits))
 	for h in hits:
 		print('  ' + h.db().desc() + '  -  ' + h.name())
 	print()
