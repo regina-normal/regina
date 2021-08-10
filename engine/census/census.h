@@ -315,6 +315,12 @@ void swap(CensusHit& a, CensusHit& b) noexcept;
  * This class consists of static routines only.  The main entry point
  * (and typically the only way that you would use this class) is via the
  * various static lookup() routines.
+ *
+ * \warning This class is not thread-safe, in that it performs some global
+ * initialisation the first time one of the lookup() functions is called.
+ * If you need thread-safety, you can always call lookup() with an empty
+ * string when initialising your program, and ensure this has finished before
+ * you allow any subsequent "normal" calls to lookup() from other threads.
  */
 class Census {
     private:
