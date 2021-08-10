@@ -197,6 +197,12 @@ Enumerating splitting surface signatures:
     (ab)(ac)(bc)  -> automorphisms:  12
     (ab)(ac)(b)(c)  -> automorphisms:  4
 
+Enumerating knots:
+    +++-++ ( ^0 ^1 _4 ^5 _2 _0 _3 ^2 _1 ^4 _5 ^3 )
+    ++-+++ ( ^0 ^1 _4 ^5 ^2 _0 ^3 _2 _1 ^4 _5 _3 )
+    +-+--- ( ^0 _1 ^4 _5 _2 _0 _3 ^2 ^1 _4 ^5 ^3 )
+    +--+-- ( ^0 _1 ^4 _5 ^2 _0 ^3 _2 ^1 _4 ^5 _3 )
+
 Destroying covers
 Destroying packet
 Destroying packet

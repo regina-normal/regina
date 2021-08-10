@@ -238,6 +238,18 @@ SigCensus.formCensus(3, displaySig)
 print()
 
 ########################################################################
+# Test enumeration of knots:
+########################################################################
+
+def displayKnot(k):
+    print('    ' + k.brief())
+
+print('Enumerating knots:')
+g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+g.generateMinimalLinks(displayKnot)
+print()
+
+########################################################################
 # Test SnapPeaTriangulation::enumerateCovers() object lifetimes:
 ########################################################################
 

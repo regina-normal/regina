@@ -460,23 +460,6 @@ class ModelLinkGraphNode : public MarkedElement,
  * even when passing or returning objects by value.
  */
 class ModelLinkGraph : public Output<ModelLinkGraph> {
-    public:
-        /**
-         * A routine that can do arbitrary processing upon a knot or link.
-         * Such routines are used to process links that are found when
-         * running generateMinimalLinks().
-         *
-         * The first parameter passed should be a link, which \e must be
-         * deallocated by this routine.  The second parameter may
-         * contain arbitrary data as passed to generateMinimalLinks().
-         *
-         * Note that the first parameter might be \c null to signal that
-         * link generation has finished.
-         *
-         * \apinotfinal
-         */
-        typedef void (*Use)(Link*, void*);
-
     private:
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
@@ -669,11 +652,29 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Arc (0,0) will always be forwards, and crossing 0 will always
          * be positive.
          *
+         * For each link that is generated, this routine will call \a action
+         * (which must be a function or some other callable object).
+         *
+         * - The first argument to \action must be a pointer to a Link.
+         *   This will be the link that was generated, and \a action is
+         *   responsible for (eventually) deallocating it.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
+         *
          * TODO: PRE: Knot, not link.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap them in std::ref or
+         * std::cref.
          *
          * \apinotfinal
          */
-        void generateMinimalLinks(Use use, void* useArgs = nullptr) const;
+        template <typename Action, typename... Args>
+        void generateMinimalLinks(Action&& action, Args&&... args) const;
 
         /**
          * Outputs this graph in the ASCII text format used by \e plantri.
@@ -880,6 +881,15 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * was found to be invalid.
          */
         static ModelLinkGraph* fromPlantri(const std::string& plantri);
+
+    private:
+        /**
+         * A helper array used by generateMinimalLinks().
+         */
+        static constexpr int upperOutArc[2 /* 0,1 for -,+ */][13 /* dir */] = {
+            { -1, -1, -1, 0, -1, -1, 1, -1, -1, 3, -1, -1, 2 },
+            { -1, -1, -1, 1, -1, -1, 2, -1, -1, 0, -1, -1, 3 }
+        };
 };
 
 /**
@@ -1417,6 +1427,8 @@ inline size_t ModelLinkGraphCells::cellPos(const ModelLinkGraphArc& arc) const {
 }
 
 } // namespace regina
+
+#include "link/modellinkgraph-impl.h"
 
 #endif
 

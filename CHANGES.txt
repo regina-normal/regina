@@ -353,6 +353,10 @@ Version 6.1  [ TODO ]
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
               regina::swap(ModelLinkGraph&, ModelLinkGraph&).
+            - Routine generateMinimalLinks() now uses a type-safe template-based
+              mechanism for its callback function, instead of a function
+              pointer with void* arguments.  Moreover, it no longer receives
+              an extra null call once the enumeration has finished.
         Class NativeInteger<...>:
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
