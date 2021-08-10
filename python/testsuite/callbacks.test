@@ -215,6 +215,18 @@ testCovers(link, 5)
 print()
 
 ########################################################################
+# Test facet pairing enumeration:
+########################################################################
+
+def displayPairing(f, autos):
+    print('    ' + f.str(), ' -> automorphisms: ', len(autos))
+
+print('Enumerating facet pairings:')
+FacetPairing3.findAllPairings(3, BoolSet(False), 0, displayPairing)
+FacetPairing5.findAllPairings(2, BoolSet(False), 0, displayPairing)
+print()
+
+########################################################################
 # Test SnapPeaTriangulation::enumerateCovers() object lifetimes:
 ########################################################################
 

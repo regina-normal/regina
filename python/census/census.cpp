@@ -56,6 +56,7 @@ void addCensus(pybind11::module_& m) {
 
     auto h = pybind11::class_<CensusHit>(m, "CensusHit")
         .def(pybind11::init<const CensusHit&>())
+        .def("swap", &CensusDB::swap)
         .def("name", &CensusHit::name)
         .def("db", &CensusHit::db,
             pybind11::return_value_policy::reference)

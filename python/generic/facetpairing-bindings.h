@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim4.h"
@@ -39,6 +40,7 @@
 #include "../helpers.h"
 
 using pybind11::overload_cast;
+using regina::BoolSet;
 using regina::FacetPairing;
 using regina::FacetSpec;
 using regina::Triangulation;
@@ -65,6 +67,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
             &FacetPairing<dim>::isUnmatched, pybind11::const_))
         .def("isClosed", &FacetPairing<dim>::isClosed)
         .def("isCanonical", &FacetPairing<dim>::isCanonical)
+        .def("findAutomorphisms", &FacetPairing<dim>::findAutomorphisms)
         .def("toTextRep", &FacetPairing<dim>::toTextRep)
         .def_static("fromTextRep", &FacetPairing<dim>::fromTextRep)
         .def("writeDot", [](const FacetPairing<dim>& p,
@@ -82,6 +85,11 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
         }, pybind11::arg("graphName") = nullptr)
         .def_static("dotHeader", &FacetPairing<dim>::dotHeader,
             pybind11::arg("graphName") = nullptr)
+        .def_static("findAllPairings", [](size_t n, BoolSet bdry, int nBdry,
+                const std::function<void(const FacetPairing<dim>&,
+                    typename FacetPairing<dim>::IsoList)>& action) {
+            FacetPairing<dim>::findAllPairings(n, bdry, nBdry, action);
+        });
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

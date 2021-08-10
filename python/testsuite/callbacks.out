@@ -166,6 +166,15 @@ Trefoil -> all covers, sheets = 5
     CoverType.cyclic_cover: Z
     CoverType.irregular_cover: Z + Z_3
 
+Enumerating facet pairings:
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 2:3 2:2  -> automorphisms:  32
+    0:1 0:0 1:0 2:0 | 0:2 1:2 1:1 2:1 | 0:3 1:3 2:3 2:2  -> automorphisms:  48
+    0:1 0:0 1:0 2:0 | 0:2 2:1 2:2 2:3 | 0:3 1:1 1:2 1:3  -> automorphisms:  24
+    1:0 1:1 2:0 2:1 | 0:0 0:1 2:2 2:3 | 0:2 0:3 1:2 1:3  -> automorphisms:  48
+    0:1 0:0 0:3 0:2 1:0 1:1 | 0:4 0:5 1:3 1:2 1:5 1:4  -> automorphisms:  256
+    0:1 0:0 1:0 1:1 1:2 1:3 | 0:2 0:3 0:4 0:5 1:5 1:4  -> automorphisms:  192
+    1:0 1:1 1:2 1:3 1:4 1:5 | 0:0 0:1 0:2 0:3 0:4 0:5  -> automorphisms:  1440
+
 Destroying covers
 Destroying packet
 Destroying packet

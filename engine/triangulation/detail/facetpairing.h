@@ -339,9 +339,6 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * \pre This facet pairing is in canonical form as described by
          * isCanonical().
          *
-         * \ifacespython Not present, even in the dimension-specific
-         * subclasses.
-         *
          * @return the list of all automorphisms.
          */
         IsoList findAutomorphisms() const;
@@ -562,8 +559,10 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
          *
-         * \ifacespython Not present, even in the dimension-specific
-         * subclasses.
+         * \ifacespython This function is available, and \a action may be a
+         * pure Python function.  However, \a action cannot take any additional
+         * arguments beyond the facet pairing and its automorphisms (and
+         * therefore the additional \a args list is omitted here).
          *
          * @param nSimplices the number of simplices whose facets should
          * be (potentially) matched.
