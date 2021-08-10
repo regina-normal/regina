@@ -143,25 +143,32 @@ void SigPartialIsomorphism::makeCanonical(const Signature& sig,
 }
 
 int SigPartialIsomorphism::compareWith(const Signature& sig,
-        const SigPartialIsomorphism* other, unsigned fromCycleGroup) const {
-    int result;
+        const SigPartialIsomorphism& other, unsigned fromCycleGroup) const {
     for (unsigned c = sig.cycleGroupStart[fromCycleGroup]; c < nCycles; c++) {
-        if (other)
-            result = Signature::cycleCmp(sig, cyclePreImage[c],
-                cycleStart[cyclePreImage[c]], dir, labelImage,
-                sig, other->cyclePreImage[c],
-                other->cycleStart[other->cyclePreImage[c]], other->dir,
-                other->labelImage);
-        else
-            result = Signature::cycleCmp(sig, cyclePreImage[c],
-                cycleStart[cyclePreImage[c]], dir, labelImage,
-                sig, c, 0, 1, nullptr);
+        int result = Signature::cycleCmp(sig, cyclePreImage[c],
+            cycleStart[cyclePreImage[c]], dir, labelImage,
+            sig, other.cyclePreImage[c],
+            other.cycleStart[other.cyclePreImage[c]], other.dir,
+            other.labelImage);
         if (result < 0)
             return -1;
         if (result > 0)
             return 1;
     }
+    return 0;
+}
 
+int SigPartialIsomorphism::compareWithIdentity(const Signature& sig,
+        unsigned fromCycleGroup) const {
+    for (unsigned c = sig.cycleGroupStart[fromCycleGroup]; c < nCycles; c++) {
+        int result = Signature::cycleCmp(sig, cyclePreImage[c],
+            cycleStart[cyclePreImage[c]], dir, labelImage,
+            sig, c, 0, 1, nullptr);
+        if (result < 0)
+            return -1;
+        if (result > 0)
+            return 1;
+    }
     return 0;
 }
 

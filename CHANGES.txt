@@ -533,6 +533,10 @@ Version 6.1  [ TODO ]
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
+            - Function compareWith() now takes the other isomorphism by
+              reference, not by pointer; added function compareWithIdentity()
+              to implement the (undocumented) previous behaviour when
+              the other isomorphism was null.
         Class SimpleSurfaceBundle:
             - Class constants are now constexpr.
         Class Simplex<dim>:

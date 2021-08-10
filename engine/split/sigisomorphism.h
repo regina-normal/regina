@@ -220,7 +220,30 @@ class SigPartialIsomorphism {
          * or equal to its image under the given isomorphism respectively.
          */
         int compareWith(const Signature& sig,
-            const SigPartialIsomorphism* other,
+            const SigPartialIsomorphism& other,
+            unsigned fromCycleGroup = 0) const;
+
+        /**
+         * Lexicographically compares the results of applying this and
+         * the identity isomorphism to the given signature.
+         *
+         * This routine behaves identically to compareWith(), except
+         * that it does not take a second isomorphism to compare against.
+         * See compareWith() for further details.
+         *
+         * @param sig the signature to which this isomorphism will be applied.
+         * @param fromCycleGroup the first cycle group whose images should
+         * be examined.  If it is already known that the cycle images for
+         * the first \a k cycle groups are identical under both this and the
+         * identity isomorphism, \a k should be passed in this parameter.
+         * This parameter should not exceed the number of cycle groups
+         * whose cycles are mapped by this partial isomorphism.
+         *
+         * @return -1, 1 or 0 if the image of the given signature under
+         * this isomorphism is lexicographically less than, greater than
+         * or equal to its image under the identity isomorphism respectively.
+         */
+        int compareWithIdentity(const Signature& sig,
             unsigned fromCycleGroup = 0) const;
 
     private:

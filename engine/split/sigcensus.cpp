@@ -69,7 +69,7 @@ bool SigCensus::extendAutomorphisms() {
 
         if (firstLabel == nextLabel) {
             iso.makeCanonical(sig, sig.nCycleGroups - 1);
-            result = iso.compareWith(sig, 0, sig.nCycleGroups - 1);
+            result = iso.compareWithIdentity(sig, sig.nCycleGroups - 1);
             if (result == 0)
                 automorph[sig.nCycleGroups].push_back(std::move(iso));
             else if (result < 0)
@@ -79,7 +79,7 @@ bool SigCensus::extendAutomorphisms() {
                 iso.labelImage[i] = i;
             do {
                 iso.makeCanonical(sig, sig.nCycleGroups - 1);
-                result = iso.compareWith(sig, 0, sig.nCycleGroups - 1);
+                result = iso.compareWithIdentity(sig, sig.nCycleGroups - 1);
                 if (result < 0)
                     return false;
                 else if (result == 0)
