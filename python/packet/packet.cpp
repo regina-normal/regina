@@ -119,13 +119,8 @@ void addPacket(pybind11::module_& m) {
         .def("insertChildLast", &Packet::insertChildLast)
         .def("insertChildAfter", &Packet::insertChildAfter)
         .def("makeOrphan", &Packet::makeOrphan)
-        .def("reparent", [](Packet& child, Packet* newParent, bool first) {
-            if (child.parent())
-                child.reparent(newParent, first);
-            else
-                throw std::invalid_argument(
-                    "reparent() cannot be used on packets with no parent");
-        }, pybind11::arg(), pybind11::arg("first") = false)
+        .def("reparent", &Packet::reparent,
+            pybind11::arg(), pybind11::arg("first") = false)
         .def("transferChildren", &Packet::transferChildren)
         .def("swapWithNextSibling", &Packet::swapWithNextSibling)
         .def("moveUp", &Packet::moveUp,

@@ -687,11 +687,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * \pre The given child has no parent packet.
          * \pre This packet is not a descendant of the given child.
          *
-         * \ifacespython Since this packet takes ownership of the given
-         * child packet, the python object containing the given child
-         * packet becomes a null object and should no longer be used.
-         * See reparent() for a way of avoiding these problems in some cases.
-         *
          * @param child the child to insert.
          */
         void insertChildFirst(Packet* child);
@@ -703,11 +698,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * \pre The given child has no parent packet.
          * \pre This packet is not a descendant of the given child.
-         *
-         * \ifacespython Since this packet takes ownership of the given
-         * child packet, the python object containing the given child
-         * packet becomes a null object and should no longer be used.
-         * See reparent() for a way of avoiding these problems in some cases.
          *
          * @param child the child to insert.
          */
@@ -722,11 +712,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * \pre Parameter \a newChild has no parent packet.
          * \pre Parameter \a prevChild is already a child of this packet.
          * \pre This packet is not a descendant of \a newChild.
-         *
-         * \ifacespython Since this packet takes ownership of the given
-         * child packet, the python object containing the given child
-         * packet becomes a null object and should no longer be used.
-         * See reparent() for a way of avoiding these problems in some cases.
          *
          * @param newChild the child to insert.
          * @param prevChild the preexisting child of this packet after
@@ -771,13 +756,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * \pre This packet does not depend on its parent; see
          * dependsOnParent() for details.
          * \pre The given parent is not a descendant of this packet.
-         *
-         * \ifacespython This routine is much simpler than combinations of
-         * makeOrphan() and insertChildFirst() / insertChildLast(), since
-         * there are no unpleasant ownership issues to deal with.
-         * However, if this packet currently has no parent then the ownership
-         * issues are unavoidable; in this case reparent() will do nothing,
-         * and one of the insertChild...() routines must be used instead.
          *
          * @param newParent the new parent of this packet, i.e., the
          * packet beneath which this packet will be inserted.
