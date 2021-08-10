@@ -40,6 +40,11 @@
  *  Census::lookup() routines.
  */
 
+#ifndef __REGINA_CENSUS_IMPL_H
+#ifndef __DOXYGEN
+#define __REGINA_CENSUS_IMPL_H
+#endif
+
 #include "regina-config.h" // For key-value store macros
 
 #include <iostream>
@@ -196,4 +201,6 @@ bool CensusDB::lookup(const std::string& isoSig, Action&& action) const {
 }
 
 } // namespace regina
+
+#endif
 

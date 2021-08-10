@@ -39,6 +39,11 @@
  *  of GluingPerms for \ref stddim "standard dimensions".
  */
 
+#ifndef __REGINA_GLUINGPERMS_IMPL_H
+#ifndef __DOXYGEN
+#define __REGINA_GLUINGPERMS_IMPL_H
+#endif
+
 #include <algorithm>
 #include <iostream>
 #include "census/gluingperms.h"
@@ -132,4 +137,6 @@ GluingPerms<dim>::GluingPerms(std::istream& in) :
 }
 
 } // namespace regina
+
+#endif
 
