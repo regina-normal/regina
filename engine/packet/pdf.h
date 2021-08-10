@@ -99,8 +99,8 @@ class PDF : public Packet {
 
     private:
         char* data_;
-            /**< The binary data of the PDF document that is stored in
-                 this packet, or 0 if no PDF document is currently stored. */
+            /**< The binary data of the PDF document that is stored in this
+                 packet, or \c null if no PDF document is currently stored. */
         size_t size_;
             /**< The size of the binary data in bytes, or 0 if no PDF
                  document is currently stored. */
@@ -261,7 +261,7 @@ class PDF : public Packet {
 
 // Inline functions for PDF
 
-inline PDF::PDF() : data_(0), size_(0), alloc_(OWN_NEW) {
+inline PDF::PDF() : data_(nullptr), size_(0), alloc_(OWN_NEW) {
 }
 
 inline PDF::PDF(char* data, size_t size, OwnershipPolicy alloc) :

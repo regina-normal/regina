@@ -474,8 +474,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given base is between 2 and 36 inclusive.
          *
-         * @return the value of this integer as a newly allocated
-         * string.
+         * @return the value of this integer as a string.
          */
         std::string stringValue(int base = 10) const;
 

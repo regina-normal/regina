@@ -1065,7 +1065,7 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
  *    (*colSpaceBasisInv) * after_matrix * (*rowSpaceBasisInv) == orig_matrix
  *
  * If any of rowSpaceBasis, colSpaceBasis or rowSpaceBasisInv or
- * colSpaceBasisInv are not allocated, this algotithm does not bother to
+ * colSpaceBasisInv are \c null, this algorithm does not bother to
  * compute them (and is correspondingly faster).
  *
  * This routine uses a first-order technique to intelligently choose the
