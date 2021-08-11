@@ -62,11 +62,11 @@ typedef Matrix<Integer, true> MatrixInt;
  * Deprecated typedef for the vector type that Regina uses internally to
  * store angle structures.
  *
- * Before Regina 6.1, this was a subclass of Vector<LargeInteger> that
- * merely added an extra static routine makeAngleEquations() that was
+ * In Regina 6.0.1 and earlier, this was a subclass of Vector<LargeInteger>
+ * that merely added an extra static routine makeAngleEquations() that was
  * identical to the global regina::makeAngleEquations().
  *
- * As of Regina 6.1, angle structures use Integer (not LargeInteger)
+ * As of Regina 7.0, angle structures use Integer (not LargeInteger)
  * internally, and so this type has had to change in an incompatible way.
  * Since it added nothing genuinely new, the subclass has been removed
  * entirely; instead angle structures just use Vector<Integer> directly.

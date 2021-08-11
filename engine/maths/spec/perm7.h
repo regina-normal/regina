@@ -73,9 +73,9 @@ namespace regina {
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  For Perm<7>, the internal permutation
- * codes have changed as of Regina 6.1:
+ * codes have changed as of Regina 7.0:
  *
- * - \e First-generation codes were used internally in Regina 6.0 and earlier.
+ * - \e First-generation codes were used internally in Regina 6.0.1 and earlier.
  *   These are <i>image packs</i>: integers whose lowest three bits represent
  *   the image of 0, whose next lowest three bits represent the image of 1,
  *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
@@ -84,7 +84,7 @@ namespace regina {
  *   continues to use first-generation codes to describe gluings between
  *   6-simplices.
  *
- * - \e Second-generation codes are used internally in Regina 6.1 and above.
+ * - \e Second-generation codes are used internally in Regina 7.0 and above.
  *   These codes are integers between 0 and 5039 inclusive, representing the
  *   index of the permutation in the array Perm<7>::S7.  The routines
  *   permCode2(), setPermCode2(), fromPermCode2() and isPermCode2()

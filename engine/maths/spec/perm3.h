@@ -174,8 +174,8 @@ class Perm<3> {
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 5 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -216,8 +216,8 @@ class Perm<3> {
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], \a p[1], \a p[2]).
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -248,8 +248,8 @@ class Perm<3> {
          * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
          * between 0 and 1 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).

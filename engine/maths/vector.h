@@ -702,9 +702,9 @@ typedef Vector<LargeInteger> VectorLarge;
  * Deprecated alias for a vector of arbitrary-precision integers that
  * allows infinite elements.
  *
- * \deprecated Prior to Regina 6.1, Ray was its own separate subclass of
- * Vector<LargeInteger>.  Now the additional members of Ray have been
- * merged directly into the Vector class, and so you should just use
+ * \deprecated In Regina 6.0.1 and earlier, Ray was its own separate subclass
+ * of Vector<LargeInteger>.  As of Regina 7.0, the additional members of Ray
+ * have been merged directly into the Vector class, and so you should just use
  * Vector<LargeInteger> (or the typedef VectorLarge) instead.  Note that
  * only the \e name Ray is deprecated; the \e class Vector<LargeInteger>
  * that it refers to remains in active use.

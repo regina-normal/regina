@@ -73,9 +73,9 @@ namespace regina {
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  For Perm<5>, the internal permutation
- * codes have changed as of Regina 6.1:
+ * codes have changed as of Regina 7.0:
  *
- * - \e First-generation codes were used internally in Regina 6.0 and earlier.
+ * - \e First-generation codes were used internally in Regina 6.0.1 and earlier.
  *   These are <i>image packs</i>: integers whose lowest three bits represent
  *   the image of 0, whose next lowest three bits represent the image of 1,
  *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
@@ -83,7 +83,7 @@ namespace regina {
  *   backward compatibility.  Likewise, the XML data file format
  *   continues to use first-generation codes to describe pentachoron gluings.
  *
- * - \e Second-generation codes are used internally in Regina 6.1 and above.
+ * - \e Second-generation codes are used internally in Regina 7.0 and above.
  *   These codes are integers between 0 and 119 inclusive, representing the
  *   index of the permutation in the array Perm<5>::S5.  The routines
  *   permCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
@@ -294,8 +294,8 @@ class Perm<5> {
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 119 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -332,8 +332,8 @@ class Perm<5> {
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[4]).
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -364,8 +364,8 @@ class Perm<5> {
          * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
          * between 0 and 23 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -402,8 +402,8 @@ class Perm<5> {
          * square bracket operator: <tt>orderedS4[i]</tt>.  The index \a i
          * must be between 0 and 23 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -426,8 +426,8 @@ class Perm<5> {
          * square bracket operator: <tt>S3[i]</tt>.  The index \a i must be
          * between 0 and 5 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -455,8 +455,8 @@ class Perm<5> {
          * square bracket operator: <tt>orderedS3[i]</tt>.  The index \a i
          * must be between 0 and 5 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -481,8 +481,8 @@ class Perm<5> {
          * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
          * between 0 and 1 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).

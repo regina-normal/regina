@@ -254,7 +254,7 @@ class NormalHypersurfaceVector : public ShortOutput<NormalHypersurfaceVector> {
          * underlying vector.  Subclasses should reimplement this if they
          * carry any additional information that also need adjusting.
          *
-         * \warning Before Regina 6.1, this routine was named setElement().
+         * \warning Before Regina 7.0, this routine was named setElement().
          * It is now named set(), and if you have subclasses that reimplement
          * it then it should be renamed accordingly in these subclasses also.
          *
