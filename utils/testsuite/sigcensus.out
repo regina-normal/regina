@@ -1,0 +1,185 @@
+============================================================
+TEST: sigcensus
+--------------------
+Usage:
+    sigcensus <order>
+--------------------
+Exit code: 1
+============================================================
+TEST: sigcensus 0
+--------------------
+Only numerical orders between 1 and 20 inclusive are accepted.
+Usage:
+    sigcensus <order>
+--------------------
+Exit code: 1
+============================================================
+TEST: sigcensus hello
+--------------------
+Only numerical orders between 1 and 20 inclusive are accepted.
+Usage:
+    sigcensus <order>
+--------------------
+Exit code: 1
+============================================================
+TEST: sigcensus 100
+--------------------
+Only numerical orders between 1 and 20 inclusive are accepted.
+Usage:
+    sigcensus <order>
+--------------------
+Exit code: 1
+============================================================
+TEST: sigcensus 2 3
+--------------------
+Usage:
+    sigcensus <order>
+--------------------
+Exit code: 1
+============================================================
+TEST: sigcensus 1
+--------------------
+aa
+a.a
+Total signatures: 2
+--------------------
+Exit code: 0
+============================================================
+TEST: sigcensus 2
+--------------------
+aabb
+abab
+aab.b
+ab.ab
+ab.a.b
+Total signatures: 5
+--------------------
+Exit code: 0
+============================================================
+TEST: sigcensus 3
+--------------------
+aabbcc
+aabcbc
+aabccb
+abacbc
+abcabc
+aabbc.c
+aabcb.c
+ababc.c
+aabc.bc
+aabc.b.c
+abac.bc
+abac.b.c
+aab.bcc
+aab.bc.c
+abc.abc
+abc.acb
+abc.ab.c
+abc.a.b.c
+ab.ac.bc
+ab.ac.b.c
+Total signatures: 20
+--------------------
+Exit code: 0
+============================================================
+TEST: sigcensus 4
+--------------------
+aabbccdd
+aabbcdcd
+aabbcddc
+aabcbdcd
+aabcbddc
+aabcdbcd
+aabcdbdc
+aabcdcdb
+aabcddbc
+aabcddcb
+ababcdcd
+abacbdcd
+abacdbcd
+abacdbdc
+abcadbcd
+abcadcbd
+abcdabcd
+aabbccd.d
+aabbcdc.d
+aabcbcd.d
+aabcbdc.d
+aabccbd.d
+aabcdbc.d
+aabcdcb.d
+ababcdc.d
+abacbcd.d
+abacbdc.d
+abcabcd.d
+aabbcd.cd
+aabbcd.c.d
+aabcbd.cd
+aabcbd.c.d
+aabccd.bd
+aabccd.b.d
+aabcdb.cd
+aabcdb.c.d
+ababcd.cd
+ababcd.c.d
+abacbd.cd
+abacbd.c.d
+abacdc.bd
+abacdc.b.d
+abcabd.cd
+abcabd.c.d
+aabbc.cdd
+aabbc.cd.d
+aabcb.cdd
+aabcb.cd.d
+aabcd.bcd
+aabcd.bdc
+aabcd.bc.d
+aabcd.bd.c
+aabcd.b.c.d
+ababc.cdd
+ababc.cd.d
+abacd.bcd
+abacd.bdc
+abacd.bc.d
+abacd.cd.b
+abacd.b.c.d
+aabc.bcdd
+aabc.bdcd
+aabc.bddc
+aabc.bcd.d
+aabc.bdc.d
+aabc.bdd.c
+aabc.bd.cd
+aabc.bd.c.d
+abac.bdcd
+abac.bcd.d
+abac.bdd.c
+abac.bd.cd
+abac.bd.c.d
+abcd.abcd
+abcd.abdc
+abcd.adcb
+abcd.abc.d
+abcd.acb.d
+abcd.ab.cd
+abcd.ab.c.d
+abcd.ac.bd
+abcd.ac.b.d
+abcd.a.b.c.d
+aab.bcd.cd
+aab.bcd.c.d
+aab.bc.cd.d
+abc.abd.cd
+abc.abd.c.d
+abc.acd.bd
+abc.acd.b.d
+abc.ab.cd.d
+abc.ad.bd.c
+abc.ad.b.c.d
+ab.ac.bd.cd
+ab.ac.bd.c.d
+Total signatures: 95
+--------------------
+Exit code: 0
+============================================================

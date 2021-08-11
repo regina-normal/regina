@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# Regina - Software for low-dimensional topology
+# Command-Line Utilities Test Suite
+#
+# Copyright (c) 2016-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# --- sigcensus with errors:
+sigcensus
+sigcensus 0
+sigcensus hello
+sigcensus 100
+sigcensus 2 3
+# --- sigcensus for low orders:
+# Results for order 1, 2, 3 have been verified in full against Tables 4.2, 4.3
+# and 4.4 from Burton's PhD thesis.  Results for order 4 are not listed in the
+# thesis but the total count appears in Table 4.1, and this matches also.
+sigcensus 1
+sigcensus 2
+sigcensus 3
+sigcensus 4
