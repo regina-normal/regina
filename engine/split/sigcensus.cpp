@@ -37,6 +37,7 @@ namespace regina {
 
 size_t SigCensus::run() {
     // Initialisations.
+    std::fill(sig.labelInv, sig.labelInv + 2 * sig.order_, false);
     sig.nCycles = 0;
     sig.nCycleGroups = 0;
     nextLabel = 0;
