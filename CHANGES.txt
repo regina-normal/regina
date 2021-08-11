@@ -345,6 +345,8 @@ Version 6.1  [ TODO ]
             - Routine swapRows() is now constant time.
             - The type Matrix<bool> is now wrapped in Python under the name
               MatrixBool.
+        Class Matrix2:
+            - Added member and global swap() functions.
         Class MaxAdmissible:
             - Function enumerate() now returns by value, not by pointer.
         Class ModelLinkGraph:

@@ -50,13 +50,16 @@ namespace regina {
  */
 
 /**
- * Represents a 2-by-2 integer matrix.  The advantages of using this
- * class over the larger MatrixInt and friends is that this class has
- * less overhead and offers additional mathematical support routines
- * that the larger classes do not.
+ * Represents a 2-by-2 integer matrix.  The advantage of using this class
+ * over the larger Matrix class template (e.g., MatrixInt) is that this class
+ * has less overhead.
  *
  * This class only contains four long integers, and so it may be considered
  * small enough to pass about by value.
+ *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, it does not implement a move
+ * constructor or move assignment, since its internal data is very small.
  */
 class Matrix2 {
     private:
@@ -115,6 +118,13 @@ class Matrix2 {
          * @return a reference to this matrix.
          */
         Matrix2& operator = (const long values[2][2]);
+
+        /**
+         * Swaps the contents of this and the given matrix.
+         *
+         * @param other the matrix whose contents should be swapped with this.
+         */
+        void swap(Matrix2& other);
 
         /**
          * Returns a single row of this matrix.
@@ -289,6 +299,17 @@ class Matrix2 {
 };
 
 /**
+ * Swaps the contents of the two given matrices.
+ *
+ * This global routine simply calls Matrix2::swap(); it is provided so
+ * that Matrix2 meets the C++ Swappable requirements.
+ *
+ * @param a the first matrix whose contents should be swapped.
+ * @param b the second matrix whose contents should be swapped.
+ */
+void swap(Matrix2& a, Matrix2& b);
+
+/**
  * Writes the given matrix to the given output stream.  The matrix will
  * be written entirely on a single line, with the first row followed by the
  * second row.
@@ -366,6 +387,10 @@ inline Matrix2& Matrix2::operator = (const long values[2][2]) {
     data[0][0] = values[0][0]; data[0][1] = values[0][1];
     data[1][0] = values[1][0]; data[1][1] = values[1][1];
     return *this;
+}
+
+inline void Matrix2::swap(Matrix2& other) {
+    std::swap(data, other.data);
 }
 
 inline const long* Matrix2::operator [] (unsigned row) const {
@@ -462,6 +487,10 @@ inline bool Matrix2::isZero() const {
 inline std::ostream& operator << (std::ostream& out, const Matrix2& mat) {
     return out << "[[ " << mat.data[0][0] << ' ' << mat.data[0][1]
         << " ] [ " << mat.data[1][0] << ' ' << mat.data[1][1] << " ]]";
+}
+
+inline void swap(Matrix2& a, Matrix2& b) {
+    a.swap(b);
 }
 
 } // namespace regina
