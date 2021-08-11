@@ -346,7 +346,9 @@ void swap(Signature& a, Signature& b) noexcept;
 
 // Inline functions for Signature
 
-inline Signature::Signature() {
+inline Signature::Signature() : order_(0),
+        label(nullptr), labelInv(nullptr), nCycles(0), cycleStart(nullptr),
+        nCycleGroups(0), cycleGroupStart(nullptr) {
 }
 
 inline Signature::Signature(unsigned newOrder) : order_(newOrder),
