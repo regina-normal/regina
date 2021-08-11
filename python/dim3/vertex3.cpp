@@ -76,7 +76,13 @@ void addVertex3(pybind11::module_& m) {
         .def("boundaryComponent", &Vertex<3>::boundaryComponent,
             pybind11::return_value_policy::reference)
         .def("degree", &Vertex<3>::degree)
-        .def("link", &Vertex<3>::link)
+        .def("linkType", &Vertex<3>::linkType)
+        .def("link", [](const Vertex<3>&) {
+            PyErr_SetString(PyExc_RuntimeError,
+                "Vertex3::link() has been renamed to Vertex3::linkType().  "
+                "You should change your code now, because the name link() "
+                "will be used for a different function in the future.");
+        })
         .def("buildLink", [](const Vertex<3>* v) {
             // Return a clone of the link.  This is because triangulations
             // have a custom holder type, and so pybind11 ignores any attempt

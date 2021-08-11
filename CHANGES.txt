@@ -662,6 +662,11 @@ Version 6.1  [ TODO ]
         Class VectorInt, VectorLarge:
             - New typedefs for Vector<Integer> and Vector<LargeInteger>, for
               compatibility with MatrixInt.
+        Class Vertex<3>:
+            - Renamed link() to linkType().  There is no deprecated alias,
+              because this rename is designed to clear the way for a
+              different routine to be called link() in the future.
+              Anyone who used link() before will need to update their code now.
         Class XMLCallback:
             - The state constants have now been rolled into a State enum type.
         Function allowsNonOrientableLinks(), allowsInvalidFaces():

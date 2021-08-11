@@ -185,7 +185,7 @@ QVariant Vertex3Model::data(const QModelIndex& index, int role) const {
             case 0:
                 return index.row();
             case 1: {
-                switch (item->link()) {
+                switch (item->linkType()) {
                     case Vertex<3>::SPHERE:
                         return QString();
                     case Vertex<3>::DISC:

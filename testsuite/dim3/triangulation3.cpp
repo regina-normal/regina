@@ -879,7 +879,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != Vertex<3>::DISC) {
+            if (v->linkType() != Vertex<3>::DISC) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as DISC.";
@@ -936,7 +936,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != Vertex<3>::SPHERE) {
+            if (v->linkType() != Vertex<3>::SPHERE) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as SPHERE.";
@@ -993,7 +993,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != Vertex<3>::TORUS) {
+            if (v->linkType() != Vertex<3>::TORUS) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as TORUS.";
@@ -1050,7 +1050,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != Vertex<3>::KLEIN_BOTTLE) {
+            if (v->linkType() != Vertex<3>::KLEIN_BOTTLE) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as KLEIN_BOTTLE.";
@@ -1107,7 +1107,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != Vertex<3>::NON_STANDARD_CUSP) {
+            if (v->linkType() != Vertex<3>::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as NON_STANDARD_CUSP.";
@@ -1164,7 +1164,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != Vertex<3>::NON_STANDARD_CUSP) {
+            if (v->linkType() != Vertex<3>::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as NON_STANDARD_CUSP.";
@@ -1221,7 +1221,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != Vertex<3>::INVALID) {
+            if (v->linkType() != Vertex<3>::INVALID) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as INVALID.";
@@ -1278,7 +1278,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != Vertex<3>::INVALID) {
+            if (v->linkType() != Vertex<3>::INVALID) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as INVALID.";

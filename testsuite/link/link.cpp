@@ -798,7 +798,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             size_t ideal = 0;
             for (auto v : c->vertices()) {
-                regina::Vertex<3>::LinkType t = v->link();
+                regina::Vertex<3>::LinkType t = v->linkType();
                 if (t == regina::Vertex<3>::TORUS)
                     ++ideal;
                 else if (t != regina::Vertex<3>::SPHERE) {

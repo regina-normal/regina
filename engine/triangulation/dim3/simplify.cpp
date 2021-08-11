@@ -215,7 +215,7 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
 
 bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     if (check) {
-        if (v->link() != Vertex<3>::SPHERE)
+        if (v->linkType() != Vertex<3>::SPHERE)
             return false;
         if (v->degree() != 2)
             return false;
@@ -454,7 +454,7 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
 
         if (nBdry != 2)
             return false;
-        if (tet->vertex(vertices[fVertex])->link() != Vertex<3>::DISC)
+        if (tet->vertex(vertices[fVertex])->linkType() != Vertex<3>::DISC)
             return false;
         if (! f->edge(fVertex)->isValid())
             return false;
@@ -494,8 +494,8 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     if (check) {
         if (t0->vertex(p0[2]) == t1->vertex(p1[3]))
             return false;
-        if (t0->vertex(p0[2])->link() != Vertex<3>::DISC ||
-               t1->vertex(p1[3])->link() != Vertex<3>::DISC)
+        if (t0->vertex(p0[2])->linkType() != Vertex<3>::DISC ||
+               t1->vertex(p1[3])->linkType() != Vertex<3>::DISC)
             return false;
     }
 
@@ -607,9 +607,9 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
         if (e->vertex(0)->isBoundary() && e->vertex(1)->isBoundary()) {
             if (! e->isBoundary())
                 return false;
-            if (e->vertex(0)->link() != Vertex<3>::DISC)
+            if (e->vertex(0)->linkType() != Vertex<3>::DISC)
                 return false;
-            if (e->vertex(1)->link() != Vertex<3>::DISC)
+            if (e->vertex(1)->linkType() != Vertex<3>::DISC)
                 return false;
         }
 

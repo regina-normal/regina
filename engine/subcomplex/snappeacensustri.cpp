@@ -66,7 +66,7 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
     unsigned long i;
     int link;
     for (i = 0; i < nVertices; i++) {
-        link = comp->vertex(i)->link();
+        link = comp->vertex(i)->linkType();
         if (link != Vertex<3>::TORUS && link != Vertex<3>::KLEIN_BOTTLE)
             return 0;
     }
@@ -141,9 +141,9 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             if (comp->countEdges() != 4)
                 return 0;
-            if (comp->vertex(0)->link() != Vertex<3>::TORUS)
+            if (comp->vertex(0)->linkType() != Vertex<3>::TORUS)
                 return 0;
-            if (comp->vertex(1)->link() != Vertex<3>::TORUS)
+            if (comp->vertex(1)->linkType() != Vertex<3>::TORUS)
                 return 0;
             if (comp->vertex(0)->degree() != 8)
                 return 0;

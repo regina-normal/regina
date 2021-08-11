@@ -400,7 +400,7 @@ long Triangulation<3>::eulerCharManifold() const {
     // and truncate those unwanted bits also.
     if (! valid_) {
         for (Vertex<3>* v : vertices())
-            if (v->link() == Vertex<3>::INVALID)
+            if (v->linkType() == Vertex<3>::INVALID)
                 ans += v->linkEulerChar() - 1;
         for (Edge<3>* e : edges())
             if (! e->isValid())

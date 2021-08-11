@@ -200,7 +200,7 @@ static NSArray* embText;
 
     if ((coords == regina::NS_QUAD_CLOSED || coords == regina::NS_AN_QUAD_OCT_CLOSED) && ! (
             tri->countVertices() == 1 &&
-            tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
+            tri->vertex(0)->linkType() == regina::Vertex<3>::TORUS &&
             tri->isOriented())) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selection Not Supported"
                                                         message:@"At present, closed quad and closed quad-oct coordinates are only available for oriented ideal triangulations with one torus cusp and no other boundary components or internal vertices."

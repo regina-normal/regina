@@ -47,7 +47,7 @@ std::optional<MatrixInt> NSVectorQuadOctClosed::makeMatchingEquations(
     if (! (triangulation.isOriented() && triangulation.isIdeal() &&
             triangulation.countBoundaryComponents() == 1 &&
             triangulation.countVertices() == 1 &&
-            triangulation.vertex(0)->link() == Vertex<3>::TORUS))
+            triangulation.vertex(0)->linkType() == Vertex<3>::TORUS))
         return std::nullopt;
 
     // We will use SnapPea to build the additional constraint that

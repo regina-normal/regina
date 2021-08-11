@@ -125,9 +125,13 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * vertex link, and so can be much faster than analysing the
          * result of buildLink().
          *
+         * This is the routine that used to be called link() in Regina 6.0.1
+         * and earlier.  It was renamed to linkType() in Regina 7.0, to clear
+         * the way for a different routine to be called link() in the future.
+         *
          * @return a broad categorisation of the vertex link.
          */
-        LinkType link() const;
+        LinkType linkType() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -301,7 +305,7 @@ inline Face<3, 0>::Face(Component<3>* component) :
         detail::FaceBase<3, 0>(component), linkEulerChar_(0), linkTri_(0) {
 }
 
-inline Vertex<3>::LinkType Face<3, 0>::link() const {
+inline Vertex<3>::LinkType Face<3, 0>::linkType() const {
     return link_;
 }
 

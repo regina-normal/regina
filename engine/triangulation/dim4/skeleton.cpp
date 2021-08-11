@@ -195,7 +195,7 @@ void Triangulation<4>::calculateVertexLinks() {
         if (! vertex->isValid()) {
             int type;
             for (Vertex<3>* v : vertex->link_->vertices()) {
-                type = v->link();
+                type = v->linkType();
                 if (type != Vertex<3>::SPHERE && type != Vertex<3>::DISC) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.

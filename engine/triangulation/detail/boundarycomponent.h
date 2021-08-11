@@ -959,7 +959,7 @@ class BoundaryComponentBase :
          * If this boundary component consists only of a single vertex
          * (i.e., this is an ideal or invalid vertex boundary component),
          * then this routine returns the triangulation of the corresponding
-         * vertex link.  See Vertex::link() for details.
+         * vertex link.  See Vertex::buildLink() for details.
          *
          * This routine is fast, since it caches the boundary triangulation.
          * Moreover, it is guaranteed that the full skeleton of this

@@ -139,7 +139,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
     if ((coordSystem == regina::NS_QUAD_CLOSED ||
                 coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) && ! (
             tri->countVertices() == 1 &&
-            tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
+            tri->vertex(0)->linkType() == regina::Vertex<3>::TORUS &&
             tri->isOriented())) {
         QString name = Coordinates::adjective(coordSystem, false);
         ReginaSupport::sorry(ui,
