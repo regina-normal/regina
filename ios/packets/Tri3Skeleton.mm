@@ -225,8 +225,7 @@
         } else {
             // We are drilling an edge between two boundaries, at least one of which is real.
             // Therefore we cannot use pinchEdge(), which would create a mixed real-ideal boundary.
-            // Since drillEdge() is deprecated (and will be removed in Regina 6.1), we will just
-            // refuse to do it here in the GUI.
+            // For now, just refuse to do it.
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Drill Between Boundaries"
                                                             message:@"I am not brave enough to drill an edge between two boundary components where at least one is real, since this could produce an enormous number of tetrahedra. You could try converting to an ideal triangulation, since I will happily drill edges between ideal vertices."
                                                            delegate:nil

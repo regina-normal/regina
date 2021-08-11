@@ -963,9 +963,8 @@ void Tri3GluingsUI::drillEdge() {
                     // We are drilling an edge between two boundaries,
                     // at least one of which is real.  Therefore we
                     // cannot use pinchEdge(), which would create a
-                    // mixed real-ideal boundary.  Since drillEdge() is
-                    // deprecated (and will be removed in Regina 6.1),
-                    // we will just refuse to do it here in the GUI.
+                    // mixed real-ideal boundary.
+                    // Just refuse to do it for now.
                     ReginaSupport::sorry(ui,
                         tr("Cannot drill between boundaries."),
                         tr("I am not brave enough "
