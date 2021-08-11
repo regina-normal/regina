@@ -205,7 +205,8 @@ void SigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                 if (sig.label[tryPos] == nextLabel)
                     nextLabel++;
                 tryPos++;
-                sig.label[tryPos] = 0;
+                if (tryPos < endPos)
+                    sig.label[tryPos] = 0;
             }
         }
     }
