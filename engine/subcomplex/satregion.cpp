@@ -121,7 +121,7 @@ SFSpace* SatRegion::createSFS(bool reflect) const {
     countBoundaries(untwisted, twisted);
 
     // Go ahead and build the Seifert fibred space.
-    SFSpace::classType baseClass;
+    SFSpace::ClassType baseClass;
 
     bool bdry = (twisted || untwisted || twistedBlocks_);
     if (baseOrbl_) {

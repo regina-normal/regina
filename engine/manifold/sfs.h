@@ -208,7 +208,7 @@ class SFSpace : public Manifold {
          * \c bo1, \c b02, \c bn1, \c bn2, \c bn3 for base orbifolds
          * with boundaries.
          */
-        enum classType {
+        enum ClassType {
             o1 = 101,
                 /**< Indicates that the base orbifold is orientable with
                      no punctures or reflector boundaries, and that none
@@ -260,8 +260,19 @@ class SFSpace : public Manifold {
                      and that its fibre-reversing paths do not correspond
                      precisely to its orientation-reversing paths. */
         };
+
+        /**
+         * Deprecated alias for the ClassType enumeration, which lists the
+         * different classes for base orbifolds.
+         *
+         * \deprecated This enumeration has been renamed from \a classType
+         * to \a ClassType, for consistency with the names of other
+         * enumeration types across Regina.
+         */
+        typedef ClassType classType [[deprecated]];
+
     private:
-        classType class_;
+        ClassType class_;
             /**< Indicates which of the classes above this space belongs to. */
         unsigned long genus_;
             /**< The genus of the base orbifold.  For non-orientable
@@ -319,7 +330,7 @@ class SFSpace : public Manifold {
          * @param useClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
          * paths in the 3-manifold.  See the SFSpace class notes and the
-         * classType enumeration notes for details.
+         * ClassType enumeration notes for details.
          * @param genus the genus of the base orbifold (the
          * number of tori or projective planes that it contains).
          * Note that for non-orientable base surfaces, this is the
@@ -339,7 +350,7 @@ class SFSpace : public Manifold {
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
-        SFSpace(classType useClass, unsigned long genus,
+        SFSpace(ClassType useClass, unsigned long genus,
             unsigned long punctures = 0, unsigned long puncturesTwisted = 0,
             unsigned long reflectors = 0, unsigned long reflectorsTwisted = 0);
         /**
@@ -373,11 +384,11 @@ class SFSpace : public Manifold {
          * addHandle(), addCrosscap(), addPuncture() or addReflector().
          *
          * For more information on the eleven predefined classes, see the
-         * SFSpace class notes or the classType enumeration notes.
+         * SFSpace class notes or the ClassType enumeration notes.
          *
          * @return the particular class to which this space belongs.
          */
-        classType baseClass() const;
+        ClassType baseClass() const;
         /**
          * Returns the genus of the base orbifold.  All punctures and
          * reflector boundaries in the base orbifold are ignored (i.e.,
@@ -537,7 +548,7 @@ class SFSpace : public Manifold {
          * a punctured torus.
          *
          * Note that this operation may alter which of the classes
-         * described by classType this space belongs to.
+         * described by ClassType this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -557,7 +568,7 @@ class SFSpace : public Manifold {
          * a Mobius band.
          *
          * Note that this operation may alter which of the classes
-         * described by classType this space belongs to.
+         * described by ClassType this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -860,7 +871,7 @@ inline SFSpace::SFSpace() : class_(o1), genus_(0),
         nFibres_(0), b_(0) {
 }
 
-inline SFSpace::SFSpace(SFSpace::classType useClass, unsigned long genus,
+inline SFSpace::SFSpace(SFSpace::ClassType useClass, unsigned long genus,
         unsigned long punctures, unsigned long puncturesTwisted,
         unsigned long reflectors, unsigned long reflectorsTwisted) :
         class_(useClass), genus_(genus),
@@ -876,7 +887,7 @@ inline bool SFSpace::operator != (const SFSpace& compare) const {
     return ! ((*this) == compare);
 }
 
-inline SFSpace::classType SFSpace::baseClass() const {
+inline SFSpace::ClassType SFSpace::baseClass() const {
     return class_;
 }
 

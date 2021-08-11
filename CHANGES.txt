@@ -568,6 +568,9 @@ Version 6.1  [ TODO ]
               fundGroupFilled() and homologyFilled() now have a precondition
               that this must not be a null SnapPea triangulation (instead of
               the old behaviour of returning a null pointer).
+        Class SFSpace:
+            - Renamed classType enumeration to ClassType.  The old name
+              is kept as a deprecated alias.
         Class StandardTriangulation:
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.
