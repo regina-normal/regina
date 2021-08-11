@@ -2930,10 +2930,6 @@ void TriangulationBase<dim>::makeDoubleCover() {
 
 template <int dim>
 void TriangulationBase<dim>::barycentricSubdivision() {
-    // IMPORTANT: If the labelling of new simplices ever changes, then the
-    // 3-dimensional drillEdge() code must be rewritten as well (since it
-    // relies on the specific labelling scheme that we use here).
-
     size_t nOld = simplices_.size();
     if (nOld == 0)
         return;
