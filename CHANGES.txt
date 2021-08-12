@@ -521,6 +521,9 @@ Version 6.1  [ TODO ]
               of using static routines only.  This makes the class
               suitable for use with C++11 range-based for loops.
             - This class is now thread-safe.
+        Class SFSpace:
+            - Added move constructors and move assignment operators.
+            - Added member and global swap() functions.
         Class SigCensus:
             - New typedef SigIsoList to replace the old global SigIsoList.
             - The old global formSigCensus() is now a static member function

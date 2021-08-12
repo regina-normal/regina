@@ -65,6 +65,7 @@ void addSFSpace(pybind11::module_& m) {
             pybind11::arg("reflectors") = 0,
             pybind11::arg("reflectorsTwisted") = 0)
         .def(pybind11::init<const SFSpace&>())
+        .def("swap", &SFSpace::baseClass)
         .def("baseClass", &SFSpace::baseClass)
         .def("baseGenus", &SFSpace::baseGenus)
         .def("baseOrientable", &SFSpace::baseOrientable)
@@ -104,6 +105,8 @@ void addSFSpace(pybind11::module_& m) {
     // The SFSpace subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(s);
+
+    m.def("swap", (void(*)(SFSpace&, SFSpace&))(regina::swap));
 
     pybind11::enum_<SFSpace::ClassType>(s, "ClassType")
         .value("o1", SFSpace::o1)
