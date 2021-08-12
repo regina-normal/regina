@@ -49,6 +49,7 @@
 #include "testsuite/generic/testgeneric.h"
 #endif
 #include "testsuite/link/testlink.h"
+#include "testsuite/manifold/testmanifold.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
@@ -161,6 +162,9 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("generictriangulation",
         &addGenericTriangulation));
 #endif
+
+    // Manifolds:
+    sets.insert(std::make_pair("sfs", &addSFS));
 
     // Subcomplexes:
     sets.insert(std::make_pair("standardtriangulation",
