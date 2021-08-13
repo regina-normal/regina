@@ -191,7 +191,9 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
+ * even when passing or returning objects by value.  Note, however, that
+ * SFSpace still requires a non-trivial (but constant sized) amount of data to
+ * be copied even in a move operation.
  *
  * \warning In Regina 4.2.1 and earlier, this class was named NSFS.
  * As of Regina 4.3, this class was renamed due to significant changes of
