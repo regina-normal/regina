@@ -265,6 +265,10 @@ c = s.enumerateCovers(3, SnapPeaTriangulation.CoverEnumerationType.all_covers)
 
 watchers = [ Watcher(s) ] + [ Watcher(i[0]) for i in c ]
 
+# In python2 we are seeing i hold on to its last value, which means the
+# corresponding packet will not be destroyed.  Fix this by resetting i.
+i = None
+
 print('Destroying covers')
 c = None
 print('Destroying original')
