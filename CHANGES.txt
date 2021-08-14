@@ -219,6 +219,8 @@ Version 6.1  [ TODO ]
               syntax should be largely unaffected, and the Python behaviour
               (returns None if there is no homomorphism) should remain the same.
             - Other major cleanup and reorganisation under the hood.
+        Class Handlebody:
+            - Added member and global swap() functions.
         Class HasReturnType:
             - Removed completely.
         Class HilbertCD, HilbertDual, HilbertPrimal:
@@ -280,6 +282,8 @@ Version 6.1  [ TODO ]
               well-defined (but unimportant) total order.
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
+        Class LensSpace:
+            - Added member and global swap() functions.
         Class LessDeref:
             - Removed completely.  Just use a lamba if you need to.
         Class LightweightSequence<T>:
@@ -562,11 +566,15 @@ Version 6.1  [ TODO ]
               the other isomorphism was null.
         Class SimpleSurfaceBundle:
             - Class constants are now constexpr.
+            - Added member and global swap() functions.
         Class Simplex<dim>:
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are now merged.
             - New compile-time constants dimension and subdimension.
-        Class SnapPeaCensusManifold, SnapPeaCensusTri:
+        Class SnapPeaCensusManifold:
+            - Class constants for the census sections are now constexpr.
+            - Added member and global swap() functions.
+        Class SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
         Class SnapPeaTriangulation:
             - New constructor that takes a link and builds its complement.
@@ -600,6 +608,8 @@ Version 6.1  [ TODO ]
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a deprecated
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
+        Class TorusBundle:
+            - Added member and global swap() functions.
         Class TreeTraversal<...>
             - The verify() routines no longer allow a ready-made matrix of
               matching/angle equations to be passed; also, they now take

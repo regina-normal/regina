@@ -54,6 +54,10 @@ namespace regina {
  *
  * All optional Manifold routines except for Manifold::construct() are
  * implemented for this class.
+ *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, it does not implement a move
+ * constructor or move assignment, since its internal data is very small.
  */
 class Handlebody : public Manifold {
     private:
@@ -73,11 +77,9 @@ class Handlebody : public Manifold {
          */
         Handlebody(unsigned long newHandles, bool newOrientable);
         /**
-         * Creates a clone of the given handlebody.
-         *
-         * @param cloneMe the handlebody to clone.
+         * Creates a new copy of the given handlebody.
          */
-        Handlebody(const Handlebody& cloneMe) = default;
+        Handlebody(const Handlebody&) = default;
         /**
          * Destroys this handlebody.
          */
@@ -115,17 +117,36 @@ class Handlebody : public Manifold {
         bool operator != (const Handlebody& compare) const;
 
         /**
-         * Sets this to be a clone of the given handlebody.
+         * Sets this to be a copy of the given handlebody.
          *
-         * @param cloneMe the handlebody to clone.
+         * @return a reference to this handlebody.
          */
-        Handlebody& operator = (const Handlebody& cloneMe) = default;
+        Handlebody& operator = (const Handlebody&) = default;
+
+        /**
+         * Swaps the contents of this and the given handlebody.
+         *
+         * @param other the handlebody whose contents should be swapped
+         * with this.
+         */
+        void swap(Handlebody& other) noexcept;
 
         std::optional<AbelianGroup> homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
+
+/**
+ * Swaps the contents of the two given handlebodies.
+ *
+ * This global routine simply calls Handlebody::swap(); it is provided so
+ * that LensSpace meets the C++ Handlebody requirements.
+ *
+ * @param a the first handlebody whose contents should be swapped.
+ * @param b the second handlebody whose contents should be swapped.
+ */
+void swap(Handlebody& a, Handlebody& b) noexcept;
 
 /*@}*/
 
@@ -159,6 +180,15 @@ inline bool Handlebody::operator != (const Handlebody& compare) const {
 
 inline bool Handlebody::isHyperbolic() const {
     return false;
+}
+
+inline void Handlebody::swap(Handlebody& other) noexcept {
+    std::swap(nHandles, other.nHandles);
+    std::swap(orientable, other.orientable);
+}
+
+inline void swap(Handlebody& a, Handlebody& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -78,6 +78,10 @@ namespace regina {
  * are identical to those of its corresponding SnapPeaCensusManifold.
  *
  * All of the optional Manifold routines are implemented for this class.
+ *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, it does not implement a move
+ * constructor or move assignment, since its internal data is very small.
  */
 class SnapPeaCensusManifold : public Manifold {
     public:
@@ -127,11 +131,9 @@ class SnapPeaCensusManifold : public Manifold {
          */
         SnapPeaCensusManifold(char newSection, unsigned long newIndex);
         /**
-         * Creates a clone of the given SnapPea census manifold.
-         *
-         * @param cloneMe the census manifold to clone.
+         * Creates a new copy of the given SnapPea census manifold.
          */
-        SnapPeaCensusManifold(const SnapPeaCensusManifold& cloneMe) = default;
+        SnapPeaCensusManifold(const SnapPeaCensusManifold&) = default;
         /**
          * Destroys this structure.
          */
@@ -182,12 +184,20 @@ class SnapPeaCensusManifold : public Manifold {
         bool operator != (const SnapPeaCensusManifold& compare) const;
 
         /**
-         * Sets this to be a clone of the given SnapPea census manifold.
+         * Sets this to be a copy of the given SnapPea census manifold.
          *
-         * @param cloneMe the census manifold to clone.
+         * @return a reference to this SnapPea census manifold.
          */
-        SnapPeaCensusManifold& operator = (
-            const SnapPeaCensusManifold& cloneMe) = default;
+        SnapPeaCensusManifold& operator = (const SnapPeaCensusManifold&) =
+            default;
+
+        /**
+         * Swaps the contents of this and the given SnapPea census manifold.
+         *
+         * @param other the census manifold whose contents should be swapped
+         * with this.
+         */
+        void swap(SnapPeaCensusManifold& other) noexcept;
 
         Triangulation<3>* construct() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -196,6 +206,17 @@ class SnapPeaCensusManifold : public Manifold {
         std::ostream& writeTeXName(std::ostream& out) const override;
         std::ostream& writeStructure(std::ostream& out) const override;
 };
+
+/**
+ * Swaps the contents of the two given SnapPea census manifolds.
+ *
+ * This global routine simply calls SnapPeaCensusManifold::swap(); it is
+ * provided so that SnapPeaCensusManifold meets the C++ Swappable requirements.
+ *
+ * @param a the first census manifold whose contents should be swapped.
+ * @param b the second census manifold whose contents should be swapped.
+ */
+void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept;
 
 /*@}*/
 
@@ -231,6 +252,15 @@ inline bool SnapPeaCensusManifold::operator != (
 }
 inline bool SnapPeaCensusManifold::isHyperbolic() const {
     return true;
+}
+
+inline void SnapPeaCensusManifold::swap(SnapPeaCensusManifold& other) noexcept {
+    std::swap(section_, other.section_);
+    std::swap(index_, other.index_);
+}
+
+inline void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

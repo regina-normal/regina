@@ -65,7 +65,7 @@ void addSFSpace(pybind11::module_& m) {
             pybind11::arg("reflectors") = 0,
             pybind11::arg("reflectorsTwisted") = 0)
         .def(pybind11::init<const SFSpace&>())
-        .def("swap", &SFSpace::baseClass)
+        .def("swap", &SFSpace::swap)
         .def("baseClass", &SFSpace::baseClass)
         .def("baseGenus", &SFSpace::baseGenus)
         .def("baseOrientable", &SFSpace::baseOrientable)

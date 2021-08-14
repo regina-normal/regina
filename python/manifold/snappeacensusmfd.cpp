@@ -42,6 +42,7 @@ void addSnapPeaCensusManifold(pybind11::module_& m) {
             (m, "SnapPeaCensusManifold")
         .def(pybind11::init<char, unsigned long>())
         .def(pybind11::init<const SnapPeaCensusManifold&>())
+        .def("swap", &SnapPeaCensusManifold::swap)
         .def("section", &SnapPeaCensusManifold::section)
         .def("index", &SnapPeaCensusManifold::index)
         // On some systems we cannot take addresses of the following
@@ -66,5 +67,8 @@ void addSnapPeaCensusManifold(pybind11::module_& m) {
     // The SnappeaCensusManifold subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(SnapPeaCensusManifold&, SnapPeaCensusManifold&))(regina::swap));
 }
 

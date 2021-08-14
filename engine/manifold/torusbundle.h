@@ -71,6 +71,10 @@ namespace regina {
  * All optional Manifold routines except for construct() are implemented
  * for this class.
  *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, it does not implement a move
+ * constructor or move assignment, since its internal data is very small.
+ *
  * \todo \feature Implement the == operator for finding conjugate and
  * inverse matrices.
  */
@@ -119,11 +123,9 @@ class TorusBundle : public Manifold {
          */
         TorusBundle(long mon00, long mon01, long mon10, long mon11);
         /**
-         * Creates a clone of the given torus bundle.
-         *
-         * @param cloneMe the torus bundle to clone.
+         * Creates a new copy of the given torus bundle.
          */
-        TorusBundle(const TorusBundle& cloneMe) = default;
+        TorusBundle(const TorusBundle&) = default;
         /**
          * Returns the monodromy describing how the upper and lower
          * torus boundaries are identified.  See the class notes for
@@ -134,11 +136,19 @@ class TorusBundle : public Manifold {
         const Matrix2& monodromy() const;
 
         /**
-         * Sets this to be a clone of the given torus bundle.
+         * Sets this to be a copy of the given torus bundle.
          *
-         * @param cloneMe the torus bundle to clone.
+         * @return a reference to this torus bundle.
          */
-        TorusBundle& operator = (const TorusBundle& cloneMe) = default;
+        TorusBundle& operator = (const TorusBundle&) = default;
+
+        /**
+         * Swaps the contents of this and the given torus bundle.
+         *
+         * @param other the torus bundle whose contents should be swapped
+         * with this.
+         */
+        void swap(TorusBundle& other) noexcept;
 
         std::optional<AbelianGroup> homology() const override;
         bool isHyperbolic() const override;
@@ -218,6 +228,17 @@ class TorusBundle : public Manifold {
         static bool simplerNonNeg(const Matrix2& m1, const Matrix2& m2);
 };
 
+/**
+ * Swaps the contents of the two given torus bundles.
+ *
+ * This global routine simply calls TorusBundle::swap(); it is provided so
+ * that TorusBundle meets the C++ Swappable requirements.
+ *
+ * @param a the first torus bundle whose contents should be swapped.
+ * @param b the second torus bundle whose contents should be swapped.
+ */
+void swap(TorusBundle& a, TorusBundle& b) noexcept;
+
 /*@}*/
 
 // Inline functions for TorusBundle
@@ -280,6 +301,14 @@ inline void TorusBundle::subtractRCUp() {
 
 inline bool TorusBundle::isHyperbolic() const {
     return false;
+}
+
+inline void TorusBundle::swap(TorusBundle& other) noexcept {
+    monodromy_.swap(other.monodromy_);
+}
+
+inline void swap(TorusBundle& a, TorusBundle& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -42,6 +42,7 @@ void addSimpleSurfaceBundle(pybind11::module_& m) {
             (m, "SimpleSurfaceBundle")
         .def(pybind11::init<int>())
         .def(pybind11::init<const SimpleSurfaceBundle&>())
+        .def("swap", &SimpleSurfaceBundle::swap)
         .def("type", &SimpleSurfaceBundle::type)
         // On some systems we cannot take addresses of the following
         // inline class constants (e.g., this fails with gcc10 on windows).
@@ -59,5 +60,8 @@ void addSimpleSurfaceBundle(pybind11::module_& m) {
     // The SimpleSurfaceBundle subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(SimpleSurfaceBundle&, SimpleSurfaceBundle&))(regina::swap));
 }
 

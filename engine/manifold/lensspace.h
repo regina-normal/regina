@@ -61,6 +61,10 @@ namespace regina {
  * integer.
  *
  * All optional Manifold routines are implemented for this class.
+ *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, it does not implement a move
+ * constructor or move assignment, since its internal data is very small.
  */
 class LensSpace : public Manifold {
     private:
@@ -84,11 +88,9 @@ class LensSpace : public Manifold {
          */
         LensSpace(unsigned long newP, unsigned long newQ);
         /**
-         * Creates a clone of the given lens space.
-         *
-         * @param cloneMe the lens space to clone.
+         * Creates a new copy of the given lens space.
          */
-        LensSpace(const LensSpace& cloneMe) = default;
+        LensSpace(const LensSpace&) = default;
         /**
          * Destroys this lens space.
          */
@@ -132,11 +134,19 @@ class LensSpace : public Manifold {
         bool operator != (const LensSpace& compare) const;
 
         /**
-         * Sets this to be a clone of the given lens space.
+         * Sets this to be a copy of the given lens space.
          *
-         * @param cloneMe the lens space to clone.
+         * @return a reference to this lens space.
          */
-        LensSpace& operator = (const LensSpace& cloneMe) = default;
+        LensSpace& operator = (const LensSpace&) = default;
+
+        /**
+         * Swaps the contents of this and the given lens space.
+         *
+         * @param other the lens space whose contents should be swapped
+         * with this.
+         */
+        void swap(LensSpace& other) noexcept;
 
         Triangulation<3>* construct() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -151,6 +161,17 @@ class LensSpace : public Manifold {
          */
         void reduce();
 };
+
+/**
+ * Swaps the contents of the two given lens spaces.
+ *
+ * This global routine simply calls LensSpace::swap(); it is provided so
+ * that LensSpace meets the C++ Swappable requirements.
+ *
+ * @param a the first lens space whose contents should be swapped.
+ * @param b the second lens space whose contents should be swapped.
+ */
+void swap(LensSpace& a, LensSpace& b) noexcept;
 
 /*@}*/
 
@@ -177,6 +198,15 @@ inline bool LensSpace::operator != (const LensSpace& compare) const {
 
 inline bool LensSpace::isHyperbolic() const {
     return false;
+}
+
+inline void LensSpace::swap(LensSpace& other) noexcept {
+    std::swap(p_, other.p_);
+    std::swap(q_, other.q_);
+}
+
+inline void swap(LensSpace& a, LensSpace& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina
