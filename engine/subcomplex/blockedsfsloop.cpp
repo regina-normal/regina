@@ -73,7 +73,7 @@ BlockedSFSLoop::~BlockedSFSLoop() {
 }
 
 Manifold* BlockedSFSLoop::manifold() const {
-    SFSpace* sfs = region_->createSFS(false);
+    std::optional<SFSpace> sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
     if (sfs->punctures() == 1) {
@@ -84,7 +84,7 @@ Manifold* BlockedSFSLoop::manifold() const {
 
     sfs->reduce(false);
 
-    return new GraphLoop(sfs, matchingReln_);
+    return new GraphLoop(std::move(*sfs), matchingReln_);
 }
 
 std::ostream& BlockedSFSLoop::writeName(std::ostream& out) const {

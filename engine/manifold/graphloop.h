@@ -84,13 +84,19 @@ namespace regina {
  * The optional Manifold routine homology() is implemented, but
  * the optional routine construct() is not.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * GraphLoop still requires a non-trivial (but constant sized) amount of data
+ * to be copied even in a move operation.
+ *
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
 class GraphLoop : public Manifold {
     private:
-        SFSpace* sfs_;
+        SFSpace sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */
         Matrix2 matchingReln_;
             /**< The matrix describing how the two boundary tori are joined;
@@ -110,17 +116,10 @@ class GraphLoop : public Manifold {
          *           [ mat10  mat11 ]
          * </pre>
          *
-         * Note that the new object will take ownership of the given
-         * Seifert fibred space, and when this object is destroyed the
-         * Seifert fibred space will be destroyed also.
-         *
          * \pre The given Seifert fibred space has precisely two torus
          * boundaries, corresponding to two untwisted punctures in the
          * base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
-         *
-         * \ifacespython In Python, this constructor clones its SFSpace
-         * argument instead of claiming ownership of it.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param mat00 the (0,0) element of the matching matrix.
@@ -128,39 +127,62 @@ class GraphLoop : public Manifold {
          * @param mat10 the (1,0) element of the matching matrix.
          * @param mat11 the (1,1) element of the matching matrix.
          */
-        GraphLoop(SFSpace* sfs, long mat00, long mat01,
+        GraphLoop(const SFSpace& sfs, long mat00, long mat01,
+            long mat10, long mat11);
+        /**
+         * Creates a new graph manifold as a self-identified Seifert fibred
+         * space, which is moved instead of copied.
+         *
+         * Other than its use of move semantics, this behaves identically
+         * to the other constructor that takes the Seifert fibred space
+         * by const reference.  See that constructor for further details.
+         *
+         * \pre The given Seifert fibred space has precisely two torus
+         * boundaries, corresponding to two untwisted punctures in the
+         * base orbifold.
+         * \pre The given matching matrix has determinant +1 or -1.
+         *
+         * @param sfs the bounded Seifert fibred space.
+         * @param mat00 the (0,0) element of the matching matrix.
+         * @param mat01 the (0,1) element of the matching matrix.
+         * @param mat10 the (1,0) element of the matching matrix.
+         * @param mat11 the (1,1) element of the matching matrix.
+         */
+        GraphLoop(SFSpace&& sfs, long mat00, long mat01,
             long mat10, long mat11);
         /**
          * Creates a new graph manifold as a self-identified Seifert fibred
          * space.  The bounded Seifert fibred space and the entire 2-by-2
          * matching matrix are each passed separately.
          *
-         * Note that the new object will take ownership of the given
-         * Seifert fibred space, and when this object is destroyed the
-         * Seifert fibred space will be destroyed also.
+         * \pre The given Seifert fibred space has precisely two torus
+         * boundaries, corresponding to two punctures in the base orbifold.
+         * \pre The given matching matrix has determinant +1 or -1.
+         *
+         * @param sfs the bounded Seifert fibred space.
+         * @param matchingReln the 2-by-2 matching matrix.
+         */
+        GraphLoop(const SFSpace& sfs, const Matrix2& matchingReln);
+        /**
+         * Creates a new graph manifold as a self-identified Seifert fibred
+         * space, which is moved instead of copied.
+         *
+         * Other than its use of move semantics, this behaves identically
+         * to the other constructor that takes the Seifert fibred space
+         * by const reference.  See that constructor for further details.
          *
          * \pre The given Seifert fibred space has precisely two torus
          * boundaries, corresponding to two punctures in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \ifacespython In Python, this constructor clones its SFSpace
-         * argument instead of claiming ownership of it.
-         *
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        GraphLoop(SFSpace* sfs, const Matrix2& matchingReln);
+        GraphLoop(SFSpace&& sfs, const Matrix2& matchingReln);
         /**
          * Creates a clone of the given graph manifold.
-         *
-         * @param cloneMe the manifold to clone.
          */
-        GraphLoop(const GraphLoop& cloneMe);
-        /**
-         * Destroys this structure along with the bounded Seifert
-         * fibred space and the matching matrix.
-         */
-        ~GraphLoop();
+        GraphLoop(const GraphLoop&) = default;
 
         /**
          * Returns a reference to the bounded Seifert fibred space that
@@ -202,9 +224,17 @@ class GraphLoop : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @param cloneMe the manifold to clone.
+         * @return a reference to this graph manifold.
          */
-        GraphLoop& operator = (const GraphLoop& cloneMe);
+        GraphLoop& operator = (const GraphLoop&) = default;
+
+        /**
+         * Swaps the contents of this and the given graph manifold.
+         *
+         * @param other the graph manifold whose contents should be swapped
+         * with this.
+         */
+        void swap(GraphLoop& other) noexcept;
 
         std::optional<AbelianGroup> homology() const override;
         bool isHyperbolic() const override;
@@ -239,33 +269,50 @@ class GraphLoop : public Manifold {
         static void reduceBasis(Matrix2& reln);
 };
 
+/**
+ * Swaps the contents of the two given graph manifolds.
+ *
+ * This global routine simply calls GraphLoop::swap(); it is provided so
+ * that GraphLoop meets the C++ Swappable requirements.
+ *
+ * @param a the first graph manifold whose contents should be swapped.
+ * @param b the second graph manifold whose contents should be swapped.
+ */
+void swap(GraphLoop& a, GraphLoop& b) noexcept;
+
 /*@}*/
 
 // Inline functions for GraphLoop
 
-inline GraphLoop::GraphLoop(SFSpace* sfs,
+inline GraphLoop::GraphLoop(const SFSpace& sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
     reduce();
 }
 
-inline GraphLoop::GraphLoop(SFSpace* sfs, const Matrix2& matchingReln) :
+inline GraphLoop::GraphLoop(const SFSpace& sfs, const Matrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
     reduce();
 }
 
-inline GraphLoop::GraphLoop(const GraphLoop& cloneMe) :
-        sfs_(new SFSpace(*cloneMe.sfs_)), matchingReln_(cloneMe.matchingReln_) {
+inline GraphLoop::GraphLoop(SFSpace&& sfs,
+        long mat00, long mat01, long mat10, long mat11) :
+        sfs_(std::move(sfs)), matchingReln_(mat00, mat01, mat10, mat11) {
+    reduce();
 }
 
-inline GraphLoop& GraphLoop::operator = (const GraphLoop& cloneMe) {
-    *sfs_ = *cloneMe.sfs_;
-    matchingReln_ = cloneMe.matchingReln_;
-    return *this;
+inline GraphLoop::GraphLoop(SFSpace&& sfs, const Matrix2& matchingReln) :
+        sfs_(std::move(sfs)), matchingReln_(matchingReln) {
+    reduce();
+}
+
+inline void GraphLoop::swap(GraphLoop& other) noexcept {
+    sfs_.swap(other.sfs_);
+    matchingReln_.swap(other.matchingReln_);
 }
 
 inline const SFSpace& GraphLoop::sfs() const {
-    return *sfs_;
+    return sfs_;
 }
 
 inline const Matrix2& GraphLoop::matchingReln() const {
@@ -274,6 +321,10 @@ inline const Matrix2& GraphLoop::matchingReln() const {
 
 inline bool GraphLoop::isHyperbolic() const {
     return false;
+}
+
+inline void swap(GraphLoop& a, GraphLoop& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

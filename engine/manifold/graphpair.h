@@ -84,13 +84,19 @@ namespace regina {
  * The optional Manifold routine homology() is implemented, but
  * the optional routine construct() is not.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * GraphPair still requires a non-trivial (but constant sized) amount of data
+ * to be copied even in a move operation.
+ *
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
 class GraphPair : public Manifold {
     private:
-        SFSpace* sfs_[2];
+        SFSpace sfs_[2];
             /**< The two bounded Seifert fibred spaces that are joined
                  together. */
         Matrix2 matchingReln_;
@@ -111,16 +117,9 @@ class GraphPair : public Manifold {
          *           [ mat10  mat11 ]
          * </pre>
          *
-         * Note that the new object will take ownership of the two given
-         * Seifert fibred spaces, and when this object is destroyed the
-         * Seifert fibred spaces will be destroyed also.
-         *
          * \pre Each Seifert fibred space has a single torus boundary,
          * corresponding to a single untwisted puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
-         *
-         * \ifacespython In Python, this constructor clones its SFSpace
-         * arguments instead of claiming ownership of them.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -129,41 +128,65 @@ class GraphPair : public Manifold {
          * @param mat10 the (1,0) element of the matching matrix.
          * @param mat11 the (1,1) element of the matching matrix.
          */
-        GraphPair(SFSpace* sfs0, SFSpace* sfs1, long mat00, long mat01,
-            long mat10, long mat11);
+        GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
+            long mat00, long mat01, long mat10, long mat11);
         /**
-         * Creates a new graph manifold as a pair of joined Seifert fibred
-         * spaces.  The two bounded Seifert fibred spaces and the entire
-         * 2-by-2 matching matrix are each passed separately.
+         * Creates a new graph manifold from a pair of bounded Seifert
+         * fibred spaces, which are moved instead of copied.
          *
-         * Note that the new object will take ownership of the two given
-         * Seifert fibred spaces, and when this object is destroyed the
-         * Seifert fibred spaces will be destroyed also.
+         * Other than its use of move semantics, this behaves identically
+         * to the other constructor that takes the Seifert fibred spaces
+         * by const reference.  See that constructor for further details.
          *
          * \pre Each Seifert fibred space has a single torus boundary,
          * corresponding to a single untwisted puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \ifacespython In Python, this constructor clones its SFSpace
-         * arguments instead of claiming ownership of them.
+         * @param sfs0 the first Seifert fibred space.
+         * @param sfs1 the second Seifert fibred space.
+         * @param mat00 the (0,0) element of the matching matrix.
+         * @param mat01 the (0,1) element of the matching matrix.
+         * @param mat10 the (1,0) element of the matching matrix.
+         * @param mat11 the (1,1) element of the matching matrix.
+         */
+        GraphPair(SFSpace&& sfs0, SFSpace&& sfs1,
+            long mat00, long mat01, long mat10, long mat11);
+        /**
+         * Creates a new graph manifold as a pair of joined Seifert fibred
+         * spaces.  The two bounded Seifert fibred spaces and the entire
+         * 2-by-2 matching matrix are each passed separately.
+         *
+         * \pre Each Seifert fibred space has a single torus boundary,
+         * corresponding to a single untwisted puncture in the base orbifold.
+         * \pre The given matching matrix has determinant +1 or -1.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        GraphPair(SFSpace* sfs0, SFSpace* sfs1,
+        GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
             const Matrix2& matchingReln);
         /**
-         * Creates a clone of the given graph manifold.
+         * Creates a new graph manifold from a pair of bounded Seifert
+         * fibred spaces, which are moved instead of copied.
          *
-         * @param cloneMe the manifold to clone.
+         * Other than its use of move semantics, this behaves identically
+         * to the other constructor that takes the Seifert fibred spaces
+         * by const reference.  See that constructor for further details.
+         *
+         * \pre Each Seifert fibred space has a single torus boundary,
+         * corresponding to a single untwisted puncture in the base orbifold.
+         * \pre The given matching matrix has determinant +1 or -1.
+         *
+         * @param sfs0 the first Seifert fibred space.
+         * @param sfs1 the second Seifert fibred space.
+         * @param matchingReln the 2-by-2 matching matrix.
          */
-        GraphPair(const GraphPair& cloneMe);
+        GraphPair(SFSpace&& sfs0, SFSpace&& sfs1, const Matrix2& matchingReln);
         /**
-         * Destroys this structure along with the component Seifert
-         * fibred spaces and the matching matrix.
+         * Creates a clone of the given graph manifold.
          */
-        ~GraphPair();
+        GraphPair(const GraphPair&) = default;
 
         /**
          * Returns a reference to one of the two bounded Seifert fibred
@@ -206,9 +229,17 @@ class GraphPair : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @param cloneMe the manifold to clone.
+         * @param return a reference to this graph manifold.
          */
-        GraphPair& operator = (const GraphPair& cloneMe);
+        GraphPair& operator = (const GraphPair&) = default;
+
+        /**
+         * Swaps the contents of this and the given graph manifold.
+         *
+         * @param other the graph manifold whose contents should be swapped
+         * with this.
+         */
+        void swap(GraphPair& other) noexcept;
 
         std::optional<AbelianGroup> homology() const override;
         bool isHyperbolic() const override;
@@ -233,42 +264,55 @@ class GraphPair : public Manifold {
         static void reduceSign(Matrix2& reln);
 };
 
+/**
+ * Swaps the contents of the two given graph manifolds.
+ *
+ * This global routine simply calls GraphPair::swap(); it is provided so
+ * that GraphPair meets the C++ Swappable requirements.
+ *
+ * @param a the first graph manifold whose contents should be swapped.
+ * @param b the second graph manifold whose contents should be swapped.
+ */
+void swap(GraphPair& a, GraphPair& b) noexcept;
+
 /*@}*/
 
 // Inline functions for GraphPair
 
-inline GraphPair::GraphPair(SFSpace* sfs0, SFSpace* sfs1,
+inline GraphPair::GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
         long mat00, long mat01, long mat10, long mat11) :
+        sfs_ { sfs0, sfs1 }, matchingReln_(mat00, mat01, mat10, mat11) {
+    reduce();
+}
+
+inline GraphPair::GraphPair(SFSpace&& sfs0, SFSpace&& sfs1,
+        long mat00, long mat01, long mat10, long mat11) :
+        sfs_ { std::move(sfs0), std::move(sfs1) },
         matchingReln_(mat00, mat01, mat10, mat11) {
-    sfs_[0] = sfs0;
-    sfs_[1] = sfs1;
-
     reduce();
 }
 
-inline GraphPair::GraphPair(SFSpace* sfs0, SFSpace* sfs1,
-        const Matrix2& matchingReln) : matchingReln_(matchingReln) {
-    sfs_[0] = sfs0;
-    sfs_[1] = sfs1;
-
+inline GraphPair::GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
+        const Matrix2& matchingReln) :
+        sfs_ { sfs0, sfs1 }, matchingReln_(matchingReln) {
     reduce();
 }
 
-inline GraphPair::GraphPair(const GraphPair& cloneMe) :
-        matchingReln_(cloneMe.matchingReln_) {
-    sfs_[0] = new SFSpace(*cloneMe.sfs_[0]);
-    sfs_[1] = new SFSpace(*cloneMe.sfs_[1]);
+inline GraphPair::GraphPair(SFSpace&& sfs0, SFSpace&& sfs1,
+        const Matrix2& matchingReln) :
+        sfs_ { std::move(sfs0), std::move(sfs1) },
+        matchingReln_(matchingReln) {
+    reduce();
 }
 
-inline GraphPair& GraphPair::operator = (const GraphPair& cloneMe) {
-    *sfs_[0] = *cloneMe.sfs_[0];
-    *sfs_[1] = *cloneMe.sfs_[1];
-    matchingReln_ = cloneMe.matchingReln_;
-    return *this;
+inline void GraphPair::swap(GraphPair& other) noexcept {
+    sfs_[0].swap(other.sfs_[0]);
+    sfs_[1].swap(other.sfs_[1]);
+    matchingReln_.swap(other.matchingReln_);
 }
 
 inline const SFSpace& GraphPair::sfs(unsigned which) const {
-    return *sfs_[which];
+    return sfs_[which];
 }
 
 inline const Matrix2& GraphPair::matchingReln() const {
@@ -277,6 +321,10 @@ inline const Matrix2& GraphPair::matchingReln() const {
 
 inline bool GraphPair::isHyperbolic() const {
     return false;
+}
+
+inline void swap(GraphPair& a, GraphPair& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

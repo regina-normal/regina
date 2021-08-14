@@ -9,7 +9,7 @@ SET ( FILES
   lensspace.cpp
   manifold.cpp
   sfs.cpp
-  sfsaltset.cpp
+  sfsalt.cpp
   simplesurfacebundle.cpp
   snappeacensusmfd.cpp
   torusbundle.cpp
@@ -32,7 +32,7 @@ if (${REGINA_INSTALL_DEV})
     manifold.h
     notation.h
     sfs.h
-    sfsaltset.h
+    sfsalt.h
     simplesurfacebundle.h
     snappeacensusmfd.h
     torusbundle.h

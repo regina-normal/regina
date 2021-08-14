@@ -31,26 +31,25 @@
  **************************************************************************/
 
 #include "manifold/sfs.h"
-#include "manifold/sfsaltset.h"
+#include "manifold/sfsalt.h"
 
 namespace regina {
 
-SFSAltSet::SFSAltSet(const SFSpace* sfs) {
+SFSAlt::SFSAlt(const SFSpace& original) :
+        alt_(original), conversion_(1, 0, 0, 1), reflected_(false) {
     /**
-     * Note that whenever we add a (1,1) twist, we compensate by setting
+     * Note that, whenever we add a (1,1) twist, we compensate by setting
      * row 2 -> row 2 + row 1 in our conversion matrix.
      */
 
-    // Start with the original, reduced to give obstruction constant zero.
-    data_[0] = new SFSpace(*sfs);
-    data_[0]->reduce(false);
+    // Reduce the original to give obstruction constant zero.
+    alt_.reduce(false);
 
-    long b = data_[0]->obstruction();
-    if (b)
-        data_[0]->insertFibre(1, -b);
-
-    conversion_[0] = Matrix2(1, 0, -b, 1);
-    reflected_[0] = false;
+    long b = alt_.obstruction();
+    if (b) {
+        alt_.insertFibre(1, -b);
+        conversion_[1][0] = -b;
+    }
 
     /**
      * If the space is M/n2, we can replace it with D:(2,1)(2,-1)
@@ -66,86 +65,49 @@ SFSAltSet::SFSAltSet(const SFSpace* sfs) {
      * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
      *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
      */
-    if (data_[0]->baseClass() == SFSpace::bn2 &&
-            data_[0]->baseGenus() == 1 &&
-            (! data_[0]->baseOrientable()) &&
-            data_[0]->punctures(false) == 1 &&
-            data_[0]->punctures(true) == 0 &&
-            data_[0]->reflectors() == 0 &&
-            data_[0]->fibreCount() == 0 &&
-            data_[0]->obstruction() == 0) {
-        delete data_[0];
-
-        data_[0] = new SFSpace(SFSpace::bo1, 0 /* genus */,
+    if (alt_.baseClass() == SFSpace::bn2 &&
+            alt_.baseGenus() == 1 &&
+            (! alt_.baseOrientable()) &&
+            alt_.punctures(false) == 1 &&
+            alt_.punctures(true) == 0 &&
+            alt_.reflectors() == 0 &&
+            alt_.fibreCount() == 0 &&
+            alt_.obstruction() == 0) {
+        alt_ = SFSpace(SFSpace::bo1, 0 /* genus */,
             1 /* punctures */, 0 /* twisted */,
             0 /* reflectors */, 0 /* twisted */);
-        data_[0]->insertFibre(2, 1);
-        data_[0]->insertFibre(2, 1);
+        alt_.insertFibre(2, 1);
+        alt_.insertFibre(2, 1);
 
-        conversion_[0] = Matrix2(0, -1, 1, -1) * conversion_[0];
-    }
-
-    // Using data_[0] as a foundation, try now for a reflection.
-    data_[1] = new SFSpace(*data_[0]);
-    data_[1]->reflect();
-    data_[1]->reduce(false);
-
-    b = data_[1]->obstruction();
-    data_[1]->insertFibre(1, -b);
-    conversion_[1] = Matrix2(1, 0, -b, -1) * conversion_[0];
-    reflected_[1] = true;
-
-    size_ = 2;
-
-    // In the vanilla case, this is all.  However, we can occasionally
-    // do a little more.
-
-    // Can we negate all fibres without reflecting?
-    // Note that (1,2) == (1,0) in this case, so this is only
-    // interesting if we have an odd number of exceptional fibres.
-    if (data_[0]->fibreNegating() && (data_[0]->fibreCount() % 2 != 0)) {
-        // Do it by adding a single (1,1).  The subsequent reduce() will
-        // negate fibres to bring the obstruction constant back down to
-        // zero, giving the desired effect.
-        data_[2] = new SFSpace(*data_[0]);
-        data_[2]->insertFibre(1, 1);
-        data_[2]->reduce(false);
-
-        b = data_[2]->obstruction();
-        data_[2]->insertFibre(1, -b);
-        conversion_[2] = Matrix2(1, 0, -b + 1, 1) * conversion_[0];
-        reflected_[2] = false;
-
-        // And do it again with an added reflection.
-        data_[3] = new SFSpace(*data_[0]);
-        data_[3]->insertFibre(1, 1);
-        data_[3]->reflect();
-        data_[3]->reduce(false);
-
-        b = data_[3]->obstruction();
-        data_[3]->insertFibre(1, -b);
-        conversion_[3] = Matrix2(1, 0, -b - 1, -1) * conversion_[0];
-        reflected_[3] = true;
-
-        size_ = 4;
+        conversion_ = Matrix2(0, -1, 1, -1) * conversion_;
     }
 }
 
-void SFSAltSet::deleteAll() {
-    for (unsigned i = 0; i < size_; i++)
-        delete data_[i];
-}
+SFSAlt::SFSAlt(const SFSAlt& base, bool reflect, bool negate) :
+        alt_(base.alt_),
+        conversion_(base.conversion_),
+        reflected_(base.reflected_) {
+    long extraTwist = 0;
 
-void SFSAltSet::deleteAll(SFSpace* exception) {
-    for (unsigned i = 0; i < size_; i++)
-        if (data_[i] != exception)
-            delete data_[i];
-}
+    if (negate) {
+        // Since the number of exceptional fibres is odd, and since
+        // (1,2) == (1,0) due to the fact that fibres can be negated,
+        // it following that adding (1,1) for every exceptional fibre is
+        // the same as adding just a single (1,1).
+        alt_.insertFibre(1, 1);
+        extraTwist = 1;
+    }
+    if (reflect) {
+        alt_.reflect();
+        reflected_ = ! reflected_;
+        extraTwist = -extraTwist;
+    }
 
-void SFSAltSet::deleteAll(SFSpace* exception1, SFSpace* exception2) {
-    for (unsigned i = 0; i < size_; i++)
-        if (data_[i] != exception1 && data_[i] != exception2)
-            delete data_[i];
+    alt_.reduce(false);
+
+    long b = alt_.obstruction();
+    alt_.insertFibre(1, -b);
+    conversion_ = Matrix2(1, 0, -b + extraTwist, -1) * conversion_;
 }
 
 } // namespace regina

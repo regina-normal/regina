@@ -393,7 +393,7 @@ class SFSpace : public Manifold {
          *
          * @param other the space whose contents should be swapped with this.
          */
-        void swap(SFSpace& other);
+        void swap(SFSpace& other) noexcept;
 
         /**
          * Returns which of the eleven predefined classes this space
@@ -873,7 +873,7 @@ class SFSpace : public Manifold {
  * @param a the first space whose contents should be swapped.
  * @param b the second space whose contents should be swapped.
  */
-void swap(SFSpace& a, SFSpace& b);
+void swap(SFSpace& a, SFSpace& b) noexcept;
 
 /*@}*/
 
@@ -916,7 +916,7 @@ inline SFSpace::SFSpace(SFSpace::ClassType useClass, unsigned long genus,
 inline SFSpace::~SFSpace() {
 }
 
-inline void SFSpace::swap(SFSpace& other) {
+inline void SFSpace::swap(SFSpace& other) noexcept {
     std::swap(class_, other.class_);
     std::swap(genus_, other.genus_);
     std::swap(punctures_, other.punctures_);
@@ -1001,7 +1001,7 @@ inline std::ostream& SFSpace::writeStructure(std::ostream& out) const {
     return writeCommonStructure(out, false);
 }
 
-inline void swap(SFSpace& a, SFSpace& b) {
+inline void swap(SFSpace& a, SFSpace& b) noexcept {
     a.swap(b);
 }
 

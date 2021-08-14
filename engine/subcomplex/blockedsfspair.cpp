@@ -60,7 +60,7 @@ struct BlockedSFSPairSearcher : public SatBlockStarterSearcher {
      * Creates a new searcher whose \a region pointers are both null.
      */
     BlockedSFSPairSearcher() {
-        region[0] = region[1] = 0;
+        region[0] = region[1] = nullptr;
     }
 
     protected:
@@ -75,14 +75,13 @@ BlockedSFSPair::~BlockedSFSPair() {
 }
 
 Manifold* BlockedSFSPair::manifold() const {
-    SFSpace* sfs0 = region_[0]->createSFS(false);
+    std::optional<SFSpace> sfs0 = region_[0]->createSFS(false);
     if (! sfs0)
-        return 0;
+        return nullptr;
 
-    SFSpace* sfs1 = region_[1]->createSFS(false);
+    std::optional<SFSpace> sfs1 = region_[1]->createSFS(false);
     if (! sfs1) {
-        delete sfs0;
-        return 0;
+        return nullptr;
     }
 
     // Reduce the Seifert fibred space representations and finish up.
@@ -90,9 +89,10 @@ Manifold* BlockedSFSPair::manifold() const {
     sfs1->reduce(false);
 
     if (*sfs1 < *sfs0)
-        return new GraphPair(sfs1, sfs0, matchingReln_.inverse());
+        return new GraphPair(std::move(*sfs1), std::move(*sfs0),
+            matchingReln_.inverse());
     else
-        return new GraphPair(sfs0, sfs1, matchingReln_);
+        return new GraphPair(std::move(*sfs0), std::move(*sfs1), matchingReln_);
 }
 
 std::ostream& BlockedSFSPair::writeName(std::ostream& out) const {
@@ -121,9 +121,9 @@ void BlockedSFSPair::writeTextLong(std::ostream& out) const {
 BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
-        return 0;
+        return nullptr;
     if (tri->countComponents() > 1)
-        return 0;
+        return nullptr;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for the boundary between blocks
@@ -132,7 +132,7 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     //
     // These will result in edges joined to themselves in reverse.
     if (! tri->isValid())
-        return 0;
+        return nullptr;
 
     // Hunt for a starting block.
     BlockedSFSPairSearcher searcher;
@@ -148,7 +148,7 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     }
 
     // Nope.
-    return 0;
+    return nullptr;
 }
 
 bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
@@ -166,7 +166,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
 
     if (region[0]->numberOfBoundaryAnnuli() != 1) {
         delete region[0];
-        region[0] = 0;
+        region[0] = nullptr;
         return true;
     }
 
@@ -187,7 +187,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
         tmpVert, tmpHoriz, false);
     if (tmpVert) {
         delete region[0];
-        region[0] = 0;
+        region[0] = nullptr;
         return true;
     }
 
@@ -210,7 +210,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
 
     if (otherSide.meetsBoundary()) {
         delete region[0];
-        region[0] = 0;
+        region[0] = nullptr;
         return true;
     }
 
@@ -272,13 +272,13 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
 
             // Nup, this one didn't work.
             delete region[1];
-            region[1] = 0;
+            region[1] = nullptr;
         }
     }
 
     // Sigh, nothing works.
     delete region[0];
-    region[0] = 0;
+    region[0] = nullptr;
     return true;
 }
 

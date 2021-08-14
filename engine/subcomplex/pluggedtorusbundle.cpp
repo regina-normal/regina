@@ -59,7 +59,7 @@ PluggedTorusBundle::~PluggedTorusBundle() {
 }
 
 Manifold* PluggedTorusBundle::manifold() const {
-    SFSpace* sfs = region_->createSFS(false);
+    std::optional<SFSpace> sfs = region_->createSFS(false);
     if (! sfs)
         return nullptr;
     if (sfs->punctures() == 1) {
@@ -70,7 +70,7 @@ Manifold* PluggedTorusBundle::manifold() const {
 
     sfs->reduce(false);
 
-    return new GraphLoop(sfs, matchingReln_);
+    return new GraphLoop(std::move(*sfs), matchingReln_);
 }
 
 std::ostream& PluggedTorusBundle::writeName(std::ostream& out) const {

@@ -115,7 +115,7 @@ void SatRegion::boundaryAnnulus(unsigned long which,
     // Given the precondition, we should never reach this point.
 }
 
-SFSpace* SatRegion::createSFS(bool reflect) const {
+std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
     // Count boundary components.
     unsigned untwisted, twisted;
     countBoundaries(untwisted, twisted);
@@ -146,26 +146,25 @@ SFSpace* SatRegion::createSFS(bool reflect) const {
     // calculate genus just by looking at baseEuler_, orientability and
     // the number of punctures.
 
-    SFSpace* sfs = new SFSpace(baseClass,
+    SFSpace sfs(baseClass,
         (baseOrbl_ ? ((2 - baseEuler_) - twisted - untwisted) / 2 :
             ((2 - baseEuler_) - twisted - untwisted)),
         untwisted /* untwisted punctures */, twisted /* twisted punctures */,
         0 /* untwisted reflectors */, twistedBlocks_ /* twisted reflectors */);
 
     for (auto it = blocks_.begin(); it != blocks_.end(); it++)
-        it->block->adjustSFS(*sfs, ! regXor(reflect,
+        it->block->adjustSFS(sfs, ! regXor(reflect,
             regXor(it->refVert, it->refHoriz)));
 
     if (shiftedAnnuli_)
-        sfs->insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
+        sfs.insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
 
-    if ((sfs->baseGenus() >= 3) &&
-            (sfs->baseClass() == SFSpace::n3 ||
-             sfs->baseClass() == SFSpace::n4)) {
+    if ((sfs.baseGenus() >= 3) &&
+            (sfs.baseClass() == SFSpace::n3 ||
+             sfs.baseClass() == SFSpace::n4)) {
         // Could still be either n3 or n4.
         // Shrug, give up.
-        delete sfs;
-        return 0;
+        return std::nullopt;
     }
 
     return sfs;

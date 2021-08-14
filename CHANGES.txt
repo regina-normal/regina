@@ -183,6 +183,12 @@ Version 6.1  [ TODO ]
             - Several class constants are now constexpr.
             - The input stream constructor now throws an InvalidInput
               exception upon error.  The inputError() routine has been removed.
+        Class GraphLoop, GraphPair, GraphTriple:
+            - Constructors now take Seifert fibred spaces either by
+              const reference (which copy) or by rvalue reference (which move),
+              not by pointer (which used to transfer ownership).
+            - Added move constructors and move assignment operators.
+            - Added member and global swap() functions.
         Class GroupExpression:
             - Added move constructors and move assignment operators.
             - Added a constructor that takes a single term, or a single
@@ -521,6 +527,12 @@ Version 6.1  [ TODO ]
               of using static routines only.  This makes the class
               suitable for use with C++11 range-based for loops.
             - This class is now thread-safe.
+        Class SatRegion:
+            - Routine createSFS() returns a std::optional instead of a pointer
+              that could be null.
+        Class SFSAlt, SFSAltSet:
+            - Removed the old SFSAltSet class; replaced this with a new SFSAlt
+              class with a static altSet() function that returns a std::vector.
         Class SFSpace:
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.

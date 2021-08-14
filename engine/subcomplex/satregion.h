@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "subcomplex/satblock.h"
+#include <optional>
 #include <vector>
 
 namespace regina {
@@ -454,12 +455,20 @@ class SatRegion : public Output<SatRegion> {
          * For Klein bottle boundary components, these curves must (for
          * now) be analysed by hand.
          *
+         * There are situations in which Regina is not (yet) capable of
+         * determining the Seifert fibred space precisely.  This can only
+         * happen if the Seifert fibred space is closed, non-orientable,
+         * belongs to the class \c n3 or \c n4, and has sufficiently large
+         * base orbifold genus.  In such situations this routine will return
+         * no value.
+         *
          * @param reflect \c true if this region is to be reflected
          * as the Seifert fibred space is created, or \c false if not.
-         * @return the newly created structure of the underlying Seifert
-         * fibred space.
+         * @return the structure of the underlying Seifert fibred space, or
+         * no value if this could not be determined precisely (see above for
+         * details on the restricted settings in which this can happen).
          */
-        SFSpace* createSFS(bool reflect) const;
+        std::optional<SFSpace> createSFS(bool reflect) const;
 
         /**
          * Expands this region as far as possible within the overall

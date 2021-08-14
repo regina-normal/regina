@@ -120,6 +120,12 @@ namespace regina {
  * The optional Manifold routine homology() is implemented, but
  * the optional routine construct() is not.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * GraphTriple still requires a non-trivial (but constant sized) amount of data
+ * to be copied even in a move operation.
+ *
  * \warning The 2-by-2 matrices used in this class are \e not the same
  * matrices that appear in the manifold name returned by name()
  * and TeXName() and seen in the census data files.  The matrices
@@ -140,10 +146,10 @@ namespace regina {
  */
 class GraphTriple : public Manifold {
     private:
-        SFSpace* end_[2];
+        SFSpace end_[2];
             /**< The two end spaces, i.e., the Seifert fibred spaces
                  with just one boundary torus. */
-        SFSpace* centre_;
+        SFSpace centre_;
             /**< The central space, i.e., the Seifert fibred space with
                  two boundary tori that meets both end spaces. */
         Matrix2 matchingReln_[2];
@@ -159,19 +165,11 @@ class GraphTriple : public Manifold {
          * The three Seifert fibred spaces and both 2-by-2 matching
          * matrices are passed separately.
          *
-         * Note that the new object will take ownership of the three given
-         * Seifert fibred spaces, and when this object is destroyed the
-         * Seifert fibred spaces will be destroyed also.
-         *
-         * \pre Spaces \a end0 and \a end1 each have a single torus
-         * boundary, corresponding to a single untwisted puncture in the
-         * base orbifold.
+         * \pre Spaces \a end0 and \a end1 each have a single torus boundary,
+         * corresponding to a single untwisted puncture in the base orbifold.
          * \pre Space \a centre has two disjoint torus boundaries,
          * corresponding to two untwisted punctures in the base orbifold.
          * \pre Each of the given matrices has determinant +1 or -1.
-         *
-         * \ifacespython In Python, this constructor clones its SFSpace
-         * arguments instead of claiming ownership of them.
          *
          * @param end0 the first end space, as described in the class notes.
          * @param centre the central space, as described in the class notes.
@@ -181,19 +179,37 @@ class GraphTriple : public Manifold {
          * @param matchingReln1 the 2-by-2 matching matrix that
          * specifies how spaces \a end1 and \a centre are joined.
          */
-        GraphTriple(SFSpace* end0, SFSpace* centre, SFSpace* end1,
+        GraphTriple(const SFSpace& end0, const SFSpace& centre,
+            const SFSpace& end1, const Matrix2& matchingReln0,
+            const Matrix2& matchingReln1);
+        /**
+         * Creates a new graph manifold from three bounded Seifert
+         * fibred spaces, which are moved instead of copied.
+         *
+         * Other than its use of move semantics, this behaves identically
+         * to the other constructor that takes the Seifert fibred spaces
+         * by const reference.
+         *
+         * \pre Spaces \a end0 and \a end1 each have a single torus boundary,
+         * corresponding to a single untwisted puncture in the base orbifold.
+         * \pre Space \a centre has two disjoint torus boundaries,
+         * corresponding to two untwisted punctures in the base orbifold.
+         * \pre Each of the given matrices has determinant +1 or -1.
+         *
+         * @param end0 the first end space, as described in the class notes.
+         * @param centre the central space, as described in the class notes.
+         * @param end1 the second end space, as described in the class notes.
+         * @param matchingReln0 the 2-by-2 matching matrix that
+         * specifies how spaces \a end0 and \a centre are joined.
+         * @param matchingReln1 the 2-by-2 matching matrix that
+         * specifies how spaces \a end1 and \a centre are joined.
+         */
+        GraphTriple(SFSpace&& end0, SFSpace&& centre, SFSpace&& end1,
             const Matrix2& matchingReln0, const Matrix2& matchingReln1);
         /**
          * Creates a clone of the given graph manifold.
-         *
-         * @param cloneMe the manifold to clone.
          */
-        GraphTriple(const GraphTriple& cloneMe);
-        /**
-         * Destroys this structure along with the component Seifert
-         * fibred spaces and matching matrices.
-         */
-        ~GraphTriple();
+        GraphTriple(const GraphTriple&) = default;
 
         /**
          * Returns a reference to one of the two end spaces.
@@ -257,9 +273,17 @@ class GraphTriple : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @param cloneMe the manifold to clone.
+         * @return a reference to this graph manifold.
          */
-        GraphTriple& operator = (const GraphTriple& cloneMe);
+        GraphTriple& operator = (const GraphTriple&) = default;
+
+        /**
+         * Swaps the contents of this and the given graph manifold.
+         *
+         * @param other the graph manifold whose contents should be swapped
+         * with this.
+         */
+        void swap(GraphTriple& other) noexcept;
 
         std::optional<AbelianGroup> homology() const override;
         bool isHyperbolic() const override;
@@ -295,46 +319,51 @@ class GraphTriple : public Manifold {
         static void reduceSign(Matrix2& reln);
 };
 
+/**
+ * Swaps the contents of the two given graph manifolds.
+ *
+ * This global routine simply calls GraphTriple::swap(); it is provided so
+ * that GraphTriple meets the C++ Swappable requirements.
+ *
+ * @param a the first graph manifold whose contents should be swapped.
+ * @param b the second graph manifold whose contents should be swapped.
+ */
+void swap(GraphTriple& a, GraphTriple& b) noexcept;
+
 /*@}*/
 
 // Inline functions for GraphTriple
 
-inline GraphTriple::GraphTriple(SFSpace* end0, SFSpace* centre,
-        SFSpace* end1, const Matrix2& matchingReln0,
-        const Matrix2& matchingReln1) {
-    end_[0] = end0;
-    centre_ = centre;
-    end_[1] = end1;
-
-    matchingReln_[0] = matchingReln0;
-    matchingReln_[1] = matchingReln1;
-
+inline GraphTriple::GraphTriple(const SFSpace& end0, const SFSpace& centre,
+        const SFSpace& end1, const Matrix2& matchingReln0,
+        const Matrix2& matchingReln1) :
+        end_ { end0, end1 }, centre_(centre),
+        matchingReln_ { matchingReln0, matchingReln1 } {
     reduce();
 }
 
-inline GraphTriple::GraphTriple(const GraphTriple& cloneMe) {
-    end_[0] = new SFSpace(*cloneMe.end_[0]);
-    end_[1] = new SFSpace(*cloneMe.end_[1]);
-    centre_ = new SFSpace(*cloneMe.centre_);
-    matchingReln_[0] = cloneMe.matchingReln_[0];
-    matchingReln_[1] = cloneMe.matchingReln_[1];
+inline GraphTriple::GraphTriple(SFSpace&& end0, SFSpace&& centre,
+        SFSpace&& end1, const Matrix2& matchingReln0,
+        const Matrix2& matchingReln1) :
+        end_ { std::move(end0), std::move(end1) }, centre_(std::move(centre)),
+        matchingReln_ { matchingReln0, matchingReln1 } {
+    reduce();
 }
 
-inline GraphTriple& GraphTriple::operator = (const GraphTriple& cloneMe) {
-    *end_[0] = *cloneMe.end_[0];
-    *end_[1] = *cloneMe.end_[1];
-    *centre_ = *cloneMe.centre_;
-    matchingReln_[0] = cloneMe.matchingReln_[0];
-    matchingReln_[1] = cloneMe.matchingReln_[1];
-    return *this;
+inline void GraphTriple::swap(GraphTriple& other) noexcept {
+    end_[0].swap(other.end_[0]);
+    end_[1].swap(other.end_[1]);
+    centre_.swap(other.centre_);
+    matchingReln_[0].swap(other.matchingReln_[0]);
+    matchingReln_[1].swap(other.matchingReln_[1]);
 }
 
 inline const SFSpace& GraphTriple::end(unsigned which) const {
-    return *end_[which];
+    return end_[which];
 }
 
 inline const SFSpace& GraphTriple::centre() const {
-    return *centre_;
+    return centre_;
 }
 
 inline const Matrix2& GraphTriple::matchingReln(unsigned which) const {
@@ -343,6 +372,10 @@ inline const Matrix2& GraphTriple::matchingReln(unsigned which) const {
 
 inline bool GraphTriple::isHyperbolic() const {
     return false;
+}
+
+inline void swap(GraphTriple& a, GraphTriple& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

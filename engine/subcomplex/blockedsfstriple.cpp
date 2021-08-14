@@ -70,7 +70,7 @@ struct BlockedSFSTripleSearcher : public SatBlockStarterSearcher {
      * are all null.
      */
     BlockedSFSTripleSearcher() {
-        end[0] = end[1] = centre = 0;
+        end[0] = end[1] = centre = nullptr;
     }
 
     protected:
@@ -88,22 +88,18 @@ BlockedSFSTriple::~BlockedSFSTriple() {
 
 Manifold* BlockedSFSTriple::manifold() const {
     // Go ahead and create the Seifert fibred spaces.
-    SFSpace* end0 = end_[0]->createSFS(false);
+    std::optional<SFSpace> end0 = end_[0]->createSFS(false);
     if (! end0)
-        return 0;
+        return nullptr;
 
-    SFSpace* end1 = end_[1]->createSFS(false);
-    if (! end1) {
-        delete end0;
-        return 0;
-    }
+    std::optional<SFSpace> end1 = end_[1]->createSFS(false);
+    if (! end1)
+        return nullptr;
 
-    SFSpace* hub = centre_->createSFS(false);
-    if (! hub) {
-        delete end0;
-        delete end1;
-        return 0;
-    }
+    std::optional<SFSpace> hub = centre_->createSFS(false);
+    if (! hub)
+        return nullptr;
+
     if (hub->punctures() == 1) {
         // The region has one larger boundary, but we pinch it to create
         // two smaller boundaries.
@@ -115,7 +111,7 @@ Manifold* BlockedSFSTriple::manifold() const {
     end1->reduce(false);
     hub->reduce(false);
 
-    return new GraphTriple(end0, hub, end1,
+    return new GraphTriple(std::move(*end0), std::move(*hub), std::move(*end1),
         matchingReln_[0], matchingReln_[1]);
 }
 
@@ -153,9 +149,9 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
         Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
-        return 0;
+        return nullptr;
     if (tri->countComponents() > 1)
-        return 0;
+        return nullptr;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for the boundary between blocks
@@ -164,7 +160,7 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
     //
     // These will result in edges joined to themselves in reverse.
     if (! tri->isValid())
-        return 0;
+        return nullptr;
 
     // Hunt for a starting block.
     BlockedSFSTripleSearcher searcher;
@@ -181,7 +177,7 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
     }
 
     // Nope.
-    return 0;
+    return nullptr;
 }
 
 bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
@@ -199,7 +195,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
 
     if (centre->numberOfBoundaryAnnuli() != 2) {
         delete centre;
-        centre = 0;
+        centre = nullptr;
         return true;
     }
 
@@ -227,7 +223,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
 
     if (! (bdry[0].isTwoSidedTorus() && bdry[1].isTwoSidedTorus())) {
         delete centre;
-        centre = 0;
+        centre = nullptr;
         return true;
     }
 
@@ -247,7 +243,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
                     usedTets.end()) {
                 // Oops, we've run back into something we've already seen.
                 delete centre;
-                centre = 0;
+                centre = nullptr;
                 return true;
             }
             usedTets.insert(layering[e]->newBoundaryTet(0));
@@ -273,10 +269,10 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
 
         if (otherSide.meetsBoundary()) {
             delete centre;
-            centre = 0;
+            centre = nullptr;
             if (e == 1) {
                 delete end[0];
-                end[0] = 0;
+                end[0] = nullptr;
             }
             return true;
         }
@@ -338,7 +334,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
 
                 // Nup, this one didn't work.
                 delete end[e];
-                end[e] = 0;
+                end[e] = nullptr;
             }
         }
 
@@ -346,11 +342,11 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
         if (! end[e]) {
             // Nope.  Keep searching.
             delete centre;
-            centre = 0;
+            centre = nullptr;
 
             if (e == 1) {
                 delete end[0];
-                end[0] = 0;
+                end[0] = nullptr;
             }
 
             return true;

@@ -58,13 +58,13 @@ namespace {
  */
 struct BlockedSFSSearcher : public SatBlockStarterSearcher {
     SatRegion* region;
-        /**< The saturated region if one has been found, or 0
+        /**< The saturated region if one has been found, or \c null
              if we are still searching. */
 
     /**
      * Creates a new searcher whose \a region pointer is null.
      */
-    BlockedSFSSearcher() : region(0) {
+    BlockedSFSSearcher() : region(nullptr) {
     }
 
     protected:
@@ -274,9 +274,9 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
 }
 
 Manifold* BlockedSFS::manifold() const {
-    SFSpace* ans = region_->createSFS(false);
+    std::optional<SFSpace> ans = region_->createSFS(false);
     if (! ans)
-        return 0;
+        return nullptr;
 
     ans->reduce();
 
@@ -306,14 +306,12 @@ Manifold* BlockedSFS::manifold() const {
         if (rp2Fibre.beta != 0) {
             altAns->insertFibre(rp2Fibre.beta, rp2Fibre.alpha);
             altAns->reduce();
-
-            delete ans;
             return altAns;
         } else
             delete altAns;
     }
 
-    return ans;
+    return new SFSpace(std::move(*ans));
 }
 
 std::ostream& BlockedSFS::writeName(std::ostream& out) const {
@@ -335,15 +333,15 @@ void BlockedSFS::writeTextLong(std::ostream& out) const {
 BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
     // Basic property checks.
     if (tri->countComponents() > 1)
-        return 0;
+        return nullptr;
     if (tri->isIdeal())
-        return 0;
+        return nullptr;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  These will result in edges joined to
     // themselves in reverse.
     if (! tri->isValid())
-        return 0;
+        return nullptr;
 
     // Hunt for a starting block.
     BlockedSFSSearcher searcher;
@@ -358,7 +356,7 @@ BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
     }
 
     // Nope.
-    return 0;
+    return nullptr;
 }
 
 bool BlockedSFSSearcher::useStarterBlock(SatBlock* starter) {
@@ -375,7 +373,7 @@ bool BlockedSFSSearcher::useStarterBlock(SatBlock* starter) {
     if (! region->expand(usedTets, true)) {
         // Nup.  Destroy the temporary structures and keep searching.
         delete region;
-        region = 0;
+        region = nullptr;
         return true;
     }
 

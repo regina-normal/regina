@@ -124,7 +124,7 @@ class Matrix2 {
          *
          * @param other the matrix whose contents should be swapped with this.
          */
-        void swap(Matrix2& other);
+        void swap(Matrix2& other) noexcept;
 
         /**
          * Returns a single row of this matrix.
@@ -307,7 +307,7 @@ class Matrix2 {
  * @param a the first matrix whose contents should be swapped.
  * @param b the second matrix whose contents should be swapped.
  */
-void swap(Matrix2& a, Matrix2& b);
+void swap(Matrix2& a, Matrix2& b) noexcept;
 
 /**
  * Writes the given matrix to the given output stream.  The matrix will
@@ -389,7 +389,7 @@ inline Matrix2& Matrix2::operator = (const long values[2][2]) {
     return *this;
 }
 
-inline void Matrix2::swap(Matrix2& other) {
+inline void Matrix2::swap(Matrix2& other) noexcept {
     std::swap(data, other.data);
 }
 
@@ -489,7 +489,7 @@ inline std::ostream& operator << (std::ostream& out, const Matrix2& mat) {
         << " ] [ " << mat.data[1][0] << ' ' << mat.data[1][1] << " ]]";
 }
 
-inline void swap(Matrix2& a, Matrix2& b) {
+inline void swap(Matrix2& a, Matrix2& b) noexcept {
     a.swap(b);
 }
 
