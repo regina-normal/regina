@@ -32,60 +32,28 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
-#include "manifold/sfs.h"
-#include "subcomplex/satregion.h"
-#include <iostream>
+#include "manifold/sfsalt.h"
 #include "../helpers.h"
 
-using regina::SatBlock;
-using regina::SatBlockSpec;
-using regina::SatRegion;
+using pybind11::overload_cast;
+using regina::SFSAlt;
+using regina::SFSpace;
 
-namespace {
-}
-
-void addSatRegion(pybind11::module_& m) {
-    auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
-        .def(pybind11::init<>())
-        .def(pybind11::init<SatBlock*, bool, bool>())
-        .def(pybind11::init<const SatBlockSpec&>())
-        .def_readonly("block", &SatBlockSpec::block)
-        .def_readonly("refVert", &SatBlockSpec::refVert)
-        .def_readonly("refHoriz", &SatBlockSpec::refHoriz)
+void addSFSAlt(pybind11::module_& m) {
+    auto s = pybind11::class_<SFSAlt>(m, "SFSAlt")
+        .def(pybind11::init<const SFSpace&>())
+        .def(pybind11::init<const SFSAlt&, bool, bool>(),
+            pybind11::arg(), pybind11::arg(), pybind11::arg("negate") = false)
+        .def(pybind11::init<const SFSAlt&>())
+        .def("swap", &SFSAlt::swap)
+        .def_static("altSet", &SFSAlt::altSet)
+        .def_static("canNegate", &SFSAlt::canNegate)
+        .def("alt", (const SFSpace& (SFSAlt::*)() const&)(&SFSAlt::alt))
+        .def("conversion", &SFSAlt::conversion)
+        .def("reflected", &SFSAlt::reflected)
     ;
     regina::python::add_eq_operators(s);
 
-    auto r = pybind11::class_<SatRegion>(m, "SatRegion")
-        .def(pybind11::init<SatBlock*>())
-        .def("numberOfBlocks", &SatRegion::numberOfBlocks)
-        .def("block", &SatRegion::block,
-            pybind11::return_value_policy::reference_internal)
-        .def("blockIndex", &SatRegion::blockIndex)
-        .def("numberOfBoundaryAnnuli", &SatRegion::numberOfBoundaryAnnuli)
-        .def("boundaryAnnulus", [](const SatRegion& r, unsigned which) {
-            SatBlock* block;
-            unsigned annulus;
-            bool blockRefVert, blockRefHoriz;
-
-            r.boundaryAnnulus(which, block, annulus,
-                blockRefVert, blockRefHoriz);
-            return pybind11::make_tuple(
-                block, annulus, blockRefVert, blockRefHoriz);
-        }, pybind11::return_value_policy::reference_internal)
-        .def("createSFS", &SatRegion::createSFS)
-        .def("expand", [](SatRegion& r, bool stopIfIncomplete) {
-            SatBlock::TetList avoidTets;
-            return r.expand(avoidTets, stopIfIncomplete);
-        }, pybind11::arg("stopIfIncomplete") = false)
-        .def("writeBlockAbbrs", [](const SatRegion& r, bool tex) {
-            r.writeBlockAbbrs(std::cout, tex);
-        }, pybind11::arg("tex") = false)
-        .def("writeDetail", [](const SatRegion& r, const std::string& title) {
-            r.writeDetail(std::cout, title);
-        })
-    ;
-    regina::python::add_output(r);
-    regina::python::add_eq_operators(r);
-
+    m.def("swap", (void(*)(SFSAlt&, SFSAlt&))(regina::swap));
 }
 

@@ -104,8 +104,6 @@ class SFSpace;
  * even when passing or returning objects by value.  Note, however, that
  * SFSAlt still requires a non-trivial (but constant sized) amount of data to
  * be copied even in a move operation.
- *
- * \ifacespython Not present.
  */
 class SFSAlt {
     private:
