@@ -154,8 +154,7 @@ Version 6.1  [ TODO ]
               not a newly allocated pointer that could be null.
         Class FuncDelete, FuncNew, FuncNewCopyPtr, FuncNewCopyRef,
                 FuncNewCopyClonePtr:
-            - Deprecated.  Regina does not use these any more, and modern
-              C++ standards provide good alternatives nowadays.
+            - Removed completely, since C++ provides good alternatives nowadays.
         Class GlobalDirs:
             - Added deduceDirs() as an alternative to setDirs().  This new
               routine also supports running directly from the source tree, and
@@ -761,6 +760,8 @@ Version 6.1  [ TODO ]
         Macro ENABLE_MEMBER_FOR_REGINA_INTEGER:
             - New macro for conditionally enabling or disabling member
               functions in template classes.
+        Header utilities/memutils.h:
+            - Removed completely.
         Header utilities/property.h:
             - Removed completely.
         Header utilities/ptrutils.h:

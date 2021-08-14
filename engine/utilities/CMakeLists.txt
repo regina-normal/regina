@@ -33,7 +33,6 @@ if (${REGINA_INSTALL_DEV})
     listview.h
     markedvector.h
     memstream.h
-    memutils.h
     osutils.h
     qitmask.h
     randutils.h
