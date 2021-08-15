@@ -594,7 +594,7 @@ bool TreeDecomposition::compress() {
         if (compare != BAG_UNRELATED) {
             // We will merge b with b->parent_, and then remove b.
             if (compare == BAG_SUPERSET)
-                b->swap(*b->parent_);
+                b->swapNodes(*b->parent_);
 
             if (b->children_) {
                 // Bag b has children.

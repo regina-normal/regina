@@ -495,9 +495,9 @@ class TreeBag : public ShortOutput<TreeBag> {
          * and it will not be assigned any other information (such as index,
          * type or subtype).
          *
-         * @param cloneMe the bag whose contents should be cloned.
+         * @param src the bag whose contents should be cloned.
          */
-        TreeBag(const TreeBag& cloneMe);
+        TreeBag(const TreeBag& src);
 
         /**
          * Inserts the given bag into the tree as the first child of this bag.
@@ -518,7 +518,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * @param other the bag to swap contents with this.
          */
-        void swap(TreeBag& other) noexcept;
+        void swapNodes(TreeBag& other) noexcept;
 
         /**
          * Adjusts the links between bags to make this bag the root of
@@ -679,7 +679,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Builds a new copy of the given tree decomposition.
          *
          * This will be a deep copy, in the sense that all of the bags
-         * of \a cloneMe will be cloned also.
+         * of \a src will be cloned also.
          *
          * @param src the tree decomposition to clone.
          */
@@ -800,6 +800,21 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Destroys this tree decomposition and all of its bags.
          */
         ~TreeDecomposition();
+
+        /**
+         * Sets this to be a copy of the given tree decomposition.
+         *
+         * This will be a deep copy, in the sense that all of the bags
+         * of \a src will be copied also.
+         *
+         * It does not matter if this and the given tree decomposition were
+         * originally built from different and/or differently sized objects
+         * or graphs.
+         *
+         * @param src the tree decomposition to copy.
+         * @return a reference to this tree decomposition.
+         */
+        TreeDecomposition& operator = (const TreeDecomposition& src);
 
         /**
          * Moves the contents of the given tree decomposition into this
@@ -1310,9 +1325,6 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          */
         static std::optional<TreeDecomposition> fromPACE(std::istream& in);
 
-        // Make this class non-assignable.
-        TreeDecomposition& operator = (const TreeDecomposition&) = delete;
-
     private:
         /**
          * A constructor that initialises all data members to zero
@@ -1372,16 +1384,16 @@ inline TreeBag::TreeBag(int size) :
         subtype_(0) {
 }
 
-inline TreeBag::TreeBag(const TreeBag& cloneMe) :
-        size_(cloneMe.size_),
-        elements_(new int[cloneMe.size_]),
+inline TreeBag::TreeBag(const TreeBag& src) :
+        size_(src.size_),
+        elements_(new int[src.size_]),
         parent_(nullptr),
         sibling_(nullptr),
         children_(nullptr),
         type_(0),
         subtype_(0) {
     for (int i = 0; i < size_; ++i)
-        elements_[i] = cloneMe.elements_[i];
+        elements_[i] = src.elements_[i];
 }
 
 inline TreeBag::~TreeBag() {
@@ -1436,9 +1448,9 @@ inline void TreeBag::insertChild(TreeBag* child) {
     children_ = child;
 }
 
-inline void TreeBag::swap(TreeBag& other) noexcept {
-    int s = size_; size_ = other.size_; other.size_ = s;
-    int* e = elements_; elements_ = other.elements_; other.elements_ = e;
+inline void TreeBag::swapNodes(TreeBag& other) noexcept {
+    std::swap(size_, other.size_);
+    std::swap(elements_, other.elements_);
 }
 
 // Inline functions for TreeDecomposition
@@ -1454,6 +1466,13 @@ inline TreeDecomposition::TreeDecomposition(TreeDecomposition&& src) noexcept :
 
 inline TreeDecomposition::~TreeDecomposition() {
     delete root_;
+}
+
+inline TreeDecomposition& TreeDecomposition::operator = (
+        const TreeDecomposition& src) {
+    TreeDecomposition copy(src); // all the hard work is here
+    swap(copy); // let copy dispose of our original contents
+    return *this;
 }
 
 inline TreeDecomposition& TreeDecomposition::operator = (

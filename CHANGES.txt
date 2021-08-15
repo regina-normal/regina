@@ -627,7 +627,7 @@ Version 6.1  [ TODO ]
         Class TorusBundle:
             - Added member and global swap() functions.
         Class TreeDecomposition:
-            - Added a move constructor and move assignment operator.
+            - Added a move constructor and move/copy assignment operators.
             - Added member and global swap() functions.
             - The fromPACE() routines now return a std::optional by value,
               instead of a newly allocated pointer that could be null.
