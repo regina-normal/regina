@@ -498,14 +498,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
             /**< An optional name associated with this hypersurface. */
 
         mutable std::optional<bool> orientable_;
-            /**< Is this hypersurface orientable? */
-                 This is std::nullopt if it has not yet been computed.
+            /**< Is this hypersurface orientable?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> twoSided_;
-            /**< Is this hypersurface two-sided? */
-                 This is std::nullopt if it has not yet been computed.
+            /**< Is this hypersurface two-sided?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> connected_;
-            /**< Is this hypersurface connected? */
-                 This is std::nullopt if it has not yet been computed.
+            /**< Is this hypersurface connected?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> realBoundary_;
             /**< Does this hypersurface have real boundary (i.e. does it meet
                  any boundary facets)?
