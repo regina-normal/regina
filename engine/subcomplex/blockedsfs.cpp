@@ -96,7 +96,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
     int delta, deltaAdj;
     bool consistent;
     for (i = 0; i < n; i++) {
-        block = region_->block(i).block;
+        block = region_->block(i).block();
 
         cube = dynamic_cast<const SatCube*>(block);
         if (cube) {

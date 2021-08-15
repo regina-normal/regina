@@ -464,9 +464,9 @@ class SatBlock : public Output<SatBlock> {
          * @param followPrev \c true if we should find the previous boundary
          * annulus, or \c false if we should find the next boundary annulus.
          */
-        void nextBoundaryAnnulus(unsigned thisAnnulus, SatBlock*& nextBlock,
-                unsigned& nextAnnulus, bool& refVert, bool& refHoriz,
-                bool followPrev);
+        void nextBoundaryAnnulus(unsigned thisAnnulus,
+                SatBlock const* &nextBlock, unsigned& nextAnnulus,
+                bool& refVert, bool& refHoriz, bool followPrev) const;
 
         /**
          * Returns an abbreviated name or symbol for this block.

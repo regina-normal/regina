@@ -525,6 +525,19 @@ Version 6.1  [ TODO ]
             - Added a global swap() to complement the member swap().
         Class Returns, ReturnsTraits:
             - Removed completely.
+        Class SatBlock:
+            - The nextBlock output argument for nextBoundaryAnnulis()
+              now sends back a const pointer.
+        Class SatBlockSpec:
+            - This is now a full class, with read-only access functions
+              to its data members which are now private.
+            - This class now owns its SatBlock, and will take responsibility
+              for deleting it.
+            - Due to the change in ownership semantics, this class is no
+              longer copyable; however, it is now movable and swappable.
+            - This class is also no longer constructible (except for the
+              new move constructor): only SatRegion is permitted to create a
+              SatBlockSpec with arbitrary content.
         Class SatBlockStarterSet:
             - Now requires a (lightweight) object to work with instead
               of using static routines only.  This makes the class
@@ -533,6 +546,8 @@ Version 6.1  [ TODO ]
         Class SatRegion:
             - Routine createSFS() returns a std::optional instead of a pointer
               that could be null.
+            - The block output argument for boundaryAnnulus() now sends back a
+              const pointer.
         Class SFSAlt, SFSAltSet:
             - Removed the old SFSAltSet class; replaced this with a new SFSAlt
               class with a static altSet() function that returns a std::vector.

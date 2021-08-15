@@ -58,7 +58,7 @@ namespace regina {
  * saturated region.
  *
  * A saturated region consists of several saturated blocks joined
- * together along their boundary annuli.  This is a helper structure
+ * together along their boundary annuli.  This is a helper class
  * containing a single saturated block along with details of its
  * orientation within a larger region.
  *
@@ -80,68 +80,148 @@ namespace regina {
  * of the Seifert fibres.  A block may of course be reflected both
  * horizontally and vertically, or it may not be reflected at all.
  *
- * This helper structure is small, and can be copied by value if
- * necessary.  Be aware that when this structure is destroyed, the
- * internal block structure of type SatBlock is \e not destroyed.
+ * Since Regina 7.0, this helper structure now owns its internal SatBlock,
+ * and will destroy this SatBlock when this structure itself is destroyed.
+ * This is a change in behaviour from Regina 6.0.1 and earlier.
  *
- * \ifacespython The data members \a block, \a refVert and \a refHoriz
- * are read-only.
+ * Because of these new ownership semantics, SatBlockSpec is no longer
+ * copyable.  However, it is both movable and swappable (it implements
+ * C++ moves semantics and adheres to the C++ Swappable requirement).
  */
-struct SatBlockSpec {
-    SatBlock* block;
-        /**< Details of the saturated block structure. */
-    bool refVert;
-        /**< Indicates whether the block is reflected vertically within
-             the larger region.  See the class notes for details. */
-    bool refHoriz;
-        /**< Indicates whether the block is reflected horizontally within
-             the larger region.  See the class notes for details. */
+class SatBlockSpec {
+    private:
+        SatBlock* block_;
+            /**< Details of the saturated block structure. */
+        bool refVert_;
+            /**< Indicates whether the block is reflected vertically within
+                 the larger region.  See the class notes for details. */
+        bool refHoriz_;
+            /**< Indicates whether the block is reflected horizontally within
+                 the larger region.  See the class notes for details. */
 
-    /**
-     * Creates a new structure that is completely uninitialised.
-     */
-    SatBlockSpec();
-    /**
-     * Creates a new structure that is initialised to the given set of
-     * values.
-     *
-     * @param useBlock details of the saturated block structure.
-     * @param useRefVert \c true if the block is reflected vertically
-     * within the larger region, or \c false otherwise.
-     * @param useRefHoriz \c true if the block is reflected horizontally
-     * within the larger region, or \c false otherwise.
-     */
-    SatBlockSpec(SatBlock* useBlock, bool useRefVert, bool useRefHoriz);
-    /**
-     * Creates a new structure that is a clone of the given structure.
-     */
-    SatBlockSpec(const SatBlockSpec&) = default;
-    /**
-     * Determines whether this and the given structure contain identical
-     * information.  In particular, their \a block pointers must be
-     * identical (not pointing to different blocks with the same contents).
-     *
-     * @param other the structure to compare against this.
-     * @return \c true if and only if this and \a other contain
-     * identical information.
-     */
-    bool operator == (const SatBlockSpec& other) const;
-    /**
-     * Determines whether this and the given structure contain different
-     * information.  In particular, they are considered different if their
-     * \a block pointers are different (even if they point to different blocks
-     * with the same contents).
-     *
-     * @param other the structure to compare against this.
-     * @return \c true if and only if this and \a other contain
-     * different information.
-     */
-    bool operator != (const SatBlockSpec& other) const;
-    /**
-     * Sets this to be a clone of the given structure.
-     */
-    SatBlockSpec& operator = (const SatBlockSpec&) = default;
+    public:
+        /**
+         * Moves the contents of the given structure into this new structure.
+         *
+         * The internal SatBlock pointer will be preserved; that is, the
+         * pointer <tt>this->block()</tt> after the move will be the
+         * same as the pointer <tt>src.block()</tt> before the move.
+         *
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         */
+        SatBlockSpec(SatBlockSpec&& src) noexcept;
+
+        /**
+         * Destroys this structure, along with the SatBlock that it holds.
+         */
+        ~SatBlockSpec();
+
+        /**
+         * Moves the contents of the given structure into this structure.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * The internal SatBlock pointer will be preserved; that is, the
+         * pointer <tt>this->block()</tt> after the move will be the
+         * same as the pointer <tt>src.block()</tt> before the move.
+         *
+         * @return a reference to this structure.
+         */
+        SatBlockSpec& operator = (SatBlockSpec&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * In particular, the internal SatBlock pointers will be swapped; that
+         * is, the pointers <tt>this->block()</tt> and <tt>other.block()</tt>
+         * after the move will be the same as <tt>other.block()</tt> and
+         * <tt>this->block()</tt> were respectively before the move.
+         *
+         * @param other the structure whose contents should be swapped with
+         * this.
+         */
+        void swap(SatBlockSpec& other) noexcept;
+
+        /**
+         * Determines whether this and the given structure contain identical
+         * information.  In particular, their block() pointers must be
+         * identical (not pointing to different blocks with the same contents).
+         *
+         * @param other the structure to compare against this.
+         * @return \c true if and only if this and \a other contain
+         * identical information.
+         */
+        bool operator == (const SatBlockSpec& other) const;
+        /**
+         * Determines whether this and the given structure contain different
+         * information.  In particular, they are considered different if their
+         * block() pointers are different (even if they point to different
+         * blocks with the same contents).
+         *
+         * @param other the structure to compare against this.
+         * @return \c true if and only if this and \a other contain
+         * different information.
+         */
+        bool operator != (const SatBlockSpec& other) const;
+
+        /**
+         * Returns the full combinatorial structure of the saturated block.
+         *
+         * @return the saturated block structure.
+         */
+        const SatBlock* block() const;
+        /**
+         * Returns whether the block is reflected vertically within
+         * the larger region.  See the class notes for details.
+         *
+         * @return \c true if and only if the block is reflected vertically.
+         */
+        bool refVert() const;
+        /**
+         * Returns whether the block is reflected horizontally within
+         * the larger region.  See the class notes for details.
+         *
+         * @return \c true if and only if the block is reflected horizontally.
+         */
+        bool refHoriz() const;
+
+        // Ensure the class is non-constructible (to the public) and
+        // non-copyable.
+        SatBlockSpec() = delete;
+        SatBlockSpec(const SatBlockSpec&) = delete;
+        SatBlockSpec& operator = (const SatBlockSpec&) = delete;
+
+    private:
+        /**
+         * Creates a new structure that is initialised to the given content.
+         *
+         * @param block details of the saturated block structure.
+         * @param refVert \c true if the block is reflected vertically
+         * within the larger region, or \c false otherwise.
+         * @param refHoriz \c true if the block is reflected horizontally
+         * within the larger region, or \c false otherwise.
+         */
+        SatBlockSpec(SatBlock* block, bool refVert, bool refHoriz);
+
+    friend class SatRegion;
 };
+
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * In particular, the internal SatBlock pointers will be swapped; that
+ * is, the pointers <tt>a.block()</tt> and <tt>b.block()</tt>
+ * after the move will be the same as <tt>b.block()</tt> and
+ * <tt>a.block()</tt> were respectively before the move.
+ *
+ * This global routine simply calls SatBlockSpec::swap(); it is provided
+ * so that SatBlockSpec meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ */
+void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept;
 
 /**
  * A large saturated region in a Seifert fibred space formed by joining
@@ -257,12 +337,6 @@ class SatRegion : public Output<SatRegion> {
          * @param starter the single block that this region will describe.
          */
         SatRegion(SatBlock* starter);
-
-        /**
-         * Destroys this structure and all of its internal data,
-         * including the individual blocks that make up this region.
-         */
-        ~SatRegion();
 
         /**
          * Returns the number of saturated blocks that come together
@@ -419,7 +493,7 @@ class SatRegion : public Output<SatRegion> {
          * or \c false if not.
          */
         void boundaryAnnulus(unsigned long which,
-            SatBlock*& block, unsigned& annulus,
+            SatBlock const* &block, unsigned& annulus,
             bool& blockRefVert, bool& blockRefHoriz) const;
 
         /**
@@ -630,22 +704,58 @@ class SatRegion : public Output<SatRegion> {
 
 // Inline functions for SatBlockSpec
 
-inline SatBlockSpec::SatBlockSpec() {
+inline SatBlockSpec::SatBlockSpec(SatBlockSpec&& src) noexcept :
+        block_(src.block_), refVert_(src.refVert_), refHoriz_(src.refHoriz_) {
+    src.block_ = nullptr;
 }
 
-inline SatBlockSpec::SatBlockSpec(SatBlock* useBlock, bool useRefVert,
-        bool useRefHoriz) : block(useBlock), refVert(useRefVert),
-        refHoriz(useRefHoriz) {
+inline SatBlockSpec& SatBlockSpec::operator = (SatBlockSpec&& src) noexcept {
+    std::swap(block_, src.block_);
+    refVert_ = src.refVert_;
+    refHoriz_ = src.refHoriz_;
+    // Let src dispose of the original block in its own destructor.
+    return *this;
+}
+
+inline void SatBlockSpec::swap(SatBlockSpec& other) noexcept {
+    std::swap(block_, other.block_);
+    std::swap(refVert_, other.refVert_);
+    std::swap(refHoriz_, other.refHoriz_);
+}
+
+inline SatBlockSpec::~SatBlockSpec() {
+    delete block_;
+}
+
+inline const SatBlock* SatBlockSpec::block() const {
+    return block_;
+}
+
+inline bool SatBlockSpec::refVert() const {
+    return refVert_;
+}
+
+inline bool SatBlockSpec::refHoriz() const {
+    return refHoriz_;
+}
+
+inline SatBlockSpec::SatBlockSpec(SatBlock* block, bool refVert,
+        bool refHoriz) :
+        block_(block), refVert_(refVert), refHoriz_(refHoriz) {
 }
 
 inline bool SatBlockSpec::operator == (const SatBlockSpec& other) const {
-    return block == other.block && refVert == other.refVert &&
-        refHoriz == other.refHoriz;
+    return block_ == other.block_ && refVert_ == other.refVert_ &&
+        refHoriz_ == other.refHoriz_;
 }
 
 inline bool SatBlockSpec::operator != (const SatBlockSpec& other) const {
-    return block != other.block || refVert != other.refVert ||
-        refHoriz != other.refHoriz;
+    return block_ != other.block_ || refVert_ != other.refVert_ ||
+        refHoriz_ != other.refHoriz_;
+}
+
+inline void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept {
+    a.swap(b);
 }
 
 // Inline functions for SatRegion

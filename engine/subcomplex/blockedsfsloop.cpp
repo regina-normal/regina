@@ -153,7 +153,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(SatBlock* starter) {
         return true;
     }
 
-    SatBlock* bdryBlock[2];
+    const SatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
     bool bdryRefVert[2], bdryRefHoriz[2];
     region->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],

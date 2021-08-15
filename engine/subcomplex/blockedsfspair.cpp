@@ -171,7 +171,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
     }
 
     // Insist on this boundary being untwisted.
-    SatBlock* bdryBlock;
+    const SatBlock* bdryBlock;
     unsigned bdryAnnulus;
     bool bdryVert, bdryHoriz;
     region[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus,
@@ -180,7 +180,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
     bool firstRegionReflected =
         ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
 
-    SatBlock* tmpBlock;
+    const SatBlock* tmpBlock;
     unsigned tmpAnnulus;
     bool tmpVert, tmpHoriz;
     bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,

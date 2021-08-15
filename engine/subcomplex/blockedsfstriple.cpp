@@ -200,7 +200,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
     }
 
     // Insist on the boundary annuli being disjoint and untwisted.
-    SatBlock* bdryBlock[2];
+    const SatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
     bool bdryVert[2], bdryHoriz[2], bdryRef[2];
 

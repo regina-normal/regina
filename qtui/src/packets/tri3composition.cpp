@@ -457,24 +457,24 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
         const regina::SatBlockSpec& spec = region.block(b);
         detailsItem = new QTreeWidgetItem(parent);
         detailsItem->setText(0,tr("Block %1: %2").
-            arg(b).arg(spec.block->abbr().c_str()));
+            arg(b).arg(spec.block()->abbr().c_str()));
 
-        nAnnuli = spec.block->nAnnuli();
+        nAnnuli = spec.block()->nAnnuli();
 
         annuli = new QTreeWidgetItem(detailsItem);
         annuli->setText(0,tr("Adjacencies:"));
 
         for (a = nAnnuli - 1; a >= 0; a--) {
             thisAnnulus = tr("Annulus %1/%2").arg(b).arg(a);
-            if (! spec.block->hasAdjacentBlock(a))
+            if (! spec.block()->hasAdjacentBlock(a))
                 (new QTreeWidgetItem(annuli))->setText(0,
                     tr("%1 --> boundary").arg(thisAnnulus));
             else {
                 adjAnnulus = tr("Annulus %1/%2").
-                    arg(region.blockIndex(spec.block->adjacentBlock(a))).
-                    arg(spec.block->adjacentAnnulus(a));
-                ref = spec.block->adjacentReflected(a);
-                back = spec.block->adjacentBackwards(a);
+                    arg(region.blockIndex(spec.block()->adjacentBlock(a))).
+                    arg(spec.block()->adjacentAnnulus(a));
+                ref = spec.block()->adjacentReflected(a);
+                back = spec.block()->adjacentBackwards(a);
 
                 if (ref && back)
                     (new QTreeWidgetItem(annuli))->setText(0,
@@ -504,7 +504,7 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
         }
         for (a = nAnnuli - 1; a >= 0; a--) {
             thisAnnulus = tr("Annulus %1/%2").arg(b).arg(a);
-            ann = spec.block->annulus(a);
+            ann = spec.block()->annulus(a);
 
             (new QTreeWidgetItem(annuli))->setText(0,
                 tr("%1 : Tet %2 (%3%4%5), Tet %6 (%7%8%9)").
@@ -519,13 +519,13 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
                 arg(ann.roles[1][2]));
         }
 
-        if (spec.refVert && spec.refHoriz)
+        if (spec.refVert() && spec.refHoriz())
             (new QTreeWidgetItem(detailsItem))->setText(0,
                 tr("Reflected vertically and horizontally"));
-        else if (spec.refVert)
+        else if (spec.refVert())
             (new QTreeWidgetItem(detailsItem))->setText(0,
                 tr("Reflected vertically"));
-        else if (spec.refHoriz)
+        else if (spec.refHoriz())
             (new QTreeWidgetItem(detailsItem))->setText(0,
                 tr("Reflected horizontally"));
         else
@@ -533,7 +533,7 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
                 tr("No reflections"));
 
         (new QTreeWidgetItem(detailsItem))->setText(0,
-            spec.block->str().c_str());
+            spec.block()->str().c_str());
     }
 }
 

@@ -46,12 +46,9 @@ namespace {
 
 void addSatRegion(pybind11::module_& m) {
     auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
-        .def(pybind11::init<>())
-        .def(pybind11::init<SatBlock*, bool, bool>())
-        .def(pybind11::init<const SatBlockSpec&>())
-        .def_readonly("block", &SatBlockSpec::block)
-        .def_readonly("refVert", &SatBlockSpec::refVert)
-        .def_readonly("refHoriz", &SatBlockSpec::refHoriz)
+        .def("block", &SatBlockSpec::block)
+        .def("refVert", &SatBlockSpec::refVert)
+        .def("refHoriz", &SatBlockSpec::refHoriz)
     ;
     regina::python::add_eq_operators(s);
 
@@ -63,7 +60,7 @@ void addSatRegion(pybind11::module_& m) {
         .def("blockIndex", &SatRegion::blockIndex)
         .def("numberOfBoundaryAnnuli", &SatRegion::numberOfBoundaryAnnuli)
         .def("boundaryAnnulus", [](const SatRegion& r, unsigned which) {
-            SatBlock* block;
+            const SatBlock* block;
             unsigned annulus;
             bool blockRefVert, blockRefHoriz;
 

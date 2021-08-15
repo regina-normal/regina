@@ -58,8 +58,8 @@ void SatBlock::transform(const Triangulation<3>* originalTri,
 }
 
 void SatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
-        SatBlock*& nextBlock, unsigned& nextAnnulus, bool& refVert,
-        bool& refHoriz, bool followPrev) {
+        SatBlock const* &nextBlock, unsigned& nextAnnulus, bool& refVert,
+        bool& refHoriz, bool followPrev) const {
     // Don't worry about testing the precondition (this annulus has no
     // adjacency) -- things won't break even if it's false.
 

@@ -57,7 +57,7 @@ void addSatBlock(pybind11::module_& m) {
         .def("adjustSFS", &SatBlock::adjustSFS)
         .def("transform", &SatBlock::transform)
         .def("nextBoundaryAnnulus", [](SatBlock& b, unsigned a, bool fromPrev) {
-            SatBlock* nextBlock;
+            const SatBlock* nextBlock;
             unsigned nextAnnulus;
             bool refVert, refHoriz;
 
