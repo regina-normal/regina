@@ -306,6 +306,8 @@ Version 6.1  [ TODO ]
               actions that take a knot signature as well as a full knot
               diagram.  This function is now also available through Python,
               and can take a pure Python function as its action argument.
+            - Routine useTreeDecomposition() now takes its argument by
+              value, not by const reference.
         Class ListOnCall:
             - Removed, since this class was not thread-safe and did not add
               anything non-trivial.
@@ -624,6 +626,11 @@ Version 6.1  [ TODO ]
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
         Class TorusBundle:
             - Added member and global swap() functions.
+        Class TreeDecomposition:
+            - Added a move constructor and move assignment operator.
+            - Added member and global swap() functions.
+            - The fromPACE() routines now return a std::optional by value,
+              instead of a newly allocated pointer that could be null.
         Class TreeTraversal<...>
             - The verify() routines no longer allow a ready-made matrix of
               matching/angle equations to be passed; also, they now take

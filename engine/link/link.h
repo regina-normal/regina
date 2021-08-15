@@ -41,7 +41,6 @@
 
 #include <array>
 #include <functional>
-#include <memory>
 #include <optional>
 #include <vector>
 #include "regina-core.h"
@@ -635,10 +634,10 @@ class Link : public Packet {
             /**< The Kauffman bracket polynomial of the link diagram.
                  This is std::nullopt if it has not yet been computed. */
 
-        mutable std::unique_ptr<TreeDecomposition> niceTreeDecomposition_;
+        mutable std::optional<TreeDecomposition> niceTreeDecomposition_;
             /**< A nice tree decomposition of the planar 4-valent multigraph
-                 formed by the link diagram, or \c null if one has not yet
-                 been computed. */
+                 formed by the link diagram.
+                 This is std::nullopt if it has not yet been computed. */
 
     public:
         /**
@@ -2406,10 +2405,7 @@ class Link : public Packet {
          * that it has cached, and will instead cache \e td for future
          * use instead.
          *
-         * Regina will not claim ownership of \e td, and will not edit
-         * it in any way.  Instead, it will make a deep copy of \e td
-         * and then modify this copy for its purposes.
-         *
+         * Regina may modify the given tree decomposition for its purposes.
          * In particular, \e td does not need to be a \e nice tree
          * decomposition (indeed, it does not need to have any special
          * properties beyond the definition of a tree decomposition).
@@ -2419,7 +2415,7 @@ class Link : public Packet {
          * @param td a tree decomposition of the planar 4-valent
          * multigraph formed by this link diagram.
          */
-        void useTreeDecomposition(const TreeDecomposition& td);
+        void useTreeDecomposition(TreeDecomposition);
 
         /*@}*/
         /**
@@ -4667,17 +4663,16 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
     if (niceTreeDecomposition_)
         return *niceTreeDecomposition_;
 
-    TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
-    prepareTreeDecomposition(*ans);
-    niceTreeDecomposition_.reset(ans);
+    TreeDecomposition ans(*this, TD_UPPER);
+    prepareTreeDecomposition(ans);
+    niceTreeDecomposition_ = ans;
 
-    return *ans;
+    return *niceTreeDecomposition_;
 }
 
-inline void Link::useTreeDecomposition(const TreeDecomposition& td) {
-    TreeDecomposition* use = new TreeDecomposition(td);
-    prepareTreeDecomposition(*use);
-    niceTreeDecomposition_.reset(use);
+inline void Link::useTreeDecomposition(TreeDecomposition td) {
+    prepareTreeDecomposition(td);
+    niceTreeDecomposition_ = std::move(td);
 }
 
 inline bool Link::dependsOnParent() const {

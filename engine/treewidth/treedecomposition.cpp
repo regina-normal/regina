@@ -206,12 +206,13 @@ TreeDecomposition::TreeDecomposition(const Link& link,
     construct(g, alg);
 }
 
-TreeDecomposition* TreeDecomposition::fromPACE(const std::string& str) {
+std::optional<TreeDecomposition> TreeDecomposition::fromPACE(
+        const std::string& str) {
     std::istringstream s(str);
     return fromPACE(s);
 }
 
-TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
+std::optional<TreeDecomposition> TreeDecomposition::fromPACE(std::istream& in) {
     TreeBag** bags = nullptr; // non-null after reading the header line
     size_t nVert, nBags, maxBagSize; // set after reading the header line
     size_t readBags = 0, readJoins = 0, readMaxBagSize = 0;
@@ -233,7 +234,7 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
                     (c == 's') && (tmp == "td") && (nBags > 0) &&
                     ! (s >> tmp))) {
                 std::cerr << "ERROR: Invalid header line" << std::endl;
-                return nullptr;
+                return std::nullopt;
             }
 
             bags = new TreeBag*[nBags];
@@ -246,7 +247,7 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
                 for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                     delete *bag;
                 delete[] bags;
-                return nullptr;
+                return std::nullopt;
             }
             --idx;
 
@@ -261,7 +262,7 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
                         for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                             delete *bag;
                         delete[] bags;
-                        return nullptr;
+                        return std::nullopt;
                     } else {
                         --bags[idx]->elements_[bags[idx]->size_];
                         ++bags[idx]->size_;
@@ -284,7 +285,7 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
                     for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                         delete *bag;
                     delete[] bags;
-                    return nullptr;
+                    return std::nullopt;
                 }
 
             // TODO: Reallocate bags[idx]->elements_ to be just the right size.
@@ -301,7 +302,7 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
                 for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                     delete *bag;
                 delete[] bags;
-                return nullptr;
+                return std::nullopt;
             }
             --i;
             --j;
@@ -334,7 +335,7 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                 delete *bag;
             delete[] bags;
-            return nullptr;
+            return std::nullopt;
         }
     }
 
@@ -344,19 +345,19 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
         for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
             delete *bag;
         delete[] bags;
-        return nullptr;
+        return std::nullopt;
     }
 
-    TreeDecomposition* ans = new TreeDecomposition();
-    ans->width_ = maxBagSize - 1;
+    TreeDecomposition ans;
+    ans.width_ = maxBagSize - 1;
 
-    for (ans->root_ = bags[nBags - 1]; ans->root_->parent_;
-            ans->root_ = ans->root_->parent_)
+    for (ans.root_ = bags[nBags - 1]; ans.root_->parent_;
+            ans.root_ = ans.root_->parent_)
         ;
 
     delete[] bags;
 
-    ans->reindex();
+    ans.reindex();
     return ans;
 }
 
@@ -593,7 +594,7 @@ bool TreeDecomposition::compress() {
         if (compare != BAG_UNRELATED) {
             // We will merge b with b->parent_, and then remove b.
             if (compare == BAG_SUPERSET)
-                b->swapContents(*b->parent_);
+                b->swap(*b->parent_);
 
             if (b->children_) {
                 // Bag b has children.

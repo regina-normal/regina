@@ -40,6 +40,7 @@
 #define __REGINA_TREEDECOMPOSITION_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
@@ -517,7 +518,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * @param other the bag to swap contents with this.
          */
-        void swapContents(TreeBag& other);
+        void swap(TreeBag& other) noexcept;
 
         /**
          * Adjusts the links between bags to make this bag the root of
@@ -613,6 +614,10 @@ class TreeBag : public ShortOutput<TreeBag> {
  * Note that individual bags are allowed to be empty.  Moreover, if the
  * underlying graph \a G is empty then the tree decomposition may
  * contain no bags at all.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class TreeDecomposition : public Output<TreeDecomposition> {
     protected:
@@ -676,9 +681,20 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * This will be a deep copy, in the sense that all of the bags
          * of \a cloneMe will be cloned also.
          *
-         * @param cloneMe the tree decomposition to clone.
+         * @param src the tree decomposition to clone.
          */
-        TreeDecomposition(const TreeDecomposition& cloneMe);
+        TreeDecomposition(const TreeDecomposition& src);
+
+        /**
+         * Moves the contents of the given tree decomposition into this
+         * new tree decomposition.  This is a fast (constant time) operation.
+         *
+         * The tree decomposition that was passed (\a src) will no longer be
+         * usable.
+         *
+         * @param src the tree decomposition to move.
+         */
+        TreeDecomposition(TreeDecomposition&& src) noexcept;
 
         /**
          * Builds a tree decomposition of the facet pairing graph of the
@@ -784,6 +800,30 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Destroys this tree decomposition and all of its bags.
          */
         ~TreeDecomposition();
+
+        /**
+         * Moves the contents of the given tree decomposition into this
+         * tree decomposition.  This is a fast (constant time) operation.
+         *
+         * The tree decomposition that was passed (\a src) will no longer be
+         * usable.
+         *
+         * It does not matter if this and the given tree decomposition were
+         * originally built from different and/or differently sized objects
+         * or graphs.
+         *
+         * @param src the tree decomposition to move.
+         * @return a reference to this tree decomposition.
+         */
+        TreeDecomposition& operator = (TreeDecomposition&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given tree decomposition.
+         *
+         * @param other the tree decomposition whose contents should be
+         * swapped with this.
+         */
+        void swap(TreeDecomposition& other) noexcept;
 
         /**
          * Returns the width of this tree decomposition.
@@ -1236,12 +1276,12 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * @param str a text representation of the tree
          * decomposition using the PACE text format.
-         * @return a newly constructed tree decomposition, or \c null if
+         * @return the corresponding tree decomposition, or no value if
          * the input was found to be invalid.
          *
          * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
-        static TreeDecomposition* fromPACE(const std::string& str);
+        static std::optional<TreeDecomposition> fromPACE(const std::string& str);
         /**
          * Builds a tree decomposition from an input stream using the PACE
          * text format.  The text format is described in detail at
@@ -1263,12 +1303,12 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * @param in an input stream that provides a text
          * representation of the tree decomposition using the PACE text format.
-         * @return a newly constructed tree decomposition, or \c null if
+         * @return the corresponding tree decomposition, or no value if
          * the input was found to be invalid.
          *
          * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
-        static TreeDecomposition* fromPACE(std::istream& in);
+        static std::optional<TreeDecomposition> fromPACE(std::istream& in);
 
         // Make this class non-assignable.
         TreeDecomposition& operator = (const TreeDecomposition&) = delete;
@@ -1306,6 +1346,17 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          */
         void reindex();
 };
+
+/**
+ * Swaps the contents of the two given tree decompositions.
+ *
+ * This global routine simply calls TreeDecomposition::swap(); it is provided
+ * so that TreeDecomposition meets the C++ Swappable requirements.
+ *
+ * @param a the first tree decomposition whose contents should be swapped.
+ * @param b the second tree decomposition whose contents should be swapped.
+ */
+void swap(TreeDecomposition& a, TreeDecomposition& b) noexcept;
 
 /*@}*/
 
@@ -1385,7 +1436,7 @@ inline void TreeBag::insertChild(TreeBag* child) {
     children_ = child;
 }
 
-inline void TreeBag::swapContents(TreeBag& other) {
+inline void TreeBag::swap(TreeBag& other) noexcept {
     int s = size_; size_ = other.size_; other.size_ = s;
     int* e = elements_; elements_ = other.elements_; other.elements_ = e;
 }
@@ -1396,8 +1447,28 @@ inline TreeDecomposition::TreeDecomposition() :
         width_(0), size_(0), root_(nullptr) {
 }
 
+inline TreeDecomposition::TreeDecomposition(TreeDecomposition&& src) noexcept :
+        width_(src.width_), size_(src.size_), root_(src.root_) {
+    src.root_ = nullptr;
+}
+
 inline TreeDecomposition::~TreeDecomposition() {
     delete root_;
+}
+
+inline TreeDecomposition& TreeDecomposition::operator = (
+        TreeDecomposition&& src) noexcept {
+    width_ = src.width_;
+    size_ = src.size_;
+    std::swap(root_, src.root_);
+    // Let src dispose of the original bags in its own destructor.
+    return *this;
+}
+
+inline void TreeDecomposition::swap(TreeDecomposition& other) noexcept {
+    std::swap(width_, other.width_);
+    std::swap(size_, other.size_);
+    std::swap(root_, other.root_);
 }
 
 inline int TreeDecomposition::width() const {
@@ -1420,6 +1491,10 @@ inline void TreeDecomposition::reindex() {
     size_ = 0;
     for (const TreeBag* b = first(); b; b = b->next())
         const_cast<TreeBag*>(b)->index_ = size_++;
+}
+
+inline void swap(TreeDecomposition& a, TreeDecomposition& b) noexcept {
+    a.swap(b);
 }
 
 // Inline functions for TreeDecomposition::Graph

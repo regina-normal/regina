@@ -43,7 +43,6 @@
 #endif
 
 #include <map>
-#include <memory>
 #include <variant>
 #include <vector>
 #include <set>
@@ -209,9 +208,10 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
                  if the computation has not yet been attempted, or \c true if
                  it is confirmed that no such angle structure exists. */
 
-        mutable std::unique_ptr<TreeDecomposition> niceTreeDecomposition_;
+        mutable std::optional<TreeDecomposition> niceTreeDecomposition_;
             /**< A nice tree decomposition of the face pairing graph of
-                 this triangulation. */
+                 this triangulation.
+                 This is std::nullopt if it has not yet been computed. */
 
         mutable TuraevViroSet turaevViroCache_;
             /**< The set of Turaev-Viro invariants that have already
@@ -3440,11 +3440,11 @@ inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
     if (niceTreeDecomposition_)
         return *niceTreeDecomposition_;
 
-    TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
-    ans->makeNice();
-    niceTreeDecomposition_.reset(ans);
+    TreeDecomposition ans(*this, TD_UPPER);
+    ans.makeNice();
+    niceTreeDecomposition_ = ans;
 
-    return *ans;
+    return *niceTreeDecomposition_;
 }
 
 inline void Triangulation<3>::writeTextShort(std::ostream& out) const {

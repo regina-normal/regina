@@ -157,6 +157,7 @@ void addTreeDecomposition(pybind11::module_& m) {
             delete[] g;
             return ans;
         }), pybind11::arg(), pybind11::arg("alg") = regina::TD_UPPER)
+        .def("swap", &TreeDecomposition::swap)
         .def("width", &TreeDecomposition::width)
         .def("size", &TreeDecomposition::size)
         .def("root", &TreeDecomposition::root,
@@ -190,5 +191,8 @@ void addTreeDecomposition(pybind11::module_& m) {
     ;
     regina::python::add_output(td);
     regina::python::add_eq_operators(td);
+
+    m.def("swap",
+        (void(*)(TreeDecomposition&, TreeDecomposition&))(regina::swap));
 }
 
