@@ -94,11 +94,13 @@ class AngleStructures : public Packet {
             /**< Does the convex span of this list include a strict
                  angle structure?
                  This is determined by looking at the output angle structues
-                 after enumeration has taken place. */
+                 after enumeration has taken place.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> doesSpanTaut_;
             /**< Does this list include a taut structure?
                  This is determined by looking at the output angle structues
-                 after enumeration has taken place. */
+                 after enumeration has taken place.
+                 This is std::nullopt if it has not yet been computed. */
 
     public:
         /**

@@ -147,41 +147,55 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
 
         mutable std::optional<AbelianGroup> H1Rel_;
             /**< Relative first homology group of the triangulation
-             *   with respect to the boundary. */
+                 with respect to the boundary.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<AbelianGroup> H1Bdry_;
-            /**< First homology group of the boundary. */
+            /**< First homology group of the boundary.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<AbelianGroup> H2_;
-            /**< Second homology group of the triangulation. */
+            /**< Second homology group of the triangulation.
+                 This is std::nullopt if it has not yet been computed. */
 
         mutable std::optional<bool> twoSphereBoundaryComponents_;
             /**< Does the triangulation contain any 2-sphere boundary
-                 components? */
+                 components?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> negativeIdealBoundaryComponents_;
             /**< Does the triangulation contain any boundary components
-                 that are ideal and have negative Euler characteristic? */
+                 that are ideal and have negative Euler characteristic?
+                 This is std::nullopt if it has not yet been computed. */
 
         mutable std::optional<bool> zeroEfficient_;
-            /**< Is the triangulation zero-efficient? */
+            /**< Is the triangulation zero-efficient?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> splittingSurface_;
-            /**< Does the triangulation have a normal splitting surface? */
+            /**< Does the triangulation have a normal splitting surface?
+                 This is std::nullopt if it has not yet been computed. */
 
         mutable std::optional<bool> threeSphere_;
-            /**< Is this a triangulation of a 3-sphere? */
+            /**< Is this a triangulation of a 3-sphere?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> threeBall_;
-            /**< Is this a triangulation of a 3-dimensional ball? */
+            /**< Is this a triangulation of a 3-dimensional ball?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> solidTorus_;
-            /**< Is this a triangulation of the solid torus? */
+            /**< Is this a triangulation of the solid torus?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> TxI_;
-            /**< Is this a triangulation of the product TxI? */
+            /**< Is this a triangulation of the product TxI?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> irreducible_;
-            /**< Is this 3-manifold irreducible? */
+            /**< Is this 3-manifold irreducible?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> compressingDisc_;
-            /**< Does this 3-manifold contain a compressing disc? */
+            /**< Does this 3-manifold contain a compressing disc?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> haken_;
             /**< Is this 3-manifold Haken?
                  This property must only be stored for triangulations
                  that are known to represent closed, connected,
-                 orientable, irreducible 3-manifolds. */
+                 orientable, irreducible 3-manifolds.
+                 This is std::nullopt if it has not yet been computed. */
 
         mutable std::variant<bool, AngleStructure> strictAngleStructure_;
             /**< A strict angle structure on this triangulation, or a

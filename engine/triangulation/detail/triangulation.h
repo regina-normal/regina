@@ -347,9 +347,11 @@ class TriangulationBase :
             /**< Is the triangulation orientable?  This property is only set
                  if/when the skeleton of the triangulation is computed. */
         mutable std::optional<GroupPresentation> fundGroup_;
-            /**< Fundamental group of the triangulation. */
+            /**< Fundamental group of the triangulation.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<AbelianGroup> H1_;
-            /**< First homology group of the triangulation. */
+            /**< First homology group of the triangulation.
+                 This is std::nullopt if it has not yet been computed. */
 
     public:
         typedef typename decltype(simplices_)::const_iterator

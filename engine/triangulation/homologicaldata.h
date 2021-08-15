@@ -211,82 +211,82 @@ private:
 
     /**
      * Pointer to the 0-th homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology0_;
     /**
      * Pointer to the 1st homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology1_;
     /**
      * Pointer to the 2nd homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology2_;
     /**
      * Pointer to the 3rd homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology3_;
 
     /**
      * Pointer to the 0-th boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
+     * coordinates, or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology0_;
     /**
      * Pointer to the 1st boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
+     * coordinates, or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology1_;
     /**
      * Pointer to the 2nd boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
+     * coordinates, or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology2_;
 
     /**
      * Pointer to the boundary inclusion on 0-th homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
+     * cellular coordinates, or no value if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap0_;
     /**
      * Pointer to the boundary inclusion on 1st homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
+     * cellular coordinates, or no value if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap1_;
     /**
      * Pointer to the boundary inclusion on 2nd homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
+     * cellular coordinates, or no value if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap2_;
 
     /**
      * Pointer to the 0-th homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
+     * no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology0_;
     /**
      * Pointer to the 1st homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
+     * no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology1_;
     /**
      * Pointer to the 2nd homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
+     * no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology2_;
     /**
      * Pointer to the 3rd homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
+     * no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology3_;
 
     /**
      * Pointer to the cellular approx of the identity H1(M) --> H1(M)
-     * from dual to standard cellular coordinates, or 0 if it has not yet
-     * been computed.
+     * from dual to standard cellular coordinates, or no value if it has
+     * not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> dmTomMap1_;
 
@@ -331,49 +331,62 @@ private:
     bool chainComplexesComputed;
 
     /** 0th term in chain complex for cellular homology, using standard
-        CW-complex struc */
+        CW-complex struc, or no value if not yet computed */
     std::optional<MatrixInt> A0_;
     /** 1st term in chain complex for cellular homology, using standard
-        CW-complex struc */
+        CW-complex struc, or no value if not yet computed */
     std::optional<MatrixInt> A1_;
     /** 2nd term in chain complex for cellular homology, using standard
-        CW-complex struc */
+        CW-complex struc, or no value if not yet computed */
     std::optional<MatrixInt> A2_;
     /** 3rd term in chain complex for cellular homology, using standard
-        CW-complex struc */
+        CW-complex struc, or no value if not yet computed */
     std::optional<MatrixInt> A3_;
     /** 4th term in chain complex for cellular homology, using standard
-        CW-complex struc */
+        CW-complex struc, or no value if not yet computed */
     std::optional<MatrixInt> A4_;
 
-    /** 0-th term in chain complex for dual cellular homology */
+    /** 0-th term in chain complex for dual cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> B0_; // B0 is #defined in some system headers :/
-    /** 1st term in chain complex for dual cellular homology */
+    /** 1st term in chain complex for dual cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> B1_;
-    /** 2nd term in chain complex for dual cellular homology */
+    /** 2nd term in chain complex for dual cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> B2_;
-    /** 3rd term in chain complex for dual cellular homology */
+    /** 3rd term in chain complex for dual cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> B3_;
-    /** 4th term in chain complex for dual cellular homology */
+    /** 4th term in chain complex for dual cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> B4_;
 
-    /** 0th term in chain complex for boundary cellular homology */
+    /** 0th term in chain complex for boundary cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> Bd0_;
-    /** 1st term in chain complex for boundary cellular homology */
+    /** 1st term in chain complex for boundary cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> Bd1_;
-    /** 2nd term in chain complex for boundary cellular homology */
+    /** 2nd term in chain complex for boundary cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> Bd2_;
-    /** 3rd term in chain complex for boundary cellular homology */
+    /** 3rd term in chain complex for boundary cellular homology, or
+        no value if not yet computed */
     std::optional<MatrixInt> Bd3_;
 
-    /** Chain map from C_0 boundary to C_0 manifold, standard coords */
+    /** Chain map from C_0 boundary to C_0 manifold, standard coords, or
+        no value if not yet computed */
     std::optional<MatrixInt> B0Incl_;
-    /** Chain map from C_1 boundary to C_1 manifold, standard coords */
+    /** Chain map from C_1 boundary to C_1 manifold, standard coords, or
+        no value if not yet computed */
     std::optional<MatrixInt> B1Incl_;
-    /** Chain map from C_2 boundary to C_2 manifold, standard coords */
+    /** Chain map from C_2 boundary to C_2 manifold, standard coords, or
+        no value if not yet computed */
     std::optional<MatrixInt> B2Incl_;
 
-    /** Isomorphism from C_1 dual to C_1 standard */
+    /** Isomorphism from C_1 dual to C_1 standard, or no value if not yet
+        computed */
     std::optional<MatrixInt> H1map_;
 
     /** Call this routine to demand the indexing of the chain complexes. */

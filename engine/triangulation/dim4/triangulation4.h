@@ -131,7 +131,8 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
             /**< Is the triangulation ideal? */
 
         mutable std::optional<AbelianGroup> H2_;
-            /**< Second homology group of the triangulation. */
+            /**< Second homology group of the triangulation.
+                 This is std::nullopt if it has not yet been computed. */
 
     public:
         /**

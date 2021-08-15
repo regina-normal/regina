@@ -447,8 +447,8 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
             /**< The number of cusps that are currently filled. */
 
         mutable std::optional<GroupPresentation> fundGroupFilled_;
-            /**< The fundamental group of the filled triangulation, or
-                 no value if this has not yet been computed. */
+            /**< The fundamental group of the filled triangulation.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::variant<bool, AbelianGroup> h1Filled_;
             /**< The first homology group of the filled triangulation,
                  or a boolean if this unknown.  The boolean will be

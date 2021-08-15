@@ -851,23 +851,31 @@ class NormalSurface : public ShortOutput<NormalSurface> {
             /**< The position of the first non-zero octagonal coordinate,
                  or a null disc type if there is no non-zero octagonal
                  coordinate.  Here DiscType::type is an octagon type
-                 between 0 and 2 inclusive. */
+                 between 0 and 2 inclusive.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<LargeInteger> eulerChar_;
-            /**< The Euler characteristic of this surface. */
+            /**< The Euler characteristic of this surface.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<size_t> boundaries_;
-            /**< The number of disjoint boundary curves on this surface. */
+            /**< The number of disjoint boundary curves on this surface.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> orientable_;
-            /**< Is this surface orientable? */
+            /**< Is this surface orientable?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> twoSided_;
-            /**< Is this surface two-sided? */
+            /**< Is this surface two-sided?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> connected_;
-            /**< Is this surface connected? */
+            /**< Is this surface connected?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> realBoundary_;
             /**< Does this surface have real boundary (i.e. does it meet
-             *   any boundary triangles)? */
+                 any boundary triangles)?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> compact_;
             /**< Is this surface compact (i.e. does it only contain
-             *   finitely many discs)? */
+                 finitely many discs)?
+                 This is std::nullopt if it has not yet been computed. */
 
     public:
         /**

@@ -619,17 +619,21 @@ class Link : public Packet {
                  null reference. */
 
         mutable std::optional<Laurent<Integer>> jones_;
-            /**< The Jones polynomial of the link. */
+            /**< The Jones polynomial of the link.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent2<Integer>> homflyLM_;
             /**< The HOMFLY polynomial of the link, as a polynomial in
                  \a l and \a m.  This property will be known if and only
-                 if \a homflyAZ_ is known. */
+                 if \a homflyAZ_ is known.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent2<Integer>> homflyAZ_;
             /**< The HOMFLY polynomial of the link, as a polynomial in
                  \a alpha and \a z.  This property will be known if and
-                 only if \a homflyLM_ is known. */
+                 only if \a homflyLM_ is known.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent<Integer>> bracket_;
-            /**< The Kauffman bracket polynomial of the link diagram. */
+            /**< The Kauffman bracket polynomial of the link diagram.
+                 This is std::nullopt if it has not yet been computed. */
 
         mutable std::unique_ptr<TreeDecomposition> niceTreeDecomposition_;
             /**< A nice tree decomposition of the planar 4-valent multigraph

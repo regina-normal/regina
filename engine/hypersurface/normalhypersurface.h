@@ -499,18 +499,24 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
 
         mutable std::optional<bool> orientable_;
             /**< Is this hypersurface orientable? */
+                 This is std::nullopt if it has not yet been computed.
         mutable std::optional<bool> twoSided_;
             /**< Is this hypersurface two-sided? */
+                 This is std::nullopt if it has not yet been computed.
         mutable std::optional<bool> connected_;
             /**< Is this hypersurface connected? */
+                 This is std::nullopt if it has not yet been computed.
         mutable std::optional<bool> realBoundary_;
             /**< Does this hypersurface have real boundary (i.e. does it meet
-                 any boundary facets)? */
+                 any boundary facets)?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> compact_;
             /**< Is this hypersurface compact (i.e., does it only
-                 contain finitely many pieces)? */
+                 contain finitely many pieces)?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<AbelianGroup> H1_;
-            /**< First homology group of the hypersurface. */
+            /**< First homology group of the hypersurface.
+                 This is std::nullopt if it has not yet been computed. */
 
     public:
         /**
