@@ -171,7 +171,6 @@ std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
 }
 
 bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
-    SatBlockSpec currBlockSpec;
     SatBlock *currBlock, *adjBlock;
     unsigned ann, adjAnn;
     unsigned long adjPos;
@@ -184,7 +183,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     // will keep the loop doing exactly what it should do even if new
     // blocks are added and blockFound.size() increases.
     for (unsigned long pos = 0; pos < blocks_.size(); pos++) {
-        currBlockSpec = blocks_[pos];
+        const SatBlockSpec& currBlockSpec = blocks_[pos];
         currBlock = currBlockSpec.block;
 
         // Run through each boundary annulus for this block.
@@ -363,22 +362,31 @@ void SatRegion::calculateBaseEuler() {
 }
 
 void SatRegion::writeBlockAbbrs(std::ostream& out, bool tex) const {
-    // The list of blocks should be cheap to copy, since it would
-    // typically be a vector storing a small number of relatively
-    // lightweight SatBlockSpec objects.
-    std::vector<SatBlockSpec> sorted(blocks_);
+    // Here we temporarily sort the blocks, just for the purpose of output.
+    // TODO: Possibly we could keep them permanently in sorted order,
+    // but we should check that won't break anything else by forgetting
+    // the order of insertion/creation.
+    //
+    // Note: creating this secondary array should be cheap, since the
+    // number of blocks is typically small.
+    std::vector<const SatBlockSpec*> sorted(blocks_.size());
+    std::transform(blocks_.begin(), blocks_.end(), sorted.begin(),
+            [](const SatBlockSpec& s) {
+        return &s;
+    });
+
     std::sort(sorted.begin(), sorted.end(),
-            [](const SatBlockSpec& a, const SatBlockSpec& b) {
-        return (*a.block) < (*b.block);
+            [](const SatBlockSpec* a, const SatBlockSpec* b) {
+        return (*a->block) < (*b->block);
     });
 
     bool first = true;
-    for (const SatBlockSpec& b : sorted) {
+    for (const SatBlockSpec* b : sorted) {
         if (first)
             first = false;
         else
             out << ", ";
-        b.block->writeAbbr(out, tex);
+        b->block->writeAbbr(out, tex);
     }
 }
 
