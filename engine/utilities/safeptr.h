@@ -83,6 +83,10 @@ template <class> class SafePointeeBase;
  *   if and only if: (i) no other SafePtr is pointing to that object, and
  *   (ii) the pointee's hasOwner() returns \c false.
  *
+ * SafePtrs are safe to copy, move or swap, and can be passed around by value.
+ * Be aware however that copying is more expensive than moves or swaps, since
+ * move and swap operations do not touch the underlying reference counts.
+ *
  * @author Matthias Goerner
  */
 template<class T>
@@ -105,18 +109,38 @@ public:
      */
     SafePtr(T* object);
 
+    /**
+     * Destroys this smart pointer.  This may also destroy the pointee;
+     * see the class notes for the conditions under which this will occur.
+     */
     ~SafePtr();
 
     /**
-     * Copy constructor.  This constructor can also be used to cast a
-     * SafePtr for a derived class \a Y to a SafePtr for a base class \a T.
+     * Creates a new safe pointer that points to the same object as the
+     * given safe pointer.
+     *
+     * This constructor can also be used to cast a SafePtr for a derived
+     * class \a Y to a SafePtr for a base class \a T.
      *
      * \pre the class \a T (whose constructor is called) is a base class
      * of \a Y.
      *
      * @param other the pointer to copy.
      */
-    template<class Y> SafePtr(const SafePtr<Y>& other);
+    template <class Y> SafePtr(const SafePtr<Y>& other);
+
+    /**
+     * Moves the contents of the given safe pointer into this new safe
+     * pointer.  Specifically, the ownership responsibilities for the
+     * pointee (if it is non-null) will be transferred to this new object,
+     * and \a src will be reset to a null pointer.
+     *
+     * \pre the class \a T (whose constructor is called) is a base class
+     * of \a Y.
+     *
+     * @param src the pointer to move.
+     */
+    template <class Y> SafePtr(SafePtr<Y>&& src) noexcept;
 
     /**
      * Returns a raw pointer to the pointee.
@@ -140,19 +164,74 @@ public:
      * new one: in particular, the old pointee may be destroyed if it meets
      * the conditions outlined in the class notes above.
      *
+     * As a special case, it is always safe to reset a SafePtr to its
+     * own value (i.e., the pointee will not be destroyed, even if this
+     * is the only SafePtr that points to it).
+     *
      * @param object the new pointee.  This may be \c null.
      */
     void reset(T* object = nullptr);
 
     /**
-     * Disable the default assignment operator.
+     * Resets this to be a copy of the given smart pointer.
+     *
+     * This is identical to calling <tt>reset(src.get())</tt>: in particular,
+     * the original pointee may be destroyed if it meets the conditions
+     * outlined in the class notes above.
+     *
+     * Self-assignment is always safe (i.e., the pointee will not be
+     * destroyed, even if this is the only SafePtr that points to it).
+     *
+     * @param src the pointer to copy.
+     * @return a reference to this pointer.
      */
-    SafePtr<T>& operator = (const SafePtr<T>&) = delete;
+    SafePtr<T>& operator = (const SafePtr<T>& src);
+
+    /**
+     * Moves the contents of the given safe pointer into this safe pointer.
+     * Specifically, the ownership responsibilities for the pointee (if it
+     * is non-null) will be transferred to this new object.
+     *
+     * This operation will not destroy the original pointee: instead its
+     * ownership responsibilities will be transferred to \a src.  Since
+     * this is a move operation, it is assumed that \a src will be destroyed
+     * soon after, and this is when the original pointee may also be destroyed
+     * (if it meets the conditions outlined in the class notes).
+     *
+     * @param src the pointer to move.
+     * @return a reference to this pointer.
+     */
+    SafePtr<T>& operator = (SafePtr<T>&& src) noexcept;
+
+    /**
+     * Swaps the pointees for this and the given smart pointer.
+     *
+     * There is no risk of either pointee being destroyed during this
+     * operation, even if these are the only smart pointers that point to them.
+     *
+     * @param other the pointer whose pointee should be swapped with this.
+     */
+    void swap(SafePtr<T>& other) noexcept;
 
 private:
     T* object_;
-        /** The pointee. */
+        /**< The pointee. */
+
+    // To support move operations from SafePtr<Y>:
+    template <class Y> friend class SafePtr;
 };
+
+/**
+ * Swaps the pointees for the two given smart pointers.
+ *
+ * There is no risk of either pointee being destroyed during this
+ * operation, even if these are the only smart pointers that point to them.
+ *
+ * @param a the first pointer whose pointee should be swapped.
+ * @param b the second pointer whose pointee should be swapped.
+ */
+template <class T>
+void swap(SafePtr<T>& a, SafePtr<T>& b) noexcept;
 
 /*@}*/
 
@@ -178,6 +257,12 @@ template<class Y>
 inline SafePtr<T>::SafePtr(const SafePtr<Y> &other) : SafePtr(other.get()) {
 }
 
+template<class T>
+template <class Y>
+inline SafePtr<T>::SafePtr(SafePtr<Y>&& src) noexcept : object_(src.object_) {
+    src.object_ = nullptr;
+}
+
 // By virtue of how \c SafePtr's are constructed, get() always holds
 // a pointer to T or a dervied class of T.
 template<class T>
@@ -192,16 +277,20 @@ inline SafePtr<T>::operator bool() const {
 
 template<class T>
 inline void SafePtr<T>::reset(T* object) {
-    if (object_) {
-        if (object_->refCount_.fetch_sub(1) == 1) {
-            if (!object_->hasOwner()) {
-                delete object_;
+    // Note: if object == object_, we do not want to risk destroying the
+    // underlying object during what should be a trivial self-assignment.
+    if (object_ != object) {
+        if (object_) {
+            if (object_->refCount_.fetch_sub(1) == 1) {
+                if (!object_->hasOwner()) {
+                    delete object_;
+                }
             }
         }
-    }
-    object_ = object;
-    if (object) {
-        object->refCount_.fetch_add(1);
+        object_ = object;
+        if (object) {
+            object->refCount_.fetch_add(1);
+        }
     }
 }
 
@@ -214,6 +303,28 @@ inline SafePtr<T>::~SafePtr() {
             }
         }
     }
+}
+
+template <class T>
+inline SafePtr<T>& SafePtr<T>::operator = (const SafePtr<T>& src) {
+    reset(src.object_);
+    return *this;
+}
+
+template <class T>
+inline SafePtr<T>& SafePtr<T>::operator = (SafePtr<T>&& src) noexcept {
+    std::swap(object_, src.object_);
+    return *this;
+}
+
+template <class T>
+inline void SafePtr<T>::swap(SafePtr<T>& other) noexcept {
+    std::swap(object_, other,object_);
+}
+
+template <class T>
+inline void swap(SafePtr<T>& a, SafePtr<T>& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina
