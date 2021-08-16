@@ -1333,6 +1333,11 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * that listeners only receive one pair of events for the
          * entire change set, instead of many events representing each
          * individual modification.
+         *
+         * ChangeEventSpan objects are not copyable, movable or swappable.
+         * In particular, Regina does not offer any way for a ChangeEventSpan
+         * to transfer its duty (i.e., firing events upon destruction) to
+         * another object.
          */
         class ChangeEventSpan {
             private:
