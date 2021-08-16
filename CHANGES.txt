@@ -521,6 +521,8 @@ Version 6.1  [ TODO ]
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
             - Removed the StoreConstPtr storage policy, which was never used.
+        Class QitmaskLen8, QitmaskLen16, QitmaskLen32, QitmaskLen64:
+            - Deprecated.  Just use Qitmask1<uint8_t>, etc.
         Class Ray:
             - All of the old Ray functionality is now merged into
               Vector<LargeInteger>, and you should use that class directly.
@@ -697,6 +699,8 @@ Version 6.1  [ TODO ]
               a full triangluation.  This function is now also available
               through Python, and can take a pure Python function as its
               action argument.
+        Class TritmaskLen8, TritmaskLen16, TritmaskLen32, TritmaskLen64:
+            - Deprecated.  Just use Tritmask1<uint8_t>, etc.
         Class TrivialTri:
             - Class constants are now constexpr.
         Class Vector:

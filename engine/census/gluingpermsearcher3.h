@@ -963,7 +963,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
 
-            QitmaskLen64 facesPos;
+            Qitmask1<uint64_t> facesPos;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the positive
                      direction.  Specifically, the (4t+i)th trit counts
@@ -982,7 +982,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                      TetEdgeState), but it is only used and updated in
                      the subclass ClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
-            QitmaskLen64 facesNeg;
+            Qitmask1<uint64_t> facesNeg;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the negative
                      direction.  Specifically, the (4t+i)th trit counts
@@ -1815,7 +1815,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
 
-            QitmaskLen64 facesPos;
+            Qitmask1<uint64_t> facesPos;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the positive
                      direction.  Specifically, the (4t+i)th trit counts
@@ -1834,7 +1834,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                      TetEdgeState), but it is only used and updated in
                      the subclass ClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
-            QitmaskLen64 facesNeg;
+            Qitmask1<uint64_t> facesNeg;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the negative
                      direction.  Specifically, the (4t+i)th trit counts

@@ -491,64 +491,8 @@ class Qitmask2 {
         const Qitmask2<T, U>& mask);
 };
 
-#ifndef __DOXYGEN
 /**
- * An internal template that helps choose the correct qitmask type for
- * a given (hard-coded) number of bits.
- *
- * Please do not use this class directly, since this template is internal
- * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs QitmaskLen8, QitmaskLen16, QitmaskLen32
- * and QitmaskLen64.
- *
- * The reason this template exists is to circumvent the fact that we cannot
- * use sizeof() in a #if statement.  The boolean argument to this template
- * should always be left as the default.
- */
-template <bool IntHolds4Bytes = (sizeof(unsigned int) >= 4)>
-struct InternalQitmaskLen32;
-
-template <>
-struct InternalQitmaskLen32<true> {
-    typedef Qitmask1<unsigned int> Type;
-};
-
-template <>
-struct InternalQitmaskLen32<false> {
-    // The standard guarantees that sizeof(long) >= 4.
-    typedef Qitmask1<unsigned long> Type;
-};
-
-/**
- * An internal template that helps choose the correct qitmask type for
- * a given (hard-coded) number of bits.
- *
- * Please do not use this class directly, since this template is internal
- * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs QitmaskLen8, QitmaskLen16, QitmaskLen32
- * and QitmaskLen64.
- *
- * The reason this template exists is to circumvent the fact that we cannot
- * use sizeof() in a #if statement.  The boolean argument to this template
- * should always be left as the default.
- */
-template <bool LongHolds8Bytes = (sizeof(unsigned long) >= 8)>
-struct InternalQitmaskLen64;
-
-template <>
-struct InternalQitmaskLen64<true> {
-    typedef Qitmask1<unsigned long> Type;
-};
-
-template <>
-struct InternalQitmaskLen64<false> {
-    // The C standard guarantees that sizeof(long long) >= 8.
-    typedef Qitmask1<unsigned long long> Type;
-};
-#endif // End block for doxygen to ignore.
-
-/**
- * A convenience typedef that gives a small and extremely fast qitmask
+ * A deprecated typedef that gives a small and extremely fast qitmask
  * class capable of holding at least 8 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -557,12 +501,14 @@ struct InternalQitmaskLen64<false> {
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
+ * \deprecated This typedef is deprecated; just use Qitmask1<uint8_t> instead.
+ *
  * \ifacespython Not present.
  */
-typedef Qitmask1<unsigned char> QitmaskLen8;
+typedef Qitmask1<uint8_t> QitmaskLen8 [[deprecated]];
 
 /**
- * A convenience typedef that gives a small and extremely fast qitmask
+ * A deprecated typedef that gives a small and extremely fast qitmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -571,12 +517,14 @@ typedef Qitmask1<unsigned char> QitmaskLen8;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
+ * \deprecated This typedef is deprecated; just use Qitmask1<uint16_t> instead.
+ *
  * \ifacespython Not present.
  */
-typedef Qitmask1<unsigned int> QitmaskLen16;
+typedef Qitmask1<uint16_t> QitmaskLen16 [[deprecated]];
 
 /**
- * A convenience typedef that gives a small and extremely fast qitmask
+ * A deprecated typedef that gives a small and extremely fast qitmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -585,12 +533,14 @@ typedef Qitmask1<unsigned int> QitmaskLen16;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
+ * \deprecated This typedef is deprecated; just use Qitmask1<uint32_t> instead.
+ *
  * \ifacespython Not present.
  */
-typedef InternalQitmaskLen32<>::Type QitmaskLen32;
+typedef Qitmask1<uint32_t> QitmaskLen32 [[deprecated]];
 
 /**
- * A convenience typedef that gives a small and extremely fast qitmask
+ * A deprecated typedef that gives a small and extremely fast qitmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of
@@ -599,9 +549,11 @@ typedef InternalQitmaskLen32<>::Type QitmaskLen32;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
+ * \deprecated This typedef is deprecated; just use Qitmask1<uint64_t> instead.
+ *
  * \ifacespython Not present.
  */
-typedef InternalQitmaskLen64<>::Type QitmaskLen64;
+typedef Qitmask1<uint64_t> QitmaskLen64 [[deprecated]];
 
 /*@}*/
 

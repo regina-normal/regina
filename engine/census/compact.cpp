@@ -226,8 +226,8 @@ CompactSearcher::CompactSearcher(FacetPairing<3>&& pairing,
     edgeStateChanged = new int[nTets * 8];
     std::fill(edgeStateChanged, edgeStateChanged + nTets * 8, -1);
 
-    // Since QitmaskLen64 only supports 64 faces, only work with
-    // the first 16 tetrahedra.  If n > 16, this just weakens the
+    // Since our hard-coded Qitmask classes only support 64 faces, only work
+    // with the first 16 tetrahedra.  If n > 16, this just weakens the
     // optimisation; however, this is no great loss since for n > 16 the
     // census code is at present infeasibly slow anyway.
     for (i = 0; i < nTets && i < 16; ++i) {

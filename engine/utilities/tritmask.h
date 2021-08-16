@@ -538,64 +538,8 @@ std::ostream& operator << (std::ostream& out, const Tritmask2<T, U>& mask) {
     return out;
 }
 
-#ifndef __DOXYGEN
 /**
- * An internal template that helps choose the correct tritmask type for
- * a given (hard-coded) number of bits.
- *
- * Please do not use this class directly, since this template is internal
- * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs TritmaskLen8, TritmaskLen16, TritmaskLen32
- * and TritmaskLen64.
- *
- * The reason this template exists is to circumvent the fact that we cannot
- * use sizeof() in a #if statement.  The boolean argument to this template
- * should always be left as the default.
- */
-template <bool IntHolds4Bytes = (sizeof(unsigned int) >= 4)>
-struct InternalTritmaskLen32;
-
-template <>
-struct InternalTritmaskLen32<true> {
-    typedef Tritmask1<unsigned int> Type;
-};
-
-template <>
-struct InternalTritmaskLen32<false> {
-    // The standard guarantees that sizeof(long) >= 4.
-    typedef Tritmask1<unsigned long> Type;
-};
-
-/**
- * An internal template that helps choose the correct tritmask type for
- * a given (hard-coded) number of bits.
- *
- * Please do not use this class directly, since this template is internal
- * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs TritmaskLen8, TritmaskLen16, TritmaskLen32
- * and TritmaskLen64.
- *
- * The reason this template exists is to circumvent the fact that we cannot
- * use sizeof() in a #if statement.  The boolean argument to this template
- * should always be left as the default.
- */
-template <bool LongHolds8Bytes = (sizeof(unsigned long) >= 8)>
-struct InternalTritmaskLen64;
-
-template <>
-struct InternalTritmaskLen64<true> {
-    typedef Tritmask1<unsigned long> Type;
-};
-
-template <>
-struct InternalTritmaskLen64<false> {
-    // The C standard guarantees that sizeof(long long) >= 8.
-    typedef Tritmask1<unsigned long long> Type;
-};
-#endif // End block for doxygen to ignore.
-
-/**
- * A convenience typedef that gives a small and extremely fast tritmask
+ * A deprecated typedef that gives a small and extremely fast tritmask
  * class capable of holding at least 8 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
@@ -604,12 +548,14 @@ struct InternalTritmaskLen64<false> {
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
+ * \deprecated This typedef is deprecated; just use Tritmask1<uint8_t> instead.
+ *
  * \ifacespython Not present.
  */
-typedef Tritmask1<unsigned char> TritmaskLen8;
+typedef Tritmask1<uint8_t> TritmaskLen8 [[deprecated]];
 
 /**
- * A convenience typedef that gives a small and extremely fast tritmask
+ * A deprecated typedef that gives a small and extremely fast tritmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
@@ -618,12 +564,14 @@ typedef Tritmask1<unsigned char> TritmaskLen8;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
+ * \deprecated This typedef is deprecated; just use Tritmask1<uint16_t> instead.
+ *
  * \ifacespython Not present.
  */
-typedef Tritmask1<unsigned int> TritmaskLen16;
+typedef Tritmask1<uint16_t> TritmaskLen16 [[deprecated]];
 
 /**
- * A convenience typedef that gives a small and extremely fast tritmask
+ * A deprecated typedef that gives a small and extremely fast tritmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
@@ -632,12 +580,14 @@ typedef Tritmask1<unsigned int> TritmaskLen16;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
+ * \deprecated This typedef is deprecated; just use Tritmask1<uint32_t> instead.
+ *
  * \ifacespython Not present.
  */
-typedef InternalTritmaskLen32<>::Type TritmaskLen32;
+typedef Tritmask1<uint32_t> TritmaskLen32 [[deprecated]];
 
 /**
- * A convenience typedef that gives a small and extremely fast tritmask
+ * A deprecated typedef that gives a small and extremely fast tritmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of
@@ -646,9 +596,11 @@ typedef InternalTritmaskLen32<>::Type TritmaskLen32;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
+ * \deprecated This typedef is deprecated; just use Tritmask1<uint64_t> instead.
+ *
  * \ifacespython Not present.
  */
-typedef InternalTritmaskLen64<>::Type TritmaskLen64;
+typedef Tritmask1<uint64_t> TritmaskLen64 [[deprecated]];
 
 /*@}*/
 
