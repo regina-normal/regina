@@ -465,7 +465,8 @@ class TreeBag : public ShortOutput<TreeBag> {
          */
         void writeTextShort(std::ostream& out) const;
 
-        // Make this class non-assignable.
+        // Make this class non-copyable.
+        TreeBag(const TreeBag&) = delete;
         TreeBag& operator = (const TreeBag&) = delete;
 
     private:
