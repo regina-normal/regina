@@ -46,6 +46,7 @@ void addFileInfo(pybind11::module_& m) {
         .def("engine", &FileInfo::engine)
         .def("isCompressed", &FileInfo::isCompressed)
         .def("isInvalid", &FileInfo::isInvalid)
+        .def("swap", &FileInfo::swap)
         .def_static("identify", &FileInfo::identify)
         // On some systems we cannot take addresses of the following
         // inline class constants (e.g., this fails with gcc10 on windows).
@@ -56,5 +57,7 @@ void addFileInfo(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap));
 }
 

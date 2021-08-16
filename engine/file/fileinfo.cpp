@@ -96,13 +96,13 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     }
 
     FileInfo ans;
-    ans.compressed = compressed;
+    ans.compressed_ = compressed;
     ans.pathname_ = idPathname;
     ans.type_ = FileInfo::TYPE_XML;
     ans.typeDescription_ = "XML Regina data file";
 
     // Make it an invalid file until we know otherwise.
-    ans.invalid = true;
+    ans.invalid_ = true;
 
     std::ifstream file(idPathname.c_str(),
         std::ios_base::in | std::ios_base::binary);
@@ -169,23 +169,23 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     }
 
     // That's as far as we need to go; we've extracted everything we want.
-    ans.invalid = false;
+    ans.invalid_ = false;
     return ans;
 }
 
 void FileInfo::writeTextShort(std::ostream& out) const {
     out << "File information: " << typeDescription_;
-    if (compressed)
+    if (compressed_)
         out << " (compressed)";
 }
 
 void FileInfo::writeTextLong(std::ostream& out) const {
     out << "Regina data\n" << typeDescription_;
-    if (compressed)
+    if (compressed_)
         out << " (compressed)";
     out << '\n';
 
-    if (invalid)
+    if (invalid_)
         out << "File contains invalid metadata.\n";
     else
         out << "Engine " << engine_ << '\n';

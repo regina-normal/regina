@@ -83,11 +83,11 @@ class FileInfo : public Output<FileInfo> {
             /**< A human-readable description of the type of data file. */
         std::string engine_;
             /**< The version of the calculation engine that wrote this file. */
-        bool compressed;
+        bool compressed_;
             /**< \c true if this file is stored in compressed format,
                  \c false otherwise.  Currently this option only applies
                  to XML data files. */
-        bool invalid;
+        bool invalid_;
             /**< \c true if the file metadata could not be read,
                  \c false otherwise. */
 
@@ -159,6 +159,12 @@ class FileInfo : public Output<FileInfo> {
          * @return a reference to this object.
          */
         FileInfo& operator = (FileInfo&&) noexcept = default;
+        /**
+         * Swaps the contents of this and the given file information.
+         *
+         * @param other the object whose contents should be swapped with this.
+         */
+        void swap(FileInfo& other) noexcept;
 
         /**
          * Return information about the given Regina data file.
@@ -201,6 +207,17 @@ class FileInfo : public Output<FileInfo> {
         FileInfo();
 };
 
+/**
+ * Swaps the contents of the two given file information objects.
+ *
+ * This global routine simply calls FileInfo::swap(); it is provided
+ * so that FileInfo meets the C++ Swappable requirements.
+ *
+ * @param a the object whose contents should be swapped with \a b.
+ * @param b the object whose contents should be swapped with \a a.
+ */
+void swap(FileInfo& a, FileInfo& b) noexcept;
+
 /*@}*/
 
 // Inline functions for FileInfo
@@ -225,11 +242,24 @@ inline const std::string& FileInfo::engine() const {
 }
 
 inline bool FileInfo::isCompressed() const {
-    return compressed;
+    return compressed_;
 }
 
 inline bool FileInfo::isInvalid() const {
-    return invalid;
+    return invalid_;
+}
+
+inline void FileInfo::swap(FileInfo& other) noexcept {
+    pathname_.swap(other.pathname_);
+    std::swap(type_, other.type_);
+    typeDescription_.swap(other.typeDescription_);
+    engine_.swap(other.engine_);
+    std::swap(compressed_, other.compressed_);
+    std::swap(invalid_, other.invalid_);
+}
+
+inline void swap(FileInfo& a, FileInfo& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

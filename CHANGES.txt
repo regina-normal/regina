@@ -149,6 +149,7 @@ Version 6.1  [ TODO ]
               can be losslessly assigned to which others.
         Class FileInfo:
             - Added a move constructor and move assignment operator.
+            - Added member and global swap() functions.
             - Class constant TYPE_XML is now constexpr.
             - Routine identify() now returns a std::optional<FileInfo>,
               not a newly allocated pointer that could be null.
