@@ -55,6 +55,8 @@ Version 6.1  [ TODO ]
         Class Base64SigEncoding:
             - New helper class that provides code common to isomorphism
               signatures and knot signatures.
+        Class BitmaskLen8, BitmaskLen16, BitmaskLen32, BitmaskLen64:
+            - Deprecated.  Just use Bitmask1<uint8_t>, etc.
         Class BoolSet:
             - Almost everything in this class is now constexpr.
             - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
