@@ -85,6 +85,22 @@ class ListView {
         typedef typename List::size_type size_type;
 
         /**
+         * A reference to a list element.
+         *
+         * Both \a reference and \a const_reference are the same, since
+         * this class only offers read-only access to the underlying list.
+         */
+        typedef typename List::const_reference reference;
+
+        /**
+         * A reference to a list element.
+         *
+         * Both \a reference and \a const_reference are the same, since
+         * this class only offers read-only access to the underlying list.
+         */
+        typedef typename List::const_reference const_reference;
+
+        /**
          * The iterator type for this list view.
          *
          * Both \a iterator and \a const_iterator are the same, since
@@ -132,7 +148,7 @@ class ListView {
          * between 0 and size()-1 inclusive.
          * @return the (\a index)th element in this list.
          */
-        auto operator [](size_type index) const;
+        const_reference operator [](size_type index) const;
         /**
          * Returns the first element of this list.
          *
@@ -140,7 +156,7 @@ class ListView {
          *
          * @return the first element in this list.
          */
-        auto front() const;
+        const_reference front() const;
         /**
          * Returns the last element of this list.
          *
@@ -148,7 +164,7 @@ class ListView {
          *
          * @return the last element in this list.
          */
-        auto back() const;
+        const_reference back() const;
         /**
          * Returns an iterator pointing to the first element.
          *
@@ -182,17 +198,18 @@ inline typename ListView<List>::size_type ListView<List>::size() const {
 }
 
 template <class List>
-inline auto ListView<List>::operator [](size_type index) const {
+inline typename ListView<List>::const_reference ListView<List>::operator [](
+        size_type index) const {
     return list_[index];
 }
 
 template <class List>
-inline auto ListView<List>::front() const {
+inline typename ListView<List>::const_reference ListView<List>::front() const {
     return list_.front();
 }
 
 template <class List>
-inline auto ListView<List>::back() const {
+inline typename ListView<List>::const_reference ListView<List>::back() const {
     return list_.back();
 }
 

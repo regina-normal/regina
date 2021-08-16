@@ -335,7 +335,7 @@ Version 6.1  [ TODO ]
               now take a MatrixInt by value.
         Class MarkedVector:
             - New convenience routine clear_destructive().
-            - New typedef value_type.
+            - New typedefs value_type, reference and const_reference.
             - New global swap() to complement the existing member swap().
             - Granted access to the reserve() member function.
         Class Matrix:

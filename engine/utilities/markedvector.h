@@ -153,9 +153,10 @@ class MarkedElement {
 template <typename T>
 class MarkedVector : private std::vector<T*> {
     public:
+        using typename std::vector<T*>::reference;
+        using typename std::vector<T*>::const_reference;
         using typename std::vector<T*>::iterator;
         using typename std::vector<T*>::const_iterator;
-
         using typename std::vector<T*>::value_type;
         using typename std::vector<T*>::size_type;
 
