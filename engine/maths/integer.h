@@ -89,24 +89,13 @@ struct InfinityBase;
 /**
  * An internal base class inherited by LargeInteger, which provides
  * support for infinity as an allowed value.
+ *
+ * End users should not use this class directly.
  */
 template <>
 struct InfinityBase<true> {
-    bool infinite_;
+    bool infinite_ = false;
         /**< Does this integer represent infinity? */
-
-    /**
-     * Default constructor that sets this integer to be finite.
-     */
-    inline InfinityBase() : infinite_(false) {
-    }
-    /**
-     * Copy constructor that sets this integer to be infinite if and only
-     * if the given integer is infinite.
-     *
-     * @param src the integer whose finiteness should be copied.
-     */
-    InfinityBase(const InfinityBase&) = default;
 };
 
 /**
