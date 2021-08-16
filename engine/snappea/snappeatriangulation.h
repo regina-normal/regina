@@ -98,15 +98,46 @@ struct SnapPeaFatalError : public SnapPeaException {
     SnapPeaFatalError(const char* fromFunction, const char* fromFile);
 
     /**
-     * Clones the given exception.
+     * Creates a new copy of the given exception.
      */
     SnapPeaFatalError(const SnapPeaFatalError&) = default;
 
     /**
-     * Sets this to a copy of the given exception.
+     * Moves the contents of the given exception into this new exception.
+     *
+     * The exception that was passed will no longer be usable.
+     */
+    SnapPeaFatalError(SnapPeaFatalError&&) noexcept = default;
+
+    /**
+     * Sets this to be a copy of the given exception.
      */
     SnapPeaFatalError& operator = (const SnapPeaFatalError&) = default;
+
+    /**
+     * Moves the contents of the given exception into this exception.
+     *
+     * The exception that was passed will no longer be usable.
+     *
+     * @return a reference to this exception.
+     */
+    SnapPeaFatalError& operator = (SnapPeaFatalError&&) noexcept = default;
+
+    /**
+     * Swaps the contents of this and the given exception.
+     *
+     * @param other the exception whose contents should be swapped with this.
+     */
+    void swap(SnapPeaFatalError& other) noexcept;
 };
+
+/**
+ * Swaps the contents of the two given exceptions.
+ *
+ * @param a the first exception whose contents should be swapped.
+ * @param b the second exception whose contents should be swapped.
+ */
+void swap(SnapPeaFatalError& a, SnapPeaFatalError& b) noexcept;
 
 /**
  * An exception that is thrown when the SnapPea kernel finds that all
@@ -1705,6 +1736,15 @@ void swap(SnapPeaTriangulation& lhs, SnapPeaTriangulation& rhs);
 inline SnapPeaFatalError::SnapPeaFatalError(
         const char* fromFunction, const char* fromFile) :
         function(fromFunction), file(fromFile) {
+}
+
+inline void SnapPeaFatalError::swap(SnapPeaFatalError& other) noexcept {
+    function.swap(other.function);
+    file.swap(other.file);
+}
+
+inline void swap(SnapPeaFatalError& a, SnapPeaFatalError& b) noexcept {
+    a.swap(b);
 }
 
 // Inline functions for Cusp

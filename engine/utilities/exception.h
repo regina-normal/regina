@@ -51,6 +51,8 @@ namespace regina {
 /**
  * An exception thrown when a function detects that its preconditions
  * have been violated.
+ *
+ * \ifacespython Not present.
  */
 class FailedPrecondition : public std::exception {
     private:
@@ -68,6 +70,8 @@ class FailedPrecondition : public std::exception {
 /**
  * An exception thrown when a function reads unexpected or incomplete
  * data from an input stream.
+ *
+ * \ifacespython Not present.
  */
 class InvalidInput : public std::exception {
     private:

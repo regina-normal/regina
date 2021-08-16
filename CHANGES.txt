@@ -593,6 +593,9 @@ Version 6.1  [ TODO ]
             - Added member and global swap() functions.
         Class SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
+        Class SnapPeaFatalError:
+            - Added a move constructor and move assignment operator.
+            - Added member and global swap() functions.
         Class SnapPeaTriangulation:
             - New constructor that takes a link and builds its complement.
             - Added member and global swap() functions.
