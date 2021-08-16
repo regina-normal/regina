@@ -68,20 +68,13 @@ namespace regina {
  */
 template <bool condition, typename T, T defaultValue>
 struct EnableIf {
-    T value;
+    T value { defaultValue };
         /**< The data member to store if \a condition is \c true. */
-
-    /**
-     * Initialises the data member to \a defaultValue, if the data member
-     * is in fact stored.
-     */
-    EnableIf() : value(defaultValue) {}
 };
 
 #ifndef __DOXYGEN
 template <typename T, T defaultValue>
 struct EnableIf<false, T, defaultValue> {
-    EnableIf() {}
 };
 #endif // __DOXYGEN
 
