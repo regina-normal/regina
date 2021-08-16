@@ -110,6 +110,9 @@ namespace regina {
  * Until isFinished() returns \c true, there is no guarantee that the
  * writing thread has detected and honoured the cancellation request.
  *
+ * Progress trackers rely on multiple threads accessing the same underlying
+ * object, and so they cannot be copied, moved or swapped.
+ *
  * \note This class implements common functionality for ProgressTracker
  * and ProgressTrackerOpen, and should not be used on its own.  Instead,
  * you should always use either ProgressTracker or ProgressTrackerOpen
