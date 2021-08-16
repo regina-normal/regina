@@ -57,9 +57,10 @@ namespace regina {
  * This class only contains four long integers, and so it may be considered
  * small enough to pass about by value.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, it does not implement a move
- * constructor or move assignment, since its internal data is very small.
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the Matrix classes.
  */
 class Matrix2 {
     private:

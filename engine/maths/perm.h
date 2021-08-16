@@ -153,6 +153,11 @@ enum PermCodeType {
  * this template is generic and most operations require more time (in
  * particular, there are no harded-coded lookup tables).
  *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via std::swap(), and does
+ * not offer its own specialised swap() functions.
+ *
  * \ifacespython Python does not support templates.  For each
  * \a n = 2,...,16, this class is available in Python under the
  * corresponding name Perm2, Perm3, ..., Perm16.

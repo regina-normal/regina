@@ -65,6 +65,11 @@ class LensSpace;
  * may be larger than \a alpha).  This is to allow more flexibility in
  * routines such as SFSpace::insertFibre().
  *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via std::swap(), and does
+ * not offer its own specialised swap() functions.
+ *
  * \warning In Regina 4.2.1 and earlier, this class was named
  * NExceptionalFibre.  The new SFSFibre class was introduced with
  * Regina 4.3, and has changed its behaviour (in particular, the

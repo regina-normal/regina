@@ -96,6 +96,11 @@ namespace regina {
  * in converting back and forth between the second-generation codes
  * (which are used internally by Perm<4>).
  *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via std::swap(), and does
+ * not offer its own specialised swap() functions.
+ *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \ifacespython Since Python does not support templates, this class is

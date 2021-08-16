@@ -55,9 +55,10 @@ namespace regina {
  * All optional Manifold routines except for Manifold::construct() are
  * implemented for this class.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, it does not implement a move
- * constructor or move assignment, since its internal data is very small.
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other manifold classes.
  */
 class Handlebody : public Manifold {
     private:

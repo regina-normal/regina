@@ -1669,10 +1669,10 @@ std::string tightEncoding(IntegerBase<supportInfinity> value);
  * their code, or support both Integer and NativeInteger types as
  * template arguments.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions, for compatibility with Integer.
- * However, it does not implement a move constructor or move assignment,
+ * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the Integer and LargeInteger classes.
  *
  * \pre The system must support integers of the given size; in particular,
  * there must be an appropriate specialisation IntOfSize<bytes>.

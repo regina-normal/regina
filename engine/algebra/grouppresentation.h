@@ -68,6 +68,11 @@ class MarkedAbelianGroup;
 
 /**
  * Represents a power of a generator in a group presentation.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via std::swap(), and does
+ * not offer its own specialised swap() functions.
  */
 struct GroupExpressionTerm {
     unsigned long generator;
