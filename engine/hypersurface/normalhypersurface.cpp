@@ -36,11 +36,6 @@
 #include "triangulation/dim4.h"
 #include "utilities/xmlutils.h"
 
-// Property IDs:
-#define PROPID_HS_REALBOUNDARY 5
-#define PROPID_HS_COMPACT 6
-#define PROPID_HS_SURFACENAME 100
-
 namespace regina {
 
 bool NormalHypersurfaceVector::isCompact(const Triangulation<4>& triang)
