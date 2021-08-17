@@ -12,7 +12,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    boundarycomponent-impl.h
     boundarycomponent.h
     canonical-impl.h
     component.h
@@ -22,11 +21,8 @@ if (${REGINA_INSTALL_DEV})
     facetpairing.h
     facetpairing-impl.h
     isosig-impl.h
-    pachner-impl.h
     retriangulate.h
-    retriangulate-impl.h
     simplex.h
-    skeleton-impl.h
     strings.h
     triangulation.h
     DESTINATION "${INCLUDEDIR}/triangulation/detail" COMPONENT Development)

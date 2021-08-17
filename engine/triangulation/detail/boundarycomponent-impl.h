@@ -34,15 +34,15 @@
  *  \brief Contains some of the implementation details for the generic
  *  BoundaryComponent class template.
  *
- *  This file is \e not included from boundarycomponent.h, but the routines
- *  it contains are explicitly instantiated in Regina's calculation engine.
- *  Therefore end users should never need to include this header.
+ *  This file is \e not included from boundarycomponent.h, and it is not
+ *  shipped with Regina's development headers.  The routines it contains are
+ *  explicitly instantiated in Regina's calculation engine for all dimensions.
  *
- *  The routines in this file are the ones that require a definition of
- *  the lower-dimensional class Triangulation<dim-1>.  Their implementations
- *  are "quarantined" here so that Triangulation<dim> does not
- *  end up automatically instantiating \e all triangulation classes
- *  Triangulation<dim-1>, Triangulation<dim-2>, ..., Triangulation<2>.
+ *  The reason for "quarantining" this file is that the routines it defines
+ *  require a definition of the lower-dimensional class Triangulation<dim-1>.
+ *  By keeping their implementations safely out of the main headers, we avoid
+ *  having Triangulation<dim> recursively instantiate \e all triangulation
+ *  classes Triangulation<dim-1>, Triangulation<dim-2>, ..., Triangulation<2>.
  */
 
 #ifndef __REGINA_BOUNDARYCOMPONENT_IMPL_H_DETAIL

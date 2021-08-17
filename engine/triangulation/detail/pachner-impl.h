@@ -34,9 +34,12 @@
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
- *  This file is \e not included from triangulation.h, but the routines
- *  it contains are explicitly instantiated in Regina's calculation engine.
- *  Therefore end users should never need to include this header.
+ *  This file is \e not included from triangulate.h, and it is not
+ *  shipped with Regina's development headers.  The routines it contains are
+ *  explicitly instantiated in Regina's calculation engine for all dimensions.
+ *
+ *  The reason for "quarantining" this file is so that the helper function and
+ *  classes it defines are not inadvertently made accessible to end users.
  */
 
 #ifndef __REGINA_PACHNER_IMPL_H_DETAIL
