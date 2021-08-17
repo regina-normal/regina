@@ -52,38 +52,89 @@ namespace regina {
  * An exception thrown when a function detects that its preconditions
  * have been violated.
  *
+ * Details of the error can be accessed through the inherited member
+ * function what().
+ *
  * \ifacespython Not present.
  */
-class FailedPrecondition : public std::exception {
-    private:
-        std::string msg_; /**< Details of the error. */
-
+class FailedPrecondition : public std::runtime_error {
     public:
-        FailedPrecondition(const std::string msg) : msg_(msg) {
+        /**
+         * Creates a new exception with the given error message.
+         *
+         * This constructor may throw std::bad_alloc.
+         *
+         * @param msg a human-readable description of the error.
+         */
+        FailedPrecondition(const std::string& msg) : std::runtime_error(msg) {
         }
 
-        const char * what() const noexcept override {
-            return msg_.c_str();
+        /**
+         * Creates a new exception with the given error message.
+         *
+         * This constructor may throw std::bad_alloc.
+         *
+         * @param msg a human-readable description of the error.
+         */
+        FailedPrecondition(const char* msg) : std::runtime_error(msg) {
         }
+
+        /**
+         * Creates a new copy of the given exception.
+         */
+        FailedPrecondition(const FailedPrecondition&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        FailedPrecondition& operator = (const FailedPrecondition&) noexcept =
+            default;
 };
 
 /**
  * An exception thrown when a function reads unexpected or incomplete
  * data from an input stream.
  *
+ * Details of the error can be accessed through the inherited member
+ * function what().
+ *
  * \ifacespython Not present.
  */
-class InvalidInput : public std::exception {
-    private:
-        std::string msg_; /**< Details of the error. */
-
+class InvalidInput : public std::runtime_error {
     public:
-        InvalidInput(const std::string msg) : msg_(msg) {
+        /**
+         * Creates a new exception with the given error message.
+         *
+         * This constructor may throw std::bad_alloc.
+         *
+         * @param msg a human-readable description of the error.
+         */
+        InvalidInput(const std::string& msg) : std::runtime_error(msg) {
         }
 
-        const char * what() const noexcept override {
-            return msg_.c_str();
+        /**
+         * Creates a new exception with the given error message.
+         *
+         * This constructor may throw std::bad_alloc.
+         *
+         * @param msg a human-readable description of the error.
+         */
+        InvalidInput(const char* msg) : std::runtime_error(msg) {
         }
+
+        /**
+         * Creates a new copy of the given exception.
+         */
+        InvalidInput(const InvalidInput&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        InvalidInput& operator = (const InvalidInput&) noexcept = default;
 };
 
 /*@}*/

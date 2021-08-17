@@ -64,88 +64,77 @@ typedef Matrix<Integer, true> MatrixInt;
  */
 
 /**
- * A base class for all exceptions that are thrown from within the
- * SnapPea kernel.
- *
- * \ifacespython Not present.
- */
-struct SnapPeaException {
-};
-
-/**
  * An exception that is thrown when the SnapPea kernel encounters a
  * fatal error.
  *
+ * Details of the error can be accessed through the inherited member
+ * function what().
+ *
  * \ifacespython Not present.
  */
-struct SnapPeaFatalError : public SnapPeaException {
-    std::string function;
-        /**< The function from the SnapPea kernel in which the
-             fatal error occurred. */
-    std::string file;
-        /**< The source file from the SnapPea kernel in which the
-             fatal error occurred. */
+class SnapPeaFatalError : public std::runtime_error {
+    public:
+        /**
+         * Creates a new exception, indicating where in the SnapPea kernel
+         * the error occurred.
+         *
+         * @param fromFunction the function from the SnapPea kernel in which
+         * the error occurred.
+         * @param fromFile the source file from the SnapPea kernel in which
+         * the error occurred.
+         */
+        SnapPeaFatalError(const char* fromFunction, const char* fromFile);
 
-    /**
-     * Creates a new exception, indicating where in the SnapPea kernel
-     * the error occurred.
-     *
-     * @param fromFunction the function from the SnapPea kernel in which
-     * the error occurred.
-     * @param fromFile the source file from the SnapPea kernel in which
-     * the error occurred.
-     */
-    SnapPeaFatalError(const char* fromFunction, const char* fromFile);
+        /**
+         * Creates a new copy of the given exception.
+         */
+        SnapPeaFatalError(const SnapPeaFatalError&) noexcept = default;
 
-    /**
-     * Creates a new copy of the given exception.
-     */
-    SnapPeaFatalError(const SnapPeaFatalError&) = default;
-
-    /**
-     * Moves the contents of the given exception into this new exception.
-     *
-     * The exception that was passed will no longer be usable.
-     */
-    SnapPeaFatalError(SnapPeaFatalError&&) noexcept = default;
-
-    /**
-     * Sets this to be a copy of the given exception.
-     */
-    SnapPeaFatalError& operator = (const SnapPeaFatalError&) = default;
-
-    /**
-     * Moves the contents of the given exception into this exception.
-     *
-     * The exception that was passed will no longer be usable.
-     *
-     * @return a reference to this exception.
-     */
-    SnapPeaFatalError& operator = (SnapPeaFatalError&&) noexcept = default;
-
-    /**
-     * Swaps the contents of this and the given exception.
-     *
-     * @param other the exception whose contents should be swapped with this.
-     */
-    void swap(SnapPeaFatalError& other) noexcept;
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        SnapPeaFatalError& operator = (const SnapPeaFatalError&) noexcept =
+            default;
 };
-
-/**
- * Swaps the contents of the two given exceptions.
- *
- * @param a the first exception whose contents should be swapped.
- * @param b the second exception whose contents should be swapped.
- */
-void swap(SnapPeaFatalError& a, SnapPeaFatalError& b) noexcept;
 
 /**
  * An exception that is thrown when the SnapPea kernel finds that all
  * available memory has been exhausted.
  *
+ * Details of the error can be accessed through the member function what().
+ *
  * \ifacespython Not present.
  */
-struct SnapPeaMemoryFull : public SnapPeaException {
+class SnapPeaMemoryFull : public std::exception {
+    public:
+        /**
+         * Creates a new exception.
+         */
+        SnapPeaMemoryFull() noexcept = default;
+
+        /**
+         * Creates a new copy of the given exception.
+         */
+        SnapPeaMemoryFull(const SnapPeaMemoryFull&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        SnapPeaMemoryFull& operator = (const SnapPeaMemoryFull&) noexcept =
+            default;
+
+        /**
+         * Returns a human-readable description of the error that occurred.
+         *
+         * @return a description of the error.
+         */
+        virtual const char* what() const noexcept override {
+            return "SnapPea reports that memory is full";
+        }
 };
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
@@ -1733,18 +1722,9 @@ void swap(SnapPeaTriangulation& lhs, SnapPeaTriangulation& rhs);
 
 // Inline functions for SnapPeaFatalError
 
-inline SnapPeaFatalError::SnapPeaFatalError(
-        const char* fromFunction, const char* fromFile) :
-        function(fromFunction), file(fromFile) {
-}
-
-inline void SnapPeaFatalError::swap(SnapPeaFatalError& other) noexcept {
-    function.swap(other.function);
-    file.swap(other.file);
-}
-
-inline void swap(SnapPeaFatalError& a, SnapPeaFatalError& b) noexcept {
-    a.swap(b);
+inline SnapPeaFatalError::SnapPeaFatalError(const char* fromFunction,
+        const char* fromFile) :
+        std::runtime_error((std::string(fromFile) + ": ") + fromFunction) {
 }
 
 // Inline functions for Cusp
