@@ -86,6 +86,16 @@ namespace regina {
  * \ifacespython Not present.
  */
 class Bitmask {
+    public:
+        /**
+         * A class constant indicating whether this class stores
+         * bitmasks whose sizes are fixed at compile time.
+         *
+         * For the general Bitmask class, this is \c false.  For the highly
+         * optimised Bitmask1 and Bitmask2 template classes, this is \c true.
+         */
+        static constexpr bool fixedSize = false;
+
     private:
         typedef unsigned Piece;
             /**< The types of the machine-native pieces into which this
@@ -521,6 +531,16 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  */
 template <typename T>
 class Bitmask1 {
+    public:
+        /**
+         * A class constant indicating whether this class stores
+         * bitmasks whose sizes are fixed at compile time.
+         *
+         * For the general Bitmask class, this is \c false.  For the highly
+         * optimised Bitmask1 and Bitmask2 template classes, this is \c true.
+         */
+        static constexpr bool fixedSize = true;
+
     private:
         T mask;
             /**< Contains all 8 * sizeof(\a T) bits of this bitmask. */
@@ -911,6 +931,16 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  */
 template <typename T, typename U = T>
 class Bitmask2 {
+    public:
+        /**
+         * A class constant indicating whether this class stores
+         * bitmasks whose sizes are fixed at compile time.
+         *
+         * For the general Bitmask class, this is \c false.  For the highly
+         * optimised Bitmask1 and Bitmask2 template classes, this is \c true.
+         */
+        static constexpr bool fixedSize = true;
+
     private:
         T low;
             /**< Contains the first 8 * sizeof(\a T) bits of this bitmask. */
