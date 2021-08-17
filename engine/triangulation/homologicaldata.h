@@ -112,7 +112,7 @@ namespace regina {
  *               vertices.end().
  *
  * This class will eventually be removed in a future release of Regina.
- * A new and more flexible class called NCellularData will take its place.
+ * A new and more flexible class called CellularData will take its place.
  *
  * @author Ryan Budney
  */
