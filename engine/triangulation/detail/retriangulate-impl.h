@@ -130,7 +130,7 @@ template <class Object>
 struct RetriangulateParams;
 
 /**
- * A helper class that performs the callable action that was passed to the
+ * A helper function that performs the callable action that was passed to the
  * high-level retriangulation or link rewriting function.
  * This implementation is for actions that take a text signature
  * as well as a triangulation/link.
@@ -142,7 +142,7 @@ bool retriangulateAct(const RetriangulateActionFunc<Object, true>& action,
 }
 
 /**
- * A helper class that performs the callable action that was passed to the
+ * A helper function that performs the callable action that was passed to the
  * high-level retriangulation or link rewriting function.
  * This implementation is for actions that just take a triangulation/link.
  */

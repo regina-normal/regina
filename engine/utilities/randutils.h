@@ -60,7 +60,7 @@ namespace regina {
  *
  * An object of this class offers threadsafe access to this global URBG.
  *
- * This class behaves in many ways like std::lock_guard.  On construction a
+ * This class behaves in many ways like std::scoped_lock.  On construction a
  * RandomEngine object will lock an internal mutex that grants exclusive
  * access to the global URBG, and on destruction the RandomEngine object will
  * unlock this mutex.
@@ -84,11 +84,19 @@ namespace regina {
  * its default value (to behave as though the process had just started),
  * you can call reseedWithDefault().
  *
+ * RandomEngine objects are not copyable, movable or swappable.  In particular,
+ * Regina does not offer any way for a RandomEngine to transfer its duty
+ * (i.e., unlocking the internal mutex upon destruction) to another object.
+ *
+ * \warning Locks are \e not recursive.  If the same thread attempts to
+ * create a second RandomEngine object before the previous one is destroyed,
+ * the resulting behaviour is undefined.
+ *
  * \ifacespython Python users only have access to the static member
  * functions in this class (which still supports basic random number
  * generation as well as reseeding).
  */
-class RandomEngine : std::lock_guard<std::mutex> {
+class RandomEngine : std::scoped_lock<std::mutex> {
     private:
         static std::default_random_engine engine_;
             /**< Regina's global uniform random bit generator. */
@@ -171,13 +179,17 @@ class RandomEngine : std::lock_guard<std::mutex> {
          * while it runs.
          */
         static void reseedWithDefault();
+
+        // Make this class non-copyable.
+        RandomEngine(const RandomEngine&) = delete;
+        RandomEngine& operator = (const RandomEngine&) = delete;
 };
 
 /*@}*/
 
 // Inline functions for RandomEngine
 
-inline RandomEngine::RandomEngine() : std::lock_guard<std::mutex>(mutex_) {
+inline RandomEngine::RandomEngine() : std::scoped_lock<std::mutex>(mutex_) {
 }
 
 inline std::default_random_engine& RandomEngine::engine() {
@@ -205,7 +217,7 @@ Int RandomEngine::rand(Int range) {
         unsigned long long>::type>::type>::type>::type Arg;
 
     std::uniform_int_distribution<Arg> d(0, range - 1);
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::scoped_lock<std::mutex> lock(mutex_);
     return d(engine_);
 }
 
