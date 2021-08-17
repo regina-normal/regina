@@ -120,6 +120,9 @@ class ExampleFromLowDim {
          * destroyed by the caller of this routine.
          */
         static Triangulation<dim>* singleCone(const Triangulation<dim-1>& base);
+
+        // Make this class non-constructible.
+        ExampleFromLowDim() = delete;
 };
 
 /**
@@ -136,6 +139,9 @@ class ExampleFromLowDim<dim, false> {
     static_assert(dim == 2,
         "The ExampleFromLowDim template should only set available = false "
         "in dimension 2.");
+
+    // Make this class non-constructible.
+    ExampleFromLowDim() = delete;
 };
 
 /**
