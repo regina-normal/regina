@@ -70,6 +70,9 @@ namespace regina {
  * many trits, see Tritmask2.  At present there is no tritmask class
  * in Regina that can store arbitrarily many trits.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \pre Type \a T is an unsigned integral numeric type.
  *
  * \ifacespython Not present.
@@ -296,6 +299,9 @@ std::ostream& operator << (std::ostream& out, const Tritmask1<T>& mask) {
  * For an even faster tritmask class that can only store half as many trits,
  * see Tritmask1.  At present there is no tritmask class
  * in Regina that can store arbitrarily many trits.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *

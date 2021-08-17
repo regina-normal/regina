@@ -54,6 +54,9 @@ namespace regina {
  * This class allows the user to form and test bitwise combinations of the
  * individual enum values, without losing type safety.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \ifacespython Present only for some particular enumeration types \a T,
  * when explicitly noted in the corresponding enum documentation.
  */

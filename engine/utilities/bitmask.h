@@ -512,6 +512,9 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  * many bits, see Bitmask2.  For a bitmask class that can store
  * arbitrarily many bits, see Bitmask.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \pre Type \a T is an unsigned integral numeric type.
  *
  * \ifacespython Not present.
@@ -898,6 +901,9 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  * For an even faster bitmask class that can only store half as many bits,
  * see Bitmask1.  For a bitmask class that can store arbitrarily many bits,
  * see Bitmask.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *

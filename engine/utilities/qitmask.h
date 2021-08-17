@@ -93,6 +93,9 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  * many qits, see Qitmask2.  At present there is no qitmask class
  * in Regina that can store arbitrarily many qits.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \pre Type \a T is an unsigned integral numeric type.
  *
  * \ifacespython Not present.
@@ -299,6 +302,9 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  * For an even faster qitmask class that can only store half as many qits,
  * see Qitmask1.  At present there is no qitmask class
  * in Regina that can store arbitrarily many qits.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *

@@ -51,8 +51,9 @@ namespace regina {
 
 /**
  * A set of booleans.  Note that there are only four possible such sets.
- * BoolSet objects are small enough to pass about by value instead of
- * by reference.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  */
 class BoolSet {
     private:
