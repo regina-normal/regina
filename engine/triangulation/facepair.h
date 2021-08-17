@@ -66,6 +66,9 @@ namespace regina {
  *
  * The before-the-start and past-the-end values are internally
  * represented as (0,0) and (3,3) respectively.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  */
 class FacePair {
     private:

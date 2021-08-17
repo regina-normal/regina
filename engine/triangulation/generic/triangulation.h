@@ -305,6 +305,9 @@ class Triangulation :
  * A single instance of this class works with faces of a single
  * fixed triangulation (which is passed to the class constructor).
  *
+ * An object of this class behaves like a reference: it is lightweight and can
+ * be copy-constructed cheaply, but it does not support assignments or swaps.
+ *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
  */
@@ -364,6 +367,9 @@ class DegreeLessThan {
  *
  * A single instance of this class works with faces of a single
  * fixed triangulation (which is passed to the class constructor).
+ *
+ * An object of this class behaves like a reference: it is lightweight and can
+ * be copy-constructed cheaply, but it does not support assignments or swaps.
  *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.

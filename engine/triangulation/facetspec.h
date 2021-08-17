@@ -70,6 +70,9 @@ namespace regina {
  * as simplex \a n, facet 1, and the before-the-start value will be
  * represented as simplex -1, facet \a dim.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \ifacespython Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g., FacetSpec2
  * and FacetSpec3 for dimensions 2 and 3).
