@@ -595,7 +595,7 @@ Version 6.1  [ TODO ]
             - Added member and global swap() functions.
         Class Simplex<dim>:
             - Simplified the class hierarchy; SimplexFaces and
-              SimplexFacesSuite are now merged.
+              SimplexFacesSuite are both gone.
             - New compile-time constants dimension and subdimension.
         Class SnapPeaCensusManifold:
             - Class constants for the census sections are now constexpr.

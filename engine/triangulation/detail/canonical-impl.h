@@ -401,8 +401,8 @@ bool TriangulationBase<dim>::findIsomorphisms(
 
             // If we are after a complete isomorphism, test whether the
             // simplices are a potential match.
-            if (complete &&
-                    ! tri->template sameDegreesTo<dim - 2>(*destSimp, myPerm)) {
+            if (complete && ! tri->sameDegreesAt(*destSimp, myPerm,
+                    std::integer_sequence<int, dim - 1>())) {
                 broken = true;
                 break;
             }

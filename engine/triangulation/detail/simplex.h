@@ -61,77 +61,6 @@ template <int> class TriangulationBase;
  */
 
 /**
- * Internal class that helps a simplex store the details of its
- * lower-dimensional faces.
- *
- * This class is used with <i>dim</i>-dimensional triangulations.  It provides
- * storage for faces of all dimensions given in the parameter pack \a subdim.
- *
- * \tparam subdim This must be exactly the sequence 0, 1, ..., <i>dim</i>-1.
- */
-template <int dim, int... subdim>
-class SimplexFaces {
-    static_assert(sizeof...(subdim) == dim &&
-        (subdim + ...) == dim * (dim - 1) / 2,
-        "The SimplexFaces template has been given an unexpected set of "
-        "face dimensions.");
-
-    protected:
-        std::tuple<std::array<Face<dim, subdim>*,
-                FaceNumbering<dim, subdim>::nFaces>...> faces_;
-            /**< Each element of this tuple stores all faces of the underlying
-                 triangulation that form the individual <i>subdim</i>-faces of
-                 this simplex. */
-
-        std::tuple<std::array<Perm<dim+1>,
-                FaceNumbering<dim, subdim>::nFaces>...> mappings_;
-            /**< Each element of this tuple stores, for each <i>subdim</i>-face
-                 of this simplex, a mapping from vertices (0,1,...,\a subdim)
-                 of the underlying <i>subdim</i>-face of the triangulation to
-                 the corresponding vertices of this simplex.  See
-                 Simplex<dim>::faceMapping() for details. */
-
-        /**
-         * Default constructor that leaves all arrays uninitialised.
-         */
-        SimplexFaces() = default;
-
-        /**
-         * Tests whether the <i>useDim</i>-face degrees of this and the
-         * given simplex are identical, under the given relabelling.
-         *
-         * @param other the simplex to compare against this.
-         * @param p a mapping from the vertices of this simplex to the
-         * vertices of \a other.
-         * @return \c true if and only if, for every \a i,
-         * <i>useDim</i>-face number \a i of this simplex has the same degree
-         * as its image in \a other under the relabelling \a p.
-         */
-        template <int useDim>
-        bool sameDegreesAt(const SimplexFaces& other, Perm<dim+1> p) const;
-
-        /**
-         * Tests whether the <i>k</i>-face degrees of this and the
-         * given simplex are identical, under the given relabelling,
-         * for all faces of all dimensions \a k &le; \a maxDim.
-         *
-         * @param other the simplex to compare against this.
-         * @param p a mapping from the vertices of this simplex to the
-         * vertices of \a other.
-         * @return \c true if and only if, for every \a i and every
-         * facial dimension \a k &le; \a maxDim, <i>k</i>-face number \a i of
-         * this simplex has the same degree as its image in \a other under
-         * the relabelling \a p.
-         */
-        template <int maxDim>
-        bool sameDegreesTo(const SimplexFaces& other, Perm<dim+1> p) const;
-
-        // Make this class non-copyable.
-        SimplexFaces(const SimplexFaces&) = delete;
-        SimplexFaces& operator = (const SimplexFaces&) = delete;
-};
-
-/**
  * Helper class that provides core functionality for a top-dimensional
  * simplex in a <i>dim</i>-manifold triangulation.
  *
@@ -152,13 +81,6 @@ template <int dim>
 class SimplexBase :
         public MarkedElement,
         public Output<SimplexBase<dim>>,
-#ifdef __DOXYGEN
-        // Doxygen doesn't understand ExpandSequence.
-        // The syntax here is not valid C++ but for doxygen it's just fine.
-        public SimplexFaces<dim, 0, 1, ..., dim - 1>,
-#else
-        public ExpandSequence<SimplexFaces, dim>,
-#endif
         public alias::FaceOfSimplex<SimplexBase<dim>, dim> {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
 
@@ -176,6 +98,45 @@ class SimplexBase :
                  (or vertices) of a <i>dim</i>-simplex. */
 
     private:
+        /**
+         * The sequence of all subface dimensions 0,...,(<i>dim</i>-1).
+         */
+        typedef std::make_integer_sequence<int, dim> subdimensions;
+
+        /**
+         * A non-existent function used to construct the type of the \a faces_
+         * tuple.  Essentially, this lets us pull apart the integer pack
+         * \a subdimensions.  The return type is the tuple type that we want.
+         */
+        template <int... subdim>
+        static auto seqToFaces(std::integer_sequence<int, subdim...>) ->
+            std::tuple<std::array<Face<dim, subdim>*,
+                FaceNumbering<dim, subdim>::nFaces>...>;
+
+        /**
+         * A non-existent function used to construct the type of the
+         * \a mappings_ tuple.  Again, this lets us pull apart the integer pack
+         * \a subdimensions, and the return type is the tuple type that we want.
+         */
+        template <int... subdim>
+        static auto seqToMappings(std::integer_sequence<int, subdim...>) ->
+            std::tuple<std::array<Perm<dim+1>,
+                FaceNumbering<dim, subdim>::nFaces>...>;
+
+        decltype(seqToFaces(subdimensions())) faces_;
+            /**< A tuple of arrays of faces of this simplex.
+                 Specifically, faces_.get<k>(i) is a pointer to the
+                 ith k-face of this simplex. */
+
+        decltype(seqToMappings(subdimensions())) mappings_;
+            /**< A tuple of arrays of permutations, showing how the faces
+                 of the triangulation map to the faces of this simplex.
+                 Specifically, mappings_.get<k>(i) describes the ith k-face
+                 of this simplex, and maps the vertices (0,1,...,k) of the
+                 underlying k-face of the triangulation to the corresponding
+                 vertices of this simplex.  See Simplex<dim>::faceMapping()
+                 for details. */
+
         Simplex<dim>* adj_[dim + 1];
             /**< Stores the adjacent simplex glued to each facet of this
                  simplex.  Specifically, <tt>adj_[f]</tt> represents the
@@ -608,35 +569,42 @@ class SimplexBase :
          */
         SimplexBase(const std::string& desc, Triangulation<dim>* tri);
 
+        /**
+         * Tests whether the <i>useDim</i>-face degrees of this and the
+         * given simplex are identical, under the given relabelling.
+         *
+         * @param other the simplex to compare against this.
+         * @param p a mapping from the vertices of this simplex to the
+         * vertices of \a other.
+         * @return \c true if and only if, for every \a i,
+         * <i>useDim</i>-face number \a i of this simplex has the same degree
+         * as its image in \a other under the relabelling \a p.
+         */
+        template <int useDim>
+        bool sameDegreesAt(const SimplexBase& other, Perm<dim+1> p) const;
+
+        /**
+         * Tests whether the <i>k</i>-face degrees of this and the given
+         * simplex are identical, under the given relabelling, for all
+         * faces whose dimensions are contained in the integer pack \a useDim.
+         *
+         * @param other the simplex to compare against this.
+         * @param p a mapping from the vertices of this simplex to the
+         * vertices of \a other.
+         * @return \c true if and only if, for every \a i and every
+         * facial dimension \a k in the integer pack \a useDim, <i>k</i>-face
+         * number \a i of this simplex has the same degree as its image in
+         * \a other under the relabelling \a p.
+         */
+        template <int... useDim >
+        bool sameDegreesAt(const SimplexBase& other, Perm<dim+1> p,
+            std::integer_sequence<int, useDim...>) const;
+
     friend class TriangulationBase<dim>;
     friend class Triangulation<dim>;
 };
 
 /*@}*/
-
-// Inline functions for SimplexFaces
-
-template <int dim, int... subdim>
-template <int useDim>
-inline bool SimplexFaces<dim, subdim...>::sameDegreesAt(
-        const SimplexFaces<dim, subdim...>& other, Perm<dim + 1> p) const {
-    size_t i, j;
-    for (i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
-        j = FaceNumbering<dim, useDim>::faceNumber(
-            p * FaceNumbering<dim, useDim>::ordering(i));
-        if (std::get<useDim>(faces_)[i]->degree() !=
-                std::get<useDim>(other.faces_)[j]->degree())
-            return false;
-    }
-    return true;
-}
-
-template <int dim, int... subdim>
-template <int maxDim>
-inline bool SimplexFaces<dim, subdim...>::sameDegreesTo(
-        const SimplexFaces<dim, subdim...>& other, Perm<dim + 1> p) const {
-    return ((subdim > maxDim || sameDegreesAt<subdim>(other, p)) && ...);
-}
 
 // Inline functions for SimplexBase
 
@@ -804,6 +772,28 @@ void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
         }
         out << std::endl;
     }
+}
+
+template <int dim>
+template <int useDim>
+inline bool SimplexBase<dim>::sameDegreesAt(
+        const SimplexBase<dim>& other, Perm<dim + 1> p) const {
+    size_t i, j;
+    for (i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
+        j = FaceNumbering<dim, useDim>::faceNumber(
+            p * FaceNumbering<dim, useDim>::ordering(i));
+        if (std::get<useDim>(faces_)[i]->degree() !=
+                std::get<useDim>(other.faces_)[j]->degree())
+            return false;
+    }
+    return true;
+}
+
+template <int dim>
+template <int... useDim >
+inline bool SimplexBase<dim>::sameDegreesAt(const SimplexBase& other,
+        Perm<dim+1> p, std::integer_sequence<int, useDim...>) const {
+    return (sameDegreesAt<useDim>(other, p) && ...);
 }
 
 } // namespace regina::detail
