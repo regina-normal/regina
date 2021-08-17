@@ -210,6 +210,13 @@ class GraphTriple : public Manifold {
          * Creates a clone of the given graph manifold.
          */
         GraphTriple(const GraphTriple&) = default;
+        /**
+         * Moves the contents of the given graph manifold into this
+         * new graph manifold.  This is a constant time operation.
+         *
+         * The graph manifold that was passed will no longer be usable.
+         */
+        GraphTriple(GraphTriple&&) noexcept = default;
 
         /**
          * Returns a reference to one of the two end spaces.
@@ -276,6 +283,15 @@ class GraphTriple : public Manifold {
          * @return a reference to this graph manifold.
          */
         GraphTriple& operator = (const GraphTriple&) = default;
+        /**
+         * Moves the contents of the given graph manifold into this
+         * graph manifold.  This is a constant time operation.
+         *
+         * The graph manifold that was passed will no longer be usable.
+         *
+         * @return a reference to this graph manifold.
+         */
+        GraphTriple& operator = (GraphTriple&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given graph manifold.

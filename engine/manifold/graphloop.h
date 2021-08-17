@@ -183,6 +183,13 @@ class GraphLoop : public Manifold {
          * Creates a clone of the given graph manifold.
          */
         GraphLoop(const GraphLoop&) = default;
+        /**
+         * Moves the contents of the given graph manifold into this
+         * new graph manifold.  This is a constant time operation.
+         *
+         * The graph manifold that was passed will no longer be usable.
+         */
+        GraphLoop(GraphLoop&&) noexcept = default;
 
         /**
          * Returns a reference to the bounded Seifert fibred space that
@@ -227,6 +234,15 @@ class GraphLoop : public Manifold {
          * @return a reference to this graph manifold.
          */
         GraphLoop& operator = (const GraphLoop&) = default;
+        /**
+         * Moves the contents of the given graph manifold into this
+         * graph manifold.  This is a constant time operation.
+         *
+         * The graph manifold that was passed will no longer be usable.
+         *
+         * @return a reference to this graph manifold.
+         */
+        GraphLoop& operator = (GraphLoop&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given graph manifold.

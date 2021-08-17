@@ -187,6 +187,13 @@ class GraphPair : public Manifold {
          * Creates a clone of the given graph manifold.
          */
         GraphPair(const GraphPair&) = default;
+        /**
+         * Moves the contents of the given graph manifold into this
+         * new graph manifold.  This is a constant time operation.
+         *
+         * The graph manifold that was passed will no longer be usable.
+         */
+        GraphPair(GraphPair&&) noexcept = default;
 
         /**
          * Returns a reference to one of the two bounded Seifert fibred
@@ -232,6 +239,15 @@ class GraphPair : public Manifold {
          * @param return a reference to this graph manifold.
          */
         GraphPair& operator = (const GraphPair&) = default;
+        /**
+         * Moves the contents of the given graph manifold into this
+         * graph manifold.  This is a constant time operation.
+         *
+         * The graph manifold that was passed will no longer be usable.
+         *
+         * @return a reference to this graph manifold.
+         */
+        GraphPair& operator = (GraphPair&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given graph manifold.
