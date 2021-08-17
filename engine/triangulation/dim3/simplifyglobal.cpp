@@ -55,7 +55,7 @@ bool Triangulation<3>::minimiseBoundary() {
         return false;
     }
 
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     ChangeEventSpan span(this);
 
     bool changed = false;

@@ -56,7 +56,7 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     // roles1 and roles2 match up with vertices (0,1,2,3) of the new
     // tetrahedron.
 
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     ChangeEventSpan span(this);
 
     Tetrahedron<3>* newTet = newTetrahedron();

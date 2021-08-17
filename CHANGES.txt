@@ -678,6 +678,7 @@ Version 6.1  [ TODO ]
               EulerCalculator, FaceCalculator, FaceList and PachnerHelper are
               now gone, and there are a lot fewer regina::alias classes.
             - FaceListSuite has been renamed to TriangulationFaceStorage.
+            - The inner TopologyLock class now takes its argument by reference.
         Class Triangulation<3>:
             - All of the changes listed for Triangulation<dim> above.
             - New routine generalAngleStructure().

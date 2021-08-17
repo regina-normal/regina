@@ -207,7 +207,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -306,7 +306,7 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -393,7 +393,7 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     ChangeEventSpan span(this);
 
     // Unglue faces from the doomed pentachora and glue them to each other.
@@ -484,7 +484,7 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     pent->unjoin(emb.tetrahedron());
 
     return true;
@@ -565,7 +565,7 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
 
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     removePentachoron(p);
 
     return true;
@@ -913,7 +913,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     ChangeEventSpan span(this);
     Perm<5> topPerm, botPerm;
     Pentachoron<4> *top, *bot;

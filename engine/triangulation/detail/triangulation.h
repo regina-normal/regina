@@ -2115,6 +2115,11 @@ class TriangulationBase :
          * do not necessarily need to be nested (i.e., the order of
          * destruction does not need to be the reverse order of construction).
          *
+         * TopologyLock objects are not copyable, movable or swappable.
+         * In particular, Regina does not offer any way for a TopologyLock
+         * to transfer its destructor's responsibilities (i.e., "unlocking"
+         * the topological properties of the triangulation) to another object.
+         *
          * \note If you are creating a ChangeEventSpan before retriangulating
          * the manifold and you wish to use a TopologyLock, then you should
          * create the TopologyLock \e before the ChangeEventSpan (since the
@@ -2123,7 +2128,7 @@ class TriangulationBase :
          */
         class TopologyLock {
             private:
-                TriangulationBase<dim>* tri_;
+                TriangulationBase<dim>& tri_;
                     /**< The triangulation whose topological properties
                          are locked. */
 
@@ -2135,11 +2140,15 @@ class TriangulationBase :
                  * properties are to be locked.  This may be \c null
                  * (in which case the lock has no effect).
                  */
-                TopologyLock(TriangulationBase<dim>* tri);
+                TopologyLock(TriangulationBase<dim>& tri);
                 /**
                  * Removes this lock on the associated triangulation.
                  */
                 ~TopologyLock();
+
+                // Make this class non-copyable.
+                TopologyLock(const TopologyLock&) = delete;
+                TopologyLock& operator = (const TopologyLock&) = delete;
         };
 
     template <int, int...> friend class BoundaryComponentFaceStorage;
@@ -2770,7 +2779,7 @@ template <int dim>
 void TriangulationBase<dim>::orient() {
     ensureSkeleton();
 
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
@@ -2809,7 +2818,7 @@ template <int dim>
 void TriangulationBase<dim>::reflect() {
     ensureSkeleton();
 
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
@@ -3306,16 +3315,14 @@ Triangulation<dim>* TriangulationBase<dim>::fromSig(const std::string& sig) {
 // Inline functions for TriangulationBase::TopologyLock
 
 template <int dim>
-TriangulationBase<dim>::TopologyLock::TopologyLock(
-        TriangulationBase<dim>* tri) : tri_(tri) {
-    if (tri_)
-        ++tri_->topologyLock_;
+inline TriangulationBase<dim>::TopologyLock::TopologyLock(
+        TriangulationBase<dim>& tri) : tri_(tri) {
+    ++tri_.topologyLock_;
 }
 
 template <int dim>
-TriangulationBase<dim>::TopologyLock::~TopologyLock() {
-    if (tri_)
-        --tri_->topologyLock_;
+inline TriangulationBase<dim>::TopologyLock::~TopologyLock() {
+    --tri_.topologyLock_;
 }
 
 } } // namespace regina::detail
