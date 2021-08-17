@@ -172,8 +172,8 @@ class RetriangulateThreadSync<true> {
     public:
         class Lock : public std::unique_lock<std::mutex> {
             public:
-                Lock(RetriangulateThreadSync* self) :
-                        std::unique_lock<std::mutex>(self->mutex_) {
+                Lock(RetriangulateThreadSync& self) :
+                        std::unique_lock<std::mutex>(self.mutex_) {
                 }
         };
 
@@ -283,7 +283,7 @@ class RetriangulateThreadSync<false> {
 
         class Lock {
             public:
-                Lock(RetriangulateThreadSync*) {}
+                Lock(RetriangulateThreadSync&) {}
                 void lock() {}
                 void unlock() {}
         };
@@ -483,7 +483,7 @@ void Retriangulator<Object, threading, withSig>::processQueue(
         ProgressTrackerOpen* tracker) {
     SigSet::iterator next;
 
-    typename RetriangulateThreadSync<threading>::Lock lock(this);
+    typename RetriangulateThreadSync<threading>::Lock lock(*this);
 
     while (true) {
         // Process the queue until either done_ is true, or there is
@@ -520,7 +520,7 @@ bool Retriangulator<Object, threading, withSig>::candidate(
         Object& alt, const std::string& derivedFrom) {
     const std::string sig = RetriangulateParams<Object>::sig(alt);
 
-    typename RetriangulateThreadSync<threading>::Lock lock(this);
+    typename RetriangulateThreadSync<threading>::Lock lock(*this);
 
     if (RetriangulateThreadSync<threading>::done())
         return false;
