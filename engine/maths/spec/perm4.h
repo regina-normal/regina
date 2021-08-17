@@ -66,9 +66,10 @@ namespace regina {
  * Amongst other things, this permutation class is used to specify how
  * simplices of a 3-manifold triangulation are glued together.
  *
- * As with all Perm template classes, these objects are small enough to
- * pass about by value instead of by reference.  Moreover, Perm<4>
- * is extremely fast to work with.
+ * As with all Perm template classes, these objects are small enough to pass
+ * by value and swap with std::swap(), with no need for any specialised move
+ * operations or swap functions.  Moreover, Perm<4> in particular is extremely
+ * fast to work with.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
@@ -95,11 +96,6 @@ namespace regina {
  * is because the first-generation routines incur additional overhead
  * in converting back and forth between the second-generation codes
  * (which are used internally by Perm<4>).
- *
- * This class supports copying but does not implement separate move operations,
- * since its internal data is so small that copying is just as efficient.
- * It implements the C++ Swappable requirement via std::swap(), and does
- * not offer its own specialised swap() functions.
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *

@@ -122,9 +122,10 @@ enum PermCodeType {
  * Amongst other things, such permutations are used to describe
  * simplex gluings in (<i>n</i>-1)-manifold triangulations.
  *
- * Perm objects are small enough to pass about by value instead of by
- * reference.  The trade-off is that, for this to be possible, the Perm
- * template class can only work with \a n &le; 16.
+ * Perm objects are small enough to pass by value and swap with std::swap(),
+ * with no need to use references, specialised move operations or custom
+ * swap functions.  The trade-off is that, for this to be possible, the
+ * Perm template class can only work with \a n &le; 16.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the entire permutation.
@@ -152,11 +153,6 @@ enum PermCodeType {
  * functionality but not as much as Perm<5> and below.  For \a n &ge; 8,
  * this template is generic and most operations require more time (in
  * particular, there are no harded-coded lookup tables).
- *
- * This class supports copying but does not implement separate move operations,
- * since its internal data is so small that copying is just as efficient.
- * It implements the C++ Swappable requirement via std::swap(), and does
- * not offer its own specialised swap() functions.
  *
  * \ifacespython Python does not support templates.  For each
  * \a n = 2,...,16, this class is available in Python under the
