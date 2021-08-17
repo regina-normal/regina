@@ -68,6 +68,9 @@ namespace regina {
  * hyperplane contains the ith coordinate axis, or 1 if not.
  * We then compare these position vectors lexicographically.
  *
+ * A PosOrder object behaves like a reference: it is lightweight and can be
+ * copy-constructed cheaply, but it does not support assignments or swaps.
+ *
  * \ifacespython Not present.
  */
 class PosOrder {
