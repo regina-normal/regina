@@ -48,7 +48,7 @@ bool Triangulation<3>::idealToFinite() {
         return false;
 
     Triangulation<3> staging;
-    ChangeEventSpan span1(&staging);
+    ChangeEventSpan span1(staging);
 
     Tetrahedron<3> **newTet = new Tetrahedron<3>*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)
@@ -134,7 +134,7 @@ bool Triangulation<3>::idealToFinite() {
             }
     }
 
-    ChangeEventSpan span2(this);
+    ChangeEventSpan span2(*this);
 
     swap(staging);
     ensureSkeleton();
@@ -165,7 +165,7 @@ void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
         tet = simplices_.front();
     }
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // We will attach a pair of triangular prisms to face 123 of tet.
     // We will join the rectangular walls of the prisms together, and
@@ -213,7 +213,7 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // From here we can assume that each triangulation contains at least
     // one tetrahedron.
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     Tetrahedron<3>* toPuncture[2];
 

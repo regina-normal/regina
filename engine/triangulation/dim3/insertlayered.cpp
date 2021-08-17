@@ -57,7 +57,7 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     // tetrahedron.
 
     TopologyLock lock(*this);
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     Tetrahedron<3>* newTet = newTetrahedron();
 
@@ -293,7 +293,7 @@ bool Triangulation<3>::fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
 
 Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     unsigned long cuts2 = cuts0 + cuts1;
 
@@ -340,7 +340,7 @@ Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
 }
 
 void Triangulation<3>::insertLayeredLensSpace(unsigned long p, unsigned long q) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     Tetrahedron<3>* chain;
     if (p == 0) {
@@ -374,7 +374,7 @@ void Triangulation<3>::insertLayeredLoop(unsigned long length, bool twisted) {
     if (length == 0)
         return;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // Insert a layered chain of the given length.
     // We should probably split this out into a separate routine.
@@ -404,7 +404,7 @@ void Triangulation<3>::insertLayeredLoop(unsigned long length, bool twisted) {
 
 void Triangulation<3>::insertAugTriSolidTorus(long a1, long b1,
         long a2, long b2, long a3, long b3) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     int i;
 

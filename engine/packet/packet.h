@@ -1341,7 +1341,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          */
         class ChangeEventSpan {
             private:
-                Packet* packet_;
+                Packet& packet_;
                     /**< The packet for which change events are fired. */
 
             public:
@@ -1356,7 +1356,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
                  *
                  * @param packet the packet whose data is about to change.
                  */
-                ChangeEventSpan(Packet* packet);
+                ChangeEventSpan(Packet& packet);
 
                 /**
                  * Destroys this change event object.
@@ -2603,19 +2603,19 @@ inline PacketChildren Packet::children() const {
     return PacketChildren(this);
 }
 
-inline Packet::ChangeEventSpan::ChangeEventSpan(Packet* packet) :
+inline Packet::ChangeEventSpan::ChangeEventSpan(Packet& packet) :
         packet_(packet) {
-    if (! packet_->changeEventSpans_)
-        packet_->fireEvent(&PacketListener::packetToBeChanged);
+    if (! packet_.changeEventSpans_)
+        packet_.fireEvent(&PacketListener::packetToBeChanged);
 
-    packet_->changeEventSpans_++;
+    packet_.changeEventSpans_++;
 }
 
 inline Packet::ChangeEventSpan::~ChangeEventSpan() {
-    packet_->changeEventSpans_--;
+    packet_.changeEventSpans_--;
 
-    if (! packet_->changeEventSpans_)
-        packet_->fireEvent(&PacketListener::packetWasChanged);
+    if (! packet_.changeEventSpans_)
+        packet_.fireEvent(&PacketListener::packetWasChanged);
 }
 
 // Inline functions for child/subtree iterators and related classes

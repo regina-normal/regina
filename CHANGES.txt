@@ -442,6 +442,9 @@ Version 6.1  [ TODO ]
             - Changed makeMirror() to take its triangulation by reference,
               not by pointer.  Also removed the static versions of makeMirror();
               only the virtual (non-static) function is used.
+        Class Packet:
+            - Inner class ChangeEventSpan's constructor now takes its
+              argument by reference.
         Class PacketInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).

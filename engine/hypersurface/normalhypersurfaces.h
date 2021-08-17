@@ -722,7 +722,7 @@ inline bool NormalHypersurfaces::dependsOnParent() const {
 
 template <typename Comparison>
 inline void NormalHypersurfaces::sort(Comparison&& comp) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 

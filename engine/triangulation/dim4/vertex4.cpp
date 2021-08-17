@@ -56,7 +56,7 @@ Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
         Isomorphism<4>** inclusion) const {
     // Build the triangulation.
     Triangulation<3>* ans = new Triangulation<3>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
 
     if (inclusion)
         *inclusion = new Isomorphism<4>(degree());

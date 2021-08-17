@@ -103,7 +103,7 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     // Note that, by using pachner(), we also preserve orientation
     // (if the triangulation was originally oriented).
     TopologyLock lock(*this);
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     Triangle<3>* tri23 = (newAxis == 0 ?
         oldTet[0]->triangle(e->embedding(0).vertices()[2]) :
         oldTet[1]->triangle(e->embedding(1).vertices()[2]));
@@ -174,7 +174,7 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
 
     // Actually perform the move.
     TopologyLock lock(*this);
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
@@ -261,7 +261,7 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
 
     // Actually perform the move.
     TopologyLock lock(*this);
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
@@ -351,7 +351,7 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
 
     // Go ahead and perform the move.
     TopologyLock lock(*this);
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // First glue together the two faces that will be flattened.
     Tetrahedron<3>* adjTet[2];
@@ -794,7 +794,7 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
 
     // Perform the move.
     TopologyLock lock(*this);
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     Perm<4> topPerm, botPerm;
     Tetrahedron<3> *top, *bot;
 
@@ -844,7 +844,7 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     std::cerr << "Performing edge pinch move\n";
     #endif
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // The two tetrahedra that we insert together form a pinched ball.
     // By a "pinched ball", this means a 3-ball in which some internal curve
@@ -888,7 +888,7 @@ void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
         return;
 
     TopologyLock lock(*this);
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // Run a breadth-first search over all tetrahedra.
     Tetrahedron<3>** ordered = new Tetrahedron<3>*[n];

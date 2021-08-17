@@ -142,7 +142,7 @@ inline void Text::setText(const std::string& newText) {
     if (text_ == newText)
         return; // No change event fired.
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     text_ = newText;
 }
 
@@ -150,7 +150,7 @@ inline void Text::setText(const char* newText) {
     if (text_ == newText)
         return; // No change event fired.
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     text_ = newText;
 }
 

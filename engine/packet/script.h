@@ -293,7 +293,7 @@ inline void Script::setText(const std::string& newText) {
     if (text_ == newText)
         return; // No change event fired.
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     text_ = newText;
 }
 
@@ -301,7 +301,7 @@ inline void Script::append(const std::string& extraText) {
     if (extraText.empty())
         return; // No change event fired.
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     text_ += extraText;
 }
 
@@ -310,7 +310,7 @@ inline size_t Script::countVariables() const {
 }
 
 inline bool Script::addVariable(const std::string& name, Packet* value) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     bool ans = variables.insert(std::make_pair(name, value)).second;
     if (value)
         value->listen(this);
@@ -319,7 +319,7 @@ inline bool Script::addVariable(const std::string& name, Packet* value) {
 inline void Script::removeAllVariables() {
     unregisterFromAllPackets();
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     variables.clear();
 }
 

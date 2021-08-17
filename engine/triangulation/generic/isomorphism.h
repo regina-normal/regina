@@ -551,7 +551,7 @@ Triangulation<dim>* Isomorphism<dim>::apply(
     unsigned long t;
     int f;
 
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     for (t = 0; t < nSimplices_; t++)
         tet[t] = ans->newSimplex();
 

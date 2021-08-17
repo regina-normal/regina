@@ -254,7 +254,7 @@ bool Link::simplifyExhaustive(int height, unsigned nThreads,
             if (alt.size() < minCrossings) {
                 // Since we are allowed to change alt, we use swap(),
                 // which avoids yet another round of rewiring the crossings.
-                Packet::ChangeEventSpan span(&original);
+                Packet::ChangeEventSpan span(original);
                 original.swap(alt);
                 original.intelligentSimplify();
                 return true;

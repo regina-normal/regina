@@ -72,7 +72,7 @@ void Script::setVariableName(size_t index, const std::string& name) {
     if (name == it->first)
         return;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     Packet* value = it->second;
     variables.erase(it);
@@ -86,7 +86,7 @@ void Script::setVariableValue(size_t index, Packet* value) {
     if (it->second == value)
         return;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     if (it->second)
         it->second->unlisten(this);
@@ -97,7 +97,7 @@ void Script::setVariableValue(size_t index, Packet* value) {
 
 const std::string& Script::addVariableName(const std::string& name,
         Packet* value) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     auto result = variables.insert(std::make_pair(name, value));
     int which = 2;
@@ -122,7 +122,7 @@ void Script::removeVariable(const std::string& name) {
     if (it->second)
         it->second->unlisten(this);
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     variables.erase(it);
 }
 
@@ -133,7 +133,7 @@ void Script::removeVariable(size_t index) {
     if (it->second)
         it->second->unlisten(this);
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     variables.erase(it);
 }
 
@@ -182,13 +182,13 @@ void Script::packetWasRenamed(Packet*) {
     // We assume that the packet that was renamed is one of the
     // variables for this packet.
     // There is nothing to update here; just fire the update.
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 }
 
 void Script::packetToBeDestroyed(PacketShell packet) {
     // We know the script will change, because one of our variables is
     // listening on this packet.
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     for (std::map<std::string, Packet*>::iterator vit =
             variables.begin(); vit != variables.end(); vit++)
         if (vit->second == packet)

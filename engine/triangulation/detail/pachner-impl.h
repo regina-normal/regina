@@ -253,7 +253,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // Perform the move.
         TopologyLock lock(*this);
         typename Triangulation<dim>::ChangeEventSpan span(
-            static_cast<Triangulation<dim>*>(this));
+            static_cast<Triangulation<dim>&>(*this));
 
         Simplex<dim>* newSimp = newSimplex();
 
@@ -304,7 +304,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
 
         TopologyLock lock(*this);
         typename Triangulation<dim>::ChangeEventSpan span(
-            static_cast<Triangulation<dim>*>(this));
+            static_cast<Triangulation<dim>&>(*this));
 
         // Before we unglue, record how the adjacent simplices are glued to f.
         Simplex<dim>* adjSimp[dim + 1];
@@ -482,7 +482,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // Perform the move.
         TopologyLock lock(*this);
         typename Triangulation<dim>::ChangeEventSpan span(
-            static_cast<Triangulation<dim>*>(this));
+            static_cast<Triangulation<dim>&>(*this));
 
         // Create (k + 1) new top-dimensional simplices.
         // We insert them in reverse order to ensure that the new internal

@@ -56,7 +56,7 @@ Triangulation<2>* Vertex<3>::buildLinkDetail(bool labels,
         Isomorphism<3>** inclusion) const {
     // Build the triangulation.
     Triangulation<2>* ans = new Triangulation<2>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
 
     if (inclusion)
         *inclusion = new Isomorphism<3>(degree());

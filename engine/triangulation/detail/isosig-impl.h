@@ -307,7 +307,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         const std::string& sig) {
     std::unique_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
 
-    typename Triangulation<dim>::ChangeEventSpan span(ans.get());
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
 
     const char* c = sig.c_str();
 

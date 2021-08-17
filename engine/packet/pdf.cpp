@@ -85,7 +85,7 @@ PDF::PDF(const char* filename) : data_(0), size_(0), alloc_(OWN_NEW) {
 }
 
 void PDF::reset() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     if (data_) {
         if (alloc_ == OWN_MALLOC)
@@ -100,7 +100,7 @@ void PDF::reset() {
 }
 
 void PDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // Out with the old data.
     if (data_) {

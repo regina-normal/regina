@@ -1154,7 +1154,7 @@ namespace {
 
 Triangulation<3>* NormalSurface::cutAlong() const {
     Triangulation<3>* ans = new Triangulation<3>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
 
     unsigned long nTet = triangulation().size();
     if (nTet == 0)

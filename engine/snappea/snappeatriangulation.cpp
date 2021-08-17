@@ -240,8 +240,8 @@ void SnapPeaTriangulation::swap(SnapPeaTriangulation& other) {
     syncing_ = true;
     other.syncing_ = true;
     {
-        ChangeEventSpan span1(this);
-        ChangeEventSpan span2(&other);
+        ChangeEventSpan span1(*this);
+        ChangeEventSpan span2(other);
 
         Triangulation<3>::swap(other);
 
@@ -767,7 +767,7 @@ void SnapPeaTriangulation::sync() {
     // the Triangulation<3> data if it has.
     syncing_ = true;
     {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
 
         // Deal with the combinatorial data and cusps first.
         if (! isEmpty())
@@ -841,7 +841,7 @@ void SnapPeaTriangulation::sync() {
 void SnapPeaTriangulation::syncFillings() {
     syncing_ = true;
     {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         fillingsHaveChanged();
         // The packet change event will be fired at this point.
     }
@@ -884,7 +884,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
 
 void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
         Triangulation<3>& dest) {
-    ChangeEventSpan span(&dest);
+    ChangeEventSpan span(dest);
 
     regina::snappea::TriangulationData* tData;
     regina::snappea::triangulation_to_data(src, &tData);

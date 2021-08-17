@@ -76,7 +76,7 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
         mainTri.template countFaces<dim-1>()];
 
     Triangulation<dim-1>* ans = new Triangulation<dim-1>();
-    typename Triangulation<dim-1>::ChangeEventSpan span(ans);
+    typename Triangulation<dim-1>::ChangeEventSpan span(*ans);
 
     for (auto s : allFacets)
         bdrySimplex[s->index()] = ans->newSimplex();

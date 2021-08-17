@@ -211,7 +211,7 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
 
 Link* Link::fromKnotSig(const std::string& sig) {
     std::unique_ptr<Link> ans(new Link());
-    Link::ChangeEventSpan span(ans.get());
+    Link::ChangeEventSpan span(*ans);
 
     const char* c = sig.c_str();
 

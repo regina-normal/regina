@@ -293,8 +293,8 @@ void Link::swap(Link& other) {
     if (&other == this)
         return;
 
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
 
     // Swap core data:
     crossings_.swap(other.crossings_);
@@ -309,7 +309,7 @@ void Link::swap(Link& other) {
 }
 
 void Link::reflect() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     for (Crossing* cross : crossings_)
         cross->sign_ = -cross->sign_;
 
@@ -317,7 +317,7 @@ void Link::reflect() {
 }
 
 void Link::reverse() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     for (Crossing* cross : crossings_) {
         std::swap(cross->next_[0], cross->prev_[0]);
         std::swap(cross->next_[1], cross->prev_[1]);
@@ -327,7 +327,7 @@ void Link::reverse() {
 }
 
 void Link::rotate() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
@@ -345,7 +345,7 @@ void Link::rotate() {
 }
 
 void Link::change(Crossing* c) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     for (StrandRef& s : components_)
         if (s.crossing_ == c)
@@ -385,7 +385,7 @@ void Link::change(Crossing* c) {
 }
 
 void Link::changeAll() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
@@ -405,7 +405,7 @@ void Link::changeAll() {
 }
 
 void Link::resolve(Crossing* c) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     if (c->next_[0].crossing() == c) {
         if (c->prev_[0].crossing() == c) {
@@ -675,7 +675,7 @@ void Link::composeWith(const Link& other) {
     if (other.isEmpty())
         return;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // From here we can assume other is non-empty.
     // Clone its crossings, and transfer them directly into this link.
@@ -1096,7 +1096,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
 
     // We have p >= q.
     if (q == 0) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         if (p == 0) {
             // Insert a single unknot.
             components_.push_back({});
@@ -1110,7 +1110,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     }
     if (q == 1) {
         // Insert a single unknot.
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         components_.push_back({});
         clearAllProperties();
         return;
@@ -1122,7 +1122,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     int n = p * (q - 1);
     int nComp = regina::gcd(p, q);
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     Crossing** c = new Crossing*[n];
     int i;

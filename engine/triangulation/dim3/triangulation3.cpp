@@ -101,8 +101,8 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     if (&other == this)
         return;
 
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
 
     swapBaseData(other);
 

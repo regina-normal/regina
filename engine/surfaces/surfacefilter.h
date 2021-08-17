@@ -542,7 +542,7 @@ inline bool SurfaceFilterCombination::usesAnd() const {
 }
 inline void SurfaceFilterCombination::setUsesAnd(bool value) {
     if (usesAnd_ != value) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         usesAnd_ = value;
     }
 }
@@ -591,37 +591,37 @@ inline BoolSet SurfaceFilterProperties::realBoundary() const {
 inline void SurfaceFilterProperties::setEulerChars(
         const std::set<LargeInteger>& s) {
     if (eulerChar_ != s) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         eulerChar_ = s;
     }
 }
 inline void SurfaceFilterProperties::addEulerChar(const LargeInteger& ec) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     eulerChar_.insert(ec);
 }
 inline void SurfaceFilterProperties::removeEulerChar(const LargeInteger& ec) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     eulerChar_.erase(ec);
 }
 inline void SurfaceFilterProperties::removeAllEulerChars() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     eulerChar_.clear();
 }
 inline void SurfaceFilterProperties::setOrientability(BoolSet value) {
     if (orientability_ != value) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         orientability_ = value;
     }
 }
 inline void SurfaceFilterProperties::setCompactness(BoolSet value) {
     if (compactness_ != value) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         compactness_ = value;
     }
 }
 inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
     if (realBoundary_ != value) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         realBoundary_ = value;
     }
 }

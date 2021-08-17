@@ -56,7 +56,7 @@ bool Triangulation<3>::minimiseBoundary() {
     }
 
     TopologyLock lock(*this);
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     bool changed = false;
 
@@ -146,7 +146,7 @@ bool Triangulation<3>::intelligentSimplify() {
     bool changed;
 
     { // Begin scope for change event block.
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
 
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimum(true);
@@ -308,7 +308,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
     bool changedNow = true; // Did we just change something (for loop control)?
 
     { // Begin scope for change event span.
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
 
         while (changedNow) {
             changedNow = false;

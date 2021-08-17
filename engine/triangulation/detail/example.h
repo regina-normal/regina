@@ -255,7 +255,7 @@ template <int dim, bool available>
 Triangulation<dim>* ExampleFromLowDim<dim, available>::singleCone(
         const Triangulation<dim-1>& base) {
     Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel("Single cone over " + base.label());
 
     size_t n = base.size();
@@ -299,7 +299,7 @@ template <int dim, bool available>
 Triangulation<dim>* ExampleFromLowDim<dim, available>::doubleCone(
         const Triangulation<dim-1>& base) {
     Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel("Double cone over " + base.label());
 
     size_t n = base.size();
@@ -352,7 +352,7 @@ Triangulation<dim>* ExampleBase<dim>::sphere() {
     // Take two simplices and join their entire boundaries according to
     // the identity map.
     Triangulation<dim>* ans = new Triangulation<dim>;
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel(std::string(Strings<dim>::dim) + "-sphere");
 
     Simplex<dim>* p = ans->newSimplex();
@@ -366,7 +366,7 @@ Triangulation<dim>* ExampleBase<dim>::sphere() {
 template <int dim>
 Triangulation<dim>* ExampleBase<dim>::simplicialSphere() {
     Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel(std::string("Standard simplicial ") +
         Strings<dim>::dim + "-sphere");
 
@@ -399,7 +399,7 @@ Triangulation<dim>* ExampleBase<dim>::sphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel(std::string("S") + Strings<dim-1>::dim + " x S1");
 
     Simplex<dim>* p = ans->newSimplex();
@@ -432,7 +432,7 @@ Triangulation<dim>* ExampleBase<dim>::twistedSphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel(std::string("S") + Strings<dim-1>::dim + " x~ S1");
 
     Simplex<dim>* p = ans->newSimplex();
@@ -463,7 +463,7 @@ Triangulation<dim>* ExampleBase<dim>::twistedSphereBundle() {
 template <int dim>
 Triangulation<dim>* ExampleBase<dim>::ball() {
     Triangulation<dim>* ans = new Triangulation<dim>;
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel(std::string(Strings<dim>::dim) + "-ball");
 
     ans->newSimplex();
@@ -476,7 +476,7 @@ Triangulation<dim>* ExampleBase<dim>::ballBundle() {
     // In even dimensions the corresponding construction is non-orientable,
     // and we need to take its orientable double cover.
     Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x S1");
 
     // Now join facet 0 to a facet dim to join up the S1 loop.
@@ -507,7 +507,7 @@ Triangulation<dim>* ExampleBase<dim>::twistedBallBundle() {
     // double it (giving a two-vertex, two-simplex Bn x S1) but fiddle
     // with the second map to make it non-orientable.
     Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(*ans);
     ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x~ S1");
 
     // Now join facet 0 to a facet dim to join up the S1 loop.

@@ -107,7 +107,7 @@ bool Triangulation<3>::insertRehydration(const std::string& dehydration) {
     }
 
     // Create the tetrahedra and start gluing.
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     Tetrahedron<3>** tet = new Tetrahedron<3>*[nTet];
     for (i = 0; i < nTet; i++)
