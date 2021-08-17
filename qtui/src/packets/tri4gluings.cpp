@@ -218,7 +218,7 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // Yes!  Go ahead and make the change.
-    regina::Packet::ChangeEventSpan span(tri_);
+    regina::Packet::ChangeEventSpan span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (p->adjacentSimplex(facet))
@@ -668,7 +668,7 @@ void Tri4GluingsUI::removeSelectedPents() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
@@ -768,7 +768,7 @@ void Tri4GluingsUI::idealToFinite() {
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices can be truncated."));
     else {
-        regina::Packet::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(*tri);
         tri->idealToFinite();
         tri->intelligentSimplify();
     }
@@ -783,7 +783,7 @@ void Tri4GluingsUI::finiteToIdeal() {
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
     else {
-        regina::Packet::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(*tri);
         tri->finiteToIdeal();
         tri->intelligentSimplify();
     }

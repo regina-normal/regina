@@ -366,7 +366,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // At present, NormalSurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
-        regina::Packet::ChangeEventSpan span(surfaces_);
+        regina::Packet::ChangeEventSpan span(*surfaces_);
         const_cast<regina::NormalSurface&>(
             surfaces_->surface(realIndex[index.row()])).
             setName(value.toString().toUtf8().constData());

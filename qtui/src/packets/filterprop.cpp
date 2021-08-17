@@ -240,7 +240,7 @@ bool FilterPropUI::notifyOptionsChanged() {
     // characteristics and then jumping directly to toggle some other
     // checkbox).  We therefore wrap everything in a ChangeEventSpan, to
     // avoid refresh() being automatically called partway through.
-    regina::Packet::ChangeEventSpan span(filter);
+    regina::Packet::ChangeEventSpan span(*filter);
 
     inNotify = true;
     bool success = true;

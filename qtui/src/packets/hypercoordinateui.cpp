@@ -267,7 +267,7 @@ bool HyperModel::setData(const QModelIndex& index, const QVariant& value,
         // At present, NormalHypersurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
-        regina::Packet::ChangeEventSpan span(surfaces_);
+        regina::Packet::ChangeEventSpan span(*surfaces_);
         const_cast<regina::NormalHypersurface&>(
             surfaces_->hypersurface(index.row())).
             setName(value.toString().toUtf8().constData());
