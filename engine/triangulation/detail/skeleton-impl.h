@@ -139,7 +139,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
 
     std::apply([=](auto&&... kFaces) {
         (calculateFaces<subdimOf<decltype(kFaces)>()>(this), ...);
-    }, this->faces_);
+    }, faces_);
 
     // -----------------------------------------------------------------
     // Real boundary components
@@ -453,7 +453,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
             std::apply([=](auto&&... kFaces) {
                 (calculateBoundaryFaces<subdimOf<decltype(kFaces)>()>(
                     label, facet), ...);
-            }, this->faces_);
+            }, faces_);
 
             // Finally we process the (dim-2)-faces, and also use these to
             // locate adjacent boundary facets.
@@ -569,7 +569,9 @@ void TriangulationBase<dim>::clearBaseProperties() {
         components_.clear();
         boundaryComponents_.clear();
 
-        this->deleteFaces();
+        std::apply([](auto&&... kFaces) {
+            (kFaces.clear_destructive(), ...);
+        }, faces_);
 
         calculatedSkeleton_ = false;
     }
@@ -599,7 +601,7 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     // Properties stored using std::... containers or MarkedVector:
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
-    this->faces_.swap(other.faces_);
+    faces_.swap(other.faces_);
     fundGroup_.swap(other.fundGroup_);
     H1_.swap(other.H1_);
 }

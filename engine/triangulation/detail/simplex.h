@@ -125,15 +125,15 @@ class SimplexBase :
 
         decltype(seqToFaces(subdimensions())) faces_;
             /**< A tuple of arrays of faces of this simplex.
-                 Specifically, faces_.get<k>(i) is a pointer to the
+                 Specifically, std::get<k>(faces)[i] is a pointer to the
                  ith k-face of this simplex. */
 
         decltype(seqToMappings(subdimensions())) mappings_;
             /**< A tuple of arrays of permutations, showing how the faces
                  of the triangulation map to the faces of this simplex.
-                 Specifically, mappings_.get<k>(i) describes the ith k-face
-                 of this simplex, and maps the vertices (0,1,...,k) of the
-                 underlying k-face of the triangulation to the corresponding
+                 Specifically, std::get<k>(mappings_)[i] describes the ith
+                 k-face of this simplex, and maps the vertices (0,1,...,k) of
+                 the underlying k-face of the triangulation to the corresponding
                  vertices of this simplex.  See Simplex<dim>::faceMapping()
                  for details. */
 
@@ -596,7 +596,7 @@ class SimplexBase :
          * number \a i of this simplex has the same degree as its image in
          * \a other under the relabelling \a p.
          */
-        template <int... useDim >
+        template <int... useDim>
         bool sameDegreesAt(const SimplexBase& other, Perm<dim+1> p,
             std::integer_sequence<int, useDim...>) const;
 
@@ -668,14 +668,14 @@ template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
     triangulation().ensureSkeleton();
-    return std::get<subdim>(this->faces_)[face];
+    return std::get<subdim>(faces_)[face];
 }
 
 template <int dim>
 template <int subdim>
 inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
     triangulation().ensureSkeleton();
-    return std::get<subdim>(this->mappings_)[face];
+    return std::get<subdim>(mappings_)[face];
 }
 
 template <int dim>

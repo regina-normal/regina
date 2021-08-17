@@ -160,88 +160,6 @@ namespace detail {
  */
 
 /**
- * Internal class that helps a triangulation store its lists of faces.
- *
- * This class is used with <i>dim</i>-dimensional triangulations.  It provides
- * storage for faces of all dimensions given in the parameter pack \a subdim.
- *
- * \tparam subdim This must be exactly the sequence 0, 1, ..., <i>dim</i>-1.
- */
-template <int dim, int... subdim>
-class TriangulationFaceStorage {
-    static_assert(sizeof...(subdim) == dim &&
-        (subdim + ...) == dim * (dim - 1) / 2,
-        "The TriangulationFaceStorage template has been given an unexpected "
-        "set of face dimensions.");
-
-    protected:
-        std::tuple<MarkedVector<Face<dim, subdim>>...> faces_;
-            /**< Each element of this tuple stores all faces of a particular
-                 dimension \a subdim. */
-
-    protected:
-        /**
-         * Default constructor that initialises all face lists as empty.
-         */
-        TriangulationFaceStorage() = default;
-
-        /**
-         * Deletes all faces of all dimensions.
-         * This routine destroys the corresponding Face objects and
-         * clears the lists that contain them.
-         */
-        void deleteFaces();
-        /**
-         * Tests whether this and the given triangulation have the same
-         * number of <i>k</i>-faces, for each facial dimension \a k.
-         *
-         * @param other the triangulation to compare against this.
-         * @return \c true if and only if the face counts considered are
-         * identical for both triangluations.
-         */
-        bool sameFVector(const TriangulationFaceStorage& other) const;
-        /**
-         * Tests whether this and the given triangulation have the same
-         * <i>useDim</i>-face degree sequences.
-         *
-         * For the purposes of this routine, degree sequences are
-         * considered to be unordered.
-         *
-         * \pre This and the given triangulation are known to have the
-         * same number of <i>useDim</i>-faces as each other.
-         *
-         * @param other the triangulation to compare against this.
-         * @return \c true if and only if the <i>useDim</i>-face
-         * degree sequences are equal.
-         */
-        template <int useDim>
-        bool sameDegreesAt(const TriangulationFaceStorage& other) const;
-        /**
-         * Tests whether this and the given triangulation have the same
-         * <i>k</i>-face degree sequences, for each facial dimension
-         * \a k &le; \a maxDim.
-         *
-         * For the purposes of this routine, degree sequences are
-         * considered to be unordered.
-         *
-         * \pre This and the given triangulation are known to have the
-         * same number of <i>k</i>-faces as each other, for each facial
-         * dimension \a k &le; \a maxDim.
-         *
-         * @param other the triangulation to compare against this.
-         * @return \c true if and only if all degree sequences considered
-         * are equal.
-         */
-        template <int maxDim>
-        bool sameDegreesTo(const TriangulationFaceStorage& other) const;
-
-        // Make this class non-copyable.
-        TriangulationFaceStorage(const TriangulationFaceStorage&) = delete;
-        TriangulationFaceStorage& operator = (const TriangulationFaceStorage&)
-            = delete;
-};
-
-/**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
  *
  * Such a triangulation is represented by the class Triangulation<dim>,
@@ -266,13 +184,6 @@ class TriangulationFaceStorage {
  */
 template <int dim>
 class TriangulationBase :
-#ifdef __DOXYGEN
-        // Doxygen doesn't understand ExpandSequence.
-        // The syntax here is not valid C++ but for doxygen it's just fine.
-        public TriangulationFaceStorage<dim, 0, 1, ..., dim - 1>,
-#else
-        public ExpandSequence<TriangulationFaceStorage, dim>,
-#endif
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
@@ -285,6 +196,29 @@ class TriangulationBase :
                  triangulation. */
 
     protected:
+        MarkedVector<Simplex<dim>> simplices_;
+            /**< The top-dimensional simplices that form the triangulation. */
+
+    private:
+        /**
+         * The sequence of all subface dimensions 0,...,(<i>dim</i>-1).
+         */
+        typedef std::make_integer_sequence<int, dim> subdimensions;
+
+        /**
+         * A non-existent function used to construct the type of the \a faces_
+         * tuple.  Essentially, this lets us pull apart the integer pack
+         * \a subdimensions.  The return type is the tuple type that we want.
+         */
+        template <int... subdim>
+        static auto seqToFaces(std::integer_sequence<int, subdim...>) ->
+            std::tuple<MarkedVector<Face<dim, subdim>>...>;
+
+        decltype(seqToFaces(subdimensions())) faces_;
+            /**< A tuple of vectors holding all faces of this triangulation.
+                 Specifically, std::get<k>(faces)[i] is a pointer to the
+                 ith k-face of the triangulatino. */
+
         /**
          * A compile-time constant function that returns the facial dimension
          * corresponding to an element of the \a faces_ tuple.
@@ -314,8 +248,6 @@ class TriangulationBase :
         }
 
     protected:
-        MarkedVector<Simplex<dim>> simplices_;
-            /**< The top-dimensional simplices that form the triangulation. */
         MarkedVector<BoundaryComponent<dim>> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
         bool valid_;
@@ -2095,6 +2027,42 @@ class TriangulationBase :
         template <int subdim>
         void relabelFace(Face<dim, subdim>* f, const Perm<dim + 1>& adjust);
 
+        /**
+         * Tests whether this and the given triangulation have the same
+         * <i>useDim</i>-face degree sequences.
+         *
+         * For the purposes of this routine, degree sequences are
+         * considered to be unordered.
+         *
+         * \pre This and the given triangulation are known to have the
+         * same number of <i>useDim</i>-faces as each other.
+         *
+         * @param other the triangulation to compare against this.
+         * @return \c true if and only if the <i>useDim</i>-face
+         * degree sequences are equal.
+         */
+        template <int useDim>
+        bool sameDegreesAt(const TriangulationBase& other) const;
+        /**
+         * Tests whether this and the given triangulation have the same
+         * <i>k</i>-face degree sequences, for each facial dimension \a k
+         * contained in the integer pack \a useDim.
+         *
+         * For the purposes of this routine, degree sequences are
+         * considered to be unordered.
+         *
+         * \pre This and the given triangulation are known to have the
+         * same number of <i>k</i>-faces as each other, for each facial
+         * dimension \a k contained in the integer pack \a useDim.
+         *
+         * @param other the triangulation to compare against this.
+         * @return \c true if and only if all degree sequences considered
+         * are equal.
+         */
+        template <int... useDim>
+        bool sameDegreesAt(const TriangulationBase& other,
+            std::integer_sequence<int, useDim...>) const;
+
     protected:
         /**
          * Creates a temporary lock on the topological properties of
@@ -2180,56 +2148,6 @@ void swap(Triangulation<dim>& lhs, Triangulation<dim>& rhs) {
 namespace detail {
 
 /*@}*/
-
-// Inline functions for TriangulationFaceStorage
-
-template <int dim, int... subdim>
-inline void TriangulationFaceStorage<dim, subdim...>::deleteFaces() {
-    (std::get<subdim>(faces_).clear_destructive(), ...);
-}
-
-template <int dim, int... subdim>
-inline bool TriangulationFaceStorage<dim, subdim...>::sameFVector(
-        const TriangulationFaceStorage<dim, subdim...>& other) const {
-    return ((std::get<subdim>(faces_).size() ==
-            std::get<subdim>(other.faces_).size()) && ...);
-}
-
-template <int dim, int... subdim>
-template <int useDim>
-bool TriangulationFaceStorage<dim, subdim...>::sameDegreesAt(
-        const TriangulationFaceStorage<dim, subdim...>& other) const {
-    // We may assume that # faces is the same for both triangulations.
-    size_t n = std::get<useDim>(this->faces_).size();
-
-    size_t* deg1 = new size_t[n];
-    size_t* deg2 = new size_t[n];
-
-    size_t* p;
-    p = deg1;
-    for (auto f : std::get<useDim>(this->faces_))
-        *p++ = f->degree();
-    p = deg2;
-    for (auto f : std::get<useDim>(other.faces_))
-        *p++ = f->degree();
-
-    std::sort(deg1, deg1 + n);
-    std::sort(deg2, deg2 + n);
-
-    bool ans = std::equal(deg1, deg1 + n, deg2);
-
-    delete[] deg1;
-    delete[] deg2;
-
-    return ans;
-}
-
-template <int dim, int... subdim>
-template <int maxDim>
-inline bool TriangulationFaceStorage<dim, subdim...>::sameDegreesTo(
-        const TriangulationFaceStorage<dim, subdim...>& other) const {
-    return ((subdim > maxDim || sameDegreesAt<subdim>(other)) && ...);
-}
 
 // Inline functions for TriangulationBase
 
@@ -2399,7 +2317,7 @@ template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::countFaces() const {
     ensureSkeleton();
-    return std::get<subdim>(this->faces_).size();
+    return std::get<subdim>(faces_).size();
 }
 
 template <int dim>
@@ -2407,7 +2325,7 @@ inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
     ensureSkeleton();
     return std::apply([this](auto&&... kFaces) {
         return std::vector<size_t>{ kFaces.size()..., size() };
-    }, this->faces_);
+    }, faces_);
 }
 
 template <int dim>
@@ -2426,13 +2344,13 @@ template <int dim>
 template <int subdim>
 inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
-    return ListView(std::get<subdim>(this->faces_));
+    return ListView(std::get<subdim>(faces_));
 }
 
 template <int dim>
 template <int subdim, typename Iterator>
 inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
-    std::get<subdim>(this->faces_).refill(begin, end);
+    std::get<subdim>(faces_).refill(begin, end);
 }
 
 template <int dim>
@@ -2461,7 +2379,7 @@ template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
     ensureSkeleton();
-    return std::get<subdim>(this->faces_)[index];
+    return std::get<subdim>(faces_)[index];
 }
 
 template <int dim>
@@ -2772,7 +2690,7 @@ inline long TriangulationBase<dim>::eulerCharTri() const {
     ensureSkeleton();
     return std::apply([this](auto&&... kFaces) {
         return (static_cast<long>(kFaces.size()) - ... - size());
-    }, this->faces_);
+    }, faces_);
 }
 
 template <int dim>
@@ -3310,6 +3228,43 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
 template <int dim>
 Triangulation<dim>* TriangulationBase<dim>::fromSig(const std::string& sig) {
     return TriangulationBase<dim>::fromIsoSig(sig);
+}
+
+template <int dim>
+template <int useDim>
+bool TriangulationBase<dim>::sameDegreesAt(const TriangulationBase<dim>& other)
+        const {
+    // We may assume that # faces is the same for both triangulations.
+    size_t n = std::get<useDim>(faces_).size();
+
+    size_t* deg1 = new size_t[n];
+    size_t* deg2 = new size_t[n];
+
+    size_t* p;
+    p = deg1;
+    for (auto f : std::get<useDim>(faces_))
+        *p++ = f->degree();
+    p = deg2;
+    for (auto f : std::get<useDim>(other.faces_))
+        *p++ = f->degree();
+
+    std::sort(deg1, deg1 + n);
+    std::sort(deg2, deg2 + n);
+
+    bool ans = std::equal(deg1, deg1 + n, deg2);
+
+    delete[] deg1;
+    delete[] deg2;
+
+    return ans;
+}
+
+template <int dim>
+template <int... useDim>
+inline bool TriangulationBase<dim>::sameDegreesAt(
+        const TriangulationBase& other,
+        std::integer_sequence<int, useDim...>) const {
+    return (sameDegreesAt<useDim>(other) && ...);
 }
 
 // Inline functions for TriangulationBase::TopologyLock

@@ -503,13 +503,20 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
             return false;
         if (isOrientable() ^ other.isOrientable())
             return false;
-        if (! this->sameFVector(other))
+
+        // Check that both triangulations have the same f-vector.
+        if (! std::apply([&other](auto&&... kFaces) {
+                    return ((kFaces.size() == std::get<
+                        subdimOf<decltype(kFaces)>()>(other.faces_).size())
+                        && ...);
+                }, faces_)) {
             return false;
+        }
 
         // TODO: Count boundary components and their sizes, once we have them.
 
         // Test degree sequences and the like.
-        if (! this->template sameDegreesTo<dim - 2>(other))
+        if (! sameDegreesAt(other, std::make_integer_sequence<int, dim - 1>()))
             return false;
 
         // Test component sizes.
