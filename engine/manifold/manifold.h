@@ -55,14 +55,23 @@ class AbelianGroup;
  */
 
 /**
- * Represents a particular 3-manifold.  The triangulation of this
- * 3-manifold that may be in use is not of interest.
+ * Represents a particular 3-manifold, independent of how it might be
+ * triangulated.  This is an abstract base class: its subclasses correspond
+ * to different families of 3-manifolds.
  *
- * Subclasses corresponding to the different types of 3-manifold must
- * (of course) override all pure virtual functions.  They must also provide
- * a copy constructor and assignment operator.  They must not override
- * writeTextShort() or writeTextLong(), since these routines are \e not virtual,
- * and are provided by the base class Manifold.
+ * Each subclass must:
+ *
+ * - override all pure virtual functions (of course);
+ *
+ * - provide value semantics (including at least a copy constructor and
+ *   assignment operator);
+ *
+ * - provide member and global swap functions, for consistency across all
+ *   Manifold subclasses.
+ *
+ * Subclasses must \e not override writeTextShort() or writeTextLong(), since
+ * these routines are not virtual, and are provided directly by the Manifold
+ * base class.
  */
 class Manifold : public Output<Manifold> {
     public:
@@ -253,15 +262,27 @@ class Manifold : public Output<Manifold> {
 
     protected:
         /**
-         * The default assignment operator.
+         * A default constructor.
          *
-         * For the base Manifold class, this operator does nothing.  It is
-         * provided so that derived classes can, if they wish, declare a default
-         * assignment operator (whereupon the compiler will automatically
-         * include a call to this base class operator).  It is protected
-         * so that external users do not accidentally call it (since every
-         * Manifold really belongs to a subclass of Manifold, but this operator
-         * does not copy any subclass data).
+         * This does nothing in the base Manifold class, and is not for
+         * public use.  It is declared here so that subclasses can use it
+         * implicitly in their own default constructors.
+         */
+        Manifold() = default;
+        /**
+         * A copy constructor.
+         *
+         * This does nothing in the base Manifold class, and is not for
+         * public use.  It is declared here so that subclasses can use it
+         * implicitly in their own copy constructors.
+         */
+        Manifold(const Manifold&) = default;
+        /**
+         * A copy assignment operator.
+         *
+         * This does nothing in the base Manifold class, and is not for
+         * public use.  It is declared here so that subclasses can use it
+         * implicitly in their own copy assignment operators.
          */
         Manifold& operator = (const Manifold&) = default;
 };
