@@ -152,7 +152,7 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * Cusp objects should be considered temporary only.  They are preserved
  * if you change the fillings (via SnapPeaTriangulation::fill()
  * or SnapPeaTriangulation::unfill()).  However, if you change the SnapPea
- * triangulation itself (e.g., via randomize()), then all cusp objects will
+ * triangulation itself (e.g., via randomise()), then all cusp objects will
  * be deleted and replaced with new ones (using fresh data re-fetched from
  * the SnapPea kernel).
  *
@@ -988,7 +988,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * These Cusp objects should be considered temporary only.  They are
          * preserved if you change the fillings (via fill() or unfill()).
          * However, if you change the SnapPea triangulation itself
-         * (e.g., via randomize()), then all cusp objects will be deleted
+         * (e.g., via randomise()), then all cusp objects will be deleted
          * and replaced with new ones (using fresh data re-fetched from
          * the SnapPea kernel).
          *
@@ -1420,7 +1420,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * Either way, we preserve the hyperbolic structure.
          *
          * If you need a canonical triangulation (as opposed to an arbitrary
-         * retriangulation), then you should call canonize() instead.
+         * retriangulation), then you should call canonise() instead.
          *
          * The resulting triangulation will be newly allocated, and it
          * is the responsibility of the caller of this routine to destroy it.
@@ -1429,13 +1429,13 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * construct a triangulation of the canonical cell decomposition,
          * then this routine will return \c nullptr.
          *
-         * \snappy The function <tt>canonize()</tt> means different
+         * \snappy The function <tt>canonise()</tt> means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
          * the naming convention used in the SnapPea kernel.  Specifically:
-         * Regina's routine SnapPeaTriangulation::protoCanonize()
+         * Regina's routine SnapPeaTriangulation::protoCanonise()
          * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
          * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
-         * Regina's routine SnapPeaTriangulation::canonize()
+         * Regina's routine SnapPeaTriangulation::canonise()
          * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
          * and is not available through SnapPy at all.
          *
@@ -1446,14 +1446,18 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * @return the canonical triangulation of the canonical cell
          * decomposition, or \c nullptr if this could not be constructed.
          */
-        SnapPeaTriangulation* protoCanonize() const;
+        SnapPeaTriangulation* protoCanonise() const;
 
         /**
-         * A synonym for protoCanonize(), which constructs the canonical
+         * An alias for protoCanonise(), which constructs the canonical
          * cell decomposition using an arbitrary retriangulation if necessary.
-         * See canonize() for further details.
+         * See protoCanonise() for further details.
+         *
+         * This alias is provided as "glue" between the British spelling
+         * used throughout Regina and the American spelling used
+         * throughout the SnapPea kernel.
          */
-        SnapPeaTriangulation* protoCanonise() const;
+        SnapPeaTriangulation* protoCanonize() const;
 
         /**
          * Constructs the canonical retriangulation of the canonical
@@ -1487,7 +1491,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * SnapPea-specific information (such as peripheral curves and
          * fillings), and simply returns one of Regina's native triangulations.
          * If you need to preserve SnapPea-specific information then you
-         * should call protoCanonize() instead.
+         * should call protoCanonise() instead.
          *
          * The resulting triangulation will be newly allocated, and it
          * is the responsibility of the caller of this routine to destroy it.
@@ -1496,13 +1500,13 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * construct the canonical retriangulation of the canonical cell
          * decomposition, this routine will return \c nullptr.
          *
-         * \snappy The function <tt>canonize()</tt> means different
+         * \snappy The function <tt>canonise()</tt> means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
          * the naming convention used in the SnapPea kernel.  Specifically:
-         * Regina's routine SnapPeaTriangulation::protoCanonize()
+         * Regina's routine SnapPeaTriangulation::protoCanonise()
          * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
          * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
-         * Regina's routine SnapPeaTriangulation::canonize()
+         * Regina's routine SnapPeaTriangulation::canonise()
          * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
          * and is not available through SnapPy at all.
          *
@@ -1513,14 +1517,18 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * @return the canonical triangulation of the canonical cell
          * decomposition, or \c nullptr if this could not be constructed.
          */
-        Triangulation<3>* canonize() const;
+        Triangulation<3>* canonise() const;
 
         /**
-         * A synonym for canonize(), which constructs the canonical
+         * An alias for canonise(), which constructs the canonical
          * retriangulation of the canonical cell decomposition.
-         * See canonize() for further details.
+         * See canonise() for further details.
+         *
+         * This alias is provided as "glue" between the British spelling
+         * used throughout Regina and the American spelling used
+         * throughout the SnapPea kernel.
          */
-        Triangulation<3>* canonise() const;
+        Triangulation<3>* canonize() const;
 
         /**
          * Asks SnapPea to randomly retriangulate this manifold, using
@@ -1529,7 +1537,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *
          * This routine uses SnapPea's own internal retriangulation code.
          *
-         * After randomizing, this routine will immediately ask SnapPea
+         * After randomising, this routine will immediately ask SnapPea
          * to try to find a hyperbolic structure.
          *
          * If this is a null SnapPea triangulation, this routine does nothing.
@@ -1537,13 +1545,17 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.randomize()</tt>.
          */
-        void randomize();
+        void randomise();
 
         /**
-         * A synonym for randomize(), which asks SnapPea to randomly
-         * retriangulate this manifold.  See randomize() for further details.
+         * An alias for randomise(), which asks SnapPea to randomly
+         * retriangulate this manifold.  See randomise() for further details.
+         *
+         * This alias is provided as "glue" between the British spelling
+         * used throughout Regina and the American spelling used
+         * throughout the SnapPea kernel.
          */
-        void randomise();
+        void randomize();
 
         /*@}*/
         /**
@@ -1788,16 +1800,16 @@ inline bool SnapPeaTriangulation::dependsOnParent() const {
     return false;
 }
 
-inline SnapPeaTriangulation* SnapPeaTriangulation::protoCanonise() const {
-    return protoCanonize();
+inline SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {
+    return protoCanonise();
 }
 
-inline Triangulation<3>* SnapPeaTriangulation::canonise() const {
-    return canonize();
+inline Triangulation<3>* SnapPeaTriangulation::canonize() const {
+    return canonise();
 }
 
-inline void SnapPeaTriangulation::randomise() {
-    randomize();
+inline void SnapPeaTriangulation::randomize() {
+    randomise();
 }
 
 template <typename Action, typename... Args>

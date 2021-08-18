@@ -447,7 +447,7 @@ Triangulation<3>* SnapPeaTriangulation::filledTriangulation() const {
     }
 }
 
-SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {
+SnapPeaTriangulation* SnapPeaTriangulation::protoCanonise() const {
     if (! data_)
         return nullptr;
 
@@ -465,7 +465,7 @@ SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {
     return ans;
 }
 
-Triangulation<3>* SnapPeaTriangulation::canonize() const {
+Triangulation<3>* SnapPeaTriangulation::canonise() const {
     if (! data_)
         return nullptr;
 
@@ -484,7 +484,7 @@ Triangulation<3>* SnapPeaTriangulation::canonize() const {
     return ans;
 }
 
-void SnapPeaTriangulation::randomize() {
+void SnapPeaTriangulation::randomise() {
     if (! data_)
         return;
 
