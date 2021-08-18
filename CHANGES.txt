@@ -126,8 +126,8 @@ Version 6.1  [ TODO ]
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.
-            - Simplified the class hierarchy; FaceOrientability,
-              FaceValidity and FaceListHolder are now gone.
+            - Simplified the class hierarchy; FaceOrientability, FaceValidity,
+              FaceListHolder and FaceStorage are all now gone.
             - New compile-time constants dimension and subdimension.
         Class FaceNumbering<dim, subdim>:
             - Everything in this class is now constexpr.
