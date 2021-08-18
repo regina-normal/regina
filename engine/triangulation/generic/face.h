@@ -169,6 +169,12 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * specialised classes, you will need to include the corresponding triangulation
  * headers (triangulation/dim3.h or triangulation/dim4.h respectively).
  *
+ * Faces do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending dimensions \a dim and \a subdim as
  * suffices (e.g., Face2_1 and Face3_0 for the two examples above).

@@ -155,6 +155,12 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * triangulation itself (e.g., via randomize()), then all cusp objects will
  * be deleted and replaced with new ones (using fresh data re-fetched from
  * the SnapPea kernel).
+ *
+ * Cusps do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the SnapPeaTriangulation to which they belong.
  */
 class Cusp : public ShortOutput<Cusp> {
     private:
@@ -234,7 +240,7 @@ class Cusp : public ShortOutput<Cusp> {
         /**
          * A default constructor that performs no initialisation whatsoever.
          */
-        Cusp();
+        Cusp() = default;
 
     friend class SnapPeaTriangulation;
         /**< Allow access to private members. */
@@ -1728,9 +1734,6 @@ inline SnapPeaFatalError::SnapPeaFatalError(const char* fromFunction,
 }
 
 // Inline functions for Cusp
-
-inline Cusp::Cusp() {
-}
 
 inline Vertex<3>* Cusp::vertex() const {
     return vertex_;

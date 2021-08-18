@@ -84,6 +84,12 @@ namespace regina {
  * triangulation headers (e.g., triangulation/dim2.h for \a dim = 2, or
  * triangulation/dim3.h for \a dim = 3).
  *
+ * Simplices do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Simplex2 and Simplex3 for dimensions 2 and 3).

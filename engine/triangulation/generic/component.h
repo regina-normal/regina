@@ -59,15 +59,17 @@ namespace regina {
  * of its component objects will be deleted and new ones will be created
  * in their place.
  *
- * Component objects are all created, managed and destroyed by the
- * class Triangulation<dim>.  See the Triangulation notes for further
- * information on working with <i>dim</i>-dimensional triangulations.
- *
  * For Regina's \ref stddim "standard dimensions", this template is specialised
  * and offers more functionality.  In order to use these specialised classes,
  * you will need to include the corresponding triangulation headers (e.g.,
  * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
  * for \a dim = 3).
+ *
+ * Components do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix

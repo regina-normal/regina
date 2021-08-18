@@ -194,6 +194,12 @@ enum NiceType {
  * Note that a bag may be empty (indeed, if you call
  * TreeDecomposition::makeNice() then it is guaranteed that the root bag
  * will be empty).
+ *
+ * Tree bags do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the TreeDecomposition to which they belong.
  */
 class TreeBag : public ShortOutput<TreeBag> {
     private:

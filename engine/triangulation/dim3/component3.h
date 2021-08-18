@@ -65,6 +65,12 @@ namespace regina {
  * In particular, each 3-dimensional component also stores details on
  * lower-dimensional faces (i.e., vertices, edges and triangles).
  *
+ * Components do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \headerfile triangulation/dim3.h
  */
 template <>
