@@ -57,7 +57,8 @@ namespace regina {
  * data structure, in a way that allows the internal data structure to
  * change at some later date without affecting the public API.
  *
- * Object of type ListView are designed to be copied by value.
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  *
  * \ifacespython Not present.
  *
@@ -70,8 +71,10 @@ namespace regina {
 template <class List>
 class ListView {
     private:
-        const List& list_;
-            /**< The list that this object will access. */
+        const List* list_;
+            /**< The list that this object will access.  This is a pointer
+                 (not a reference) so that we can support assignment;
+                 it must never be \c null. */
 
     public:
         /**
@@ -184,43 +187,43 @@ class ListView {
 // Inline functions for ListView
 
 template <class List>
-ListView<List>::ListView(const List& list) : list_(list) {
+ListView<List>::ListView(const List& list) : list_(&list) {
 }
 
 template <class List>
 inline bool ListView<List>::empty() const {
-    return list_.empty();
+    return list_->empty();
 }
 
 template <class List>
 inline typename ListView<List>::size_type ListView<List>::size() const {
-    return list_.size();
+    return list_->size();
 }
 
 template <class List>
 inline typename ListView<List>::const_reference ListView<List>::operator [](
         size_type index) const {
-    return list_[index];
+    return (*list_)[index];
 }
 
 template <class List>
 inline typename ListView<List>::const_reference ListView<List>::front() const {
-    return list_.front();
+    return list_->front();
 }
 
 template <class List>
 inline typename ListView<List>::const_reference ListView<List>::back() const {
-    return list_.back();
+    return list_->back();
 }
 
 template <class List>
 inline typename ListView<List>::const_iterator ListView<List>::begin() const {
-    return list_.begin();
+    return list_->begin();
 }
 
 template <class List>
 inline typename ListView<List>::const_iterator ListView<List>::end() const {
-    return list_.end();
+    return list_->end();
 }
 
 } // namespace regina
