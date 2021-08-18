@@ -46,7 +46,6 @@
 #include "triangulation/alias/face.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
-#include "utilities/typeutils.h"
 #include <array>
 #include <cassert>
 #include <tuple>
