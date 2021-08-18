@@ -709,8 +709,6 @@ class DiscSetSurfaceData : public DiscSetSurface {
  * A forward iterator used for running through all normal discs in a normal
  * surface.
  *
- * This header also specialises std::iterator_traits for this iterator class.
- *
  * \warning This class converts the indices of normal discs of a
  * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
@@ -727,6 +725,18 @@ class DiscSetSurfaceData : public DiscSetSurface {
  * if there are no more discs to return.
  */
 class DiscSpecIterator {
+    public:
+        typedef std::forward_iterator_tag iterator_category;
+            /**< Declares this to be a forward iterator type. */
+        typedef regina::DiscSpec value_type;
+            /**< Indicates what type the iterator points to. */
+        typedef long difference_type;
+            /**< The type obtained by subtracting iterators. */
+        typedef const regina::DiscSpec* pointer;
+            /**< A pointer to \a value_type. */
+        typedef const regina::DiscSpec& reference;
+            /**< The type obtained when dereferencing iterators. */
+
     protected:
         const DiscSetSurface* internalDiscSet;
             /**< The disc set through which we are iterating. */
@@ -848,22 +858,7 @@ class DiscSpecIterator {
     friend class DiscSetSurface;
 };
 
-} // namespace regina
-
 /*@}*/
-
-namespace std {
-    template <>
-    struct iterator_traits<regina::DiscSpecIterator> {
-        typedef long difference_type;
-        typedef const regina::DiscSpec& value_type;
-        typedef const regina::DiscSpec* pointer;
-        typedef const regina::DiscSpec& reference;
-        typedef std::forward_iterator_tag iterator_category;
-    };
-} // namespace std
-
-namespace regina {
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

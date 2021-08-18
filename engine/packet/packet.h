@@ -1581,8 +1581,6 @@ Packet* open(std::istream& in);
  * A forward iterator for iterating through all immediate children of a
  * given packet.
  *
- * This header also specialises std::iterator_traits for this iterator class.
- *
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
@@ -1592,6 +1590,18 @@ Packet* open(std::istream& in);
  * <tt>StopException</tt> if there are no more children to return.
  */
 class ChildIterator {
+    public:
+        typedef std::forward_iterator_tag iterator_category;
+            /**< Declares this to be a forward iterator type. */
+        typedef regina::Packet* value_type;
+            /**< Indicates what the iterator points to. */
+        typedef ptrdiff_t difference_type;
+            /**< The type obtained by subtracting iterators. */
+        typedef regina::Packet* const* pointer;
+            /**< A pointer to \a value_type. */
+        typedef regina::Packet* const& reference;
+            /**< A reference to \a value_type. */
+
     private:
         Packet* current_;
             /**< The child packet that this iterator is pointing to, or
@@ -1684,8 +1694,6 @@ class ChildIterator {
  * The order of iteration is depth-first, where a parent packet is always
  * processed before its descendants.
  *
- * This header also specialises std::iterator_traits for this iterator class.
- *
  * \ifacespython Instead of the C++ interface described here, in Python
  * this class implements the Python iterable/iterator interface.  It implements
  * the function <tt>__iter__()</tt>, which returns the iterator object itself;
@@ -1694,6 +1702,18 @@ class ChildIterator {
  * are no more packets to return.
  */
 class SubtreeIterator {
+    public:
+        typedef std::forward_iterator_tag iterator_category;
+            /**< Declares this to be a forward iterator type. */
+        typedef regina::Packet* value_type;
+            /**< Indicates what the iterator points to. */
+        typedef ptrdiff_t difference_type;
+            /**< The type obtained by subtracting iterators. */
+        typedef regina::Packet* const* pointer;
+            /**< A pointer to \a value_type. */
+        typedef regina::Packet* const& reference;
+            /**< A reference to \a value_type. */
+
     private:
         const Packet* subtree_;
             /**< The root of the packet subtree that we are iterating over. */
@@ -2451,31 +2471,7 @@ class PacketListener {
     friend class Packet;
 };
 
-} // namespace regina
-
 /*@}*/
-
-namespace std {
-    template <>
-    struct iterator_traits<regina::ChildIterator> {
-        typedef ptrdiff_t difference_type;
-        typedef regina::Packet* value_type;
-        typedef regina::Packet** pointer_type;
-        typedef regina::Packet* const& reference_type;
-        typedef std::forward_iterator_tag iterator_category;
-    };
-
-    template <>
-    struct iterator_traits<regina::SubtreeIterator> {
-        typedef ptrdiff_t difference_type;
-        typedef regina::Packet* value_type;
-        typedef regina::Packet** pointer_type;
-        typedef regina::Packet* const& reference_type;
-        typedef std::forward_iterator_tag iterator_category;
-    };
-} // namespace std
-
-namespace regina {
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

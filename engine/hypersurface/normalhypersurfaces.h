@@ -366,8 +366,19 @@ class NormalHypersurfaces : public Packet {
          *
          * \ifacespython Not present.
          */
-        class VectorIterator : public std::iterator<
-                std::bidirectional_iterator_tag, Vector<LargeInteger>> {
+        class VectorIterator {
+            public:
+                typedef std::bidirectional_iterator_tag iterator_category;
+                    /**< Declares this to be a bidirectional iterator type. */
+                typedef Vector<LargeInteger> value_type;
+                    /**< Indicates what type the iterator points to. */
+                typedef ptrdiff_t difference_type;
+                    /**< The type obtained by subtracting iterators. */
+                typedef const Vector<LargeInteger>* pointer;
+                    /**< A pointer to \a value_type. */
+                typedef const Vector<LargeInteger>& reference;
+                    /**< The type obtained when dereferencing iterators. */
+
             private:
                 std::vector<NormalHypersurface>::const_iterator it_;
                     /**< An iterator into the underlying list of

@@ -201,7 +201,6 @@ namespace graph {
      * which is similar to the standard C++ forward iterator except that
      * the \a reference type may be the same as \a value_type (and so,
      * in particular, the dereference operator may return by value).
-     * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam dim the dimension of the underlying triangulation.
      */
@@ -213,6 +212,21 @@ namespace graph {
                 InternalIterator;
                 /**< The type used to iterate through (<i>dim</i>-1)-faces
                      of the underlying triangulation. */
+
+            typedef std::input_iterator_tag iterator_category;
+                /**< Declares this to be an input iterator type. */
+            typedef DualEdge value_type;
+                /**< Indicates what type the iterator points to. */
+            typedef DualEdgeIterator::InternalIterator::difference_type
+                difference_type;
+                /**< The type obtained by subtracting iterators. */
+            typedef DualEdge const* pointer;
+                /**< A pointer to \a value_type. */
+            typedef DualEdge reference;
+                /**< The type obtained when dereferencing iterators.
+                     Note that, for input iterators that are not forward
+                     iterators, this does not need to be an actual C++
+                     reference type. */
 
         private:
             InternalIterator it_;
@@ -339,7 +353,6 @@ namespace graph {
      * which is similar to the standard C++ forward iterator except that
      * the \a reference type may be the same as \a value_type (and so,
      * in particular, the dereference operator may return by value).
-     * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam dim the dimension of the underlying triangulation.
      * \tparam out indicates the orientation that will be assigned to
@@ -347,6 +360,21 @@ namespace graph {
      */
     template <int dim, bool out>
     class IncidentDualEdgeIterator {
+        public:
+            typedef std::input_iterator_tag iterator_category;
+                /**< Declares this to be an input iterator type. */
+            typedef DualEdge value_type;
+                /**< Indicates what type the iterator points to. */
+            typedef int difference_type;
+                /**< The type obtained by subtracting iterators. */
+            typedef DualEdge const* pointer;
+                /**< A pointer to \a value_type. */
+            typedef DualEdge reference;
+                /**< The type obtained when dereferencing iterators.
+                     Note that, for input iterators that are not forward
+                     iterators, this does not need to be an actual C++
+                     reference type. */
+
         private:
             Simplex<dim>* simp_;
                 /**< The dual vertex (i.e., top-dimensional simplex)
@@ -467,12 +495,26 @@ namespace graph {
      * which is similar to the standard C++ forward iterator except that
      * the \a reference type may be the same as \a value_type (and so,
      * in particular, the dereference operator may return by value).
-     * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam dim the dimension of the underlying triangulation.
      */
     template <int dim>
     class AdjacentDualVertexIterator {
+        public:
+            typedef std::input_iterator_tag iterator_category;
+                /**< Declares this to be an input iterator type. */
+            typedef regina::Simplex<dim>* value_type;
+                /**< Indicates what type the iterator points to. */
+            typedef int difference_type;
+                /**< The type obtained by subtracting iterators. */
+            typedef regina::Simplex<dim>* const* pointer;
+                /**< A pointer to \a value_type. */
+            typedef regina::Simplex<dim>* reference;
+                /**< The type obtained when dereferencing iterators.
+                     Note that, for input iterators that are not forward
+                     iterators, this does not need to be an actual C++
+                     reference type. */
+
         private:
             Simplex<dim>* source_;
                 /**< The dual vertex (i.e., top-dimensional simplex)
@@ -905,38 +947,6 @@ namespace graph {
             Simplex<dim>* v);
 
 } // namespace regina
-
-namespace std {
-    template <int dim>
-    struct iterator_traits<typename regina::graph::DualEdgeIterator<dim>> {
-        typedef typename regina::graph::DualEdgeIterator<dim>::
-            InternalIterator::difference_type difference_type;
-        typedef typename regina::graph::DualEdge<dim> value_type;
-        typedef typename regina::graph::DualEdge<dim> const* pointer;
-        typedef typename regina::graph::DualEdge<dim> reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-
-    template <int dim>
-    struct iterator_traits<
-            typename regina::graph::AdjacentDualVertexIterator<dim>> {
-        typedef int difference_type;
-        typedef regina::Simplex<dim>* value_type;
-        typedef regina::Simplex<dim>* const* pointer;
-        typedef regina::Simplex<dim>* reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-
-    template <int dim, bool out>
-    struct iterator_traits<
-            typename regina::graph::IncidentDualEdgeIterator<dim, out>> {
-        typedef int difference_type;
-        typedef typename regina::graph::DualEdge<dim> value_type;
-        typedef typename regina::graph::DualEdge<dim> const* pointer;
-        typedef typename regina::graph::DualEdge<dim> reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-} // namespace std
 
 namespace boost {
     template <int dim>

@@ -70,13 +70,27 @@ namespace graph {
      * which is similar to the standard C++ forward iterator except that
      * the \a reference type may be the same as \a value_type (and so,
      * in particular, the dereference operator may return by value).
-     * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam out indicates whether to iterate through arcs exiting or
      * entering the given crossing, as described above.
      */
     template <bool out>
     class IncidentArcIterator {
+        public:
+            typedef std::input_iterator_tag iterator_category;
+                /**< Declares this to be an input iterator type. */
+            typedef regina::StrandRef value_type;
+                /**< Indicates what type the iterator points to. */
+            typedef int difference_type;
+                /**< The type obtained by subtracting iterators. */
+            typedef regina::StrandRef const* pointer;
+                /**< A pointer to \a value_type. */
+            typedef regina::StrandRef reference;
+                /**< The type obtained when dereferencing iterators.
+                     Note that, for input iterators that are not forward
+                     iterators, this does not need to be an actual C++
+                     reference type. */
+
         private:
             Crossing* crossing_;
                 /**< The crossing whose incident arcs we are iterating
@@ -181,9 +195,23 @@ namespace graph {
      * which is similar to the standard C++ forward iterator except that
      * the \a reference type may be the same as \a value_type (and so,
      * in particular, the dereference operator may return by value).
-     * This header also specialises std::iterator_traits for this iterator type.
      */
     class AdjacentCrossingIterator {
+        public:
+            typedef std::input_iterator_tag iterator_category;
+                /**< Declares this to be an input iterator type. */
+            typedef regina::Crossing* value_type;
+                /**< Indicates what type the iterator points to. */
+            typedef int difference_type;
+                /**< The type obtained by subtracting iterators. */
+            typedef regina::Crossing* const* pointer;
+                /**< A pointer to \a value_type. */
+            typedef regina::Crossing* reference;
+                /**< The type obtained when dereferencing iterators.
+                     Note that, for input iterators that are not forward
+                     iterators, this does not need to be an actual C++
+                     reference type. */
+
         private:
             Crossing* crossing_;
                 /**< The crossing whose adacent crossings we are iterating
@@ -515,26 +543,6 @@ namespace graph {
     size_t get(boost::vertex_index_t, const Link&, Crossing* v);
 
 } // namespace regina
-
-namespace std {
-    template <>
-    struct iterator_traits<regina::graph::AdjacentCrossingIterator> {
-        typedef int difference_type;
-        typedef regina::Crossing* value_type;
-        typedef regina::Crossing* const* pointer;
-        typedef regina::Crossing* reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-
-    template <bool out>
-    struct iterator_traits<regina::graph::IncidentArcIterator<out>> {
-        typedef int difference_type;
-        typedef typename regina::StrandRef value_type;
-        typedef typename regina::StrandRef const* pointer;
-        typedef typename regina::StrandRef reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-} // namespace std
 
 namespace boost {
     template <>

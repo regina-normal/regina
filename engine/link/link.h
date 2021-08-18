@@ -4216,11 +4216,24 @@ void swap(Link& lhs, Link& rhs);
  * which is similar to the standard C++ forward iterator except that
  * the \a reference type may be the same as \a value_type (and so,
  * in particular, the dereference operator may return by value).
- * This header also specialises std::iterator_traits for this iterator type.
  *
  * \ifacespython Not present.
  */
 class CrossingIterator {
+    public:
+        typedef std::input_iterator_tag iterator_category;
+            /**< Declares this to be an input iterator type. */
+        typedef regina::Crossing* value_type;
+            /**< Indicates what type the iterator points to. */
+        typedef ptrdiff_t difference_type;
+            /**< The type obtained by subtracting iterators. */
+        typedef regina::Crossing* const* pointer;
+            /**< A pointer to \a value_type. */
+        typedef regina::Crossing* reference;
+            /**< The type obtained when dereferencing iterators.
+                 Note that, for input iterators that are not forward iterators,
+                 this does not need to be an actual C++ reference type. */
+
     private:
         const Link* link_;
             /**< The underlying link. */
@@ -4316,11 +4329,24 @@ class CrossingIterator {
  * which is similar to the standard C++ forward iterator except that
  * the \a reference type may be the same as \a value_type (and so,
  * in particular, the dereference operator may return by value).
- * This header also specialises std::iterator_traits for this iterator type.
  *
  * \ifacespython Not present.
  */
 class ArcIterator {
+    public:
+        typedef std::input_iterator_tag iterator_category;
+            /**< Declares this to be an input iterator type. */
+        typedef regina::StrandRef value_type;
+            /**< Indicates what type the iterator points to. */
+        typedef ptrdiff_t difference_type;
+            /**< The type obtained by subtracting iterators. */
+        typedef regina::StrandRef const* pointer;
+            /**< A pointer to \a value_type. */
+        typedef regina::StrandRef reference;
+            /**< The type obtained when dereferencing iterators.
+                 Note that, for input iterators that are not forward iterators,
+                 this does not need to be an actual C++ reference type. */
+
     private:
         const Link* link_;
             /**< The underlying link. */
@@ -4793,26 +4819,6 @@ inline bool ArcIterator::operator != (const ArcIterator& rhs) const {
 }
 
 } // namespace regina
-
-namespace std {
-    template <>
-    struct iterator_traits<regina::CrossingIterator> {
-        typedef int difference_type;
-        typedef regina::Crossing* value_type;
-        typedef regina::Crossing* const* pointer;
-        typedef regina::Crossing* const& reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-
-    template <>
-    struct iterator_traits<regina::ArcIterator> {
-        typedef int difference_type;
-        typedef typename regina::StrandRef value_type;
-        typedef typename regina::StrandRef const* pointer;
-        typedef typename regina::StrandRef reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-} // namespace std
 
 #include "link/data-impl.h"
 #include "link/dt-impl.h"
