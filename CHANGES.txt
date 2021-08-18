@@ -568,6 +568,9 @@ Version 6.1  [ TODO ]
         Class SFSpace:
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
+        Class ShortArray:
+            - New class that is essentially a variable-but-bounded sized
+              std::array.
         Class SigCensus:
             - New typedef SigIsoList to replace the old global SigIsoList.
             - The old global formSigCensus() is now a static member function

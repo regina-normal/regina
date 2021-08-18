@@ -39,6 +39,7 @@ if (${REGINA_INSTALL_DEV})
     safepointeebase.h
     safeptr.h
     sequence.h
+    shortarray.h
     sigutils.h
     stringutils.h
     stringutils-impl.h
