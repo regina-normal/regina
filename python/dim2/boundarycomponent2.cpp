@@ -42,6 +42,7 @@ void addBoundaryComponent2(pybind11::module_& m) {
     auto c = pybind11::class_<BoundaryComponent<2>>(m, "BoundaryComponent2")
         .def("index", &BoundaryComponent<2>::index)
         .def("size", &BoundaryComponent<2>::size)
+        .def("countRidges", &BoundaryComponent<2>::countRidges)
         .def("countFaces",
             &regina::python::countFaces<BoundaryComponent<2>, 2>)
         .def("countEdges", &BoundaryComponent<2>::countEdges)

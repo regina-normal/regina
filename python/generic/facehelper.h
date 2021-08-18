@@ -238,11 +238,11 @@ struct FaceHelper<T, dim, -1> {
 
 /**
  * Throws an exception.  The error message will state that the argument
- * for the face dimension (which should be the first argument of the
+ * for the face dimension (which should be the first argument of the original
  * function, corresponding to the C++ template argument) must be in the
- * range 0, ..., <i>dim</i>-1.
+ * range \a minDim, ..., \a maxDim.
  */
-void invalidFaceDimension(const char* functionName, int dim);
+void invalidFaceDimension(const char* functionName, int minDim, int maxDim);
 
 /**
  * The Python binding for the C++ template member function
@@ -252,7 +252,7 @@ void invalidFaceDimension(const char* functionName, int dim);
 template <class T, int dim>
 size_t countFaces(const T& t, int subdimArg) {
     if (subdimArg < 0 || subdimArg >= dim)
-        invalidFaceDimension("countFaces", dim);
+        invalidFaceDimension("countFaces", 0, dim - 1);
     return FaceHelper<T, dim, dim - 1>::countFacesFrom(t, subdimArg);
 }
 
@@ -265,7 +265,7 @@ template <class T, int dim, typename Index,
         pybind11::return_value_policy policy>
 pybind11::object face(const T& t, int subdimArg, Index f) {
     if (subdimArg < 0 || subdimArg >= dim)
-        invalidFaceDimension("face", dim);
+        invalidFaceDimension("face", 0, dim - 1);
     return FaceHelper<T, dim, dim - 1>::template faceFrom<Index, policy>(
         t, subdimArg, f);
 }
@@ -278,7 +278,7 @@ pybind11::object face(const T& t, int subdimArg, Index f) {
 template <class T, int dim, pybind11::return_value_policy policy>
 pybind11::object faces(const T& t, int subdimArg) {
     if (subdimArg < 0 || subdimArg >= dim)
-        invalidFaceDimension("faces", dim);
+        invalidFaceDimension("faces", 0, dim - 1);
     return FaceHelper<T, dim, dim - 1>::template facesFrom<policy>(
         t, subdimArg);
 }
@@ -292,7 +292,7 @@ pybind11::object faces(const T& t, int subdimArg) {
 template <class T, int dim, int permSize = dim + 1>
 Perm<permSize> faceMapping(const T& t, int subdimArg, int f) {
     if (subdimArg < 0 || subdimArg >= dim)
-        invalidFaceDimension("faceMapping", dim);
+        invalidFaceDimension("faceMapping", 0, dim - 1);
     return FaceHelper<T, dim, dim - 1>::template faceMappingFrom<permSize>(
         t, subdimArg, f);
 }

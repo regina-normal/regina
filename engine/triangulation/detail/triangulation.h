@@ -216,8 +216,8 @@ class TriangulationBase :
 
         decltype(seqToFaces(subdimensions())) faces_;
             /**< A tuple of vectors holding all faces of this triangulation.
-                 Specifically, std::get<k>(faces)[i] is a pointer to the
-                 ith k-face of the triangulatino. */
+                 Specifically, std::get<k>(faces_)[i] is a pointer to the
+                 ith k-face of the triangulation. */
 
         /**
          * A compile-time constant function that returns the facial dimension
@@ -2119,7 +2119,7 @@ class TriangulationBase :
                 TopologyLock& operator = (const TopologyLock&) = delete;
         };
 
-    template <int, int...> friend class BoundaryComponentFaceStorage;
+    template <int> friend class BoundaryComponentBase;
     friend class regina::XMLTriangulationReaderBase<dim>;
 };
 

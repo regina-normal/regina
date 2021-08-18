@@ -125,7 +125,7 @@ class SimplexBase :
 
         decltype(seqToFaces(subdimensions())) faces_;
             /**< A tuple of arrays of faces of this simplex.
-                 Specifically, std::get<k>(faces)[i] is a pointer to the
+                 Specifically, std::get<k>(faces_)[i] is a pointer to the
                  ith k-face of this simplex. */
 
         decltype(seqToMappings(subdimensions())) mappings_;

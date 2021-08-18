@@ -36,10 +36,13 @@
 
 namespace regina::python {
 
-void invalidFaceDimension(const char* functionName, int dim) {
+void invalidFaceDimension(const char* functionName, int minDim, int maxDim) {
     std::ostringstream s;
-    s << functionName << "() requires a face dimension in the range 0.."
-        << (dim - 1);
+    if (minDim == maxDim)
+        s << functionName << "() can only work with face dimension " << minDim;
+    else
+        s << functionName << "() requires a face dimension in the range "
+            << minDim << ".." << maxDim;
     throw std::invalid_argument(s.str());
 }
 

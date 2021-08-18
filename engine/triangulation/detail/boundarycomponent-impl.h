@@ -43,6 +43,8 @@
  *  By keeping their implementations safely out of the main headers, we avoid
  *  having Triangulation<dim> recursively instantiate \e all triangulation
  *  classes Triangulation<dim-1>, Triangulation<dim-2>, ..., Triangulation<2>.
+ *  This quarantining also helps us to keep the helper class ReorderIterator
+ *  out of the main API.
  */
 
 #ifndef __REGINA_BOUNDARYCOMPONENT_IMPL_H_DETAIL
@@ -54,6 +56,59 @@
 
 namespace regina::detail {
 
+namespace {
+    /**
+     * A helper iterator class for
+     * BoundaryComponentBase::reorderAndRelabelFaces().
+     *
+     * An input iterator that runs through the <i>subdim</i>-faces of
+     * a boundary component in order and (when dereferenced) converts
+     * them to the corresponding faces from some other triangulation \a tri.
+     *
+     * The iterator relies on an array \a map, where for each face \a f
+     * of the boundary component, <tt>map[f->index()]</tt> is the
+     * corresponding face of \a tri.  Note that <tt>f->index()</tt> is the
+     * index of \a f in the underlying <i>dim</i>-dimensional triangulation,
+     * \e not the index of \a f in the boundary component's facet list.
+     */
+    template <int dim, int subdim>
+    class ReorderIterator {
+        private:
+            typedef typename std::vector<Face<dim, subdim>*>::const_iterator
+                InternalIterator;
+            InternalIterator it_;
+            Face<dim - 1, subdim>** map_;
+
+        public:
+            ReorderIterator() : it_(), map_(nullptr) {
+            }
+            ReorderIterator(InternalIterator it,
+                    Face<dim - 1, subdim>** map) : it_(it), map_(map) {
+            }
+            ReorderIterator(const ReorderIterator&) = default;
+            ReorderIterator& operator = (const ReorderIterator&) = default;
+
+            bool operator == (const ReorderIterator& rhs) const {
+                return it_ == rhs.it_;
+            }
+            bool operator != (const ReorderIterator& rhs) const {
+                return it_ != rhs.it_;
+            }
+            ReorderIterator& operator ++() {
+                ++it_;
+                return *this;
+            }
+            ReorderIterator operator ++(int) {
+                ReorderIterator prev(*this);
+                ++it_;
+                return prev;
+            }
+            Face<dim - 1, subdim>* operator * () const {
+                return map_[(*it_)->index()];
+            }
+    };
+}
+
 template <int dim>
 BoundaryComponentBase<dim>::~BoundaryComponentBase() {
     if constexpr (canBuild)
@@ -63,7 +118,7 @@ BoundaryComponentBase<dim>::~BoundaryComponentBase() {
 template <int dim>
 Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
     // From the precondition, there is a positive number of (dim-1)-faces.
-    const auto& allFacets = this->facets();
+    const auto& allFacets = std::get<tupleIndex(dim-1)>(faces_);
 
     // Build a map from ((dim-1)-face index in underlying triangulation)
     // to ((dim-1)-face in boundary component).
@@ -126,7 +181,7 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
 
     delete[] bdrySimplex;
 
-    if constexpr (BoundaryComponent<dim>::allFaces) {
+    if constexpr (allFaces) {
         /**
          * We are storing all faces of boundary components, not just the
          * (dim-1)-dimensional facets.
@@ -154,10 +209,71 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
             "There is a problem with relabelling/reordering faces in "
             "buildRealBoundary(); see the code comments for details.");
         ans->countComponents(); // ensures that the skeleton is calculated
-        this->reorderAndRelabelFaces(ans);
+
+        std::apply([this, ans](auto&&... kFaces){
+            (reorderAndRelabelFaces(ans, kFaces), ...);
+        }, faces_);
     }
 
     return ans;
+}
+
+template <int dim>
+template <int subdim>
+void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
+        Triangulation<dim - 1>* tri,
+        const std::vector<Face<dim, subdim>*>& reference) const {
+    if constexpr (subdim == dim - 1) {
+        // The (dim-1) faces are already in perfect correspondence.
+        return;
+    } else {
+        if (reference.empty())
+            return; // Should never happen.
+
+        // Check for pinched faces: if these are present then
+        // the situation is hopeless, since such faces are
+        // effectively duplicated when we triangulate the boundary,
+        // and so the numbers of faces do not match.
+        if (reference.size() != tri->template countFaces<subdim>())
+            return;
+
+        // Build a map from (subdim-face indices in the d-dim triangulation
+        // that owns this boundary component) to (subdim-faces in tri).
+        //
+        // This is a partial function: it is only defined for indices
+        // of *boundary* subdim-faces in this d-dim triang.
+        // We leave the other values of the map uninitialised.
+        Face<dim - 1, subdim>** map = new Face<dim - 1, subdim>*[
+            reference.front()->triangulation().template countFaces<subdim>()];
+
+        for (Face<dim - 1, subdim>* f : tri->template faces<subdim>()) {
+            const auto& emb = f->front();
+            Face<dim, dim - 1>* outer = facet(emb.simplex()->index());
+            map[outer->template face<subdim>(emb.face())->index()] = f;
+
+            // While we have the two corresponding faces in front of us,
+            // relabel the vertices of f now.
+            //
+            // The following two permutations should be made equal:
+            //
+            // - emb.simplex()->faceMapping<subdim>(emb.face())
+            // - outer->faceMapping<subdim>(emb.face())
+            //
+            Perm<dim> adjust =
+                emb.simplex()->template faceMapping<subdim>(
+                    emb.face()).inverse() *
+                Perm<dim>::contract(
+                    outer->template faceMapping<subdim>(emb.face()));
+            adjust.clear(subdim + 1);
+            tri->relabelFace(f, adjust);
+        }
+
+        tri->template reorderFaces<subdim>(
+            ReorderIterator<dim, subdim>(reference.begin(), map),
+            ReorderIterator<dim, subdim>(reference.end(), map));
+
+        delete[] map;
+    }
 }
 
 } // namespace regina::detail

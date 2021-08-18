@@ -74,11 +74,15 @@ Version 6.1  [ TODO ]
             - Routine build() now behaves correctly in the presence of
               pinched faces (which only appear in invalid triangulations).
             - Simplified the class hierarchy; BoundaryComponentFaceInterface,
-              BoundaryComponentStorage, WeakFaceList and WeakFaceListSuite
-              are all gone.
+              BoundaryComponentStorage, BoundaryComponentFaceStorage,
+              WeakFaceList and WeakFaceListSuite are all gone.
             - New compile-time constant dimension.
             - Dimension 3 is no longer specialised: all dimensions now share
               the same generic code.
+            - Higher dimension (dim >= 5) can now access: isReal(), isIdeal(),
+              isInvalidVertex() (which always return true, false, false
+              respectively); face<dim-1>(), faces<dim-1>(), countFaces<dim-1>();
+              and countFaces<dim-2>().
         Class BoundaryComponent<4>:
             - All of the changes listed for BoundaryComponent<dim> above.
             - Added eulerChar().
