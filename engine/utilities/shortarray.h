@@ -88,6 +88,18 @@ class ShortArray {
          */
         typedef T value_type;
         /**
+         * The type used for indexing into this array.
+         */
+        typedef size_t size_type;
+        /**
+         * A non-const reference to an array element.
+         */
+        typedef T& reference;
+        /**
+         * A const reference to an array element.
+         */
+        typedef T const& const_reference;
+        /**
          * An iterator type that provides non-const access to the array
          * elements.
          */
