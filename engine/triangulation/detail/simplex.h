@@ -70,6 +70,11 @@ template <int> class TriangulationBase;
  * See the Simplex template class notes for further information, including
  * details of how the vertices and facets of each simplex are numbered.
  *
+ * Neither this class nor the "end user" class Simplex<dim> support
+ * value semantics: they cannot be copied, swapped, or manually constructed.
+ * Their memory is managed by the Triangulation class, and their locations
+ * in memory define them.  See Simplex<dim> for further details.
+ *
  * \ifacespython This base class is not present, but the "end user" class
  * Simplex<dim> is.
  *

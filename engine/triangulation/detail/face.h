@@ -256,6 +256,11 @@ struct FaceEmbeddingsList<dim, 1> {
  *
  * See the Face template class notes for further information.
  *
+ * Neither this class nor the "end user" class Face<dim> support
+ * value semantics: they cannot be copied, swapped, or manually constructed.
+ * Their memory is managed by the Triangulation class, and their locations
+ * in memory define them.  See Face<dim> for further details.
+ *
  * \ifacespython This base class is not present, but the "end user" class
  * Face<dim, subdim> is.
  *

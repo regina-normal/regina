@@ -113,8 +113,6 @@ enum Framing {
  *
  * A "null reference" is one whose crossing is the null pointer.
  *
- * These references are small enough to pass around by value.
- *
  * This class can also be used to refer to an \e arc of a link; that is,
  * a section of the link that runs from one crossing to the next.
  * When used in this way:
@@ -133,6 +131,9 @@ enum Framing {
  * - The increment and decrement operators, as well as next() and prev(),
  *   behave as expected: they follow the link forward and backward
  *   respectively along its orientation.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  */
 class StrandRef {
     private:
@@ -417,6 +418,12 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  * added or removed - if you wish to track a particular crossing through
  * such operations then you should use a pointer to the relevant Crossing
  * object instead.
+ *
+ * Crossings do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Link to which they belong.
  */
 class Crossing : public MarkedElement, public Output<Crossing> {
     private:

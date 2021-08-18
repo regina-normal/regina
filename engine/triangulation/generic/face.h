@@ -73,6 +73,9 @@ namespace regina {
  * corresponding triangulation headers (e.g., triangulation/dim2.h for
  * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \ifacespython Python does not support templates.  Instead this class
  * can be used by appending dimensions \a dim and \a subdim as suffices
  * (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).

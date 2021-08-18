@@ -69,6 +69,11 @@ template <int> class TriangulationBase;
  *
  * See the BoundaryComponent class notes for further information.
  *
+ * Neither this class nor the "end user" class BoundaryComponent<dim> support
+ * value semantics: they cannot be copied, swapped, or manually constructed.
+ * Their memory is managed by the Triangulation class, and their locations
+ * in memory define them.  See BoundaryComponent<dim> for further details.
+ *
  * \ifacespython This base class is not present, but the "end user"
  * class BoundaryComponent<dim> is.
  *
