@@ -834,7 +834,7 @@ void Tri3CompositionUI::findPillowSpheres() {
         f1 = tri->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
             f2 = tri->triangle(j);
-            pillow = regina::PillowTwoSphere::formsPillowTwoSphere(f1, f2);
+            pillow = regina::PillowTwoSphere::recognise(f1, f2);
             if (pillow) {
                 id = addComponentSection(tr("Pillow 2-sphere"));
 
@@ -947,7 +947,7 @@ void Tri3CompositionUI::findSnappedSpheres() {
         t1 = tri->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = tri->tetrahedron(j);
-            sphere = regina::SnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
+            sphere = regina::SnappedTwoSphere::recognise(t1, t2);
             if (sphere) {
                 id = addComponentSection(tr("Snapped 2-sphere"));
 

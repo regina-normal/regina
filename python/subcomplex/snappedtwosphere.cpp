@@ -44,12 +44,18 @@ void addSnappedTwoSphere(pybind11::module_& m) {
         .def("clone", &SnappedTwoSphere::clone)
         .def("snappedBall", &SnappedTwoSphere::snappedBall,
             pybind11::return_value_policy::reference_internal)
-        .def_static("formsSnappedTwoSphere",
+        .def_static("recognise",
             overload_cast<regina::SnappedBall*, regina::SnappedBall*>(
-            &SnappedTwoSphere::formsSnappedTwoSphere))
-        .def_static("formsSnappedTwoSphere",
+            &SnappedTwoSphere::recognise))
+        .def_static("formsSnappedTwoSphere", // deprecated
+            overload_cast<regina::SnappedBall*, regina::SnappedBall*>(
+            &SnappedTwoSphere::recognise))
+        .def_static("recognise",
             overload_cast<regina::Tetrahedron<3>*, regina::Tetrahedron<3>*>(
-            &SnappedTwoSphere::formsSnappedTwoSphere))
+            &SnappedTwoSphere::recognise))
+        .def_static("formsSnappedTwoSphere", // deprecated
+            overload_cast<regina::Tetrahedron<3>*, regina::Tetrahedron<3>*>(
+            &SnappedTwoSphere::recognise))
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

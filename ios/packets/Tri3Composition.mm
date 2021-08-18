@@ -670,7 +670,7 @@
         f1 = self.packet->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
             f2 = self.packet->triangle(j);
-            pillow = regina::PillowTwoSphere::formsPillowTwoSphere(f1, f2);
+            pillow = regina::PillowTwoSphere::recognise(f1, f2);
             if (pillow) {
                 [details appendString:@"Pillow 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Triangles: %ld, %ld\n", i, j];
@@ -698,7 +698,7 @@
         t1 = self.packet->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = self.packet->tetrahedron(j);
-            sphere = regina::SnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
+            sphere = regina::SnappedTwoSphere::recognise(t1, t2);
             if (sphere) {
                 [details appendString:@"Snapped 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Tetrahedra: %ld, %ld\n", i, j];

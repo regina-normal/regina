@@ -43,8 +43,9 @@ void addPillowTwoSphere(pybind11::module_& m) {
         .def("triangle", &PillowTwoSphere::triangle,
             pybind11::return_value_policy::reference)
         .def("triangleMapping", &PillowTwoSphere::triangleMapping)
-        .def_static("formsPillowTwoSphere",
-            &PillowTwoSphere::formsPillowTwoSphere)
+        .def_static("recognise", &PillowTwoSphere::recognise)
+        .def_static("formsPillowTwoSphere", // deprecated
+            &PillowTwoSphere::recognise)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

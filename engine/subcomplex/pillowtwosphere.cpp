@@ -43,7 +43,7 @@ PillowTwoSphere* PillowTwoSphere::clone() const {
     return ans;
 }
 
-PillowTwoSphere* PillowTwoSphere::formsPillowTwoSphere(
+PillowTwoSphere* PillowTwoSphere::recognise(
         Triangle<3>* tri1, Triangle<3>* tri2) {
     if (tri1 == tri2 || tri1->isBoundary() || tri2->isBoundary())
         return 0;

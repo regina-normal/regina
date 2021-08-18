@@ -118,8 +118,17 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * pillow 2-sphere, or \c null if the given triangles do not
          * form a pillow 2-sphere.
          */
-        static PillowTwoSphere* formsPillowTwoSphere(Triangle<3>* tri1,
-            Triangle<3>* tri2);
+        static PillowTwoSphere* recognise(Triangle<3>* tri1, Triangle<3>* tri2);
+
+        /**
+         * A deprecated alias to recognise if two triangles together
+         * form a pillow 2-sphere.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static PillowTwoSphere* formsPillowTwoSphere(
+            Triangle<3>* tri1, Triangle<3>* tri2);
 
         /**
          * Writes a short text representation of this object to the
@@ -156,6 +165,11 @@ inline Perm<4> PillowTwoSphere::triangleMapping() const {
 }
 inline void PillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";
+}
+
+inline PillowTwoSphere* PillowTwoSphere::formsPillowTwoSphere(
+        Triangle<3>* tri1, Triangle<3>* tri2) {
+    return recognise(tri1, tri2);
 }
 
 } // namespace regina

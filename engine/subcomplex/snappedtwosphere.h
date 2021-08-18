@@ -107,8 +107,17 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * snapped 2-sphere, or \c null if the given tetrahedra do not
          * form a snapped 2-sphere.
          */
-        static SnappedTwoSphere* formsSnappedTwoSphere(Tetrahedron<3>* tet1,
+        static SnappedTwoSphere* recognise(Tetrahedron<3>* tet1,
             Tetrahedron<3>* tet2);
+        /**
+         * A deprecated alias to recognise if two tetrahedra together
+         * form a snapped 2-sphere.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static SnappedTwoSphere* formsSnappedTwoSphere(
+            Tetrahedron<3>* tet1, Tetrahedron<3>* tet2);
         /**
          * Determines if the two given snapped 3-balls together form a snapped
          * 2-sphere.
@@ -125,8 +134,18 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * snapped 2-sphere, or \c null if the given snapped 3-balls do not
          * form a snapped 2-sphere.
          */
-        static SnappedTwoSphere* formsSnappedTwoSphere(SnappedBall* ball1,
+        static SnappedTwoSphere* recognise(SnappedBall* ball1,
             SnappedBall* ball2);
+
+        /**
+         * A deprecated alias to recognise if two snapped 3-balls together
+         * form a snapped 2-sphere.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static SnappedTwoSphere* formsSnappedTwoSphere(
+            SnappedBall* ball1, SnappedBall* ball2);
 
         /**
          * Writes a short text representation of this object to the
@@ -163,6 +182,16 @@ inline const SnappedBall* SnappedTwoSphere::snappedBall(int index) const {
 }
 inline void SnappedTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Snapped 2-sphere";
+}
+
+inline SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
+        Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
+    return recognise(tet1, tet2);
+}
+
+inline SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
+        SnappedBall* ball1, SnappedBall* ball2) {
+    return recognise(ball1, ball2);
 }
 
 } // namespace regina

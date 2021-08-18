@@ -43,7 +43,7 @@ SnappedTwoSphere* SnappedTwoSphere::clone() const {
     return ans;
 }
 
-SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
+SnappedTwoSphere* SnappedTwoSphere::recognise(
         Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
     SnappedBall* ball[2];
     if (! (ball[0] = SnappedBall::formsSnappedBall(tet1)))
@@ -66,7 +66,7 @@ SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
     return ans;
 }
 
-SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
+SnappedTwoSphere* SnappedTwoSphere::recognise(
         SnappedBall* ball1, SnappedBall* ball2) {
     if (ball1->tetrahedron()->edge(ball1->equatorEdge()) !=
             ball2->tetrahedron()->edge(ball2->equatorEdge()))
