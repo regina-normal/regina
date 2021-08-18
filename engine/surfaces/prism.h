@@ -60,8 +60,10 @@ class NormalSurface;
  * additional product regions).  Each triangular prism contains two of
  * the vertices and one of the edges of the original tetrahedron.
  *
- * \pre This class should only be used with \a embedded
- * normal surfaces.
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \pre This class should only be used with \a embedded normal surfaces.
  */
 struct PrismSpec {
     size_t tetIndex;

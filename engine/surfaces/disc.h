@@ -70,14 +70,16 @@ class DiscSpecIterator;
  * Note that, unlike DiscType in which the meaning of DiscType::type is
  * flexible, the meaning of DiscSpec::type is fixed as described above.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \warning This class converts the indices of normal discs of a
  * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
  * in a particular tetrahedron can be represented by a long integer.
- * \pre This class should only be used with \a embedded
- * normal surfaces.
+ * \pre This class should only be used with \a embedded normal surfaces.
  */
 struct DiscSpec {
     size_t tetIndex;
