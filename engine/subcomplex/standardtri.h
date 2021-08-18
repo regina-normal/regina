@@ -256,10 +256,6 @@ class StandardTriangulation : public Output<StandardTriangulation> {
         static StandardTriangulation* isStandardTriangulation(
             Triangulation<3>* tri);
 
-        // Mark this class as non-assignable.
-        StandardTriangulation& operator = (const StandardTriangulation&) =
-            delete;
-
     protected:
         /**
          * Default constructor.  This is needed for subclasses to implicitly
@@ -271,6 +267,13 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * implicitly call from their own default copy constructors.
          */
         StandardTriangulation(const StandardTriangulation&) = default;
+        /**
+         * Do-nothing assignment operator.  This is needed for subclasses to
+         * implicitly call from their own default assignment operators.
+         */
+        StandardTriangulation& operator = (const StandardTriangulation&) =
+            default;
+
 };
 
 /*@}*/
