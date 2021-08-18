@@ -1852,6 +1852,11 @@ class SubtreeIterator {
  *     ...
  * \endcode
  *
+ * These are lightweight objects, small enough to pass by value and swap with
+ * std::swap(), with no need for any specialised move operations or swap
+ * functions.  Copies of a PacketChildren will iterate over the children
+ * of the same underlying packet.
+ *
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
@@ -1929,6 +1934,11 @@ class PacketChildren {
  *     ...
  * \endcode
  *
+ * These are lightweight objects, small enough to pass by value and swap with
+ * std::swap(), with no need for any specialised move operations or swap
+ * functions.  Copies of a PacketDescendants will iterate over the descendants
+ * of the same underlying packet.
+ *
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketDescendants and SubtreeIterator together implement the
  * Python iterable/iterator interface.  The class PacketDescendants has just
@@ -1997,7 +2007,10 @@ class PacketDescendants {
  * All functions in this class mirror the corresponding Packet functions,
  * and are safe to call during PacketListener::packetToBeDestroyed().
  *
- * This is a lightweight class, and objects may be safely passed by value.
+ * These are lightweight objects, small enough to pass by value and swap with
+ * std::swap(), with no need for any specialised move operations or swap
+ * functions.  Copies of a PacketShell will give access to the remains
+ * of the same underlying packet.
  */
 class PacketShell {
     private:

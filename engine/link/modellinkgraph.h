@@ -70,7 +70,8 @@ class ModelLinkGraphNode;
  *
  * A "null arc" is one whose node is the null pointer.
  *
- * These objects are small enough to pass around by value.
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  */
 class ModelLinkGraphArc {
     private:
@@ -351,6 +352,12 @@ std::ostream& operator << (std::ostream& out, const ModelLinkGraphArc& a);
  * Note that nodes may be reindexed when other nodes are added or removed -
  * if you wish to track a particular node through such operations then you
  * should use a pointer to the relevant ModelLinkGraphNode instead.
+ *
+ * Graph nodes do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the ModelLinkGraph to which they belong.
  */
 class ModelLinkGraphNode : public MarkedElement,
         public Output<ModelLinkGraphNode> {
