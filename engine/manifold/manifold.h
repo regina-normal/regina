@@ -59,19 +59,21 @@ class AbelianGroup;
  * triangulated.  This is an abstract base class: its subclasses correspond
  * to different families of 3-manifolds.
  *
- * Each subclass must:
+ * Each subclass:
  *
- * - override all pure virtual functions (of course);
+ * - must override all pure virtual functions (of course);
  *
- * - provide value semantics (including at least a copy constructor and
+ * - may optionally override construct(), homology() and/or writeStructure(),
+ *   if they are able to provide this functionality;
+ *
+ * - must \e not override writeTextShort() or writeTextLong(), since routines
+ *   are not virtual, and are provided directly by the Manifold base class;
+ *
+ * - must provide value semantics (including at least a copy constructor and
  *   assignment operator);
  *
- * - provide member and global swap functions, for consistency across all
+ * - must provide member and global swap functions, for consistency across all
  *   Manifold subclasses.
- *
- * Subclasses must \e not override writeTextShort() or writeTextLong(), since
- * these routines are not virtual, and are provided directly by the Manifold
- * base class.
  */
 class Manifold : public Output<Manifold> {
     public:

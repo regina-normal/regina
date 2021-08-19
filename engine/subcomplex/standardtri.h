@@ -61,19 +61,34 @@ class Manifold;
 
 /**
  * Describes a triangulation or subcomplex of a triangulation whose structure
- * is well-understood.  A StandardTriangulation is generally connected
- * with a real triangulation, i.e., a Triangulation<3> object, which it
- * describes some portion of.
+ * is well-understood.  This is an abstract base class: its subclasses
+ * correspond to different combinatorial constructions (typically
+ * parameterised families of triangulations or subcomplexes).
  *
- * In general StandardTriangulation objects cannot be constructed
- * directly, but are instead created through static identification
- * routines such as StandardTriangulation::recognise(Triangulation<3>*).
+ * A StandardTriangulation is generally identified with a concrete
+ * triangulation, i.e., a Triangulation<3> object, which it describes some
+ * portion of (or possibly all of).
  *
- * Subclasses corresponding to different families of triangulations may,
- * but not need to, override the output routines writeTextShort() and
- * writeTextLong().  This class offers sensible default implementations
- * of both routines, which call the pure virtual function writeName()
- * (which every subclass must override).
+ * In general StandardTriangulation objects cannot be constructed directly,
+ * but are instead created through static identification routines such as
+ * StandardTriangulation::recognise(Triangulation<3>*).
+ *
+ * Each subclass of StandardTriangulation:
+ *
+ * - must override all pure virtual functions (of course);
+ *
+ * - may optionally override manifold() and/or homology(), if they are
+ *   able to provide this functionality;
+ *
+ * - may optionally override writeTextShort() and writeTextLong(), though this
+ *   class provides sensible default implementations which use writeName()
+ *   (which subclasses always override because writeName() is pure virtual);
+ *
+ * - provide value semantics (including at least a copy constructor and
+ *   assignment operator);
+ *
+ * - provide member and global swap functions, for consistency across all
+ *   StandardTriangulation subclasses.
  */
 class StandardTriangulation : public Output<StandardTriangulation> {
     public:
@@ -273,18 +288,18 @@ class StandardTriangulation : public Output<StandardTriangulation> {
 
     protected:
         /**
-         * Default constructor.  This is needed for subclasses to implicitly
+         * Default constructor.  This is here for subclasses to implicitly
          * call from their own constructors.
          */
         StandardTriangulation() = default;
         /**
-         * Do-nothing copy constructor.  This is needed for subclasses to
-         * implicitly call from their own default copy constructors.
+         * Do-nothing copy constructor.  This is here for subclasses to
+         * implicitly call from their own copy constructors.
          */
         StandardTriangulation(const StandardTriangulation&) = default;
         /**
-         * Do-nothing assignment operator.  This is needed for subclasses to
-         * implicitly call from their own default assignment operators.
+         * Do-nothing assignment operator.  This is here for subclasses to
+         * implicitly call from their own assignment operators.
          */
         StandardTriangulation& operator = (const StandardTriangulation&) =
             default;
