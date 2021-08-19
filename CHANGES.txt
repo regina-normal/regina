@@ -286,6 +286,7 @@ Version 6.1  [ TODO ]
               return a std::optional instead of a pointer that could be null.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
         Class Laurent, Laurent2:
             - Added member and global swap() functions.
@@ -623,6 +624,7 @@ Version 6.1  [ TODO ]
               return a std::optional instead of a pointer that could be null.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - The base class SnapPeaException is removed; instead the
@@ -649,6 +651,7 @@ Version 6.1  [ TODO ]
               return a std::optional instead of a pointer that could be null.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
         Class SnappedTwoSphere:
             - Routine formsSnappedTwoSphere() is now called recognise(), and
@@ -763,6 +766,7 @@ Version 6.1  [ TODO ]
               return a std::optional instead of a pointer that could be null.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
         Class Vector:
             - New operator !=.

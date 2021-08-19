@@ -58,10 +58,12 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  *
- * These objects are small enough to pass by value and swap with std::swap(),
- * with no need for any specialised move operations or swap functions.
- * However, the only way to create them (aside from copying or moving)
- * is via the static member function recognise().
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
  */
 class SnappedBall : public StandardTriangulation {
     private:
@@ -91,6 +93,14 @@ class SnappedBall : public StandardTriangulation {
          * @return a newly created clone.
          */
         [[deprecated]] SnappedBall* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(SnappedBall& other) noexcept;
 
         /**
          * Returns the tetrahedron that forms this snapped ball.
@@ -178,6 +188,17 @@ class SnappedBall : public StandardTriangulation {
         SnappedBall(Tetrahedron<3>* tet, int equator);
 };
 
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls SnappedBall::swap(); it is provided
+ * so that SnappedBall meets the C++ Swappable requirements.
+ *
+ * @param a the first alternative whose contents should be swapped.
+ * @param b the second alternative whose contents should be swapped.
+ */
+void swap(SnappedBall& a, SnappedBall& b) noexcept;
+
 /*@}*/
 
 // Inline functions for SnappedBall
@@ -188,6 +209,11 @@ inline SnappedBall::SnappedBall(Tetrahedron<3>* tet, int equator) :
 
 inline SnappedBall* SnappedBall::clone() const {
     return new SnappedBall(*this);
+}
+
+inline void SnappedBall::swap(SnappedBall& other) noexcept {
+    std::swap(tet_, other.tet_);
+    std::swap(equator_, other.equator_);
 }
 
 inline Tetrahedron<3>* SnappedBall::tetrahedron() const {
@@ -222,6 +248,10 @@ inline void SnappedBall::writeTextLong(std::ostream& out) const {
 inline std::optional<SnappedBall> SnappedBall::formsSnappedBall(
         Tetrahedron<3>* tet) {
     return recognise(tet);
+}
+
+inline void swap(SnappedBall& a, SnappedBall& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

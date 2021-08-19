@@ -80,10 +80,12 @@ namespace regina {
  * All of the optional StandardTriangulation routines are implemented
  * for this class.
  *
- * These objects are small enough to pass by value and swap with std::swap(),
- * with no need for any specialised move operations or swap functions.
- * However, the only way to create them (aside from copying or moving)
- * is via the static member function recognise().
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
  */
 class SnapPeaCensusTri: public StandardTriangulation {
     public:
@@ -139,6 +141,14 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * @return a newly created clone.
          */
         [[deprecated]] SnapPeaCensusTri* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(SnapPeaCensusTri& other) noexcept;
 
         /**
          * Returns the section of the SnapPea census to which this
@@ -221,6 +231,17 @@ class SnapPeaCensusTri: public StandardTriangulation {
     friend class SnapPeaCensusManifold;
 };
 
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls SnapPeaCensusTri::swap(); it is provided
+ * so that SnapPeaCensusTri meets the C++ Swappable requirements.
+ *
+ * @param a the first alternative whose contents should be swapped.
+ * @param b the second alternative whose contents should be swapped.
+ */
+void swap(SnapPeaCensusTri& a, SnapPeaCensusTri& b) noexcept;
+
 /*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
@@ -234,6 +255,11 @@ inline SnapPeaCensusTri::SnapPeaCensusTri(char section, unsigned long index) :
 
 inline SnapPeaCensusTri* SnapPeaCensusTri::clone() const {
     return new SnapPeaCensusTri(section_, index_);
+}
+
+inline void SnapPeaCensusTri::swap(SnapPeaCensusTri& other) noexcept {
+    std::swap(section_, other.section_);
+    std::swap(index_, other.index_);
 }
 
 inline char SnapPeaCensusTri::section() const {
@@ -257,6 +283,10 @@ inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
 inline std::optional<SnapPeaCensusTri>
         SnapPeaCensusTri::isSmallSnapPeaCensusTri(const Component<3>* comp) {
     return recognise(comp);
+}
+
+inline void swap(SnapPeaCensusTri& a, SnapPeaCensusTri& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

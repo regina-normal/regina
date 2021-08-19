@@ -45,6 +45,7 @@ void addSnappedBall(pybind11::module_& m) {
         .def("clone", [](const SnappedBall& s) { // deprecated
             return SnappedBall(s);
         })
+        .def("swap", &SnappedBall::swap)
         .def("tetrahedron", &SnappedBall::tetrahedron,
             pybind11::return_value_policy::reference)
         .def("boundaryFace", &SnappedBall::boundaryFace)
@@ -54,5 +55,7 @@ void addSnappedBall(pybind11::module_& m) {
         .def_static("recognise", &SnappedBall::recognise)
         .def_static("formsSnappedBall", &SnappedBall::recognise) // deprecated
     ;
+
+    m.def("swap", (void(*)(SnappedBall&, SnappedBall&))(regina::swap));
 }
 

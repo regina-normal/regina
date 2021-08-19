@@ -44,6 +44,7 @@ void addTrivialTri(pybind11::module_& m) {
         .def("clone", [](const TrivialTri& s) { // deprecated
             return TrivialTri(s);
         })
+        .def("swap", &TrivialTri::swap)
         .def("type", &TrivialTri::type)
         .def_static("recognise", &TrivialTri::recognise)
         .def_static("isTrivialTriangulation", // deprecated
@@ -70,5 +71,7 @@ void addTrivialTri(pybind11::module_& m) {
             return TrivialTri::N3_2;
         })
     ;
+
+    m.def("swap", (void(*)(TrivialTri&, TrivialTri&))(regina::swap));
 }
 

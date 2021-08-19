@@ -43,11 +43,14 @@ void addL31Pillow(pybind11::module_& m) {
         .def("clone", [](const L31Pillow& s) { // deprecated
             return L31Pillow(s);
         })
+        .def("swap", &L31Pillow::swap)
         .def("tetrahedron", &L31Pillow::tetrahedron,
             pybind11::return_value_policy::reference)
         .def("interiorVertex", &L31Pillow::interiorVertex)
         .def_static("recognise", &L31Pillow::recognise)
         .def_static("isL31Pillow", &L31Pillow::recognise) // deprecated
     ;
+
+    m.def("swap", (void(*)(L31Pillow&, L31Pillow&))(regina::swap));
 }
 

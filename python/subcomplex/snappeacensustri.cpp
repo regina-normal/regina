@@ -45,6 +45,7 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
         .def("clone", [](const SnapPeaCensusTri& s) { // deprecated
             return SnapPeaCensusTri(s);
         })
+        .def("swap", &SnapPeaCensusTri::swap)
         .def("section", &SnapPeaCensusTri::section)
         .def("index", &SnapPeaCensusTri::index)
         .def_static("recognise", &SnapPeaCensusTri::recognise)
@@ -73,5 +74,8 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
     // we should override the compare-by-pointer test that we inherit from
     // StandardTriangulation.
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(SnapPeaCensusTri&, SnapPeaCensusTri&))(regina::swap));
 }
 

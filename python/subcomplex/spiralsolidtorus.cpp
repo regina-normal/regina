@@ -44,6 +44,7 @@ void addSpiralSolidTorus(pybind11::module_& m) {
         .def("clone", [](const SpiralSolidTorus& s) { // deprecated
             return SpiralSolidTorus(s);
         })
+        .def("swap", &SpiralSolidTorus::swap)
         .def("size", &SpiralSolidTorus::size)
         .def("tetrahedron", &SpiralSolidTorus::tetrahedron,
             pybind11::return_value_policy::reference)
@@ -56,5 +57,8 @@ void addSpiralSolidTorus(pybind11::module_& m) {
         .def_static("formsSpiralSolidTorus", // deprecated
             &SpiralSolidTorus::recognise)
     ;
+
+    m.def("swap",
+        (void(*)(SpiralSolidTorus&, SpiralSolidTorus&))(regina::swap));
 }
 

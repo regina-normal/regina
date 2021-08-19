@@ -62,10 +62,12 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  *
- * These objects are small enough to pass by value and swap with std::swap(),
- * with no need for any specialised move operations or swap functions.
- * However, the only way to create them (aside from copying or moving)
- * is via the static member function recognise().
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
  */
 class L31Pillow : public StandardTriangulation {
     private:
@@ -96,6 +98,14 @@ class L31Pillow : public StandardTriangulation {
          * @return a newly created clone.
          */
         [[deprecated]] L31Pillow* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(L31Pillow& other) noexcept;
 
         /**
          * Returns one of the two tetrahedra involved in this structure.
@@ -156,12 +166,30 @@ class L31Pillow : public StandardTriangulation {
         L31Pillow() = default;
 };
 
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls L31Pillow::swap(); it is provided
+ * so that L31Pillow meets the C++ Swappable requirements.
+ *
+ * @param a the first alternative whose contents should be swapped.
+ * @param b the second alternative whose contents should be swapped.
+ */
+void swap(L31Pillow& a, L31Pillow& b) noexcept;
+
 /*@}*/
 
 // Inline functions for L31Pillow
 
 inline L31Pillow* L31Pillow::clone() const {
     return new L31Pillow(*this);
+}
+
+inline void L31Pillow::swap(L31Pillow& other) noexcept {
+    std::swap(tet[0], other.tet[0]);
+    std::swap(tet[1], other.tet[1]);
+    std::swap(interior[0], other.interior[0]);
+    std::swap(interior[1], other.interior[1]);
 }
 
 inline Tetrahedron<3>* L31Pillow::tetrahedron(int whichTet) const {
@@ -183,6 +211,10 @@ inline void L31Pillow::writeTextLong(std::ostream& out) const {
 inline std::optional<L31Pillow> L31Pillow::isL31Pillow(
         const Component<3>* comp) {
     return recognise(comp);
+}
+
+inline void swap(L31Pillow& a, L31Pillow& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina
