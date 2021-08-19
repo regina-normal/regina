@@ -83,8 +83,13 @@ namespace regina {
  * layered chain containing only one tetrahedron will be considered as a
  * standalone tetrahedron that forms a 3-ball (and not a solid torus).
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.
  */
 class LayeredChain : public StandardTriangulation {
     private:
@@ -106,8 +111,7 @@ class LayeredChain : public StandardTriangulation {
          * may be extended using extendAbove(), extendBelow() or
          * extendMaximal().
          *
-         * @param tet the tetrahedron that will make up this layered
-         * chain.
+         * @param tet the tetrahedron that will make up this layered chain.
          * @param vertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the layered chain; this must be
          * in the same format as the permutation returned by
@@ -116,17 +120,24 @@ class LayeredChain : public StandardTriangulation {
         LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles);
 
         /**
-         * Creates a new layered chain that is a clone of the given
-         * structure.
-         *
-         * @param cloneMe the layered chain to clone.
+         * Creates a new copy of this structure.
          */
-        LayeredChain(const LayeredChain& cloneMe) = default;
+        LayeredChain(const LayeredChain&) = default;
 
         /**
-         * Destroys this layered chain.
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
          */
-        virtual ~LayeredChain();
+        LayeredChain& operator = (const LayeredChain&) = default;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(LayeredChain& other) noexcept;
 
         /**
          * Returns the bottom tetrahedron of this layered chain.
@@ -252,6 +263,17 @@ class LayeredChain : public StandardTriangulation {
         void writeTextLong(std::ostream& out) const override;
 };
 
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls LayeredChain::swap(); it is provided
+ * so that LayeredChain meets the C++ Swappable requirements.
+ *
+ * @param a the first alternative whose contents should be swapped.
+ * @param b the second alternative whose contents should be swapped.
+ */
+void swap(LayeredChain& a, LayeredChain& b) noexcept;
+
 /*@}*/
 
 // Inline functions for LayeredChain
@@ -260,7 +282,13 @@ inline LayeredChain::LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles) :
         bottom_(tet), top_(tet), index_(1), bottomVertexRoles_(vertexRoles),
         topVertexRoles_(vertexRoles) {
 }
-inline LayeredChain::~LayeredChain() {
+
+inline void LayeredChain::swap(LayeredChain& other) noexcept {
+    std::swap(bottom_, other.bottom_);
+    std::swap(top_, other.top_);
+    std::swap(index_, other.index_);
+    std::swap(bottomVertexRoles_, other.bottomVertexRoles_);
+    std::swap(topVertexRoles_, other.topVertexRoles_);
 }
 
 inline Tetrahedron<3>* LayeredChain::bottom() const {
@@ -288,6 +316,10 @@ inline std::ostream& LayeredChain::writeTeXName(std::ostream& out) const {
 }
 inline void LayeredChain::writeTextLong(std::ostream& out) const {
     out << "Layered chain of index " << index_;
+}
+
+inline void swap(LayeredChain& a, LayeredChain& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

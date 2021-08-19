@@ -71,8 +71,8 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         return std::unique_ptr<StandardTriangulation>(ans);
     if (auto ans = LayeredLoop::isLayeredLoop(comp))
         return std::unique_ptr<StandardTriangulation>(ans);
-    if (auto ans = LayeredChainPair::isLayeredChainPair(comp))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredChainPair::recognise(comp))
+        return std::make_unique<LayeredChainPair>(*ans);
     if (auto ans = AugTriSolidTorus::isAugTriSolidTorus(comp))
         return std::unique_ptr<StandardTriangulation>(ans);
     if (auto ans = PlugTriSolidTorus::isPlugTriSolidTorus(comp))

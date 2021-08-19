@@ -38,26 +38,17 @@
 
 namespace regina {
 
-LayeredChainPair* LayeredChainPair::clone() const {
-    LayeredChainPair* ans = new LayeredChainPair();
-    if (chain_[0])
-        ans->chain_[0] = new LayeredChain(*chain_[0]);
-    if (chain_[1])
-        ans->chain_[1] = new LayeredChain(*chain_[1]);
-    return ans;
-}
-
-LayeredChainPair* LayeredChainPair::isLayeredChainPair(
+std::optional<LayeredChainPair> LayeredChainPair::recognise(
         const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return 0;
+        return std::nullopt;
 
     unsigned long nTet = comp->size();
     if (nTet < 2)
-        return 0;
+        return std::nullopt;
     if (comp->countVertices() != 1)
-        return 0;
+        return std::nullopt;
 
     // We have at least two tetrahedra and precisely 1 vertex.
     // The component is closed and orientable (and connected, since it's
@@ -98,7 +89,8 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
                         longChain->bottomVertexRoles() ==
                         firstTopRoles * Perm<4>(3, 2, 1, 0)) {
                     // We've got a layered loop!
-                    LayeredChainPair* ans = new LayeredChainPair();
+                    delete first;
+
                     if (nTet == 2) {
                         // The new chain is already too long.
                         delete longChain;
@@ -109,16 +101,14 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
                     // Extend longChain to (n-1) tetrahedra.
                     while (longChain->index() + 1 < nTet)
                         longChain->extendBelow();
-                    ans->chain_[1] = longChain;
-                    ans->chain_[0] = new LayeredChain(
-                        firstBottom->adjacentTetrahedron(
-                            firstBottomRoles[0]),
-                        firstBottom->adjacentGluing(
-                            firstBottomRoles[0]) * firstBottomRoles *
-                            Perm<4>(0, 2, 1, 3));
-
-                    delete first;
-                    return ans;
+                    return LayeredChainPair(
+                        new LayeredChain(
+                            firstBottom->adjacentTetrahedron(
+                                firstBottomRoles[0]),
+                            firstBottom->adjacentGluing(
+                                firstBottomRoles[0]) * firstBottomRoles *
+                                Perm<4>(0, 2, 1, 3)),
+                        longChain);
                 }
 
             delete longChain;
@@ -167,15 +157,10 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
                     firstBottomRoles[1]) * firstBottomRoles *
                     Perm<4>(2, 0, 3, 1)) {
             // We found one!
-            LayeredChainPair* ans = new LayeredChainPair();
-            if (first->index() > second->index()) {
-                ans->chain_[0] = second;
-                ans->chain_[1] = first;
-            } else {
-                ans->chain_[0] = first;
-                ans->chain_[1] = second;
-            }
-            return ans;
+            if (first->index() > second->index())
+                return LayeredChainPair(second, first);
+            else
+                return LayeredChainPair(first, second);
         } else {
             delete first;
             delete second;
@@ -183,7 +168,7 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
     }
 
     // Nothing was found.  Sigh.
-    return 0;
+    return std::nullopt;
 }
 
 std::unique_ptr<Manifold> LayeredChainPair::manifold() const {

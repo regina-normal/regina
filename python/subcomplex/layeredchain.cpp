@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/layeredchain.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -42,6 +43,7 @@ void addLayeredChain(pybind11::module_& m) {
             (m, "LayeredChain")
         .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
         .def(pybind11::init<const LayeredChain&>())
+        .def("swap", &LayeredChain::swap)
         .def("bottom", &LayeredChain::bottom,
             pybind11::return_value_policy::reference)
         .def("top", &LayeredChain::top,
@@ -55,5 +57,7 @@ void addLayeredChain(pybind11::module_& m) {
         .def("reverse", &LayeredChain::reverse)
         .def("invert", &LayeredChain::invert)
     ;
+
+    m.def("swap", (void(*)(LayeredChain&, LayeredChain&))(regina::swap));
 }
 
