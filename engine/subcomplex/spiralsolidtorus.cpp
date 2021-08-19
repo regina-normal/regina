@@ -39,43 +39,47 @@
 
 namespace regina {
 
-SpiralSolidTorus* SpiralSolidTorus::clone() const {
-    SpiralSolidTorus* ans = new SpiralSolidTorus(nTet);
-    for (size_t i = 0; i < nTet; i++) {
-        ans->tet[i] = tet[i];
-        ans->vertexRoles_[i] = vertexRoles_[i];
+SpiralSolidTorus& SpiralSolidTorus::operator = (const SpiralSolidTorus& src) {
+    if (nTet_ != src.nTet_) {
+        delete[] tet_;
+        delete[] vertexRoles_;
+        nTet_ = src.nTet_;
+        tet_ = new Tetrahedron<3>*[nTet_];
+        vertexRoles_ = new Perm<4>[nTet_];
     }
-    return ans;
+    std::copy(src.tet_, src.tet_ + nTet_, tet_);
+    std::copy(src.vertexRoles_, src.vertexRoles_ + nTet_, vertexRoles_);
+    return *this;
 }
 
 void SpiralSolidTorus::reverse() {
-    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
-    Perm<4>* newRoles = new Perm<4>[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet_];
+    Perm<4>* newRoles = new Perm<4>[nTet_];
 
     Perm<4> switchPerm(3, 2, 1, 0);
-    for (size_t i = 0; i < nTet; i++) {
-        newTet[i] = tet[nTet - 1 - i];
-        newRoles[i] = vertexRoles_[nTet - 1 - i] * switchPerm;
+    for (size_t i = 0; i < nTet_; i++) {
+        newTet[i] = tet_[nTet_ - 1 - i];
+        newRoles[i] = vertexRoles_[nTet_ - 1 - i] * switchPerm;
     }
 
-    delete[] tet;
+    delete[] tet_;
     delete[] vertexRoles_;
-    tet = newTet;
+    tet_ = newTet;
     vertexRoles_ = newRoles;
 }
 
 void SpiralSolidTorus::cycle(size_t k) {
-    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
-    Perm<4>* newRoles = new Perm<4>[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet_];
+    Perm<4>* newRoles = new Perm<4>[nTet_];
 
-    for (size_t i = 0; i < nTet; i++) {
-        newTet[i] = tet[(i + k) % nTet];
-        newRoles[i] = vertexRoles_[(i + k) % nTet];
+    for (size_t i = 0; i < nTet_; i++) {
+        newTet[i] = tet_[(i + k) % nTet_];
+        newRoles[i] = vertexRoles_[(i + k) % nTet_];
     }
 
-    delete[] tet;
+    delete[] tet_;
     delete[] vertexRoles_;
-    tet = newTet;
+    tet_ = newTet;
     vertexRoles_ = newRoles;
 }
 
@@ -83,9 +87,9 @@ bool SpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     size_t i, index;
 
     size_t baseTet = 0;
-    size_t baseIndex = tet[0]->index();
-    for (i = 1; i < nTet; i++) {
-        index = tet[i]->index();
+    size_t baseIndex = tet_[0]->index();
+    for (i = 1; i < nTet_; i++) {
+        index = tet_[i]->index();
         if (index < baseIndex) {
             baseIndex = index;
             baseTet = i;
@@ -97,28 +101,28 @@ bool SpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     if (baseTet == 0 && (! reverseAlso))
         return false;
 
-    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
-    Perm<4>* newRoles = new Perm<4>[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet_];
+    Perm<4>* newRoles = new Perm<4>[nTet_];
 
     if (reverseAlso) {
         // Make baseTet into tetrahedron 0 and reverse.
         Perm<4> switchPerm(3, 2, 1, 0);
-        for (i = 0; i < nTet; i++) {
-            newTet[i] = tet[(baseTet + nTet - i) % nTet];
-            newRoles[i] = vertexRoles_[(baseTet + nTet - i) % nTet] *
+        for (i = 0; i < nTet_; i++) {
+            newTet[i] = tet_[(baseTet + nTet_ - i) % nTet_];
+            newRoles[i] = vertexRoles_[(baseTet + nTet_ - i) % nTet_] *
                 switchPerm;
         }
     } else {
         // Make baseTet into tetrahedron 0 but don't reverse.
-        for (i = 0; i < nTet; i++) {
-            newTet[i] = tet[(i + baseTet) % nTet];
-            newRoles[i] = vertexRoles_[(i + baseTet) % nTet];
+        for (i = 0; i < nTet_; i++) {
+            newTet[i] = tet_[(i + baseTet) % nTet_];
+            newRoles[i] = vertexRoles_[(i + baseTet) % nTet_];
         }
     }
 
-    delete[] tet;
+    delete[] tet_;
     delete[] vertexRoles_;
-    tet = newTet;
+    tet_ = newTet;
     vertexRoles_ = newRoles;
 
     return true;
@@ -128,15 +132,15 @@ bool SpiralSolidTorus::isCanonical(const Triangulation<3>* tri) const {
     if (vertexRoles_[0][0] > vertexRoles_[0][3])
         return false;
 
-    long baseIndex = tet[0]->index();
-    for (size_t i = 1; i < nTet; i++)
-        if (tet[i]->index() < baseIndex)
+    long baseIndex = tet_[0]->index();
+    for (size_t i = 1; i < nTet_; i++)
+        if (tet_[i]->index() < baseIndex)
             return false;
 
     return true;
 }
 
-SpiralSolidTorus* SpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
+std::optional<SpiralSolidTorus> SpiralSolidTorus::recognise(Tetrahedron<3>* tet,
         Perm<4> useVertexRoles) {
     Perm<4> invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
 
@@ -162,20 +166,20 @@ SpiralSolidTorus* SpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
 
         // Check that we haven't hit the boundary.
         if (adjTet == 0)
-            return 0;
+            return std::nullopt;
 
         if (adjTet == base) {
             // We're back at the beginning of the loop.
             // Check that everything is glued up correctly.
             if (adjRoles != baseRoles)
-                return 0;
+                return std::nullopt;
 
             // Success!
             break;
         }
 
         if (usedTets.count(adjTet))
-            return 0;
+            return std::nullopt;
 
         // Move on to the next tetrahedron.
         tet = adjTet;
@@ -187,9 +191,9 @@ SpiralSolidTorus* SpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
     }
 
     // We've found a spiralled solid torus.
-    SpiralSolidTorus* ans = new SpiralSolidTorus(tets.size());
-    copy(tets.begin(), tets.end(), ans->tet);
-    copy(roles.begin(), roles.end(), ans->vertexRoles_);
+    SpiralSolidTorus ans(tets.size());
+    std::copy(tets.begin(), tets.end(), ans.tet_);
+    std::copy(roles.begin(), roles.end(), ans.vertexRoles_);
     return ans;
 }
 

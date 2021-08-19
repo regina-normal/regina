@@ -551,7 +551,6 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::SpiralSolidTorus* spiral;
     regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
@@ -561,13 +560,11 @@
             if (regina::Perm<4>::S4[whichPerm][0] > regina::Perm<4>::S4[whichPerm][3])
                 continue;
             
-            spiral = regina::SpiralSolidTorus::formsSpiralSolidTorus(tet, regina::Perm<4>::S4[whichPerm]);
+            auto spiral = regina::SpiralSolidTorus::recognise(tet, regina::Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
-            if (! spiral->isCanonical(self.packet)) {
-                delete spiral;
+            if (! spiral->isCanonical(self.packet))
                 continue;
-            }
             
             // We've got one!
             [details appendFormat:@"Spiralled solid torus %s\n", spiral->name().c_str()];
@@ -629,7 +626,6 @@
             }
             
             [details appendString:@"\n"];
-            delete spiral;
         }
     }
 }

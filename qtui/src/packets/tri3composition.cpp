@@ -959,7 +959,6 @@ void Tri3CompositionUI::findSpiralSolidTori() {
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
-    regina::SpiralSolidTorus* spiral;
     regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
@@ -969,14 +968,12 @@ void Tri3CompositionUI::findSpiralSolidTori() {
             if (Perm<4>::S4[whichPerm][0] > Perm<4>::S4[whichPerm][3])
                 continue;
 
-            spiral = regina::SpiralSolidTorus::formsSpiralSolidTorus(tet,
+            auto spiral = regina::SpiralSolidTorus::recognise(tet,
                 Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
-            if (! spiral->isCanonical(tri)) {
-                delete spiral;
+            if (! spiral->isCanonical(tri))
                 continue;
-            }
 
             // We've got one!
             id = addComponentSection(tr("Spiralled solid torus ") +
@@ -1050,8 +1047,6 @@ void Tri3CompositionUI::findSpiralSolidTori() {
 
                 edge->setText(0, data);
             }
-
-            delete spiral;
         }
     }
 }
