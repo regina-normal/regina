@@ -58,7 +58,7 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
             else {
                 invalidFaceDimension("countFaces", dim - 2, dim - 1);
                 // This throws, but the compiler wants us to return a value.
-                return (unsigned long)0;
+                return (size_t)0;
             }
         })
         .def("facets", [](const BoundaryComponent<dim>& b) {
