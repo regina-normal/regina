@@ -82,8 +82,7 @@ namespace regina {
  * Note that all three tetrahedra in the triangular solid torus must be
  * distinct.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.

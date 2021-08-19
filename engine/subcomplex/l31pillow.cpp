@@ -71,16 +71,15 @@ std::optional<L31Pillow> L31Pillow::recognise(const Component<3>* comp) {
     // 2-tetrahedron triangulations that we have our triangular pillow
     // L(3,1).
     L31Pillow ans;
-    ans.tet[0] = tet[0];
-    ans.tet[1] = tet[1];
+    ans.tet_[0] = tet[0];
+    ans.tet_[1] = tet[1];
 
     for (int i = 0; i < 2; i++) {
-        const VertexEmbedding<3>& emb = comp->vertex(internalVertex)->
-            embedding(i);
+        const auto& emb = comp->vertex(internalVertex)->embedding(i);
         if (emb.tetrahedron() == tet[0])
-            ans.interior[0] = emb.vertex();
+            ans.interior_[0] = emb.vertex();
         else
-            ans.interior[1] = emb.vertex();
+            ans.interior_[1] = emb.vertex();
     }
 
     return ans;

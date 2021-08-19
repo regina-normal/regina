@@ -60,8 +60,7 @@ namespace regina {
  * degree three vertex in the interior of the pillow.  The two boundary
  * triangles of this pillow are then identified with a one-third twist.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
@@ -72,9 +71,9 @@ namespace regina {
  */
 class L31Pillow : public StandardTriangulation {
     private:
-        Tetrahedron<3>* tet[2];
+        Tetrahedron<3>* tet_[2];
             /**< The two tetrahedra in the triangular pillow. */
-        unsigned interior[2];
+        unsigned interior_[2];
             /**< The vertex of each tetrahedron that corresponds to the
                  interior vertex of the triangular pillow. */
 
@@ -187,17 +186,17 @@ inline L31Pillow* L31Pillow::clone() const {
 }
 
 inline void L31Pillow::swap(L31Pillow& other) noexcept {
-    std::swap(tet[0], other.tet[0]);
-    std::swap(tet[1], other.tet[1]);
-    std::swap(interior[0], other.interior[0]);
-    std::swap(interior[1], other.interior[1]);
+    std::swap(tet_[0], other.tet_[0]);
+    std::swap(tet_[1], other.tet_[1]);
+    std::swap(interior_[0], other.interior_[0]);
+    std::swap(interior_[1], other.interior_[1]);
 }
 
 inline Tetrahedron<3>* L31Pillow::tetrahedron(int whichTet) const {
-    return tet[whichTet];
+    return tet_[whichTet];
 }
 inline unsigned L31Pillow::interiorVertex(int whichTet) const {
-    return interior[whichTet];
+    return interior_[whichTet];
 }
 inline std::ostream& L31Pillow::writeName(std::ostream& out) const {
     return out << "L'(3,1)";
