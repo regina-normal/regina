@@ -91,28 +91,15 @@ namespace regina {
 template <typename T>
 class TrieSet {
     private:
-        TrieSet* child_[2];
-            /**< Stores the two child nodes that appear beneath this
-                 node in the tree.  If \c P is the prefix corresponding
-                 to this node, then the two child nodes will correspond to
-                 prefixes \c P0 and \c P1 respectively.  If there are no
-                 sets stored at or beneath a child node, then the
-                 corresponding child pointer will be \c null. */
-        unsigned long descendants_;
-            /**< The number of sets stored at or beneath this node in
-                 the tree.  The number of sets stored \e precisely at
-                 this node can be computed by subtracting the descendant
-                 counts for each child node. */
+        struct Node;
+        Node root_;
+            /**< Stores the root node in this tree. */
 
     public:
         /**
          * Constructs an empty collection of sets.
          */
-        TrieSet();
-        /**
-         * Destroys this collection of sets.
-         */
-        ~TrieSet();
+        TrieSet() = default;
 
         /**
          * Insert the given set into this collection.  The same set may
@@ -191,6 +178,38 @@ class TrieSet {
         // Make this class non-copyable.
         TrieSet(const TrieSet&) = delete;
         TrieSet& operator = (const TrieSet&) = delete;
+
+    private:
+        /**
+         * An individual node in this trie.
+         */
+        struct Node {
+            Node* child_[2];
+                /**< Stores the two child nodes that appear beneath this
+                     node in the tree.  If \c P is the prefix corresponding
+                     to this node, then the two child nodes will correspond to
+                     prefixes \c P0 and \c P1 respectively.  If there are no
+                     sets stored at or beneath a child node, then the
+                     corresponding child pointer will be \c null. */
+            unsigned long descendants_;
+                /**< The number of sets stored at or beneath this node in
+                     the tree.  The number of sets stored \e precisely at
+                     this node can be computed by subtracting the descendant
+                     counts for each child node. */
+
+            /**
+             * Constructs an empty node.
+             */
+            Node();
+            /**
+             * Destroys this node and all its descendants.
+             */
+            ~Node();
+
+            // Make this class non-copyable.
+            Node(const Node&) = delete;
+            Node& operator = (const Node&) = delete;
+        };
 };
 
 /*@}*/
@@ -198,35 +217,34 @@ class TrieSet {
 // Inline functions and template implementations for TrieSet
 
 template <typename T>
-inline TrieSet<T>::TrieSet() : descendants_(0) {
-    child_[0] = child_[1] = 0;
+inline TrieSet<T>::Node::Node() : child_ { nullptr, nullptr }, descendants_(0) {
 }
 
 template <typename T>
-inline TrieSet<T>::~TrieSet() {
+inline TrieSet<T>::Node::~Node() {
     delete child_[0];
     delete child_[1];
 }
 
 template <typename T>
 void TrieSet<T>::insert(const T& entry) {
-    ++descendants_;
+    ++root_.descendants_;
 
     long last = entry.lastBit();
     if (last < 0)
         return;
 
-    TrieSet<T>* node = this;
+    Node* node = &root_;
     for (long pos = 0; pos <= last; ++pos) {
         if (entry.get(pos)) {
             // Follow right branch.
             if (! node->child_[1])
-                node->child_[1] = new TrieSet<T>();
+                node->child_[1] = new Node;
             node = node->child_[1];
         } else {
             // Follow left branch.
             if (! node->child_[0])
-                node->child_[0] = new TrieSet<T>();
+                node->child_[0] = new Node;
             node = node->child_[0];
         }
         ++node->descendants_;
@@ -236,10 +254,10 @@ void TrieSet<T>::insert(const T& entry) {
 template <typename T>
 bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
         const {
-    const TrieSet<T>** node = new const TrieSet<T>*[universeSize + 2];
+    const Node** node = new const Node*[universeSize + 2];
 
     long level = 0;
-    node[0] = this;
+    node[0] = &root_;
     while (level >= 0) {
         if (! node[level]) {
             // We ran out of siblings at this level.  Move up.
@@ -248,7 +266,7 @@ bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
             if (level > 0 && node[level] == node[level - 1]->child_[1])
                 node[level] = node[level - 1]->child_[0];
             else if (level >= 0)
-                node[level] = 0;
+                node[level] = nullptr;
             continue;
         }
 
@@ -274,7 +292,7 @@ bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
 template <typename T>
 bool TrieSet<T>::hasExtraSuperset(const T& subset,
         const T& exc1, const T& exc2, unsigned long universeSize) const {
-    const TrieSet<T>** node = new const TrieSet<T>*[universeSize + 2];
+    const Node** node = new const Node*[universeSize + 2];
 
     long last = subset.lastBit();
 
@@ -282,7 +300,7 @@ bool TrieSet<T>::hasExtraSuperset(const T& subset,
     long prefixOfExc1 = 0; // Last layer for which this is true.
     long prefixOfExc2 = 0; // Last layer for which this is true.
 
-    node[0] = this;
+    node[0] = &root_;
 
     while (level >= 0) {
         if (! node[level]) {
@@ -304,7 +322,7 @@ bool TrieSet<T>::hasExtraSuperset(const T& subset,
                 else if (prefixOfExc2 == level - 1 && exc2.get(level - 1))
                     ++prefixOfExc2;
             } else if (level >= 0)
-                node[level] = 0;
+                node[level] = nullptr;
             continue;
         }
 
@@ -319,7 +337,7 @@ bool TrieSet<T>::hasExtraSuperset(const T& subset,
             }
 
             // Back up.
-            node[level] = 0;
+            node[level] = nullptr;
             continue;
         }
 
