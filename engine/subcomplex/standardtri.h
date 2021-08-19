@@ -44,6 +44,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
+#include "manifold/manifold.h"
 #include "triangulation/forward.h"
 
 namespace regina {
