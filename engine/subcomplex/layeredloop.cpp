@@ -39,11 +39,7 @@
 namespace regina {
 
 LayeredLoop* LayeredLoop::clone() const {
-    LayeredLoop* ans = new LayeredLoop();
-    ans->length_ = length_;
-    ans->hinge_[0] = hinge_[0];
-    ans->hinge_[1] = hinge_[1];
-    return ans;
+    return new LayeredLoop(*this);
 }
 
 std::unique_ptr<Manifold> LayeredLoop::manifold() const {
@@ -61,17 +57,17 @@ std::unique_ptr<Manifold> LayeredLoop::manifold() const {
     }
 }
 
-LayeredLoop* LayeredLoop::isLayeredLoop(const Component<3>* comp) {
+std::optional<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return 0;
+        return std::nullopt;
 
     unsigned long nTet = comp->size();
     if (nTet == 0)
-        return 0;
+        return std::nullopt;
     unsigned long nVertices = comp->countVertices();
     if (nVertices > 2)
-        return 0;
+        return std::nullopt;
     bool twisted = (nVertices == 1);
 
     // We have at least 1 tetrahedron and precisely 1 or 2 vertices.
@@ -129,7 +125,7 @@ LayeredLoop* LayeredLoop::isLayeredLoop(const Component<3>* comp) {
             ok = true;
             while (true) {
                 // Already set: tet, next, topi, bottomi.
-                
+
                 // Check that both steps up lead to the same tetrahedron.
                 // Note that this check has already been done for the first
                 // iteration of this loop; never mind, no big loss.
@@ -187,17 +183,14 @@ LayeredLoop* LayeredLoop::isLayeredLoop(const Component<3>* comp) {
                 }
 
                 // We have a solution!
-                LayeredLoop* ans = new LayeredLoop();
-                ans->length_ = nTet;
-                ans->hinge_[0] = base->edge(hinge0);
-                ans->hinge_[1] = (twisted ? 0 : base->edge(hinge1));
-                return ans;
+                return LayeredLoop(nTet, base->edge(hinge0),
+                    (twisted ? nullptr : base->edge(hinge1)));
             }
         }
     }
 
     // Nothing found.
-    return 0;
+    return std::nullopt;
 }
 
 std::optional<AbelianGroup> LayeredLoop::homology() const {

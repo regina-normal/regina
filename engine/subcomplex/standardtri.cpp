@@ -69,8 +69,8 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         return std::make_unique<L31Pillow>(*ans);
     if (auto ans = LayeredLensSpace::isLayeredLensSpace(comp))
         return std::unique_ptr<StandardTriangulation>(ans);
-    if (auto ans = LayeredLoop::isLayeredLoop(comp))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredLoop::recognise(comp))
+        return std::make_unique<LayeredLoop>(*ans);
     if (auto ans = LayeredChainPair::recognise(comp))
         return std::make_unique<LayeredChainPair>(*ans);
     if (auto ans = AugTriSolidTorus::isAugTriSolidTorus(comp))

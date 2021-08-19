@@ -736,9 +736,8 @@ void Tri3CompositionUI::findLayeredLoops() {
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
-    regina::LayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
-        loop = regina::LayeredLoop::isLayeredLoop(tri->component(i));
+        auto loop = regina::LayeredLoop::recognise(tri->component(i));
         if (loop) {
             id = addComponentSection(tr("Layered loop ") +
                 loop->name().c_str());
@@ -763,8 +762,6 @@ void Tri3CompositionUI::findLayeredLoops() {
                     arg(loop->hinge(0)->index()).
                     arg(loop->hinge(1)->index()));
             }
-
-            delete loop;
         }
     }
 }
