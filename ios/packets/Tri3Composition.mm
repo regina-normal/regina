@@ -348,7 +348,6 @@
 
 - (void)describeSatRegion:(const regina::SatRegion&)region details:(NSMutableString*)details
 {
-    regina::SatBlockSpec spec;
     regina::SatAnnulus ann;
     unsigned nAnnuli;
     long b;
@@ -356,7 +355,7 @@
     bool ref, back;
     NSString *thisAnnulus, *adjAnnulus;
     for (b = region.numberOfBlocks() - 1; b >= 0; b--) {
-        spec = region.block(b);
+        const regina::SatBlockSpec& spec = region.block(b);
         [details appendFormat:@INDENT2 "Block %ld: %s\n", b, spec.block->abbr().c_str()];
         
         nAnnuli = spec.block->nAnnuli();

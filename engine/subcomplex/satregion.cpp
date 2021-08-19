@@ -178,7 +178,13 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     // blocks are added and blockFound.size() increases.
     for (unsigned long pos = 0; pos < blocks_.size(); pos++) {
         const SatBlockSpec& currBlockSpec = blocks_[pos];
+
+        // Keep a local copy of the contents of currBlockSpec, since
+        // our additions to the blocks_ vector might cause reallocation
+        // and therefore invalidate our reference.
         SatBlock* currBlock = currBlockSpec.block_;
+        bool currVert = currBlockSpec.refVert();
+        bool currHoriz = currBlockSpec.refHoriz();
 
         // Run through each boundary annulus for this block.
         for (ann = 0; ann < currBlock->nAnnuli(); ann++) {
@@ -210,8 +216,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
                 // Note that, since the annuli are not horizontally
                 // reflected, the blocks themselves will be.
                 currBlock->setAdjacent(ann, adjBlock, 0, false, false);
-                blocks_.push_back(SatBlockSpec(adjBlock, false,
-                    ! currBlockSpec.refHoriz()));
+                blocks_.push_back(SatBlockSpec(adjBlock, false, ! currHoriz));
                 nBdryAnnuli_ = nBdryAnnuli_ + adjBlock->nAnnuli() - 2;
 
                 // Note whether the new block has twisted boundary.
@@ -247,9 +252,9 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
 
                     // See what kinds of inconsistencies this
                     // rejoining has caused.
-                    currNor = regXor(regXor(currBlockSpec.refHoriz(),
+                    currNor = regXor(regXor(currHoriz,
                         blocks_[adjPos].refHoriz()), ! adjHoriz);
-                    currTwisted = regXor(regXor(currBlockSpec.refVert(),
+                    currTwisted = regXor(regXor(currVert,
                         blocks_[adjPos].refVert()), adjVert);
 
                     if (currNor)
@@ -262,8 +267,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
                     // See if we need to add a (1,1) shift before
                     // the annuli can be identified.
                     if (regXor(adjHoriz, adjVert)) {
-                        if (regXor(currBlockSpec.refHoriz(),
-                                currBlockSpec.refVert()))
+                        if (regXor(currHoriz, currVert))
                             shiftedAnnuli_--;
                         else
                             shiftedAnnuli_++;
