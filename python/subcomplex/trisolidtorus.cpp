@@ -46,7 +46,6 @@ void addTriSolidTorus(pybind11::module_& m) {
             return TriSolidTorus(s);
         })
         .def("swap", &TriSolidTorus::swap)
-        .def("clone", &TriSolidTorus::clone)
         .def("tetrahedron", &TriSolidTorus::tetrahedron,
             pybind11::return_value_policy::reference)
         .def("vertexRoles", &TriSolidTorus::vertexRoles)
