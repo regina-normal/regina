@@ -47,7 +47,7 @@ PlugTriSolidTorus::~PlugTriSolidTorus() {
 
 PlugTriSolidTorus* PlugTriSolidTorus::clone() const {
     PlugTriSolidTorus* ans = new PlugTriSolidTorus();
-    ans->core_ = core_->clone();
+    ans->core_ = new TriSolidTorus(*core_);
     for (int i = 0; i < 3; i++) {
         if (chain_[i])
             ans->chain_[i] = new LayeredChain(*chain_[i]);
@@ -159,7 +159,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
     // just once.
     unsigned long tetIndex;
     int coreIndex;
-    TriSolidTorus* core;
+    std::optional<TriSolidTorus> core;
     Tetrahedron<3>* coreTet[3];
     Edge<3>* axis[3];
     Perm<4> coreRoles[3];
@@ -184,7 +184,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
             if (coreRoles[0][0] > coreRoles[0][3])
                 continue;
 
-            core = TriSolidTorus::formsTriSolidTorus(
+            core = TriSolidTorus::recognise(
                 comp->tetrahedron(tetIndex), coreRoles[0]);
             if (! core)
                 continue;
@@ -198,7 +198,6 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
 
             if (axis[0] == axis[1] || axis[1] == axis[2] ||
                     axis[2] == axis[0]) {
-                delete core;
                 continue;
             }
 
@@ -280,7 +279,6 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
                         delete chain[j];
                         chain[j] = 0;
                     }
-                delete core;
                 continue;
             }
 
@@ -395,13 +393,12 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
                         delete chain[j];
                         chain[j] = 0;
                     }
-                delete core;
                 continue;
             }
 
             // Success!
             PlugTriSolidTorus* plug = new PlugTriSolidTorus();
-            plug->core_ = core;
+            plug->core_ = new TriSolidTorus(*core);
             for (i = 0; i < 3; i++) {
                 plug->chain_[i] = chain[i];
                 plug->chainType_[i] = chainType[i];

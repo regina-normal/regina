@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/spiralsolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"

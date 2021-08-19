@@ -39,6 +39,7 @@
 #define __REGINA_SPIRALSOLIDTORUS_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "maths/perm.h"
 #include "subcomplex/standardtri.h"

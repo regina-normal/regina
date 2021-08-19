@@ -39,6 +39,7 @@
 #define __REGINA_SNAPPEACENSUSTRI_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "standardtri.h"
 
