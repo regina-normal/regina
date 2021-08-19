@@ -215,9 +215,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::L31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::L31Pillow::isL31Pillow(self.packet->component(i));
+        auto pillow = regina::L31Pillow::recognise(self.packet->component(i));
         if (pillow) {
             [details appendFormat:@"L(3,1) pillow %s\n", pillow->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -225,7 +224,6 @@
              pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->index()];
             
             [details appendString:@"\n"];
-            delete pillow;
         }
     }
 }

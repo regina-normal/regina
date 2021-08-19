@@ -656,9 +656,8 @@ void Tri3CompositionUI::findL31Pillows() {
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
-    regina::L31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::L31Pillow::isL31Pillow(tri->component(i));
+        auto pillow = regina::L31Pillow::recognise(tri->component(i));
         if (pillow) {
             id = addComponentSection(tr("L(3,1) pillow ") +
                 pillow->name().c_str());
@@ -671,8 +670,6 @@ void Tri3CompositionUI::findL31Pillows() {
                 tr("Pillow interior vertex: %1").
                 arg(pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->
                     index()));
-
-            delete pillow;
         }
     }
 }

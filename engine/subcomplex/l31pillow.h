@@ -61,6 +61,11 @@ namespace regina {
  *
  * All optional StandardTriangulation routines are implemented for this
  * class.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ * However, the only way to create them (aside from copying or moving)
+ * is via the static member function recognise().
  */
 class L31Pillow : public StandardTriangulation {
     private:
@@ -72,15 +77,25 @@ class L31Pillow : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this structure.
+         * Creates a new copy of this structure.
          */
-        virtual ~L31Pillow();
+        L31Pillow(const L31Pillow&) = default;
+
         /**
-         * Returns a newly created clone of this structure.
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        L31Pillow& operator = (const L31Pillow&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        L31Pillow* clone() const;
+        [[deprecated]] L31Pillow* clone() const;
 
         /**
          * Returns one of the two tetrahedra involved in this structure.
@@ -117,7 +132,16 @@ class L31Pillow : public StandardTriangulation {
          * triangular pillow L(3,1), or \c null if the given component is
          * not a triangular pillow L(3,1).
          */
-        static L31Pillow* isL31Pillow(const Component<3>* comp);
+        static std::optional<L31Pillow> recognise(const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms a
+         * triangular pillow L(3,1).
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<L31Pillow> isL31Pillow(
+            const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -129,16 +153,15 @@ class L31Pillow : public StandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        L31Pillow();
+        L31Pillow() = default;
 };
 
 /*@}*/
 
 // Inline functions for L31Pillow
 
-inline L31Pillow::L31Pillow() {
-}
-inline L31Pillow::~L31Pillow() {
+inline L31Pillow* L31Pillow::clone() const {
+    return new L31Pillow(*this);
 }
 
 inline Tetrahedron<3>* L31Pillow::tetrahedron(int whichTet) const {
@@ -155,6 +178,11 @@ inline std::ostream& L31Pillow::writeTeXName(std::ostream& out) const {
 }
 inline void L31Pillow::writeTextLong(std::ostream& out) const {
     out << "Triangular pillow lens space L(3,1)";
+}
+
+inline std::optional<L31Pillow> L31Pillow::isL31Pillow(
+        const Component<3>* comp) {
+    return recognise(comp);
 }
 
 } // namespace regina
