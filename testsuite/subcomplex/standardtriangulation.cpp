@@ -81,7 +81,7 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            Manifold* mfd = std->manifold();
+            auto mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
@@ -95,8 +95,6 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                     << ", not the expected " << mfdName << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete mfd;
         }
 
         void testRecognitionSig(const char* isoSig,
@@ -124,7 +122,7 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            Manifold* mfd = std->manifold();
+            auto mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
@@ -139,7 +137,6 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            delete mfd;
             delete t;
         }
 

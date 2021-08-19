@@ -241,7 +241,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          */
         static AugTriSolidTorus* isAugTriSolidTorus(const Component<3>* comp);
 
-        Manifold* manifold() const override;
+        std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;

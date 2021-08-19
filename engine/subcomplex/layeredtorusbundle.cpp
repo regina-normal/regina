@@ -154,10 +154,10 @@ LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
     return ans;
 }
 
-Manifold* LayeredTorusBundle::manifold() const {
+std::unique_ptr<Manifold> LayeredTorusBundle::manifold() const {
     // Note that this one-liner appears again in homology(), where
     // we use the underlying TorusBundle for homology calculations.
-    return new TorusBundle(core_.parallelReln() * reln_);
+    return std::make_unique<TorusBundle>(core_.parallelReln() * reln_);
 }
 
 std::optional<AbelianGroup> LayeredTorusBundle::homology() const {

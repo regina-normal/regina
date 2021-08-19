@@ -162,8 +162,8 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
     return 0;
 }
 
-Manifold* SnapPeaCensusTri::manifold() const {
-    return new SnapPeaCensusManifold(section_, index_);
+std::unique_ptr<Manifold> SnapPeaCensusTri::manifold() const {
+    return std::make_unique<SnapPeaCensusManifold>(section_, index_);
 }
 
 std::optional<AbelianGroup> SnapPeaCensusTri::homology() const {

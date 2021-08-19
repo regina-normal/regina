@@ -183,8 +183,8 @@ std::optional<AbelianGroup> TriSolidTorus::homology() const {
     return ans;
 }
 
-Manifold* TriSolidTorus::manifold() const {
-    return new Handlebody(1, true);
+std::unique_ptr<Manifold> TriSolidTorus::manifold() const {
+    return std::make_unique<Handlebody>(1, true);
 }
 
 } // namespace regina

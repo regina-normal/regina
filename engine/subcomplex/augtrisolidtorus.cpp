@@ -62,8 +62,8 @@ AugTriSolidTorus* AugTriSolidTorus::clone() const {
     return ans;
 }
 
-Manifold* AugTriSolidTorus::manifold() const {
-    SFSpace* ans = new SFSpace();
+std::unique_ptr<Manifold> AugTriSolidTorus::manifold() const {
+    std::unique_ptr<SFSpace> ans(new SFSpace());
     if (chainType_ == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
         ans->insertFibre(2, 1);
@@ -96,10 +96,9 @@ Manifold* AugTriSolidTorus::manifold() const {
             r = -r;
             q = -q;
         }
-        if (r == 0) {
-            delete ans;
-            return 0;
-        } else
+        if (r == 0)
+            return nullptr;
+        else
             ans->insertFibre(r, q);
     } else if (chainType_ == CHAIN_AXIS) {
         // Layered solid torus + layered chain.
@@ -134,10 +133,9 @@ Manifold* AugTriSolidTorus::manifold() const {
             alpha = -alpha;
             beta = -beta;
         }
-        if (alpha == 0) {
-            delete ans;
-            return 0;
-        } else
+        if (alpha == 0)
+            return nullptr;
+        else
             ans->insertFibre(alpha, beta);
     } else {
         // Three layered solid tori.
@@ -162,10 +160,9 @@ Manifold* AugTriSolidTorus::manifold() const {
                     beta = -(edgeGroupRoles_[i][1] == 2 ? 2 : 1);
                 }
             }
-            if (alpha == 0) {
-                delete ans;
-                return 0;
-            } else
+            if (alpha == 0)
+                return nullptr;
+            else
                 ans->insertFibre(alpha, beta);
         }
     }
@@ -178,15 +175,15 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
         const Component<3>* comp) {
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return 0;
+        return nullptr;
     if (comp->countVertices() > 1)
-        return 0;
+        return nullptr;
 
     // We have a 1-vertex closed orientable triangulation.
 
     unsigned long nTet = comp->size();
     if (nTet < 3)
-        return 0;
+        return nullptr;
 
     // Handle the 3-tetrahedron case separately.
     if (nTet == 3) {
@@ -245,7 +242,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
         }
 
         // Didn't find anything.
-        return 0;
+        return nullptr;
     }
 
     // We have strictly more than three tetrahedra.
@@ -266,7 +263,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                 // Too many layered solid tori.
                 for (int i = 0; i < nLayered; i++)
                     delete layered[i];
-                return 0;
+                return nullptr;
             }
         }
     }
@@ -469,7 +466,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
         }
 
         // Didn't find anything.
-        return 0;
+        return nullptr;
     }
 
     // We now know nLayered >= 1.
@@ -481,7 +478,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     if (needChain && nLayered != 1) {
         for (j = 0; j < nLayered; j++)
             delete layered[j];
-        return 0;
+        return nullptr;
     }
 
     // Examine each layered solid torus.
@@ -494,7 +491,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
             // tetrahedra.
             for (j = 0; j < nLayered; j++)
                 delete layered[j];
-            return 0;
+            return nullptr;
         }
     }
 
@@ -661,7 +658,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     // Nothing was found.
     for (i = 0; i < nLayered; i++)
         delete layered[i];
-    return 0;
+    return nullptr;
 }
 
 std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,

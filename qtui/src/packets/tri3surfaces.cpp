@@ -363,11 +363,10 @@ void Tri3SurfacesUI::refresh() {
     // Begin with the combinatorial recognition.
     auto std = regina::StandardTriangulation::recognise(tri);
     if (std) {
-        regina::Manifold* mfd = std->manifold();
+        auto mfd = std->manifold();
         if (mfd) {
             isHyp = mfd->isHyperbolic();
             name = mfd->name();
-            delete mfd;
 
             // If we have the 3-sphere, 3-ball or solid torus, then
             // automatically run the large recognition routines: these

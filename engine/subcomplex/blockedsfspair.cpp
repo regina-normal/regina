@@ -74,7 +74,7 @@ BlockedSFSPair::~BlockedSFSPair() {
         delete region_[1];
 }
 
-Manifold* BlockedSFSPair::manifold() const {
+std::unique_ptr<Manifold> BlockedSFSPair::manifold() const {
     std::optional<SFSpace> sfs0 = region_[0]->createSFS(false);
     if (! sfs0)
         return nullptr;
@@ -89,10 +89,11 @@ Manifold* BlockedSFSPair::manifold() const {
     sfs1->reduce(false);
 
     if (*sfs1 < *sfs0)
-        return new GraphPair(std::move(*sfs1), std::move(*sfs0),
+        return std::make_unique<GraphPair>(std::move(*sfs1), std::move(*sfs0),
             matchingReln_.inverse());
     else
-        return new GraphPair(std::move(*sfs0), std::move(*sfs1), matchingReln_);
+        return std::make_unique<GraphPair>(std::move(*sfs0), std::move(*sfs1),
+            matchingReln_);
 }
 
 std::ostream& BlockedSFSPair::writeName(std::ostream& out) const {

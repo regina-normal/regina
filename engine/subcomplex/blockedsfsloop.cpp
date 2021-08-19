@@ -72,10 +72,10 @@ BlockedSFSLoop::~BlockedSFSLoop() {
         delete region_;
 }
 
-Manifold* BlockedSFSLoop::manifold() const {
+std::unique_ptr<Manifold> BlockedSFSLoop::manifold() const {
     std::optional<SFSpace> sfs = region_->createSFS(false);
     if (! sfs)
-        return 0;
+        return nullptr;
     if (sfs->punctures() == 1) {
         // The region has one larger boundary, but we pinch it to create
         // two smaller boundaries.
@@ -84,7 +84,7 @@ Manifold* BlockedSFSLoop::manifold() const {
 
     sfs->reduce(false);
 
-    return new GraphLoop(std::move(*sfs), matchingReln_);
+    return std::make_unique<GraphLoop>(std::move(*sfs), matchingReln_);
 }
 
 std::ostream& BlockedSFSLoop::writeName(std::ostream& out) const {

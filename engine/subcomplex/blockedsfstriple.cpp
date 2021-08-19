@@ -86,7 +86,7 @@ BlockedSFSTriple::~BlockedSFSTriple() {
         delete centre_;
 }
 
-Manifold* BlockedSFSTriple::manifold() const {
+std::unique_ptr<Manifold> BlockedSFSTriple::manifold() const {
     // Go ahead and create the Seifert fibred spaces.
     std::optional<SFSpace> end0 = end_[0]->createSFS(false);
     if (! end0)
@@ -111,7 +111,8 @@ Manifold* BlockedSFSTriple::manifold() const {
     end1->reduce(false);
     hub->reduce(false);
 
-    return new GraphTriple(std::move(*end0), std::move(*hub), std::move(*end1),
+    return std::make_unique<GraphTriple>(
+        std::move(*end0), std::move(*hub), std::move(*end1),
         matchingReln_[0], matchingReln_[1]);
 }
 

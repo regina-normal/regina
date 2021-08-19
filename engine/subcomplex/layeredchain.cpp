@@ -103,8 +103,8 @@ void LayeredChain::invert() {
     bottomVertexRoles_ = bottomVertexRoles_ * Perm<4>(3, 2, 1, 0);
 }
 
-Manifold* LayeredChain::manifold() const {
-    return new Handlebody(index_ <= 1 ? 0 : 1, true);
+std::unique_ptr<Manifold> LayeredChain::manifold() const {
+    return std::make_unique<Handlebody>(index_ <= 1 ? 0 : 1, true);
 }
 
 std::optional<AbelianGroup> LayeredChain::homology() const {

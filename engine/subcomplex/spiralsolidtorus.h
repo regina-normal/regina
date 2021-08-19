@@ -231,7 +231,7 @@ class SpiralSolidTorus : public StandardTriangulation {
         static SpiralSolidTorus* formsSpiralSolidTorus(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
 
-        Manifold* manifold() const override;
+        std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

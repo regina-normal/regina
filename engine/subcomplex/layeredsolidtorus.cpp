@@ -658,8 +658,8 @@ void LayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     }
 }
 
-Manifold* LayeredSolidTorus::manifold() const {
-    return new Handlebody(1, true);
+std::unique_ptr<Manifold> LayeredSolidTorus::manifold() const {
+    return std::make_unique<Handlebody>(1, true);
 }
 
 std::optional<AbelianGroup> LayeredSolidTorus::homology() const {

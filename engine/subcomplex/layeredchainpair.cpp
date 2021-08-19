@@ -186,8 +186,8 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
     return 0;
 }
 
-Manifold* LayeredChainPair::manifold() const {
-    SFSpace* ans = new SFSpace();
+std::unique_ptr<Manifold> LayeredChainPair::manifold() const {
+    std::unique_ptr<SFSpace> ans(new SFSpace());
 
     ans->insertFibre(2, -1);
     ans->insertFibre(chain_[0]->index() + 1, 1);

@@ -193,8 +193,8 @@ SpiralSolidTorus* SpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
     return ans;
 }
 
-Manifold* SpiralSolidTorus::manifold() const {
-    return new Handlebody(1, true);
+std::unique_ptr<Manifold> SpiralSolidTorus::manifold() const {
+    return std::make_unique<Handlebody>(1, true);
 }
 
 std::optional<AbelianGroup> SpiralSolidTorus::homology() const {

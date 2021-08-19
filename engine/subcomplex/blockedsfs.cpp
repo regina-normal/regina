@@ -273,7 +273,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
     return false;
 }
 
-Manifold* BlockedSFS::manifold() const {
+std::unique_ptr<Manifold> BlockedSFS::manifold() const {
     std::optional<SFSpace> ans = region_->createSFS(false);
     if (! ans)
         return nullptr;
@@ -289,7 +289,7 @@ Manifold* BlockedSFS::manifold() const {
             ans->punctures() == 0 &&
             ans->reflectors() == 0 &&
             ans->fibreCount() <= 1) {
-        SFSpace* altAns = new SFSpace(/* S2 x S1 */);
+        std::unique_ptr<SFSpace> altAns(new SFSpace(/* S2 x S1 */));
         altAns->insertFibre(2, 1);
         altAns->insertFibre(2, -1);
 
@@ -307,11 +307,10 @@ Manifold* BlockedSFS::manifold() const {
             altAns->insertFibre(rp2Fibre.beta, rp2Fibre.alpha);
             altAns->reduce();
             return altAns;
-        } else
-            delete altAns;
+        }
     }
 
-    return new SFSpace(std::move(*ans));
+    return std::make_unique<SFSpace>(std::move(*ans));
 }
 
 std::ostream& BlockedSFS::writeName(std::ostream& out) const {

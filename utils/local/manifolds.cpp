@@ -94,12 +94,12 @@ Packet* tree;
 struct ManifoldSpec {
     Packet* container;
     bool hasTriangulation;
-    Manifold* manifold; // 0 if unknown
+    std::auto_ptr<Manifold> manifold; // null if unknown
 
-    ManifoldSpec() : container(0), hasTriangulation(false), manifold(0) {
+    ManifoldSpec() : container(0), hasTriangulation(false), manifold() {
     }
-    ManifoldSpec(Packet* c, bool t, Manifold* m) :
-            container(c), hasTriangulation(t), manifold(m) {
+    ManifoldSpec(Packet* c, bool t, std::auto_ptr<Manifold>&& m) :
+            container(c), hasTriangulation(t), manifold(std::move(m)) {
     }
 
     bool operator < (const ManifoldSpec& other) const;
@@ -153,7 +153,6 @@ bool ManifoldSpec::operator < (const ManifoldSpec& other) const {
 bool process(Container* c) {
     bool foundTri = false;
 
-    Manifold* mfd;
     std::string name, structure;
     for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
@@ -167,7 +166,7 @@ bool process(Container* c) {
         if (! std)
             continue;
 
-        mfd = std->manifold();
+        auto mfd = std->manifold();
         if (! mfd)
             continue;
 
@@ -208,9 +207,7 @@ bool process(Container* c) {
             std::cout << '\n';
 
         if (sortMfds)
-            children.push_back(ManifoldSpec(c, true, mfd));
-        else
-            delete mfd;
+            children.push_back(ManifoldSpec(c, true, std::move(mfd)));
 
         return true;
     }

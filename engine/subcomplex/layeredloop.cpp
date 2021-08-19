@@ -46,13 +46,13 @@ LayeredLoop* LayeredLoop::clone() const {
     return ans;
 }
 
-Manifold* LayeredLoop::manifold() const {
+std::unique_ptr<Manifold> LayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.
-        return new LensSpace(length_, 1);
+        return std::make_unique<LensSpace>(length_, 1);
     } else {
         // Twisted.
-        SFSpace* ans = new SFSpace();
+        std::unique_ptr<SFSpace> ans(new SFSpace());
         ans->insertFibre(2, -1);
         ans->insertFibre(2, 1);
         ans->insertFibre(length_, 1);

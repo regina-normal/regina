@@ -139,8 +139,8 @@ LayeredLensSpace* LayeredLensSpace::isLayeredLensSpace(
     return 0;
 }
 
-Manifold* LayeredLensSpace::manifold() const {
-    return new LensSpace(p_, q_);
+std::unique_ptr<Manifold> LayeredLensSpace::manifold() const {
+    return std::make_unique<LensSpace>(p_, q_);
 }
 
 std::optional<AbelianGroup> LayeredLensSpace::homology() const {

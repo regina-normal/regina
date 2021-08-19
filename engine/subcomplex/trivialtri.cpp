@@ -129,16 +129,18 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     return 0;
 }
 
-Manifold* TrivialTri::manifold() const {
+std::unique_ptr<Manifold> TrivialTri::manifold() const {
     if (type_ == SPHERE_4_VERTEX)
-        return new LensSpace(1, 0);
+        return std::make_unique<LensSpace>(1, 0);
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
-        return new Handlebody(0, true);
+        return std::make_unique<Handlebody>(0, true);
     else if (type_ == N2)
-        return new SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED);
+        return std::make_unique<SimpleSurfaceBundle>(
+            SimpleSurfaceBundle::S2xS1_TWISTED);
     else if (type_ == N3_1 || type_ == N3_2)
-        return new SimpleSurfaceBundle(SimpleSurfaceBundle::RP2xS1);
-    return 0;
+        return std::make_unique<SimpleSurfaceBundle>(
+            SimpleSurfaceBundle::RP2xS1);
+    return nullptr;
 }
 
 std::optional<AbelianGroup> TrivialTri::homology() const {

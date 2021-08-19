@@ -113,12 +113,9 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * underlying 3-manifolds can be recognised will grow between
          * releases.
          *
-         * The 3-manifold will be newly allocated and must be destroyed
-         * by the caller of this routine.
-         *
          * @return the underlying 3-manifold.
          */
-        virtual Manifold* manifold() const;
+        virtual std::unique_ptr<Manifold> manifold() const;
         /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
@@ -300,7 +297,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
 inline StandardTriangulation::~StandardTriangulation() {
 }
 
-inline Manifold* StandardTriangulation::manifold() const {
+inline std::unique_ptr<Manifold> StandardTriangulation::manifold() const {
     return nullptr;
 }
 

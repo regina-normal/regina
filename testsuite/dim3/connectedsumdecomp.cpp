@@ -116,7 +116,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri.get() != 0);
 
-            std::unique_ptr<Manifold> stdManifold(stdTri->manifold());
+            auto stdManifold = stdTri->manifold();
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold.get() != 0);
 
@@ -177,11 +177,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri2.get() != 0);
 
-            std::unique_ptr<Manifold> stdManifold1(stdTri1->manifold());
+            auto stdManifold1 = stdTri1->manifold();
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold1.get() != 0);
 
-            std::unique_ptr<Manifold> stdManifold2(stdTri2->manifold());
+            auto stdManifold2 = stdTri2->manifold();
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
 
@@ -273,15 +273,15 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri3.get() != 0);
 
-            std::unique_ptr<Manifold> stdManifold1(stdTri1->manifold());
+            auto stdManifold1 = stdTri1->manifold();
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold1.get() != 0);
 
-            std::unique_ptr<Manifold> stdManifold2(stdTri2->manifold());
+            auto stdManifold2 = stdTri2->manifold();
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
 
-            std::unique_ptr<Manifold> stdManifold3(stdTri3->manifold());
+            auto stdManifold3 = stdTri3->manifold();
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold3.get() != 0);
 

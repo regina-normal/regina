@@ -95,8 +95,8 @@ L31Pillow* L31Pillow::isL31Pillow(const Component<3>* comp) {
     return ans;
 }
 
-Manifold* L31Pillow::manifold() const {
-    return new LensSpace(3, 1);
+std::unique_ptr<Manifold> L31Pillow::manifold() const {
+    return std::make_unique<LensSpace>(3, 1);
 }
 
 std::optional<AbelianGroup> L31Pillow::homology() const {

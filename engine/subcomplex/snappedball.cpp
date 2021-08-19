@@ -53,8 +53,8 @@ std::optional<SnappedBall> SnappedBall::recognise(Tetrahedron<3>* tet) {
     return std::nullopt;
 }
 
-Manifold* SnappedBall::manifold() const {
-    return new Handlebody(0, true);
+std::unique_ptr<Manifold> SnappedBall::manifold() const {
+    return std::make_unique<Handlebody>(0, true);
 }
 
 std::optional<AbelianGroup> SnappedBall::homology() const {

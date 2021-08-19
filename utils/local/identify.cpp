@@ -92,7 +92,7 @@ void process(Triangulation<3>* t) {
         std::cout << s->name();
         trisOk++;
 
-        Manifold* m = s->manifold();
+        auto m = s->manifold();
         if (m) {
             std::string manifold = m->name();
             std::cout << "  ==  " << manifold;
@@ -113,8 +113,6 @@ void process(Triangulation<3>* t) {
 
                 delete h1;
             }
-
-            delete m;
         }
     } else
         std::cout << "UNKNOWN";

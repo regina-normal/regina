@@ -165,7 +165,7 @@ class SnappedBall : public StandardTriangulation {
         [[deprecated]] static std::optional<SnappedBall> formsSnappedBall(
             Tetrahedron<3>* tet);
 
-        Manifold* manifold() const override;
+        std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

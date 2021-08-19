@@ -116,11 +116,10 @@
         simp.intelligentSimplify();
         auto std = regina::StandardTriangulation::recognise(&simp);
         if (std) {
-            regina::Manifold* mfd = std->manifold();
+            auto mfd = std->manifold();
             if (mfd) {
                 isHyp = mfd->isHyperbolic();
                 manifoldName = @(mfd->name().c_str());
-                delete mfd;
 
                 // If we have the 3-sphere, 3-ball or solid torus, then
                 // automatically run the large recognition routines: these

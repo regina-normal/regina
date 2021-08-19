@@ -657,6 +657,7 @@ Version 6.1  [ TODO ]
               The old name is kept as a deprecated alias.
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.
+            - Routine manifold() now returns a std::unique_ptr.
         Class SurfaceFilterInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).

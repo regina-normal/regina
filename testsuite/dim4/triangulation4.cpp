@@ -601,13 +601,11 @@ class Triangulation4Test : public TriangulationTest<4> {
             if (! std)
                 ans = "<unrecognised triangulation>";
             else {
-                regina::Manifold* mfd = std->manifold();
+                auto mfd = std->manifold();
                 if (! mfd)
                     ans = "<unrecognised manifold>";
-                else {
+                else
                     ans = mfd->name();
-                    delete mfd;
-                }
             }
 
             if (ans != bdryManifold) {
@@ -831,13 +829,11 @@ class Triangulation4Test : public TriangulationTest<4> {
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
-                    regina::Manifold* mfd = std->manifold();
+                    auto mfd = std->manifold();
                     if (! mfd)
                         link = "<unrecognised manifold>";
-                    else {
+                    else
                         link = mfd->name();
-                        delete mfd;
-                    }
                 }
 
                 if (link != "S3") {
@@ -862,13 +858,11 @@ class Triangulation4Test : public TriangulationTest<4> {
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
-                    regina::Manifold* mfd = std->manifold();
+                    auto mfd = std->manifold();
                     if (! mfd)
                         link = "<unrecognised manifold>";
-                    else {
+                    else
                         link = mfd->name();
-                        delete mfd;
-                    }
                 }
 
                 if (link != "B3") {
@@ -892,13 +886,11 @@ class Triangulation4Test : public TriangulationTest<4> {
             if (! std)
                 link = "<unrecognised triangulation>";
             else {
-                regina::Manifold* mfd = std->manifold();
+                auto mfd = std->manifold();
                 if (! mfd)
                     link = "<unrecognised manifold>";
-                else {
+                else
                     link = mfd->name();
-                    delete mfd;
-                }
             }
 
             if (link != manifold) {

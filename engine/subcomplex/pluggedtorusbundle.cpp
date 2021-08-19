@@ -58,7 +58,7 @@ PluggedTorusBundle::~PluggedTorusBundle() {
     delete region_;
 }
 
-Manifold* PluggedTorusBundle::manifold() const {
+std::unique_ptr<Manifold> PluggedTorusBundle::manifold() const {
     std::optional<SFSpace> sfs = region_->createSFS(false);
     if (! sfs)
         return nullptr;
@@ -70,7 +70,7 @@ Manifold* PluggedTorusBundle::manifold() const {
 
     sfs->reduce(false);
 
-    return new GraphLoop(std::move(*sfs), matchingReln_);
+    return std::make_unique<GraphLoop>(std::move(*sfs), matchingReln_);
 }
 
 std::ostream& PluggedTorusBundle::writeName(std::ostream& out) const {
