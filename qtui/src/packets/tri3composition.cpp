@@ -829,12 +829,11 @@ void Tri3CompositionUI::findPillowSpheres() {
     unsigned long i, j;
     regina::Triangle<3>* f1;
     regina::Triangle<3>* f2;
-    regina::PillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
         f1 = tri->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
             f2 = tri->triangle(j);
-            pillow = regina::PillowTwoSphere::recognise(f1, f2);
+            auto pillow = regina::PillowTwoSphere::recognise(f1, f2);
             if (pillow) {
                 id = addComponentSection(tr("Pillow 2-sphere"));
 
@@ -848,8 +847,6 @@ void Tri3CompositionUI::findPillowSpheres() {
                      arg(f1->edge(0)->index()).
                      arg(f1->edge(1)->index()).
                      arg(f1->edge(2)->index()));
-
-                delete pillow;
             }
         }
     }
@@ -914,10 +911,8 @@ void Tri3CompositionUI::findSnappedBalls() {
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
-    regina::SnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
-        ball = regina::SnappedBall::formsSnappedBall(
-            tri->tetrahedron(i));
+        auto ball = regina::SnappedBall::recognise(tri->tetrahedron(i));
         if (ball) {
             id = addComponentSection(tr("Snapped 3-ball"));
 
@@ -927,8 +922,6 @@ void Tri3CompositionUI::findSnappedBalls() {
             detailsItem = new QTreeWidgetItem(id, detailsItem);
             detailsItem->setText(0, tr("Equator: edge %1%2").
                 arg(ball->internalFace(0)).arg(ball->internalFace(1)));
-
-            delete ball;
         }
     }
 }
@@ -942,12 +935,11 @@ void Tri3CompositionUI::findSnappedSpheres() {
     unsigned long i, j;
     regina::Tetrahedron<3>* t1;
     regina::Tetrahedron<3>* t2;
-    regina::SnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = tri->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = tri->tetrahedron(j);
-            sphere = regina::SnappedTwoSphere::recognise(t1, t2);
+            auto sphere = regina::SnappedTwoSphere::recognise(t1, t2);
             if (sphere) {
                 id = addComponentSection(tr("Snapped 2-sphere"));
 
@@ -955,13 +947,11 @@ void Tri3CompositionUI::findSnappedSpheres() {
                 detailsItem->setText(0, tr("Tetrahedra: %1, %2").
                     arg(i).arg(j));
 
-                const regina::SnappedBall* ball = sphere->snappedBall(0);
+                const regina::SnappedBall& ball = sphere->snappedBall(0);
                 detailsItem = new QTreeWidgetItem(id, detailsItem);
                 detailsItem->setText(0, tr(
                     "Equator: edge %1").arg(
-                    ball->tetrahedron()->edge(ball->equatorEdge())->index()));
-
-                delete sphere;
+                    ball.tetrahedron()->edge(ball.equatorEdge())->index()));
             }
         }
     }

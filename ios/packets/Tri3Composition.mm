@@ -642,9 +642,8 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::SnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
-        ball = regina::SnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
+        auto ball = regina::SnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
         if (ball) {
             [details appendString:@"Snapped 3-ball\n"];
             [details appendFormat:@INDENT1 "Tetrahedron %ld\n", i];
@@ -653,7 +652,6 @@
              ball->internalFace(1)];
             
             [details appendString:@"\n"];
-            delete ball;
         }
     }
 }
@@ -665,12 +663,11 @@
     unsigned long i, j;
     regina::Triangle<3>* f1;
     regina::Triangle<3>* f2;
-    regina::PillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
         f1 = self.packet->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
             f2 = self.packet->triangle(j);
-            pillow = regina::PillowTwoSphere::recognise(f1, f2);
+            auto pillow = regina::PillowTwoSphere::recognise(f1, f2);
             if (pillow) {
                 [details appendString:@"Pillow 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Triangles: %ld, %ld\n", i, j];
@@ -680,7 +677,6 @@
                  f1->edge(2)->index()];
                 
                 [details appendString:@"\n"];
-                delete pillow;
             }
         }
     }
@@ -693,22 +689,20 @@
     unsigned long i, j;
     regina::Tetrahedron<3>* t1;
     regina::Tetrahedron<3>* t2;
-    regina::SnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = self.packet->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = self.packet->tetrahedron(j);
-            sphere = regina::SnappedTwoSphere::recognise(t1, t2);
+            auto sphere = regina::SnappedTwoSphere::recognise(t1, t2);
             if (sphere) {
                 [details appendString:@"Snapped 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Tetrahedra: %ld, %ld\n", i, j];
                 
-                const regina::SnappedBall* ball = sphere->snappedBall(0);
+                const regina::SnappedBall& ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
-                 ball->tetrahedron()->edge(ball->equatorEdge())->index()];
+                 ball.tetrahedron()->edge(ball.equatorEdge())->index()];
                 
                 [details appendString:@"\n"];
-                delete sphere;
             }
         }
     }

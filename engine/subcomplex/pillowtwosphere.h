@@ -40,6 +40,7 @@
 #define __REGINA_PILLOWTWOSPHERE_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/perm.h"
@@ -66,6 +67,11 @@ namespace regina {
  * the same number of tetrahedra as the original.  If the original
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ * However, the only way to create them (aside from copying or moving)
+ * is via the static member function recognise().
  */
 class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
     private:
@@ -78,11 +84,25 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        PillowTwoSphere(const PillowTwoSphere&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        PillowTwoSphere& operator = (const PillowTwoSphere&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        PillowTwoSphere* clone() const;
+        [[deprecated]] PillowTwoSphere* clone() const;
 
         /**
          * Returns one of the two triangles whose boundaries are joined.
@@ -115,10 +135,11 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * @param tri1 the first triangle to examine.
          * @param tri2 the second triangle to examine.
          * @return a newly created structure containing details of the
-         * pillow 2-sphere, or \c null if the given triangles do not
+         * pillow 2-sphere, or no value if the given triangles do not
          * form a pillow 2-sphere.
          */
-        static PillowTwoSphere* recognise(Triangle<3>* tri1, Triangle<3>* tri2);
+        static std::optional<PillowTwoSphere> recognise(
+            Triangle<3>* tri1, Triangle<3>* tri2);
 
         /**
          * A deprecated alias to recognise if two triangles together
@@ -127,8 +148,8 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static PillowTwoSphere* formsPillowTwoSphere(
-            Triangle<3>* tri1, Triangle<3>* tri2);
+        [[deprecated]] static std::optional<PillowTwoSphere>
+            formsPillowTwoSphere(Triangle<3>* tri1, Triangle<3>* tri2);
 
         /**
          * Writes a short text representation of this object to the
@@ -140,22 +161,24 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          */
         void writeTextShort(std::ostream& out) const;
 
-        // Make this class non-copyable.
-        PillowTwoSphere(const PillowTwoSphere&) = delete;
-        PillowTwoSphere& operator = (const PillowTwoSphere&) = delete;
-
     private:
         /**
-         * Creates a new uninitialised structure.
+         * Creates a new structure containing the given internal data.
          */
-        PillowTwoSphere();
+        PillowTwoSphere(Triangle<3>* tri0, Triangle<3>* tri1,
+            Perm<4> triMapping);
 };
 
 /*@}*/
 
 // Inline functions for PillowTwoSphere
 
-inline PillowTwoSphere::PillowTwoSphere() {
+inline PillowTwoSphere::PillowTwoSphere(Triangle<3>* tri0, Triangle<3>* tri1,
+        Perm<4> triMapping) :
+        triangle_ { tri0, tri1 }, triMapping_(triMapping) {
+}
+inline PillowTwoSphere* PillowTwoSphere::clone() const {
+    return new PillowTwoSphere(*this);
 }
 inline Triangle<3>* PillowTwoSphere::triangle(int index) const {
     return triangle_[index];
@@ -167,7 +190,7 @@ inline void PillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";
 }
 
-inline PillowTwoSphere* PillowTwoSphere::formsPillowTwoSphere(
+inline std::optional<PillowTwoSphere> PillowTwoSphere::formsPillowTwoSphere(
         Triangle<3>* tri1, Triangle<3>* tri2) {
     return recognise(tri1, tri2);
 }

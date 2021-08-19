@@ -519,8 +519,11 @@ Version 6.1  [ TODO ]
             - Perm<7> likewise gains precompute(), cachedComp(), cachedPow()
               and cachedOrder().
         Class PillowTwoSphere:
-            - Renamed formsPillowTwoSphere() to recognise().  The old
-              name is kept as a deprecated alias.
+            - Routine formsPillowTwoSphere() is now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Deprecated clone().  Just use the copy constructor instead.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
         Class Polynomial:
@@ -630,9 +633,21 @@ Version 6.1  [ TODO ]
               fundGroupFilled() and homologyFilled() now have a precondition
               that this must not be a null SnapPea triangulation (instead of
               the old behaviour of returning a null pointer).
+        Class SnappedBall:
+            - Routine formsBall() is now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Deprecated clone().  Just use the copy constructor instead.
         Class SnappedTwoSphere:
-            - Renamed formsSnappedTwoSphere() to recognise().  The old
-              name is kept as a deprecated alias.
+            - Routine formsSnappedTwoSphere() is now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old name is kept as a deprecated alias.
+            - The variant of recognise() that took a pair of snapped balls
+              now takes these balls by reference, not pointer.  Likewise,
+              snappedBall() now returns by reference, not pointer.
+            - Added copy construction and copy assignment.
+            - Deprecated clone().  Just use the copy constructor instead.
         Class SFSpace:
             - Renamed classType enumeration to ClassType.  The old name
               is kept as a deprecated alias.

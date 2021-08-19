@@ -40,14 +40,18 @@ using regina::SnappedBall;
 void addSnappedBall(pybind11::module_& m) {
     pybind11::class_<SnappedBall, regina::StandardTriangulation>
             (m, "SnappedBall")
-        .def("clone", &SnappedBall::clone)
+        .def(pybind11::init<const SnappedBall&>())
+        .def("clone", [](const SnappedBall& s) { // deprecated
+            return SnappedBall(s);
+        })
         .def("tetrahedron", &SnappedBall::tetrahedron,
             pybind11::return_value_policy::reference)
         .def("boundaryFace", &SnappedBall::boundaryFace)
         .def("internalFace", &SnappedBall::internalFace)
         .def("equatorEdge", &SnappedBall::equatorEdge)
         .def("internalEdge", &SnappedBall::internalEdge)
-        .def_static("formsSnappedBall", &SnappedBall::formsSnappedBall)
+        .def_static("recognise", &SnappedBall::recognise)
+        .def_static("formsSnappedBall", &SnappedBall::recognise) // deprecated
     ;
 }
 

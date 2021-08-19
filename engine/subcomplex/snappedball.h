@@ -57,21 +57,40 @@ namespace regina {
  *
  * All optional StandardTriangulation routines are implemented for this
  * class.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ * However, the only way to create them (aside from copying or moving)
+ * is via the static member function recognise().
  */
 class SnappedBall : public StandardTriangulation {
     private:
-        Tetrahedron<3>* tet;
+        Tetrahedron<3>* tet_;
             /**< The tetrahedron that forms the snapped ball. */
-        int equator;
+        int equator_;
             /**< The edge that forms the equator on the ball boundary. */
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        SnappedBall(const SnappedBall&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        SnappedBall& operator = (const SnappedBall&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        SnappedBall* clone() const;
+        [[deprecated]] SnappedBall* clone() const;
 
         /**
          * Returns the tetrahedron that forms this snapped ball.
@@ -131,10 +150,20 @@ class SnappedBall : public StandardTriangulation {
          *
          * @param tet the tetrahedron to examine as a potential 3-ball.
          * @return a newly created structure containing details of the
-         * snapped 3-ball, or \c null if the given tetrahedron is
+         * snapped 3-ball, or no value if the given tetrahedron is
          * not a snapped 3-ball.
          */
-        static SnappedBall* formsSnappedBall(Tetrahedron<3>* tet);
+        static std::optional<SnappedBall> recognise(Tetrahedron<3>* tet);
+
+        /**
+         * A deprecated alias to recognise if a tetrahedron forms a
+         * snapped 3-ball.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<SnappedBall> formsSnappedBall(
+            Tetrahedron<3>* tet);
 
         Manifold* manifold() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -144,35 +173,41 @@ class SnappedBall : public StandardTriangulation {
 
     private:
         /**
-         * Creates a new uninitialised structure.
+         * Creates a new structure containing the given internal data.
          */
-        SnappedBall();
+        SnappedBall(Tetrahedron<3>* tet, int equator);
 };
 
 /*@}*/
 
 // Inline functions for SnappedBall
 
-inline SnappedBall::SnappedBall() {
+inline SnappedBall::SnappedBall(Tetrahedron<3>* tet, int equator) :
+        tet_(tet), equator_(equator) {
 }
+
+inline SnappedBall* SnappedBall::clone() const {
+    return new SnappedBall(*this);
+}
+
 inline Tetrahedron<3>* SnappedBall::tetrahedron() const {
-    return tet;
+    return tet_;
 }
 inline int SnappedBall::boundaryFace(int index) const {
     return index == 0 ?
-        Edge<3>::edgeVertex[5 - equator][0] :
-        Edge<3>::edgeVertex[5 - equator][1];
+        Edge<3>::edgeVertex[5 - equator_][0] :
+        Edge<3>::edgeVertex[5 - equator_][1];
 }
 inline int SnappedBall::internalFace(int index) const {
     return index == 0 ?
-        Edge<3>::edgeVertex[equator][0] :
-        Edge<3>::edgeVertex[equator][1];
+        Edge<3>::edgeVertex[equator_][0] :
+        Edge<3>::edgeVertex[equator_][1];
 }
 inline int SnappedBall::equatorEdge() const {
-    return equator;
+    return equator_;
 }
 inline int SnappedBall::internalEdge() const {
-    return 5 - equator;
+    return 5 - equator_;
 }
 inline std::ostream& SnappedBall::writeName(std::ostream& out) const {
     return out << "Snap";
@@ -182,6 +217,11 @@ inline std::ostream& SnappedBall::writeTeXName(std::ostream& out) const {
 }
 inline void SnappedBall::writeTextLong(std::ostream& out) const {
     out << "Snapped 3-ball";
+}
+
+inline std::optional<SnappedBall> SnappedBall::formsSnappedBall(
+        Tetrahedron<3>* tet) {
+    return recognise(tet);
 }
 
 } // namespace regina

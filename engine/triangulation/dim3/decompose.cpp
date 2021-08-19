@@ -1044,17 +1044,14 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // degree-one edge on the inside and a boundary edge on the outside.
     // The boundary edge on the outside will surround a disc that cuts
     // right through the tetrahedron.
-    SnappedBall* ball;
     for (Tetrahedron<3>* t : use.simplices_) {
-        ball = SnappedBall::formsSnappedBall(t);
+        std::optional<SnappedBall> ball = SnappedBall::recognise(t);
         if (! ball)
             continue;
 
         int equator = ball->equatorEdge();
-        if (! t->edge(equator)->isBoundary()) {
-            delete ball;
+        if (! t->edge(equator)->isBoundary())
             continue;
-        }
 
         // This could be a compressing disc.
         // Cut through the tetrahedron to be sure.
@@ -1062,7 +1059,6 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
         // both holes on either side of the disc with new copies of the
         // tetrahedron.
         int upper = ball->boundaryFace(0);
-        delete ball;
 
         Tetrahedron<3>* adj = t->adjacentTetrahedron(upper);
         if (! adj) {
