@@ -63,8 +63,8 @@ std::string StandardTriangulation::TeXName() const {
 
 std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         Component<3>* comp) {
-    if (auto ans = TrivialTri::isTrivialTriangulation(comp))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = TrivialTri::recognise(comp))
+        return std::make_unique<TrivialTri>(*ans);
     if (auto ans = L31Pillow::isL31Pillow(comp))
         return std::unique_ptr<StandardTriangulation>(ans);
     if (auto ans = LayeredLensSpace::isLayeredLensSpace(comp))
@@ -79,8 +79,8 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         return std::unique_ptr<StandardTriangulation>(ans);
     if (auto ans = LayeredSolidTorus::isLayeredSolidTorus(comp))
         return std::unique_ptr<StandardTriangulation>(ans);
-    if (auto ans = SnapPeaCensusTri::isSmallSnapPeaCensusTri(comp))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = SnapPeaCensusTri::recognise(comp))
+        return std::make_unique<SnapPeaCensusTri>(*ans);
 
     return nullptr;
 }

@@ -55,6 +55,11 @@ namespace regina {
  *
  * All optional StandardTriangulation routines are implemented for this
  * class.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ * However, the only way to create them (aside from copying or moving)
+ * is via the static member function recognise().
  */
 class TrivialTri : public StandardTriangulation {
     public:
@@ -92,6 +97,7 @@ class TrivialTri : public StandardTriangulation {
          * triangulation has two Mobius band triangles.
          */
         static constexpr int N3_2 = 302;
+
     private:
         int type_;
             /**< The specific triangulation being represented.
@@ -100,11 +106,25 @@ class TrivialTri : public StandardTriangulation {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        TrivialTri(const TrivialTri&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        TrivialTri& operator = (const TrivialTri&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        TrivialTri* clone() const;
+        [[deprecated]] TrivialTri* clone() const;
 
         /**
          * Returns the specific trivial triangulation being represented.
@@ -123,7 +143,16 @@ class TrivialTri : public StandardTriangulation {
          * triangulation, or \c null if the given component is not one
          * of the triangulations recognised by this class.
          */
-        static TrivialTri* isTrivialTriangulation(const Component<3>* comp);
+        static std::optional<TrivialTri> recognise(const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms one of
+         * the trivial triangulations recognised by this class.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<TrivialTri> isTrivialTriangulation(
+            const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -135,14 +164,14 @@ class TrivialTri : public StandardTriangulation {
         /**
          * Creates a new structure.
          */
-        TrivialTri(int newType);
+        TrivialTri(int type);
 };
 
 /*@}*/
 
 // Inline functions for TrivialTri
 
-inline TrivialTri::TrivialTri(int newType) : type_(newType) {
+inline TrivialTri::TrivialTri(int type) : type_(type) {
 }
 
 inline TrivialTri* TrivialTri::clone() const {
@@ -151,6 +180,11 @@ inline TrivialTri* TrivialTri::clone() const {
 
 inline int TrivialTri::type() const {
     return type_;
+}
+
+inline std::optional<TrivialTri> TrivialTri::isTrivialTriangulation(
+        const Component<3>* comp) {
+    return recognise(comp);
 }
 
 } // namespace regina

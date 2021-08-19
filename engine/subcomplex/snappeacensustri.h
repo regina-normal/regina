@@ -79,6 +79,11 @@ namespace regina {
  *
  * All of the optional StandardTriangulation routines are implemented
  * for this class.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ * However, the only way to create them (aside from copying or moving)
+ * is via the static member function recognise().
  */
 class SnapPeaCensusTri: public StandardTriangulation {
     public:
@@ -115,11 +120,25 @@ class SnapPeaCensusTri: public StandardTriangulation {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        SnapPeaCensusTri(const SnapPeaCensusTri&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        SnapPeaCensusTri& operator = (const SnapPeaCensusTri&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        SnapPeaCensusTri* clone() const;
+        [[deprecated]] SnapPeaCensusTri* clone() const;
 
         /**
          * Returns the section of the SnapPea census to which this
@@ -175,8 +194,17 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * component is not one of the few SnapPea census
          * triangulations recognised by this routine.
          */
-        static SnapPeaCensusTri* isSmallSnapPeaCensusTri(
+        static std::optional<SnapPeaCensusTri> recognise(
             const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms one of
+         * the smallest SnapPea census triangulations.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<SnapPeaCensusTri>
+            isSmallSnapPeaCensusTri(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -188,7 +216,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * Creates a new SnapPea census triangulation with the given
          * parameters.
          */
-        SnapPeaCensusTri(char newSection, unsigned long newIndex);
+        SnapPeaCensusTri(char section, unsigned long index);
 
     friend class SnapPeaCensusManifold;
 };
@@ -198,9 +226,8 @@ class SnapPeaCensusTri: public StandardTriangulation {
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
-inline SnapPeaCensusTri::SnapPeaCensusTri(char newSection,
-        unsigned long newIndex) :
-        section_(newSection), index_(newIndex) {
+inline SnapPeaCensusTri::SnapPeaCensusTri(char section, unsigned long index) :
+        section_(section), index_(index) {
 }
 
 // Inline functions for SnapPeaCensusTri
@@ -225,6 +252,11 @@ inline bool SnapPeaCensusTri::operator == (const SnapPeaCensusTri& compare)
 inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
         const {
     return (section_ != compare.section_ || index_ != compare.index_);
+}
+
+inline std::optional<SnapPeaCensusTri>
+        SnapPeaCensusTri::isSmallSnapPeaCensusTri(const Component<3>* comp) {
+    return recognise(comp);
 }
 
 } // namespace regina

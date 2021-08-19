@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/trivialtri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -39,10 +40,14 @@ using regina::TrivialTri;
 
 void addTrivialTri(pybind11::module_& m) {
     pybind11::class_<TrivialTri, regina::StandardTriangulation>(m, "TrivialTri")
-        .def("clone", &TrivialTri::clone)
+        .def(pybind11::init<const TrivialTri&>())
+        .def("clone", [](const TrivialTri& s) { // deprecated
+            return TrivialTri(s);
+        })
         .def("type", &TrivialTri::type)
-        .def_static("isTrivialTriangulation",
-            &TrivialTri::isTrivialTriangulation)
+        .def_static("recognise", &TrivialTri::recognise)
+        .def_static("isTrivialTriangulation", // deprecated
+            &TrivialTri::recognise)
         // On some systems we cannot take addresses of the following
         // inline class constants (e.g., this fails with gcc10 on windows).
         // We therefore define getter functions instead.

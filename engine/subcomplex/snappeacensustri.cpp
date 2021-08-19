@@ -37,7 +37,7 @@
 
 namespace regina {
 
-SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
+std::optional<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
         const Component<3>* comp) {
     // Currently this routine can recognise SnapPea triangulations
     // m000 -- m004 as well as m129.
@@ -50,7 +50,7 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
     // tetrahedra is within the supported range.
 
     if (comp->size() > 4)
-        return 0;
+        return std::nullopt;
 
     // Start with property checks to see if it has a chance of being
     // in the SnapPea census at all.  The component must not be
@@ -59,7 +59,7 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
     // that there are no boundary triangles.
 
     if (comp->isClosed())
-        return 0;
+        return std::nullopt;
 
     unsigned long nVertices = comp->countVertices();
     unsigned long nEdges = comp->countEdges();
@@ -68,11 +68,11 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
     for (i = 0; i < nVertices; i++) {
         link = comp->vertex(i)->linkType();
         if (link != Vertex<3>::TORUS && link != Vertex<3>::KLEIN_BOTTLE)
-            return 0;
+            return std::nullopt;
     }
     for (i = 0; i < nEdges; i++)
         if (! comp->edge(i)->isValid())
-            return 0;
+            return std::nullopt;
 
     // Now search for specific triangulations.
 
@@ -81,54 +81,54 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
         // that fit these constraints.  But test orientability
         // anyway just to be safe.
         if (comp->isOrientable())
-            return 0;
-        return new SnapPeaCensusTri(SEC_5, 0);
+            return std::nullopt;
+        return SnapPeaCensusTri(SEC_5, 0);
     } else if (comp->size() == 2) {
         if (comp->isOrientable()) {
             // Orientable.  Looking for m003 or m004.
             if (comp->countVertices() != 1)
-                return 0;
+                return std::nullopt;
             if (comp->countEdges() != 2)
-                return 0;
+                return std::nullopt;
             if (comp->edge(0)->degree() != 6 ||
                     comp->edge(1)->degree() != 6)
-                return 0;
+                return std::nullopt;
 
             // Now we know it's either m003 or m004.  We distinguish
             // between them by triangle types, since all of m003's triangles
             // are Mobius bands and all of m004's triangles are horns.
             if (comp->triangle(0)->type() == Triangle<3>::MOBIUS)
-                return new SnapPeaCensusTri(SEC_5, 3);
+                return SnapPeaCensusTri(SEC_5, 3);
             else
-                return new SnapPeaCensusTri(SEC_5, 4);
+                return SnapPeaCensusTri(SEC_5, 4);
         } else {
             // Non-orientable.  Looking for m001 or m002.
             if (comp->countVertices() == 1) {
                 // Looking for m001.
                 if (comp->countEdges() != 2)
-                    return 0;
+                    return std::nullopt;
                 if (! ((comp->edge(0)->degree() == 4 &&
                         comp->edge(1)->degree() == 8) ||
                        (comp->edge(0)->degree() == 8 &&
                         comp->edge(1)->degree() == 4)))
-                    return 0;
+                    return std::nullopt;
                 // Census says it's m001 if no triangle forms a dunce hat.
                 for (int t = 0; t < 4; ++t)
                     if (comp->triangle(t)->type() == Triangle<3>::DUNCEHAT)
-                        return 0;
-                return new SnapPeaCensusTri(SEC_5, 1);
+                        return std::nullopt;
+                return SnapPeaCensusTri(SEC_5, 1);
             } else if (comp->countVertices() == 2) {
                 // Looking for m002.
                 if (comp->countEdges() != 2)
-                    return 0;
+                    return std::nullopt;
                 if (comp->edge(0)->degree() != 6 ||
                         comp->edge(1)->degree() != 6)
-                    return 0;
+                    return std::nullopt;
                 // Census says it's m002 if some triangle forms a dunce hat.
                 for (int t = 0; t < 4; ++t)
                     if (comp->triangle(t)->type() == Triangle<3>::DUNCEHAT)
-                        return new SnapPeaCensusTri(SEC_5, 2);
-                return 0;
+                        return SnapPeaCensusTri(SEC_5, 2);
+                return std::nullopt;
             }
         }
     } else if (comp->size() == 4) {
@@ -138,28 +138,28 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
             // since some can be deduced from others, but these tests
             // aren't terribly expensive anyway.
             if (comp->countVertices() != 2)
-                return 0;
+                return std::nullopt;
             if (comp->countEdges() != 4)
-                return 0;
+                return std::nullopt;
             if (comp->vertex(0)->linkType() != Vertex<3>::TORUS)
-                return 0;
+                return std::nullopt;
             if (comp->vertex(1)->linkType() != Vertex<3>::TORUS)
-                return 0;
+                return std::nullopt;
             if (comp->vertex(0)->degree() != 8)
-                return 0;
+                return std::nullopt;
             if (comp->vertex(1)->degree() != 8)
-                return 0;
+                return std::nullopt;
             // Census says it's the Whitehead link if some edge has
             // degree 8.
             for (int t = 0; t < 4; ++t)
                 if (comp->edge(t)->degree() == 8)
-                    return new SnapPeaCensusTri(SEC_5, 129);
-            return 0;
+                    return SnapPeaCensusTri(SEC_5, 129);
+            return std::nullopt;
         }
     }
 
     // Not recognised after all.
-    return 0;
+    return std::nullopt;
 }
 
 std::unique_ptr<Manifold> SnapPeaCensusTri::manifold() const {

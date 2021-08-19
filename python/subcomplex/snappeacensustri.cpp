@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/snappeacensustri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -40,11 +41,15 @@ using regina::SnapPeaCensusTri;
 void addSnapPeaCensusTri(pybind11::module_& m) {
     auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
             (m, "SnapPeaCensusTri")
-        .def("clone", &SnapPeaCensusTri::clone)
+        .def(pybind11::init<const SnapPeaCensusTri&>())
+        .def("clone", [](const SnapPeaCensusTri& s) { // deprecated
+            return SnapPeaCensusTri(s);
+        })
         .def("section", &SnapPeaCensusTri::section)
         .def("index", &SnapPeaCensusTri::index)
-        .def_static("isSmallSnapPeaCensusTri",
-            &SnapPeaCensusTri::isSmallSnapPeaCensusTri)
+        .def_static("recognise", &SnapPeaCensusTri::recognise)
+        .def_static("isSmallSnapPeaCensusTri", // deprecated
+            &SnapPeaCensusTri::recognise)
         // On some systems we cannot take addresses of the following
         // inline class constants (e.g., this fails with gcc10 on windows).
         // We therefore define getter functions instead.

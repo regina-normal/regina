@@ -613,6 +613,11 @@ Version 6.1  [ TODO ]
             - Added member and global swap() functions.
         Class SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
+            - Routine isSmallSnapPeaCensusTri() is now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Deprecated clone().  Just use the copy constructor instead.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - The base class SnapPeaException is removed; instead the
               other classes inherit from standard C++ exception types,
@@ -741,6 +746,11 @@ Version 6.1  [ TODO ]
             - Deprecated.  Just use Tritmask1<uint8_t>, etc.
         Class TrivialTri:
             - Class constants are now constexpr.
+            - Routine isTrivialTriangulation() is now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Deprecated clone().  Just use the copy constructor instead.
         Class Vector:
             - New operator !=.
             - New constructors that take iterator ranges and initialiser lists.

@@ -40,7 +40,7 @@
 
 namespace regina {
 
-TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
+std::optional<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
     // Since the triangulations are so small we can use census results
     // to recognise the triangulations by properties alone.
 
@@ -55,15 +55,15 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
                 // Look for a one-tetrahedron ball.
                 if (comp->size() == 1) {
                     if (bc->countTriangles() == 4)
-                        return new TrivialTri(BALL_4_VERTEX);
+                        return TrivialTri(BALL_4_VERTEX);
                     if (bc->countTriangles() == 2 && comp->countVertices() == 3)
-                        return new TrivialTri(BALL_3_VERTEX);
+                        return TrivialTri(BALL_3_VERTEX);
                 }
             }
         }
 
         // Not recognised.
-        return 0;
+        return std::nullopt;
     }
 
     // Otherwise we are dealing with a closed component.
@@ -71,7 +71,7 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     // Before we do our validity check, make sure the number of
     // tetrahedra is in the supported range.
     if (comp->size() > 3)
-        return 0;
+        return std::nullopt;
 
     // Is the triangulation valid?
     // Since the triangulations is closed we know that the vertices are
@@ -80,7 +80,7 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     unsigned long i;
     for (i = 0; i < nEdges; i++)
         if (! comp->edge(i)->isValid())
-            return 0;
+            return std::nullopt;
 
     // Test for the specific triangulations that we know about.
 
@@ -89,14 +89,14 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
             if (comp->countVertices() == 4) {
                 // There's only one closed valid two-tetrahedron
                 // four-vertex orientable triangulation.
-                return new TrivialTri(SPHERE_4_VERTEX);
+                return TrivialTri(SPHERE_4_VERTEX);
             }
         } else {
             // There's only one closed valid two-tetrahedron non-orientable
             // triangulation.
-            return new TrivialTri(N2);
+            return TrivialTri(N2);
         }
-        return 0;
+        return std::nullopt;
     }
 
     if (comp->size() == 3) {
@@ -106,7 +106,7 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
             // All of the vertices are valid since there are no boundary
             // triangles; we thus only need to check the edges.
             if (comp->countEdges() != 4)
-                return 0;
+                return std::nullopt;
 
             long degree[4];
             for (i = 0; i < 4; i++)
@@ -120,13 +120,13 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
                 unsigned long nTriangles = comp->countTriangles();
                 for (i = 0; i < nTriangles; i++)
                     if (comp->triangle(i)->isMobiusBand())
-                        return new TrivialTri(N3_2);
-                return new TrivialTri(N3_1);
+                        return TrivialTri(N3_2);
+                return TrivialTri(N3_1);
             }
         }
     }
 
-    return 0;
+    return std::nullopt;
 }
 
 std::unique_ptr<Manifold> TrivialTri::manifold() const {
