@@ -87,8 +87,7 @@ void process(Triangulation<3>* t) {
     std::cout << t->label() << "  -->  ";
     totTris++;
 
-    StandardTriangulation* s =
-        StandardTriangulation::isStandardTriangulation(t);
+    auto s = StandardTriangulation::recognise(t);
     if (s) {
         std::cout << s->name();
         trisOk++;
@@ -117,8 +116,6 @@ void process(Triangulation<3>* t) {
 
             delete m;
         }
-
-        delete s;
     } else
         std::cout << "UNKNOWN";
 

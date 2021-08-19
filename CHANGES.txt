@@ -652,6 +652,9 @@ Version 6.1  [ TODO ]
             - Renamed classType enumeration to ClassType.  The old name
               is kept as a deprecated alias.
         Class StandardTriangulation:
+            - Routine isStandardTriangulation() is now called recognise(),
+              and now returns a std::unique_ptr.
+              The old name is kept as a deprecated alias.
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.
         Class SurfaceFilterInfo<...>:

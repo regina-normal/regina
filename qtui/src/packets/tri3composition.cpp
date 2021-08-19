@@ -237,9 +237,8 @@ void Tri3CompositionUI::refresh() {
     */
 
     // Try to identify the triangulation.
-    standard = std::unique_ptr<regina::StandardTriangulation>(
-        regina::StandardTriangulation::isStandardTriangulation(tri));
-    if (standard.get()) {
+    standard = regina::StandardTriangulation::recognise(tri);
+    if (standard) {
         standardTri->setText(standard->name().c_str());
         standardTri->setStyleSheet(
             "QLabel { color : black ; }");

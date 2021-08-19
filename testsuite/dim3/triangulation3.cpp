@@ -3950,9 +3950,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            StandardTriangulation* std =
-                StandardTriangulation::isStandardTriangulation(&t);
-            if (std == 0) {
+            auto std = StandardTriangulation::recognise(&t);
+            if (! std) {
                 std::ostringstream msg;
                 msg << "Large triangulation should simplify to " << simpleName
                     << ", but instead simplifies to something unrecognisable.";
@@ -3981,7 +3980,6 @@ class Triangulation3Test : public TriangulationTest<3> {
                     "but it does.";
                 CPPUNIT_FAIL(msg.str());
             }
-            delete std;
         }
 
         void verifyNoSimplification(const Triangulation<3>& tri,

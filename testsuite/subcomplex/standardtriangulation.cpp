@@ -66,8 +66,7 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            StandardTriangulation* std =
-                StandardTriangulation::isStandardTriangulation(&t);
+            auto std = StandardTriangulation::recognise(&t);
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -98,7 +97,6 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
             }
 
             delete mfd;
-            delete std;
         }
 
         void testRecognitionSig(const char* isoSig,
@@ -111,8 +109,7 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            StandardTriangulation* std =
-                StandardTriangulation::isStandardTriangulation(t);
+            auto std = StandardTriangulation::recognise(t);
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -143,7 +140,6 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
             }
 
             delete mfd;
-            delete std;
             delete t;
         }
 

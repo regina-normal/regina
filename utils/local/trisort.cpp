@@ -128,7 +128,6 @@ void process(Container* c) {
     if (! hasTriangulation(c))
         return;
 
-    StandardTriangulation* std;
     std::vector<TriSpec> children;
     TriSpec spec;
     for (Packet* child = c->firstChild(); child;
@@ -137,9 +136,9 @@ void process(Container* c) {
         spec.isTri = (child->type() == PACKET_TRIANGULATION3);
 
         if (spec.isTri) {
-            std = StandardTriangulation::isStandardTriangulation(
+            auto std = StandardTriangulation::recognise(
                 static_cast<Triangulation<3>*>(child));
-            spec.hasName = (std != 0);
+            spec.hasName = (bool)std;
 
             if (spec.hasName) {
                 spec.name = std->name();
@@ -148,8 +147,6 @@ void process(Container* c) {
                 BlockedSFS* sfs = dynamic_cast<BlockedSFS*>(std);
                 if (sfs && sfs->isPluggedIBundle(spec.specialName))
                     spec.hasSpecialName = true;
-
-                delete std;
             }
         }
 

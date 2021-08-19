@@ -361,8 +361,7 @@ void Tri3SurfacesUI::refresh() {
     name.clear();
 
     // Begin with the combinatorial recognition.
-    regina::StandardTriangulation* std =
-        regina::StandardTriangulation::isStandardTriangulation(tri);
+    auto std = regina::StandardTriangulation::recognise(tri);
     if (std) {
         regina::Manifold* mfd = std->manifold();
         if (mfd) {
@@ -382,7 +381,6 @@ void Tri3SurfacesUI::refresh() {
                 tri->isSolidTorus();
             }
         }
-        delete std;
     }
 
     if (! dynamic_cast<regina::SnapPeaTriangulation*>(tri)) {

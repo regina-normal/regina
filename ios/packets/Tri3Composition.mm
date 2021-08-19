@@ -125,12 +125,11 @@
 
     self.isosig.text = @(self.packet->isoSig().c_str());
     
-    regina::StandardTriangulation* stdTri = regina::StandardTriangulation::isStandardTriangulation(self.packet);
+    auto stdTri = regina::StandardTriangulation::recognise(self.packet);
     if (stdTri)
         self.standard.text = @(stdTri->name().c_str());
     else
         self.standard.attributedText = [TextHelper dimString:@"Not recognised"];
-    delete stdTri;
     
     NSMutableString* details = [[NSMutableString alloc] init];
     

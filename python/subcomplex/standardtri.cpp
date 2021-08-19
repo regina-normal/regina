@@ -54,12 +54,12 @@ void addStandardTriangulation(pybind11::module_& m) {
         .def("writeTeXName", [](const StandardTriangulation& t) {
             t.writeTeXName(std::cout);
         })
-        .def_static("isStandardTriangulation",
+        .def_static("recognise",
             overload_cast<regina::Component<3>*>(
-            &StandardTriangulation::isStandardTriangulation))
-        .def_static("isStandardTriangulation",
+            &StandardTriangulation::recognise))
+        .def_static("isStandardTriangulation", // deprecated
             overload_cast<regina::Triangulation<3>*>(
-            &StandardTriangulation::isStandardTriangulation))
+            &StandardTriangulation::recognise))
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

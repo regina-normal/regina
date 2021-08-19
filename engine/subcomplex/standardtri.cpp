@@ -61,59 +61,58 @@ std::string StandardTriangulation::TeXName() const {
     return ans.str();
 }
 
-StandardTriangulation* StandardTriangulation::isStandardTriangulation(
+std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         Component<3>* comp) {
-    StandardTriangulation* ans;
-    if ((ans = TrivialTri::isTrivialTriangulation(comp)))
-        return ans;
-    if ((ans = L31Pillow::isL31Pillow(comp)))
-        return ans;
-    if ((ans = LayeredLensSpace::isLayeredLensSpace(comp)))
-        return ans;
-    if ((ans = LayeredLoop::isLayeredLoop(comp)))
-        return ans;
-    if ((ans = LayeredChainPair::isLayeredChainPair(comp)))
-        return ans;
-    if ((ans = AugTriSolidTorus::isAugTriSolidTorus(comp)))
-        return ans;
-    if ((ans = PlugTriSolidTorus::isPlugTriSolidTorus(comp)))
-        return ans;
-    if ((ans = LayeredSolidTorus::isLayeredSolidTorus(comp)))
-        return ans;
-    if ((ans = SnapPeaCensusTri::isSmallSnapPeaCensusTri(comp)))
-        return ans;
+    if (auto ans = TrivialTri::isTrivialTriangulation(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = L31Pillow::isL31Pillow(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredLensSpace::isLayeredLensSpace(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredLoop::isLayeredLoop(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredChainPair::isLayeredChainPair(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = AugTriSolidTorus::isAugTriSolidTorus(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = PlugTriSolidTorus::isPlugTriSolidTorus(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredSolidTorus::isLayeredSolidTorus(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = SnapPeaCensusTri::isSmallSnapPeaCensusTri(comp))
+        return std::unique_ptr<StandardTriangulation>(ans);
 
-    return 0;
+    return nullptr;
 }
 
-StandardTriangulation* StandardTriangulation::isStandardTriangulation(
+std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         Triangulation<3>* tri) {
     if (tri->countComponents() != 1)
-        return 0;
+        return nullptr;
 
     // Do what we can through components.
     StandardTriangulation* ans;
-    if ((ans = isStandardTriangulation(tri->component(0))))
+    if (auto ans = recognise(tri->component(0)))
         return ans;
 
     // Run tests that require entire triangulations.
-    if ((ans = BlockedSFS::isBlockedSFS(tri)))
-        return ans;
-    if ((ans = LayeredTorusBundle::isLayeredTorusBundle(tri)))
-        return ans;
+    if (auto ans = BlockedSFS::isBlockedSFS(tri))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredTorusBundle::isLayeredTorusBundle(tri))
+        return std::unique_ptr<StandardTriangulation>(ans);
 
     // Save non-geometric graph manifolds until last.
-    if ((ans = BlockedSFSLoop::isBlockedSFSLoop(tri)))
-        return ans;
-    if ((ans = BlockedSFSPair::isBlockedSFSPair(tri)))
-        return ans;
-    if ((ans = BlockedSFSTriple::isBlockedSFSTriple(tri)))
-        return ans;
-    if ((ans = PluggedTorusBundle::isPluggedTorusBundle(tri)))
-        return ans;
+    if (auto ans = BlockedSFSLoop::isBlockedSFSLoop(tri))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = BlockedSFSPair::isBlockedSFSPair(tri))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = BlockedSFSTriple::isBlockedSFSTriple(tri))
+        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = PluggedTorusBundle::isPluggedTorusBundle(tri))
+        return std::unique_ptr<StandardTriangulation>(ans);
 
     // Nup.
-    return 0;
+    return nullptr;
 }
 
 } // namespace regina

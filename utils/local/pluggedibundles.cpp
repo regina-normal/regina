@@ -82,10 +82,9 @@ void process(Triangulation<3>* t) {
     std::cout << t->label();
     totTris++;
 
-    StandardTriangulation* s =
-        StandardTriangulation::isStandardTriangulation(t);
+    auto s = StandardTriangulation::recognise(t);
     if (s) {
-        BlockedSFS* sfs = dynamic_cast<BlockedSFS*>(s);
+        const BlockedSFS* sfs = dynamic_cast<const BlockedSFS*>(s.get());
         if (sfs) {
             std::string pluggedName;
             if (sfs->isPluggedIBundle(pluggedName)) {
@@ -93,8 +92,6 @@ void process(Triangulation<3>* t) {
                 std::cout << "  ==  " << pluggedName;
             }
         }
-
-        delete s;
     }
 
     std::cout << std::endl;

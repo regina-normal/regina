@@ -114,7 +114,7 @@
     {
         regina::Triangulation<3> simp(*self.packet);
         simp.intelligentSimplify();
-        regina::StandardTriangulation* std = regina::StandardTriangulation::isStandardTriangulation(&simp);
+        auto std = regina::StandardTriangulation::recognise(&simp);
         if (std) {
             regina::Manifold* mfd = std->manifold();
             if (mfd) {
@@ -134,7 +134,6 @@
                     self.packet->isSolidTorus();
                 }
             }
-            delete std;
         }
         if (manifoldName)
             self.manifold.text = manifoldName;

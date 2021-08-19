@@ -39,6 +39,7 @@
 #define __REGINA_STANDARDTRI_H
 #endif
 
+#include <memory>
 #include <optional>
 #include "regina-core.h"
 #include "core/output.h"
@@ -65,8 +66,7 @@ class Manifold;
  *
  * In general StandardTriangulation objects cannot be constructed
  * directly, but are instead created through static identification
- * routines such as
- * StandardTriangulation::isStandardTriangulation(Triangulation<3>*).
+ * routines such as StandardTriangulation::recognise(Triangulation<3>*).
  *
  * Subclasses corresponding to different families of triangulations may,
  * but not need to, override the output routines writeTextShort() and
@@ -223,7 +223,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * identifications of these boundary triangles with each other.
          *
          * Note that the triangulation-based routine
-         * isStandardTriangulation(Triangulation<3>*) may recognise more
+         * recognise(Triangulation<3>*) may recognise more
          * triangulations than this routine, since passing an entire
          * triangulation allows access to more information.
          *
@@ -231,8 +231,17 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * @return the details of the standard triangulation if the
          * given component is recognised, or \c null otherwise.
          */
-        static StandardTriangulation* isStandardTriangulation(
+        static std::unique_ptr<StandardTriangulation> recognise(
             Component<3>* component);
+        /**
+         * A deprecated alias to determine whether a component represents
+         * one of the standard triangulations understood by Regina.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<StandardTriangulation>
+            isStandardTriangulation(Component<3>* component);
         /**
          * Determines whether the given triangulation represents one of the
          * standard triangulations understood by Regina.  The list of
@@ -245,16 +254,24 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * identifications of these boundary triangles with each other.
          *
          * This routine may recognise more triangulations than the
-         * component-based isStandardTriangulation(Component<3>*),
-         * since passing an entire triangulation allows access to
-         * more information.
+         * component-based recognise(Component<3>*), since passing an entire
+         * triangulation allows access to more information.
          *
          * @param tri the triangulation under examination.
          * @return the details of the standard triangualation if the
          * given triangulation is recognised, or \c null otherwise.
          */
-        static StandardTriangulation* isStandardTriangulation(
+        static std::unique_ptr<StandardTriangulation> recognise(
             Triangulation<3>* tri);
+        /**
+         * A deprecated alias to determine whether a triangulation represents
+         * one of the standard triangulations understood by Regina.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<StandardTriangulation>
+            isStandardTriangulation(Triangulation<3>* tri);
 
     protected:
         /**
@@ -302,6 +319,16 @@ inline void StandardTriangulation::writeTextShort(std::ostream& out) const {
 inline void StandardTriangulation::writeTextLong(std::ostream& out) const {
     writeName(out);
     out << '\n';
+}
+
+inline std::unique_ptr<StandardTriangulation>
+        StandardTriangulation::isStandardTriangulation(Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline std::unique_ptr<StandardTriangulation>
+        StandardTriangulation::isStandardTriangulation(Triangulation<3>* tri) {
+    return recognise(tri);
 }
 
 } // namespace regina

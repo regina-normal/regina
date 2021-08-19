@@ -597,8 +597,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
             }
 
-            StandardTriangulation* std =
-                StandardTriangulation::isStandardTriangulation(&t);
+            auto std = StandardTriangulation::recognise(&t);
             if (! std)
                 ans = "<unrecognised triangulation>";
             else {
@@ -609,7 +608,6 @@ class Triangulation4Test : public TriangulationTest<4> {
                     ans = mfd->name();
                     delete mfd;
                 }
-                delete std;
             }
 
             if (ans != bdryManifold) {
@@ -829,8 +827,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
 
                 std::string link;
-                StandardTriangulation* std =
-                    StandardTriangulation::isStandardTriangulation(&t);
+                auto std = StandardTriangulation::recognise(&t);
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
@@ -841,7 +838,6 @@ class Triangulation4Test : public TriangulationTest<4> {
                         link = mfd->name();
                         delete mfd;
                     }
-                    delete std;
                 }
 
                 if (link != "S3") {
@@ -862,8 +858,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
 
                 std::string link;
-                StandardTriangulation* std =
-                    StandardTriangulation::isStandardTriangulation(&t);
+                auto std = StandardTriangulation::recognise(&t);
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
@@ -874,7 +869,6 @@ class Triangulation4Test : public TriangulationTest<4> {
                         link = mfd->name();
                         delete mfd;
                     }
-                    delete std;
                 }
 
                 if (link != "B3") {
@@ -894,8 +888,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             Triangulation<3> t(*(tri.vertex(whichVertex)->buildLink()));
             t.intelligentSimplify();
 
-            StandardTriangulation* std =
-                StandardTriangulation::isStandardTriangulation(&t);
+            auto std = StandardTriangulation::recognise(&t);
             if (! std)
                 link = "<unrecognised triangulation>";
             else {
@@ -906,7 +899,6 @@ class Triangulation4Test : public TriangulationTest<4> {
                     link = mfd->name();
                     delete mfd;
                 }
-                delete std;
             }
 
             if (link != manifold) {
