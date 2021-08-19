@@ -69,40 +69,35 @@ std::optional<LayeredChainPair> LayeredChainPair::recognise(
     Perm<4> firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
 
     for (int p = 0; p < 6; p++) {
-        first = new LayeredChain(base, Perm<4>::S3[p]);
-        first->extendMaximal();
+        LayeredChain first(base, Perm<4>::S3[p]);
+        first.extendMaximal();
 
-        firstTop = first->top();
-        firstBottom = first->bottom();
-        firstTopRoles = first->topVertexRoles();
-        firstBottomRoles = first->bottomVertexRoles();
+        firstTop = first.top();
+        firstBottom = first.bottom();
+        firstTopRoles = first.topVertexRoles();
+        firstBottomRoles = first.bottomVertexRoles();
 
         // Check to see if the first chain fills the entire component.
-        if (first->index() == nTet) {
+        if (first.index() == nTet) {
             // The only success here will be if we have a chain pair of
             // indices (n-1) and 1, which is in fact a layered loop.
 
-            LayeredChain* longChain = new LayeredChain(
-                firstBottom, firstBottomRoles);
-            if (longChain->extendBelow())
-                if (longChain->bottom() == firstTop &&
-                        longChain->bottomVertexRoles() ==
+            LayeredChain longChain(firstBottom, firstBottomRoles);
+            if (longChain.extendBelow())
+                if (longChain.bottom() == firstTop &&
+                        longChain.bottomVertexRoles() ==
                         firstTopRoles * Perm<4>(3, 2, 1, 0)) {
                     // We've got a layered loop!
-                    delete first;
-
                     if (nTet == 2) {
                         // The new chain is already too long.
-                        delete longChain;
-                        longChain = new LayeredChain(
-                            firstBottom, firstBottomRoles);
+                        longChain = LayeredChain(firstBottom, firstBottomRoles);
                     }
 
                     // Extend longChain to (n-1) tetrahedra.
-                    while (longChain->index() + 1 < nTet)
-                        longChain->extendBelow();
+                    while (longChain.index() + 1 < nTet)
+                        longChain.extendBelow();
                     return LayeredChainPair(
-                        new LayeredChain(
+                        LayeredChain(
                             firstBottom->adjacentTetrahedron(
                                 firstBottomRoles[0]),
                             firstBottom->adjacentGluing(
@@ -111,8 +106,6 @@ std::optional<LayeredChainPair> LayeredChainPair::recognise(
                         longChain);
                 }
 
-            delete longChain;
-            delete first;
             continue;
         }
 
@@ -120,25 +113,21 @@ std::optional<LayeredChainPair> LayeredChainPair::recognise(
         secondBottom = firstTop->adjacentTetrahedron(firstTopRoles[3]);
         if (secondBottom == firstTop || secondBottom == firstBottom ||
                 secondBottom == 0) {
-            delete first;
             continue;
         }
 
-        second = new LayeredChain(secondBottom,
+        LayeredChain second(secondBottom,
             firstTop->adjacentGluing(firstTopRoles[3]) *
             firstTopRoles * Perm<4>(1, 3, 0, 2));
-        while (second->extendAbove())
+        while (second.extendAbove())
             ;
 
-        if (second->index() + first->index() != nTet) {
-            delete first;
-            delete second;
+        if (second.index() + first.index() != nTet)
             continue;
-        }
 
-        secondTop = second->top();
-        secondTopRoles = second->topVertexRoles();
-        secondBottomRoles = second->bottomVertexRoles();
+        secondTop = second.top();
+        secondTopRoles = second.topVertexRoles();
+        secondBottomRoles = second.bottomVertexRoles();
 
         // At this point we have two chains that together have the
         // correct number of tetrahedra.  All we need do is check the
@@ -157,13 +146,10 @@ std::optional<LayeredChainPair> LayeredChainPair::recognise(
                     firstBottomRoles[1]) * firstBottomRoles *
                     Perm<4>(2, 0, 3, 1)) {
             // We found one!
-            if (first->index() > second->index())
+            if (first.index() > second.index())
                 return LayeredChainPair(second, first);
             else
                 return LayeredChainPair(first, second);
-        } else {
-            delete first;
-            delete second;
         }
     }
 
@@ -175,8 +161,8 @@ std::unique_ptr<Manifold> LayeredChainPair::manifold() const {
     std::unique_ptr<SFSpace> ans(new SFSpace());
 
     ans->insertFibre(2, -1);
-    ans->insertFibre(chain_[0]->index() + 1, 1);
-    ans->insertFibre(chain_[1]->index() + 1, 1);
+    ans->insertFibre(chain_[0].index() + 1, 1);
+    ans->insertFibre(chain_[1].index() + 1, 1);
 
     ans->reduce();
     return ans;
@@ -195,8 +181,8 @@ std::optional<AbelianGroup> LayeredChainPair::homology() const {
     MatrixInt mat(3, 3);
     mat.initialise(1);
     mat.entry(0, 1) = mat.entry(2, 2) = -1;
-    mat.entry(1, 0) = chain_[0]->index();
-    mat.entry(2, 1) = chain_[1]->index();
+    mat.entry(1, 0) = chain_[0].index();
+    mat.entry(2, 1) = chain_[1].index();
     ans.addGroup(mat);
     return ans;
 }

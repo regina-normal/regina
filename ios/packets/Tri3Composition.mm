@@ -238,8 +238,8 @@
             [details appendFormat:@"Layered chain pair %s\n", pair->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             [details appendFormat:@INDENT1 "Chain lengths: %ld, %ld\n",
-             pair->chain(0)->index(),
-             pair->chain(1)->index()];
+             pair->chain(0).index(),
+             pair->chain(1).index()];
             
             [details appendString:@"\n"];
         }

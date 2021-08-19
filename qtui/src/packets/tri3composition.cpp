@@ -692,8 +692,8 @@ void Tri3CompositionUI::findLayeredChainPairs() {
             detailsItem = new QTreeWidgetItem(id, detailsItem);
             detailsItem->setText(0,
                 tr("Chain lengths: %1, %2").
-                arg(pair->chain(0)->index()).
-                arg(pair->chain(1)->index()));
+                arg(pair->chain(0).index()).
+                arg(pair->chain(1).index()));
         }
     }
 }

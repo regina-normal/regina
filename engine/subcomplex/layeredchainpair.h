@@ -78,53 +78,30 @@ namespace regina {
  *
  * All optional StandardTriangulation routines are implemented for this class.
  *
- * This class implements C++ move semantics and adheres to the C++ Swappable
- * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.  Note, however, that
- * the only way to create objects of this class (aside from copying or moving)
- * is via the static member function recognise().
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
  */
 class LayeredChainPair : public StandardTriangulation {
     private:
-        LayeredChain* chain_[2];
+        LayeredChain chain_[2];
             /**< The two layered chains that make up this pair. */
 
     public:
         /**
          * Creates a new copy of this structure.
          */
-        LayeredChainPair(const LayeredChainPair&);
-
-        /**
-         * Moves the contents of the given structure into this new structure.
-         *
-         * The structure that was passed (\a src) will no longer be usable.
-         *
-         * @param src the structure to move from.
-         */
-        LayeredChainPair(LayeredChainPair&& src) noexcept;
-
-        /**
-         * Destroys this structure.
-         */
-        virtual ~LayeredChainPair();
+        LayeredChainPair(const LayeredChainPair&) = default;
 
         /**
          * Sets this to be a copy of the given structure.
          *
          * @return a reference to this structure.
          */
-        LayeredChainPair& operator = (const LayeredChainPair&);
-
-        /**
-         * Moves the contents of the given structure into this structure.
-         *
-         * The structure that was passed (\a src) will no longer be usable.
-         *
-         * @param src the structure to move from.
-         * @return a reference to this structure.
-         */
-        LayeredChainPair& operator = (LayeredChainPair&& src) noexcept;
+        LayeredChainPair& operator = (const LayeredChainPair&) = default;
 
         /**
          * Deprecated routine that returns a new copy of this structure.
@@ -152,7 +129,7 @@ class LayeredChainPair : public StandardTriangulation {
          * or 1.
          * @return the requested layered chain.
          */
-        const LayeredChain* chain(int which) const;
+        const LayeredChain& chain(int which) const;
 
         /**
          * Determines if the given triangulation component is a layered
@@ -184,9 +161,8 @@ class LayeredChainPair : public StandardTriangulation {
     private:
         /**
          * Creates a new structure containing the given data.
-         * This object will take ownership of the two given layered chains.
          */
-        LayeredChainPair(LayeredChain* chain0, LayeredChain* chain1);
+        LayeredChainPair(const LayeredChain& c0, const LayeredChain& c1);
 };
 
 /**
@@ -204,59 +180,33 @@ void swap(LayeredChainPair& a, LayeredChainPair& b) noexcept;
 
 // Inline functions for LayeredChainPair
 
-inline LayeredChainPair::LayeredChainPair(const LayeredChainPair& src) :
-        chain_ { new LayeredChain(*src.chain_[0]),
-                 new LayeredChain(*src.chain_[1]) } {
-}
-inline LayeredChainPair::LayeredChainPair(LayeredChainPair&& src) noexcept :
-        chain_ { src.chain_[0], src.chain_[1] } {
-    src.chain_[0] = src.chain_[1] = nullptr;
-}
-inline LayeredChainPair::LayeredChainPair(LayeredChain* chain0,
-        LayeredChain* chain1) : chain_ { chain0, chain1 } {
-}
-inline LayeredChainPair::~LayeredChainPair() {
-    delete chain_[0];
-    delete chain_[1];
-}
-inline LayeredChainPair& LayeredChainPair::operator = (
-        const LayeredChainPair& src) {
-    delete chain_[0];
-    delete chain_[1];
-    chain_[0] = new LayeredChain(*src.chain_[0]);
-    chain_[1] = new LayeredChain(*src.chain_[1]);
-    return *this;
-}
-inline LayeredChainPair& LayeredChainPair::operator = (
-        LayeredChainPair&& src) noexcept {
-    std::swap(chain_[0], src.chain_[0]);
-    std::swap(chain_[1], src.chain_[1]);
-    // Let src dispose of the original contents in its own destructor.
-    return *this;
+inline LayeredChainPair::LayeredChainPair(const LayeredChain& c0,
+        const LayeredChain& c1) : chain_ { c0, c1 } {
 }
 
 inline void LayeredChainPair::swap(LayeredChainPair& other) noexcept {
-    std::swap(chain_[0], other.chain_[0]);
-    std::swap(chain_[1], other.chain_[1]);
+    chain_[0].swap(other.chain_[0]);
+    chain_[1].swap(other.chain_[1]);
 }
+
 inline LayeredChainPair* LayeredChainPair::clone() const {
     return new LayeredChainPair(*this);
 }
 
-inline const LayeredChain* LayeredChainPair::chain(int which) const {
+inline const LayeredChain& LayeredChainPair::chain(int which) const {
     return chain_[which];
 }
 inline std::ostream& LayeredChainPair::writeName(std::ostream& out) const {
     return out << "C("
-        << chain_[0]->index() << ',' << chain_[1]->index() << ')';
+        << chain_[0].index() << ',' << chain_[1].index() << ')';
 }
 inline std::ostream& LayeredChainPair::writeTeXName(std::ostream& out) const {
     return out << "C_{"
-        << chain_[0]->index() << ',' << chain_[1]->index() << '}';
+        << chain_[0].index() << ',' << chain_[1].index() << '}';
 }
 inline void LayeredChainPair::writeTextLong(std::ostream& out) const {
     out << "Layered chain pair (chain lengths "
-        << chain_[0]->index() << ", " << chain_[1]->index() << ')';
+        << chain_[0].index() << ", " << chain_[1].index() << ')';
 }
 
 inline std::optional<LayeredChainPair> LayeredChainPair::isLayeredChainPair(
