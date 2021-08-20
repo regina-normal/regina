@@ -1316,11 +1316,11 @@ void HomologicalData::computeTorsionLinkingForm() {
         for (j=0; j<it1->second.size(); j++)
             h1PrimePowerDecomp[i].second[j] = it1->second[j].first;
 
-        linkingFormPD[i] = new Matrix<Rational>(it1->second.size(),
+        linkingFormPD[i] = Matrix<Rational>(it1->second.size(),
                 it1->second.size() );
         for (j=0; j<it1->second.size(); j++)
             for (k=0; k<it1->second.size(); k++)
-                linkingFormPD[i]->entry(j,k) =
+                linkingFormPD[i].entry(j,k) =
                     torsionLinkingFormPresentationMat.entry(
                         it1->second[j].second,
                         it1->second[k].second
@@ -1399,8 +1399,7 @@ void HomologicalData::computeTorsionLinkingForm() {
             // first initialize the length of twoTorSigmaV
             twoTorSigmaV.resize(torRankV[0].second.size());
 
-            groupV.resize(h1PrimePowerDecomp[0].second.size(),
-                Integer(0) );
+            groupV.resize(h1PrimePowerDecomp[0].second.size(), Integer(0));
 
             ProperPrimePower.resize( h1PrimePowerDecomp[0].second.size() );
             for (i=0; i<ProperPrimePower.size(); i++) {
@@ -1442,11 +1441,11 @@ void HomologicalData::computeTorsionLinkingForm() {
                     // first we evaluate the form(x,x) for x==groupV.
                     // the form is linkingformPD[0]
                     tSum=Rational::zero;
-                    for (j=0; j<linkingFormPD[0]->rows(); j++)
-                        for (k=0; k<linkingFormPD[0]->columns();
+                    for (j=0; j<linkingFormPD[0].rows(); j++)
+                        for (k=0; k<linkingFormPD[0].columns();
                                 k++)
                             tSum += Rational(groupV[j]*groupV[k])*
-                                linkingFormPD[0]->entry(j,k);
+                                linkingFormPD[0].entry(j,k);
 
                     // reduce mod 1, then turn into a long double and
                     // evaluate cos, sin
@@ -1547,7 +1546,7 @@ void HomologicalData::computeTorsionLinkingForm() {
 
             for (k=0; k<torRankV[i].second[j]; k++)
                 for (l=0; l<torRankV[i].second[j]; l++)
-                    tempM.entry(k,l) = (Rational(tI)*linkingFormPD[i]->
+                    tempM.entry(k,l) = (Rational(tI)*linkingFormPD[i].
                         entry(k+curri,l+curri)).numerator();
 
             tempa.push_back( tempM.det().legendre(torRankV[i].first) );
@@ -1617,14 +1616,14 @@ void HomologicalData::computeTorsionLinkingForm() {
         // std::vector< std::pair< Integer,
         //     std::vector<unsigned long> > > h1PrimePowerDecomp;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
-        //std::vector< Matrix<Rational>* > linkingFormPD;
+        //std::vector< Matrix<Rational> > linkingFormPD;
         for (i=0; i<h1PrimePowerDecomp[0].second.size(); i++) {
             // run down diagonal of linkingFormPD[0], for each (i,i) entry
             // multiply it by 2^{h1PrimePowerDecomp[0].second[i]-1} check if
             // congruent to zero. if not, trigger flag.
             tI = Integer(2);
             tI.raiseToPower(h1PrimePowerDecomp[0].second[i]-1);
-            tRat = Rational(tI) * linkingFormPD[0]->entry(i,i);
+            tRat = Rational(tI) * linkingFormPD[0].entry(i,i);
             tN = tRat.numerator();
             tD = tRat.denominator();
             tN.divisionAlg(tD,tR);

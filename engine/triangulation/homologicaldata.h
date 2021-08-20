@@ -203,88 +203,88 @@ private:
     };
 
     /**
-     * Stored pointer to a valid triangulation. All routines use this
+     * Stored copy of a valid triangulation. All routines use this
      * triangulation as reference.
-     * This is the triangulation that it is initialized by.
+     * This is a deep copy of the triangulation that it is initialized by.
      */
-    Triangulation<3> tri_;
+    const Triangulation<3> tri_;
 
     /**
-     * Pointer to the 0-th homology group in standard cellular coordinates,
+     * The 0-th homology group in standard cellular coordinates,
      * or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology0_;
     /**
-     * Pointer to the 1st homology group in standard cellular coordinates,
+     * The 1st homology group in standard cellular coordinates,
      * or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology1_;
     /**
-     * Pointer to the 2nd homology group in standard cellular coordinates,
+     * The 2nd homology group in standard cellular coordinates,
      * or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology2_;
     /**
-     * Pointer to the 3rd homology group in standard cellular coordinates,
+     * The 3rd homology group in standard cellular coordinates,
      * or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> mHomology3_;
 
     /**
-     * Pointer to the 0-th boundary homology group in standard cellular
+     * The 0-th boundary homology group in standard cellular
      * coordinates, or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology0_;
     /**
-     * Pointer to the 1st boundary homology group in standard cellular
+     * The 1st boundary homology group in standard cellular
      * coordinates, or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology1_;
     /**
-     * Pointer to the 2nd boundary homology group in standard cellular
+     * The 2nd boundary homology group in standard cellular
      * coordinates, or no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> bHomology2_;
 
     /**
-     * Pointer to the boundary inclusion on 0-th homology, standard
+     * The boundary inclusion on 0-th homology, standard
      * cellular coordinates, or no value if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap0_;
     /**
-     * Pointer to the boundary inclusion on 1st homology, standard
+     * The boundary inclusion on 1st homology, standard
      * cellular coordinates, or no value if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap1_;
     /**
-     * Pointer to the boundary inclusion on 2nd homology, standard
+     * The boundary inclusion on 2nd homology, standard
      * cellular coordinates, or no value if it has not yet been computed.
      */
     std::optional<HomMarkedAbelianGroup> bmMap2_;
 
     /**
-     * Pointer to the 0-th homology group in dual cellular coordinates, or
+     * The 0-th homology group in dual cellular coordinates, or
      * no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology0_;
     /**
-     * Pointer to the 1st homology group in dual cellular coordinates, or
+     * The 1st homology group in dual cellular coordinates, or
      * no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology1_;
     /**
-     * Pointer to the 2nd homology group in dual cellular coordinates, or
+     * The 2nd homology group in dual cellular coordinates, or
      * no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology2_;
     /**
-     * Pointer to the 3rd homology group in dual cellular coordinates, or
+     * The 3rd homology group in dual cellular coordinates, or
      * no value if it has not yet been computed.
      */
     std::optional<MarkedAbelianGroup> dmHomology3_;
 
     /**
-     * Pointer to the cellular approx of the identity H1(M) --> H1(M)
+     * The cellular approx of the identity H1(M) --> H1(M)
      * from dual to standard cellular coordinates, or no value if it has
      * not yet been computed.
      */
@@ -433,7 +433,7 @@ private:
         h1PrimePowerDecomp;
     /** p-primary decomposition of the torsion linking form as needed to
      ** construct the Kawauchi-Kojima invariants. */
-    std::vector< Matrix<Rational>* > linkingFormPD;
+    std::vector<Matrix<Rational>> linkingFormPD;
 
     /** True if torsion linking form is `hyperbolic'.   */
     bool torsionLinkingFormIsHyperbolic;
@@ -479,14 +479,8 @@ public:
     HomologicalData(const Triangulation<3>& input);
     /**
      * Copy constructor.
-     *
-     * @param h the homological data to clone.
      */
-    HomologicalData(const HomologicalData& h);
-    /**
-     * Destructor.
-     */
-    ~HomologicalData();
+    HomologicalData(const HomologicalData&) = default;
     /**
      * Writes a short text representation of this object to the
      * given output stream.
@@ -784,102 +778,13 @@ inline HomologicalData::HomologicalData(const Triangulation<3>& input):
         ccIndexingComputed_(false),
         chainComplexesComputed(false),
 
-        torsionFormComputed(false),
-        h1PrimePowerDecomp(0), linkingFormPD(0) 
+        torsionFormComputed(false)
 {
     std::fill(numStandardCells, numStandardCells + 4, 0);
     std::fill(numDualCells, numDualCells + 4, 0);
     std::fill(numBdryCells, numBdryCells + 3, 0);
 }
 
-
-
-// copy constructor
-inline HomologicalData::HomologicalData(const HomologicalData& g) :
-
-        tri_(g.tri_),
-
-        mHomology0_(g.mHomology0_),
-        mHomology1_(g.mHomology1_),
-        mHomology2_(g.mHomology2_),
-        mHomology3_(g.mHomology3_),
-
-        bHomology0_(g.bHomology0_),
-        bHomology1_(g.bHomology1_),
-        bHomology2_(g.bHomology2_),
-
-        bmMap0_(g.bmMap0_),
-        bmMap1_(g.bmMap1_),
-        bmMap2_(g.bmMap2_),
-
-        dmHomology0_(g.dmHomology0_),
-        dmHomology1_(g.dmHomology1_),
-        dmHomology2_(g.dmHomology2_),
-        dmHomology3_(g.dmHomology3_),
-
-        dmTomMap1_(g.dmTomMap1_),
-
-        ccIndexingComputed_(g.ccIndexingComputed_),
-
-        chainComplexesComputed(g.chainComplexesComputed),
-        A0_(g.A0_), A1_(g.A1_), A2_(g.A2_),
-        A3_(g.A3_), A4_(g.A4_),
-        B0_(g.B0_), B1_(g.B1_), B2_(g.B2_),
-        B3_(g.B3_), B4_(g.B4_),
-        Bd0_(g.Bd0_), Bd1_(g.Bd1_),
-        Bd2_(g.Bd2_), Bd3_(g.Bd3_),
-        B0Incl_(g.B0Incl_),
-        B1Incl_(g.B1Incl_),
-        B2Incl_(g.B2Incl_),
-        H1map_(g.H1map_),
-
-        torsionFormComputed(g.torsionFormComputed),
-        embeddabilityString(g.embeddabilityString)
-{
-    // More complex initialisation:
-    if (ccIndexingComputed_) {
-        // Numbers of cells, dual cells and standard boundary cells
-        std::copy(g.numStandardCells, g.numStandardCells + 4, numStandardCells);
-        std::copy(g.numDualCells, g.numDualCells + 4, numDualCells);
-        std::copy(g.numBdryCells, g.numBdryCells + 3, numBdryCells);
-
-        sNIV = g.sNIV;   // non-ideal vertices
-        sIEOE = g.sIEOE;  // ideal endpoints of edges
-        sIEEOF = g.sIEEOF; // ideal end edges of faces
-        sIEFOT = g.sIEFOT; // ideal end faces of tetrahedra
-        dNINBV = g.dNINBV; // nonideal nonboundary vertices
-        dNBE = g.dNBE;   // non-boundary edges
-        dNBF = g.dNBF;   // non-boundary faces
-        sBNIV = g.sBNIV;  // boundary non-ideal vertices
-        sBNIE = g.sBNIE;  // boundary non-ideal edges
-        sBNIF = g.sBNIF;  // boundary non-ideal faces
-    }
-
-    if (torsionFormComputed) {
-        h1PrimePowerDecomp = g.h1PrimePowerDecomp;
-        linkingFormPD.resize( g.linkingFormPD.size(), 0 );
-        for (unsigned long i=0; i<linkingFormPD.size(); i++)
-            linkingFormPD[i] = new Matrix<Rational> (*g.linkingFormPD[i]);
-        torsionLinkingFormIsHyperbolic = g.torsionLinkingFormIsHyperbolic;
-        torsionLinkingFormIsSplit = g.torsionLinkingFormIsSplit;
-        torsionLinkingFormSatisfiesKKtwoTorCondition =
-            g.torsionLinkingFormSatisfiesKKtwoTorCondition;
-        torRankV = g.torRankV;
-        twoTorSigmaV = g.twoTorSigmaV;
-        oddTorLegSymV = g.oddTorLegSymV;
-        torsionRankString = g.torsionRankString;
-        torsionSigmaString = g.torsionSigmaString;
-        torsionLegendreString = g.torsionLegendreString;
-    }
-}
-
-// destructor
-inline HomologicalData::~HomologicalData() {
-    if (torsionFormComputed) {
-        for (unsigned long i=0; i<linkingFormPD.size(); i++)
-            delete linkingFormPD[i];
-    }
-}
 
 inline unsigned long HomologicalData::countStandardCells(unsigned dimension)
 {
