@@ -18,6 +18,9 @@
 #include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchain.h"
 #include "subcomplex/layeredchainpair.h"
+#include "subcomplex/layeredloop.h"
+#include "subcomplex/layeredsolidtorus.h"
+#include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/pillowtwosphere.h"
 #include "subcomplex/satregion.h"
 #include "subcomplex/snappeacensustri.h"
@@ -50,6 +53,9 @@ int main(int argc, char* argv[]) {
     SHOW_SIZE(L31Pillow);
     SHOW_SIZE(LayeredChain);
     SHOW_SIZE(LayeredChainPair);
+    SHOW_SIZE(LayeredLoop);
+    SHOW_SIZE(LayeredSolidTorus);
+    SHOW_SIZE(LayeredTorusBundle);
     SHOW_SIZE(PillowTwoSphere);
     SHOW_SIZE(SatRegion);
     SHOW_SIZE(SnapPeaCensusTri);
