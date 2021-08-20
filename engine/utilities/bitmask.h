@@ -72,6 +72,10 @@ namespace regina {
  * This means that, upon construction (or reset), the length will be
  * automatically rounded up to the next "raw unit of storage".
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \todo \opt Insist that sizeof(Piece) is a power of two, and replace
  * expensive division/mod operations with cheap bit operations.
  *
@@ -80,8 +84,7 @@ namespace regina {
  * not give the results that you expect.  In particular, flip() may set
  * additional \c true bits in the "dead space" between the intended length
  * and the actual length, and this may have a flow-on effect for other
- * operations (such as subset testing, bit counting and so on).  Be
- * careful!
+ * operations (such as subset testing, bit counting and so on).  Be careful!
  *
  * \ifacespython Not present.
  */
@@ -142,9 +145,22 @@ class Bitmask {
          * the new bitmask will be invalid also).  Invalid bitmasks must be
          * assigned a length using reset(size_t) or the assignment operator.
          *
-         * @param cloneMe the bitmask to clone.
+         * @param src the bitmask to clone.
          */
-        Bitmask(const Bitmask& cloneMe);
+        Bitmask(const Bitmask& src);
+
+        /**
+         * Moves the contents of the given bitmask into this new bitmask.
+         *
+         * It is fine if the given bitmask is invalid (but in this case,
+         * the new bitmask will be invalid also).  Invalid bitmasks must be
+         * assigned a length using reset(size_t) or the assignment operator.
+         *
+         * The bitmask that was passed (\a src) will no longer be usable.
+         *
+         * @param src the bitmask whose contents should be moved.
+         */
+        Bitmask(Bitmask&& src) noexcept;
 
         /**
          * Destroys this bitmask.
@@ -273,6 +289,27 @@ class Bitmask {
          * @return a reference to this bitmask.
          */
         Bitmask& operator = (const Bitmask& other);
+
+        /**
+         * Moves the contents of the given bitmask into this bitmask.
+         *
+         * It is fine if the given bitmask is invalid (but in this case,
+         * the new bitmask will be invalid also).  Invalid bitmasks must be
+         * assigned a length using reset(size_t) or the assignment operator.
+         *
+         * The bitmask that was passed (\a src) will no longer be usable.
+         *
+         * @param src the bitmask whose contents should be moved.
+         * @return a reference to this bitmask.
+         */
+        Bitmask& operator = (Bitmask&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given bitmask.
+         *
+         * @param other the bitmask whose contents should be swapped with this.
+         */
+        void swap(Bitmask& other) noexcept;
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -466,6 +503,14 @@ class Bitmask {
 };
 
 /**
+ * Swaps the contents of the two given bitmasks.
+ *
+ * @param a the first bitmask whose contents should be swapped.
+ * @param b the second bitmask whose contents should be swapped.
+ */
+void swap(Bitmask& a, Bitmask& b) noexcept;
+
+/**
  * Writes the given bitmask to the given output stream as a sequence of
  * zeroes and ones.
  *
@@ -567,9 +612,9 @@ class Bitmask1 {
         /**
          * Creates a clone of the given bitmask.
          *
-         * @param cloneMe the bitmask to clone.
+         * @param src the bitmask to clone.
          */
-        inline Bitmask1(const Bitmask1<T>& cloneMe) = default;
+        inline Bitmask1(const Bitmask1<T>& src) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -969,9 +1014,9 @@ class Bitmask2 {
         /**
          * Creates a clone of the given bitmask.
          *
-         * @param cloneMe the bitmask to clone.
+         * @param src the bitmask to clone.
          */
-        inline Bitmask2(const Bitmask2<T, U>& cloneMe) = default;
+        inline Bitmask2(const Bitmask2<T, U>& src) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -1406,10 +1451,14 @@ inline Bitmask::Bitmask(size_t length) :
     std::fill(mask, mask + pieces, 0);
 }
 
-inline Bitmask::Bitmask(const Bitmask& cloneMe) :
-        pieces(cloneMe.pieces),
-        mask(new Piece[cloneMe.pieces]) {
-    std::copy(cloneMe.mask, cloneMe.mask + pieces, mask);
+inline Bitmask::Bitmask(const Bitmask& src) :
+        pieces(src.pieces), mask(new Piece[src.pieces]) {
+    std::copy(src.mask, src.mask + pieces, mask);
+}
+
+inline Bitmask::Bitmask(Bitmask&& src) noexcept :
+        pieces(src.pieces), mask(src.mask) {
+    src.mask = nullptr;
 }
 
 inline Bitmask::~Bitmask() {
@@ -1438,6 +1487,18 @@ inline Bitmask& Bitmask::operator = (const Bitmask& other) {
     if (pieces)
         std::copy(other.mask, other.mask + pieces, mask);
     return *this;
+}
+
+inline Bitmask& Bitmask::operator = (Bitmask&& src) noexcept {
+    pieces = src.pieces;
+    std::swap(mask, src.mask);
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
+}
+
+inline void Bitmask::swap(Bitmask& other) noexcept {
+    std::swap(pieces, other.pieces);
+    std::swap(mask, other.mask);
 }
 
 inline void Bitmask::truncate(size_t numBits) {
@@ -1561,6 +1622,10 @@ inline bool Bitmask::atMostOneBit() const {
             return false;
     }
     return true;
+}
+
+inline void swap(Bitmask& a, Bitmask& b) noexcept {
+    a.swap(b);
 }
 
 inline std::ostream& operator << (std::ostream& out, const Bitmask& mask) {
