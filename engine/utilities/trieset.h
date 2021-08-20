@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include "core/output.h"
 #include "utilities/bitmask.h"
 
 namespace regina {
@@ -88,7 +89,7 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  */
-class TrieSet {
+class TrieSet : public Output<TrieSet> {
     private:
         /**
          * An individual node in this trie.
@@ -263,6 +264,25 @@ class TrieSet {
         template <typename T>
         bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
             unsigned long universeSize) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 };
 
 /**
@@ -447,6 +467,14 @@ bool TrieSet::hasExtraSuperset(const T& subset,
 
 inline void swap(TrieSet& a, TrieSet& b) noexcept {
     a.swap(b);
+}
+
+inline void TrieSet::writeTextShort(std::ostream& out) const {
+    if (root_.descendants_ == 1) {
+        out << "Trie containing 1 set";
+    } else {
+        out << "Trie containing " << root_.descendants_ << " sets";
+    }
 }
 
 } // namespace regina

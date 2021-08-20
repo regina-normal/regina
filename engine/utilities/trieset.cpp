@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <stack>
+#include <vector>
 #include "utilities/trieset.h"
 
 namespace regina {
@@ -73,6 +74,80 @@ TrieSet& TrieSet::operator = (const TrieSet& src) {
     }
 
     return *this;
+}
+
+void TrieSet::writeTextLong(std::ostream& out) const {
+    out << "Trie containing ";
+    if (root_.descendants_ == 0) {
+        out << "0 sets." << std::endl;
+        return;
+    }
+
+    if (root_.descendants_ == 1)
+        out << "1 set:" << std::endl;
+    else
+        out << root_.descendants_ << " sets:" << std::endl;
+
+    // We don't know how deep the tree goes, so use our own stack.
+    std::stack<const Node*> nodes;
+    std::vector<size_t> elts;
+    const Node* didChild = nullptr;
+
+    // We will process the right branch of each child before the left, since
+    // this will result in the sets being output in lexicographical order.
+    nodes.push(&root_);
+    while (! nodes.empty()) {
+        const Node* curr = nodes.top();
+        if (! didChild) {
+            // We are visiting this node for the first time.
+            size_t beneath =
+                (curr->child_[0] ? curr->child_[0]->descendants_ : 0) +
+                (curr->child_[1] ? curr->child_[1]->descendants_ : 0);
+            if (curr->descendants_ > beneath) {
+                for (size_t i = beneath; i < curr->descendants_; ++i) {
+                    out << "    {";
+                    bool first = true;
+                    for (auto elt : elts) {
+                        if (first)
+                            first = false;
+                        else
+                            out << ',';
+                        out << ' ' << elt;
+                    }
+                    out << " }" << std::endl;
+                }
+            }
+            if (curr->child_[1]) {
+                elts.push_back(nodes.size() - 1);
+                nodes.push(curr->child_[1]);
+                didChild = nullptr;
+            } else if (curr->child_[0]) {
+                nodes.push(curr->child_[0]);
+                didChild = nullptr;
+            } else {
+                didChild = curr;
+                nodes.pop();
+            }
+        } else if (didChild == curr->child_[1]) {
+            // We have just finished processing the right child.
+            if (elts.back() == nodes.size() - 1)
+                elts.pop_back();
+
+            // Now do the left branch, if that branch exists.
+            if (curr->child_[0]) {
+                nodes.push(curr->child_[0]);
+                didChild = nullptr;
+            } else {
+                didChild = curr;
+                nodes.pop();
+            }
+        } else {
+            // We have just finished processing the left child.
+            // We are done with this part of the tree.
+            didChild = curr;
+            nodes.pop();
+        }
+    }
 }
 
 } // namespace regina
