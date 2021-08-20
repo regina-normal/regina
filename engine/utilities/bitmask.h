@@ -85,8 +85,6 @@ namespace regina {
  * additional \c true bits in the "dead space" between the intended length
  * and the actual length, and this may have a flow-on effect for other
  * operations (such as subset testing, bit counting and so on).  Be careful!
- *
- * \ifacespython Not present.
  */
 class Bitmask {
     public:
@@ -194,8 +192,7 @@ class Bitmask {
          * routine takes iterators over this container, and sets the
          * bits at the corresponding indices to the given value.
          *
-         * For example, the following code would set bits 3, 5 and 6
-         * to \c true:
+         * For example, the following code would set bits 3, 5 and 6 to \c true:
          *
          * \code
          * std::vector<unsigned> indices;
@@ -219,6 +216,10 @@ class Bitmask {
          * larger bitmask types.
          * \pre All indices in the given list are at least zero and
          * strictly less than the length of this bitmask.
+         *
+         * \ifacespython Instead of a pair of iterators, you should pass
+         * a Python list (which, as described above, must be a sorted
+         * list of indices).
          *
          * @param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -393,6 +394,17 @@ class Bitmask {
          * identical.
          */
         bool operator == (const Bitmask& other) const;
+
+        /**
+         * Determines whether this and the given bitmask are different.
+         *
+         * \pre This and the given bitmask have the same length.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this and the given bitmask are
+         * different.
+         */
+        bool operator != (const Bitmask& other) const;
 
         /**
          * Determines whether this bitmask appears strictly before the given
@@ -572,7 +584,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, though the more general Bitmask class is.
  */
 template <typename T>
 class Bitmask1 {
@@ -806,6 +818,17 @@ class Bitmask1 {
         }
 
         /**
+         * Determines whether this and the given bitmask are different.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this and the given bitmask are
+         * different.
+         */
+        inline bool operator != (const Bitmask1<T>& other) const {
+            return (mask != other.mask);
+        }
+
+        /**
          * Determines whether this bitmask appears strictly before the given
          * bitmask when bitmasks are sorted in lexicographical order.
          * Here the bit at index 0 is least significant, and the bit at
@@ -972,7 +995,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, though the more general Bitmask class is.
  */
 template <typename T, typename U = T>
 class Bitmask2 {
@@ -1237,6 +1260,17 @@ class Bitmask2 {
          */
         inline bool operator == (const Bitmask2<T, U>& other) const {
             return (low == other.low && high == other.high);
+        }
+
+        /**
+         * Determines whether this and the given bitmask are different.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this and the given bitmask are
+         * different.
+         */
+        inline bool operator != (const Bitmask2<T, U>& other) const {
+            return (low != other.low || high != other.high);
         }
 
         /**
@@ -1559,6 +1593,10 @@ inline void Bitmask::flip() {
 
 inline bool Bitmask::operator == (const Bitmask& other) const {
     return std::equal(mask, mask + pieces, other.mask);
+}
+
+inline bool Bitmask::operator != (const Bitmask& other) const {
+    return ! std::equal(mask, mask + pieces, other.mask);
 }
 
 inline bool Bitmask::lessThan(const Bitmask& other) const {

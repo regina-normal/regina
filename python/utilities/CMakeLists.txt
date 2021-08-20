@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   base64.cpp
+  bitmask.cpp
   boolset.cpp
   i18nutils.cpp
   intutils.cpp

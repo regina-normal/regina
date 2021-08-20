@@ -57,6 +57,7 @@ Version 6.1  [ TODO ]
               signatures and knot signatures.
         Class Bitmask, Bitmask1, Bitmask2:
             - Added compile-time constant fixedSize.
+            - Added != to complement the already-existing == operator.
             - Bitmask now has a move constructor, move assignment, and
               member and global swap() functions.
         Class BitmaskLen8, BitmaskLen16, BitmaskLen32, BitmaskLen64:
