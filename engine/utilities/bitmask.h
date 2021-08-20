@@ -531,8 +531,6 @@ void swap(Bitmask& a, Bitmask& b) noexcept;
  * bitmask (specifically, the length will be rounded up to the next "raw
  * unit of storage").
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
@@ -548,8 +546,6 @@ class Bitmask1;
  *
  * Since the length of the bitmask is not stored, the number of bits
  * written will be 8 * sizeof(\a T).
- *
- * \ifacespython Not present.
  *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
@@ -584,7 +580,13 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Not present, though the more general Bitmask class is.
+ * \ifacespython Python does not support templates, and so instead Regina's
+ * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+ * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
+ * Bitmask256.  Each of these will be an optimised bitmask class that
+ * can hold the corresponding number of bits, and is guaranteed to be an
+ * instance of either the C++ Bitmask1<T> class (where possible) or the
+ * C++ Bitmask2<T,U> template class (if necessary).
  */
 template <typename T>
 class Bitmask1 {
@@ -726,6 +728,10 @@ class Bitmask1 {
          * larger bitmask types.
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
+         *
+         * \ifacespython Instead of a pair of iterators, you should pass
+         * a Python list (which, as described above, must be a sorted
+         * list of indices).
          *
          * @param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -957,8 +963,6 @@ class Bitmask2;
  * Since the length of the bitmask is not stored, the number of bits
  * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
@@ -995,7 +999,13 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
- * \ifacespython Not present, though the more general Bitmask class is.
+ * \ifacespython Python does not support templates, and so instead Regina's
+ * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+ * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
+ * Bitmask256.  Each of these will be an optimised bitmask class that
+ * can hold the corresponding number of bits, and is guaranteed to be an
+ * instance of either the C++ Bitmask1<T> class (where possible) or the
+ * C++ Bitmask2<T,U> template class (if necessary).
  */
 template <typename T, typename U = T>
 class Bitmask2 {
@@ -1156,6 +1166,10 @@ class Bitmask2 {
          * larger bitmask types.
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
+         *
+         * \ifacespython Instead of a pair of iterators, you should pass
+         * a Python list (which, as described above, must be a sorted
+         * list of indices).
          *
          * @param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -1420,7 +1434,8 @@ class Bitmask2 {
  *
  * \deprecated This typedef is deprecated; just use Bitmask1<uint8_t> instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised bitmask class via the name Bitmask8.
  */
 typedef Bitmask1<uint8_t> BitmaskLen8 [[deprecated]];
 
@@ -1436,7 +1451,8 @@ typedef Bitmask1<uint8_t> BitmaskLen8 [[deprecated]];
  *
  * \deprecated This typedef is deprecated; just use Bitmask1<uint16_t> instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised bitmask class via the name Bitmask16.
  */
 typedef Bitmask1<uint16_t> BitmaskLen16 [[deprecated]];
 
@@ -1452,7 +1468,8 @@ typedef Bitmask1<uint16_t> BitmaskLen16 [[deprecated]];
  *
  * \deprecated This typedef is deprecated; just use Bitmask1<uint32_t> instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised bitmask class via the name Bitmask32.
  */
 typedef Bitmask1<uint32_t> BitmaskLen32 [[deprecated]];
 
@@ -1468,7 +1485,8 @@ typedef Bitmask1<uint32_t> BitmaskLen32 [[deprecated]];
  *
  * \deprecated This typedef is deprecated; just use Bitmask1<uint64_t> instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised bitmask class via the name Bitmask64.
  */
 typedef Bitmask1<uint64_t> BitmaskLen64 [[deprecated]];
 

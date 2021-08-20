@@ -33,11 +33,63 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "utilities/bitmask.h"
+#include "utilities/intutils.h"
 #include "../helpers.h"
 
 using regina::Bitmask;
+using regina::Bitmask1;
+using regina::Bitmask2;
 
-void addBitmask(pybind11::module_& m) {
+template <class B>
+void addBitmaskOpt(pybind11::module_& m, const char* name) {
+    auto c = pybind11::class_<B>(m, name)
+        .def(pybind11::init<>())
+        .def(pybind11::init<size_t>())
+        .def(pybind11::init<const B&>())
+        .def("reset", pybind11::overload_cast<>(&B::reset))
+        .def("reset", pybind11::overload_cast<size_t>(&B::reset))
+        .def("truncate", &B::truncate)
+        .def("get", &B::get)
+        .def("set", (void (B::*)(size_t, bool))(&B::set))
+        .def("set", [](B& b, pybind11::list indices, bool value) {
+            std::vector<size_t> arg;
+            for (auto item : indices) {
+                try {
+                    arg.push_back(item.cast<size_t>());
+                } catch (pybind11::cast_error const&) {
+                    throw std::invalid_argument(
+                        "B index not convertible to integer");
+                }
+            }
+            b.set(arg.begin(), arg.end(), value);
+        })
+        .def(pybind11::self &= pybind11::self)
+        .def(pybind11::self |= pybind11::self)
+        .def(pybind11::self ^= pybind11::self)
+        .def(pybind11::self -= pybind11::self)
+        .def("flip", &B::flip)
+        .def("lessThan", &B::lessThan)
+        .def(pybind11::self <= pybind11::self)
+        .def("inUnion", &B::inUnion)
+        .def("containsIntn", &B::containsIntn)
+        .def("bits", &B::bits)
+        .def("firstBit", &B::firstBit)
+        .def("lastBit", &B::lastBit)
+        .def("atMostOneBit", &B::atMostOneBit)
+        // On some systems we cannot take addresses of inline class constants
+        // (e.g., this fails with gcc10 on windows).  We therefore define
+        // getter functions instead.
+        .def_property_readonly_static("fixedSize", [](pybind11::object) {
+            return B::fixedSize;
+        })
+    ;
+    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(B&, B&))(regina::swap));
+}
+
+void addBitmaskGeneric(pybind11::module_& m) {
     auto c = pybind11::class_<Bitmask>(m, "Bitmask")
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())
@@ -84,5 +136,20 @@ void addBitmask(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Bitmask&, Bitmask&))(regina::swap));
+}
+
+void addBitmask(pybind11::module_& m) {
+    addBitmaskGeneric(m);
+    addBitmaskOpt<Bitmask1<uint8_t>>(m, "Bitmask8");
+    addBitmaskOpt<Bitmask1<uint16_t>>(m, "Bitmask16");
+    addBitmaskOpt<Bitmask1<uint32_t>>(m, "Bitmask32");
+    addBitmaskOpt<Bitmask1<uint64_t>>(m, "Bitmask64");
+    #ifdef INT128_AVAILABLE
+    addBitmaskOpt<Bitmask1<regina::IntOfSize<16>::utype>>(m, "Bitmask128");
+    addBitmaskOpt<Bitmask2<regina::IntOfSize<16>::utype,
+        regina::IntOfSize<16>::utype>>(m, "Bitmask256");
+    #else
+    addBitmaskOpt<Bitmask2<uint64_t, uint64_t>>(m, "Bitmask128");
+    #endif
 }
 

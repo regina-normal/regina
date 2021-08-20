@@ -31,20 +31,61 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "utilities/intutils.h"
 #include "utilities/trieset.h"
 #include "../helpers.h"
 
 using regina::Bitmask;
+using regina::Bitmask1;
+using regina::Bitmask2;
 using regina::TrieSet;
+
+#ifdef INT128_AVAILABLE
+typedef Bitmask1<regina::IntOfSize<16>::utype> Bitmask128;
+typedef Bitmask2<regina::IntOfSize<16>::utype, regina::IntOfSize<16>::utype>
+    Bitmask256;
+#else
+typedef Bitmask2<uint64_t, uint64_t> Bitmask128;
+#endif
 
 void addTrieSet(pybind11::module_& m) {
     auto c = pybind11::class_<TrieSet>(m, "TrieSet")
         .def(pybind11::init<>())
         .def(pybind11::init<const TrieSet&>())
         .def("swap", &TrieSet::swap)
+
         .def("insert", &TrieSet::insert<Bitmask>)
         .def("hasSubset", &TrieSet::hasSubset<Bitmask>)
         .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask>)
+
+        // The following set of bitmask types matches the types that we
+        // bind in python; see bitmask.cpp for the full list.
+
+        .def("insert", &TrieSet::insert<Bitmask1<uint8_t>>)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint8_t>>)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint8_t>>)
+
+        .def("insert", &TrieSet::insert<Bitmask1<uint16_t>>)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint16_t>>)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint16_t>>)
+
+        .def("insert", &TrieSet::insert<Bitmask1<uint32_t>>)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint32_t>>)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint32_t>>)
+
+        .def("insert", &TrieSet::insert<Bitmask1<uint64_t>>)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint64_t>>)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint64_t>>)
+
+        .def("insert", &TrieSet::insert<Bitmask128>)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask128>)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask128>)
+
+        #ifdef INT128_AVAILABLE
+        .def("insert", &TrieSet::insert<Bitmask256>)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask256>)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask256>)
+        #endif
     ;
     regina::python::add_eq_operators(c);
 
