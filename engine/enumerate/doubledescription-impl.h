@@ -436,7 +436,7 @@ bool DoubleDescription::intersectHyperplane(
     // We use the TrieSet data structure to speed up adjacency testing
     // in the code below.  Construct a TrieSet that records the facet
     // structure for every vertex in the old solution set.
-    TrieSet<BitmaskType> trie;
+    TrieSet trie;
     for (otherit = src.begin(); otherit != src.end(); ++otherit)
         trie.insert((*otherit)->facets());
 

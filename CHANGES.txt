@@ -776,6 +776,9 @@ Version 6.1  [ TODO ]
               a full triangluation.  This function is now also available
               through Python, and can take a pure Python function as its
               action argument.
+        Class TrieSet:
+            - This is no longer a template class (though its member
+              functions are still templated on the bitmask type).
         Class TriSolidTorus:
             - Routine formsTriSolidTorus() is now called recognise(), and
               return a std::optional instead of a pointer that could be null.

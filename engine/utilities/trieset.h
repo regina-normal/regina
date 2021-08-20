@@ -55,10 +55,11 @@ namespace regina {
  * fairly small universe, but where the \e number of sets being stored
  * can be extremely large.
  *
- * For simplicity, let the universe consist of the integers 0,...,\a n.
- * Sets are represented as bitmasks of type \a T (which must be capable
- * of holding bitmasks of length \a n).  The <i>i</i>th bit of a bitmask
- * indicates whether the integer \a i belongs to the corresponding set.
+ * For simplicity, let the universe consist of the integers 0,...,(<i>n</i>-1).
+ * Sets are represented as bitmasks of length \a n (using one of Regina's
+ * bitmask types, such as Bitmask, Bitmask1 or Bitmask2).  The <i>i</i>th bit
+ * of a bitmask indicates whether the integer \a i belongs to the corresponding
+ * set.
  *
  * To construct an empty trie, simply call the default constructor.
  * To insert a new set into the trie, call insert() (whose running time is
@@ -83,102 +84,9 @@ namespace regina {
  * which occurs at level 3 of the tree.  Regions of the tree that do
  * not store any sets are never explicitly constructed in memory.
  *
- * \pre The template argument T is one of Regina's bitmask types, such
- * as Bitmask, Bitmask1 or Bitmask2.
- *
  * \ifacespython Not present.
  */
-template <typename T>
 class TrieSet {
-    private:
-        struct Node;
-        Node root_;
-            /**< Stores the root node in this tree. */
-
-    public:
-        /**
-         * Constructs an empty collection of sets.
-         */
-        TrieSet() = default;
-
-        /**
-         * Insert the given set into this collection.  The same set may
-         * be insert into this collection multiple times (and this
-         * multiplicity will be recorded correctly).
-         *
-         * Running time for insertion is O(\a n), where \a n is the
-         * bitmask length.
-         *
-         * \param entry the new set to insert.
-         */
-        void insert(const T& entry);
-
-        /**
-         * Determines whether this collection of sets contains any subset
-         * of the argument \a superset.
-         * Subsets need not be \e proper subsets (so if an exact copy of
-         * \a superset is found in the tree then this will suffice).
-         *
-         * This routine has a slow running time, which in
-         * pathological cases can grow to either <tt>2^n</tt>
-         * (where \a n is the bitmask length) or the number of sets
-         * stored in this collection, whichever is smaller.  However,
-         * for "typical" searches in the context of normal surface
-         * enumeration, the running time is often significantly faster.
-         *
-         * \param superset the object of the query: we are searching this
-         * collection for a (non-strict) subset of this argument.
-         * \param universeSize the number of elements in the underlying
-         * universe (and therefore the lowest possible level in the
-         * search tree).  Note that this is always less than or equal to
-         * the number of bits that the underlying bitmask type \a T
-         * can support.
-         * \return \c true if a subset was found, or \c false otherwise.
-         */
-        bool hasSubset(const T& superset, unsigned long universeSize) const;
-
-        /**
-         * Performs the particular superset search required by the double
-         * description method.
-         *
-         * This routine asks the following question:  In this collection
-         * of sets, is there any superset of the argument \a subset
-         * \e other than \a exc1 or \a exc2?  Here the sets \a exc1 and
-         * \a exc2 are explicitly excluded from our search.  Supersets
-         * need not be \e proper supersets (so if an exact copy of
-         * \a subset is found in the tree then this will suffice).
-         *
-         * This routine has a slow running time, which in
-         * pathological cases can grow to either <tt>2^n</tt>
-         * (where \a n is the bitmask length) or the number of sets
-         * stored in this collection, whichever is smaller.  However,
-         * for "typical" searches in the context of normal surface
-         * enumeration, the running time is often significantly faster.
-         *
-         * \pre The sets \a exc1 and \a exc2 are distinct, and each is
-         * contained in this collection precisely once.
-         *
-         * \param subset the object of the query: we are searching this
-         * collection for a (non-strict) superset of this argument.
-         * \param exc1 the first set in the collection to be excluded
-         * from this search.
-         * \param exc2 the second set in the collection to be excluded
-         * from this search.
-         * \param universeSize the number of elements in the underlying
-         * universe (and therefore the lowest possible level in the
-         * search tree).  Note that this is always less than or equal to
-         * the number of bits that the underlying bitmask type \a T
-         * can support.
-         * \return \c true if a superset with the required properties
-         * was found, or \c false otherwise.
-         */
-        bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
-            unsigned long universeSize) const;
-
-        // Make this class non-copyable.
-        TrieSet(const TrieSet&) = delete;
-        TrieSet& operator = (const TrieSet&) = delete;
-
     private:
         /**
          * An individual node in this trie.
@@ -210,24 +118,119 @@ class TrieSet {
             Node(const Node&) = delete;
             Node& operator = (const Node&) = delete;
         };
+
+        Node root_;
+            /**< Stores the root node in this tree. */
+
+    public:
+        /**
+         * Constructs an empty collection of sets.
+         */
+        TrieSet() = default;
+
+        /**
+         * Insert the given set into this collection.  The same set may
+         * be insert into this collection multiple times (and this
+         * multiplicity will be recorded correctly).
+         *
+         * Running time for insertion is O(\a n), where \a n is the
+         * bitmask length.
+         *
+         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
+         * or Bitmask2.
+         *
+         * \param entry the new set to insert.
+         */
+        template <typename T>
+        void insert(const T& entry);
+
+        /**
+         * Determines whether this collection of sets contains any subset
+         * of the argument \a superset.
+         * Subsets need not be \e proper subsets (so if an exact copy of
+         * \a superset is found in the tree then this will suffice).
+         *
+         * This routine has a slow running time, which in
+         * pathological cases can grow to either <tt>2^n</tt>
+         * (where \a n is the bitmask length) or the number of sets
+         * stored in this collection, whichever is smaller.  However,
+         * for "typical" searches in the context of normal surface
+         * enumeration, the running time is often significantly faster.
+         *
+         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
+         * or Bitmask2.
+         *
+         * \param superset the object of the query: we are searching this
+         * collection for a (non-strict) subset of this argument.
+         * \param universeSize the number of elements in the underlying
+         * universe (and therefore the lowest possible level in the
+         * search tree).  This must be less than or equal to the number of
+         * bits that the underlying bitmask type \a T can support.
+         * \return \c true if a subset was found, or \c false otherwise.
+         */
+        template <typename T>
+        bool hasSubset(const T& superset, unsigned long universeSize) const;
+
+        /**
+         * Performs the particular superset search required by the double
+         * description method.
+         *
+         * This routine asks the following question:  In this collection
+         * of sets, is there any superset of the argument \a subset
+         * \e other than \a exc1 or \a exc2?  Here the sets \a exc1 and
+         * \a exc2 are explicitly excluded from our search.  Supersets
+         * need not be \e proper supersets (so if an exact copy of
+         * \a subset is found in the tree then this will suffice).
+         *
+         * This routine has a slow running time, which in
+         * pathological cases can grow to either <tt>2^n</tt>
+         * (where \a n is the bitmask length) or the number of sets
+         * stored in this collection, whichever is smaller.  However,
+         * for "typical" searches in the context of normal surface
+         * enumeration, the running time is often significantly faster.
+         *
+         * \pre The sets \a exc1 and \a exc2 are distinct, and each is
+         * contained in this collection precisely once.
+         *
+         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
+         * or Bitmask2.
+         *
+         * \param subset the object of the query: we are searching this
+         * collection for a (non-strict) superset of this argument.
+         * \param exc1 the first set in the collection to be excluded
+         * from this search.
+         * \param exc2 the second set in the collection to be excluded
+         * from this search.
+         * \param universeSize the number of elements in the underlying
+         * universe (and therefore the lowest possible level in the
+         * search tree).  This must be less than or equal to the number of
+         * bits that the underlying bitmask type \a T can support.
+         * \return \c true if a superset with the required properties
+         * was found, or \c false otherwise.
+         */
+        template <typename T>
+        bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
+            unsigned long universeSize) const;
+
+        // Make this class non-copyable.
+        TrieSet(const TrieSet&) = delete;
+        TrieSet& operator = (const TrieSet&) = delete;
 };
 
 /*@}*/
 
 // Inline functions and template implementations for TrieSet
 
-template <typename T>
-inline TrieSet<T>::Node::Node() : child_ { nullptr, nullptr }, descendants_(0) {
+inline TrieSet::Node::Node() : child_ { nullptr, nullptr }, descendants_(0) {
 }
 
-template <typename T>
-inline TrieSet<T>::Node::~Node() {
+inline TrieSet::Node::~Node() {
     delete child_[0];
     delete child_[1];
 }
 
 template <typename T>
-void TrieSet<T>::insert(const T& entry) {
+void TrieSet::insert(const T& entry) {
     ++root_.descendants_;
 
     long last = entry.lastBit();
@@ -252,8 +255,7 @@ void TrieSet<T>::insert(const T& entry) {
 }
 
 template <typename T>
-bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
-        const {
+bool TrieSet::hasSubset(const T& superset, unsigned long universeSize) const {
     const Node** node = new const Node*[universeSize + 2];
 
     long level = 0;
@@ -290,7 +292,7 @@ bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
 }
 
 template <typename T>
-bool TrieSet<T>::hasExtraSuperset(const T& subset,
+bool TrieSet::hasExtraSuperset(const T& subset,
         const T& exc1, const T& exc2, unsigned long universeSize) const {
     const Node** node = new const Node*[universeSize + 2];
 
