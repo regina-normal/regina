@@ -136,6 +136,9 @@ Version 6.1  [ TODO ]
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.
             - Simplified the underlying web of template specialisations.
+        Class FacePair:
+            - Increment/decrement operators now insist that the face
+              pair is not past-the-end/before-the-start respectively.
         Class FacetPairing<dim>, FacetPairingBase<dim>:
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.

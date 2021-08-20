@@ -72,10 +72,12 @@ namespace regina {
  */
 class FacePair {
     private:
-        unsigned first_;
-            /**< The smaller of the two faces in this pair. */
-        unsigned second_;
-            /**< The larger of the two faces in this pair. */
+        uint8_t code_;
+            /**< An internal code, whose lowest two bits represent the
+                 smaller index face, and whose next two bits represent
+                 the higher index face.  Specifically:
+                 (0,0) (0,1) (0,2) (0,3) (1,2) (1,3) (2,3) (3,3) ->
+                  0,    1,    2,    3,    6,    7,    11,   15. */
 
     public:
         /**
@@ -92,13 +94,11 @@ class FacePair {
          * @param newFirst the first face number in the new pair.
          * @param newSecond the second face number in the new pair.
          */
-        FacePair(int newFirst, int newSecond);
+        FacePair(int first, int second);
         /**
          * Creates a new face pair that is a clone of the given pair.
-         *
-         * @param cloneMe the face pair to clone.
          */
-        FacePair(const FacePair& cloneMe) = default;
+        FacePair(const FacePair&) = default;
 
         /**
          * Returns the smaller of the two face numbers in this pair.
@@ -108,7 +108,7 @@ class FacePair {
          *
          * @return the lower face number.
          */
-        unsigned lower() const;
+        int lower() const;
         /**
          * Returns the larger of the two face numbers in this pair.
          *
@@ -117,7 +117,7 @@ class FacePair {
          *
          * @return the upper face number.
          */
-        unsigned upper() const;
+        int upper() const;
 
         /**
          * Determines if this face pair represents a before-the-start
@@ -207,6 +207,8 @@ class FacePair {
          * This is a preincrement operator: the object will be changed,
          * and then a reference to it will be returned.
          *
+         * \pre This face pair is not currently past-the-end.
+         *
          * \ifacespython This routine is not available; however, the
          * postincrement operator is available under the name inc().
          *
@@ -221,6 +223,8 @@ class FacePair {
          * This is a postincrement operator: the object will be changed,
          * but a copy of the original reference will be returned.
          *
+         * \pre This face pair is not currently past-the-end.
+         *
          * \ifacespython This routine is available under the name inc().
          *
          * @return a copy of this object before the change took place.
@@ -233,6 +237,8 @@ class FacePair {
          *
          * This is a predecrement operator: the object will be changed,
          * and then a reference to it will be returned.
+         *
+         * \pre This face pair is not currently before-the-start.
          *
          * \ifacespython This routine is not available; however, the
          * postdecrement operator is available under the name dec().
@@ -248,11 +254,19 @@ class FacePair {
          * This is a postdecrement operator: the object will be changed,
          * but a copy of the original reference will be returned.
          *
+         * \pre This face pair is not currently before-the-start.
+         *
          * \ifacespython This routine is available under the name dec().
          *
          * @return a copy of this object before the change took place.
          */
         FacePair operator -- (int);
+
+    private:
+        /**
+         * Creates a new face pair with the given internal code.
+         */
+        FacePair(uint8_t code);
 };
 
 /**
@@ -266,55 +280,65 @@ std::ostream& operator << (std::ostream& out, const FacePair& pair);
 
 // Inline functions for FacePair
 
-inline FacePair::FacePair() : first_(0), second_(1) {
+inline FacePair::FacePair() : code_(1) {
 }
 
-inline unsigned FacePair::lower() const {
-    return first_;
+inline FacePair::FacePair(int first, int second) :
+        code_(first < second ?
+              ((first << 2) | second) :
+              ((second << 2) | first)) {
 }
 
-inline unsigned FacePair::upper() const {
-    return second_;
+inline FacePair::FacePair(uint8_t code) : code_(code) {
+}
+
+inline int FacePair::lower() const {
+    return (code_ >> 2) & 3;
+}
+
+inline int FacePair::upper() const {
+    return (code_ & 3);
 }
 
 inline bool FacePair::isBeforeStart() const {
-    return (second_ <= 0);
+    return (code_ <= 0);
 }
 
 inline bool FacePair::isPastEnd() const {
-    return (first_ >= 3);
+    return (code_ >= 15);
+}
+
+inline FacePair FacePair::complement() const {
+    // Codes: 1 <-> 11, 2 <-> 7, 3 <-> 6.
+    switch (code_) {
+        case 1: return FacePair(11);
+        case 11: return FacePair(1);
+        default: return FacePair(9 - code_);
+    }
 }
 
 inline bool FacePair::operator == (const FacePair& other) const {
-    return (first_ == other.first_ && second_ == other.second_);
+    return (code_ == other.code_);
 }
 
 inline bool FacePair::operator != (const FacePair& other) const {
-    return (first_ != other.first_ || second_ != other.second_);
+    return (code_ != other.code_);
 }
 
 inline bool FacePair::operator < (const FacePair& other) const {
-    if (first_ < other.first_)
-        return true;
-    if (first_ > other.first_)
-        return false;
-    return (second_ < other.second_);
+    return (code_ < other.code_);
 }
 
 inline bool FacePair::operator > (const FacePair& other) const {
-    return (other < *this);
+    return (code_ > other.code_);
 }
 
 inline bool FacePair::operator <= (const FacePair& other) const {
-    if (first_ < other.first_)
-        return true;
-    if (first_ > other.first_)
-        return false;
-    return (second_ <= other.second_);
+    return (code_ <= other.code_);
 }
 
 inline bool FacePair::operator >= (const FacePair& other) const {
-    return (other <= *this);
+    return (code_ >= other.code_);
 }
 
 inline FacePair FacePair::operator ++ (int) {
