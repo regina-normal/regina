@@ -10,6 +10,27 @@ Equality type : EqualityType.BY_REFERENCE
 AugTriSolidTorus : class
 Equality type : EqualityType.BY_REFERENCE
 
+Bitmask : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask128 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask16 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask256 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask32 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask64 : class
+Equality type : EqualityType.BY_VALUE
+
+Bitmask8 : class
+Equality type : EqualityType.BY_VALUE
+
 BlockedSFS : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1850,6 +1871,9 @@ Triangulation8 : class
 Equality type : EqualityType.BY_REFERENCE
 
 Triangulation9 : class
+Equality type : EqualityType.BY_REFERENCE
+
+TrieSet : class
 Equality type : EqualityType.BY_REFERENCE
 
 TrivialTri : class
