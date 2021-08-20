@@ -41,6 +41,7 @@ void addOSUtils(pybind11::module_& m);
 void addRandUtils(pybind11::module_& m);
 void addStringUtils(pybind11::module_& m);
 void addTightEncoding(pybind11::module_& m);
+void addTrieSet(pybind11::module_& m);
 void addXMLUtils(pybind11::module_& m);
 
 void addUtilitiesClasses(pybind11::module_& m) {
@@ -53,6 +54,7 @@ void addUtilitiesClasses(pybind11::module_& m) {
     addRandUtils(m);
     addStringUtils(m);
     addTightEncoding(m);
+    addTrieSet(m);
     addXMLUtils(m);
 }
 

@@ -87,8 +87,6 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
- *
- * \ifacespython Not present.
  */
 class TrieSet {
     private:
@@ -190,6 +188,9 @@ class TrieSet {
          * Running time for insertion is O(\a n), where \a n is the
          * bitmask length.
          *
+         * \ifacespython This is only available where \a T is the type
+         * regina::Bitmask.
+         *
          * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
          * or Bitmask2.
          *
@@ -210,6 +211,9 @@ class TrieSet {
          * stored in this collection, whichever is smaller.  However,
          * for "typical" searches in the context of normal surface
          * enumeration, the running time is often significantly faster.
+         *
+         * \ifacespython This is only available where \a T is the type
+         * regina::Bitmask.
          *
          * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
          * or Bitmask2.
@@ -245,6 +249,9 @@ class TrieSet {
          *
          * \pre The sets \a exc1 and \a exc2 are distinct, and each is
          * contained in this collection precisely once.
+         *
+         * \ifacespython This is only available where \a T is the type
+         * regina::Bitmask.
          *
          * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
          * or Bitmask2.

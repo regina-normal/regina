@@ -12,6 +12,7 @@ SET ( FILES
   randutils.cpp
   stringutils.cpp
   tightencoding.cpp
+  trieset.cpp
   xmlutils.cpp
   )
 
