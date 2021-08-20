@@ -98,8 +98,8 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
     // Run tests that require entire triangulations.
     if (auto ans = BlockedSFS::isBlockedSFS(tri))
         return std::unique_ptr<StandardTriangulation>(ans);
-    if (auto ans = LayeredTorusBundle::isLayeredTorusBundle(tri))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredTorusBundle::recognise(tri))
+        return std::make_unique<LayeredTorusBundle>(*ans);
 
     // Save non-geometric graph manifolds until last.
     if (auto ans = BlockedSFSLoop::isBlockedSFSLoop(tri))

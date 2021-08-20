@@ -58,64 +58,63 @@ namespace {
     const TxIParallelCore core_T_p;
 }
 
-LayeredTorusBundle* LayeredTorusBundle::isLayeredTorusBundle(
+std::optional<LayeredTorusBundle> LayeredTorusBundle::recognise(
         Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
-        return nullptr;
+        return std::nullopt;
     if (tri->countVertices() > 1)
-        return nullptr;
+        return std::nullopt;
     if (tri->countComponents() > 1)
-        return nullptr;
+        return std::nullopt;
     if (tri->size() < 6)
-        return nullptr;
+        return std::nullopt;
 
     // We have a 1-vertex 1-component closed triangulation with at least
     // six tetrahedra.
 
     // Hunt for the core thin torus bundle.
-    LayeredTorusBundle* ans;
-    if ((ans = hunt(tri, core_T_6_1)))
+    if (auto ans = hunt(tri, core_T_6_1))
         return ans;
-    if ((ans = hunt(tri, core_T_7_1)))
+    if (auto ans = hunt(tri, core_T_7_1))
         return ans;
-    if ((ans = hunt(tri, core_T_8_1)))
+    if (auto ans = hunt(tri, core_T_8_1))
         return ans;
-    if ((ans = hunt(tri, core_T_8_2)))
+    if (auto ans = hunt(tri, core_T_8_2))
         return ans;
-    if ((ans = hunt(tri, core_T_9_1)))
+    if (auto ans = hunt(tri, core_T_9_1))
         return ans;
-    if ((ans = hunt(tri, core_T_9_2)))
+    if (auto ans = hunt(tri, core_T_9_2))
         return ans;
-    if ((ans = hunt(tri, core_T_10_1)))
+    if (auto ans = hunt(tri, core_T_10_1))
         return ans;
-    if ((ans = hunt(tri, core_T_10_2)))
+    if (auto ans = hunt(tri, core_T_10_2))
         return ans;
-    if ((ans = hunt(tri, core_T_10_3)))
+    if (auto ans = hunt(tri, core_T_10_3))
         return ans;
-    if ((ans = hunt(tri, core_T_11_1)))
+    if (auto ans = hunt(tri, core_T_11_1))
         return ans;
-    if ((ans = hunt(tri, core_T_11_2)))
+    if (auto ans = hunt(tri, core_T_11_2))
         return ans;
-    if ((ans = hunt(tri, core_T_11_3)))
+    if (auto ans = hunt(tri, core_T_11_3))
         return ans;
-    if ((ans = hunt(tri, core_T_12_1)))
+    if (auto ans = hunt(tri, core_T_12_1))
         return ans;
-    if ((ans = hunt(tri, core_T_12_2)))
+    if (auto ans = hunt(tri, core_T_12_2))
         return ans;
-    if ((ans = hunt(tri, core_T_12_3)))
+    if (auto ans = hunt(tri, core_T_12_3))
         return ans;
-    if ((ans = hunt(tri, core_T_12_4)))
+    if (auto ans = hunt(tri, core_T_12_4))
         return ans;
-    if ((ans = hunt(tri, core_T_p)))
+    if (auto ans = hunt(tri, core_T_p))
         return ans;
 
-    return nullptr;
+    return std::nullopt;
 }
 
-LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
-        const TxICore& core) {
-    LayeredTorusBundle* ans = nullptr;
+std::optional<LayeredTorusBundle> LayeredTorusBundle::hunt(
+        Triangulation<3>* tri, const TxICore& core) {
+    std::optional<LayeredTorusBundle> ans;
     core.core().findAllSubcomplexesIn(*tri,
             [&ans, &core, tri](const Isomorphism<3>& iso) {
         // Look for the corresponding layering.
@@ -137,7 +136,7 @@ LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
                 iso.facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
             // It's a match!
-            ans = new LayeredTorusBundle(core, iso,
+            ans = LayeredTorusBundle(core, iso,
                 core.bdryReln(0) * matchReln * core.bdryReln(1).inverse());
             return true;
         }
@@ -151,23 +150,23 @@ LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
 std::unique_ptr<Manifold> LayeredTorusBundle::manifold() const {
     // Note that this one-liner appears again in homology(), where
     // we use the underlying TorusBundle for homology calculations.
-    return std::make_unique<TorusBundle>(core_.parallelReln() * reln_);
+    return std::make_unique<TorusBundle>(core_->parallelReln() * reln_);
 }
 
 std::optional<AbelianGroup> LayeredTorusBundle::homology() const {
     // It's implemented in TorusBundle, so ride on that for now.
     // We'll implement it directly here in good time.
-    return TorusBundle(core_.parallelReln() * reln_).homology();
+    return TorusBundle(core_->parallelReln() * reln_).homology();
 }
 
 std::ostream& LayeredTorusBundle::writeCommonName(std::ostream& out,
         bool tex) const {
     if (tex) {
         out << "B_{";
-        core_.writeTeXName(out);
+        core_->writeTeXName(out);
     } else {
         out << "B(";
-        core_.writeName(out);
+        core_->writeName(out);
     }
 
     out << " | " << reln_[0][0] << ',' << reln_[0][1];

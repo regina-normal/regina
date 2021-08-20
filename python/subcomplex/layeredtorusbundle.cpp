@@ -40,14 +40,17 @@ using regina::LayeredTorusBundle;
 void addLayeredTorusBundle(pybind11::module_& m) {
     pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
             (m, "LayeredTorusBundle")
+        .def(pybind11::init<const LayeredTorusBundle&>())
+        .def("swap", &LayeredTorusBundle::swap)
         .def("core", &LayeredTorusBundle::core,
             pybind11::return_value_policy::reference)
         .def("coreIso", &LayeredTorusBundle::coreIso,
             pybind11::return_value_policy::reference_internal)
         .def("layeringReln", &LayeredTorusBundle::layeringReln,
             pybind11::return_value_policy::reference_internal)
-        .def_static("isLayeredTorusBundle",
-            &LayeredTorusBundle::isLayeredTorusBundle)
+        .def_static("recognise", &LayeredTorusBundle::recognise)
+        .def_static("isLayeredTorusBundle", // deprecated
+            &LayeredTorusBundle::recognise)
     ;
 }
 

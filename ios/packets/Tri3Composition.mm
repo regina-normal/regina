@@ -473,7 +473,7 @@
         delete triple;
     }
     
-    regina::LayeredTorusBundle* bundle = regina::LayeredTorusBundle::isLayeredTorusBundle(self.packet);
+    auto bundle = regina::LayeredTorusBundle::recognise(self.packet);
     if (bundle) {
         [details appendString:@"Layered Torus Bundle\n"];
         
@@ -487,7 +487,6 @@
          bundle->core().name().c_str()];
         
         [details appendString:@"\n"];
-        delete bundle;
     }
     
     regina::PluggedTorusBundle* pBundle = regina::PluggedTorusBundle::isPluggedTorusBundle(self.packet);
