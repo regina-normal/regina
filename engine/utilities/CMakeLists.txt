@@ -9,6 +9,7 @@ SET ( FILES
   osutils.cpp
   randutils.cpp
   stringutils.cpp
+  trieset.cpp
   xmlutils.cpp
   )
 

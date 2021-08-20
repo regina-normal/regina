@@ -782,6 +782,8 @@ Version 6.1  [ TODO ]
         Class TrieSet:
             - This is no longer a template class (though its member
               functions are still templated on the bitmask type).
+            - Added move/copy constructors and move/copy assignment operators.
+            - Added member and global swap() functions.
         Class TriSolidTorus:
             - Routine formsTriSolidTorus() is now called recognise(), and
               return a std::optional instead of a pointer that could be null.

@@ -84,6 +84,10 @@ namespace regina {
  * which occurs at level 3 of the tree.  Regions of the tree that do
  * not store any sets are never explicitly constructed in memory.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \ifacespython Not present.
  */
 class TrieSet {
@@ -110,6 +114,10 @@ class TrieSet {
              */
             Node();
             /**
+             * Constructs a node filled with the given data.
+             */
+            Node(Node* child0, Node* child1, unsigned long descendants);
+            /**
              * Destroys this node and all its descendants.
              */
             ~Node();
@@ -127,6 +135,52 @@ class TrieSet {
          * Constructs an empty collection of sets.
          */
         TrieSet() = default;
+
+        /**
+         * Creates a new copy of the given collection.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the collection of sets to copy.
+         */
+        TrieSet(const TrieSet& src);
+
+        /**
+         * Moves the contents of the given collection into this new collection.
+         * This is a fast (constant time) operation.
+         *
+         * The collection that was passed (\a src) will no longer be usable.
+         *
+         * @param src the collection of sets whose contents should be moved.
+         */
+        TrieSet(TrieSet&& src) noexcept;
+
+        /**
+         * Sets this to be a copy of the given collection.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the collection of sets to copy.
+         * @return a reference to this collection.
+         */
+        TrieSet& operator = (const TrieSet& src);
+
+        /**
+         * Moves the contents of the given collection into this collection.
+         * This is a fast (constant time) operation.
+         *
+         * The collection that was passed (\a src) will no longer be usable.
+         *
+         * @param src the collection of sets whose contents should be moved.
+         * @return a reference to this collection.
+         */
+        TrieSet& operator = (TrieSet&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given collection.
+         *
+         * @param other the collection whose contents should be swapped
+         * with this.
+         */
+        void swap(TrieSet& other) noexcept;
 
         /**
          * Insert the given set into this collection.  The same set may
@@ -211,11 +265,15 @@ class TrieSet {
         template <typename T>
         bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
             unsigned long universeSize) const;
-
-        // Make this class non-copyable.
-        TrieSet(const TrieSet&) = delete;
-        TrieSet& operator = (const TrieSet&) = delete;
 };
+
+/**
+ * Swaps the contents of the two given collections.
+ *
+ * @param a the first collection of sets whose contents should be swapped.
+ * @param b the second collection of sets whose contents should be swapped.
+ */
+void swap(TrieSet& a, TrieSet& b) noexcept;
 
 /*@}*/
 
@@ -224,9 +282,34 @@ class TrieSet {
 inline TrieSet::Node::Node() : child_ { nullptr, nullptr }, descendants_(0) {
 }
 
+inline TrieSet::Node::Node(Node* child0, Node* child1,
+        unsigned long descendants) :
+        child_ { child0, child1 }, descendants_(descendants) {
+}
+
 inline TrieSet::Node::~Node() {
     delete child_[0];
     delete child_[1];
+}
+
+inline TrieSet::TrieSet(TrieSet&& src) noexcept :
+        root_(src.root_.child_[0], src.root_.child_[1],
+            src.root_.descendants_) {
+    src.root_.child_[0] = src.root_.child_[1] = nullptr;
+}
+
+inline TrieSet& TrieSet::operator = (TrieSet&& src) noexcept {
+    std::swap(root_.child_[0], src.root_.child_[0]);
+    std::swap(root_.child_[1], src.root_.child_[1]);
+    root_.descendants_ = src.root_.descendants_;
+    // Let src.root_ dispose of the original children in its own destructor.
+    return *this;
+}
+
+inline void TrieSet::swap(TrieSet& other) noexcept {
+    std::swap(root_.child_[0], other.root_.child_[0]);
+    std::swap(root_.child_[1], other.root_.child_[1]);
+    std::swap(root_.descendants_, other.root_.descendants_);
 }
 
 template <typename T>
@@ -362,6 +445,10 @@ bool TrieSet::hasExtraSuperset(const T& subset,
 
     delete[] node;
     return false;
+}
+
+inline void swap(TrieSet& a, TrieSet& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina
