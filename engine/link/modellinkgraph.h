@@ -924,6 +924,11 @@ void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept;
  *
  * At present, this class insists that each 2-cell is a topological disc.
  * As a consequence, this class cannot work with empty or disconnected graphs.
+ *
+ * Cellular decompositions do not support value semantics: they cannot be
+ * copied, swapped, or manually constructed.  Instead they are computed
+ * properties of model graphs, and are only accessible via const reference
+ * through the member function ModelLinkGraph::cells().
  */
 class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
     private:
@@ -1168,6 +1173,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
         void writeTextLong(std::ostream& out) const;
 
         // Make this class non-assignable.
+        // There is a copy constructor, but it is private.
         ModelLinkGraphCells& operator = (const ModelLinkGraphCells&) = delete;
 
     private:
