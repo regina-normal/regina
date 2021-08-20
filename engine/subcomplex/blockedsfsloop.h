@@ -150,9 +150,9 @@ class BlockedSFSLoop : public StandardTriangulation {
          * class.
          *
          * @param tri the triangulation to examine.
-         * @return a newly created structure containing details of the
-         * blocked self-identified Seifert fibred space, or \c null if
-         * the given triangulation is not of this form.
+         * @return a structure containing details of the blocked
+         * self-identified Seifert fibred space, or no value if the given
+         * triangulation is not of this form.
          */
         static BlockedSFSLoop* isBlockedSFSLoop(Triangulation<3>* tri);
 

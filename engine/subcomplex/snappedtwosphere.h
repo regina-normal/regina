@@ -118,9 +118,8 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          *
          * @param tet1 the first tetrahedron to examine.
          * @param tet2 the second tetrahedron to examine.
-         * @return a newly created structure containing details of the
-         * snapped 2-sphere, or no value if the given tetrahedra do not
-         * form a snapped 2-sphere.
+         * @return a structure containing details of the snapped 2-sphere, or
+         * no value if the given tetrahedra do not form a snapped 2-sphere.
          */
         static std::optional<SnappedTwoSphere> recognise(Tetrahedron<3>* tet1,
             Tetrahedron<3>* tet2);
@@ -145,9 +144,8 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          *
          * @param ball1 the first snapped 3-ball to examine.
          * @param ball2 the second snapped 3-ball to examine.
-         * @return a newly created structure containing details of the
-         * snapped 2-sphere, or no value if the given snapped 3-balls do not
-         * form a snapped 2-sphere.
+         * @return a structure containing details of the snapped 2-sphere, or
+         * no value if the given snapped 3-balls do not form a snapped 2-sphere.
          */
         static std::optional<SnappedTwoSphere> recognise(
             const SnappedBall& ball1, const SnappedBall& ball2);

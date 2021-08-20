@@ -200,10 +200,9 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * recognised by this routine.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure representing the small
-         * SnapPea census triangulation, or \c null if the given
-         * component is not one of the few SnapPea census
-         * triangulations recognised by this routine.
+         * @return a structure representing the small SnapPea census
+         * triangulation, or no value if the given component is not one of
+         * the few SnapPea census triangulations recognised by this routine.
          */
         static std::optional<SnapPeaCensusTri> recognise(
             const Component<3>* comp);

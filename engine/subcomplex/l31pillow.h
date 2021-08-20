@@ -138,9 +138,9 @@ class L31Pillow : public StandardTriangulation {
          * triangular pillow L(3,1).
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * triangular pillow L(3,1), or \c null if the given component is
-         * not a triangular pillow L(3,1).
+         * @return a structure containing details of the triangular pillow
+         * L(3,1), or no value if the given component is not a
+         * triangular pillow L(3,1).
          */
         static std::optional<L31Pillow> recognise(const Component<3>* comp);
         /**

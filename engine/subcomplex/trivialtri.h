@@ -150,9 +150,9 @@ class TrivialTri : public StandardTriangulation {
          * trivial triangulations recognised by this class.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure representing the trivial
-         * triangulation, or \c null if the given component is not one
-         * of the triangulations recognised by this class.
+         * @return a structure representing the trivial triangulation, or
+         * no value if the given component is not one of the triangulations
+         * recognised by this class.
          */
         static std::optional<TrivialTri> recognise(const Component<3>* comp);
         /**

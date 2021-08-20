@@ -235,9 +235,9 @@ class AugTriSolidTorus : public StandardTriangulation {
          * augmented triangular solid torus.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * augmented triangular solid torus, or \c null if the given
-         * component is not an augmented triangular solid torus.
+         * @return a structure containing details of the augmented triangular
+         * solid torus, or no value if the given component is not an augmented
+         * triangular solid torus.
          */
         static AugTriSolidTorus* isAugTriSolidTorus(const Component<3>* comp);
 

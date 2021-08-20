@@ -134,9 +134,8 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          *
          * @param tri1 the first triangle to examine.
          * @param tri2 the second triangle to examine.
-         * @return a newly created structure containing details of the
-         * pillow 2-sphere, or no value if the given triangles do not
-         * form a pillow 2-sphere.
+         * @return a structure containing details of the pillow 2-sphere, or
+         * no value if the given triangles do not form a pillow 2-sphere.
          */
         static std::optional<PillowTwoSphere> recognise(
             Triangle<3>* tri1, Triangle<3>* tri2);

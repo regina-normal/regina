@@ -141,9 +141,8 @@ class LayeredLensSpace : public StandardTriangulation {
          * lens space.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * layered lens space, or \c null if the given component is
-         * not a layered lens space.
+         * @return a structure containing details of the layered lens space,
+         * or no value if the given component is not a layered lens space.
          */
         static LayeredLensSpace* isLayeredLensSpace(const Component<3>* comp);
 

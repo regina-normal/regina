@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file subcomplex/layeredtorusbundle.h
- *  \brief Deals with layered surface bundle triangulations.
+ *  \brief Deals with layered torus bundle triangulations.
  */
 
 #ifndef __REGINA_LAYEREDTORUSBUNDLE_H

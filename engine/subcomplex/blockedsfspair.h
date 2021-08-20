@@ -145,9 +145,8 @@ class BlockedSFSPair : public StandardTriangulation {
          * Seifert fibred spaces, as described by this class.
          *
          * @param tri the triangulation to examine.
-         * @return a newly created structure containing details of the
-         * blocked pair, or \c null if the given triangulation is not of
-         * this form.
+         * @return a structure containing details of the blocked pair, or
+         * no value if the given triangulation is not of this form.
          */
         static BlockedSFSPair* isBlockedSFSPair(Triangulation<3>* tri);
 

@@ -153,9 +153,8 @@ class LayeredLoop : public StandardTriangulation {
          * Determines if the given triangulation component is a layered loop.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * layered loop, or no value if the given component is
-         * not a layered loop.
+         * @return a structure containing details of the layered loop, or
+         * no value if the given component is not a layered loop.
          */
         static std::optional<LayeredLoop> recognise(const Component<3>* comp);
         /**

@@ -205,9 +205,9 @@ class PluggedTorusBundle : public StandardTriangulation {
          * in the class notes above.
          *
          * @param tri the triangulation to examine.
-         * @return a newly created object containing details of the
-         * structure that was found, or \c null if the given
-         * triangulation is not of the form described by this class.
+         * @return an object containing details of the structure that was
+         * found, or no value if the given triangulation is not of the form
+         * described by this class.
          */
         static PluggedTorusBundle* isPluggedTorusBundle
             (Triangulation<3>* tri);
@@ -255,10 +255,10 @@ class PluggedTorusBundle : public StandardTriangulation {
          * @param tri the triangulation to examine.
          * @param bundle the thin I-bundle whose isomorphic copy must be
          * used in the given triangulation.
-         * @return a newly created object containing details of the
-         * structure that was found, or \c null if the given triangulation
-         * is not of the form described by this class using an isomorphic
-         * copy of the given thin I-bundle.
+         * @return an object containing details of the structure that was
+         * found, or no value if the given triangulation is not of the form
+         * described by this class using an isomorphic copy of the given
+         * thin I-bundle.
          */
         static PluggedTorusBundle* hunt(Triangulation<3>* tri,
             const TxICore& bundle);

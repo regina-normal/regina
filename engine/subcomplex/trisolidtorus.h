@@ -280,10 +280,10 @@ class TriSolidTorus : public StandardTriangulation {
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by
          * vertexRoles().
-         * @return a newly created structure containing details of the
-         * solid torus with the given tetrahedron as tetrahedron 0, or
-         * \c null if the given tetrahedron is not part of a triangular
-         * solid torus with the given vertex roles.
+         * @return a structure containing details of the solid torus with the
+         * given tetrahedron as tetrahedron 0, or no value if the given
+         * tetrahedron is not part of a triangular solid torus with the given
+         * vertex roles.
          */
         static std::optional<TriSolidTorus> recognise(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);

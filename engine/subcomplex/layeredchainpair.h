@@ -136,9 +136,8 @@ class LayeredChainPair : public StandardTriangulation {
          * chain pair.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * layered chain pair, or \c null if the given component is
-         * not a layered chain pair.
+         * @return a structure containing details of the layered chain pair,
+         * or no value if the given component is not a layered chain pair.
          */
         static std::optional<LayeredChainPair> recognise(
             const Component<3>* comp);

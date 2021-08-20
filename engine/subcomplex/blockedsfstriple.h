@@ -209,9 +209,8 @@ class BlockedSFSTriple : public StandardTriangulation {
          * above.
          *
          * @param tri the triangulation to examine.
-         * @return a newly created structure containing details of the
-         * blocked triple, or \c null if the given triangulation is not of
-         * this form.
+         * @return a structure containing details of the blocked triple, or
+         * no value if the given triangulation is not of this form.
          */
         static BlockedSFSTriple* isBlockedSFSTriple(Triangulation<3>* tri);
 

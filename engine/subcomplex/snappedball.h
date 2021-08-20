@@ -160,9 +160,8 @@ class SnappedBall : public StandardTriangulation {
          * or with triangles of other tetrahedra.
          *
          * @param tet the tetrahedron to examine as a potential 3-ball.
-         * @return a newly created structure containing details of the
-         * snapped 3-ball, or no value if the given tetrahedron is
-         * not a snapped 3-ball.
+         * @return a structure containing details of the snapped 3-ball, or
+         * no value if the given tetrahedron is not a snapped 3-ball.
          */
         static std::optional<SnappedBall> recognise(Tetrahedron<3>* tet);
 

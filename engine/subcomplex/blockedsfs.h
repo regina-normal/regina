@@ -118,9 +118,9 @@ class BlockedSFS : public StandardTriangulation {
          * fibred space.
          *
          * @param tri the triangulation to examine.
-         * @return a newly created structure containing details of the
-         * blocked Seifert fibred space, or \c null if the given
-         * triangulation is not a blocked Seifert fibred space.
+         * @return a structure containing details of the blocked Seifert
+         * fibred space, or no value if the given triangulation is not a
+         * blocked Seifert fibred space.
          */
         static BlockedSFS* isBlockedSFS(Triangulation<3>* tri);
 

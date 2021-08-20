@@ -202,9 +202,9 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * plugged triangular solid torus.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * plugged triangular solid torus, or \c null if the given
-         * component is not a plugged triangular solid torus.
+         * @return a structure containing details of the plugged triangular
+         * solid torus, or no value if the given component is not a plugged
+         * triangular solid torus.
          */
         static PlugTriSolidTorus* isPlugTriSolidTorus(Component<3>* comp);
 
