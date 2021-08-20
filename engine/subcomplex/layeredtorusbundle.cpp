@@ -58,10 +58,6 @@ namespace {
     const TxIParallelCore core_T_p;
 }
 
-LayeredTorusBundle::~LayeredTorusBundle() {
-    delete coreIso_;
-}
-
 LayeredTorusBundle* LayeredTorusBundle::isLayeredTorusBundle(
         Triangulation<3>* tri) {
     // Basic property checks.
@@ -141,10 +137,8 @@ LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
                 iso.facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
             // It's a match!
-            ans = new LayeredTorusBundle(core);
-            ans->coreIso_ = new Isomorphism<3>(iso);
-            ans->reln_ = core.bdryReln(0) * matchReln *
-                core.bdryReln(1).inverse();
+            ans = new LayeredTorusBundle(core, iso,
+                core.bdryReln(0) * matchReln * core.bdryReln(1).inverse());
             return true;
         }
 

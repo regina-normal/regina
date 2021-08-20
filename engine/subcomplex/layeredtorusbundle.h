@@ -83,7 +83,7 @@ class LayeredTorusBundle : public StandardTriangulation {
         const TxICore& core_;
             /**< The core <tt>T x I</tt> triangulation whose boundaries
                  are joined (possibly via a layering of tetrahedra). */
-        Isomorphism<3>* coreIso_;
+        Isomorphism<3> coreIso_;
             /**< Describes how the tetrahedra and vertices of the core
                  <tt>T x I</tt> triangulation returned by TxICore::core()
                  map to the tetrahedra and vertices of the larger layered
@@ -94,12 +94,6 @@ class LayeredTorusBundle : public StandardTriangulation {
                  See layeringReln() for details. */
 
     public:
-        /**
-         * Destroys this layered torus bundle and all of its internal
-         * components.
-         */
-        virtual ~LayeredTorusBundle();
-
         /**
          * Returns the <tt>T x I</tt> triangulation at the core of this
          * layered surface bundle.  This is the product <tt>T x I</tt>
@@ -132,13 +126,10 @@ class LayeredTorusBundle : public StandardTriangulation {
          * returned by LayeredTorusBundle::core().core()) to the
          * tetrahedra and vertices of this overall layered surface bundle.
          *
-         * The isomorphism that is returned belongs to this object, and
-         * should not be modified or destroyed.
-         *
          * @return the isomorphism from the core <tt>T x I</tt> to this
          * layered surface bundle.
          */
-        const Isomorphism<3>* coreIso() const;
+        const Isomorphism<3>& coreIso() const;
 
         /**
          * Returns a 2-by-2 matrix describing how the layering of
@@ -222,8 +213,7 @@ class LayeredTorusBundle : public StandardTriangulation {
     private:
         /**
          * Creates a new structure based upon the given core <tt>T x I</tt>
-         * triangulation.  Aside from this core, the structure will
-         * remain uninitialised.
+         * triangulation, and initialised with the given additional data.
          *
          * Note that only a reference to the core <tt>T x I</tt> is stored.
          * This class does not manage the life span of the core; it is
@@ -234,7 +224,8 @@ class LayeredTorusBundle : public StandardTriangulation {
          * @param whichCore a reference to the core <tt>T x I</tt>
          * triangulation upon which this layered surface bundle is based.
          */
-        LayeredTorusBundle(const TxICore& whichCore);
+        LayeredTorusBundle(const TxICore& whichCore,
+            const Isomorphism<3>& coreIso, const Matrix2& reln);
 
         /**
          * Contains code common to both writeName() and writeTeXName().
@@ -265,15 +256,20 @@ class LayeredTorusBundle : public StandardTriangulation {
 
 // Inline functions for LayeredTorusBundle
 
-inline LayeredTorusBundle::LayeredTorusBundle(const TxICore& whichCore) :
-        core_(whichCore), coreIso_(0) {
+inline LayeredTorusBundle::LayeredTorusBundle(const TxICore& whichCore,
+        const Isomorphism<3>& coreIso, const Matrix2& reln) :
+        core_(whichCore), coreIso_(coreIso), reln_(reln) {
+    // Note above that we cannot move coreIso, since where it comes from
+    // (via recognise()) is Triangulation<3>::findAllSubcomplexesIn(),
+    // which only lets us access the isomorphism as a const reference.
+    // Therefore we don't worry about move operations here.
 }
 
 inline const TxICore& LayeredTorusBundle::core() const {
     return core_;
 }
 
-inline const Isomorphism<3>* LayeredTorusBundle::coreIso() const {
+inline const Isomorphism<3>& LayeredTorusBundle::coreIso() const {
     return coreIso_;
 }
 

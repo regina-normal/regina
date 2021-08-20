@@ -316,6 +316,8 @@ Version 6.1  [ TODO ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
+        Class LayeredTorusBundle:
+            - Routine coreIso() returns by const reference, not by pointer.
         Class LensSpace:
             - Added member and global swap() functions.
         Class LessDeref:
