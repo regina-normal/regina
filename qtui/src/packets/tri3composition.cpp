@@ -771,7 +771,7 @@ void Tri3CompositionUI::findLayeredSolidTori() {
 
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        auto torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(
+        auto torus = regina::LayeredSolidTorus::recogniseFromBase(
             tri->tetrahedron(i));
         if (torus) {
             id = addComponentSection(tr("Layered solid torus ") +
