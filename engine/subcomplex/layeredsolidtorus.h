@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include "maths/perm.h"
 #include "subcomplex/standardtri.h"
 #include "triangulation/facepair.h"
 
@@ -71,14 +72,10 @@ class LayeredSolidTorus : public StandardTriangulation {
         Tetrahedron<3>* base_;
             /**< The tetrahedron that is glued to itself at the base of
                  this torus. */
-        int8_t baseEdge_[6];
-            /**< The edges of the base tetrahedron that are identified as
-                 a group of 1, 2 or 3 according to whether the index is
-                 0, 1-2 or 3-5 respectively.  See baseEdge() for
-                 further details. */
-        int8_t baseEdgeGroup_[6];
-            /**< Classifies the edges of the base tetrahedron according
-                 to whether they are identified in a group of 1, 2 or 3. */
+        Perm<6> baseEdge_;
+            /**< Edges baseEdge_[0..5] of the base tetrahedron are identified
+                 as a group of 1, 2, 2, 3, 3, 3 respectively.
+                 See baseEdge() for further details. */
         FacePair baseFace_;
             /**< The two faces of the base tetrahedron that are glued to
                  each other. */
@@ -417,7 +414,8 @@ inline int LayeredSolidTorus::baseEdge(int group, int index) const {
         group == 2 ? baseEdge_[1 + index] : baseEdge_[3 + index];
 }
 inline int LayeredSolidTorus::baseEdgeGroup(int edge) const {
-    return baseEdgeGroup_[edge];
+    int pre = baseEdge_.pre(edge);
+    return (pre == 0 ? 1 : pre < 3 ? 2 : 3);
 }
 inline int LayeredSolidTorus::baseFace(int index) const {
     return (index == 0 ? baseFace_.lower() : baseFace_.upper());

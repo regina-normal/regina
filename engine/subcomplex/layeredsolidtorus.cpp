@@ -44,9 +44,8 @@ LayeredSolidTorus* LayeredSolidTorus::clone() const {
     ans->nTetrahedra = nTetrahedra;
     ans->base_ = base_;
     ans->topLevel_ = topLevel_;
+    ans->baseEdge_ = baseEdge_;
     for (i = 0; i < 6; i++) {
-        ans->baseEdge_[i] = baseEdge_[i];
-        ans->baseEdgeGroup_[i] = baseEdgeGroup_[i];
         ans->topEdgeGroup_[i] = topEdgeGroup_[i];
     }
     ans->baseFace_ = baseFace_;
@@ -68,10 +67,12 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
     // Data members nTetrahedra and meridinalCuts remain unchanged.
 
     // Transform edge numbers (note that -1s can also be present for topEdge[]):
+    int edgeID[6];
     for (i = 0; i < 6; i++)
-        baseEdge_[i] = Edge<3>::edgeNumber
+        edgeID[i] = Edge<3>::edgeNumber
             [iso->facePerm(baseTetID)[Edge<3>::edgeVertex[baseEdge_[i]][0]]]
             [iso->facePerm(baseTetID)[Edge<3>::edgeVertex[baseEdge_[i]][1]]];
+    baseEdge_ = Perm<6>(edgeID);
 
     for (i = 0; i < 3; i++)
         for (j = 0; j < 2; j++) {
@@ -82,10 +83,6 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
                 [iso->facePerm(topTetID)[Edge<3>::edgeVertex[topEdge_[i][j]][0]]]
                 [iso->facePerm(topTetID)[Edge<3>::edgeVertex[topEdge_[i][j]][1]]];
         }
-
-    // Inverse arrays for edge numbers:
-    for (i = 0; i < 6; i++)
-        baseEdgeGroup_[baseEdge_[i]] = (i == 0 ? 1 : i < 3 ? 2 : 3);
 
     unsigned missingEdge = 0 + 1 + 2 + 3 + 4 + 5;
     for (i = 0; i < 3; i++)
@@ -101,8 +98,8 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
         iso->facePerm(baseTetID)[baseFace_.lower()],
         iso->facePerm(baseTetID)[baseFace_.upper()]);
     if (newBaseFace.lower() != iso->facePerm(baseTetID)[baseFace_.lower()]) {
-        std::swap(baseEdge_[1], baseEdge_[2]);
-        std::swap(baseEdge_[3], baseEdge_[5]);
+        // Swap images of 1,2 and images of 3,5.
+        baseEdge_ = baseEdge_ * Perm<6>(0, 2, 1, 5, 4, 3);
     }
     baseFace_ = newBaseFace;
 
@@ -168,16 +165,13 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
     ans->topLevel_ = tet;
 
     if (basePerm[ans->baseFace_.upper()] == ans->topFace_.lower()) {
-        ans->baseEdge_[0] = ans->baseFace_.oppositeEdge();
-        ans->baseEdge_[1] = Edge<3>::edgeNumber
-            [ans->topFace_.upper()][ans->baseFace_.upper()];
-        ans->baseEdge_[2] = Edge<3>::edgeNumber
-            [ans->topFace_.lower()][ans->baseFace_.lower()];
-        ans->baseEdge_[3] = Edge<3>::edgeNumber
-            [ans->topFace_.lower()][ans->baseFace_.upper()];
-        ans->baseEdge_[4] = ans->baseFace_.commonEdge();
-        ans->baseEdge_[5] = Edge<3>::edgeNumber
-            [ans->topFace_.upper()][ans->baseFace_.lower()];
+        ans->baseEdge_ = Perm<6>(
+            ans->baseFace_.oppositeEdge(),
+            Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.upper()],
+            Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.lower()],
+            Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.upper()],
+            ans->baseFace_.commonEdge(),
+            Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.lower()]);
 
         ans->topEdge_[0][0] = ans->baseEdge_[5];
         ans->topEdge_[0][1] = ans->baseEdge_[3];
@@ -186,16 +180,13 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
         ans->topEdge_[2][0] = ans->baseEdge_[0];
         ans->topEdge_[2][1] = -1;
     } else {
-        ans->baseEdge_[0] = ans->baseFace_.oppositeEdge();
-        ans->baseEdge_[1] = Edge<3>::edgeNumber
-            [ans->topFace_.lower()][ans->baseFace_.upper()];
-        ans->baseEdge_[2] = Edge<3>::edgeNumber
-            [ans->topFace_.upper()][ans->baseFace_.lower()];
-        ans->baseEdge_[3] = Edge<3>::edgeNumber
-            [ans->topFace_.upper()][ans->baseFace_.upper()];
-        ans->baseEdge_[4] = ans->baseFace_.commonEdge();
-        ans->baseEdge_[5] = Edge<3>::edgeNumber
-            [ans->topFace_.lower()][ans->baseFace_.lower()];
+        ans->baseEdge_ = Perm<6>(
+            ans->baseFace_.oppositeEdge(),
+            Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.upper()],
+            Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.lower()],
+            Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.upper()],
+            ans->baseFace_.commonEdge(),
+            Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.lower()]);
 
         ans->topEdge_[0][0] = ans->baseEdge_[3];
         ans->topEdge_[0][1] = ans->baseEdge_[5];
@@ -204,8 +195,6 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
         ans->topEdge_[2][0] = ans->baseEdge_[0];
         ans->topEdge_[2][1] = -1;
     }
-    for (i = 0; i < 6; i++)
-        ans->baseEdgeGroup_[ans->baseEdge_[i]] = (i == 0 ? 1 : i < 3 ? 2 : 3);
     for (i = 0; i < 3; i++)
         for (j = 0; j < 2; j++)
             if (ans->topEdge_[i][j] != -1)
@@ -413,37 +402,24 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
 
             ans->base_ = tet;
             ans->baseFace_ = FacePair(vRoles[0], vRoles[3]);
-            ans->baseEdge_[0] = ans->baseFace_.oppositeEdge();
             if ((rotation == 1 && vRoles[3] < vRoles[0]) ||
                     (rotation == 2 && vRoles[0] < vRoles[3])) {
-                ans->baseEdge_[1] = Edge<3>::edgeNumber
-                    [ans->baseFace_.upper()][vRoles[2]];
-                ans->baseEdge_[2] = Edge<3>::edgeNumber
-                    [vRoles[1]][ans->baseFace_.lower()];
-
-                ans->baseEdge_[3] = Edge<3>::edgeNumber
-                    [ans->baseFace_.upper()][vRoles[1]];
-                ans->baseEdge_[4] = ans->baseFace_.commonEdge();
-                ans->baseEdge_[5] = Edge<3>::edgeNumber
-                    [vRoles[2]][ans->baseFace_.lower()];
+                ans->baseEdge_ = Perm<6>(
+                    ans->baseFace_.oppositeEdge(),
+                    Edge<3>::edgeNumber[ans->baseFace_.upper()][vRoles[2]],
+                    Edge<3>::edgeNumber[vRoles[1]][ans->baseFace_.lower()],
+                    Edge<3>::edgeNumber[ans->baseFace_.upper()][vRoles[1]],
+                    ans->baseFace_.commonEdge(),
+                    Edge<3>::edgeNumber[vRoles[2]][ans->baseFace_.lower()]);
             } else {
-                ans->baseEdge_[1] = Edge<3>::edgeNumber
-                    [ans->baseFace_.upper()][vRoles[1]];
-                ans->baseEdge_[2] = Edge<3>::edgeNumber
-                    [vRoles[2]][ans->baseFace_.lower()];
-
-                ans->baseEdge_[3] = Edge<3>::edgeNumber
-                    [ans->baseFace_.upper()][vRoles[2]];
-                ans->baseEdge_[4] = ans->baseFace_.commonEdge();
-                ans->baseEdge_[5] = Edge<3>::edgeNumber
-                    [vRoles[1]][ans->baseFace_.lower()];
+                ans->baseEdge_ = Perm<6>(
+                    ans->baseFace_.oppositeEdge(),
+                    Edge<3>::edgeNumber[ans->baseFace_.upper()][vRoles[1]],
+                    Edge<3>::edgeNumber[vRoles[2]][ans->baseFace_.lower()],
+                    Edge<3>::edgeNumber[ans->baseFace_.upper()][vRoles[2]],
+                    ans->baseFace_.commonEdge(),
+                    Edge<3>::edgeNumber[vRoles[1]][ans->baseFace_.lower()]);
             }
-            ans->baseEdgeGroup_[ans->baseEdge_[0]] = 1;
-            ans->baseEdgeGroup_[ans->baseEdge_[1]] = 2;
-            ans->baseEdgeGroup_[ans->baseEdge_[2]] = 2;
-            ans->baseEdgeGroup_[ans->baseEdge_[3]] = 3;
-            ans->baseEdgeGroup_[ans->baseEdge_[4]] = 3;
-            ans->baseEdgeGroup_[ans->baseEdge_[5]] = 3;
 
             long cuts01, cuts13, cuts30;
             if (rotation == 1) {
