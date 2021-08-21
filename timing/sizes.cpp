@@ -16,6 +16,9 @@
 
 #include "subcomplex/augtrisolidtorus.h"
 #include "subcomplex/blockedsfs.h"
+#include "subcomplex/blockedsfsloop.h"
+#include "subcomplex/blockedsfspair.h"
+#include "subcomplex/blockedsfstriple.h"
 #include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchain.h"
 #include "subcomplex/layeredchainpair.h"
@@ -24,6 +27,7 @@
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/pillowtwosphere.h"
+#include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/plugtrisolidtorus.h"
 #include "subcomplex/satregion.h"
 #include "subcomplex/snappeacensustri.h"
@@ -54,6 +58,9 @@ int main(int argc, char* argv[]) {
     std::cout << "Standard Triangulations:" << std::endl;
     SHOW_SIZE(AugTriSolidTorus);
     SHOW_SIZE(BlockedSFS);
+    SHOW_SIZE(BlockedSFSLoop);
+    SHOW_SIZE(BlockedSFSPair);
+    SHOW_SIZE(BlockedSFSTriple);
     SHOW_SIZE(L31Pillow);
     SHOW_SIZE(LayeredChain);
     SHOW_SIZE(LayeredChainPair);
@@ -62,6 +69,7 @@ int main(int argc, char* argv[]) {
     SHOW_SIZE(LayeredSolidTorus);
     SHOW_SIZE(LayeredTorusBundle);
     SHOW_SIZE(PillowTwoSphere);
+    SHOW_SIZE(PluggedTorusBundle);
     SHOW_SIZE(PlugTriSolidTorus);
     SHOW_SIZE(SatRegion);
     SHOW_SIZE(SnapPeaCensusTri);
