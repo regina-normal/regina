@@ -344,7 +344,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * The region that was passed will no longer be usable.
          */
-        SatRegion(SatRegion&& src) noexcept = default;
+        SatRegion(SatRegion&&) noexcept = default;
         /**
          * Moves the contents of the given region into this region.
          * This is a fast (constant time) operation.

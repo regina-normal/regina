@@ -643,6 +643,7 @@ Version 6.1  [ TODO ]
               that could be null.
             - The block output argument for boundaryAnnulus() now sends back a
               const pointer.
+            - Added move construction, and move assignment.
         Class SFSAlt, SFSAltSet:
             - Removed the old SFSAltSet class; replaced this with a new SFSAlt
               class with a static altSet() function that returns a std::vector.
