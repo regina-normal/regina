@@ -72,13 +72,13 @@ class LayeredSolidTorus : public StandardTriangulation {
         Tetrahedron<3>* base_;
             /**< The tetrahedron that is glued to itself at the base of
                  this torus. */
+        Tetrahedron<3>* topLevel_;
+            /**< The tetrahedron on the boundary of this torus. */
+
         Perm<6> baseEdge_;
             /**< Edges baseEdge_[0..5] of the base tetrahedron are identified
                  as a group of 1, 2, 2, 3, 3, 3 respectively.
                  See baseEdge() for further details. */
-
-        Tetrahedron<3>* topLevel_;
-            /**< The tetrahedron on the boundary of this torus. */
         Perm<6> topEdge_;
             /**< Edges topEdge_[0,1], topEdge_[2,3] and topEdge_[4,5] are the
                  boundary edges of the top tetrahedron that the meridinal disc
@@ -86,9 +86,6 @@ class LayeredSolidTorus : public StandardTriangulation {
                  one of the edges is *not* on the boundary; this will
                  be put in the group with only one edge, and will correspond to
                  index 1, 3 or 5.  See topEdge() for further details. */
-        unsigned long meridinalCuts_[3];
-            /**< Returns the number of times the meridinal disc cuts each
-                 boundary edge; this array is in non-decreasing order. */
 
         FacePair baseFace_;
             /**< The two faces of the base tetrahedron that are glued to
@@ -96,6 +93,10 @@ class LayeredSolidTorus : public StandardTriangulation {
         FacePair topFace_;
             /**< The two faces of the boundary tetrahedron that form the
                  torus boundary. */
+
+        unsigned long meridinalCuts_[3];
+            /**< Returns the number of times the meridinal disc cuts each
+                 boundary edge; this array is in non-decreasing order. */
 
     public:
         /**
