@@ -201,8 +201,8 @@ class SatLST : public SatBlock {
 
         virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
-        virtual void transform(const Triangulation<3>* originalTri,
-            const Isomorphism<3>* iso, Triangulation<3>* newTri) override;
+        virtual void transform(const Triangulation<3>& originalTri,
+            const Isomorphism<3>& iso, Triangulation<3>& newTri) override;
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
             override;

@@ -344,6 +344,7 @@ Version 6.1  [ TODO ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
+            - Routine transform() now takes its arguments by reference.
         Class LayeredTorusBundle:
             - Routine coreIso() returns by const reference, not by pointer.
             - Routine isLayeredTorusBundle() is now called recognise(), and
@@ -618,9 +619,14 @@ Version 6.1  [ TODO ]
             - Added a global swap() to complement the member swap().
         Class Returns, ReturnsTraits:
             - Removed completely.
+        Class SatAnnulus:
+            - Routines transform() and image() now takes their arguments by
+              reference.
         Class SatBlock:
             - The nextBlock output argument for nextBoundaryAnnulis()
               now sends back a const pointer.
+            - Routine transform() now takes its arguments by reference.
+            - Both the copy constructor and clone() are now protected.
         Class SatBlockSpec:
             - This is now a full class, with read-only access functions
               to its data members which are now private.
@@ -631,6 +637,9 @@ Version 6.1  [ TODO ]
             - This class is also no longer constructible (except for the
               new move constructor): only SatRegion is permitted to create a
               SatBlockSpec with arbitrary content.
+        Class SatBlockStarter:
+            - The routine block() now returns a newly constructed isomorphic
+              copy of the original block, located within a given triangulation.
         Class SatBlockStarterSet:
             - Now requires a (lightweight) object to work with instead
               of using static routines only.  This makes the class

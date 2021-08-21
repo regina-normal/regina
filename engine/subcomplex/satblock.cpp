@@ -51,8 +51,8 @@ SatBlock::SatBlock(const SatBlock& cloneMe) : nAnnuli_(cloneMe.nAnnuli_),
     }
 }
 
-void SatBlock::transform(const Triangulation<3>* originalTri,
-        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
+void SatBlock::transform(const Triangulation<3>& originalTri,
+        const Isomorphism<3>& iso, Triangulation<3>& newTri) {
     for (unsigned i = 0; i < nAnnuli_; i++)
         annulus_[i].transform(originalTri, iso, newTri);
 }

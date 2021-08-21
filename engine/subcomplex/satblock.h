@@ -102,15 +102,26 @@ class SFSpace;
  * \e backwards, meaning that the first triangle of one annulus is joined to
  * the second triangle of the other (and vice versa).
  *
- * \warning In addition to mandatory overrides such as clone() and
- * adjustSFS(), some subclasses will need to override the virtual
- * routine transform() in order to correctly adjust additional
- * triangulation-specific information stored in the subclass.  See the
- * transform() documentation for further details.
+ * This is an abstract base class: its subclasses correspond to different
+ * combinatorial constructions (or in some cases, parameterised families
+ * of constructions).  Each subclass of SatBlock:
+ *
+ * - must override all pure virtual functions (of course);
+ *
+ * - should override transform() if the subclass contains additional
+ *   data that needs to be altered when an isomorphism is applied;
+ *
+ * - may optionally override writeTextLong(), if more detailed output
+ *   could be useful.
+ *
+ * SatBlock does not support value semantics: blocks cannot be copied,
+ * swapped, or manually constructed.  Their memory is managed by the
+ * SatRegion class, and their locations in memory define them.
+ * See SatRegion for further details.
  */
 class SatBlock : public Output<SatBlock> {
     public:
-        typedef std::set<Tetrahedron<3>*> TetList;
+        typedef std::set<const Tetrahedron<3>*> TetList;
             /**< The data structure used to store a list of tetrahedra
                  that should not be examined by isBlock(). */
 
@@ -146,32 +157,11 @@ class SatBlock : public Output<SatBlock> {
 
     public:
         /**
-         * Creates a new clone of the given block.
-         *
-         * Note that the new \a adjBlock_ array will contain pointers to
-         * the same adjacent blocks as the original.  That is, adjacent
-         * blocks will not be cloned also; instead pointers to adjacent
-         * blocks will simply be copied across.
-         *
-         * @param cloneMe the saturated block to clone.
-         */
-        SatBlock(const SatBlock& cloneMe);
-        /**
          * Destroys all internal arrays.  Note that any adjacent blocks
          * that are referenced by the \a adjBlock array will \e not be
          * destroyed.
          */
         virtual ~SatBlock();
-
-        /**
-         * Returns a newly created clone of this saturated block structure.
-         * A clone of the correct subclass of SatBlock will be returned.
-         * For this reason, each subclass of SatBlock must implement this
-         * routine.
-         *
-         * @return a new clone of this block.
-         */
-        virtual SatBlock* clone() const = 0;
 
         /**
          * Returns the number of annuli on the boundary of this
@@ -374,8 +364,8 @@ class SatBlock : public Output<SatBlock> {
          * @param newTri the triangulation to be used by the updated
          * block structure.
          */
-        virtual void transform(const Triangulation<3>* originalTri,
-                const Isomorphism<3>* iso, Triangulation<3>* newTri);
+        virtual void transform(const Triangulation<3>& originalTri,
+                const Isomorphism<3>& iso, Triangulation<3>& newTri);
 
         /**
          * Finds the next (or previous) boundary annulus around from this,
@@ -576,6 +566,7 @@ class SatBlock : public Output<SatBlock> {
          virtual void writeTextLong(std::ostream& out) const;
 
          // Mark this class as non-assignable.
+         // There is a copy constructor, but that is protected.
          SatBlock& operator = (const SatBlock&) = delete;
 
     protected:
@@ -594,6 +585,27 @@ class SatBlock : public Output<SatBlock> {
          * if it is not.
          */
         SatBlock(unsigned nAnnuli, bool twistedBoundary = false);
+        /**
+         * Creates a new clone of the given block.
+         *
+         * Note that the new \a adjBlock_ array will contain pointers to
+         * the same adjacent blocks as the original.  That is, adjacent
+         * blocks will not be cloned also; instead pointers to adjacent
+         * blocks will simply be copied across.
+         *
+         * @param cloneMe the saturated block to clone.
+         */
+        SatBlock(const SatBlock& cloneMe);
+
+        /**
+         * Returns a newly created clone of this saturated block structure.
+         * A clone of the correct subclass of SatBlock will be returned.
+         * For this reason, each subclass of SatBlock must implement this
+         * routine.
+         *
+         * @return a new clone of this block.
+         */
+        virtual SatBlock* clone() const = 0;
 
         /**
          * Determines whether the given tetrahedron is contained within the
@@ -718,6 +730,9 @@ class SatBlock : public Output<SatBlock> {
          */
         static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
             Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4);
+
+    friend class SatBlockStarter;
+    friend class SatRegion;
 };
 
 /*@}*/

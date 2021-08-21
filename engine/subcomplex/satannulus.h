@@ -114,6 +114,9 @@ class Matrix2;
  *         l  *--->---*        l  *--->---*
  * </pre>
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \ifacespython The member arrays \a tet and \a roles are accessed for
  * reading through functions \a tet() and \a roles() respectively.  For
  * instance, the first triangle tetrahedron for the saturated annulus \a a can
@@ -395,8 +398,8 @@ struct SatAnnulus {
      * @param newTri the triangulation to be used by the updated annulus
      * representation.
      */
-    void transform(const Triangulation<3>* originalTri,
-            const Isomorphism<3>* iso, Triangulation<3>* newTri);
+    void transform(const Triangulation<3>& originalTri,
+            const Isomorphism<3>& iso, Triangulation<3>& newTri);
     /**
      * Returns the image of this annulus representation under the given
      * isomorphism between triangulations.  This annulus representation
@@ -408,8 +411,8 @@ struct SatAnnulus {
      * @param newTri the triangulation to be used by the new annulus
      * representation.
      */
-    SatAnnulus image(const Triangulation<3>* originalTri,
-            const Isomorphism<3>* iso, Triangulation<3>* newTri) const;
+    SatAnnulus image(const Triangulation<3>& originalTri,
+            const Isomorphism<3>& iso, Triangulation<3>& newTri) const;
 
     /**
      * Attaches a layered solid torus to the this saturated annulus.
@@ -511,8 +514,8 @@ inline SatAnnulus SatAnnulus::halfTurnRotation() const {
     return SatAnnulus(tet[1], roles[1], tet[0], roles[0]);
 }
 
-inline SatAnnulus SatAnnulus::image(const Triangulation<3>* originalTri,
-        const Isomorphism<3>* iso, Triangulation<3>* newTri) const {
+inline SatAnnulus SatAnnulus::image(const Triangulation<3>& originalTri,
+        const Isomorphism<3>& iso, Triangulation<3>& newTri) const {
     SatAnnulus a(*this);
     a.transform(originalTri, iso, newTri);
     return a;

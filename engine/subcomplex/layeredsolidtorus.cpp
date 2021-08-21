@@ -38,31 +38,31 @@
 
 namespace regina {
 
-void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
-        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
+void LayeredSolidTorus::transform(const Triangulation<3>& originalTri,
+        const Isomorphism<3>& iso, Triangulation<3>& newTri) {
     size_t baseTetID = base_->index();
     size_t topTetID = top_->index();
 
     // Data members size_ and meridinalCuts remain unchanged.
 
     // Transform edge numbers:
-    baseEdge_ = iso->facePerm(baseTetID).pairs() * baseEdge_;
-    topEdge_ = iso->facePerm(topTetID).pairs() * topEdge_;
+    baseEdge_ = iso.facePerm(baseTetID).pairs() * baseEdge_;
+    topEdge_ = iso.facePerm(topTetID).pairs() * topEdge_;
 
     // Transform face numbers:
     FacePair newBaseFace = FacePair(
-        iso->facePerm(baseTetID)[baseFace_.lower()],
-        iso->facePerm(baseTetID)[baseFace_.upper()]);
-    if (newBaseFace.lower() != iso->facePerm(baseTetID)[baseFace_.lower()]) {
+        iso.facePerm(baseTetID)[baseFace_.lower()],
+        iso.facePerm(baseTetID)[baseFace_.upper()]);
+    if (newBaseFace.lower() != iso.facePerm(baseTetID)[baseFace_.lower()]) {
         // Swap images of 1,2 and images of 3,5.
         baseEdge_ = baseEdge_ * Perm<6>(0, 2, 1, 5, 4, 3);
     }
     baseFace_ = newBaseFace;
 
     FacePair newTopFace = FacePair(
-        iso->facePerm(topTetID)[topFace_.lower()],
-        iso->facePerm(topTetID)[topFace_.upper()]);
-    if (newTopFace.lower() != iso->facePerm(topTetID)[topFace_.lower()]) {
+        iso.facePerm(topTetID)[topFace_.lower()],
+        iso.facePerm(topTetID)[topFace_.upper()]);
+    if (newTopFace.lower() != iso.facePerm(topTetID)[topFace_.lower()]) {
         // Swap images of 0,1, images of 2,3 and images of 4,5, except for
         // the pair that only contains one top edge.
         // We do this by swapping all three pairs, and then swapping the
@@ -73,8 +73,8 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
     topFace_ = newTopFace;
 
     // Transform tetrahedra:
-    base_ = newTri->tetrahedron(iso->tetImage(baseTetID));
-    top_ = newTri->tetrahedron(iso->tetImage(topTetID));
+    base_ = newTri.tetrahedron(iso.tetImage(baseTetID));
+    top_ = newTri.tetrahedron(iso.tetImage(topTetID));
 }
 
 std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(

@@ -35,8 +35,8 @@
 
 namespace regina {
 
-Layering::Layering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
-        Perm<4> roles1) : size_(0), reln(1, 0, 0, 1) {
+Layering::Layering(Tetrahedron<3>* bdry0, Perm<4> roles0,
+        Tetrahedron<3>* bdry1, Perm<4> roles1) : size_(0), reln(1, 0, 0, 1) {
     oldBdryTet_[0] = newBdryTet_[0] = bdry0;
     oldBdryTet_[1] = newBdryTet_[1] = bdry1;
 
@@ -126,8 +126,8 @@ unsigned long Layering::extend() {
 }
 
 bool Layering::matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
-        Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1, Matrix2& upperReln)
-        const {
+        Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
+        Matrix2& upperReln) const {
     // We can cut half our cases by assuming that upperBdry0 meets with
     // newBdryTet[0] and that upperBdry1 meets with newBdryTet[1].
     bool rot180;

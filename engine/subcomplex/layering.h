@@ -159,8 +159,8 @@ class Layering {
          * @param roles1 the permutation describing how this second triangle is
          * formed from three vertices of tetrahedron \a bdry1.
          */
-        Layering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
-            Perm<4> roles1);
+        Layering(Tetrahedron<3>* bdry0, Perm<4> roles0,
+            Tetrahedron<3>* bdry1, Perm<4> roles1);
 
         /**
          * Returns the number of individual tetrahedra that have been

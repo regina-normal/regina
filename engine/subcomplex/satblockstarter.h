@@ -102,7 +102,7 @@ class SatBlockStarter {
          *
          * @return the block structure.
          */
-        const SatBlock* block() const;
+        SatBlock* block(Triangulation<3>& tri, const Isomorphism<3>& iso) const;
 
         // Mark this class as non-copyable.
         SatBlockStarter(const SatBlockStarter&) = delete;
@@ -332,20 +332,15 @@ class SatBlockStarterSearcher {
 
 // Inline functions for SatBlockStarter
 
-inline SatBlockStarter::SatBlockStarter() : block_(0) {
+inline SatBlockStarter::SatBlockStarter() : block_(nullptr) {
 }
 
 inline SatBlockStarter::~SatBlockStarter() {
-    if (block_)
-        delete block_;
+    delete block_;
 }
 
 inline const Triangulation<3>& SatBlockStarter::triangulation() const {
     return triangulation_;
-}
-
-inline const SatBlock* SatBlockStarter::block() const {
-    return block_;
 }
 
 // Inline functions for SatBlockStarterSet

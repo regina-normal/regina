@@ -273,8 +273,8 @@ void SatLST::writeAbbr(std::ostream& out, bool tex) const {
         << lst_.meridinalCuts(2) << (tex ? '}' : ')');
 }
 
-void SatLST::transform(const Triangulation<3>* originalTri,
-        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
+void SatLST::transform(const Triangulation<3>& originalTri,
+        const Isomorphism<3>& iso, Triangulation<3>& newTri) {
     // Start with the parent implementation.
     SatBlock::transform(originalTri, iso, newTri);
 

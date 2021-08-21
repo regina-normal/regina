@@ -320,8 +320,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * @param newTri the triangulation to be referenced by the updated
          * layered solid torus.
          */
-        void transform(const Triangulation<3>* originalTri,
-                const Isomorphism<3>* iso, Triangulation<3>* newTri);
+        void transform(const Triangulation<3>& originalTri,
+                const Isomorphism<3>& iso, Triangulation<3>& newTri);
 
         /**
          * Determines if the given tetrahedron forms the base of a

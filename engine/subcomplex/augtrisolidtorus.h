@@ -323,6 +323,18 @@ inline AugTriSolidTorus* AugTriSolidTorus::clone() const {
     return new AugTriSolidTorus(*this);
 }
 
+inline void AugTriSolidTorus::swap(AugTriSolidTorus& other) noexcept {
+    core_.swap(other.core_);
+    augTorus_[0].swap(other.augTorus_[0]);
+    augTorus_[1].swap(other.augTorus_[1]);
+    augTorus_[2].swap(other.augTorus_[2]);
+    std::swap_ranges(edgeGroupRoles_, edgeGroupRoles_ + 3,
+        other.edgeGroupRoles_);
+    std::swap(chainIndex_, other.chainIndex_);
+    std::swap(chainType_, other.chainType_);
+    std::swap(torusAnnulus_, other.torusAnnulus_);
+}
+
 inline const TriSolidTorus& AugTriSolidTorus::core() const {
     return core_;
 }

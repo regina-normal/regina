@@ -217,6 +217,13 @@ inline LayeredLensSpace* LayeredLensSpace::clone() const {
     return new LayeredLensSpace(*this);
 }
 
+inline void LayeredLensSpace::swap(LayeredLensSpace& other) noexcept {
+    torus_.swap(other.torus_);
+    std::swap(mobiusBoundaryGroup_, other.mobiusBoundaryGroup_);
+    std::swap(p_, other.p_);
+    std::swap(q_, other.q_);
+}
+
 inline unsigned long LayeredLensSpace::p() const {
     return p_;
 }

@@ -279,6 +279,15 @@ inline PlugTriSolidTorus* PlugTriSolidTorus::clone() const {
     return new PlugTriSolidTorus(*this);
 }
 
+inline void PlugTriSolidTorus::swap(PlugTriSolidTorus& other) noexcept {
+    core_.swap(other.core_);
+    chain_[0].swap(other.chain_[0]);
+    chain_[1].swap(other.chain_[1]);
+    chain_[2].swap(other.chain_[2]);
+    std::swap_ranges(chainType_, chainType_ + 3, other.chainType_);
+    std::swap(equatorType_, other.equatorType_);
+}
+
 inline const TriSolidTorus& PlugTriSolidTorus::core() const {
     return core_;
 }

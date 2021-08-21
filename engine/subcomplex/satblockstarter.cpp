@@ -42,6 +42,13 @@ namespace {
 
 std::list<const SatBlockStarter*> SatBlockStarterSet::blocks;
 
+SatBlock* SatBlockStarter::block(Triangulation<3>& tri,
+        const Isomorphism<3>& iso) const {
+    SatBlock* ans = block_->clone();
+    ans->transform(triangulation_, iso, tri);
+    return ans;
+}
+
 SatBlockStarterSet::SatBlockStarterSet() {
     std::scoped_lock lock(starterBlocksMutex);
     if (blocks.empty()) {
@@ -118,8 +125,7 @@ void SatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
         bool terminate = model->triangulation().findAllSubcomplexesIn(*tri,
                 [=](const Isomorphism<3>& iso) {
             // See if this isomorphism leads somewhere useful.
-            SatBlock* starter = model->block()->clone();
-            starter->transform(&model->triangulation(), &iso, tri);
+            SatBlock* starter = model->block(*tri, iso);
 
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.
