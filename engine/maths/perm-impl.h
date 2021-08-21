@@ -49,11 +49,11 @@
 #define __REGINA_PERM_IMPL_H
 
 // Import the specialised template classes.
+#include "maths/spec/perm6.h" // Required by Perm<4>::pairs()
 #include "maths/spec/perm2.h"
 #include "maths/spec/perm3.h"
 #include "maths/spec/perm4.h"
 #include "maths/spec/perm5.h"
-#include "maths/spec/perm6.h"
 #include "maths/spec/perm7.h"
 
 namespace regina {

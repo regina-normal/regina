@@ -523,6 +523,8 @@ Version 6.1  [ TODO ]
             - New routine isConjugacyMinimal().
             - New ++ and < operators.
             - New routines pow() and order().
+            - New routine pairs() which returnes the induced permutation
+              on six pairs of elements.
             - New constant imageBits for consistency with higher order
               permutation classes.
             - Added a new typedef Code2; this is identical to Code, but

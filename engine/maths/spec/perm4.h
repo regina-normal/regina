@@ -1181,6 +1181,25 @@ class Perm<4> {
          */
         constexpr bool isConjugacyMinimal() const;
 
+        /**
+         * Returns the induced permutation on all six \e pairs of
+         * elements from 0,1,2,3.
+         *
+         * Specifically: suppose we number the six pairs in
+         * lexicographical order, so that the pairs 01, 02, 03, 12, 13, 23
+         * are indexed as 0, 1, 2, 3, 4, 5 respectively.  Then this
+         * permutation induces a corresponding permutation of 0,...,5, where
+         * the pair (\a a, \a b) maps to the pair (<i>p[a]</i>, <i>p[b]</i>).
+         * This routine returns that induced permutation.
+         *
+         * Note that, if \a p permutes the four vertices (or equivalently,
+         * the four faces) of a tetrahedron, then <tt>p.pairs()</tt> is
+         * the induced permutation on the six \e edges of the tetrahedron.
+         *
+         * @return the induced permutation on six pairs of elements.
+         */
+        constexpr Perm<6> pairs() const;
+
     private:
         /**
          * Contains the images of every element under every possible
@@ -1271,6 +1290,16 @@ class Perm<4> {
          * element 3 maps to itself.
          */
         static constexpr Code2 S3Table[6] = { 0, 3, 8, 7, 12, 15 };
+
+        /**
+         * Contains a full table of induced permutations on six
+         * elements, as returned by pairs().  This array is indexed
+         * according to S4, and its values are indices in S6.
+         */
+        static constexpr uint16_t pairsTable[24] = {
+            0,   26,  148, 120, 242, 268,  86,  60, 372, 436, 556, 494,
+            186, 230, 466, 402, 638, 682, 356, 330, 546, 592, 712, 668
+        };
 
     protected:
         /**
@@ -1625,6 +1654,10 @@ inline constexpr Perm<4> Perm<4>::atIndex(Index i) {
 
 inline constexpr bool Perm<4>::isConjugacyMinimal() const {
     return (code_ < 3 || code_ == 6 || code_ == 9);
+}
+
+inline constexpr Perm<6> Perm<4>::pairs() const {
+    return Perm<6>::fromPermCode2(pairsTable[code_]);
 }
 
 } // namespace regina

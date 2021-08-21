@@ -32,7 +32,9 @@
 
 #include "testsuite/maths/permtest.h"
 #include "testsuite/maths/testmaths.h"
+#include "triangulation/facenumbering.h"
 
+using regina::FaceNumbering;
 using regina::Perm;
 
 class Perm4Test : public SmallPermTest<4> {
@@ -55,6 +57,7 @@ class Perm4Test : public SmallPermTest<4> {
     CPPUNIT_TEST(increment);
 
     // Tests specific to Perm<4>:
+    CPPUNIT_TEST(pairs);
     CPPUNIT_TEST(databases);
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(S2);
@@ -63,6 +66,24 @@ class Perm4Test : public SmallPermTest<4> {
     CPPUNIT_TEST_SUITE_END();
 
     public:
+        void pairs() {
+            for (unsigned idx = 0; idx < 24; ++idx) {
+                Perm<4> p4 = Perm<4>::S4[idx];
+                Perm<6> p6 = p4.pairs();
+
+                for (int i = 0; i < 4; ++i)
+                    for (int j = i + 1; j < 4; ++j) {
+                        // Look at how p4 maps the pair {i,j}.
+                        int e = FaceNumbering<3,1>::edgeNumber[i][j];
+                        int f = FaceNumbering<3,1>::edgeNumber[p4[i]][p4[j]];
+                        if (p6[e] != f) {
+                            CPPUNIT_FAIL("Perm<4>::pairs() does not give "
+                                "consistent results.");
+                        }
+                    }
+            }
+        }
+
         void databases() {
             unsigned i;
             for (i = 0; i < 6; ++i) {
