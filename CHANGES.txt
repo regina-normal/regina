@@ -137,6 +137,7 @@ Version 6.1  [ TODO ]
             - New class constants lexNumbering and oppositeDim.
             - Simplified the underlying web of template specialisations.
         Class FacePair:
+            - New routines commonEdge() and oppositeEdge().
             - Increment/decrement operators now insist that the face
               pair is not past-the-end/before-the-start respectively.
         Class FacetPairing<dim>, FacetPairingBase<dim>:

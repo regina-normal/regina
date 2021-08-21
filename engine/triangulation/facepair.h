@@ -262,6 +262,35 @@ class FacePair {
          */
         FacePair operator -- (int);
 
+        /**
+         * Identifies the tetrahedron edge that is common to both faces
+         * in this pair.
+         *
+         * This will be a tetrahedron edge number, between 0 and 5 inclusive.
+         * Note that edges commonEdge() and oppositeEdge() will be opposite
+         * edges in the tetrahedron.
+         *
+         * \pre This face pair is neither before-the-start nor
+         * past-the-end.
+         *
+         * @return the edge that belongs to both faces in this pair.
+         */
+        int commonEdge() const;
+        /**
+         * Identifies the tetrahedron edge that belongs to neither of
+         * the two faces in this pair.
+         *
+         * This will be a tetrahedron edge number, between 0 and 5 inclusive.
+         * Note that edges commonEdge() and oppositeEdge() will be opposite
+         * edges in the tetrahedron.
+         *
+         * \pre This face pair is neither before-the-start nor
+         * past-the-end.
+         *
+         * @return the edge that does not belong to either of these two faces.
+         */
+        int oppositeEdge() const;
+
     private:
         /**
          * Creates a new face pair with the given internal code.
@@ -355,6 +384,24 @@ inline FacePair FacePair::operator -- (int) {
 
 inline std::ostream& operator << (std::ostream& out, const FacePair& pair) {
     return out << '(' << pair.lower() << ',' << pair.upper() << ')';
+}
+
+inline int FacePair::commonEdge() const {
+    // Code 1, 2, 3, 6, 7, 11 -> edge 5, 4, 3, 2, 1, 0.
+    if (code_ < 6)
+        return 6 - code_;
+    if (code_ < 11)
+        return 8 - code_;
+    return 0;
+}
+
+inline int FacePair::oppositeEdge() const {
+    // Code 1, 2, 3, 6, 7, 11 -> edge 0, 1, 2, 3, 4, 5.
+    if (code_ < 6)
+        return code_ - 1;
+    if (code_ < 11)
+        return code_ - 3;
+    return 5;
 }
 
 } // namespace regina
