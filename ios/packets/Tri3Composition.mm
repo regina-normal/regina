@@ -182,9 +182,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::AugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::AugTriSolidTorus::isAugTriSolidTorus(self.packet->component(i));
+        auto aug = regina::AugTriSolidTorus::recognise(self.packet->component(i));
         if (aug) {
             [details appendFormat:@"Augmented triangular solid torus %s\n", aug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -206,7 +205,6 @@
                 [details appendString:@INDENT1 "Attached: 3 layered solid tori\n"];
      
             [details appendString:@"\n"];
-            delete aug;
         }
     }
 }
@@ -250,9 +248,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::LayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::LayeredLensSpace::isLayeredLensSpace(self.packet->component(i));
+        auto lens = regina::LayeredLensSpace::recognise(self.packet->component(i));
         if (lens) {
             [details appendFormat:@"Layered lens space %s\n", lens->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -265,7 +262,6 @@
              (lens->isSnapped() ? "snapped shut" : "twisted shut")];
 
             [details appendString:@"\n"];
-            delete lens;
         }
     }
 }
@@ -299,9 +295,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::PlugTriSolidTorus* plug;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
+        auto plug = regina::PlugTriSolidTorus::recognise(self.packet->component(i));
         if (plug) {
             [details appendFormat:@"Plugged triangular solid torus %s\n", plug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -334,7 +329,6 @@
                 [details appendString:@INDENT1 "Equator type: minor\n"];
 
             [details appendString:@"\n"];
-            delete plug;
         }
     }
 }

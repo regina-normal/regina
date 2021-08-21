@@ -41,7 +41,11 @@ using regina::AugTriSolidTorus;
 void addAugTriSolidTorus(pybind11::module_& m) {
     pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
             (m, "AugTriSolidTorus")
-        .def("clone", &AugTriSolidTorus::clone)
+        .def(pybind11::init<const AugTriSolidTorus&>())
+        .def("clone", [](const AugTriSolidTorus& s) { // deprecated
+            return AugTriSolidTorus(s);
+        })
+        .def("swap", &AugTriSolidTorus::swap)
         .def("core", &AugTriSolidTorus::core,
             pybind11::return_value_policy::reference_internal)
         .def("augTorus", &AugTriSolidTorus::augTorus,
@@ -51,7 +55,9 @@ void addAugTriSolidTorus(pybind11::module_& m) {
         .def("chainType", &AugTriSolidTorus::chainType)
         .def("torusAnnulus", &AugTriSolidTorus::torusAnnulus)
         .def("hasLayeredChain", &AugTriSolidTorus::hasLayeredChain)
-        .def_static("isAugTriSolidTorus", &AugTriSolidTorus::isAugTriSolidTorus)
+        .def_static("recognise", &AugTriSolidTorus::recognise)
+        .def_static("isAugTriSolidTorus", // deprecated
+            &AugTriSolidTorus::recognise)
         // On some systems we cannot take addresses of the following
         // inline class constants (e.g., this fails with gcc10 on windows).
         // We therefore define getter functions instead.

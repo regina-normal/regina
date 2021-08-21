@@ -197,7 +197,7 @@ inline TrivialTri::TrivialTri(int type) : type_(type) {
 }
 
 inline TrivialTri* TrivialTri::clone() const {
-    return new TrivialTri(type_);
+    return new TrivialTri(*this);
 }
 
 inline void TrivialTri::swap(TrivialTri& other) noexcept {

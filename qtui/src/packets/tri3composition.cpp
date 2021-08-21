@@ -399,10 +399,8 @@ void Tri3CompositionUI::findAugTriSolidTori() {
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
-    regina::AugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::AugTriSolidTorus::isAugTriSolidTorus(
-            tri->component(i));
+        auto aug = regina::AugTriSolidTorus::recognise(tri->component(i));
         if (aug) {
             id = addComponentSection(tr(
                 "Augmented triangular solid torus ") + aug->name().c_str());
@@ -436,8 +434,6 @@ void Tri3CompositionUI::findAugTriSolidTori() {
                 detailsItem = new QTreeWidgetItem(id, detailsItem);
                 detailsItem->setText(0,tr("Attached: 3 layered solid tori"));
             }
-
-            delete aug;
         }
     }
 }
@@ -701,10 +697,8 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
-    regina::LayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::LayeredLensSpace::isLayeredLensSpace(
-            tri->component(i));
+        auto lens = regina::LayeredLensSpace::recognise(tri->component(i));
         if (lens) {
             id = addComponentSection(tr("Layered lens space ") +
                 lens->name().c_str());
@@ -721,8 +715,6 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
                 arg(torus.meridinalCuts(2)).
                 arg(lens->isSnapped() ? tr("snapped shut") :
                     tr("twisted shut")));
-
-            delete lens;
         }
     }
 }
@@ -841,10 +833,8 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
-    regina::PlugTriSolidTorus* plug;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(
-            tri->component(i));
+        auto plug = regina::PlugTriSolidTorus::recognise(tri->component(i));
         if (plug) {
             id = addComponentSection(tr("Plugged triangular solid torus ") +
                 plug->name().c_str());
@@ -881,8 +871,6 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
                 (plug->equatorType() ==
                 regina::PlugTriSolidTorus::EQUATOR_MAJOR ?
                 tr("major") : tr("minor")));
-
-            delete plug;
         }
     }
 }

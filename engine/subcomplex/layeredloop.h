@@ -198,6 +198,10 @@ inline LayeredLoop::LayeredLoop(unsigned long length, Edge<3>* hinge0,
         Edge<3>* hinge1) : length_(length), hinge_ { hinge0, hinge1 } {
 }
 
+inline LayeredLoop* LayeredLoop::clone() const {
+    return new LayeredLoop(*this);
+}
+
 inline void LayeredLoop::swap(LayeredLoop& other) noexcept {
     std::swap(length_, other.length_);
     std::swap(hinge_[0], other.hinge_[0]);

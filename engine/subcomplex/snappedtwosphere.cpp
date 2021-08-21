@@ -36,10 +36,6 @@
 
 namespace regina {
 
-SnappedTwoSphere* SnappedTwoSphere::clone() const {
-    return new SnappedTwoSphere(ball_[0], ball_[1]);
-}
-
 std::optional<SnappedTwoSphere> SnappedTwoSphere::recognise(
         Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
     std::optional<SnappedBall> ball[2];

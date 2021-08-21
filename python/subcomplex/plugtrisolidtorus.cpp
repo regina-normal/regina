@@ -40,15 +40,20 @@ using regina::PlugTriSolidTorus;
 void addPlugTriSolidTorus(pybind11::module_& m) {
     pybind11::class_<PlugTriSolidTorus, regina::StandardTriangulation>
             (m, "PlugTriSolidTorus")
-        .def("clone", &PlugTriSolidTorus::clone)
+        .def(pybind11::init<const PlugTriSolidTorus&>())
+        .def("clone", [](const PlugTriSolidTorus& s) { // deprecated
+            return PlugTriSolidTorus(s);
+        })
+        .def("swap", &PlugTriSolidTorus::swap)
         .def("core", &PlugTriSolidTorus::core,
             pybind11::return_value_policy::reference_internal)
         .def("chain", &PlugTriSolidTorus::chain,
             pybind11::return_value_policy::reference_internal)
         .def("chainType", &PlugTriSolidTorus::chainType)
         .def("equatorType", &PlugTriSolidTorus::equatorType)
-        .def_static("isPlugTriSolidTorus",
-            &PlugTriSolidTorus::isPlugTriSolidTorus)
+        .def_static("recognise", &PlugTriSolidTorus::recognise)
+        .def_static("isPlugTriSolidTorus", // deprecated
+            &PlugTriSolidTorus::recognise)
         // On some systems we cannot take addresses of the following
         // inline class constants (e.g., this fails with gcc10 on windows).
         // We therefore define getter functions instead.

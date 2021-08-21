@@ -39,6 +39,7 @@
 #define __REGINA_LAYEREDLENSSPACE_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/standardtri.h"
@@ -60,8 +61,14 @@ namespace regina {
  * 
  * A layered lens space must contain at least one tetrahedron.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
  */
 class LayeredLensSpace : public StandardTriangulation {
     private:
@@ -77,11 +84,33 @@ class LayeredLensSpace : public StandardTriangulation {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        LayeredLensSpace(const LayeredLensSpace&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        LayeredLensSpace& operator = (const LayeredLensSpace&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        LayeredLensSpace* clone() const;
+        [[deprecated]] LayeredLensSpace* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(LayeredLensSpace& other) noexcept;
 
         /**
          * Returns the first parameter \a p of this lens space L(p,q).
@@ -139,7 +168,17 @@ class LayeredLensSpace : public StandardTriangulation {
          * @return a structure containing details of the layered lens space,
          * or no value if the given component is not a layered lens space.
          */
-        static LayeredLensSpace* isLayeredLensSpace(const Component<3>* comp);
+        static std::optional<LayeredLensSpace> recognise(
+            const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms a
+         * layered lens space.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<LayeredLensSpace>
+            isLayeredLensSpace(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -155,12 +194,27 @@ class LayeredLensSpace : public StandardTriangulation {
         LayeredLensSpace(const LayeredSolidTorus& torus);
 };
 
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls LayeredLensSpace::swap(); it is provided
+ * so that LayeredLensSpace meets the C++ Swappable requirements.
+ *
+ * @param a the first alternative whose contents should be swapped.
+ * @param b the second alternative whose contents should be swapped.
+ */
+void swap(LayeredLensSpace& a, LayeredLensSpace& b) noexcept;
+
 /*@}*/
 
 // Inline functions for LayeredLensSpace
 
 inline LayeredLensSpace::LayeredLensSpace(const LayeredSolidTorus& torus) :
         torus_(torus) {
+}
+
+inline LayeredLensSpace* LayeredLensSpace::clone() const {
+    return new LayeredLensSpace(*this);
 }
 
 inline unsigned long LayeredLensSpace::p() const {
@@ -184,6 +238,15 @@ inline bool LayeredLensSpace::isTwisted() const {
 inline void LayeredLensSpace::writeTextLong(std::ostream& out) const {
     out << "Layered lens space ";
     writeName(out);
+}
+
+inline std::optional<LayeredLensSpace> LayeredLensSpace::isLayeredLensSpace(
+        const Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline void swap(LayeredLensSpace& a, LayeredLensSpace& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

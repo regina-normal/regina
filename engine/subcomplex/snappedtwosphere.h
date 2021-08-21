@@ -186,6 +186,9 @@ inline SnappedTwoSphere::SnappedTwoSphere(
         const SnappedBall& ball0, const SnappedBall& ball1) :
         ball_ { ball0, ball1 } {
 }
+inline SnappedTwoSphere* SnappedTwoSphere::clone() const {
+    return new SnappedTwoSphere(*this);
+}
 inline const SnappedBall& SnappedTwoSphere::snappedBall(int index) const {
     return ball_[index];
 }

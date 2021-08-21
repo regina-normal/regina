@@ -37,16 +37,6 @@
 
 namespace regina {
 
-PlugTriSolidTorus* PlugTriSolidTorus::clone() const {
-    PlugTriSolidTorus* ans = new PlugTriSolidTorus(core_);
-    for (int i = 0; i < 3; i++) {
-        ans->chain_[i] = chain_[i];
-        ans->chainType_[i] = chainType_[i];
-    }
-    ans->equatorType_ = equatorType_;
-    return ans;
-}
-
 std::ostream& PlugTriSolidTorus::writeName(std::ostream& out) const {
     long params[3];
     int nParams = 0;
@@ -124,7 +114,7 @@ std::unique_ptr<Manifold> PlugTriSolidTorus::manifold() const {
     return ans;
 }
 
-PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
+std::optional<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
         Component<3>* comp) {
     // Each triangular solid torus is tested three times since we
     // can't call Tetrahedron<3>::index() from within a component only.
@@ -133,14 +123,14 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
 
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return 0;
+        return std::nullopt;
 
     if (comp->countVertices() > 1)
-        return 0;
+        return std::nullopt;
 
     unsigned long nTet = comp->size();
     if (nTet < 5)
-        return 0;
+        return std::nullopt;
 
     // We have a 1-vertex closed orientable component with at least
     // 5 tetrahedra.
@@ -379,17 +369,17 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
             }
 
             // Success!
-            PlugTriSolidTorus* plug = new PlugTriSolidTorus(*core);
+            PlugTriSolidTorus plug(*core);
             for (i = 0; i < 3; i++) {
-                plug->chain_[i] = std::move(chain[i]);
-                plug->chainType_[i] = chainType[i];
+                plug.chain_[i] = std::move(chain[i]);
+                plug.chainType_[i] = chainType[i];
             }
-            plug->equatorType_ = equatorType;
+            plug.equatorType_ = equatorType;
             return plug;
         }
 
     // Nothing was found.
-    return 0;
+    return std::nullopt;
 }
 
 } // namespace regina

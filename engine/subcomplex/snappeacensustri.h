@@ -254,7 +254,7 @@ inline SnapPeaCensusTri::SnapPeaCensusTri(char section, unsigned long index) :
 // Inline functions for SnapPeaCensusTri
 
 inline SnapPeaCensusTri* SnapPeaCensusTri::clone() const {
-    return new SnapPeaCensusTri(section_, index_);
+    return new SnapPeaCensusTri(*this);
 }
 
 inline void SnapPeaCensusTri::swap(SnapPeaCensusTri& other) noexcept {

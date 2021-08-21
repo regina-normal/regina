@@ -84,6 +84,13 @@ namespace regina {
  * Of the optional StandardTriangulation routines, manifold() is
  * implemented for most augmented triangular solid tori and
  * homology() is not implemented at all.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
  */
 class AugTriSolidTorus : public StandardTriangulation {
     public:
@@ -128,11 +135,33 @@ class AugTriSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        AugTriSolidTorus(const AugTriSolidTorus&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        AugTriSolidTorus& operator = (const AugTriSolidTorus&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        AugTriSolidTorus* clone() const;
+        [[deprecated]] AugTriSolidTorus* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(AugTriSolidTorus& other) noexcept;
 
         /**
          * Returns the triangular solid torus at the core of this
@@ -235,7 +264,17 @@ class AugTriSolidTorus : public StandardTriangulation {
          * solid torus, or no value if the given component is not an augmented
          * triangular solid torus.
          */
-        static AugTriSolidTorus* isAugTriSolidTorus(const Component<3>* comp);
+        static std::optional<AugTriSolidTorus> recognise(
+            const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms an
+         * augmented triangular solid torus.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<AugTriSolidTorus>
+            isAugTriSolidTorus(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -261,12 +300,27 @@ class AugTriSolidTorus : public StandardTriangulation {
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
 
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls AugTriSolidTorus::swap(); it is provided
+ * so that AugTriSolidTorus meets the C++ Swappable requirements.
+ *
+ * @param a the first alternative whose contents should be swapped.
+ * @param b the second alternative whose contents should be swapped.
+ */
+void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept;
+
 /*@}*/
 
 // Inline functions for AugTriSolidTorus
 
 inline AugTriSolidTorus::AugTriSolidTorus(const TriSolidTorus& core) :
         core_(core), chainType_(CHAIN_NONE) {
+}
+
+inline AugTriSolidTorus* AugTriSolidTorus::clone() const {
+    return new AugTriSolidTorus(*this);
 }
 
 inline const TriSolidTorus& AugTriSolidTorus::core() const {
@@ -290,6 +344,15 @@ inline int AugTriSolidTorus::torusAnnulus() const {
 }
 inline bool AugTriSolidTorus::hasLayeredChain() const {
     return (chainIndex_ != 0);
+}
+
+inline void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept {
+    a.swap(b);
+}
+
+inline std::optional<AugTriSolidTorus> AugTriSolidTorus::isAugTriSolidTorus(
+        const Component<3>* comp) {
+    return recognise(comp);
 }
 
 } // namespace regina

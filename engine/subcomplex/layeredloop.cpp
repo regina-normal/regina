@@ -38,10 +38,6 @@
 
 namespace regina {
 
-LayeredLoop* LayeredLoop::clone() const {
-    return new LayeredLoop(*this);
-}
-
 std::unique_ptr<Manifold> LayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.

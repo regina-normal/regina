@@ -67,16 +67,16 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         return std::make_unique<TrivialTri>(*ans);
     if (auto ans = L31Pillow::recognise(comp))
         return std::make_unique<L31Pillow>(*ans);
-    if (auto ans = LayeredLensSpace::isLayeredLensSpace(comp))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = LayeredLensSpace::recognise(comp))
+        return std::make_unique<LayeredLensSpace>(*ans);
     if (auto ans = LayeredLoop::recognise(comp))
         return std::make_unique<LayeredLoop>(*ans);
     if (auto ans = LayeredChainPair::recognise(comp))
         return std::make_unique<LayeredChainPair>(*ans);
-    if (auto ans = AugTriSolidTorus::isAugTriSolidTorus(comp))
-        return std::unique_ptr<StandardTriangulation>(ans);
-    if (auto ans = PlugTriSolidTorus::isPlugTriSolidTorus(comp))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = AugTriSolidTorus::recognise(comp))
+        return std::make_unique<AugTriSolidTorus>(*ans);
+    if (auto ans = PlugTriSolidTorus::recognise(comp))
+        return std::make_unique<PlugTriSolidTorus>(*ans);
     if (auto ans = LayeredSolidTorus::recognise(comp))
         return std::make_unique<LayeredSolidTorus>(*ans);
     if (auto ans = SnapPeaCensusTri::recognise(comp))
