@@ -46,7 +46,7 @@ AugTriSolidTorus* AugTriSolidTorus::clone() const {
         ans->augTorus_[i] = augTorus_[i];
         ans->edgeGroupRoles_[i] = edgeGroupRoles_[i];
     }
-    ans->chainIndex = chainIndex;
+    ans->chainIndex_ = chainIndex_;
     ans->chainType_ = chainType_;
     ans->torusAnnulus_ = torusAnnulus_;
     return ans;
@@ -57,7 +57,7 @@ std::unique_ptr<Manifold> AugTriSolidTorus::manifold() const {
     if (chainType_ == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
         ans->insertFibre(2, 1);
-        ans->insertFibre(chainIndex + 1, 1);
+        ans->insertFibre(chainIndex_ + 1, 1);
 
         long q, r;
         if (edgeGroupRoles_[torusAnnulus_][2] == 2) {
@@ -117,7 +117,7 @@ std::unique_ptr<Manifold> AugTriSolidTorus::manifold() const {
                 q = -(edgeGroupRoles_[torusAnnulus_][1] == 2 ? 2 : 1);
             }
         }
-        long alpha = q - chainIndex * r;
+        long alpha = q - chainIndex_ * r;
         long beta = -r;
         if (alpha < 0) {
             alpha = -alpha;
@@ -221,7 +221,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                         }
                     }
 
-                    ans->chainIndex = 0;
+                    ans->chainIndex_ = 0;
                     ans->chainType_ = CHAIN_NONE;
                     ans->torusAnnulus_ = -1;
                     return ans;
@@ -306,7 +306,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                             ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(0,1,2,3);
                             break;
                     }
-                    ans->chainIndex = chainLen;
+                    ans->chainIndex_ = chainLen;
                     ans->chainType_ = chainType;
                     ans->torusAnnulus_ = torusAnnulus;
                     return ans;
@@ -372,7 +372,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                     ans->edgeGroupRoles_[0] = Perm<4>(0, 1, 2, 3);
                                     break;
                             }
-                            ans->chainIndex = chain.index() - 1;
+                            ans->chainIndex_ = chain.index() - 1;
                             ans->chainType_ = chainType;
                             ans->torusAnnulus_ = 0;
                             return ans;
@@ -428,7 +428,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                     ans->edgeGroupRoles_[0] = Perm<4>(0, 1, 2, 3);
                                     break;
                             }
-                            ans->chainIndex = chain.index();
+                            ans->chainIndex_ = chain.index();
                             ans->chainType_ = chainType;
                             ans->torusAnnulus_ = 0;
                             return ans;
@@ -597,7 +597,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                         ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     }
                 }
-                ans->chainIndex = chainLen;
+                ans->chainIndex_ = chainLen;
                 ans->chainType_ = chainType;
                 ans->torusAnnulus_ = torusAnnulus;
                 return ans;
@@ -610,7 +610,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                     if (whichLayered[j] >= 0)
                         ans->augTorus_[j] = std::move(layered[whichLayered[j]]);
                 }
-                ans->chainIndex = 0;
+                ans->chainIndex_ = 0;
                 ans->chainType_ = CHAIN_NONE;
                 ans->torusAnnulus_ = -1;
                 return ans;
@@ -624,7 +624,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
 
 std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
         bool tex) const {
-    if (chainIndex) {
+    if (chainIndex_) {
         // We have a layered solid torus and a layered chain.
         Perm<4> roles = edgeGroupRoles_[torusAnnulus_];
         const auto& torus = augTorus_[torusAnnulus_];
@@ -650,7 +650,7 @@ std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
             out << (tex ? "J_{" : "J(");
         else
             out << (tex ? "X_{" : "X(");
-        return out << chainIndex << " | " << params[roles[0]] << ','
+        return out << chainIndex_ << " | " << params[roles[0]] << ','
             << params[roles[1]] << (tex ? '}' : ')');
     } else {
         // We have three layered solid tori.
@@ -701,7 +701,7 @@ std::ostream& AugTriSolidTorus::writeTeXName(std::ostream& out) const {
 }
 
 void AugTriSolidTorus::writeTextLong(std::ostream& out) const {
-    out << (chainIndex ? "Chained " : "Augmented ")
+    out << (chainIndex_ ? "Chained " : "Augmented ")
         << "triangular solid torus "
         << (torusAnnulus_ == -1 ? "(three tori): " : "(torus + chain): ");
     writeName(out);
