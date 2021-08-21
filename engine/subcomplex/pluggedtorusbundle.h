@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include "maths/matrix2.h"
+#include "subcomplex/satregion.h"
 #include "subcomplex/standardtri.h"
 
 namespace regina {
@@ -128,7 +129,7 @@ class PluggedTorusBundle : public StandardTriangulation {
                  triangulation.  This is required since the thin I-bundle
                  \a bundle_ is external, and does not refer directly to this
                  triangulation. */
-        SatRegion* region_;
+        SatRegion region_;
             /**< The saturated region that appears within this
                  triangulation.  This region is owned by this object, and
                  refers to tetrahedra within this triangulation. */
@@ -215,9 +216,7 @@ class PluggedTorusBundle : public StandardTriangulation {
     private:
         /**
          * Creates a new structure of the form described in the class notes
-         * above, based on the given constituent components.  The new object
-         * will take ownership of the given saturated region and isomorphism.
-         * It will not take ownership of the given thin I-bundle.
+         * above, based on the given constituent components.
          *
          * Note that the new object must refer to an existing triangulation.
          *
@@ -235,7 +234,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * I-bundle and layerings, as described in the class notes above.
          */
         PluggedTorusBundle(const TxICore& bundle, Isomorphism<3>* bundleIso,
-            SatRegion* region, const Matrix2& matchingReln);
+            SatRegion&& region, const Matrix2& matchingReln);
 
         /**
          * Determines whether the given triangulation is of the form
@@ -269,9 +268,9 @@ class PluggedTorusBundle : public StandardTriangulation {
 // Inline functions for PluggedTorusBundle
 
 inline PluggedTorusBundle::PluggedTorusBundle(const TxICore& bundle,
-        Isomorphism<3>* bundleIso, SatRegion* region,
+        Isomorphism<3>* bundleIso, SatRegion&& region,
         const Matrix2& matchingReln) :
-        bundle_(bundle), bundleIso_(bundleIso), region_(region),
+        bundle_(bundle), bundleIso_(bundleIso), region_(std::move(region)),
         matchingReln_(matchingReln) {
 }
 
@@ -284,7 +283,7 @@ inline const Isomorphism<3>& PluggedTorusBundle::bundleIso() const {
 }
 
 inline const SatRegion& PluggedTorusBundle::region() const {
-    return *region_;
+    return region_;
 }
 
 inline const Matrix2& PluggedTorusBundle::matchingReln() const {

@@ -339,6 +339,23 @@ class SatRegion : public Output<SatRegion> {
         SatRegion(SatBlock* starter);
 
         /**
+         * Moves the contents of the given region into this new region.
+         * This is a fast (constant time) operation.
+         *
+         * The region that was passed will no longer be usable.
+         */
+        SatRegion(SatRegion&& src) noexcept = default;
+        /**
+         * Moves the contents of the given region into this region.
+         * This is a fast (constant time) operation.
+         *
+         * The region that was passed will no longer be usable.
+         *
+         * @return a reference to this region.
+         */
+        SatRegion& operator = (SatRegion&&) noexcept = default;
+
+        /**
          * Returns the number of saturated blocks that come together
          * to form this saturated region.
          */

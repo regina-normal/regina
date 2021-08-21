@@ -137,8 +137,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
                  annulus on the triangular solid torus, or \a CHAIN_NONE
                  for those annuli without attached layered chains. */
         int equatorType_;
-            /**< Indicates which types of edges form the equator of the
-                 plug. */
+            /**< Indicates which types of edges form the equator of the plug. */
 
     public:
         /**

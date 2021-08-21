@@ -55,11 +55,10 @@ namespace {
 
 PluggedTorusBundle::~PluggedTorusBundle() {
     delete bundleIso_;
-    delete region_;
 }
 
 std::unique_ptr<Manifold> PluggedTorusBundle::manifold() const {
-    std::optional<SFSpace> sfs = region_->createSFS(false);
+    std::optional<SFSpace> sfs = region_.createSFS(false);
     if (! sfs)
         return nullptr;
     if (sfs->punctures() == 1) {
@@ -77,7 +76,7 @@ std::ostream& PluggedTorusBundle::writeName(std::ostream& out) const {
     out << "Plugged Torus Bundle [";
     bundle_.writeName(out);
     out << " | ";
-    region_->writeBlockAbbrs(out, false);
+    region_.writeBlockAbbrs(out, false);
     return out << ']';
 }
 
@@ -85,7 +84,7 @@ std::ostream& PluggedTorusBundle::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{PTB}\\left[";
     bundle_.writeTeXName(out);
     out << "\\,|\\n";
-    region_->writeBlockAbbrs(out, true);
+    region_.writeBlockAbbrs(out, true);
     return out << "\\right]";
 }
 
@@ -95,7 +94,7 @@ void PluggedTorusBundle::writeTextLong(std::ostream& out) const {
     out << "Thin I-bundle: ";
     bundle_.writeName(out);
     out << '\n';
-    region_->writeDetail(out, "Saturated region");
+    region_.writeDetail(out, "Saturated region");
 }
 
 PluggedTorusBundle* PluggedTorusBundle::isPluggedTorusBundle(
@@ -150,7 +149,6 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* tri,
         SatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
         SatBlock::TetList avoidTets;
         SatBlock* starter;
-        SatRegion* region;
         bool bdryRefVert, bdryRefHoriz;
 
         // Look for the corresponding layering.
@@ -218,25 +216,21 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* tri,
 
             // We have a starter block.  Make a region out of it, and
             // ensure that region has precisely two boundary annuli.
-            region = new SatRegion(starter);
-            region->expand(avoidTets, false);
+            SatRegion region(starter);
+            region.expand(avoidTets, false);
 
-            if (region->numberOfBoundaryAnnuli() != 2) {
-                delete region;
+            if (region.numberOfBoundaryAnnuli() != 2)
                 continue;
-            }
 
             // From the SatRegion specifications we know that the first
             // boundary annulus will be upperAnnulus.  Find the second.
-            bdryAnnulus = region->boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
+            bdryAnnulus = region.boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
 
             // Hope like hell that this meets up with the lower layering
             // boundary.  Note that this will force it to be a torus also.
             Matrix2 upperRolesToLower;
-            if (! lowerAnnulus.isJoined(bdryAnnulus, upperRolesToLower)) {
-                delete region;
+            if (! lowerAnnulus.isJoined(bdryAnnulus, upperRolesToLower))
                 continue;
-            }
 
             // All good!
             // Better work out what we've got here.
@@ -298,7 +292,8 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* tri,
             // Note that curvesToBdryAnnulus is self-inverse, so we won't
             // bother inverting it even though we should.
             ans = new PluggedTorusBundle(bundle, new Isomorphism<3>(iso),
-                region, curvesToBdryAnnulus * upperRolesToLower.inverse() *
+                std::move(region),
+                curvesToBdryAnnulus * upperRolesToLower.inverse() *
                 curvesToLowerAnnulus);
             return true;
         }
