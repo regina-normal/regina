@@ -47,7 +47,6 @@
 
 namespace regina {
 
-struct SatAnnulus;
 class SFSpace;
 
 /**
@@ -734,7 +733,7 @@ inline SatBlock::SatBlock(unsigned nAnnuli, bool twistedBoundary) :
         adjReflected_(new bool[nAnnuli]),
         adjBackwards_(new bool[nAnnuli]) {
     for (unsigned i = 0; i < nAnnuli; i++)
-        adjBlock_[i] = 0;
+        adjBlock_[i] = nullptr;
 }
 
 inline SatBlock::~SatBlock() {
@@ -763,7 +762,7 @@ inline bool SatBlock::twistedBoundary() const {
 }
 
 inline bool SatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
-    return (adjBlock_[whichAnnulus] != 0);
+    return (adjBlock_[whichAnnulus] != nullptr);
 }
 
 inline SatBlock* SatBlock::adjacentBlock(unsigned whichAnnulus) const {
@@ -796,27 +795,28 @@ inline void SatBlock::setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
 }
 
 inline bool SatBlock::notUnique(Tetrahedron<3>* test) {
-    return (test == 0);
+    return (test == nullptr);
 }
 
 inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1) {
-    return (test == 0 || test == other1);
+    return (test == nullptr || test == other1);
 }
 
 inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
         Tetrahedron<3>* other2) {
-    return (test == 0 || test == other1 || test == other2);
+    return (test == nullptr || test == other1 || test == other2);
 }
 
 inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
         Tetrahedron<3>* other2, Tetrahedron<3>* other3) {
-    return (test == 0 || test == other1 || test == other2 || test == other3);
+    return (test == nullptr || test == other1 || test == other2 ||
+        test == other3);
 }
 
 inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
         Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4) {
-    return (test == 0 || test == other1 || test == other2 || test == other3 ||
-        test == other4);
+    return (test == nullptr || test == other1 || test == other2 ||
+        test == other3 || test == other4);
 }
 
 } // namespace regina
