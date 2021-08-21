@@ -67,21 +67,13 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
     // Data members nTetrahedra and meridinalCuts remain unchanged.
 
     // Transform edge numbers (note that -1s can also be present for topEdge[]):
-    int edgeID[6];
-    for (i = 0; i < 6; i++)
-        edgeID[i] = Edge<3>::edgeNumber
-            [iso->facePerm(baseTetID)[Edge<3>::edgeVertex[baseEdge_[i]][0]]]
-            [iso->facePerm(baseTetID)[Edge<3>::edgeVertex[baseEdge_[i]][1]]];
-    baseEdge_ = Perm<6>(edgeID);
+    baseEdge_ = iso->facePerm(baseTetID).pairs() * baseEdge_;
 
     for (i = 0; i < 3; i++)
         for (j = 0; j < 2; j++) {
             if (topEdge_[i][j] < 0)
                 continue;
-
-            topEdge_[i][j] = Edge<3>::edgeNumber
-                [iso->facePerm(topTetID)[Edge<3>::edgeVertex[topEdge_[i][j]][0]]]
-                [iso->facePerm(topTetID)[Edge<3>::edgeVertex[topEdge_[i][j]][1]]];
+            topEdge_[i][j] = iso->facePerm(topTetID).pairs()[topEdge_[i][j]];
         }
 
     unsigned missingEdge = 0 + 1 + 2 + 3 + 4 + 5;
@@ -234,12 +226,8 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
 
         // See which edges of the current top tetrahedron are being
         // layered upon.
-        layerOnEdge[0] = Edge<3>::edgeNumber
-            [adjPerm[0].pre(Edge<3>::edgeVertex[adjEdge][0])]
-            [adjPerm[0].pre(Edge<3>::edgeVertex[adjEdge][1])];
-        layerOnEdge[1] = Edge<3>::edgeNumber
-            [adjPerm[1].pre(Edge<3>::edgeVertex[adjEdge][0])]
-            [adjPerm[1].pre(Edge<3>::edgeVertex[adjEdge][1])];
+        layerOnEdge[0] = adjPerm[0].inverse().pairs()[adjEdge];
+        layerOnEdge[1] = adjPerm[1].inverse().pairs()[adjEdge];
         if (layerOnEdge[0] != layerOnEdge[1] &&
                 layerOnEdge[0] + layerOnEdge[1] != 5)
             break;
@@ -683,9 +671,7 @@ void LayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
         pos = (topEdge_[sourceGroup][i] == -1 ? 0 : i);
         adjPerm = topLevel_->adjacentGluing(
             i == 0 ? topFace_.lower() : topFace_.upper());
-        topEdge_[destGroup][i] = Edge<3>::edgeNumber
-            [adjPerm[Edge<3>::edgeVertex[topEdge_[sourceGroup][pos]][0]]]
-            [adjPerm[Edge<3>::edgeVertex[topEdge_[sourceGroup][pos]][1]]];
+        topEdge_[destGroup][i] = adjPerm.pairs()[topEdge_[sourceGroup][pos]];
     }
 }
 
