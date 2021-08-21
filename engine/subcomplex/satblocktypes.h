@@ -78,10 +78,8 @@ class SatMobius : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
-         *
-         * @param cloneMe the block structure to clone.
          */
-        SatMobius(const SatMobius& cloneMe) = default;
+        SatMobius(const SatMobius&) = default;
 
         /**
          * Describes how the Mobius band is attached to the
@@ -169,10 +167,8 @@ class SatLST : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
-         *
-         * @param cloneMe the block structure to clone.
          */
-        SatLST(const SatLST& cloneMe);
+        SatLST(const SatLST&) = default;
 
         /**
          * Returns details of the layered solid torus that this block
@@ -260,10 +256,8 @@ class SatTriPrism : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
-         *
-         * @param cloneMe the block structure to clone.
          */
-        SatTriPrism(const SatTriPrism& cloneMe) = default;
+        SatTriPrism(const SatTriPrism&) = default;
 
         /**
          * Is this prism of major type or minor type?  See the class
@@ -361,10 +355,8 @@ class SatCube : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
-         *
-         * @param cloneMe the block structure to clone.
          */
-        SatCube(const SatCube& cloneMe) = default;
+        SatCube(const SatCube&) = default;
 
         virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
@@ -438,10 +430,8 @@ class SatReflectorStrip : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
-         *
-         * @param cloneMe the block structure to clone.
          */
-        SatReflectorStrip(const SatReflectorStrip& cloneMe) = default;
+        SatReflectorStrip(const SatReflectorStrip&) = default;
 
         virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
@@ -533,10 +523,8 @@ class SatLayering : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
-         *
-         * @param cloneMe the block structure to clone.
          */
-        SatLayering(const SatLayering& cloneMe) = default;
+        SatLayering(const SatLayering&) = default;
 
         /**
          * Does this describe a layering over the horizontal edge of the

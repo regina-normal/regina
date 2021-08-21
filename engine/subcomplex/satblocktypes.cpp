@@ -247,10 +247,6 @@ SatMobius* SatMobius::isBlockMobius(const SatAnnulus& annulus, TetList&) {
     return ans;
 }
 
-SatLST::SatLST(const SatLST& cloneMe) : SatBlock(cloneMe),
-        lst_(cloneMe.lst_), roles_(cloneMe.roles_) {
-}
-
 void SatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
     long cutsVert = lst_.meridinalCuts(roles_[0]);
     long cutsHoriz = lst_.meridinalCuts(roles_[1]);
