@@ -300,7 +300,6 @@
     unsigned long nComps = self.packet->countComponents();
     
     regina::PlugTriSolidTorus* plug;
-    const regina::LayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
         plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
         if (plug) {
@@ -315,7 +314,7 @@
 
             [details appendString:@INDENT1 "Chain lengths: "];
             for (int j = 0; j < 3; j++) {
-                chain = plug->chain(j);
+                const auto& chain = plug->chain(j);
                 if (chain) {
                     [details appendFormat:@"%ld", chain->index()];
                     if (plug->chainType(j) == regina::PlugTriSolidTorus::CHAIN_MAJOR)

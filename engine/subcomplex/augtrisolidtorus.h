@@ -100,7 +100,7 @@ class AugTriSolidTorus : public StandardTriangulation {
                  TriSolidTorus::areAnnuliLinkedAxis(). */
 
     private:
-        TriSolidTorus* core_;
+        TriSolidTorus core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
         std::optional<LayeredSolidTorus> augTorus_[3];
@@ -127,11 +127,6 @@ class AugTriSolidTorus : public StandardTriangulation {
                  no layered chain. */
 
     public:
-        /**
-         * Destroys this augmented solid torus; note that the corresponding
-         * triangular and layered solid tori will also be destroyed.
-         */
-        virtual ~AugTriSolidTorus();
         /**
          * Returns a newly created clone of this structure.
          *
@@ -249,10 +244,11 @@ class AugTriSolidTorus : public StandardTriangulation {
 
     private:
         /**
-         * Creates a new structure with all subcomponent pointers
-         * initialised to \c null.
+         * Creates a new structure with the given core.
+         * The chain type will be initialised to CHAIN_NONE, and
+         * all other data members will be left uninitialised.
          */
-        AugTriSolidTorus();
+        AugTriSolidTorus(const TriSolidTorus& core);
 
         /**
          * Contains code common to both writeName() and writeTeXName().
@@ -269,15 +265,12 @@ class AugTriSolidTorus : public StandardTriangulation {
 
 // Inline functions for AugTriSolidTorus
 
-inline AugTriSolidTorus::AugTriSolidTorus() : core_(0), chainType_(CHAIN_NONE) {
-}
-
-inline AugTriSolidTorus::~AugTriSolidTorus() {
-    delete core_;
+inline AugTriSolidTorus::AugTriSolidTorus(const TriSolidTorus& core) :
+        core_(core), chainType_(CHAIN_NONE) {
 }
 
 inline const TriSolidTorus& AugTriSolidTorus::core() const {
-    return *core_;
+    return core_;
 }
 inline const std::optional<LayeredSolidTorus>& AugTriSolidTorus::augTorus(
         int annulus) const {

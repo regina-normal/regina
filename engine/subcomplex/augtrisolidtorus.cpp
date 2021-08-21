@@ -41,8 +41,7 @@
 namespace regina {
 
 AugTriSolidTorus* AugTriSolidTorus::clone() const {
-    AugTriSolidTorus* ans = new AugTriSolidTorus();
-    ans->core_ = new TriSolidTorus(*core_);
+    AugTriSolidTorus* ans = new AugTriSolidTorus(core_);
     for (int i = 0; i < 3; i++) {
         ans->augTorus_[i] = augTorus_[i];
         ans->edgeGroupRoles_[i] = edgeGroupRoles_[i];
@@ -204,8 +203,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
 
                 if (core) {
                     // We got one!
-                    AugTriSolidTorus* ans = new AugTriSolidTorus();
-                    ans->core_ = new TriSolidTorus(*core);
+                    AugTriSolidTorus* ans = new AugTriSolidTorus(*core);
 
                     // Work out how the mobius strip is glued onto each
                     // annulus.
@@ -296,8 +294,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                         break;
 
                     // We have the entire structure!
-                    AugTriSolidTorus* ans = new AugTriSolidTorus();
-                    ans->core_ = new TriSolidTorus(*core);
+                    AugTriSolidTorus* ans = new AugTriSolidTorus(*core);
                     switch (annulusPerm[0]) {
                         case 0:
                             ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(2,0,1,3);
@@ -363,8 +360,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                 core->isAnnulusSelfIdentified(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
-                            AugTriSolidTorus* ans = new AugTriSolidTorus();
-                            ans->core_ = new TriSolidTorus(*core);
+                            AugTriSolidTorus* ans = new AugTriSolidTorus(*core);
                             switch (annulusPerm[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
@@ -420,8 +416,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                 core->isAnnulusSelfIdentified(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
-                            AugTriSolidTorus* ans = new AugTriSolidTorus();
-                            ans->core_ = new TriSolidTorus(*core);
+                            AugTriSolidTorus* ans = new AugTriSolidTorus(*core);
                             switch (annulusPerm[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
@@ -595,11 +590,10 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                     continue;
 
                 // We've got one!
-                AugTriSolidTorus* ans = new AugTriSolidTorus();
-                ans->core_ = new TriSolidTorus(*core);
+                AugTriSolidTorus* ans = new AugTriSolidTorus(*core);
                 for (j = 0; j < 3; j++) {
                     if (whichLayered[j] >= 0) {
-                        ans->augTorus_[j] = layered[whichLayered[j]];
+                        ans->augTorus_[j] = std::move(layered[whichLayered[j]]);
                         ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     }
                 }
@@ -610,12 +604,11 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
             } else {
                 // We're not looking for a layered chain.
                 // This means we have found the entire structure!
-                AugTriSolidTorus* ans = new AugTriSolidTorus();
-                ans->core_ = new TriSolidTorus(*core);
+                AugTriSolidTorus* ans = new AugTriSolidTorus(*core);
                 for (j = 0; j < 3; j++) {
                     ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     if (whichLayered[j] >= 0)
-                        ans->augTorus_[j] = layered[whichLayered[j]];
+                        ans->augTorus_[j] = std::move(layered[whichLayered[j]]);
                 }
                 ans->chainIndex = 0;
                 ans->chainType_ = CHAIN_NONE;

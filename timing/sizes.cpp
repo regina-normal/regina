@@ -24,6 +24,7 @@
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/pillowtwosphere.h"
+#include "subcomplex/plugtrisolidtorus.h"
 #include "subcomplex/satregion.h"
 #include "subcomplex/snappeacensustri.h"
 #include "subcomplex/snappedball.h"
@@ -61,6 +62,7 @@ int main(int argc, char* argv[]) {
     SHOW_SIZE(LayeredSolidTorus);
     SHOW_SIZE(LayeredTorusBundle);
     SHOW_SIZE(PillowTwoSphere);
+    SHOW_SIZE(PlugTriSolidTorus);
     SHOW_SIZE(SatRegion);
     SHOW_SIZE(SnapPeaCensusTri);
     SHOW_SIZE(SnappedBall);

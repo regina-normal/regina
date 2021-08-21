@@ -578,6 +578,8 @@ Version 6.1  [ TODO ]
             - Deprecated clone().  Just use the copy constructor instead.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
+            - Routine chain() now returns a std::optional by const reference,
+              not by pointer that could be null.
         Class Polynomial:
             - Added member and global swap() functions.
         Class Property<...>:

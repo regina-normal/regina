@@ -40,6 +40,7 @@
 #define __REGINA_PLUGTRISOLIDTORUS_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "subcomplex/trisolidtorus.h"
 #include "subcomplex/layeredchain.h"
@@ -117,10 +118,10 @@ class PlugTriSolidTorus : public StandardTriangulation {
                  core triangular solid torus. */
 
     private:
-        TriSolidTorus* core_;
+        TriSolidTorus core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
-        LayeredChain* chain_[3];
+        std::optional<LayeredChain> chain_[3];
             /**< The layered chains attached to the annuli on the
                  triangular solid torus, or 0 for those annuli without
                  attached layered chains. */
@@ -133,11 +134,6 @@ class PlugTriSolidTorus : public StandardTriangulation {
                  plug. */
 
     public:
-        /**
-         * Destroys this plugged solid torus; note that the corresponding
-         * triangular solid torus and layered chains will also be destroyed.
-         */
-        virtual ~PlugTriSolidTorus();
         /**
          * Returns a newly created clone of this structure.
          *
@@ -156,7 +152,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
         /**
          * Returns the layered chain attached to the requested
          * annulus on the boundary of the core triangular solid torus.
-         * If there is no attached layered chain, \c null will be returned.
+         * If there is no attached layered chain, no value will be returned.
          *
          * Note that the core triangular solid torus will be attached to
          * the bottom (as opposed to the top) of the layered chain.
@@ -165,7 +161,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * be 0, 1 or 2.
          * @return the corresponding layered chain.
          */
-        const LayeredChain* chain(int annulus) const;
+        const std::optional<LayeredChain>& chain(int annulus) const;
 
         /**
          * Returns the way in which a layered chain is attached to the
@@ -215,25 +211,27 @@ class PlugTriSolidTorus : public StandardTriangulation {
 
     private:
         /**
-         * Creates a new structure with all subcomponent pointers
-         * initialised to \c null.
+         * Creates a new structure with the given core.
+         * All optional data members will be initialsed to no value,
+         * all chain types will be initialised to CHAIN_NONE, and
+         * all remaining data members will be left uninitialised.
          */
-        PlugTriSolidTorus();
+        PlugTriSolidTorus(const TriSolidTorus& core);
 };
 
 /*@}*/
 
 // Inline functions for PlugTriSolidTorus
 
-inline PlugTriSolidTorus::PlugTriSolidTorus() : core_(0) {
-    chain_[0] = chain_[1] = chain_[2] = 0;
-    chainType_[0] = chainType_[1] = chainType_[2] = CHAIN_NONE;
+inline PlugTriSolidTorus::PlugTriSolidTorus(const TriSolidTorus& core) :
+        core_(core), chainType_ { CHAIN_NONE, CHAIN_NONE, CHAIN_NONE } {
 }
 
 inline const TriSolidTorus& PlugTriSolidTorus::core() const {
-    return *core_;
+    return core_;
 }
-inline const LayeredChain* PlugTriSolidTorus::chain(int annulus) const {
+inline const std::optional<LayeredChain>& PlugTriSolidTorus::chain(int annulus)
+        const {
     return chain_[annulus];
 }
 inline int PlugTriSolidTorus::chainType(int annulus) const {

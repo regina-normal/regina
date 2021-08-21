@@ -842,7 +842,6 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
     QTreeWidgetItem* detailsItem = nullptr;
 
     regina::PlugTriSolidTorus* plug;
-    const regina::LayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
         plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(
             tri->component(i));
@@ -863,7 +862,7 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
 
             QString lengths(tr("Chain lengths: "));
             for (int j = 0; j < 3; j++) {
-                chain = plug->chain(j);
+                const auto& chain = plug->chain(j);
                 if (chain)
                     lengths += tr("%1 (%2)").arg(chain->index()).
                         arg(plug->chainType(j) ==
