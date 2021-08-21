@@ -338,8 +338,17 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layered solid torus, or \c null if the given tetrahedron is
          * not the base of a layered solid torus.
          */
-        static std::optional<LayeredSolidTorus> formsLayeredSolidTorusBase(
+        static std::optional<LayeredSolidTorus> recogniseFromBase(
             Tetrahedron<3>* tet);
+        /**
+         * A deprecated alias to recognise if a tetrahedron forms the
+         * base of a layered solid torus.
+         *
+         * \deprecated This function has been renamed to recogniseFromBase().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<LayeredSolidTorus>
+            formsLayeredSolidTorusBase(Tetrahedron<3>* tet);
 
         /**
          * Determines if the given tetrahedron forms the top level
@@ -368,8 +377,18 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layered solid torus, or \c null if the given tetrahedron with
          * its two faces do not form the top level of a layered solid torus.
          */
-        static std::optional<LayeredSolidTorus> formsLayeredSolidTorusTop(
+        static std::optional<LayeredSolidTorus> recogniseFromTop(
             Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
+        /**
+         * A deprecated alias to recognise if a tetrahedron forms the
+         * top level of a layered solid torus.
+         *
+         * \deprecated This function has been renamed to recogniseFromTop().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<LayeredSolidTorus>
+            formsLayeredSolidTorusTop(Tetrahedron<3>* tet, unsigned topFace1,
+            unsigned topFace2);
 
         /**
          * Determines if the given triangulation component forms a
@@ -386,8 +405,17 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layered solid torus, or \c null if the given component is not
          * a layered solid torus.
          */
-        static std::optional<LayeredSolidTorus> isLayeredSolidTorus(
+        static std::optional<LayeredSolidTorus> recognise(
             Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms a
+         * layered solid torus.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<LayeredSolidTorus>
+            isLayeredSolidTorus(Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -479,6 +507,22 @@ inline std::ostream& LayeredSolidTorus::writeTeXName(std::ostream& out) const {
 inline void LayeredSolidTorus::writeTextLong(std::ostream& out) const {
     out << "( " << meridinalCuts_[0] << ", " << meridinalCuts_[1] << ", "
         << meridinalCuts_[2] << " ) layered solid torus";
+}
+
+inline std::optional<LayeredSolidTorus>
+        LayeredSolidTorus::formsLayeredSolidTorusBase(Tetrahedron<3>* tet) {
+    return recogniseFromBase(tet);
+}
+
+inline std::optional<LayeredSolidTorus>
+        LayeredSolidTorus::formsLayeredSolidTorusTop(
+        Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
+    return recogniseFromTop(tet, topFace1, topFace2);
+}
+
+inline std::optional<LayeredSolidTorus> LayeredSolidTorus::isLayeredSolidTorus(
+        Component<3>* comp) {
+    return recognise(comp);
 }
 
 inline void swap(LayeredSolidTorus& a, LayeredSolidTorus& b) noexcept {

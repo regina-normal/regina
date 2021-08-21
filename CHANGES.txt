@@ -324,8 +324,10 @@ Version 6.1  [ TODO ]
             - Deprecated clone().  Just use the copy constructor instead.
         Class LayeredSolidTorus:
             - Routines isLayeredSolidTorus(), formsLayeredSolidTorusBase()
-              and formsLayeredSolidTorusTop() now return a std::optional
-              instead of a possibly-null pointer.
+              and formsLayeredSolidTorusTop() are now called recognise(),
+              recogniseFromBase() and recogniseFromTop(), and now return a
+              std::optional instead of a pointer that could be null.
+              The old names are kept as deprecated aliases.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.

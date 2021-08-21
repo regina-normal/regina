@@ -308,7 +308,7 @@ SatLST* SatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
         return 0;
 
     // Find the layered solid torus.
-    auto lst = LayeredSolidTorus::formsLayeredSolidTorusTop(
+    auto lst = LayeredSolidTorus::recogniseFromTop(
         annulus.tet[0], annulus.roles[0][3], annulus.roles[1][3]);
     if (! lst)
         return nullptr;

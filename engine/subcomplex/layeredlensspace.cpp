@@ -56,7 +56,7 @@ LayeredLensSpace* LayeredLensSpace::isLayeredLensSpace(
 
     unsigned long nTet = comp->size();
     for (unsigned long i = 0; i < nTet; i++) {
-        auto torus = LayeredSolidTorus::formsLayeredSolidTorusBase(
+        auto torus = LayeredSolidTorus::recogniseFromBase(
             comp->tetrahedron(i));
         if (torus) {
             // We have found a layered solid torus; either this makes the

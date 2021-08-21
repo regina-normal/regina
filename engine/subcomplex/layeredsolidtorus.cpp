@@ -77,7 +77,7 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
     topLevel_ = newTri->tetrahedron(iso->tetImage(topTetID));
 }
 
-std::optional<LayeredSolidTorus> LayeredSolidTorus::formsLayeredSolidTorusBase(
+std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
         Tetrahedron<3>* tet) {
     int baseFace1;
     int baseFace2 = -1;
@@ -252,7 +252,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::formsLayeredSolidTorusBase(
     return ans;
 }
 
-std::optional<LayeredSolidTorus> LayeredSolidTorus::formsLayeredSolidTorusTop(
+std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromTop(
         Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
     Tetrahedron<3>* top = tet;
     Tetrahedron<3>* next;
@@ -541,7 +541,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::formsLayeredSolidTorusTop(
     return std::nullopt;
 }
 
-std::optional<LayeredSolidTorus> LayeredSolidTorus::isLayeredSolidTorus(
+std::optional<LayeredSolidTorus> LayeredSolidTorus::recognise(
         Component<3>* comp) {
     // Start with some basic property checks.
     if (! comp->isOrientable())
@@ -568,7 +568,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::isLayeredSolidTorus(
 
     // Run a full search.
 
-    // We use formsLayeredSolidTorusBase(), which works out the full structure
+    // We use recogniseFromBase(), which works out the full structure
     // for us.  It would be faster to just follow straight down from
     // the top level tetrahedron (which we already know), but this would
     // also require us to code up the entire structure again.
@@ -603,7 +603,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::isLayeredSolidTorus(
 
     // Here we are at the bottom.  Now check the individual permutations
     // and fill in the structural details.
-    return formsLayeredSolidTorusBase(currTet);
+    return recogniseFromBase(currTet);
 }
 
 std::unique_ptr<Manifold> LayeredSolidTorus::manifold() const {

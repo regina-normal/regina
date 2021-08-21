@@ -244,7 +244,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     std::optional<LayeredSolidTorus> layered[4];
     unsigned long usedTets = 0;
     for (unsigned long t = 0; t < nTet; t++) {
-        layered[nLayered] = LayeredSolidTorus::formsLayeredSolidTorusBase(
+        layered[nLayered] = LayeredSolidTorus::recogniseFromBase(
             comp->tetrahedron(t));
         if (layered[nLayered]) {
             usedTets += layered[nLayered]->size();

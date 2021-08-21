@@ -60,12 +60,15 @@ void addLayeredSolidTorus(pybind11::module_& m) {
         .def("topFace", &LayeredSolidTorus::topFace)
         .def("flatten", &LayeredSolidTorus::flatten)
         .def("transform", &LayeredSolidTorus::transform)
-        .def_static("formsLayeredSolidTorusBase",
-            &LayeredSolidTorus::formsLayeredSolidTorusBase)
-        .def_static("formsLayeredSolidTorusTop",
-            &LayeredSolidTorus::formsLayeredSolidTorusTop)
-        .def_static("isLayeredSolidTorus",
-            &LayeredSolidTorus::isLayeredSolidTorus)
+        .def_static("recogniseFromBase", &LayeredSolidTorus::recogniseFromBase)
+        .def_static("formsLayeredSolidTorusBase", // deprecated
+            &LayeredSolidTorus::recogniseFromBase)
+        .def_static("recogniseFromTop", &LayeredSolidTorus::recogniseFromTop)
+        .def_static("formsLayeredSolidTorusTop", // deprecated
+            &LayeredSolidTorus::recogniseFromTop)
+        .def_static("recognise", &LayeredSolidTorus::recognise)
+        .def_static("isLayeredSolidTorus", // deprecated
+            &LayeredSolidTorus::recognise)
     ;
 
     m.def("swap",

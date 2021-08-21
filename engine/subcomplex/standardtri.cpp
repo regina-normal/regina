@@ -77,7 +77,7 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         return std::unique_ptr<StandardTriangulation>(ans);
     if (auto ans = PlugTriSolidTorus::isPlugTriSolidTorus(comp))
         return std::unique_ptr<StandardTriangulation>(ans);
-    if (auto ans = LayeredSolidTorus::isLayeredSolidTorus(comp))
+    if (auto ans = LayeredSolidTorus::recognise(comp))
         return std::make_unique<LayeredSolidTorus>(*ans);
     if (auto ans = SnapPeaCensusTri::recognise(comp))
         return std::make_unique<SnapPeaCensusTri>(*ans);
