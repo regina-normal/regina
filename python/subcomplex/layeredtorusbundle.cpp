@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/txicore.h"
 #include "../helpers.h"

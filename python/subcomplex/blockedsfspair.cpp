@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
