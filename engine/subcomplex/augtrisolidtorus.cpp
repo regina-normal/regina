@@ -40,20 +40,11 @@
 
 namespace regina {
 
-AugTriSolidTorus::~AugTriSolidTorus() {
-    if (core_)
-        delete core_;
-    for (int i = 0; i < 3; i++)
-        if (augTorus_[i])
-            delete augTorus_[i];
-}
-
 AugTriSolidTorus* AugTriSolidTorus::clone() const {
     AugTriSolidTorus* ans = new AugTriSolidTorus();
     ans->core_ = new TriSolidTorus(*core_);
     for (int i = 0; i < 3; i++) {
-        if (augTorus_[i])
-            ans->augTorus_[i] = augTorus_[i]->clone();
+        ans->augTorus_[i] = augTorus_[i];
         ans->edgeGroupRoles_[i] = edgeGroupRoles_[i];
     }
     ans->chainIndex = chainIndex;
@@ -250,7 +241,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     // boundary annuli on the core, since no other tetrahedron is glued
     // to itself.
     int nLayered = 0;
-    LayeredSolidTorus* layered[4];
+    std::optional<LayeredSolidTorus> layered[4];
     unsigned long usedTets = 0;
     for (unsigned long t = 0; t < nTet; t++) {
         layered[nLayered] = LayeredSolidTorus::formsLayeredSolidTorusBase(
@@ -260,8 +251,6 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
             nLayered++;
             if (nLayered == 4) {
                 // Too many layered solid tori.
-                for (int i = 0; i < nLayered; i++)
-                    delete layered[i];
                 return nullptr;
             }
         }
@@ -468,11 +457,8 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     // Determine whether or not this augmented solid torus must contain a
     // layered chain.
     bool needChain = (usedTets + 3 != nTet);
-    if (needChain && nLayered != 1) {
-        for (j = 0; j < nLayered; j++)
-            delete layered[j];
+    if (needChain && nLayered != 1)
         return nullptr;
-    }
 
     // Examine each layered solid torus.
     Tetrahedron<3>* top[3];
@@ -480,10 +466,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
         top[i] = layered[i]->topLevel();
         if (top[i]->adjacentTetrahedron(layered[i]->topFace(0)) ==
                 top[i]->adjacentTetrahedron(layered[i]->topFace(1))) {
-            // These two top triangles should be glued to different
-            // tetrahedra.
-            for (j = 0; j < nLayered; j++)
-                delete layered[j];
+            // These two top triangles should be glued to different tetrahedra.
             return nullptr;
         }
     }
@@ -643,8 +626,6 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     }
 
     // Nothing was found.
-    for (i = 0; i < nLayered; i++)
-        delete layered[i];
     return nullptr;
 }
 
@@ -653,7 +634,7 @@ std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
     if (chainIndex) {
         // We have a layered solid torus and a layered chain.
         Perm<4> roles = edgeGroupRoles_[torusAnnulus_];
-        const LayeredSolidTorus* torus = augTorus_[torusAnnulus_];
+        const auto& torus = augTorus_[torusAnnulus_];
 
         long params[3];
         if (torus) {
@@ -683,13 +664,12 @@ std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
         std::pair<long, long> allParams[3];
         int nAllParams = 0;
         Perm<4> roles;
-        const LayeredSolidTorus* torus;
         long params[3];
         std::pair<long, long> lstParams;
         int i;
         for (i = 0; i < 3; i++) {
             roles = edgeGroupRoles_[i];
-            torus = augTorus_[i];
+            const auto& torus = augTorus_[i];
             if (torus) {
                 params[0] = torus->meridinalCuts(0);
                 params[1] = torus->meridinalCuts(1);

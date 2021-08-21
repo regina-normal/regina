@@ -511,10 +511,9 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::LayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->tetrahedron(i));
+        auto torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->tetrahedron(i));
         if (torus) {
             [details appendFormat:@"Layered solid torus %s\n", torus->name().c_str()];
             [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->base()->index()];
@@ -537,7 +536,6 @@
                                          second:torus->topEdge(2, 1)]];
             
             [details appendString:@"\n"];
-            delete torus;
         }
     }
 }

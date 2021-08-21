@@ -39,8 +39,7 @@
 namespace regina {
 
 LayeredLensSpace* LayeredLensSpace::clone() const {
-    LayeredLensSpace* ans = new LayeredLensSpace();
-    ans->torus_ = torus_->clone();
+    LayeredLensSpace* ans = new LayeredLensSpace(torus_);
     ans->mobiusBoundaryGroup_ = mobiusBoundaryGroup_;
     ans->p_ = p_;
     ans->q_ = q_;
@@ -56,9 +55,8 @@ LayeredLensSpace* LayeredLensSpace::isLayeredLensSpace(
         return 0;
 
     unsigned long nTet = comp->size();
-    LayeredSolidTorus* torus;
     for (unsigned long i = 0; i < nTet; i++) {
-        torus = LayeredSolidTorus::formsLayeredSolidTorusBase(
+        auto torus = LayeredSolidTorus::formsLayeredSolidTorusBase(
             comp->tetrahedron(i));
         if (torus) {
             // We have found a layered solid torus; either this makes the
@@ -66,10 +64,8 @@ LayeredLensSpace* LayeredLensSpace::isLayeredLensSpace(
             Tetrahedron<3>* tet = torus->topLevel();
             int tf0 = torus->topFace(0);
             int tf1 = torus->topFace(1);
-            if (tet->adjacentTetrahedron(tf0) != tet) {
-                delete torus;
-                return 0;
-            }
+            if (tet->adjacentTetrahedron(tf0) != tet)
+                return nullptr;
 
             /* We already know the component is orientable; no need
                to check orientation!
@@ -79,8 +75,7 @@ LayeredLensSpace* LayeredLensSpace::isLayeredLensSpace(
             }*/
 
             // This is the real thing!
-            LayeredLensSpace* ans = new LayeredLensSpace();
-            ans->torus_ = torus;
+            LayeredLensSpace* ans = new LayeredLensSpace(*torus);
 
             Perm<4> perm = tet->adjacentGluing(tf0);
             if (perm[tf1] == tf0) {
@@ -136,7 +131,7 @@ LayeredLensSpace* LayeredLensSpace::isLayeredLensSpace(
             return ans;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 std::unique_ptr<Manifold> LayeredLensSpace::manifold() const {
@@ -155,7 +150,7 @@ std::optional<AbelianGroup> LayeredLensSpace::homology() const {
 std::ostream& LayeredLensSpace::writeName(std::ostream& out) const {
     if (p_ == 3 && q_ == 1) {
         out << "L(3,1)";
-        if (torus_->size() != 2)
+        if (torus_.size() != 2)
             return out;
         else if (isSnapped())
             return out << " (1)";
@@ -168,7 +163,7 @@ std::ostream& LayeredLensSpace::writeName(std::ostream& out) const {
 std::ostream& LayeredLensSpace::writeTeXName(std::ostream& out) const {
     if (p_ == 3 && q_ == 1) {
         out << "L_{3,1}";
-        if (torus_->size() != 2)
+        if (torus_.size() != 2)
             return out;
         else if (isSnapped())
             return out << "^{(1)}";

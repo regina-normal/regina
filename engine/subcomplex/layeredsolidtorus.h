@@ -39,6 +39,7 @@
 #define __REGINA_LAYEREDSOLIDTORUS_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "maths/perm.h"
 #include "subcomplex/standardtri.h"
@@ -61,8 +62,14 @@ namespace regina {
  * boundary (including the minimal (1,1,0) triangulation) are not
  * described by this class.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
  */
 class LayeredSolidTorus : public StandardTriangulation {
     private:
@@ -100,11 +107,33 @@ class LayeredSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        LayeredSolidTorus(const LayeredSolidTorus&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        LayeredSolidTorus& operator = (const LayeredSolidTorus&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        LayeredSolidTorus* clone() const;
+        [[deprecated]] LayeredSolidTorus* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(LayeredSolidTorus& other) noexcept;
 
         /**
          * Returns the number of tetrahedra in this layered solid torus.
@@ -309,7 +338,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layered solid torus, or \c null if the given tetrahedron is
          * not the base of a layered solid torus.
          */
-        static LayeredSolidTorus* formsLayeredSolidTorusBase(
+        static std::optional<LayeredSolidTorus> formsLayeredSolidTorusBase(
             Tetrahedron<3>* tet);
 
         /**
@@ -339,7 +368,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layered solid torus, or \c null if the given tetrahedron with
          * its two faces do not form the top level of a layered solid torus.
          */
-        static LayeredSolidTorus* formsLayeredSolidTorusTop(
+        static std::optional<LayeredSolidTorus> formsLayeredSolidTorusTop(
             Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
 
         /**
@@ -357,7 +386,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layered solid torus, or \c null if the given component is not
          * a layered solid torus.
          */
-        static LayeredSolidTorus* isLayeredSolidTorus(Component<3>* comp);
+        static std::optional<LayeredSolidTorus> isLayeredSolidTorus(
+            Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -369,14 +399,37 @@ class LayeredSolidTorus : public StandardTriangulation {
         /**
          * Create a new uninitialised structure.
          */
-        LayeredSolidTorus();
+        LayeredSolidTorus() = default;
 };
+
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls LayeredSolidTorus::swap(); it is provided
+ * so that LayeredSolidTorus meets the C++ Swappable requirements.
+ *
+ * @param a the first alternative whose contents should be swapped.
+ * @param b the second alternative whose contents should be swapped.
+ */
+void swap(LayeredSolidTorus& a, LayeredSolidTorus& b) noexcept;
 
 /*@}*/
 
 // Inline functions for LayeredSolidTorus
 
-inline LayeredSolidTorus::LayeredSolidTorus() {
+inline LayeredSolidTorus* LayeredSolidTorus::clone() const {
+    return new LayeredSolidTorus(*this);
+}
+
+inline void LayeredSolidTorus::swap(LayeredSolidTorus& other) noexcept {
+    std::swap(nTetrahedra, other.nTetrahedra);
+    std::swap(base_, other.base_);
+    std::swap(topLevel_, other.topLevel_);
+    std::swap(baseEdge_, other.baseEdge_);
+    std::swap(topEdge_, other.topEdge_);
+    std::swap(baseFace_, other.baseFace_);
+    std::swap(topFace_, other.topFace_);
+    std::swap_ranges(meridinalCuts_, meridinalCuts_ + 3, other.meridinalCuts_);
 }
 
 inline size_t LayeredSolidTorus::size() const {
@@ -426,6 +479,10 @@ inline std::ostream& LayeredSolidTorus::writeTeXName(std::ostream& out) const {
 inline void LayeredSolidTorus::writeTextLong(std::ostream& out) const {
     out << "( " << meridinalCuts_[0] << ", " << meridinalCuts_[1] << ", "
         << meridinalCuts_[2] << " ) layered solid torus";
+}
+
+inline void swap(LayeredSolidTorus& a, LayeredSolidTorus& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

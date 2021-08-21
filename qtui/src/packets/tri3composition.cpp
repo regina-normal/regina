@@ -769,10 +769,9 @@ void Tri3CompositionUI::findLayeredSolidTori() {
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
-    regina::LayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(
+        auto torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(
             tri->tetrahedron(i));
         if (torus) {
             id = addComponentSection(tr("Layered solid torus ") +
@@ -800,8 +799,6 @@ void Tri3CompositionUI::findLayeredSolidTori() {
                 "Weight %1 edge: %2").arg(torus->meridinalCuts(2)).
                 arg(edgeString(topIndex, torus->topEdge(2, 0),
                     torus->topEdge(2, 1))));
-
-            delete torus;
         }
     }
 }

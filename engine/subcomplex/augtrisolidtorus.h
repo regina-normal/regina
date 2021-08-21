@@ -40,6 +40,7 @@
 #define __REGINA_AUGTRISOLIDTORUS_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "subcomplex/trisolidtorus.h"
 #include "subcomplex/layeredsolidtorus.h"
@@ -102,10 +103,10 @@ class AugTriSolidTorus : public StandardTriangulation {
         TriSolidTorus* core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
-        LayeredSolidTorus* augTorus_[3];
+        std::optional<LayeredSolidTorus> augTorus_[3];
             /**< The layered solid tori attached to the boundary annuli.
                  If one of the layered solid tori is a degenerate (2,1,1)
-                 triangle, the corresponding pointer will be 0.
+                 triangle, the corresponding value will be std::nullopt.
                  Note that <tt>augTorus[i]</tt> will be attached to
                  annulus \c i of the triangular solid torus. */
         Perm<4> edgeGroupRoles_[3];
@@ -150,13 +151,13 @@ class AugTriSolidTorus : public StandardTriangulation {
          * annulus on the boundary of the core triangular solid torus.
          * If the layered solid torus is a degenerate (2,1,1) mobius
          * band (i.e., the two triangles of the corresponding annulus have
-         * simply been glued together), \c null will be returned.
+         * simply been glued together), then no value will be returned.
          *
          * @param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
          * @return the corresponding layered solid torus.
          */
-        const LayeredSolidTorus* augTorus(int annulus) const;
+        const std::optional<LayeredSolidTorus>& augTorus(int annulus) const;
 
         /**
          * Returns a permutation describing the role played by each top
@@ -268,15 +269,17 @@ class AugTriSolidTorus : public StandardTriangulation {
 
 // Inline functions for AugTriSolidTorus
 
-inline AugTriSolidTorus::AugTriSolidTorus() : core_(0),
-        chainType_(CHAIN_NONE) {
-    augTorus_[0] = augTorus_[1] = augTorus_[2] = 0;
+inline AugTriSolidTorus::AugTriSolidTorus() : core_(0), chainType_(CHAIN_NONE) {
+}
+
+inline AugTriSolidTorus::~AugTriSolidTorus() {
+    delete core_;
 }
 
 inline const TriSolidTorus& AugTriSolidTorus::core() const {
     return *core_;
 }
-inline const LayeredSolidTorus* AugTriSolidTorus::augTorus(
+inline const std::optional<LayeredSolidTorus>& AugTriSolidTorus::augTorus(
         int annulus) const {
     return augTorus_[annulus];
 }

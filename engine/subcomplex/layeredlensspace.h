@@ -65,7 +65,7 @@ namespace regina {
  */
 class LayeredLensSpace : public StandardTriangulation {
     private:
-        LayeredSolidTorus* torus_;
+        LayeredSolidTorus torus_;
             /**< The layered solid torus that forms the basis of this
                  layered lens space. */
         int mobiusBoundaryGroup_;
@@ -76,11 +76,6 @@ class LayeredLensSpace : public StandardTriangulation {
             /**< The lens space parameters for L(p,q). */
 
     public:
-        /**
-         * Destroys this lens space; note that the corresponding layered
-         * solid torus will also be destroyed.
-         */
-        virtual ~LayeredLensSpace();
         /**
          * Returns a newly created clone of this structure.
          *
@@ -154,19 +149,18 @@ class LayeredLensSpace : public StandardTriangulation {
 
     private:
         /**
-         * Creates a new uninitialised structure.
+         * Creates a new structure initialised with the given layered
+         * solid torus.  All other data members will be left uninitialised.
          */
-        LayeredLensSpace();
+        LayeredLensSpace(const LayeredSolidTorus& torus);
 };
 
 /*@}*/
 
 // Inline functions for LayeredLensSpace
 
-inline LayeredLensSpace::LayeredLensSpace() {
-}
-inline LayeredLensSpace::~LayeredLensSpace() {
-    delete torus_;
+inline LayeredLensSpace::LayeredLensSpace(const LayeredSolidTorus& torus) :
+        torus_(torus) {
 }
 
 inline unsigned long LayeredLensSpace::p() const {
@@ -176,16 +170,16 @@ inline unsigned long LayeredLensSpace::q() const {
     return q_;
 }
 inline const LayeredSolidTorus& LayeredLensSpace::torus() const {
-    return *torus_;
+    return torus_;
 }
 inline int LayeredLensSpace::mobiusBoundaryGroup() const {
     return mobiusBoundaryGroup_;
 }
 inline bool LayeredLensSpace::isSnapped() const {
-    return (torus_->topEdge(mobiusBoundaryGroup_, 1) == -1);
+    return (torus_.topEdge(mobiusBoundaryGroup_, 1) == -1);
 }
 inline bool LayeredLensSpace::isTwisted() const {
-    return (torus_->topEdge(mobiusBoundaryGroup_, 1) != -1);
+    return (torus_.topEdge(mobiusBoundaryGroup_, 1) != -1);
 }
 inline void LayeredLensSpace::writeTextLong(std::ostream& out) const {
     out << "Layered lens space ";

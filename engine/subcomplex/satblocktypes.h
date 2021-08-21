@@ -41,11 +41,10 @@
 #endif
 
 #include "regina-core.h"
+#include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/satblock.h"
 
 namespace regina {
-
-class LayeredSolidTorus;
 
 /**
  * \weakgroup subcomplex
@@ -157,7 +156,7 @@ class SatMobius : public SatBlock {
  */
 class SatLST : public SatBlock {
     private:
-        LayeredSolidTorus* lst_;
+        LayeredSolidTorus lst_;
             /**< Contains details of the layered solid torus that this
                  block represents. */
         Perm<4> roles_;
@@ -174,10 +173,6 @@ class SatLST : public SatBlock {
          * @param cloneMe the block structure to clone.
          */
         SatLST(const SatLST& cloneMe);
-        /**
-         * Destroys this structure and its internal components.
-         */
-        ~SatLST();
 
         /**
          * Returns details of the layered solid torus that this block
@@ -185,7 +180,7 @@ class SatLST : public SatBlock {
          *
          * @return details of the layered solid torus.
          */
-        const LayeredSolidTorus* lst() const;
+        const LayeredSolidTorus& lst() const;
         /**
          * Describes how the layered solid torus is attached to the
          * boundary annulus.
@@ -243,7 +238,7 @@ class SatLST : public SatBlock {
          * attached to the boundary annulus, as explained in the
          * \a roles_ data member documentation.
          */
-        SatLST(LayeredSolidTorus* lst, Perm<4> roles);
+        SatLST(const LayeredSolidTorus& lst, Perm<4> roles);
 };
 
 /**
@@ -605,11 +600,11 @@ inline SatBlock* SatMobius::clone() const {
 
 // Inline functions for SatLST
 
-inline SatLST::SatLST(LayeredSolidTorus* lst, Perm<4> roles) : SatBlock(1),
-        lst_(lst), roles_(roles) {
+inline SatLST::SatLST(const LayeredSolidTorus& lst, Perm<4> roles) :
+        SatBlock(1), lst_(lst), roles_(roles) {
 }
 
-inline const LayeredSolidTorus* SatLST::lst() const {
+inline const LayeredSolidTorus& SatLST::lst() const {
     return lst_;
 }
 

@@ -90,17 +90,17 @@ bool SatBlock::operator < (const SatBlock& compare) const {
         return false;
     if (lst1 && lst2) {
         // Order first by LST parameters, then by roles.
-        if (lst1->lst()->meridinalCuts(2) < lst2->lst()->meridinalCuts(2))
+        if (lst1->lst().meridinalCuts(2) < lst2->lst().meridinalCuts(2))
             return true;
-        if (lst1->lst()->meridinalCuts(2) > lst2->lst()->meridinalCuts(2))
+        if (lst1->lst().meridinalCuts(2) > lst2->lst().meridinalCuts(2))
             return false;
-        if (lst1->lst()->meridinalCuts(1) < lst2->lst()->meridinalCuts(1))
+        if (lst1->lst().meridinalCuts(1) < lst2->lst().meridinalCuts(1))
             return true;
-        if (lst1->lst()->meridinalCuts(1) > lst2->lst()->meridinalCuts(1))
+        if (lst1->lst().meridinalCuts(1) > lst2->lst().meridinalCuts(1))
             return false;
-        if (lst1->lst()->meridinalCuts(0) < lst2->lst()->meridinalCuts(0))
+        if (lst1->lst().meridinalCuts(0) < lst2->lst().meridinalCuts(0))
             return true;
-        if (lst1->lst()->meridinalCuts(0) > lst2->lst()->meridinalCuts(0))
+        if (lst1->lst().meridinalCuts(0) > lst2->lst().meridinalCuts(0))
             return false;
 
         // Sorts by which edge group is joined to the vertical annulus
@@ -248,16 +248,12 @@ SatMobius* SatMobius::isBlockMobius(const SatAnnulus& annulus, TetList&) {
 }
 
 SatLST::SatLST(const SatLST& cloneMe) : SatBlock(cloneMe),
-        lst_(cloneMe.lst_->clone()), roles_(cloneMe.roles_) {
-}
-
-SatLST::~SatLST() {
-    delete lst_;
+        lst_(cloneMe.lst_), roles_(cloneMe.roles_) {
 }
 
 void SatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
-    long cutsVert = lst_->meridinalCuts(roles_[0]);
-    long cutsHoriz = lst_->meridinalCuts(roles_[1]);
+    long cutsVert = lst_.meridinalCuts(roles_[0]);
+    long cutsHoriz = lst_.meridinalCuts(roles_[1]);
     if (roles_[2] == 2) {
         // Most cuts are on the diagonal, which means the meridinal
         // curve is negative.
@@ -269,16 +265,16 @@ void SatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
 
 void SatLST::writeTextShort(std::ostream& out) const {
     out << "Saturated ("
-        << lst_->meridinalCuts(0) << ", "
-        << lst_->meridinalCuts(1) << ", "
-        << lst_->meridinalCuts(2) << ") layered solid torus";
+        << lst_.meridinalCuts(0) << ", "
+        << lst_.meridinalCuts(1) << ", "
+        << lst_.meridinalCuts(2) << ") layered solid torus";
 }
 
 void SatLST::writeAbbr(std::ostream& out, bool tex) const {
     out << (tex ? "\\mathrm{LST}_{" : "LST(")
-        << lst_->meridinalCuts(0) << ", "
-        << lst_->meridinalCuts(1) << ", "
-        << lst_->meridinalCuts(2) << (tex ? '}' : ')');
+        << lst_.meridinalCuts(0) << ", "
+        << lst_.meridinalCuts(1) << ", "
+        << lst_.meridinalCuts(2) << (tex ? '}' : ')');
 }
 
 void SatLST::transform(const Triangulation<3>* originalTri,
@@ -287,7 +283,7 @@ void SatLST::transform(const Triangulation<3>* originalTri,
     SatBlock::transform(originalTri, iso, newTri);
 
     // Transform the layered solid torus also.
-    lst_->transform(originalTri, iso, newTri);
+    lst_.transform(originalTri, iso, newTri);
 }
 
 SatLST* SatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
@@ -312,10 +308,10 @@ SatLST* SatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
         return 0;
 
     // Find the layered solid torus.
-    LayeredSolidTorus* lst = LayeredSolidTorus::formsLayeredSolidTorusTop(
+    auto lst = LayeredSolidTorus::formsLayeredSolidTorusTop(
         annulus.tet[0], annulus.roles[0][3], annulus.roles[1][3]);
     if (! lst)
-        return 0;
+        return nullptr;
 
     // Make sure we're not about to create a (0,k) curve.
     Perm<4> lstRoles(
@@ -328,7 +324,7 @@ SatLST* SatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
         3);
 
     if (lst->meridinalCuts(lstRoles[0]) == 0)
-        return 0;
+        return nullptr;
 
     // Make two runs through the full set of tetrahedra.
     // The first run verifies that each tetrahedron is usable.
@@ -350,7 +346,7 @@ SatLST* SatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
 
         // Make sure this next tetrahedron is usable.
         if (isBad(current, avoidTets))
-            return 0;
+            return nullptr;
     }
 
     // All good!
@@ -373,7 +369,7 @@ SatLST* SatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
         avoidTets.insert(current);
     }
 
-    SatLST* ans = new SatLST(lst, lstRoles);
+    SatLST* ans = new SatLST(*lst, lstRoles);
     ans->annulus_[0] = annulus;
     return ans;
 }

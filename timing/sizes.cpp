@@ -14,10 +14,12 @@
 #include "manifold/snappeacensusmfd.h"
 #include "manifold/torusbundle.h"
 
+#include "subcomplex/augtrisolidtorus.h"
 #include "subcomplex/blockedsfs.h"
 #include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchain.h"
 #include "subcomplex/layeredchainpair.h"
+#include "subcomplex/layeredlensspace.h"
 #include "subcomplex/layeredloop.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/layeredtorusbundle.h"
@@ -49,10 +51,12 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl;
 
     std::cout << "Standard Triangulations:" << std::endl;
+    SHOW_SIZE(AugTriSolidTorus);
     SHOW_SIZE(BlockedSFS);
     SHOW_SIZE(L31Pillow);
     SHOW_SIZE(LayeredChain);
     SHOW_SIZE(LayeredChainPair);
+    SHOW_SIZE(LayeredLensSpace);
     SHOW_SIZE(LayeredLoop);
     SHOW_SIZE(LayeredSolidTorus);
     SHOW_SIZE(LayeredTorusBundle);

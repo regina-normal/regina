@@ -38,19 +38,6 @@
 
 namespace regina {
 
-LayeredSolidTorus* LayeredSolidTorus::clone() const {
-    LayeredSolidTorus* ans = new LayeredSolidTorus();
-    ans->nTetrahedra = nTetrahedra;
-    ans->base_ = base_;
-    ans->topLevel_ = topLevel_;
-    ans->baseEdge_ = baseEdge_;
-    ans->baseFace_ = baseFace_;
-    ans->topFace_ = topFace_;
-    ans->topEdge_ = topEdge_;
-    std::copy(meridinalCuts_, meridinalCuts_ + 3, ans->meridinalCuts_);
-    return ans;
-}
-
 void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     size_t baseTetID = base_->index();
@@ -90,7 +77,7 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
     topLevel_ = newTri->tetrahedron(iso->tetImage(topTetID));
 }
 
-LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
+std::optional<LayeredSolidTorus> LayeredSolidTorus::formsLayeredSolidTorusBase(
         Tetrahedron<3>* tet) {
     int baseFace1;
     int baseFace2 = -1;
@@ -119,48 +106,48 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
         }
 
     if (baseFace2 == -1)
-        return nullptr;
+        return std::nullopt;
 
     // We have a layered solid torus!!
     // Fill in the details for the bottom layer.
-    LayeredSolidTorus* ans = new LayeredSolidTorus();
-    ans->nTetrahedra = 1;
-    ans->base_ = tet;
+    LayeredSolidTorus ans;
+    ans.nTetrahedra = 1;
+    ans.base_ = tet;
 
-    ans->baseFace_ = FacePair(baseFace1, baseFace2);
+    ans.baseFace_ = FacePair(baseFace1, baseFace2);
     // Currently basePerm maps baseFace1 -> baseFace2.
     // Make it so that basePerm maps baseFace_.lower() -> baseFace_.upper().
     if (baseFace1 > baseFace2)
         basePerm = basePerm.inverse();
 
-    ans->topFace_ = ans->baseFace_.complement();
-    ans->topLevel_ = tet;
+    ans.topFace_ = ans.baseFace_.complement();
+    ans.topLevel_ = tet;
 
-    if (basePerm[ans->baseFace_.upper()] == ans->topFace_.lower()) {
-        ans->baseEdge_ = Perm<6>(
-            ans->baseFace_.oppositeEdge(),
-            Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.upper()],
-            Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.lower()],
-            Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.upper()],
-            ans->baseFace_.commonEdge(),
-            Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.lower()]);
+    if (basePerm[ans.baseFace_.upper()] == ans.topFace_.lower()) {
+        ans.baseEdge_ = Perm<6>(
+            ans.baseFace_.oppositeEdge(),
+            Edge<3>::edgeNumber[ans.topFace_.upper()][ans.baseFace_.upper()],
+            Edge<3>::edgeNumber[ans.topFace_.lower()][ans.baseFace_.lower()],
+            Edge<3>::edgeNumber[ans.topFace_.lower()][ans.baseFace_.upper()],
+            ans.baseFace_.commonEdge(),
+            Edge<3>::edgeNumber[ans.topFace_.upper()][ans.baseFace_.lower()]);
 
-        ans->topEdge_ = ans->baseEdge_ * Perm<6>(5, 3, 1, 2, 0, 4);
+        ans.topEdge_ = ans.baseEdge_ * Perm<6>(5, 3, 1, 2, 0, 4);
     } else {
-        ans->baseEdge_ = Perm<6>(
-            ans->baseFace_.oppositeEdge(),
-            Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.upper()],
-            Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.lower()],
-            Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.upper()],
-            ans->baseFace_.commonEdge(),
-            Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.lower()]);
+        ans.baseEdge_ = Perm<6>(
+            ans.baseFace_.oppositeEdge(),
+            Edge<3>::edgeNumber[ans.topFace_.lower()][ans.baseFace_.upper()],
+            Edge<3>::edgeNumber[ans.topFace_.upper()][ans.baseFace_.lower()],
+            Edge<3>::edgeNumber[ans.topFace_.upper()][ans.baseFace_.upper()],
+            ans.baseFace_.commonEdge(),
+            Edge<3>::edgeNumber[ans.topFace_.lower()][ans.baseFace_.lower()]);
 
-        ans->topEdge_ = ans->baseEdge_ * Perm<6>(3, 5, 2, 1, 0, 4);
+        ans.topEdge_ = ans.baseEdge_ * Perm<6>(3, 5, 2, 1, 0, 4);
     }
 
-    ans->meridinalCuts_[0] = 1;
-    ans->meridinalCuts_[1] = 2;
-    ans->meridinalCuts_[2] = 3;
+    ans.meridinalCuts_[0] = 1;
+    ans.meridinalCuts_[1] = 2;
+    ans.meridinalCuts_[2] = 3;
 
     // Now run through and look for layers to add to the torus.
     int adjFace[2]; // Faces of adjacent tetrahedron glued to the torus.
@@ -172,20 +159,20 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
     int layerOnGroup;
     while (true) {
         // Is there a new layer?
-        tet = ans->topLevel_->adjacentTetrahedron(ans->topFace_.lower());
-        if (tet == nullptr || tet == ans->topLevel_ ||
-                tet != ans->topLevel_->adjacentTetrahedron(ans->topFace_.upper()))
+        tet = ans.topLevel_->adjacentTetrahedron(ans.topFace_.lower());
+        if (tet == nullptr || tet == ans.topLevel_ ||
+                tet != ans.topLevel_->adjacentTetrahedron(ans.topFace_.upper()))
             break;
 
         // There is a new tetrahedron glued to both torus boundary triangles.
-        adjPerm[0] = ans->topLevel_->adjacentGluing(ans->topFace_.lower());
-        adjPerm[1] = ans->topLevel_->adjacentGluing(ans->topFace_.upper());
+        adjPerm[0] = ans.topLevel_->adjacentGluing(ans.topFace_.lower());
+        adjPerm[1] = ans.topLevel_->adjacentGluing(ans.topFace_.upper());
         if (adjPerm[0].sign() != adjPerm[1].sign())
             break;
 
         // See what the new boundary edge would be.
-        adjFace[0] = ans->topLevel_->adjacentFace(ans->topFace_.lower());
-        adjFace[1] = ans->topLevel_->adjacentFace(ans->topFace_.upper());
+        adjFace[0] = ans.topLevel_->adjacentFace(ans.topFace_.lower());
+        adjFace[1] = ans.topLevel_->adjacentFace(ans.topFace_.upper());
         newTopEdge = Edge<3>::edgeNumber[adjFace[0]][adjFace[1]];
         adjEdge = 5 - newTopEdge;
 
@@ -201,71 +188,71 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
 
         // Before changing anything else, rearrange the topEdge and
         // meridinalCuts arrays.
-        layerOnGroup = ans->topEdge_.pre(layerOnEdge[0]) / 2;
+        layerOnGroup = ans.topEdge_.pre(layerOnEdge[0]) / 2;
         Perm<6> edgePerm = adjPerm[0].pairs();
         switch(layerOnGroup) {
             case 0:
                 // p q r  ->  q r q+r
-                ans->meridinalCuts_[0] = ans->meridinalCuts_[1];
-                ans->meridinalCuts_[1] = ans->meridinalCuts_[2];
-                ans->meridinalCuts_[2] = ans->meridinalCuts_[0] +
-                    ans->meridinalCuts_[1];
-                ans->topEdge_ = edgePerm * ans->topEdge_ *
+                ans.meridinalCuts_[0] = ans.meridinalCuts_[1];
+                ans.meridinalCuts_[1] = ans.meridinalCuts_[2];
+                ans.meridinalCuts_[2] = ans.meridinalCuts_[0] +
+                    ans.meridinalCuts_[1];
+                ans.topEdge_ = edgePerm * ans.topEdge_ *
                     Perm<6>(2, 3, 4, 5, 1, 0);
                 break;
             case 1:
                 // p q r  ->  p r p+r
-                ans->meridinalCuts_[1] = ans->meridinalCuts_[2];
-                ans->meridinalCuts_[2] = ans->meridinalCuts_[0] +
-                    ans->meridinalCuts_[1];
-                ans->topEdge_ = edgePerm * ans->topEdge_ *
+                ans.meridinalCuts_[1] = ans.meridinalCuts_[2];
+                ans.meridinalCuts_[2] = ans.meridinalCuts_[0] +
+                    ans.meridinalCuts_[1];
+                ans.topEdge_ = edgePerm * ans.topEdge_ *
                     Perm<6>(0, 1, 4, 5, 3, 2);
                 break;
             case 2:
-                if (ans->meridinalCuts_[1] - ans->meridinalCuts_[0] <
-                        ans->meridinalCuts_[0]) {
+                if (ans.meridinalCuts_[1] - ans.meridinalCuts_[0] <
+                        ans.meridinalCuts_[0]) {
                     // p q r  ->  q-p p q
-                    ans->meridinalCuts_[2] = ans->meridinalCuts_[1];
-                    ans->meridinalCuts_[1] = ans->meridinalCuts_[0];
-                    ans->meridinalCuts_[0] = ans->meridinalCuts_[2] -
-                        ans->meridinalCuts_[1];
-                    ans->topEdge_ = edgePerm * ans->topEdge_ *
+                    ans.meridinalCuts_[2] = ans.meridinalCuts_[1];
+                    ans.meridinalCuts_[1] = ans.meridinalCuts_[0];
+                    ans.meridinalCuts_[0] = ans.meridinalCuts_[2] -
+                        ans.meridinalCuts_[1];
+                    ans.topEdge_ = edgePerm * ans.topEdge_ *
                         Perm<6>(5, 4, 0, 1, 2, 3);
                 } else {
                     // p q r  ->  p q-p q
-                    ans->meridinalCuts_[2] = ans->meridinalCuts_[1];
-                    ans->meridinalCuts_[1] = ans->meridinalCuts_[2] -
-                        ans->meridinalCuts_[0];
-                    ans->topEdge_ = edgePerm * ans->topEdge_ *
+                    ans.meridinalCuts_[2] = ans.meridinalCuts_[1];
+                    ans.meridinalCuts_[1] = ans.meridinalCuts_[2] -
+                        ans.meridinalCuts_[0];
+                    ans.topEdge_ = edgePerm * ans.topEdge_ *
                         Perm<6>(0, 1, 5, 4, 2, 3);
                 }
                 break;
         }
 
-        ans->topFace_ = FacePair(
+        ans.topFace_ = FacePair(
             Edge<3>::edgeVertex[adjEdge][0],
             Edge<3>::edgeVertex[adjEdge][1]);
 
         // Massage the indices in topEdge to match topFace.
         for (i = 0; i < 6; i += 2) {
-            // Make sure ans->topEdge[i] is in face ans->topFace.lower().
+            // Make sure ans.topEdge[i] is in face ans.topFace.lower().
             // That is: neither of the edge vertices can match the face number.
-            if (    ans->topFace_.lower() ==
-                        Edge<3>::edgeVertex[ans->topEdge_[i]][0] ||
-                    ans->topFace_.lower() ==
-                        Edge<3>::edgeVertex[ans->topEdge_[i]][1]) {
-                ans->topEdge_ = ans->topEdge_ * Perm<6>(i, i+1);
+            if (    ans.topFace_.lower() ==
+                        Edge<3>::edgeVertex[ans.topEdge_[i]][0] ||
+                    ans.topFace_.lower() ==
+                        Edge<3>::edgeVertex[ans.topEdge_[i]][1]) {
+                ans.topEdge_ = ans.topEdge_ * Perm<6>(i, i+1);
             }
         }
 
-        ans->topLevel_ = tet;
-        ans->nTetrahedra++;
+        ans.topLevel_ = tet;
+        ans.nTetrahedra++;
     }
 
     return ans;
 }
 
-LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
+std::optional<LayeredSolidTorus> LayeredSolidTorus::formsLayeredSolidTorusTop(
         Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
     Tetrahedron<3>* top = tet;
     Tetrahedron<3>* next;
@@ -305,9 +292,9 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
         // exists).
         next = tet->adjacentTetrahedron(vRoles[0]);
         if (! next)
-            return nullptr;
+            return std::nullopt;
         if (next != tet->adjacentTetrahedron(vRoles[3]))
-            return nullptr;
+            return std::nullopt;
 
         // Are we folding over?
         cross1 = tet->adjacentGluing(vRoles[0]);
@@ -326,7 +313,7 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
                 // Tetrahedron is folded shut over edge vRoles[12].
                 // This does not give an LST(3,2,1) base, so we are not
                 // interested.
-                return nullptr;
+                return std::nullopt;
             } else if (canon1 == Perm<4>(3, 0, 1, 2)) {
                 rotation = 1;
                 // a, b have weights 1, 2.
@@ -335,32 +322,32 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
                 // a, b have weights 2, 1.
             } else {
                 // We have an orientation-reversing permutation.
-                return nullptr;
+                return std::nullopt;
             }
 
             // We got one!
-            LayeredSolidTorus* ans = new LayeredSolidTorus();
-            ans->nTetrahedra = nTets;
+            LayeredSolidTorus ans;
+            ans.nTetrahedra = nTets;
 
-            ans->base_ = tet;
-            ans->baseFace_ = FacePair(vRoles[0], vRoles[3]);
+            ans.base_ = tet;
+            ans.baseFace_ = FacePair(vRoles[0], vRoles[3]);
             if ((rotation == 1 && vRoles[3] < vRoles[0]) ||
                     (rotation == 2 && vRoles[0] < vRoles[3])) {
-                ans->baseEdge_ = Perm<6>(
-                    ans->baseFace_.oppositeEdge(),
-                    Edge<3>::edgeNumber[ans->baseFace_.upper()][vRoles[2]],
-                    Edge<3>::edgeNumber[vRoles[1]][ans->baseFace_.lower()],
-                    Edge<3>::edgeNumber[ans->baseFace_.upper()][vRoles[1]],
-                    ans->baseFace_.commonEdge(),
-                    Edge<3>::edgeNumber[vRoles[2]][ans->baseFace_.lower()]);
+                ans.baseEdge_ = Perm<6>(
+                    ans.baseFace_.oppositeEdge(),
+                    Edge<3>::edgeNumber[ans.baseFace_.upper()][vRoles[2]],
+                    Edge<3>::edgeNumber[vRoles[1]][ans.baseFace_.lower()],
+                    Edge<3>::edgeNumber[ans.baseFace_.upper()][vRoles[1]],
+                    ans.baseFace_.commonEdge(),
+                    Edge<3>::edgeNumber[vRoles[2]][ans.baseFace_.lower()]);
             } else {
-                ans->baseEdge_ = Perm<6>(
-                    ans->baseFace_.oppositeEdge(),
-                    Edge<3>::edgeNumber[ans->baseFace_.upper()][vRoles[1]],
-                    Edge<3>::edgeNumber[vRoles[2]][ans->baseFace_.lower()],
-                    Edge<3>::edgeNumber[ans->baseFace_.upper()][vRoles[2]],
-                    ans->baseFace_.commonEdge(),
-                    Edge<3>::edgeNumber[vRoles[1]][ans->baseFace_.lower()]);
+                ans.baseEdge_ = Perm<6>(
+                    ans.baseFace_.oppositeEdge(),
+                    Edge<3>::edgeNumber[ans.baseFace_.upper()][vRoles[1]],
+                    Edge<3>::edgeNumber[vRoles[2]][ans.baseFace_.lower()],
+                    Edge<3>::edgeNumber[ans.baseFace_.upper()][vRoles[2]],
+                    ans.baseFace_.commonEdge(),
+                    Edge<3>::edgeNumber[vRoles[1]][ans.baseFace_.lower()]);
             }
 
             long cuts01, cuts13, cuts30;
@@ -379,8 +366,8 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
             if (cuts13 < 0) cuts13 = -cuts13;
             if (cuts30 < 0) cuts30 = -cuts30;
 
-            ans->topLevel_ = top;
-            ans->topFace_ = FacePair(topRoles[2], topRoles[1]);
+            ans.topLevel_ = top;
+            ans.topFace_ = FacePair(topRoles[2], topRoles[1]);
 
             // Run through all six possible orderings.
             int group01, group13, group30;
@@ -409,37 +396,37 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
                     group13 = 0; group30 = 1; group01 = 2;
                 }
             }
-            ans->meridinalCuts_[group01] = cuts01;
-            ans->meridinalCuts_[group13] = cuts13;
-            ans->meridinalCuts_[group30] = cuts30;
+            ans.meridinalCuts_[group01] = cuts01;
+            ans.meridinalCuts_[group13] = cuts13;
+            ans.meridinalCuts_[group30] = cuts30;
             if (topRoles[2] < topRoles[1]) {
-                ans->topEdge_ = Perm<6>(
+                ans.topEdge_ = Perm<6>(
                     2 * group01,
-                    Edge<3>::edgeNumber[topRoles[0]][ans->topFace_.upper()],
+                    Edge<3>::edgeNumber[topRoles[0]][ans.topFace_.upper()],
                     2 * group01 + 1,
-                    Edge<3>::edgeNumber[ans->topFace_.lower()][topRoles[3]],
+                    Edge<3>::edgeNumber[ans.topFace_.lower()][topRoles[3]],
                     2 * group13,
-                    Edge<3>::edgeNumber[ans->topFace_.upper()][topRoles[3]],
+                    Edge<3>::edgeNumber[ans.topFace_.upper()][topRoles[3]],
                     2 * group13 + 1,
-                    Edge<3>::edgeNumber[topRoles[0]][ans->topFace_.lower()],
+                    Edge<3>::edgeNumber[topRoles[0]][ans.topFace_.lower()],
                     2 * group30,
-                    ans->topFace_.commonEdge(),
+                    ans.topFace_.commonEdge(),
                     2 * group30 + 1,
-                    ans->topFace_.oppositeEdge());
+                    ans.topFace_.oppositeEdge());
             } else {
-                ans->topEdge_ = Perm<6>(
+                ans.topEdge_ = Perm<6>(
                     2 * group01,
-                    Edge<3>::edgeNumber[topRoles[3]][ans->topFace_.upper()],
+                    Edge<3>::edgeNumber[topRoles[3]][ans.topFace_.upper()],
                     2 * group01 + 1,
-                    Edge<3>::edgeNumber[ans->topFace_.lower()][topRoles[0]],
+                    Edge<3>::edgeNumber[ans.topFace_.lower()][topRoles[0]],
                     2 * group13,
-                    Edge<3>::edgeNumber[ans->topFace_.upper()][topRoles[0]],
+                    Edge<3>::edgeNumber[ans.topFace_.upper()][topRoles[0]],
                     2 * group13 + 1,
-                    Edge<3>::edgeNumber[topRoles[3]][ans->topFace_.lower()],
+                    Edge<3>::edgeNumber[topRoles[3]][ans.topFace_.lower()],
                     2 * group30,
-                    ans->topFace_.commonEdge(),
+                    ans.topFace_.commonEdge(),
                     2 * group30 + 1,
-                    ans->topFace_.oppositeEdge());
+                    ans.topFace_.oppositeEdge());
             }
 
             // All done!
@@ -449,7 +436,7 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
         // We're looking for an entirely new tetrahedron.
         // Make sure we're not looping back in a cycle or anything kinky.
         if (next == tet || next == top)
-            return nullptr;
+            return std::nullopt;
 
         // Set up nextRoles so that faces tet/vRoles[0,3] are joined to
         // faces next/nextRoles[1,2] respectively.
@@ -467,7 +454,7 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
         // Make sure it's actually a layering, i.e., canon1 and canon2 are
         // compatible.
         if (rot180 * canon1 * rot180 != canon2)
-            return nullptr;
+            return std::nullopt;
 
         // Update the matrix [ a,b | c,d ].
         // It seems sanest to take cases based on the six possible
@@ -538,7 +525,7 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
         } else {
             // Impossible.  We should never get to this point.
             std::cerr << "ERROR: Bad permutation canon2." << std::endl;
-            return nullptr;
+            return std::nullopt;
         }
 
         w = w_; x = x_; y = y_; z = z_;
@@ -551,17 +538,18 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
     }
 
     // The loop has no break so we should never get here, but what the hell.
-    return nullptr;
+    return std::nullopt;
 }
 
-LayeredSolidTorus* LayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
+std::optional<LayeredSolidTorus> LayeredSolidTorus::isLayeredSolidTorus(
+        Component<3>* comp) {
     // Start with some basic property checks.
     if (! comp->isOrientable())
-        return nullptr;
+        return std::nullopt;
     if (comp->countBoundaryComponents() != 1)
-        return nullptr;
+        return std::nullopt;
     if (comp->boundaryComponent(0)->countTriangles() != 2)
-        return nullptr;
+        return std::nullopt;
 
     TriangleEmbedding<3> f0 = comp->boundaryComponent(0)->triangle(0)->
         embedding(0);
@@ -570,7 +558,7 @@ LayeredSolidTorus* LayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
 
     Tetrahedron<3>* top = f0.tetrahedron();
     if (f1.tetrahedron() != top)
-        return nullptr;
+        return std::nullopt;
 
     // We have precisely one boundary component, which consists of two
     // triangular faces belonging to the same tetrahedron.
@@ -600,7 +588,7 @@ LayeredSolidTorus* LayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
         // boundary faces and these have already been seen.
         nextTet = currTet->adjacentTetrahedron(underFaces.lower());
         if (nextTet != currTet->adjacentTetrahedron(underFaces.upper()))
-            return nullptr;
+            return std::nullopt;
 
         // They both lead to the same adjacent tetrahedron.
         // Have we reached the end?
