@@ -45,16 +45,10 @@ LayeredSolidTorus* LayeredSolidTorus::clone() const {
     ans->base_ = base_;
     ans->topLevel_ = topLevel_;
     ans->baseEdge_ = baseEdge_;
-    for (i = 0; i < 6; i++) {
-        ans->topEdgeGroup_[i] = topEdgeGroup_[i];
-    }
     ans->baseFace_ = baseFace_;
     ans->topFace_ = topFace_;
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 2; j++)
-            ans->topEdge_[i][j] = topEdge_[i][j];
-        ans->meridinalCuts_[i] = meridinalCuts_[i];
-    }
+    ans->topEdge_ = topEdge_;
+    std::copy(meridinalCuts_, meridinalCuts_ + 3, ans->meridinalCuts_);
     return ans;
 }
 
@@ -66,24 +60,9 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
 
     // Data members nTetrahedra and meridinalCuts remain unchanged.
 
-    // Transform edge numbers (note that -1s can also be present for topEdge[]):
+    // Transform edge numbers:
     baseEdge_ = iso->facePerm(baseTetID).pairs() * baseEdge_;
-
-    for (i = 0; i < 3; i++)
-        for (j = 0; j < 2; j++) {
-            if (topEdge_[i][j] < 0)
-                continue;
-            topEdge_[i][j] = iso->facePerm(topTetID).pairs()[topEdge_[i][j]];
-        }
-
-    unsigned missingEdge = 0 + 1 + 2 + 3 + 4 + 5;
-    for (i = 0; i < 3; i++)
-        for (j = 0; j < 2; j++)
-            if (topEdge_[i][j] != -1) {
-                topEdgeGroup_[topEdge_[i][j]] = i;
-                missingEdge -= topEdge_[i][j];
-            }
-    topEdgeGroup_[missingEdge] = -1;
+    topEdge_ = iso->facePerm(topTetID).pairs() * topEdge_;
 
     // Transform face numbers:
     FacePair newBaseFace = FacePair(
@@ -99,9 +78,11 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
         iso->facePerm(topTetID)[topFace_.lower()],
         iso->facePerm(topTetID)[topFace_.upper()]);
     if (newTopFace.lower() != iso->facePerm(topTetID)[topFace_.lower()]) {
+        // Swap images of 0,1, images of 2,3 and images of 4,5
+        // (except for the pair that only contains one top edge).
         for (int i = 0; i < 3; ++i)
-            if (topEdge_[i][1] != -1)
-                std::swap(topEdge_[i][0], topEdge_[i][1]);
+            if (topEdge_[2*i+1] != newTopFace.oppositeEdge())
+                topEdge_ = topEdge_ * Perm<6>(2*i, 2*i+1);
     }
     topFace_ = newTopFace;
 
@@ -165,12 +146,7 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
             ans->baseFace_.commonEdge(),
             Edge<3>::edgeNumber[ans->topFace_.upper()][ans->baseFace_.lower()]);
 
-        ans->topEdge_[0][0] = ans->baseEdge_[5];
-        ans->topEdge_[0][1] = ans->baseEdge_[3];
-        ans->topEdge_[1][0] = ans->baseEdge_[1];
-        ans->topEdge_[1][1] = ans->baseEdge_[2];
-        ans->topEdge_[2][0] = ans->baseEdge_[0];
-        ans->topEdge_[2][1] = -1;
+        ans->topEdge_ = ans->baseEdge_ * Perm<6>(5, 3, 1, 2, 0, 4);
     } else {
         ans->baseEdge_ = Perm<6>(
             ans->baseFace_.oppositeEdge(),
@@ -180,18 +156,8 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
             ans->baseFace_.commonEdge(),
             Edge<3>::edgeNumber[ans->topFace_.lower()][ans->baseFace_.lower()]);
 
-        ans->topEdge_[0][0] = ans->baseEdge_[3];
-        ans->topEdge_[0][1] = ans->baseEdge_[5];
-        ans->topEdge_[1][0] = ans->baseEdge_[2];
-        ans->topEdge_[1][1] = ans->baseEdge_[1];
-        ans->topEdge_[2][0] = ans->baseEdge_[0];
-        ans->topEdge_[2][1] = -1;
+        ans->topEdge_ = ans->baseEdge_ * Perm<6>(3, 5, 2, 1, 0, 4);
     }
-    for (i = 0; i < 3; i++)
-        for (j = 0; j < 2; j++)
-            if (ans->topEdge_[i][j] != -1)
-                ans->topEdgeGroup_[ans->topEdge_[i][j]] = i;
-    ans->topEdgeGroup_[ans->baseEdge_[4]] = -1;
 
     ans->meridinalCuts_[0] = 1;
     ans->meridinalCuts_[1] = 2;
@@ -236,7 +202,8 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
 
         // Before changing anything else, rearrange the topEdge and
         // meridinalCuts arrays.
-        layerOnGroup = ans->topEdgeGroup_[layerOnEdge[0]];
+        layerOnGroup = ans->topEdge_.pre(layerOnEdge[0]) / 2;
+        Perm<6> edgePerm = adjPerm[0].pairs();
         switch(layerOnGroup) {
             case 0:
                 // p q r  ->  q r q+r
@@ -244,20 +211,16 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
                 ans->meridinalCuts_[1] = ans->meridinalCuts_[2];
                 ans->meridinalCuts_[2] = ans->meridinalCuts_[0] +
                     ans->meridinalCuts_[1];
-                ans->followEdge(0, 1);
-                ans->followEdge(1, 2);
-                ans->topEdge_[2][0] = newTopEdge;
-                ans->topEdge_[2][1] = -1;
+                ans->topEdge_ = edgePerm * ans->topEdge_ *
+                    Perm<6>(2, 3, 4, 5, 1, 0);
                 break;
             case 1:
                 // p q r  ->  p r p+r
                 ans->meridinalCuts_[1] = ans->meridinalCuts_[2];
                 ans->meridinalCuts_[2] = ans->meridinalCuts_[0] +
                     ans->meridinalCuts_[1];
-                ans->followEdge(0, 0);
-                ans->followEdge(1, 2);
-                ans->topEdge_[2][0] = newTopEdge;
-                ans->topEdge_[2][1] = -1;
+                ans->topEdge_ = edgePerm * ans->topEdge_ *
+                    Perm<6>(0, 1, 4, 5, 3, 2);
                 break;
             case 2:
                 if (ans->meridinalCuts_[1] - ans->meridinalCuts_[0] <
@@ -267,19 +230,15 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
                     ans->meridinalCuts_[1] = ans->meridinalCuts_[0];
                     ans->meridinalCuts_[0] = ans->meridinalCuts_[2] -
                         ans->meridinalCuts_[1];
-                    ans->followEdge(2, 1);
-                    ans->followEdge(1, 0);
-                    ans->topEdge_[0][0] = newTopEdge;
-                    ans->topEdge_[0][1] = -1;
+                    ans->topEdge_ = edgePerm * ans->topEdge_ *
+                        Perm<6>(5, 4, 0, 1, 2, 3);
                 } else {
                     // p q r  ->  p q-p q
                     ans->meridinalCuts_[2] = ans->meridinalCuts_[1];
                     ans->meridinalCuts_[1] = ans->meridinalCuts_[2] -
                         ans->meridinalCuts_[0];
-                    ans->followEdge(2, 1);
-                    ans->followEdge(0, 0);
-                    ans->topEdge_[1][0] = newTopEdge;
-                    ans->topEdge_[1][1] = -1;
+                    ans->topEdge_ = edgePerm * ans->topEdge_ *
+                        Perm<6>(0, 1, 5, 4, 2, 3);
                 }
                 break;
         }
@@ -290,21 +249,16 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
 
         // Massage the indices in topEdge to match topFace.
         for (i = 0; i < 3; i++) {
-            // Make sure ans->topEdge[i][0] is in face ans->topFace.lower().
+            // Make sure ans->topEdge[2*i] is in face ans->topFace.lower().
             if (    ans->topFace_.lower() ==
-                        Edge<3>::edgeVertex[ans->topEdge_[i][0]][0] ||
+                        Edge<3>::edgeVertex[ans->topEdge_[2*i]][0] ||
                     ans->topFace_.lower() ==
-                        Edge<3>::edgeVertex[ans->topEdge_[i][0]][1]) {
-                std::swap(ans->topEdge_[i][0], ans->topEdge_[i][1]);
+                        Edge<3>::edgeVertex[ans->topEdge_[2*i]][1]) {
+                ans->topEdge_ = ans->topEdge_ * Perm<6>(2*i, 2*i+1);
             }
         }
 
         ans->topLevel_ = tet;
-        for (i = 0; i < 3; i++)
-            for (j = 0; j < 2; j++)
-                if (ans->topEdge_[i][j] != -1)
-                    ans->topEdgeGroup_[ans->topEdge_[i][j]] = i;
-        ans->topEdgeGroup_[adjEdge] = -1;
         ans->nTetrahedra++;
     }
 
@@ -459,34 +413,34 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
             ans->meridinalCuts_[group13] = cuts13;
             ans->meridinalCuts_[group30] = cuts30;
             if (topRoles[2] < topRoles[1]) {
-                ans->topEdge_[group01][0] = Edge<3>::edgeNumber
-                    [topRoles[0]][ans->topFace_.upper()];
-                ans->topEdge_[group01][1] = Edge<3>::edgeNumber
-                    [ans->topFace_.lower()][topRoles[3]];
-                ans->topEdge_[group13][0] = Edge<3>::edgeNumber
-                    [ans->topFace_.upper()][topRoles[3]];
-                ans->topEdge_[group13][1] = Edge<3>::edgeNumber
-                    [topRoles[0]][ans->topFace_.lower()];
-                ans->topEdge_[group30][0] = ans->topFace_.commonEdge();
-                ans->topEdge_[group30][1] = -1;
+                ans->topEdge_ = Perm<6>(
+                    2 * group01,
+                    Edge<3>::edgeNumber[topRoles[0]][ans->topFace_.upper()],
+                    2 * group01 + 1,
+                    Edge<3>::edgeNumber[ans->topFace_.lower()][topRoles[3]],
+                    2 * group13,
+                    Edge<3>::edgeNumber[ans->topFace_.upper()][topRoles[3]],
+                    2 * group13 + 1,
+                    Edge<3>::edgeNumber[topRoles[0]][ans->topFace_.lower()],
+                    2 * group30,
+                    ans->topFace_.commonEdge(),
+                    2 * group30 + 1,
+                    ans->topFace_.oppositeEdge());
             } else {
-            ans->topEdge_[group01][0] = Edge<3>::edgeNumber
-                [topRoles[3]][ans->topFace_.upper()];
-            ans->topEdge_[group01][1] = Edge<3>::edgeNumber
-                [ans->topFace_.lower()][topRoles[0]];
-            ans->topEdge_[group13][0] = Edge<3>::edgeNumber
-                [ans->topFace_.upper()][topRoles[0]];
-            ans->topEdge_[group13][1] = Edge<3>::edgeNumber
-                [topRoles[3]][ans->topFace_.lower()];
-            ans->topEdge_[group30][0] = ans->topFace_.commonEdge();
-            ans->topEdge_[group30][1] = -1;
+                ans->topEdge_ = Perm<6>(
+                    2 * group01,
+                    Edge<3>::edgeNumber[topRoles[3]][ans->topFace_.upper()],
+                    2 * group01 + 1,
+                    Edge<3>::edgeNumber[ans->topFace_.lower()][topRoles[0]],
+                    2 * group13,
+                    Edge<3>::edgeNumber[ans->topFace_.upper()][topRoles[0]],
+                    2 * group13 + 1,
+                    Edge<3>::edgeNumber[topRoles[3]][ans->topFace_.lower()],
+                    2 * group30,
+                    ans->topFace_.commonEdge(),
+                    2 * group30 + 1,
+                    ans->topFace_.oppositeEdge());
             }
-            ans->topEdgeGroup_[ans->topEdge_[group01][0]] = group01;
-            ans->topEdgeGroup_[ans->topEdge_[group01][1]] = group01;
-            ans->topEdgeGroup_[ans->topEdge_[group13][0]] = group13;
-            ans->topEdgeGroup_[ans->topEdge_[group13][1]] = group13;
-            ans->topEdgeGroup_[ans->topEdge_[group30][0]] = group30;
-            ans->topEdgeGroup_[ans->topFace_.oppositeEdge()] = -1;
 
             // All done!
             return ans;
@@ -664,17 +618,6 @@ LayeredSolidTorus* LayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
     return formsLayeredSolidTorusBase(currTet);
 }
 
-void LayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
-    int pos;
-    Perm<4> adjPerm;
-    for (int i = 1; i >= 0; i--) {
-        pos = (topEdge_[sourceGroup][i] == -1 ? 0 : i);
-        adjPerm = topLevel_->adjacentGluing(
-            i == 0 ? topFace_.lower() : topFace_.upper());
-        topEdge_[destGroup][i] = adjPerm.pairs()[topEdge_[sourceGroup][pos]];
-    }
-}
-
 std::unique_ptr<Manifold> LayeredSolidTorus::manifold() const {
     return std::make_unique<Handlebody>(1, true);
 }
@@ -709,12 +652,12 @@ Triangulation<3>* LayeredSolidTorus::flatten(const Triangulation<3>* original,
 
         // Start by representing vertices of this tetrahedron instead.
         Perm<4> groups0 = Perm<4>(
-            6 - Edge<3>::edgeVertex[topEdge_[0][0]][0] -
-                Edge<3>::edgeVertex[topEdge_[0][0]][1] - topFace_.lower(),
-            6 - Edge<3>::edgeVertex[topEdge_[1][0]][0] -
-                Edge<3>::edgeVertex[topEdge_[1][0]][1] - topFace_.lower(),
-            6 - Edge<3>::edgeVertex[topEdge_[2][0]][0] -
-                Edge<3>::edgeVertex[topEdge_[2][0]][1] - topFace_.lower(),
+            6 - Edge<3>::edgeVertex[topEdge_[0]][0] -
+                Edge<3>::edgeVertex[topEdge_[0]][1] - topFace_.lower(),
+            6 - Edge<3>::edgeVertex[topEdge_[2]][0] -
+                Edge<3>::edgeVertex[topEdge_[2]][1] - topFace_.lower(),
+            6 - Edge<3>::edgeVertex[topEdge_[4]][0] -
+                Edge<3>::edgeVertex[topEdge_[4]][1] - topFace_.lower(),
             topFace_.lower());
 
         FacePair underFaces = topFace_.complement();

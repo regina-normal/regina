@@ -76,24 +76,23 @@ class LayeredSolidTorus : public StandardTriangulation {
             /**< Edges baseEdge_[0..5] of the base tetrahedron are identified
                  as a group of 1, 2, 2, 3, 3, 3 respectively.
                  See baseEdge() for further details. */
-        FacePair baseFace_;
-            /**< The two faces of the base tetrahedron that are glued to
-                 each other. */
 
         Tetrahedron<3>* topLevel_;
             /**< The tetrahedron on the boundary of this torus. */
-        int8_t topEdge_[3][2];
-            /**< Returns the edges of the top tetrahedron that the meridinal
-                 disc cuts fewest, middle or most times according to whether
-                 the first index is 0, 1 or 2 respectively.  See topEdge()
-                 for further details. */
+        Perm<6> topEdge_;
+            /**< Edges topEdge_[0,1], topEdge_[2,3] and topEdge_[4,5] are the
+                 boundary edges of the top tetrahedron that the meridinal disc
+                 fewest, middle and most times respectively.  As an exception,
+                 one of the edges is *not* on the boundary; this will
+                 be put in the group with only one edge, and will correspond to
+                 index 1, 3 or 5.  See topEdge() for further details. */
         unsigned long meridinalCuts_[3];
             /**< Returns the number of times the meridinal disc cuts each
                  boundary edge; this array is in non-decreasing order. */
-        int8_t topEdgeGroup_[6];
-            /**< Classifies the edges of the boundary tetrahedron
-                 according to whether the meridinal disc cuts them fewest,
-                 middle or most times. */
+
+        FacePair baseFace_;
+            /**< The two faces of the base tetrahedron that are glued to
+                 each other. */
         FacePair topFace_;
             /**< The two faces of the boundary tetrahedron that form the
                  torus boundary. */
@@ -370,29 +369,6 @@ class LayeredSolidTorus : public StandardTriangulation {
          * Create a new uninitialised structure.
          */
         LayeredSolidTorus();
-
-        /**
-         * Fills <tt>topEdge[destGroup]</tt> with the edges produced by
-         * following the edges in group \c sourceGroup from the current
-         * top level tetrahedron up to the next layered tetrahedron.
-         *
-         * Note that which edge is placed in <tt>topEdge[][0]</tt> and
-         * which edge is placed in <tt>topEdge[][1]</tt> will be an
-         * arbitrary decision; these may need to be switched later on.
-         *
-         * \pre There is a next layered tetrahedron.
-         * \pre Member variables \a topLevel and \a topFace have not yet been
-         * changed to reflect the next layered tetrahedron.
-         * \pre The edges in group \a destGroup in the next layered
-         * tetrahedron are actually layered onto the edges in group \a
-         * sourceGroup in the current top level tetrahedron.
-         *
-         * @param sourceGroup the group in the current top level
-         * tetrahedron to which the edges belong.
-         * @param destGroup the group in the next layered tetrahedron to
-         * which the same edges belong.
-         */
-        void followEdge(int destGroup, int sourceGroup);
 };
 
 /*@}*/
@@ -428,10 +404,11 @@ inline unsigned long LayeredSolidTorus::meridinalCuts(int group) const {
     return meridinalCuts_[group];
 }
 inline int LayeredSolidTorus::topEdge(int group, int index) const {
-    return topEdge_[group][index];
+    int ans = topEdge_[2 * group + index];
+    return (ans == topFace_.oppositeEdge() ? -1 : ans);
 }
 inline int LayeredSolidTorus::topEdgeGroup(int edge) const {
-    return topEdgeGroup_[edge];
+    return (edge == topFace_.oppositeEdge() ? -1 : (topEdge_.pre(edge) / 2));
 }
 inline int LayeredSolidTorus::topFace(int index) const {
     return (index == 0 ? topFace_.lower() : topFace_.upper());
