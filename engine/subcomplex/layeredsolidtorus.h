@@ -41,6 +41,7 @@
 
 #include "regina-core.h"
 #include "subcomplex/standardtri.h"
+#include "triangulation/facepair.h"
 
 namespace regina {
 
@@ -70,21 +71,21 @@ class LayeredSolidTorus : public StandardTriangulation {
         Tetrahedron<3>* base_;
             /**< The tetrahedron that is glued to itself at the base of
                  this torus. */
-        int baseEdge_[6];
+        int8_t baseEdge_[6];
             /**< The edges of the base tetrahedron that are identified as
                  a group of 1, 2 or 3 according to whether the index is
                  0, 1-2 or 3-5 respectively.  See baseEdge() for
                  further details. */
-        int baseEdgeGroup_[6];
+        int8_t baseEdgeGroup_[6];
             /**< Classifies the edges of the base tetrahedron according
                  to whether they are identified in a group of 1, 2 or 3. */
-        int baseFace_[2];
+        FacePair baseFace_;
             /**< The two faces of the base tetrahedron that are glued to
                  each other. */
 
         Tetrahedron<3>* topLevel_;
             /**< The tetrahedron on the boundary of this torus. */
-        int topEdge_[3][2];
+        int8_t topEdge_[3][2];
             /**< Returns the edges of the top tetrahedron that the meridinal
                  disc cuts fewest, middle or most times according to whether
                  the first index is 0, 1 or 2 respectively.  See topEdge()
@@ -92,11 +93,11 @@ class LayeredSolidTorus : public StandardTriangulation {
         unsigned long meridinalCuts_[3];
             /**< Returns the number of times the meridinal disc cuts each
                  boundary edge; this array is in non-decreasing order. */
-        int topEdgeGroup_[6];
+        int8_t topEdgeGroup_[6];
             /**< Classifies the edges of the boundary tetrahedron
                  according to whether the meridinal disc cuts them fewest,
                  middle or most times. */
-        int topFace_[2];
+        FacePair topFace_;
             /**< The two faces of the boundary tetrahedron that form the
                  torus boundary. */
 
@@ -419,7 +420,7 @@ inline int LayeredSolidTorus::baseEdgeGroup(int edge) const {
     return baseEdgeGroup_[edge];
 }
 inline int LayeredSolidTorus::baseFace(int index) const {
-    return baseFace_[index];
+    return (index == 0 ? baseFace_.lower() : baseFace_.upper());
 }
 
 inline Tetrahedron<3>* LayeredSolidTorus::topLevel() const {
@@ -435,7 +436,7 @@ inline int LayeredSolidTorus::topEdgeGroup(int edge) const {
     return topEdgeGroup_[edge];
 }
 inline int LayeredSolidTorus::topFace(int index) const {
-    return topFace_[index];
+    return (index == 0 ? topFace_.lower() : topFace_.upper());
 }
 
 inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {
