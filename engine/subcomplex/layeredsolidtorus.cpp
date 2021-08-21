@@ -40,7 +40,6 @@ namespace regina {
 
 LayeredSolidTorus* LayeredSolidTorus::clone() const {
     LayeredSolidTorus* ans = new LayeredSolidTorus();
-    int i,j;
     ans->nTetrahedra = nTetrahedra;
     ans->base_ = base_;
     ans->topLevel_ = topLevel_;
@@ -54,7 +53,6 @@ LayeredSolidTorus* LayeredSolidTorus::clone() const {
 
 void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) {
-    unsigned i, j;
     size_t baseTetID = base_->index();
     size_t topTetID = topLevel_->index();
 
@@ -78,11 +76,12 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
         iso->facePerm(topTetID)[topFace_.lower()],
         iso->facePerm(topTetID)[topFace_.upper()]);
     if (newTopFace.lower() != iso->facePerm(topTetID)[topFace_.lower()]) {
-        // Swap images of 0,1, images of 2,3 and images of 4,5
-        // (except for the pair that only contains one top edge).
-        for (int i = 0; i < 3; ++i)
-            if (topEdge_[2*i+1] != newTopFace.oppositeEdge())
-                topEdge_ = topEdge_ * Perm<6>(2*i, 2*i+1);
+        // Swap images of 0,1, images of 2,3 and images of 4,5, except for
+        // the pair that only contains one top edge.
+        // We do this by swapping all three pairs, and then swapping the
+        // unwanted pair back again.
+        topEdge_ = Perm<6>(newTopFace.oppositeEdge(), newTopFace.commonEdge()) *
+            topEdge_ * Perm<6>(1,0, 3,2, 5,4);
     }
     topFace_ = newTopFace;
 
@@ -174,7 +173,7 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
     while (true) {
         // Is there a new layer?
         tet = ans->topLevel_->adjacentTetrahedron(ans->topFace_.lower());
-        if (tet == 0 || tet == ans->topLevel_ ||
+        if (tet == nullptr || tet == ans->topLevel_ ||
                 tet != ans->topLevel_->adjacentTetrahedron(ans->topFace_.upper()))
             break;
 
@@ -248,13 +247,14 @@ LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
             Edge<3>::edgeVertex[adjEdge][1]);
 
         // Massage the indices in topEdge to match topFace.
-        for (i = 0; i < 3; i++) {
-            // Make sure ans->topEdge[2*i] is in face ans->topFace.lower().
+        for (i = 0; i < 6; i += 2) {
+            // Make sure ans->topEdge[i] is in face ans->topFace.lower().
+            // That is: neither of the edge vertices can match the face number.
             if (    ans->topFace_.lower() ==
-                        Edge<3>::edgeVertex[ans->topEdge_[2*i]][0] ||
+                        Edge<3>::edgeVertex[ans->topEdge_[i]][0] ||
                     ans->topFace_.lower() ==
-                        Edge<3>::edgeVertex[ans->topEdge_[2*i]][1]) {
-                ans->topEdge_ = ans->topEdge_ * Perm<6>(2*i, 2*i+1);
+                        Edge<3>::edgeVertex[ans->topEdge_[i]][1]) {
+                ans->topEdge_ = ans->topEdge_ * Perm<6>(i, i+1);
             }
         }
 
