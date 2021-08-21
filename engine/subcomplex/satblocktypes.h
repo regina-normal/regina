@@ -67,6 +67,10 @@ namespace regina {
  * three edges of the annulus in 1, 1 and 2 places, so it is in fact
  * a degenerate (1,1,2) layered solid torus.  Note that the weight 2 edge
  * is the boundary edge of the Mobius strip.
+ *
+ * This class does not support value semantics: it cannot be copied, swapped
+ * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatMobius : public SatBlock {
     private:
@@ -76,11 +80,6 @@ class SatMobius : public SatBlock {
                  See the position() documentation for further details. */
 
     public:
-        /**
-         * Constructs a clone of the given block structure.
-         */
-        SatMobius(const SatMobius&) = default;
-
         /**
          * Describes how the Mobius band is attached to the
          * boundary annulus.
@@ -107,7 +106,6 @@ class SatMobius : public SatBlock {
          */
         int position() const;
 
-        virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
@@ -129,6 +127,9 @@ class SatMobius : public SatBlock {
         static SatMobius* isBlockMobius(const SatAnnulus& annulus,
             TetList& avoidTets);
 
+    protected:
+        virtual SatBlock* clone() const override;
+
     private:
         /**
          * Constructs a partially initialised block.  The boundary
@@ -141,6 +142,11 @@ class SatMobius : public SatBlock {
          * must be 0, 1 or 2.
          */
         SatMobius(int position);
+
+        /**
+         * Constructs a clone of the given block structure.
+         */
+        SatMobius(const SatMobius&) = default;
 };
 
 /**
@@ -151,6 +157,10 @@ class SatMobius : public SatBlock {
  * the vertical, horizontal and diagonal edges of the boundary annulus;
  * see the SatAnnulus class notes for details on precisely what
  * vertical, horizontal and diagonal mean.
+ *
+ * This class does not support value semantics: it cannot be copied, swapped
+ * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatLST : public SatBlock {
     private:
@@ -165,11 +175,6 @@ class SatLST : public SatBlock {
                  the annulus respectively. */
 
     public:
-        /**
-         * Constructs a clone of the given block structure.
-         */
-        SatLST(const SatLST&) = default;
-
         /**
          * Returns details of the layered solid torus that this block
          * represents.
@@ -199,7 +204,6 @@ class SatLST : public SatBlock {
          */
         Perm<4> roles() const;
 
-        virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
         virtual void transform(const Triangulation<3>& originalTri,
             const Isomorphism<3>& iso, Triangulation<3>& newTri) override;
@@ -223,6 +227,9 @@ class SatLST : public SatBlock {
         static SatLST* isBlockLST(const SatAnnulus& annulus,
             TetList& avoidTets);
 
+    protected:
+        virtual SatBlock* clone() const override;
+
     private:
         /**
          * Constructs a partially initialised block.  The boundary
@@ -235,6 +242,11 @@ class SatLST : public SatBlock {
          * \a roles_ data member documentation.
          */
         SatLST(const LayeredSolidTorus& lst, Perm<4> roles);
+
+        /**
+         * Constructs a clone of the given block structure.
+         */
+        SatLST(const SatLST&) = default;
 };
 
 /**
@@ -247,6 +259,10 @@ class SatLST : public SatBlock {
  * edges of the prism.  See the SatAnnulus class notes for a definition
  * of "horizontal" and the TriSolidTorus class notes for further
  * details regarding "major" and "minor".
+ *
+ * This class does not support value semantics: it cannot be copied, swapped
+ * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatTriPrism : public SatBlock {
     private:
@@ -254,11 +270,6 @@ class SatTriPrism : public SatBlock {
             /**< Is this prism of major type or of minor type? */
 
     public:
-        /**
-         * Constructs a clone of the given block structure.
-         */
-        SatTriPrism(const SatTriPrism&) = default;
-
         /**
          * Is this prism of major type or minor type?  See the class
          * notes for further details.
@@ -272,7 +283,6 @@ class SatTriPrism : public SatBlock {
          */
         bool isMajor() const;
 
-        virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
@@ -310,6 +320,9 @@ class SatTriPrism : public SatBlock {
         static SatTriPrism* insertBlock(Triangulation<3>& tri, bool major);
 
     protected:
+        virtual SatBlock* clone() const override;
+
+    private:
         /**
          * Constructs a partially initialised block.  The boundary
          * annuli will remain uninitialised, and must be initialised
@@ -320,7 +333,11 @@ class SatTriPrism : public SatBlock {
          */
         SatTriPrism(bool major);
 
-    private:
+        /**
+         * Constructs a clone of the given block structure.
+         */
+        SatTriPrism(const SatTriPrism&) = default;
+
         /**
          * Implements a special case of isBlockTriPrism() to search for
          * a block of major type.  See isBlockTriPrism() for further details.
@@ -350,15 +367,13 @@ class SatTriPrism : public SatBlock {
  * meet both central tetrahedra.  Note also that (unlike other
  * triangulations) this cube cannot be split vertically into two
  * triangular prisms.
+ *
+ * This class does not support value semantics: it cannot be copied, swapped
+ * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatCube : public SatBlock {
     public:
-        /**
-         * Constructs a clone of the given block structure.
-         */
-        SatCube(const SatCube&) = default;
-
-        virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
@@ -393,11 +408,19 @@ class SatCube : public SatBlock {
         static SatCube* insertBlock(Triangulation<3>& tri);
 
     protected:
+        virtual SatBlock* clone() const override;
+
+    private:
         /**
          * Constructs an uninitialised block.  The boundary annuli
          * must be initialised before this block can be used.
          */
         SatCube();
+
+        /**
+         * Constructs a clone of the given block structure.
+         */
+        SatCube(const SatCube&) = default;
 };
 
 /**
@@ -425,15 +448,13 @@ class SatCube : public SatBlock {
  * The \e length of a reflector strip is defined to be the number of
  * prisms that are joined together, or equivalently the number of
  * saturated annuli on the boundary.
+ *
+ * This class does not support value semantics: it cannot be copied, swapped
+ * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatReflectorStrip : public SatBlock {
     public:
-        /**
-         * Constructs a clone of the given block structure.
-         */
-        SatReflectorStrip(const SatReflectorStrip&) = default;
-
-        virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
@@ -474,6 +495,14 @@ class SatReflectorStrip : public SatBlock {
             unsigned length, bool twisted);
 
     protected:
+        virtual SatBlock* clone() const override;
+
+    private:
+        /**
+         * Constructs a clone of the given block structure.
+         */
+        SatReflectorStrip(const SatReflectorStrip&) = default;
+
         /**
          * Constructs a partially initialised block of the given length.
          * The boundary annuli will remain uninitialised, and must be
@@ -513,6 +542,10 @@ class SatReflectorStrip : public SatBlock {
  * edges), or the tetrahedron can be layered over the diagonal edge of
  * each annulus (with the fibres pinched together between the two
  * horizontal edges).
+ *
+ * This class does not support value semantics: it cannot be copied, swapped
+ * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatLayering : public SatBlock {
     private:
@@ -522,11 +555,6 @@ class SatLayering : public SatBlock {
 
     public:
         /**
-         * Constructs a clone of the given block structure.
-         */
-        SatLayering(const SatLayering&) = default;
-
-        /**
          * Does this describe a layering over the horizontal edge of the
          * boundary annulus, or a layering over the diagonal edge?
          *
@@ -535,7 +563,6 @@ class SatLayering : public SatBlock {
          */
         bool overHorizontal() const;
 
-        virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
@@ -558,6 +585,9 @@ class SatLayering : public SatBlock {
             TetList& avoidTets);
 
     protected:
+        virtual SatBlock* clone() const override;
+
+    private:
         /**
          * Constructs a partially initialised block.  The boundary
          * annuli will remain uninitialised, and must be initialised
@@ -568,6 +598,11 @@ class SatLayering : public SatBlock {
          * \c false if it describes a layering over the diagonal edge.
          */
         SatLayering(bool overHorizontal);
+
+        /**
+         * Constructs a clone of the given block structure.
+         */
+        SatLayering(const SatLayering&) = default;
 };
 
 /*@}*/

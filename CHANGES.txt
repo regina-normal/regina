@@ -622,11 +622,12 @@ Version 6.1  [ TODO ]
         Class SatAnnulus:
             - Routines transform() and image() now takes their arguments by
               reference.
-        Class SatBlock:
-            - The nextBlock output argument for nextBoundaryAnnulis()
+        Class SatBlock and subclasses:
+            - The nextBlock output argument for nextBoundaryAnnulus()
               now sends back a const pointer.
             - Routine transform() now takes its arguments by reference.
-            - Both the copy constructor and clone() are now protected.
+            - All copy constructors and clone() functions are now either
+              protected or private.
         Class SatBlockSpec:
             - This is now a full class, with read-only access functions
               to its data members which are now private.

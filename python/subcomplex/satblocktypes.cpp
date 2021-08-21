@@ -47,7 +47,6 @@ using regina::SatTriPrism;
 
 void addSatBlockTypes(pybind11::module_& m) {
     pybind11::class_<SatMobius, regina::SatBlock>(m, "SatMobius")
-        .def(pybind11::init<const SatMobius&>())
         .def("position", &SatMobius::position)
         .def_static("isBlockMobius", [](const SatAnnulus& a) {
             SatBlock::TetList avoidTets;
@@ -57,7 +56,6 @@ void addSatBlockTypes(pybind11::module_& m) {
 
 
     pybind11::class_<SatLST, regina::SatBlock>(m, "SatLST")
-        .def(pybind11::init<const SatLST&>())
         .def("lst", &SatLST::lst,
             pybind11::return_value_policy::reference_internal)
         .def("roles", &SatLST::roles)
@@ -69,7 +67,6 @@ void addSatBlockTypes(pybind11::module_& m) {
 
 
     pybind11::class_<SatTriPrism, regina::SatBlock>(m, "SatTriPrism")
-        .def(pybind11::init<const SatTriPrism&>())
         .def("isMajor", &SatTriPrism::isMajor)
         .def_static("isBlockTriPrism", [](const SatAnnulus& a) {
             SatBlock::TetList avoidTets;
@@ -80,7 +77,6 @@ void addSatBlockTypes(pybind11::module_& m) {
 
 
     pybind11::class_<SatCube, regina::SatBlock>(m, "SatCube")
-        .def(pybind11::init<const SatCube&>())
         .def_static("isBlockCube", [](const SatAnnulus& a) {
             SatBlock::TetList avoidTets;
             return SatCube::isBlockCube(a, avoidTets);
@@ -91,7 +87,6 @@ void addSatBlockTypes(pybind11::module_& m) {
 
     pybind11::class_<SatReflectorStrip, regina::SatBlock>(
             m, "SatReflectorStrip")
-        .def(pybind11::init<const SatReflectorStrip&>())
         .def_static("isBlockReflectorStrip", [](const SatAnnulus& a) {
             SatBlock::TetList avoidTets;
             return SatReflectorStrip::isBlockReflectorStrip(a, avoidTets);
@@ -101,7 +96,6 @@ void addSatBlockTypes(pybind11::module_& m) {
 
 
     pybind11::class_<SatLayering, regina::SatBlock>(m, "SatLayering")
-        .def(pybind11::init<const SatLayering&>())
         .def("overHorizontal", &SatLayering::overHorizontal)
         .def_static("isBlockLayering", [](const SatAnnulus& a) {
             SatBlock::TetList avoidTets;
