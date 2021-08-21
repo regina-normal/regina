@@ -137,11 +137,9 @@ struct SatAnnulus {
      */
     SatAnnulus();
     /**
-     * Creates a clone of the given structure.
-     *
-     * @param cloneMe the structure to clone.
+     * Creates a new copy of the given structure.
      */
-    SatAnnulus(const SatAnnulus& cloneMe);
+    SatAnnulus(const SatAnnulus&) = default;
     /**
      * Creates a new structure initialised to the given values.  See the
      * class notes for what the various tetrahedra and permutations mean.
@@ -153,12 +151,11 @@ struct SatAnnulus {
      */
     SatAnnulus(Tetrahedron<3>* t0, Perm<4> r0, Tetrahedron<3>* t1, Perm<4> r1);
     /**
-     * Makes this equal to a clone of the given structure.
+     * Sets this to be a copy of the given structure.
      *
-     * @param cloneMe the structure to clone.
      * @return a reference to this structure.
      */
-    SatAnnulus& operator = (const SatAnnulus& cloneMe);
+    SatAnnulus& operator = (const SatAnnulus&) = default;
 
     /**
      * Determines whether or not this and the given structure describe
@@ -450,25 +447,13 @@ struct SatAnnulus {
 
 // Inline functions for SatAnnulus
 
-inline SatAnnulus::SatAnnulus() {
-    tet[0] = tet[1] = 0;
-}
-
-inline SatAnnulus::SatAnnulus(const SatAnnulus& cloneMe) {
-    tet[0] = cloneMe.tet[0]; tet[1] = cloneMe.tet[1];
-    roles[0] = cloneMe.roles[0]; roles[1] = cloneMe.roles[1];
+inline SatAnnulus::SatAnnulus() : tet { nullptr, nullptr } {
 }
 
 inline SatAnnulus::SatAnnulus(Tetrahedron<3>* t0, Perm<4> r0,
         Tetrahedron<3>* t1, Perm<4> r1) {
     tet[0] = t0; tet[1] = t1;
     roles[0] = r0; roles[1] = r1;
-}
-
-inline SatAnnulus& SatAnnulus::operator = (const SatAnnulus& cloneMe) {
-    tet[0] = cloneMe.tet[0]; tet[1] = cloneMe.tet[1];
-    roles[0] = cloneMe.roles[0]; roles[1] = cloneMe.roles[1];
-    return *this;
 }
 
 inline bool SatAnnulus::operator == (const SatAnnulus& other) const {
