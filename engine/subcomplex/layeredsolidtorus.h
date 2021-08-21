@@ -73,13 +73,13 @@ namespace regina {
  */
 class LayeredSolidTorus : public StandardTriangulation {
     private:
-        size_t nTetrahedra;
+        size_t size_;
             /**< The number of tetrahedra in this torus. */
 
         Tetrahedron<3>* base_;
             /**< The tetrahedron that is glued to itself at the base of
                  this torus. */
-        Tetrahedron<3>* topLevel_;
+        Tetrahedron<3>* top_;
             /**< The tetrahedron on the boundary of this torus. */
 
         Perm<6> baseEdge_;
@@ -450,9 +450,9 @@ inline LayeredSolidTorus* LayeredSolidTorus::clone() const {
 }
 
 inline void LayeredSolidTorus::swap(LayeredSolidTorus& other) noexcept {
-    std::swap(nTetrahedra, other.nTetrahedra);
+    std::swap(size_, other.size_);
     std::swap(base_, other.base_);
-    std::swap(topLevel_, other.topLevel_);
+    std::swap(top_, other.top_);
     std::swap(baseEdge_, other.baseEdge_);
     std::swap(topEdge_, other.topEdge_);
     std::swap(baseFace_, other.baseFace_);
@@ -461,7 +461,7 @@ inline void LayeredSolidTorus::swap(LayeredSolidTorus& other) noexcept {
 }
 
 inline size_t LayeredSolidTorus::size() const {
-    return nTetrahedra;
+    return size_;
 }
 
 inline Tetrahedron<3>* LayeredSolidTorus::base() const {
@@ -480,7 +480,7 @@ inline int LayeredSolidTorus::baseFace(int index) const {
 }
 
 inline Tetrahedron<3>* LayeredSolidTorus::topLevel() const {
-    return topLevel_;
+    return top_;
 }
 inline unsigned long LayeredSolidTorus::meridinalCuts(int group) const {
     return meridinalCuts_[group];

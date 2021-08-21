@@ -41,9 +41,9 @@ namespace regina {
 void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     size_t baseTetID = base_->index();
-    size_t topTetID = topLevel_->index();
+    size_t topTetID = top_->index();
 
-    // Data members nTetrahedra and meridinalCuts remain unchanged.
+    // Data members size_ and meridinalCuts remain unchanged.
 
     // Transform edge numbers:
     baseEdge_ = iso->facePerm(baseTetID).pairs() * baseEdge_;
@@ -74,7 +74,7 @@ void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
 
     // Transform tetrahedra:
     base_ = newTri->tetrahedron(iso->tetImage(baseTetID));
-    topLevel_ = newTri->tetrahedron(iso->tetImage(topTetID));
+    top_ = newTri->tetrahedron(iso->tetImage(topTetID));
 }
 
 std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
@@ -111,7 +111,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
     // We have a layered solid torus!!
     // Fill in the details for the bottom layer.
     LayeredSolidTorus ans;
-    ans.nTetrahedra = 1;
+    ans.size_ = 1;
     ans.base_ = tet;
 
     ans.baseFace_ = FacePair(baseFace1, baseFace2);
@@ -121,7 +121,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
         basePerm = basePerm.inverse();
 
     ans.topFace_ = ans.baseFace_.complement();
-    ans.topLevel_ = tet;
+    ans.top_ = tet;
 
     if (basePerm[ans.baseFace_.upper()] == ans.topFace_.lower()) {
         ans.baseEdge_ = Perm<6>(
@@ -159,20 +159,20 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
     int layerOnGroup;
     while (true) {
         // Is there a new layer?
-        tet = ans.topLevel_->adjacentTetrahedron(ans.topFace_.lower());
-        if (tet == nullptr || tet == ans.topLevel_ ||
-                tet != ans.topLevel_->adjacentTetrahedron(ans.topFace_.upper()))
+        tet = ans.top_->adjacentTetrahedron(ans.topFace_.lower());
+        if (tet == nullptr || tet == ans.top_ ||
+                tet != ans.top_->adjacentTetrahedron(ans.topFace_.upper()))
             break;
 
         // There is a new tetrahedron glued to both torus boundary triangles.
-        adjPerm[0] = ans.topLevel_->adjacentGluing(ans.topFace_.lower());
-        adjPerm[1] = ans.topLevel_->adjacentGluing(ans.topFace_.upper());
+        adjPerm[0] = ans.top_->adjacentGluing(ans.topFace_.lower());
+        adjPerm[1] = ans.top_->adjacentGluing(ans.topFace_.upper());
         if (adjPerm[0].sign() != adjPerm[1].sign())
             break;
 
         // See what the new boundary edge would be.
-        adjFace[0] = ans.topLevel_->adjacentFace(ans.topFace_.lower());
-        adjFace[1] = ans.topLevel_->adjacentFace(ans.topFace_.upper());
+        adjFace[0] = ans.top_->adjacentFace(ans.topFace_.lower());
+        adjFace[1] = ans.top_->adjacentFace(ans.topFace_.upper());
         newTopEdge = Edge<3>::edgeNumber[adjFace[0]][adjFace[1]];
         adjEdge = 5 - newTopEdge;
 
@@ -245,8 +245,8 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
             }
         }
 
-        ans.topLevel_ = tet;
-        ans.nTetrahedra++;
+        ans.top_ = tet;
+        ++ans.size_;
     }
 
     return ans;
@@ -327,7 +327,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromTop(
 
             // We got one!
             LayeredSolidTorus ans;
-            ans.nTetrahedra = nTets;
+            ans.size_ = nTets;
 
             ans.base_ = tet;
             ans.baseFace_ = FacePair(vRoles[0], vRoles[3]);
@@ -366,7 +366,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromTop(
             if (cuts13 < 0) cuts13 = -cuts13;
             if (cuts30 < 0) cuts30 = -cuts30;
 
-            ans.topLevel_ = top;
+            ans.top_ = top;
             ans.topFace_ = FacePair(topRoles[2], topRoles[1]);
 
             // Run through all six possible orderings.
@@ -622,7 +622,7 @@ Triangulation<3>* LayeredSolidTorus::flatten(const Triangulation<3>* original,
     // base tetrahedra.
     Triangulation<3>* ans = new Triangulation<3>(*original, false);
 
-    Tetrahedron<3>* newTop = ans->tetrahedron(topLevel_->index());
+    Tetrahedron<3>* newTop = ans->tetrahedron(top_->index());
     Tetrahedron<3>* newBase = ans->tetrahedron(base_->index());
 
     Packet::ChangeEventSpan span(*ans);
