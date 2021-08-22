@@ -639,8 +639,8 @@ Version 6.1  [ TODO ]
               new move constructor): only SatRegion is permitted to create a
               SatBlockSpec with arbitrary content.
         Class SatBlockStarter:
-            - The routine block() now returns a newly constructed isomorphic
-              copy of the original block, located within a given triangulation.
+            - The routine block() now returns by reference, not by pointer.
+            - New routine isomorphicCopy().
         Class SatBlockStarterSet:
             - Now requires a (lightweight) object to work with instead
               of using static routines only.  This makes the class

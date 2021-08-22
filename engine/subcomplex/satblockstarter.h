@@ -97,12 +97,23 @@ class SatBlockStarter {
         const Triangulation<3>& triangulation() const;
 
         /**
-         * Returns details that describe the structure of the saturated
-         * block.
+         * Returns the structure of the saturated block.
          *
          * @return the block structure.
          */
-        SatBlock* block(Triangulation<3>& tri, const Isomorphism<3>& iso) const;
+        const SatBlock& block() const;
+
+        /**
+         * Returns a newly allocated copy of this saturated block,
+         * showing how it appears in the given triangulation.
+         *
+         * @param tri the triangulation that the new block will refer to.
+         * @param iso a mapping from triangulation() to the given triangulation
+         * \a tri, showing how this block appears as a subcomplex of \a tri.
+         * @return the newly allocated block structure.
+         */
+        SatBlock* isomorphicCopy(Triangulation<3>& tri,
+            const Isomorphism<3>& iso) const;
 
         // Mark this class as non-copyable.
         SatBlockStarter(const SatBlockStarter&) = delete;
@@ -341,6 +352,10 @@ inline SatBlockStarter::~SatBlockStarter() {
 
 inline const Triangulation<3>& SatBlockStarter::triangulation() const {
     return triangulation_;
+}
+
+inline const SatBlock& SatBlockStarter::block() const {
+    return *block_;
 }
 
 // Inline functions for SatBlockStarterSet
