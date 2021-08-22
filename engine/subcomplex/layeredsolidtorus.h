@@ -334,9 +334,9 @@ class LayeredSolidTorus : public StandardTriangulation {
          * tetrahedron glued to itself with a twist.
          *
          * @param tet the tetrahedron to examine as a potential base.
-         * @return a newly created structure containing details of the
-         * layered solid torus, or \c null if the given tetrahedron is
-         * not the base of a layered solid torus.
+         * @return a structure containing details of the layered solid torus,
+         * or no value if the given tetrahedron is not the base of a
+         * layered solid torus.
          */
         static std::optional<LayeredSolidTorus> recogniseFromBase(
             Tetrahedron<3>* tet);
@@ -373,9 +373,9 @@ class LayeredSolidTorus : public StandardTriangulation {
          * should represent the second boundary triangle of the layered solid
          * torus.  This should be between 0 and 3 inclusive, and should
          * not be equal to \a topFace1.
-         * @return a newly created structure containing details of the
-         * layered solid torus, or \c null if the given tetrahedron with
-         * its two faces do not form the top level of a layered solid torus.
+         * @return a structure containing details of the layered solid torus,
+         * or no value if the given tetrahedron with its two faces do not form
+         * the top level of a layered solid torus.
          */
         static std::optional<LayeredSolidTorus> recogniseFromTop(
             Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
@@ -401,9 +401,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * triangles of the component.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * layered solid torus, or \c null if the given component is not
-         * a layered solid torus.
+         * @return a structure containing details of the layered solid torus,
+         * or no value if the given component is not a layered solid torus.
          */
         static std::optional<LayeredSolidTorus> recognise(
             Component<3>* comp);

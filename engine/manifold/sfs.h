@@ -737,14 +737,10 @@ class SFSpace : public Manifold {
         /**
          * Determines if this Seifert fibred space is a Lens space.
          *
-         * If this is a Lens space, the LensSpace returned will be
-         * newly created and it will be up to the caller
-         * of this routine to destroy it.
-         *
          * @return a structure containing the details of this Lens
-         * space, or \c null if this is not a Lens space.
+         * space, or no value if this is not a Lens space.
          */
-        LensSpace* isLensSpace() const;
+        std::optional<LensSpace> isLensSpace() const;
 
         /**
          * Determines whether this and the given structure contain

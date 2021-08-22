@@ -41,6 +41,7 @@
 #endif
 
 #include <functional>
+#include <memory>
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
@@ -484,9 +485,6 @@ class GluingPermSearcher<3> {
          * (such as partial searching), you are probably better calling
          * findAllPerms() instead.
          *
-         * The resulting object is newly created, and must be destroyed
-         * by the caller of this routine.
-         *
          * See the GluingPermSearcher<3> constructor for documentation on
          * the arguments to this routine.
          *
@@ -505,9 +503,9 @@ class GluingPermSearcher<3> {
          * @return the newly created search manager.
          */
         template <typename Action, typename... Args>
-        static GluingPermSearcher<3>* bestSearcher(FacetPairing<3> pairing,
-                FacetPairing<3>::IsoList autos, bool orientableOnly,
-                bool finiteOnly, int whichPurge,
+        static std::unique_ptr<GluingPermSearcher<3>> bestSearcher(
+                FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
+                bool orientableOnly, bool finiteOnly, int whichPurge,
                 Action&& action, Args&&... args);
 
         /**
@@ -2933,7 +2931,8 @@ inline GluingPermSearcher<3>* GluingPermSearcher<3>::readTaggedData(
 }
 
 template <typename Action, typename... Args>
-inline GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
+inline std::unique_ptr<GluingPermSearcher<3>>
+        GluingPermSearcher<3>::bestSearcher(
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         Action&& action, Args&&... args) {
@@ -2945,35 +2944,34 @@ inline GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
                 (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {
             // Closed prime minimal P2-irreducible triangulations with >= 3
             // tetrahedra.
-            return new ClosedPrimeMinSearcher(std::move(pairing),
+            return std::make_unique<ClosedPrimeMinSearcher>(std::move(pairing),
                 std::move(autos), orientableOnly, std::forward<Action>(action),
                 std::forward<Args>(args)...);
         }
-        return new CompactSearcher(std::move(pairing), std::move(autos),
-            orientableOnly, whichPurge, std::forward<Action>(action),
-            std::forward<Args>(args)...);
+        return std::make_unique<CompactSearcher>(std::move(pairing),
+            std::move(autos), orientableOnly, whichPurge,
+            std::forward<Action>(action), std::forward<Args>(args)...);
     }
 
     if (pairing.isClosed() && ((whichPurge & PURGE_NON_MINIMAL_HYP) ==
             PURGE_NON_MINIMAL_HYP))
-        return new HyperbolicMinSearcher(std::move(pairing), std::move(autos),
-            orientableOnly, std::forward<Action>(action),
+        return std::make_unique<HyperbolicMinSearcher>(std::move(pairing),
+            std::move(autos), orientableOnly, std::forward<Action>(action),
             std::forward<Args>(args)...);
 
-    return new GluingPermSearcher<3>(std::move(pairing), std::move(autos),
-        orientableOnly, finiteOnly, whichPurge, std::forward<Action>(action),
-        std::forward<Args>(args)...);
+    return std::make_unique<GluingPermSearcher<3>>(std::move(pairing),
+        std::move(autos), orientableOnly, finiteOnly, whichPurge,
+        std::forward<Action>(action), std::forward<Args>(args)...);
 }
 
 template <typename Action, typename... Args>
 inline void GluingPermSearcher<3>::findAllPerms(FacetPairing<3> pairing,
         FacetPairing<3>::IsoList autos, bool orientableOnly,
         bool finiteOnly, int whichPurge, Action&& action, Args&&... args) {
-    GluingPermSearcher<3>* searcher = bestSearcher(std::move(pairing),
-        std::move(autos), orientableOnly, finiteOnly, whichPurge,
-        std::forward<Action>(action), std::forward<Args>(args)...);
+    std::unique_ptr<GluingPermSearcher<3>> searcher = bestSearcher(
+        std::move(pairing), std::move(autos), orientableOnly, finiteOnly,
+        whichPurge, std::forward<Action>(action), std::forward<Args>(args)...);
     searcher->runSearch();
-    delete searcher;
 }
 
 // Inline functions for EulerSearcher

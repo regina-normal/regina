@@ -207,10 +207,9 @@ class Signature : public ShortOutput<Signature> {
          *
          * \pre The given string contains at least one letter.
          *
-         * @param sig a string representation of a splitting surface
-         * signature.
-         * @return a corresponding newly created signature, or no value if the
-         * given string was invalid.
+         * @param sig a string representation of a splitting surface signature.
+         * @return the corresponding signature, or no value if the given string
+         * was invalid.
          */
         static std::optional<Signature> parse(const std::string& sig);
         /**

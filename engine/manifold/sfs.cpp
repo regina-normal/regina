@@ -566,22 +566,22 @@ void SFSpace::complementAllFibres() {
     }
 }
 
-LensSpace* SFSpace::isLensSpace() const {
+std::optional<LensSpace> SFSpace::isLensSpace() const {
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_) {
         // Not a chance.
-        return 0;
+        return std::nullopt;
     }
 
     if (genus_ == 0 && class_ == o1) {
         // Base orbifold is the sphere.
         if (fibres_.empty())
-            return new LensSpace(b_ >= 0 ? b_ : -b_, 1);
+            return LensSpace(b_ >= 0 ? b_ : -b_, 1);
         else if (nFibres_ == 1) {
             long q = fibres_.front().alpha;
             long p = fibres_.front().beta + (b_ * q);
 
             // We have SFS [S2 : (q,p)].
-            return new LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
+            return LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
         } else if (nFibres_ == 2) {
             // Precisely two fibres.
             long q = fibres_.back().alpha;
@@ -600,11 +600,11 @@ LensSpace* SFSpace::isLensSpace() const {
             }
 
             // We should now have (x,y) == (1,0).
-            return new LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
+            return LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
         }
 
         // Not a lens space.
-        return 0;
+        return std::nullopt;
     } else if (genus_ == 1 && class_ == n2) {
         // Base orbifold is the projective plane.
         if (nFibres_ == 1) {
@@ -613,14 +613,14 @@ LensSpace* SFSpace::isLensSpace() const {
             long n = b_ * a + fibres_.front().beta;
 
             if (n == 1 || n == -1)
-                return new LensSpace(4 * a, 2 * a - 1);
+                return LensSpace(4 * a, 2 * a - 1);
         }
 
         // Not a lens space.
-        return 0;
+        return std::nullopt;
     }
 
-    return 0;
+    return std::nullopt;
 }
 
 bool SFSpace::operator == (const SFSpace& compare) const {
@@ -724,16 +724,12 @@ Triangulation<3>* SFSpace::construct() const {
         return 0;
 
     // We already know how to construct lens spaces.
-    LensSpace* lens = isLensSpace();
-    if (lens) {
-        Triangulation<3>* t = lens->construct();
-        delete lens;
-        return t;
-    }
+    if (auto lens = isLensSpace())
+        return lens->construct();
 
     // Currently we work over the 2-sphere only.
     if (genus_ != 0 || class_ != o1)
-        return 0;
+        return nullptr;
 
     // Since we've already dealt with lens spaces, we must have at least
     // three exceptional fibres.  Build a blocked structure.
@@ -1047,13 +1043,11 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // punctures or reflector boundaries.
 
     // Take out the lens spaces first.
-    LensSpace* lens = isLensSpace();
-    if (lens) {
+    if (auto lens = isLensSpace()) {
         if (tex)
             lens->writeTeXName(out);
         else
             lens->writeName(out);
-        delete lens;
         return out;
     }
 

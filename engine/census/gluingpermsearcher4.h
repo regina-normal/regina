@@ -41,6 +41,7 @@
 #endif
 
 #include <functional>
+#include <memory>
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
@@ -744,9 +745,6 @@ class GluingPermSearcher<4> {
          * (such as partial searching), you are probably better calling
          * findAllPerms() instead.
          *
-         * The resulting object is newly created, and must be destroyed
-         * by the caller of this routine.
-         *
          * See the GluingPermSearcher<4> constructor for documentation on
          * the arguments to this routine.
          *
@@ -765,9 +763,10 @@ class GluingPermSearcher<4> {
          * @return the newly created search manager.
          */
         template <typename Action, typename... Args>
-        static GluingPermSearcher<4>* bestSearcher(FacetPairing<4> pairing,
-                FacetPairing<4>::IsoList autos, bool orientableOnly,
-                bool finiteOnly, Action&& action, Args&&... args);
+        static std::unique_ptr<GluingPermSearcher<4>> bestSearcher(
+                FacetPairing<4> pairing, FacetPairing<4>::IsoList autos,
+                bool orientableOnly, bool finiteOnly,
+                Action&& action, Args&&... args);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -1284,16 +1283,16 @@ inline bool GluingPermSearcher<4>::edgeBdryLength2(int edgeID1, int edgeID2) {
 }
 
 template <typename Action, typename... Args>
-GluingPermSearcher<4>* GluingPermSearcher<4>::bestSearcher(
+std::unique_ptr<GluingPermSearcher<4>> GluingPermSearcher<4>::bestSearcher(
         FacetPairing<4> pairing, FacetPairing<4>::IsoList autos,
         bool orientableOnly, bool finiteOnly,
         Action&& action, Args&&... args) {
     // Do everything by brute force for now.
     // If we ever get to the point of choosing between different algorithms,
     // we should change findAllPerms() to call bestSearcher() also.
-    return new GluingPermSearcher<4>(std::move(pairing), std::move(autos),
-        orientableOnly, finiteOnly, std::forward<Action>(action),
-        std::forward<Args>(args)...);
+    return std::make_unique<GluingPermSearcher<4>>(std::move(pairing),
+        std::move(autos), orientableOnly, finiteOnly,
+        std::forward<Action>(action), std::forward<Args>(args)...);
 }
 
 template <typename Action, typename... Args>

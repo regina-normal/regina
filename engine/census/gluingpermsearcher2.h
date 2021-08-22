@@ -41,6 +41,7 @@
 #endif
 
 #include <functional>
+#include <memory>
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
@@ -364,9 +365,6 @@ class GluingPermSearcher<2> {
          * (such as partial searching), you are probably better calling
          * findAllPerms() instead.
          *
-         * The resulting object is newly created, and must be destroyed
-         * by the caller of this routine.
-         *
          * See the GluingPermSearcher<2> constructor for documentation on
          * the arguments to this routine.
          *
@@ -385,9 +383,9 @@ class GluingPermSearcher<2> {
          * @return the newly created search manager.
          */
         template <typename Action, typename... Args>
-        static GluingPermSearcher<2>* bestSearcher(FacetPairing<2> pairing,
-                FacetPairing<2>::IsoList autos, bool orientableOnly,
-                Action&& action, Args&&... args);
+        static std::unique_ptr<GluingPermSearcher<2>> bestSearcher(
+                FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
+                bool orientableOnly, Action&& action, Args&&... args);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -535,14 +533,15 @@ inline GluingPermSearcher<2>* GluingPermSearcher<2>::readTaggedData(
 }
 
 template <typename Action, typename... Args>
-inline GluingPermSearcher<2>* GluingPermSearcher<2>::bestSearcher(
+inline std::unique_ptr<GluingPermSearcher<2>>
+        GluingPermSearcher<2>::bestSearcher(
         FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
         bool orientableOnly, Action&& action, Args&&... args) {
     // We only have one algorithm for now.
     // If we ever get to the point of choosing, we should change
     // findAllPerms() to call bestSearcher() also.
-    return new GluingPermSearcher<2>(std::move(pairing), std::move(autos),
-        orientableOnly, std::forward<Action>(action),
+    return std::make_unique<GluingPermSearcher<2>>(std::move(pairing),
+        std::move(autos), orientableOnly, std::forward<Action>(action),
         std::forward<Args>(args)...);
 }
 

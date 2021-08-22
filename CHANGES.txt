@@ -214,6 +214,7 @@ Version 6.1  [ TODO ]
             - Several class constants are now constexpr.
             - The input stream constructor now throws an InvalidInput
               exception upon error.  The inputError() routine has been removed.
+            - Routine bestSearcher() now returns a std::unique_ptr.
         Class GraphLoop, GraphPair, GraphTriple:
             - Constructors now take Seifert fibred spaces either by
               const reference (which copy) or by rvalue reference (which move),
@@ -670,6 +671,8 @@ Version 6.1  [ TODO ]
         Class SFSpace:
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
+            - Routine isLensSpace() now returns a std::optional by value,
+              not a newly created pointer that could be null.
         Class ShortArray:
             - New class that is essentially a variable-but-bounded sized
               std::array.
