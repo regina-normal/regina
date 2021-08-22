@@ -54,16 +54,6 @@
 namespace regina {
 
 template <int dim>
-GluingPerms<dim>::GluingPerms(const GluingPerms<dim>& cloneMe) :
-        pairing_(cloneMe.pairing_) {
-    unsigned nSimp = cloneMe.size();
-
-    permIndices_ = new int[nSimp * (dim + 1)];
-    std::copy(cloneMe.permIndices_,
-        cloneMe.permIndices_ + nSimp * (dim + 1), permIndices_);
-}
-
-template <int dim>
 Triangulation<dim>* GluingPerms<dim>::triangulate() const {
     unsigned nSimp = size();
 

@@ -184,6 +184,8 @@ Version 6.1  [ TODO ]
             - Removed pythonLibs(), since nothing has been installed to
               this path since Regina 5.0.
         Class GluingPerms<dim>:
+            - Added a move constructor and copy/move assignment operators.
+            - Added member and global swap() functions.
             - Routine facetPairing() now returns by reference, not pointer.
             - Routines facetPairing() and gluingPerm() are renamed to pairing()
               and perm(); the old names are kept as deprecated aliases.
