@@ -76,6 +76,9 @@ namespace regina {
  * involve building and repeatedly modifying the inherited GluingPerms<2>
  * data in-place.
  *
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
+ *
  * \ifacespython Not present.
  */
 template <>
@@ -408,8 +411,8 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
                 Action&& action, Args&&... args);
 
         // Make this class non-copyable.
-        // The base class GluingPerms already makes it non-assignable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
+        GluingPermSearcher& operator = (const GluingPermSearcher&) = delete;
 
     protected:
         /**

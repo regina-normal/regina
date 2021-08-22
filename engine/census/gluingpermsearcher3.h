@@ -99,6 +99,9 @@ namespace regina {
  * involve building and repeatedly modifying the inherited GluingPerms<3>
  * data in-place.
  *
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
+ *
  * \ifacespython Only the PurgeFlags enumeration from this class is
  * present, and the PurgeFlags constants are also made directly
  * available through the regina namespace.  Therefore there is no need
@@ -529,8 +532,8 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
                 Action&& action, Args&&... args);
 
         // Make this class non-copyable.
-        // The base class GluingPerms already makes it non-assignable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
+        GluingPermSearcher& operator = (const GluingPermSearcher&) = delete;
 
     protected:
         /**
@@ -667,6 +670,9 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
  * No additional unwanted triangulations will be produced by this search
  * (in contrast to other search classes, such as ClosedPrimeMinSearcher).
  * That is, \e only 3-manifolds with the required vertex links will be produced.
+ *
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
  */
@@ -1551,6 +1557,9 @@ class EulerSearcher : public GluingPermSearcher<3> {
  * (in contrast to other search classes, such as ClosedPrimeMinSearcher).
  * That is, \e only compact 3-manifolds will be produced.
  *
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
+ *
  * \ifacespython Not present.
  */
 class CompactSearcher : public GluingPermSearcher<3> {
@@ -2379,6 +2388,9 @@ class CompactSearcher : public GluingPermSearcher<3> {
  * However, significantly fewer unwanted triangulations will be produced
  * when using this class instead of GluingPermSearcher<3>.
  *
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
+ *
  * \ifacespython Not present.
  */
 class ClosedPrimeMinSearcher : public CompactSearcher {
@@ -2671,6 +2683,9 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
  * non-minimal triangulations) may still be produced by this search.
  * However, significantly fewer unwanted triangulations will be produced
  * when using this class instead of GluingPermSearcher<3>.
+ *
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
  */

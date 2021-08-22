@@ -59,6 +59,12 @@ namespace regina {
  * GluingPermSearcher<dim> remains undefined, as a placeholder for
  * if/when Regina implements higher-dimensional census code.
  *
+ * Gluing permutation searchers are designed to manage the construction of
+ * a large census of triangulations, and so they cannot be copied, moved or
+ * swapped.  They can be constructed manually if you need fine-grained control,
+ * but often this is not necessary either; instead you can run a "typical"
+ * census using the static routine GluingPermSearcher<dim>::findAllPerms().
+ *
  * For further information, see the documentation for the specialisations
  * GluingPermSearcher<2>, GluingPermSearcher<3> and GluingPermSearcher<4>.
  *
