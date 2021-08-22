@@ -19,9 +19,6 @@ Equality type : EqualityType.BY_VALUE
 Bitmask16 : class
 Equality type : EqualityType.BY_VALUE
 
-Bitmask256 : class
-Equality type : EqualityType.BY_VALUE
-
 Bitmask32 : class
 Equality type : EqualityType.BY_VALUE
 
