@@ -185,9 +185,17 @@ Version 6.1  [ TODO ]
               this path since Regina 5.0.
         Class GluingPerms<dim>:
             - Routine facetPairing() now returns by reference, not pointer.
+            - Routines facetPairing() and gluingPerm() are renamed to pairing()
+              and perm(); the old names are kept as deprecated aliases.
             - The input stream constructor now throws an InvalidInput
               exception upon error.  The inputError() routine has been removed.
+            - All previously-protected functions are now public: this
+              includes permIndex(), gluingToIndex(), indexToGluing(), and the
+              FacetPairing constructor.
+            - The destuctor and dumpData() are no longer virtual.
         Class GluingPermSearcher<dim> and subclasses:
+            - No longer derived from GluingPerms<dim>, which means that
+              none of the previously-inherited functions are available.
             - Significant reorganisation of the API for enumerating
               permuatation sets; this includes:
                 * The callback function and its arguments now use a type-safe

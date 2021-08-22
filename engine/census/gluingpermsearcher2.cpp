@@ -40,14 +40,14 @@ namespace regina {
 GluingPermSearcher<2>::GluingPermSearcher(
         FacetPairing<2>&& pairing, FacetPairing<2>::IsoList&& autos,
         bool orientableOnly, ActionWrapper&& action) :
-        GluingPerms<2>(std::move(pairing)), autos_(std::move(autos)),
+        perms_(std::move(pairing)), autos_(std::move(autos)),
+        // pairing and autos are no longer usable
         orientableOnly_(orientableOnly), action_(std::move(action)),
-        started(false), orientation(new int[pairing_.size()]) {
+        started(false), orientation(new int[perms_.size()]) {
     // Initialise arrays.
-    unsigned nTris = size();
+    unsigned nTris = perms_.size();
 
     std::fill(orientation, orientation + nTris, 0);
-    std::fill(permIndices_, permIndices_ + nTris* 3, -1);
 
     // Just fill the order[] array in a default left-to-right fashion.
     // Subclasses can rearrange things if they choose.
@@ -56,8 +56,8 @@ GluingPermSearcher<2>::GluingPermSearcher(
 
     FacetSpec<2> edge, adj;
     for (edge.setFirst(); ! edge.isPastEnd(nTris, true); edge++)
-        if (! pairing_.isUnmatched(edge))
-            if (edge < pairing_.dest(edge))
+        if (! perms_.pairing().isUnmatched(edge))
+            if (edge < perms_.pairing().dest(edge))
                 order[orderSize++] = edge;
 }
 
@@ -69,7 +69,7 @@ GluingPermSearcher<2>::~GluingPermSearcher() {
 void GluingPermSearcher<2>::runSearch(long maxDepth) {
     // In this generation algorithm, each orientation is simply +/-1.
 
-    unsigned nTriangles = size();
+    unsigned nTriangles = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTriangles * 3 + 1;
@@ -80,8 +80,9 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
         started = true;
 
         // Do we in fact have no permutation at all to choose?
-        if (maxDepth == 0 || pairing_.dest(0, 0).isBoundary(nTriangles)) {
-            action_(*this);
+        if (maxDepth == 0 ||
+                perms_.pairing().dest(0, 0).isBoundary(nTriangles)) {
+            action_(perms_);
             return;
         }
 
@@ -92,7 +93,7 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
     // Is it a partial search that has already finished?
     if (orderElt == orderSize) {
         if (isCanonical())
-            action_(*this);
+            action_(perms_);
         return;
     }
 
@@ -105,7 +106,7 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
 
     while (orderElt >= minOrder) {
         edge = order[orderElt];
-        adj = pairing_[edge];
+        adj = perms_.pairing()[edge];
 
         // TODO: Check for cancellation.
 
@@ -113,26 +114,27 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
 
         // Be sure to preserve the orientation of the permutation if necessary.
         if ((! orientableOnly_) || adj.facet == 0)
-            permIndex(edge)++;
+            perms_.permIndex(edge)++;
         else
-            permIndex(edge) += 2;
+            perms_.permIndex(edge) += 2;
 
         // Are we out of ideas for this edge?
-        if (permIndex(edge) >= 2) {
+        if (perms_.permIndex(edge) >= 2) {
             // Yep.  Head back down to the previous edge.
-            permIndex(edge) = -1;
-            permIndex(adj) = -1;
+            perms_.permIndex(edge) = -1;
+            perms_.permIndex(adj) = -1;
             orderElt--;
             continue;
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = permIndex(edge); // S2 elements are their own inverses.
+        // Note: S2 elements are their own inverses.
+        perms_.permIndex(adj) = perms_.permIndex(edge);
 
         // Fix the orientation if appropriate.
         if (adj.facet == 0 && orientableOnly_) {
             // It's the first time we've hit this triangle.
-            if ((permIndex(edge) + (edge.facet == 2 ? 0 : 1) +
+            if ((perms_.permIndex(edge) + (edge.facet == 2 ? 0 : 1) +
                     (adj.facet == 2 ? 0 : 1)) % 2 == 0)
                 orientation[adj.simp] = -orientation[edge.simp];
             else
@@ -148,7 +150,7 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             if (isCanonical())
-                action_(*this);
+                action_(perms_);
 
             // Back to the previous face.
             orderElt--;
@@ -158,28 +160,28 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
             // We've moved onto a new edge.
             // Be sure to get the orientation right.
             edge = order[orderElt];
-            if (orientableOnly_ && pairing_.dest(edge).facet > 0) {
+            if (orientableOnly_ && perms_.pairing().dest(edge).facet > 0) {
                 // permIndex(edge) will be set to -1 or -2 as appropriate.
-                adj = pairing_[edge];
+                adj = perms_.pairing()[edge];
                 if (orientation[edge.simp] == orientation[adj.simp])
-                    permIndex(edge) = 1;
+                    perms_.permIndex(edge) = 1;
                 else
-                    permIndex(edge) = 0;
+                    perms_.permIndex(edge) = 0;
 
                 if ((edge.facet == 2 ? 0 : 1) + (adj.facet == 2 ? 0 : 1) == 1)
-                    permIndex(edge) = (permIndex(edge) + 1) % 2;
+                    perms_.permIndex(edge) = (perms_.permIndex(edge) + 1) % 2;
 
-                permIndex(edge) -= 2;
+                perms_.permIndex(edge) -= 2;
             }
 
             if (orderElt == maxOrder) {
                 // We haven't found an entire triangulation, but we've
                 // gone as far as we need to.
                 // Process it, then step back.
-                action_(*this);
+                action_(perms_);
 
                 // Back to the previous edge.
-                permIndex(edge) = -1;
+                perms_.permIndex(edge) = -1;
                 orderElt--;
             }
         }
@@ -194,13 +196,13 @@ void GluingPermSearcher<2>::dumpTaggedData(std::ostream& out) const {
 }
 
 void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
-    GluingPerms<2>::dumpData(out);
+    perms_.dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
     out << (started ? 's' : '.');
     out << std::endl;
 
-    int nTris = size();
+    int nTris = perms_.size();
     int i;
 
     for (i = 0; i < nTris; i++) {
@@ -221,9 +223,9 @@ void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
 
 GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
         ActionWrapper&& action) :
-        GluingPerms<2>(in), autos_(pairing_.findAutomorphisms()),
-        action_(std::move(action)), orientation(0), order(0), orderSize(0),
-        orderElt(0) {
+        perms_(in), autos_(perms_.pairing().findAutomorphisms()),
+        action_(std::move(action)),
+        orientation(nullptr), order(nullptr), orderSize(0), orderElt(0) {
     // Keep reading.
     char c;
 
@@ -245,7 +247,7 @@ GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
         throw InvalidInput("Invalid started tag "
             "while attempting to read GluingPermSearcher<2>");
 
-    int nTris = pairing_.size();
+    int nTris = perms_.size();
     int t;
 
     orientation = new int[nTris];
@@ -277,14 +279,14 @@ bool GluingPermSearcher<2>::isCanonical() const {
         // preimage under each edge pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
         for (edge.setFirst(); edge.simp <
-                static_cast<int>(pairing_.size()); edge++) {
-            edgeDest = pairing_.dest(edge);
-            if (pairing_.isUnmatched(edge) || edgeDest < edge)
+                static_cast<int>(perms_.size()); edge++) {
+            edgeDest = perms_.pairing().dest(edge);
+            if (perms_.pairing().isUnmatched(edge) || edgeDest < edge)
                 continue;
 
             edgeImage = iso[edge];
-            ordering = gluingPerm(edge).compareWith(
-                iso.edgePerm(edgeDest.simp).inverse() * gluingPerm(edgeImage)
+            ordering = perms_.perm(edge).compareWith(
+                iso.edgePerm(edgeDest.simp).inverse() * perms_.perm(edgeImage)
                 * iso.edgePerm(edge.simp));
             if (ordering < 0) {
                 // This permutation set is closer.

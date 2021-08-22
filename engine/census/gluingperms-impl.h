@@ -79,7 +79,7 @@ Triangulation<dim>* GluingPerms<dim>::triangulate() const {
             if ((! pairing_.isUnmatched(t, facet)) &&
                     (! simp[t]->adjacentSimplex(facet)))
                 simp[t]->join(facet, simp[pairing_.dest(t, facet).simp],
-                    gluingPerm(t, facet));
+                    perm(t, facet));
 
     delete[] simp;
     return ans;

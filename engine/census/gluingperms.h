@@ -97,6 +97,23 @@ class GluingPerms {
 
     public:
         /**
+         * Creates a new permutation set.  All internal permutation
+         * indices will be initialised to -1 (which indicates that a
+         * permutation has not yet been chosen).
+         *
+         * \pre The given facet pairing is connected, i.e., it is possible
+         * to reach any simplex from any other simplex via a
+         * series of matched facet pairs.
+         * \pre The given facet pairing is in canonical form as described
+         * by FacetPairing::isCanonical().  Note that all facet pairings
+         * constructed by FacetPairing::findAllPairings() are of this form.
+         *
+         * @param pairing the specific pairing of simplex facets
+         * that this permutation set will complement.
+         */
+        GluingPerms(FacetPairing<dim>&& pairing);
+
+        /**
          * Creates a new set of gluing permutations that is a clone of
          * the given permutation set.
          *
@@ -124,7 +141,7 @@ class GluingPerms {
         /**
          * Deallocates any memory used by this structure.
          */
-        virtual ~GluingPerms();
+        ~GluingPerms();
 
         /**
          * Returns the total number of simplices under consideration.
@@ -139,7 +156,8 @@ class GluingPerms {
          *
          * @return the corresponding simplex facet pairing.
          */
-        const FacetPairing<dim>& facetPairing() const;
+        const FacetPairing<dim>& pairing() const;
+        [[deprecated]] const FacetPairing<dim>& facetPairing() const;
 
         /**
          * Returns the gluing permutation associated with the given
@@ -153,7 +171,8 @@ class GluingPerms {
          * @param source the simplex facet under investigation.
          * @return the associated gluing permutation.
          */
-        Perm<dim+1> gluingPerm(const FacetSpec<dim>& source) const;
+        Perm<dim+1> perm(const FacetSpec<dim>& source) const;
+        [[deprecated]] Perm<dim+1> gluingPerm(const FacetSpec<dim>& source) const;
 
         /**
          * Returns the gluing permutation associated with the given
@@ -169,67 +188,41 @@ class GluingPerms {
          * investigation (between 0 and \a dim inclusive).
          * @return the associated gluing permutation.
          */
-        Perm<dim+1> gluingPerm(unsigned simp, unsigned facet) const;
+        Perm<dim+1> perm(unsigned simp, unsigned facet) const;
+        [[deprecated]] Perm<dim+1> gluingPerm(unsigned simp, unsigned facet) const;
 
         /**
-         * Returns a newly created triangulation as modelled by this set
-         * of gluing permutations and the associated simplex facet
-         * pairing.
+         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
+         * the given facet is joined to its partner.
          *
-         * Each matched pair of facets and their associated permutations
-         * will be realised as two simplex facets in the triangulation glued
-         * together with the corresponding gluing permutation.  Each
-         * unmatched facet will be realised as a boundary facet in the
-         * triangulation.
+         * Note that this permutation is not a gluing permutation as such,
+         * but rather a permutation of 0,...,\a dim-1 only.  For a real facet
+         * gluing permutation, see routine gluingPerm().
          *
-         * It is the responsibility of the caller of this routine to
-         * delete this triangulation once it is no longer required.
+         * \pre The given facet is a real simplex
+         * facet (not boundary, before-the-start or past-the-end).
          *
-         * @return a newly created triangulation modelled by this structure.
+         * @param source the simplex facet under investigation.
+         * @return a reference to the corresponding array index.
          */
-        Triangulation<dim>* triangulate() const;
+        const int& permIndex(const FacetSpec<dim>& source) const;
 
         /**
-         * Dumps all internal data in a plain text format to the given
-         * output stream.  This object can be recreated from this text
-         * data by calling the input stream constructor for this class.
+         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
+         * the given facet is joined to its partner.
          *
-         * This routine may be useful for transferring objects from
-         * one processor to another.
+         * Note that this permutation is not a gluing permutation as such,
+         * but rather a permutation of 0,...,\a dim-1 only.  For a real facet
+         * gluing permutation, see routine gluingPerm().
          *
-         * Note that subclass data is written after superclass data, so
-         * it is safe to dump data from a subclass and then recreate a
-         * new superclass object from that data (though subclass-specific
-         * information will of course be lost).
-         *
-         * \warning The data format is liable to change between
-         * Regina releases.  Data in this format should be used on a
-         * short-term temporary basis only.
-         *
-         * @param out the output stream to which the data should be
-         * written.
+         * @param simp the simplex under investigation (this must be
+         * strictly less than the total number of simplices under
+         * consideration).
+         * @param facet the facet of the given simplex under
+         * investigation (between 0 and \a dim inclusive).
+         * @return a reference to the corresponding array index.
          */
-        virtual void dumpData(std::ostream& out) const;
-
-        // Make this class non-assignable.
-        GluingPerms& operator = (const GluingPerms&) = delete;
-
-    protected:
-        /**
-         * Creates a new permutation set.  All internal arrays will be
-         * allocated but not initialised.
-         *
-         * \pre The given facet pairing is connected, i.e., it is possible
-         * to reach any simplex from any other simplex via a
-         * series of matched facet pairs.
-         * \pre The given facet pairing is in canonical form as described
-         * by FacetPairing::isCanonical().  Note that all facet pairings
-         * constructed by FacetPairing::findAllPairings() are of this form.
-         *
-         * @param pairing the specific pairing of simplex facets
-         * that this permutation set will complement.
-         */
-        GluingPerms(FacetPairing<dim>&& pairing);
+        const int& permIndex(unsigned simp, unsigned facet) const;
 
         /**
          * Returns the index into array Perm<dim+1>::Sn_1 describing how the
@@ -265,37 +258,42 @@ class GluingPerms {
         int& permIndex(unsigned simp, unsigned facet);
 
         /**
-         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
-         * the given facet is joined to its partner.
+         * Returns a newly created triangulation as modelled by this set
+         * of gluing permutations and the associated simplex facet
+         * pairing.
          *
-         * Note that this permutation is not a gluing permutation as such,
-         * but rather a permutation of 0,...,\a dim-1 only.  For a real facet
-         * gluing permutation, see routine gluingPerm().
+         * Each matched pair of facets and their associated permutations
+         * will be realised as two simplex facets in the triangulation glued
+         * together with the corresponding gluing permutation.  Each
+         * unmatched facet will be realised as a boundary facet in the
+         * triangulation.
          *
-         * \pre The given facet is a real simplex
-         * facet (not boundary, before-the-start or past-the-end).
+         * It is the responsibility of the caller of this routine to
+         * delete this triangulation once it is no longer required.
          *
-         * @param source the simplex facet under investigation.
-         * @return a reference to the corresponding array index.
+         * @return a newly created triangulation modelled by this structure.
          */
-        const int& permIndex(const FacetSpec<dim>& source) const;
+        Triangulation<dim>* triangulate() const;
 
         /**
-         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
-         * the given facet is joined to its partner.
+         * Dumps all internal data in a plain text format to the given
+         * output stream.  This object can be recreated from this text
+         * data by calling the input stream constructor for this class.
          *
-         * Note that this permutation is not a gluing permutation as such,
-         * but rather a permutation of 0,...,\a dim-1 only.  For a real facet
-         * gluing permutation, see routine gluingPerm().
+         * This routine may be useful for transferring objects from
+         * one processor to another.
          *
-         * @param simp the simplex under investigation (this must be
-         * strictly less than the total number of simplices under
-         * consideration).
-         * @param facet the facet of the given simplex under
-         * investigation (between 0 and \a dim inclusive).
-         * @return a reference to the corresponding array index.
+         * \warning The data format is liable to change between
+         * Regina releases.  Data in this format should be used on a
+         * short-term temporary basis only.
+         *
+         * @param out the output stream to which the data should be
+         * written.
          */
-        const int& permIndex(unsigned simp, unsigned facet) const;
+        void dumpData(std::ostream& out) const;
+
+        // Make this class non-assignable.
+        GluingPerms& operator = (const GluingPerms&) = delete;
 
         /**
          * Returns the index into array Perm<dim+1>::Sn_1 corresponding to
@@ -422,6 +420,7 @@ template <int dim>
 inline GluingPerms<dim>::GluingPerms(FacetPairing<dim>&& pairing) :
         pairing_(std::move(pairing)), // note: pairing is now unusable
         permIndices_(new int[pairing_.size() * (dim + 1)]) {
+    std::fill(permIndices_, permIndices_ + size() * (dim + 1), -1);
 }
 
 template <int dim>
@@ -435,14 +434,29 @@ inline unsigned GluingPerms<dim>::size() const {
 }
 
 template <int dim>
+inline const FacetPairing<dim>& GluingPerms<dim>::pairing() const {
+    return pairing_;
+}
+
+template <int dim>
 inline const FacetPairing<dim>& GluingPerms<dim>::facetPairing() const {
     return pairing_;
+}
+
+template <int dim>
+inline Perm<dim+1> GluingPerms<dim>::perm(const FacetSpec<dim>& source) const {
+    return indexToGluing(source, permIndex(source));
 }
 
 template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::gluingPerm(
         const FacetSpec<dim>& source) const {
     return indexToGluing(source, permIndex(source));
+}
+
+template <int dim>
+inline Perm<dim+1> GluingPerms<dim>::perm(unsigned simp, unsigned facet) const {
+    return indexToGluing(simp, facet, permIndex(simp, facet));
 }
 
 template <int dim>

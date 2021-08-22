@@ -95,10 +95,6 @@ namespace regina {
  * constructing an object of the corresponding class (and again
  * calling runSearch() on that object directly).
  *
- * Note that this class derives from GluingPerms<3>.  The search will
- * involve building and repeatedly modifying the inherited GluingPerms<3>
- * data in-place.
- *
  * This class is designed to manage the construction of a large census of
  * triangulations, and so it does not support copying, moving or swapping.
  *
@@ -108,7 +104,7 @@ namespace regina {
  * to explicitly access the class GluingPermSearcher<3> through Python.
  */
 template <>
-class GluingPermSearcher<3> : public GluingPerms<3> {
+class GluingPermSearcher<3> {
     public:
         static constexpr char dataTag_ = 'g';
             /**< A character used to identify this class when reading
@@ -167,6 +163,8 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
             /**< The type used to hold the user's action function and
                  arguments when enumerating gluing permutations. */
 
+        GluingPerms<3> perms_;
+            /**< The set of gluing permutations under construction. */
         const FacetPairing<3>::IsoList autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
@@ -421,8 +419,26 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          */
         void dumpTaggedData(std::ostream& out) const;
 
-        // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
+        /**
+         * Dumps all internal data in a plain text format to the given
+         * output stream.  This object can be recreated from this text
+         * data by calling the input stream constructor for this class.
+         *
+         * This routine may be useful for transferring objects from
+         * one processor to another.
+         *
+         * If subclasses override this function, they should write subclass
+         * data after superclass data.  This means it is safe to dump data
+         * from a subclass and then recreate a new superclass object from
+         * that data (though subclass-specific information will be lost).
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param out the output stream to which the data should be written.
+         */
+        virtual void dumpData(std::ostream& out) const;
 
         /**
          * The main entry routine for running a search for all gluing
@@ -3062,12 +3078,13 @@ inline void EulerSearcher::vtxBdryNext(int vertexID,
         case 3: next[0] = next[1] = vertexID;
                 twist[0] = twist[1] = 0;
                 break;
-        case 2: if (permIndex(tet, vertexLinkNextFace[vertex][bdryFace]) < 0) {
+        case 2: if (perms_.permIndex(tet,
+                        vertexLinkNextFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexState[vertexID].bdryNext[0];
                     twist[0] = vertexState[vertexID].bdryTwist[0];
                     next[1] = vertexID;
                     twist[1] = 0;
-                } else if (permIndex(tet,
+                } else if (perms_.permIndex(tet,
                         vertexLinkPrevFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexID;
                     twist[0] = 0;
@@ -3082,7 +3099,7 @@ inline void EulerSearcher::vtxBdryNext(int vertexID,
                     // to either the tetrahedron face we are currently
                     // working with or its adjacent partner.
                     int ghostFace = (bdryFace == order[orderElt].facet ?
-                        pairing_[order[orderElt]].facet :
+                        perms_.pairing()[order[orderElt]].facet :
                         order[orderElt].facet);
                     if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
                         next[0] = vertexState[vertexID].bdryNext[0];
@@ -3223,12 +3240,13 @@ inline void CompactSearcher::vtxBdryNext(int vertexID,
         case 3: next[0] = next[1] = vertexID;
                 twist[0] = twist[1] = 0;
                 break;
-        case 2: if (permIndex(tet, vertexLinkNextFace[vertex][bdryFace]) < 0) {
+        case 2: if (perms_.permIndex(tet,
+                        vertexLinkNextFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexState[vertexID].bdryNext[0];
                     twist[0] = vertexState[vertexID].bdryTwist[0];
                     next[1] = vertexID;
                     twist[1] = 0;
-                } else if (permIndex(tet,
+                } else if (perms_.permIndex(tet,
                         vertexLinkPrevFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexID;
                     twist[0] = 0;
@@ -3243,7 +3261,7 @@ inline void CompactSearcher::vtxBdryNext(int vertexID,
                     // to either the tetrahedron face we are currently
                     // working with or its adjacent partner.
                     int ghostFace = (bdryFace == order[orderElt].facet ?
-                        pairing_[order[orderElt]].facet :
+                        perms_.pairing()[order[orderElt]].facet :
                         order[orderElt].facet);
                     if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
                         next[0] = vertexState[vertexID].bdryNext[0];

@@ -72,17 +72,13 @@ namespace regina {
  * constructing an object of the corresponding class (and again
  * calling runSearch() on that object directly).
  *
- * Note that this class derives from GluingPerms<2>.  The search will
- * involve building and repeatedly modifying the inherited GluingPerms<2>
- * data in-place.
- *
  * This class is designed to manage the construction of a large census of
  * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
  */
 template <>
-class GluingPermSearcher<2> : public GluingPerms<2> {
+class GluingPermSearcher<2> {
     public:
         static constexpr char dataTag_ = 'g';
             /**< A character used to identify this class when reading
@@ -93,6 +89,8 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
             /**< The type used to hold the user's action function and
                  arguments when enumerating gluing permutations. */
 
+        GluingPerms<2> perms_;
+            /**< The set of gluing permutations under construction. */
         const FacetPairing<2>::IsoList autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
@@ -302,8 +300,26 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          */
         void dumpTaggedData(std::ostream& out) const;
 
-        // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
+        /**
+         * Dumps all internal data in a plain text format to the given
+         * output stream.  This object can be recreated from this text
+         * data by calling the input stream constructor for this class.
+         *
+         * This routine may be useful for transferring objects from
+         * one processor to another.
+         *
+         * If subclasses override this function, they should write subclass
+         * data after superclass data.  This means it is safe to dump data
+         * from a subclass and then recreate a new superclass object from
+         * that data (though subclass-specific information will be lost).
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param out the output stream to which the data should be written.
+         */
+        virtual void dumpData(std::ostream& out) const;
 
         /**
          * The main entry routine for running a search for all gluing
