@@ -377,6 +377,10 @@ class LPMatrix {
  * For any additional rows that represent extra linear constraints,
  * we inherit the coefficients directly from LPConstraint::Coefficients.
  *
+ * These column objects have full value semantics.  They are always cheap to
+ * move, and cheap to swap via std::swap().  They can also be copied, but the
+ * cost of copying will depend on the underlying LPConstraint class.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -402,6 +406,40 @@ struct LPCol : public LPConstraint::Coefficients {
     inline LPCol();
 
     /**
+     * Creates a new copy of the given column.
+     */
+    LPCol(const LPCol&) = default;
+
+    /**
+     * Moves the contents of the given column into this new column.
+     *
+     * This move operation is not marked \c noexcept, since this depends
+     * upon the underlying LPConstraint class.
+     *
+     * After this operation, the given column will no longer be usable.
+     */
+    LPCol(LPCol&&) = default;
+
+    /**
+     * Sets this to be a copy of the given column.
+     *
+     * @return a reference to this column.
+     */
+    LPCol& operator = (const LPCol&) = default;
+
+    /**
+     * Moves the contents of the given column into this column.
+     *
+     * This move operation is not marked \c noexcept, since this depends
+     * upon the underlying LPConstraint class.
+     *
+     * After this operation, the given column will no longer be usable.
+     *
+     * @return a reference to this column.
+     */
+    LPCol& operator = (LPCol&&) = default;
+
+    /**
      * Adds the given entry in the given row to this column.
      *
      * \pre No entry in the given row has been added to this column
@@ -414,10 +452,6 @@ struct LPCol : public LPConstraint::Coefficients {
      * @param val the value at this location in the matrix.
      */
     inline void push(unsigned row, int val);
-
-    // Mark this class as non-copyable:
-    LPCol(const LPCol&) = delete;
-    LPCol& operator = (const LPCol&) = delete;
 };
 
 /**

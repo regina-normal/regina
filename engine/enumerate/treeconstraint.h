@@ -85,6 +85,12 @@ class LPConstraintNone;
  * provide any implementations at all, and subclasses are completely
  * responsible for their own implementations.
  *
+ * All constraint classes provide their functionality through static routines:
+ * they do not contain any member data, and it is unnecessary (but harmless) to
+ * construct them.  On the other hand, their inner Coefficients classes
+ * do contain data, and must support value semantics; see the Coefficients
+ * documentation for details.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -111,6 +117,12 @@ class LPConstraintBase {
          * (in particular, they may optimise for sparse coefficients,
          * binary coefficients, and so on).  They will only ever be
          * accessed through the member functions of this Coefficients class.
+         *
+         * This Coefficients class must support value semantics: it \e must
+         * provide copy construction and assignment, and if it will help
+         * performance it \e may also provide move construction and assignment.
+         * It should not provide custom swap() functions: all swapping will
+         * be done via std::swap(), which uses move operations where possible.
          */
         struct Coefficients {
             /**
@@ -119,6 +131,18 @@ class LPConstraintBase {
              * call to addRows() before they can be used.
              */
             Coefficients();
+
+            /**
+             * Creates a new copy of the given set of coefficients.
+             */
+            Coefficients(const Coefficients&);
+
+            /**
+             * Sets this to be a copy of the given set of coefficients.
+             *
+             * @return a reference to this set of coefficients.
+             */
+            Coefficients& operator = (const Coefficients&);
 
             /**
              * Explicitly fills the final row(s) of the given tableaux matrix 
@@ -396,7 +420,10 @@ class LPConstraintNone : public LPConstraintSubspace {
          * See the LPConstraintBase::Coefficients notes for further details.
          */
         struct Coefficients {
-            Coefficients();
+            Coefficients() = default;
+            Coefficients(const Coefficients&) = default;
+            Coefficients& operator = (const Coefficients&) = default;
+
             template<typename IntType>
             void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
             template<typename IntType>
@@ -453,12 +480,14 @@ class LPConstraintEulerPositive : public LPConstraintBase {
          * See the LPConstraintBase::Coefficients notes for further details.
          */
         struct Coefficients {
-            int euler;
+            int euler { 0 };
                 /**< The coefficient of the Euler characteristic
                      function for the corresponding column of the matching
                      equation matrix. */
 
-            Coefficients();
+            Coefficients() = default;
+            Coefficients(const Coefficients&) = default;
+            Coefficients& operator = (const Coefficients&) = default;
             template<typename IntType>
             void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
             template<typename IntType>
@@ -522,12 +551,14 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
          * See the LPConstraintBase::Coefficients notes for further details.
          */
         struct Coefficients {
-            int euler;
+            int euler { 0 };
                 /**< The coefficient of the Euler characteristic
                      function for the corresponding column of the matching
                      equation matrix. */
 
-            Coefficients();
+            Coefficients() = default;
+            Coefficients(const Coefficients&) = default;
+            Coefficients& operator = (const Coefficients&) = default;
             template<typename IntType>
             void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
             template<typename IntType>
@@ -593,14 +624,16 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
          * See the LPConstraintBase::Coefficients notes for further details.
          */
         struct Coefficients {
-            int meridian;
+            int meridian { 0 };
                 /**< The coefficient of the meridian equation for the
                      corresponding column of the matching equation matrix. */
-            int longitude;
+            int longitude { 0 };
                 /**< The coefficient of the longitude equation for the
                      corresponding column of the matching equation matrix. */
 
-            Coefficients();
+            Coefficients() = default;
+            Coefficients(const Coefficients&) = default;
+            Coefficients& operator = (const Coefficients&) = default;
             template <typename IntType>
             void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
             template <typename IntType>
@@ -913,9 +946,6 @@ namespace regina {
 
 // Inline functions
 
-inline LPConstraintNone::Coefficients::Coefficients() {
-}
-
 template <typename IntType>
 inline void LPConstraintNone::Coefficients::fillFinalRows(
         LPMatrix<IntType>& m, unsigned col) const {
@@ -955,8 +985,6 @@ inline bool LPConstraintNone::verify(const AngleStructure&) {
 inline bool LPConstraintNone::supported(NormalCoords) {
     return true;
 }
-
-inline LPConstraintEulerPositive::Coefficients::Coefficients() : euler(0) {}
 
 template <typename IntType>
 inline void LPConstraintEulerPositive::Coefficients::fillFinalRows(
@@ -1011,8 +1039,6 @@ inline bool LPConstraintEulerPositive::supported(NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
 }
 
-inline LPConstraintEulerZero::Coefficients::Coefficients() : euler(0) {}
-
 template <typename IntType>
 inline void LPConstraintEulerZero::Coefficients::fillFinalRows(
         LPMatrix<IntType>& m, unsigned col) const {
@@ -1052,10 +1078,6 @@ inline bool LPConstraintEulerZero::verify(const AngleStructure&) {
 
 inline bool LPConstraintEulerZero::supported(NormalCoords coords) {
     return (coords == NS_STANDARD);
-}
-
-inline LPConstraintNonSpun::Coefficients::Coefficients() :
-        meridian(0), longitude(0) {
 }
 
 template <typename IntType>
