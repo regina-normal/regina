@@ -37,12 +37,24 @@
 #include "subcomplex/trisolidtorus.h"
 #include "subcomplex/trivialtri.h"
 
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
+#include "triangulation/homologicaldata.h"
+
 #define SHOW_SIZE(T) std::cout << #T << ": " \
     << sizeof(T) << " byte(s)" << std::endl;
 
 using namespace regina;
 
 int main(int argc, char* argv[]) {
+    std::cout << "Algebra:" << std::endl;
+    SHOW_SIZE(AbelianGroup);
+    SHOW_SIZE(GroupPresentation);
+    SHOW_SIZE(HomGroupPresentation);
+    SHOW_SIZE(MarkedAbelianGroup);
+    std::cout << std::endl;
+
     std::cout << "Manifolds:" << std::endl;
     SHOW_SIZE(GraphLoop);
     SHOW_SIZE(GraphPair);
@@ -53,6 +65,19 @@ int main(int argc, char* argv[]) {
     SHOW_SIZE(SimpleSurfaceBundle);
     SHOW_SIZE(SnapPeaCensusManifold);
     SHOW_SIZE(TorusBundle);
+    std::cout << std::endl;
+
+    std::cout << "Mathematical Support:" << std::endl;
+    SHOW_SIZE(Integer);
+    SHOW_SIZE(LargeInteger);
+    SHOW_SIZE(MatrixInt);
+    SHOW_SIZE(VectorInt);
+    SHOW_SIZE(Perm<2>);
+    SHOW_SIZE(Perm<3>);
+    SHOW_SIZE(Perm<4>);
+    SHOW_SIZE(Perm<5>);
+    SHOW_SIZE(Perm<6>);
+    SHOW_SIZE(Perm<7>);
     std::cout << std::endl;
 
     std::cout << "Standard Triangulations:" << std::endl;
@@ -78,6 +103,13 @@ int main(int argc, char* argv[]) {
     SHOW_SIZE(SpiralSolidTorus);
     SHOW_SIZE(TriSolidTorus);
     SHOW_SIZE(TrivialTri);
+    std::cout << std::endl;
+
+    std::cout << "Triangulation Data:" << std::endl;
+    SHOW_SIZE(Triangulation<2>);
+    SHOW_SIZE(Triangulation<3>);
+    SHOW_SIZE(Triangulation<4>);
+    SHOW_SIZE(HomologicalData);
     std::cout << std::endl;
 
     return 0;
