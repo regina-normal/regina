@@ -219,7 +219,7 @@ class DiscSetTet {
          * code.  Since the DiscSetTet class does not actually hold any data
          * for each normal disc, this typedef should normally not be used.
          */
-        typedef nullptr_t Data;
+        typedef std::nullptr_t Data;
 
     protected:
         unsigned long internalNDiscs[10];
