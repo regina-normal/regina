@@ -42,7 +42,8 @@ using regina::DiscSpecIterator;
 
 namespace {
     // Support for iterables and iterators:
-    DiscSpec nextDiscSpec(DiscSpecIterator& it) {
+    template <typename TetData>
+    DiscSpec nextDiscSpec(DiscSpecIterator<TetData>& it) {
         if (! it.done())
             return *it++;
         else
@@ -85,9 +86,9 @@ void addDisc(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(s);
 
-    auto it = pybind11::class_<DiscSpecIterator>(m, "DiscSpecIterator")
-        .def("next", nextDiscSpec) // for python 2
-        .def("__next__", nextDiscSpec) // for python 3
+    auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(m, "DiscSpecIterator")
+        .def("next", nextDiscSpec<DiscSetTet>) // for python 2
+        .def("__next__", nextDiscSpec<DiscSetTet>) // for python 3
     ;
     regina::python::add_eq_operators(it);
 }

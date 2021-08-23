@@ -90,9 +90,7 @@ namespace {
      */
     struct TriangleData {
         TriangleMap map[2];
-        int nMaps;
-
-        TriangleData() : nMaps(0) {}
+        int nMaps { 0 } ;
     };
 
     /**

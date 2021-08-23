@@ -40,22 +40,16 @@ namespace {
      * Stores orientation and sides A/B for a normal disc.
      */
     struct OrientData {
-        int orient;
+        int orient { 0 };
             /**< Specifies the orientation of the disc.
                  1 represents with the natural boundary orientation.
                  -1 represents against the natural boundary orientation.
                  0 means orientation is not yet determined. */
-        int sides;
+        int sides { 0 };
             /**< Specifies which sides of the disc are sides A/B.
                  If sides is 1, discs are numbered from side A to B.
                  If sides is -1, discs are numbered from side B to A.
                  A value of 0 means sides are not yet determined. */
-
-        /**
-         * Create a new structure with all values initialised to 0.
-         */
-        OrientData() : orient(0), sides(0) {
-        }
     };
 }
 

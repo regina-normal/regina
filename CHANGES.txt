@@ -125,6 +125,17 @@ Version 6.1  [ TODO ]
             - Almost everything in this class is now constexpr.
             - The class constant NONE is deprecated.  Just use DiscType().
             - Added a bool() operator that tests for a null disc type.
+        Class DiscSpecIterator:
+            - This is now a template class, templated upon the
+              DiscSetSurface / DiscSetSurfaceData type that it works with.
+        Class DiscSetSurface, DiscSetSurfaceData:
+            - Merged into a single class DiscSetSurfaceDataImpl, with
+              appropriate typedefs for DiscSetSurface and DiscSetSurfaceData.
+        Class DiscSetTet, DiscSetTetData:
+            - The destructors are no longer virtual.  Classes that own
+              DiscSetTetData objects now need to know the specific subclass.
+            - DiscSetTetData has a new typedef Data, and the old typedef
+              DataPtr is now deprecated.
         Class DoubleDescription:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.

@@ -39,22 +39,6 @@ namespace regina {
 
 namespace {
     /**
-     * Stores a connected component ID for a normal disc.
-     */
-    struct ComponentData {
-        long id;
-            /**< Stores the ID of the connected component that this disc
-                 belongs to.  Components are numbered from 0 upwards;
-                 -1 means that the component ID is unknown. */
-
-        /**
-         * Create a new structure with the component ID initialised to -1.
-         */
-        ComponentData() : id(-1) {
-        }
-    };
-
-    /**
      * Splits the given normal surface into connected components.
      *
      * The surface itself will not be changed.  Instead, each
@@ -101,8 +85,10 @@ namespace {
 
         // TODO: First check that there aren't too many discs!
 
-        // All right.  Off we go.
-        DiscSetSurfaceData<ComponentData> components(s);
+        // The components structure stores an integer alongside each disc;
+        // that integer will be the ID of its connected component, or -1 if
+        // this is unknown.  Components are numbered from 0 upwards.
+        DiscSetSurfaceData<long> components(s, -1);
             // Stores the component ID for each disc.
         std::queue<DiscSpec> discQueue;
             // A queue of discs whose component IDs must be propagated.
@@ -127,8 +113,8 @@ namespace {
             // If there's no discs to propagate from, choose the next
             // one without a component label.
             while (discQueue.empty() && (! it.done())) {
-                if (components.data(*it).id == -1) {
-                    components.data(*it).id = compID++;
+                if (components.data(*it) == -1) {
+                    components.data(*it) = compID++;
                     discQueue.push(*it);
                 }
                 ++it;
@@ -170,8 +156,8 @@ namespace {
                 // There is actually a disc glued along this arc.
                 // Propagate the component ID.
 
-                if (components.data(*adjDisc).id == -1) {
-                    components.data(*adjDisc).id = components.data(use).id;
+                if (components.data(*adjDisc) == -1) {
+                    components.data(*adjDisc) = components.data(use);
                     discQueue.push(*adjDisc);
                 }
 
@@ -197,7 +183,7 @@ namespace {
                     10 * tri.size());
 
             for (const auto& disc : components) {
-                vec = ans[components.data(disc).id];
+                vec = ans[components.data(disc)];
                 coord = 10 * disc.tetIndex + disc.type;
                 vec->set(coord, (*vec)[coord] + 1);
             }
@@ -207,7 +193,7 @@ namespace {
                     7 * tri.size());
 
             for (const auto& disc : components) {
-                vec = ans[components.data(disc).id];
+                vec = ans[components.data(disc)];
                 coord = 7 * disc.tetIndex + disc.type;
                 vec->set(coord, (*vec)[coord] + 1);
             }
