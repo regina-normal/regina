@@ -146,11 +146,26 @@ private:
              * Construct a clone of the given array.
              */
             SortedArray(const SortedArray&) = default;
+            /**
+             * Move the contents of the given array into this new array.
+             */
+            SortedArray(SortedArray&&) noexcept = default;
 
             /**
              * Set this to a clone of the given array.
              */
             SortedArray& operator = (const SortedArray&) = default;
+            /**
+             * Move the contents of the given array into this array.
+             */
+            SortedArray& operator = (SortedArray&&) noexcept = default;
+
+            /**
+             * Swap the contents of this and the given array.
+             */
+            void swap(SortedArray& other) noexcept {
+                data_.swap(other.data_);
+            }
 
             /**
              * Return the number of elements in this array.
@@ -207,7 +222,7 @@ private:
      * triangulation as reference.
      * This is a deep copy of the triangulation that it is initialized by.
      */
-    const Triangulation<3> tri_;
+    Triangulation<3> tri_;
 
     /**
      * The 0-th homology group in standard cellular coordinates,
@@ -481,6 +496,20 @@ public:
      * Copy constructor.
      */
     HomologicalData(const HomologicalData&) = default;
+
+    /**
+     * Swaps the contents of this and the given object.
+     *
+     * \warning Although this operation is constant time, the HomologicalData
+     * class contains an enormous amount of data spread across many different
+     * member variables, and so this should really be considered "expensive
+     * constant time".  You should still work to avoid swapping (or moving,
+     * and certainly copying) HomologicalData objects where possible.
+     *
+     * @param other the object whose contents should be swapped with this.
+     */
+    void swap(HomologicalData& other) noexcept;
+
     /**
      * Writes a short text representation of this object to the
      * given output stream.
@@ -764,6 +793,23 @@ public:
     HomologicalData& operator = (const HomologicalData&) = delete;
 };
 
+/**
+ * Swaps the contents of the two given HomologicalData objects.
+ *
+ * This global routine simply calls HomologicalData::swap(); it is provided
+ * so that HomologicalData meets the C++ Swappable requirements.
+ *
+ * \warning Although this operation is constant time, the HomologicalData
+ * class contains an enormous amount of data spread across many different
+ * member variables, and so this should really be considered "expensive
+ * constant time".  You should still work to avoid swapping (or moving,
+ * and certainly copying) HomologicalData objects where possible.
+ *
+ * @param a the first object whose contents should be swapped.
+ * @param b the second object whose contents should be swapped.
+ */
+inline void swap(HomologicalData& a, HomologicalData& b) noexcept;
+
 /*@}*/
 
 // Inline functions for HomologicalData
@@ -865,6 +911,10 @@ inline const std::string& HomologicalData::embeddabilityComment()
 {
     computeEmbeddabilityString();
     return embeddabilityString;
+}
+
+inline void swap(HomologicalData& a, HomologicalData& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -41,6 +41,78 @@
 namespace regina {
 
 
+void HomologicalData::swap(HomologicalData& other) noexcept {
+    // OMFGBBQ.
+    tri_.swap(other.tri_);
+    mHomology0_.swap(other.mHomology0_);
+    mHomology1_.swap(other.mHomology1_);
+    mHomology2_.swap(other.mHomology2_);
+    mHomology3_.swap(other.mHomology3_);
+    bHomology0_.swap(other.bHomology0_);
+    bHomology1_.swap(other.bHomology1_);
+    bHomology2_.swap(other.bHomology2_);
+    bmMap0_.swap(other.bmMap0_);
+    bmMap1_.swap(other.bmMap1_);
+    bmMap2_.swap(other.bmMap2_);
+    dmHomology0_.swap(other.dmHomology0_);
+    dmHomology1_.swap(other.dmHomology1_);
+    dmHomology2_.swap(other.dmHomology2_);
+    dmHomology3_.swap(other.dmHomology3_);
+    dmTomMap1_.swap(other.dmTomMap1_);
+
+    std::swap(ccIndexingComputed_, other.ccIndexingComputed_);
+    std::swap_ranges(numStandardCells, numStandardCells + 4,
+        other.numStandardCells);
+    std::swap_ranges(numDualCells, numDualCells + 4, other.numDualCells);
+    std::swap_ranges(numBdryCells, numBdryCells + 3, other.numBdryCells);
+    sNIV.swap(other.sNIV);
+    sIEOE.swap(other.sIEOE);
+    sIEEOF.swap(other.sIEEOF);
+    sIEFOT.swap(other.sIEFOT);
+    dNINBV.swap(other.dNINBV);
+    dNBE.swap(other.dNBE);
+    dNBF.swap(other.dNBF);
+    sBNIV.swap(other.sBNIV);
+    sBNIE.swap(other.sBNIE);
+    sBNIF.swap(other.sBNIF);
+
+    std::swap(chainComplexesComputed, other.chainComplexesComputed);
+    A0_.swap(other.A0_);
+    A1_.swap(other.A1_);
+    A2_.swap(other.A2_);
+    A3_.swap(other.A3_);
+    A4_.swap(other.A4_);
+    B0_.swap(other.B0_);
+    B1_.swap(other.B1_);
+    B2_.swap(other.B2_);
+    B3_.swap(other.B3_);
+    B4_.swap(other.B4_);
+    Bd0_.swap(other.Bd0_);
+    Bd1_.swap(other.Bd1_);
+    Bd2_.swap(other.Bd2_);
+    Bd3_.swap(other.Bd3_);
+    B0Incl_.swap(other.B0Incl_);
+    B1Incl_.swap(other.B1Incl_);
+    B2Incl_.swap(other.B2Incl_);
+    H1map_.swap(other.H1map_);
+
+    std::swap(torsionFormComputed, other.torsionFormComputed);
+    h1PrimePowerDecomp.swap(other.h1PrimePowerDecomp);
+    linkingFormPD.swap(other.linkingFormPD);
+    std::swap(torsionLinkingFormIsHyperbolic,
+        other.torsionLinkingFormIsHyperbolic);
+    std::swap(torsionLinkingFormIsSplit, other.torsionLinkingFormIsSplit);
+    std::swap(torsionLinkingFormSatisfiesKKtwoTorCondition,
+        other.torsionLinkingFormSatisfiesKKtwoTorCondition);
+    torRankV.swap(other.torRankV);
+    twoTorSigmaV.swap(other.twoTorSigmaV);
+    oddTorLegSymV.swap(other.oddTorLegSymV);
+    torsionRankString.swap(other.torsionRankString);
+    torsionSigmaString.swap(other.torsionSigmaString);
+    torsionLegendreString.swap(other.torsionLegendreString);
+    embeddabilityString.swap(other.embeddabilityString);
+}
+
 void HomologicalData::writeTextShort(std::ostream& out) const {
     if (mHomology0_) {
         out<<"H_0(M) = ";

@@ -298,6 +298,8 @@ Version 6.1  [ TODO ]
               MatrixInt arguments by value.
             - The composition operator (*) now has an overload whose argument
               is an rvalue reference.
+        Class HomologicalData:
+            - Added member and global swap() functions.
         Class HyperInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
