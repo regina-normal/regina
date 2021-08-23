@@ -136,6 +136,7 @@ Version 6.1  [ TODO ]
               DiscSetTetData objects now need to know the specific subclass.
             - DiscSetTetData has a new typedef Data, and the old typedef
               DataPtr is now deprecated.
+            - Added copy construction and copy assignment to DiscSetTet.
         Class DoubleDescription:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.

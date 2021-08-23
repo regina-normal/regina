@@ -67,6 +67,7 @@ void addDisc(pybind11::module_& m) {
 
     auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet")
         .def(pybind11::init<const regina::NormalSurface&, unsigned long>())
+        .def(pybind11::init<const DiscSetTet&>())
         .def("nDiscs", &DiscSetTet::nDiscs)
         .def("arcFromDisc", &DiscSetTet::arcFromDisc)
         .def("discFromArc", &DiscSetTet::discFromArc)

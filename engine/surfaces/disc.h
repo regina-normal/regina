@@ -198,6 +198,9 @@ bool discOrientationFollowsEdge(int discType, int vertex,
  * querying them is fast regardless of the underlying normal surface
  * coordinate system used.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \warning This class converts the number of normal discs of a
  * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
@@ -259,6 +262,21 @@ class DiscSetTet {
             unsigned long quad0, unsigned long quad1, unsigned long quad2,
             unsigned long oct0 = 0, unsigned long oct1 = 0,
             unsigned long oct2 = 0);
+
+        /**
+         * Creates a new copy of the given set of normal discs.
+         *
+         * @param src the disc set to copy.
+         */
+        DiscSetTet(const DiscSetTet& src) = default;
+
+        /**
+         * Sets this to be a copy of the given set of normal discs.
+         *
+         * @param src the disc set to copy.
+         * @return a reference to this disc set.
+         */
+        DiscSetTet& operator = (const DiscSetTet& src) = default;
 
         /**
          * Determines the number of discs of the given type inside this
@@ -328,10 +346,6 @@ class DiscSetTet {
          */
         void discFromArc(int arcFace, int arcVertex, unsigned long arcNumber,
             int& discType, unsigned long& discNumber) const;
-
-        // Make this class non-copyable.
-        DiscSetTet(const DiscSetTet&) = delete;
-        DiscSetTet& operator = (const DiscSetTet&) = delete;
 };
 
 /**
