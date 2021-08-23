@@ -41,6 +41,7 @@
 #endif
 
 #include <cassert>
+#include <cstddef> // for nullptr_t
 #include <iterator>
 #include "regina-core.h"
 #include "surfaces/normalsurface.h"
