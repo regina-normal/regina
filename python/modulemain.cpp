@@ -43,6 +43,7 @@ void addAngleClasses(pybind11::module_& m);
 void addCensusClasses(pybind11::module_& m);
 void addDim2Classes(pybind11::module_& m);
 void addDim4Classes(pybind11::module_& m);
+void addEnumerateClasses(pybind11::module_& m);
 void addFileClasses(pybind11::module_& m);
 void addForeignClasses(pybind11::module_& m);
 #ifndef REGINA_LOWDIMONLY
@@ -142,6 +143,7 @@ PYBIND11_MODULE(regina, m) {
     addGenericClasses(m);
     addTreewidthClasses(m);
     addLinkClasses(m);
+    addEnumerateClasses(m);
 
     // This routine allows the user to import sage-related hacks, which
     // are not included by default in regina's python module.

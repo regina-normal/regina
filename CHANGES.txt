@@ -868,6 +868,7 @@ Version 6.1  [ TODO ]
               functions are still templated on the bitmask type).
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
+            - Added short and detailed output functions.
         Class TriSolidTorus:
             - Routine formsTriSolidTorus() is now called recognise(), and
               return a std::optional instead of a pointer that could be null.
@@ -885,6 +886,10 @@ Version 6.1  [ TODO ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
+        Class TypeTrie:
+            - Added move/copy constructors and move/copy assignment operators.
+            - Added member and global swap() functions.
+            - Added short and detailed output functions.
         Class Vector:
             - New operator !=.
             - New constructors that take iterator ranges and initialiser lists.

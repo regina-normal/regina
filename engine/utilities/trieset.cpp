@@ -57,6 +57,7 @@ TrieSet::TrieSet(const TrieSet& src) {
 TrieSet& TrieSet::operator = (const TrieSet& src) {
     delete root_.child_[0];
     delete root_.child_[1];
+    root_.child_[0] = root_.child_[1] = nullptr;
 
     // Follow what we did with the copy constructor.
     std::stack<std::pair<Node*, const Node*>> toProcess;
