@@ -74,6 +74,10 @@ namespace graph {
      * out_edges(), the same dual edge will appear with opposite orientations
      * depending upon which of its endpoints was used for the iteration.
      *
+     * These objects are small enough to pass by value and swap with
+     * std::swap(), with no need for any specialised move operations or
+     * swap functions.
+     *
      * \warning If the underlying triangulation changes, then all DualEdge
      * and DualEdgeIterator objects will become invalid.
      *
