@@ -662,6 +662,10 @@ Version 6.1  [ TODO ]
             - Routine transform() now takes its arguments by reference.
             - All copy constructors and clone() functions are now either
               protected or private.
+            - All insertBlock() routines have been replaced with safer model()
+              routines that return a SatBlockModel by value.
+        Class SatBlockModel:
+            - New class to replace SatBlockStarter.
         Class SatBlockSpec:
             - This is now a full class, with read-only access functions
               to its data members which are now private.
@@ -673,7 +677,10 @@ Version 6.1  [ TODO ]
               new move constructor): only SatRegion is permitted to create a
               SatBlockSpec with arbitrary content.
         Class SatBlockStarter:
-            - The routine block() now returns by reference, not by pointer.
+            - Removed completely, and replaced with the new class SatBlockModel.
+        Class SatBlockStarterSet:
+            - Removed completely, and replaced with a hard-coded list
+              that is private to the SatRegion class.
         Class SatBlockStarterSearcher:
             - Removed completely.  Instead use the new, simpler and more
               flexible routine SatRegion::findStarterBlocks().

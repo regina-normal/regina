@@ -31,22 +31,47 @@
  **************************************************************************/
 
 #include "manifold/sfs.h"
-#include "subcomplex/satblockstarter.h"
+#include "subcomplex/satblocktypes.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
+#include <mutex>
 #include <set>
 #include <sstream>
 
 namespace regina {
 
 namespace {
+    std::mutex startersMutex;
+
     /**
      * An anonymous inline boolean xor.  I'm always afraid to use ^ with
      * bool, since I'm never sure if this bitwise operator will do the
      * right thing on all platforms.
+     *
+     * (Update, 24/08/21: I'm pretty sure (bool != bool) does it. - Ben.)
      */
     inline bool regXor(bool a, bool b) {
         return ((a && ! b) || (b && ! a));
+    }
+}
+
+std::list<SatBlockModel> SatRegion::starters_;
+
+void SatRegion::initStarters() {
+    std::scoped_lock lock(startersMutex);
+    if (starters_.empty()) {
+        starters_.push_back(SatTriPrism::model(true));
+        starters_.push_back(SatCube::model());
+
+        // Try various reflector strips of small length.
+        starters_.push_back(SatReflectorStrip::model(1, false));
+        starters_.push_back(SatReflectorStrip::model(1, true));
+        starters_.push_back(SatReflectorStrip::model(2, false));
+        starters_.push_back(SatReflectorStrip::model(2, true));
+        starters_.push_back(SatReflectorStrip::model(3, false));
+        starters_.push_back(SatReflectorStrip::model(3, true));
+        starters_.push_back(SatReflectorStrip::model(4, false));
+        starters_.push_back(SatReflectorStrip::model(4, true));
     }
 }
 

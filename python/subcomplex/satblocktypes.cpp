@@ -72,7 +72,7 @@ void addSatBlockTypes(pybind11::module_& m) {
             SatBlock::TetList avoidTets;
             return SatTriPrism::isBlockTriPrism(a, avoidTets);
         })
-        .def_static("insertBlock", &SatTriPrism::insertBlock)
+        .def_static("model", &SatTriPrism::model)
     ;
 
 
@@ -81,7 +81,7 @@ void addSatBlockTypes(pybind11::module_& m) {
             SatBlock::TetList avoidTets;
             return SatCube::isBlockCube(a, avoidTets);
         })
-        .def_static("insertBlock", &SatCube::insertBlock)
+        .def_static("model", &SatCube::model)
     ;
 
 
@@ -91,7 +91,7 @@ void addSatBlockTypes(pybind11::module_& m) {
             SatBlock::TetList avoidTets;
             return SatReflectorStrip::isBlockReflectorStrip(a, avoidTets);
         })
-        .def_static("insertBlock", &SatReflectorStrip::insertBlock)
+        .def_static("model", &SatReflectorStrip::model)
     ;
 
 

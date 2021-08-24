@@ -305,19 +305,13 @@ class SatTriPrism : public SatBlock {
             TetList& avoidTets);
 
         /**
-         * Inserts a new copy of a triangular prism block into the given
-         * triangulation, and returns the corresponding block structure.
+         * Creates a new model of a triangular prism block.
          *
-         * The given triangulation will not be emptied before the new
-         * tetrahedra are inserted.
-         *
-         * @param tri the triangulation into which the new block should
-         * be inserted.
-         * @param major \c true if a block of major type should be inserted,
-         * or \c false if a block of minor type should be inserted.
-         * @return structural details of the newly inserted block.
+         * @param major \c true if a block of major type should be created,
+         * or \c false if a block of minor type should be created.
+         * @return a full triangulated model of this type of block.
          */
-        static SatTriPrism* insertBlock(Triangulation<3>& tri, bool major);
+        static SatBlockModel model(bool major);
 
     protected:
         virtual SatBlock* clone() const override;
@@ -395,17 +389,11 @@ class SatCube : public SatBlock {
             TetList& avoidTets);
 
         /**
-         * Inserts a new copy of a cube block into the given triangulation,
-         * and returns the corresponding block structure.
+         * Creates a new model of a cube block.
          *
-         * The given triangulation will not be emptied before the new
-         * tetrahedra are inserted.
-         *
-         * @param tri the triangulation into which the new block should
-         * be inserted.
-         * @return structural details of the newly inserted block.
+         * @return a full triangulated model of this type of block.
          */
-        static SatCube* insertBlock(Triangulation<3>& tri);
+        static SatBlockModel model();
 
     protected:
         virtual SatBlock* clone() const override;
@@ -476,23 +464,16 @@ class SatReflectorStrip : public SatBlock {
             const SatAnnulus& annulus, TetList& avoidTets);
 
         /**
-         * Inserts a new reflector strip into the given triangulation,
-         * and returns the corresponding block structure.
+         * Creates a new model of a reflector strip block.
          *
-         * The given triangulation will not be emptied before the new
-         * tetrahedra are inserted.
-         *
-         * @param tri the triangulation into which the new block should
-         * be inserted.
          * @param length the length of the new reflector strip, i.e.,
          * the number of boundary annuli; this must be strictly positive.
          * @param twisted \c true if the new reflector strip should be twisted
          * (causing its ring of boundary annuli to be twisted also), or
          * \c false if the new strip should not be twisted.
-         * @return structural details of the newly inserted block.
+         * @return a full triangulated model of this type of block.
          */
-        static SatReflectorStrip* insertBlock(Triangulation<3>& tri,
-            unsigned length, bool twisted);
+        static SatBlockModel model(unsigned length, bool twisted);
 
     protected:
         virtual SatBlock* clone() const override;

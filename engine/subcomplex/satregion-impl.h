@@ -42,36 +42,37 @@
 #endif
 
 #include "subcomplex/satregion.h"
-#include "subcomplex/satblockstarter.h"
 
 namespace regina {
 
 template <typename Action, typename... Args>
 bool SatRegion::findStarterBlocks(Triangulation<3>* tri,
         bool mustBeComplete, Action&& action, Args&&... args) {
+    initStarters();
+
     SatBlock::TetList usedTets;
 
     // Hunt for a starting block.
-    for (const SatBlockStarter* model : SatBlockStarterSet()) {
+    for (const SatBlockModel& model : starters_) {
         // Look for this particular starting block.
         // Get trivialities out of the way first.
-        if (tri->isOrientable() && ! model->triangulation().isOrientable())
+        if (tri->isOrientable() && ! model.triangulation().isOrientable())
             continue;
-        if (tri->size() < model->triangulation().size())
+        if (tri->size() < model.triangulation().size())
             continue;
 
         // Find all isomorphisms of the starter block within the given
         // triangulation.
         // In the lambda below, most of our captures are pointers (hence [=]).
-        bool terminate = model->triangulation().findAllSubcomplexesIn(*tri,
+        bool terminate = model.triangulation().findAllSubcomplexesIn(*tri,
                 [=, &usedTets](const Isomorphism<3>& iso) {
             // See if this isomorphism leads somewhere useful.
-            SatBlock* starter = model->block().clone();
-            starter->transform(model->triangulation(), iso, *tri);
+            SatBlock* starter = model.block().clone();
+            starter->transform(model.triangulation(), iso, *tri);
 
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.
-            for (unsigned long i = 0; i < model->triangulation().size(); i++)
+            for (unsigned long i = 0; i < model.triangulation().size(); i++)
                 usedTets.insert(tri->tetrahedron(iso.tetImage(i)));
 
             // Wrap an initial region around the block, and expand.

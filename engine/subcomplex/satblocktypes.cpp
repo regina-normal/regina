@@ -457,10 +457,11 @@ SatTriPrism* SatTriPrism::isBlockTriPrismMajor(const SatAnnulus& annulus,
     return ans;
 }
 
-SatTriPrism* SatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
-    Tetrahedron<3>* a = tri.newTetrahedron();
-    Tetrahedron<3>* b = tri.newTetrahedron();
-    Tetrahedron<3>* c = tri.newTetrahedron();
+SatBlockModel SatTriPrism::model(bool major) {
+    Triangulation<3>* tri = new Triangulation<3>;
+    Tetrahedron<3>* a = tri->newTetrahedron();
+    Tetrahedron<3>* b = tri->newTetrahedron();
+    Tetrahedron<3>* c = tri->newTetrahedron();
     a->join(1, c, Perm<4>(2, 0, 3, 1));
     b->join(1, a, Perm<4>(2, 0, 3, 1));
     c->join(1, b, Perm<4>(2, 0, 3, 1));
@@ -488,7 +489,7 @@ SatTriPrism* SatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
         ans->annulus_[2].reflectVertical();
     }
 
-    return ans;
+    return ans->modelWith(tri);
 }
 
 void SatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
@@ -591,13 +592,14 @@ SatCube* SatCube::isBlockCube(const SatAnnulus& annulus,
     return ans;
 }
 
-SatCube* SatCube::insertBlock(Triangulation<3>& tri) {
-    Tetrahedron<3>* bdry0 = tri.newTetrahedron();
-    Tetrahedron<3>* bdry1 = tri.newTetrahedron();
-    Tetrahedron<3>* bdry2 = tri.newTetrahedron();
-    Tetrahedron<3>* bdry3 = tri.newTetrahedron();
-    Tetrahedron<3>* central0 = tri.newTetrahedron();
-    Tetrahedron<3>* central1 = tri.newTetrahedron();
+SatBlockModel SatCube::model() {
+    Triangulation<3>* tri = new Triangulation<3>;
+    Tetrahedron<3>* bdry0 = tri->newTetrahedron();
+    Tetrahedron<3>* bdry1 = tri->newTetrahedron();
+    Tetrahedron<3>* bdry2 = tri->newTetrahedron();
+    Tetrahedron<3>* bdry3 = tri->newTetrahedron();
+    Tetrahedron<3>* central0 = tri->newTetrahedron();
+    Tetrahedron<3>* central1 = tri->newTetrahedron();
 
     const Perm<4> id;
     bdry0->join(1, central0, id);
@@ -629,7 +631,7 @@ SatCube* SatCube::insertBlock(Triangulation<3>& tri) {
     ans->annulus_[3].roles[0] = Perm<4>(1, 3, 0, 2);
     ans->annulus_[3].roles[1] = Perm<4>(2, 3);
 
-    return ans;
+    return ans->modelWith(tri);
 }
 
 void SatReflectorStrip::adjustSFS(SFSpace& sfs, bool) const {
@@ -817,8 +819,8 @@ SatReflectorStrip* SatReflectorStrip::isBlockReflectorStrip(
     return 0;
 }
 
-SatReflectorStrip* SatReflectorStrip::insertBlock(Triangulation<3>& tri,
-        unsigned length, bool twisted) {
+SatBlockModel SatReflectorStrip::model(unsigned length, bool twisted) {
+    Triangulation<3>* tri = new Triangulation<3>;
     SatReflectorStrip* ans = new SatReflectorStrip(length, twisted);
 
     const Perm<4> id;
@@ -826,9 +828,9 @@ SatReflectorStrip* SatReflectorStrip::insertBlock(Triangulation<3>& tri,
     Tetrahedron<3> *prevRight = 0, *firstLeft = 0;
     for (unsigned i = 0; i < length; i++) {
         // Create the three tetrahedra behind boundary annulus #i.
-        upper = tri.newTetrahedron();
-        lower = tri.newTetrahedron();
-        middle = tri.newTetrahedron();
+        upper = tri->newTetrahedron();
+        lower = tri->newTetrahedron();
+        middle = tri->newTetrahedron();
 
         upper->join(0, middle, Perm<4>(2, 1, 3, 0));
         lower->join(0, middle, Perm<4>(0, 3, 1, 2));
@@ -853,7 +855,7 @@ SatReflectorStrip* SatReflectorStrip::insertBlock(Triangulation<3>& tri,
     else
         firstLeft->join(2, prevRight, Perm<4>(0, 1));
 
-    return ans;
+    return ans->modelWith(tri);
 }
 
 void SatLayering::adjustSFS(SFSpace& sfs, bool reflect) const {

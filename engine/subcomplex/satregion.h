@@ -314,6 +314,11 @@ class SatRegion : public Output<SatRegion> {
             /**< The number of saturated annuli forming the boundary
                  components (if any) of this region. */
 
+        static std::list<SatBlockModel> starters_;
+            /**< The blocks from which findStarterBlocks() will begin
+                 its searches.  These are generated on demand, the first
+                 time that findStarterBlocks() is called. */
+
     public:
         /**
          * Constructs a new region containing just the given block.
@@ -776,6 +781,13 @@ class SatRegion : public Output<SatRegion> {
          * boundary components.
          */
         void countBoundaries(unsigned& untwisted, unsigned& twisted) const;
+
+        /**
+         * Fills the \a starters_ list with an appropriate set of model
+         * block to search from, if this has not yet been done.
+         * This routine is thread-safe.
+         */
+        static void initStarters();
 };
 
 /*@}*/

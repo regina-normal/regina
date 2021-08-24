@@ -43,10 +43,12 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "subcomplex/satannulus.h"
+#include "triangulation/dim3.h"
 #include <set>
 
 namespace regina {
 
+class SatBlockModel;
 class SFSpace;
 
 /**
@@ -731,9 +733,134 @@ class SatBlock : public Output<SatBlock> {
         static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
             Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4);
 
-    friend class SatBlockStarter;
+        /**
+         * Returns a new model that combines this block structure with
+         * the given triangulation.  The new model will take ownership of
+         * both this block and the given triangulation.
+         *
+         * The purpose of this routine is, essentially, to give subclasses
+         * access to the private SatBlockModel constructor (which SatBlock
+         * can access as a friend class, but which subclasses cannot).
+         *
+         * @param triangulation an explicit triangulation of this block
+         * structure.
+         * @return a model that holds this block and the given triangulation.
+         */
+        SatBlockModel modelWith(Triangulation<3>* triangulation);
+
+    // The following classes are the only classes that are allowed to
+    // manage a raw SatBlock pointer:
+    friend class SatBlockModel;
     friend class SatRegion;
 };
+
+/**
+ * Contains an explicit triangulation of a saturated block along with the
+ * accompanying saturated block description.
+ *
+ * This class is designed to work with SatRegion::findStarterBlock(),
+ * which uses such models as potential starting points for its search.
+ * The ultimate aim here is to identify regions within triangulations that are
+ * formed by joining saturated blocks together along their boundary annuli.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * you cannot create generate your own models manually (aside from copying or
+ * moving); instead you will need to use block-specific factory routines
+ * such as SatTriPrism::model(), SatCube::model(), and so on.
+ */
+class SatBlockModel {
+    private:
+        Triangulation<3>* triangulation_;
+            /**< The triangulation of the saturated block. */
+        SatBlock* block_;
+            /**< Structural details of the saturated block. */
+
+    public:
+        /**
+         * Creates a new copy of the given model.
+         * This will induce a deep copy of both the triangulation and the
+         * block structure.
+         *
+         * @param src the model to copy.
+         */
+        SatBlockModel(const SatBlockModel& src);
+
+        /**
+         * Moves the contents of the given model into this new model.
+         * This is a fast (constant time) operation.
+         *
+         * The model that was passed (\a src) will no longer be usable.
+         *
+         * @param src the model whose contents should be moved.
+         */
+        SatBlockModel(SatBlockModel&& src) noexcept;
+
+        /**
+         * Destroys both the internal triangulation and block structure.
+         */
+        ~SatBlockModel();
+
+        /**
+         * Sets this to be a copy of the given model.
+         * This will induce a deep copy of both the triangulation and the
+         * block structure.
+         *
+         * @param src the model to copy.
+         * @return a reference to this model.
+         */
+        SatBlockModel& operator = (const SatBlockModel& src);
+
+        /**
+         * Moves the contents of the given model into this model.
+         * This is a fast (constant time) operation.
+         *
+         * The model that was passed (\a src) will no longer be usable.
+         *
+         * @param src the model whose contents should be moved.
+         * @return a reference to this model.
+         */
+        SatBlockModel& operator = (SatBlockModel&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given model.
+         *
+         * @param other the model whose contents should be swapped with this.
+         */
+        void swap(SatBlockModel& other) noexcept;
+
+        /**
+         * Returns the triangulation of the saturated block.
+         *
+         * @return the block triangulation.
+         */
+        const Triangulation<3>& triangulation() const;
+
+        /**
+         * Returns the structure of the saturated block.
+         *
+         * @return the block structure.
+         */
+        const SatBlock& block() const;
+
+    private:
+        /**
+         * Creates a new model filled with the given data.  The model will
+         * take ownership of both the given triangulation and the given block.
+         */
+        SatBlockModel(Triangulation<3>* triangulation, SatBlock* block);
+
+    friend class SatBlock;
+};
+
+/**
+ * Swaps the contents of the two given models.
+ *
+ * @param a the first model whose contents should be swapped.
+ * @param b the second model whose contents should be swapped.
+ */
+void swap(SatBlockModel& a, SatBlockModel& b) noexcept;
 
 /*@}*/
 
@@ -832,6 +959,64 @@ inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
         Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4) {
     return (test == nullptr || test == other1 || test == other2 ||
         test == other3 || test == other4);
+}
+
+inline SatBlockModel SatBlock::modelWith(Triangulation<3>* triangulation) {
+    return SatBlockModel(triangulation, this);
+}
+
+// Inline functions for SatBlockModel
+
+inline SatBlockModel::SatBlockModel(Triangulation<3>* triangulation,
+        SatBlock* block) : triangulation_(triangulation), block_(block) {
+}
+
+inline SatBlockModel::SatBlockModel(const SatBlockModel& src) :
+        triangulation_(new Triangulation<3>(*src.triangulation_)),
+        block_(src.block_->clone()) {
+}
+
+inline SatBlockModel::SatBlockModel(SatBlockModel&& src) noexcept :
+        triangulation_(src.triangulation_), block_(src.block_) {
+    src.triangulation_ = nullptr;
+    src.block_ = nullptr;
+}
+
+inline SatBlockModel::~SatBlockModel() {
+    delete triangulation_;
+    delete block_;
+}
+
+inline SatBlockModel& SatBlockModel::operator = (const SatBlockModel& src) {
+        delete triangulation_;
+        delete block_;
+        triangulation_ = new Triangulation<3>(*src.triangulation_);
+        block_ = src.block_->clone();
+        return *this;
+}
+
+inline SatBlockModel& SatBlockModel::operator = (SatBlockModel&& src) noexcept {
+    std::swap(triangulation_, src.triangulation_);
+    std::swap(block_, src.block_);
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
+}
+
+inline void SatBlockModel::swap(SatBlockModel& other) noexcept {
+    std::swap(triangulation_, other.triangulation_);
+    std::swap(block_, other.block_);
+}
+
+inline const Triangulation<3>& SatBlockModel::triangulation() const {
+    return *triangulation_;
+}
+
+inline const SatBlock& SatBlockModel::block() const {
+    return *block_;
+}
+
+inline void swap(SatBlockModel& a, SatBlockModel& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

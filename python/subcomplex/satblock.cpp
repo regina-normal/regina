@@ -39,6 +39,7 @@
 
 using regina::SatAnnulus;
 using regina::SatBlock;
+using regina::SatBlockModel;
 
 void addSatBlock(pybind11::module_& m) {
     auto c = pybind11::class_<SatBlock>(m, "SatBlock")
@@ -82,5 +83,15 @@ void addSatBlock(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel")
+        .def(pybind11::init<const SatBlockModel&>())
+        .def("swap", &SatBlockModel::swap)
+        .def("triangulation", &SatBlockModel::triangulation)
+        .def("block", &SatBlockModel::block)
+    ;
+    regina::python::add_eq_operators(d);
+
+    m.def("swap", (void(*)(SatBlockModel&, SatBlockModel&))(regina::swap));
 }
 
