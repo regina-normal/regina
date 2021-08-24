@@ -69,12 +69,11 @@ struct BlockedSFSTripleSearcher : public SatBlockStarterSearcher {
      * Creates a new searcher whose \a end and \a centre region pointers
      * are all null.
      */
-    BlockedSFSTripleSearcher() {
-        end[0] = end[1] = centre = nullptr;
+    BlockedSFSTripleSearcher() : end { nullptr, nullptr }, centre(nullptr) {
     }
 
     protected:
-        bool useStarterBlock(SatBlock* starter) override;
+        bool useStarterBlock(SatRegion*, SatBlock::TetList&) override;
 };
 
 BlockedSFSTriple::~BlockedSFSTriple() {
@@ -165,7 +164,7 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
 
     // Hunt for a starting block.
     BlockedSFSTripleSearcher searcher;
-    searcher.findStarterBlocks(tri);
+    searcher.findStarterBlocks(tri, false);
 
     // Any luck?
     if (searcher.centre) {
@@ -181,22 +180,10 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
     return nullptr;
 }
 
-bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
-    // The region pointers should be null, but just in case...
-    if (end[0] || end[1] || centre) {
-        delete starter;
-        return false;
-    }
-
-    // Flesh out the triangulation as far as we can.  We're aiming for
-    // precisely two disjoint boundary annuli remaining.
-    // Note that the starter block will now be owned by centre.
-    centre = new SatRegion(starter);
-    centre->expand(usedTets);
-
-    if (centre->numberOfBoundaryAnnuli() != 2) {
-        delete centre;
-        centre = nullptr;
+bool BlockedSFSTripleSearcher::useStarterBlock(SatRegion* r,
+        SatBlock::TetList& usedTets) {
+    if (r->numberOfBoundaryAnnuli() != 2) {
+        delete r;
         return true;
     }
 
@@ -205,9 +192,9 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
     unsigned bdryAnnulus[2];
     bool bdryVert[2], bdryHoriz[2], bdryRef[2];
 
-    centre->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
+    r->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
         bdryVert[0], bdryHoriz[0]);
-    centre->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
+    r->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
         bdryVert[1], bdryHoriz[1]);
 
     bdryRef[0] =
@@ -223,8 +210,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
     bdry[1] = bdryBlock[1]->annulus(bdryAnnulus[1]);
 
     if (! (bdry[0].isTwoSidedTorus() && bdry[1].isTwoSidedTorus())) {
-        delete centre;
-        centre = nullptr;
+        delete r;
         return true;
     }
 
@@ -243,8 +229,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
                     usedTets.find(layering[e]->newBoundaryTet(1)) !=
                     usedTets.end()) {
                 // Oops, we've run back into something we've already seen.
-                delete centre;
-                centre = nullptr;
+                delete r;
                 return true;
             }
             usedTets.insert(layering[e]->newBoundaryTet(0));
@@ -269,8 +254,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
             layering[e]->newBoundaryTet(1), Perm<4>());
 
         if (otherSide.meetsBoundary()) {
-            delete centre;
-            centre = nullptr;
+            delete r;
             if (e == 1) {
                 delete end[0];
                 end[0] = nullptr;
@@ -342,8 +326,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
         // Did we manage to fill in this end space?
         if (! end[e]) {
             // Nope.  Keep searching.
-            delete centre;
-            centre = nullptr;
+            delete r;
 
             if (e == 1) {
                 delete end[0];
@@ -356,6 +339,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
 
     // w00t!  It all worked out.
     // Stop searching, we're done.
+    centre = r;
     return false;
 }
 

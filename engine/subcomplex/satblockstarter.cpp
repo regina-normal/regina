@@ -33,6 +33,7 @@
 #include <mutex>
 #include "subcomplex/satblockstarter.h"
 #include "subcomplex/satblocktypes.h"
+#include "subcomplex/satregion.h"
 
 namespace regina {
 
@@ -105,10 +106,9 @@ SatBlockStarterSet::SatBlockStarterSet() {
     }
 }
 
-void SatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
-    // Clean up usedTets if required.
-    if (! usedTets.empty())
-        usedTets.clear();
+void SatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri,
+        bool mustBeComplete) {
+    SatBlock::TetList usedTets;
 
     // Hunt for a starting block.
     for (const SatBlockStarter* model : SatBlockStarterSet()) {
@@ -121,9 +121,9 @@ void SatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
 
         // Find all isomorphisms of the starter block within the given
         // triangulation.
-        // In the lambda below, all our captures are pointers (hence [=]).
+        // In the lambda below, most of our captures are pointers (hence [=]).
         bool terminate = model->triangulation().findAllSubcomplexesIn(*tri,
-                [=](const Isomorphism<3>& iso) {
+                [=, &usedTets](const Isomorphism<3>& iso) {
             // See if this isomorphism leads somewhere useful.
             SatBlock* starter = model->isomorphicCopy(*tri, iso);
 
@@ -132,18 +132,22 @@ void SatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
             for (unsigned long i = 0; i < model->triangulation().size(); i++)
                 usedTets.insert(tri->tetrahedron(iso.tetImage(i)));
 
-            // And process!
-            // Note that useStarterBlock() passes ownership of the starter
-            // block elsewhere.
-            if (! useStarterBlock(starter)) {
-                // The search ends now.
+            // Wrap an initial region around the block, and expand.
+            SatRegion* region = new SatRegion(starter);
+            if (! region->expand(usedTets, mustBeComplete)) {
+                // Nope.  Keep on searching.
+                delete region;
                 usedTets.clear();
-                return true;
+                return false;
             }
 
-            // Keep on searching.
+            // We have a saturated region: give it to the caller to process.
+            // Note that useStarterBlock() passes ownership of the region
+            // elsewhere, regardless of whether it ultimately succeeded.
+            bool success = ! useStarterBlock(region, usedTets);
+
             usedTets.clear();
-            return false;
+            return success; // terminate the subcomplex search upon success
         });
         if (terminate)
             return;

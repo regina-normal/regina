@@ -59,12 +59,11 @@ struct BlockedSFSPairSearcher : public SatBlockStarterSearcher {
     /**
      * Creates a new searcher whose \a region pointers are both null.
      */
-    BlockedSFSPairSearcher() {
-        region[0] = region[1] = nullptr;
+    BlockedSFSPairSearcher() : region { nullptr, nullptr } {
     }
 
     protected:
-        bool useStarterBlock(SatBlock* starter) override;
+        bool useStarterBlock(SatRegion*, SatBlock::TetList&) override;
 };
 
 BlockedSFSPair::~BlockedSFSPair() {
@@ -137,7 +136,7 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
 
     // Hunt for a starting block.
     BlockedSFSPairSearcher searcher;
-    searcher.findStarterBlocks(tri);
+    searcher.findStarterBlocks(tri, false);
 
     // Any luck?
     if (searcher.region[0]) {
@@ -152,22 +151,10 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     return nullptr;
 }
 
-bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
-    // The region pointers should be null, but just in case...
-    if (region[0] || region[1]) {
-        delete starter;
-        return false;
-    }
-
-    // Flesh out the triangulation as far as we can.  We're aiming for
-    // just one boundary annulus remaining.
-    // Note that the starter block will now be owned by region[0].
-    region[0] = new SatRegion(starter);
-    region[0]->expand(usedTets);
-
-    if (region[0]->numberOfBoundaryAnnuli() != 1) {
-        delete region[0];
-        region[0] = nullptr;
+bool BlockedSFSPairSearcher::useStarterBlock(SatRegion* r,
+        SatBlock::TetList& usedTets) {
+    if (r->numberOfBoundaryAnnuli() != 1) {
+        delete r;
         return true;
     }
 
@@ -175,8 +162,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
     const SatBlock* bdryBlock;
     unsigned bdryAnnulus;
     bool bdryVert, bdryHoriz;
-    region[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus,
-        bdryVert, bdryHoriz);
+    r->boundaryAnnulus(0, bdryBlock, bdryAnnulus, bdryVert, bdryHoriz);
 
     bool firstRegionReflected =
         ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
@@ -187,8 +173,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
     bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
         tmpVert, tmpHoriz, false);
     if (tmpVert) {
-        delete region[0];
-        region[0] = nullptr;
+        delete r;
         return true;
     }
 
@@ -210,8 +195,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
         layering.newBoundaryTet(1), Perm<4>());
 
     if (otherSide.meetsBoundary()) {
-        delete region[0];
-        region[0] = nullptr;
+        delete r;
         return true;
     }
 
@@ -264,6 +248,8 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
 
             if (region[1]->numberOfBoundaryAnnuli() == 1) {
                 // This is it!  Stop searching.
+                region[0] = r;
+
                 // Do a final conversion from annulus first triangle markings
                 // 01/02 and exit.
                 matchingReln = Matrix2(-1, 0, 0, 1) * layeringToAnnulus1 *
@@ -278,8 +264,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
     }
 
     // Sigh, nothing works.
-    delete region[0];
-    region[0] = nullptr;
+    delete r;
     return true;
 }
 

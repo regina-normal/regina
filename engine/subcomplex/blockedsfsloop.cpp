@@ -60,11 +60,11 @@ struct BlockedSFSLoopSearcher : public SatBlockStarterSearcher {
     /**
      * Creates a new searcher whose \a region pointer is null.
      */
-    BlockedSFSLoopSearcher() : region(0) {
+    BlockedSFSLoopSearcher() : region(nullptr) {
     }
 
     protected:
-        bool useStarterBlock(SatBlock* starter) override;
+        bool useStarterBlock(SatRegion*, SatBlock::TetList&) override;
 };
 
 BlockedSFSLoop::~BlockedSFSLoop() {
@@ -120,7 +120,7 @@ BlockedSFSLoop* BlockedSFSLoop::isBlockedSFSLoop(Triangulation<3>* tri) {
 
     // Hunt for a starting block.
     BlockedSFSLoopSearcher searcher;
-    searcher.findStarterBlocks(tri);
+    searcher.findStarterBlocks(tri, false);
 
     // Any luck?
     if (searcher.region) {
@@ -134,31 +134,19 @@ BlockedSFSLoop* BlockedSFSLoop::isBlockedSFSLoop(Triangulation<3>* tri) {
     return 0;
 }
 
-bool BlockedSFSLoopSearcher::useStarterBlock(SatBlock* starter) {
-    // The region pointer should be null, but just in case...
-    if (region) {
-        delete starter;
-        return false;
-    }
-
-    // Flesh out the triangulation as far as we can.  We're aiming for
-    // precisely two boundary annuli remaining.
-    // Note that the starter block will now be owned by region.
-    region = new SatRegion(starter);
-    region->expand(usedTets);
-
-    if (region->numberOfBoundaryAnnuli() != 2) {
-        delete region;
-        region = 0;
+bool BlockedSFSLoopSearcher::useStarterBlock(SatRegion* r,
+        SatBlock::TetList& usedTets) {
+    if (r->numberOfBoundaryAnnuli() != 2) {
+        delete r;
         return true;
     }
 
     const SatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
     bool bdryRefVert[2], bdryRefHoriz[2];
-    region->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
+    r->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
         bdryRefVert[0], bdryRefHoriz[0]);
-    region->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
+    r->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
         bdryRefVert[1], bdryRefHoriz[1]);
 
     // We either want two disjoint one-annulus torus boundaries, or else a
@@ -172,8 +160,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(SatBlock* starter) {
     SatAnnulus bdry1 = bdryBlock[1]->annulus(bdryAnnulus[1]);
 
     if (! (bdry0.isTwoSidedTorus() && bdry1.isTwoSidedTorus())) {
-        delete region;
-        region = 0;
+        delete r;
         return true;
     }
 
@@ -198,8 +185,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(SatBlock* starter) {
         // We haven't joined up yet.  Either extend or die.
         if (! layering.extendOne()) {
             // The layering dried up and we didn't make it.
-            delete region;
-            region = 0;
+            delete r;
             return true;
         }
 
@@ -208,8 +194,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(SatBlock* starter) {
                 usedTets.find(layering.newBoundaryTet(1)) !=
                 usedTets.end()) {
             // Gone too far -- we've looped back upon ourselves.
-            delete region;
-            region = 0;
+            delete r;
             return true;
         }
 
@@ -218,6 +203,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(SatBlock* starter) {
     }
 
     // This is it!  Build the matching matrix and stop searching.
+    region = r;
 
     // First find mappings from the fibre/base curves (fi, oi) to
     // annulus #i edges (first triangle: 01, first triangle: 02).

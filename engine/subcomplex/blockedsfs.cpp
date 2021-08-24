@@ -68,7 +68,7 @@ struct BlockedSFSSearcher : public SatBlockStarterSearcher {
     }
 
     protected:
-        bool useStarterBlock(SatBlock* starter) override;
+        bool useStarterBlock(SatRegion*, SatBlock::TetList&) override;
 };
 
 BlockedSFS::~BlockedSFS() {
@@ -344,7 +344,7 @@ BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
 
     // Hunt for a starting block.
     BlockedSFSSearcher searcher;
-    searcher.findStarterBlocks(tri);
+    searcher.findStarterBlocks(tri, true);
 
     // Any luck?
     if (searcher.region) {
@@ -358,25 +358,10 @@ BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
     return nullptr;
 }
 
-bool BlockedSFSSearcher::useStarterBlock(SatBlock* starter) {
-    // The region pointer should be null, but just in case...
-    if (region) {
-        delete starter;
-        return false;
-    }
-
-    // See if we can flesh out an entire triangulation component from
-    // the starter block.  At this point the region will own the given
-    // starter block.
-    region = new SatRegion(starter);
-    if (! region->expand(usedTets, true)) {
-        // Nup.  Destroy the temporary structures and keep searching.
-        delete region;
-        region = nullptr;
-        return true;
-    }
-
+bool BlockedSFSSearcher::useStarterBlock(SatRegion* r,
+        SatBlock::TetList&) {
     // Got one!  Stop the search.
+    region = r;
     return false;
 }
 

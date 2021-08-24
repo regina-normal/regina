@@ -47,6 +47,8 @@
 
 namespace regina {
 
+class SatRegion;
+
 /**
  * \weakgroup subcomplex
  * @{
@@ -245,12 +247,6 @@ class SatBlockStarterSet {
  * \ifacespython Not present.
  */
 class SatBlockStarterSearcher {
-    protected:
-        SatBlock::TetList usedTets;
-            /**< Keeps track of which tetrahedra have used by the
-                 current embedding of the current starter block.
-                 See useStarterBlock() for further details. */
-
     public:
         /**
          * Destroys this object and its internal structures.
@@ -274,7 +270,7 @@ class SatBlockStarterSearcher {
          * @param tri the triangulation in which to search for starter
          * blocks.
          */
-        void findStarterBlocks(Triangulation<3>* tri);
+        void findStarterBlocks(Triangulation<3>* tri, bool mustBeComplete);
 
         // Mark this class as non-copyable.
         SatBlockStarterSearcher(const SatBlockStarterSearcher&) = delete;
@@ -336,7 +332,8 @@ class SatBlockStarterSearcher {
          * @return \c true if the search for embeddings of starter blocks
          * should continue, or \c false if the search should stop immediately.
          */
-        virtual bool useStarterBlock(SatBlock* starter) = 0;
+        virtual bool useStarterBlock(SatRegion* region,
+            SatBlock::TetList& usedTets) = 0;
 };
 
 /*@}*/
