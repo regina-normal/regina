@@ -664,6 +664,11 @@ Version 6.1  [ TODO ]
               protected or private.
             - All insertBlock() routines have been replaced with safer model()
               routines that return a SatBlockModel by value.
+            - Removed SatBlock::isBlock(), and made all subclass isBlock...()
+              functions private (and with new names).  This functionality is
+              now accessible through SatRegion::beginsRegion() instead.
+            - Modifying routines transform() and setAdjacent() are now
+              protected and private respectively.
         Class SatBlockModel:
             - New class to replace SatBlockStarter.
         Class SatBlockSpec:
@@ -699,6 +704,10 @@ Version 6.1  [ TODO ]
             - Added move construction, and move assignment.
             - New static routine findStarterBlocks(), which replaces the old
               class SatBlockStarterSearcher.
+            - New static routine beginsRegion(), which replaces the old
+              SatBlock::isBlock().
+            - Routine expand() is now private, since all publicly accessible
+              functions that construct regions will expand them automatically.
         Class SFSAlt, SFSAltSet:
             - Removed the old SFSAltSet class; replaced this with a new SFSAlt
               class with a static altSet() function that returns a std::vector.

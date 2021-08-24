@@ -210,21 +210,17 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* tri,
             avoidTets.insert(layerLower.newBoundaryTet(0));
             avoidTets.insert(layerLower.newBoundaryTet(1));
 
-            starter = SatBlock::isBlock(upperAnnulus, avoidTets);
-            if (! starter)
+            auto region = SatRegion::beginsRegion(upperAnnulus, avoidTets);
+            if (! region)
                 continue;
 
-            // We have a starter block.  Make a region out of it, and
-            // ensure that region has precisely two boundary annuli.
-            SatRegion region(starter);
-            region.expand(avoidTets, false);
-
-            if (region.numberOfBoundaryAnnuli() != 2)
+            // We have a starter block and a region built from it.
+            if (region->numberOfBoundaryAnnuli() != 2)
                 continue;
 
             // From the SatRegion specifications we know that the first
             // boundary annulus will be upperAnnulus.  Find the second.
-            bdryAnnulus = region.boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
+            bdryAnnulus = region->boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
 
             // Hope like hell that this meets up with the lower layering
             // boundary.  Note that this will force it to be a torus also.
@@ -292,7 +288,7 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* tri,
             // Note that curvesToBdryAnnulus is self-inverse, so we won't
             // bother inverting it even though we should.
             ans = new PluggedTorusBundle(bundle, new Isomorphism<3>(iso),
-                std::move(region),
+                std::move(*region),
                 curvesToBdryAnnulus * upperRolesToLower.inverse() *
                 curvesToLowerAnnulus);
             return true;

@@ -158,7 +158,6 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
         Matrix2 layeringToAnnulus1;
 
         // Try the three possible orientations for fibres on the other side.
-        SatBlock* otherStarter;
         for (int plugPos = 0; plugPos < 3; plugPos++) {
             // Construct the boundary annulus for the second region.
             // Refresh the tetrahedra as well as the vertex roles, since
@@ -195,10 +194,7 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
             // See if we can flesh the other side out to an entire region.
             otherSide.switchSides();
 
-            if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
-                r1 = std::make_unique<SatRegion>(otherStarter);
-                r1->expand(usedTets);
-
+            if ((r1 = SatRegion::beginsRegion(otherSide, usedTets))) {
                 if (r1->numberOfBoundaryAnnuli() == 1) {
                     // This is it!  Stop searching.
                     r0 = std::move(r);

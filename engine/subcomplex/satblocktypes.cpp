@@ -146,32 +146,6 @@ bool SatBlock::operator < (const SatBlock& compare) const {
     return false;
 }
 
-SatBlock* SatBlock::isBlock(const SatAnnulus& annulus, TetList& avoidTets) {
-    SatBlock* ans;
-
-    // Run through the types of blocks that we know about.
-    if ((ans = SatMobius::isBlockMobius(annulus, avoidTets)))
-        return ans;
-    if ((ans = SatLST::isBlockLST(annulus, avoidTets)))
-        return ans;
-    if ((ans = SatTriPrism::isBlockTriPrism(annulus, avoidTets)))
-        return ans;
-    if ((ans = SatCube::isBlockCube(annulus, avoidTets)))
-        return ans;
-    if ((ans = SatReflectorStrip::isBlockReflectorStrip(annulus, avoidTets)))
-        return ans;
-
-    // As a last attempt, try a single layering.  We don't have to worry
-    // about the degeneracy, since we'll never get a loop of these
-    // things (since that would form a disconnected component, and we
-    // never use one as a starting block).
-    if ((ans = SatLayering::isBlockLayering(annulus, avoidTets)))
-        return ans;
-
-    // Nothing was found.
-    return 0;
-}
-
 void SatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (position_ == 0) {
         // Diagonal:
@@ -210,7 +184,7 @@ void SatMobius::writeAbbr(std::ostream& out, bool tex) const {
         out << ')';
 }
 
-SatMobius* SatMobius::isBlockMobius(const SatAnnulus& annulus, TetList&) {
+SatMobius* SatMobius::beginsRegion(const SatAnnulus& annulus, TetList&) {
     // The two tetrahedra must be joined together along the annulus triangles.
 
     if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][3]) !=
@@ -282,7 +256,7 @@ void SatLST::transform(const Triangulation<3>& originalTri,
     lst_.transform(originalTri, iso, newTri);
 }
 
-SatLST* SatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
+SatLST* SatLST::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
     // Do we move to a common usable tetrahedron?
 
     if (annulus.tet[0] != annulus.tet[1])
@@ -377,17 +351,17 @@ void SatTriPrism::adjustSFS(SFSpace& sfs, bool reflect) const {
         sfs.insertFibre(1, reflect ? -2 : 2);
 }
 
-SatTriPrism* SatTriPrism::isBlockTriPrism(const SatAnnulus& annulus,
+SatTriPrism* SatTriPrism::beginsRegion(const SatAnnulus& annulus,
         TetList& avoidTets) {
     SatTriPrism* ans;
 
     // First try for one of major type.
-    if ((ans = isBlockTriPrismMajor(annulus, avoidTets)))
+    if ((ans = beginsRegionMajor(annulus, avoidTets)))
         return ans;
 
     // Now try the reflected version.
     SatAnnulus altAnnulus = annulus.verticalReflection();
-    if ((ans = isBlockTriPrismMajor(altAnnulus, avoidTets))) {
+    if ((ans = beginsRegionMajor(altAnnulus, avoidTets))) {
         // Reflect it back again but mark it as a minor variant.
         ans->major_ = false;
 
@@ -402,7 +376,7 @@ SatTriPrism* SatTriPrism::isBlockTriPrism(const SatAnnulus& annulus,
     return 0;
 }
 
-SatTriPrism* SatTriPrism::isBlockTriPrismMajor(const SatAnnulus& annulus,
+SatTriPrism* SatTriPrism::beginsRegionMajor(const SatAnnulus& annulus,
         TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
         return 0;
@@ -496,8 +470,7 @@ void SatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
     sfs.insertFibre(1, reflect ? -2 : 2);
 }
 
-SatCube* SatCube::isBlockCube(const SatAnnulus& annulus,
-        TetList& avoidTets) {
+SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
         return 0;
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
@@ -639,8 +612,8 @@ void SatReflectorStrip::adjustSFS(SFSpace& sfs, bool) const {
         sfs.addReflector(false);
 }
 
-SatReflectorStrip* SatReflectorStrip::isBlockReflectorStrip(
-        const SatAnnulus& annulus, TetList& avoidTets) {
+SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
+        TetList& avoidTets) {
     // Hunt for the initial segment of the reflector strip that lies
     // behind the given annulus.
 
@@ -865,7 +838,7 @@ void SatLayering::adjustSFS(SFSpace& sfs, bool reflect) const {
     // Over the diagonal, there is no change at all.
 }
 
-SatLayering* SatLayering::isBlockLayering(const SatAnnulus& annulus,
+SatLayering* SatLayering::beginsRegion(const SatAnnulus& annulus,
         TetList& avoidTets) {
     // Must be a common usable tetrahedron.
     if (annulus.tet[0] != annulus.tet[1])

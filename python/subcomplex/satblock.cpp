@@ -53,9 +53,7 @@ void addSatBlock(pybind11::module_& m) {
         .def("adjacentAnnulus", &SatBlock::adjacentAnnulus)
         .def("adjacentReflected", &SatBlock::adjacentReflected)
         .def("adjacentBackwards", &SatBlock::adjacentBackwards)
-        .def("setAdjacent", &SatBlock::setAdjacent)
         .def("adjustSFS", &SatBlock::adjustSFS)
-        .def("transform", &SatBlock::transform)
         .def("nextBoundaryAnnulus", [](SatBlock& b, unsigned a, bool fromPrev) {
             const SatBlock* nextBlock;
             unsigned nextAnnulus;
@@ -75,10 +73,6 @@ void addSatBlock(pybind11::module_& m) {
         // see https://github.com/pybind/pybind11/issues/1487 for details.
         .def("__lt__", [](const SatBlock& lhs, const SatBlock& rhs) {
             return lhs < rhs;
-        })
-        .def_static("isBlock", [](const SatAnnulus& a) {
-            SatBlock::TetList avoidTets;
-            return SatBlock::isBlock(a, avoidTets);
         })
     ;
     regina::python::add_output(c);

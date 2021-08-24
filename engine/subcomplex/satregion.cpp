@@ -75,6 +75,33 @@ void SatRegion::initStarters() {
     }
 }
 
+SatBlock* SatRegion::hasBlock(const SatAnnulus& annulus,
+        SatBlock::TetList& avoidTets) {
+    SatBlock* ans;
+
+    // Run through the types of blocks that we know about.
+    if ((ans = SatMobius::beginsRegion(annulus, avoidTets)))
+        return ans;
+    if ((ans = SatLST::beginsRegion(annulus, avoidTets)))
+        return ans;
+    if ((ans = SatTriPrism::beginsRegion(annulus, avoidTets)))
+        return ans;
+    if ((ans = SatCube::beginsRegion(annulus, avoidTets)))
+        return ans;
+    if ((ans = SatReflectorStrip::beginsRegion(annulus, avoidTets)))
+        return ans;
+
+    // As a last attempt, try a single layering.  We don't have to worry
+    // about the degeneracy, since we'll never get a loop of these
+    // things (since that would form a disconnected component, and we
+    // never use one as a starting block).
+    if ((ans = SatLayering::beginsRegion(annulus, avoidTets)))
+        return ans;
+
+    // Nothing was found.
+    return nullptr;
+}
+
 SatRegion::SatRegion(SatBlock* starter) :
         baseEuler_(1),
         baseOrbl_(true),
@@ -234,7 +261,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
             // We can happily jump to the other side, since we know
             // there are tetrahedra present.
             // Is there a new block there?
-            if (SatBlock* adjBlock = SatBlock::isBlock(
+            if (SatBlock* adjBlock = hasBlock(
                     currBlock->annulus(ann).otherSide(), avoidTets)) {
                 // We found a new adjacent block that we haven't seen before.
 

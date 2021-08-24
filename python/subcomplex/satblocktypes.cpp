@@ -48,10 +48,6 @@ using regina::SatTriPrism;
 void addSatBlockTypes(pybind11::module_& m) {
     pybind11::class_<SatMobius, regina::SatBlock>(m, "SatMobius")
         .def("position", &SatMobius::position)
-        .def_static("isBlockMobius", [](const SatAnnulus& a) {
-            SatBlock::TetList avoidTets;
-            return SatMobius::isBlockMobius(a, avoidTets);
-        })
     ;
 
 
@@ -59,48 +55,28 @@ void addSatBlockTypes(pybind11::module_& m) {
         .def("lst", &SatLST::lst,
             pybind11::return_value_policy::reference_internal)
         .def("roles", &SatLST::roles)
-        .def_static("isBlockLST", [](const SatAnnulus& a) {
-            SatBlock::TetList avoidTets;
-            return SatLST::isBlockLST(a, avoidTets);
-        })
     ;
 
 
     pybind11::class_<SatTriPrism, regina::SatBlock>(m, "SatTriPrism")
         .def("isMajor", &SatTriPrism::isMajor)
-        .def_static("isBlockTriPrism", [](const SatAnnulus& a) {
-            SatBlock::TetList avoidTets;
-            return SatTriPrism::isBlockTriPrism(a, avoidTets);
-        })
         .def_static("model", &SatTriPrism::model)
     ;
 
 
     pybind11::class_<SatCube, regina::SatBlock>(m, "SatCube")
-        .def_static("isBlockCube", [](const SatAnnulus& a) {
-            SatBlock::TetList avoidTets;
-            return SatCube::isBlockCube(a, avoidTets);
-        })
         .def_static("model", &SatCube::model)
     ;
 
 
     pybind11::class_<SatReflectorStrip, regina::SatBlock>(
             m, "SatReflectorStrip")
-        .def_static("isBlockReflectorStrip", [](const SatAnnulus& a) {
-            SatBlock::TetList avoidTets;
-            return SatReflectorStrip::isBlockReflectorStrip(a, avoidTets);
-        })
         .def_static("model", &SatReflectorStrip::model)
     ;
 
 
     pybind11::class_<SatLayering, regina::SatBlock>(m, "SatLayering")
         .def("overHorizontal", &SatLayering::overHorizontal)
-        .def_static("isBlockLayering", [](const SatAnnulus& a) {
-            SatBlock::TetList avoidTets;
-            return SatLayering::isBlockLayering(a, avoidTets);
-        })
     ;
 }
 

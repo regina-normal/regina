@@ -180,7 +180,6 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
 
         // Start looking for the end regions.
         int plugPos;
-        SatBlock* otherStarter;
         Matrix2 curvesCentreToLayering, layeringToEndAnnulus;
 
         for (e = 0; e < 2; e++) {
@@ -243,10 +242,7 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
                 // See if we can flesh the other side out to an entire region.
                 otherSide.switchSides();
 
-                if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
-                    end[e] = std::make_unique<SatRegion>(otherStarter);
-                    end[e]->expand(usedTets);
-
+                if ((end[e] = SatRegion::beginsRegion(otherSide, usedTets))) {
                     if (end[e]->numberOfBoundaryAnnuli() == 1) {
                         // Got it!
                         // Do a final conversion from annulus first triangle
