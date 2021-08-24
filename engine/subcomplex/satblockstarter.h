@@ -105,18 +105,6 @@ class SatBlockStarter {
          */
         const SatBlock& block() const;
 
-        /**
-         * Returns a newly allocated copy of this saturated block,
-         * showing how it appears in the given triangulation.
-         *
-         * @param tri the triangulation that the new block will refer to.
-         * @param iso a mapping from triangulation() to the given triangulation
-         * \a tri, showing how this block appears as a subcomplex of \a tri.
-         * @return the newly allocated block structure.
-         */
-        SatBlock* isomorphicCopy(Triangulation<3>& tri,
-            const Isomorphism<3>& iso) const;
-
         // Mark this class as non-copyable.
         SatBlockStarter(const SatBlockStarter&) = delete;
         SatBlockStarter& operator = (const SatBlockStarter&) = delete;
@@ -131,7 +119,20 @@ class SatBlockStarter {
          */
         SatBlockStarter();
 
+        /**
+         * Returns a newly allocated copy of this saturated block,
+         * showing how it appears in the given triangulation.
+         *
+         * @param tri the triangulation that the new block will refer to.
+         * @param iso a mapping from triangulation() to the given triangulation
+         * \a tri, showing how this block appears as a subcomplex of \a tri.
+         * @return the newly allocated block structure.
+         */
+        SatBlock* isomorphicCopy(Triangulation<3>& tri,
+            const Isomorphism<3>& iso) const;
+
     friend class SatBlockStarterSet;
+    friend class SatRegion;
 };
 
 /**

@@ -674,7 +674,6 @@ Version 6.1  [ TODO ]
               SatBlockSpec with arbitrary content.
         Class SatBlockStarter:
             - The routine block() now returns by reference, not by pointer.
-            - New routine isomorphicCopy().
         Class SatBlockStarterSearcher:
             - Removed completely.  Instead use the new, simpler and more
               flexible routine SatRegion::findStarterBlocks().
