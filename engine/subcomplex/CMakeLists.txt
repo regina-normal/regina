@@ -64,6 +64,7 @@ if (${REGINA_INSTALL_DEV})
     satblockstarter.h
     satblocktypes.h
     satregion.h
+    satregion-impl.h
     snappeacensustri.h
     snappedball.h
     snappedtwosphere.h

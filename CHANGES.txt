@@ -675,6 +675,9 @@ Version 6.1  [ TODO ]
         Class SatBlockStarter:
             - The routine block() now returns by reference, not by pointer.
             - New routine isomorphicCopy().
+        Class SatBlockStarterSearcher:
+            - Removed completely.  Instead use the new, simpler and more
+              flexible routine SatRegion::findStarterBlocks().
         Class SatBlockStarterSet:
             - Now requires a (lightweight) object to work with instead
               of using static routines only.  This makes the class
@@ -688,6 +691,8 @@ Version 6.1  [ TODO ]
             - The block output argument for boundaryAnnulus() now sends back a
               const pointer.
             - Added move construction, and move assignment.
+            - New static routine findStarterBlocks(), which replaces the old
+              class SatBlockStarterSearcher.
         Class SFSAlt, SFSAltSet:
             - Removed the old SFSAltSet class; replaced this with a new SFSAlt
               class with a static altSet() function that returns a std::vector.

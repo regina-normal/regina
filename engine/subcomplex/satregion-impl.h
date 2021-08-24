@@ -30,81 +30,74 @@
  *                                                                        *
  **************************************************************************/
 
-#include <mutex>
-#include "subcomplex/satblockstarter.h"
-#include "subcomplex/satblocktypes.h"
+/*! \file subcomplex/satregion-impl.h
+ *  \brief Full implementation details for SatRegion::findStarterBlocks().
+ *
+ *  This file is \e not included automatically by satregion.h.
+ */
+
+#ifndef __REGINA_SATREGION_IMPL_H
+#ifndef __DOXYGEN
+#define __REGINA_SATREGION_IMPL_H
+#endif
+
 #include "subcomplex/satregion.h"
+#include "subcomplex/satblockstarter.h"
 
 namespace regina {
 
-namespace {
-    std::mutex starterBlocksMutex;
-}
+template <typename Action, typename... Args>
+bool SatRegion::findStarterBlocks(Triangulation<3>* tri,
+        bool mustBeComplete, Action&& action, Args&&... args) {
+    SatBlock::TetList usedTets;
 
-std::list<const SatBlockStarter*> SatBlockStarterSet::blocks;
+    // Hunt for a starting block.
+    for (const SatBlockStarter* model : SatBlockStarterSet()) {
+        // Look for this particular starting block.
+        // Get trivialities out of the way first.
+        if (tri->isOrientable() && ! model->triangulation().isOrientable())
+            continue;
+        if (tri->size() < model->triangulation().size())
+            continue;
 
-SatBlock* SatBlockStarter::isomorphicCopy(Triangulation<3>& tri,
-        const Isomorphism<3>& iso) const {
-    SatBlock* ans = block_->clone();
-    ans->transform(triangulation_, iso, tri);
-    return ans;
-}
+        // Find all isomorphisms of the starter block within the given
+        // triangulation.
+        // In the lambda below, most of our captures are pointers (hence [=]).
+        bool terminate = model->triangulation().findAllSubcomplexesIn(*tri,
+                [=, &usedTets](const Isomorphism<3>& iso) {
+            // See if this isomorphism leads somewhere useful.
+            SatBlock* starter = model->isomorphicCopy(*tri, iso);
 
-SatBlockStarterSet::SatBlockStarterSet() {
-    std::scoped_lock lock(starterBlocksMutex);
-    if (blocks.empty()) {
-        SatBlockStarter* s;
+            // Create an initial blacklist of tetrahedra consisting of
+            // those in the isomorphic image of the initial starting block.
+            for (unsigned long i = 0; i < model->triangulation().size(); i++)
+                usedTets.insert(tri->tetrahedron(iso.tetImage(i)));
 
-        s = new SatBlockStarter;
-        s->block_ = SatTriPrism::insertBlock(s->triangulation_, true);
-        blocks.push_back(s);
+            // Wrap an initial region around the block, and expand.
+            SatRegion* region = new SatRegion(starter);
+            if (! region->expand(usedTets, mustBeComplete)) {
+                // Nope.  Keep on searching.
+                delete region;
+                usedTets.clear();
+                return false;
+            }
 
-        s = new SatBlockStarter;
-        s->block_ = SatCube::insertBlock(s->triangulation_);
-        blocks.push_back(s);
+            // We have a saturated region: give it to the caller to process.
+            bool terminate = action(std::unique_ptr<SatRegion>(region),
+                usedTets, std::forward<Args>(args)...);
 
-        // Try various reflector strips of small length.
-        s = new SatBlockStarter;
-        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
-            1, false);
-        blocks.push_back(s);
-
-        s = new SatBlockStarter;
-        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
-            1, true);
-        blocks.push_back(s);
-
-        s = new SatBlockStarter;
-        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
-            2, false);
-        blocks.push_back(s);
-
-        s = new SatBlockStarter;
-        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
-            2, true);
-        blocks.push_back(s);
-
-        s = new SatBlockStarter;
-        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
-            3, false);
-        blocks.push_back(s);
-
-        s = new SatBlockStarter;
-        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
-            3, true);
-        blocks.push_back(s);
-
-        s = new SatBlockStarter;
-        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
-            4, false);
-        blocks.push_back(s);
-
-        s = new SatBlockStarter;
-        s->block_ = SatReflectorStrip::insertBlock(s->triangulation_,
-            4, true);
-        blocks.push_back(s);
+            usedTets.clear();
+            return terminate;
+        });
+        if (terminate)
+            return true;
     }
+
+    // Search over.  Nothing here to see.
+    return false;
 }
 
 } // namespace regina
+
+#endif
 

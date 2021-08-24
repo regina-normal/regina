@@ -34,43 +34,13 @@
 #include "manifold/sfs.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/layering.h"
-#include "subcomplex/satblockstarter.h"
-#include "subcomplex/satregion.h"
+#include "subcomplex/satregion-impl.h"
 
 namespace regina {
 
-/**
- * A subclass of SatBlockStarterSearcher that, upon finding a starter
- * block, attempts to flesh this out to a pair of saturated regions
- * joined along their single torus boundaries, as desribed by the
- * BlockedSFSPair class.
- */
-struct BlockedSFSPairSearcher : public SatBlockStarterSearcher {
-    SatRegion* region[2];
-        /**< The two bounded saturated regions that are joined together,
-             if the entire BlockedSFSPair structure has been successfully
-             found; otherwise, two null pointers if we are still searching. */
-    Matrix2 matchingReln;
-        /**< The matrix describing how the region boundaries are joined
-             together.  This matrix expresses the fibre/base curves on the
-             second region boundary in terms of the fibre/base curves on
-             the first, as described by GraphPair::matchingReln(). */
-
-    /**
-     * Creates a new searcher whose \a region pointers are both null.
-     */
-    BlockedSFSPairSearcher() : region { nullptr, nullptr } {
-    }
-
-    protected:
-        bool useStarterBlock(SatRegion*, SatBlock::TetList&) override;
-};
-
 BlockedSFSPair::~BlockedSFSPair() {
-    if (region_[0])
-        delete region_[0];
-    if (region_[1])
-        delete region_[1];
+    delete region_[0];
+    delete region_[1];
 }
 
 std::unique_ptr<Manifold> BlockedSFSPair::manifold() const {
@@ -135,137 +105,130 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
         return nullptr;
 
     // Hunt for a starting block.
-    BlockedSFSPairSearcher searcher;
-    searcher.findStarterBlocks(tri, false);
+    std::unique_ptr<SatRegion> r0;
+    std::unique_ptr<SatRegion> r1;
+    Matrix2 matchingReln;
+    bool found = SatRegion::findStarterBlocks(tri, false,
+            [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
+        if (r->numberOfBoundaryAnnuli() != 1)
+            return false;
+
+        // Insist on this boundary being untwisted.
+        const SatBlock* bdryBlock;
+        unsigned bdryAnnulus;
+        bool bdryVert, bdryHoriz;
+        r->boundaryAnnulus(0, bdryBlock, bdryAnnulus, bdryVert, bdryHoriz);
+
+        bool firstRegionReflected =
+            ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
+
+        const SatBlock* tmpBlock;
+        unsigned tmpAnnulus;
+        bool tmpVert, tmpHoriz;
+        bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
+            tmpVert, tmpHoriz, false);
+        if (tmpVert)
+            return false;
+
+        SatAnnulus bdry = bdryBlock->annulus(bdryAnnulus);
+
+        // We have a boundary annulus for the first region.
+
+        // Hunt for a layering.
+        Layering layering(bdry.tet[0], bdry.roles[0],
+            bdry.tet[1], bdry.roles[1]);
+        layering.extend();
+
+        // Relation from fibre/orbifold to layering first
+        // triangle markings 01/02:
+        Matrix2 curves0ToLayering = layering.boundaryReln() *
+            Matrix2(-1, 0, 0, firstRegionReflected ? -1 : 1);
+
+        // We make the shell of an other-side boundary annulus; we will fill
+        // in the precise vertex role permutations later on.
+        SatAnnulus otherSide(layering.newBoundaryTet(0), Perm<4>(),
+            layering.newBoundaryTet(1), Perm<4>());
+
+        if (otherSide.meetsBoundary())
+            return false;
+
+        // Mapping from (layering first triangle markings 01/02) to
+        // (other side annulus first triangle markings 01/02).  Like the other
+        // side vertex roles, this mapping will be filled in later.
+        Matrix2 layeringToAnnulus1;
+
+        // Try the three possible orientations for fibres on the other side.
+        SatBlock* otherStarter;
+        for (int plugPos = 0; plugPos < 3; plugPos++) {
+            // Construct the boundary annulus for the second region.
+            // Refresh the tetrahedra as well as the vertex roles, since
+            // it may have switched sides since our last run through the loop.
+            otherSide.tet[0] = layering.newBoundaryTet(0);
+            otherSide.tet[1] = layering.newBoundaryTet(1);
+
+            if (plugPos == 0) {
+                otherSide.roles[0] = layering.newBoundaryRoles(0);
+                otherSide.roles[1] = layering.newBoundaryRoles(1);
+                layeringToAnnulus1 = Matrix2(1, 0, 0, 1);
+            } else if (plugPos == 1) {
+                otherSide.roles[0] = layering.newBoundaryRoles(0) *
+                    Perm<4>(1, 2, 0, 3);
+                otherSide.roles[1] = layering.newBoundaryRoles(1) *
+                    Perm<4>(1, 2, 0, 3);
+                layeringToAnnulus1 = Matrix2(-1, 1, -1, 0);
+            } else {
+                otherSide.roles[0] = layering.newBoundaryRoles(0) *
+                    Perm<4>(2, 0, 1, 3);
+                otherSide.roles[1] = layering.newBoundaryRoles(1) *
+                    Perm<4>(2, 0, 1, 3);
+                layeringToAnnulus1 = Matrix2(0, -1, 1, -1);
+            }
+
+            // Clear out the used tetrahedron list.  Everything before the new
+            // layering boundary is self-contained, so we won't run into it
+            // again on the other side.  We'll just re-insert the layering
+            // boundary tetrahedra.
+            usedTets.clear();
+            usedTets.insert(layering.newBoundaryTet(0));
+            usedTets.insert(layering.newBoundaryTet(1));
+
+            // See if we can flesh the other side out to an entire region.
+            otherSide.switchSides();
+
+            if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
+                r1 = std::make_unique<SatRegion>(otherStarter);
+                r1->expand(usedTets);
+
+                if (r1->numberOfBoundaryAnnuli() == 1) {
+                    // This is it!  Stop searching.
+                    r0 = std::move(r);
+
+                    // Do a final conversion from annulus first triangle
+                    // markings 01/02 and exit.
+                    matchingReln = Matrix2(-1, 0, 0, 1) * layeringToAnnulus1 *
+                        curves0ToLayering;
+                    return true;
+                }
+
+                // Nup, this one didn't work.
+                r1.reset();
+            }
+        }
+
+        // Sigh, nothing works.
+        return false;
+    });
 
     // Any luck?
-    if (searcher.region[0]) {
+    if (found) {
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new BlockedSFSPair(searcher.region[0], searcher.region[1],
-            searcher.matchingReln);
+        return new BlockedSFSPair(r0.release(), r1.release(), matchingReln);
     }
 
     // Nope.
     return nullptr;
-}
-
-bool BlockedSFSPairSearcher::useStarterBlock(SatRegion* r,
-        SatBlock::TetList& usedTets) {
-    if (r->numberOfBoundaryAnnuli() != 1) {
-        delete r;
-        return true;
-    }
-
-    // Insist on this boundary being untwisted.
-    const SatBlock* bdryBlock;
-    unsigned bdryAnnulus;
-    bool bdryVert, bdryHoriz;
-    r->boundaryAnnulus(0, bdryBlock, bdryAnnulus, bdryVert, bdryHoriz);
-
-    bool firstRegionReflected =
-        ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
-
-    const SatBlock* tmpBlock;
-    unsigned tmpAnnulus;
-    bool tmpVert, tmpHoriz;
-    bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
-        tmpVert, tmpHoriz, false);
-    if (tmpVert) {
-        delete r;
-        return true;
-    }
-
-    SatAnnulus bdry = bdryBlock->annulus(bdryAnnulus);
-
-    // We have a boundary annulus for the first region.
-
-    // Hunt for a layering.
-    Layering layering(bdry.tet[0], bdry.roles[0], bdry.tet[1], bdry.roles[1]);
-    layering.extend();
-
-    // Relation from fibre/orbifold to layering first triangle markings 01/02:
-    Matrix2 curves0ToLayering = layering.boundaryReln() *
-        Matrix2(-1, 0, 0, firstRegionReflected ? -1 : 1);
-
-    // We make the shell of an other-side boundary annulus; we will fill
-    // in the precise vertex role permutations later on.
-    SatAnnulus otherSide(layering.newBoundaryTet(0), Perm<4>(),
-        layering.newBoundaryTet(1), Perm<4>());
-
-    if (otherSide.meetsBoundary()) {
-        delete r;
-        return true;
-    }
-
-    // Mapping from (layering first triangle markings 01/02) to
-    // (other side annulus first triangle markings 01/02).  Like the other
-    // side vertex roles, this mapping will be filled in later.
-    Matrix2 layeringToAnnulus1;
-
-    // Try the three possible orientations for fibres on the other side.
-    SatBlock* otherStarter;
-    for (int plugPos = 0; plugPos < 3; plugPos++) {
-        // Construct the boundary annulus for the second region.
-        // Refresh the tetrahedra as well as the vertex roles, since
-        // it may have switched sides since our last run through the loop.
-        otherSide.tet[0] = layering.newBoundaryTet(0);
-        otherSide.tet[1] = layering.newBoundaryTet(1);
-
-        if (plugPos == 0) {
-            otherSide.roles[0] = layering.newBoundaryRoles(0);
-            otherSide.roles[1] = layering.newBoundaryRoles(1);
-            layeringToAnnulus1 = Matrix2(1, 0, 0, 1);
-        } else if (plugPos == 1) {
-            otherSide.roles[0] = layering.newBoundaryRoles(0) *
-                Perm<4>(1, 2, 0, 3);
-            otherSide.roles[1] = layering.newBoundaryRoles(1) *
-                Perm<4>(1, 2, 0, 3);
-            layeringToAnnulus1 = Matrix2(-1, 1, -1, 0);
-        } else {
-            otherSide.roles[0] = layering.newBoundaryRoles(0) *
-                Perm<4>(2, 0, 1, 3);
-            otherSide.roles[1] = layering.newBoundaryRoles(1) *
-                Perm<4>(2, 0, 1, 3);
-            layeringToAnnulus1 = Matrix2(0, -1, 1, -1);
-        }
-
-        // Clear out the used tetrahedron list.  Everything before the new
-        // layering boundary is self-contained, so we won't run into it
-        // again on the other side.  We'll just re-insert the layering
-        // boundary tetrahedra.
-        usedTets.clear();
-        usedTets.insert(layering.newBoundaryTet(0));
-        usedTets.insert(layering.newBoundaryTet(1));
-
-        // See if we can flesh the other side out to an entire region.
-        otherSide.switchSides();
-
-        if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
-            region[1] = new SatRegion(otherStarter);
-            region[1]->expand(usedTets);
-
-            if (region[1]->numberOfBoundaryAnnuli() == 1) {
-                // This is it!  Stop searching.
-                region[0] = r;
-
-                // Do a final conversion from annulus first triangle markings
-                // 01/02 and exit.
-                matchingReln = Matrix2(-1, 0, 0, 1) * layeringToAnnulus1 *
-                    curves0ToLayering;
-                return false;
-            }
-
-            // Nup, this one didn't work.
-            delete region[1];
-            region[1] = nullptr;
-        }
-    }
-
-    // Sigh, nothing works.
-    delete r;
-    return true;
 }
 
 } // namespace regina

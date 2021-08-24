@@ -259,11 +259,10 @@ void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept;
  * description.
  *
  * Blocks cannot be added to a region by hand.  The way a region is
- * constructed is by locating some initial block within a triangulation
- * and passing this to the SatRegion constructor, and then by calling
- * expand() to locate adjacent blocks and expand the region as far as
- * possible.  For locating initial blocks, the class
- * SatBlockStarterSearcher may be of use.
+ * constructed is by locating some initial block within a triangulation and
+ * passing this to the SatRegion constructor, and then by calling expand()
+ * to locate adjacent blocks and expand the region as far as possible.  For
+ * locating initial blocks, the routine findStarterBlocks() may be of use.
  *
  * \warning It is crucial that the adjacency information stored in the
  * blocks is consistent with the region containing them.  All this
@@ -325,7 +324,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * Typically a region is initialised using this constructor, and
          * then grown using the expand() routine.  For help in finding
-         * an initial starter block, see the SatBlockStarterSearcher class.
+         * an initial starter block, see the routine findStarterBlocks().
          *
          * This region will claim ownership of the given block, and upon
          * destruction it will destroy this block also.
@@ -685,6 +684,68 @@ class SatRegion : public Output<SatRegion> {
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        /**
+         * Runs a search for every isomorphic embedding of every
+         * starter block from the global SatBlockStarterSet within the
+         * given triangulation.
+         *
+         * Each time an embedding of a starter block is discovered, the block
+         * will be wrapped in a new SatRegion which describes how the block
+         * appears within the given triangulation.  The region will be expanded
+         * as far as possible (using expand()) and then passed to \a action,
+         * which must be a function or some other callable object.
+         *
+         * - The first argument to \a action must be of type
+         *   std::unique_ptr<SatRegion>; this will be the newly constructed
+         *   and expanded region that contains the starter block that was found.
+         *   As expected from std::unique_ptr, this function will have
+         *   relinquished all ownership of the region, and your action
+         *   can do what it likes with it.
+         *
+         * - The second argument to \a action must be of type
+         *   SatBlock::TetList&.  This list will contain all tetrahedra
+         *   currently used by the region, and \a action is welcome to
+         *   modify the list as it pleases.  This function will clear and
+         *   reuse the list after \a action returns.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return a \c bool.  A return value of \c false
+         *   indicates that the search for starter blocks should continue,
+         *   and a return value of \c true indicates that the search
+         *   should terminate immediately.
+         *
+         * Note that different embeddings of the same starter block within
+         * \a tri will result in the action being called multiple times
+         * (with different containing regions).
+         *
+         * If you are searching for a region that fills an entire triangulation
+         * component (i.e., every boundary annulus of the region in fact forms
+         * part of the boundary of the triangulation), then you should pass
+         * \a mustBeComplete as \c true.  If a region expansion does not fill
+         * the entire component (as described by the \a stopIfIncomplete
+         * argument to expand()), then it will be discarded and \a action
+         * will not be called for that particular embeddeding of that
+         * particular starter block.
+         *
+         * \headers The implementation of this template function is contained
+         * in a separate header (satregion-impl.h), which is not included
+         * automatically by this file.  If you wish to use this function
+         * in your own code, you will need to include satregion-impl.h.
+         *
+         * \ifacespython Not present.
+         *
+         * @param tri the triangulation in which to search for starter blocks.
+         * @param mustBeComplete \c true if you are searching for a region
+         * that fills an entire triangulation component, as described above.
+         * @return \c true if \a action ever terminated the search by returning
+         * \c true, or \c false if the search was allowed to run to completion.
+         */
+        template <typename Action, typename... Args>
+        static bool findStarterBlocks(Triangulation<3>* tri,
+            bool mustBeComplete, Action&& action, Args&&... args);
 
         // Mark this class as non-copyable.
         SatRegion(const SatRegion&) = delete;

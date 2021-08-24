@@ -33,9 +33,8 @@
 #include "manifold/sfs.h"
 #include "subcomplex/blockedsfs.h"
 #include "subcomplex/layeredsolidtorus.h"
-#include "subcomplex/satblockstarter.h"
 #include "subcomplex/satblocktypes.h"
-#include "subcomplex/satregion.h"
+#include "subcomplex/satregion-impl.h"
 #include <cstdlib> // For labs().
 #include <sstream>
 
@@ -51,29 +50,8 @@ namespace {
     }
 }
 
-/**
- * A subclass of SatBlockStarterSearcher that, upon finding a starter
- * saturated block, attempts to flesh this out to a saturated region
- * that fills the entire triangulation (including all internal triangles).
- */
-struct BlockedSFSSearcher : public SatBlockStarterSearcher {
-    SatRegion* region;
-        /**< The saturated region if one has been found, or \c null
-             if we are still searching. */
-
-    /**
-     * Creates a new searcher whose \a region pointer is null.
-     */
-    BlockedSFSSearcher() : region(nullptr) {
-    }
-
-    protected:
-        bool useStarterBlock(SatRegion*, SatBlock::TetList&) override;
-};
-
 BlockedSFS::~BlockedSFS() {
-    if (region_)
-        delete region_;
+    delete region_;
 }
 
 bool BlockedSFS::isPluggedIBundle(std::string& name) const {
@@ -343,26 +321,23 @@ BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
         return nullptr;
 
     // Hunt for a starting block.
-    BlockedSFSSearcher searcher;
-    searcher.findStarterBlocks(tri, true);
+    std::unique_ptr<SatRegion> region;
+    bool found = SatRegion::findStarterBlocks(tri, true,
+            [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
+        // Got one!  Nothing more to do; just stop the search.
+        region = std::move(r);
+        return true;
+    });
 
-    // Any luck?
-    if (searcher.region) {
+    if (found) {
         // The region expansion worked, and the triangulation is known
         // to be connected.
         // This means we've got one!
-        return new BlockedSFS(searcher.region);
+        return new BlockedSFS(region.release());
     }
 
     // Nope.
     return nullptr;
-}
-
-bool BlockedSFSSearcher::useStarterBlock(SatRegion* r,
-        SatBlock::TetList&) {
-    // Got one!  Stop the search.
-    region = r;
-    return false;
 }
 
 bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,

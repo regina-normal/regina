@@ -69,11 +69,11 @@ class SatRegion;
  * and transform it to describe the corresponding block in the larger
  * triangulation.
  *
- * As such, one of the core uses of this class is as a starting point
- * for identifying regions within triangulations that are formed by
- * joining saturated blocks together along their boundary annuli.  See
- * the routines SatBlockStarterSearcher::findStarterBlocks() and
- * SatRegion::expand() for implementations of this.
+ * As such, one of the core uses of this class is as a starting point for
+ * identifying regions within triangulations that are formed by joining
+ * saturated blocks together along their boundary annuli.  See the routines
+ * SatRegion::findStarterBlocks() and SatRegion::expand() for implementations
+ * of this.
  *
  * \ifacespython Not present.
  */
@@ -214,128 +214,6 @@ class SatBlockStarterSet {
         iterator end();
 };
 
-/**
- * A helper class for locating and using starter blocks within a
- * triangulation.
- *
- * This class provides a means for searching for each starter
- * block in the global hard-coded SatBlockStarterSet within a
- * given triangulation.  More specifically, given some triangulation \a t,
- * this class can locate every isomorphic embedding of every starter
- * block in the global SatBlockStarterSet as a subcomplex of \a t (see
- * Triangulation<3>::isContainedIn() for what is meant by "isomorphic
- * embedding").
- *
- * The routine findStarterBlocks() runs the search.  Each time an
- * isomorphic embedding of a starter block is discovered within the
- * given triangulation, the pure virtual routine useStarterBlock() will
- * be called.  The block that is passed to useStarterBlock() will be a
- * new block that refers to the particular embedding of the starter block
- * within the given triangulation (as opposed to the original block
- * structure referring to the prebuilt triangulation in SatBlockStarter).
- *
- * For each situation that requires searching for starter blocks, a
- * subclass of SatBlockStarterSearcher will be required.  This subclass
- * should override useStarterBlock() to perform whatever action is
- * necessary.
- *
- * Instead of locating all isomorphic embeddings of all starter blocks
- * in the global set, the search can be made to finish early once
- * certain conditions are met.  This is done by implementing
- * useStarterBlock() to return \c false when the search should quit.
- *
- * \ifacespython Not present.
- */
-class SatBlockStarterSearcher {
-    public:
-        /**
-         * Destroys this object and its internal structures.
-         */
-        virtual ~SatBlockStarterSearcher();
-
-        /**
-         * Runs a search for every isomorphic embedding of every
-         * starter block from the global SatBlockStarterSet within the
-         * given triangulation.  Each time an embedding is discovered,
-         * the pure virtual routine useStarterBlock() will be called.
-         *
-         * See the SatBlockStarterSearcher class notes for greater
-         * detail on what this search does and how it runs.
-         *
-         * For subclasses that make use of the \a usedTets data member,
-         * it is worth noting that this routine empties the \a usedTets
-         * list on both entry and exit, as well as every time that
-         * useStarterBlock() returns after each new embedding is found.
-         *
-         * @param tri the triangulation in which to search for starter
-         * blocks.
-         */
-        void findStarterBlocks(Triangulation<3>* tri, bool mustBeComplete);
-
-        // Mark this class as non-copyable.
-        SatBlockStarterSearcher(const SatBlockStarterSearcher&) = delete;
-        SatBlockStarterSearcher& operator = (const SatBlockStarterSearcher&) =
-            delete;
-
-    protected:
-        /**
-         * Default constructor, for use by subclasses.
-         */
-        SatBlockStarterSearcher() = default;
-
-        /**
-         * Used by subclasses to process each starter block embedding that
-         * is found.
-         *
-         * Suppose that the main search routine findStarterBlocks() has
-         * been called with some triangulation \a t.  Each time it
-         * locates an isomorphic embedding of a starter block within \a t,
-         * it will call useStarterBlock().  Subclasses of
-         * SatBlockStarterSearcher should therefore override
-         * useStarterBlock() to process each embedding in whatever way
-         * is appropriate for the problem at hand.
-         *
-         * The block passed in the argument \a starter is a newly
-         * created structure describing the starter block as it appears
-         * within the triangulation \a t.  Thus different embeddings of
-         * the same starter block within \a t will pass different
-         * \a starter arguments to this routine.
-         * It is the responsibility of useStarterBlock() to either
-         * destroy the new block \a starter or pass ownership of it
-         * elsewhere.
-         *
-         * When this routine is called, the data member \a usedTets
-         * will contain a list of all tetrahedra from the triangulation
-         * \a t that appear within the relevant starter block embedding.
-         * The reimplementation of useStarterBlock() may modify this list
-         * as it pleases, since the main search routine will empty the
-         * list anyway when useStarterBlock() returns.  One possible use
-         * for the \a usedTets data member is for passing to
-         * SatBlock::isBlock() or SatRegion::expand() as the list of
-         * tetrahedra to avoid in further searches.
-         *
-         * This routine must return a boolean; this allows subclasses to
-         * immediately terminate the main search once they have found
-         * whatever it is they were looking for.  A return value of
-         * \c true signifies that the search should continue as normal,
-         * whereas a return value of \c false signifies that the search
-         * should end immediately (specifically, that findStarterBlocks()
-         * should clean up and return before all remaining embeddings of all
-         * starter blocks have been found).
-         *
-         * \warning Subclasses must remember to either destroy or claim
-         * ownership of the newly created block \a starter.
-         *
-         * @param starter a newly created structure describing the
-         * starter block as it appears within the larger triangulation
-         * currently under examination.
-         * @return \c true if the search for embeddings of starter blocks
-         * should continue, or \c false if the search should stop immediately.
-         */
-        virtual bool useStarterBlock(SatRegion* region,
-            SatBlock::TetList& usedTets) = 0;
-};
-
 /*@}*/
 
 // Inline functions for SatBlockStarter
@@ -363,11 +241,6 @@ inline SatBlockStarterSet::iterator SatBlockStarterSet::begin() {
 
 inline SatBlockStarterSet::iterator SatBlockStarterSet::end() {
     return blocks.end();
-}
-
-// Inline functions for SatBlockStarterSearcher
-
-inline SatBlockStarterSearcher::~SatBlockStarterSearcher() {
 }
 
 } // namespace regina
