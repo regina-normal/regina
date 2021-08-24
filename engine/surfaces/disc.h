@@ -225,7 +225,7 @@ class DiscSetTet {
         typedef std::nullptr_t Data;
 
     protected:
-        unsigned long internalNDiscs[10];
+        unsigned long discs_[10];
             /**< The number of discs of each type. */
 
     public:
@@ -334,23 +334,24 @@ class DiscSetTet {
          * Arcs of a given type (where \a arcFace and \a arcVertex
          * together define the arc type) are numbered starting at 0 from the
          * tetrahedron vertex outwards.
-         * @param discType returns the disc type of the normal disc that
-         * meets the given normal arc; this will be between 0 and 9
-         * inclusive, as described in the DiscSpec class notes.
-         * Any value may be initially passed.
-         * @param discNumber returns a number that indicates which
+         * @return a pair (\a discType, \a discNumber), where \a discType gives
+         * the disc type of the normal disc that meets the given normal arc
+         * (between 0 and 9 inclusive), and \a discNumber indicates which
          * normal disc of the returned disc type (<tt>discType</tt>)
-         * meets the given normal arc; this will be between 0 and
-         * <tt>nDiscs(discType)-1</tt> inclusive.  Any value may be
-         * initially passed.
+         * meets the given normal arc (between 0 and <tt>nDiscs(discType)-1</tt>
+         * inclusive).
          */
-        void discFromArc(int arcFace, int arcVertex, unsigned long arcNumber,
-            int& discType, unsigned long& discNumber) const;
+        std::pair<int, unsigned long> discFromArc(int arcFace, int arcVertex,
+            unsigned long arcNumber) const;
 };
 
 /**
  * Stores data of type \c T for every normal disc inside a single
  * tetrahedron.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \warning This class converts the number of normal discs of a
  * given type from LargeInteger to <tt>unsigned long</tt>.  See the
@@ -382,7 +383,7 @@ class DiscSetTetData : public DiscSetTet {
         typedef T* DataPtr [[deprecated]];
 
     protected:
-        T* internalData[10];
+        T* data_[10];
             /**< Stores the data corresponding to each normal disc. */
 
     public:
@@ -400,10 +401,10 @@ class DiscSetTetData : public DiscSetTet {
         DiscSetTetData(const NormalSurface& surface,
                 size_t tetIndex) : DiscSetTet(surface, tetIndex) {
             for (int i=0; i<10; i++)
-                if (internalNDiscs[i])
-                    internalData[i] = new T[internalNDiscs[i]];
+                if (discs_[i])
+                    data_[i] = new T[discs_[i]];
                 else
-                    internalData[i] = nullptr;
+                    data_[i] = nullptr;
         }
         /**
          * Creates a new disc set corresponding to the discs of the
@@ -424,12 +425,11 @@ class DiscSetTetData : public DiscSetTet {
                 DiscSetTet(surface, tetIndex) {
             unsigned long disc;
             for (int i=0; i<10; i++)
-                if (internalNDiscs[i]) {
-                    internalData[i] = new T[internalNDiscs[i]];
-                    std::fill(internalData[i],
-                        internalData[i] + internalNDiscs[i], initValue);
+                if (discs_[i]) {
+                    data_[i] = new T[discs_[i]];
+                    std::fill(data_[i], data_[i] + discs_[i], initValue);
                 } else
-                    internalData[i] = nullptr;
+                    data_[i] = nullptr;
         }
         /**
          * Creates a new disc set where the number of discs of each type
@@ -455,11 +455,44 @@ class DiscSetTetData : public DiscSetTet {
                 DiscSetTet(tri0, tri1, tri2, tri3, quad0, quad1, quad2,
                     oct0, oct1, oct2) {
             for (int i=0; i<10; i++)
-                if (internalNDiscs[i])
-                    internalData[i] = new T[internalNDiscs[i]];
+                if (discs_[i])
+                    data_[i] = new T[discs_[i]];
                 else
-                    internalData[i] = 0;
+                    data_[i] = nullptr;
         }
+
+        /**
+         * Creates a new copy of the given set of normal discs.
+         *
+         * The data for each disc will be copied using the copy
+         * assignment operator for type \a T.
+         *
+         * @param src the disc set to copy.
+         */
+        DiscSetTetData(const DiscSetTetData& src) : DiscSetTet(src) {
+            for (int i = 0; i < 10; ++i) {
+                if (discs_[i]) {
+                    data_[i] = new T[discs_[i]];
+                    std::copy(src.data_[i], src.data_[i] + discs_[i], data_[i]);
+                } else
+                    data_[i] = nullptr;
+            }
+        }
+
+        /**
+         * Moves the contents of the given disc set into this new disc set.
+         * This is a fast (constant time) operation.
+         *
+         * The disc set that was passed (\a src) will no longer be usable.
+         *
+         * @param src the disc set to move from.
+         */
+        DiscSetTetData(DiscSetTetData&& src) noexcept :
+                DiscSetTet(src) /* parent copy constructor */ {
+            std::copy(src.data_, src.data_ + 10, data_);
+            std::fill(src.data_, src.data_ + 10, nullptr);
+        }
+
         /**
          * Destroys this disc set and deallocates all data arrays.
          * Note that no assumption is made about type \c T, so if data
@@ -468,7 +501,66 @@ class DiscSetTetData : public DiscSetTet {
          */
         ~DiscSetTetData() {
             for (int i=0; i<10; i++)
-                delete[] internalData[i];
+                delete[] data_[i];
+        }
+
+        /**
+         * Sets this to be a copy of the given set of normal discs.
+         *
+         * The data for each disc will be copied using the copy
+         * assignment operator for type \a T.
+         *
+         * @param src the disc set to copy.
+         * @return a reference to this disc set.
+         */
+        DiscSetTetData& operator = (const DiscSetTetData& src) {
+            // Resize the data arrays:
+            for (int i = 0; i < 10; ++i) {
+                if (discs_[i] != src.discs_[i]) {
+                    delete[] data_[i];
+                    if (src.discs_[i])
+                        data_[i] = new T[src.discs_[i]];
+                    else
+                        data_[i] = nullptr;
+                }
+            }
+
+            // Copy across the disc counts:
+            DiscSetTet::operator = (src);
+
+            // Refill the data arrays:
+            for (int i = 0; i < 10; ++i)
+                if (discs_[i])
+                    std::copy(src.data_[i], src.data_[i] + discs_[i], data_[i]);
+
+            return *this;
+        }
+
+        /**
+         * Moves the contents of the given disc set into this disc set.
+         * This is a fast (constant time) operation.
+         *
+         * The disc set that was passed (\a src) will no longer be usable.
+         *
+         * @param src the disc set to move from.
+         */
+        DiscSetTetData& operator = (DiscSetTetData&& src) noexcept {
+            // Swap the data arrays, and leave the originals for src to destroy:
+            std::swap_ranges(data_, data_ + 10, src.data_);
+
+            // Copy across the disc counts:
+            DiscSetTet::operator = (src);
+
+            return *this;
+        }
+
+        /**
+         * Swaps the contents of this and the given disc set.
+         *
+         * @param other the disc set whose contents should be swapped with this.
+         */
+        void swap(DiscSetTetData& other) noexcept {
+            std::swap_ranges(data_, data_ + 10, other.data_);
         }
 
         /**
@@ -485,15 +577,25 @@ class DiscSetTetData : public DiscSetTet {
          * normal disc.
          */
         T& data(int discType, unsigned long discNumber) {
-            assert(0 <= discType && discType < 10);
-            assert(discNumber < internalNDiscs[discType]);
-            return internalData[discType][discNumber];
+            // assert(0 <= discType && discType < 10);
+            // assert(discNumber < discs_[discType]);
+            return data_[discType][discNumber];
         }
-
-        // Make this class non-copyable.
-        DiscSetTetData(const DiscSetTet&) = delete;
-        DiscSetTetData& operator = (const DiscSetTet&) = delete;
 };
+
+/**
+ * Swaps the contents of the two given disc sets.
+ *
+ * This global routine simply calls DiscSetTetData::swap(); it is provided
+ * so that DiscSetTetData meets the C++ Swappable requirements.
+ *
+ * @param a the first disc set whose contents should be swapped.
+ * @param b the second disc set whose contents should be swapped.
+ */
+template <class T>
+void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
+    a.swap(b);
+}
 
 /**
  * Stores a piece of data alongside every normal disc within a particular
@@ -501,6 +603,10 @@ class DiscSetTetData : public DiscSetTet {
  *
  * End users should not refer to this class directly; instead use one of
  * the type aliases DiscSetSurfaceData<T> or DiscSetSurface.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \tparam TetData This must be either (1) DiscSetTet, in which case
  * there will be no additional data stored for each normal disc; or
@@ -524,8 +630,10 @@ class DiscSetSurfaceDataImpl {
     private:
         TetData** discSets;
             /**< The disc sets and associated data for each tetrahedron. */
-        const Triangulation<3>& triangulation;
-            /**< The triangulation in which the normal surface lives. */
+        const Triangulation<3>* triangulation;
+            /**< The triangulation in which the normal surface lives.
+                 This is kept as a pointer to support assignment; it
+                 must never be null. */
 
     public:
         /**
@@ -537,8 +645,8 @@ class DiscSetSurfaceDataImpl {
          * @param surface the normal surface whose discs we shall use.
          */
         DiscSetSurfaceDataImpl(const NormalSurface& surface) :
-                triangulation(surface.triangulation()) {
-            size_t tot = triangulation.size();
+                triangulation(&surface.triangulation()) {
+            size_t tot = triangulation->size();
             if (tot) {
                 discSets = new TetData*[tot];
                 for (size_t index = 0; index < tot; index++)
@@ -560,14 +668,46 @@ class DiscSetSurfaceDataImpl {
          */
         DiscSetSurfaceDataImpl(const NormalSurface& surface,
                 const typename TetData::Data& initValue) :
-                triangulation(surface.triangulation()) {
-            size_t tot = triangulation.size();
+                triangulation(&surface.triangulation()) {
+            size_t tot = triangulation->size();
             if (tot) {
                 discSets = new TetData*[tot];
                 for (size_t index = 0; index < tot; index++)
                     discSets[index] = new TetData(surface, index, initValue);
             } else
                 discSets = nullptr;
+        }
+
+        /**
+         * Creates a new copy of the given set of normal discs.
+         *
+         * The data for each disc will be copied using the copy
+         * assignment operator for type \a T.
+         *
+         * @param src the disc set to copy.
+         */
+        DiscSetSurfaceDataImpl(const DiscSetSurfaceDataImpl& src) :
+                triangulation(src.triangulation) {
+            size_t tot = triangulation->size();
+            if (tot) {
+                discSets = new TetData*[tot];
+                for (size_t index = 0; index < tot; index++)
+                    discSets[index] = new TetData(*src.discSets[index]);
+            } else
+                discSets = nullptr;
+        }
+
+        /**
+         * Moves the contents of the given disc set into this new disc set.
+         * This is a fast (constant time) operation.
+         *
+         * The disc set that was passed (\a src) will no longer be usable.
+         *
+         * @param src the disc set to move from.
+         */
+        DiscSetSurfaceDataImpl(DiscSetSurfaceDataImpl&& src) noexcept :
+                discSets(src.discSets), triangulation(src.triangulation) {
+            src.discSets = nullptr;
         }
 
         /**
@@ -583,14 +723,88 @@ class DiscSetSurfaceDataImpl {
         }
 
         /**
+         * Sets this to be a copy of the given disc set.
+         *
+         * The data for each disc will be copied using the copy
+         * assignment operator for type \a T.
+         *
+         * @param src the disc set to copy.
+         * @return a reference to this disc set.
+         */
+        DiscSetSurfaceDataImpl& operator = (const DiscSetSurfaceDataImpl& src) {
+            // Destroy the original data.
+            // Note: we could optimise this if it is the same triangulation
+            // (not deleting and reallocating the arrays).
+            // However, we will leave this until if/when it actually matters.
+            if (discSets) {
+                size_t tot = nTets();
+                for (size_t index = 0; index < tot; index++)
+                    delete discSets[index];
+                delete[] discSets;
+            }
+
+            triangulation = src.triangulation;
+
+            size_t tot = triangulation->size();
+            if (tot) {
+                discSets = new TetData*[tot];
+                for (size_t index = 0; index < tot; index++)
+                    discSets[index] = new TetData(*src.discSets[index]);
+            } else
+                discSets = nullptr;
+
+            return *this;
+        }
+
+        /**
+         * Moves the contents of the given disc set into this disc set.
+         *
+         * The running time of this operation is linear in the number of
+         * tetrahedra from the \e original triangulation (since the
+         * underlying data for those tetrahedra will be destroyed immediately).
+         *
+         * The disc set that was passed (\a src) will no longer be usable.
+         *
+         * @param src the disc set to move from.
+         */
+        DiscSetSurfaceDataImpl& operator = (DiscSetSurfaceDataImpl&& src)
+                noexcept {
+            // We destroy the original data now, since otherwise this
+            // would require us to impose a constraint on the continued
+            // lifespan of the original triangulation (which we need
+            // during the destruction process).
+            if (discSets) {
+                size_t tot = nTets();
+                for (size_t index = 0; index < tot; index++)
+                    delete discSets[index];
+                delete[] discSets;
+            }
+
+            discSets = src.discSets;
+            triangulation = src.triangulation;
+
+            src.discSets = nullptr;
+            return *this;
+        }
+
+        /**
+         * Swaps the contents of this and the given disc set.
+         *
+         * @param other the disc set whose contents should be swapped with this.
+         */
+        void swap(DiscSetSurfaceDataImpl& other) noexcept {
+            std::swap(discSets, other.discSets);
+            std::swap(triangulation, other.triangulation);
+        }
+
+        /**
          * Returns the number of tetrahedra in the underlying triangulation.
          *
          * @return the number of tetrahedra.
          */
         size_t nTets() const {
-            return triangulation.size();
+            return triangulation->size();
         }
-
 
         /**
          * Determines the number of discs of the given type inside the
@@ -651,34 +865,30 @@ class DiscSetSurfaceDataImpl {
          * @param arc the given normal arc; this must actually be an arc
          * on the boundary of the given normal disc (although it may run
          * in either direction).
-         * @param adjArc returns the same directed normal arc that was
-         * passed, but expressed in terms of the vertices of the
-         * adjacent tetrahedron.  Any value may be initially passed.  If
-         * there is no adjacent disc/tetrahedron, this permutation will
-         * remain unchanged.
-         * @return the normal disc adjacent to the given disc along the
-         * given arc, or 0 if there is no adjacent disc.  This disc
-         * specifier will be newly created, and it is up to the caller
-         * of this routine to dispose of it.
+         * @return a pair (\a adj, \a perm), where \a adj is the normal disc
+         * adjacent to the given disc along the given arc, and \a perm represents
+         * the same directed normal arc that was passed but expressed in terms
+         * of the vertices of the adjacent tetrahedron.  This will be no value
+         * if there is no adjacent disc.
          */
-        DiscSpec* adjacentDisc(const DiscSpec& disc, Perm<4> arc,
-                Perm<4>& adjArc) const {
-            const Tetrahedron<3>* tet = triangulation.tetrahedron(
+        std::optional<std::pair<DiscSpec, Perm<4>>> adjacentDisc(
+                const DiscSpec& disc, Perm<4> arc) const {
+            const Tetrahedron<3>* tet = triangulation->tetrahedron(
                 disc.tetIndex);
             int arcFace = arc[3];
             if (tet->adjacentTetrahedron(arcFace) == nullptr)
-                return nullptr;
+                return std::nullopt;
 
-            DiscSpec* ans = new DiscSpec;
-            ans->tetIndex = tet->adjacentTetrahedron(arcFace)->index();
-            adjArc = tet->adjacentGluing(arcFace) * arc;
+            DiscSpec ans;
+            ans.tetIndex = tet->adjacentTetrahedron(arcFace)->index();
+            Perm<4> adjArc = tet->adjacentGluing(arcFace) * arc;
 
             unsigned long arcNumber = discSets[disc.tetIndex]->arcFromDisc(
                 arcFace, arc[0], disc.type, disc.number);
-            discSets[ans->tetIndex]->discFromArc(adjArc[3], adjArc[0],
-                arcNumber, ans->type, ans->number);
+            std::tie(ans.type, ans.number) = discSets[ans.tetIndex]->
+                discFromArc(adjArc[3], adjArc[0], arcNumber);
 
-            return ans;
+            return std::make_pair(ans, adjArc);
         }
 
         /**
@@ -720,17 +930,26 @@ class DiscSetSurfaceDataImpl {
          */
         DiscSpecIterator<TetData> end() const {
             DiscSpecIterator<TetData> ans(*this);
-            ans.current.tetIndex = triangulation.size();
+            ans.current.tetIndex = triangulation->size();
             ans.current.type = 0;
             ans.current.number = 0;
             return ans;
         }
-
-        // Make this class non-copyable.
-        DiscSetSurfaceDataImpl(const DiscSetSurfaceDataImpl&) = delete;
-        DiscSetSurfaceDataImpl& operator = (const DiscSetSurfaceDataImpl&) =
-            delete;
 };
+
+/**
+ * Swaps the contents of the two given disc sets.
+ *
+ * This global routine simply calls DiscSetSurfaceDataImpl::swap(); it is
+ * provided so that DiscSetSurfaceDataImpl meets the C++ Swappable requirements.
+ *
+ * @param a the first disc set whose contents should be swapped.
+ * @param b the second disc set whose contents should be swapped.
+ */
+template <class T>
+void swap(DiscSetSurfaceDataImpl<T>& a, DiscSetSurfaceDataImpl<T>& b) noexcept {
+    a.swap(b);
+}
 
 /**
  * A structure that stores data of type \a T alongside every normal disc
@@ -975,8 +1194,15 @@ inline bool DiscSpec::operator != (const DiscSpec& other) const {
 
 // Inline functions for DiscSetTet
 
+inline DiscSetTet::DiscSetTet(unsigned long tri0, unsigned long tri1,
+        unsigned long tri2, unsigned long tri3,
+        unsigned long quad0, unsigned long quad1, unsigned long quad2,
+        unsigned long oct0, unsigned long oct1, unsigned long oct2) :
+        discs_{ tri0, tri1, tri2, tri3, quad0, quad1, quad2, oct0, oct1, oct2 } {
+}
+
 inline unsigned long DiscSetTet::nDiscs(int type) const {
-    return internalNDiscs[type];
+    return discs_[type];
 }
 
 } // namespace regina

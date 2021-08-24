@@ -100,11 +100,7 @@ namespace {
 
         int nGluingArcs;     // The number of arcs on the current disc to
                              //     which an adjacent disc might may be glued.
-
-        DiscSpec* adjDisc;  // The disc to which the current disc is glued.
         Perm<4> arc[8];       // Holds each gluing arc for the current disc.
-        Perm<4> adjArc;       // Represents the corresponding gluing arc on the
-                             //     adjacent disc.
 
         long compID = 0;     // The current working component ID.
         long i;
@@ -149,20 +145,17 @@ namespace {
             // gluing arcs.
             for (i = 0; i < nGluingArcs; ++i) {
                 // Establish which is the adjacent disc.
-                adjDisc = components.adjacentDisc(use, arc[i], adjArc);
-                if (adjDisc == 0)
+                auto adjDisc = components.adjacentDisc(use, arc[i]);
+                if (! adjDisc)
                     continue;
 
                 // There is actually a disc glued along this arc.
                 // Propagate the component ID.
 
-                if (components.data(*adjDisc) == -1) {
-                    components.data(*adjDisc) = components.data(use);
-                    discQueue.push(*adjDisc);
+                if (components.data(adjDisc->first) == -1) {
+                    components.data(adjDisc->first) = components.data(use);
+                    discQueue.push(adjDisc->first);
                 }
-
-                // Tidy up.
-                delete adjDisc;
             }
         }
 

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "surfaces/disc.h"
 #include "surfaces/normalsurface.h"
 #include "../helpers.h"
@@ -76,6 +77,8 @@ void addDisc(pybind11::module_& m) {
 
     auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface")
         .def(pybind11::init<const regina::NormalSurface&>())
+        .def(pybind11::init<const DiscSetSurface&>())
+        .def("swap", &DiscSetSurface::swap)
         .def("nTets", &DiscSetSurface::nTets)
         .def("nDiscs", &DiscSetSurface::nDiscs)
         .def("tetDiscs", &DiscSetSurface::tetDiscs,
@@ -86,6 +89,8 @@ void addDisc(pybind11::module_& m) {
         })
     ;
     regina::python::add_eq_operators(s);
+
+    m.def("swap", (void(*)(DiscSetSurface&, DiscSetSurface&))(regina::swap));
 
     auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(m, "DiscSpecIterator")
         .def("next", nextDiscSpec<DiscSetTet>) // for python 2
