@@ -122,11 +122,8 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
         bool firstRegionReflected =
             ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
 
-        const SatBlock* tmpBlock;
-        unsigned tmpAnnulus;
-        bool tmpVert, tmpHoriz;
-        bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
-            tmpVert, tmpHoriz, false);
+        auto [tmpBlock, tmpAnnulus, tmpVert, tmpHoriz] =
+            bdryBlock->nextBoundaryAnnulus(bdryAnnulus, false);
         if (tmpVert)
             return false;
 

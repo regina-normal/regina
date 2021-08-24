@@ -669,6 +669,8 @@ Version 6.1  [ TODO ]
               now accessible through SatRegion::beginsRegion() instead.
             - Modifying routines transform() and setAdjacent() are now
               protected and private respectively.
+            - Routine nextBoundaryAnnulus() now returns a tuple, instead
+              of using several reference arguments for output.
         Class SatBlockModel:
             - New class to replace SatBlockStarter.
         Class SatBlockSpec:

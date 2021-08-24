@@ -520,9 +520,9 @@ void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
     std::fill(used, used + totAnnuli, false);
 
     // Off we go!
-    const SatBlock *currBlock, *tmpBlock;
-    unsigned currBlockIndex, currAnnulus, tmpAnnulus;
-    bool hTwist, vTwist, tmpHTwist, tmpVTwist;
+    const SatBlock *currBlock;
+    unsigned currBlockIndex, currAnnulus;
+    bool hTwist, vTwist;
     for (i = 0; i < blocks_.size(); ++i) {
         const SatBlock* b = blocks_[i].block();
         for (j = 0; j < nAnnuli[i]; ++j) {
@@ -549,8 +549,8 @@ void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
             while (true) {
                 used[indexAnnuliFrom[currBlockIndex] + currAnnulus] = true;
 
-                currBlock->nextBoundaryAnnulus(currAnnulus, tmpBlock,
-                    tmpAnnulus, tmpVTwist, tmpHTwist, hTwist);
+                auto [tmpBlock, tmpAnnulus, tmpVTwist, tmpHTwist] =
+                    currBlock->nextBoundaryAnnulus(currAnnulus, hTwist);
                 if (tmpVTwist)
                     vTwist = ! vTwist;
                 if (tmpHTwist)

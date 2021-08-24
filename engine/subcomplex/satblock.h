@@ -45,6 +45,7 @@
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
 #include <set>
+#include <tuple>
 
 namespace regina {
 
@@ -342,17 +343,16 @@ class SatBlock : public Output<SatBlock> {
          * The next/previous annulus itself is not returned, but rather a
          * reference as to how it appears within its enclosing saturated block.
          * Specifically, a block and corresponding annulus number will be
-         * returned in the arguments \a nextBlock and \a nextAnnulus
-         * respectively.
+         * included as the first two elements of the returned tuple.
          *
          * It is possible that the next/previous annulus as it appears within
          * the returned block is oriented differently from how it appears
-         * within this large boundary ring.  For this reason, two
-         * booleans are returned also.  The argument \a refVert will
+         * within this large boundary ring.  For this reason, two booleans are
+         * returned also.  The third element of the returned tuple will
          * describe whether the annulus is reflected vertically as it
          * appears within the large boundary ring (i.e., the first and
          * second triangles remain the same but the fibre direction is
-         * reversed).  Similarly, the argument \a refHoriz will describe
+         * reversed).  Similarly, the fourth element of the tuple will describe
          * whether the annulus is reflected horizontally as it appears
          * within the large boundary ring (i.e., first and second triangles
          * are switched but the fibre direction is unchanged).
@@ -365,7 +365,7 @@ class SatBlock : public Output<SatBlock> {
          * Finally, note that if the large boundary ring is twisted
          * (i.e., it forms a Klein bottle), then following the entire
          * boundary ring around using this routine will bring you back to
-         * the starting annulus but with the \a refVert flag set.
+         * the starting annulus but with the vertical reflection flag set.
          *
          * \pre Annulus \a thisAnnulus of this block has no block
          * adjacent to it.
@@ -376,34 +376,23 @@ class SatBlock : public Output<SatBlock> {
          * is reflected horizontally (since, under a horizontal
          * reflection, "next" becomes "previous" and vice versa).
          *
-         * \ifacespython This routine only takes two arguments (\a thisAnnulus
-         * and \a followPrev). The return value is a tuple of four
-         * values: the block returned in \a nextBlock, the integer
-         * returned in \a nextAnnulus, the boolean returned in \a refVert,
-         * and the boolean returned in \a refHoriz.
-         *
          * @param thisAnnulus describes which original boundary annulus of
          * this block to examine; this must be between 0 and nAnnuli()-1
          * inclusive.
-         * @param nextBlock a reference used to return the block
-         * containing the next boundary annulus around from \a thisAnnulus.
-         * @param nextAnnulus a reference used to return the specific
-         * annulus number within \a nextBlock of the next annulus
-         * around; this will be between 0 and \a nextBlock->nAnnuli()-1
-         * inclusive, and the corresponding annulus will have no block
-         * adjacent to it.
-         * @param refVert a reference used to return \c true if the next
-         * annulus around is vertically reflected, or \c false if not;
-         * see above for details.
-         * @param refHoriz a reference used to return \c true if the next
-         * annulus around is horizontally reflected, or \c false if not;
-         * see above for details.
          * @param followPrev \c true if we should find the previous boundary
          * annulus, or \c false if we should find the next boundary annulus.
+         * @return a tuple (\a nextBlock, \a nextAnnulus, \a refVert,
+         * \a refHoriz), where: \a nextBlock is the block containing the next
+         * boundary annulus around from \a thisAnnulus; \a nextAnnulus is the
+         * specific annulus number within \a nextBlock of the next annulus
+         * around (between 0 and \a nextBlock->nAnnuli()-1 inclusive, and the
+         * corresponding annulus will have no block adjacent to it);
+         * \a refVert is \c true iff the next annulus around is vertically
+         * reflected; and \a refHoriz is \c true iff the next annulus around
+         * is horizontally reflected (see above for details on reflections).
          */
-        void nextBoundaryAnnulus(unsigned thisAnnulus,
-                SatBlock const* &nextBlock, unsigned& nextAnnulus,
-                bool& refVert, bool& refHoriz, bool followPrev) const;
+        std::tuple<const SatBlock*, unsigned, bool, bool>
+            nextBoundaryAnnulus(unsigned thisAnnulus, bool followPrev) const;
 
         /**
          * Returns an abbreviated name or symbol for this block.

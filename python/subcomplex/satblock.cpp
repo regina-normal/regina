@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "manifold/sfs.h"
 #include "subcomplex/satblock.h"
 #include "triangulation/dim3.h"
@@ -54,16 +55,8 @@ void addSatBlock(pybind11::module_& m) {
         .def("adjacentReflected", &SatBlock::adjacentReflected)
         .def("adjacentBackwards", &SatBlock::adjacentBackwards)
         .def("adjustSFS", &SatBlock::adjustSFS)
-        .def("nextBoundaryAnnulus", [](SatBlock& b, unsigned a, bool fromPrev) {
-            const SatBlock* nextBlock;
-            unsigned nextAnnulus;
-            bool refVert, refHoriz;
-
-            b.nextBoundaryAnnulus(a, nextBlock, nextAnnulus, refVert, refHoriz,
-                fromPrev);
-            return pybind11::make_tuple(nextBlock, nextAnnulus, refVert,
-                refHoriz);
-        }, pybind11::return_value_policy::reference)
+        .def("nextBoundaryAnnulus", &SatBlock::nextBoundaryAnnulus,
+            pybind11::return_value_policy::reference)
         .def("abbr", &SatBlock::abbr,
             pybind11::arg("tex") = false)
         .def("writeAbbr", [](const SatBlock& b, bool tex) {
