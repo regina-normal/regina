@@ -172,8 +172,8 @@ class L31Pillow : public StandardTriangulation {
  * This global routine simply calls L31Pillow::swap(); it is provided
  * so that L31Pillow meets the C++ Swappable requirements.
  *
- * @param a the first alternative whose contents should be swapped.
- * @param b the second alternative whose contents should be swapped.
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
  */
 void swap(L31Pillow& a, L31Pillow& b) noexcept;
 

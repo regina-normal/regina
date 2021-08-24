@@ -320,8 +320,8 @@ class SpiralSolidTorus : public StandardTriangulation {
  * This global routine simply calls SpiralSolidTorus::swap(); it is provided
  * so that SpiralSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first alternative whose contents should be swapped.
- * @param b the second alternative whose contents should be swapped.
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
  */
 void swap(SpiralSolidTorus& a, SpiralSolidTorus& b) noexcept;
 
