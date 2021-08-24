@@ -66,7 +66,8 @@ bool SatRegion::findStarterBlocks(Triangulation<3>* tri,
         bool terminate = model->triangulation().findAllSubcomplexesIn(*tri,
                 [=, &usedTets](const Isomorphism<3>& iso) {
             // See if this isomorphism leads somewhere useful.
-            SatBlock* starter = model->isomorphicCopy(*tri, iso);
+            SatBlock* starter = model->block().clone();
+            starter->transform(model->triangulation(), iso, *tri);
 
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.

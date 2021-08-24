@@ -43,13 +43,6 @@ namespace {
 
 std::list<const SatBlockStarter*> SatBlockStarterSet::blocks;
 
-SatBlock* SatBlockStarter::isomorphicCopy(Triangulation<3>& tri,
-        const Isomorphism<3>& iso) const {
-    SatBlock* ans = block_->clone();
-    ans->transform(triangulation_, iso, tri);
-    return ans;
-}
-
 SatBlockStarterSet::SatBlockStarterSet() {
     std::scoped_lock lock(starterBlocksMutex);
     if (blocks.empty()) {
