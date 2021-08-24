@@ -1885,6 +1885,12 @@ Equality type : EqualityType.BY_REFERENCE
 TxIParallelCore : class
 Equality type : EqualityType.BY_REFERENCE
 
+TypeTrie4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+TypeTrie7 : class
+Equality type : EqualityType.BY_REFERENCE
+
 VectorInt : class
 Equality type : EqualityType.BY_VALUE
 
