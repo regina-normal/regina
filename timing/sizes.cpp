@@ -70,6 +70,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Mathematical Support:" << std::endl;
     SHOW_SIZE(Integer);
     SHOW_SIZE(LargeInteger);
+    SHOW_SIZE(Matrix2);
     SHOW_SIZE(MatrixInt);
     SHOW_SIZE(VectorInt);
     SHOW_SIZE(Perm<2>);

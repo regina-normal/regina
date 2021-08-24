@@ -124,29 +124,19 @@ class PluggedTorusBundle : public StandardTriangulation {
                  is not owned by this object), and its tetrahedra do not
                  belong to this triangulation (instead see the data member
                  \a bundleIso_). */
-        Isomorphism<3>* bundleIso_;
+        Isomorphism<3> bundleIso_;
             /**< A mapping from the thin I-bundle \a bundle_ to this
                  triangulation.  This is required since the thin I-bundle
                  \a bundle_ is external, and does not refer directly to this
                  triangulation. */
         SatRegion region_;
-            /**< The saturated region that appears within this
-                 triangulation.  This region is owned by this object, and
-                 refers to tetrahedra within this triangulation. */
+            /**< The saturated region that appears within this triangulation. */
 
         Matrix2 matchingReln_;
             /**< Describes how the two torus boundaries of the saturated
                  region are joined, as discussed in the class notes above. */
 
     public:
-        /**
-         * Destroys this structure and its constituent components.
-         *
-         * As an exception, the thin I-bundle is not destroyed, since
-         * it is assumed that this is referenced from elsewhere.
-         */
-        ~PluggedTorusBundle();
-
         /**
          * Returns an isomorphic copy of the thin I-bundle that forms part
          * of this triangulation.  Like all objects of class TxICore, the
@@ -233,8 +223,9 @@ class PluggedTorusBundle : public StandardTriangulation {
          * two saturated region boundaries are joined by the thin
          * I-bundle and layerings, as described in the class notes above.
          */
-        PluggedTorusBundle(const TxICore& bundle, Isomorphism<3>* bundleIso,
-            SatRegion&& region, const Matrix2& matchingReln);
+        PluggedTorusBundle(const TxICore& bundle,
+            const Isomorphism<3>& bundleIso, SatRegion&& region,
+            const Matrix2& matchingReln);
 
         /**
          * Determines whether the given triangulation is of the form
@@ -268,7 +259,7 @@ class PluggedTorusBundle : public StandardTriangulation {
 // Inline functions for PluggedTorusBundle
 
 inline PluggedTorusBundle::PluggedTorusBundle(const TxICore& bundle,
-        Isomorphism<3>* bundleIso, SatRegion&& region,
+        const Isomorphism<3>& bundleIso, SatRegion&& region,
         const Matrix2& matchingReln) :
         bundle_(bundle), bundleIso_(bundleIso), region_(std::move(region)),
         matchingReln_(matchingReln) {
@@ -279,7 +270,7 @@ inline const TxICore& PluggedTorusBundle::bundle() const {
 }
 
 inline const Isomorphism<3>& PluggedTorusBundle::bundleIso() const {
-    return *bundleIso_;
+    return bundleIso_;
 }
 
 inline const SatRegion& PluggedTorusBundle::region() const {

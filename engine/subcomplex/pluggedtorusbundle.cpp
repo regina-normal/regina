@@ -53,10 +53,6 @@ namespace {
     const TxIParallelCore core_T_p;
 }
 
-PluggedTorusBundle::~PluggedTorusBundle() {
-    delete bundleIso_;
-}
-
 std::unique_ptr<Manifold> PluggedTorusBundle::manifold() const {
     std::optional<SFSpace> sfs = region_.createSFS(false);
     if (! sfs)
@@ -287,8 +283,7 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* tri,
             // together -- we worked this out earlier as upperRolesToLower.
             // Note that curvesToBdryAnnulus is self-inverse, so we won't
             // bother inverting it even though we should.
-            ans = new PluggedTorusBundle(bundle, new Isomorphism<3>(iso),
-                std::move(*region),
+            ans = new PluggedTorusBundle(bundle, iso, std::move(*region),
                 curvesToBdryAnnulus * upperRolesToLower.inverse() *
                 curvesToLowerAnnulus);
             return true;
