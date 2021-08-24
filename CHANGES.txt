@@ -624,6 +624,12 @@ Version 6.1  [ TODO ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Deprecated clone().  Just use the copy constructor instead.
+        Class PluggedTorusBundle:
+            - Routine isPluggedTorusBundle() is now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old name is kept as a deprecated alias.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
             - Routine chain() now returns a std::optional by const reference,

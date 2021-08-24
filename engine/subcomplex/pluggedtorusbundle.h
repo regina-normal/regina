@@ -118,7 +118,7 @@ class TxICore;
  */
 class PluggedTorusBundle : public StandardTriangulation {
     private:
-        const TxICore& bundle_;
+        const TxICore* bundle_;
             /**< The thin I-bundle that appears within this triangulation.
                  This thin I-bundle is referenced from elsewhere (i.e., it
                  is not owned by this object), and its tetrahedra do not
@@ -137,6 +137,50 @@ class PluggedTorusBundle : public StandardTriangulation {
                  region are joined, as discussed in the class notes above. */
 
     public:
+        /**
+         * Creates a new copy of this structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
+         */
+        PluggedTorusBundle(const PluggedTorusBundle& src) = default;
+        /**
+         * Moves the contents of the given structure into this new structure.
+         * This is a fast (constant time) operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         */
+        PluggedTorusBundle(PluggedTorusBundle&& src) noexcept = default;
+        /**
+         * Sets this to be a copy of the given structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
+         * @return a reference to this structure.
+         */
+        PluggedTorusBundle& operator = (const PluggedTorusBundle& src) =
+            default;
+        /**
+         * Moves the contents of the given structure into this structure.
+         * This is a fast (constant time) operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         * @return a reference to this structure.
+         */
+        PluggedTorusBundle& operator = (PluggedTorusBundle&& src) noexcept =
+            default;
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(PluggedTorusBundle& other) noexcept;
+
         /**
          * Returns an isomorphic copy of the thin I-bundle that forms part
          * of this triangulation.  Like all objects of class TxICore, the
@@ -200,8 +244,17 @@ class PluggedTorusBundle : public StandardTriangulation {
          * found, or no value if the given triangulation is not of the form
          * described by this class.
          */
-        static PluggedTorusBundle* isPluggedTorusBundle
+        static std::optional<PluggedTorusBundle> recognise
             (Triangulation<3>* tri);
+        /**
+         * A deprecated alias to recognise if a triangulation forms a
+         * saturated region joined to a think I-bundle via optional layerings.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<PluggedTorusBundle>
+            isPluggedTorusBundle(Triangulation<3>* tri);
 
     private:
         /**
@@ -210,9 +263,12 @@ class PluggedTorusBundle : public StandardTriangulation {
          *
          * Note that the new object must refer to an existing triangulation.
          *
-         * \warning The thin I-bundle \a bundle must have a lifetime at
-         * least as long as the new object being created, since it will
-         * be referenced directly by this new object.
+         * \warning Only a pointer to the thin I-bundle \a bundle is stored.
+         * This class does not manage the life span of the bundle; it is
+         * assumed that \a bundle will remain in existence for at least
+         * as long as this object (and any objects copied or moved from it).
+         * Typically \a bundle would be a static or global variable that is
+         * not destroyed until the program exits.
          *
          * @param bundle the thin I-bundle whose isomorphic copy is used
          * within the triangulation described by the new object.
@@ -237,10 +293,10 @@ class PluggedTorusBundle : public StandardTriangulation {
          *
          * \pre The given triangulation is closed and connected.
          *
-         * \warning If this routine is successful and a new object is
-         * returned, this new object must not outlive the given thin
-         * I-bundle (since the new object will in fact contain a direct
-         * reference to this thin I-bundle).
+         * \warning If this routine is successful and a value is returned,
+         * this returned object (and any objects copied or moved from it)
+         * must not outlive the given thin I-bundle (since the returned object
+         * will in fact contain a direct reference to this thin I-bundle).
          *
          * @param tri the triangulation to examine.
          * @param bundle the thin I-bundle whose isomorphic copy must be
@@ -250,9 +306,20 @@ class PluggedTorusBundle : public StandardTriangulation {
          * described by this class using an isomorphic copy of the given
          * thin I-bundle.
          */
-        static PluggedTorusBundle* hunt(Triangulation<3>* tri,
+        static std::optional<PluggedTorusBundle> hunt(Triangulation<3>* tri,
             const TxICore& bundle);
 };
+
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls PluggedTorusBundle::swap(); it is provided
+ * so that PluggedTorusBundle meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ */
+void swap(PluggedTorusBundle& a, PluggedTorusBundle& b) noexcept;
 
 /*@}*/
 
@@ -261,12 +328,19 @@ class PluggedTorusBundle : public StandardTriangulation {
 inline PluggedTorusBundle::PluggedTorusBundle(const TxICore& bundle,
         const Isomorphism<3>& bundleIso, SatRegion&& region,
         const Matrix2& matchingReln) :
-        bundle_(bundle), bundleIso_(bundleIso), region_(std::move(region)),
+        bundle_(&bundle), bundleIso_(bundleIso), region_(std::move(region)),
         matchingReln_(matchingReln) {
 }
 
+inline void PluggedTorusBundle::swap(PluggedTorusBundle& other) noexcept {
+    std::swap(bundle_, other.bundle_);
+    std::swap(bundleIso_, other.bundleIso_);
+    std::swap(region_, other.region_);
+    std::swap(matchingReln_, other.matchingReln_);
+}
+
 inline const TxICore& PluggedTorusBundle::bundle() const {
-    return bundle_;
+    return *bundle_;
 }
 
 inline const Isomorphism<3>& PluggedTorusBundle::bundleIso() const {
@@ -279,6 +353,15 @@ inline const SatRegion& PluggedTorusBundle::region() const {
 
 inline const Matrix2& PluggedTorusBundle::matchingReln() const {
     return matchingReln_;
+}
+
+inline std::optional<PluggedTorusBundle>
+        PluggedTorusBundle::isPluggedTorusBundle(Triangulation<3>* tri) {
+    return recognise(tri);
+}
+
+inline void swap(PluggedTorusBundle& a, PluggedTorusBundle& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

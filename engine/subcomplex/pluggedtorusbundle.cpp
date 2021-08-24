@@ -70,7 +70,7 @@ std::unique_ptr<Manifold> PluggedTorusBundle::manifold() const {
 
 std::ostream& PluggedTorusBundle::writeName(std::ostream& out) const {
     out << "Plugged Torus Bundle [";
-    bundle_.writeName(out);
+    bundle_->writeName(out);
     out << " | ";
     region_.writeBlockAbbrs(out, false);
     return out << ']';
@@ -78,7 +78,7 @@ std::ostream& PluggedTorusBundle::writeName(std::ostream& out) const {
 
 std::ostream& PluggedTorusBundle::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{PTB}\\left[";
-    bundle_.writeTeXName(out);
+    bundle_->writeTeXName(out);
     out << "\\,|\\n";
     region_.writeBlockAbbrs(out, true);
     return out << "\\right]";
@@ -88,56 +88,55 @@ void PluggedTorusBundle::writeTextLong(std::ostream& out) const {
     out << "Plugged torus bundle, fibre/orbifold relation " << matchingReln_
         << '\n';
     out << "Thin I-bundle: ";
-    bundle_.writeName(out);
+    bundle_->writeName(out);
     out << '\n';
     region_.writeDetail(out, "Saturated region");
 }
 
-PluggedTorusBundle* PluggedTorusBundle::isPluggedTorusBundle(
+std::optional<PluggedTorusBundle> PluggedTorusBundle::recognise(
         Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
-        return nullptr;
+        return std::nullopt;
     if (tri->countComponents() > 1)
-        return nullptr;
+        return std::nullopt;
 
     // The smallest non-trivial examples of these have nine tetrahedra
     // (six for the TxI core and another three for a non-trivial region).
     if (tri->size() < 9)
-        return nullptr;
+        return std::nullopt;
 
     // We have a closed and connected triangulation with at least
     // nine tetrahedra.
 
     // Hunt for the thin torus bundle.
-    PluggedTorusBundle* ans;
-    if ((ans = hunt(tri, core_T_6_1)))
+    if (auto ans = hunt(tri, core_T_6_1))
         return ans;
-    if ((ans = hunt(tri, core_T_7_1)))
+    if (auto ans = hunt(tri, core_T_7_1))
         return ans;
-    if ((ans = hunt(tri, core_T_8_1)))
+    if (auto ans = hunt(tri, core_T_8_1))
         return ans;
-    if ((ans = hunt(tri, core_T_8_2)))
+    if (auto ans = hunt(tri, core_T_8_2))
         return ans;
-    if ((ans = hunt(tri, core_T_9_1)))
+    if (auto ans = hunt(tri, core_T_9_1))
         return ans;
-    if ((ans = hunt(tri, core_T_9_2)))
+    if (auto ans = hunt(tri, core_T_9_2))
         return ans;
-    if ((ans = hunt(tri, core_T_10_1)))
+    if (auto ans = hunt(tri, core_T_10_1))
         return ans;
-    if ((ans = hunt(tri, core_T_10_2)))
+    if (auto ans = hunt(tri, core_T_10_2))
         return ans;
-    if ((ans = hunt(tri, core_T_10_3)))
+    if (auto ans = hunt(tri, core_T_10_3))
         return ans;
-    if ((ans = hunt(tri, core_T_p)))
+    if (auto ans = hunt(tri, core_T_p))
         return ans;
 
-    return nullptr;
+    return std::nullopt;
 }
 
-PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* tri,
-        const TxICore& bundle) {
-    PluggedTorusBundle* ans = nullptr;
+std::optional<PluggedTorusBundle> PluggedTorusBundle::hunt(
+        Triangulation<3>* tri, const TxICore& bundle) {
+    std::optional<PluggedTorusBundle> ans;
     bundle.core().findAllSubcomplexesIn(*tri,
             [&ans, &bundle, tri](const Isomorphism<3>& iso) {
         int regionPos;
@@ -283,7 +282,7 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* tri,
             // together -- we worked this out earlier as upperRolesToLower.
             // Note that curvesToBdryAnnulus is self-inverse, so we won't
             // bother inverting it even though we should.
-            ans = new PluggedTorusBundle(bundle, iso, std::move(*region),
+            ans = PluggedTorusBundle(bundle, iso, std::move(*region),
                 curvesToBdryAnnulus * upperRolesToLower.inverse() *
                 curvesToLowerAnnulus);
             return true;

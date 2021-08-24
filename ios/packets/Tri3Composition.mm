@@ -482,7 +482,7 @@
         [details appendString:@"\n"];
     }
     
-    regina::PluggedTorusBundle* pBundle = regina::PluggedTorusBundle::isPluggedTorusBundle(self.packet);
+    auto pBundle = regina::PluggedTorusBundle::recognise(self.packet);
     if (pBundle) {
         [details appendString:@"Plugged Torus Bundle\n"];
         
@@ -496,7 +496,6 @@
          pBundle->bundle().name().c_str()];
         
         [details appendString:@"\n"];
-        delete pBundle;
     }
 }
 

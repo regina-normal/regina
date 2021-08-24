@@ -622,8 +622,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(bundle->core().name().c_str()));
     }
 
-    regina::PluggedTorusBundle* pBundle =
-        regina::PluggedTorusBundle::isPluggedTorusBundle(tri);
+    auto pBundle = regina::PluggedTorusBundle::recognise(tri);
     if (pBundle) {
         id = addComponentSection(tr("Plugged Torus Bundle"));
 
@@ -638,8 +637,6 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         (new QTreeWidgetItem(id))->setText(0,
             tr("Thin I-bundle (T x I): %1").
             arg(pBundle->bundle().name().c_str()));
-
-        delete pBundle;
     }
 }
 
