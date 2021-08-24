@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file subcomplex/satregion-impl.h
- *  \brief Full implementation details for SatRegion::findStarterBlocks().
+ *  \brief Full implementation details for SatRegion::find().
  *
  *  This file is \e not included automatically by satregion.h.
  */
@@ -46,8 +46,8 @@
 namespace regina {
 
 template <typename Action, typename... Args>
-bool SatRegion::findStarterBlocks(Triangulation<3>& tri,
-        bool mustBeComplete, Action&& action, Args&&... args) {
+bool SatRegion::find(Triangulation<3>& tri, bool mustBeComplete,
+        Action&& action, Args&&... args) {
     initStarters();
 
     SatBlock::TetList usedTets;

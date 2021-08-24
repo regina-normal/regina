@@ -258,7 +258,7 @@ def displayRegion(r):
 
 print('Finding regions:')
 t = Triangulation3.rehydrate('jofdiaabcceffhiiiedkgiilpsw')
-SatRegion.findStarterBlocks(t, False, displayRegion)
+SatRegion.find(t, False, displayRegion)
 print()
 
 ########################################################################

@@ -259,8 +259,7 @@ void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept;
  * description.
  *
  * Regions cannot be constructed by hand; instead you will need to call
- * one of the static recognition routines, such as findStarterBlocks()
- * or beginsRegion().
+ * one of the static recognition routines, such as find() or beginsRegion().
  *
  * \warning It is crucial that the adjacency information stored in the
  * blocks is consistent with the region containing them.  All this
@@ -311,9 +310,8 @@ class SatRegion : public Output<SatRegion> {
                  components (if any) of this region. */
 
         static std::list<SatBlockModel> starters_;
-            /**< The blocks from which findStarterBlocks() will begin
-                 its searches.  These are generated on demand, the first
-                 time that findStarterBlocks() is called. */
+            /**< The blocks from which find() will begin its searches.  These
+                 are generated on demand, the first time find() is called. */
 
     public:
         /**
@@ -663,8 +661,8 @@ class SatRegion : public Output<SatRegion> {
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
-        static bool findStarterBlocks(Triangulation<3>& tri,
-            bool mustBeComplete, Action&& action, Args&&... args);
+        static bool find(Triangulation<3>& tri, bool mustBeComplete,
+            Action&& action, Args&&... args);
 
         /**
          * Determines whether the given annulus is in fact a boundary

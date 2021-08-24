@@ -126,7 +126,7 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
     std::unique_ptr<SatRegion> end[2];
     std::unique_ptr<SatRegion> centre;
     Matrix2 matchingReln[2];
-    bool found = SatRegion::findStarterBlocks(*tri, false,
+    bool found = SatRegion::find(*tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         if (r->numberOfBoundaryAnnuli() != 2)
             return false;

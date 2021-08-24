@@ -692,7 +692,7 @@ Version 6.1  [ TODO ]
               that is private to the SatRegion class.
         Class SatBlockStarterSearcher:
             - Removed completely.  Instead use the new, simpler and more
-              flexible routine SatRegion::findStarterBlocks().
+              flexible routine SatRegion::find().
         Class SatBlockStarterSet:
             - Now requires a (lightweight) object to work with instead
               of using static routines only.  This makes the class
@@ -706,8 +706,8 @@ Version 6.1  [ TODO ]
             - The block output argument for boundaryAnnulus() now sends back a
               const pointer.
             - Added move construction, and move assignment.
-            - New static routine findStarterBlocks(), which replaces the old
-              class SatBlockStarterSearcher.
+            - New static routine find(), which replaces the old class
+              SatBlockStarterSearcher.
             - New static routine beginsRegion(), which replaces the old
               SatBlock::isBlock().
             - Routine expand() is now private, since all publicly accessible

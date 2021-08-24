@@ -77,11 +77,10 @@ void addSatRegion(pybind11::module_& m) {
         .def("writeDetail", [](const SatRegion& r, const std::string& title) {
             r.writeDetail(std::cout, title);
         })
-        .def_static("findStarterBlocks", [](
-                regina::Triangulation<3>& tri, bool complete,
+        .def_static("find", [](regina::Triangulation<3>& tri, bool complete,
                 const std::function<bool(std::unique_ptr<SatRegion>)>& action) {
             // We need to strip out any reference to the TetList argument.
-            return SatRegion::findStarterBlocks(tri, complete,
+            return SatRegion::find(tri, complete,
                     [&](std::unique_ptr<SatRegion> r, SatBlock::TetList&) {
                 return action(std::move(r));
             });
