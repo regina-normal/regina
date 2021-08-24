@@ -258,8 +258,11 @@ void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept;
  * themselves; see the notes regarding adjacency in the SatBlock class
  * description.
  *
- * Regions cannot be constructed by hand; instead you will need to call
- * one of the static recognition routines, such as find() or beginsRegion().
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * the only way to create objects of this class (aside from copying or moving)
+ * is via the static search functions, such as find() or beginsRegion().
  *
  * \warning It is crucial that the adjacency information stored in the
  * blocks is consistent with the region containing them.  All this
@@ -315,12 +318,25 @@ class SatRegion : public Output<SatRegion> {
 
     public:
         /**
+         * Creates a new copy of the given region.
+         *
+         * @param src the region to copy.
+         */
+        SatRegion(const SatRegion& src);
+        /**
          * Moves the contents of the given region into this new region.
          * This is a fast (constant time) operation.
          *
          * The region that was passed will no longer be usable.
          */
         SatRegion(SatRegion&&) noexcept = default;
+        /**
+         * Sets this to be a copy of the given region.
+         *
+         * @param src the region to copy.
+         * @return a reference to this region.
+         */
+        SatRegion& operator = (const SatRegion& src);
         /**
          * Moves the contents of the given region into this region.
          * This is a fast (constant time) operation.
@@ -696,10 +712,6 @@ class SatRegion : public Output<SatRegion> {
         static std::unique_ptr<SatRegion> beginsRegion(
             const SatAnnulus& annulus, SatBlock::TetList& avoidTets);
 
-        // Mark this class as non-copyable.
-        SatRegion(const SatRegion&) = delete;
-        SatRegion& operator = (const SatRegion&) = delete;
-
     private:
         /**
          * Constructs a new region containing just the given block.
@@ -904,6 +916,15 @@ inline void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept {
 }
 
 // Inline functions for SatRegion
+
+inline SatRegion& SatRegion::operator = (const SatRegion& src) {
+    // We could probably do something slicker here, but the copy
+    // operation is quite a bit of work (mainly because we need to fix
+    // the block adjacencies) - let's just implement it once.
+    SatRegion tmp(src);
+    swap(tmp);
+    return *this;
+}
 
 inline void SatRegion::swap(SatRegion& other) noexcept {
     blocks_.swap(other.blocks_);

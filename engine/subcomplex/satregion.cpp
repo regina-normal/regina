@@ -34,6 +34,7 @@
 #include "subcomplex/satblocktypes.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
+#include <map>
 #include <mutex>
 #include <set>
 #include <sstream>
@@ -116,6 +117,38 @@ SatRegion::SatRegion(SatBlock* starter) :
         hasTwist_ = true;
         twistsMatchOrientation_ = false;
         twistedBlocks_ = 1;
+    }
+}
+
+SatRegion::SatRegion(const SatRegion& src) :
+        baseEuler_(src.baseEuler_),
+        baseOrbl_(src.baseOrbl_),
+        hasTwist_(src.hasTwist_),
+        twistsMatchOrientation_(src.twistsMatchOrientation_),
+        shiftedAnnuli_(src.shiftedAnnuli_),
+        twistedBlocks_(src.twistedBlocks_),
+        nBdryAnnuli_(src.nBdryAnnuli_)
+        {
+    // First clone the blocks, and keep a map from original blocks to
+    // their clones.
+    std::map<const SatBlock*, SatBlock*> clones;
+    for (const SatBlockSpec& b : src.blocks_) {
+        SatBlock* clone = b.block_->clone();
+        clones.insert(std::make_pair(b.block_, clone));
+        blocks_.push_back(SatBlockSpec(clone, b.refVert_, b.refHoriz_));
+    }
+
+    // Now fix the adjacencies in the cloned blocks.
+    for (const SatBlockSpec& b : blocks_) {
+        for (unsigned i = 0; i < b.block_->nAnnuli_; ++i)
+            if (b.block_->adjBlock_[i]) {
+                auto it = clones.find(b.block_->adjBlock_[i]);
+                if (it == clones.end()) {
+                    // This should *not* happen.
+                    b.block_->adjBlock_[i] = nullptr;
+                } else
+                    b.block_->adjBlock_[i] = it->second;
+            }
     }
 }
 

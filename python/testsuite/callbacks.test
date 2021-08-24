@@ -255,6 +255,9 @@ print()
 
 def displayRegion(r):
     print(r.detail())
+    s = SatRegion(r) # this is a non-trivial copy constructor
+    if r.detail() != s.detail():
+        print('ERROR - Does not match:\n' + s.detail())
 
 print('Finding regions:')
 t = Triangulation3.rehydrate('jofdiaabcceffhiiiedkgiilpsw')
