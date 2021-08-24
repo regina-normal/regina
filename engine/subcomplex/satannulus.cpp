@@ -55,10 +55,10 @@ void SatAnnulus::switchSides() {
     }
 }
 
-bool SatAnnulus::isAdjacent(const SatAnnulus& other, bool* refVert,
-        bool* refHoriz) const {
+std::tuple<bool, bool, bool> SatAnnulus::isAdjacent(const SatAnnulus& other)
+        const {
     if (other.meetsBoundary())
-        return false;
+        return { false, false, false };
 
     // See what is actually attached to the given annulus.
     SatAnnulus opposite(other);
@@ -69,17 +69,13 @@ bool SatAnnulus::isAdjacent(const SatAnnulus& other, bool* refVert,
 
         if (opposite.roles[0] == roles[0] && opposite.roles[1] == roles[1]) {
             // Perfect match.
-            if (refVert) *refVert = false;
-            if (refHoriz) *refHoriz = false;
-            return true;
+            return { true, false, false };
         }
 
         if (opposite.roles[0] == roles[0] * Perm<4>(0, 1) &&
                 opposite.roles[1] == roles[1] * Perm<4>(0, 1)) {
             // Match with vertical reflection.
-            if (refVert) *refVert = true;
-            if (refHoriz) *refHoriz = false;
-            return true;
+            return { true, true, false };
         }
     }
 
@@ -89,21 +85,17 @@ bool SatAnnulus::isAdjacent(const SatAnnulus& other, bool* refVert,
         if (opposite.roles[0] == roles[1] * Perm<4>(0, 1) &&
                 opposite.roles[1] == roles[0] * Perm<4>(0, 1)) {
             // Match with horizontal reflection.
-            if (refVert) *refVert = false;
-            if (refHoriz) *refHoriz = true;
-            return true;
+            return { true, false, true };
         }
 
         if (opposite.roles[0] == roles[1] && opposite.roles[1] == roles[0]) {
             // Match with both reflections.
-            if (refVert) *refVert = true;
-            if (refHoriz) *refHoriz = true;
-            return true;
+            return { true, true, true };
         }
     }
 
     // No match.
-    return false;
+    return { false, false, false };
 }
 
 bool SatAnnulus::isJoined(const SatAnnulus& other, Matrix2& matching) const {

@@ -656,6 +656,8 @@ Version 6.1  [ TODO ]
         Class SatAnnulus:
             - Routines transform() and image() now takes their arguments by
               reference.
+            - Routine isAdjacent() now returns a tuple, instead of using
+              a mix of return values and pointer arguments for output.
         Class SatBlock and subclasses:
             - The nextBlock output argument for nextBoundaryAnnulus()
               now sends back a const pointer.

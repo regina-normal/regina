@@ -220,7 +220,6 @@ std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
 bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     unsigned ann, adjAnn;
     unsigned long adjPos;
-    bool adjVert, adjHoriz;
     bool currTwisted, currNor;
     unsigned annBdryTriangles;
 
@@ -294,38 +293,40 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
             }
             while (adjPos < blocks_.size()) {
                 SatBlock* adjBlock = blocks_[adjPos].block_;
-                if ((! adjBlock->hasAdjacentBlock(adjAnn)) &&
-                        currBlock->annulus(ann).isAdjacent(
-                        adjBlock->annulus(adjAnn), &adjVert, &adjHoriz)) {
-                    // They match!
-                    currBlock->setAdjacent(ann, adjBlock, adjAnn,
-                        adjVert, adjHoriz);
-                    nBdryAnnuli_ -= 2;
+                if (! adjBlock->hasAdjacentBlock(adjAnn)) {
+                    auto [isAdj, adjVert, adjHoriz] = currBlock->annulus(ann).
+                        isAdjacent(adjBlock->annulus(adjAnn));
+                    if (isAdj) {
+                        // They match!
+                        currBlock->setAdjacent(ann, adjBlock, adjAnn,
+                            adjVert, adjHoriz);
+                        nBdryAnnuli_ -= 2;
 
-                    // See what kinds of inconsistencies this
-                    // rejoining has caused.
-                    currNor = regXor(regXor(currHoriz,
-                        blocks_[adjPos].refHoriz()), ! adjHoriz);
-                    currTwisted = regXor(regXor(currVert,
-                        blocks_[adjPos].refVert()), adjVert);
+                        // See what kinds of inconsistencies this
+                        // rejoining has caused.
+                        currNor = regXor(regXor(currHoriz,
+                            blocks_[adjPos].refHoriz()), ! adjHoriz);
+                        currTwisted = regXor(regXor(currVert,
+                            blocks_[adjPos].refVert()), adjVert);
 
-                    if (currNor)
-                        baseOrbl_ = false;
-                    if (currTwisted)
-                        hasTwist_ = true;
-                    if (regXor(currNor, currTwisted))
-                        twistsMatchOrientation_ = false;
+                        if (currNor)
+                            baseOrbl_ = false;
+                        if (currTwisted)
+                            hasTwist_ = true;
+                        if (regXor(currNor, currTwisted))
+                            twistsMatchOrientation_ = false;
 
-                    // See if we need to add a (1,1) shift before
-                    // the annuli can be identified.
-                    if (regXor(adjHoriz, adjVert)) {
-                        if (regXor(currHoriz, currVert))
-                            shiftedAnnuli_--;
-                        else
-                            shiftedAnnuli_++;
+                        // See if we need to add a (1,1) shift before
+                        // the annuli can be identified.
+                        if (regXor(adjHoriz, adjVert)) {
+                            if (regXor(currHoriz, currVert))
+                                shiftedAnnuli_--;
+                            else
+                                shiftedAnnuli_++;
+                        }
+
+                        break;
                     }
-
-                    break;
                 }
 
                 if (adjAnn + 1 < adjBlock->nAnnuli())
