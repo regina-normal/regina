@@ -31,9 +31,10 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "manifold/sfs.h"
-#include "subcomplex/satregion.h"
+#include "subcomplex/satregion-impl.h"
 #include <iostream>
 #include "../helpers.h"
 
@@ -75,6 +76,15 @@ void addSatRegion(pybind11::module_& m) {
         }, pybind11::arg("tex") = false)
         .def("writeDetail", [](const SatRegion& r, const std::string& title) {
             r.writeDetail(std::cout, title);
+        })
+        .def_static("findStarterBlocks", [](
+                regina::Triangulation<3>& tri, bool complete,
+                const std::function<bool(std::unique_ptr<SatRegion>)>& action) {
+            // We need to strip out any reference to the TetList argument.
+            return SatRegion::findStarterBlocks(tri, complete,
+                    [&](std::unique_ptr<SatRegion> r, SatBlock::TetList&) {
+                return action(std::move(r));
+            });
         })
         .def_static("beginsRegion", [](const regina::SatAnnulus& a) {
             SatBlock::TetList avoidTets;

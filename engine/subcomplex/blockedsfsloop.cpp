@@ -91,7 +91,7 @@ BlockedSFSLoop* BlockedSFSLoop::isBlockedSFSLoop(Triangulation<3>* tri) {
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
     Matrix2 matchingReln;
-    bool found = SatRegion::findStarterBlocks(tri, false,
+    bool found = SatRegion::findStarterBlocks(*tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         if (r->numberOfBoundaryAnnuli() != 2)
             return false;

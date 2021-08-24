@@ -250,6 +250,18 @@ g.generateMinimalLinks(displayKnot)
 print()
 
 ########################################################################
+# Test location of saturated regions:
+########################################################################
+
+def displayRegion(r):
+    print(r.detail())
+
+print('Finding regions:')
+t = Triangulation3.rehydrate('jofdiaabcceffhiiiedkgiilpsw')
+SatRegion.findStarterBlocks(t, False, displayRegion)
+print()
+
+########################################################################
 # Test SnapPeaTriangulation::enumerateCovers() object lifetimes:
 ########################################################################
 

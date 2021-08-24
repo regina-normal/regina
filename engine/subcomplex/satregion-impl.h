@@ -46,7 +46,7 @@
 namespace regina {
 
 template <typename Action, typename... Args>
-bool SatRegion::findStarterBlocks(Triangulation<3>* tri,
+bool SatRegion::findStarterBlocks(Triangulation<3>& tri,
         bool mustBeComplete, Action&& action, Args&&... args) {
     initStarters();
 
@@ -56,24 +56,23 @@ bool SatRegion::findStarterBlocks(Triangulation<3>* tri,
     for (const SatBlockModel& model : starters_) {
         // Look for this particular starting block.
         // Get trivialities out of the way first.
-        if (tri->isOrientable() && ! model.triangulation().isOrientable())
+        if (tri.isOrientable() && ! model.triangulation().isOrientable())
             continue;
-        if (tri->size() < model.triangulation().size())
+        if (tri.size() < model.triangulation().size())
             continue;
 
         // Find all isomorphisms of the starter block within the given
         // triangulation.
-        // In the lambda below, most of our captures are pointers (hence [=]).
-        bool terminate = model.triangulation().findAllSubcomplexesIn(*tri,
-                [=, &usedTets](const Isomorphism<3>& iso) {
+        bool terminate = model.triangulation().findAllSubcomplexesIn(tri,
+                [&](const Isomorphism<3>& iso) {
             // See if this isomorphism leads somewhere useful.
             SatBlock* starter = model.block().clone();
-            starter->transform(model.triangulation(), iso, *tri);
+            starter->transform(model.triangulation(), iso, tri);
 
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.
             for (unsigned long i = 0; i < model.triangulation().size(); i++)
-                usedTets.insert(tri->tetrahedron(iso.tetImage(i)));
+                usedTets.insert(tri.tetrahedron(iso.tetImage(i)));
 
             // Wrap an initial region around the block, and expand.
             SatRegion* region = new SatRegion(starter);

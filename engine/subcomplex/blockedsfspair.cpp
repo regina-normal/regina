@@ -108,7 +108,7 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     std::unique_ptr<SatRegion> r0;
     std::unique_ptr<SatRegion> r1;
     Matrix2 matchingReln;
-    bool found = SatRegion::findStarterBlocks(tri, false,
+    bool found = SatRegion::findStarterBlocks(*tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         if (r->numberOfBoundaryAnnuli() != 1)
             return false;

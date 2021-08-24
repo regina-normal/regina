@@ -322,7 +322,7 @@ BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
-    bool found = SatRegion::findStarterBlocks(tri, true,
+    bool found = SatRegion::findStarterBlocks(*tri, true,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         // Got one!  Nothing more to do; just stop the search.
         region = std::move(r);
