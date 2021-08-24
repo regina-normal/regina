@@ -118,8 +118,8 @@ class SFSpace;
  *
  * SatBlock does not support value semantics: blocks cannot be copied,
  * swapped, or manually constructed.  Their memory is managed by the
- * SatRegion class, and their locations in memory define them.
- * See SatRegion for further details.
+ * SatRegion class (or in special cases the SatBlockModel class), and their
+ * locations in memory define them.  See SatRegion for further details.
  */
 class SatBlock : public Output<SatBlock> {
     public:

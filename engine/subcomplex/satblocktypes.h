@@ -261,7 +261,8 @@ class SatLST : public SatBlock {
  * details regarding "major" and "minor".
  *
  * This class does not support value semantics: it cannot be copied, swapped
- * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * or manually constructed.  Its memory is managed by the SatRegion class
+ * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatTriPrism : public SatBlock {
@@ -363,7 +364,8 @@ class SatTriPrism : public SatBlock {
  * triangular prisms.
  *
  * This class does not support value semantics: it cannot be copied, swapped
- * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * or manually constructed.  Its memory is managed by the SatRegion class
+ * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatCube : public SatBlock {
@@ -438,7 +440,8 @@ class SatCube : public SatBlock {
  * saturated annuli on the boundary.
  *
  * This class does not support value semantics: it cannot be copied, swapped
- * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * or manually constructed.  Its memory is managed by the SatRegion class
+ * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatReflectorStrip : public SatBlock {
