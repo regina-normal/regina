@@ -137,6 +137,36 @@ class InvalidInput : public std::runtime_error {
         InvalidInput& operator = (const InvalidInput&) noexcept = default;
 };
 
+/**
+ * An exception thrown when a set of normal surface/hypersurface matching
+ * equations could not be created for a given triangulation.
+ */
+class NoMatchingEquations : public std::exception {
+    public:
+        /**
+         * Creates a new exception.
+         */
+        NoMatchingEquations() noexcept = default;
+
+        /**
+         * Creates a new copy of the given exception.
+         */
+        NoMatchingEquations(const NoMatchingEquations&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given exception.
+         */
+        NoMatchingEquations& operator = (const NoMatchingEquations&) noexcept =
+            default;
+
+        /**
+         * Returns a human-readable description of the error that occurred.
+         */
+        virtual const char* what() const noexcept override {
+            return "Could not create a set of matching equations";
+        }
+};
+
 /*@}*/
 
 } // namespace regina

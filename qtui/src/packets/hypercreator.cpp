@@ -173,14 +173,15 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating vertex normal hypersurfaces"),
             parentWidget);
 
-        NormalHypersurfaces* ans = NormalHypersurfaces::enumerate(
-            *dynamic_cast<regina::Triangulation<4>*>(parent),
-            coordSystem,
-            regina::HS_VERTEX | (embedded->isChecked() ?
-                regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
-            regina::HS_ALG_DEFAULT, &tracker);
-
-        if (! ans) {
+        NormalHypersurfaces* ans;
+        try {
+            ans = new NormalHypersurfaces(
+                *dynamic_cast<regina::Triangulation<4>*>(parent),
+                coordSystem,
+                regina::HS_VERTEX | (embedded->isChecked() ?
+                    regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
+                regina::HS_ALG_DEFAULT, &tracker);
+        } catch (const regina::NoMatchingEquations&) {
             ReginaSupport::failure(parentWidget,
                 ui->tr("<qt>I could not enumerate vertex normal "
                 "hypersurfaces.<p>"
@@ -203,14 +204,15 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating fundamental normal hypersurfaces"),
             parentWidget);
 
-        NormalHypersurfaces* ans = NormalHypersurfaces::enumerate(
-            *dynamic_cast<regina::Triangulation<4>*>(parent),
-            coordSystem,
-            regina::HS_FUNDAMENTAL | (embedded->isChecked() ?
-                regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
-            regina::HS_ALG_DEFAULT, &tracker);
-
-        if (! ans) {
+        NormalHypersurfaces* ans;
+        try {
+            ans = new NormalHypersurfaces(
+                *dynamic_cast<regina::Triangulation<4>*>(parent),
+                coordSystem,
+                regina::HS_FUNDAMENTAL | (embedded->isChecked() ?
+                    regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
+                regina::HS_ALG_DEFAULT, &tracker);
+        } catch (const regina::NoMatchingEquations&) {
             ReginaSupport::failure(parentWidget,
                 ui->tr("<qt>I could not enumerate fundamental normal "
                 "hypersurfaces.<p>"

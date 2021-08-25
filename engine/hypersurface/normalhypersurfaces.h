@@ -51,6 +51,7 @@
 #include "hypersurface/normalhypersurface.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
+#include "utilities/exception.h"
 #include "utilities/listview.h"
 
 namespace regina {
@@ -108,7 +109,7 @@ class NormalHypersurfaces : public Packet {
 
     public:
         /**
-         * A unified routine for enumerating various classes of normal
+         * A unified constructor for enumerating various classes of normal
          * hypersurfaces within a given triangulation.
          *
          * The HyperCoords argument allows you to specify an underlying
@@ -132,7 +133,7 @@ class NormalHypersurfaces : public Packet {
          * makes no hints at all) will allow Regina to choose what it
          * thinks will be the most efficient method.
          *
-         * The enumerated hypersurfaces will be stored in a new normal
+         * The enumerated hypersurfaces will be stored in this new normal
          * hypersurface list, and their representations will be scaled down
          * to use the smallest possible integer coordinates.
          * This normal hypersurface list will be inserted into the packet tree
@@ -140,32 +141,36 @@ class NormalHypersurfaces : public Packet {
          * \b must remain the parent of this normal hypersurface list, and must
          * not change while this normal hypersurface list remains in existence.
          *
-         * If a progress tracker is passed, the normal hypersurface
-         * enumeration will take place in a new thread and this routine
-         * will return immediately.  If the user cancels the operation
-         * from another thread, then the normal surface list will \e not
-         * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).  Regarding progress tracking,
-         * this routine will declare and work through a series of stages
-         * whose combined weights sum to 1; typically this means that the
-         * given tracker must not have been used before.
+         * If a progress tracker is passed:
+         *
+         * - The normal hypersurface enumeration will take place in a new
+         *   thread.  This constructor will return immediately, but the
+         *   new normal hypersurface list will not be inserted into the
+         *   packet tree until the enumeration is complete.
+         *
+         * - If the user cancels the operation from another thread, then the
+         *   normal hypersurface list will \e never be inserted into the packet
+         *   tree.  The caller of this constructor will still need to delete it.
+         *
+         * - For progress tracking, this routine will declare and work through
+         *   a series of stages whose combined weights sum to 1; typically this
+         *   means that the given tracker must not have been used before.
          *
          * If no progress tracker is passed, the enumeration will run
-         * in the current thread and this routine will return only when
+         * in the current thread and this constructor will return only when
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
          *
-         * If an error occurs, then this routine will return \c null,
-         * no normal hypersurface list will be created, and the progress
-         * tracker (if passed) will be marked as finished.  Errors can occur
-         * in the following scenarios:
+         * If an error occurs, then this routine will thrown an exception.
+         * In this case, no normal hypersurface list will be created, and the
+         * progress tracker (if passed) will be marked as finished.  The
+         * possible errors are:
          *
          * - Regina could not create the matching equations for the given
-         *   triangulation in the given coordinate system.  This is only
-         *   possible in certain coordinate systems, and all such coordinate
-         *   systems are marked as such in the HyperCoords enum documentation.
-         *
-         * - A progress tracker is passed but a new thread could not be started.
+         *   triangulation in the given coordinate system (throws
+         *   regina::NoMatchingEquations).  This is only possible in certain
+         *   coordinate systems, and all such coordinate systems are marked as
+         *   such in the HyperCoords enum documentation.
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
@@ -176,12 +181,41 @@ class NormalHypersurfaces : public Packet {
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the newly created normal hypersurface list.  Note that if
-         * a progress tracker is passed then this list may not be completely
-         * filled when this routine returns.  If an error occurs (as
-         * described above) then this routine will return \c null instead.
          */
-        static NormalHypersurfaces* enumerate(Triangulation<4>& owner,
+        NormalHypersurfaces(
+            Triangulation<4>& owner,
+            HyperCoords coords,
+            HyperList which = HS_LIST_DEFAULT,
+            HyperAlg algHints = HS_ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr);
+
+        /**
+         * Deprecated routine to enumerate normal hypersurfaces within a
+         * given triangulation.
+         *
+         * This static routine is identical to calling the class
+         * constructor with the given arguments, but with one difference:
+         * if there is an error, then the class constructor will throw
+         * an exception, whereas this routine will simply return \c null.
+         *
+         * See the class constructor for details on what the arguments mean.
+         *
+         * \deprecated Just call the NormalHypersurfaces constructor.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * hypersurfaces will be based.
+         * @param coords the coordinate system to be used.
+         * @param which indicates which normal hypersurfaces should be
+         * enumerated.
+         * @param algHints passes requests to Regina for which specific
+         * enumeration algorithm should be used.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * @return the newly created normal hypersurface list, or \c null
+         * if an error occured.
+         */
+        [[deprecated]] static NormalHypersurfaces* enumerate(
+            Triangulation<4>& owner,
             HyperCoords coords,
             HyperList which = HS_LIST_DEFAULT,
             HyperAlg algHints = HS_ALG_DEFAULT,
@@ -729,6 +763,16 @@ inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
 
 inline bool NormalHypersurfaces::dependsOnParent() const {
     return true;
+}
+
+inline NormalHypersurfaces* NormalHypersurfaces::enumerate(
+        Triangulation<4>& owner, HyperCoords coords, HyperList which,
+        HyperAlg algHints, ProgressTracker* tracker) {
+    try {
+        return new NormalHypersurfaces(owner, coords, which, algHints, tracker);
+    } catch (const NoMatchingEquations&) {
+        return nullptr;
+    }
 }
 
 template <typename Comparison>

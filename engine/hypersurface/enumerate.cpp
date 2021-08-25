@@ -43,19 +43,16 @@
 
 namespace regina {
 
-NormalHypersurfaces* NormalHypersurfaces::enumerate(
-        Triangulation<4>& owner, HyperCoords coords,
-        HyperList which, HyperAlg algHints,
-        ProgressTracker* tracker) {
+NormalHypersurfaces::NormalHypersurfaces(Triangulation<4>& owner,
+        HyperCoords coords, HyperList which, HyperAlg algHints,
+        ProgressTracker* tracker) :
+        coords_(coords), which_(which), algorithm_(algHints) {
     std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
     if (! eqns) {
         if (tracker)
             tracker->setFinished();
-        return nullptr;
+        throw NoMatchingEquations();
     }
-
-    NormalHypersurfaces* list = new NormalHypersurfaces(
-        coords, which, algHints);
 
     if (tracker) {
         // We pass the matching equations as an argument to the thread
@@ -63,14 +60,13 @@ NormalHypersurfaces* NormalHypersurfaces::enumerate(
         // the thread before they are destroyed.
         std::thread([=, &owner](MatrixInt e) {
             forCoords(coords, [=, &e, &owner](auto info) {
-                Enumerator<decltype(info)>(list, &owner, e, tracker).enumerate();
+                Enumerator<decltype(info)>(this, &owner, e, tracker).enumerate();
             });
         }, std::move(*eqns)).detach();
     } else
         forCoords(coords, [=, &eqns, &owner](auto info) {
-            Enumerator<decltype(info)>(list, &owner, *eqns, tracker).enumerate();
+            Enumerator<decltype(info)>(this, &owner, *eqns, tracker).enumerate();
         });
-    return list;
 }
 
 template <typename Coords>

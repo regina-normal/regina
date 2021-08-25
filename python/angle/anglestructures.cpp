@@ -39,12 +39,18 @@
 
 using namespace regina::python;
 using regina::AngleStructures;
+using regina::ProgressTracker;
+using regina::Triangulation;
 
 void addAngleStructures(pybind11::module_& m) {
     m.def("makeAngleEquations", regina::makeAngleEquations);
 
     pybind11::class_<AngleStructures, regina::Packet,
             regina::SafePtr<AngleStructures>>(m, "AngleStructures")
+        .def(pybind11::init<Triangulation<3>&, bool, ProgressTracker*>(),
+            pybind11::arg(),
+            pybind11::arg("tautOnly") = false,
+            pybind11::arg("tracker") = nullptr)
         .def("triangulation", &AngleStructures::triangulation)
         .def("isTautOnly", &AngleStructures::isTautOnly)
         .def("size", &AngleStructures::size)

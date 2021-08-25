@@ -128,16 +128,14 @@ void AngleStructures::enumerateInternal(Triangulation<3>& triang,
     }
 }
 
-AngleStructures* AngleStructures::enumerate(Triangulation<3>& owner,
-        bool tautOnly, ProgressTracker* tracker) {
-    AngleStructures* ans = new AngleStructures(tautOnly);
-
+AngleStructures::AngleStructures(Triangulation<3>& owner,
+        bool tautOnly, ProgressTracker* tracker) :
+        tautOnly_(tautOnly) {
     if (tracker)
         std::thread(&AngleStructures::enumerateInternal,
-            ans, std::ref(owner), tracker).detach();
+            this, std::ref(owner), tracker).detach();
     else
-        ans->enumerateInternal(owner);
-    return ans;
+        enumerateInternal(owner);
 }
 
 AngleStructures* AngleStructures::enumerateTautDD(Triangulation<3>& owner) {

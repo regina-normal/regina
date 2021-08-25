@@ -511,19 +511,17 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void spunBoundaries() {
-            Triangulation<3>* f8 =
-                Example<3>::figureEight();
-            SnapPeaTriangulation* t = new SnapPeaTriangulation(*f8);
+            Triangulation<3>* f8 = Example<3>::figureEight();
+            SnapPeaTriangulation t(*f8);
 
-            regina::NormalSurfaces* s =
-                regina::NormalSurfaces::enumerate(*t, regina::NS_QUAD);
-            if (s->size() != 4)
+            regina::NormalSurfaces s(t, regina::NS_QUAD);
+            if (s.size() != 4)
                 CPPUNIT_FAIL(
                     "The figure 8 knot complement should have 4 vertex "
                     "surfaces in quad space.");
 
             bool found[4] = {}; // initialises to false
-            for (const regina::NormalSurface& f : s->surfaces()) {
+            for (const regina::NormalSurface& f : s.surfaces()) {
                 std::optional<regina::MatrixInt> m = f.boundaryIntersections();
                 if (! m) {
                     CPPUNIT_FAIL(
@@ -565,8 +563,6 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Figure 8 knot complement: did not find "
                     "boundary slope (-1, -4).");
 
-            delete s;
-            delete t;
             delete f8;
         }
 

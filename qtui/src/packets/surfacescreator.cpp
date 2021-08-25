@@ -202,14 +202,15 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating vertex normal surfaces"),
             parentWidget);
 
-        NormalSurfaces* ans = NormalSurfaces::enumerate(
-            *tri,
-            coordSystem,
-            regina::NS_VERTEX | (embedded->isChecked() ?
-                regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
-            regina::NS_ALG_DEFAULT, &tracker);
-
-        if (! ans) {
+        NormalSurfaces* ans;
+        try {
+            ans = new NormalSurfaces(
+                *tri,
+                coordSystem,
+                regina::NS_VERTEX | (embedded->isChecked() ?
+                    regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
+                regina::NS_ALG_DEFAULT, &tracker);
+        } catch (const regina::NoMatchingEquations&) {
             if (coordSystem == regina::NS_QUAD_CLOSED ||
                     coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
                 ReginaSupport::info(parentWidget,
@@ -245,14 +246,15 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating fundamental normal surfaces"),
             parentWidget);
 
-        NormalSurfaces* ans = NormalSurfaces::enumerate(
-            *tri,
-            coordSystem,
-            regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
-                regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
-            regina::NS_ALG_DEFAULT, &tracker);
-
-        if (! ans) {
+        NormalSurfaces* ans;
+        try {
+            ans = new NormalSurfaces(
+                *tri,
+                coordSystem,
+                regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
+                    regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
+                regina::NS_ALG_DEFAULT, &tracker);
+        } catch (const regina::NoMatchingEquations&) {
             if (coordSystem == regina::NS_QUAD_CLOSED ||
                     coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
                 ReginaSupport::info(parentWidget,

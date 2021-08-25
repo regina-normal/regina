@@ -45,6 +45,9 @@ Version 6.1  [ TODO ]
             - Constructors now take a reference to the triangulation, not a
               pointer.
         Class AngleStructures:
+            - Replaced enumerate() with a class constructor; this will
+              throw an exception on error (instead of returning null).
+              The old enumerate() function is kept as a deprecated alias.
             - New function structures() for simpler iteration.
             - Changed triangulation() and surface() to return const references,
               not pointers.
@@ -489,6 +492,8 @@ Version 6.1  [ TODO ]
             - Added a global swap() to complement the member swap().
         Class NewFunction<...>:
             - Removed completely.
+        Class NoMatchingEquations:
+            - New exception class.
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -506,6 +511,9 @@ Version 6.1  [ TODO ]
             - Constructors now take a reference to the triangulation, not a
               pointer.
         Class NormalHypersurfaces:
+            - Replaced enumerate() with a class constructor; this will
+              throw an exception on error (instead of returning null).
+              The old enumerate() function is kept as a deprecated alias.
             - New function hypersurfaces() for simpler iteration.
             - Changed triangulation() and hypersurface() to return
               const references, not pointers.
@@ -527,6 +535,9 @@ Version 6.1  [ TODO ]
             - Constructors now take a reference to the triangulation, not a
               pointer.
         Class NormalSurfaces:
+            - Replaced enumerate() with a class constructor; this will
+              throw an exception on error (instead of returning null).
+              The old enumerate() function is kept as a deprecated alias.
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,

@@ -43,6 +43,7 @@ using regina::NormalListFlags;
 
 void addNormalFlags(pybind11::module_& m) {
     pybind11::enum_<NormalListFlags>(m, "NormalListFlags")
+        .value("NS_LIST_DEFAULT", regina::NS_LIST_DEFAULT)
         .value("NS_EMBEDDED_ONLY", regina::NS_EMBEDDED_ONLY)
         .value("NS_IMMERSED_SINGULAR", regina::NS_IMMERSED_SINGULAR)
         .value("NS_VERTEX", regina::NS_VERTEX)
