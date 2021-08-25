@@ -58,8 +58,6 @@
 #include "surfaces/nsvectorquadclosed.h"
 #include "surfaces/nsvectorquadoct.h"
 #include "surfaces/nsvectorquadoctclosed.h"
-#include "surfaces/nsvectororiented.h"
-#include "surfaces/nsvectororientedquad.h"
 
 namespace regina {
 
@@ -75,8 +73,6 @@ inline auto forCoords(NormalCoords coords, FunctionObject&& func,
         case NS_AN_QUAD_OCT : return func(NormalInfo<NS_AN_QUAD_OCT>());
         case NS_AN_QUAD_OCT_CLOSED :
             return func(NormalInfo<NS_AN_QUAD_OCT_CLOSED>());
-        case NS_ORIENTED : return func(NormalInfo<NS_ORIENTED>());
-        case NS_ORIENTED_QUAD : return func(NormalInfo<NS_ORIENTED_QUAD>());
         default: return static_cast<RealReturnType>(defaultReturn);
     }
 }
@@ -92,8 +88,6 @@ inline auto forCoords(NormalCoords coords, FunctionObject&& func) {
         case NS_AN_QUAD_OCT : return func(NormalInfo<NS_AN_QUAD_OCT>());
         case NS_AN_QUAD_OCT_CLOSED :
             return func(NormalInfo<NS_AN_QUAD_OCT_CLOSED>());
-        case NS_ORIENTED : return func(NormalInfo<NS_ORIENTED>());
-        case NS_ORIENTED_QUAD : return func(NormalInfo<NS_ORIENTED_QUAD>());
         default: return RealReturnType();
     }
 }

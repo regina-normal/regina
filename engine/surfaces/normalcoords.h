@@ -141,16 +141,6 @@ enum NormalCoords {
      */
     NS_TRIANGLE_ARCS = 201,
     /**
-     * Represents standard triangle-quadrilateral coordinates for
-     * transversely oriented normal surfaces.
-     */
-    NS_ORIENTED = 300,
-    /**
-     * Represents quadrilateral coordinates for transversely oriented 
-     * normal surfaces.
-     */
-    NS_ORIENTED_QUAD = 301,
-    /**
      * Represents angle structure coordinates.
      *
      * This coordinate system is \e not for use with normal surfaces:

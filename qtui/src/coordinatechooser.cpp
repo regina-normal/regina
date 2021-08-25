@@ -40,6 +40,8 @@
 
 #include <algorithm>
 
+// #define SUPPORT_TONS
+
 using regina::NormalSurfaces;
 
 void CoordinateChooser::insertSystem(regina::NormalCoords coordSystem) {
@@ -56,10 +58,12 @@ void CoordinateChooser::insertAllCreators() {
     // ideal triangulations.
     insertSystem(regina::NS_QUAD_CLOSED);
     insertSystem(regina::NS_AN_QUAD_OCT_CLOSED);
+#ifdef SUPPORT_TONS
     if (ReginaPrefSet::global().surfacesSupportOriented) {
         insertSystem(regina::NS_ORIENTED);
         insertSystem(regina::NS_ORIENTED_QUAD);
     }
+#endif
 }
 
 void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
@@ -77,10 +81,12 @@ void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
         insertSystem(regina::NS_STANDARD);
         insertSystem(regina::NS_QUAD);
 
+#ifdef SUPPORT_TONS
         if (surfaces->allowsOriented()) {
             insertSystem(regina::NS_ORIENTED);
             insertSystem(regina::NS_ORIENTED_QUAD);
         }
+#endif
     }
 
     insertSystem(regina::NS_EDGE_WEIGHT);
@@ -93,13 +99,18 @@ void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
 
     if (it == systems.end()) {
         // Try to find a reasonable fallback.
-        if (newSystem == regina::NS_QUAD_CLOSED ||
-                newSystem == regina::NS_ORIENTED_QUAD)
+        if (newSystem == regina::NS_QUAD_CLOSED)
             it = std::find(systems.begin(), systems.end(), regina::NS_QUAD);
+#ifdef SUPPORT_TONS
+        else if (newSystem == regina::NS_ORIENTED_QUAD)
+            it = std::find(systems.begin(), systems.end(), regina::NS_QUAD);
+#endif
         else if (newSystem == regina::NS_AN_QUAD_OCT_CLOSED)
             it = std::find(systems.begin(), systems.end(), regina::NS_AN_QUAD_OCT);
+#ifdef SUPPORT_TONS
         else if (newSystem == regina::NS_ORIENTED)
             it = std::find(systems.begin(), systems.end(), regina::NS_STANDARD);
+#endif
         else if (newSystem == regina::NS_AN_LEGACY)
             it = std::find(systems.begin(), systems.end(), regina::NS_AN_STANDARD);
     }

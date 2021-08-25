@@ -14,8 +14,6 @@ SET ( FILES
   normalsurface.cpp
   normalsurfaces.cpp
   nsvectoranstandard.cpp
-  nsvectororiented.cpp
-  nsvectororientedquad.cpp
   nsvectorquad.cpp
   nsvectorquadclosed.cpp
   nsvectorquadoct.cpp
@@ -51,8 +49,6 @@ if (${REGINA_INSTALL_DEV})
     normalsurfaces.h
     nsvectoranstandard.h
     nsvectormirrored.h
-    nsvectororiented.h
-    nsvectororientedquad.h
     nsvectorquad.h
     nsvectorquadclosed.h
     nsvectorquadoct.h

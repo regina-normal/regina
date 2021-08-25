@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,22 +30,48 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "surfaces/normalcoords.h"
+/*! \file surfaces/normalcoords.h
+ *  \brief Defines constants for normal surface coordinate systems.
+ */
 
-void addNormalCoords(pybind11::module_& m) {
-    pybind11::enum_<regina::NormalCoords>(m, "NormalCoords")
-        .value("NS_STANDARD", regina::NS_STANDARD)
-        .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)
-        .value("NS_QUAD", regina::NS_QUAD)
-        .value("NS_QUAD_CLOSED", regina::NS_QUAD_CLOSED)
-        .value("NS_AN_QUAD_OCT", regina::NS_AN_QUAD_OCT)
-        .value("NS_AN_QUAD_OCT_CLOSED", regina::NS_AN_QUAD_OCT_CLOSED)
-        .value("NS_EDGE_WEIGHT", regina::NS_EDGE_WEIGHT)
-        .value("NS_TRIANGLE_ARCS", regina::NS_TRIANGLE_ARCS)
-        .value("NS_AN_LEGACY", regina::NS_AN_LEGACY)
-        .value("NS_ANGLE", regina::NS_ANGLE)
-        .export_values()
-        ;
-}
+#ifndef __REGINA_NORMALCOORDS_H
+#ifndef __DOXYGEN
+#define __REGINA_NORMALCOORDS_H
+#endif
+
+#include "regina-core.h"
+
+namespace regina {
+
+/**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
+ * Represents different coordinate systems that can
+ * be used for enumerating and displaying normal surfaces.
+ *
+ * IDs 0-9999 are reserved for future use by Regina.  If you are extending
+ * Regina to include your own coordinate system, you should choose
+ * an ID >= 10000.
+ */
+enum NormalCoords {
+    /**
+     * Represents standard triangle-quadrilateral coordinates for
+     * transversely oriented normal surfaces.
+     */
+    NS_ORIENTED = 300,
+    /**
+     * Represents quadrilateral coordinates for transversely oriented 
+     * normal surfaces.
+     */
+    NS_ORIENTED_QUAD = 301,
+};
+
+/*@}*/
+
+} // namespace regina
+
+#endif
 
