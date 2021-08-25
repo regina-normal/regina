@@ -536,15 +536,13 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     QTreeWidgetItem* id;
     QTreeWidgetItem* detailsItem;
 
-    regina::BlockedSFS* sfs = regina::BlockedSFS::isBlockedSFS(tri);
+    auto sfs = regina::BlockedSFS::recognise(tri);
     if (sfs) {
         id = addComponentSection(tr("Blocked Seifert Fibred Space"));
         describeSatRegion(sfs->region(), id);
-        delete sfs;
     }
 
-    regina::BlockedSFSLoop* loop =
-        regina::BlockedSFSLoop::isBlockedSFSLoop(tri);
+    auto loop = regina::BlockedSFSLoop::recognise(tri);
     if (loop) {
         id = addComponentSection(tr("Blocked SFS Loop"));
 
@@ -554,12 +552,9 @@ void Tri3CompositionUI::findBlockedTriangulations() {
 
         (new QTreeWidgetItem(id))->setText(0, tr("Matching relation: %1").
             arg(matrixString(loop->matchingReln())));
-
-        delete loop;
     }
 
-    regina::BlockedSFSPair* pair =
-        regina::BlockedSFSPair::isBlockedSFSPair(tri);
+    auto pair = regina::BlockedSFSPair::recognise(tri);
     if (pair) {
         id = addComponentSection(tr("Blocked SFS Pair"));
 
@@ -573,12 +568,9 @@ void Tri3CompositionUI::findBlockedTriangulations() {
 
         (new QTreeWidgetItem(id))->setText(0, tr("Matching relation (first --> second): %1").
             arg(matrixString(pair->matchingReln())));
-
-        delete pair;
     }
 
-    regina::BlockedSFSTriple* triple =
-        regina::BlockedSFSTriple::isBlockedSFSTriple(tri);
+    auto triple = regina::BlockedSFSTriple::recognise(tri);
     if (triple) {
         id = addComponentSection(tr("Blocked SFS Triple"));
 
@@ -601,8 +593,6 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         (new QTreeWidgetItem(id))->setText(0,
             tr("Matching relation (centre --> first end): %1").
             arg(matrixString(triple->matchingReln(0))));
-
-        delete triple;
     }
 
     auto bundle = regina::LayeredTorusBundle::recognise(tri);

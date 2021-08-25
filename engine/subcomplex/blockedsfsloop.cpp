@@ -38,12 +38,8 @@
 
 namespace regina {
 
-BlockedSFSLoop::~BlockedSFSLoop() {
-    delete region_;
-}
-
 std::unique_ptr<Manifold> BlockedSFSLoop::manifold() const {
-    std::optional<SFSpace> sfs = region_->createSFS(false);
+    std::optional<SFSpace> sfs = region_.createSFS(false);
     if (! sfs)
         return nullptr;
     if (sfs->punctures() == 1) {
@@ -59,34 +55,34 @@ std::unique_ptr<Manifold> BlockedSFSLoop::manifold() const {
 
 std::ostream& BlockedSFSLoop::writeName(std::ostream& out) const {
     out << "Blocked SFS Loop [";
-    region_->writeBlockAbbrs(out, false);
+    region_.writeBlockAbbrs(out, false);
     return out << ']';
 }
 
 std::ostream& BlockedSFSLoop::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{BSFS\\_Loop}\\left[";
-    region_->writeBlockAbbrs(out, true);
+    region_.writeBlockAbbrs(out, true);
     return out << "\\right]";
 }
 
 void BlockedSFSLoop::writeTextLong(std::ostream& out) const {
     out << "Blocked SFS Loop, matching relation " << matchingReln_ << '\n';
-    region_->writeDetail(out, "Internal region");
+    region_.writeDetail(out, "Internal region");
 }
 
-BlockedSFSLoop* BlockedSFSLoop::isBlockedSFSLoop(Triangulation<3>* tri) {
+std::optional<BlockedSFSLoop> BlockedSFSLoop::recognise(Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
-        return 0;
+        return std::nullopt;
     if (tri->countComponents() > 1)
-        return 0;
+        return std::nullopt;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for saturated tori being joined
     // to saturated Klein bottles.  Any of these issues will result in
     // edges joined to themselves in reverse.
     if (! tri->isValid())
-        return 0;
+        return std::nullopt;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
@@ -176,11 +172,11 @@ BlockedSFSLoop* BlockedSFSLoop::isBlockedSFSLoop(Triangulation<3>* tri) {
         // The expansion and self-adjacency worked, and the triangulation
         // is known to be closed and connected.
         // This means we've got one!
-        return new BlockedSFSLoop(region.release(), matchingReln);
+        return BlockedSFSLoop(std::move(*region), matchingReln);
     }
 
     // Nope.
-    return nullptr;
+    return std::nullopt;
 }
 
 } // namespace regina

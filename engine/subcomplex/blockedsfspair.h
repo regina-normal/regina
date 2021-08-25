@@ -40,8 +40,10 @@
 #define __REGINA_BLOCKEDSFSPAIR_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "maths/matrix2.h"
+#include "subcomplex/satregion.h"
 #include "subcomplex/standardtri.h"
 
 namespace regina {
@@ -94,10 +96,16 @@ class SatRegion;
  *
  * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * the only way to create objects of this class (aside from copying or moving)
+ * is via the static member function recognise().
  */
 class BlockedSFSPair : public StandardTriangulation {
     private:
-        SatRegion* region_[2];
+        SatRegion region_[2];
             /**< The two saturated regions whose boundaries are joined. */
         Matrix2 matchingReln_;
             /**< Specifies how the two region boundaries are joined, as
@@ -105,9 +113,46 @@ class BlockedSFSPair : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this structure and its constituent components.
+         * Creates a new copy of this structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
          */
-        ~BlockedSFSPair();
+        BlockedSFSPair(const BlockedSFSPair& src) = default;
+        /**
+         * Moves the contents of the given structure into this new structure.
+         * This is a constant time operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         */
+        BlockedSFSPair(BlockedSFSPair&& src) noexcept = default;
+        /**
+         * Sets this to be a copy of the given structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
+         * @return a reference to this structure.
+         */
+        BlockedSFSPair& operator = (const BlockedSFSPair& src) = default;
+        /**
+         * Moves the contents of the given structure into this structure.
+         * This is a constant time operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         * @return a reference to this structure.
+         */
+        BlockedSFSPair& operator = (BlockedSFSPair&& src) noexcept = default;
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(BlockedSFSPair& other) noexcept;
 
         /**
          * Returns details of one of the two bounded saturated regions that
@@ -148,14 +193,21 @@ class BlockedSFSPair : public StandardTriangulation {
          * @return a structure containing details of the blocked pair, or
          * no value if the given triangulation is not of this form.
          */
-        static BlockedSFSPair* isBlockedSFSPair(Triangulation<3>* tri);
+        static std::optional<BlockedSFSPair> recognise(Triangulation<3>* tri);
+        /**
+         * A deprecated alias to recognise if a triangulation forms a
+         * saturated region joined to a think I-bundle via optional layerings.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<BlockedSFSPair> isBlockedSFSPair(
+            Triangulation<3>* tri);
 
     private:
         /**
          * Constructs a new blocked pair of Seifert fibred spaces, as
-         * described by the given saturated regions and matching
-         * relation.  The new object will take ownership of each of the
-         * regions passed.
+         * described by the given saturated regions and matching relation.
          *
          * Note that the new object must describe an existing triangulation.
          *
@@ -164,27 +216,52 @@ class BlockedSFSPair : public StandardTriangulation {
          * @param matchingReln describes how the first and second region
          * boundaries are joined, as detailed in the class notes above.
          */
-        BlockedSFSPair(SatRegion* region0, SatRegion* region1,
+        BlockedSFSPair(SatRegion&& region0, SatRegion&& region1,
             const Matrix2& matchingReln);
 };
+
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls BlockedSFSPair::swap(); it is provided
+ * so that BlockedSFSPair meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ */
+void swap(BlockedSFSPair& a, BlockedSFSPair& b) noexcept;
 
 /*@}*/
 
 // Inline functions for BlockedSFSPair
 
-inline BlockedSFSPair::BlockedSFSPair(SatRegion* region0,
-        SatRegion* region1, const Matrix2& matchingReln) :
+inline BlockedSFSPair::BlockedSFSPair(SatRegion&& region0,
+        SatRegion&& region1, const Matrix2& matchingReln) :
+        region_ { std::move(region0), std::move(region1) },
         matchingReln_(matchingReln) {
-    region_[0] = region0;
-    region_[1] = region1;
+}
+
+inline void BlockedSFSPair::swap(BlockedSFSPair& other) noexcept {
+    region_[0].swap(other.region_[0]);
+    region_[1].swap(other.region_[1]);
+    matchingReln_.swap(other.matchingReln_);
 }
 
 inline const SatRegion& BlockedSFSPair::region(int which) const {
-    return *region_[which];
+    return region_[which];
 }
 
 inline const Matrix2& BlockedSFSPair::matchingReln() const {
     return matchingReln_;
+}
+
+inline std::optional<BlockedSFSPair> BlockedSFSPair::isBlockedSFSPair(
+        Triangulation<3>* tri) {
+    return recognise(tri);
+}
+
+inline void swap(BlockedSFSPair& a, BlockedSFSPair& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

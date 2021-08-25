@@ -96,18 +96,18 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         return ans;
 
     // Run tests that require entire triangulations.
-    if (auto ans = BlockedSFS::isBlockedSFS(tri))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = BlockedSFS::recognise(tri))
+        return std::make_unique<BlockedSFS>(std::move(*ans));
     if (auto ans = LayeredTorusBundle::recognise(tri))
         return std::make_unique<LayeredTorusBundle>(std::move(*ans));
 
     // Save non-geometric graph manifolds until last.
-    if (auto ans = BlockedSFSLoop::isBlockedSFSLoop(tri))
-        return std::unique_ptr<StandardTriangulation>(ans);
-    if (auto ans = BlockedSFSPair::isBlockedSFSPair(tri))
-        return std::unique_ptr<StandardTriangulation>(ans);
-    if (auto ans = BlockedSFSTriple::isBlockedSFSTriple(tri))
-        return std::unique_ptr<StandardTriangulation>(ans);
+    if (auto ans = BlockedSFSLoop::recognise(tri))
+        return std::make_unique<BlockedSFSLoop>(std::move(*ans));
+    if (auto ans = BlockedSFSPair::recognise(tri))
+        return std::make_unique<BlockedSFSPair>(std::move(*ans));
+    if (auto ans = BlockedSFSTriple::recognise(tri))
+        return std::make_unique<BlockedSFSTriple>(std::move(*ans));
     if (auto ans = PluggedTorusBundle::recognise(tri))
         return std::make_unique<PluggedTorusBundle>(std::move(*ans));
 

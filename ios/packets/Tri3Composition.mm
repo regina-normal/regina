@@ -403,16 +403,15 @@
 
 - (void)findBlockedTriangulations:(NSMutableString*)details
 {
-    regina::BlockedSFS* sfs = regina::BlockedSFS::isBlockedSFS(self.packet);
+    auto sfs = regina::BlockedSFS::recognise(self.packet);
     if (sfs) {
         [details appendString:@"Blocked Seifert Fibred Space\n"];
         [details appendString:@INDENT1 "Saturated region:\n"];
         [self describeSatRegion:sfs->region() details:details];
         [details appendString:@"\n"];
-        delete sfs;
     }
     
-    regina::BlockedSFSLoop* loop = regina::BlockedSFSLoop::isBlockedSFSLoop(self.packet);
+    auto loop = regina::BlockedSFSLoop::recognise(self.packet);
     if (loop) {
         [details appendString:@"Blocked SFS Loop\n"];
         
@@ -423,10 +422,9 @@
          [Tri3Composition matrixString:loop->matchingReln()]];
         
         [details appendString:@"\n"];
-        delete loop;
     }
     
-    regina::BlockedSFSPair* pair = regina::BlockedSFSPair::isBlockedSFSPair(self.packet);
+    auto pair = regina::BlockedSFSPair::recognise(self.packet);
     if (pair) {
         [details appendString:@"Blocked SFS Pair\n"];
         
@@ -440,10 +438,9 @@
          [Tri3Composition matrixString:pair->matchingReln()]];
         
         [details appendString:@"\n"];
-        delete pair;
     }
     
-    regina::BlockedSFSTriple* triple = regina::BlockedSFSTriple::isBlockedSFSTriple(self.packet);
+    auto triple = regina::BlockedSFSTriple::recognise(self.packet);
     if (triple) {
         [details appendString:@"Blocked SFS Triple\n"];
         
@@ -463,7 +460,6 @@
          [Tri3Composition matrixString:triple->matchingReln(0)]];
         
         [details appendString:@"\n"];
-        delete triple;
     }
     
     auto bundle = regina::LayeredTorusBundle::recognise(self.packet);

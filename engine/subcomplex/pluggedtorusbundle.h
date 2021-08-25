@@ -115,6 +115,12 @@ class TxICore;
  *
  * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * the only way to create objects of this class (aside from copying or moving)
+ * is via the static member function recognise().
  */
 class PluggedTorusBundle : public StandardTriangulation {
     private:

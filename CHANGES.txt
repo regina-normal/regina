@@ -70,6 +70,12 @@ Version 6.1  [ TODO ]
               member and global swap() functions.
         Class BitmaskLen8, BitmaskLen16, BitmaskLen32, BitmaskLen64:
             - Deprecated.  Just use Bitmask1<uint8_t>, etc.
+        Class BlockedSFS, BlockedSFSLoop, BlockedSFSPair, BlockedSFSTriple:
+            - Routines isBlockedSFS...() are now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old names are kept as deprecated aliases.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
         Class BoolSet:
             - Almost everything in this class is now constexpr.
             - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
