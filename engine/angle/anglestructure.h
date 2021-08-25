@@ -423,7 +423,7 @@ inline AngleStructure* AngleStructure::clone() const {
 
 inline AngleStructure& AngleStructure::operator = (
         const AngleStructure& value) {
-    vector_ = new Vector<Integer>(*value.vector_);
+    *vector_ = *value.vector_;
     triangulation_ = value.triangulation_;
     flags_ = value.flags_;
     return *this;
