@@ -140,9 +140,7 @@ void addNormalSurface(pybind11::module_& m) {
         .def("swap", &NormalSurface::swap)
         .def("doubleSurface", &NormalSurface::doubleSurface)
         .def("triangles", &NormalSurface::triangles)
-        .def("orientedTriangles", &NormalSurface::orientedTriangles)
         .def("quads", &NormalSurface::quads)
-        .def("orientedQuads", &NormalSurface::orientedQuads)
         .def("octs", &NormalSurface::octs)
         .def("edgeWeight", &NormalSurface::edgeWeight)
         .def("arcs", &NormalSurface::arcs)
@@ -190,7 +188,6 @@ void addNormalSurface(pybind11::module_& m) {
         .def("systemAllowsAlmostNormal",
             &NormalSurface::systemAllowsAlmostNormal)
         .def("systemAllowsSpun", &NormalSurface::systemAllowsSpun)
-        .def("systemAllowsOriented", &NormalSurface::systemAllowsOriented)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

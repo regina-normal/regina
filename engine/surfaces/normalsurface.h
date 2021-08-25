@@ -258,9 +258,8 @@ struct NormalInfo;
  * - a copy constructor that takes a vector of the same subclass;
  * - declarations and implementations of the virtual functions
  *   NormalSurfaceVector::clone(),
- *   NormalSurfaceVector::allowsAlmostNormal(),
- *   NormalSurfaceVector::allowsSpun(), and
- *   NormalSurfaceVector::allowsOriented().
+ *   NormalSurfaceVector::allowsAlmostNormal(), and
+ *   NormalSurfaceVector::allowsSpun().
  *
  * @param class_ the name of this subclass of NormalSurfaceVector.
  * @param id the corresponding NNormalCoords constant.
@@ -282,9 +281,6 @@ struct NormalInfo;
         } \
         inline virtual bool allowsSpun() const override { \
             return Info::spun; \
-        } \
-        inline virtual bool allowsOriented() const override { \
-            return Info::oriented; \
         }
 
 /**
@@ -335,10 +331,6 @@ struct NormalInfo;
  *   \e total number of discs of the requested type; if your new coordinate
  *   system adorns discs with extra information (such as orientation) then
  *   your implementation must compute the appropriate sum.</li>
- *   <li>The orientation-specific coordinate functions
- *   orientedTriangles() and orientedQuads() must be
- *   implemented if your coordinate system supports transverse orientation.
- *   Otherwise you can use the default implementations (which returns zero).
  *   <li>Static public functions
  *   std::optional<MatrixInt> makeMatchingEquations(const Triangulation<3>&) and
  *   makeEmbeddedConstraints(const Triangulation<3>&) must be declared and
@@ -650,29 +642,6 @@ class NormalSurfaceVector : public ShortOutput<NormalSurfaceVector> {
             int vertex, const Triangulation<3>& triang) const = 0;
 
         /**
-         * Returns the number of oriented triangular discs of the given type in
-         * this normal surface.
-         * See NormalSurface::orientedTriangles() for further details.
-         *
-         * The default implementation of this routine returns zero,
-         * which is suitable for coordinate systems that do not support
-         * transverse orientation.
-         *
-         * @param tetIndex the index in the triangulation of the
-         * tetrahedron in which the requested triangles reside;
-         * this should be between 0 and
-         * Triangulation<3>::size()-1 inclusive.
-         * @param vertex the vertex of the given tetrahedron around
-         * which the requested triangles lie; this should be between 0
-         * and 3 inclusive.
-         * @param triang the triangulation in which this normal surface lives.
-         * @param orientation the orientation of the normal discs.
-         * @return the number of triangular discs of the given type.
-         */
-        virtual LargeInteger orientedTriangles(size_t tetIndex,
-            int vertex, const Triangulation<3>& triang, bool orientation) const;
-
-        /**
          * Returns the number of quadrilateral discs of the given type
          * in this normal surface.
          * See NormalSurface::quads() for further details.
@@ -689,27 +658,6 @@ class NormalSurfaceVector : public ShortOutput<NormalSurfaceVector> {
         virtual LargeInteger quads(size_t tetIndex,
             int quadType, const Triangulation<3>& triang) const = 0;
 
-        /**
-         * Returns the number of oriented quadrilateral discs of the given type
-         * in this normal surface.
-         * See NormalSurface::orientedQuads() for further details.
-         *
-         * The default implementation of this routine returns zero,
-         * which is suitable for coordinate systems that do not support
-         * transverse orientation.
-         *
-         * @param tetIndex the index in the triangulation of the
-         * tetrahedron in which the requested quadrilaterals reside;
-         * this should be between 0 and
-         * Triangulation<3>::size()-1 inclusive.
-         * @param quadType the type of this quadrilateral in the given
-         * tetrahedron; this should be 0, 1 or 2.
-         * @param triang the triangulation in which this normal surface lives.
-         * @param orientation the orientation of the normal discs.
-         * @return the number of quadrilateral discs of the given type.
-         */
-        virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const Triangulation<3>& triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
@@ -1053,37 +1001,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         LargeInteger triangles(size_t tetIndex, int vertex) const;
 
         /**
-         * Returns the number of oriented triangular discs of the given type 
-         * in this normal surface.
-         *
-         * This routine is for coordinate systems that support
-         * transversely oriented normal surfaces; for details see
-         * "The Thurston norm via normal surfaces", Stephan Tillmann and
-         * Daryl Cooper, Pacific Journal of Mathematics 239 (2009), 1-15.
-         *
-         * An oriented triangular disc type is identified by specifying a
-         * tetrahedron, a vertex of that tetrahedron that the
-         * triangle surrounds, and a boolean orientation.  The \c true
-         * orientation indicates a transverse orientation pointing to the
-         * nearby vertex, and the \c false orientation indicates a
-         * transverse orientation pointing to the opposite face.
-         *
-         * If the underlying coordinate system does not support transverse
-         * orientation, this routine will simply return zero.
-         *
-         * @param tetIndex the index in the triangulation of the
-         * tetrahedron in which the requested triangles reside;
-         * this should be between 0 and
-         * Triangulation<3>::size()-1 inclusive.
-         * @param vertex the vertex of the given tetrahedron around
-         * which the requested triangles lie; this should be between 0
-         * and 3 inclusive.
-         * @param orientation the orientation of the triangle 
-         * @return the number of triangular discs of the given type.
-         */
-        LargeInteger orientedTriangles(size_t tetIndex,
-            int vertex, bool orientation) const;
-        /**
          * Returns the number of quadrilateral discs of the given
          * type in this normal surface.
          *
@@ -1111,37 +1028,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * @return the number of quadrilateral discs of the given type.
          */
         LargeInteger quads(size_t tetIndex, int quadType) const;
-        /**
-         * Returns the number of oriented quadrilateral discs of the given type
-         * in this normal surface.
-         *
-         * This routine is for coordinate systems that support
-         * transversely oriented normal surfaces; for details see
-         * "The Thurston norm via normal surfaces", Stephan Tillmann and
-         * Daryl Cooper, Pacific Journal of Mathematics 239 (2009), 1-15.
-         *
-         * An oriented quadrilateral disc type is identified by specifying
-         * a tetrahedron, a quadrilateral type (0, 1 or 2) as described
-         * in quads(), and a boolean orientation.
-         * The \c true orientation indicates a transverse orientation
-         * pointing to the edge containing vertex 0 of the tetrahedron,
-         * and the \c false orientation indicates a transverse
-         * orientation pointing to the opposite edge.
-         *
-         * If the underlying coordinate system does not support transverse
-         * orientation, this routine will simply return zero.
-         *
-         * @param tetIndex the index in the triangulation of the
-         * tetrahedron in which the requested quadrilaterals reside;
-         * this should be between 0 and
-         * Triangulation<3>::size()-1 inclusive.
-         * @param quadType the type of this quadrilateral in the given
-         * tetrahedron; this should be 0, 1 or 2, as described above.
-         * @param orientation the orientation of the quadrilateral disc 
-         * @return the number of quadrilateral discs of the given type.
-         */
-        LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.

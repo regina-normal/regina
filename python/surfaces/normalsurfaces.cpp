@@ -74,7 +74,6 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("algorithm", &NormalSurfaces::algorithm)
         .def("allowsAlmostNormal", &NormalSurfaces::allowsAlmostNormal)
         .def("allowsSpun", &NormalSurfaces::allowsSpun)
-        .def("allowsOriented", &NormalSurfaces::allowsOriented)
         .def("isEmbeddedOnly", &NormalSurfaces::isEmbeddedOnly)
         .def("triangulation", &NormalSurfaces::triangulation)
         .def("size", &NormalSurfaces::size)
