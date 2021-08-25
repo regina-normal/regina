@@ -392,6 +392,8 @@ Version 6.1  [ TODO ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+        Class Layering:
+            - Added copy construction and copy assignment.
         Class LensSpace:
             - Added member and global swap() functions.
         Class LessDeref:

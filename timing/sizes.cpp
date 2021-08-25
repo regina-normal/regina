@@ -26,6 +26,7 @@
 #include "subcomplex/layeredloop.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/layeredtorusbundle.h"
+#include "subcomplex/layering.h"
 #include "subcomplex/pillowtwosphere.h"
 #include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/plugtrisolidtorus.h"
@@ -94,6 +95,7 @@ int main(int argc, char* argv[]) {
     SHOW_SIZE(LayeredLoop);
     SHOW_SIZE(LayeredSolidTorus);
     SHOW_SIZE(LayeredTorusBundle);
+    SHOW_SIZE(Layering);
     SHOW_SIZE(PillowTwoSphere);
     SHOW_SIZE(PluggedTorusBundle);
     SHOW_SIZE(PlugTriSolidTorus);

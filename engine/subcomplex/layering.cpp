@@ -35,15 +35,6 @@
 
 namespace regina {
 
-Layering::Layering(Tetrahedron<3>* bdry0, Perm<4> roles0,
-        Tetrahedron<3>* bdry1, Perm<4> roles1) : size_(0), reln(1, 0, 0, 1) {
-    oldBdryTet_[0] = newBdryTet_[0] = bdry0;
-    oldBdryTet_[1] = newBdryTet_[1] = bdry1;
-
-    oldBdryRoles_[0] = newBdryRoles_[0] = roles0;
-    oldBdryRoles_[1] = newBdryRoles_[1] = roles1;
-}
-
 bool Layering::extendOne() {
     // See if we move to a common new tetrahedron.
     // Also make sure this really is a new tetrahedron, so we don't get

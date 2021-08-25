@@ -107,6 +107,9 @@ namespace regina {
  * layering.  The routines extend() or extendOne() are then called to see
  * how many additional tetrahedra have been layered upon this pair of triangles
  * according to the rules above.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  */
 class Layering {
     private:
@@ -116,13 +119,12 @@ class Layering {
         Tetrahedron<3>* oldBdryTet_[2];
             /**< The two tetrahedra of the old boundary (these may be
                  the same).  See the class notes for details. */
-        Perm<4> oldBdryRoles_[2];
-            /**< The corresponding two permutations of the old boundary.
-                 See the class notes for details. */
-
         Tetrahedron<3>* newBdryTet_[2];
             /**< The two tetrahedra of the new boundary (these may be
                  the same).  See the class notes for details. */
+        Perm<4> oldBdryRoles_[2];
+            /**< The corresponding two permutations of the old boundary.
+                 See the class notes for details. */
         Perm<4> newBdryRoles_[2];
             /**< The corresponding two permutations of the new boundary.
                  See the class notes for details. */
@@ -161,6 +163,24 @@ class Layering {
          */
         Layering(Tetrahedron<3>* bdry0, Perm<4> roles0,
             Tetrahedron<3>* bdry1, Perm<4> roles1);
+
+        /**
+         * Creates a new copy of this layering structure.
+         *
+         * The new structure will describe the same layering within the same
+         * underlying triangulation.
+         */
+        Layering(const Layering&) = default;
+
+        /**
+         * Sets this to be a copy of the given layering structure.
+         *
+         * The copied structure will describe the same layering within the
+         * same underlying triangulation.
+         *
+         * @return a reference to this structure.
+         */
+        Layering& operator = (const Layering&) = default;
 
         /**
          * Returns the number of individual tetrahedra that have been
@@ -402,15 +422,21 @@ class Layering {
         bool matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
             Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
             Matrix2& upperReln) const;
-
-        // Mark this class as non-copyable.
-        Layering(const Layering&) = delete;
-        Layering& operator = (const Layering&) = delete;
 };
 
 /*@}*/
 
 // Inline functions for Layering
+
+inline Layering::Layering(Tetrahedron<3>* bdry0, Perm<4> roles0,
+        Tetrahedron<3>* bdry1, Perm<4> roles1) :
+        size_(0),
+        oldBdryTet_ { bdry0, bdry1 },
+        newBdryTet_ { bdry0, bdry1 },
+        oldBdryRoles_ { roles0, roles1 },
+        newBdryRoles_ { roles0, roles1 },
+        reln(1, 0, 0, 1) {
+}
 
 inline unsigned long Layering::size() const {
     return size_;
