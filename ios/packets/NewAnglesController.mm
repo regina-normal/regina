@@ -108,8 +108,7 @@ static NSArray* whichText;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        AngleStructures* ans =
-            AngleStructures::enumerate((regina::Triangulation<3>*)self.spec.parent, tautOnly, &_tracker);
+        AngleStructures* ans = new AngleStructures((regina::Triangulation<3>*)self.spec.parent, tautOnly, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
                 // This operation blocks until the UI is updated:

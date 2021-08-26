@@ -84,18 +84,15 @@ namespace {
     };
 }
 
-NormalSurfaces* NormalSurfaces::enumerate(
-        Triangulation<3>& owner, NormalCoords coords,
-        NormalList which, NormalAlg algHints,
-        ProgressTracker* tracker) {
+NormalSurfaces::NormalSurfaces(Triangulation<3>& owner, NormalCoords coords,
+        NormalList which, NormalAlg algHints, ProgressTracker* tracker) :
+        coords_(coords), which_(which), algorithm_(algHints) {
     std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
     if (! eqns) {
         if (tracker)
             tracker->setFinished();
-        return nullptr;
+        throw NoMatchingEquations();
     }
-
-    NormalSurfaces* list = new NormalSurfaces(coords, which, algHints);
 
     if (tracker) {
         // We pass the matching equations as an argument to the thread
@@ -103,14 +100,13 @@ NormalSurfaces* NormalSurfaces::enumerate(
         // the thread before they are destroyed.
         std::thread([=, &owner](MatrixInt e) {
             forCoords(coords, [=, &e, &owner](auto info) {
-                Enumerator<decltype(info)>(list, &owner, e, tracker).enumerate();
+                Enumerator<decltype(info)>(this, &owner, e, tracker).enumerate();
             });
         }, std::move(*eqns)).detach();
     } else
         forCoords(coords, [=, &eqns, &owner](auto info) {
-            Enumerator<decltype(info)>(list, &owner, *eqns, tracker).enumerate();
+            Enumerator<decltype(info)>(this, &owner, *eqns, tracker).enumerate();
         });
-    return list;
 }
 
 template <typename Coords>

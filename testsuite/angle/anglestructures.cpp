@@ -93,17 +93,17 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void testSize(AngleStructures* list, const char* triName,
+        void testSize(AngleStructures& list, const char* triName,
                 unsigned long expectedSize,
                 bool allowStrict, bool allowTaut) {
             {
                 std::ostringstream msg;
                 msg << "Number of angle structures for " << triName
                     << " should be " << expectedSize << ", not "
-                    << list->size() << '.';
+                    << list.size() << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->size() == expectedSize);
+                    list.size() == expectedSize);
             }
             {
                 std::ostringstream msg;
@@ -114,7 +114,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 msg << "support strict angle structures.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->spansStrict() == allowStrict);
+                    list.spansStrict() == allowStrict);
             }
             {
                 std::ostringstream msg;
@@ -125,16 +125,16 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 msg << "support taut angle structures.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->spansTaut() == allowTaut);
+                    list.spansTaut() == allowTaut);
             }
         }
 
-        void countStructures(const AngleStructures* list,
+        void countStructures(const AngleStructures& list,
                 const char* triName, unsigned long expectedCount,
                 bool strict, bool taut) {
             unsigned long tot = 0;
 
-            for (const AngleStructure& s : list->structures())
+            for (const AngleStructure& s : list.structures())
                 if (s.isStrict() == strict && s.isTaut() == taut)
                     ++tot;
 
@@ -152,66 +152,57 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void empty() {
-            AngleStructures* list = AngleStructures::enumerate(triEmpty);
+            AngleStructures list(triEmpty);
 
             testSize(list, "the empty triangulation", 1, true, true);
-
-            delete list;
         }
 
         void oneTet() {
-            AngleStructures* list = AngleStructures::enumerate(triOneTet);
+            AngleStructures list(triOneTet);
 
             testSize(list, "a standalone tetrahedron", 3, true, true);
             countStructures(list, "a standalone tetrahedron", 3,
                 false /* strict */, true /* taut */);
-
-            delete list;
         }
 
         void gieseking() {
-            AngleStructures* list = AngleStructures::enumerate(triGieseking);
+            AngleStructures list(triGieseking);
 
             testSize(list, "the Gieseking manifold", 3, true, true);
             countStructures(list, "the Gieseking manifold", 3,
                 false /* strict */, true /* taut */);
-
-            delete list;
         }
 
         void figure8() {
-            AngleStructures* list = AngleStructures::enumerate(triFigure8);
+            AngleStructures list(triFigure8);
 
             testSize(list, "the figure eight knot complement", 5, true, true);
             countStructures(list, "the figure eight knot complement", 3,
                 false /* strict */, true /* taut */);
             countStructures(list, "the figure eight knot complement", 2,
                 false /* strict */, false /* taut */);
-
-            delete list;
         }
 
         void loopC2() {
-            AngleStructures* list = AngleStructures::enumerate(triLoopC2);
+            AngleStructures list(triLoopC2);
 
             testSize(list, "the untwisted layered loop C(2)", 0, false, false);
-
-            delete list;
         }
 
         void verifyTaut(const char* isoSig, unsigned long nTaut) {
-            Triangulation<3>* tri = Triangulation<3>::fromIsoSig(isoSig);
+            std::unique_ptr<Triangulation<3>> tri(
+                Triangulation<3>::fromIsoSig(isoSig));
             if (! tri) {
                 std::ostringstream msg;
                 msg << "Could not reconstruct from isoSig: " << isoSig << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            AngleStructures* a = AngleStructures::enumerate(*tri, true);
-            if (a->size() != nTaut) {
+            AngleStructures a(*tri, true);
+            if (a.size() != nTaut) {
                 std::ostringstream msg;
                 msg << "Taut angle structures for " << isoSig << ": "
-                    "found " << a->size()
+                    "found " << a.size()
                     << " structures instead of the expected " << nTaut << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -219,7 +210,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             unsigned long j, k;
             regina::Rational tmp, tot;
             regina::Edge<3>* e;
-            for (const AngleStructure& s : a->structures()) {
+            for (const AngleStructure& s : a.structures()) {
                 for (j = 0; j < tri->size(); ++j) {
                     tot = 0;
                     for (k = 0; k < 3; ++k) {
@@ -263,9 +254,6 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     }
                 }
             }
-
-            delete a;
-            delete tri;
         }
 
         void taut() {
@@ -309,16 +297,16 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void verifyTautVsAll(Triangulation<3>* t, const char* name) {
-            AngleStructures* all = AngleStructures::enumerate(*t, false);
-            AngleStructures* taut = AngleStructures::enumerate(*t, true);
+            AngleStructures all(*t, false);
+            AngleStructures taut(*t, true);
 
-            if (all->isTautOnly()) {
+            if (all.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Non-taut-only enumeration on " << name
                     << " produced a list marked as taut-only.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! taut->isTautOnly()) {
+            if (! taut.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut-only enumeration on " << name
                     << " produced a list marked as non-taut-only.";
@@ -327,11 +315,11 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
             unsigned nAll = 0, nTaut = 0;
 
-            for (const AngleStructure& a : all->structures())
+            for (const AngleStructure& a : all.structures())
                 if (a.isTaut())
                     ++nAll;
 
-            for (const AngleStructure& a : taut->structures())
+            for (const AngleStructure& a : taut.structures())
                 if (a.isTaut())
                     ++nTaut;
                 else {
@@ -348,9 +336,6 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     " (" << nTaut << " vs " << nAll << ")";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete all;
-            delete taut;
         }
 
         void verifyTautVsAll(const char* dehydration) {
@@ -386,12 +371,12 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             return false;
         }
 
-        static bool identical(const AngleStructures* lhs,
-                const AngleStructures* rhs) {
-            if (lhs->size() != rhs->size())
+        static bool identical(const AngleStructures& lhs,
+                const AngleStructures& rhs) {
+            if (lhs.size() != rhs.size())
                 return false;
 
-            unsigned long n = lhs->size();
+            unsigned long n = lhs.size();
             if (n == 0)
                 return true;
 
@@ -401,8 +386,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = &(lhs->structure(i).vector());
-                rhsRaw[i] = &(rhs->structure(i).vector());
+                lhsRaw[i] = &(lhs.structure(i).vector());
+                rhsRaw[i] = &(rhs.structure(i).vector());
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
@@ -420,24 +405,24 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             return ok;
         }
 
-        static bool identicalTaut(const AngleStructures* all,
-                const AngleStructures* taut) {
-            if (all->size() < taut->size())
+        static bool identicalTaut(const AngleStructures& all,
+                const AngleStructures& taut) {
+            if (all.size() < taut.size())
                 return false;
 
-            unsigned long nAll = all->size();
-            unsigned long nTaut = taut->size();
+            unsigned long nAll = all.size();
+            unsigned long nTaut = taut.size();
 
             typedef const regina::VectorInt* VecPtr;
             VecPtr* allRaw = new VecPtr[nAll + 1];
             VecPtr* tautRaw = new VecPtr[nTaut + 1];
 
             unsigned long foundAll = 0;
-            for (const AngleStructure& a : all->structures())
+            for (const AngleStructure& a : all.structures())
                 if (a.isTaut())
                     allRaw[foundAll++] = &(a.vector());
             unsigned long i = 0;
-            for (const AngleStructure& a : taut->structures())
+            for (const AngleStructure& a : taut.structures())
                 tautRaw[i++] = &(a.vector());
 
             if (foundAll != nTaut) {
@@ -462,19 +447,19 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         static void verifyTreeVsDD(Triangulation<3>* tri) {
-            AngleStructures* all = AngleStructures::enumerate(*tri, false);
-            AngleStructures* tautTree = AngleStructures::enumerate(*tri, true);
+            AngleStructures all(*tri, false);
+            AngleStructures tautTree(*tri, true);
             AngleStructures* tautDD = AngleStructures::enumerateTautDD(*tri);
             bool strictTree = tri->hasStrictAngleStructure();
 
-            if (all->isTautOnly()) {
+            if (all.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Vertex angle structure enumeration gives "
                     "incorrect flags for " << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! tautTree->isTautOnly()) {
+            if (! tautTree.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (tree) gives "
                     "incorrect flags for " << tri->label() << ".";
@@ -488,8 +473,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (all->spansTaut() != tautTree->spansTaut() ||
-                    all->spansTaut() != tautDD->spansTaut()) {
+            if (all.spansTaut() != tautTree.spansTaut() ||
+                    all.spansTaut() != tautDD->spansTaut()) {
                 std::ostringstream msg;
                 msg << "Flag for spansTaut() mismatched between "
                     "different enumeration methods for "
@@ -497,14 +482,14 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (all->spansStrict() && ! strictTree) {
+            if (all.spansStrict() && ! strictTree) {
                 std::ostringstream msg;
                 msg << "Finding a strict angle structure (tree) gives "
                     "no solution when one should exist for "
                     << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (strictTree && ! all->spansStrict()) {
+            if (strictTree && ! all.spansStrict()) {
                 std::ostringstream msg;
                 msg << "Finding a strict angle structure (tree) gives "
                     "a solution when none should exist for "
@@ -512,7 +497,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! identical(tautTree, tautDD)) {
+            if (! identical(tautTree, *tautDD)) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration gives "
                     "different solutions for tree vs DD for "
@@ -528,8 +513,6 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            delete all;
-            delete tautTree;
             delete tautDD;
         }
 

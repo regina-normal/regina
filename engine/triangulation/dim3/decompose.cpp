@@ -846,14 +846,15 @@ bool Triangulation<3>::hasCompressingDisc() const {
 
     // Off we go.
     // Work with a simplified triangulation.
-    Triangulation<3>* use = new Triangulation<3>(*this, false);
+    // We keep this as a pointer because we will be switching and changing
+    // triangulations; also we use a unique_ptr because we need it to fall
+    // off the stack *after* any of its normal surface lists go out of scope.
+    std::unique_ptr<Triangulation<3>> use(new Triangulation<3>(*this, false));
     use->intelligentSimplify();
 
     // Try for a fast answer first.
-    if (use->hasSimpleCompressingDisc()) {
-        delete use;
+    if (use->hasSimpleCompressingDisc())
         return *(compressingDisc_ = true);
-    }
 
     // Nope.  Decide whether we can use the fast linear programming
     // machinery or whether we need to do a full vertex surface enumeration.
@@ -872,18 +873,14 @@ bool Triangulation<3>::hasCompressingDisc() const {
                     // Fall back to a full vertex enumeration.
                     // This mirrors the code for non-orientable
                     // triangulations; see that later block for details.
-                    NormalSurfaces* q = NormalSurfaces::enumerate(
-                        *use, NS_STANDARD);
+                    NormalSurfaces q(*use, NS_STANDARD);
 
-                    for (const NormalSurface& s : q->surfaces()) {
-                        if (s.isCompressingDisc(true)) {
-                            delete use;
+                    for (const NormalSurface& s : q.surfaces()) {
+                        if (s.isCompressingDisc(true))
                             return *(compressingDisc_ = true);
-                        }
                     }
 
                     // No compressing discs!
-                    delete use;
                     return *(compressingDisc_ = false);
                 }
             }
@@ -891,12 +888,11 @@ bool Triangulation<3>::hasCompressingDisc() const {
             TreeSingleSoln<LPConstraintEulerPositive> search(*use, NS_STANDARD);
             if (! search.find()) {
                 // No compressing discs!
-                delete use;
                 return *(compressingDisc_ = false);
             }
 
             crush = search.buildSurface().crush();
-            delete use;
+            use.reset();
 
             crush->splitIntoComponents();
             comp = static_cast<Triangulation<3>*>(crush->firstChild());
@@ -920,7 +916,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
             }
 
             // Around we go again, but this time with a smaller triangulation.
-            use = comp;
+            use.reset(comp);
         }
     } else {
         // Sigh.  Enumerate all vertex normal surfaces.
@@ -929,19 +925,16 @@ bool Triangulation<3>::hasCompressingDisc() const {
         // use standard coordinates.  Jaco, Letscher and Rubinstein mention
         // quad space, but don't give details (which I'd prefer to see).
         // Leave it in standard coordinates for now.
-        NormalSurfaces* q = NormalSurfaces::enumerate(*use, NS_STANDARD);
+        NormalSurfaces q(*use, NS_STANDARD);
 
         // Run through all vertex surfaces looking for a compressing disc.
-        for (const NormalSurface& s : q->surfaces()) {
+        for (const NormalSurface& s : q.surfaces()) {
             // Use the fact that all vertex normal surfaces are connected.
-            if (s.isCompressingDisc(true)) {
-                delete use;
+            if (s.isCompressingDisc(true))
                 return *(compressingDisc_ = true);
-            }
         }
 
         // No compressing discs!
-        delete use;
         return *(compressingDisc_ = false);
     }
 }
@@ -1140,22 +1133,22 @@ bool Triangulation<3>::isHaken() const {
 
     // Enumerate vertex normal surfaces in quad coordinates.
     // std::cout << "Enumerating surfaces..." << std::endl;
-    NormalSurfaces* list = NormalSurfaces::enumerate(t, NS_QUAD);
+    NormalSurfaces list(t, NS_QUAD);
 
     // Run through each surface, one at a time.
     // Sort them first however, so we process the (easier) smaller genus
     // surfaces first.
-    SurfaceID* id = new SurfaceID[list->size()];
+    SurfaceID* id = new SurfaceID[list.size()];
     unsigned i;
-    for (i = 0; i < list->size(); ++i) {
+    for (i = 0; i < list.size(); ++i) {
         id[i].index = i;
-        id[i].euler = list->surface(i).eulerChar().longValue();
+        id[i].euler = list.surface(i).eulerChar().longValue();
     }
-    std::sort(id, id + list->size());
+    std::sort(id, id + list.size());
 
-    for (i = 0; i < list->size(); ++i) {
+    for (i = 0; i < list.size(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
-        if (list->surface(id[i].index).isIncompressible()) {
+        if (list.surface(id[i].index).isIncompressible()) {
             delete[] id;
             threeSphere_ = false; // Implied by Hakenness.
             return *(haken_ = true);

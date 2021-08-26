@@ -308,7 +308,7 @@ class TxICore : public Output<TxICore> {
         void writeTextLong(std::ostream& out) const;
 
         // Mark this class as non-copyable.
-        TxICore(const TxICore&) = delete;
+        // There is a copy constructor, but it is protected.
         TxICore& operator = (const TxICore&) = delete;
 
     protected:
@@ -316,6 +316,12 @@ class TxICore : public Output<TxICore> {
          * Default constructor that performs no initialisation.
          */
         TxICore();
+        /**
+         * Copy constructor.
+         *
+         * This induces a deep copy of the underlying triangulation.
+         */
+        TxICore(const TxICore& src) = default;
 };
 
 /**
@@ -400,6 +406,11 @@ class TxIDiagonalCore : public TxICore {
         TxIDiagonalCore(unsigned long newSize, unsigned long newK);
 
         /**
+         * Creates a new copy of the given <tt>T x I</tt> triangulation.
+         */
+        TxIDiagonalCore(const TxIDiagonalCore&) = default;
+
+        /**
          * Returns the total number of tetrahedra in this <tt>T x I</tt>
          * triangulation.
          *
@@ -453,6 +464,15 @@ class TxIParallelCore : public TxICore {
          * Creates a new copy of this <tt>T x I</tt> triangulation.
          */
         TxIParallelCore();
+
+        /**
+         * Creates a new copy of the given <tt>T x I</tt> triangulation.
+         *
+         * Since there is only one triangulation of this type, the copy
+         * constructor will give the same end result as the default constructor
+         * (but using a different algorithm).
+         */
+        TxIParallelCore(const TxIParallelCore&) = default;
 
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

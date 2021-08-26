@@ -31,9 +31,10 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "manifold/sfs.h"
-#include "subcomplex/satregion.h"
+#include "subcomplex/satregion-impl.h"
 #include <iostream>
 #include "../helpers.h"
 
@@ -53,7 +54,8 @@ void addSatRegion(pybind11::module_& m) {
     regina::python::add_eq_operators(s);
 
     auto r = pybind11::class_<SatRegion>(m, "SatRegion")
-        .def(pybind11::init<SatBlock*>())
+        .def(pybind11::init<const SatRegion&>())
+        .def("swap", &SatRegion::swap)
         .def("numberOfBlocks", &SatRegion::numberOfBlocks)
         .def("block", &SatRegion::block,
             pybind11::return_value_policy::reference_internal)
@@ -70,19 +72,28 @@ void addSatRegion(pybind11::module_& m) {
                 block, annulus, blockRefVert, blockRefHoriz);
         }, pybind11::return_value_policy::reference_internal)
         .def("createSFS", &SatRegion::createSFS)
-        .def("expand", [](SatRegion& r, bool stopIfIncomplete) {
-            SatBlock::TetList avoidTets;
-            return r.expand(avoidTets, stopIfIncomplete);
-        }, pybind11::arg("stopIfIncomplete") = false)
         .def("writeBlockAbbrs", [](const SatRegion& r, bool tex) {
             r.writeBlockAbbrs(std::cout, tex);
         }, pybind11::arg("tex") = false)
         .def("writeDetail", [](const SatRegion& r, const std::string& title) {
             r.writeDetail(std::cout, title);
         })
+        .def_static("find", [](regina::Triangulation<3>& tri, bool complete,
+                const std::function<bool(std::unique_ptr<SatRegion>)>& action) {
+            // We need to strip out any reference to the TetList argument.
+            return SatRegion::find(tri, complete,
+                    [&](std::unique_ptr<SatRegion> r, SatBlock::TetList&) {
+                return action(std::move(r));
+            });
+        })
+        .def_static("beginsRegion", [](const regina::SatAnnulus& a) {
+            SatBlock::TetList avoidTets;
+            return SatRegion::beginsRegion(a, avoidTets);
+        })
     ;
     regina::python::add_output(r);
     regina::python::add_eq_operators(r);
 
+    m.def("swap", (void(*)(SatRegion&, SatRegion&))(regina::swap));
 }
 

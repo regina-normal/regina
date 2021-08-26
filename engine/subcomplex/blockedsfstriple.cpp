@@ -39,23 +39,17 @@
 
 namespace regina {
 
-BlockedSFSTriple::~BlockedSFSTriple() {
-    delete end_[0];
-    delete end_[1];
-    delete centre_;
-}
-
 std::unique_ptr<Manifold> BlockedSFSTriple::manifold() const {
     // Go ahead and create the Seifert fibred spaces.
-    std::optional<SFSpace> end0 = end_[0]->createSFS(false);
+    std::optional<SFSpace> end0 = end_[0].createSFS(false);
     if (! end0)
         return nullptr;
 
-    std::optional<SFSpace> end1 = end_[1]->createSFS(false);
+    std::optional<SFSpace> end1 = end_[1].createSFS(false);
     if (! end1)
         return nullptr;
 
-    std::optional<SFSpace> hub = centre_->createSFS(false);
+    std::optional<SFSpace> hub = centre_.createSFS(false);
     if (! hub)
         return nullptr;
 
@@ -77,21 +71,21 @@ std::unique_ptr<Manifold> BlockedSFSTriple::manifold() const {
 
 std::ostream& BlockedSFSTriple::writeName(std::ostream& out) const {
     out << "Blocked SFS Triple [";
-    end_[0]->writeBlockAbbrs(out, false);
+    end_[0].writeBlockAbbrs(out, false);
     out << " | ";
-    centre_->writeBlockAbbrs(out, false);
+    centre_.writeBlockAbbrs(out, false);
     out << " | ";
-    end_[1]->writeBlockAbbrs(out, false);
+    end_[1].writeBlockAbbrs(out, false);
     return out << ']';
 }
 
 std::ostream& BlockedSFSTriple::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{BSFS\\_Triple}\\left[";
-    end_[0]->writeBlockAbbrs(out, true);
+    end_[0].writeBlockAbbrs(out, true);
     out << "\\,|\\,";
-    centre_->writeBlockAbbrs(out, true);
+    centre_.writeBlockAbbrs(out, true);
     out << "\\,|\\,";
-    end_[1]->writeBlockAbbrs(out, true);
+    end_[1].writeBlockAbbrs(out, true);
     return out << "\\right]";
 }
 
@@ -100,18 +94,18 @@ void BlockedSFSTriple::writeTextLong(std::ostream& out) const {
     out << "Matching relation (centre -> end #1): " << matchingReln_[0] << '\n';
     out << "Matching relation (centre -> end #2): " << matchingReln_[1] << '\n';
 
-    centre_->writeDetail(out, "Central region");
-    end_[0]->writeDetail(out, "First end region");
-    end_[1]->writeDetail(out, "Second end region");
+    centre_.writeDetail(out, "Central region");
+    end_[0].writeDetail(out, "First end region");
+    end_[1].writeDetail(out, "Second end region");
 }
 
-BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
+std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
         Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
-        return nullptr;
+        return std::nullopt;
     if (tri->countComponents() > 1)
-        return nullptr;
+        return std::nullopt;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for the boundary between blocks
@@ -120,13 +114,13 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
     //
     // These will result in edges joined to themselves in reverse.
     if (! tri->isValid())
-        return nullptr;
+        return std::nullopt;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> end[2];
     std::unique_ptr<SatRegion> centre;
     Matrix2 matchingReln[2];
-    bool found = SatRegion::findStarterBlocks(tri, false,
+    bool found = SatRegion::find(*tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         if (r->numberOfBoundaryAnnuli() != 2)
             return false;
@@ -180,7 +174,6 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
 
         // Start looking for the end regions.
         int plugPos;
-        SatBlock* otherStarter;
         Matrix2 curvesCentreToLayering, layeringToEndAnnulus;
 
         for (e = 0; e < 2; e++) {
@@ -243,10 +236,7 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
                 // See if we can flesh the other side out to an entire region.
                 otherSide.switchSides();
 
-                if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
-                    end[e] = std::make_unique<SatRegion>(otherStarter);
-                    end[e]->expand(usedTets);
-
+                if ((end[e] = SatRegion::beginsRegion(otherSide, usedTets))) {
                     if (end[e]->numberOfBoundaryAnnuli() == 1) {
                         // Got it!
                         // Do a final conversion from annulus first triangle
@@ -281,12 +271,12 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new BlockedSFSTriple(end[0].release(), centre.release(),
-            end[1].release(), matchingReln[0], matchingReln[1]);
+        return BlockedSFSTriple(std::move(*end[0]), std::move(*centre),
+            std::move(*end[1]), matchingReln[0], matchingReln[1]);
     }
 
     // Nope.
-    return nullptr;
+    return std::nullopt;
 }
 
 } // namespace regina

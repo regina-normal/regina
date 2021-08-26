@@ -40,8 +40,10 @@
 #define __REGINA_BLOCKEDSFSTRIPLE_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "maths/matrix2.h"
+#include "subcomplex/satregion.h"
 #include "subcomplex/standardtri.h"
 
 namespace regina {
@@ -132,13 +134,19 @@ class SatRegion;
  *
  * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * the only way to create objects of this class (aside from copying or moving)
+ * is via the static member function recognise().
  */
 class BlockedSFSTriple : public StandardTriangulation {
     private:
-        SatRegion* end_[2];
+        SatRegion end_[2];
             /**< The two end regions, i.e., the saturated regions with
                  just one boundary annulus. */
-        SatRegion* centre_;
+        SatRegion centre_;
             /**< The central region, i.e., the saturated region with two
                  boundary annuli that meets both end regions. */
         Matrix2 matchingReln_[2];
@@ -150,9 +158,47 @@ class BlockedSFSTriple : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this structure and its constituent components.
+         * Creates a new copy of this structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
          */
-        ~BlockedSFSTriple();
+        BlockedSFSTriple(const BlockedSFSTriple& src) = default;
+        /**
+         * Moves the contents of the given structure into this new structure.
+         * This is a constant time operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         */
+        BlockedSFSTriple(BlockedSFSTriple&& src) noexcept = default;
+        /**
+         * Sets this to be a copy of the given structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
+         * @return a reference to this structure.
+         */
+        BlockedSFSTriple& operator = (const BlockedSFSTriple& src) = default;
+        /**
+         * Moves the contents of the given structure into this structure.
+         * This is a constant time operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         * @return a reference to this structure.
+         */
+        BlockedSFSTriple& operator = (BlockedSFSTriple&& src) noexcept =
+            default;
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(BlockedSFSTriple& other) noexcept;
 
         /**
          * Returns details of the requested end region, as described in
@@ -212,13 +258,21 @@ class BlockedSFSTriple : public StandardTriangulation {
          * @return a structure containing details of the blocked triple, or
          * no value if the given triangulation is not of this form.
          */
-        static BlockedSFSTriple* isBlockedSFSTriple(Triangulation<3>* tri);
+        static std::optional<BlockedSFSTriple> recognise(Triangulation<3>* tri);
+        /**
+         * A deprecated alias to recognise if a triangulation forms a
+         * saturated region joined to a think I-bundle via optional layerings.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::optional<BlockedSFSTriple> isBlockedSFSTriple(
+            Triangulation<3>* tri);
 
     private:
         /**
          * Constructs a new blocked sequence of three Seifert fibred spaces,
          * as described by the given saturated regions and matching relations.
-         * The new object will take ownership of each of the regions passed.
          *
          * See the class notes above for details of terminology used here.
          *
@@ -232,35 +286,61 @@ class BlockedSFSTriple : public StandardTriangulation {
          * @param matchingReln1 describes how the second end region is
          * joined to the central region.
          */
-        BlockedSFSTriple(SatRegion* end0, SatRegion* centre,
-            SatRegion* end1, const Matrix2& matchingReln0,
+        BlockedSFSTriple(SatRegion&& end0, SatRegion&& centre,
+            SatRegion&& end1, const Matrix2& matchingReln0,
             const Matrix2& matchingReln1);
 };
+
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls BlockedSFSTriple::swap(); it is provided
+ * so that BlockedSFSTriple meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ */
+void swap(BlockedSFSTriple& a, BlockedSFSTriple& b) noexcept;
 
 /*@}*/
 
 // Inline functions for BlockedSFSTriple
 
-inline BlockedSFSTriple::BlockedSFSTriple(SatRegion* end0,
-        SatRegion* centre, SatRegion* end1, const Matrix2& matchingReln0,
-        const Matrix2& matchingReln1) {
-    end_[0] = end0;
-    centre_ = centre;
-    end_[1] = end1;
-    matchingReln_[0] = matchingReln0;
-    matchingReln_[1] = matchingReln1;
+inline BlockedSFSTriple::BlockedSFSTriple(SatRegion&& end0,
+        SatRegion&& centre, SatRegion&& end1, const Matrix2& matchingReln0,
+        const Matrix2& matchingReln1) :
+    end_ { std::move(end0), std::move(end1) },
+    centre_(std::move(centre)),
+    matchingReln_ { matchingReln0, matchingReln1 } {
+}
+
+inline void BlockedSFSTriple::swap(BlockedSFSTriple& other) noexcept {
+    end_[0].swap(other.end_[0]);
+    end_[1].swap(other.end_[1]);
+    centre_.swap(other.centre_);
+    matchingReln_[0].swap(other.matchingReln_[0]);
+    matchingReln_[1].swap(other.matchingReln_[1]);
 }
 
 inline const SatRegion& BlockedSFSTriple::end(int which) const {
-    return *end_[which];
+    return end_[which];
 }
 
 inline const SatRegion& BlockedSFSTriple::centre() const {
-    return *centre_;
+    return centre_;
 }
 
 inline const Matrix2& BlockedSFSTriple::matchingReln(int which) const {
     return matchingReln_[which];
+}
+
+inline std::optional<BlockedSFSTriple> BlockedSFSTriple::isBlockedSFSTriple(
+        Triangulation<3>* tri) {
+    return recognise(tri);
+}
+
+inline void swap(BlockedSFSTriple& a, BlockedSFSTriple& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

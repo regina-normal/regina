@@ -43,10 +43,13 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "subcomplex/satannulus.h"
+#include "triangulation/dim3.h"
 #include <set>
+#include <tuple>
 
 namespace regina {
 
+class SatBlockModel;
 class SFSpace;
 
 /**
@@ -116,14 +119,15 @@ class SFSpace;
  *
  * SatBlock does not support value semantics: blocks cannot be copied,
  * swapped, or manually constructed.  Their memory is managed by the
- * SatRegion class, and their locations in memory define them.
- * See SatRegion for further details.
+ * SatRegion class (or in special cases the SatBlockModel class), and their
+ * locations in memory define them.  See SatRegion for further details.
  */
 class SatBlock : public Output<SatBlock> {
     public:
         typedef std::set<const Tetrahedron<3>*> TetList;
             /**< The data structure used to store a list of tetrahedra
-                 that should not be examined by isBlock(). */
+                 that should not be examined when searching for
+                 saturated blocks. */
 
     protected:
         unsigned nAnnuli_;
@@ -267,27 +271,6 @@ class SatBlock : public Output<SatBlock> {
         bool adjacentBackwards(unsigned whichAnnulus) const;
 
         /**
-         * Lists the given saturated block as being adjacent to the
-         * given boundary annulus of this block.  Both block structures
-         * (this and the given block) will be updated.
-         *
-         * @param whichAnnulus indicates which boundary annulus of this block
-         * has the new adjacency; this must be between 0 and nAnnuli()-1
-         * inclusive.
-         * @param adjBlock the other saturated block that is adjacent to
-         * this.
-         * @param adjAnnulus indicates which boundary annulus of the
-         * adjacent block meets the given boundary annulus of this block;
-         * this must be between 0 and adjBlock->nAnnuli()-1 inclusive.
-         * @param adjReflected indicates whether the new adjacency is
-         * reflected (see the class notes for details).
-         * @param adjBackwards indicates whether the new adjacency is
-         * backwards (see the class notes for details).
-         */
-        void setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
-                unsigned adjAnnulus, bool adjReflected, bool adjBackwards);
-
-        /**
          * Adjusts the given Seifert fibred space to insert the contents
          * of this saturated block.  In particular, the space should be
          * adjusted as though an ordinary solid torus (base orbifold a
@@ -334,40 +317,6 @@ class SatBlock : public Output<SatBlock> {
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const = 0;
 
         /**
-         * Adjusts the structure of this block according to the given
-         * isomorphism between triangulations.  Any triangulation-specific
-         * information will be transformed accordingly (for instance, the
-         * routine SatAnnulus::transform() will be called for each
-         * boundary annulus).
-         *
-         * Information regarding adjacent blocks will \e not be changed.
-         * Only structural information for this particular block will be
-         * updated.
-         *
-         * The given isomorphism must describe a mapping from \a originalTri
-         * to \a newTri, and this block must currently refer to tetrahedra in
-         * \a originalTri.  After this routine is called the block will
-         * instead refer to the corresponding tetrahedra in \a newTri (with
-         * changes in vertex/face numbering also accounted for).
-         *
-         * \pre This block currently refers to tetrahedra in \a originalTri,
-         * and \a iso describes a mapping from \a originalTri to \a newTri.
-         *
-         * \warning Any subclasses of SatBlock that store additional
-         * triangulation-specific information will need to override this
-         * routine.  When doing so, be sure to call SatBlock::transform()
-         * so that the generic changes defined here will still take place.
-         *
-         * @param originalTri the triangulation currently used by this
-         * saturated block.
-         * @param iso the mapping from \a originalTri to \a newTri.
-         * @param newTri the triangulation to be used by the updated
-         * block structure.
-         */
-        virtual void transform(const Triangulation<3>& originalTri,
-                const Isomorphism<3>& iso, Triangulation<3>& newTri);
-
-        /**
          * Finds the next (or previous) boundary annulus around from this,
          * treating all adjacent blocks as part of a single large saturated
          * region.
@@ -394,17 +343,16 @@ class SatBlock : public Output<SatBlock> {
          * The next/previous annulus itself is not returned, but rather a
          * reference as to how it appears within its enclosing saturated block.
          * Specifically, a block and corresponding annulus number will be
-         * returned in the arguments \a nextBlock and \a nextAnnulus
-         * respectively.
+         * included as the first two elements of the returned tuple.
          *
          * It is possible that the next/previous annulus as it appears within
          * the returned block is oriented differently from how it appears
-         * within this large boundary ring.  For this reason, two
-         * booleans are returned also.  The argument \a refVert will
+         * within this large boundary ring.  For this reason, two booleans are
+         * returned also.  The third element of the returned tuple will
          * describe whether the annulus is reflected vertically as it
          * appears within the large boundary ring (i.e., the first and
          * second triangles remain the same but the fibre direction is
-         * reversed).  Similarly, the argument \a refHoriz will describe
+         * reversed).  Similarly, the fourth element of the tuple will describe
          * whether the annulus is reflected horizontally as it appears
          * within the large boundary ring (i.e., first and second triangles
          * are switched but the fibre direction is unchanged).
@@ -417,7 +365,7 @@ class SatBlock : public Output<SatBlock> {
          * Finally, note that if the large boundary ring is twisted
          * (i.e., it forms a Klein bottle), then following the entire
          * boundary ring around using this routine will bring you back to
-         * the starting annulus but with the \a refVert flag set.
+         * the starting annulus but with the vertical reflection flag set.
          *
          * \pre Annulus \a thisAnnulus of this block has no block
          * adjacent to it.
@@ -428,34 +376,23 @@ class SatBlock : public Output<SatBlock> {
          * is reflected horizontally (since, under a horizontal
          * reflection, "next" becomes "previous" and vice versa).
          *
-         * \ifacespython This routine only takes two arguments (\a thisAnnulus
-         * and \a followPrev). The return value is a tuple of four
-         * values: the block returned in \a nextBlock, the integer
-         * returned in \a nextAnnulus, the boolean returned in \a refVert,
-         * and the boolean returned in \a refHoriz.
-         *
          * @param thisAnnulus describes which original boundary annulus of
          * this block to examine; this must be between 0 and nAnnuli()-1
          * inclusive.
-         * @param nextBlock a reference used to return the block
-         * containing the next boundary annulus around from \a thisAnnulus.
-         * @param nextAnnulus a reference used to return the specific
-         * annulus number within \a nextBlock of the next annulus
-         * around; this will be between 0 and \a nextBlock->nAnnuli()-1
-         * inclusive, and the corresponding annulus will have no block
-         * adjacent to it.
-         * @param refVert a reference used to return \c true if the next
-         * annulus around is vertically reflected, or \c false if not;
-         * see above for details.
-         * @param refHoriz a reference used to return \c true if the next
-         * annulus around is horizontally reflected, or \c false if not;
-         * see above for details.
          * @param followPrev \c true if we should find the previous boundary
          * annulus, or \c false if we should find the next boundary annulus.
+         * @return a tuple (\a nextBlock, \a nextAnnulus, \a refVert,
+         * \a refHoriz), where: \a nextBlock is the block containing the next
+         * boundary annulus around from \a thisAnnulus; \a nextAnnulus is the
+         * specific annulus number within \a nextBlock of the next annulus
+         * around (between 0 and \a nextBlock->nAnnuli()-1 inclusive, and the
+         * corresponding annulus will have no block adjacent to it);
+         * \a refVert is \c true iff the next annulus around is vertically
+         * reflected; and \a refHoriz is \c true iff the next annulus around
+         * is horizontally reflected (see above for details on reflections).
          */
-        void nextBoundaryAnnulus(unsigned thisAnnulus,
-                SatBlock const* &nextBlock, unsigned& nextAnnulus,
-                bool& refVert, bool& refHoriz, bool followPrev) const;
+        std::tuple<const SatBlock*, unsigned, bool, bool>
+            nextBoundaryAnnulus(unsigned thisAnnulus, bool followPrev) const;
 
         /**
          * Returns an abbreviated name or symbol for this block.
@@ -503,42 +440,6 @@ class SatBlock : public Output<SatBlock> {
          * the given block.
          */
         bool operator < (const SatBlock& compare) const;
-
-        /**
-         * Determines whether the given annulus is in fact a boundary
-         * annulus for a recognised type of saturated block.  The
-         * annulus should be represented from the inside of the proposed
-         * saturated block.
-         *
-         * Only certain types of saturated block are recognised by this
-         * routine.  More exotic saturated blocks will not be identified,
-         * and this routine will return \c null in such cases.
-         *
-         * The given list of tetrahedra will not be examined by this
-         * routine.  That is, only saturated blocks that do not contain
-         * any of these tetrahedra will be considered.  As a consequence,
-         * if the given annulus uses any of these tetrahedra then \c null
-         * will be returned.
-         *
-         * If a block is found on the other hand, all of the tetrahedra
-         * within this block will be added to the given list.
-         *
-         * In the event that a block is found, it is guaranteed that the
-         * given annulus will be listed as annulus number 0 in the block
-         * structure, without any horizontal or vertical reflection.
-         *
-         * \ifacespython The second argument \a avoidTets is not
-         * present.  An empty list will be passed instead.
-         *
-         * @param annulus the proposed boundary annulus that should form
-         * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
-         * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
-         * \c null if none was found.
-         */
-        static SatBlock* isBlock(const SatAnnulus& annulus,
-            TetList& avoidTets);
 
         /**
          * Writes a short text representation of this object to the
@@ -731,9 +632,193 @@ class SatBlock : public Output<SatBlock> {
         static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
             Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4);
 
-    friend class SatBlockStarter;
+        /**
+         * Returns a new model that combines this block structure with
+         * the given triangulation.  The new model will take ownership of
+         * both this block and the given triangulation.
+         *
+         * The purpose of this routine is, essentially, to give subclasses
+         * access to the private SatBlockModel constructor (which SatBlock
+         * can access as a friend class, but which subclasses cannot).
+         *
+         * @param triangulation an explicit triangulation of this block
+         * structure.
+         * @return a model that holds this block and the given triangulation.
+         */
+        SatBlockModel modelWith(Triangulation<3>* triangulation);
+
+        /**
+         * Adjusts the structure of this block according to the given
+         * isomorphism between triangulations.  Any triangulation-specific
+         * information will be transformed accordingly (for instance, the
+         * routine SatAnnulus::transform() will be called for each
+         * boundary annulus).
+         *
+         * Information regarding adjacent blocks will \e not be changed.
+         * Only structural information for this particular block will be
+         * updated.
+         *
+         * The given isomorphism must describe a mapping from \a originalTri
+         * to \a newTri, and this block must currently refer to tetrahedra in
+         * \a originalTri.  After this routine is called the block will
+         * instead refer to the corresponding tetrahedra in \a newTri (with
+         * changes in vertex/face numbering also accounted for).
+         *
+         * \pre This block currently refers to tetrahedra in \a originalTri,
+         * and \a iso describes a mapping from \a originalTri to \a newTri.
+         *
+         * \warning Any subclasses of SatBlock that store additional
+         * triangulation-specific information will need to override this
+         * routine.  When doing so, be sure to call SatBlock::transform()
+         * so that the generic changes defined here will still take place.
+         *
+         * @param originalTri the triangulation currently used by this
+         * saturated block.
+         * @param iso the mapping from \a originalTri to \a newTri.
+         * @param newTri the triangulation to be used by the updated
+         * block structure.
+         */
+        virtual void transform(const Triangulation<3>& originalTri,
+                const Isomorphism<3>& iso, Triangulation<3>& newTri);
+
+    private:
+        /**
+         * Lists the given saturated block as being adjacent to the
+         * given boundary annulus of this block.  Both block structures
+         * (this and the given block) will be updated.
+         *
+         * @param whichAnnulus indicates which boundary annulus of this block
+         * has the new adjacency; this must be between 0 and nAnnuli()-1
+         * inclusive.
+         * @param adjBlock the other saturated block that is adjacent to
+         * this.
+         * @param adjAnnulus indicates which boundary annulus of the
+         * adjacent block meets the given boundary annulus of this block;
+         * this must be between 0 and adjBlock->nAnnuli()-1 inclusive.
+         * @param adjReflected indicates whether the new adjacency is
+         * reflected (see the class notes for details).
+         * @param adjBackwards indicates whether the new adjacency is
+         * backwards (see the class notes for details).
+         */
+        void setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
+                unsigned adjAnnulus, bool adjReflected, bool adjBackwards);
+
+    // The following classes are the only classes that are allowed to
+    // manage a raw SatBlock pointer:
+    friend class SatBlockModel;
     friend class SatRegion;
 };
+
+/**
+ * Contains an explicit triangulation of a saturated block along with the
+ * accompanying saturated block description.
+ *
+ * This class is designed to work with SatRegion::findStarterBlock(),
+ * which uses such models as potential starting points for its search.
+ * The ultimate aim here is to identify regions within triangulations that are
+ * formed by joining saturated blocks together along their boundary annuli.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * you cannot create generate your own models manually (aside from copying or
+ * moving); instead you will need to use block-specific factory routines
+ * such as SatTriPrism::model(), SatCube::model(), and so on.
+ */
+class SatBlockModel {
+    private:
+        Triangulation<3>* triangulation_;
+            /**< The triangulation of the saturated block. */
+        SatBlock* block_;
+            /**< Structural details of the saturated block. */
+
+    public:
+        /**
+         * Creates a new copy of the given model.
+         * This will induce a deep copy of both the triangulation and the
+         * block structure.
+         *
+         * @param src the model to copy.
+         */
+        SatBlockModel(const SatBlockModel& src);
+
+        /**
+         * Moves the contents of the given model into this new model.
+         * This is a fast (constant time) operation.
+         *
+         * The model that was passed (\a src) will no longer be usable.
+         *
+         * @param src the model whose contents should be moved.
+         */
+        SatBlockModel(SatBlockModel&& src) noexcept;
+
+        /**
+         * Destroys both the internal triangulation and block structure.
+         */
+        ~SatBlockModel();
+
+        /**
+         * Sets this to be a copy of the given model.
+         * This will induce a deep copy of both the triangulation and the
+         * block structure.
+         *
+         * @param src the model to copy.
+         * @return a reference to this model.
+         */
+        SatBlockModel& operator = (const SatBlockModel& src);
+
+        /**
+         * Moves the contents of the given model into this model.
+         * This is a fast (constant time) operation.
+         *
+         * The model that was passed (\a src) will no longer be usable.
+         *
+         * @param src the model whose contents should be moved.
+         * @return a reference to this model.
+         */
+        SatBlockModel& operator = (SatBlockModel&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given model.
+         *
+         * @param other the model whose contents should be swapped with this.
+         */
+        void swap(SatBlockModel& other) noexcept;
+
+        /**
+         * Returns the triangulation of the saturated block.
+         *
+         * @return the block triangulation.
+         */
+        const Triangulation<3>& triangulation() const;
+
+        /**
+         * Returns the structure of the saturated block.
+         *
+         * @return the block structure.
+         */
+        const SatBlock& block() const;
+
+    private:
+        /**
+         * Creates a new model filled with the given data.  The model will
+         * take ownership of both the given triangulation and the given block.
+         */
+        SatBlockModel(Triangulation<3>* triangulation, SatBlock* block);
+
+    friend class SatBlock;
+};
+
+/**
+ * Swaps the contents of the two given models.
+ *
+ * This global routine simply calls SatBlockModel::swap(); it is provided
+ * so that SatBlockModel meets the C++ Swappable requirements.
+ *
+ * @param a the first model whose contents should be swapped.
+ * @param b the second model whose contents should be swapped.
+ */
+void swap(SatBlockModel& a, SatBlockModel& b) noexcept;
 
 /*@}*/
 
@@ -832,6 +917,64 @@ inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
         Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4) {
     return (test == nullptr || test == other1 || test == other2 ||
         test == other3 || test == other4);
+}
+
+inline SatBlockModel SatBlock::modelWith(Triangulation<3>* triangulation) {
+    return SatBlockModel(triangulation, this);
+}
+
+// Inline functions for SatBlockModel
+
+inline SatBlockModel::SatBlockModel(Triangulation<3>* triangulation,
+        SatBlock* block) : triangulation_(triangulation), block_(block) {
+}
+
+inline SatBlockModel::SatBlockModel(const SatBlockModel& src) :
+        triangulation_(new Triangulation<3>(*src.triangulation_)),
+        block_(src.block_->clone()) {
+}
+
+inline SatBlockModel::SatBlockModel(SatBlockModel&& src) noexcept :
+        triangulation_(src.triangulation_), block_(src.block_) {
+    src.triangulation_ = nullptr;
+    src.block_ = nullptr;
+}
+
+inline SatBlockModel::~SatBlockModel() {
+    delete triangulation_;
+    delete block_;
+}
+
+inline SatBlockModel& SatBlockModel::operator = (const SatBlockModel& src) {
+        delete triangulation_;
+        delete block_;
+        triangulation_ = new Triangulation<3>(*src.triangulation_);
+        block_ = src.block_->clone();
+        return *this;
+}
+
+inline SatBlockModel& SatBlockModel::operator = (SatBlockModel&& src) noexcept {
+    std::swap(triangulation_, src.triangulation_);
+    std::swap(block_, src.block_);
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
+}
+
+inline void SatBlockModel::swap(SatBlockModel& other) noexcept {
+    std::swap(triangulation_, other.triangulation_);
+    std::swap(block_, other.block_);
+}
+
+inline const Triangulation<3>& SatBlockModel::triangulation() const {
+    return *triangulation_;
+}
+
+inline const SatBlock& SatBlockModel::block() const {
+    return *block_;
+}
+
+inline void swap(SatBlockModel& a, SatBlockModel& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

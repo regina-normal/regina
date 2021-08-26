@@ -255,8 +255,9 @@ class LayeredTorusBundle : public StandardTriangulation {
          * \warning Only a pointer to the core <tt>T x I</tt> is stored.
          * This class does not manage the life span of the core; it is
          * assumed that the core will remain in existence for at least
-         * as long as this object does.  Typically the core would be a static
-         * or global variable that is not destroyed until the program exits.
+         * as long as this object (and any objects copied or moved from it).
+         * Typically the core would be a static or global variable that is
+         * not destroyed until the program exits.
          *
          * @param whichCore a reference to the core <tt>T x I</tt>
          * triangulation upon which this layered torus bundle is based.
@@ -278,6 +279,11 @@ class LayeredTorusBundle : public StandardTriangulation {
          * Internal to recognise().  Determines if the given
          * triangulation is a layered torus bundle with the given core
          * <tt>T x I</tt> triangulation (up to isomorphism).
+         *
+         * \warning If this routine is successful and a value is returned,
+         * this returned object (and any objects copied or moved from it)
+         * must not outlive the given core (since the returned object
+         * will in fact contain a direct reference to this core).
          *
          * @param tri the triangulation to examine.
          * @param core the core <tt>T x I</tt> to search for.

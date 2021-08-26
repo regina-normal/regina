@@ -1589,6 +1589,9 @@ Equality type : EqualityType.BY_VALUE
 SatBlock : class
 Equality type : EqualityType.BY_REFERENCE
 
+SatBlockModel : class
+Equality type : EqualityType.BY_REFERENCE
+
 SatBlockSpec : class
 Equality type : EqualityType.BY_VALUE
 

@@ -72,25 +72,21 @@ class IncompressibleTest : public CppUnit::TestFixture {
 
         Triangulation<3>* verifyAllNotIncompressible(Triangulation<3>* tri,
                 const std::string& triName) {
-            NormalSurfaces* s = NormalSurfaces::enumerate(*tri,
-                regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
-            for (const NormalSurface& f : s->surfaces())
+            NormalSurfaces s(*tri, regina::NS_STANDARD,
+                regina::NS_EMBEDDED_ONLY);
+            for (const NormalSurface& f : s.surfaces())
                 verifyNotIncompressible(f, triName);
-            delete s;
             return tri;
         }
 
         Triangulation<3>* verifyHasIncompressible(Triangulation<3>* tri,
                 const std::string& triName) {
-            NormalSurfaces* s = NormalSurfaces::enumerate(*tri,
-                regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
-            for (const NormalSurface& f : s->surfaces())
-                if (f.isIncompressible()) {
-                    delete s;
+            NormalSurfaces s(*tri, regina::NS_STANDARD,
+                regina::NS_EMBEDDED_ONLY);
+            for (const NormalSurface& f : s.surfaces())
+                if (f.isIncompressible())
                     return tri;
-                }
 
-            delete s;
             CPPUNIT_FAIL(("The incompressible surface was not found in "
                 + triName + ".").c_str());
             return tri;

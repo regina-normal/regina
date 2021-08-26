@@ -111,22 +111,6 @@ class SatMobius : public SatBlock {
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
             override;
 
-        /**
-         * Determines whether the given annulus is a boundary annulus for
-         * a block of this type (Mobius band).  This routine is
-         * a specific case of SatBlock::isBlock(); see that routine for
-         * further details.
-         *
-         * @param annulus the proposed boundary annulus that should form
-         * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
-         * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
-         * \c null if none was found.
-         */
-        static SatMobius* isBlockMobius(const SatAnnulus& annulus,
-            TetList& avoidTets);
-
     protected:
         virtual SatBlock* clone() const override;
 
@@ -147,6 +131,24 @@ class SatMobius : public SatBlock {
          * Constructs a clone of the given block structure.
          */
         SatMobius(const SatMobius&) = default;
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (Mobius band).  This routine is
+         * a specific case of SatRegion::beginsRegion(); see that routine for
+         * further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static SatMobius* beginsRegion(const SatAnnulus& annulus,
+            TetList& avoidTets);
+
+    friend class SatRegion;
 };
 
 /**
@@ -205,30 +207,14 @@ class SatLST : public SatBlock {
         Perm<4> roles() const;
 
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
-        virtual void transform(const Triangulation<3>& originalTri,
-            const Isomorphism<3>& iso, Triangulation<3>& newTri) override;
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
             override;
 
-        /**
-         * Determines whether the given annulus is a boundary annulus for
-         * a block of this type (layered solid torus).  This routine is
-         * a specific case of SatBlock::isBlock(); see that routine for
-         * further details.
-         *
-         * @param annulus the proposed boundary annulus that should form
-         * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
-         * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
-         * \c null if none was found.
-         */
-        static SatLST* isBlockLST(const SatAnnulus& annulus,
-            TetList& avoidTets);
-
     protected:
         virtual SatBlock* clone() const override;
+        virtual void transform(const Triangulation<3>& originalTri,
+            const Isomorphism<3>& iso, Triangulation<3>& newTri) override;
 
     private:
         /**
@@ -247,6 +233,24 @@ class SatLST : public SatBlock {
          * Constructs a clone of the given block structure.
          */
         SatLST(const SatLST&) = default;
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (layered solid torus).  This routine is
+         * a specific case of SatRegion::beginsRegion(); see that routine for
+         * further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static SatLST* beginsRegion(const SatAnnulus& annulus,
+            TetList& avoidTets);
+
+    friend class SatRegion;
 };
 
 /**
@@ -261,7 +265,8 @@ class SatLST : public SatBlock {
  * details regarding "major" and "minor".
  *
  * This class does not support value semantics: it cannot be copied, swapped
- * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * or manually constructed.  Its memory is managed by the SatRegion class
+ * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatTriPrism : public SatBlock {
@@ -289,35 +294,13 @@ class SatTriPrism : public SatBlock {
             override;
 
         /**
-         * Determines whether the given annulus is a boundary annulus for
-         * a block of this type (triangular prism).  This routine is
-         * a specific case of SatBlock::isBlock(); see that routine for
-         * further details.
+         * Creates a new model of a triangular prism block.
          *
-         * @param annulus the proposed boundary annulus that should form
-         * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
-         * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
-         * \c null if none was found.
+         * @param major \c true if a block of major type should be created,
+         * or \c false if a block of minor type should be created.
+         * @return a full triangulated model of this type of block.
          */
-        static SatTriPrism* isBlockTriPrism(const SatAnnulus& annulus,
-            TetList& avoidTets);
-
-        /**
-         * Inserts a new copy of a triangular prism block into the given
-         * triangulation, and returns the corresponding block structure.
-         *
-         * The given triangulation will not be emptied before the new
-         * tetrahedra are inserted.
-         *
-         * @param tri the triangulation into which the new block should
-         * be inserted.
-         * @param major \c true if a block of major type should be inserted,
-         * or \c false if a block of minor type should be inserted.
-         * @return structural details of the newly inserted block.
-         */
-        static SatTriPrism* insertBlock(Triangulation<3>& tri, bool major);
+        static SatBlockModel model(bool major);
 
     protected:
         virtual SatBlock* clone() const override;
@@ -339,8 +322,10 @@ class SatTriPrism : public SatBlock {
         SatTriPrism(const SatTriPrism&) = default;
 
         /**
-         * Implements a special case of isBlockTriPrism() to search for
-         * a block of major type.  See isBlockTriPrism() for further details.
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (triangular prism).  This routine is
+         * a specific case of SatRegion::beginsRegion(); see that routine for
+         * further details.
          *
          * @param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
@@ -349,8 +334,24 @@ class SatTriPrism : public SatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static SatTriPrism* isBlockTriPrismMajor(const SatAnnulus& annulus,
+        static SatTriPrism* beginsRegion(const SatAnnulus& annulus,
             TetList& avoidTets);
+
+        /**
+         * Implements a special case of beginsRegion() to search for
+         * a block of major type.  See beginsRegion() for further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static SatTriPrism* beginsRegionMajor(const SatAnnulus& annulus,
+            TetList& avoidTets);
+
+    friend class SatRegion;
 };
 
 /**
@@ -369,7 +370,8 @@ class SatTriPrism : public SatBlock {
  * triangular prisms.
  *
  * This class does not support value semantics: it cannot be copied, swapped
- * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * or manually constructed.  Its memory is managed by the SatRegion class
+ * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatCube : public SatBlock {
@@ -380,32 +382,11 @@ class SatCube : public SatBlock {
             override;
 
         /**
-         * Determines whether the given annulus is a boundary annulus for
-         * a block of this type (cube).  This routine is a specific case
-         * of SatBlock::isBlock(); see that routine for further details.
+         * Creates a new model of a cube block.
          *
-         * @param annulus the proposed boundary annulus that should form
-         * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
-         * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
-         * \c null if none was found.
+         * @return a full triangulated model of this type of block.
          */
-        static SatCube* isBlockCube(const SatAnnulus& annulus,
-            TetList& avoidTets);
-
-        /**
-         * Inserts a new copy of a cube block into the given triangulation,
-         * and returns the corresponding block structure.
-         *
-         * The given triangulation will not be emptied before the new
-         * tetrahedra are inserted.
-         *
-         * @param tri the triangulation into which the new block should
-         * be inserted.
-         * @return structural details of the newly inserted block.
-         */
-        static SatCube* insertBlock(Triangulation<3>& tri);
+        static SatBlockModel model();
 
     protected:
         virtual SatBlock* clone() const override;
@@ -421,6 +402,23 @@ class SatCube : public SatBlock {
          * Constructs a clone of the given block structure.
          */
         SatCube(const SatCube&) = default;
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (cube).  This routine is a specific case
+         * of SatRegion::beginsRegion(); see that routine for further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static SatCube* beginsRegion(const SatAnnulus& annulus,
+            TetList& avoidTets);
+
+    friend class SatRegion;
 };
 
 /**
@@ -450,7 +448,8 @@ class SatCube : public SatBlock {
  * saturated annuli on the boundary.
  *
  * This class does not support value semantics: it cannot be copied, swapped
- * or manually constructed.  Its memory is managed by the SatRegion class, and
+ * or manually constructed.  Its memory is managed by the SatRegion class
+ * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
  */
 class SatReflectorStrip : public SatBlock {
@@ -461,38 +460,16 @@ class SatReflectorStrip : public SatBlock {
             override;
 
         /**
-         * Determines whether the given annulus is a boundary annulus for
-         * a block of this type (reflector strip).  This routine is a specific
-         * case of SatBlock::isBlock(); see that routine for further details.
+         * Creates a new model of a reflector strip block.
          *
-         * @param annulus the proposed boundary annulus that should form
-         * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
-         * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
-         * \c null if none was found.
-         */
-        static SatReflectorStrip* isBlockReflectorStrip(
-            const SatAnnulus& annulus, TetList& avoidTets);
-
-        /**
-         * Inserts a new reflector strip into the given triangulation,
-         * and returns the corresponding block structure.
-         *
-         * The given triangulation will not be emptied before the new
-         * tetrahedra are inserted.
-         *
-         * @param tri the triangulation into which the new block should
-         * be inserted.
          * @param length the length of the new reflector strip, i.e.,
          * the number of boundary annuli; this must be strictly positive.
          * @param twisted \c true if the new reflector strip should be twisted
          * (causing its ring of boundary annuli to be twisted also), or
          * \c false if the new strip should not be twisted.
-         * @return structural details of the newly inserted block.
+         * @return a full triangulated model of this type of block.
          */
-        static SatReflectorStrip* insertBlock(Triangulation<3>& tri,
-            unsigned length, bool twisted);
+        static SatBlockModel model(unsigned length, bool twisted);
 
     protected:
         virtual SatBlock* clone() const override;
@@ -514,6 +491,24 @@ class SatReflectorStrip : public SatBlock {
          * a twisted ring of boundary annuli), or \c false if not.
          */
         SatReflectorStrip(unsigned length, bool twisted);
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (reflector strip).  This routine is a specific
+         * case of SatRegion::beginsRegion(); see that routine for further
+         * details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static SatReflectorStrip* beginsRegion(const SatAnnulus& annulus,
+            TetList& avoidTets);
+
+    friend class SatRegion;
 };
 
 /**
@@ -568,22 +563,6 @@ class SatLayering : public SatBlock {
         virtual void writeAbbr(std::ostream& out, bool tex = false) const
             override;
 
-        /**
-         * Determines whether the given annulus is a boundary annulus for
-         * a block of this type (single layering).  This routine is
-         * a specific case of SatBlock::isBlock(); see that routine for
-         * further details.
-         *
-         * @param annulus the proposed boundary annulus that should form
-         * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
-         * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
-         * \c null if none was found.
-         */
-        static SatLayering* isBlockLayering(const SatAnnulus& annulus,
-            TetList& avoidTets);
-
     protected:
         virtual SatBlock* clone() const override;
 
@@ -603,6 +582,24 @@ class SatLayering : public SatBlock {
          * Constructs a clone of the given block structure.
          */
         SatLayering(const SatLayering&) = default;
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (single layering).  This routine is
+         * a specific case of SatRegion::beginsRegion(); see that routine for
+         * further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static SatLayering* beginsRegion(const SatAnnulus& annulus,
+            TetList& avoidTets);
+
+    friend class SatRegion;
 };
 
 /*@}*/

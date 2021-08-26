@@ -227,8 +227,11 @@ static NSArray* embText;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NormalSurfaces* ans =
-            NormalSurfaces::enumerate(tri, coords, which, regina::NS_ALG_DEFAULT, &_tracker);
+        NormalSurfaces* ans = nullptr;
+        try {
+            ans = new NormalSurfaces(tri, coords, which, regina::NS_ALG_DEFAULT, &_tracker);
+        } catch (const regina::NoMatchingEquations&) {
+        }
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
                 // This operation blocks until the UI is updated:

@@ -41,6 +41,8 @@
 #include "../helpers.h"
 
 using regina::NormalSurfaces;
+using regina::ProgressTracker;
+using regina::Triangulation;
 
 void addNormalSurfaces(pybind11::module_& m) {
     pybind11::enum_<regina::SurfaceExportFields>(m, "SurfaceExportFields")
@@ -61,6 +63,12 @@ void addNormalSurfaces(pybind11::module_& m) {
 
     pybind11::class_<NormalSurfaces, regina::Packet,
             regina::SafePtr<NormalSurfaces>>(m, "NormalSurfaces")
+        .def(pybind11::init<Triangulation<3>&, regina::NormalCoords,
+                regina::NormalList, regina::NormalAlg, ProgressTracker*>(),
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("which") = regina::NS_LIST_DEFAULT,
+            pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
         .def("coords", &NormalSurfaces::coords)
         .def("which", &NormalSurfaces::which)
         .def("algorithm", &NormalSurfaces::algorithm)

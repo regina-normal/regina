@@ -97,9 +97,9 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
     // For valid, non-ideal triangulations we can do this in quad
     // coordinates (where a non-trivial sphere or disc is guaranteed to
     // appear as a vertex surface).  Otherwise fall back to standard coords.
-    NormalSurfaces* surfaces = NormalSurfaces::enumerate(*this,
+    NormalSurfaces surfaces(*this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
-    for (const NormalSurface& s : surfaces->surfaces()) {
+    for (const NormalSurface& s : surfaces.surfaces()) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
         // (ii) working with a non-ideal triangulation; we know the
@@ -113,24 +113,20 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
         if (s.eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
             NormalSurface ans = s;
-            delete surfaces;
             return ans;
         } else if (s.eulerChar() == 1) {
             if (s.hasRealBoundary()) {
                 // Must be a disc.
                 NormalSurface ans = s;
-                delete surfaces;
                 return ans;
             } else if (! s.isTwoSided()) {
                 // A projective plane that doubles to a sphere.
                 NormalSurface ans = s.doubleSurface();
-                delete surfaces;
                 return ans;
             }
         }
     }
 
-    delete surfaces;
     return std::nullopt;
 }
 
@@ -163,7 +159,7 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
     // Given our preconditions, we can do this in quadrilateral-octagon
     // coordinates; for details see "Quadrilateral-octagon coordinates for
     // almost normal surfaces", B.B., Experiment. Math. 19 (2010), 285-315.
-    NormalSurfaces* surfaces = NormalSurfaces::enumerate(*this, NS_AN_QUAD_OCT);
+    NormalSurfaces surfaces(*this, NS_AN_QUAD_OCT);
 
     // Our vertex surfaces are guaranteed to be in smallest possible
     // integer coordinates, with at most one non-zero octagonal coordinate.
@@ -171,7 +167,7 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
     unsigned oct;
     bool found, broken;
     LargeInteger coord;
-    for (const NormalSurface& s : surfaces->surfaces()) {
+    for (const NormalSurface& s : surfaces.surfaces()) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are working with a non-ideal triangulation, we know the
         // vertex surfaces are compact.
@@ -200,13 +196,11 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
             if (found && ! broken) {
                 // This is it!
                 NormalSurface ans = s;
-                delete surfaces;
                 return ans;
             }
         }
     }
 
-    delete surfaces;
     return std::nullopt;
 }
 

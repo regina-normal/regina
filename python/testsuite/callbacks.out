@@ -203,6 +203,308 @@ Enumerating knots:
     +-+--- ( ^0 _1 ^4 _5 _2 _0 _3 ^2 ^1 _4 ^5 ^3 )
     +--+-- ( ^0 _1 ^4 _5 ^2 _0 ^3 _2 ^1 _4 ^5 _3 )
 
+Finding regions:
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> 2/0
+    1/0 --> 0/0
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/2 (reflected)
+    0/1 --> bdry
+    0/2 --> 0/0 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/2 (reflected)
+    0/1 --> bdry
+    0/2 --> 0/0 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> 2/0
+    1/0 --> 0/0
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> 2/0
+    0/2 --> bdry
+    1/0 --> 0/0
+    2/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/1 (reflected)
+    0/1 --> 0/0 (reflected)
+    0/2 --> bdry
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> 2/0
+    1/0 --> 0/1
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 0/2 (reflected)
+    0/2 --> 0/1 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> 2/0
+    0/2 --> bdry
+    1/0 --> 0/0
+    2/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/1 (reflected)
+    0/1 --> 0/0 (reflected)
+    0/2 --> bdry
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> 2/0
+    1/0 --> 0/1
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 0/2 (reflected)
+    0/2 --> 0/1 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> bdry
+    1/0 --> 0/0
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> bdry
+    0/2 --> 1/0
+    1/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> bdry
+    1/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> bdry
+    1/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> bdry
+    1/0 --> 0/0
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> bdry
+    0/2 --> 1/0
+    1/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/1 (reflected)
+    0/1 --> 0/0 (reflected)
+    0/2 --> bdry
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 0/2 (reflected)
+    0/2 --> 0/1 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> 2/0
+    1/0 --> 0/1
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> 2/0
+    0/2 --> bdry
+    1/0 --> 0/0
+    2/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> 2/0
+    0/2 --> bdry
+    1/0 --> 0/0
+    2/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> 2/0
+    1/0 --> 0/1
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 0/2 (reflected)
+    0/2 --> 0/1 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/1 (reflected)
+    0/1 --> 0/0 (reflected)
+    0/2 --> bdry
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/2 (reflected)
+    0/1 --> bdry
+    0/2 --> 0/0 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> 2/0
+    1/0 --> 0/0
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> 2/0
+    1/0 --> 0/0
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/2 (reflected)
+    0/1 --> bdry
+    0/2 --> 0/0 (reflected)
+
+
 Destroying covers
 Destroying packet
 Destroying packet

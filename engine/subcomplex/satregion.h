@@ -258,19 +258,17 @@ void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept;
  * themselves; see the notes regarding adjacency in the SatBlock class
  * description.
  *
- * Blocks cannot be added to a region by hand.  The way a region is
- * constructed is by locating some initial block within a triangulation and
- * passing this to the SatRegion constructor, and then by calling expand()
- * to locate adjacent blocks and expand the region as far as possible.  For
- * locating initial blocks, the routine findStarterBlocks() may be of use.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * the only way to create objects of this class (aside from copying or moving)
+ * is via the static search functions, such as find() or beginsRegion().
  *
  * \warning It is crucial that the adjacency information stored in the
  * blocks is consistent with the region containing them.  All this
  * requires is that the blocks are not manipulated externally (e.g.,
  * SatBlock::setAdjacent() is not called on any of the blocks), but
- * instead all adjacency information is managed by this class.  Routines
- * such as expand() which may add more blocks to the region will update
- * the block adjacencies accordingly.
+ * instead all adjacency information is managed by this class.
  *
  * \todo \feature Have this class track the boundary components properly,
  * with annuli grouped and oriented according to the region boundaries (as
@@ -314,29 +312,17 @@ class SatRegion : public Output<SatRegion> {
             /**< The number of saturated annuli forming the boundary
                  components (if any) of this region. */
 
+        static std::list<SatBlockModel> starters_;
+            /**< The blocks from which find() will begin its searches.  These
+                 are generated on demand, the first time find() is called. */
+
     public:
         /**
-         * Constructs a new region containing just the given block.
-         * All boundary annuli of the given block will become boundary
-         * annuli of this region.  It is guaranteed that this block will
-         * be stored in the region without any kind of reflection (see
-         * SatBlockSpec for details).
+         * Creates a new copy of the given region.
          *
-         * Typically a region is initialised using this constructor, and
-         * then grown using the expand() routine.  For help in finding
-         * an initial starter block, see the routine findStarterBlocks().
-         *
-         * This region will claim ownership of the given block, and upon
-         * destruction it will destroy this block also.
-         *
-         * \pre The given block has no adjacencies listed.  That is,
-         * for every boundary annulus of the given block,
-         * SatBlock::hasAdjacentBlock() returns \c false.
-         *
-         * @param starter the single block that this region will describe.
+         * @param src the region to copy.
          */
-        SatRegion(SatBlock* starter);
-
+        SatRegion(const SatRegion& src);
         /**
          * Moves the contents of the given region into this new region.
          * This is a fast (constant time) operation.
@@ -344,6 +330,13 @@ class SatRegion : public Output<SatRegion> {
          * The region that was passed will no longer be usable.
          */
         SatRegion(SatRegion&&) noexcept = default;
+        /**
+         * Sets this to be a copy of the given region.
+         *
+         * @param src the region to copy.
+         * @return a reference to this region.
+         */
+        SatRegion& operator = (const SatRegion& src);
         /**
          * Moves the contents of the given region into this region.
          * This is a fast (constant time) operation.
@@ -353,6 +346,13 @@ class SatRegion : public Output<SatRegion> {
          * @return a reference to this region.
          */
         SatRegion& operator = (SatRegion&&) noexcept = default;
+
+        /**
+         * Swaps the contents of this and the given region.
+         *
+         * @param other the region whose contents should be swapped with this.
+         */
+        void swap(SatRegion& other) noexcept;
 
         /**
          * Returns the number of saturated blocks that come together
@@ -561,72 +561,6 @@ class SatRegion : public Output<SatRegion> {
         std::optional<SFSpace> createSFS(bool reflect) const;
 
         /**
-         * Expands this region as far as possible within the overall
-         * triangulation.  This routine will hunt for new saturated
-         * blocks, and will also hunt for new adjacencies between
-         * existing blocks.
-         *
-         * The first argument to this routine is the tetrahedron list
-         * \a avoidTets.  This is a list of tetrahedra that will not be
-         * considered when examining potential new blocks.  This list
-         * will be modified by this routine; in particular, it will be
-         * expanded to include all tetrahedra for any new blocks that
-         * are found.  Before calling this routine it should contain
-         * tetrahedra for blocks already in this region, as discussed in
-         * the preconditions below.
-         *
-         * It may be that you are searching for a region that fills an entire
-         * triangulation component (i.e., every boundary annulus of the
-         * region in fact forms part of the boundary of the triangulation).
-         * In this case you may pass the optional argument
-         * \a stopIfIncomplete as \c true.  This means that if this routine
-         * ever discovers an annulus that is not part of the
-         * triangulation boundary and that it cannot match with some
-         * adjacent block, it will exit immediately and return \c false.
-         * Note that the region structure will be incomplete and/or
-         * inconsistent if this happens; in this case the unfinished
-         * region should be destroyed completely and never used.
-         *
-         * For internal purposes, it should be noted that any new blocks
-         * that are discovered will be added to the end of the internal
-         * block list (thus the indices of existing blocks will not change).
-         *
-         * \warning When joining blocks together, it is possible to
-         * create invalid edges (e.g., by joining a one-annulus
-         * untwisted boundary to a one-annulus twisted boundary).
-         * This routine does \e not check for such conditions.  It is
-         * recommended that you run Triangulation<3>::isValid() before
-         * calling this routine.
-         *
-         * \pre If any blocks already belonging to this region have
-         * adjacencies listed in their SatBlock structures, then these
-         * adjacent blocks belong to this region also.  This precondition
-         * is easily satisfied if you let the SatRegion constructor
-         * and expand() do all of the adjacency handling, as described
-         * in the class notes.
-         * \pre The list \a avoidTets includes all tetrahedra on the
-         * boundaries of any blocks already contained in this region.
-         *
-         * \ifacespython The first argument \a avoidTets is not present.
-         * An empty list will be passed instead.
-         *
-         * @param avoidTets a list of tetrahedra that should not be
-         * considered for new blocks, as discussed above.  Note that
-         * this list may be modified by this routine.
-         * @param stopIfIncomplete \c true if you are filling an entire
-         * triangulation component with this region and you wish this
-         * routine to exit early if this is not possible, or \c false
-         * (the default) if you simply wish to expand this region as far
-         * as you can.  See above for further discussion.
-         * @return \c false if the optional argument \a stopIfIncomplete
-         * was passed as \c true but expansion did not fill the entire
-         * triangulation component as described above, or \c true in all
-         * other cases.
-         */
-        bool expand(SatBlock::TetList& avoidTets,
-            bool stopIfIncomplete = false);
-
-        /**
          * Writes an abbreviated list of blocks within this region to
          * the given output stream.  Blocks will be written using their
          * abbreviated names, and these names will be separated by
@@ -693,8 +627,8 @@ class SatRegion : public Output<SatRegion> {
          * Each time an embedding of a starter block is discovered, the block
          * will be wrapped in a new SatRegion which describes how the block
          * appears within the given triangulation.  The region will be expanded
-         * as far as possible (using expand()) and then passed to \a action,
-         * which must be a function or some other callable object.
+         * to encompass as many saturated blocks as possible, and then passed to
+         * \a action, which must be a function or some other callable object.
          *
          * - The first argument to \a action must be of type
          *   std::unique_ptr<SatRegion>; this will be the newly constructed
@@ -725,8 +659,7 @@ class SatRegion : public Output<SatRegion> {
          * component (i.e., every boundary annulus of the region in fact forms
          * part of the boundary of the triangulation), then you should pass
          * \a mustBeComplete as \c true.  If a region expansion does not fill
-         * the entire component (as described by the \a stopIfIncomplete
-         * argument to expand()), then it will be discarded and \a action
+         * the entire component, then it will be discarded and \a action
          * will not be called for that particular embeddeding of that
          * particular starter block.
          *
@@ -744,14 +677,63 @@ class SatRegion : public Output<SatRegion> {
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
-        static bool findStarterBlocks(Triangulation<3>* tri,
-            bool mustBeComplete, Action&& action, Args&&... args);
+        static bool find(Triangulation<3>& tri, bool mustBeComplete,
+            Action&& action, Args&&... args);
 
-        // Mark this class as non-copyable.
-        SatRegion(const SatRegion&) = delete;
-        SatRegion& operator = (const SatRegion&) = delete;
+        /**
+         * Determines whether the given annulus is in fact a boundary
+         * annulus for a saturated region.  The annulus should be represented
+         * from the inside of the proposed saturated region.
+         *
+         * All tetrahedra in the given list \a avoidTets will be ignored by
+         * this routine, and so if a region is found then it is guaranteed
+         * not to include any of them.  As a consequence, if the given
+         * annulus uses any of these tetrahedra then \c null will be returned.
+         *
+         * If a region is found, it will be expanded as far as possible,
+         * and all of the tetrahedra within it will be added to the
+         * list \a avoidTets.  Moreover, it is guaranteed that the given
+         * annulus will be listed as annulus number 0 in the block
+         * that contains it, without any horizontal or vertical reflection.
+         *
+         * \pre Either the given annulus lies on the boundary of the
+         * triangulation, or else the (one or two) tetrahedra attached to
+         * the other side of it are already in the list \a avoidTets.
+         * This is necessary to ensure that the saturated region does not
+         * expand through the annulus to the other side.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated region.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated region if one was found, or
+         * \c null if none was found.
+         */
+        static std::unique_ptr<SatRegion> beginsRegion(
+            const SatAnnulus& annulus, SatBlock::TetList& avoidTets);
 
     private:
+        /**
+         * Constructs a new region containing just the given block.
+         * All boundary annuli of the given block will become boundary
+         * annuli of this region.  It is guaranteed that this block will
+         * be stored in the region without any kind of reflection (see
+         * SatBlockSpec for details).
+         *
+         * Typically a region is initialised using this constructor, and
+         * then grown using the expand() routine.
+         *
+         * This region will claim ownership of the given block, and upon
+         * destruction it will destroy this block also.
+         *
+         * \pre The given block has no adjacencies listed.  That is,
+         * for every boundary annulus of the given block,
+         * SatBlock::hasAdjacentBlock() returns \c false.
+         *
+         * @param starter the single block that this region will describe.
+         */
+        SatRegion(SatBlock* starter);
+
         /**
          * Runs through the region structure and recalculates the
          * \a baseEuler_ data member.
@@ -776,7 +758,104 @@ class SatRegion : public Output<SatRegion> {
          * boundary components.
          */
         void countBoundaries(unsigned& untwisted, unsigned& twisted) const;
+
+        /**
+         * Expands this region as far as possible within the overall
+         * triangulation.  This routine will hunt for new saturated
+         * blocks, and will also hunt for new adjacencies between
+         * existing blocks.
+         *
+         * The first argument to this routine is the tetrahedron list
+         * \a avoidTets.  This is a list of tetrahedra that will not be
+         * considered when examining potential new blocks.  This list
+         * will be modified by this routine; in particular, it will be
+         * expanded to include all tetrahedra for any new blocks that
+         * are found.  Before calling this routine it should contain
+         * tetrahedra for blocks already in this region, as discussed in
+         * the preconditions below.
+         *
+         * It may be that you are searching for a region that fills an entire
+         * triangulation component (i.e., every boundary annulus of the
+         * region in fact forms part of the boundary of the triangulation).
+         * In this case you may pass the optional argument
+         * \a stopIfIncomplete as \c true.  This means that if this routine
+         * ever discovers an annulus that is not part of the
+         * triangulation boundary and that it cannot match with some
+         * adjacent block, it will exit immediately and return \c false.
+         * Note that the region structure will be incomplete and/or
+         * inconsistent if this happens; in this case the unfinished
+         * region should be destroyed completely and never used.
+         *
+         * For internal purposes, it should be noted that any new blocks
+         * that are discovered will be added to the end of the internal
+         * block list (thus the indices of existing blocks will not change).
+         *
+         * \warning When joining blocks together, it is possible to
+         * create invalid edges (e.g., by joining a one-annulus
+         * untwisted boundary to a one-annulus twisted boundary).
+         * This routine does \e not check for such conditions.  It is
+         * recommended that you run Triangulation<3>::isValid() before
+         * calling this routine.
+         *
+         * \pre If any blocks already belonging to this region have
+         * adjacencies listed in their SatBlock structures, then these
+         * adjacent blocks belong to this region also.  This precondition
+         * is easily satisfied if you let the SatRegion constructor
+         * and expand() do all of the adjacency handling, as described
+         * in the class notes.
+         * \pre The list \a avoidTets includes all tetrahedra on the
+         * boundaries of any blocks already contained in this region.
+         *
+         * \ifacespython The first argument \a avoidTets is not present.
+         * An empty list will be passed instead.
+         *
+         * @param avoidTets a list of tetrahedra that should not be
+         * considered for new blocks, as discussed above.  Note that
+         * this list may be modified by this routine.
+         * @param stopIfIncomplete \c true if you are filling an entire
+         * triangulation component with this region and you wish this
+         * routine to exit early if this is not possible, or \c false
+         * (the default) if you simply wish to expand this region as far
+         * as you can.  See above for further discussion.
+         * @return \c false if the optional argument \a stopIfIncomplete
+         * was passed as \c true but expansion did not fill the entire
+         * triangulation component as described above, or \c true in all
+         * other cases.
+         */
+        bool expand(SatBlock::TetList& avoidTets,
+            bool stopIfIncomplete = false);
+
+        /**
+         * Performs the first step of beginsRegion().
+         *
+         * This routine behaves exactly like beginsRegion(), except that
+         * it will only find a single saturated block (i.e., the block
+         * that meets the given annulus).
+         *
+         * The caller of this routine must take ownership of the block
+         * that is returned (if any).
+         */
+        static SatBlock* hasBlock(const SatAnnulus& annulus,
+            SatBlock::TetList& avoidTets);
+
+        /**
+         * Fills the \a starters_ list with an appropriate set of model
+         * block to search from, if this has not yet been done.
+         * This routine is thread-safe.
+         */
+        static void initStarters();
 };
+
+/**
+ * Swaps the contents of the two given regions.
+ *
+ * This global routine simply calls SatRegion::swap(); it is provided
+ * so that SatRegion meets the C++ Swappable requirements.
+ *
+ * @param a the first region whose contents should be swapped.
+ * @param b the second region whose contents should be swapped.
+ */
+void swap(SatRegion& a, SatRegion& b) noexcept;
 
 /*@}*/
 
@@ -838,6 +917,26 @@ inline void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept {
 
 // Inline functions for SatRegion
 
+inline SatRegion& SatRegion::operator = (const SatRegion& src) {
+    // We could probably do something slicker here, but the copy
+    // operation is quite a bit of work (mainly because we need to fix
+    // the block adjacencies) - let's just implement it once.
+    SatRegion tmp(src);
+    swap(tmp);
+    return *this;
+}
+
+inline void SatRegion::swap(SatRegion& other) noexcept {
+    blocks_.swap(other.blocks_);
+    std::swap(baseEuler_, other.baseEuler_);
+    std::swap(baseOrbl_, other.baseOrbl_);
+    std::swap(hasTwist_, other.hasTwist_);
+    std::swap(twistsMatchOrientation_, other.twistsMatchOrientation_);
+    std::swap(shiftedAnnuli_, other.shiftedAnnuli_);
+    std::swap(twistedBlocks_, other.twistedBlocks_);
+    std::swap(nBdryAnnuli_, other.nBdryAnnuli_);
+}
+
 inline unsigned long SatRegion::numberOfBlocks() const {
     return blocks_.size();
 }
@@ -852,6 +951,21 @@ inline unsigned long SatRegion::numberOfBoundaryAnnuli() const {
 
 inline void SatRegion::writeTextLong(std::ostream& out) const {
     writeDetail(out, "Saturated region");
+}
+
+inline std::unique_ptr<SatRegion> SatRegion::beginsRegion(
+        const SatAnnulus& annulus, SatBlock::TetList& avoidTets) {
+    SatBlock* starter = hasBlock(annulus, avoidTets);
+    if (starter) {
+        std::unique_ptr<SatRegion> ans(new SatRegion(starter));
+        ans->expand(avoidTets, false);
+        return ans;
+    } else
+        return nullptr;
+}
+
+inline void swap(SatRegion& a, SatRegion& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

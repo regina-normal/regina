@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "maths/perm.h"
 #include "triangulation/forward.h"
+#include <tuple>
 
 namespace regina {
 
@@ -280,13 +281,13 @@ struct SatAnnulus {
      * this context, and see reflectVertical() and reflectHorizontal()
      * for descriptions of the various types of reflection.
      *
-     * Information regarding reflections is returned via the two boolean
-     * pointers \a refVert and \a refHoriz.  If the two annuli are
-     * identically opposite each other as described by switchSides(),
-     * both booleans will be set to \c false.  If the two annuli are
-     * identically opposite after one undergoes a vertical and/or
-     * horizontal reflection, then the booleans \a refVert and/or
-     * \a refHoriz will be set to \c true accordingly.
+     * Information regarding reflections is returned via the second and
+     * third elements of the returned tuple (call these \a refVert and
+     * \a refHoriz).  If the two annuli are identically opposite each other
+     * as described by switchSides(), both booleans will be \c false.  If the
+     * two annuli are identically opposite after one undergoes a vertical
+     * and/or horizontal reflection, then the booleans \a refVert and/or
+     * \a refHoriz will be \c true accordingly.
      *
      * The critical difference between this routine and isJoined() is
      * that this routine insists that the fibres on each annulus be
@@ -294,29 +295,15 @@ struct SatAnnulus {
      * between different sections of the same Seifert fibred space,
      * for example.
      *
-     * \ifacespython This routine only takes a single argument (the
-     * annulus \a other).  The return value is a tuple of three
-     * booleans: the usual return value, the value returned in \a refVert,
-     * and the value returned in \a refHoriz.
-     *
      * @param other the annulus to compare with this.
-     * @param refVert returns information on whether the annuli are
-     * adjacent modulo a vertical reflection.  This is set to \c true
-     * if a vertical reflection is required and \c false if it is not.
-     * If no adjacency was found at all, this boolean is not touched.
-     * A null pointer may be passed, in which case this information will
-     * not be returned at all.
-     * @param refHoriz returns information on whether the annuli are
-     * adjacent modulo a horizontal reflection.  This is set to \c true
-     * if a horizontal reflection is required and \c false if it is not.
-     * If no adjacency was found at all, this boolean is not touched.
-     * A null pointer may be passed, in which case this information will
-     * not be returned at all.
-     * @return \c true if some adjacency was found (either with or
-     * without reflections), or \c false if no adjacency was found at all.
+     * @return a tuple of booleans (\a adj, \a refVert, \a refHoriz), where:
+     * \a adj is \c true iff some adjacency was found (either with or
+     * without reflections); \a refVert is \c true iff a vertical reflection
+     * is required; and \a refHoriz is \c true iff a horizontal reflection is
+     * required.  If no adjacency was found at all, then both \a refVert and
+     * \a refHoriz will be \c false.
      */
-    bool isAdjacent(const SatAnnulus& other, bool* refVert, bool* refHoriz)
-        const;
+    std::tuple<bool, bool, bool> isAdjacent(const SatAnnulus& other) const;
 
     /**
      * Determines whether this and the given annulus are joined in some

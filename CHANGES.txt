@@ -45,6 +45,9 @@ Version 6.1  [ TODO ]
             - Constructors now take a reference to the triangulation, not a
               pointer.
         Class AngleStructures:
+            - Replaced enumerate() with a class constructor; this will
+              throw an exception on error (instead of returning null).
+              The old enumerate() function is kept as a deprecated alias.
             - New function structures() for simpler iteration.
             - Changed triangulation() and surface() to return const references,
               not pointers.
@@ -70,6 +73,12 @@ Version 6.1  [ TODO ]
               member and global swap() functions.
         Class BitmaskLen8, BitmaskLen16, BitmaskLen32, BitmaskLen64:
             - Deprecated.  Just use Bitmask1<uint8_t>, etc.
+        Class BlockedSFS, BlockedSFSLoop, BlockedSFSPair, BlockedSFSTriple:
+            - Routines isBlockedSFS...() are now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old names are kept as deprecated aliases.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
         Class BoolSet:
             - Almost everything in this class is now constexpr.
             - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
@@ -386,6 +395,8 @@ Version 6.1  [ TODO ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+        Class Layering:
+            - Added copy construction and copy assignment.
         Class LensSpace:
             - Added member and global swap() functions.
         Class LessDeref:
@@ -481,6 +492,8 @@ Version 6.1  [ TODO ]
             - Added a global swap() to complement the member swap().
         Class NewFunction<...>:
             - Removed completely.
+        Class NoMatchingEquations:
+            - New exception class.
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -498,6 +511,9 @@ Version 6.1  [ TODO ]
             - Constructors now take a reference to the triangulation, not a
               pointer.
         Class NormalHypersurfaces:
+            - Replaced enumerate() with a class constructor; this will
+              throw an exception on error (instead of returning null).
+              The old enumerate() function is kept as a deprecated alias.
             - New function hypersurfaces() for simpler iteration.
             - Changed triangulation() and hypersurface() to return
               const references, not pointers.
@@ -519,6 +535,9 @@ Version 6.1  [ TODO ]
             - Constructors now take a reference to the triangulation, not a
               pointer.
         Class NormalSurfaces:
+            - Replaced enumerate() with a class constructor; this will
+              throw an exception on error (instead of returning null).
+              The old enumerate() function is kept as a deprecated alias.
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
@@ -624,6 +643,12 @@ Version 6.1  [ TODO ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Deprecated clone().  Just use the copy constructor instead.
+        Class PluggedTorusBundle:
+            - Routine isPluggedTorusBundle() is now called recognise(), and
+              return a std::optional instead of a pointer that could be null.
+              The old name is kept as a deprecated alias.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
             - Routine chain() now returns a std::optional by const reference,
@@ -656,12 +681,25 @@ Version 6.1  [ TODO ]
         Class SatAnnulus:
             - Routines transform() and image() now takes their arguments by
               reference.
+            - Routine isAdjacent() now returns a tuple, instead of using
+              a mix of return values and pointer arguments for output.
         Class SatBlock and subclasses:
             - The nextBlock output argument for nextBoundaryAnnulus()
               now sends back a const pointer.
             - Routine transform() now takes its arguments by reference.
             - All copy constructors and clone() functions are now either
               protected or private.
+            - All insertBlock() routines have been replaced with safer model()
+              routines that return a SatBlockModel by value.
+            - Removed SatBlock::isBlock(), and made all subclass isBlock...()
+              functions private (and with new names).  This functionality is
+              now accessible through SatRegion::beginsRegion() instead.
+            - Modifying routines transform() and setAdjacent() are now
+              protected and private respectively.
+            - Routine nextBoundaryAnnulus() now returns a tuple, instead
+              of using several reference arguments for output.
+        Class SatBlockModel:
+            - New class to replace SatBlockStarter.
         Class SatBlockSpec:
             - This is now a full class, with read-only access functions
               to its data members which are now private.
@@ -673,10 +711,13 @@ Version 6.1  [ TODO ]
               new move constructor): only SatRegion is permitted to create a
               SatBlockSpec with arbitrary content.
         Class SatBlockStarter:
-            - The routine block() now returns by reference, not by pointer.
+            - Removed completely, and replaced with the new class SatBlockModel.
+        Class SatBlockStarterSet:
+            - Removed completely, and replaced with a hard-coded list
+              that is private to the SatRegion class.
         Class SatBlockStarterSearcher:
             - Removed completely.  Instead use the new, simpler and more
-              flexible routine SatRegion::findStarterBlocks().
+              flexible routine SatRegion::find().
         Class SatBlockStarterSet:
             - Now requires a (lightweight) object to work with instead
               of using static routines only.  This makes the class
@@ -690,8 +731,12 @@ Version 6.1  [ TODO ]
             - The block output argument for boundaryAnnulus() now sends back a
               const pointer.
             - Added move construction, and move assignment.
-            - New static routine findStarterBlocks(), which replaces the old
-              class SatBlockStarterSearcher.
+            - New static routine find(), which replaces the old class
+              SatBlockStarterSearcher.
+            - New static routine beginsRegion(), which replaces the old
+              SatBlock::isBlock().
+            - Routine expand() is now private, since all publicly accessible
+              functions that construct regions will expand them automatically.
         Class SFSAlt, SFSAltSet:
             - Removed the old SFSAltSet class; replaced this with a new SFSAlt
               class with a static altSet() function that returns a std::vector.
@@ -900,6 +945,8 @@ Version 6.1  [ TODO ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
+        Class TxIDiagonalCore, TxIParallelCore:
+            - Added copy construction.
         Class TypeTrie:
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.

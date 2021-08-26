@@ -1,10 +1,10 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2021, Ben Burton
+# Copyright (c) 2007-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Tests the behaviour of the packet cloning functions.
+# Provides various tests for angle structure enumeration.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -33,59 +33,43 @@
 
 from __future__ import print_function
 
-root = Container()
+def dumpAngles(name, tri, tautOnly = False):
+	try:
+		slist = regina.AngleStructures(tri, tautOnly)
+	except:
+		print("-------------------------------")
+		print(name)
+		print('ENUMERATION FAILED')
+		print("-------------------------------")
+		print()
+		return
 
-# 3-D surface test:
+	print("-------------------------------")
+	print(slist.triangulation().label())
+	print(name)
+	print("-------------------------------")
+	print()
 
-tri = Example3.poincareHomologySphere()
-list = NormalSurfaces(tri, NS_STANDARD)
-root.insertChildLast(tri)
+	# Dump the angle structures in sort order, since we don't really mind if
+	# the ordering changes between releases.
+	structures = slist.detail().split('\n')
+	structures.sort()
+	# Let the text headers appear up top.
+	structures.reverse()
+	for s in structures:
+		print(s)
 
-tri2 = tri.clone(True)
-list2 = tri2.firstChild()
+	# Nothing else to say.
+	print()
 
-s = list.surface(0)
-s2 = list2.surface(0)
+def angleStats(tri):
+	dumpAngles('Vertex angle structures', tri, False)
+	dumpAngles('Taut angle structures', tri, True)
 
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
+t = regina.Triangulation3()
+t.setLabel("Empty triangulation")
+angleStats(t)
 
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
-
-# 4-D hypersurface test:
-
-tri = Example4.s3xs1()
-list = NormalHypersurfaces(tri, HS_STANDARD)
-root.insertChildLast(tri)
-
-tri2 = tri.clone(True)
-list2 = tri2.firstChild()
-
-s = list.hypersurface(0)
-s2 = list2.hypersurface(0)
-
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
-
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
-
-# Angle structure test:
-
-tri = Example3.whiteheadLink()
-list = AngleStructures(tri)
-root.insertChildLast(tri)
-
-tri2 = tri.clone(True)
-list2 = tri2.firstChild()
-
-s = list.structure(0)
-s2 = list2.structure(0)
-
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
-
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
-
+angleStats(regina.Example3.figureEight())
+angleStats(regina.Example3.whiteheadLink())
+angleStats(regina.Example3.poincareHomologySphere())

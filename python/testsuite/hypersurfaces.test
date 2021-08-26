@@ -33,7 +33,17 @@
 
 from __future__ import print_function
 
-def dumpSurfaces(name, slist):
+def dumpSurfaces(name, tri, coords = regina.HS_STANDARD, which = regina.HS_LIST_DEFAULT, alg = regina.HS_ALG_DEFAULT):
+	try:
+		slist = regina.NormalHypersurfaces(tri, coords, which)
+	except:
+		print("-------------------------------")
+		print(name)
+		print('ENUMERATION FAILED')
+		print("-------------------------------")
+		print()
+		return
+
 	print("-------------------------------")
 	print(slist.triangulation().label())
 	print(name)
@@ -54,14 +64,11 @@ def dumpSurfaces(name, slist):
 
 def surfaceStats(tri):
 	dumpSurfaces('Vertex hypersurfaces (std)',
-		regina.NormalHypersurfaces.enumerate(tri,
-		regina.HS_STANDARD, regina.HS_VERTEX))
+		tri, regina.HS_STANDARD, regina.HS_VERTEX)
 	dumpSurfaces('Fundamental surfaces (std, primal)',
-		regina.NormalHypersurfaces.enumerate(tri,
-			regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_PRIMAL))
+		tri, regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_PRIMAL)
 	dumpSurfaces('Fundamental surfaces (std, dual)',
-		regina.NormalHypersurfaces.enumerate(tri,
-		regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL))
+		tri, regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL)
 
 t = regina.Triangulation4()
 t.setLabel("Empty triangulation")

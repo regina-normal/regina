@@ -42,11 +42,17 @@ using regina::BlockedSFSPair;
 void addBlockedSFSPair(pybind11::module_& m) {
     pybind11::class_<BlockedSFSPair, regina::StandardTriangulation>
             (m, "BlockedSFSPair")
+        .def(pybind11::init<const BlockedSFSPair&>())
+        .def("swap", &BlockedSFSPair::swap)
         .def("region", &BlockedSFSPair::region,
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &BlockedSFSPair::matchingReln,
             pybind11::return_value_policy::reference_internal)
-        .def_static("isBlockedSFSPair", &BlockedSFSPair::isBlockedSFSPair)
+        .def_static("recognise", &BlockedSFSPair::recognise)
+        .def_static("isBlockedSFSPair", // deprecated
+            &BlockedSFSPair::recognise)
     ;
+
+    m.def("swap", (void(*)(BlockedSFSPair&, BlockedSFSPair&))(regina::swap));
 }
 

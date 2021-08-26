@@ -38,17 +38,12 @@
 
 namespace regina {
 
-BlockedSFSPair::~BlockedSFSPair() {
-    delete region_[0];
-    delete region_[1];
-}
-
 std::unique_ptr<Manifold> BlockedSFSPair::manifold() const {
-    std::optional<SFSpace> sfs0 = region_[0]->createSFS(false);
+    std::optional<SFSpace> sfs0 = region_[0].createSFS(false);
     if (! sfs0)
         return nullptr;
 
-    std::optional<SFSpace> sfs1 = region_[1]->createSFS(false);
+    std::optional<SFSpace> sfs1 = region_[1].createSFS(false);
     if (! sfs1) {
         return nullptr;
     }
@@ -67,33 +62,33 @@ std::unique_ptr<Manifold> BlockedSFSPair::manifold() const {
 
 std::ostream& BlockedSFSPair::writeName(std::ostream& out) const {
     out << "Blocked SFS Pair [";
-    region_[0]->writeBlockAbbrs(out, false);
+    region_[0].writeBlockAbbrs(out, false);
     out << " | ";
-    region_[1]->writeBlockAbbrs(out, false);
+    region_[1].writeBlockAbbrs(out, false);
     return out << ']';
 }
 
 std::ostream& BlockedSFSPair::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{BSFS\\_Pair}\\left[";
-    region_[0]->writeBlockAbbrs(out, true);
+    region_[0].writeBlockAbbrs(out, true);
     out << "\\,|\\,";
-    region_[1]->writeBlockAbbrs(out, true);
+    region_[1].writeBlockAbbrs(out, true);
     return out << "\\right]";
 }
 
 void BlockedSFSPair::writeTextLong(std::ostream& out) const {
     out << "Blocked SFS pair, matching relation " << matchingReln_ << "\n";
 
-    region_[0]->writeDetail(out, "First region");
-    region_[1]->writeDetail(out, "Second region");
+    region_[0].writeDetail(out, "First region");
+    region_[1].writeDetail(out, "Second region");
 }
 
-BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
+std::optional<BlockedSFSPair> BlockedSFSPair::recognise(Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
-        return nullptr;
+        return std::nullopt;
     if (tri->countComponents() > 1)
-        return nullptr;
+        return std::nullopt;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for the boundary between blocks
@@ -102,13 +97,13 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     //
     // These will result in edges joined to themselves in reverse.
     if (! tri->isValid())
-        return nullptr;
+        return std::nullopt;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> r0;
     std::unique_ptr<SatRegion> r1;
     Matrix2 matchingReln;
-    bool found = SatRegion::findStarterBlocks(tri, false,
+    bool found = SatRegion::find(*tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         if (r->numberOfBoundaryAnnuli() != 1)
             return false;
@@ -122,11 +117,8 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
         bool firstRegionReflected =
             ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
 
-        const SatBlock* tmpBlock;
-        unsigned tmpAnnulus;
-        bool tmpVert, tmpHoriz;
-        bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
-            tmpVert, tmpHoriz, false);
+        auto [tmpBlock, tmpAnnulus, tmpVert, tmpHoriz] =
+            bdryBlock->nextBoundaryAnnulus(bdryAnnulus, false);
         if (tmpVert)
             return false;
 
@@ -158,7 +150,6 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
         Matrix2 layeringToAnnulus1;
 
         // Try the three possible orientations for fibres on the other side.
-        SatBlock* otherStarter;
         for (int plugPos = 0; plugPos < 3; plugPos++) {
             // Construct the boundary annulus for the second region.
             // Refresh the tetrahedra as well as the vertex roles, since
@@ -195,10 +186,7 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
             // See if we can flesh the other side out to an entire region.
             otherSide.switchSides();
 
-            if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
-                r1 = std::make_unique<SatRegion>(otherStarter);
-                r1->expand(usedTets);
-
+            if ((r1 = SatRegion::beginsRegion(otherSide, usedTets))) {
                 if (r1->numberOfBoundaryAnnuli() == 1) {
                     // This is it!  Stop searching.
                     r0 = std::move(r);
@@ -224,11 +212,11 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new BlockedSFSPair(r0.release(), r1.release(), matchingReln);
+        return BlockedSFSPair(std::move(*r0), std::move(*r1), matchingReln);
     }
 
     // Nope.
-    return nullptr;
+    return std::nullopt;
 }
 
 } // namespace regina

@@ -41,12 +41,20 @@
 
 using regina::HyperCoords;
 using regina::NormalHypersurfaces;
+using regina::ProgressTracker;
+using regina::Triangulation;
 
 void addNormalHypersurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
 
     pybind11::class_<NormalHypersurfaces, regina::Packet,
             regina::SafePtr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
+        .def(pybind11::init<Triangulation<4>&, HyperCoords,
+                regina::HyperList, regina::HyperAlg, ProgressTracker*>(),
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("which") = regina::HS_LIST_DEFAULT,
+            pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
         .def_static("enumerate", &NormalHypersurfaces::enumerate,
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,

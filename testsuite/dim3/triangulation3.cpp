@@ -2095,9 +2095,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                 expected = false;
             else {
                 expected = true;
-                NormalSurfaces* s = NormalSurfaces::enumerate(
-                    *tri, regina::NS_STANDARD);
-                for (const NormalSurface& f : s->surfaces()) {
+                NormalSurfaces s(*tri, regina::NS_STANDARD);
+                for (const NormalSurface& f : s.surfaces()) {
                     if (f.eulerChar() == 2 &&
                             (! f.hasRealBoundary()) &&
                             ! f.isVertexLinking()) {
@@ -2119,7 +2118,6 @@ class Triangulation3Test : public TriangulationTest<3> {
                         break;
                     }
                 }
-                delete s;
             }
             if (ans && ! expected) {
                 std::ostringstream msg;

@@ -31,23 +31,76 @@
  **************************************************************************/
 
 #include "manifold/sfs.h"
-#include "subcomplex/satblockstarter.h"
+#include "subcomplex/satblocktypes.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
+#include <map>
+#include <mutex>
 #include <set>
 #include <sstream>
 
 namespace regina {
 
 namespace {
+    std::mutex startersMutex;
+
     /**
      * An anonymous inline boolean xor.  I'm always afraid to use ^ with
      * bool, since I'm never sure if this bitwise operator will do the
      * right thing on all platforms.
+     *
+     * (Update, 24/08/21: I'm pretty sure (bool != bool) does it. - Ben.)
      */
     inline bool regXor(bool a, bool b) {
         return ((a && ! b) || (b && ! a));
     }
+}
+
+std::list<SatBlockModel> SatRegion::starters_;
+
+void SatRegion::initStarters() {
+    std::scoped_lock lock(startersMutex);
+    if (starters_.empty()) {
+        starters_.push_back(SatTriPrism::model(true));
+        starters_.push_back(SatCube::model());
+
+        // Try various reflector strips of small length.
+        starters_.push_back(SatReflectorStrip::model(1, false));
+        starters_.push_back(SatReflectorStrip::model(1, true));
+        starters_.push_back(SatReflectorStrip::model(2, false));
+        starters_.push_back(SatReflectorStrip::model(2, true));
+        starters_.push_back(SatReflectorStrip::model(3, false));
+        starters_.push_back(SatReflectorStrip::model(3, true));
+        starters_.push_back(SatReflectorStrip::model(4, false));
+        starters_.push_back(SatReflectorStrip::model(4, true));
+    }
+}
+
+SatBlock* SatRegion::hasBlock(const SatAnnulus& annulus,
+        SatBlock::TetList& avoidTets) {
+    SatBlock* ans;
+
+    // Run through the types of blocks that we know about.
+    if ((ans = SatMobius::beginsRegion(annulus, avoidTets)))
+        return ans;
+    if ((ans = SatLST::beginsRegion(annulus, avoidTets)))
+        return ans;
+    if ((ans = SatTriPrism::beginsRegion(annulus, avoidTets)))
+        return ans;
+    if ((ans = SatCube::beginsRegion(annulus, avoidTets)))
+        return ans;
+    if ((ans = SatReflectorStrip::beginsRegion(annulus, avoidTets)))
+        return ans;
+
+    // As a last attempt, try a single layering.  We don't have to worry
+    // about the degeneracy, since we'll never get a loop of these
+    // things (since that would form a disconnected component, and we
+    // never use one as a starting block).
+    if ((ans = SatLayering::beginsRegion(annulus, avoidTets)))
+        return ans;
+
+    // Nothing was found.
+    return nullptr;
 }
 
 SatRegion::SatRegion(SatBlock* starter) :
@@ -64,6 +117,38 @@ SatRegion::SatRegion(SatBlock* starter) :
         hasTwist_ = true;
         twistsMatchOrientation_ = false;
         twistedBlocks_ = 1;
+    }
+}
+
+SatRegion::SatRegion(const SatRegion& src) :
+        baseEuler_(src.baseEuler_),
+        baseOrbl_(src.baseOrbl_),
+        hasTwist_(src.hasTwist_),
+        twistsMatchOrientation_(src.twistsMatchOrientation_),
+        shiftedAnnuli_(src.shiftedAnnuli_),
+        twistedBlocks_(src.twistedBlocks_),
+        nBdryAnnuli_(src.nBdryAnnuli_)
+        {
+    // First clone the blocks, and keep a map from original blocks to
+    // their clones.
+    std::map<const SatBlock*, SatBlock*> clones;
+    for (const SatBlockSpec& b : src.blocks_) {
+        SatBlock* clone = b.block_->clone();
+        clones.insert(std::make_pair(b.block_, clone));
+        blocks_.push_back(SatBlockSpec(clone, b.refVert_, b.refHoriz_));
+    }
+
+    // Now fix the adjacencies in the cloned blocks.
+    for (const SatBlockSpec& b : blocks_) {
+        for (unsigned i = 0; i < b.block_->nAnnuli_; ++i)
+            if (b.block_->adjBlock_[i]) {
+                auto it = clones.find(b.block_->adjBlock_[i]);
+                if (it == clones.end()) {
+                    // This should *not* happen.
+                    b.block_->adjBlock_[i] = nullptr;
+                } else
+                    b.block_->adjBlock_[i] = it->second;
+            }
     }
 }
 
@@ -168,7 +253,6 @@ std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
 bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     unsigned ann, adjAnn;
     unsigned long adjPos;
-    bool adjVert, adjHoriz;
     bool currTwisted, currNor;
     unsigned annBdryTriangles;
 
@@ -209,7 +293,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
             // We can happily jump to the other side, since we know
             // there are tetrahedra present.
             // Is there a new block there?
-            if (SatBlock* adjBlock = SatBlock::isBlock(
+            if (SatBlock* adjBlock = hasBlock(
                     currBlock->annulus(ann).otherSide(), avoidTets)) {
                 // We found a new adjacent block that we haven't seen before.
 
@@ -242,38 +326,40 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
             }
             while (adjPos < blocks_.size()) {
                 SatBlock* adjBlock = blocks_[adjPos].block_;
-                if ((! adjBlock->hasAdjacentBlock(adjAnn)) &&
-                        currBlock->annulus(ann).isAdjacent(
-                        adjBlock->annulus(adjAnn), &adjVert, &adjHoriz)) {
-                    // They match!
-                    currBlock->setAdjacent(ann, adjBlock, adjAnn,
-                        adjVert, adjHoriz);
-                    nBdryAnnuli_ -= 2;
+                if (! adjBlock->hasAdjacentBlock(adjAnn)) {
+                    auto [isAdj, adjVert, adjHoriz] = currBlock->annulus(ann).
+                        isAdjacent(adjBlock->annulus(adjAnn));
+                    if (isAdj) {
+                        // They match!
+                        currBlock->setAdjacent(ann, adjBlock, adjAnn,
+                            adjVert, adjHoriz);
+                        nBdryAnnuli_ -= 2;
 
-                    // See what kinds of inconsistencies this
-                    // rejoining has caused.
-                    currNor = regXor(regXor(currHoriz,
-                        blocks_[adjPos].refHoriz()), ! adjHoriz);
-                    currTwisted = regXor(regXor(currVert,
-                        blocks_[adjPos].refVert()), adjVert);
+                        // See what kinds of inconsistencies this
+                        // rejoining has caused.
+                        currNor = regXor(regXor(currHoriz,
+                            blocks_[adjPos].refHoriz()), ! adjHoriz);
+                        currTwisted = regXor(regXor(currVert,
+                            blocks_[adjPos].refVert()), adjVert);
 
-                    if (currNor)
-                        baseOrbl_ = false;
-                    if (currTwisted)
-                        hasTwist_ = true;
-                    if (regXor(currNor, currTwisted))
-                        twistsMatchOrientation_ = false;
+                        if (currNor)
+                            baseOrbl_ = false;
+                        if (currTwisted)
+                            hasTwist_ = true;
+                        if (regXor(currNor, currTwisted))
+                            twistsMatchOrientation_ = false;
 
-                    // See if we need to add a (1,1) shift before
-                    // the annuli can be identified.
-                    if (regXor(adjHoriz, adjVert)) {
-                        if (regXor(currHoriz, currVert))
-                            shiftedAnnuli_--;
-                        else
-                            shiftedAnnuli_++;
+                        // See if we need to add a (1,1) shift before
+                        // the annuli can be identified.
+                        if (regXor(adjHoriz, adjVert)) {
+                            if (regXor(currHoriz, currVert))
+                                shiftedAnnuli_--;
+                            else
+                                shiftedAnnuli_++;
+                        }
+
+                        break;
                     }
-
-                    break;
                 }
 
                 if (adjAnn + 1 < adjBlock->nAnnuli())
@@ -468,9 +554,9 @@ void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
     std::fill(used, used + totAnnuli, false);
 
     // Off we go!
-    const SatBlock *currBlock, *tmpBlock;
-    unsigned currBlockIndex, currAnnulus, tmpAnnulus;
-    bool hTwist, vTwist, tmpHTwist, tmpVTwist;
+    const SatBlock *currBlock;
+    unsigned currBlockIndex, currAnnulus;
+    bool hTwist, vTwist;
     for (i = 0; i < blocks_.size(); ++i) {
         const SatBlock* b = blocks_[i].block();
         for (j = 0; j < nAnnuli[i]; ++j) {
@@ -497,8 +583,8 @@ void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
             while (true) {
                 used[indexAnnuliFrom[currBlockIndex] + currAnnulus] = true;
 
-                currBlock->nextBoundaryAnnulus(currAnnulus, tmpBlock,
-                    tmpAnnulus, tmpVTwist, tmpHTwist, hTwist);
+                auto [tmpBlock, tmpAnnulus, tmpVTwist, tmpHTwist] =
+                    currBlock->nextBoundaryAnnulus(currAnnulus, hTwist);
                 if (tmpVTwist)
                     vTwist = ! vTwist;
                 if (tmpHTwist)

@@ -916,12 +916,11 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementTrefoilUnknot(Link* l) {
-            Triangulation<3>* c = l->complement();
+            std::unique_ptr<Triangulation<3>> c(l->complement());
 
             // Find a separating sphere.
-            regina::NormalSurfaces* vtx =
-                regina::NormalSurfaces::enumerate(*c, regina::NS_STANDARD);
-            for (const regina::NormalSurface& s : vtx->surfaces()) {
+            regina::NormalSurfaces vtx(*c, regina::NS_STANDARD);
+            for (const regina::NormalSurface& s : vtx.surfaces()) {
                 if (s.eulerChar() != 2)
                     continue;
                 // s must be a 2-sphere.
@@ -931,7 +930,6 @@ class LinkTest : public CppUnit::TestFixture {
                 if (cut->isConnected()) {
                     // Should never happen...
                     delete cut;
-                    delete c;
                     std::ostringstream msg;
                     msg << l->label() << " complement contains a "
                         "non-separating 2-sphere.";
@@ -953,7 +951,6 @@ class LinkTest : public CppUnit::TestFixture {
                          c1->isSolidTorus())) {
                     // We have the correct manifold!
                     delete cut;
-                    delete c;
                     return;
                 }
 
@@ -962,8 +959,6 @@ class LinkTest : public CppUnit::TestFixture {
                 delete cut;
             }
 
-            // Note: vtx will be deleted automatically with c.
-            delete c;
             std::ostringstream msg;
             msg << l->label() << " complement could not be recognised "
                 "as coming from (trefoil U unknot).";

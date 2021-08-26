@@ -50,16 +50,12 @@ namespace {
     }
 }
 
-BlockedSFS::~BlockedSFS() {
-    delete region_;
-}
-
 bool BlockedSFS::isPluggedIBundle(std::string& name) const {
     // The triangulation needs to be closed.
-    if (region_->numberOfBoundaryAnnuli() > 0)
+    if (region_.numberOfBoundaryAnnuli() > 0)
         return false;
 
-    unsigned long n = region_->numberOfBlocks();
+    unsigned long n = region_.numberOfBlocks();
     if (n < 3 || n > 4)
         return false;
 
@@ -74,7 +70,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
     int delta, deltaAdj;
     bool consistent;
     for (i = 0; i < n; i++) {
-        block = region_->block(i).block();
+        block = region_.block(i).block();
 
         cube = dynamic_cast<const SatCube*>(block);
         if (cube) {
@@ -252,7 +248,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
 }
 
 std::unique_ptr<Manifold> BlockedSFS::manifold() const {
-    std::optional<SFSpace> ans = region_->createSFS(false);
+    std::optional<SFSpace> ans = region_.createSFS(false);
     if (! ans)
         return nullptr;
 
@@ -293,36 +289,36 @@ std::unique_ptr<Manifold> BlockedSFS::manifold() const {
 
 std::ostream& BlockedSFS::writeName(std::ostream& out) const {
     out << "Blocked SFS [";
-    region_->writeBlockAbbrs(out, false);
+    region_.writeBlockAbbrs(out, false);
     return out << ']';
 }
 
 std::ostream& BlockedSFS::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{BSFS}\\left[";
-    region_->writeBlockAbbrs(out, true);
+    region_.writeBlockAbbrs(out, true);
     return out << "\\right]";
 }
 
 void BlockedSFS::writeTextLong(std::ostream& out) const {
-    region_->writeDetail(out, "Blocked SFS");
+    region_.writeDetail(out, "Blocked SFS");
 }
 
-BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
+std::optional<BlockedSFS> BlockedSFS::recognise(Triangulation<3>* tri) {
     // Basic property checks.
     if (tri->countComponents() > 1)
-        return nullptr;
+        return std::nullopt;
     if (tri->isIdeal())
-        return nullptr;
+        return std::nullopt;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  These will result in edges joined to
     // themselves in reverse.
     if (! tri->isValid())
-        return nullptr;
+        return std::nullopt;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
-    bool found = SatRegion::findStarterBlocks(tri, true,
+    bool found = SatRegion::find(*tri, true,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         // Got one!  Nothing more to do; just stop the search.
         region = std::move(r);
@@ -333,11 +329,11 @@ BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
         // The region expansion worked, and the triangulation is known
         // to be connected.
         // This means we've got one!
-        return new BlockedSFS(region.release());
+        return BlockedSFS(std::move(*region));
     }
 
     // Nope.
-    return nullptr;
+    return std::nullopt;
 }
 
 bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,

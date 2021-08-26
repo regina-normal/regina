@@ -104,6 +104,51 @@ class AngleStructures : public Packet {
 
     public:
         /**
+         * Enumerates all angle structures on the given triangulation.
+         *
+         * If \a tautOnly is \c false (the default), then this new list will
+         * be filled with all vertices of the angle structure solution space.
+         * If \c tautOnly is \c true, then the list will be filled with only
+         * the taut angle structures (a subset of the vertex angle structures);
+         * these are usually much faster to enumerate.
+         *
+         * The angle structure list that is created will be inserted as the
+         * last child of the given triangulation.  This triangulation \b must
+         * remain the parent of this angle structure list, and must not
+         * change while this angle structure list remains in existence.
+         *
+         * If a progress tracker is passed:
+         *
+         * - The angle structure enumeration will take place in a new thread.
+         *   This constructor will return immediately, but the new angle
+         *   structure list will not be inserted into the packet tree
+         *   until the enumeration is complete.
+         *
+         * - If the user cancels the operation from another thread, then the
+         *   angle structure list will \e never be inserted into the packet
+         *   tree.  The caller of this constructor will still need to delete it.
+         *
+         * - For progress tracking, this routine will declare and work through
+         *   a series of stages whose combined weights sum to 1; typically this
+         *   means that the given tracker must not have been used before.
+         *
+         * If no progress tracker is passed, the enumeration will run
+         * in the current thread and this constructor will return only when
+         * the enumeration is complete.  Note that this enumeration can
+         * be extremely slow for larger triangulations.
+         *
+         * @param owner the triangulation for which the vertex
+         * angle structures will be enumerated.
+         * @param tautOnly \c true if only taut structures are to be
+         * enuemrated, or \c false if we should enumerate all vertices
+         * of the angle structure solution space.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         */
+        AngleStructures(Triangulation<3>& owner, bool tautOnly = false,
+            ProgressTracker* tracker = nullptr);
+
+        /**
          * Returns the triangulation on which these angle structures lie.
          *
          * The triangulation is also accessible via the packet tree as
@@ -195,33 +240,15 @@ class AngleStructures : public Packet {
         bool spansTaut() const;
 
         /**
-         * Enumerates all angle structures on the given triangulation.
-         * A list containing all vertices of the angle structure solution
-         * space will be returned.
+         * Deprecated routine to enumerate angle structures on a given
+         * triangulation.
          *
-         * The option is offered to find only taut structures (which are
-         * considerably faster to enumerate) instead of enumerating all
-         * vertex angle structures.  See the \a tautOnly argument below.
+         * This static routine is identical to calling the class
+         * constructor with the given arguments.
          *
-         * The angle structure list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this angle structure list, and must not
-         * change while this angle structure list remains in existence.
+         * See the class constructor for details on what the arguments mean.
          *
-         * If a progress tracker is passed, the angle structure
-         * enumeration will take place in a new thread and this routine
-         * will return immediately.  If the user cancels the operation
-         * from another thread, then the angle structure list will \e not
-         * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).  Regarding progress tracking,
-         * this routine will declare and work through a series of stages
-         * whose combined weights sum to 1; typically this means that the
-         * given tracker must not have been used before.
-         *
-         * If no progress tracker is passed, the enumeration will run
-         * in the current thread and this routine will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
+         * \deprecated Just call the AngleStructures constructor.
          *
          * @param owner the triangulation for which the vertex
          * angle structures will be enumerated.
@@ -230,14 +257,11 @@ class AngleStructures : public Packet {
          * of the angle structure solution space; this defaults to \c false.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the newly created angle structure list.  Note that if
-         * a progress tracker is passed then this list may not be completely
-         * filled when this routine returns.  If a progress tracker is
-         * passed and a new thread could not be started, this routine
-         * returns \c null (and no angle structure list is created).
+         * @return the newly created angle structure list.
          */
-        static AngleStructures* enumerate(Triangulation<3>& owner,
-            bool tautOnly = false, ProgressTracker* tracker = nullptr);
+        [[deprecated]] static AngleStructures* enumerate(
+            Triangulation<3>& owner, bool tautOnly = false,
+            ProgressTracker* tracker = nullptr);
 
         /**
          * A slower, alternative method to enumerate all taut angle structures
@@ -364,6 +388,11 @@ inline bool AngleStructures::spansTaut() const {
 
 inline bool AngleStructures::dependsOnParent() const {
     return true;
+}
+
+inline AngleStructures* AngleStructures::enumerate(Triangulation<3>& owner,
+        bool tautOnly, ProgressTracker* tracker) {
+    return new AngleStructures(owner, tautOnly, tracker);
 }
 
 inline AngleStructures::AngleStructures(bool tautOnly) :
