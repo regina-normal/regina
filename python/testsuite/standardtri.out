@@ -1,0 +1,1529 @@
+bkaajj:
+  IsoSig: bkaajj
+  Standard: L(4,1)
+  Manifold: L(4,1)
+  Layered lens space: L(4,1)
+    LST: 1 2 3
+    Twisted shut
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+bkaajn:
+  IsoSig: bkaajn
+  Standard: L(5,2)
+  Manifold: L(5,2)
+  Layered lens space: L(5,2)
+    LST: 1 2 3
+    Twisted shut
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+bkaagb:
+  IsoSig: bkaagb
+  Standard: C(1)
+  Manifold: S3
+bkaagj:
+  IsoSig: bkaagj
+  Standard: L(1,0)
+  Manifold: S3
+  Layered lens space: L(1,0)
+    LST: 1 2 3
+    Snapped shut
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+cMcabbjqw:
+  IsoSig: cMcabbjqw
+  Standard: L(7,2)
+  Manifold: L(7,2)
+  Layered lens space: L(7,2)
+    LST: 2 3 5
+    Twisted shut
+  Layered solid torus: LST(2,3,5)
+    Base tet: 0
+    Top tet: 1
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(1,3,4)
+    Base tet: 1
+    Top tet: 0
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+cMcabbjxr:
+  IsoSig: cMcabbjxr
+  Standard: L(5,1)
+  Manifold: L(5,1)
+  Layered lens space: L(5,1)
+    LST: 1 3 4
+    Twisted shut
+  Layered solid torus: LST(1,3,4)
+    Base tet: 0
+    Top tet: 1
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(1,3,4)
+    Base tet: 1
+    Top tet: 0
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+cMcabbjaj:
+  IsoSig: cMcabbjaj
+  Standard: L(0,1)
+  Manifold: S2 x S1
+  Layered lens space: L(0,1)
+    LST: 1 1 2
+    Twisted shut
+  Layered solid torus: LST(1,1,2)
+    Base tet: 0
+    Top tet: 1
+    Meridinal cuts: 1 1 2
+    Edges for cut 0: 3 2
+    Edges for cut 1: 5 -1
+    Edges for cut 2: 4 1
+  Layered solid torus: LST(1,1,2)
+    Base tet: 1
+    Top tet: 0
+    Meridinal cuts: 1 1 2
+    Edges for cut 0: 3 2
+    Edges for cut 1: 5 -1
+    Edges for cut 2: 4 1
+cMcabbjak:
+  IsoSig: cMcabbjak
+  Standard: L(3,1) (2)
+  Manifold: L(3,1)
+  Layered lens space: L(3,1) (2)
+    LST: 1 1 2
+    Twisted shut
+  Layered solid torus: LST(1,1,2)
+    Base tet: 0
+    Top tet: 1
+    Meridinal cuts: 1 1 2
+    Edges for cut 0: 3 2
+    Edges for cut 1: 5 -1
+    Edges for cut 2: 4 1
+  Layered solid torus: LST(1,1,2)
+    Base tet: 1
+    Top tet: 0
+    Meridinal cuts: 1 1 2
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 -1
+    Edges for cut 2: 3 2
+cMcabbjqs:
+  IsoSig: cMcabbjqs
+  Standard: L(8,3)
+  Manifold: L(8,3)
+  Layered lens space: L(8,3)
+    LST: 2 3 5
+    Twisted shut
+  Layered solid torus: LST(2,3,5)
+    Base tet: 0
+    Top tet: 1
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(2,3,5)
+    Base tet: 1
+    Top tet: 0
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+cMcabbgqw:
+  IsoSig: cMcabbgqw
+  Standard: L(2,1)
+  Manifold: RP3
+  Layered lens space: L(2,1)
+    LST: 1 3 4
+    Snapped shut
+  Layered solid torus: LST(1,3,4)
+    Base tet: 1
+    Top tet: 0
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+cMcabbgaj:
+  IsoSig: cMcabbgaj
+  Standard: L(3,1) (1)
+  Manifold: L(3,1)
+  Layered lens space: L(3,1) (1)
+    LST: 1 1 2
+    Snapped shut
+  Layered solid torus: LST(1,1,2)
+    Base tet: 1
+    Top tet: 0
+    Meridinal cuts: 1 1 2
+    Edges for cut 0: 3 2
+    Edges for cut 1: 5 -1
+    Edges for cut 2: 4 1
+cPcbbbaaa:
+  IsoSig: cPcbbbaaa
+  Standard: S3 (4-vtx)
+  Manifold: S3
+cPcbbbaai:
+  IsoSig: cPcbbbaai
+  Standard: L'(3,1)
+  Manifold: L(3,1)
+  L(3,1) pillow: L'(3,1)
+    Interior vertex: 1
+cPcbbbqxh:
+  IsoSig: cPcbbbqxh
+  Standard: C~(2)
+  Manifold: S3/Q8
+  Layered chain pair: C(1,1)
+    Chain lengths: 1 1
+cPcbbbajs:
+  IsoSig: cPcbbbajs
+  Standard: N(2)
+  Manifold: S2 x~ S1
+cPcbbbahh:
+  IsoSig: cPcbbbahh
+  Standard: C(2)
+  Manifold: RP3
+dLQbcbchhww:
+  IsoSig: dLQbcbchhww
+  Standard: L(12,5)
+  Manifold: L(12,5)
+  Layered lens space: L(12,5)
+    LST: 2 5 7
+    Twisted shut
+  Layered solid torus: LST(2,5,7)
+    Base tet: 1
+    Top tet: 2
+    Meridinal cuts: 2 5 7
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(2,5,7)
+    Base tet: 2
+    Top tet: 1
+    Meridinal cuts: 2 5 7
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+dLQbcbchxwn:
+  IsoSig: dLQbcbchxwn
+  Standard: L(13,5)
+  Manifold: L(13,5)
+  Layered lens space: L(13,5)
+    LST: 3 5 8
+    Twisted shut
+  Layered solid torus: LST(3,5,8)
+    Base tet: 1
+    Top tet: 2
+    Meridinal cuts: 3 5 8
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,5,8)
+    Base tet: 2
+    Top tet: 1
+    Meridinal cuts: 3 5 8
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+dLQbcbchhjw:
+  IsoSig: dLQbcbchhjw
+  Standard: L(9,2)
+  Manifold: L(9,2)
+  Layered lens space: L(9,2)
+    LST: 1 4 5
+    Twisted shut
+  Layered solid torus: LST(1,4,5)
+    Base tet: 1
+    Top tet: 2
+    Meridinal cuts: 1 4 5
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(2,5,7)
+    Base tet: 2
+    Top tet: 1
+    Meridinal cuts: 2 5 7
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+dLQbcbchxjn:
+  IsoSig: dLQbcbchxjn
+  Standard: L(11,3)
+  Manifold: L(11,3)
+  Layered lens space: L(11,3)
+    LST: 3 4 7
+    Twisted shut
+  Layered solid torus: LST(3,4,7)
+    Base tet: 1
+    Top tet: 2
+    Meridinal cuts: 3 4 7
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,5,8)
+    Base tet: 2
+    Top tet: 1
+    Meridinal cuts: 3 5 8
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+dLQbcbchhjs:
+  IsoSig: dLQbcbchhjs
+  Standard: L(6,1)
+  Manifold: L(6,1)
+  Layered lens space: L(6,1)
+    LST: 1 4 5
+    Twisted shut
+  Layered solid torus: LST(1,4,5)
+    Base tet: 1
+    Top tet: 2
+    Meridinal cuts: 1 4 5
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(1,4,5)
+    Base tet: 2
+    Top tet: 1
+    Meridinal cuts: 1 4 5
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+dLQbcbchxjj:
+  IsoSig: dLQbcbchxjj
+  Standard: L(10,3)
+  Manifold: L(10,3)
+  Layered lens space: L(10,3)
+    LST: 3 4 7
+    Twisted shut
+  Layered solid torus: LST(3,4,7)
+    Base tet: 1
+    Top tet: 2
+    Meridinal cuts: 3 4 7
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,4,7)
+    Base tet: 2
+    Top tet: 1
+    Meridinal cuts: 3 4 7
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+dLQbccchhrw:
+  IsoSig: dLQbccchhrw
+  Standard: C~(3)
+  Manifold: S3/Q12
+  Layered chain pair: C(1,2)
+    Chain lengths: 1 2
+eLAkbcbddhhwhr:
+  IsoSig: eLAkbcbddhhwhr
+  Standard: L(16,7)
+  Manifold: L(16,7)
+  Layered lens space: L(16,7)
+    LST: 2 7 9
+    Twisted shut
+  Layered solid torus: LST(2,7,9)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 2 7 9
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(2,7,9)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 2 7 9
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhhwqj:
+  IsoSig: eLAkbcbddhhwqj
+  Standard: L(19,7)
+  Manifold: L(19,7)
+  Layered lens space: L(19,7)
+    LST: 5 7 12
+    Twisted shut
+  Layered solid torus: LST(5,7,12)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 5 7 12
+    Edges for cut 0: 4 1
+    Edges for cut 1: 2 3
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,8,11)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 3 8 11
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhxwqs:
+  IsoSig: eLAkbcbddhxwqs
+  Standard: L(21,8)
+  Manifold: L(21,8)
+  Layered lens space: L(21,8)
+    LST: 5 8 13
+    Twisted shut
+  Layered solid torus: LST(5,8,13)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 5 8 13
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(5,8,13)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 5 8 13
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhhjhr:
+  IsoSig: eLAkbcbddhhjhr
+  Standard: L(11,2)
+  Manifold: L(11,2)
+  Layered lens space: L(11,2)
+    LST: 1 5 6
+    Twisted shut
+  Layered solid torus: LST(1,5,6)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 1 5 6
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(2,7,9)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 2 7 9
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhhjqj:
+  IsoSig: eLAkbcbddhhjqj
+  Standard: L(14,3)
+  Manifold: L(14,3)
+  Layered lens space: L(14,3)
+    LST: 4 5 9
+    Twisted shut
+  Layered solid torus: LST(4,5,9)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 4 5 9
+    Edges for cut 0: 4 1
+    Edges for cut 1: 2 3
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,8,11)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 3 8 11
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhhwqn:
+  IsoSig: eLAkbcbddhhwqn
+  Standard: L(17,5)
+  Manifold: L(17,5)
+  Layered lens space: L(17,5)
+    LST: 5 7 12
+    Twisted shut
+  Layered solid torus: LST(5,7,12)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 5 7 12
+    Edges for cut 0: 4 1
+    Edges for cut 1: 2 3
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,7,10)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 3 7 10
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhxjqs:
+  IsoSig: eLAkbcbddhxjqs
+  Standard: L(18,5)
+  Manifold: L(18,5)
+  Layered lens space: L(18,5)
+    LST: 4 7 11
+    Twisted shut
+  Layered solid torus: LST(4,7,11)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 4 7 11
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(5,8,13)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 5 8 13
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhhjhk:
+  IsoSig: eLAkbcbddhhjhk
+  Standard: L(7,1)
+  Manifold: L(7,1)
+  Layered lens space: L(7,1)
+    LST: 1 5 6
+    Twisted shut
+  Layered solid torus: LST(1,5,6)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 1 5 6
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(1,5,6)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 1 5 6
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhhjqn:
+  IsoSig: eLAkbcbddhhjqn
+  Standard: L(13,3)
+  Manifold: L(13,3)
+  Layered lens space: L(13,3)
+    LST: 4 5 9
+    Twisted shut
+  Layered solid torus: LST(4,5,9)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 4 5 9
+    Edges for cut 0: 4 1
+    Edges for cut 1: 2 3
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,7,10)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 3 7 10
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbcbddhxjqw:
+  IsoSig: eLAkbcbddhxjqw
+  Standard: L(15,4)
+  Manifold: L(15,4)
+  Layered lens space: L(15,4)
+    LST: 4 7 11
+    Twisted shut
+  Layered solid torus: LST(4,7,11)
+    Base tet: 1
+    Top tet: 3
+    Meridinal cuts: 4 7 11
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(4,7,11)
+    Base tet: 3
+    Top tet: 1
+    Meridinal cuts: 4 7 11
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+eLAkbccddemkiw:
+  IsoSig: eLAkbccddemkiw
+  Standard: A(3,-1)
+  Manifold: S3/Q12
+  Augmented triangular solid torus: A(3,-1)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+eLAkbccddemker:
+  IsoSig: eLAkbccddemker
+  Standard: A(1,-3)
+  Manifold: L(12,5)
+  Augmented triangular solid torus: A(1,-3)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+eLAkbccddrrhrr:
+  IsoSig: eLAkbccddrrhrr
+  Standard: Blocked SFS [Tri, LST(1, 2, 3)]
+  Manifold: SFS [RP2: (3,2)]
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+eLAkbccddemkij:
+  IsoSig: eLAkbccddemkij
+  Standard: A(3,-2)
+  Manifold: S3/D24
+  Augmented triangular solid torus: A(3,-2)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+eLAkbccddemken:
+  IsoSig: eLAkbccddemken
+  Standard: A(2,-3)
+  Manifold: S3/Q8 x Z3
+  Augmented triangular solid torus: A(2,-3)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+eLAkbccddrrhrn:
+  IsoSig: eLAkbccddrrhrn
+  Standard: Blocked SFS [Tri, LST(1, 2, 3)]
+  Manifold: SFS [RP2: (3,1)]
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+eLMkbcdddhhhqx:
+  IsoSig: eLMkbcdddhhhqx
+  Standard: C~(4)
+  Manifold: S3/Q16
+  Layered chain pair: C(1,3)
+    Chain lengths: 1 3
+eLPkbcdddhrrnk:
+  IsoSig: eLPkbcdddhrrnk
+  Standard: C(2,2)
+  Manifold: S3/P24
+  Layered chain pair: C(2,2)
+    Chain lengths: 2 2
+eLPkbcddddrwos:
+  IsoSig: eLPkbcddddrwos
+  Standard: J(1 | 2,-1)
+  Manifold: S3/D24
+  Augmented triangular solid torus: J(1 | 2,-1)
+    Core tets: 0 1 3
+    Attached: layered chain + layered solid tori
+    Chain type: major
+fLAMcbcbdeehhwhhw:
+  IsoSig: fLAMcbcbdeehhwhhw
+  Standard: L(20,9)
+  Manifold: L(20,9)
+  Layered lens space: L(20,9)
+    LST: 2 9 11
+    Twisted shut
+  Layered solid torus: LST(2,9,11)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 2 9 11
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(2,9,11)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 2 9 11
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhwqqs:
+  IsoSig: fLAMcbcbdeehhwqqs
+  Standard: L(29,12)
+  Manifold: L(29,12)
+  Layered lens space: L(29,12)
+    LST: 5 12 17
+    Twisted shut
+  Layered solid torus: LST(5,12,17)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 5 12 17
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(5,12,17)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 5 12 17
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhwhxn:
+  IsoSig: fLAMcbcbdeehhwhxn
+  Standard: L(25,9)
+  Manifold: L(25,9)
+  Layered lens space: L(25,9)
+    LST: 7 9 16
+    Twisted shut
+  Layered solid torus: LST(7,9,16)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 7 9 16
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,11,14)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 3 11 14
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehxwxhw:
+  IsoSig: fLAMcbcbdeehxwxhw
+  Standard: L(30,11)
+  Manifold: L(30,11)
+  Layered lens space: L(30,11)
+    LST: 8 11 19
+    Twisted shut
+  Layered solid torus: LST(8,11,19)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 8 11 19
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(8,11,19)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 8 11 19
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhwqxk:
+  IsoSig: fLAMcbcbdeehhwqxk
+  Standard: L(31,12)
+  Manifold: L(31,12)
+  Layered lens space: L(31,12)
+    LST: 7 12 19
+    Twisted shut
+  Layered solid torus: LST(7,12,19)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 7 12 19
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(5,13,18)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 5 13 18
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehxwqhr:
+  IsoSig: fLAMcbcbdeehxwqhr
+  Standard: L(34,13)
+  Manifold: L(34,13)
+  Layered lens space: L(34,13)
+    LST: 8 13 21
+    Twisted shut
+  Layered solid torus: LST(8,13,21)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 8 13 21
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(8,13,21)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 8 13 21
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhjhhw:
+  IsoSig: fLAMcbcbdeehhjhhw
+  Standard: L(13,2)
+  Manifold: L(13,2)
+  Layered lens space: L(13,2)
+    LST: 1 6 7
+    Twisted shut
+  Layered solid torus: LST(1,6,7)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 1 6 7
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(2,9,11)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 2 9 11
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhjhxn:
+  IsoSig: fLAMcbcbdeehhjhxn
+  Standard: L(17,3)
+  Manifold: L(17,3)
+  Layered lens space: L(17,3)
+    LST: 5 6 11
+    Twisted shut
+  Layered solid torus: LST(5,6,11)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 5 6 11
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,11,14)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 3 11 14
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhjqqs:
+  IsoSig: fLAMcbcbdeehhjqqs
+  Standard: L(22,5)
+  Manifold: L(22,5)
+  Layered lens space: L(22,5)
+    LST: 4 9 13
+    Twisted shut
+  Layered solid torus: LST(4,9,13)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 4 9 13
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(5,12,17)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 5 12 17
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhjqxk:
+  IsoSig: fLAMcbcbdeehhjqxk
+  Standard: L(23,5)
+  Manifold: L(23,5)
+  Layered lens space: L(23,5)
+    LST: 5 9 14
+    Twisted shut
+  Layered solid torus: LST(5,9,14)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 5 9 14
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(5,13,18)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 5 13 18
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhwhxj:
+  IsoSig: fLAMcbcbdeehhwhxj
+  Standard: L(23,7)
+  Manifold: L(23,7)
+  Layered lens space: L(23,7)
+    LST: 7 9 16
+    Twisted shut
+  Layered solid torus: LST(7,9,16)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 7 9 16
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,10,13)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 3 10 13
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehxjxhw:
+  IsoSig: fLAMcbcbdeehxjxhw
+  Standard: L(27,8)
+  Manifold: L(27,8)
+  Layered lens space: L(27,8)
+    LST: 7 10 17
+    Twisted shut
+  Layered solid torus: LST(7,10,17)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 7 10 17
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(8,11,19)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 8 11 19
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhwqxr:
+  IsoSig: fLAMcbcbdeehhwqxr
+  Standard: L(26,7)
+  Manifold: L(26,7)
+  Layered lens space: L(26,7)
+    LST: 7 12 19
+    Twisted shut
+  Layered solid torus: LST(7,12,19)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 7 12 19
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(4,11,15)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 4 11 15
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehxjqhr:
+  IsoSig: fLAMcbcbdeehxjqhr
+  Standard: L(29,8)
+  Manifold: L(29,8)
+  Layered lens space: L(29,8)
+    LST: 7 11 18
+    Twisted shut
+  Layered solid torus: LST(7,11,18)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 7 11 18
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(8,13,21)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 8 13 21
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhjhhs:
+  IsoSig: fLAMcbcbdeehhjhhs
+  Standard: L(8,1)
+  Manifold: L(8,1)
+  Layered lens space: L(8,1)
+    LST: 1 6 7
+    Twisted shut
+  Layered solid torus: LST(1,6,7)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 1 6 7
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(1,6,7)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 1 6 7
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhjqqw:
+  IsoSig: fLAMcbcbdeehhjqqw
+  Standard: L(17,4)
+  Manifold: L(17,4)
+  Layered lens space: L(17,4)
+    LST: 4 9 13
+    Twisted shut
+  Layered solid torus: LST(4,9,13)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 4 9 13
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(4,9,13)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 4 9 13
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhjhxj:
+  IsoSig: fLAMcbcbdeehhjhxj
+  Standard: L(16,3)
+  Manifold: L(16,3)
+  Layered lens space: L(16,3)
+    LST: 5 6 11
+    Twisted shut
+  Layered solid torus: LST(5,6,11)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 5 6 11
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+  Layered solid torus: LST(3,10,13)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 3 10 13
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehxjxhs:
+  IsoSig: fLAMcbcbdeehxjxhs
+  Standard: L(24,7)
+  Manifold: L(24,7)
+  Layered lens space: L(24,7)
+    LST: 7 10 17
+    Twisted shut
+  Layered solid torus: LST(7,10,17)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 7 10 17
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+  Layered solid torus: LST(7,10,17)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 7 10 17
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehhjqxr:
+  IsoSig: fLAMcbcbdeehhjqxr
+  Standard: L(19,4)
+  Manifold: L(19,4)
+  Layered lens space: L(19,4)
+    LST: 5 9 14
+    Twisted shut
+  Layered solid torus: LST(5,9,14)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 5 9 14
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(4,11,15)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 4 11 15
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbcbdeehxjqhk:
+  IsoSig: fLAMcbcbdeehxjqhk
+  Standard: L(25,7)
+  Manifold: L(25,7)
+  Layered lens space: L(25,7)
+    LST: 7 11 18
+    Twisted shut
+  Layered solid torus: LST(7,11,18)
+    Base tet: 1
+    Top tet: 4
+    Meridinal cuts: 7 11 18
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+  Layered solid torus: LST(7,11,18)
+    Base tet: 4
+    Top tet: 1
+    Meridinal cuts: 7 11 18
+    Edges for cut 0: 5 0
+    Edges for cut 1: 1 4
+    Edges for cut 2: 2 -1
+fLAMcbccdeeemkihr:
+  IsoSig: fLAMcbccdeeemkihr
+  Standard: A(5,-3)
+  Manifold: S3/Q20 x Z3
+  Augmented triangular solid torus: A(5,-3)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(2,3,5)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+fLAMcbccdeeemkehw:
+  IsoSig: fLAMcbccdeeemkehw
+  Standard: A(3,-5)
+  Manifold: S3/Q12 x Z5
+  Augmented triangular solid torus: A(3,-5)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(2,3,5)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+fLAMcbccdeerrhrhw:
+  IsoSig: fLAMcbccdeerrhrhw
+  Standard: Blocked SFS [Tri, LST(2, 3, 5)]
+  Manifold: SFS [RP2: (5,2)]
+  Layered solid torus: LST(2,3,5)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+fLAMcbccdeeemkiqj:
+  IsoSig: fLAMcbccdeeemkiqj
+  Standard: A(5,-2)
+  Manifold: S3/D40
+  Augmented triangular solid torus: A(5,-2)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(2,3,5)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+fLAMcbccdeeemkexn:
+  IsoSig: fLAMcbccdeeemkexn
+  Standard: A(2,-5)
+  Manifold: S3/Q8 x Z5
+  Augmented triangular solid torus: A(2,-5)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(2,3,5)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+fLAMcbccdeerrhrxn:
+  IsoSig: fLAMcbccdeerrhrxn
+  Standard: Blocked SFS [Tri, LST(2, 3, 5)]
+  Manifold: SFS [RP2: (5,3)]
+  Layered solid torus: LST(2,3,5)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 2 3 5
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+fLAMcbccdeeemkihn:
+  IsoSig: fLAMcbccdeeemkihn
+  Standard: A(4,-3)
+  Manifold: S3/Q16 x Z3
+  Augmented triangular solid torus: A(4,-3)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,3,4)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 5 0
+    Edges for cut 1: 4 1
+    Edges for cut 2: 3 -1
+fLAMcbccdeeemkehj:
+  IsoSig: fLAMcbccdeeemkehj
+  Standard: A(3,-4)
+  Manifold: S3/D48
+  Augmented triangular solid torus: A(3,-4)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,3,4)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+fLAMcbccdeerrhrhj:
+  IsoSig: fLAMcbccdeerrhrhj
+  Standard: Blocked SFS [Tri, LST(1, 3, 4)]
+  Manifold: SFS [RP2: (4,1)]
+  Layered solid torus: LST(1,3,4)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 5 0
+    Edges for cut 1: 2 3
+    Edges for cut 2: 1 -1
+fLAMcbccdeeemkiqn:
+  IsoSig: fLAMcbccdeeemkiqn
+  Standard: A(4,-1)
+  Manifold: S3/Q16
+  Augmented triangular solid torus: A(4,-1)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,3,4)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 4 1
+    Edges for cut 1: 5 0
+    Edges for cut 2: 3 -1
+fLAMcbccdeeemkexj:
+  IsoSig: fLAMcbccdeeemkexj
+  Standard: A(1,-4)
+  Manifold: L(16,7)
+  Augmented triangular solid torus: A(1,-4)
+    Core tets: 2 1 0
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,3,4)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+fLAMcbccdeerrhrxj:
+  IsoSig: fLAMcbccdeerrhrxj
+  Standard: Blocked SFS [Tri, LST(1, 3, 4)]
+  Manifold: SFS [RP2: (4,3)]
+  Layered solid torus: LST(1,3,4)
+    Base tet: 4
+    Top tet: 3
+    Meridinal cuts: 1 3 4
+    Edges for cut 0: 2 3
+    Edges for cut 1: 5 0
+    Edges for cut 2: 1 -1
+fLLQcacddeenkaikr:
+  IsoSig: fLLQcacddeenkaikr
+  Standard: A(1,-3 | 3,-2)
+  Manifold: L(19,7)
+  Augmented triangular solid torus: A(1,-3 | 3,-2)
+    Core tets: 1 2 3
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 4
+    Top tet: 4
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 5 0
+    Edges for cut 2: 4 -1
+fLLQcacddeejkaink:
+  IsoSig: fLLQcacddeejkaink
+  Standard: A(1,-3 | 2,-3)
+  Manifold: L(16,7)
+  Augmented triangular solid torus: A(1,-3 | 2,-3)
+    Core tets: 1 2 3
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 4
+    Top tet: 4
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 2 3
+    Edges for cut 2: 0 -1
+fLLQcaceeedjkuxkn:
+  IsoSig: fLLQcaceeedjkuxkn
+  Standard: A(3,-2 | 3,-1)
+  Manifold: S3/P'72
+  Augmented triangular solid torus: A(3,-2 | 3,-1)
+    Core tets: 1 2 4
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+fLLQcacddeejkaikk:
+  IsoSig: fLLQcacddeejkaikk
+  Standard: A(2,-3 | 3,-1)
+  Manifold: S3/D48
+  Augmented triangular solid torus: A(2,-3 | 3,-1)
+    Core tets: 1 2 3
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 4
+    Top tet: 4
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 5 0
+    Edges for cut 1: 3 2
+    Edges for cut 2: 4 -1
+fLLQcaceeedjkuxkj:
+  IsoSig: fLLQcaceeedjkuxkj
+  Standard: A(3,-2 | 3,-2)
+  Manifold: S3/P24 x Z5
+  Augmented triangular solid torus: A(3,-2 | 3,-2)
+    Core tets: 1 2 4
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+fLLQcacddeejkaikr:
+  IsoSig: fLLQcacddeejkaikr
+  Standard: A(2,-3 | 3,-2)
+  Manifold: S3/Q12 x Z5
+  Augmented triangular solid torus: A(2,-3 | 3,-2)
+    Core tets: 1 2 3
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 4
+    Top tet: 4
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 5 0
+    Edges for cut 2: 4 -1
+fLLQcacddeejkainj:
+  IsoSig: fLLQcacddeejkainj
+  Standard: A(2,-3 | 2,-3)
+  Manifold: S3/Q8 x Z5
+  Augmented triangular solid torus: A(2,-3 | 2,-3)
+    Core tets: 1 2 3
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 4
+    Top tet: 4
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 2 3
+    Edges for cut 1: 4 1
+    Edges for cut 2: 0 -1
+fLLQcacddeenkaink:
+  IsoSig: fLLQcacddeenkaink
+  Standard: A(1,-3 | 1,-3)
+  Manifold: L(11,2)
+  Augmented triangular solid torus: A(1,-3 | 1,-3)
+    Core tets: 1 2 3
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 4
+    Top tet: 4
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 2 3
+    Edges for cut 2: 0 -1
+fLLQcaceeednkuxkn:
+  IsoSig: fLLQcaceeednkuxkn
+  Standard: A(3,-1 | 3,-1)
+  Manifold: S3/P24
+  Augmented triangular solid torus: A(3,-1 | 3,-1)
+    Core tets: 1 2 4
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 3
+    Top tet: 3
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+fLLQcacddeenkaikk:
+  IsoSig: fLLQcacddeenkaikk
+  Standard: A(1,-3 | 3,-1)
+  Manifold: L(17,5)
+  Augmented triangular solid torus: A(1,-3 | 3,-1)
+    Core tets: 1 2 3
+    Attached: 3 layered solid tori
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+  Layered solid torus: LST(1,2,3)
+    Base tet: 4
+    Top tet: 4
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 5 0
+    Edges for cut 1: 3 2
+    Edges for cut 2: 4 -1
+fLLQcacdeeenkqxvn:
+  IsoSig: fLLQcacdeeenkqxvn
+  Standard: J(1 | 3,-1)
+  Manifold: S3/Q16 x Z3
+  Augmented triangular solid torus: J(1 | 3,-1)
+    Core tets: 1 2 4
+    Attached: layered chain + layered solid tori
+    Chain type: major
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+fLLQcacdeeenkaqnv:
+  IsoSig: fLLQcacdeeenkaqnv
+  Standard: J(1 | 1,-3)
+  Manifold: S3/Q16
+  Augmented triangular solid torus: J(1 | 1,-3)
+    Core tets: 1 2 3
+    Attached: layered chain + layered solid tori
+    Chain type: major
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 4 1
+    Edges for cut 1: 3 2
+    Edges for cut 2: 5 -1
+fLLQcacdeeejkqxvn:
+  IsoSig: fLLQcacdeeejkqxvn
+  Standard: J(1 | 3,-2)
+  Manifold: S3/Q20 x Z3
+  Augmented triangular solid torus: J(1 | 3,-2)
+    Core tets: 1 2 4
+    Attached: layered chain + layered solid tori
+    Chain type: major
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+fLLQcacdeeejkaqnv:
+  IsoSig: fLLQcacdeeejkaqnv
+  Standard: J(1 | 2,-3)
+  Manifold: S3/D40
+  Augmented triangular solid torus: J(1 | 2,-3)
+    Core tets: 1 2 3
+    Attached: layered chain + layered solid tori
+    Chain type: major
+  Layered solid torus: LST(1,2,3)
+    Base tet: 0
+    Top tet: 0
+    Meridinal cuts: 1 2 3
+    Edges for cut 0: 3 2
+    Edges for cut 1: 4 1
+    Edges for cut 2: 5 -1
+fLMPcbcdeeehhhhwr:
+  IsoSig: fLMPcbcdeeehhhhwr
+  Standard: C~(5)
+  Manifold: S3/Q20
+  Layered chain pair: C(1,4)
+    Chain lengths: 1 4
+fLLQcbeddeehhnkxx:
+  IsoSig: fLLQcbeddeehhnkxx
+  Standard: C(2,3)
+  Manifold: S3/P48
+  Layered chain pair: C(2,3)
+    Chain lengths: 2 3
+fLLQcbededexxnxwx:
+  IsoSig: fLLQcbededexxnxwx
+fLLQcbededexxrxwx:
+  IsoSig: fLLQcbededexxrxwx
+fLLQcbeddeehhokum:
+  IsoSig: fLLQcbeddeehhokum
+  Standard: J(2 | 2,-1)
+  Manifold: S3/P'72
+  Augmented triangular solid torus: J(2 | 2,-1)
+    Core tets: 4 2 3
+    Attached: layered chain + layered solid tori
+    Chain type: major
+fLLQcbcdeeehwkiiq:
+  IsoSig: fLLQcbcdeeehwkiiq
+  Standard: X(2 | 2,-1)
+  Manifold: S3/D40
+  Augmented triangular solid torus: X(2 | 2,-1)
+    Core tets: 2 4 3
+    Attached: layered chain + layered solid tori
+    Chain type: axis
+fvPQcdecedekrsnrs:
+  IsoSig: fvPQcdecedekrsnrs
+  Standard: P(0)
+  Manifold: S3/P120
+fvPQcceddeerrnskr:
+  IsoSig: fvPQcceddeerrnskr
+  Standard: P'(0)
+  Manifold: S3/P48

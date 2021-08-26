@@ -50,29 +50,67 @@ def describe(t, name):
 	# We assume the triangulation is connected.
 	c = t.component(0)
 
+	sub = AugTriSolidTorus.recognise(c)
+	if sub:
+		print(prefix(1) + 'Augmented triangular solid torus: ' + sub.name())
+		core = sub.core()
+		print(prefix(2) + 'Core tets:', core.tetrahedron(0).index(),
+			core.tetrahedron(1).index(), core.tetrahedron(2).index())
+		if sub.hasLayeredChain():
+			print(prefix(2) + 'Attached: layered chain + layered solid tori')
+			if sub.chainType() == AugTriSolidTorus.CHAIN_MAJOR:
+				print(prefix(2) + 'Chain type: major')
+			elif sub.chainType() == AugTriSolidTorus.CHAIN_AXIS:
+				print(prefix(2) + 'Chain type: axis')
+			else:
+				print(prefix(2) + 'Chain type: unknown')
+		else:
+			print(prefix(2) + 'Attached: 3 layered solid tori')
+
+	sub = L31Pillow.recognise(c)
+	if sub:
+		print(prefix(1) + 'L(3,1) pillow: ' + sub.name())
+		print(prefix(2) + 'Interior vertex:',
+			sub.tetrahedron(0).vertex(sub.interiorVertex(0)).index())
+
 	sub = LayeredChainPair.recognise(c)
 	if sub:
 		print(prefix(1) + 'Layered chain pair: ' + sub.name())
-		print(prefix(2) + 'Chain lengths:', sub.chain(0).index(), sub.chain(1).index())
+		print(prefix(2) + 'Chain lengths:',
+			sub.chain(0).index(), sub.chain(1).index())
+
 	sub = LayeredLensSpace.recognise(c)
 	if sub:
 		print(prefix(1) + 'Layered lens space: ' + sub.name())
 		torus = sub.torus()
-		print(prefix(2) + 'LST:', torus.meridinalCuts(0), torus.meridinalCuts(1), torus.meridinalCuts(2))
+		print(prefix(2) + 'LST:', torus.meridinalCuts(0),
+			torus.meridinalCuts(1), torus.meridinalCuts(2))
 		if sub.isSnapped():
 			print(prefix(2) + 'Snapped shut')
 		else:
 			print(prefix(2) + 'Twisted shut')
-	# findAugTriSolidTori
-	# findL31Pillows
-	# findLayeredChainPairs
-	# findLayeredLensSpaces
-	# findLayeredLoops
-	# findPlugTriSolidTori
-	# findBlockedTriangulations
-	# findPillowSpheres
-	# findSnappedSpheres
-	# findLayeredSolidTori
+
+	# TODO: findLayeredLoops
+	# TODO: findPlugTriSolidTori
+	# TODO: findBlockedTriangulations
+	# TODO: findPillowSpheres
+	# TODO: findSnappedSpheres
+
+	for tet in t.tetrahedra():
+		sub = LayeredSolidTorus.recogniseFromBase(tet)
+		if sub:
+			print(prefix(1) + 'Layered solid torus: ' + sub.name())
+			print(prefix(2) + 'Base tet:', sub.base().index())
+			print(prefix(2) + 'Top tet:', sub.topLevel().index())
+			print(prefix(2) + 'Meridinal cuts:', sub.meridinalCuts(0),
+				sub.meridinalCuts(1), sub.meridinalCuts(2))
+			print(prefix(2) + 'Edges for cut 0:',
+				sub.topEdge(0, 0), sub.topEdge(0, 1))
+			print(prefix(2) + 'Edges for cut 1:',
+				sub.topEdge(1, 0), sub.topEdge(1, 1))
+			print(prefix(2) + 'Edges for cut 2:',
+				sub.topEdge(2, 0), sub.topEdge(2, 1))
+
 	# findSnappedBalls
 	# findSpiralSolidTori
 
