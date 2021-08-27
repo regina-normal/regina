@@ -348,6 +348,92 @@ t6 = [ 'gLALQbcbefffxxnnmxm', 'gLALQbcbefffxxnndxd', 'gLALQbcbefffxxnnnxn',
 	'gvLQQcdefeffffomfum', 'gvLQQcdefeffffomfhm', 'gvLQQcdfeeffjjassaa',
 	'gvLQQcdefeffdwnplhe', 'gvLQQcdefeffnjndspx', 'gvLQQcedffefvksidsi' ]
 
+# The following isosigs are hand-picked from the non-orientable census with
+# 7 and 8 tetrahedra, to collect blocked SFS pairs, other more exotic
+# block types and manifolds, and pillow 2-spheres:
+
+t7 = [ 'hLALAkbcceffggrrhutwun', 'hLALAkbcceffggrrhutwdk',
+	'hLAwPkbccdgfggemkijjjq', 'hLAwMkbccdfgggemkiwrwa',
+	'hLAwPkbccdgfggrrhrnnnx', 'hLAwMkbccdfgggrrhrrwar',
+	'hLAwMkbccdfgggrrbrqwar', 'hLALPkbccefgggrrhuwrfs',
+	'hLALPkbccefgggrrhurgsf', 'hLAvQkbccefgggrrhhgrwb',
+	'hLLAPkbedegfggjjhqjxox', 'hLLAPkbedegfggjjjqjsja',
+	'hLvAQkbefegfgghaxqahha', 'hLvAQkbefegfggjajqassa',
+	'hLvAQkbefegfggjajqashf', 'hvLPQkcdefggfgqhhvvaxq',
+	'hvLPQkcdefggfgqhhxaaxq', 'hvLPQkcdefgfggqqjqqjqq',
+	'hvLPQkcdefgfggqqxwrrrq', 'hvLPQkcdefgfggqqxqqxqq',
+	'hvLPQkcdefgfggdeiqqxqp', 'hvLPQkcedfggfgnnnvvaxn',
+	'hvLPQkcdefggfgtssdjkkw', 'hvLPQkcedfggfgpnnvvawn',
+	'hvLPQkcdefgfggffxqqjqo', 'hvLPQkcedfgfggnnkffeiw',
+	'hvLPQkcedfgfggnnkrweiw', 'hvLPQkcedfgfggwwrwrrrr',
+	'hvLPQkcedfgfggwwrffsfk', 'hvLPQkcedfgfggnpkkdrid',
+	'hvLAQkcdfegfggjqajpmpt', 'hvLAQkcdfegfggjqajooof',
+	'hvLAQkcdfegfggjdajpmpd', 'hvLAQkcdegffggttncseas' ]
+
+t8 = [ 'iLALAMcbcceffghhrrhutwuxn', 'iLALAMcbccfefghhrrhuhwhhw',
+	'iLALMMcbcceffghhrrhuestxk', 'iLALAMcbcceffghhrrhutwdxk',
+	'iLALAMcbccfefghhrrhuhwahr', 'iLALMMcbcceffghhrrhuesexn',
+	'iLALAMcbcceffghhrrhutwdqj', 'iLALAMcbccfefghhrrhuhwaqj',
+	'iLALMMcbcceffghhrrhuesehw', 'iLALAMcbcceffghhrrhutwuhw',
+	'iLALAMcbccfefghhrrhuhwhxn', 'iLALMMcbcceffghhrrhuestqs',
+	'iLALAMcbcceffghhrrhutwuxj', 'iLALAMcbccfefghhrrhuhwhhj',
+	'iLALMMcbcceffghhrrhuestxr', 'iLALAMcbcceffghhrrhutwdxr',
+	'iLALAMcbccfefghhrrhuhwahk', 'iLALMMcbcceffghhrrhuesexj',
+	'iLALAMcbcceffghhrrhutwdqw', 'iLALAMcbccfefghhrrhuhwaqn',
+	'iLALMMcbcceffghhrrhuesehs', 'iLALAMcbcceffghhrrhutwuhj',
+	'iLALAMcbccfefghhrrhuhwhxj', 'iLALMMcbcceffghhrrhuestqw',
+	'iLAwLQcbccdfgghhrrhrntxnk', 'iLAwMMcbccdfgghhrrhwwlukr',
+	'iLAwLQcbccdfhhghrrhrnamnn', 'iLAwMMcbccdfgghhrrhrriarr',
+	'iLAwLQcbccdfgghhrrhrntxkk', 'iLAwMMcbccdfgghhrrhwwlucw',
+	'iLAwLQcbccdfhhhgrrhrnamkn', 'iLAwMMcbccdfgghhrrhrriaww',
+	'iLAwLQcbccdfgghhrrhrntxkr', 'iLAwMMcbccdfgghhrrhwwlucs',
+	'iLAwLQcbccdfhhhgrrhrnamkj', 'iLAwMMcbccdfgghhrrhrriaws',
+	'iLAwLQcbccdfgghhrrhrntxnj', 'iLAwMMcbccdfgghhrrhwwlukn',
+	'iLAwLQcbccdfhhghrrhrnamrn', 'iLAwMMcbccdfgghhrrhrriarn',
+	'iLALzQcbccefhgghrrhuwuswr', 'iLAvAQcbccefghghrrhhwwhsn',
+	'iLALLQcbcceggfhhrrhugsnuj', 'iLALzQcbccefhgghrrhuwdjjj',
+	'iLAvAQcbccefghghrrhhwranw', 'iLALLQcbccegfghhrrhugjjdr',
+	'iLALzQcbccefhgghrrhuwdswk', 'iLAvAQcbccefghghrrhhwrhrn',
+	'iLALLQcbccegfghhrrhugjjuj', 'iLALzQcbccefhgghrrhuwdssj',
+	'iLAvAQcbccefghghrrhhwrhnr', 'iLALLQcbccegfghhrrhugwjun',
+	'iLALzQcbccefhgghrrhuwussr', 'iLAvAQcbccefghghrrhhwwhsr',
+	'iLALLQcbcceggfhhrrhugsjuj', 'iLALzQcbccefhgghrrhuwdjkj',
+	'iLAvAQcbccefghghrrhhwrans', 'iLALLQcbccegfghhrrhugwjdr',
+	'iLALzQcbccefhgghrrhuwdswj', 'iLAvAQcbccefghghrrhhwrhnn',
+	'iLALLQcbccegfghhrrhugwjuj', 'iLALzQcbccefhgghrrhuwdjjk',
+	'iLAvAQcbccefghghrrhhwrarw', 'iLALLQcbccegfghhrrhugjjdk',
+	'iLALzQcbccefhgghrrhuwdssk', 'iLAvAQcbccefghghrrhhwrhrr',
+	'iLALLQcbccegfghhrrhugjjun', 'iLALzQcbccefhgghrrhuwussn',
+	'iLAvAQcbccefghghrrhhwwhwr', 'iLALLQcbcceggfhhrrhugsjun',
+	'iLLALQcadddhhghgjsajsaajn', 'iLLALQcadddhhghgjsajsaqjw',
+	'iLAMLPcbccdeghhhemkehwrwa', 'iLAMLPcbccdeghhhrrhwqjpqp',
+	'iLAMLPcbccdeghhhlpkuhrwar', 'iLAMLPcbccdeghhhemkexjjqj',
+	'iLAMLPcbccdeghhhemkihrwar', 'iLAMLPcbccdeghhhlpklqwrwa',
+	'iLAMLPcbccdeghhhemkiqjjqj', 'iLAMLPcbccdeghhhlpklxrrhr',
+	'iLAMLPcbccdeghhhrrhrhwrwa', 'iLAMLPcbccdeghhhrrhwqjjqj',
+	'iLAMLPcbccdeghhhrrhrxjjqj', 'iLAMLPcbccdeghhhrrbrhxrwa',
+	'iLAwLQcbccdfhghhrrhrnhxnv', 'iLAwLQcbccdfhghhrrhrnahvn',
+	'iLAwwQcbccdfghhhrrhrrxhgw', 'iLAwwQcbccdfghhhrrhrraxgw',
+	'iLALzQcbccefhghhrrhuwusqx', 'iLALLQcbccegghhhrrhugstiu',
+	'iLAvAQcbccefghhhrrhhwwhml', 'iLLLQPccegffghhhkknknknka',
+	'iLLLQPccegffghhhkknqhknna', 'iLLvQQccdfeghghhhsaqllqxr',
+	'iLLvQQccdfehghghhsaquuahr', 'iLLvQQccdfeghghhhsaqxaiin',
+	'iLLvQQccdfeghhghhsaqlllmn', 'iLLvQQccdfeghhghhsawlllsn',
+	'iLLvQQccdfeghghhhsawvvodn', 'iLLvQQccdfeghhghhsanqqesn',
+	'iLLvQQccdfeghhghhsaqptttr', 'iLLvQQccdfehgghhhsaqeiiir',
+	'iLLvQQccdfeghhghqxaqhhhxh', 'iLLvQQccdfehgghhqxaqaaaqh',
+	'iLLvQQccdfeghhghqsaqhhhxj', 'iLLLMQcceefghghhkkaakqqvq',
+	'iLLLMQcceefghghhjjaajedve', 'iLvMQPcbefgfehhhjaaaaaaas' ]
+
+# The following isosigs are hand-picked from the 9-tetrahedron census to
+# pick up blocked SFS triples:
+
+t9 = [ 'jLALMLQbcceffhiiiemkbtilubc', 'jLALALQbccfefihiilpkusudego',
+	'jLALALQbccfefihiilpkusuuero' ]
+
+# TODO: We still have nothing in this list that contains a snapped 2-sphere
+# (mainly because such things do not appear in the census).
+
 for i in t1:
 	describeSig(i)
 for i in t2:
@@ -359,4 +445,10 @@ for i in t4:
 for i in t5:
 	describeSig(i)
 for i in t6:
+	describeSig(i)
+for i in t7:
+	describeSig(i)
+for i in t8:
+	describeSig(i)
+for i in t9:
 	describeSig(i)
