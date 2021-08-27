@@ -122,7 +122,7 @@ std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
     Matrix2 matchingReln[2];
     bool found = SatRegion::find(*tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
-        if (r->numberOfBoundaryAnnuli() != 2)
+        if (r->countBoundaryAnnuli() != 2)
             return false;
 
         // Insist on the boundary annuli being disjoint and untwisted.
@@ -237,7 +237,7 @@ std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
                 otherSide.switchSides();
 
                 if ((end[e] = SatRegion::beginsRegion(otherSide, usedTets))) {
-                    if (end[e]->numberOfBoundaryAnnuli() == 1) {
+                    if (end[e]->countBoundaryAnnuli() == 1) {
                         // Got it!
                         // Do a final conversion from annulus first triangle
                         // markings 01/02 and move onto the next end space.

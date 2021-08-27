@@ -173,15 +173,24 @@ class SatBlock : public Output<SatBlock> {
          *
          * @return the number of boundary annuli.
          */
-        unsigned nAnnuli() const;
+        unsigned countAnnuli() const;
+        /**
+         * Deprecated routine that returns the number of annuli on the
+         * boundary of this saturated block.
+         *
+         * \deprecated This routine has been renamed countAnnuli().
+         *
+         * @return the number of boundary annuli.
+         */
+        [[deprecated]] unsigned nAnnuli() const;
 
         /**
          * Returns details of the requested annulus on the boundary of
          * this saturated block.  Annuli are numbered from 0 to
-         * nAnnuli()-1 as described in the class notes.
+         * countAnnuli()-1 as described in the class notes.
          *
          * @param which indicates which boundary annulus is requested;
-         * this must be between 0 and nAnnuli()-1 inclusive.
+         * this must be between 0 and countAnnuli()-1 inclusive.
          * @return a reference to the requested boundary annulus.
          */
         const SatAnnulus& annulus(unsigned which) const;
@@ -191,7 +200,7 @@ class SatBlock : public Output<SatBlock> {
          * strip?
          *
          * Recall from the class notes that the twist occurs between
-         * boundary annuli nAnnuli()-1 and 0.
+         * boundary annuli countAnnuli()-1 and 0.
          *
          * @return \c true if the ring of boundary annuli is twisted, or
          * \c false if not.
@@ -203,7 +212,7 @@ class SatBlock : public Output<SatBlock> {
          * being adjacent to the given boundary annulus of this block.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return \c true if the given boundary annulus has an adjacent
          * block listed, or \c false otherwise.
@@ -215,7 +224,7 @@ class SatBlock : public Output<SatBlock> {
          * given boundary annulus of this block.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return the other block adjacent along this annulus, or 0
          * if there is no adjacent block listed.
@@ -231,7 +240,7 @@ class SatBlock : public Output<SatBlock> {
          * block listed.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return the corresponding annulus number on the other block
          * that is adjacent along this annulus.
@@ -247,7 +256,7 @@ class SatBlock : public Output<SatBlock> {
          * block listed.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return \c true if the corresponding adjacency is reflected,
          * or \c false if it is not.
@@ -263,7 +272,7 @@ class SatBlock : public Output<SatBlock> {
          * block listed.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return \c true if the corresponding adjacency is backwards,
          * or \c false if it is not.
@@ -377,7 +386,7 @@ class SatBlock : public Output<SatBlock> {
          * reflection, "next" becomes "previous" and vice versa).
          *
          * @param thisAnnulus describes which original boundary annulus of
-         * this block to examine; this must be between 0 and nAnnuli()-1
+         * this block to examine; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @param followPrev \c true if we should find the previous boundary
          * annulus, or \c false if we should find the next boundary annulus.
@@ -385,8 +394,8 @@ class SatBlock : public Output<SatBlock> {
          * \a refHoriz), where: \a nextBlock is the block containing the next
          * boundary annulus around from \a thisAnnulus; \a nextAnnulus is the
          * specific annulus number within \a nextBlock of the next annulus
-         * around (between 0 and \a nextBlock->nAnnuli()-1 inclusive, and the
-         * corresponding annulus will have no block adjacent to it);
+         * around (between 0 and \a nextBlock->countAnnuli()-1 inclusive, and
+         * the corresponding annulus will have no block adjacent to it);
          * \a refVert is \c true iff the next annulus around is vertically
          * reflected; and \a refHoriz is \c true iff the next annulus around
          * is horizontally reflected (see above for details on reflections).
@@ -688,13 +697,13 @@ class SatBlock : public Output<SatBlock> {
          * (this and the given block) will be updated.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * has the new adjacency; this must be between 0 and nAnnuli()-1
+         * has the new adjacency; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @param adjBlock the other saturated block that is adjacent to
          * this.
          * @param adjAnnulus indicates which boundary annulus of the
          * adjacent block meets the given boundary annulus of this block;
-         * this must be between 0 and adjBlock->nAnnuli()-1 inclusive.
+         * this must be between 0 and adjBlock->countAnnuli()-1 inclusive.
          * @param adjReflected indicates whether the new adjacency is
          * reflected (see the class notes for details).
          * @param adjBackwards indicates whether the new adjacency is
@@ -847,6 +856,10 @@ inline SatBlock::~SatBlock() {
 inline void SatBlock::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << '\n';
+}
+
+inline unsigned SatBlock::countAnnuli() const {
+    return nAnnuli_;
 }
 
 inline unsigned SatBlock::nAnnuli() const {

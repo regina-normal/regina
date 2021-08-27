@@ -302,13 +302,13 @@ class SatRegion : public Output<SatRegion> {
                  as they are joined together.  This typically happens when
                  the triangulations of two boundary annuli are not compatible
                  when joined (e.g., they provide opposite diagonal edges) */
-        unsigned long twistedBlocks_;
+        size_t twistedBlocks_;
             /**< The number of constituent blocks with twisted boundary.
                  Each such block provides an additional twisted reflector
                  boundary to the base orbifold; see SatBlock::adjustSFS()
                  for details. */
 
-        unsigned long nBdryAnnuli_;
+        size_t nBdryAnnuli_;
             /**< The number of saturated annuli forming the boundary
                  components (if any) of this region. */
 
@@ -357,8 +357,19 @@ class SatRegion : public Output<SatRegion> {
         /**
          * Returns the number of saturated blocks that come together
          * to form this saturated region.
+         *
+         * @return the total number of blocks.
          */
-        unsigned long numberOfBlocks() const;
+        size_t countBlocks() const;
+        /**
+         * Deprecated routine that returns the number of saturated blocks
+         * in this saturated region.
+         *
+         * \deprecated This routine has been renamed countBlocks().
+         *
+         * @return the total number of blocks.
+         */
+        [[deprecated]] size_t numberOfBlocks() const;
         /**
          * Returns details of the requested saturated block within this
          * region.  The information will returned will include
@@ -367,11 +378,11 @@ class SatRegion : public Output<SatRegion> {
          * horizontally) within the larger region.
          *
          * @param which indicates which of the constituent blocks should
-         * be returned; this must be between 0 and numberOfBlocks()-1
+         * be returned; this must be between 0 and countBlocks()-1
          * inclusive.
          * @return details of the requested saturated block.
          */
-        const SatBlockSpec& block(unsigned long which) const;
+        const SatBlockSpec& block(size_t which) const;
         /**
          * Returns the index of the given block within this region.
          * This index corresponds to the integer parameter that is passed
@@ -382,7 +393,7 @@ class SatRegion : public Output<SatRegion> {
          * found (or until all blocks are exhausted).
          *
          * @return the index of the given block (as an integer between
-         * 0 and numberOfBlocks()-1 inclusive), or -1 if the block is
+         * 0 and countBlocks()-1 inclusive), or -1 if the block is
          * not part of this region.
          */
         long blockIndex(const SatBlock* block) const;
@@ -393,14 +404,23 @@ class SatRegion : public Output<SatRegion> {
          *
          * @return the number of boundary annuli.
          */
-        unsigned long numberOfBoundaryAnnuli() const;
+        size_t countBoundaryAnnuli() const;
+        /**
+         * Deprecated routine that returns the number of saturated annuli
+         * in the boundary of this region.
+         *
+         * \deprecated This routine has been renamed countBoundaryAnnuli().
+         *
+         * @return the total number of boundary annuli.
+         */
+        [[deprecated]] size_t numberOfBoundaryAnnuli() const;
         /**
          * Returns the requested saturated annulus on the boundary of
          * this region.
          *
          * The saturated annuli that together form the boundary
          * components of this region are numbered from 0 to
-         * numberOfBoundaryAnnuli()-1 inclusive.  The argument \a which
+         * countBoundaryAnnuli()-1 inclusive.  The argument \a which
          * specifies which one of these annuli should be returned.
          *
          * Currently the annuli are numbered lexicographically by
@@ -439,7 +459,7 @@ class SatRegion : public Output<SatRegion> {
          * details on how the return tuple is structured.
          *
          * @param which specifies which boundary annulus of this region
-         * to return; this must be between 0 and numberOfBoundaryAnnuli()-1
+         * to return; this must be between 0 and countBoundaryAnnuli()-1
          * inclusive.
          * @param blockRefVert used to return whether the block
          * containing the requested annulus is vertically reflected
@@ -454,7 +474,7 @@ class SatRegion : public Output<SatRegion> {
          * @return details of the requested boundary annulus, precisely
          * as it appears within its particular saturated block.
          */
-        const SatAnnulus& boundaryAnnulus(unsigned long which,
+        const SatAnnulus& boundaryAnnulus(size_t which,
             bool& blockRefVert, bool& blockRefHoriz) const;
         /**
          * Returns fine details of the requested saturated annulus on
@@ -462,7 +482,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * The argument \a which specifies which one of these
          * annuli should be returned.  See the
-         * boundaryAnnulus(unsigned long, bool&, bool&) documentation
+         * boundaryAnnulus(size_t, bool&, bool&) documentation
          * for details on how the boundary annuli are numbered.
          *
          * Various details of the requested boundary annulus are
@@ -490,13 +510,13 @@ class SatRegion : public Output<SatRegion> {
          * in \a blockRefHoriz.
          *
          * @param which specifies which boundary annulus of this region
-         * to return; this must be between 0 and numberOfBoundaryAnnuli()-1
+         * to return; this must be between 0 and countBoundaryAnnuli()-1
          * inclusive.
          * @param block used to return the particular saturated block
          * containing the requested annulus.
          * @param annulus used to return which annulus number in the
          * returned block is the requested annulus; this will be between
-         * 0 and block->nAnnuli() inclusive.
+         * 0 and block->countAnnuli() inclusive.
          * @param blockRefVert used to return whether the block
          * containing the requested annulus is vertically reflected
          * within this region (see SatBlockSpec for details).  This
@@ -508,7 +528,7 @@ class SatRegion : public Output<SatRegion> {
          * will be set to \c true if the block is horizontally reflected,
          * or \c false if not.
          */
-        void boundaryAnnulus(unsigned long which,
+        void boundaryAnnulus(size_t which,
             SatBlock const* &block, unsigned& annulus,
             bool& blockRefVert, bool& blockRefHoriz) const;
 
@@ -937,15 +957,23 @@ inline void SatRegion::swap(SatRegion& other) noexcept {
     std::swap(nBdryAnnuli_, other.nBdryAnnuli_);
 }
 
-inline unsigned long SatRegion::numberOfBlocks() const {
+inline size_t SatRegion::countBlocks() const {
     return blocks_.size();
 }
 
-inline const SatBlockSpec& SatRegion::block(unsigned long which) const {
+inline size_t SatRegion::numberOfBlocks() const {
+    return blocks_.size();
+}
+
+inline const SatBlockSpec& SatRegion::block(size_t which) const {
     return blocks_[which];
 }
 
-inline unsigned long SatRegion::numberOfBoundaryAnnuli() const {
+inline size_t SatRegion::countBoundaryAnnuli() const {
+    return nBdryAnnuli_;
+}
+
+inline size_t SatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
 }
 

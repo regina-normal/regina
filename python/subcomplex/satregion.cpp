@@ -47,7 +47,8 @@ namespace {
 
 void addSatRegion(pybind11::module_& m) {
     auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
-        .def("block", &SatBlockSpec::block)
+        .def("block", &SatBlockSpec::block,
+            pybind11::return_value_policy::reference_internal)
         .def("refVert", &SatBlockSpec::refVert)
         .def("refHoriz", &SatBlockSpec::refHoriz)
     ;
@@ -56,11 +57,14 @@ void addSatRegion(pybind11::module_& m) {
     auto r = pybind11::class_<SatRegion>(m, "SatRegion")
         .def(pybind11::init<const SatRegion&>())
         .def("swap", &SatRegion::swap)
-        .def("numberOfBlocks", &SatRegion::numberOfBlocks)
+        .def("countBlocks", &SatRegion::countBlocks)
+        .def("numberOfBlocks", &SatRegion::countBlocks) // deprecated
         .def("block", &SatRegion::block,
             pybind11::return_value_policy::reference_internal)
         .def("blockIndex", &SatRegion::blockIndex)
-        .def("numberOfBoundaryAnnuli", &SatRegion::numberOfBoundaryAnnuli)
+        .def("countBoundaryAnnuli", &SatRegion::countBoundaryAnnuli)
+        .def("numberOfBoundaryAnnuli", // deprecated
+            &SatRegion::countBoundaryAnnuli)
         .def("boundaryAnnulus", [](const SatRegion& r, unsigned which) {
             const SatBlock* block;
             unsigned annulus;

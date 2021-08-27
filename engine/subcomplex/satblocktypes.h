@@ -692,7 +692,7 @@ inline SatBlock* SatReflectorStrip::clone() const {
 }
 
 inline void SatReflectorStrip::writeTextShort(std::ostream& out) const {
-    out << "Saturated reflector strip of length " << nAnnuli();
+    out << "Saturated reflector strip of length " << countAnnuli();
     if (twistedBoundary())
         out << " (twisted)";
 }
@@ -700,14 +700,14 @@ inline void SatReflectorStrip::writeTextShort(std::ostream& out) const {
 inline void SatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
     if (twistedBoundary()) {
         if (tex)
-            out << "\\tilde{\\circledash}_" << nAnnuli();
+            out << "\\tilde{\\circledash}_" << countAnnuli();
         else
-            out << "Ref~(" << nAnnuli() << ')';
+            out << "Ref~(" << countAnnuli() << ')';
     } else {
         if (tex)
-            out << "\\circledash_" << nAnnuli();
+            out << "\\circledash_" << countAnnuli();
         else
-            out << "Ref(" << nAnnuli() << ')';
+            out << "Ref(" << countAnnuli() << ')';
     }
 }
 

@@ -52,10 +52,10 @@ namespace {
 
 bool BlockedSFS::isPluggedIBundle(std::string& name) const {
     // The triangulation needs to be closed.
-    if (region_.numberOfBoundaryAnnuli() > 0)
+    if (region_.countBoundaryAnnuli() > 0)
         return false;
 
-    unsigned long n = region_.numberOfBlocks();
+    unsigned long n = region_.countBlocks();
     if (n < 3 || n > 4)
         return false;
 
@@ -124,7 +124,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
             if (ref->twistedBoundary())
                 return false;
 
-            if (ref->nAnnuli() == 1) {
+            if (ref->countAnnuli() == 1) {
                 tri = dynamic_cast<const SatTriPrism*>(ref->adjacentBlock(0));
                 if (! tri)
                     return false;
@@ -138,7 +138,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
                     return findPluggedTori(false, 4, name,
                         tri->adjacentBlock((adjAnn + 1) % 3), false,
                         tri->adjacentBlock((adjAnn + 2) % 3), true);
-            } else if (ref->nAnnuli() == 2) {
+            } else if (ref->countAnnuli() == 2) {
                 return findPluggedTori(true, 4, name,
                     ref->adjacentBlock(0), true,
                     ref->adjacentBlock(1), true);

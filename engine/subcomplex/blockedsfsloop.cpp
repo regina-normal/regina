@@ -89,7 +89,7 @@ std::optional<BlockedSFSLoop> BlockedSFSLoop::recognise(Triangulation<3>* tri) {
     Matrix2 matchingReln;
     bool found = SatRegion::find(*tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
-        if (r->numberOfBoundaryAnnuli() != 2)
+        if (r->countBoundaryAnnuli() != 2)
             return false;
 
         const SatBlock* bdryBlock[2];
