@@ -216,6 +216,16 @@ enum NormalCoords {
  * knowledge that, even if the vector stores triangle coordinates, the
  * surface cannot contain any vertex linking components).
  *
+ * For convenience, there is also a special encoding that identifies an angle
+ * structure vector; this can be created via <tt>NormalEncoding(NS_ANGLE)</tt>,
+ * and can be recognised via angles().  However, like NS_ANGLE itself, this
+ * special angle structure encoding does \e not represent a normal surface,
+ * cannot be combined with other encodings, and must not be used with any of
+ * Regina's routines unless the documentation explicitly allows it.
+ * Specifically, any code that accepts a NormalEncoding argument may silently
+ * assume that the encoding is \e not the special angle structure encoding,
+ * unless the documentation explicitly says otherwise.
+ *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  */
@@ -261,6 +271,11 @@ class NormalEncoding {
             /**< A bit of \a flags that, if \c true, indicates that this does
                  not represent a valid encoding method. */
 
+        static constexpr int ANGLES = 0x2000;
+            /**< A bit of \a flags that, if \c true, indicates that this
+                 is the special encoding that corresponds to NS_ANGLE.
+                 See the NormalEncoding class notes for details. */
+
         int flags_;
             /**< Holds (1) the number of coordinates per tetrahedron in
                  the bits indicated by SIZE_MASK; and (2) additional
@@ -290,10 +305,16 @@ class NormalEncoding {
          * resulting encoding will have storesTriangles() return \c false.
          *
          * If \a coords is not one of the coordinate systems that Regina
-         * can use to enumerate or reconstruct surfaces, then the resulting
-         * encoding will be invalid, and valid() will return \c false.
-         * (Here "reconstruct" refers to the special case of NS_AN_LEGACY,
-         * which is used only when reading surfaces from very old data files).
+         * can use to enumerate or reconstruct surfaces (or NS_ANGLE, as
+         * discussed below), then the resulting encoding will be invalid,
+         * and valid() will return \c false.  (Here "reconstruct" refers
+         * to the special case of NS_AN_LEGACY, which is used only when
+         * reading surfaces from very old data files).
+         *
+         * As a special case, you may pass NS_ANGLE to this constructor;
+         * however, the resulting encoding does not represent a normal surface
+         * and must not be used anywhere in Regina unless the documentation
+         * explicitly allows it.  See the class notes for further details.
          *
          * @param coords one of Regina's normal or almost normal coordinate
          * systems.
@@ -320,6 +341,8 @@ class NormalEncoding {
                 case NS_AN_QUAD_OCT_CLOSED:
                     flags_ = 6 | STORES_OCTAGONS;
                     break;
+                case NS_ANGLE:
+                    flags_ = 3 | ANGLES;
                 default:
                     break;
             }
@@ -363,6 +386,9 @@ class NormalEncoding {
          * does not use for enumeration or reconstruction; or (2) another
          * invalid encoding.
          *
+         * For the special angle structure encoding (described in the class
+         * notes), this routine will return \c true.
+         *
          * @return \c true if and only if this is a valid encoding.
          */
         constexpr bool valid() const {
@@ -379,6 +405,9 @@ class NormalEncoding {
         /**
          * Returns whether this encoding explicitly stores triangle coordinates.
          *
+         * For the special angle structure encoding (described in the class
+         * notes), this routine will return \c false.
+         *
          * @return \c true if triangle coordinates are stored.
          */
         constexpr bool storesTriangles() const {
@@ -386,6 +415,9 @@ class NormalEncoding {
         }
         /**
          * Returns whether this encoding explicitly stores octagon coordinates.
+         *
+         * For the special angle structure encoding (described in the class
+         * notes), this routine will return \c false.
          *
          * @return \c true if octagon coordinates are stored.
          */
@@ -405,6 +437,9 @@ class NormalEncoding {
          * If this returns \c false, however, it is guaranteed that the
          * surface does \e not contain any vertex linking components,
          * with no further testing required.
+         *
+         * For the special angle structure encoding (described in the class
+         * notes), this routine will return \c false.
          *
          * @return \c true if it is possible that the surface might
          * contain one or more vertex linking components.
@@ -427,11 +462,26 @@ class NormalEncoding {
          * If this returns \c false, however, it is guaranteed that the
          * surface is compact, with no further testing required.
          *
+         * For the special angle structure encoding (described in the class
+         * notes), this routine will return \c false.
+         *
          * @return \c true if it is possible that the surface might
          * be non-compact.
          */
         constexpr bool couldBeNonCompact() const {
             return flags_ & COULD_BE_NON_COMPACT;
+        }
+        /**
+         * Identifies whether this is the special angle structure encoding.
+         *
+         * This routine is used to recognise the "special case" encoding
+         * <tt>NormalEncoding(NS_ANGLE)</tt>.  Such an encoding does not
+         * represent a normal surface, and cannot be used anywhere in Regina
+         * unless explicitly allowed in the documentation.  See the class
+         * notes for further details.
+         */
+        constexpr bool angles() const {
+            return flags_ & ANGLES;
         }
         /**
          * Returns an extension of this encoding that explicitly stores
@@ -444,6 +494,9 @@ class NormalEncoding {
          *
          * If this encoding already stores triangle coordinates, then
          * the result will be identical to this.
+         *
+         * \pre This is not the special angle structure encoding (see the
+         * class notes for details).
          *
          * @return an extension of this encoding that stores triangle
          * coordinates.
@@ -461,6 +514,9 @@ class NormalEncoding {
          * More precisely, the encoding that is returned is the "simplest"
          * possible encoding that is capable of holding the sum of two
          * surfaces that use this and the given encoding respectively.
+         *
+         * \pre Neither this encoding nor \a rhs is the special angle
+         * structure encoding (see the class notes for details).
          *
          * @param rhs the encoding to combine with this.
          * @return the "sum" of this and the given encoding, as defined above.

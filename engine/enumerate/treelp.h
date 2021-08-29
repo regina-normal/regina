@@ -453,6 +453,156 @@ struct LPCol : public LPConstraint::Coefficients {
 };
 
 /**
+ * Indicates which broad class of vector encodings a particular tableaux
+ * is designed to work with.  This type is used by Regina's linear
+ * programming machinery, and in particular by the LPInitialTableaux class.
+ *
+ * By "broad class of vector encodings", we allow only three options:
+ *
+ * - \e standard encodings, which cover all normal surface encodings
+ *   that include triangle coordinates, and where the tableaux holds
+ *   triangle and quadrilateral columns but nothing else;
+ *
+ * - \e quad encodings, which cover all normal surface encodings that do not
+ *   include triangle coordinates, and where the tableaux holds
+ *   quadrilateral columns but nothing else;
+ *
+ * - \e angle encodings, which cover angle structure encodings, and
+ *   where the tableaux holds angle columns as well as a single scaling
+ *   column.
+ *
+ * When working with almost normal coordinate systems, we represent octagons
+ * as pairs of intersecting quadrilaterals; see the LPData class notes for
+ * more information on how this works.  This means, for example, that the
+ * coordinate system NS_AN_STANDARD will fall under the class of standard
+ * encodings, and NS_AN_QUAD_OCT will fall under the class of quad encodings.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ */
+class LPSystem {
+    private:
+        /**
+         * The three possible classes of vector encodings.
+         */
+        enum System {
+            LP_STANDARD = 1,
+            LP_QUAD = 2,
+            LP_ANGLE = 4
+        } system_;
+
+    public:
+        /**
+         * Identifies which class of vector encodings the given encoding
+         * falls into.
+         *
+         * @param enc a normal surface vector encoding; this may be any
+         * valid NormalEncoding object, including the special angle
+         * structure encoding.
+         */
+        constexpr LPSystem(NormalEncoding enc) : system_(
+                enc.angles() ? LP_ANGLE :
+                enc.storesTriangles() ? LP_STANDARD :
+                LP_QUAD) {
+        }
+        /**
+         * Creates a new copy of the given class of vector encodings.
+         */
+        constexpr LPSystem(const LPSystem&) = default;
+        /**
+         * Sets this to be a copy of the given class of vector encodings.
+         *
+         * @return a reference to this object.
+         */
+        LPSystem& operator = (const LPSystem&) = default;
+        /**
+         * Determines whether this and the given object represent the
+         * same class of vector encodings.
+         *
+         * @param other the object to compare with this.
+         * @return \c true if and only if both objects represent the same
+         * class of encodings.
+         */
+        bool operator == (const LPSystem& other) const {
+            return system_ == other.system_;
+        }
+        /**
+         * Determines whether this and the given object represent
+         * different classes of vector encodings.
+         *
+         * @param other the object to compare with this.
+         * @return \c true if and only if both objects represent
+         * different classes of encodings.
+         */
+        bool operator != (const LPSystem& other) const {
+            return system_ != other.system_;
+        }
+        /**
+         * Identifies whether this is one of the two classes of
+         * encodings that represent normal or almost normal surfaces.
+         *
+         * This will be \c true if and only if either standard() or quad()
+         * returns \c true.
+         *
+         * Exactly one of normal() and angle() will return \c true.
+         *
+         * @return \c true if this is a class of normal or almost normal
+         * surface encodings.
+         */
+        constexpr bool normal() const {
+            return (system_ != LP_ANGLE);
+        };
+        /**
+         * Identifies whether this is the class of encodings that represent
+         * angle structures.
+         *
+         * Exactly one of normal() and angle() will return \c true.
+         *
+         * @return \c true if this is the class of angle encodings.
+         */
+        constexpr bool angle() const {
+            return (system_ == LP_ANGLE);
+        }
+        /**
+         * Identifies whether this is the class of standard encodings.
+         *
+         * Exactly one of standard(), quad() and angle() will return \c true.
+         *
+         * @return \c true if this is the class of standard encodings.
+         */
+        constexpr bool standard() const {
+            return (system_ == LP_STANDARD);
+        }
+        /**
+         * Identifies whether this is the class of quad encodings.
+         *
+         * Exactly one of standard(), quad() and angle() will return \c true.
+         *
+         * @return \c true if this is the class of quad encodings.
+         */
+        constexpr bool quad() const {
+            return (system_ == LP_QUAD);
+        }
+        /**
+         * Returns the number of coordinate columns that a tableaux will use
+         * for this class of vector encodings, with respect to a particular
+         * triangulation.
+         *
+         * @param nTet the number of tetrahedra in the triangulation.
+         * @return the corresponding number of coordinate columns in the
+         * tableaux.
+         */
+        constexpr size_t coords(size_t nTet) const {
+            switch (system_) {
+                case LP_STANDARD: return 7 * nTet;
+                case LP_QUAD: return 3 * nTet;
+                case LP_ANGLE: return 3 * nTet + 1;
+                default: return 0;
+            }
+        }
+};
+
+/**
  * Stores an adjusted matrix of homogeneous linear matching equations based on
  * a given triangulation, in sparse form.  Typically these will be
  * the normal surface matching equations in some coordinate system,
@@ -500,9 +650,18 @@ struct LPCol : public LPConstraint::Coefficients {
  * (in particular, multiplying columns of this matrix by rows of some
  * other matrix).
  *
- * This class can only work in quadrilateral normal coordinates (NS_QUAD),
- * standard normal coordinates (NS_STANDARD), or angle structure coordinates
- * (NS_ANGLE).  No other coordinate systems are supported.
+ * This class works with a broad class of vector encodings for normal
+ * surfaces or angle structures, as described by the LPSystem class,
+ * and within that broad class it does not know \e which particular
+ * encoding or underlying coordinate system is being used.  In particular,
+ * the matching equations it uses will \e always be one of the standard
+ * tri-quad normal matching equations (if LPSystem::standard() is \c true),
+ * the quad normal matching equations (if LPSystem::quad() is \c true),
+ * or the homogeneous angle equations (if LPSystem::angles() is true).
+ * If you need to support more exotic coordinate systems (such as
+ * octagonal almost normal surfaces), then you will need to find a way
+ * to map that system onto one of these three broad classes; see the
+ * LPData class notes for how this is done with octagons.
  *
  * \warning The implementation of this class relies on the fact that the
  * sum of <i>absolute values</i> of all coefficients in each column is
@@ -528,10 +687,9 @@ class LPInitialTableaux {
     private:
         const Triangulation<3>& tri_;
             /**< The underlying triangulation. */
-        NormalCoords coords_;
-            /**< The coordinate system used for the matrix of matching
-                 equations; this must be one of NS_QUAD, NS_STANDARD,
-                 or NS_ANGLE. */
+        LPSystem system_;
+            /**< The broad class of vector encodings that this tableaux
+                 works with. */
         MatrixInt eqns_;
             /**< The adjusted matching equation matrix, in dense form.
                  The precise adjustments that we make are described in the
@@ -580,9 +738,11 @@ class LPInitialTableaux {
          * \pre The given triangulation is non-empty.
          *
          * @param tri the underlying 3-manifold triangulation.
-         * @param coords the coordinate system to use for the matrix of
-         * matching equations; this must be one of NS_QUAD, NS_STANDARD,
-         * or NS_ANGLE.
+         * @param coords the coordinate system in which we are performing our
+         * enumeration task.  This can be any of the normal or almost normal
+         * coordinate systems in which Regina can enumerate surfaces; it
+         * may also be the special value NS_ANGLE if we are enumerating
+         * angle structures.
          * @param enumeration \c true if we should optimise the tableaux
          * for a full enumeration of vertex surfaces or taut angle structures,
          * or \c false if we should optimise the tableaux for an existence test
@@ -606,14 +766,17 @@ class LPInitialTableaux {
         inline const Triangulation<3>& tri() const;
 
         /**
-         * Returns the coordinate system that is used for the matrix of
-         * matching equations.  This will be the same coordinate system
-         * that was passed to the LPInitialTableaux constructor; in particular,
-         * it will always be one of NS_QUAD, NS_STANDARD, or NS_ANGLE.
+         * Returns the broad class of vector encodings that this tableaux
+         * works with.  This broad class is deduced from the vector encoding
+         * that was passed to the class constructor, and it completely
+         * determines which matching equations were generated as a result.
          *
-         * @return the coordinate system.
+         * See the LPInitialTableaux class notes for more information on
+         * these three broad classes and how they affect the tableaux.
+         *
+         * @return the class of vector encodings used by this tableaux.
          */
-        NormalCoords coords() const;
+        LPSystem system() const;
 
         /**
          * Returns the rank of this matrix.
@@ -1587,8 +1750,8 @@ inline const Triangulation<3>& LPInitialTableaux<LPConstraint>::tri() const {
 }
 
 template <class LPConstraint>
-inline NormalCoords LPInitialTableaux<LPConstraint>::coords() const {
-    return coords_;
+inline LPSystem LPInitialTableaux<LPConstraint>::system() const {
+    return system_;
 }
 
 template <class LPConstraint>

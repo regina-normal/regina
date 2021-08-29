@@ -209,11 +209,7 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
         const Triangulation<3>& tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
-        origTableaux_(tri,
-            (coords == NS_AN_QUAD_OCT ? NS_QUAD :
-             coords == NS_AN_STANDARD ? NS_STANDARD :
-             coords),
-            enumeration),
+        origTableaux_(tri, coords, enumeration),
         coords_(coords),
         nTets_(tri.size()),
         nTypes_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ||

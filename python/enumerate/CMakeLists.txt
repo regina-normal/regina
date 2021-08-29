@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   pyenumerate.cpp
+  treelp.cpp
   typetrie.cpp
   )
 

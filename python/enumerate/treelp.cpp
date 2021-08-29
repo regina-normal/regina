@@ -30,13 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "enumerate/treelp.h"
+#include "../helpers.h"
 
-void addTreeLP(pybind11::module_& m);
-void addTypeTrie(pybind11::module_& m);
+using regina::LPSystem;
 
-void addEnumerateClasses(pybind11::module_& m) {
-    addTreeLP(m);
-    addTypeTrie(m);
+void addTreeLP(pybind11::module_& m) {
+    auto s = pybind11::class_<LPSystem>(m, "LPSystem")
+        .def(pybind11::init<regina::NormalEncoding>())
+        .def(pybind11::init<const LPSystem&>())
+        .def("normal", &LPSystem::normal)
+        .def("angle", &LPSystem::angle)
+        .def("standard", &LPSystem::standard)
+        .def("quad", &LPSystem::quad)
+        .def("coords", &LPSystem::coords)
+        ;
+    regina::python::add_eq_operators(s);
 }
 

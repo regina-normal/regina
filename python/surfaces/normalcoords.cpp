@@ -63,6 +63,7 @@ void addNormalCoords(pybind11::module_& m) {
         .def("storesOctagons", &NormalEncoding::storesOctagons)
         .def("couldBeVertexLink", &NormalEncoding::couldBeVertexLink)
         .def("couldBeNonCompact", &NormalEncoding::couldBeNonCompact)
+        .def("angles", &NormalEncoding::angles)
         .def("withTriangles", &NormalEncoding::withTriangles)
         .def("intValue", &NormalEncoding::intValue)
         .def_static("fromIntValue", &NormalEncoding::fromIntValue)

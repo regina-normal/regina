@@ -122,14 +122,17 @@ void LPMatrix<IntType>::dump(std::ostream& out) const {
 template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         const Triangulation<3>& tri, NormalCoords coords, bool enumeration) :
-        tri_(tri), coords_(coords) {
+        tri_(tri), system_(coords) {
     unsigned r, c;
 
     // Fetch the original (unadjusted) matrix of matching equations.
-    if (coords_ != NS_ANGLE) {
-        // Here coords must be one of NS_QUAD or NS_STANDARD, and so we
-        // know that makeMatchingEquations() must succeed.
-        eqns_ = *regina::makeMatchingEquations(tri, coords);
+    if (system_.normal()) {
+        // In both cases below we know that makeMatchingEquations() will
+        // always succeed.
+        if (system_.standard())
+            eqns_ = *regina::makeMatchingEquations(tri, NS_STANDARD);
+        else
+            eqns_ = *regina::makeMatchingEquations(tri, NS_QUAD);
         scaling_ = 0;
     } else {
         eqns_ = regina::makeAngleEquations(tri);
@@ -174,7 +177,7 @@ template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // This is a "do-nothing" version of reorder().
     int i, j;
-    if (coords_ == NS_QUAD || coords_ == NS_ANGLE) {
+    if (! system_.standard()) {
         // Leave the columns exactly as they were.
         for (i = 0; i < cols_; ++i)
             columnPerm_[i] = i;
@@ -241,7 +244,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
 
     // Fill the columnPerm_ array according to what kind of
     // problem we're trying to solve.
-    if (coords_ == NS_STANDARD && enumeration) {
+    if (system_.standard() && enumeration) {
         // We're doing vertex enumeration in standard coordinates.
         //
         // Use exactly the same ordering of quadrilaterals that we
@@ -262,7 +265,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             columnPerm_[3 * n + 4 * i + 2] = 7 * k + 2;
             columnPerm_[3 * n + 4 * i + 3] = 7 * k + 3;
         }
-    } else if (coords_ == NS_ANGLE) {
+    } else if (system_.angle()) {
         // TODO: Find a good heuristic to use for angle structure coordinates.
         // For now, we'll leave the columns exactly as they were.
         for (i = 0; i < cols_; ++i)
@@ -304,9 +307,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                 for (k = 0; k < n; ++k) {
                     if (touched[k])
                         continue;
-                    if (coords_ == NS_QUAD) {
-                        // We're in quadrilateral or angle structure
-                        // coordinates.
+                    if (system_.quad()) {
+                        // We're in quadrilateral coordinates.
                         if (eqns_.entry(j, 3 * k) != 0 ||
                                 eqns_.entry(j, 3 * k + 1) != 0 ||
                                 eqns_.entry(j, 3 * k + 2) != 0)
@@ -335,8 +337,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             for (k = 0; k < n; ++k) {
                 if (touched[k])
                     continue;
-                if (coords_ == NS_QUAD) {
-                    // We're in quadrilateral or angle structure coordinates.
+                if (system_.quad()) {
+                    // We're in quadrilateral coordinates.
                     if ((eqns_.entry(bestRow, 3 * k) != 0 ||
                             eqns_.entry(bestRow, 3 * k + 1) != 0 ||
                             eqns_.entry(bestRow, 3 * k + 2) != 0)) {
@@ -382,8 +384,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             if (touched[k])
                 continue;
             touched[k] = true;
-            if (coords_ == NS_QUAD) {
-                // We're in quadrilateral or angle structure coordinates.
+            if (system_.quad()) {
+                // We're in quadrilateral coordinates.
                 columnPerm_[3 * (n - nTouched) - 3] = 3 * k;
                 columnPerm_[3 * (n - nTouched) - 2] = 3 * k + 1;
                 columnPerm_[3 * (n - nTouched) - 1] = 3 * k + 2;
@@ -913,7 +915,7 @@ void LPData<LPConstraint, IntType>::extractSolution(
     // Since we have multiplied everything by lcm, instead of
     // adding +1 to each relevant variable we must add +lcm.
     size_t pos;
-    if (origTableaux_->coords() == NS_ANGLE) {
+    if (origTableaux_->system().angle()) {
         if (type) {
             // For taut angle structures, the only coordinate that is explicitly
             // constrained to be positive is the final scaling coordinate.

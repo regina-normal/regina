@@ -458,6 +458,9 @@ Version 7.0  [ TODO ]
         Class LPConstraintEulerZero:
             - New constraint to use with normal surface enumeration that
               fixes Euler characteristic to be zero.
+        Class LPSystem:
+            - New class to translate coordinate systems into a layout
+              for LPInitialTableaux.
         Class Manifold:
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.
