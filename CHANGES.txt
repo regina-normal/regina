@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 6.1  [ TODO ]
+Version 7.0  [ TODO ]
 
     GENERAL:
         - Now requires C++17 (not C++14).
