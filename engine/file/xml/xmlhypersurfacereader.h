@@ -65,8 +65,12 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
             /**< The triangulation in which this hypersurface lives. */
         HyperCoords coords_;
             /**< The coordinate system used by this hypersurface. */
+        int vecEnc_;
+            /**< The integer encoding used for the normal hypersurface
+                 vector, or 0 if this is unknown. */
         long vecLen_;
-            /**< The length of corresponding normal hypersurface vector. */
+            /**< The length of the normal hypersurface vector, or -1 if
+                 this is unknown (since 0 is a valid vector length). */
         std::string name_;
             /**< The optional name associated with this normal hypersurface. */
 
@@ -137,7 +141,7 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
 
 inline XMLNormalHypersurfaceReader::XMLNormalHypersurfaceReader(
         const Triangulation<4>* tri, HyperCoords coords) :
-        tri_(tri), coords_(coords), vecLen_(-1) {
+        tri_(tri), coords_(coords), vecLen_(-1), vecEnc_(0) {
 }
 
 inline std::optional<NormalHypersurface>&

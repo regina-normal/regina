@@ -1093,7 +1093,7 @@ class Matrix : public Output<Matrix<T>> {
                 T elt = 0;
                 for (col = 0; col < cols_; ++col)
                     elt += (data_[row][col] * other[col]);
-                ans.set(row, elt);
+                ans[row] = elt;
             }
 
             return ans;

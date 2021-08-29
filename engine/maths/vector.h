@@ -253,32 +253,26 @@ class Vector : public ShortOutput<Vector<T>> {
             return elements[index];
         }
         /**
-         * Sets the element at the given index in the vector to the
-         * given value.
+         * Gives write access to the element at the given index in the vector.
          *
          * \pre \c index is between 0 and size()-1 inclusive.
          *
-         * \ifacespython This set() routine is available, but you can
-         * also set elements directly using syntax of the form
-         * <tt>v[index] = value</tt>.
-         *
-         * @param index the vector index to examine.
-         * @param value the new value to assign to the element.
+         * @param index the vector index to access.
+         * @return a reference to the vector element at the given index.
          */
-        inline void set(size_t index, const T& value) {
-            elements[index] = value;
+        inline T& operator[](size_t index) {
+            return elements[index];
         }
         /**
          * Deprecated routine that sets the element at the given index
          * in the vector to the given value.
          *
-         * \deprecated This routine has been renamed to set().
+         * \deprecated Simply use the square bracker operator instead.
          *
          * \pre \c index is between 0 and size()-1 inclusive.
          *
-         * \ifacespython Both setElement() and its new name set() are available,
-         * but you can also set elements directly using syntax of the form
-         * <tt>v[index] = value</tt>.
+         * \ifacespython In Python also, you can now set elements directly
+         * using syntax of the form <tt>v[index] = value</tt>.
          *
          * @param index the vector index to examine.
          * @param value the new value to assign to the element.

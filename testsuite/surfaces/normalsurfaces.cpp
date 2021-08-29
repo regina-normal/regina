@@ -52,7 +52,6 @@ using regina::Example;
 using regina::LargeInteger;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
-using regina::NormalSurfaceVector;
 using regina::Packet;
 using regina::Perm;
 using regina::Signature;
@@ -480,8 +479,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = &lhs.surface(i).vector().coords();
-                rhsRaw[i] = &rhs.surface(i).vector().coords();
+                lhsRaw[i] = &lhs.surface(i).vector();
+                rhsRaw[i] = &rhs.surface(i).vector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess<LargeInteger>);
@@ -1702,8 +1701,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         "chi = " << s.eulerChar() << ": " << tri.label();
                     CPPUNIT_FAIL(msg.str());
                 }
-                eulerZero.push_back(new Vector<LargeInteger>(
-                    s.vector().coords()));
+                eulerZero.push_back(new Vector<LargeInteger>(s.vector()));
             }
 
             // Collect *all* vertex surfaces in the normal way, and extract
@@ -1712,7 +1710,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             NormalSurfaces all(tri, NS_STANDARD);
             for (const NormalSurface& s : all.surfaces())
                 if (s.eulerChar() == 0)
-                    filtered.push_back(&s.vector().coords());
+                    filtered.push_back(&s.vector());
 
             // Ensure that every vertex surface with chi=0 was picked up
             // in our custom list.

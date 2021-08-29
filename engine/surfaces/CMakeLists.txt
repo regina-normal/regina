@@ -11,19 +11,15 @@ SET ( FILES
   enumerator.cpp
   enumfilter.cpp
   links.cpp
+  matching.cpp
   normalsurface.cpp
   normalsurfaces.cpp
-  nsvectoranstandard.cpp
-  nsvectorquad.cpp
-  nsvectorquadclosed.cpp
-  nsvectorquadoct.cpp
-  nsvectorquadoctclosed.cpp
-  nsvectorstandard.cpp
   prism.cpp
   surfacefilter.cpp
   orientable.cpp
   quadtostd.cpp
   stdtoquad.cpp
+  triangles.cpp
   )
 
 # Prepend folder name
@@ -36,8 +32,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    coordregistry.h
-    coordregistry-impl.h
     disc.h
     disctype.h
     filterregistry.h
@@ -47,13 +41,6 @@ if (${REGINA_INSTALL_DEV})
     normalspec-impl.h
     normalsurface.h
     normalsurfaces.h
-    nsvectoranstandard.h
-    nsvectormirrored.h
-    nsvectorquad.h
-    nsvectorquadclosed.h
-    nsvectorquadoct.h
-    nsvectorquadoctclosed.h
-    nsvectorstandard.h
     prism.h
     surfacefilter.h
     surfacefiltertype.h

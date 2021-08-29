@@ -985,6 +985,37 @@ class IntegerTest : public CppUnit::TestFixture {
             }
         }
 
+        void testInfinityFrom(const char* str) {
+            std::string cppstr(str);
+
+            {
+                LargeInteger x(str);
+                testInfinity(x, (std::string("Copied infinity: ")
+                    + str).c_str());
+            }
+            {
+                LargeInteger x(cppstr);
+                testInfinity(x, (std::string("Copied std::string infinity: ")
+                    + str).c_str());
+            }
+            {
+                LargeInteger x(5);
+                if (! x.isNative())
+                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                x = str;
+                testInfinity(x, (std::string("Assigned infinity: ")
+                    + str).c_str());
+            }
+            {
+                LargeInteger x(5);
+                if (! x.isNative())
+                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                x = cppstr;
+                testInfinity(x, (std::string("Assigned std::string infinity: ")
+                    + str).c_str());
+            }
+        }
+
         void constructAssignCopyInfinity() {
             testInfinity(LargeInteger::infinity, "Static infinity");
 
@@ -1005,6 +1036,12 @@ class IntegerTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Hard-coded infinity is not infinite.");
             z.makeInfinite();
             testInfinity(z, "inf.makeInfinite()");
+
+            testInfinityFrom("inf");
+            testInfinityFrom("infinity");
+            testInfinityFrom(" \tinf");
+            testInfinityFrom(" \tinfinity! ");
+            testInfinityFrom("  infimum");
         }
 
         template <typename IntType>

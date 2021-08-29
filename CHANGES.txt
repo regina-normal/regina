@@ -19,6 +19,12 @@ Version 6.1  [ TODO ]
         - Major simplifications to the triangulation template class hierarchies.
           A consequence is that the API docs are much more usable, since
           doxygen can finally understand the code again.
+        - Removed all support for transversely oriented normal surfaces.
+          These were originally hooked into the normal surface machinery
+          as an "experimental" feature, but they are fundamentally different
+          kinds of objects and this was never really the right place for them.
+          They will return in a future version of Regina, with their own
+          dedicated suite of classes instead.
         - Environment variables such as REGINA_HOME and REGINA_PYLIBDIR
           are more consistently used, and should need to be set less often.
         - All XML parsing code is now private to Regina's engine, and the
@@ -37,13 +43,13 @@ Version 6.1  [ TODO ]
               deprecated typedef for Vector<Integer>.
             - Replaced rawVector() with vector(), which now returns a reference
               (not a pointer) and is now accessible through python.  The old
-              rawVector() (with its pointer return type) is kept but deprecated.
+              rawVector() is kept but deprecated, and returns by reference also.
             - AngleStructure now has copy and move constructors, copy and move
               assignment, and member and global swap() functions.  The old
               clone() is now deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
-            - Constructors now take a reference to the triangulation, not a
-              pointer.
+            - Constructors now take their arguments by reference (and,
+              for the vector constructor, optionally an rvalue reference).
         Class AngleStructures:
             - Replaced enumerate() with a class constructor; this will
               throw an exception on error (instead of returning null).
@@ -319,9 +325,17 @@ Version 6.1  [ TODO ]
               is an rvalue reference.
         Class HomologicalData:
             - Added member and global swap() functions.
-        Class HyperInfo<...>:
-            - Routine name() has been changed to a class constant.
-              This change is backward incompatible (but probably affects noone).
+        Class HyperEncoding:
+            - New class to describe how the internal integer vector is encoded.
+        Class HyperInfo:
+            - This used to be a template class full of compile-time constants.
+              It is now a non-templated class filled with static functions,
+              which are also constexpr (so you can still use them at
+              compile time if needed, but you can now use them at runtime also).
+            - Much of the functionality that HyperInfo<coords> used to provide
+              is now accessible through HyperEncoding(coords).  This
+              HyperInfo class has been stripped down to just provide
+              "human-readable name" functions.
         Class Integer, LargeInteger:
             - The constructor that takes a NativeInteger is no longer explicit.
             - The constructors Integer(LargeInteger) and LargeInteger(Integer)
@@ -330,6 +344,8 @@ Version 6.1  [ TODO ]
             - Added a global swap() to complement the member swap().
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
+            - The string constructors and assignment operators recognise
+              "inf" as infinity.
         Class InvalidInput:
             - New exception class.
         Class Isomorphism<dim>, IsomorphismBase<dim>:
@@ -492,24 +508,43 @@ Version 6.1  [ TODO ]
             - Added a global swap() to complement the member swap().
         Class NewFunction<...>:
             - Removed completely.
+        Class NNativeLong:
+            - Renamed to NativeLong.  The old name is a deprecated typedef.
         Class NoMatchingEquations:
             - New exception class.
-        Class NormalInfo<...>:
-            - Routine name() has been changed to a class constant.
-              This change is backward incompatible (but probably affects noone).
-            - Class constants almostNormal, spun and oriented are now
-              static constexpr bool, not enum constants.
+        Class NormalEncoding:
+            - New class to describe how the internal integer vector is encoded.
+        Class NormalInfo:
+            - This used to be a template class full of compile-time constants.
+              It is now a non-templated class filled with static functions,
+              which are also constexpr (so you can still use them at
+              compile time if needed, but you can now use them at runtime also).
+            - Much of the functionality that NormalInfo<coords> used to provide
+              is now accessible through NormalEncoding(coords).  This
+              NormalInfo class has been stripped down to just provide
+              "human-readable name" functions.
         Class NormalHypersurface:
             - Replaced rawVector() with vector(), which now returns a
-              NormalHypersurfaceVector by reference (not a Vector by pointer).
+              Vector<LargeInteger> by reference (not a Vector by pointer).
               The old name is kept but deprecated.
             - Added copy and move constructors, copy and move assignment
               operators, and member and global swap() functions.  The old
               clone() now is deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
             - Changed doubleHypersurface() to return by value, not by pointer.
-            - Constructors now take a reference to the triangulation, not a
-              pointer.
+            - Constructors now take their arguments by reference (and,
+              for the vector constructors, optionally an rvalue reference).
+            - New routine encoding(), which explains how to interpret
+              the internal integer vector.
+            - New routine reconstructTetrahedra(), which now makes this
+              functionality available to the outside world.
+            - Removed countCoords() completely, since its meaning is
+              amgibuous as to whether it refers to the original
+              coordinate system or the current internal encoding.
+              Just use vector().size() instead.
+            - New operator +.  At last!  Crucially, this operator can combine
+              hypersurfaces that use different coordinate systems.
+            - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalHypersurfaces:
             - Replaced enumerate() with a class constructor; this will
               throw an exception on error (instead of returning null).
@@ -521,9 +556,10 @@ Version 6.1  [ TODO ]
               reference, not by pointer.
             - Changed sort() so the comparison function must now take
               two hypersurfaces by reference, not by pointer.
+            - New function allowsNonCompact().
         Class NormalSurface:
             - Replaced rawVector() with vector(), which now returns a
-              NormalSurfaceVector by reference (not a Vector by pointer).
+              Vector<LargeInteger> by reference (not a Vector by pointer).
               The old name is kept but deprecated.
             - Added copy and move constructors, copy and move assignment
               operators, and member and global swap() functions.  The old
@@ -532,8 +568,32 @@ Version 6.1  [ TODO ]
             - Changed boundaryIntersections() to return a
               std::optional<MatrixInt>, not a pointer that could be null.
             - Changed doubleSurface() to return by value, not by pointer.
-            - Constructors now take a reference to the triangulation, not a
-              pointer.
+            - Constructors now take their arguments by reference (and,
+              for the vector constructors, optionally an rvalue reference).
+            - Removed systemAllowsOriented(), orientedTriangles() and
+              orientedQuads() completely, since TONS are now handled by a
+              completely different collection of classes.
+            - Changed isCentral() to return size_t, not LargeInteger.
+            - Routine disjoint() no longer requires both surfaces to use
+              the same coordinate system.
+            - New routine encoding(), which explains how to interpret
+              the internal integer vector.
+            - New routine reconstructTriangles(), which now makes this
+              functionality available to the outside world.
+            - Removed countCoords() completely, since its meaning is
+              amgibuous as to whether it refers to the original
+              coordinate system or the current internal encoding.
+              Just use vector().size() instead.
+            - Replaced systemAllowsAlmostNormal() and systemAllowsSpun() with
+              new functions couldBeAlmostNormal() and couldBeNonCompact(), again
+              to avoid ambiguities between the original coordinate system used
+              for enumeration versus the current vector encoding being used.
+              The old functions are removed completely.
+            - New routine hasMultipleOctDiscs(), which has been moved from the
+              old NormalSurfaceVector class.
+            - New operator +.  At last!  Crucially, this operator can combine
+              surfaces that use different coordinate systems.
+            - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalSurfaces:
             - Replaced enumerate() with a class constructor; this will
               throw an exception on error (instead of returning null).
@@ -546,19 +606,15 @@ Version 6.1  [ TODO ]
               reference, not by pointer.
             - Changed sort() so the comparison function must now take
               two surfaces by reference, not by pointer.
+            - Routine filterForDisjointPairs() no longer requires all surfaces
+              to use the same coordinate system.
+            - Removed allowsOriented() completely, since TONS are now
+              handled by a completely different collection of classes.
+            - Renamed allowsSpun() to allowsNonCompact(); the old name
+              is kept as a deprecated alias.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
-            - Renamed setElement() to set().  Since this is a virtual function,
-              the old name has been removed completely.  If you have a
-              subclass which overrides this function (which is highly unlikely
-              for end users), you MUST rename your override accordingly.
-            - The constructor that used to take a const Vector<LargeInteger>&
-              is now a template constructor that takes any const Vector<T>&.
-            - Operator += now returns a reference, as it should.
-            - New typedef Element, for better compatibility with Vector.
-            - Now derives from ShortOutput<...> and provides the corresponding
-              output routines.
-            - All query routines now take the triangulation by reference,
-              not by pointer.
+            - Removed completely.  Normal surfaces/hypersurfaces now hold
+              their coordinates using a plain Vector<LargeInteger>.
         Class NSVectorMirrored:
             - Changed makeMirror() to take its triangulation by reference,
               not by pointer.  Also removed the static versions of makeMirror();
@@ -960,8 +1016,8 @@ Version 6.1  [ TODO ]
             - New routine scaleDown() for vectors over Regina's integer classes.
             - New typedef Element.
             - Provides the standard str() and detail() output functions.
-            - Renamed setElement() to set(); the old name is now a deprecated
-              alias.
+            - Added a non-const operator[]; the old setElement() is now
+              deprecated.
             - Operators +=, -=, *= now return a reference, as they should.
             - The class Vector<Integer> is now available in python, via
               the typedef VectorInt (in a similar way to MatrixInt).
@@ -991,7 +1047,10 @@ Version 6.1  [ TODO ]
             - Removed completely; just use strdup() instead.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
-        Function forCoords(), forFilter(), forPacket():
+        Function forCoords():
+            - Removed completely.  See the new NormalEncoding class and
+              the redesigned NormalInfo class for details.
+        Function forFilter(), forPacket():
             - Completely rewritten to take advantage of C++14 generic lambdas.
               Any code that used these functions will need to be completely
               rewritten (but should now become substantially simpler).
@@ -1040,6 +1099,8 @@ Version 6.1  [ TODO ]
         Macro ENABLE_MEMBER_FOR_REGINA_INTEGER:
             - New macro for conditionally enabling or disabling member
               functions in template classes.
+        Header surfaces/coordregistry.h, surfaces/coordregistry-impl.h:
+            - Removed completely.
         Header utilities/memutils.h:
             - Removed completely.
         Header utilities/property.h:

@@ -48,13 +48,8 @@
 
 namespace regina {
 
-class NSVectorStandard;
-class NSVectorQuad;
-class NSVectorANStandard;
-class NSVectorQuadOct;
-
 /**
- * Constants, typedefs and operations for working with normal (as
+ * Constants and operations for working with normal (as
  * opposed to almost normal) surfaces.  See the declaration in
  * normalsurfaces.h for further details.
  *
@@ -67,15 +62,6 @@ class NSVectorQuadOct;
  * Tollefson).
  */
 struct NormalSurfaces::NormalSpec {
-    /**
-     * The underlying class for vectors in standard form.
-     */
-    typedef NSVectorStandard StandardVector;
-    /**
-     * The underlying class for vectors in reduced form.
-     */
-    typedef NSVectorQuad ReducedVector;
-
     /**
      * Returns the coordinate system constant corresponding to standard form.
      *
@@ -132,7 +118,7 @@ struct NormalSurfaces::NormalSpec {
 };
 
 /**
- * Constants, typedefs and operations for working with almost normal (as
+ * Constants and operations for working with almost normal (as
  * opposed to almost normal) surfaces.  See the declaration in
  * normalsurfaces.h for further details.
  *
@@ -145,16 +131,6 @@ struct NormalSurfaces::NormalSpec {
  * normal surfaces).
  */
 struct NormalSurfaces::AlmostNormalSpec {
-    /**
-     * The underlying class for vectors in standard form.
-     */
-    typedef NSVectorANStandard StandardVector;
-
-    /**
-     * The underlying class for vectors in reduced form.
-     */
-    typedef NSVectorQuadOct ReducedVector;
-
     /**
      * Returns the coordinate system constant corresponding to standard form.
      *

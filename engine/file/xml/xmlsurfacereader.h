@@ -64,8 +64,12 @@ class XMLNormalSurfaceReader : public XMLElementReader {
             /**< The triangulation in which this surface lives. */
         NormalCoords coords;
             /**< The coordinate system used by this surface. */
+        int vecEnc;
+            /**< The integer encoding used for the normal surface vector,
+                 or 0 if this is unknown. */
         long vecLen;
-            /**< The length of corresponding normal surface vector. */
+            /**< The length of the normal surface vector, or -1 if this
+                 is unknown (since 0 is a valid vector length). */
         std::string name;
             /**< The optional name associated with this normal surface. */
 
@@ -135,7 +139,7 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
 
 inline XMLNormalSurfaceReader::XMLNormalSurfaceReader(
         const Triangulation<3>* newTri, NormalCoords newCoords) :
-        tri(newTri), coords(newCoords), vecLen(-1) {
+        tri(newTri), coords(newCoords), vecLen(-1), vecEnc(0) {
 }
 
 inline std::optional<NormalSurface>& XMLNormalSurfaceReader::surface() {

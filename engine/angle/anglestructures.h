@@ -76,15 +76,15 @@ struct PacketInfo<PACKET_ANGLESTRUCTURES> {
  * which the angle structures lie.  If this triangulation changes, the
  * information contained in this packet will become invalid.
  *
- * Angle structure lists should be created using the routine enumerate(),
- * which is new as of Regina 3.95.
+ * Since Regina 7.0, you can (and should) create angle structure lists
+ * using the class constructor.  There is no need to use enumerate() any more.
  */
 class AngleStructures : public Packet {
     REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES)
 
     private:
         std::vector<AngleStructure> structures_;
-            /**< Contains the angle structures stored in this packet. */
+            /**< Contains all angle structures in this list. */
         bool tautOnly_;
             /**< Stores whether we are only interested in taut structures.
                  This is an option selected by the user before enumeration
@@ -342,6 +342,9 @@ class AngleStructures : public Packet {
 
 /**
  * Generates the set of angle structure equations for the given triangulation.
+ *
+ * These are the angle equations that will be used when enumerating
+ * angle structures on the given triangulation.
  *
  * Each equation will be represented as a row of the resulting matrix, and each
  * column will represent a coordinate in the underlying coordinate system

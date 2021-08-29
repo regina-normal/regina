@@ -32,8 +32,7 @@
 
 #include <queue>
 #include "surfaces/disc.h"
-#include "surfaces/nsvectorstandard.h"
-#include "surfaces/nsvectoranstandard.h"
+#include "surfaces/normalsurface.h"
 
 namespace regina {
 
@@ -41,25 +40,18 @@ namespace {
     /**
      * Splits the given normal surface into connected components.
      *
-     * The surface itself will not be changed.  Instead, each
-     * connected component will be appended to the end of the
-     * given list \a dest.  Note that the list \a dest will \e not
-     * be emptied at the beginning of this routine (i.e., any
-     * surfaces that were in the list beforehand will be left there).
+     * The surface itself will not be changed.  Instead, a list of
+     * connected components will be returned.
      *
-     * The components inserted into \a dest will always be in standard
+     * The components in this list will always be encoded using standard
      * (tri-quad or tri-quad-oct) coordinates, regardless of the
-     * native coordinate system that is used by the given surface.
-     * Any transverse orientations will be lost.
+     * internal vector encoding that is used by the given surface.
      *
      * This routine is slow, since it performs a depth-first search
      * over the entire set of normal discs.  If the surface contains
      * a very large number of discs (large enough to cause integer
      * overflows or exhaust memory) then this routine will give up and
-     * return 0.
-     *
-     * The components inserted into \a dest will be newly created.  It is
-     * the responsibility of the caller of this routine to deallocate them.
+     * return an empty list.
      *
      * \pre The given normal surface is compact (has finitely many discs)
      * and is also embedded.
@@ -68,12 +60,9 @@ namespace {
      * accordingly.
      *
      * @param s the surface to split into components.
-     * @param dest the vector into which individual components will
-     * be inserted.
-     * @return the number of connected components.
+     * @return the list of connected components.
      */
-    unsigned splitIntoComponents(const NormalSurface& s,
-            std::vector<NormalSurface*>& dest) {
+    std::vector<NormalSurface> splitIntoComponents(const NormalSurface& s) {
         // Shamelessly copied from my orientation/two-sidedness code from
         // years earlier.  Some day I will need to make a generic structure
         // for a depth-first search over normal discs.  Not today.
@@ -81,7 +70,7 @@ namespace {
         // If the precondition (compactness) does not hold, things will get
         // nasty (read: infinite).
         if (! s.isCompact())
-            return 0;
+            return {};
 
         // TODO: First check that there aren't too many discs!
 
@@ -161,43 +150,36 @@ namespace {
 
         // Were there any discs at all?
         if (compID == 0)
-            return 0;
+            return {};
 
         // Create the set of normal surfaces!
         // Note that all vectors are automagically initialised to zero.
+        std::vector<NormalSurface> dest;
         const Triangulation<3>& tri = s.triangulation();
-        NormalSurfaceVector** ans = new NormalSurfaceVector*[compID];
+        std::vector<Vector<LargeInteger>> ans;
+        ans.reserve(compID);
 
-        NormalSurfaceVector* vec;
-        long coord;
-        if (s.systemAllowsAlmostNormal()) {
+        if (s.couldBeAlmostNormal()) {
             for (i = 0; i < compID; ++i)
-                ans[i] = new NSVectorANStandard(
-                    10 * tri.size());
+                ans.push_back(Vector<LargeInteger>(10 * tri.size()));
 
-            for (const auto& disc : components) {
-                vec = ans[components.data(disc)];
-                coord = 10 * disc.tetIndex + disc.type;
-                vec->set(coord, (*vec)[coord] + 1);
-            }
+            for (const auto& disc : components)
+                ++ans[components.data(disc)][10 * disc.tetIndex + disc.type];
+
+            for (i = 0; i < compID; ++i)
+                dest.push_back(NormalSurface(tri, NS_AN_STANDARD, ans[i]));
         } else {
             for (i = 0; i < compID; ++i)
-                ans[i] = new NSVectorStandard(
-                    7 * tri.size());
+                ans.push_back(Vector<LargeInteger>(7 * tri.size()));
 
-            for (const auto& disc : components) {
-                vec = ans[components.data(disc)];
-                coord = 7 * disc.tetIndex + disc.type;
-                vec->set(coord, (*vec)[coord] + 1);
-            }
+            for (const auto& disc : components)
+                ++ans[components.data(disc)][7 * disc.tetIndex + disc.type];
+
+            for (i = 0; i < compID; ++i)
+                dest.push_back(NormalSurface(tri, NS_STANDARD, ans[i]));
         }
 
-        for (i = 0; i < compID; ++i)
-            dest.push_back(new NormalSurface(tri, ans[i]));
-        delete[] ans;
-
-        // All done!
-        return compID;
+        return dest;
     }
 } // anonymous namespace
 
@@ -216,28 +198,11 @@ bool NormalSurface::disjoint(const NormalSurface& other) const {
     // Now we know that the sum of both surfaces is an embedded surface.
     // Form the sum, pull it apart into connected components, and see
     // whether we get our original two surfaces back.
-    NormalSurfaceVector* v =
-        static_cast<NormalSurfaceVector*>(vector_->clone());
-    (*v) += *(other.vector_);
-    NormalSurface* sum = new NormalSurface(*triangulation_, v);
-
-    typedef std::vector<NormalSurface*> CompVector;
-    CompVector bits;
-    splitIntoComponents(*sum, bits);
-
-    bool ans = false;
-    if (bits.size() == 2)
-        for (int c = 0; c < 2; ++c)
-            if (sameSurface(*bits[c])) {
-                ans = true;
-                break;
-            }
-
-    for (auto s : bits)
-        delete s;
-    delete sum;
-
-    return ans;
+    //
+    // Note: splitIntoComponents() may return surfaces that use
+    // different vector encodings, but sameSurface() can handle this.
+    std::vector<NormalSurface> bits = splitIntoComponents((*this) + other);
+    return (bits.size() == 2 && (sameSurface(bits[0]) || sameSurface(bits[1])));
 }
 
 } // namespace regina

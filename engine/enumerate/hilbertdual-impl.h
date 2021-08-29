@@ -124,7 +124,7 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
         RayClass* ans;
         for (unsigned i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
-            ans->set(i, IntegerType::one);
+            (*ans)[i] = IntegerType::one;
             action(ans);
         }
 
@@ -203,7 +203,7 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
     for (it = list.begin(); it != list.end(); ++it) {
         ans = new RayClass(dim);
         for (i = 0; i < dim; ++i)
-            ans->set(i, (**it)[i]);
+            (*ans)[i] = (**it)[i];
         action(ans);
 
         delete *it;

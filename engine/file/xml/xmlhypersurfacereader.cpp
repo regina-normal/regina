@@ -32,7 +32,6 @@
 
 #include <vector>
 #include "file/xml/xmlhypersurfacereader.h"
-#include "hypersurface/hscoordregistry.h"
 #include "triangulation/dim4.h"
 #include "utilities/stringutils.h"
 
@@ -43,11 +42,16 @@ void XMLNormalHypersurfaceReader::startElement(const std::string&,
         XMLElementReader*) {
     if (! valueOf(props.lookup("len"), vecLen_))
         vecLen_ = -1;
+    if (! valueOf(props.lookup("enc"), vecEnc_))
+        vecEnc_ = 0;
     name_ = props.lookup("name");
 }
 
 void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
-    if (vecLen_ < 0 || tri_ == 0)
+    // If this file was created before Regina 7.0, then it will not include
+    // a vector encoding.  For those earlier versions of Regina, the encoding
+    // is meant to be deduced from the enclosing list's coordinate system.
+    if (vecLen_ < 0 || ! tri_)
         return;
 
     std::vector<std::string> tokens;
@@ -55,13 +59,7 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    // Bring in cases from the coordinate system registry...
-    NormalHypersurfaceVector* vec = forCoords(coords_, [=](auto info) {
-        return static_cast<NormalHypersurfaceVector*>(
-            new typename decltype(info)::Class(vecLen_));
-    }, nullptr);
-    if (! vec)
-        return;
+    Vector<LargeInteger> vec(vecLen_);
 
     long pos;
     LargeInteger value;
@@ -70,16 +68,19 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
             if (valueOf(tokens[i + 1], value))
                 if (pos >= 0 && pos < vecLen_) {
                     // All looks valid.
-                    vec->set(pos, value);
+                    vec[pos] = value;
                     continue;
                 }
 
         // Found something invalid.
-        delete vec;
         return;
     }
 
-    surface_ = NormalHypersurface(*tri_, vec);
+    if (vecEnc_ != 0)
+        surface_ = NormalHypersurface(*tri_,
+            HyperEncoding::fromIntValue(vecEnc_), std::move(vec));
+    else
+        surface_ = NormalHypersurface(*tri_, coords_, std::move(vec));
     if (! name_.empty())
         surface_->setName(name_);
 }

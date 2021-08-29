@@ -308,7 +308,7 @@ void SurfacesSummaryUI::refresh() {
     // coordinate systems.
     if ((surfaces->triangulation().isIdeal() ||
             ! surfaces->triangulation().isValid()) &&
-            (surfaces->allowsSpun())) {
+            (surfaces->allowsNonCompact())) {
         if (spun == 0) {
             totSpun->setText(tr("No spun (non-compact) surfaces."));
         } else {

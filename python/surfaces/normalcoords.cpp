@@ -31,10 +31,16 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "surfaces/normalcoords.h"
+#include "../helpers.h"
+
+using regina::NormalCoords;
+using regina::NormalEncoding;
+using regina::NormalInfo;
 
 void addNormalCoords(pybind11::module_& m) {
-    pybind11::enum_<regina::NormalCoords>(m, "NormalCoords")
+    pybind11::enum_<NormalCoords>(m, "NormalCoords")
         .value("NS_STANDARD", regina::NS_STANDARD)
         .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)
         .value("NS_QUAD", regina::NS_QUAD)
@@ -47,5 +53,26 @@ void addNormalCoords(pybind11::module_& m) {
         .value("NS_ANGLE", regina::NS_ANGLE)
         .export_values()
         ;
+
+    auto e = pybind11::class_<NormalEncoding>(m, "NormalEncoding")
+        .def(pybind11::init<NormalCoords>())
+        .def(pybind11::init<const NormalEncoding&>())
+        .def("valid", &NormalEncoding::valid)
+        .def("block", &NormalEncoding::block)
+        .def("storesTriangles", &NormalEncoding::storesTriangles)
+        .def("storesOctagons", &NormalEncoding::storesOctagons)
+        .def("couldBeVertexLink", &NormalEncoding::couldBeVertexLink)
+        .def("couldBeNonCompact", &NormalEncoding::couldBeNonCompact)
+        .def("withTriangles", &NormalEncoding::withTriangles)
+        .def("intValue", &NormalEncoding::intValue)
+        .def_static("fromIntValue", &NormalEncoding::fromIntValue)
+        .def(pybind11::self + pybind11::self)
+        ;
+    regina::python::add_eq_operators(e);
+
+    auto i = pybind11::class_<NormalInfo>(m, "NormalInfo")
+        .def_static("name", &NormalInfo::name)
+        ;
+    regina::python::no_eq_operators(i);
 }
 

@@ -905,7 +905,7 @@ void LPData<LPConstraint, IntType>::extractSolution(
         coord = lcm;
         coord *= rhs_[i];
         coord /= entry(i, basis_[i]);
-        v.set(columnPerm[basis_[i]], coord);
+        v[columnPerm[basis_[i]]] = coord;
     }
 
     // Now we take into account the changes of variable due
@@ -920,14 +920,14 @@ void LPData<LPConstraint, IntType>::extractSolution(
             // Even better, this coordinate is never moved by the column
             // permutation.
             pos = 3 * origTableaux_->tri().size();
-            v.set(pos, v[pos] + lcm);
+            v[pos] = v[pos] + lcm;
         } else {
             // For strict angle structures, we pass type == 0, and we
             // constrain *all* coordinates as positive.
             for (pos = 0;
                     pos <= 3 * origTableaux_->tri().size();
                     ++pos)
-                v.set(pos, v[pos] + lcm);
+                v[pos] = v[pos] + lcm;
         }
     } else {
         // For normal and almost normal surfaces, we need to work through
@@ -939,21 +939,21 @@ void LPData<LPConstraint, IntType>::extractSolution(
         for (i = 0; i < nTets; ++i)
             if (type[i] && type[i] < 4) {
                 pos = columnPerm[3 * i + type[i] - 1];
-                v.set(pos, v[pos] + lcm);
+                v[pos] = v[pos] + lcm;
             }
         // ... and then the triangle types.
         for (i = 3 * nTets; i < v.size(); ++i)
             if (type[i - 2 * nTets]) {
                 pos = columnPerm[i];
-                v.set(pos, v[pos] + lcm);
+                v[pos] = v[pos] + lcm;
             }
 
         // Next take into account the changes of variable due to
         // past calls to constrainOct().
         if (octPrimary_ >= 0) {
             pos = columnPerm[octPrimary_];
-            v.set(pos, v[pos] + lcm);
-            v.set(columnPerm[octSecondary_], v[pos]);
+            v[pos] = v[pos] + lcm;
+            v[columnPerm[octSecondary_]] = v[pos];
         }
     }
 

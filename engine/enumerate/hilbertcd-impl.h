@@ -130,7 +130,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     for (i = 0; i < dim; ++i) {
         unitMatch[i] = new Vector<IntegerType>(nEqns);
         for (j = 0; j < nEqns; ++j)
-            unitMatch[i]->set(j, subspace.entry(j, i));
+            (*unitMatch[i])[j] = subspace.entry(j, i);
     }
 
     unsigned stackSize;
@@ -244,7 +244,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
             }
 
             coord[stackSize] = new VecSpec<IntegerType, BitmaskType>(*c);
-            coord[stackSize]->set(i, (*coord[stackSize])[i] + 1);
+            ++(*coord[stackSize])[i];
             coord[stackSize]->mask_.set(i, true);
 
             match[stackSize] = new Vector<IntegerType>(*m);

@@ -299,6 +299,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
          *
+         * If the template argument \a supportInfinity is \c true, then
+         * any string beginning with "inf" (after any initial whitesapce)
+         * will be interpreted as infinity.
+         *
          * Whitespace may be present at the beginning or the end
          * of the given string, and will simply be ignored.
          *
@@ -310,7 +314,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * is based).
          *
          * \pre The given base is zero, or is between 2 and 36 inclusive.
-         * \pre The given string represents a finite integer
+         * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
          * \ifacespython The final parameter \a valid is not present.
@@ -333,6 +337,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * the base will be assumed to be 16.  Otherwise, if the string
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
+         *
+         * If the template argument \a supportInfinity is \c true, then
+         * any string beginning with "inf" (after any initial whitesapce)
+         * will be interpreted as infinity.
          *
          * Whitespace may be present at the beginning or the end
          * of the given string, and will simply be ignored.
@@ -540,6 +548,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Whitespace may be present at the beginning or end of the given
          * string and will simply be ignored.
          *
+         * If the template argument \a supportInfinity is \c true, then
+         * any string beginning with "inf" (after any initial whitesapce)
+         * will be interpreted as infinity.
+         *
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
          *
@@ -554,6 +566,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * Whitespace may be present at the beginning or end of the given
          * string and will simply be ignored.
+         *
+         * If the template argument \a supportInfinity is \c true, then
+         * any string beginning with "inf" (after any initial whitesapce)
+         * will be interpreted as infinity.
          *
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
@@ -2354,12 +2370,21 @@ template <int bytes>
 std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
 
 /**
- * NNativeLong is a typedef for the NativeInteger template class whose
+ * NativeLong is a typedef for the NativeInteger template class whose
  * underlying integer type is a native long.
  *
  * \ifacespython Not present.
  */
-typedef NativeInteger<sizeof(long)> NNativeLong;
+typedef NativeInteger<sizeof(long)> NativeLong;
+
+/**
+ * A deprecated alias for the NativeLong typedef.
+ *
+ * \deprecated Use NativeLong instead.
+ *
+ * \ifacespython Not present.
+ */
+[[deprecated]] typedef NativeLong NNativeLong;
 
 /*@}*/
 
@@ -2542,6 +2567,12 @@ typename IntOfSize<bytes>::type
 
     mpz_clear(tmp);
     return ans;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>::IntegerBase(
+        const std::string& value, int base, bool* valid) :
+        IntegerBase(value.c_str(), base, valid) {
 }
 
 template <bool supportInfinity>

@@ -53,7 +53,7 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    VectorInt* vec = new VectorInt(vecLen);
+    VectorInt vec(vecLen);
 
     long pos;
     Integer value;
@@ -62,16 +62,15 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
             if (valueOf(tokens[i + 1], value))
                 if (pos >= 0 && pos < vecLen) {
                     // All looks valid.
-                    vec->set(pos, value);
+                    vec[pos] = value;
                     continue;
                 }
 
         // Found something invalid.
-        delete vec;
         return;
     }
 
-    angles = AngleStructure(*tri, vec);
+    angles = AngleStructure(*tri, std::move(vec));
 }
 
 XMLElementReader* XMLAngleStructureReader::startSubElement(

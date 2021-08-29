@@ -150,10 +150,11 @@ struct PacketInfo<PACKET_NORMALSURFACES> {
  * which the surfaces were obtained.  If this triangulation changes, the
  * information contained in this packet will become invalid.
  *
- * See the NormalSurfaceVector class notes for details of what to do
+ * See the NormalSurface class notes for details of what to do
  * when introducing a new coordinate system.
  *
- * Normal surface lists should be created using the routine enumerate().
+ * Since Regina 7.0, you can (and should) create normal surface lists
+ * using the class constructor.  There is no need to use enumerate() any more.
  *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow enumeration with some coordinates explicitly set
@@ -170,18 +171,18 @@ class NormalSurfaces : public Packet {
 
     protected:
         std::vector<NormalSurface> surfaces_;
-            /**< Contains the normal surfaces stored in this packet. */
+            /**< Contains all normal surfaces in this list. */
         NormalCoords coords_;
-            /**< Stores which coordinate system is being
-                 used by the normal surfaces in this packet. */
+            /**< The coordinate system that was originally used to enumerate
+                 the normal surfaces in this list. */
         NormalList which_;
             /**< Indicates which normal surfaces these represent within
                  the underlying triangulation. */
         NormalAlg algorithm_;
             /**< Stores the details of the enumeration algorithm that
                  was used to generate this list.  This might not be the
-                 same as the \a algorithmHints flag passed to the
-                 corresponding enumeration routine (e.g., if invalid
+                 same as the \a algorithmHints flag that was originally
+                 passed to the enumeration routine (e.g., if invalid
                  or inappropriate flags were passed). */
 
     public:
@@ -190,8 +191,11 @@ class NormalSurfaces : public Packet {
          * surfaces within a given triangulation.
          *
          * The NormalCoords argument allows you to specify an underlying
-         * coordinate system (e.g., standard coordinates,
-         * quadrilateral coordinates or almost normal coordinates).
+         * coordinate system in which to do the enumeration (e.g., standard
+         * coordinates, quadrilateral coordinates or almost normal coordinates).
+         * This choice of coordinate system will affect which surfaces are
+         * produced, since vertex/fundamental surfaces in one system are not
+         * necessarily vertex/fundamental in another.
          *
          * The NormalList argument is a combination of flags that
          * allows you to specify exactly which normal surfaces you require.
@@ -252,7 +256,9 @@ class NormalSurfaces : public Packet {
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param coords the coordinate system to be used.
+         * @param coords the coordinate system to be used.  This must be
+         * one of the system that Regina is able to use for enumeration;
+         * this is documented alongside each NormalCoords enum value.
          * @param which indicates which normal surfaces should be enumerated.
          * @param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
@@ -298,8 +304,8 @@ class NormalSurfaces : public Packet {
             ProgressTracker* tracker = nullptr);
 
         /**
-         * Returns the coordinate system being used by the
-         * surfaces stored in this set.
+         * Returns the coordinate system that was originally used to enumerate
+         * the surfaces in this list.
          *
          * @return the coordinate system used.
          */
@@ -331,30 +337,39 @@ class NormalSurfaces : public Packet {
          */
         NormalAlg algorithm() const;
         /**
-         * Determines if the coordinate system being used
-         * allows for almost normal surfaces, that is, allows for
-         * octagonal discs.
+         * Determines if the coordinate system that was used for enumeration
+         * allows for almost normal surfaces.
          *
-         * @return \c true if and only if almost normal surfaces are
-         * allowed.
+         * This does not test whether any of the surfaces in this list
+         * actually contain octagons: it simply returns a basic property
+         * of the coordinate system that was used for enumeration.
+         *
+         * @return \c true if and only if almost normal surfaces are supported.
          */
         bool allowsAlmostNormal() const;
         /**
-         * Determines if the coordinate system being used
-         * allows for spun normal surfaces.
+         * Determines if the coordinate system that was used for enumeration
+         * allows for non-compact normal surfaces.
          *
-         * @return \c true if and only if spun normal surface are
+         * This does not test whether any of the surfaces in this list
+         * are actually non-compact: it simply returns a basic property
+         * of the coordinate system that was used for enumeration.
+         *
+         * @return \c true if and only if non-compact normal surfaces are
          * supported.
          */
-        bool allowsSpun() const;
+        bool allowsNonCompact() const;
         /**
-         * Determines if the coordinate system being used
-         * allows for transversely oriented normal surfaces.
+         * A deprecated alias for allowsNonCompact().
          *
-         * @return \c true if and only if transverse orientations are
+         * \deprecated This routine has been renamed to allowsNonCompact(),
+         * for consistency between three and four dimensions.  See
+         * allowsNonCompact() for further details.
+         *
+         * @return c true if and only if non-compact normal surfaces are
          * supported.
          */
-        bool allowsOriented() const;
+        [[deprecated]] bool allowsSpun() const;
         /**
          * Returns whether this list was constructed to contain only
          * properly embedded surfaces.
@@ -416,16 +431,16 @@ class NormalSurfaces : public Packet {
          */
         auto surfaces() const;
         /**
-         * Returns the surface at the requested index in this set.
+         * Returns the surface at the requested index in this list.
          *
-         * @param index the index of the requested surface in this set;
+         * @param index the index of the requested surface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
-         * @return the normal surface at the requested index in this set.
+         * @return the normal surface at the requested index in this list.
          */
         const NormalSurface& surface(size_t index) const;
         /**
-         * Writes the number of surfaces in this set followed by the
+         * Writes the number of surfaces in this list followed by the
          * details of each surface to the given output stream.  Output
          * will be over many lines.
          *
@@ -635,6 +650,9 @@ class NormalSurfaces : public Packet {
          * the surfaces in the new list are deep copies of the originals
          * (so they can be altered without affecting the original surfaces).
          *
+         * For the resulting list, which() will include the NS_CUSTOM
+         * flag, and algorithm() will include the NS_ALG_CUSTOM flag.
+         *
          * @return the new list, which will also have been inserted as
          * a new child packet of the underlying triangulation.
          */
@@ -656,6 +674,9 @@ class NormalSurfaces : public Packet {
          * This original list is not altered in any way.  Likewise,
          * the surfaces in the new list are deep copies of the originals
          * (so they can be altered without affecting the original surfaces).
+         *
+         * For the resulting list, which() will include the NS_CUSTOM
+         * flag, and algorithm() will be precisely NS_ALG_CUSTOM.
          *
          * \pre This list contains only embedded normal surfaces.  More
          * precisely, isEmbeddedOnly() must return \c true.
@@ -693,10 +714,11 @@ class NormalSurfaces : public Packet {
          * the surfaces in the new list are deep copies of the originals
          * (so they can be altered without affecting the original surfaces).
          *
+         * For the resulting list, which() will include the NS_CUSTOM
+         * flag, and algorithm() will be precisely NS_ALG_CUSTOM.
+         *
          * \pre This list contains only embedded normal surfaces.  More
          * precisely, isEmbeddedOnly() must return \c true.
-         * \pre All surfaces within this list are stored using the same
-         * coordinate system (i.e., the same subclass of NormalSurfaceVector).
          *
          * \warning If this list contains a vertex link (plus at least
          * one other surface), then the new list will be identical to
@@ -751,6 +773,9 @@ class NormalSurfaces : public Packet {
          * see "The Weber-Seifert dodecahedral space is non-Haken",
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
          * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
+         *
+         * For the resulting list, which() will include the NS_CUSTOM
+         * flag, and algorithm() will be precisely NS_ALG_CUSTOM.
          *
          * \pre The underlying 3-manifold triangulation is valid and closed.
          * In particular, it has no ideal vertices.
@@ -1015,8 +1040,8 @@ class NormalSurfaces : public Packet {
          * Creates an empty list of normal surfaces with the given
          * parameters.
          *
-         * @param coords the coordinate system to be used
-         * for filling this list.
+         * @param coords the coordinate system that will be used for
+         * enumeration when filling this list.
          * @param which indicates which normal surfaces these will
          * represent within the underlying triangulation.
          * @param algorithm details of the enumeration algorithm that
@@ -1030,7 +1055,7 @@ class NormalSurfaces : public Packet {
 
     private:
         /**
-         * A helper class containing constants, typedefs and operations
+         * A helper class containing constants and operations
          * for working with normal (as opposed to almost normal) surfaces.
          *
          * This class and its partner AlmostNormalSpec can be used to
@@ -1043,7 +1068,7 @@ class NormalSurfaces : public Packet {
         struct NormalSpec;
 
         /**
-         * A helper class containing constants, typedefs and operations
+         * A helper class containing constants and operations
          * for working with almost normal (as opposed to normal) surfaces.
          *
          * This class and its partner NormalSpec can be used to
@@ -1072,9 +1097,6 @@ class NormalSurfaces : public Packet {
          * tree completely.  The parent packet is ignored (and not changed);
          * instead the underlying triangulation is passed explicitly as
          * the argument \a owner.
-         *
-         * Although this routine takes a vector of non-const pointers, it
-         * guarantees not to modify (or destroy) any of the contents.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -1165,13 +1187,8 @@ class NormalSurfaces : public Packet {
         NormalSurfaces* internalStandardToReduced() const;
 
         /**
-         * Contains the code responsible for all normal surface enumeration,
-         * in a setting where the underlying coordinate system is known
-         * at compile time.
-         *
-         * \tparam Coords an instance of the NormalInfo<> template class.
+         * Contains the code responsible for all normal surface enumeration.
          */
-        template <typename Coords>
         class Enumerator {
             private:
                 NormalSurfaces* list_;
@@ -1381,9 +1398,6 @@ class NormalSurfaces : public Packet {
                  * \pre The underlying triangulation is non-empty.
                  */
                 void fillFundamentalFullCone();
-
-            friend class Enumerator<typename Coords::Standard>;
-            friend class Enumerator<typename Coords::Reduced>;
         };
 
     friend class XMLNormalSurfacesReader;
@@ -1392,6 +1406,9 @@ class NormalSurfaces : public Packet {
 /**
  * Generates the set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
+ *
+ * These are the matching equations that will be used when enumerating
+ * normal surfaces in the coordinate system \a coords.
  *
  * Each equation will be represented as a row of the resulting matrix.
  * Each column of the matrix represents a coordinate in the given
@@ -1412,10 +1429,22 @@ class NormalSurfaces : public Packet {
  */
 std::optional<MatrixInt> makeMatchingEquations(
     const Triangulation<3>& triangulation, NormalCoords coords);
+
 /**
  * Generates the validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
  * relative to the given coordinate system.
+ *
+ * For some coordinate systems, these will include additional constraints
+ * of a similar nature (i.e., restricting which combinations of
+ * coordinates may be non-zero).  For instance, in almost normal coordinates,
+ * there will typically be an extra constraint insisting that at most
+ * one octagon type is non-zero across the entire triangulation.
+ *
+ * These are the constraints that will be used when enumerating embedded
+ * surfaces in the given coordinate system (i.e., when the default
+ * NS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
+ * allows for immersed and/or singular surfaces.
  *
  * \ifacespython Not present.
  *
@@ -1459,6 +1488,18 @@ inline const NormalSurface& NormalSurfaces::surface(size_t index) const {
     return surfaces_[index];
 }
 
+inline bool NormalSurfaces::allowsAlmostNormal() const {
+    return NormalEncoding(coords_).storesOctagons();
+}
+
+inline bool NormalSurfaces::allowsNonCompact() const {
+    return NormalEncoding(coords_).couldBeNonCompact();
+}
+
+inline bool NormalSurfaces::allowsSpun() const {
+    return NormalEncoding(coords_).couldBeNonCompact();
+}
+
 inline bool NormalSurfaces::dependsOnParent() const {
     return true;
 }
@@ -1484,7 +1525,7 @@ inline bool NormalSurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>& NormalSurfaces::VectorIterator::
         operator *() const {
-    return it_->vector().coords();
+    return it_->vector();
 }
 
 inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::
@@ -1536,12 +1577,10 @@ inline NormalSurfaces* NormalSurfaces::enumerate(Triangulation<3>& owner,
     }
 }
 
-template <typename Coords>
-inline NormalSurfaces::Enumerator<Coords>::Enumerator(NormalSurfaces* list,
+inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
         Triangulation<3>* triang, const MatrixInt& eqns,
         ProgressTracker* tracker) :
-        list_(list), triang_(triang), eqns_(eqns),
-        tracker_(tracker) {
+        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
 }
 
 } // namespace regina

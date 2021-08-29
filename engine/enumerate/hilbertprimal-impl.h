@@ -179,17 +179,10 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         tracker->setPercent(90);
 
     RayClass* ans;
-    IntegerType tmpInt;
     for (hsit = finalBasis.begin(); hsit != finalBasis.end(); ++hsit) {
         ans = new RayClass(dim);
-        for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i) {
-            // We make two copies of the GMP integer instead of one.
-            // This is because Vector does not give us direct
-            // non-const access to its elements, and so we need a
-            // temporary IntegerType to pass through set() instead.
-            tmpInt.setRaw(hvit->get_mpz_t());
-            ans->set(i, tmpInt);
-        }
+        for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i)
+            (*ans)[i].setRaw(hvit->get_mpz_t());
         action(ans);
     }
 

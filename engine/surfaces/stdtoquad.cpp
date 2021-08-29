@@ -32,10 +32,6 @@
 
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "surfaces/nsvectorstandard.h"
-#include "surfaces/nsvectorquad.h"
-#include "surfaces/nsvectoranstandard.h"
-#include "surfaces/nsvectorquadoct.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
@@ -79,32 +75,31 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     }
 
     // We need to get rid of vertex links entirely before we start.
+    // Build a new list of pointers to the (non-vertex-linking) surfaces
+    // that we are interested in.
     typedef const Vector<LargeInteger>* VectorPtr;
     VectorPtr* use = new VectorPtr[surfaces_.size()];
-    unsigned long nUse = 0;
+    size_t nUse = 0;
 
     for (const NormalSurface& s : surfaces_)
         if (! s.isVertexLinking())
-            use[nUse++] = &s.vector().coords();
+            use[nUse++] = &s.vector();
 
     // We want to take all surfaces with maximal zero sets in quad space.
     // That is, we want surface S if and only if there is no other surface T
-    // where, for every quadrilateral coordinate where S is zero, T is
-    // zero also.
-    // For almost normal surfaces, simply replace "quadrilateral" with
-    // "quadrilateral or octagonal".
-    bool dominates, strict;
+    // where, for every quad coordinate where S is zero, T is zero also.
+    // For almost normal surfaces, simply replace "quad coordinate" with
+    // "quad or oct coordinate".
     unsigned tet, quad, pos;
-    typename Variant::ReducedVector* v;
-    unsigned long i, j;
-    for (i = 0; i < nUse; ++i) {
-        if (use[i] == 0)
+    for (size_t i = 0; i < nUse; ++i) {
+        if (! use[i])
             continue;
 
-        dominates = strict = false;
+        bool dominates = false;
+        bool strict = false;
 
-        for (j = 0; j < nUse; ++j) {
-            if (j == i || use[j] == 0)
+        for (size_t j = 0; j < nUse; ++j) {
+            if (j == i || ! use[j])
                 continue;
 
             dominates = true;
@@ -132,13 +127,13 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
 
         if (! dominates) {
             // We want this surface.
-            v = new typename Variant::ReducedVector(Variant::redLen(n));
+            Vector<LargeInteger> v(Variant::redLen(n));
             pos = 0;
             for (tet = 0; tet < n; ++tet)
                 for (quad = 0; quad < Variant::reducedPerTet; ++quad)
-                    v->set(pos++,
-                        (*use[i])[Variant::stdPos(tet, 4 + quad)]);
-            ans->surfaces_.push_back(NormalSurface(owner, v));
+                    v[pos++] = (*use[i])[Variant::stdPos(tet, 4 + quad)];
+            ans->surfaces_.push_back(NormalSurface(owner,
+                Variant::reducedCoords, std::move(v)));
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if
@@ -148,7 +143,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
             // The domination need to be strict because otherwise we
             // might want use[i] to rule out use[j] (i.e., they both
             // rule out each other).
-            use[i] = 0;
+            use[i] = nullptr;
         }
     }
 

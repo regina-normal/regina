@@ -91,9 +91,9 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
 
     // We have a strict angle structure: reconstruct it.
     unsigned long len = 3 * simplices_.size() + 1;
-    VectorInt* v = new VectorInt(len);
-    lp.extractSolution(*v, nullptr /* type vector */);
-    strictAngleStructure_ = AngleStructure(*this, v);
+    VectorInt v(len);
+    lp.extractSolution(v, nullptr /* type vector */);
+    strictAngleStructure_ = AngleStructure(*this, std::move(v));
     return &std::get<AngleStructure>(strictAngleStructure_);
 }
 
@@ -163,8 +163,8 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
     }
 
     // Build up the final vector from back to front.
-    VectorInt* v = new VectorInt(eqns.columns());
-    v->set(eqns.columns() - 1, 1);
+    VectorInt v(eqns.columns());
+    v[eqns.columns() - 1] = 1;
 
     // We currently have row == rank.
     while (row > 0) {
@@ -179,14 +179,14 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
         Integer den = eqns.entry(row, col);
 
         Integer num; // set to 0
-        for (++col; col < v->size(); ++col)
+        for (++col; col < v.size(); ++col)
             if (eqns.entry(row, col) != 0)
-                num += (eqns.entry(row, col) * (*v)[col]);
+                num += (eqns.entry(row, col) * v[col]);
 
         // Our row echelon form guarantees that den > 0.
         // We need to set v[leading[row]] = -num/den.
         if (den == 1) {
-            v->set(leading[row], -num);
+            v[leading[row]] = -num;
         } else {
             Integer gcd = den.gcd(num); // guaranteed >= 0.
             if (gcd > 1) {
@@ -196,16 +196,16 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
 
             // Still we have den > 0.
             if (den > 1)
-                (*v) *= den;
+                v *= den;
             // Now the current solution has gcd == den.
 
-            v->set(leading[row], -num);
+            v[leading[row]] = -num;
             // Since gcd(num, den) == 1, there is no need to scale down again.
         }
     }
 
     delete[] leading;
-    generalAngleStructure_ = AngleStructure(*this, v);
+    generalAngleStructure_ = AngleStructure(*this, std::move(v));
     return &std::get<AngleStructure>(generalAngleStructure_);
 }
 

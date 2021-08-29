@@ -48,10 +48,6 @@
 #include "angle/anglestructures.h"
 #include "enumerate/treetraversal.h"
 #include "progress/progresstracker.h"
-#include "surfaces/nsvectoranstandard.h"
-#include "surfaces/nsvectorquad.h"
-#include "surfaces/nsvectorquadoct.h"
-#include "surfaces/nsvectorstandard.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/exception.h"
@@ -90,58 +86,62 @@ namespace regina {
 template <class LPConstraint, typename BanConstraint, typename IntType>
 NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildSurface() const {
-    // Note that the vector constructors automatically set all
-    // elements to zero, as required by LPData::extractSolution().
-    NormalSurfaceVector* v;
+    // The TreeTraversal constructor guarantees one of the coordinate systems
+    // NS_STANDARD, NS_AN_STANDARD, NS_QUAD, NS_AN_QUAD_OCT.
+    //
+    // For the almost normal systems, we will first extract a solution from
+    // the tableaux where octagons are encoded in the quad coordinates;
+    // we will then reconstruct the extra octagon coordinates later on.
+    size_t dim;
     if (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT)
-        v = new NSVectorQuad(3 * nTets_);
+        dim = 3 * nTets_;
     else if (coords_ == NS_STANDARD || coords_ == NS_AN_STANDARD)
-        v = new NSVectorStandard(7 * nTets_);
+        dim = 7 * nTets_;
     else
         throw regina::FailedPrecondition(
             "TreeTraversal::buildSurface() requires "
             "standard/quad/quad-oct normal or almost normal coordinates");
 
-    lpSlot_[nTypes_]->extractSolution(*v, type_);
+    // Note that the vector constructors automatically set all
+    // elements to zero, as required by LPData::extractSolution().
+    Vector<LargeInteger> v(dim);
+    lpSlot_[nTypes_]->extractSolution(v, type_);
 
     if (coords_ == NS_QUAD || coords_ == NS_STANDARD)
-        return NormalSurface(origTableaux_.tri(), v);
+        return NormalSurface(origTableaux_.tri(), coords_, std::move(v));
 
     // We have an almost normal surface: restore the octagon
     // coordinates.
-    NormalSurfaceVector* an;
-    unsigned i, j;
     if (coords_ == NS_AN_QUAD_OCT) {
-        an = new NSVectorQuadOct(6 * nTets_);
-        for (i = 0; i < nTets_; ++i)
-            for (j = 0; j < 3; ++j)
-                an->set(6 * i + j, (*v)[3 * i + j]);
+        Vector<LargeInteger> an(6 * nTets_);
+        for (size_t i = 0; i < nTets_; ++i)
+            for (int j = 0; j < 3; ++j)
+                an[6 * i + j] = v[3 * i + j];
         if (octLevel_ >= 0) {
             unsigned octTet = (origTableaux_.columnPerm()[
                 3 * typeOrder_[octLevel_]] / 3);
             unsigned octType = type_[typeOrder_[octLevel_]] - 4;
-            an->set(6 * octTet + 3 + octType,
-                (*v)[3 * octTet + (octType + 1) % 3]);
-            for (j = 0; j < 3; ++j)
-                an->set(6 * octTet + j, 0);
+            an[6 * octTet + 3 + octType] = v[3 * octTet + (octType + 1) % 3];
+            for (int j = 0; j < 3; ++j)
+                an[6 * octTet + j] = 0;
         }
-    } else {
-        an = new NSVectorANStandard(10 * nTets_);
-        for (i = 0; i < nTets_; ++i)
-            for (j = 0; j < 7; ++j)
-                an->set(10 * i + j, (*v)[7 * i + j]);
+        return NormalSurface(origTableaux_.tri(), coords_, std::move(an));
+    } else /* NS_AN_STANDARD */{
+        Vector<LargeInteger> an(10 * nTets_);
+        for (size_t i = 0; i < nTets_; ++i)
+            for (int j = 0; j < 7; ++j)
+                an[10 * i + j] = v[7 * i + j];
         if (octLevel_ >= 0) {
             unsigned octTet = (origTableaux_.columnPerm()[
                 3 * typeOrder_[octLevel_]] / 7);
             unsigned octType = type_[typeOrder_[octLevel_]] - 4;
-            an->set(10 * octTet + 7 + octType,
-                (*v)[7 * octTet + 4 + (octType + 1) % 3]);
-            for (j = 0; j < 3; ++j)
-                an->set(10 * octTet + 4 + j, 0);
+            an[10 * octTet + 7 + octType] =
+                v[7 * octTet + 4 + (octType + 1) % 3];
+            for (int j = 0; j < 3; ++j)
+                an[10 * octTet + 4 + j] = 0;
         }
+        return NormalSurface(origTableaux_.tri(), coords_, std::move(an));
     }
-    delete v;
-    return NormalSurface(origTableaux_.tri(), an);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -154,9 +154,9 @@ AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
             "TreeTraversal::buildStructure() requires "
             "angle structure coordinates");
 
-    VectorInt* v = new VectorInt(3 * nTets_ + 1);
-    lpSlot_[nTypes_]->extractSolution(*v, type_);
-    return AngleStructure(origTableaux_.tri(), v);
+    VectorInt v(3 * nTets_ + 1);
+    lpSlot_[nTypes_]->extractSolution(v, type_);
+    return AngleStructure(origTableaux_.tri(), std::move(v));
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -1181,12 +1181,10 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 std::cout << " (" << idx << " -> " << (int)type_[idx]
                     << ")" << std::endl;
 
-                NormalSurfaceVector* v =
-                    new NSVectorStandard(7 * nTets_);
-                lpSlot_[level_ + 1]->extractSolution(*v, type_);
-                NormalSurface* f = new NormalSurface(origTableaux_.tri(), v);
-                std::cout << f->str() << std::endl;
-                delete f;
+                Vector<LargeInteger> v(7 * nTets_);
+                lpSlot_[level_ + 1]->extractSolution(v, type_);
+                NormalSurface f(origTableaux_.tri(), NS_STANDARD, std::move(v));
+                std::cout << f.str() << std::endl;
             }
 #endif
             if (level_ < nTypes_ - 1) {

@@ -53,8 +53,6 @@
 
 namespace regina {
 
-class NormalSurfaceVector;
-
 template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
 
@@ -1276,9 +1274,8 @@ class LPData {
          *
          * \pre The given vector \a v has been initialised to the zero vector
          * of length origTableaux_->columns().  Note that the constructors
-         * for all of Vector<T> (where \a T is of Regina's own integer types),
-         * NormalSurfaceVector and NormalHypersurfaceVector will automatically
-         * initialise all elements to zero as required.
+         * for all types Vector<T> (where \a T is of Regina's own integer types)
+         * will automatically initialise all elements to zero as required.
          *
          * \pre No individual coordinate column has had more than one call
          * to either of constrainPositive() or constrainOct() (otherwise
@@ -1291,9 +1288,7 @@ class LPData {
          *
          * \tparam RayClass the class used to hold the output vector \a v.
          * This should be Vector<T> where \a T is one of Regina's own integer
-         * types (Integer, LargeInteger or NativeInteger), or else one
-         * of Regina's surface classes (NormalSurfaceVector or
-         * NormalHypersurfaceVector).
+         * types (Integer, LargeInteger or NativeInteger).
          *
          * @param v the vector into which the values of the variables
          * will be placed.
@@ -1484,7 +1479,7 @@ namespace regina {
 // Inline functions for LPMatrix
 
 template <typename IntType>
-inline LPMatrix<IntType>::LPMatrix() : dat_(nullptr) {
+inline LPMatrix<IntType>::LPMatrix() : rows_(0), cols_(0), dat_(nullptr) {
 }
 
 template <typename IntType>

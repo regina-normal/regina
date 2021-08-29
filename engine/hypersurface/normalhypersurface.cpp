@@ -38,41 +38,50 @@
 
 namespace regina {
 
-bool NormalHypersurfaceVector::isCompact(const Triangulation<4>& triang)
-        const {
-    size_t nPents = triang.size();
-    size_t pent;
-    int type;
-    for (pent = 0; pent < nPents; pent++) {
-        for (type = 0; type < 5; type++)
-            if (tetrahedra(pent, type, triang).isInfinite())
-                return false;
-        for (type = 0; type < 10; type++)
-            if (prisms(pent, type, triang).isInfinite())
-                return false;
+LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
+    // Find a pentachoron next to the edge in question.
+    const EdgeEmbedding<4>& emb = triangulation_->edge(edgeIndex)->front();
+    const size_t pentPos = enc_.block() * emb.pentachoron()->index();
+    int start = emb.vertices()[0];
+    int end = emb.vertices()[1];
+
+    // Add up the tetrahedra and prisms meeting that edge.
+    // Tetrahedra:
+    LargeInteger ans = vector_[pentPos + start] + vector_[pentPos + end];
+    // Prisms:
+    int e = Edge<4>::edgeNumber[start][end];
+    for (int i = 0; i < 3; ++i) {
+        ans += vector_[pentPos + 5 +
+            Edge<4>::edgeNumber[start][Triangle<4>::triangleVertex[e][i]]];
+        ans += vector_[pentPos + 5 +
+            Edge<4>::edgeNumber[end][Triangle<4>::triangleVertex[e][i]]];
     }
-    return true;
-}
-
-NormalHypersurface* NormalHypersurface::clone() const {
-    NormalHypersurface* ans = new NormalHypersurface(*triangulation_,
-        dynamic_cast<NormalHypersurfaceVector*>(vector_->clone()));
-
-    ans->orientable_ = orientable_;
-    ans->twoSided_ = twoSided_;
-    ans->connected_ = connected_;
-    ans->realBoundary_ = realBoundary_;
-    ans->compact_ = compact_;
-    ans->H1_ = H1_;
-
     return ans;
 }
 
-NormalHypersurface NormalHypersurface::doubleHypersurface() const {
-    NormalHypersurface ans(*triangulation_,
-        dynamic_cast<NormalHypersurfaceVector*>(vector_->clone()));
+bool NormalHypersurface::isCompact() const {
+    if (compact_.has_value())
+        return *compact_;
 
-    *(ans.vector_) += *(ans.vector_);
+    if (enc_.couldBeNonCompact()) {
+        // It is only the tetrahedron coordinates that could be infinite.
+        // Ignore prisms.
+        size_t nPent = triangulation_->size();
+        for (size_t pent = 0; pent < nPent; pent++) {
+            for (int type = 0; type < 5; type++)
+                if (tetrahedra(pent, type).isInfinite())
+                    return *(compact_ = false);
+        }
+    }
+    return *(compact_ = true);
+}
+
+NormalHypersurface NormalHypersurface::doubleHypersurface() const {
+    // Don't use the copy constructor, since we want to choose which
+    // properties we keep.
+    NormalHypersurface ans(*triangulation_, enc_, vector_);
+
+    ans.vector_ += ans.vector_;
 
     // Some properties can be copied straight across.
     ans.realBoundary_ = realBoundary_;
@@ -84,15 +93,13 @@ NormalHypersurface NormalHypersurface::doubleHypersurface() const {
 
 void NormalHypersurface::writeTextShort(std::ostream& out) const {
     size_t nPents = triangulation_->size();
-    size_t pent;
-    unsigned j;
-    for (pent=0; pent < nPents; pent++) {
+    for (size_t pent = 0; pent < nPents; pent++) {
         if (pent > 0)
             out << " || ";
-        for (j=0; j<5; j++)
+        for (int j = 0; j < 5; j++)
             out << tetrahedra(pent, j) << ' ';
         out << ';';
-        for (j=0; j<10; j++)
+        for (int j = 0; j < 10; j++)
             out << ' ' << prisms(pent, j);
     }
 }
@@ -102,14 +109,15 @@ void NormalHypersurface::writeXMLData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     // Write the opening tag including vector length.
-    size_t vecLen = vector_->size();
-    out << "  <hypersurface len=\"" << vecLen << "\" name=\""
-        << xmlEncodeSpecialChars(name_) << "\">";
+    size_t vecLen = vector_.size();
+    out << "  <hypersurface "
+        "enc=\"" << enc_.intValue() << "\" "
+        "len=\"" << vecLen << "\" "
+        "name=\"" << xmlEncodeSpecialChars(name_) << "\">";
 
     // Write all non-zero entries.
-    LargeInteger entry;
     for (size_t i = 0; i < vecLen; i++) {
-        entry = (*vector_)[i];
+        LargeInteger entry = vector_[i];
         if (entry != 0)
             out << ' ' << i << ' ' << entry;
     }
@@ -124,54 +132,34 @@ void NormalHypersurface::writeXMLData(std::ostream& out) const {
     out << " </hypersurface>\n";
 }
 
-bool NormalHypersurface::isEmpty() const {
-    size_t nPents = triangulation_->size();
-
-    size_t p;
-    int i;
-
-    for (p = 0; p < nPents; ++p) {
-        for (i = 0; i < 5; ++i)
-            if (tetrahedra(p, i) != 0)
-                return false;
-
-        for (i = 0; i < 10; ++i)
-            if (prisms(p, i) != 0)
-                return false;
+bool NormalHypersurface::sameSurface(const NormalHypersurface& other) const {
+    if (enc_ == other.enc_) {
+        // This is a common case, and a straight left-to-right scan
+        // should be faster than jumping around the vectors.
+        return vector_ == other.vector_;
     }
 
-    return true;
-}
-
-bool NormalHypersurface::sameSurface(const NormalHypersurface& other) const {
     size_t nPents = triangulation_->size();
 
-    size_t p;
-    int i;
-
-    for (p = 0; p < nPents; ++p) {
-        for (i = 0; i < 5; ++i)
+    for (size_t p = 0; p < nPents; ++p) {
+        for (int i = 0; i < 5; ++i)
             if (tetrahedra(p, i) != other.tetrahedra(p, i))
                 return false;
-
-        for (i = 0; i < 10; ++i)
+        for (int i = 0; i < 10; ++i)
             if (prisms(p, i) != other.prisms(p, i))
                 return false;
     }
-
     return true;
 }
 
 bool NormalHypersurface::embedded() const {
     size_t nPent = triangulation_->size();
 
-    int type;
-    int found, prism[2];
-    int i, j;
+    int prism[2];
     for (size_t pent = 0; pent < nPent; ++pent) {
         // Find all prism types that appear in this pentachoron.
-        found = 0;
-        for (type = 0; type < 10; ++type)
+        int found = 0;
+        for (int type = 0; type < 10; ++type)
             if (prisms(pent, type) > 0) {
                 if (found == 2)
                     return false;
@@ -180,8 +168,8 @@ bool NormalHypersurface::embedded() const {
 
         // If we do use two prisms, ensure they are compatible.
         if (found == 2)
-            for (i = 0; i < 2; ++i)
-                for (j = 0; j < 2; ++j)
+            for (int i = 0; i < 2; ++i)
+                for (int j = 0; j < 2; ++j)
                     if (Edge<4>::edgeVertex[prism[0]][i] ==
                             Edge<4>::edgeVertex[prism[1]][j])
                         return false;
@@ -194,13 +182,11 @@ bool NormalHypersurface::locallyCompatible(const NormalHypersurface& other)
         const {
     size_t nPent = triangulation_->size();
 
-    int type;
-    int found, prism[2];
-    int i, j;
+    int prism[2];
     for (size_t pent = 0; pent < nPent; ++pent) {
         // Find all prism types that appear in this pentachoron.
-        found = 0;
-        for (type = 0; type < 10; ++type)
+        int found = 0;
+        for (int type = 0; type < 10; ++type)
             if (prisms(pent, type) > 0 || other.prisms(pent, type) > 0) {
                 if (found == 2)
                     return false;
@@ -209,8 +195,8 @@ bool NormalHypersurface::locallyCompatible(const NormalHypersurface& other)
 
         // If we do use two prisms, ensure they are compatible.
         if (found == 2)
-            for (i = 0; i < 2; ++i)
-                for (j = 0; j < 2; ++j)
+            for (int i = 0; i < 2; ++i)
+                for (int j = 0; j < 2; ++j)
                     if (Edge<4>::edgeVertex[prism[0]][i] ==
                             Edge<4>::edgeVertex[prism[1]][j])
                         return false;
@@ -225,29 +211,25 @@ void NormalHypersurface::calculateRealBoundary() const {
         return;
     }
 
-    size_t index;
     size_t tot = triangulation_->size();
-    const Pentachoron<4>* pent;
-    int type, facet;
-
-    for (index = 0; index < tot; index++) {
-        pent = triangulation_->pentachoron(index);
+    for (size_t index = 0; index < tot; index++) {
+        const Pentachoron<4>* pent = triangulation_->pentachoron(index);
         if (pent->hasBoundary()) {
             // Check for piece types with boundary
-            for (type = 0; type < 10; type++) {
+            for (int type = 0; type < 10; type++) {
                 if (prisms(index, type) > 0) {
                     realBoundary_ = true;
                     return;
                 }
             }
-            for (type = 0; type < 5; type++)
+            for (int type = 0; type < 5; type++)
                 if (tetrahedra(index, type) > 0) {
                     // Make sure the tetrahedron actually hits the
                     // boundary.
-                    for (facet = 0; facet < 5; facet++) {
+                    for (int facet = 0; facet < 5; facet++) {
                         if (facet == type)
                             continue;
-                        if (pent->adjacentPentachoron(facet) == 0) {
+                        if (! pent->adjacentPentachoron(facet)) {
                             realBoundary_ = true;
                             return;
                         }

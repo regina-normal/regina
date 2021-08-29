@@ -90,7 +90,7 @@ typedef Vector<Integer> AngleStructureVector [[deprecated]];
  */
 class AngleStructure : public ShortOutput<AngleStructure> {
     private:
-        Vector<Integer>* vector_;
+        Vector<Integer> vector_;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
         const Triangulation<3>* triangulation_;
@@ -117,10 +117,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
     public:
         /**
          * Creates a new copy of the given angle structure.
-         *
-         * @param other the angle structure to clone.
          */
-        AngleStructure(const AngleStructure& other);
+        AngleStructure(const AngleStructure&) = default;
 
         /**
          * Creates a new copy of the given angle structure.
@@ -140,38 +138,55 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * Moves the given angle structure into this new angle structure.
          * This is a fast (constant time) operation.
          *
-         * The angle structure that is passed (\a src) will no longer be usable.
-         *
-         * @param src the angle structure to move.
+         * The angle structure that is passed will no longer be usable.
          */
-        AngleStructure(AngleStructure&& src) noexcept;
+        AngleStructure(AngleStructure&&) noexcept = default;
 
         /**
          * Creates a new angle structure on the given triangulation with
          * the given coordinate vector.
          *
-         * This angle structure will claim ownership of the given vector,
-         * and so you should not change or destroy the vector yourself
-         * afterwards.
+         * This constructor takes a deep copy of the given vector.
+         * There is a move version also, for situations where you can make
+         * your vector an rvalue reference.  Note that none of the
+         * constructors ever copy the triangulation: an angle structure always
+         * maintains just a reference to its enclosing triangulation.
          *
          * \pre The given coordinate vector represents an angle structure on
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
-         * \pre The given vector is not a null pointer.
          *
          * \ifacespython Not present.
          *
          * @param triang the triangulation on which this angle structure lies.
-         * @param newVector a vector containing the individual angles in the
+         * @param vector a vector containing the individual angles in the
          * angle structure.
          */
         AngleStructure(const Triangulation<3>& triang,
-            Vector<Integer>* newVector);
+            const Vector<Integer>& vector);
+
         /**
-         * Destroys this angle structure.
-         * The underlying vector of angles will also be deallocated.
+         * Creates a new angle structure on the given triangulation with
+         * the given coordinate vector.
+         *
+         * This constructor moves the contents of the given vector into
+         * this angle structure, and therefore runs in fast constant time.
+         * Note that none of the constructors ever copy the triangulation:
+         * an angle structure always maintains just a reference to its
+         * enclosing triangulation.
+         *
+         * \pre The given coordinate vector represents an angle structure on
+         * the given triangulation, according to the integer vector
+         * representation described in the notes for vector().
+         *
+         * \ifacespython Not present.
+         *
+         * @param triang the triangulation on which this angle structure lies.
+         * @param vector a vector containing the individual angles in the
+         * angle structure.
          */
-        ~AngleStructure();
+        AngleStructure(const Triangulation<3>& triang,
+            Vector<Integer>&& vector);
 
         /**
          * Deprecated routine that creates a newly allocated clone of this
@@ -193,10 +208,9 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *
          * This operator induces a deep copy of the given angle structure.
          *
-         * @param value the angle structure to copy.
          * @return a reference to this angle structure.
          */
-        AngleStructure& operator = (const AngleStructure& value);
+        AngleStructure& operator = (const AngleStructure&) = default;
 
         /**
          * Moves the contents of the given angle structure to this structure.
@@ -207,12 +221,11 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * length vectors (but of course if either property differs then
          * this structure will be adjusted accordingly).
          *
-         * The structure that was passed (\a value) will no longer be usable.
+         * The structure that was passed will no longer be usable.
          *
-         * @param value the angle structure to move.
          * @return a reference to this angle structure.
          */
-        AngleStructure& operator = (AngleStructure&& value) noexcept;
+        AngleStructure& operator = (AngleStructure&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given angle structure.
@@ -335,12 +348,11 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         /**
          * A deprecated alias for vector().
          *
-         * \deprecated This routine has been renamed to vector().  Note that
-         * the replacement routine vector() returns a reference, not a pointer.
+         * \deprecated This routine has been renamed to vector().
          *
          * @return the underlying integer vector.
          */
-        [[deprecated]] const Vector<Integer>* rawVector() const;
+        [[deprecated]] const Vector<Integer>& rawVector() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -389,58 +401,28 @@ void swap(AngleStructure& a, AngleStructure& b) noexcept;
 // Inline functions for AngleStructure
 
 inline AngleStructure::AngleStructure(const Triangulation<3>& triang,
-        Vector<Integer>* newVector) : vector_(newVector),
+        const Vector<Integer>& vector) : vector_(vector),
+        triangulation_(&triang), flags_(0) {
+}
+
+inline AngleStructure::AngleStructure(const Triangulation<3>& triang,
+        Vector<Integer>&& vector) : vector_(std::move(vector)),
         triangulation_(&triang), flags_(0) {
 }
 
 inline AngleStructure::AngleStructure(const AngleStructure& other,
         const Triangulation<3>& triangulation) :
-        vector_(new Vector<Integer>(*other.vector_)),
+        vector_(other.vector_),
         triangulation_(&triangulation),
         flags_(other.flags_) {
-}
-
-inline AngleStructure::AngleStructure(const AngleStructure& other) :
-        vector_(new Vector<Integer>(*other.vector_)),
-        triangulation_(other.triangulation_),
-        flags_(other.flags_) {
-}
-
-inline AngleStructure::AngleStructure(AngleStructure&& src) noexcept :
-        vector_(src.vector_),
-        triangulation_(src.triangulation_),
-        flags_(src.flags_) {
-    src.vector_ = nullptr;
-}
-
-inline AngleStructure::~AngleStructure() {
-    delete vector_;
 }
 
 inline AngleStructure* AngleStructure::clone() const {
     return new AngleStructure(*this);
 }
 
-inline AngleStructure& AngleStructure::operator = (
-        const AngleStructure& value) {
-    *vector_ = *value.vector_;
-    triangulation_ = value.triangulation_;
-    flags_ = value.flags_;
-    return *this;
-}
-
-inline AngleStructure& AngleStructure::operator = (AngleStructure&& value)
-        noexcept {
-    // Let value dispose of the original vector contents.
-    std::swap(vector_, value.vector_);
-
-    triangulation_ = value.triangulation_;
-    flags_ = value.flags_;
-    return *this;
-}
-
 inline void AngleStructure::swap(AngleStructure& other) noexcept {
-    std::swap(vector_, other.vector_);
+    vector_.swap(other.vector_);
     std::swap(triangulation_, other.triangulation_);
     std::swap(flags_, other.flags_);
 }
@@ -468,10 +450,10 @@ inline bool AngleStructure::isVeering() const {
 }
 
 inline const Vector<Integer>& AngleStructure::vector() const {
-    return *vector_;
+    return vector_;
 }
 
-inline const Vector<Integer>* AngleStructure::rawVector() const {
+inline const Vector<Integer>& AngleStructure::rawVector() const {
     return vector_;
 }
 

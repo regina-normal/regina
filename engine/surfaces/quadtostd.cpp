@@ -36,10 +36,6 @@
 #include "maths/vector.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "surfaces/nsvectorstandard.h"
-#include "surfaces/nsvectorquad.h"
-#include "surfaces/nsvectoranstandard.h"
-#include "surfaces/nsvectorquadoct.h"
 #include "triangulation/dim3.h"
 #include "utilities/bitmask.h"
 #include <iterator>
@@ -72,23 +68,6 @@ template void NormalSurfaces::buildStandardFromReduced<
  * Put helper classes and constants into an anonymous namespace.
  */
 namespace {
-    /**
-     * A back insertion iterator that defines \a value_type, which is
-     * required by DoubleDescription::enumerate().
-     *
-     * The standard back_insert_iterator does not provide this typedef,
-     * so we subclass and provide the typedef ourselves.
-     */
-    class VectorInserter : public std::back_insert_iterator<
-            std::vector<NormalSurfaceVector> > {
-        public:
-            typedef NormalSurfaceVector* value_type;
-            VectorInserter(std::vector<NormalSurfaceVector>& v) :
-                    std::back_insert_iterator<
-                        std::vector<NormalSurfaceVector> >(v) {
-            }
-    };
-
     /**
      * A helper class for converting between reduced and standard
      * solution sets, describing a single ray (which is typically a
@@ -204,6 +183,16 @@ namespace {
             }
 
             /**
+             * Moves the contents of the given ray into this new ray.
+             */
+            RaySpec(RaySpec&&) noexcept = default;
+
+            /**
+             * Moves the contents of the given ray into this ray.
+             */
+            RaySpec& operator = (RaySpec&&) noexcept = default;
+
+            /**
              * Returns the bitmask listing which coordinates of this ray
              * are currently set to zero.  See the class notes for details.
              *
@@ -276,21 +265,20 @@ namespace {
 
             /**
              * Returns a new normal (or almost normal) surface whose
-             * coordinates are described by this vector.  The template
-             * argument dictates the class of the underlying normal surface
-             * vector (i.e., the underlying coordinate system).
+             * coordinates are described by this vector.
+             *
+             * The normal coordinates will be moved out of this vector, and
+             * so this object will become unsable (as indicated by the
+             * rvalue reference qualifier).
              *
              * @param tri the underlying triangulation.
-             * @return a newly created normal surface based on this vector.
+             * @param enc the encoding used by this vector to describe a
+             * normal surface.
+             * @return a normal surface based on this vector.
              */
-            template <class VectorClass>
-            NormalSurface recover(const Triangulation<3>& tri) const {
-                VectorClass* v = new VectorClass(size());
-
-                for (size_t i = 0; i < size(); ++i)
-                    v->set(i, elements[i]);
-
-                return NormalSurface(tri, v);
+            NormalSurface recover(const Triangulation<3>& tri,
+                    NormalEncoding enc) && {
+                return NormalSurface(tri, enc, std::move(*this));
             }
 
             /**
@@ -380,18 +368,16 @@ void NormalSurfaces::buildStandardFromReducedUsing(
         const std::vector<NormalSurface>& reducedList,
         ProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.
-    unsigned long n = owner.size();
-    size_t slen = Variant::stdLen(n); // # standard coordinates
-    unsigned long llen = owner.countVertices(); // # vertex links
-
-    unsigned i;
+    const size_t n = owner.size();
+    const size_t slen = Variant::stdLen(n); // # standard coordinates
+    const size_t llen = owner.countVertices(); // # vertex links
 
     // Recreate the quadrilateral constraints (or the corresponding
     // constraints for almost normal surfaces) as bitmasks.
     // Since we have a non-empty triangulation, we know the list of
     // constraints is non-empty.
     EnumConstraints constraints =
-        Variant::StandardVector::makeEmbeddedConstraints(owner);
+        makeEmbeddedConstraints(owner, Variant::standardCoords);
 
     BitmaskType* constraintsBegin = new BitmaskType[constraints.size()];
     BitmaskType* constraintsEnd = constraintsBegin;
@@ -403,34 +389,32 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     }
 
     // Create all vertex links.
-    typename Variant::StandardVector** link =
-        new typename Variant::StandardVector*[llen];
+    // TODO: Do this by value.
+    Vector<LargeInteger>** link = new Vector<LargeInteger>*[llen];
 
-    for (i = 0; i < llen; ++i) {
-        link[i] = new typename Variant::StandardVector(slen);
+    for (size_t i = 0; i < llen; ++i) {
+        link[i] = new Vector<LargeInteger>(slen);
 
         for (auto& emb : *owner.vertex(i))
-            link[i]->set(Variant::stdPos(
-                emb.tetrahedron()->markedIndex(), emb.vertex()), 1);
+            (*link[i])[Variant::stdPos(
+                emb.tetrahedron()->markedIndex(), emb.vertex())] = 1;
     }
 
     // Create the initial set of rays:
+    // TODO: Keep these by value.
     typedef std::vector<RaySpec<BitmaskType>*> RaySpecList;
     RaySpecList list[2];
 
-    NormalSurfaceVector* v;
-    for (const auto& s : reducedList) {
-        v = static_cast<const NSVectorMirrored&>(s.vector()).makeMirror(owner);
-        list[0].push_back(new RaySpec<BitmaskType>(v->coords()));
-        delete v;
-    }
+    // TODO: Check that s uses the right encoding.
+    for (auto& s : reducedList)
+        list[0].push_back(new RaySpec<BitmaskType>(s.vector()));
 
     // Each additional inequality is of the form tri_coord >= 0.
     // We will therefore just create them on the fly as we need them.
 
     // And run!
     BitmaskType ignoreFacets(slen);
-    for (i = 0; i < slen; ++i)
+    for (size_t i = 0; i < slen; ++i)
         if (i % Variant::totalPerTet < 4)
             ignoreFacets.set(i, true);
 
@@ -450,7 +434,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     unsigned long slices = 0;
     unsigned iterations;
     for (vtx = 0; vtx < llen; ++vtx) {
-        linkSpec = new RaySpec<BitmaskType>(link[vtx]->coords());
+        linkSpec = new RaySpec<BitmaskType>(*link[vtx]);
         delete link[vtx];
 
         list[workingList].push_back(new RaySpec<BitmaskType>(&owner, vtx,
@@ -564,8 +548,8 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                 }
 
             // Clean up and prepare for the next iteration.
-            for (negit = neg.begin(); negit != neg.end(); ++negit)
-                delete *negit;
+            for (auto ray : neg)
+                delete ray;
 
             pos.clear();
             neg.clear();
@@ -583,18 +567,17 @@ void NormalSurfaces::buildStandardFromReducedUsing(
         // new common factors that can be divided out.
         list[workingList].push_back(linkSpec);
 
-        for (it = list[workingList].begin(); it != list[workingList].end();
-                ++it) {
-            for (i = vtx + 1; i < llen; ++i)
-                (*it)->reduce(link[i]->coords());
-            (*it)->scaleDown();
+        for (auto ray : list[workingList]) {
+            for (size_t i = vtx + 1; i < llen; ++i)
+                ray->reduce(*link[i]);
+            ray->scaleDown();
         }
     }
 
     // All done!  Put the solutions into the normal surface list and clean up.
     for (auto ray : list[workingList]) {
-        surfaces_.push_back(ray->
-            template recover<typename Variant::StandardVector>(owner));
+        surfaces_.push_back(std::move(*ray).recover(
+            owner, Variant::standardCoords));
         delete ray;
     }
 

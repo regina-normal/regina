@@ -101,7 +101,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     for (i = 0, j = 0; i < subspace.columns(); ++i)
         if (facets_.get(i)) {
             // We know in advance that this coordinate will be zero.
-            dest.set(i, IntegerType::zero);
+            dest[i] = IntegerType::zero;
         } else {
             use[j++] = i;
         }
@@ -110,7 +110,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // If there are no equations then there must be only one non-zero
     // coordinate, and vice versa.
     if (cols == 1) {
-        dest.set(*use, 1);
+        dest[*use] = 1;
         delete[] use;
         return;
     }
@@ -191,9 +191,9 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         common.negate();
 
     for (i = 0; i < rows; ++i)
-        dest.set(use[lead[i]], - (common * m[i * cols + lead[rows]]).
-            divExact(m[i * cols + lead[i]]));
-    dest.set(use[lead[rows]], common);
+        dest[use[lead[i]]] = - (common * m[i * cols + lead[rows]]).
+            divExact(m[i * cols + lead[i]]);
+    dest[use[lead[rows]]] = common;
 
     dest.scaleDown();
 
@@ -272,7 +272,7 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
         RayClass* ans;
         for (unsigned long i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
-            ans->set(i, IntegerType::one);
+            (*ans)[i] = IntegerType::one;
             action(ans);
         }
 

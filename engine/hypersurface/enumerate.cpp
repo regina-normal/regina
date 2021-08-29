@@ -35,13 +35,59 @@
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
 #include "hypersurface/normalhypersurfaces.h"
-#include "hypersurface/hscoordregistry.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
+
+namespace {
+    /**
+     * A class that makes a vector appear as though it uses a different
+     * encoding.
+     *
+     * This can only be used when the desired encoding stores a subset of the
+     * coordinates that the source encoding stores.  In other words, it can
+     * hide unwanted coordinates but it cannot reconstruct missing coordinates.
+     *
+     * This is (in particular) used by the two-pass primal Hilbert basis
+     * algorithm, where the second pass needs to "forget" any reconstructed
+     * tetrahedron coordinates that were added by the NormalHypersurface
+     * constructor at the end of the first pass.
+     */
+    class HSShadowVector {
+        private:
+            const Vector<LargeInteger>& source_;
+            HyperEncoding srcEnc_;
+            HyperEncoding destEnc_;
+            size_t destSize_;
+
+        public:
+            HSShadowVector(const Vector<LargeInteger>& source,
+                    HyperEncoding srcEnc, HyperEncoding destEnc) :
+                    source_(source), srcEnc_(srcEnc), destEnc_(destEnc),
+                    destSize_((source_.size() / srcEnc.block()) *
+                        destEnc_.block()) {
+            }
+
+            size_t size() const {
+                return destSize_;
+            }
+
+            const LargeInteger& operator [] (size_t destIndex) const {
+                if (srcEnc_.block() == destEnc_.block())
+                    return source_[destIndex];
+
+                size_t block_ = destIndex / destEnc_.block();
+                size_t type_ = (srcEnc_.storesTetrahedra() &&
+                        ! destEnc_.storesTetrahedra()) ?
+                    (destIndex % destEnc_.block() + 5) :
+                    (destIndex % destEnc_.block());
+                return source_[srcEnc_.block() * block_ + type_];
+            }
+    };
+}
 
 NormalHypersurfaces::NormalHypersurfaces(Triangulation<4>& owner,
         HyperCoords coords, HyperList which, HyperAlg algHints,
@@ -59,18 +105,13 @@ NormalHypersurfaces::NormalHypersurfaces(Triangulation<4>& owner,
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
         std::thread([=, &owner](MatrixInt e) {
-            forCoords(coords, [=, &e, &owner](auto info) {
-                Enumerator<decltype(info)>(this, &owner, e, tracker).enumerate();
-            });
+            Enumerator(this, &owner, e, tracker).enumerate();
         }, std::move(*eqns)).detach();
     } else
-        forCoords(coords, [=, &eqns, &owner](auto info) {
-            Enumerator<decltype(info)>(this, &owner, *eqns, tracker).enumerate();
-        });
+        Enumerator(this, &owner, *eqns, tracker).enumerate();
 }
 
-template <typename Coords>
-void NormalHypersurfaces::Enumerator<Coords>::enumerate() {
+void NormalHypersurfaces::Enumerator::enumerate() {
     // Clean up the "type of list" flag.
     list_->which_ &= (
         HS_EMBEDDED_ONLY | HS_IMMERSED_SINGULAR | HS_VERTEX | HS_FUNDAMENTAL);
@@ -92,8 +133,7 @@ void NormalHypersurfaces::Enumerator<Coords>::enumerate() {
         tracker_->setFinished();
 }
 
-template <typename Coords>
-void NormalHypersurfaces::Enumerator<Coords>::fillVertex() {
+void NormalHypersurfaces::Enumerator::fillVertex() {
     // ----- Decide which algorithm to use -----
 
     // Here we will set the algorithm_ flag to precisely what we plan to do.
@@ -114,25 +154,27 @@ void NormalHypersurfaces::Enumerator<Coords>::fillVertex() {
     }
 }
 
-template <typename Coords>
-void NormalHypersurfaces::Enumerator<Coords>::fillVertexDD() {
+void NormalHypersurfaces::Enumerator::fillVertexDD() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         EnumConstraints c = makeEmbeddedConstraints(
             *triang_, list_->coords_);
-        DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-            [this](NormalHypersurfaceVector* v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+        DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_,
+                    list_->coords_, std::move(*v)));
+                delete v;
             }, eqns_, &c, tracker_);
     } else {
-        DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-            [this](NormalHypersurfaceVector* v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+        DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_,
+                    list_->coords_, std::move(*v)));
+                delete v;
             }, eqns_, nullptr, tracker_);
     }
 }
 
-template <typename Coords>
-void NormalHypersurfaces::Enumerator<Coords>::fillFundamental() {
+void NormalHypersurfaces::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
     if (triang_->isEmpty()) {
         list_->algorithm_ = HS_HILBERT_DUAL; /* shrug */
@@ -157,8 +199,7 @@ void NormalHypersurfaces::Enumerator<Coords>::fillFundamental() {
         fillFundamentalDual();
 }
 
-template <typename Coords>
-void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
+void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
     // enumeration has finished (since we might want to pass additional flags
     // to and/or from that routine).
@@ -170,14 +211,24 @@ void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
     if (tracker_)
         tracker_->newStage("Enumerating extremal rays", 0.4);
 
-    NormalHypersurfaces* vtx = new NormalHypersurfaces(list_->coords_,
+    NormalHypersurfaces vtx(list_->coords_,
         HS_VERTEX | (list_->which_.has(HS_EMBEDDED_ONLY) ?
             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator<Coords> e(vtx, triang_, std::move(eqns_), nullptr);
+    Enumerator e(&vtx, triang_, std::move(eqns_), nullptr);
     e.fillVertex();
 
     // We cannot use eqns_ beyond this point, since we moved it into e.
+
+    // The next pass, through HilbertPrimal, will need the vertex vectors
+    // to appears as though they use the original coordinate system.
+    // In particular, we must hide any tetrahedron coordinates that were
+    // reconstructed by NormalSurface at the end of the first pass above.
+    std::vector<HSShadowVector> shadows;
+    shadows.reserve(vtx.size());
+    for (const auto& s : vtx.hypersurfaces())
+        shadows.push_back(HSShadowVector(s.vector(), s.encoding(),
+            HyperEncoding(list_->coords_)));
 
     // Finalise the algorithm flags for this list: combine HS_HILBERT_PRIMAL
     // with whatever vertex enumeration flags were used.
@@ -189,22 +240,23 @@ void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
 
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
-        HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-            [this](NormalHypersurfaceVector* v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
-            }, vtx->beginVectors(), vtx->endVectors(), &c, tracker_);
+        HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_,
+                    list_->coords_, std::move(*v)));
+                delete v;
+            }, shadows.begin(), shadows.end(), &c, tracker_);
     } else {
-        HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-            [this](NormalHypersurfaceVector* v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
-            }, vtx->beginVectors(), vtx->endVectors(), nullptr, tracker_);
+        HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_,
+                    list_->coords_, std::move(*v)));
+                delete v;
+            }, shadows.begin(), shadows.end(), nullptr, tracker_);
     }
-
-    delete vtx;
 }
 
-template <typename Coords>
-void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalDual() {
+void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
     list_->algorithm_ = HS_HILBERT_DUAL;
 
     if (tracker_)
@@ -212,14 +264,18 @@ void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalDual() {
 
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
-        HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-            [this](NormalHypersurfaceVector* v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+        HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_,
+                    list_->coords_, std::move(*v)));
+                delete v;
             }, eqns_, &c, tracker_);
     } else {
-        HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-            [this](NormalHypersurfaceVector* v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_, v));
+        HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>* v) {
+                list_->surfaces_.push_back(NormalHypersurface(*triang_,
+                    list_->coords_, std::move(*v)));
+                delete v;
             }, eqns_, nullptr, tracker_);
     }
 }

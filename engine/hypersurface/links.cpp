@@ -35,43 +35,40 @@
 
 namespace regina {
 
-bool NormalHypersurfaceVector::isVertexLinking(const Triangulation<4>& triang)
-        const {
-    size_t nPents = triang.size();
-    size_t pent;
-    int type;
-    for (pent = 0; pent < nPents; pent++) {
-        for (type = 0; type < 10; type++)
-            if (prisms(pent, type, triang) != 0)
+bool NormalHypersurface::isVertexLinking() const {
+    if (! enc_.couldBeVertexLink())
+        return false;
+
+    size_t nPents = triangulation_->size();
+    for (size_t pent = 0; pent < nPents; pent++) {
+        for (int type = 0; type < 10; type++)
+            if (prisms(pent, type) != 0)
                 return false;
     }
     return true;
 }
 
-const Vertex<4>* NormalHypersurfaceVector::isVertexLink(
-        const Triangulation<4>& triang) const {
-    size_t nPents = triang.size();
-    size_t pent;
-    int type;
+const Vertex<4>* NormalHypersurface::isVertexLink() const {
+    if (! enc_.couldBeVertexLink())
+        return nullptr;
+
+    size_t nPents = triangulation_->size();
 
     // Check that there are no prism pieces.
-    for (pent = 0; pent < nPents; pent++) {
-        for (type = 0; type < 10; type++)
-            if (prisms(pent, type, triang) != 0)
-                return 0;
+    for (size_t pent = 0; pent < nPents; pent++) {
+        for (int type = 0; type < 10; type++)
+            if (prisms(pent, type) != 0)
+                return nullptr;
     }
 
     // Now examine the tetrahedra to see if we link only a single vertex.
-    Vertex<4>* ans = 0;
+    Vertex<4>* ans = nullptr;
     LargeInteger ansMult;
 
-    const Pentachoron<4>* p;
-    LargeInteger coord;
-
-    for (pent = 0; pent < nPents; pent++) {
-        p = triang.pentachoron(pent);
-        for (type = 0; type < 5; type++) {
-            coord = tetrahedra(pent, type, triang);
+    for (size_t pent = 0; pent < nPents; pent++) {
+        const Pentachoron<4>* p = triangulation_->pentachoron(pent);
+        for (int type = 0; type < 5; type++) {
+            LargeInteger coord = tetrahedra(pent, type);
 
             if (coord != 0) {
                 // Some tetrahedron discs of this type.
@@ -81,7 +78,7 @@ const Vertex<4>* NormalHypersurfaceVector::isVertexLink(
                     ansMult = coord;
                 } else if (ans != p->vertex(type)) {
                     // We seem to be linking more than one vertex.
-                    return 0;
+                    return nullptr;
                 }
             }
         }
@@ -89,7 +86,7 @@ const Vertex<4>* NormalHypersurfaceVector::isVertexLink(
 
     // Did we find any candidate vertices at all?
     if (! ans)
-        return 0;
+        return nullptr;
 
     // If the matching equations are satisfied, we are done at this
     // point.  Specifically, the only normal pieces we have are those
@@ -99,30 +96,24 @@ const Vertex<4>* NormalHypersurfaceVector::isVertexLink(
     for (size_t e = 0; e < ans->degree(); ++e)
         if (ansMult != tetrahedra(
                 ans->embedding(e).pentachoron()->index(),
-                ans->embedding(e).vertex(), triang))
-            return 0;
+                ans->embedding(e).vertex()))
+            return nullptr;
 
     // All good.
     return ans;
 }
 
-const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
-        const Triangulation<4>& triang) const {
-    size_t nPents = triang.size();
-    size_t pent;
-    int type;
+const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
+    size_t nPents = triangulation_->size();
 
     // Search through prism pieces for one and only one candidate edge.
-    Edge<4>* ans = 0;
+    Edge<4>* ans = nullptr;
     LargeInteger ansMult;
 
-    const Pentachoron<4>* p;
-    LargeInteger coord;
-
-    for (pent = 0; pent < nPents; pent++) {
-        p = triang.pentachoron(pent);
-        for (type = 0; type < 10; type++) {
-            coord = prisms(pent, type, triang);
+    for (size_t pent = 0; pent < nPents; pent++) {
+        const Pentachoron<4>* p = triangulation_->pentachoron(pent);
+        for (int type = 0; type < 10; type++) {
+            LargeInteger coord = prisms(pent, type);
 
             if (coord != 0) {
                 // Some prism discs of this type.
@@ -132,7 +123,7 @@ const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
                     ansMult = coord;
                 } else if (ans != p->edge(type)) {
                     // We seem to be linking more than one edge.
-                    return 0;
+                    return nullptr;
                 }
             }
         }
@@ -140,7 +131,7 @@ const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
 
     // Did we find any candidate edges at all?
     if (! ans)
-        return 0;
+        return nullptr;
 
     // There are no unwanted prism piece types.  However, we must still
     // run through the prism types that do appear to make sure that they
@@ -148,25 +139,22 @@ const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
     for (size_t e = 0; e < ans->degree(); ++e)
         if (ansMult != prisms(
                 ans->embedding(e).pentachoron()->index(),
-                ans->embedding(e).edge(), triang))
-            return 0;
+                ans->embedding(e).edge()))
+            return nullptr;
 
     // Finally, run through the tetrahedron piece types and make sure
     // that everything checks out.
-    Vertex<4>* v;
-    bool crosses;
-    int i;
-    for (pent = 0; pent < nPents; pent++) {
-        p = triang.pentachoron(pent);
-        for (type = 0; type < 5; type++) {
-            v = p->vertex(type);
+    for (size_t pent = 0; pent < nPents; pent++) {
+        const Pentachoron<4>* p = triangulation_->pentachoron(pent);
+        for (int type = 0; type < 5; type++) {
+            Vertex<4>* v = p->vertex(type);
 
             if (ans->vertex(0) == v || ans->vertex(1) == v) {
                 // We should see tetrahedra here, but only if none of
                 // the four pentachoron edges touching this vertex are
                 // the same edge as ans.
-                crosses = false;
-                for (i = 0; i < 5; ++i) {
+                bool crosses = false;
+                for (int i = 0; i < 5; ++i) {
                     if (i == type)
                         continue;
                     if (p->edge(Edge<4>::edgeNumber[type][i]) == ans) {
@@ -176,15 +164,15 @@ const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
                 }
 
                 if (crosses) {
-                    if (tetrahedra(pent, type, triang) != 0)
-                        return 0;
+                    if (tetrahedra(pent, type) != 0)
+                        return nullptr;
                 } else {
-                    if (tetrahedra(pent, type, triang) != ansMult)
-                        return 0;
+                    if (tetrahedra(pent, type) != ansMult)
+                        return nullptr;
                 }
             } else {
-                if (tetrahedra(pent, type, triang) != 0)
-                    return 0;
+                if (tetrahedra(pent, type) != 0)
+                    return nullptr;
             }
         }
     }

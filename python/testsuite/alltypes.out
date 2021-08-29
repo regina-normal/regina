@@ -1291,6 +1291,12 @@ Equality type : EqualityType.BY_REFERENCE
 HyperAlg : class
 Equality type : EqualityType.BY_VALUE
 
+HyperEncoding : class
+Equality type : EqualityType.BY_VALUE
+
+HyperInfo : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 HyperList : class
 Equality type : EqualityType.BY_VALUE
 
@@ -1414,22 +1420,22 @@ Equality type : EqualityType.BY_REFERENCE
 NormalAlg : class
 Equality type : EqualityType.BY_VALUE
 
-NormalHypersurface : class
-Equality type : EqualityType.BY_REFERENCE
+NormalEncoding : class
+Equality type : EqualityType.BY_VALUE
 
-NormalHypersurfaceVector : class
+NormalHypersurface : class
 Equality type : EqualityType.BY_REFERENCE
 
 NormalHypersurfaces : class
 Equality type : EqualityType.BY_REFERENCE
 
+NormalInfo : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 NormalList : class
 Equality type : EqualityType.BY_VALUE
 
 NormalSurface : class
-Equality type : EqualityType.BY_REFERENCE
-
-NormalSurfaceVector : class
 Equality type : EqualityType.BY_REFERENCE
 
 NormalSurfaces : class

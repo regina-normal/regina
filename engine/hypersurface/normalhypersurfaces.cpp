@@ -36,27 +36,12 @@
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
 #include "hypersurface/normalhypersurfaces.h"
-#include "hypersurface/hscoordregistry.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
-
-std::optional<MatrixInt> makeMatchingEquations(
-        const Triangulation<4>& triangulation, HyperCoords coords) {
-    return forCoords(coords, [&](auto info) {
-        return decltype(info)::Class::makeMatchingEquations(triangulation);
-    }, std::nullopt);
-}
-
-EnumConstraints makeEmbeddedConstraints(
-        const Triangulation<4>& triangulation, HyperCoords coords) {
-    return forCoords(coords, [&](auto info) {
-        return decltype(info)::Class::makeEmbeddedConstraints(triangulation);
-    });
-}
 
 const Triangulation<4>& NormalHypersurfaces::triangulation() const {
     return *dynamic_cast<Triangulation<4>*>(parent());
@@ -86,11 +71,7 @@ void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
     out << " hypersurface";
     if (surfaces_.size() != 1)
         out << 's';
-    out << " ("
-        << forCoords(coords_, [](auto info) {
-                return decltype(info)::name;
-            }, "Unknown")
-        << ')';
+    out << " (" << HyperInfo::name(coords_) << ')';
 }
 
 void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
@@ -114,11 +95,7 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
 
     out << " hypersurfaces\n";
 
-    out << "Coordinates: "
-        << forCoords(coords_, [](auto info) {
-                return decltype(info)::name;
-            }, "Unknown")
-        << '\n';
+    out << "Coordinates: " << HyperInfo::name(coords_) << '\n';
 
     size_t n = surfaces_.size();
     out << "Number of hypersurfaces is " << n << '\n';
@@ -135,10 +112,7 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
         << "algorithm=\"" << algorithm_.intValue() << "\" "
         << "flavourid=\"" << coords_ << "\"\n";
     out << "\tflavour=\""
-        << regina::xml::xmlEncodeSpecialChars(
-            forCoords(coords_, [](auto info) {
-                return decltype(info)::name;
-            }, "Unknown"))
+        << regina::xml::xmlEncodeSpecialChars(HyperInfo::name(coords_))
         << "\"/>\n";
 
     // Write the individual hypersurfaces.

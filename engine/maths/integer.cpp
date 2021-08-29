@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <cctype>
 #include <cerrno>
 #include <cstdlib>
 #include <mutex>
@@ -102,43 +103,26 @@ IntegerBase<supportInfinity>::IntegerBase(
     errno = 0;
     small_ = strtol(value, &endptr, base);
     if (errno || *endptr) {
-        // Something went wrong.  Try again with large integers.
+        // Something went wrong.  Try again with large integers and/or infinity.
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
         bool maybeTrailingWhitespace = (*endptr && ! errno);
+        if constexpr (supportInfinity) {
+            // Skip initial whitespace now and look for infinity.
+            while (*value && isspace(*value))
+                ++value;
+            if (strncmp(value, "inf", 3) == 0) {
+                if (valid)
+                    *valid = true;
+                makeInfinite();
+                return;
+            }
+        }
         large_ = new __mpz_struct[1];
         if (valid)
             *valid = (mpz_init_set_str(large_, value, base) == 0);
         else
             mpz_init_set_str(large_, value, base);
-        // If the error was just trailing whitespace, we might still fit
-        // into a native long.
-        if (maybeTrailingWhitespace)
-            tryReduce();
-    } else {
-        // All good.
-        if (valid)
-            *valid = true;
-    }
-}
-
-template <bool supportInfinity>
-IntegerBase<supportInfinity>::IntegerBase(
-        const std::string& value, int base, bool* valid) :
-        large_(nullptr) {
-    char* endptr;
-    errno = 0;
-    small_ = strtol(value.c_str(), &endptr, base);
-    if (errno || *endptr) {
-        // Something went wrong.  Try again with large integers.
-        // Note that in the case of overflow, we may have errno != 0 but
-        // *endptr == 0.
-        bool maybeTrailingWhitespace = (*endptr && ! errno);
-        large_ = new __mpz_struct[1];
-        if (valid)
-            *valid = (mpz_init_set_str(large_, value.c_str(), base) == 0);
-        else
-            mpz_init_set_str(large_, value.c_str(), base);
         // If the error was just trailing whitespace, we might still fit
         // into a native long.
         if (maybeTrailingWhitespace)
@@ -183,10 +167,19 @@ IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator =(
     errno = 0;
     small_ = strtol(value, &endptr, 10 /* base */);
     if (errno || *endptr) {
-        // Something went wrong.  Try again with large integers.
+        // Something went wrong.  Try again with large integers and/or infinity.
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
         bool maybeTrailingWhitespace = (*endptr && ! errno);
+        if constexpr (supportInfinity) {
+            // Skip initial whitespace now and look for infinity.
+            while (*value && isspace(*value))
+                ++value;
+            if (strncmp(value, "inf", 3) == 0) {
+                makeInfinite();
+                return *this;
+            }
+        }
         if (large_)
             mpz_set_str(large_, value, 10 /* base */);
         else {

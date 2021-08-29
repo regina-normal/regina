@@ -61,11 +61,10 @@ void addVectorInt(pybind11::module_& m) {
         .def("__getitem__", [](const VectorInt& v, size_t index) {
             return v[index];
         }, pybind11::return_value_policy::reference_internal)
-        .def("set", &VectorInt::set)
-        .def("setElement", &VectorInt::set) // deprecated
+        .def("setElement", &VectorInt::setElement) // deprecated
         .def("__setitem__", [](VectorInt& v, size_t index,
                 const regina::Integer& value) {
-            v.set(index, value);
+            v[index] = value;
         })
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self -= pybind11::self)

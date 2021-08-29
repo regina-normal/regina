@@ -80,10 +80,11 @@ struct PacketInfo<PACKET_NORMALHYPERSURFACES> {
  * triangulation from which the surfaces were obtained.  If this triangulation
  * changes, the information contained in this packet will become invalid.
  *
- * See the NormalHypersurfaceVector class notes for details of what to do
+ * See the NormalHypersurface class notes for details of what to do
  * when introducing a new coordinate system.
  *
- * Normal hypersurface lists should be created using the routine enumerate().
+ * Since Regina 7.0, you can (and should) create normal hypersurface lists
+ * using the class constructor.  There is no need to use enumerate() any more.
  */
 class NormalHypersurfaces : public Packet {
     REGINA_PACKET(NormalHypersurfaces, PACKET_NORMALHYPERSURFACES)
@@ -93,18 +94,18 @@ class NormalHypersurfaces : public Packet {
 
     protected:
         std::vector<NormalHypersurface> surfaces_;
-            /**< Contains the normal hypersurfaces stored in this packet. */
+            /**< Contains all normal hypersurfaces in this list. */
         HyperCoords coords_;
-            /**< Stores which coordinate system is being
-                 used by the normal hypersurfaces in this packet. */
+            /**< The coordinate system that was originally used to enumerate
+                 the normal hypersurfaces in this list. */
         HyperList which_;
             /**< Indicates which normal hypersurfaces these represent
                  within the underlying triangulation. */
         HyperAlg algorithm_;
             /**< Stores the details of the enumeration algorithm that
                  was used to generate this list.  This might not be the
-                 same as the \a algorithmHints flag passed to the
-                 corresponding enumeration routine (e.g., if invalid or
+                 same as the \a algorithmHints flag that was originally
+                 passed to the enumeration routine (e.g., if invalid or
                  inappropriate flags were passed). */
 
     public:
@@ -113,7 +114,11 @@ class NormalHypersurfaces : public Packet {
          * hypersurfaces within a given triangulation.
          *
          * The HyperCoords argument allows you to specify an underlying
-         * coordinate system.
+         * coordinate system in which to do the enumeration (e.g., standard
+         * coordinates or prism coordinates).
+         * This choice of coordinate system will affect which surfaces are
+         * produced, since vertex/fundamental surfaces in one system are not
+         * necessarily vertex/fundamental in another.
          *
          * The HyperList argument is a combination of flags that
          * allows you to specify exactly which normal hypersurfaces you require.
@@ -121,7 +126,7 @@ class NormalHypersurfaces : public Packet {
          * or all fundamental hypersurfaces, which defaults to HS_VERTEX
          * if you specify neither or both; and (ii) whether you want only
          * properly embedded surfaces or you also wish to include
-         * immersed and/or singular surfaces, which defaults to
+         * immersed and/or singular hypersurfaces, which defaults to
          * HS_EMBEDDED_ONLY if you specify neither or both.
          *
          * The HyperAlg argument is a combination of flags that allows
@@ -174,7 +179,9 @@ class NormalHypersurfaces : public Packet {
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
-         * @param coords the coordinate system to be used.
+         * @param coords the coordinate system to be used.  This must be
+         * one of the system that Regina is able to use for enumeration;
+         * this is documented alongside each HyperCoords enum value.
          * @param which indicates which normal hypersurfaces should be
          * enumerated.
          * @param algHints passes requests to Regina for which specific
@@ -222,8 +229,8 @@ class NormalHypersurfaces : public Packet {
             ProgressTracker* tracker = nullptr);
 
         /**
-         * Returns the coordinate system being used by the
-         * hypersurfaces stored in this set.
+         * Returns the coordinate system that was originally used to enumerate
+         * the hypersurfaces in this list.
          *
          * @return the coordinate system used.
          */
@@ -255,7 +262,19 @@ class NormalHypersurfaces : public Packet {
          */
         HyperAlg algorithm() const;
         /**
-         * Returns whether this set is known to contain only embedded normal
+         * Determines if the coordinate system that was used for enumeration
+         * allows for non-compact hypersurfaces.
+         *
+         * This does not test whether any of the hypersurfaces in this
+         * list are actually non-compact; it simply returns a basic
+         * property of the coordinate system that was used for enumeration.
+         *
+         * @return \c true if and only if non-compact normal hypersurfaces
+         * are supported.
+         */
+        bool allowsNonCompact() const;
+        /**
+         * Returns whether this list is known to contain only embedded normal
          * hypersurfaces.
          *
          * If this returns \c false, it does not guarantee that immersed
@@ -517,8 +536,8 @@ class NormalHypersurfaces : public Packet {
          * Creates an empty list of normal hypersurfaces with the given
          * parameters.
          *
-         * @param coords the coordinate system to be used for filling
-         * this list.
+         * @param coords the coordinate system that will be used for
+         * enumeration when filling this list.
          * @param which indicates which normal hypersurfaces these will
          * represent within the underlying triangulation.
          * @param algorithm details of the enumeration algorithm that
@@ -533,12 +552,8 @@ class NormalHypersurfaces : public Packet {
     private:
         /**
          * Contains the code responsible for all normal hypersurface
-         * enumeration, in a setting where the underlying coordinate system
-         * is known at compile time.
-         *
-         * \tparam Coords an instance of the HyperInfo<> template class.
+         * enumeration.
          */
-        template <typename Coords>
         class Enumerator {
             private:
                 NormalHypersurfaces* list_;
@@ -690,6 +705,9 @@ class NormalHypersurfaces : public Packet {
  * Generates the set of normal hypersurface matching equations for the
  * given triangulation using the given coordinate system.
  *
+ * These are the matching equations that will be used when enumerating
+ * normal hypersurfaces in the coordinate system \a coords.
+ *
  * Each equation will be represented as a row of the resulting matrix.
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
@@ -711,10 +729,16 @@ class NormalHypersurfaces : public Packet {
  */
 std::optional<MatrixInt> makeMatchingEquations(
     const Triangulation<4>& triangulation, HyperCoords coords);
+
 /**
  * Generates the validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
  * relative to the given coordinate system.
+ *
+ * These are the constraints that will be used when enumerating embedded
+ * hypersurfaces in the given coordinate system (i.e., when the default
+ * HS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
+ * allows for immersed and/or singular hypersurfaces.
  *
  * \ifacespython Not present.
  *
@@ -761,6 +785,10 @@ inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
     return surfaces_[index];
 }
 
+inline bool NormalHypersurfaces::allowsNonCompact() const {
+    return HyperEncoding(coords_).couldBeNonCompact();
+}
+
 inline bool NormalHypersurfaces::dependsOnParent() const {
     return true;
 }
@@ -802,7 +830,7 @@ inline bool NormalHypersurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>&
         NormalHypersurfaces::VectorIterator::operator *() const {
-    return it_->vector().coords();
+    return it_->vector();
 }
 
 inline NormalHypersurfaces::VectorIterator&
@@ -846,12 +874,10 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
         coords_(coords), which_(which), algorithm_(algorithm) {
 }
 
-template <typename Coords>
-inline NormalHypersurfaces::Enumerator<Coords>::Enumerator(
+inline NormalHypersurfaces::Enumerator::Enumerator(
         NormalHypersurfaces* list, Triangulation<4>* triang,
         const MatrixInt& eqns, ProgressTracker* tracker) :
-        list_(list), triang_(triang), eqns_(eqns),
-        tracker_(tracker) {
+        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
 }
 
 } // namespace regina

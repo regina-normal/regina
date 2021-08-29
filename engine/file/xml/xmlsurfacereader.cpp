@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include <vector>
-#include "surfaces/coordregistry.h"
 #include "file/xml/xmlsurfacereader.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
@@ -43,11 +42,16 @@ void XMLNormalSurfaceReader::startElement(const std::string&,
         XMLElementReader*) {
     if (! valueOf(props.lookup("len"), vecLen))
         vecLen = -1;
+    if (! valueOf(props.lookup("enc"), vecEnc))
+        vecEnc = 0;
     name = props.lookup("name");
 }
 
 void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
-    if (vecLen < 0 || tri == 0)
+    // If this file was created before Regina 7.0, then it will not include
+    // a vector encoding.  For those earlier versions of Regina, the encoding
+    // is meant to be deduced from the enclosing list's coordinate system.
+    if (vecLen < 0 || ! tri)
         return;
 
     std::vector<std::string> tokens;
@@ -55,17 +59,7 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    // Bring in cases from the coordinate system registry...
-    NormalSurfaceVector* vec;
-    if (coords == NS_AN_LEGACY)
-        vec = new NSVectorANStandard(vecLen);
-    else
-        vec = forCoords(coords, [=](auto info) {
-            return static_cast<NormalSurfaceVector*>(
-                new typename decltype(info)::Class(vecLen));
-        }, nullptr);
-    if (! vec)
-        return;
+    Vector<LargeInteger> vec(vecLen);
 
     long pos;
     LargeInteger value;
@@ -74,16 +68,20 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
             if (valueOf(tokens[i + 1], value))
                 if (pos >= 0 && pos < vecLen) {
                     // All looks valid.
-                    vec->set(pos, value);
+                    vec[pos] = value;
                     continue;
                 }
 
         // Found something invalid.
-        delete vec;
         return;
     }
 
-    surface_ = NormalSurface(*tri, vec);
+    if (vecEnc != 0)
+        surface_ = NormalSurface(*tri, NormalEncoding::fromIntValue(vecEnc),
+            std::move(vec));
+    else
+        surface_ = NormalSurface(*tri, coords, std::move(vec));
+
     if (! name.empty())
         surface_->setName(name);
 }

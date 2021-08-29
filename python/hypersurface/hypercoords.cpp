@@ -31,13 +31,40 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "hypersurface/hypercoords.h"
+#include "../helpers.h"
+
+using regina::HyperCoords;
+using regina::HyperEncoding;
+using regina::HyperInfo;
 
 void addHyperCoords(pybind11::module_& m) {
     pybind11::enum_<regina::HyperCoords>(m, "HyperCoords")
         .value("HS_STANDARD", regina::HS_STANDARD)
+        .value("HS_PRISM", regina::HS_PRISM)
         .value("HS_EDGE_WEIGHT", regina::HS_EDGE_WEIGHT)
         .export_values()
         ;
+
+    auto e = pybind11::class_<HyperEncoding>(m, "HyperEncoding")
+        .def(pybind11::init<HyperCoords>())
+        .def(pybind11::init<const HyperEncoding&>())
+        .def("valid", &HyperEncoding::valid)
+        .def("block", &HyperEncoding::block)
+        .def("storesTetrahedra", &HyperEncoding::storesTetrahedra)
+        .def("couldBeVertexLink", &HyperEncoding::couldBeVertexLink)
+        .def("couldBeNonCompact", &HyperEncoding::couldBeNonCompact)
+        .def("withTetrahedra", &HyperEncoding::withTetrahedra)
+        .def("intValue", &HyperEncoding::intValue)
+        .def_static("fromIntValue", &HyperEncoding::fromIntValue)
+        .def(pybind11::self + pybind11::self)
+        ;
+    regina::python::add_eq_operators(e);
+
+    auto i = pybind11::class_<HyperInfo>(m, "HyperInfo")
+        .def_static("name", &HyperInfo::name)
+        ;
+    regina::python::no_eq_operators(i);
 }
 

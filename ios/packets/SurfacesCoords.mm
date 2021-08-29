@@ -156,7 +156,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             case PROP_BDRY:
                 if (self.packet->triangulation().isClosed())
                     tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"—"] : [RegularSpreadHeaderCell cellSizeFor:@"Bdry"]).width;
-                else if (! self.packet->allowsSpun())
+                else if (! self.packet->allowsNonCompact())
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Real"].width;
                 else if (! dynamic_cast<regina::SnapPeaTriangulation*>(self.packet->triangulation()))
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Spun"].width;

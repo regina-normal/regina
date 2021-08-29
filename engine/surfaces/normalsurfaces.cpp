@@ -30,19 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/coordregistry.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
-
-namespace {
-    // Since legacy coordinate systems don't appear in the coordinate system
-    // registry, give them a consistent name here.
-    constexpr const char* AN_LEGACY_NAME =
-        "Legacy standard almost normal (pruned tri-quad-oct)";
-}
 
 // This should really be inline.  However, when inline, it seems to
 // trigger an instantiation of the generic Triangulation<3> as opposed
@@ -63,45 +55,8 @@ void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
     }
 }
 
-std::optional<MatrixInt> makeMatchingEquations(
-        const Triangulation<3>& triangulation, NormalCoords coords) {
-    return forCoords(coords, [&](auto info) {
-        return decltype(info)::Class::makeMatchingEquations(triangulation);
-    }, std::nullopt);
-}
-
-EnumConstraints makeEmbeddedConstraints(
-        const Triangulation<3>& triangulation, NormalCoords coords) {
-    return forCoords(coords, [&](auto info) {
-        return decltype(info)::Class::makeEmbeddedConstraints(triangulation);
-    });
-}
-
 const Triangulation<3>& NormalSurfaces::triangulation() const {
     return *dynamic_cast<Triangulation<3>*>(parent());
-}
-
-bool NormalSurfaces::allowsAlmostNormal() const {
-    if (coords_ == NS_AN_LEGACY)
-        return true;
-    else
-        return forCoords(coords_, [](auto info) {
-            return decltype(info)::almostNormal;
-        }, false);
-}
-
-bool NormalSurfaces::allowsSpun() const {
-    // Both the default and the NS_AN_LEGACY cases should return false.
-    return forCoords(coords_, [](auto info) {
-        return decltype(info)::spun;
-    }, false);
-}
-
-bool NormalSurfaces::allowsOriented() const {
-    // Both the default and the NS_AN_LEGACY cases should return false.
-    return forCoords(coords_, [](auto info) {
-        return decltype(info)::oriented;
-    }, false);
 }
 
 void NormalSurfaces::writeTextShort(std::ostream& out) const {
@@ -129,14 +84,7 @@ void NormalSurfaces::writeTextShort(std::ostream& out) const {
     if (surfaces_.size() != 1)
         out << 's';
 
-    out << " (";
-    if (coords_ == NS_AN_LEGACY)
-        out << AN_LEGACY_NAME;
-    else
-        out << forCoords(coords_, [](auto info) {
-            return decltype(info)::name;
-        }, "Unknown");
-    out << ')';
+    out << " (" << NormalInfo::name(coords_) << ')';
 }
 
 void NormalSurfaces::writeTextLong(std::ostream& out) const {
@@ -160,14 +108,7 @@ void NormalSurfaces::writeTextLong(std::ostream& out) const {
 
     out << " surfaces\n";
 
-    out << "Coordinates: ";
-    if (coords_ == NS_AN_LEGACY)
-        out << AN_LEGACY_NAME << '\n';
-    else
-        out << forCoords(coords_, [](auto info) {
-                    return decltype(info)::name;
-                }, "Unknown")
-            << '\n';
+    out << "Coordinates: " << NormalInfo::name(coords_) << '\n';
 
     writeAllSurfaces(out);
 }
@@ -178,15 +119,9 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
         << "type=\"" << which_.intValue() << "\" "
         << "algorithm=\"" << algorithm_.intValue() << "\" "
         << "flavourid=\"" << coords_ << "\"\n";
-    out << "\tflavour=\"";
-    if (coords_ == NS_AN_LEGACY)
-        out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
-    else
-        out << regina::xml::xmlEncodeSpecialChars(
-            forCoords(coords_, [](auto info) {
-                return decltype(info)::name;
-            }, "Unknown"));
-    out << "\"/>\n";
+    out << "\tflavour=\""
+        << regina::xml::xmlEncodeSpecialChars(NormalInfo::name(coords_))
+        << "\"/>\n";
 
     // Write the individual surfaces.
     for (const NormalSurface& s : surfaces_)
