@@ -781,6 +781,19 @@ class BanConstraintBase {
         template <class LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>& lp) const;
 
+        /**
+         * Identifies whether the given column of the tableaux corresponds to
+         * a marked coordinate (e.g., a marked normal disc type).
+         *
+         * @param column a column of the tableaux.  This must be one of
+         * the columns corresponding to a normal or angle structure coordinate,
+         * not one of the extra columns induced by an LPConstraint parameter
+         * for the tree traversal class.
+         * @return \c true if and only if the given column corresponds
+         * to a marked coordinate.
+         */
+        bool marked(size_t column) const;
+
 #ifdef __DOXYGEN
         /**
          * Identifies which coordinates to ban and mark, and records the
@@ -831,34 +844,28 @@ class BanConstraintBase {
 /**
  * A do-nothing class that bans no coordinates and marks no coordinates.
  *
- * See the BanConstraintBase class notes for details on all member
- * functions and structs.
+ * This is intended to act as a drop-in replacement for a "real" BanConstraint
+ * class (i.e., a subclass of BanConstraintBase).  However, to avoid any
+ * overhead in this trivial case, BanNone does \e not derive from
+ * BanConstraintBase, and all of its routines do nothing at all.
+ *
+ * See the BanConstraintBase class notes for details on the interface
+ * that this class adheres to.
  *
  * \apinotfinal
  *
  * \ifacespython Not present.
  */
-class BanNone : public BanConstraintBase {
+class BanNone {
     protected:
-        /**
-         * Constructs and initialises the \a banned_ and \a marked_ arrays
-         * to be entirely \c false, as described in the BanConstraintBase
-         * superclass constructor.
-         *
-         * Although one should normally call the routine init() before
-         * using this object, for BanNone this is not strictly necessary
-         * since there are no coordinates to ban or mark.
-         *
-         * @param tri the triangulation with which we are working.
-         * @param enc the vector encoding being used for this enumeration task.
-         * This must be one of the vector encodings known to be supported by
-         * the generic TreeTraversal infrastructure, and in particular it
-         * may be the special angle structure encoding.
-         */
-        BanNone(const Triangulation<3>& tri, NormalEncoding enc);
+        BanNone(const Triangulation<3>&, NormalEncoding) {}
 
-        void init(const int*);
-        static bool supported(NormalEncoding enc);
+        template <class LPConstraint, typename IntType>
+        void enforceBans(LPData<LPConstraint, IntType>&) const {}
+
+        bool marked(size_t column) const { return false; }
+        void init(const int*) {}
+        static bool supported(NormalEncoding enc) { return true; }
 };
 
 /**
@@ -1168,15 +1175,8 @@ inline void BanConstraintBase::enforceBans(LPData<LPConstraint, IntType>& lp)
             lp.constrainZero(i);
 }
 
-inline BanNone::BanNone(const Triangulation<3>& tri, NormalEncoding enc) :
-        BanConstraintBase(tri, enc) {
-}
-
-inline void BanNone::init(const int*) {
-}
-
-inline bool BanNone::supported(NormalEncoding) {
-    return true;
+inline bool BanConstraintBase::marked(size_t column) const {
+    return marked_[column];
 }
 
 inline BanBoundary::BanBoundary(const Triangulation<3>& tri,

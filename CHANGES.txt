@@ -69,6 +69,9 @@ Version 7.0  [ TODO ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
+        Class BanConstraintNone:
+            - No longer derives from BanConstraintBase; instead this is
+              intended as a trivial drop-in replacement.
         Class Base64SigEncoding:
             - New helper class that provides code common to isomorphism
               signatures and knot signatures.

@@ -1347,7 +1347,7 @@ template <class LPConstraint, typename BanConstraint, typename IntType>
 inline int TreeTraversal<LPConstraint, BanConstraint, IntType>::
         nextUnmarkedTriangleType(int startFrom) {
     while (startFrom < nTypes_ &&
-            BanConstraint::marked_[2 * nTets_ + startFrom])
+            BanConstraint::marked(2 * nTets_ + startFrom))
         ++startFrom;
     return (startFrom == nTypes_ ? -1 : startFrom);
 }
