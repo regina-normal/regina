@@ -204,7 +204,7 @@ class HyperEncoding {
          * @param other the encoding to compare with this.
          * @return \c true if and only if both encodings are identical.
          */
-        bool operator == (const HyperEncoding& other) const {
+        constexpr bool operator == (const HyperEncoding& other) const {
             return flags_ == other.flags_;
         }
         /**
@@ -213,7 +213,7 @@ class HyperEncoding {
          * @param other the encoding to compare with this.
          * @return \c true if and only if both encodings are different.
          */
-        bool operator != (const HyperEncoding& other) const {
+        constexpr bool operator != (const HyperEncoding& other) const {
             return flags_ != other.flags_;
         }
 

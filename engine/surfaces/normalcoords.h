@@ -218,8 +218,8 @@ enum NormalCoords {
  *
  * For convenience, there is also a special encoding that identifies an angle
  * structure vector; this can be created via <tt>NormalEncoding(NS_ANGLE)</tt>,
- * and can be recognised via angles().  However, like NS_ANGLE itself, this
- * special angle structure encoding does \e not represent a normal surface,
+ * and can be recognised via storesAngles().  However, like NS_ANGLE itself,
+ * this special angle structure encoding does \e not represent a normal surface,
  * cannot be combined with other encodings, and must not be used with any of
  * Regina's routines unless the documentation explicitly allows it.
  * Specifically, any code that accepts a NormalEncoding argument may silently
@@ -253,6 +253,11 @@ class NormalEncoding {
             /**< The bit of \a flags_ that indicates whether octagon
                  coordinates are included in the vector. */
 
+        static constexpr int STORES_ANGLES = 0x0080;
+            /**< A bit of \a flags that, if \c true, indicates that this
+                 is the special encoding that corresponds to NS_ANGLE.
+                 See the NormalEncoding class notes for details. */
+
         static constexpr int COULD_BE_VERTEX_LINK = 0x0100;
             /**< A bit of \a flags_ that, if \c false, indicates that it is
                  known from elsewhere (e.g., the enumeration process) that
@@ -270,11 +275,6 @@ class NormalEncoding {
         static constexpr int INVALID = 0x1000;
             /**< A bit of \a flags that, if \c true, indicates that this does
                  not represent a valid encoding method. */
-
-        static constexpr int ANGLES = 0x2000;
-            /**< A bit of \a flags that, if \c true, indicates that this
-                 is the special encoding that corresponds to NS_ANGLE.
-                 See the NormalEncoding class notes for details. */
 
         int flags_;
             /**< Holds (1) the number of coordinates per tetrahedron in
@@ -342,7 +342,7 @@ class NormalEncoding {
                     flags_ = 6 | STORES_OCTAGONS;
                     break;
                 case NS_ANGLE:
-                    flags_ = 3 | ANGLES;
+                    flags_ = 3 | STORES_ANGLES;
                 default:
                     break;
             }
@@ -364,7 +364,7 @@ class NormalEncoding {
          * @param other the encoding to compare with this.
          * @return \c true if and only if both encodings are identical.
          */
-        bool operator == (const NormalEncoding& other) const {
+        constexpr bool operator == (const NormalEncoding& other) const {
             return flags_ == other.flags_;
         }
         /**
@@ -373,7 +373,7 @@ class NormalEncoding {
          * @param other the encoding to compare with this.
          * @return \c true if and only if both encodings are different.
          */
-        bool operator != (const NormalEncoding& other) const {
+        constexpr bool operator != (const NormalEncoding& other) const {
             return flags_ != other.flags_;
         }
 
@@ -425,6 +425,18 @@ class NormalEncoding {
             return flags_ & STORES_OCTAGONS;
         }
         /**
+         * Identifies whether this is the special angle structure encoding.
+         *
+         * This routine is used to recognise the "special case" encoding
+         * <tt>NormalEncoding(NS_ANGLE)</tt>.  Such an encoding does not
+         * represent a normal surface, and cannot be used anywhere in Regina
+         * unless explicitly allowed in the documentation.  See the class
+         * notes for further details.
+         */
+        constexpr bool storesAngles() const {
+            return flags_ & STORES_ANGLES;
+        }
+        /**
          * Returns whether it is possible for a surface using this
          * encoding to include one or more vertex linking components.
          *
@@ -470,18 +482,6 @@ class NormalEncoding {
          */
         constexpr bool couldBeNonCompact() const {
             return flags_ & COULD_BE_NON_COMPACT;
-        }
-        /**
-         * Identifies whether this is the special angle structure encoding.
-         *
-         * This routine is used to recognise the "special case" encoding
-         * <tt>NormalEncoding(NS_ANGLE)</tt>.  Such an encoding does not
-         * represent a normal surface, and cannot be used anywhere in Regina
-         * unless explicitly allowed in the documentation.  See the class
-         * notes for further details.
-         */
-        constexpr bool angles() const {
-            return flags_ & ANGLES;
         }
         /**
          * Returns an extension of this encoding that explicitly stores

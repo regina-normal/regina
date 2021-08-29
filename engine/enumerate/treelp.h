@@ -501,7 +501,7 @@ class LPSystem {
          * structure encoding.
          */
         constexpr LPSystem(NormalEncoding enc) : system_(
-                enc.angles() ? LP_ANGLE :
+                enc.storesAngles() ? LP_ANGLE :
                 enc.storesTriangles() ? LP_STANDARD :
                 LP_QUAD) {
         }
@@ -523,7 +523,7 @@ class LPSystem {
          * @return \c true if and only if both objects represent the same
          * class of encodings.
          */
-        bool operator == (const LPSystem& other) const {
+        constexpr bool operator == (const LPSystem& other) const {
             return system_ == other.system_;
         }
         /**
@@ -534,7 +534,7 @@ class LPSystem {
          * @return \c true if and only if both objects represent
          * different classes of encodings.
          */
-        bool operator != (const LPSystem& other) const {
+        constexpr bool operator != (const LPSystem& other) const {
             return system_ != other.system_;
         }
         /**
@@ -637,14 +637,14 @@ class LPSystem {
  * functions).  If there are no additional constraints, simply use the
  * template parameter LPConstraintNone.
  *
- * In some cases, it may be impossible to add the extra linear constraints
- * that you would like (for instance, the constraints might require some
- * preconditions on the underlying triangulation that are not met).  If this
- * is a possibility in your setting, you should call constraintsBroken() to
- * test this as soon as the LPInitialTableaux has been constructed.  Even if
- * the constraints could not be added correctly, the tableaux will be left in a
- * consistent state (the constraints will just be treated as zero functions
- * instead).
+ * In some cases, you may discover at runtime that it is impossible to add the
+ * extra linear constraints that you would like (for instance, the constraints
+ * might require some preconditions on the underlying triangulation that are
+ * not met).  If this is a possibility in your setting, you should call
+ * constraintsBroken() to test this as soon as the LPInitialTableaux has been
+ * constructed.  Even if the constraints could not be added correctly, the
+ * tableaux will be left in a consistent state (the constraints will just be
+ * treated as zero functions instead).
  *
  * This class is optimised for working with \e columns of the matrix
  * (in particular, multiplying columns of this matrix by rows of some
@@ -658,10 +658,11 @@ class LPSystem {
  * tri-quad normal matching equations (if LPSystem::standard() is \c true),
  * the quad normal matching equations (if LPSystem::quad() is \c true),
  * or the homogeneous angle equations (if LPSystem::angles() is true).
- * If you need to support more exotic coordinate systems (such as
- * octagonal almost normal surfaces), then you will need to find a way
- * to map that system onto one of these three broad classes; see the
- * LPData class notes for how this is done with octagons.
+ * If you need to add extra matching equations beyond these, use the
+ * LPConstraint template argument as outlined above.  If you need to support
+ * more exotic vector encodings (e.g., for octagonal almost normal surfaces),
+ * you will need to find a way to represent it using one of these three broad
+ * classes; see the LPData class notes for how this is done with octagons.
  *
  * \warning The implementation of this class relies on the fact that the
  * sum of <i>absolute values</i> of all coefficients in each column is
@@ -738,19 +739,17 @@ class LPInitialTableaux {
          * \pre The given triangulation is non-empty.
          *
          * @param tri the underlying 3-manifold triangulation.
-         * @param coords the coordinate system in which we are performing our
-         * enumeration task.  This can be any of the normal or almost normal
-         * coordinate systems in which Regina can enumerate surfaces; it
-         * may also be the special value NS_ANGLE if we are enumerating
-         * angle structures.
+         * @param enc the normal surface vector encoding that we are using
+         * for our enumeration task.  This may be any valid NormalEncoding
+         * object, including the special angle structure encoding.
          * @param enumeration \c true if we should optimise the tableaux
          * for a full enumeration of vertex surfaces or taut angle structures,
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere, or
          * a strict angle structure).
          */
-        LPInitialTableaux(const Triangulation<3>& tri,
-            NormalCoords coords, bool enumeration);
+        LPInitialTableaux(const Triangulation<3>& tri, NormalEncoding enc,
+            bool enumeration);
 
         /**
          * Destroys this matrix.

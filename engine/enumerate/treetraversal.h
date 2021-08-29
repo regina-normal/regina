@@ -144,9 +144,9 @@ class ProgressTracker;
  * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
- * \pre The parameters LPConstraint and BanConstraint must be subclasses of
- * LPConstraintBase and BanConstraintBase respectively.  See the
- * LPConstraintBase and BanConstraintBase class notes for further details.
+ * \pre The parameter LPConstraint must be a subclass of LPConstraintBase, and
+ * BanConstraint must either BanNone or a subclass of BanConstraintBase.  See
+ * the LPConstraintBase and BanConstraintBase class notes for further details.
  *
  * \pre The default constructor for the template class IntType must
  * intialise each new integer to zero.  The classes Integer and NativeInteger,
@@ -170,15 +170,11 @@ class TreeTraversal : public BanConstraint {
             /**< The original starting tableaux that holds the adjusted
                  matrix of matching equations, before the tree traversal
                  algorithm begins. */
-        const NormalCoords coords_;
-            /**< The coordinate system in which we are enumerating or
-                 searching for normal surfaces, almost normal surfaces,
-                 or taut angle structures.
-                 This must be one of NS_QUAD or NS_STANDARD if we are only
-                 supporting normal surfaces, one of NS_AN_QUAD_OCT
-                 or NS_AN_STANDARD if we are allowing octagons in
-                 almost normal surfaces, or NS_ANGLE if we are searching
-                 for taut angle structures. */
+        const NormalEncoding enc_;
+            /**< The normal surface or angle structure vector encoding
+                 that we are using for our enumeration task.
+                 Note that the tableaux will \e not necessarily use this
+                 same encoding; see LPInitialTableaux for details. */
         const int nTets_;
             /**< The number of tetrahedra in the underlying triangulation. */
         const int nTypes_;
@@ -268,20 +264,21 @@ class TreeTraversal : public BanConstraint {
 
     public:
         /**
-         * Indicates whether the given coordinate system is supported by
-         * this tree traversal infrastructure.
+         * Indicates whether the given normal surface or angle structure
+         * vector encoding is supported by this tree traversal infrastructure.
+         * Any restrictions imposed by LPConstraint and BanConstraint will be
+         * taken into account.
          *
-         * Currently this is true only for NS_STANDARD and NS_QUAD (for
-         * normal surfaces), NS_AN_STANDARD and NS_AN_QUAD_OCT (for
-         * almost normal surfaces), and NS_ANGLE (for taut angle structures).
-         * Any additional restrictions imposed by LPConstraint and
-         * BanConstraint will also be taken into account.
+         * Note that, even if an encoding is supported, this does not
+         * mean that the underlying tableaux will use the same encoding
+         * internally.  See LPInitialTableaux for more details on this.
          *
-         * @param coords the coordinate system being queried.
-         * @return \c true if and only if this coordinate system is
+         * @param enc the vector encoding being queried.  In particular,
+         * this may be the special angle structure encoding.
+         * @return \c true if and only if the given vector encoding is
          * supported.
          */
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 
         /**
          * Indicates whether or not the extra constraints from the template
@@ -351,6 +348,9 @@ class TreeTraversal : public BanConstraint {
          * no further guarantees about \e which of these normal surfaces
          * you will get.
          *
+         * The surface that is returned will use the same vector encoding
+         * that was passed to the TreeTraversal class constructor.
+         *
          * \pre This tree traversal is at a point in the search where
          * it has found a feasible solution that represents a normal surface
          * (though this need not be a vertex surface).
@@ -393,64 +393,6 @@ class TreeTraversal : public BanConstraint {
          */
         AngleStructure buildStructure() const;
 
-        /**
-         * Ensures that the given normal or almost normal surface satisfies
-         * the matching equations, as well as any additional constraints
-         * from the template parameter LPConstraint.
-         * This routine is for use only with normal (or almost normal)
-         * surfaces, not angle structures.
-         *
-         * This routine is provided for diagnostic, debugging and verification
-         * purposes.
-         *
-         * Instead of using the initial tableaux to verify the matching
-         * equations, this routine goes back to the original matching
-         * equations matrix as constructed by regina::makeMatchingEquations().
-         * This ensures that the test is independent of any potential
-         * problems with the tableaux.
-         *
-         * If Regina is unable to construct the matching equations (which can
-         * happen when the underlying triangulation is not supported by the
-         * normal coordinate system), then this routine will return \c false.
-         *
-         * \pre The normal or almost normal surface \a s uses the same
-         * coordinate system as was passed to the TreeTraversal constructor.
-         * Moreover, this coordinate system is in fact a normal or
-         * almost normal coordinate system (i.e., not NS_ANGLE).
-         *
-         * @param s the normal surface to verify.
-         * @return \c true if the given surface passes all of the tests
-         * described above, or \c false if it fails one or more tests
-         * (indicating a problem or error).
-         */
-        bool verify(const NormalSurface& s) const;
-
-        /**
-         * Ensures that the given angle structure satisfies
-         * the angle equations, as well as any additional constraints
-         * from the template parameter LPConstraint.
-         * This routine is for use only with angle structures,
-         * not normal (or almost normal) surfaces.
-         *
-         * This routine is provided for diagnostic, debugging and verification
-         * purposes.
-         *
-         * Instead of using the initial tableaux to verify the angle equations,
-         * this routine goes back to the original angle equations matrix as
-         * constructed by regina::makeAngleEquations().
-         * This ensures that the test is independent of any potential
-         * problems with the tableaux.
-         *
-         * \pre The coordinate system passed to the TreeTraversal constructor
-         * was NS_ANGLE.
-         *
-         * @param s the angle structure to verify.
-         * @return \c true if the given angle structure passes all of the tests
-         * described above, or \c false if it fails one or more tests
-         * (indicating a problem or error).
-         */
-        bool verify(const AngleStructure& s) const;
-
         // Mark this class as non-copyable.
         TreeTraversal(const TreeTraversal&) = delete;
         TreeTraversal& operator = (const TreeTraversal&) = delete;
@@ -467,9 +409,9 @@ class TreeTraversal : public BanConstraint {
          *
          * @param tri the triangulation in which we wish to search for
          * normal surfaces or taut angle structures.
-         * @param coords the coordinate system in which wish to search for
-         * normal surfaces or taut angle structures.  This must be one of
-         * NS_QUAD, NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
+         * @param enc the normal surface or angle structure vector encoding
+         * that we are working with; in particular, this may be the special
+         * angle structure encoding.
          * @param branchesPerQuad the maximum number of branches we
          * spawn in the search tree for each quadrilateral or angle type
          * (e.g., 4 for a vanilla normal surface tree traversal algorithm,
@@ -484,7 +426,7 @@ class TreeTraversal : public BanConstraint {
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere).
          */
-        TreeTraversal(const Triangulation<3>& tri, NormalCoords coords,
+        TreeTraversal(const Triangulation<3>& tri, NormalEncoding enc,
                 int branchesPerQuad, int branchesPerTri, bool enumeration);
 
         /**
@@ -625,9 +567,9 @@ class TreeTraversal : public BanConstraint {
  * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
- * \pre The parameters LPConstraint and BanConstraint must be subclasses of
- * LPConstraintSubspace and BanConstraintBase respectively.  Note in
- * particular that the base class LPConstraintBase is not enough here.
+ * \pre The parameter LPConstraint must be a subclass of LPConstraintSubspace,
+ * and BanConstraint must either BanNone or a subclass of BanConstraintBase.
+ * Note in particular that the base class LPConstraintBase is not enough here.
  * See the LPConstraintBase, LPConstraintSubspace and BanConstraintBase
  * class notes for further details.
  *
@@ -720,17 +662,16 @@ class TreeEnumeration :
          *
          * \pre The given triangulation is non-empty.
          *
-         * \pre Both the trianglation and the given coordinate system
+         * \pre Both the trianglation and the given vector encoding
          * adhere to any preconditions required by the template
          * parameters LPConstraint and BanConstraint.
          *
          * @param tri the triangulation in which we wish to enumerate
          * vertex surfaces.
-         * @param coords the coordinate system in which wish to enumerate
-         * vertex surfaces.  This must be one of NS_QUAD, NS_STANDARD,
-         * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
+         * @param enc the normal (or almost normal) surface vector encoding
+         * that we are working with.
          */
-        TreeEnumeration(const Triangulation<3>& tri, NormalCoords coords);
+        TreeEnumeration(const Triangulation<3>& tri, NormalEncoding enc);
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -923,9 +864,9 @@ class TreeEnumeration :
  * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
- * \pre The parameters LPConstraint and BanConstraint must be subclasses of
- * LPConstraintSubspace and BanConstraintBase respectively.  Note in
- * particular that the base class LPConstraintBase is not enough here.
+ * \pre The parameter LPConstraint must be a subclass of LPConstraintSubspace,
+ * and BanConstraint must either BanNone or a subclass of BanConstraintBase.
+ * Note in particular that the base class LPConstraintBase is not enough here.
  * See the LPConstraintBase, LPConstraintSubspace and BanConstraintBase
  * class notes for further details.
  *
@@ -1238,9 +1179,9 @@ class TautEnumeration :
  * type 0 never appears, and that type 1 could indicate \e either positive
  * quadrilaterals in the first position, or else no quadrilaterals at all.
  *
- * \pre The parameters LPConstraint and BanConstraint must be subclasses of
- * LPConstraintBase and BanConstraintBase respectively.  See the
- * LPConstraintBase and BanConstraintBase class notes for further details.
+ * \pre The parameter LPConstraint must be a subclass of LPConstraintBase, and
+ * BanConstraint must either BanNone or a subclass of BanConstraintBase.  See
+ * the LPConstraintBase and BanConstraintBase class notes for further details.
  *
  * \pre The default constructor for the template class IntType must
  * intialise each new integer to zero.  The classes Integer and NativeInteger,
@@ -1313,17 +1254,16 @@ class TreeSingleSoln :
          *
          * \pre The given triangulation is non-empty.
          *
-         * \pre Both the trianglation and the given coordinate system
+         * \pre Both the trianglation and the given vector encoding
          * adhere to any preconditions required by the template
          * parameters LPConstraint and BanConstraint.
          *
          * @param tri the triangulation in which we wish to search for a
          * non-trivial surface.
-         * @param coords the normal or almost normal coordinate system in
-         * which to work.  This must be one of NS_QUAD, NS_STANDARD,
-         * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
+         * @param enc the normal (or almost normal) surface vector encoding
+         * that we are working with.
          */
-        TreeSingleSoln(const Triangulation<3>& tri, NormalCoords coords);
+        TreeSingleSoln(const Triangulation<3>& tri, NormalEncoding enc);
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -1378,11 +1318,10 @@ class TreeSingleSoln :
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeTraversal<LPConstraint, BanConstraint, IntType>::supported(
-        NormalCoords coords) {
-    return (coords == NS_STANDARD || coords == NS_AN_STANDARD ||
-        coords == NS_QUAD || coords == NS_AN_QUAD_OCT || coords == NS_ANGLE) &&
-        LPConstraint::supported(coords) &&
-        BanConstraint::supported(coords);
+        NormalEncoding enc) {
+    return enc.valid() &&
+        LPConstraint::supported(enc) &&
+        BanConstraint::supported(enc);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -1415,10 +1354,9 @@ inline int TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
-        const Triangulation<3>& tri, NormalCoords coords) :
-        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, coords,
-            (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
-             7 : 4) /* branches per quad */,
+        const Triangulation<3>& tri, NormalEncoding enc) :
+        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, enc,
+            (enc.storesOctagons() ? 7 : 4) /* branches per quad */,
             2 /* branches per triangle */,
             true /* enumeration */),
         nSolns_(0),
@@ -1491,10 +1429,9 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline TreeSingleSoln<LPConstraint, BanConstraint, IntType>::TreeSingleSoln(
-        const Triangulation<3>& tri, NormalCoords coords) :
-        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, coords,
-            (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
-             6 : 3) /* branches per quad */,
+        const Triangulation<3>& tri, NormalEncoding enc) :
+        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, enc,
+            (enc.storesOctagons() ? 6 : 3) /* branches per quad */,
             2 /* branches per triangle */,
             false /* enumeration */),
         nextZeroLevel_(0),

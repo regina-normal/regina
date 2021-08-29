@@ -79,6 +79,11 @@ class LPConstraintNone;
  * The coefficient for the final scaling coordinate in each additional
  * linear constraint will be assumed to be zero.
  *
+ * Bear in mind that the tableaux that these constraints are working with will
+ * not necessarily use the same coordinates as the underlying enumeration task
+ * (e.g., the tableaux will never include separate columns for octagon
+ * coordinates).  See LPInitialTableaux for a more detailed discussion of this.
+ *
  * This base class provides no functionality.  For documentation's sake
  * only, the notes here describe the functionality that any subclass
  * \e must implement.  We note again that LPConstraintBase does not
@@ -358,24 +363,31 @@ class LPConstraintBase {
         static bool verify(const AngleStructure& s);
 
         /**
-         * Indicates whether the given coordinate system is supported by
+         * Indicates whether the given vector encoding is supported by
          * this constraint class.
          *
-         * This routine assumes that the given system is already known to be
+         * This routine assumes that the given encoding is already known to be
          * supported by the generic tree traversal infrastructure, and only
          * returns \c false if there are additional prerequisites
          * imposed by this particular constraint class that the given
-         * system does not satisfy.  If this constraint class does not impose
+         * encoding does not satisfy.  If this constraint class does not impose
          * any of its own additional conditions, this routine may
          * simply return \c true.
          *
-         * @param coords the coordinate system being queried; this must
-         * be one of the coordinate systems known to be supported by the
-         * generic TreeTraversal infrastructure.
-         * @return \c true if and only if this coordinate system is
+         * The only features of the encoding that this routine should
+         * examine are what coordinates are stored (e.g.,
+         * NormalEncoding::storesTriangles()).  In particular, this
+         * routine will not look at any "semantic guarantees" (e.g.
+         * NormalEncoding::couldBeNonCompact()).
+         *
+         * @param enc the vector encoding being queried.  This must
+         * be one of the vector encodings known to be supported by the
+         * generic TreeTraversal infrastructure, and in particular it
+         * may be the special angle structure encoding.
+         * @return \c true if and only if this vector encoding is
          * also supported by this specific constraint class.
          */
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 #endif
 };
 
@@ -439,7 +451,7 @@ class LPConstraintNone : public LPConstraintSubspace {
             LPData<regina::LPConstraintNone, IntType>&, unsigned);
         static bool verify(const NormalSurface&);
         static bool verify(const AngleStructure&);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -460,10 +472,9 @@ class LPConstraintNone : public LPConstraintSubspace {
  * See the LPConstraintBase class notes for details on all member
  * functions and structs.
  *
- * \pre We are working in standard normal or almost normal coordinates
- * (not quadrilateral or quadrilateral-octagon coordinates).  In
- * particular, the coordinate system passed to the corresponding
- * LPInitialTableaux class constructor must be NS_STANDARD.
+ * \pre We are working with a normal or almost normal vector encoding
+ * that includes triangle coordinates (i.e., the encoding for standard
+ * normal or standard almost normal coordinates).
  *
  * \apinotfinal
  *
@@ -507,7 +518,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
             unsigned numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -532,9 +543,9 @@ typedef LPConstraintEulerPositive LPConstraintEuler [[deprecated]];
  * See the LPConstraintBase class notes for details on all member
  * functions and structs.
  *
- * \pre We are working in standard normal coordinates (not quadrilateral
- * coordinates).  In particular, the coordinate system passed to the
- * corresponding LPInitialTableaux class constructor must be NS_STANDARD.
+ * \pre We are working with a normal vector encoding that includes triangle
+ * coordinates, and that does \e not include octagon coordinates (i.e,
+ * the encoding for standard normal coordinates).
  *
  * \apinotfinal
  *
@@ -578,7 +589,7 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
             unsigned numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -604,10 +615,9 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * See the LPConstraintBase class notes for details on all member
  * functions and structs.
  *
- * \pre We are working in quadrilateral normal coordinates.  In particular,
- * the coordinate system passed to the corresponding LPInitialTableaux class
- * must be NS_QUAD, and constrainOct() must never be
- * called on any of the corresponding LPData tableaux.
+ * \pre We are working with a normal or almost normal vector encoding that
+ * does not include triangle coordinates (i.e., the encoding for quad or
+ * quad-oct normal coordinates).
  *
  * \apinotfinal
  *
@@ -653,7 +663,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
             unsigned numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -700,6 +710,11 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * the initial lists of banned and marked columns, but then these lists are
  * easy to use on the fly during tree traversal algorithms.
  *
+ * Bear in mind that the tableaux that these constraints are working with will
+ * not necessarily use the same coordinates as the underlying enumeration task
+ * (e.g., the tableaux will never include separate columns for octagon
+ * coordinates).  See LPInitialTableaux for a more detailed discussion of this.
+ *
  * This base class provides limited functionality (as documented below).
  * Subclasses \e must implement a constructor (which, like this base
  * class, takes a triangulation and a coordinate system), must implement
@@ -715,10 +730,8 @@ class BanConstraintBase {
     protected:
         const Triangulation<3>& tri_;
             /**< The triangulation with which we are working. */
-        int coords_;
-            /**< The normal or almost normal coordinate system in which
-                 we are working.  This must be one of NS_QUAD, NS_STANDARD,
-                 NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE. */
+        NormalEncoding enc_;
+            /**< The vector encoding that our enumeration task is using. */
         bool* banned_;
             /**< Indicates which columns of a tableaux correspond to banned
                  coordinates (e.g., banned normal disc types).
@@ -736,7 +749,7 @@ class BanConstraintBase {
         /**
          * Constructs and initialises the \a banned_ and \a marked_ arrays
          * to be entirely \c false.  The only purpose of passing the
-         * triangulation and coordinate system is to determine how many
+         * triangulation and vector encoding is to determine how many
          * normal or angle structure coordinates we are dealing with.
          *
          * \warning Before you use this object, the routine init() must be
@@ -745,11 +758,12 @@ class BanConstraintBase {
          * types at all.
          *
          * @param tri the triangulation with which we are working.
-         * @param coords the coordinate system in
-         * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
+         * @param enc the vector encoding being used for this enumeration task.
+         * This must be one of the vector encodings known to be supported by
+         * the generic TreeTraversal infrastructure, and in particular it
+         * may be the special angle structure encoding.
          */
-        BanConstraintBase(const Triangulation<3>& tri, int coords);
+        BanConstraintBase(const Triangulation<3>& tri, NormalEncoding enc);
 
         /**
          * Destroys this object and all associated data.
@@ -793,13 +807,20 @@ class BanConstraintBase {
          * any of its own additional conditions, this routine may
          * simply return \c true.
          *
-         * @param coords the coordinate system being queried; this must
-         * be one of the coordinate systems known to be supported by the
-         * generic TreeTraversal infrastructure.
-         * @return \c true if and only if this coordinate system is
+         * The only features of the encoding that this routine should
+         * examine are what coordinates are stored (e.g.,
+         * NormalEncoding::storesTriangles()).  In particular, this
+         * routine will not look at any "semantic guarantees" (e.g.
+         * NormalEncoding::couldBeNonCompact()).
+         *
+         * @param enc the vector encoding being queried.  This must
+         * be one of the vector encodings known to be supported by the
+         * generic TreeTraversal infrastructure, and in particular it
+         * may be the special angle structure encoding.
+         * @return \c true if and only if this vector encoding is
          * also supported by this specific constraint class.
          */
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 #endif
 
         // Mark this class as non-copyable.
@@ -829,14 +850,15 @@ class BanNone : public BanConstraintBase {
          * since there are no coordinates to ban or mark.
          *
          * @param tri the triangulation with which we are working.
-         * @param coords the coordinate system in
-         * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
+         * @param enc the vector encoding being used for this enumeration task.
+         * This must be one of the vector encodings known to be supported by
+         * the generic TreeTraversal infrastructure, and in particular it
+         * may be the special angle structure encoding.
          */
-        BanNone(const Triangulation<3>& tri, int coords);
+        BanNone(const Triangulation<3>& tri, NormalEncoding enc);
 
         void init(const int*);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -846,13 +868,14 @@ class BanNone : public BanConstraintBase {
  * This class is only for use with normal or almost normal surfaces, not
  * angle structures.
  *
- * \warning This class only works as expected in \e standard normal or
- * almost normal coordinates.  In quadrilateral or quadrilateral-octagon
+ * \warning This class only works as expected with vector encodings that
+ * explicitly include triangles (e.g., encodings for standard normal or
+ * almost normal coordinates).  In quadrilateral or quadrilateral-octagon
  * coordinates it will only ban quadrilaterals or octagons that touch
  * the boundary, but it will still allow \e triangles that meet the boundary
  * (since triangle types are not counted in these coordinate systems).
- * The supported() routine will only return \c true in standard normal or
- * almost normal coordinates.
+ * The supported() routine will only return \c true for encodings that
+ * include triangles.
  *
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
@@ -874,14 +897,15 @@ class BanBoundary : public BanConstraintBase {
          * types at all.
          *
          * @param tri the triangulation with which we are working.
-         * @param coords the normal or almost normal coordinate system in
-         * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
+         * @param enc the vector encoding being used for this enumeration task.
+         * This must be one of the normal or almost normal surface vector
+         * encodings known to be supported by the generic TreeTraversal
+         * infrastructure.
          */
-        BanBoundary(const Triangulation<3>& tri, int coords);
+        BanBoundary(const Triangulation<3>& tri, NormalEncoding enc);
 
         void init(const int* columnPerm);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -898,13 +922,14 @@ class BanBoundary : public BanConstraintBase {
  * This class is only for use with normal or almost normal surfaces, not
  * angle structures.
  *
- * \warning As with BanBoundary, this class only works as expected in
- * \e standard normal or almost normal coordinates.  In quadrilateral or
+ * \warning As with BanBoundary, this class only works as expected with
+ * vector encodings that explicitly include triangles (e.g., encodings for
+ * standard normal or almost normal coordinates).  In quadrilateral or
  * quadrilateral-octagon coordinates it will only ban quadrilaterals or
  * octagons that touch torus boundaries, but it will still allow \e triangles
  * that meet torus boundaries (since triangle types are not counted in these
- * coordinate systems).  The supported() routine will only return \c true
- * in standard normal or almost normal coordinates.
+ * coordinate systems).  The supported() routine will only return \c true for
+ * encodings that include triangles.
  *
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
@@ -926,14 +951,15 @@ class BanTorusBoundary : public BanConstraintBase {
          * types at all.
          *
          * @param tri the triangulation with which we are working.
-         * @param coords the normal or almost normal coordinate system in
-         * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
+         * @param enc the vector encoding being used for this enumeration task.
+         * This must be one of the normal or almost normal surface vector
+         * encodings known to be supported by the generic TreeTraversal
+         * infrastructure.
          */
-        BanTorusBoundary(const Triangulation<3>& tri, int coords);
+        BanTorusBoundary(const Triangulation<3>& tri, NormalEncoding enc);
 
         void init(const int* columnPerm);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /*@}*/
@@ -982,7 +1008,7 @@ inline bool LPConstraintNone::verify(const AngleStructure&) {
     return true;
 }
 
-inline bool LPConstraintNone::supported(NormalCoords) {
+inline bool LPConstraintNone::supported(NormalEncoding) {
     return true;
 }
 
@@ -1035,8 +1061,9 @@ inline bool LPConstraintEulerPositive::verify(const AngleStructure&) {
     return false;
 }
 
-inline bool LPConstraintEulerPositive::supported(NormalCoords coords) {
-    return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
+inline bool LPConstraintEulerPositive::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return enc.storesTriangles();
 }
 
 template <typename IntType>
@@ -1076,8 +1103,9 @@ inline bool LPConstraintEulerZero::verify(const AngleStructure&) {
     return false;
 }
 
-inline bool LPConstraintEulerZero::supported(NormalCoords coords) {
-    return (coords == NS_STANDARD);
+inline bool LPConstraintEulerZero::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return (enc.storesTriangles() && ! enc.storesOctagons());
 }
 
 template <typename IntType>
@@ -1123,8 +1151,8 @@ inline bool LPConstraintNonSpun::verify(const AngleStructure&) {
     return false;
 }
 
-inline bool LPConstraintNonSpun::supported(NormalCoords coords) {
-    return (coords == NS_QUAD || coords == NS_AN_QUAD_OCT);
+inline bool LPConstraintNonSpun::supported(NormalEncoding enc) {
+    return ! (enc.storesTriangles() || enc.storesAngles());
 }
 
 inline BanConstraintBase::~BanConstraintBase() {
@@ -1140,32 +1168,35 @@ inline void BanConstraintBase::enforceBans(LPData<LPConstraint, IntType>& lp)
             lp.constrainZero(i);
 }
 
-inline BanNone::BanNone(const Triangulation<3>& tri, int coords) :
-        BanConstraintBase(tri, coords) {
+inline BanNone::BanNone(const Triangulation<3>& tri, NormalEncoding enc) :
+        BanConstraintBase(tri, enc) {
 }
 
 inline void BanNone::init(const int*) {
 }
 
-inline bool BanNone::supported(NormalCoords) {
+inline bool BanNone::supported(NormalEncoding) {
     return true;
 }
 
-inline BanBoundary::BanBoundary(const Triangulation<3>& tri, int coords) :
-        BanConstraintBase(tri, coords) {
+inline BanBoundary::BanBoundary(const Triangulation<3>& tri,
+        NormalEncoding enc) :
+        BanConstraintBase(tri, enc) {
 }
 
-inline bool BanBoundary::supported(NormalCoords coords) {
-    return (coords == NS_STANDARD || NS_AN_STANDARD);
+inline bool BanBoundary::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return enc.storesTriangles();
 }
 
 inline BanTorusBoundary::BanTorusBoundary(
-        const Triangulation<3>& tri, int coords) :
-        BanConstraintBase(tri, coords) {
+        const Triangulation<3>& tri, NormalEncoding enc) :
+        BanConstraintBase(tri, enc) {
 }
 
-inline bool BanTorusBoundary::supported(NormalCoords coords) {
-    return (coords == NS_STANDARD || NS_AN_STANDARD);
+inline bool BanTorusBoundary::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return enc.storesTriangles();
 }
 
 } // namespace regina

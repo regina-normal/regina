@@ -121,8 +121,8 @@ void LPMatrix<IntType>::dump(std::ostream& out) const {
 
 template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
-        const Triangulation<3>& tri, NormalCoords coords, bool enumeration) :
-        tri_(tri), system_(coords) {
+        const Triangulation<3>& tri, NormalEncoding enc, bool enumeration) :
+        tri_(tri), system_(enc) {
     unsigned r, c;
 
     // Fetch the original (unadjusted) matrix of matching equations.

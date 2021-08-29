@@ -98,22 +98,12 @@ namespace {
             }
     };
 
-    // These anonymous routines generate the linear programming arguments to
-    // use with the tree traversal enumeration algorithm for each
-    // coordinate system.
-    inline constexpr NormalCoords lpCoords(NormalCoords coords) {
-        switch (coords) {
-            case NS_QUAD_CLOSED: return NS_QUAD;
-            case NS_AN_QUAD_OCT_CLOSED: return NS_AN_QUAD_OCT;
-            default: return coords;
-        }
-    }
+    /**
+     * Determines whether we will need to add the LPConstraintNonSpun
+     * constraint to our linear programming machinery, or whether we can
+     * just use the default LPConstraintNone.
+     */
     inline constexpr bool useNonSpunConstraint(NormalCoords coords) {
-        // LPConstraintNonSpun can fail to construct the tableaux constraints,
-        // but only in scenarios where NS_QUAD_CLOSED fails to construct the
-        // matching equations.  Since we explicitly construct the matching
-        // equations as the first step of the enumeration process, we are
-        // assured that LPConstraintNonSpun can be used without problems.
         return (coords == NS_QUAD_CLOSED || coords == NS_AN_QUAD_OCT_CLOSED);
     }
 }
@@ -213,11 +203,11 @@ void NormalSurfaces::Enumerator::fillVertex() {
             list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
         } else if (useNonSpunConstraint(list_->coords_)) {
             if (! TreeTraversal<LPConstraintNonSpun, BanNone, Integer>::
-                    supported(lpCoords(list_->coords_)))
+                    supported(list_->coords_))
                 list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
         } else {
             if (! TreeTraversal<LPConstraintNone, BanNone, Integer>::
-                    supported(lpCoords(list_->coords_)))
+                    supported(list_->coords_))
                 list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
         }
     }
@@ -470,8 +460,13 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 template <typename Integer>
 void NormalSurfaces::Enumerator::fillVertexTreeWith() {
     if (useNonSpunConstraint(list_->coords_)) {
+        // LPConstraintNonSpun can fail to construct the tableaux constraints,
+        // but only in scenarios where NS_QUAD_CLOSED fails to construct the
+        // matching equations.  Since we explicitly constructed the matching
+        // equations as the first step of the enumeration process, we are
+        // assured that LPConstraintNonSpun can be used without problems.
         TreeEnumeration<LPConstraintNonSpun, BanNone, Integer> search(
-            *triang_, lpCoords(list_->coords_));
+            *triang_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
             if (tracker_ && tracker_->isCancelled())
@@ -479,7 +474,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         }
     } else {
         TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
-            *triang_, lpCoords(list_->coords_));
+            *triang_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
             if (tracker_ && tracker_->isCancelled())

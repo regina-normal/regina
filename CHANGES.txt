@@ -924,13 +924,14 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
             - The fromPACE() routines now return a std::optional by value,
               instead of a newly allocated pointer that could be null.
-        Class TreeTraversal<...>
-            - The verify() routines no longer allow a ready-made matrix of
-              matching/angle equations to be passed; also, they now take
-              their arguments by reference (not by pointer).
+        Class TreeTraversal, TreeEnumeration, TreeSingleSoln, TautEnumeration:
+            - Removed the verify() routines, since this is basically just a
+              single matrix multiplication.
             - Changed buildStructure() and buildSurface() to return by value,
               not by newly allocated pointer.  Now throws an exception (instead
               of returning null) if the coordinate preconditions are not met.
+            - Constructors now take a NormalEncoding, not a NormalCoords, and
+              will now happily accept any valid encoding.
         Class Triangulation<dim>:
             - New constructor that takes a link and builds its complement.
             - New alias fromSig(), which is is identical to fromIsoSig().

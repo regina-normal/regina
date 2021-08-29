@@ -56,26 +56,6 @@ void usage(const char* program) {
 }
 
 /**
- * A variant of TreeTraversal::writeTypes() that also performs sanity
- * checking on the normal surface.
- */
-template <class LPConstraint, typename BanConstraint>
-bool writeTypesAndVerify(
-        const TreeEnumeration<LPConstraint, BanConstraint>& tree, void*) {
-    /*
-    std::cout << "SOLN #" << tree.nSolns() << ": ";
-    tree.dumpTypes(std::cout);
-    std::cout << std::endl;
-    */
-
-    NormalSurface s = tree.buildSurface();
-    if (! tree.verify(s))
-        std::cout << "ERROR: Verification failed." << std::endl;
-
-    return true;
-}
-
-/**
  * The main body of the program.
  *
  * For each isomorphism signature passed on the command line, we build
@@ -135,8 +115,9 @@ int main(int argc, char* argv[]) {
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;
                 else {
-                    search.run(&writeTypesAndVerify<LPConstraintNone, BanNone>,
-                        nullptr);
+                    search.run(&TreeEnumeration<LPConstraintNone,
+                        BanNone>::writeTypes, nullptr);
+
                     std::cout << "# solutions = " << search.nSolns()
                         << std::endl;
                     std::cout << "# nodes visited = " << search.nVisited() 
@@ -153,11 +134,6 @@ int main(int argc, char* argv[]) {
                     std::cout << std::endl;
                     std::cout << "# nodes visited = " << search.nVisited()
                         << std::endl;
-
-                    // Sanity checking:
-                    NormalSurface s = search.buildSurface();
-                    if (! search.verify(s))
-                        std::cout << "ERROR: Verification failed." << std::endl;
                 } else {
                     std::cout << "No non-trivial solution with Euler > 0"
                         << std::endl;

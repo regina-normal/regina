@@ -1348,6 +1348,9 @@ Equality type : EqualityType.BY_REFERENCE
 L31Pillow : class
 Equality type : EqualityType.BY_REFERENCE
 
+LPSystem : class
+Equality type : EqualityType.BY_VALUE
+
 LargeInteger : class
 Equality type : EqualityType.BY_VALUE
 

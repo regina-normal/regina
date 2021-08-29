@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "enumerate/treeconstraint.h"
+#include "enumerate/treelp.h" // for LPSystem
 #include "snappea/snappeatriangulation.h"
 #include "triangulation/dim3.h"
 
@@ -151,12 +152,9 @@ bool LPConstraintNonSpun::addRows(
     return true;
 }
 
-BanConstraintBase::BanConstraintBase(const Triangulation<3>& tri, int coords) :
-        tri_(tri), coords_(coords) {
-    unsigned nCols = (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
-            3 * tri.size() :
-        coords == NS_ANGLE ? 3 * tri.size() + 1 :
-        7 * tri.size());
+BanConstraintBase::BanConstraintBase(const Triangulation<3>& tri,
+        NormalEncoding enc) : tri_(tri), enc_(enc) {
+    const size_t nCols = LPSystem(enc).coords(tri.size());
     banned_ = new bool[nCols];
     marked_ = new bool[nCols];
     std::fill(banned_, banned_ + nCols, false);
@@ -167,7 +165,7 @@ void BanBoundary::init(const int* columnPerm) {
     unsigned n = tri_.size();
     unsigned tet, type, i, k;
 
-    bool quadOnly = (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT);
+    bool quadOnly = ! enc_.storesTriangles();
 
     // The implementation here is a little inefficient (we repeat tests
     // three or four times over), but this routine is only called at
@@ -231,7 +229,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
         }
     }
 
-    bool quadOnly = (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT);
+    bool quadOnly = ! enc_.storesTriangles();
 
     // The implementation here is a little inefficient (we repeat tests
     // three or four times over), but this routine is only called at
