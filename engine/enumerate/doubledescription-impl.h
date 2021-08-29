@@ -269,11 +269,10 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
     unsigned long nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the vertices of the non-negative orthant.
-        RayClass* ans;
         for (unsigned long i = 0; i < dim; ++i) {
-            ans = new RayClass(dim);
-            (*ans)[i] = IntegerType::one;
-            action(ans);
+            RayClass ans(dim);
+            ans[i] = IntegerType::one;
+            action(std::move(ans));
         }
 
         if (tracker)
@@ -372,11 +371,10 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
     }
 
     // Convert the final solutions into the required ray class.
-    RayClass* ans;
     for (it = list[workingList].begin(); it != list[workingList].end(); ++it) {
-        ans = new RayClass(dim);
-        (*it)->recover(*ans, subspace);
-        action(ans);
+        RayClass ans(dim);
+        (*it)->recover(ans, subspace);
+        action(std::move(ans));
 
         delete *it;
     }

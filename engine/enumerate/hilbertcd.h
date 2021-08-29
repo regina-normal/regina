@@ -109,9 +109,9 @@ class HilbertCD {
          * For each of the resulting basis elements, this routine will call
          * \a action (which must be a function or some other callable object).
          * This action should return \c void, and must take exactly one
-         * argument: a pointer to RayClass, which will be the newly allocated
-         * basis element.  The action is responsible for ensuring that this
-         * basis element is (eventually) deallocated.
+         * argument: an rvalue reference of type RayClass&&, which will be the
+         * basis element.  A typical action would then move the contents of
+         * this basis element out into their own storage.
          *
          * \pre The template argument RayClass is derived from (or equal to)
          * Vector<T>, where \a T is one of Regina's arbitrary-precision
@@ -124,8 +124,7 @@ class HilbertCD {
          *
          * @param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
-         * argument of type <tt>RayClass*</tt>, and it is responsible for
-         * eventually deallocating the basis element that was passed.
+         * argument of type <tt>RayClass&&</tt>.
          * @param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear

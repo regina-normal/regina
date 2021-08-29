@@ -275,7 +275,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
 
     // Output basis elements.
     for (bit = basis.begin(); bit != basis.end(); ++bit) {
-        action(new RayClass(**bit));
+        action(RayClass(**bit));
         delete *bit;
     }
 }

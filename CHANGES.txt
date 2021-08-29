@@ -166,6 +166,8 @@ Version 7.0  [ TODO ]
               integer types, not only LargeInteger.
             - The main enumeration routine no longer takes an output iterator;
               instead it takes a callable object (e.g., a lambda).
+            - The main enumeration now returns each ray by rvalue reference,
+              not by pointer to a newly allocated object.
         Class EnableIf<condition, T, defaultValue>:
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
@@ -296,6 +298,8 @@ Version 7.0  [ TODO ]
               integer types, not only LargeInteger.
             - The main enumeration routine no longer takes an output iterator;
               instead it takes a callable object (e.g., a lambda).
+            - The main enumeration now returns each basis element by
+              rvalue reference, not by pointer to a newly allocated object.
         Class HomGroupPresentation:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.

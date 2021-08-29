@@ -121,11 +121,10 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
     size_t nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the unit vectors.
-        RayClass* ans;
         for (unsigned i = 0; i < dim; ++i) {
-            ans = new RayClass(dim);
-            (*ans)[i] = IntegerType::one;
-            action(ans);
+            RayClass ans(dim);
+            ans[i] = IntegerType::one;
+            action(std::move(ans));
         }
 
         if (tracker)
@@ -199,12 +198,11 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
         return;
     }
 
-    RayClass* ans;
     for (it = list.begin(); it != list.end(); ++it) {
-        ans = new RayClass(dim);
+        RayClass ans(dim);
         for (i = 0; i < dim; ++i)
-            (*ans)[i] = (**it)[i];
-        action(ans);
+            ans[i] = (**it)[i];
+        action(std::move(ans));
 
         delete *it;
     }

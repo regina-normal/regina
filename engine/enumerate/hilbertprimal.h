@@ -113,9 +113,9 @@ class HilbertPrimal {
          * For each of the resulting basis elements, this routine will call
          * \a action (which must be a function or some other callable object).
          * This action should return \c void, and must take exactly one
-         * argument: a pointer to RayClass, which will be the newly allocated
-         * basis element.  The action is responsible for ensuring that this
-         * basis element is (eventually) deallocated.
+         * argument: an rvalue reference of type RayClass&&, which will be the
+         * basis element.  A typical action would then move the contents of
+         * this basis element out into their own storage.
          *
          * \pre If \a constraints is passed, then the given list of
          * extremal rays contains \e only those extremal rays that satisfy
@@ -139,8 +139,7 @@ class HilbertPrimal {
          *
          * @param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
-         * argument of type <tt>RayClass*</tt>, and it is responsible for
-         * eventually deallocating the basis element that was passed.
+         * argument of type <tt>RayClass&&</tt>.
          * @param raysBegin an iterator pointing to the beginning of the
          * list of extremal rays.
          * @param raysEnd an iterator pointing past the end of the

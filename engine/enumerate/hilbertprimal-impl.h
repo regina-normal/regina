@@ -178,12 +178,11 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
     if (tracker)
         tracker->setPercent(90);
 
-    RayClass* ans;
     for (hsit = finalBasis.begin(); hsit != finalBasis.end(); ++hsit) {
-        ans = new RayClass(dim);
+        RayClass ans(dim);
         for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i)
-            (*ans)[i].setRaw(hvit->get_mpz_t());
-        action(ans);
+            ans[i].setRaw(hvit->get_mpz_t());
+        action(std::move(ans));
     }
 
     // All done!

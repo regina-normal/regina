@@ -113,9 +113,9 @@ class DoubleDescription {
          * For each of the resulting extremal rays, this routine will call
          * \a action (which must be a function or some other callable object).
          * This action should return \c void, and must take exactly one
-         * argument: a pointer to RayClass, which will be the newly allocated
-         * extremal ray.  The action is responsible for ensuring that this
-         * ray is (eventually) deallocated.
+         * argument: an rvalue reference of type RayClass&&, which will be the
+         * extremal ray.  A typical action would then move the contents of
+         * this ray out into their own storage.
          *
          * \pre The template argument RayClass is derived from (or equal to)
          * Vector<T>, where \a T is one of Regina's arbitrary-precision
@@ -123,8 +123,7 @@ class DoubleDescription {
          *
          * @param action a function (or other callable object) that will be
          * called for each extremal ray.  This function must take a single
-         * argument of type <tt>RayClass*</tt>, and it is responsible for
-         * eventually deallocating the ray that was passed.
+         * argument of type <tt>RayClass&&</tt>.
          * @param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
