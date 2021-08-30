@@ -556,6 +556,7 @@ Version 7.0  [ TODO ]
               hypersurfaces that use different coordinate systems.
             - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalHypersurfaces:
+            - Now supports enumeration in prism coordinates (HS_PRISM).
             - Replaced enumerate() with a class constructor; this will
               throw an exception on error (instead of returning null).
               The old enumerate() function is kept as a deprecated alias.
