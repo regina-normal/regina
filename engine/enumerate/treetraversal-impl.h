@@ -895,14 +895,6 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
-        writeStructure(const TautEnumeration& tree, void*) {
-    std::cout << "SOLN #" << tree.nSolns() << ": ";
-    std::cout << tree.buildStructure().str() << std::endl;
-    return true;
-}
-
-template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:

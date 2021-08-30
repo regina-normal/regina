@@ -935,6 +935,15 @@ Version 7.0  [ TODO ]
               of returning null) if the coordinate preconditions are not met.
             - Constructors now take a NormalEncoding, not a NormalCoords, and
               will now happily accept any valid encoding.
+            - TreeEnumeration::run() and TautEnumeration::run() now use a
+              type-safe template-based mechanism for callbacks instead of
+              function pointers with void* arguments.  Moreover, the
+              true/false behaviour of the callback has been inverted for
+              consistency with other callback functions throughout Regina.
+            - All writeTypes(), writeSurface() and writeStructure() functions
+              (which are intended as drop-in callbacks) no longer have a
+              void pointer argument, and now return false instead of true
+              according to the new callback requirements described above.
         Class Triangulation<dim>:
             - New constructor that takes a link and builds its complement.
             - New alias fromSig(), which is is identical to fromIsoSig().

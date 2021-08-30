@@ -678,7 +678,7 @@ class TreeEnumeration :
          * found thus far in the tree traversal search.
          *
          * If you called run(), then this will simply be the total number of
-         * vertex surfaces.  If you are calling next() one
+         * vertex surfaces that were found.  If you are calling next() one
          * surface at time, this will be the partial count of how many
          * vertex surfaces have been found until now.
          *
@@ -690,30 +690,35 @@ class TreeEnumeration :
          * Runs the complete tree traversal algorithm to enumerate
          * vertex normal or almost normal surfaces.
          *
-         * For each vertex surface that is found, this routine
-         * will call the function \a useSoln.  It will pass two
-         * arguments to this function: (i) this tree enumeration object,
-         * and (ii) an arbitrary piece of data that you can supply via
-         * the argument \a arg.
+         * For each vertex surface that is found, this routine will call
+         * \a action (which must be a function or some other callable object).
          *
-         * You can extract details of the solution directly from the
-         * tree enumeration object: for instance, you can dump the type
-         * vector using dumpTypes(), or you can reconstruct the full normal or
+         * - The first argument to \a action must be a const reference
+         *   to a TreeEnumeration object (which will be this object).
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - The tree traversal algorithm will block until \a action returns.
+         *
+         * - \a action must return a \c bool.  A return value of \c false
+         *   indicates that run() should continue the tree traversal, and
+         *   a return value of \c true indicates that run() should terminate
+         *   the search immediately.
+         *
+         * Your action can extract details of the solution directly from the
+         * tree enumeration object: for instance, it can dump the type
+         * vector using dumpTypes(), or it can reconstruct the full normal or
          * almost normal surface using buildSurface() and perform some other
          * operations upon it.
-         *
-         * The tree traversal will block until your callback function
-         * \a useSoln returns.  If the callback function returns \c true,
-         * then run() will continue the tree traversal.  If it returns
-         * \c false, then run() will abort the search and return immediately.
          *
          * The usual way of using this routine is to construct a
          * TreeEnumeration object and then immediately call run().  However,
          * if you prefer, you may call run() after one or more calls to next().
          * In this case, run() will continue the search from the current point
          * and run it to its completion.  In other words, run() will locate
-         * and call \a useSoln for all vertex surfaces that had not yet
-         * been found, but it will not call \a useSoln on those surfaces
+         * and call \a action for all vertex surfaces that had not yet
+         * been found, but it will not call \a action on those surfaces
          * that had previously been found during earlier calls to next().
          *
          * \pre The tree traversal algorithm has not yet finished.
@@ -721,13 +726,15 @@ class TreeEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * @param useSoln a callback function that will be called each
-         * time we locate a vertex surface, as described above.
-         * @param arg the second argument to pass to the callback
-         * function; this may be any type of data that you like.
+         * @param action a function (or some other callable object) to
+         * call for each vertex surface that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial tree enumeration argument.
+         * @return \c true if \a action ever terminated the search by returning
+         * \c true, or \c false if the search was allowed to run to completion.
          */
-        void run(bool (*useSoln)(const TreeEnumeration&, void*),
-                void* arg = nullptr);
+        template <typename Action, typename... Args>
+        bool run(Action&& action, Args&&... args);
 
         /**
          * An incremental step in the tree traversal algorithm that
@@ -780,16 +787,12 @@ class TreeEnumeration :
         /**
          * A callback function that writes to standard output the type vector
          * at the current point in the given tree traversal search.
-         * You can use this as the callback function \a useSoln that is
-         * passed to run().
+         * You can use this as the callback \a action that is passed to run().
          *
          * The type vector will be written on a single line, with no
          * spaces between types, with a prefix indicating which solution
          * we are up to, and with a final newline appended.
          * This output format is subject to change in future versions of Regina.
-         *
-         * The second (void*) argument is ignored.  It is only present
-         * for compatibility with run().
          *
          * \pre The given tree traversal is at a point in the search where
          * it has reached the deepest level of the search tree and found a
@@ -799,25 +802,22 @@ class TreeEnumeration :
          *
          * @param tree the tree traversal object from which we are
          * extracting the current type vector.
-         * @return \c true (which indicates to run() that we should
+         * @return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeTypes(const TreeEnumeration& tree, void*);
+        static bool writeTypes(const TreeEnumeration& tree);
 
         /**
          * A callback function that writes to standard output the full
          * triangle-quadrilateral coordinates of the vertex normal
          * or almost normal surface at the current point in the given
-         * tree traversal search.  You can use this as the callback function
-         * \a useSoln that is passed to run().
+         * tree traversal search.  You can use this as the callback \a action
+         * that is passed to run().
          *
          * The normal surface coordinates will be written on a single line, with
          * spaces and punctuation separating them, a prefix indicating which
          * solution we are up to, and a final newline appended.
          * This output format is subject to change in future versions of Regina.
-         *
-         * The second (void*) argument is ignored.  It is only present
-         * for compatibility with run().
          *
          * \pre The given tree traversal is at a point in the search where
          * it has reached the deepest level of the search tree and found a
@@ -827,10 +827,10 @@ class TreeEnumeration :
          *
          * @param tree the tree traversal object from which we are
          * extracting the current vertex normal or almost normal surface.
-         * @return \c true (which indicates to run() that we should
+         * @return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeSurface(const TreeEnumeration& tree, void*);
+        static bool writeSurface(const TreeEnumeration& tree);
 };
 
 /**
@@ -944,8 +944,8 @@ class TautEnumeration :
          * found thus far in the tree traversal search.
          *
          * If you called run(), then this will simply be the total number of
-         * taut angle structures.  If you are calling next() one
-         * surface at time, this will be the partial count of how many
+         * taut angle structures that were found.  If you are calling next()
+         * one surface at time, this will be the partial count of how many
          * taut angle structures have been found until now.
          *
          * @return the number of solutions found so far.
@@ -956,30 +956,35 @@ class TautEnumeration :
          * Runs the complete tree traversal algorithm to enumerate
          * all taut angle structures.
          *
-         * For each taut angle structure that is found, this routine
-         * will call the function \a useSoln.  It will pass two
-         * arguments to this function: (i) this enumeration object,
-         * and (ii) an arbitrary piece of data that you can supply via
-         * the argument \a arg.
+         * For each taut angle structure that is found, this routine will call
+         * \a action (which must be a function or some other callable object).
          *
-         * You can extract details of the solution directly from the
-         * enumeration object: for instance, you can dump the type
-         * vector using dumpTypes(), or you can reconstruct the full taut
+         * - The first argument to \a action must be a const reference
+         *   to a TautEnumeration object (which will be this object).
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - The tree traversal algorithm will block until \a action returns.
+         *
+         * - \a action must return a \c bool.  A return value of \c false
+         *   indicates that run() should continue the enumeration, and
+         *   a return value of \c true indicates that run() should terminate
+         *   the search immediately.
+         *
+         * Your action can extract details of the solution directly from the
+         * enumeration object: for instance, it can dump the type
+         * vector using dumpTypes(), or it can reconstruct the full taut
          * angle structure using buildStructure() and perform some other
          * operations upon it.
-         *
-         * The enumeration will block until your callback function
-         * \a useSoln returns.  If the callback function returns \c true,
-         * then run() will continue the enumeration.  If it returns
-         * \c false, then run() will abort the search and return immediately.
          *
          * The usual way of using this routine is to construct an
          * TautEnumeration object and then immediately call run().  However,
          * if you prefer, you may call run() after one or more calls to next().
          * In this case, run() will continue the search from the current point
          * and run it to its completion.  In other words, run() will locate
-         * and call \a useSoln for all taut angle structures that had not yet
-         * been found, but it will not call \a useSoln on those solutions
+         * and call \a action for all taut angle structures that had not yet
+         * been found, but it will not call \a action for those solutions
          * that had previously been found during earlier calls to next().
          *
          * \pre The enumeration algorithm has not yet finished.
@@ -987,13 +992,15 @@ class TautEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * @param useSoln a callback function that will be called each
-         * time we locate a taut angle structure, as described above.
-         * @param arg the second argument to pass to the callback
-         * function; this may be any type of data that you like.
+         * @param action a function (or some other callable object) to
+         * call for each taut angle structure that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial tree enumeration argument.
+         * @return \c true if \a action ever terminated the search by returning
+         * \c true, or \c false if the search was allowed to run to completion.
          */
-        void run(bool (*useSoln)(const TautEnumeration&, void*),
-                void* arg = nullptr);
+        template <typename Action, typename... Args>
+        bool run(Action&& action, Args&&... args);
 
         /**
          * An incremental step in the enumeration algorithm that
@@ -1046,16 +1053,12 @@ class TautEnumeration :
         /**
          * A callback function that writes to standard output the type vector
          * at the current point in the given tree traversal search.
-         * You can use this as the callback function \a useSoln that is
-         * passed to run().
+         * You can use this as the callback \a action that is passed to run().
          *
          * The type vector will be written on a single line, with no
          * spaces between types, with a prefix indicating which solution
          * we are up to, and with a final newline appended.
          * This output format is subject to change in future versions of Regina.
-         *
-         * The second (void*) argument is ignored.  It is only present
-         * for compatibility with run().
          *
          * \pre The given tree traversal is at a point in the search where
          * it has reached the deepest level of the search tree and found a
@@ -1065,16 +1068,16 @@ class TautEnumeration :
          *
          * @param tree the tree traversal object from which we are
          * extracting the current type vector.
-         * @return \c true (which indicates to run() that we should
+         * @return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeTypes(const TautEnumeration& tree, void*);
+        static bool writeTypes(const TautEnumeration& tree);
 
         /**
          * A callback function that writes to standard output the full
          * angle structure coordinates of the taut angle structure at the
          * current point in the given tree traversal search.  You can use
-         * this as the callback function \a useSoln that is passed to run().
+         * this as the callback \a action that is passed to run().
          *
          * The angle structure coordinates will be written on a single line,
          * with spaces and punctuation separating them, a prefix indicating
@@ -1082,9 +1085,6 @@ class TautEnumeration :
          * The final scaling coordinate (used to projectivise the angle
          * structure polytope) will also be written.
          * This output format is subject to change in future versions of Regina.
-         *
-         * The second (void*) argument is ignored.  It is only present
-         * for compatibility with run().
          *
          * \pre The given tree traversal is at a point in the search where
          * it has reached the deepest level of the search tree and found a
@@ -1094,10 +1094,10 @@ class TautEnumeration :
          *
          * @param tree the tree traversal object from which we are
          * extracting the current taut angle structure.
-         * @return \c true (which indicates to run() that we should
+         * @return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeStructure(const TautEnumeration& tree, void*);
+        static bool writeStructure(const TautEnumeration& tree);
 };
 
 /**
@@ -1370,28 +1370,30 @@ inline unsigned long TreeEnumeration<LPConstraint, BanConstraint, IntType>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-inline void TreeEnumeration<LPConstraint, BanConstraint, IntType>::run(
-        bool (*useSoln)(const TreeEnumeration&, void*), void* arg) {
+template <typename Action, typename... Args>
+inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::run(
+        Action&& action, Args&&... args) {
     while (next())
-        if (! useSoln(*this, arg))
-            return;
+        if (action(*this, std::forward<Args>(args)...))
+            return true;
+    return false;
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
-        const TreeEnumeration& tree, void*) {
+        const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     tree.dumpTypes(std::cout);
     std::cout << std::endl;
-    return true;
+    return false;
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
-        writeSurface(const TreeEnumeration& tree, void*) {
+        writeSurface(const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     std::cout << tree.buildSurface().str() << std::endl;
-    return true;
+    return false;
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -1411,20 +1413,30 @@ inline unsigned long TautEnumeration<LPConstraint, BanConstraint, IntType>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-inline void TautEnumeration<LPConstraint, BanConstraint, IntType>::run(
-        bool (*useSoln)(const TautEnumeration&, void*), void* arg) {
+template <typename Action, typename... Args>
+inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::run(
+        Action&& action, Args&&... args) {
     while (next())
-        if (! useSoln(*this, arg))
-            return;
+        if (action(*this, std::forward<Args>(args)...))
+            return true;
+    return false;
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
-        const TautEnumeration& tree, void*) {
+        const TautEnumeration& tree) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     tree.dumpTypes(std::cout);
     std::cout << std::endl;
-    return true;
+    return false;
+}
+
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
+        writeStructure(const TautEnumeration& tree) {
+    std::cout << "SOLN #" << tree.nSolns() << ": ";
+    std::cout << tree.buildStructure().str() << std::endl;
+    return false;
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>

@@ -115,8 +115,14 @@ int main(int argc, char* argv[]) {
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;
                 else {
-                    search.run(&TreeEnumeration<LPConstraintNone,
-                        BanNone>::writeTypes, nullptr);
+                    search.run([](const auto& tree) {
+                        /*
+                        std::cout << "SOLN #" << tree.nSolns() << ": ";
+                        tree.dumpTypes(std::cout);
+                        std::cout << std::endl;
+                        */
+                        return false;
+                    });
 
                     std::cout << "# solutions = " << search.nSolns()
                         << std::endl;
