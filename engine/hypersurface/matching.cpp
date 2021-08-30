@@ -132,6 +132,35 @@ std::optional<MatrixInt> makeMatchingEquations(
         }
         case HS_PRISM:
         {
+            const size_t nCoords = 10 * triangulation.size();
+
+            // Three equations per non-boundary triangle.
+            size_t nEquations = triangulation.countTriangles();
+            for (BoundaryComponent<4>* bc : triangulation.boundaryComponents())
+                nEquations -= bc->countTriangles();
+            nEquations *= 3;
+
+            MatrixInt ans(nEquations, nCoords);
+
+            // Run through each internal triangle and add the corresponding
+            // equations.
+            size_t row = 0;
+            for (Triangle<4>* t : triangulation.triangles()) {
+                if (! t->isBoundary()) {
+                    for (int v = 0; v < 3; ++v) {
+                        for (const auto& emb : *t) {
+                            size_t pos = 10 * emb.pentachoron()->index();
+                            Perm<5> perm = emb.vertices();
+                            ++ans.entry(row, pos +
+                                Edge<4>::edgeNumber[perm[v]][perm[3]]);
+                            --ans.entry(row, pos +
+                                Edge<4>::edgeNumber[perm[v]][perm[4]]);
+                        }
+                        ++row;
+                    }
+                }
+            }
+            return ans;
         }
         default:
             return std::nullopt;

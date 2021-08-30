@@ -122,6 +122,7 @@ void addNormalHypersurface(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("rawVector", &NormalHypersurface::vector, // deprecated
             pybind11::return_value_policy::reference_internal)
+        .def("encoding", &NormalHypersurface::encoding)
         .def_static("reconstructTetrahedra",
             &NormalHypersurface::reconstructTetrahedra)
         .def(pybind11::self + pybind11::self)

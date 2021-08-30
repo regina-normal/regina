@@ -180,7 +180,7 @@ class HyperEncoding {
                     break;
 
                 case HS_PRISM:
-                    flags_ = 3 | COULD_BE_NON_COMPACT;
+                    flags_ = 10 | COULD_BE_NON_COMPACT;
                     break;
 
                 default:
