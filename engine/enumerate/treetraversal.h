@@ -110,7 +110,7 @@ class ProgressTracker;
  *
  * This class can also support octagon types in almost normal surfaces.
  * However, we still do our linear programming in standard or quadrilateral
- * coordinates, where we represent an octagon using two conflicting 
+ * coordinates, where we represent an octagon using two conflicting
  * quadrilaterals in the same tetrahedron (which meet the tetrahedron boundary
  * in the same set of arcs as a single octagon would).  As with the almost
  * normal coordinate systems in NormalSurfaces, we allow multiple octagons
@@ -143,6 +143,10 @@ class ProgressTracker;
  * Unless you have a good reason to do otherwise, you should use the
  * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
+ *
+ * Subclasses of TreeTraversal are designed to manage the execution of
+ * significant enumeration and search operations, and so this class does not
+ * support copying, moving or swapping.
  *
  * \pre The parameter LPConstraint must be a subclass of LPConstraintBase, and
  * BanConstraint must either BanNone or a subclass of BanConstraintBase.  See
@@ -567,6 +571,9 @@ class TreeTraversal : public BanConstraint {
  * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
+ * This class is designed to manage the execution of a significant enumeration
+ * operation, and so it does not support copying, moving or swapping.
+ *
  * \pre The parameter LPConstraint must be a subclass of LPConstraintSubspace,
  * and BanConstraint must either BanNone or a subclass of BanConstraintBase.
  * Note in particular that the base class LPConstraintBase is not enough here.
@@ -831,6 +838,10 @@ class TreeEnumeration :
          * continue the tree traversal).
          */
         static bool writeSurface(const TreeEnumeration& tree);
+
+        // Mark this class as non-copyable.
+        TreeEnumeration(const TreeEnumeration&) = delete;
+        TreeEnumeration& operator = (const TreeEnumeration&) = delete;
 };
 
 /**
@@ -863,6 +874,9 @@ class TreeEnumeration :
  * Unless you have a good reason to do otherwise, you should use the
  * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
+ *
+ * This class is designed to manage the execution of a significant enumeration
+ * operation, and so it does not support copying, moving or swapping.
  *
  * \pre The parameter LPConstraint must be a subclass of LPConstraintSubspace,
  * and BanConstraint must either BanNone or a subclass of BanConstraintBase.
@@ -1098,6 +1112,10 @@ class TautEnumeration :
          * continue the tree traversal).
          */
         static bool writeStructure(const TautEnumeration& tree);
+
+        // Mark this class as non-copyable.
+        TautEnumeration(const TautEnumeration&) = delete;
+        TautEnumeration& operator = (const TautEnumeration&) = delete;
 };
 
 /**
@@ -1165,6 +1183,9 @@ class TautEnumeration :
  * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
+ * This class is designed to manage the execution of a significant search
+ * operation, and so it does not support copying, moving or swapping.
+ *
  * \warning Typically one should only use this class with \e one-vertex
  * triangulations (since otherwise, setting at least one triangle coordinate
  * to zero is not enough to rule out trivial vertex linking surfaces).
@@ -1172,7 +1193,7 @@ class TautEnumeration :
  * (for instance, in ideal triangulations with multiple cusps, or when
  * using ban constraints), and in such settings this class will still work
  * precisely as described.
- * 
+ *
  * \warning If you examine the type vector (for instance, by calling
  * dumpTypes()), be aware that this class merges the old types 0 and 1
  * together into a single branch of the search tree.  This means that
@@ -1299,6 +1320,10 @@ class TreeSingleSoln :
          * then it should be cancelled at the earliest convenient opportunity.
          */
         void cancel();
+
+        // Mark this class as non-copyable.
+        TreeSingleSoln(const TreeSingleSoln&) = delete;
+        TreeSingleSoln& operator = (const TreeSingleSoln&) = delete;
 
     private:
         /**

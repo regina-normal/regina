@@ -53,9 +53,12 @@ namespace regina {
  */
 
 /**
- * A utility class used by formSigCensus().  Other routines should never
- * refer to this class directly.  It is used to store temporary
- * information when forming the census.
+ * A class responsible for building censuses of splitting surface signatures.
+ *
+ * The main entry point for building a census is the static routine
+ * formCensus().  End users cannot create their own objects of this class.
+ *
+ * See formCensus() for further information.
  */
 class SigCensus {
     public:
@@ -77,7 +80,7 @@ class SigCensus {
                  signature. */
 
         std::function<void(const Signature&, const IsoList&)> action_;
-            /**< The action that was passed to formSigCensus(), also
+            /**< The action that was passed to formCensus(), also
                  encapsulating all of its user-supplied arguments. */
 
         size_t totalFound;
@@ -158,7 +161,7 @@ class SigCensus {
     private:
         /**
          * Creates a new structure to form a signature census.
-         * All parameters are taken directly from formSigCensus().
+         * All parameters are taken directly from formCensus().
          *
          * \pre order is at least 1.
          */

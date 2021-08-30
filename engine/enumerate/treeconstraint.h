@@ -722,6 +722,12 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * and must implement supported(), which indicates which normal or angle
  * structure coordinate system this constraint class can work with.
  *
+ * All ban constraint classes are designed to help TreeTraversal manage
+ * significant enumeration and search operations, and objects of these classes
+ * cannot be constructed directly by end users.  To use a ban constraint class,
+ * pass it as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -852,6 +858,12 @@ class BanConstraintBase {
  * See the BanConstraintBase class notes for details on the interface
  * that this class adheres to.
  *
+ * This class is designed to help TreeTraversal manage significant enumeration
+ * and search operations, and objects of this class cannot be constructed
+ * directly by end users.  To use this class, pass it as the BanConstraint
+ * template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -886,6 +898,12 @@ class BanNone {
  *
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
+ *
+ * This class is designed to help TreeTraversal manage significant enumeration
+ * and search operations, and objects of this class cannot be constructed
+ * directly by end users.  To use this class, pass it as the BanConstraint
+ * template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration or TreeSingleSolution).
  *
  * \apinotfinal
  *
@@ -940,6 +958,12 @@ class BanBoundary : public BanConstraintBase {
  *
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
+ *
+ * This class is designed to help TreeTraversal manage significant enumeration
+ * and search operations, and objects of this class cannot be constructed
+ * directly by end users.  To use this class, pass it as the BanConstraint
+ * template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration or TreeSingleSolution).
  *
  * \apinotfinal
  *
