@@ -65,10 +65,16 @@ def dumpSurfaces(name, tri, coords = regina.HS_STANDARD, which = regina.HS_LIST_
 def surfaceStats(tri):
 	dumpSurfaces('Vertex hypersurfaces (std)',
 		tri, regina.HS_STANDARD, regina.HS_VERTEX)
+	dumpSurfaces('Vertex hypersurfaces (prism)',
+		tri, regina.HS_PRISM, regina.HS_VERTEX)
 	dumpSurfaces('Fundamental surfaces (std, primal)',
 		tri, regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_PRIMAL)
 	dumpSurfaces('Fundamental surfaces (std, dual)',
 		tri, regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL)
+	dumpSurfaces('Fundamental surfaces (prism, primal)',
+		tri, regina.HS_PRISM, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_PRIMAL)
+	dumpSurfaces('Fundamental surfaces (prism, dual)',
+		tri, regina.HS_PRISM, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL)
 
 t = regina.Triangulation4()
 t.setLabel("Empty triangulation")
