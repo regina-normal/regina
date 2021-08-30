@@ -55,8 +55,17 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
-        .def_static("enumerate", &NormalHypersurfaces::enumerate,
-            pybind11::arg(), pybind11::arg(),
+        .def_static("enumerate", [](Triangulation<4>& owner, HyperCoords coords,
+                regina::HyperList which, regina::HyperAlg algHints,
+                ProgressTracker* tracker) -> NormalHypersurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                return new NormalHypersurfaces(owner, coords, which, algHints,
+                    tracker);
+            } catch (const regina::NoMatchingEquations&) {
+                return nullptr;
+            }
+        }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)

@@ -60,8 +60,11 @@ void addAngleStructures(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("spansStrict", &AngleStructures::spansStrict)
         .def("spansTaut", &AngleStructures::spansTaut)
-        .def_static("enumerate", &AngleStructures::enumerate,
-            pybind11::arg(),
+        .def_static("enumerate", [](Triangulation<3>& owner, bool tautOnly,
+                ProgressTracker* tracker) {
+            // This is deprecated, so we reimplement it here ourselves.
+            return new AngleStructures(owner, tautOnly, tracker);
+        }, pybind11::arg(),
             pybind11::arg("tautOnly") = false,
             pybind11::arg("tracker") = nullptr)
         .def_static("enumerateTautDD", &AngleStructures::enumerateTautDD)

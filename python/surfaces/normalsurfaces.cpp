@@ -85,8 +85,18 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("writeAllSurfaces", [](const NormalSurfaces& s) {
             s.writeAllSurfaces(std::cout);
         })
-        .def_static("enumerate", &NormalSurfaces::enumerate,
-            pybind11::arg(), pybind11::arg(),
+        .def_static("enumerate", [](Triangulation<3>& owner,
+                regina::NormalCoords coords, regina::NormalList which,
+                regina::NormalAlg algHints, ProgressTracker* tracker)
+                -> NormalSurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                return new NormalSurfaces(owner, coords, which, algHints,
+                    tracker);
+            } catch (const regina::NoMatchingEquations&) {
+                return nullptr;
+            }
+        }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::NS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
