@@ -99,6 +99,12 @@ typedef Matrix<Integer, true> MatrixInt;
  * This matrix is stored in dense form.  All elements are of the integer class
  * \a IntType, which is supplied as a template argument.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  However, due to the unusual create-reserve-initialise
+ * procedure, it does not support copying (either by copy construction or
+ * copy assignment).  Because of the move semantics, this class avoids deep
+ * copies, even when passing or returning objects by value.
+ *
  * \pre The default constructor for the template class IntType must intialise
  * each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
@@ -153,6 +159,19 @@ class LPMatrix {
         inline LPMatrix(unsigned rows, unsigned cols);
 
         /**
+         * Moves the contents of the given matrix into this new matrix.
+         * This is a fast (constant time) operation.
+         *
+         * If the given matrix is uninitialised, then this new matrix
+         * will be uninitialised also.
+         *
+         * The matrix that is passed (\a src) will no longer be usable.
+         *
+         * @param src the matrix to move.
+         */
+        inline LPMatrix(LPMatrix&& src) noexcept;
+
+        /**
          * Destroys this matrix and all of the data it contains.
          *
          * You can safely destroy a matrix that is uninitialised
@@ -160,6 +179,31 @@ class LPMatrix {
          * the matrix size is not set).
          */
         inline ~LPMatrix();
+
+        /**
+         * Moves the contents of the given matrix into this matrix.
+         * This is a fast (constant time) operation.
+         *
+         * If the given matrix is uninitialised, then this matrix
+         * will become uninitialised also.
+         *
+         * The matrix that is passed (\a src) will no longer be usable.
+         *
+         * @param src the matrix to move.
+         * @return a reference to this matrix.
+         */
+        inline LPMatrix& operator = (LPMatrix&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given matrix.
+         *
+         * It does not matter if the two matrices have different sizes,
+         * or if one or both is unintialised; if so then these properties
+         * will be swapped also.
+         *
+         * @param other the matrix whose contents should be swapped with this.
+         */
+        inline void swap(LPMatrix& other) noexcept;
 
         /**
          * Reserves enough space to store the elements of a
@@ -359,6 +403,18 @@ class LPMatrix {
         LPMatrix(const LPMatrix&) = delete;
         LPMatrix& operator = (const LPMatrix&) = delete;
 };
+
+/**
+ * Swaps the contents of the given matrices.
+ *
+ * This global routine simply calls LPMatrix<IntType>::swap(); it is provided
+ * so that LPMatrix<IntType> meets the C++ Swappable requirements.
+ *
+ * @param a the first matrix whose contents should be swapped.
+ * @param b the second matrix whose contents should be swapped.
+ */
+template <typename IntType>
+inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
 
 /**
  * Used by LPInitialTableaux<LPConstraint> to store a single column of the
@@ -664,6 +720,10 @@ class LPSystem {
  * you will need to find a way to represent it using one of these three broad
  * classes; see the LPData class notes for how this is done with octagons.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \warning The implementation of this class relies on the fact that the
  * sum of <i>absolute values</i> of all coefficients in each column is
  * at most four (not counting the rows for any optional extra constraints).
@@ -686,8 +746,9 @@ class LPSystem {
 template <class LPConstraint>
 class LPInitialTableaux {
     private:
-        const Triangulation<3>& tri_;
-            /**< The underlying triangulation. */
+        const Triangulation<3>* tri_;
+            /**< The underlying triangulation.  This is stored by pointer
+                 in order to support assignment; it must never be \c null. */
         LPSystem system_;
             /**< The broad class of vector encodings that this tableaux
                  works with. */
@@ -752,9 +813,64 @@ class LPInitialTableaux {
             bool enumeration);
 
         /**
+         * Creates a new copy of the given matrix.
+         *
+         * @param src the matrix to copy.
+         */
+        inline LPInitialTableaux(const LPInitialTableaux& src);
+
+        /**
+         * Moves the contents of the given matrix into this new matrix.
+         * This is a fast (constant time) operation.
+         *
+         * The matrix that is passed (\a src) will no longer be usable.
+         *
+         * @param src the matrix to move.
+         */
+        inline LPInitialTableaux(LPInitialTableaux&& src) noexcept;
+
+        /**
          * Destroys this matrix.
          */
         inline ~LPInitialTableaux();
+
+        /**
+         * Sets this to be a copy of the given matrix.
+         *
+         * It does not matter if this and the given matrix have different
+         * sizes and/or work with different vector encodings; if so then these
+         * properties will be copied across also.
+         *
+         * @param src the matrix to copy.
+         * @return a reference to this matrix.
+         */
+        inline LPInitialTableaux& operator = (const LPInitialTableaux& src);
+
+        /**
+         * Moves the contents of the given matrix into this matrix.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given matrix have different
+         * sizes and/or work with different vector encodings; if so then these
+         * properties will be moved across also.
+         *
+         * The matrix that is passed (\a src) will no longer be usable.
+         *
+         * @param src the matrix to move.
+         * @return a reference to this matrix.
+         */
+        inline LPInitialTableaux& operator = (LPInitialTableaux&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given matrix.
+         *
+         * It does not matter if the two matrices have different sizes,
+         * and/or work with different vector encodings; if so then these
+         * properties will be swapped also.
+         *
+         * @param other the matrix whose contents should be swapped with this.
+         */
+        inline void swap(LPInitialTableaux& other) noexcept;
 
         /**
          * Returns the underlying 3-manifold triangulation from which the
@@ -969,10 +1085,6 @@ class LPInitialTableaux {
         template <typename IntType>
         void fillInitialTableaux(LPMatrix<IntType>& m) const;
 
-        // Mark this class as non-copyable:
-        LPInitialTableaux(const LPInitialTableaux&) = delete;
-        LPInitialTableaux& operator = (const LPInitialTableaux&) = delete;
-
     private:
         /**
          * Reorders the columns of the matching equation matrix.
@@ -998,6 +1110,20 @@ class LPInitialTableaux {
          */
         void reorder(bool enumeration);
 };
+
+/**
+ * Swaps the contents of the given matrices.
+ *
+ * This global routine simply calls LPInitialTableaux<IntType>::swap(); it is
+ * provided so that LPInitialTableaux<IntType> meets the C++ Swappable
+ * requirements.
+ *
+ * @param a the first matrix whose contents should be swapped.
+ * @param b the second matrix whose contents should be swapped.
+ */
+template <typename IntType>
+inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
+    noexcept;
 
 /**
  * Stores an intermediate tableaux for the dual simplex method, and
@@ -1651,8 +1777,31 @@ inline LPMatrix<IntType>::LPMatrix(unsigned rows, unsigned cols) :
 }
 
 template <typename IntType>
+inline LPMatrix<IntType>::LPMatrix(LPMatrix&& src) noexcept :
+        dat_(src.dat_), rows_(src.rows_), cols_(src.cols_) {
+    src.dat_ = nullptr;
+}
+
+template <typename IntType>
 inline LPMatrix<IntType>::~LPMatrix() {
     delete[] dat_;
+}
+
+template <typename IntType>
+inline LPMatrix<IntType>& LPMatrix<IntType>::operator = (LPMatrix&& src)
+        noexcept {
+    std::swap(dat_, src.dat_);
+    rows_ = src.rows_;
+    cols_ = src.cols_;
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
+}
+
+template <typename IntType>
+inline void LPMatrix<IntType>::swap(LPMatrix& other) noexcept {
+    std::swap(dat_, other.dat_);
+    std::swap(rows_, other.rows_);
+    std::swap(cols_, other.cols_);
 }
 
 template <typename IntType>
@@ -1714,6 +1863,11 @@ inline void LPMatrix<IntType>::negateRow(unsigned row) {
         p->negate();
 }
 
+template <typename IntType>
+inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept {
+    a.swap(b);
+}
+
 // Inline functions for LPCol
 
 template <class LPConstraint>
@@ -1738,14 +1892,100 @@ inline void LPCol<LPConstraint>::push(unsigned row, int val) {
 // Inline functions for LPInitialTableaux
 
 template <class LPConstraint>
+inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
+        const LPInitialTableaux& src) :
+        tri_(src.tri_),
+        system_(src.system_),
+        eqns_(src.eqns_),
+        rank_(src.rank_),
+        cols_(src.cols_),
+        scaling_(src.scaling_),
+        col_(new LPCol<LPConstraint>[cols_]),
+        columnPerm_(new int[cols_]),
+        constraintsBroken_(src.constraintsBroken_) {
+    std::copy(src.col_, src.col_ + cols_, col_);
+    std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
+}
+
+template <class LPConstraint>
+inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
+        LPInitialTableaux&& src) noexcept :
+        tri_(src.tri_),
+        system_(src.system_),
+        eqns_(std::move(src.eqns_)),
+        rank_(src.rank_),
+        cols_(src.cols_),
+        scaling_(src.scaling_),
+        col_(src.col_),
+        columnPerm_(src.columnPerm_),
+        constraintsBroken_(src.constraintsBroken_) {
+    src.col_ = nullptr;
+    src.columnPerm_ = nullptr;
+}
+
+template <class LPConstraint>
 inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
     delete[] col_;
     delete[] columnPerm_;
 }
 
 template <class LPConstraint>
+inline LPInitialTableaux<LPConstraint>&
+        LPInitialTableaux<LPConstraint>::operator = (
+        const LPInitialTableaux& src) {
+    tri_ = src.tri_;
+    system_ = src.system_;
+    eqns_ = std::move(src.eqns_);
+    rank_ = src.rank_;
+    cols_ = src.cols_;
+    scaling_ = src.scaling_;
+    constraintsBroken_ = src.constraintsBroken_;
+
+    col_ = new LPCol<LPConstraint>[cols_];
+    std::copy(src.col_, src.col_ + cols_, col_);
+
+    columnPerm_ = new int[cols_];
+    std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
+
+    return *this;
+}
+
+template <class LPConstraint>
+inline LPInitialTableaux<LPConstraint>&
+        LPInitialTableaux<LPConstraint>::operator = (
+        LPInitialTableaux&& src) noexcept {
+    tri_ = src.tri_;
+    system_ = src.system_;
+    eqns_ = std::move(src.eqns_);
+    rank_ = src.rank_;
+    cols_ = src.cols_;
+    scaling_ = src.scaling_;
+    constraintsBroken_ = src.constraintsBroken_;
+
+    std::swap(col_, src.col_);
+    std::swap(columnPerm_, src.columnPerm_);
+    // Let src dispose of the original contents of col_ and columnPerm_
+    // in its own destructor.
+    return *this;
+}
+
+template <class LPConstraint>
+inline void LPInitialTableaux<LPConstraint>::swap(LPInitialTableaux& other)
+        noexcept {
+    std::swap(tri_, other.tri_);
+    std::swap(system_, other.system_);
+    eqns_.swap(other.eqns_);
+    std::swap(rank_, other.rank_);
+    std::swap(cols_, other.cols_);
+    std::swap(scaling_, other.scaling_);
+    std::swap(col_, other.col_);
+    std::swap(columnPerm_, other.columnPerm_);
+    std::swap(constraintsBroken_, other.constraintsBroken_);
+}
+
+template <class LPConstraint>
 inline const Triangulation<3>& LPInitialTableaux<LPConstraint>::tri() const {
-    return tri_;
+    return *tri_;
 }
 
 template <class LPConstraint>
@@ -1839,6 +2079,12 @@ inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
     if (scaling_)
         for (i = 0; i < rank_; ++i)
             m.entry(i, coordinateColumns() - 1) = scaling_;
+}
+
+template <typename IntType>
+inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
+        noexcept {
+    a.swap(b);
 }
 
 // Template functions for LPData

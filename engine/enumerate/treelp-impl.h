@@ -122,7 +122,7 @@ void LPMatrix<IntType>::dump(std::ostream& out) const {
 template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         const Triangulation<3>& tri, NormalEncoding enc, bool enumeration) :
-        tri_(tri), system_(enc) {
+        tri_(&tri), system_(enc) {
     unsigned r, c;
 
     // Fetch the original (unadjusted) matrix of matching equations.
@@ -186,7 +186,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
         // Keep the tetrahedra in the same order, but move
         // quadrilaterals to the front and triangles to the back
         // as required by columnPerm().
-        int n = tri_.size();
+        int n = tri_->size();
         for (i = 0; i < n; ++i) {
             columnPerm_[3 * i] = 7 * i + 4;
             columnPerm_[3 * i + 1] = 7 * i + 5;
@@ -239,7 +239,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
 #else
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
-    int n = tri_.size();
+    int n = tri_->size();
     int i, j, k;
 
     // Fill the columnPerm_ array according to what kind of
@@ -253,7 +253,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         //
         // We remove our extra constraints here, since some constraints might
         // not be offered in quad coordinates.
-        LPInitialTableaux<LPConstraintNone> quad(tri_, NS_QUAD,
+        LPInitialTableaux<LPConstraintNone> quad(*tri_, NS_QUAD,
             true /* enumeration */);
         for (i = 0; i < n; ++i) {
             k = quad.columnPerm()[3 * i] / 3;
