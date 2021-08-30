@@ -61,7 +61,9 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
                 return nullptr;
     }
 
-    // Now examine the tetrahedra to see if we link only a single vertex.
+    // It follows from the matching equations that what we have is a
+    // union of vertex links.  Make sure we are linking just the one vertex.
+
     Vertex<4>* ans = nullptr;
     LargeInteger ansMult;
 
@@ -84,22 +86,8 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
         }
     }
 
-    // Did we find any candidate vertices at all?
-    if (! ans)
-        return nullptr;
-
-    // If the matching equations are satisfied, we are done at this
-    // point.  Specifically, the only normal pieces we have are those
-    // surrounding vertex ans.  However, although it is already implied
-    // by the matching equations, let's just ensure the number
-    // of pieces of each type is the same.
-    for (size_t e = 0; e < ans->degree(); ++e)
-        if (ansMult != tetrahedra(
-                ans->embedding(e).pentachoron()->index(),
-                ans->embedding(e).vertex()))
-            return nullptr;
-
-    // All good.
+    // Either we are linking exactly one vertex (ans != null), or we
+    // have the empty vector (ans == null).
     return ans;
 }
 

@@ -72,60 +72,33 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
                 if (octs(tet, type) != 0)
                     return nullptr;
 
-    // Now examine the triangle to see if we link only a single vertex.
-    std::set<Vertex<3>*> notAns;
-        /**< Vertices that we know the answer *isn't*.
-             We will stop updating this set once ans != null. */
+    // It follows from the matching equations that what we have is a
+    // union of vertex links.  Make sure we are linking just the one vertex.
+
     Vertex<3>* ans = nullptr;
     LargeInteger ansMult;
 
-    const Tetrahedron<3>* t;
-    Vertex<3>* v;
-    LargeInteger coord;
-
     for (size_t tet = 0; tet < nTets; tet++) {
-        t = triangulation_->tetrahedron(tet);
+        const Tetrahedron<3>* t = triangulation_->tetrahedron(tet);
         for (int type = 0; type < 4; type++) {
-            v = t->vertex(type);
-            coord = triangles(tet, type);
-
-            if (coord == 0) {
-                // No discs in this coordinate.
-                // Do we have a candidate vertex yet?
-                if (! ans) {
-                    // Still haven't found a candidate.
-                    notAns.insert(v);
-                } else if (ans == v) {
-                    // This is our only candidate vertex.
-                    return nullptr;
-                }
-            }
+            LargeInteger coord = triangles(tet, type);
 
             if (coord != 0) {
-                // Some discs in this coordinate.
-                // Do we have a candidate vertex?
+                // Some triangle discs of this type.
                 if (! ans) {
                     // We've found our first and only possible candidate.
-                    if (notAns.find(v) != notAns.end())
-                        return nullptr;
-                    ans = v;
+                    ans = t->vertex(type);
                     ansMult = coord;
-                } else if (ans == v) {
-                    // This vertex matches our current candidate.
-                    if (ansMult != coord)
-                        return nullptr;
-                } else {
-                    // This vertex does not match our current candidate.
+                } else if (ans != t->vertex(type)) {
+                    // We seem to be linking more than one vertex.
                     return nullptr;
                 }
-            } else {
-                // No discs in this coordinate.
-                if (ans == v)
-                    return nullptr;
             }
         }
     }
 
+    // Either we are linking exactly one vertex (ans != null), or we
+    // have the empty vector (ans == null).
     return ans;
 }
 
