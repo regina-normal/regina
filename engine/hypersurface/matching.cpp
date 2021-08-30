@@ -79,10 +79,12 @@ std::optional<MatrixInt> makeMatchingEquations(
         case HS_STANDARD:
         {
             const size_t nCoords = 15 * triangulation.size();
+
             // Seven equations per non-boundary facet.
             // T_boundary + 2 T_internal = 5 P
             const size_t nEquations = 7 * (5 * triangulation.size() -
                 triangulation.countTetrahedra());
+
             MatrixInt ans(nEquations, nCoords);
 
             // Run through each internal facet and add the corresponding seven
@@ -134,16 +136,19 @@ std::optional<MatrixInt> makeMatchingEquations(
         {
             const size_t nCoords = 10 * triangulation.size();
 
-            // Three equations per non-boundary triangle.
+            // Three equations per non-boundary triangle, and
+            // three equations per non-boundary facet.
+            // T_boundary + 2 T_internal = 5 P
             size_t nEquations = triangulation.countTriangles();
             for (BoundaryComponent<4>* bc : triangulation.boundaryComponents())
                 nEquations -= bc->countTriangles();
+            nEquations += (5 * triangulation.size() -
+                triangulation.countTetrahedra());
             nEquations *= 3;
 
             MatrixInt ans(nEquations, nCoords);
 
-            // Run through each internal triangle and add the corresponding
-            // equations.
+            // The equations around each triangle:
             size_t row = 0;
             for (Triangle<4>* t : triangulation.triangles()) {
                 if (! t->isBoundary()) {
@@ -156,6 +161,34 @@ std::optional<MatrixInt> makeMatchingEquations(
                             --ans.entry(row, pos +
                                 Edge<4>::edgeNumber[perm[v]][perm[4]]);
                         }
+                        ++row;
+                    }
+                }
+            }
+
+            // The equations across each tetrahedron:
+            for (Tetrahedron<4>* tet : triangulation.tetrahedra()) {
+                if (! tet->isBoundary()) {
+                    size_t pos0 = 10 * tet->embedding(0).pentachoron()->index();
+                    size_t pos1 = 10 * tet->embedding(1).pentachoron()->index();
+                    Perm<5> perm0 = tet->embedding(0).vertices();
+                    Perm<5> perm1 = tet->embedding(1).vertices();
+
+                    // Quads:
+                    for (int i=0; i<3; i++) {
+                        // Prisms that meet this quad:
+                        ++ans.entry(row, pos0 +
+                            Edge<4>::edgeNumber[perm0[quadDefn[i][0]]]
+                                               [perm0[quadDefn[i][1]]]);
+                        ++ans.entry(row, pos0 +
+                            Edge<4>::edgeNumber[perm0[quadDefn[i][2]]]
+                                               [perm0[quadDefn[i][3]]]);
+                        --ans.entry(row, pos1 +
+                            Edge<4>::edgeNumber[perm1[quadDefn[i][0]]]
+                                               [perm1[quadDefn[i][1]]]);
+                        --ans.entry(row, pos1 +
+                            Edge<4>::edgeNumber[perm1[quadDefn[i][2]]]
+                                               [perm1[quadDefn[i][3]]]);
                         ++row;
                     }
                 }
