@@ -797,6 +797,10 @@ class LPInitialTableaux {
         /**
          * Construts this adjusted sparse matrix of matching equations.
          *
+         * Note that LPInitialTableaux does not copy the given triangulation;
+         * it merely keeps a reference to it.  The triangulation should
+         * not change during the lifespan of this object.
+         *
          * \pre The given triangulation is non-empty.
          *
          * @param tri the underlying 3-manifold triangulation.
@@ -1228,6 +1232,12 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * supplied as a template argument.  This same integer class will be
  * used as a template argument for \a LPConstraint.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  However, due to the unusual create-reserve-initialise
+ * procedure, it does not support copying (either by copy construction or
+ * copy assignment).  Because of the move semantics, this class avoids deep
+ * copies, even when passing or returning objects by value.
+ *
  * \pre The template parameter LPConstraint must be one of the subclasses of
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
  *
@@ -1322,10 +1332,48 @@ class LPData {
         inline LPData();
 
         /**
+         * Moves the contents of the given tableaux into this new tableaux.
+         * This is a fast (constant time) operation.
+         *
+         * If the given tableaux is uninitialised, then this new tableaux
+         * will be uninitialised also.
+         *
+         * The tableaux that is passed (\a src) will no longer be usable.
+         *
+         * @param src the tableaux to move.
+         */
+        inline LPData(LPData&& src) noexcept;
+
+        /**
          * Destroys this tableaux.  This is safe even if reserve() was
          * never called.
          */
         inline ~LPData();
+
+        /**
+         * Moves the contents of the given tableaux into this tableaux.
+         * This is a fast (constant time) operation.
+         *
+         * If the given tableaux is uninitialised, then this tableaux
+         * will become uninitialised also.
+         *
+         * The tableaux that is passed (\a src) will no longer be usable.
+         *
+         * @param src the tableaux to move.
+         * @return a reference to this tableaux.
+         */
+        inline LPData& operator = (LPData&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given tableaux.
+         *
+         * It does not matter if the two tableaux have different sizes,
+         * or if one or both is unintialised; if so then these properties
+         * will be swapped also.
+         *
+         * @param other the tableaux whose contents should be swapped with this.
+         */
+        inline void swap(LPData& other) noexcept;
 
         /**
          * Reserves enough memory for this tableaux to work with.
@@ -1756,6 +1804,20 @@ class LPData {
         void verify() const;
 };
 
+/**
+ * Swaps the contents of the given tableaux.
+ *
+ * This global routine simply calls LPData<LPConstraint, IntType>::swap();
+ * it is provided so that LPData<LPConstraint, IntType> meets the C++ Swappable
+ * requirements.
+ *
+ * @param a the first tableaux whose contents should be swapped.
+ * @param b the second tableaux whose contents should be swapped.
+ */
+template <class LPConstraint, typename IntType>
+inline void swap(LPData<LPConstraint, IntType>& a,
+        LPData<LPConstraint, IntType>& b) noexcept;
+
 /*@}*/
 
 } // namespace regina
@@ -2095,10 +2157,57 @@ inline LPData<LPConstraint, IntType>::LPData() :
 }
 
 template <class LPConstraint, typename IntType>
+inline LPData<LPConstraint, IntType>::LPData(LPData&& src) noexcept :
+        origTableaux_(src.origTableaux_),
+        rhs_(src.rhs_),
+        rowOps_(std::move(src.rowOps_)),
+        rank_(src.rank_),
+        basis_(src.basis_),
+        basisRow_(src.basisRow_),
+        feasible_(src.feasible_),
+        octPrimary_(src.octPrimary_),
+        octSecondary_(src.octSecondary_) {
+    src.rhs_ = nullptr;
+    src.basis_ = nullptr;
+    src.basisRow_ = nullptr;
+}
+
+template <class LPConstraint, typename IntType>
 inline LPData<LPConstraint, IntType>::~LPData() {
     delete[] rhs_;
     delete[] basis_;
     delete[] basisRow_;
+}
+
+template <class LPConstraint, typename IntType>
+inline LPData<LPConstraint, IntType>&
+        LPData<LPConstraint, IntType>::operator = (LPData&& src) noexcept {
+    origTableaux_ = src.origTableaux_;
+    rowOps_ = std::move(src.rowOps_);
+    rank_ = src.rank_;
+    feasible_ = src.feasible_;
+    octPrimary_ = src.octPrimary_;
+    octSecondary_ = src.octSecondary_;
+
+    std::swap(rhs_, src.rhs_);
+    std::swap(basis_, src.basis_);
+    std::swap(basisRow_, src.basisRow_);
+    // Let src dispose of the original contents of these arrays in its
+    // own destructor.
+    return *this;
+}
+
+template <class LPConstraint, typename IntType>
+inline void LPData<LPConstraint, IntType>::swap(LPData& other) noexcept {
+    std::swap(origTableaux_, other.origTableaux_);
+    std::swap(rhs_, other.rhs_);
+    rowOps_.swap(other.rowOps_);
+    std::swap(rank_, other.rank_);
+    std::swap(basis_, other.basis_);
+    std::swap(basisRow_, other.basisRow_);
+    std::swap(feasible_, other.feasible_);
+    std::swap(octPrimary_, other.octPrimary_);
+    std::swap(octSecondary_, other.octSecondary_);
 }
 
 template <class LPConstraint, typename IntType>
@@ -2189,6 +2298,12 @@ inline int LPData<LPConstraint, IntType>::entrySign(unsigned row, unsigned col)
         ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
         return ans.sign();
     }
+}
+
+template <class LPConstraint, typename IntType>
+inline void swap(LPData<LPConstraint, IntType>& a,
+        LPData<LPConstraint, IntType>& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina
