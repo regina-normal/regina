@@ -79,7 +79,7 @@ bool SatBlock::operator < (const SatBlock& compare) const {
             return false;
         if (ref2->twistedBoundary() && ! ref1->twistedBoundary())
             return true;
-        return (ref1->nAnnuli() < ref2->nAnnuli());
+        return (ref1->countAnnuli() < ref2->countAnnuli());
     }
 
     const SatLST* lst1 = dynamic_cast<const SatLST*>(this);

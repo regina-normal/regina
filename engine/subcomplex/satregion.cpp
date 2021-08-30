@@ -110,7 +110,7 @@ SatRegion::SatRegion(SatBlock* starter) :
         twistsMatchOrientation_(true),
         shiftedAnnuli_(0),
         twistedBlocks_(0),
-        nBdryAnnuli_(starter->nAnnuli()) {
+        nBdryAnnuli_(starter->countAnnuli()) {
     blocks_.push_back(SatBlockSpec(starter, false, false));
 
     if (starter->twistedBoundary()) {
@@ -152,11 +152,11 @@ SatRegion::SatRegion(const SatRegion& src) :
     }
 }
 
-const SatAnnulus& SatRegion::boundaryAnnulus(unsigned long which,
+const SatAnnulus& SatRegion::boundaryAnnulus(size_t which,
         bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
     for (const SatBlockSpec& b : blocks_)
-        for (ann = 0; ann < b.block()->nAnnuli(); ann++)
+        for (ann = 0; ann < b.block()->countAnnuli(); ann++)
             if (! b.block()->hasAdjacentBlock(ann)) {
                 if (which == 0) {
                     blockRefVert = b.refVert();
@@ -174,12 +174,12 @@ const SatAnnulus& SatRegion::boundaryAnnulus(unsigned long which,
     return *(new SatAnnulus());
 }
 
-void SatRegion::boundaryAnnulus(unsigned long which,
+void SatRegion::boundaryAnnulus(size_t which,
         SatBlock const* &block, unsigned& annulus,
         bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
     for (const SatBlockSpec& b : blocks_)
-        for (ann = 0; ann < b.block()->nAnnuli(); ann++)
+        for (ann = 0; ann < b.block()->countAnnuli(); ann++)
             if (! b.block()->hasAdjacentBlock(ann)) {
                 if (which == 0) {
                     block = b.block();
@@ -252,7 +252,7 @@ std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
 
 bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     unsigned ann, adjAnn;
-    unsigned long adjPos;
+    size_t adjPos;
     bool currTwisted, currNor;
     unsigned annBdryTriangles;
 
@@ -260,7 +260,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     // We rely on a vector data type for blocks_ here, since this
     // will keep the loop doing exactly what it should do even if new
     // blocks are added and blockFound.size() increases.
-    for (unsigned long pos = 0; pos < blocks_.size(); pos++) {
+    for (size_t pos = 0; pos < blocks_.size(); pos++) {
         const SatBlockSpec& currBlockSpec = blocks_[pos];
 
         // Keep a local copy of the contents of currBlockSpec, since
@@ -271,7 +271,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
         bool currHoriz = currBlockSpec.refHoriz();
 
         // Run through each boundary annulus for this block.
-        for (ann = 0; ann < currBlock->nAnnuli(); ann++) {
+        for (ann = 0; ann < currBlock->countAnnuli(); ann++) {
             if (currBlock->hasAdjacentBlock(ann))
                 continue;
 
@@ -301,7 +301,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
                 // reflected, the blocks themselves will be.
                 currBlock->setAdjacent(ann, adjBlock, 0, false, false);
                 blocks_.push_back(SatBlockSpec(adjBlock, false, ! currHoriz));
-                nBdryAnnuli_ = nBdryAnnuli_ + adjBlock->nAnnuli() - 2;
+                nBdryAnnuli_ = nBdryAnnuli_ + adjBlock->countAnnuli() - 2;
 
                 // Note whether the new block has twisted boundary.
                 if (adjBlock->twistedBoundary()) {
@@ -317,7 +317,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
             // No adjacent block.
             // Perhaps it's joined to something we've already seen?
             // Only search forwards from this annulus.
-            if (ann + 1 < currBlock->nAnnuli()) {
+            if (ann + 1 < currBlock->countAnnuli()) {
                 adjPos = pos;
                 adjAnn = ann + 1;
             } else {
@@ -362,7 +362,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
                     }
                 }
 
-                if (adjAnn + 1 < adjBlock->nAnnuli())
+                if (adjAnn + 1 < adjBlock->countAnnuli())
                     adjAnn++;
                 else {
                     adjPos++;
@@ -387,7 +387,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
 
 long SatRegion::blockIndex(const SatBlock* block) const {
     std::vector<SatBlockSpec>::const_iterator it;
-    unsigned long id;
+    size_t id;
 
     for (id = 0, it = blocks_.begin(); it != blocks_.end(); it++, id++)
         if (block == it->block())
@@ -405,7 +405,7 @@ void SatRegion::calculateBaseEuler() {
     long edgesInternalDoubled = 0;
 
     for (const SatBlockSpec& b : blocks_)
-        for (ann = 0; ann < b.block()->nAnnuli(); ann++)
+        for (ann = 0; ann < b.block()->countAnnuli(); ann++)
             if (b.block()->hasAdjacentBlock(ann))
                 edgesInternalDoubled++;
             else
@@ -421,7 +421,7 @@ void SatRegion::calculateBaseEuler() {
     SatAnnulus annData;
 
     for (const SatBlockSpec& b : blocks_)
-        for (ann = 0; ann < b.block()->nAnnuli(); ann++) {
+        for (ann = 0; ann < b.block()->countAnnuli(); ann++) {
             annData = b.block()->annulus(ann);
             baseVerticesAll.insert(annData.tet[0]->edge(
                 Edge<3>::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
@@ -479,14 +479,14 @@ void SatRegion::writeDetail(std::ostream& out, const std::string& title)
     out << title << ":\n";
 
     std::vector<SatBlockSpec>::const_iterator it;
-    unsigned long id, nAnnuli, ann;
+    size_t id, nAnnuli, ann;
     bool ref, back;
 
     out << "  Blocks:\n";
     for (id = 0, it = blocks_.begin(); it != blocks_.end(); it++, id++) {
         out << "    " << id << ". ";
         it->block()->writeTextShort(out);
-        nAnnuli = it->block()->nAnnuli();
+        nAnnuli = it->block()->countAnnuli();
         out << " (" << nAnnuli << (nAnnuli == 1 ? " annulus" : " annuli");
         if (it->refVert() || it->refHoriz()) {
             out << ", ";
@@ -503,7 +503,7 @@ void SatRegion::writeDetail(std::ostream& out, const std::string& title)
 
     out << "  Adjacencies:\n";
     for (id = 0, it = blocks_.begin(); it != blocks_.end(); it++, id++)
-        for (ann = 0; ann < it->block()->nAnnuli(); ann++) {
+        for (ann = 0; ann < it->block()->countAnnuli(); ann++) {
             out << "    " << id << '/' << ann << " --> ";
             if (! it->block()->hasAdjacentBlock(ann))
                 out << "bdry";
@@ -526,7 +526,7 @@ void SatRegion::writeDetail(std::ostream& out, const std::string& title)
 }
 
 void SatRegion::writeTextShort(std::ostream& out) const {
-    unsigned long size = blocks_.size();
+    size_t size = blocks_.size();
     out << "Saturated region with " << size <<
         (size == 1 ? " block" : " blocks");
 }
@@ -543,7 +543,7 @@ void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
     unsigned* nAnnuli = new unsigned[blocks_.size()];
     unsigned* indexAnnuliFrom = new unsigned[blocks_.size()];
     for (i = 0; i < blocks_.size(); ++i) {
-        nAnnuli[i] = blocks_[i].block()->nAnnuli();
+        nAnnuli[i] = blocks_[i].block()->countAnnuli();
         indexAnnuliFrom[i] = (i == 0 ? 0 : indexAnnuliFrom[i-1] + nAnnuli[i-1]);
     }
     unsigned totAnnuli = indexAnnuliFrom[blocks_.size() - 1] +

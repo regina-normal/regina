@@ -341,11 +341,11 @@
     int a;
     bool ref, back;
     NSString *thisAnnulus, *adjAnnulus;
-    for (b = region.numberOfBlocks() - 1; b >= 0; b--) {
+    for (b = region.countBlocks() - 1; b >= 0; b--) {
         const regina::SatBlockSpec& spec = region.block(b);
         [details appendFormat:@INDENT2 "Block %ld: %s\n", b, spec.block->abbr().c_str()];
         
-        nAnnuli = spec.block->nAnnuli();
+        nAnnuli = spec.block->countAnnuli();
         
         [details appendString:@INDENT3 "Adjacencies:\n"];
         

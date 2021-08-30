@@ -764,6 +764,8 @@ Version 7.0  [ TODO ]
               protected and private respectively.
             - Routine nextBoundaryAnnulus() now returns a tuple, instead
               of using several reference arguments for output.
+            - Renamed nAnnuli() to countAnnuli().  The old name is kept
+              as a deprecated alias.
         Class SatBlockModel:
             - New class to replace SatBlockStarter.
         Class SatBlockSpec:

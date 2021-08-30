@@ -210,7 +210,7 @@ std::optional<PluggedTorusBundle> PluggedTorusBundle::hunt(
                 continue;
 
             // We have a starter block and a region built from it.
-            if (region->numberOfBoundaryAnnuli() != 2)
+            if (region->countBoundaryAnnuli() != 2)
                 continue;
 
             // From the SatRegion specifications we know that the first

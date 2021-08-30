@@ -105,7 +105,7 @@ std::optional<BlockedSFSPair> BlockedSFSPair::recognise(Triangulation<3>* tri) {
     Matrix2 matchingReln;
     bool found = SatRegion::find(*tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
-        if (r->numberOfBoundaryAnnuli() != 1)
+        if (r->countBoundaryAnnuli() != 1)
             return false;
 
         // Insist on this boundary being untwisted.
@@ -187,7 +187,7 @@ std::optional<BlockedSFSPair> BlockedSFSPair::recognise(Triangulation<3>* tri) {
             otherSide.switchSides();
 
             if ((r1 = SatRegion::beginsRegion(otherSide, usedTets))) {
-                if (r1->numberOfBoundaryAnnuli() == 1) {
+                if (r1->countBoundaryAnnuli() == 1) {
                     // This is it!  Stop searching.
                     r0 = std::move(r);
 

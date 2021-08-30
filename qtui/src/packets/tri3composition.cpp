@@ -448,13 +448,13 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
     long a, b;
     bool ref, back;
     QString thisAnnulus, adjAnnulus;
-    for (b = region.numberOfBlocks() - 1; b >= 0; b--) {
+    for (b = region.countBlocks() - 1; b >= 0; b--) {
         const regina::SatBlockSpec& spec = region.block(b);
         detailsItem = new QTreeWidgetItem(parent);
         detailsItem->setText(0,tr("Block %1: %2").
             arg(b).arg(spec.block()->abbr().c_str()));
 
-        nAnnuli = spec.block()->nAnnuli();
+        nAnnuli = spec.block()->countAnnuli();
 
         annuli = new QTreeWidgetItem(detailsItem);
         annuli->setText(0,tr("Adjacencies:"));
