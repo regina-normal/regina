@@ -36,36 +36,32 @@
 
 namespace regina {
 
-// Although internalStandardToReduced() is a template routine, we implement
-// it here in this C++ file to avoid dragging it into the headers.
-//
-// The following definitions should ensure that the template is fully
-// instantiated where it needs to be.
-
-NormalSurfaces* NormalSurfaces::standardToQuad() const {
-    return internalStandardToReduced<NormalSpec>();
-}
-
-NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
-    return internalStandardToReduced<AlmostNormalSpec>();
-}
-
-template <class Variant>
 NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     // And off we go!
     const Triangulation<3>& owner = triangulation();
 
-    // Basic sanity checks:
-    if (coords_ != Variant::standardCoords)
-        return nullptr;
+    // Run some basic sanity checks, and prepare a final surface list.
     if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
         return nullptr;
     if (owner.isIdeal() || ! owner.isValid())
         return nullptr;
 
-    // Prepare a final surface list.
-    NormalSurfaces* ans = new NormalSurfaces(
-        Variant::reducedCoords, NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
+    bool almostNormal;
+    NormalSurfaces* ans;
+    switch (coords_) {
+        case NS_STANDARD:
+            almostNormal = false;
+            ans = new NormalSurfaces(
+                NS_QUAD, NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
+            break;
+        case NS_AN_STANDARD:
+            almostNormal = true;
+            ans = new NormalSurfaces(
+                NS_AN_QUAD_OCT, NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
+            break;
+        default:
+            return nullptr;
+    }
 
     // Get the empty triangulation out of the way now.
     unsigned long n = owner.size();
@@ -77,13 +73,12 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     // We need to get rid of vertex links entirely before we start.
     // Build a new list of pointers to the (non-vertex-linking) surfaces
     // that we are interested in.
-    typedef const Vector<LargeInteger>* VectorPtr;
-    VectorPtr* use = new VectorPtr[surfaces_.size()];
+    const NormalSurface** use = new const NormalSurface*[surfaces_.size()];
     size_t nUse = 0;
 
     for (const NormalSurface& s : surfaces_)
         if (! s.isVertexLinking())
-            use[nUse++] = &s.vector();
+            use[nUse++] = &s;
 
     // We want to take all surfaces with maximal zero sets in quad space.
     // That is, we want surface S if and only if there is no other surface T
@@ -104,22 +99,34 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
 
             dominates = true;
             strict = false;
-            for (tet = 0; tet < n && dominates; ++tet)
-                for (quad = 0; quad < Variant::reducedPerTet; ++quad)
-                    if ((*use[i])[Variant::stdPos(tet, 4 + quad)] ==
-                                LargeInteger::zero &&
-                            (*use[j])[Variant::stdPos(tet, 4 + quad)] !=
-                                LargeInteger::zero) {
+            for (tet = 0; tet < n && dominates; ++tet) {
+                // Check the zero/non-zero status of the quads.
+                for (int type = 0; type < 3; ++type) {
+                    if (use[i]->quads(tet, type) == 0 &&
+                            use[j]->quads(tet, type) != 0) {
                         dominates = false;
                         break;
-                    } else if ((*use[i])[Variant::stdPos(tet, 4 + quad)] !=
-                                LargeInteger::zero &&
-                            (*use[j])[Variant::stdPos(tet, 4 + quad)] ==
-                                LargeInteger::zero) {
+                    } else if (use[i]->quads(tet, type) != 0 &&
+                            use[j]->quads(tet, type) == 0) {
                         // If this *does* turn out to be a domination of
                         // zero sets, we know it's strict.
                         strict = true;
                     }
+                }
+                // Likewise for the octagons.
+                if (almostNormal && dominates) {
+                    for (int type = 0; type < 3; ++type) {
+                        if (use[i]->octs(tet, type) == 0 &&
+                                use[j]->octs(tet, type) != 0) {
+                            dominates = false;
+                            break;
+                        } else if (use[i]->octs(tet, type) != 0 &&
+                                use[j]->octs(tet, type) == 0) {
+                            strict = true;
+                        }
+                    }
+                }
+            }
 
             if (dominates)
                 break;
@@ -127,13 +134,15 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
 
         if (! dominates) {
             // We want this surface.
-            Vector<LargeInteger> v(Variant::redLen(n));
-            pos = 0;
-            for (tet = 0; tet < n; ++tet)
-                for (quad = 0; quad < Variant::reducedPerTet; ++quad)
-                    v[pos++] = (*use[i])[Variant::stdPos(tet, 4 + quad)];
-            ans->surfaces_.push_back(NormalSurface(owner,
-                Variant::reducedCoords, std::move(v)));
+            // Although we now have vertices in a different coordinate
+            // system, the encoding should not have changed.
+
+            // TODO: However.. we *should* give the encoding the extra
+            // flag that guarantees it is not vertex linking.
+            // Not doing so is harmless but a bit wasteful.
+            // However, the entire standard-to-quad conversion is also
+            // somewhat unnecessary and wasteful, so leave this alone for now.
+            ans->surfaces_.push_back(*use[i]);
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if

@@ -38,7 +38,6 @@ if (${REGINA_INSTALL_DEV})
     filterregistry-impl.h
     normalcoords.h
     normalflags.h
-    normalspec-impl.h
     normalsurface.h
     normalsurfaces.h
     prism.h

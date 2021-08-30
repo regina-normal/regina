@@ -268,12 +268,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
         // Expand to the standard the solution set.
         if (tracker_)
             tracker_->newStage("Expanding to standard solution set", 0.1);
-        if (list_->coords_ == NS_STANDARD)
-            list_->buildStandardFromReduced<NormalSpec>(*triang_,
-                e.list_->surfaces_, tracker_);
-        else
-            list_->buildStandardFromReduced<AlmostNormalSpec>(*triang_,
-                e.list_->surfaces_, tracker_);
+        list_->buildStandardFromReduced(*triang_, e.list_->surfaces_, tracker_);
 
         // Clean up.
         delete e.list_;

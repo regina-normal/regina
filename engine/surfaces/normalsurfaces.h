@@ -1055,32 +1055,6 @@ class NormalSurfaces : public Packet {
 
     private:
         /**
-         * A helper class containing constants and operations
-         * for working with normal (as opposed to almost normal) surfaces.
-         *
-         * This class and its partner AlmostNormalSpec can be used to
-         * write generic template code that works with both normal
-         * \e and almost normal surfaces.
-         *
-         * The full definition of this class is in the file normalspec-impl.h,
-         * which is included automatically by this header.
-         */
-        struct NormalSpec;
-
-        /**
-         * A helper class containing constants and operations
-         * for working with almost normal (as opposed to normal) surfaces.
-         *
-         * This class and its partner NormalSpec can be used to
-         * write generic template code that works with both normal
-         * \e and almost normal surfaces.
-         *
-         * The full definition of this class is in the file normalspec-impl.h,
-         * which is included automatically by this header.
-         */
-        struct AlmostNormalSpec;
-
-        /**
          * Converts a set of embedded vertex normal surfaces in
          * (quad or quad-oct) space to a set of embedded vertex normal
          * surfaces in (standard normal or standard almost normal) space.
@@ -1109,9 +1083,6 @@ class NormalSurfaces : public Packet {
          * template function and so is only defined in the one <tt>.cpp</tt>
          * file that needs it.
          *
-         * \pre The template argument \a Variant is either NormalSpec
-         * or AlmostNormalSpec, according to whether we are doing the
-         * work for quadToStandard() or quadOctToStandardAN() respectively.
          * \pre The coordinate system for this surface list is set to
          * NS_STANDARD or NS_AN_STANDARD, according to whether we are doing
          * the work for quadToStandard() or quadOctToStandardAN() respectively,
@@ -1126,7 +1097,6 @@ class NormalSurfaces : public Packet {
          * @param tracker a progress tracker to be used for progress reporting
          * and cancellation requests, or \c null if this is not required.
          */
-        template <class Variant>
         void buildStandardFromReduced(const Triangulation<3>& owner,
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker = nullptr);
@@ -1147,7 +1117,7 @@ class NormalSurfaces : public Packet {
          * 10 \a n (if we are using almost normal surfaces), where \a n is
          * the number of tetrahedra in the given triangulation.
          */
-        template <class Variant, class BitmaskType>
+        template <class BitmaskType>
         void buildStandardFromReducedUsing(const Triangulation<3>& owner,
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker);
@@ -1161,12 +1131,7 @@ class NormalSurfaces : public Packet {
          * for both quadToStandard() and quadOctToStandardAN().  See each
          * of those routines for further details as well as relevant
          * preconditions and postconditions.
-         *
-         * \pre The template argument \a Variant is either NormalSpec
-         * or AlmostNormalSpec, according to whether we are implementing
-         * quadToStandard() or quadOctToStandardAN() accordingly.
          */
-        template <class Variant>
         NormalSurfaces* internalReducedToStandard() const;
 
         /**
@@ -1178,12 +1143,7 @@ class NormalSurfaces : public Packet {
          * for both standardToQuad() and standardANToQuadOct().  See each
          * of those routines for further details as well as relevant
          * preconditions and postconditions.
-         *
-         * \pre The template argument \a Variant is either NormalSpec
-         * or AlmostNormalSpec, according to whether we are implementing
-         * standardToQuad() or standardANToQuadOct() accordingly.
          */
-        template <class Variant>
         NormalSurfaces* internalStandardToReduced() const;
 
         /**
@@ -1510,6 +1470,22 @@ inline void NormalSurfaces::sort(Comparison&& comp) {
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 
+inline NormalSurfaces* NormalSurfaces::quadToStandard() const {
+    return internalReducedToStandard();
+}
+
+inline NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
+    return internalReducedToStandard();
+}
+
+inline NormalSurfaces* NormalSurfaces::standardToQuad() const {
+    return internalStandardToReduced();
+}
+
+inline NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
+    return internalStandardToReduced();
+}
+
 inline NormalSurfaces::VectorIterator::VectorIterator() {
 }
 
@@ -1584,8 +1560,5 @@ inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
 }
 
 } // namespace regina
-
-// Import the full definitions of NormalSpec and AlmostNormalSpec.
-#include "surfaces/normalspec-impl.h"
 
 #endif
