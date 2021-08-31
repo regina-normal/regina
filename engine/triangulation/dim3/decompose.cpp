@@ -179,6 +179,7 @@ std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands(
         working = std::make_unique<Triangulation<3>>();
         working->insertLayeredLensSpace(2, 1);
         primeComponents.push_back(std::move(working));
+        zeroEfficient_ = false; // Implied by the RP3 summand.
     }
     while (finalZ3++ < initZ3) {
         working = std::make_unique<Triangulation<3>>();

@@ -37,6 +37,7 @@
 #include "algebra/grouppresentation.h"
 #include "angle/anglestructure.h"
 #include "link/link.h"
+#include "packet/container.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
 #include "triangulation/dim3.h"
@@ -386,7 +387,30 @@ void addTriangulation3(pybind11::module_& m) {
         .def("knowsThreeSphere", &Triangulation<3>::knowsThreeSphere)
         .def("isBall", &Triangulation<3>::isBall)
         .def("knowsBall", &Triangulation<3>::knowsBall)
-        .def("makeZeroEfficient", &Triangulation<3>::makeZeroEfficient)
+        .def("makeZeroEfficient", [](Triangulation<3>& t) -> regina::Packet* {
+            // This is deprecated, so we reimplement it ourselves.
+            auto ans = t.summands(true);
+            if (ans.size() > 1) {
+                // Composite!
+                regina::Packet* connSum = new regina::Container();
+                connSum->setLabel(t.adornedLabel("Decomposition"));
+                for (auto& s : ans)
+                    connSum->insertChildLast(s.release());
+                return connSum;
+            } else if (ans.size() == 1) {
+                // Prime.
+                if (! t.isIsomorphicTo(*ans.front()))
+                    t.swap(*ans.front());
+                return nullptr;
+            } else {
+                // 3-sphere.
+                if (t.size() > 1) {
+                    t.removeAllTetrahedra();
+                    t.insertLayeredLensSpace(1,0);
+                }
+                return nullptr;
+            }
+        })
         .def("isSolidTorus", &Triangulation<3>::isSolidTorus)
         .def("knowsSolidTorus", &Triangulation<3>::knowsSolidTorus)
         .def("isTxI", &Triangulation<3>::isTxI)

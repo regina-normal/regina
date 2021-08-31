@@ -1914,6 +1914,19 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * This triangulation will not be modified.  The prime summands
          * will be returned as a vector of newly created triangulations.
          *
+         * As far as possible, the summands will be represented using
+         * 0-efficient triangulations (i.e., triangulations that contain
+         * no non-vertex-linking normal spheres).  Specifically, for
+         * every summand, either:
+         *
+         * - the triangulation of the summand that is produced will be
+         *   0-efficient; or
+         *
+         * - the summand is one of RP3, the product S2xS1, or the twisted
+         *   product S2x~S1.  In each of these cases there is no possible
+         *   0-efficient triangulation of the summand, and so the triangulation
+         *   that is produced will just be minimal (i.e., two tetrahedra).
+         *
          * For non-orientable triangulations, this routine is only guaranteed
          * to succeed if the original manifold contains no embedded two-sided
          * projective planes.  If the manifold \e does contain embedded
@@ -2119,10 +2132,11 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         bool knowsBall() const;
         /**
-         * Converts this into a 0-efficient triangulation of the same
-         * underlying 3-manifold.  A triangulation is 0-efficient if its
-         * only normal spheres and discs are vertex linking, and if it has
-         * no 2-sphere boundary components.
+         * Deprecated routine that converts this into a 0-efficient
+         * triangulation of the same underlying 3-manifold.
+         *
+         * A triangulation is 0-efficient if its only normal spheres and discs
+         * are vertex linking, and if it has no 2-sphere boundary components.
          *
          * Note that this routine is currently only available for
          * closed orientable triangulations; see the list of
@@ -2142,15 +2156,18 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * If the underlying 3-manifold is not prime, it cannot be made
          * 0-efficient.  In this case the original triangulation will
          * remain unchanged and a new connected sum decomposition will
-         * be returned.  This will be presented as a newly allocated
-         * container packet with one child triangulation for each prime
-         * summand.
+         * be returned.  This will be presented as a newly allocated container
+         * packet with one child triangulation for each prime summand.
+         *
+         * \deprecated You should call summands() instead, which does
+         * everything that this routine can do but with a cleaner interface.
+         * Indeed, this function just calls summands() and wraps the result
+         * with extra code to reproduce the old makeZeroEfficient() behaviour.
          *
          * \warning The algorithms used in this routine rely on normal
          * surface theory and so can be very slow for larger triangulations.
          *
-         * \pre This triangulation is valid, closed, orientable and
-         * connected.
+         * \pre This triangulation is valid, closed, orientable and connected.
          *
          * \todo Preserve computed properties of the underlying manifold.
          *
@@ -2160,7 +2177,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * underlying 3-manifold is composite (in which case the
          * original triangulation was not changed).
          */
-        Packet* makeZeroEfficient();
+        [[deprecated]] Packet* makeZeroEfficient();
         /**
          * Determines whether this is a triangulation of the solid
          * torus; that is, the unknot complement.  This routine can be

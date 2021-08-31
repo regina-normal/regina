@@ -1263,18 +1263,26 @@ void Tri3GluingsUI::makeZeroEfficient() {
         "slow for larger triangulations.\n\n"
         "Please be patient."), ui));
 
-    // If it's possible that the triangulation but not the number of
-    // tetrahedra is changed, remember the original.
-    std::unique_ptr<Triangulation<3>> orig;
-    if (initTets <= 2)
-        orig.reset(new Triangulation<3>(*tri));
-
-    // Make it 0-efficient and see what happens.
-    Packet* decomp = tri->makeZeroEfficient();
+    auto summands = tri->summands(true);
     dlg.reset();
 
-    if (decomp) {
+    if (summands.empty()) {
+        // 3-sphere.
+        if (tri->size() == 1) {
+            ReginaSupport::info(ui,
+                tr("This 3-sphere triangulation is already 0-efficient."),
+                tr("No changes are necessary."));
+        } else {
+            // Replace this with a minimal, 0-efficient 3-sphere triangulation.
+            tri->removeAllTetrahedra();
+            tri->insertLayeredLensSpace(1,0);
+        }
+    } else if (summands.size() > 1) {
         // Composite 3-manifold.
+        Packet* decomp = new regina::Container();
+        decomp->setLabel(tri->adornedLabel("Decomposition"));
+        for (auto& s : summands)
+            decomp->insertChildLast(s.release());
         tri->insertChildLast(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
             decomp->lastChild());
@@ -1286,12 +1294,16 @@ void Tri3GluingsUI::makeZeroEfficient() {
             "prime summands (without modifying this triangulation)."));
     } else {
         // Prime 3-manifold.
-        unsigned long finalTets = tri->size();
-        if (finalTets <= 2) {
-            // Check for special cases.
-            if ((! tri->isZeroEfficient()) && tri->homology().isZn(2)) {
-                // RP3.
-                if (finalTets < initTets)
+
+        if (summands.front()->size() < tri->size()) {
+            // The summand shrank.  Either it became 0-efficient or it
+            // became one of our 2-tetrahedron special cases.
+            tri->swap(*summands.front());
+
+            if (tri->size() <= 2 && ! tri->isZeroEfficient()) {
+                // We improved the triangulation but it's still not
+                // 0-efficient.  Tell the user why.
+                if (tri->homology().isZn(2)) {
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "RP<sup>3</sup>, which does not have a 0-efficient "
@@ -1299,24 +1311,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                         tr("<qt>I have instead converted it to a minimal "
                         "two-tetrahedron triangulation of "
                         "RP<sup>3</sup>.</qt>"));
-                else if (orig->isIsomorphicTo(*tri))
-                    ReginaSupport::info(ui,
-                        tr("<qt>This is the 3-manifold "
-                        "RP<sup>3</sup>, which does not have a 0-efficient "
-                        "triangulation.</qt>"),
-                        tr("I have left the triangulation unchanged."));
-                else
-                    ReginaSupport::info(ui,
-                        tr("<qt>This is the 3-manifold "
-                        "RP<sup>3</sup>, which does not have a 0-efficient "
-                        "triangulation.</qt>"),
-                        tr("<qt>I have instead converted it to a "
-                        "one-vertex minimal triangulation "
-                        "of RP<sup>3</sup>.</qt>"));
-                return;
-            } else if ((! tri->isZeroEfficient()) && tri->homology().isZ()) {
-                // S2xS1.
-                if (finalTets < initTets)
+                } else if (tri->homology().isZ()) {
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "S<sup>2</sup> x S<sup>1</sup>, which does not have "
@@ -1324,28 +1319,62 @@ void Tri3GluingsUI::makeZeroEfficient() {
                         tr("<qt>I have instead converted it to a minimal "
                         "two-tetrahedron triangulation of "
                         "S<sup>2</sup> x S<sup>1</sup>.</qt>"));
-                else
+                }
+            }
+        } else {
+            // The summand did not shrink.  Either it was already 0-efficient,
+            // or we have one of the following 2-tetrahedron cases:
+            // - we replaced a non-0-efficient L(3,1) with a 0-efficient L(3,1);
+            // - we replaced a 2-vertex RP3 with a 1-vertex RP3.
+            // - we had a non-0-efficient, 1-vertex RP3 or S2xS1 that we
+            //   could not improve.
+            if (tri->size() == 2) {
+                if (tri->homology().isZn(2)) {
+                    // This is RP3.  We could have reduced the number of
+                    // vertices, but it will still not be 0-efficient.
+                    if (tri->countVertices() > 1) {
+                        // This is our 2-to-1-vertex RP3 case.
+                        // Use the new triangulation; however, it is
+                        // still not 0-efficient, so also explain why.
+                        tri->swap(*summands.front());
+                        ReginaSupport::info(ui,
+                            tr("<qt>This is the 3-manifold "
+                            "RP<sup>3</sup>, which does not have a 0-efficient "
+                            "triangulation.</qt>"),
+                            tr("<qt>I have instead converted it to a "
+                            "one-vertex minimal triangulation "
+                            "of RP<sup>3</sup>.</qt>"));
+                    } else {
+                        ReginaSupport::info(ui,
+                            tr("<qt>This is the 3-manifold "
+                            "RP<sup>3</sup>, which does not have a 0-efficient "
+                            "triangulation.</qt>"),
+                            tr("I have left the triangulation unchanged."));
+                    }
+                } else if (tri->homology().isZn(3)) {
+                    // We could still have improved this L(3,1) by
+                    // making it 0-efficient.
+                    if (! tri->isZeroEfficient()) {
+                        tri->swap(*summands.front());
+                    } else {
+                        ReginaSupport::info(ui,
+                            tr("This triangulation is already 0-efficient."),
+                            tr("No changes are necessary."));
+                    }
+                } else if (tri->homology().isZ()) {
+                    // No way to improve this case.
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "S<sup>2</sup> x S<sup>1</sup>, which does not have "
                         "a 0-efficient triangulation."),
                         tr("I have left the triangulation unchanged."));
-                return;
-            } else if (finalTets == initTets && ! orig->isZeroEfficient()) {
-                // The triangulation has been made 0-efficient
-                // without changing the number of tetrahedra; don't
-                // report this as a no-op to the user.
-                // This specifically occurs with some L(3,1) triangulations.
-                return;
+                }
+            } else {
+                ReginaSupport::info(ui,
+                    tr("This triangulation is already 0-efficient."),
+                    tr("No changes are necessary."));
             }
-
-            // Fall through - it's an ordinary case.
         }
-
-        if (finalTets == initTets)
-            ReginaSupport::info(ui,
-                tr("This triangulation is already 0-efficient."),
-                tr("No changes are necessary."));
     }
 }
 

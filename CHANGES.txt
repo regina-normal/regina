@@ -994,6 +994,8 @@ Version 7.0  [ TODO ]
               by default (but this is still an option), and it throws on error
               (instead of returning -1).  The old connectedSumDecomposition()
               is kept but deprecated.
+            - Routine makeZeroEfficient() is deprecated.  Instead call
+              summands(), which now formally guarantees 0-efficiency.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.  This function is now also available
