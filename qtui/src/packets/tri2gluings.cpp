@@ -622,14 +622,15 @@ void Tri2GluingsUI::splitIntoComponents() {
             base = tri;
 
         // Make the split.
-        size_t nComps = tri->splitIntoComponents(base);
+        for (auto& c : tri->triangulateComponents(true))
+            base->insertChildLast(c.release());
 
         // Make sure the new components are visible.
         enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,
-            tr("%1 components were extracted.").arg(nComps));
+            tr("%1 components were extracted.").arg(tri->countComponents()));
     }
 }
 
