@@ -1425,7 +1425,6 @@ namespace {
                 long ec = t_[side]->boundaryComponent(0)->eulerChar();
 
                 // Look for a normal disc or sphere to crush.
-                Triangulation<3>* crush;
                 bool found;
                 while (true) {
                     t_[side]->intelligentSimplify();
@@ -1478,27 +1477,20 @@ namespace {
                     // TreeSingleSoln guarantees that our solution is
                     // connected, and so it (or its double) is a sphere or
                     // a disc.
-                    crush = search.buildSurface().crush();
+                    Triangulation<3>* crush = search.buildSurface().crush();
                     delete t_[side];
 
                     // Find the piece in the crushed triangulation with the
                     // right Euler characteristic on the boundary, if it exists.
-                    crush->splitIntoComponents();
-                    t_[side] = static_cast<Triangulation<3>*>(
-                        crush->firstChild());
-                    while (t_[side]) {
-                        if (t_[side]->countBoundaryComponents() == 1 &&
-                                t_[side]->boundaryComponent(0)->
-                                    eulerChar() == ec) {
+                    t_[side] = nullptr;
+                    for (auto& comp : crush->triangulateComponents()) {
+                        if (comp->countBoundaryComponents() == 1 &&
+                                comp->boundaryComponent(0)->eulerChar() == ec) {
                             // Found it.
-                            t_[side]->makeOrphan();
+                            t_[side] = comp.release();
                             break;
                         }
-
-                        t_[side] = static_cast<Triangulation<3>*>(
-                            t_[side]->nextSibling());
                     }
-
                     delete crush;
 
                     if (! t_[side]) {
@@ -1540,13 +1532,11 @@ bool NormalSurface::isIncompressible() const {
     Triangulation<3>* cut = cutAlong();
     cut->intelligentSimplify();
 
-    Triangulation<3>* side[2];
-    side[0] = side[1] = 0;
+    Triangulation<3>* side[2] { nullptr, nullptr };
 
-    cut->splitIntoComponents();
     int which = 0;
-    for (Packet* comp = cut->firstChild(); comp; comp = comp->nextSibling())
-        if (static_cast<Triangulation<3>*>(comp)->hasBoundaryTriangles()) {
+    for (auto& comp : cut->triangulateComponents()) {
+        if (comp->hasBoundaryTriangles()) {
             if (which == 2) {
                 // We have more than two components with boundary.
                 // This should never happen.
@@ -1555,15 +1545,9 @@ bool NormalSurface::isIncompressible() const {
                 delete cut;
                 return false;
             }
-            side[which++] = static_cast<Triangulation<3>*>(comp);
+            side[which++] = comp.release();
         }
-
-    // Detach from parents so we don't run into multithreading problems
-    // (e.g., when both triangulations try to delete themselves at the
-    // same time).
-    side[0]->makeOrphan();
-    if (side[1])
-        side[1]->makeOrphan();
+    }
     delete cut;
 
     SharedSearch ss(side[0], side[1]);

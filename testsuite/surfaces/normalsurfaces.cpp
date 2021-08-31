@@ -2081,49 +2081,40 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         static void testCutAlong(Triangulation<3>* tri) {
             NormalSurfaces list(*tri, NS_STANDARD);
             std::unique_ptr<Triangulation<3>> t;
-            std::unique_ptr<Container> comp;
-            unsigned long nComp;
-
             std::unique_ptr<Triangulation<3>> tDouble;
-            std::unique_ptr<Container> compDouble;
-            unsigned long nCompDouble;
 
             bool separating;
-
             unsigned long expected;
-            Packet* p;
 
             // We use the fact that each normal surface is connected.
             for (const NormalSurface& s : list.surfaces()) {
                 t.reset(s.cutAlong());
                 t->intelligentSimplify();
-                comp.reset(new Container());
-                nComp = t->splitIntoComponents(comp.get(), false);
 
                 NormalSurface sDouble = s.doubleSurface();
                 tDouble.reset(sDouble.cutAlong());
                 tDouble->intelligentSimplify();
-                compDouble.reset(new Container());
-                nCompDouble = tDouble->splitIntoComponents(compDouble.get(),
-                    false);
 
-                separating = (s.isTwoSided() && nComp > 1);
+                auto comp = t->triangulateComponents();
+                auto compDouble = tDouble->triangulateComponents();
+
+                separating = (s.isTwoSided() && comp.size() > 1);
 
                 expected = (separating ? 2 : 1);
-                if (nComp != expected) {
+                if (comp.size() != expected) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for " << tri->label()
-                        << " gives " << nComp << " component(s), not "
+                        << " gives " << comp.size() << " component(s), not "
                         << expected << " as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 expected = (separating ? 3 : 2);
-                if (nCompDouble != expected) {
+                if (compDouble.size() != expected) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for " << tri->label()
-                        << " gives " << nCompDouble << " component(s), not "
-                        << expected << " as expected.";
+                        << " gives " << compDouble.size() <<
+                        " component(s), not " << expected << " as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
@@ -2184,17 +2175,15 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                for (p = comp->firstChild(); p; p = p->nextSibling())
-                    if (! static_cast<Triangulation<3>*>(p)->
-                            hasBoundaryTriangles()) {
+                for (const auto& c : comp)
+                    if (! c->hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along surface for " << tri->label()
                             << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                for (p = compDouble->firstChild(); p; p = p->nextSibling())
-                    if (! static_cast<Triangulation<3>*>(p)->
-                            hasBoundaryTriangles()) {
+                for (const auto& c : compDouble)
+                    if (! c->hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along double surface for "
                             << tri->label()
@@ -2230,8 +2219,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
-                for (p = comp->firstChild(); p; p = p->nextSibling())
-                    checkBoundaryType(s, static_cast<Triangulation<3>*>(p),
+                for (const auto& c : comp)
+                    checkBoundaryType(s, c.get(),
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
@@ -2263,8 +2252,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
-                for (p = compDouble->firstChild(); p; p = p->nextSibling())
-                    checkBoundaryType(s, static_cast<Triangulation<3>*>(p),
+                for (const auto& c : compDouble)
+                    checkBoundaryType(s, c.get(),
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
@@ -2276,18 +2265,21 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
                 // Look for the product piece when cutting along the
                 // double surface.
-                for (p = compDouble->firstChild(); p; p = p->nextSibling()) {
+                bool found = false;
+                for (const auto& c : compDouble) {
                     if (s.isTwoSided()) {
-                        if (mightBeUntwistedProduct(
-                                static_cast<Triangulation<3>*>(p)))
+                        if (mightBeUntwistedProduct(c.get())) {
+                            found = true;
                             break;
+                        }
                     } else {
-                        if (mightBeTwistedProduct(
-                                static_cast<Triangulation<3>*>(p)))
+                        if (mightBeTwistedProduct(c.get())) {
+                            found = true;
                             break;
+                        }
                     }
                 }
-                if (! p) {
+                if (! found) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for " << tri->label()
                         << " does not yield a product piece as expected.";

@@ -33,6 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
+#include "../helpers.h"
 #include "algebra/grouppresentation.h"
 #include "angle/anglestructure.h"
 #include "link/link.h"
@@ -46,6 +47,8 @@ using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
+
+CONVERT_FROM_UNIQUE_PTR(regina::Triangulation<3>)
 
 /**
  * An internal C++ representation of a snappy.Manifold or snappy.Triangulation.
@@ -347,7 +350,18 @@ void addTriangulation3(pybind11::module_& m) {
         .def("reflect", &Triangulation<3>::reflect)
         .def("order", &Triangulation<3>::order,
             pybind11::arg("forceOriented") = false)
-        .def("splitIntoComponents", &Triangulation<3>::splitIntoComponents,
+        .def("triangulateComponents", &Triangulation<3>::triangulateComponents,
+            pybind11::arg("setLabels") = false)
+        .def("splitIntoComponents", [](Triangulation<3>& t,
+                regina::Packet* componentParent, bool setLabels) {
+            // This is deprecated, so we reimplement it ourselves.
+            auto comp = t.triangulateComponents(setLabels);
+            if (! componentParent)
+                componentParent = &t;
+            for (auto& c : comp)
+                componentParent->insertChildLast(c.release());
+            return comp.size();
+        },
             pybind11::arg("componentParent") = nullptr,
             pybind11::arg("setLabels") = true)
         .def("connectedSumDecomposition",

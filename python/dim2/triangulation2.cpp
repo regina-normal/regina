@@ -33,6 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
+#include "../helpers.h"
 #include "algebra/grouppresentation.h"
 #include "triangulation/dim2.h"
 #include "utilities/safeptr.h"
@@ -42,6 +43,8 @@ using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
+
+CONVERT_FROM_UNIQUE_PTR(regina::Triangulation<2>)
 
 void addTriangulation2(pybind11::module_& m) {
     auto c = pybind11::class_<Triangulation<2>, regina::Packet,
@@ -152,7 +155,18 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isMinimal", &Triangulation<2>::isMinimal)
         .def("orient", &Triangulation<2>::orient)
         .def("reflect", &Triangulation<2>::reflect)
-        .def("splitIntoComponents", &Triangulation<2>::splitIntoComponents,
+        .def("triangulateComponents", &Triangulation<2>::triangulateComponents,
+            pybind11::arg("setLabels") = false)
+        .def("splitIntoComponents", [](Triangulation<2>& t,
+                regina::Packet* componentParent, bool setLabels) {
+            // This is deprecated, so we reimplement it ourselves.
+            auto comp = t.triangulateComponents(setLabels);
+            if (! componentParent)
+                componentParent = &t;
+            for (auto& c : comp)
+                componentParent->insertChildLast(c.release());
+            return comp.size();
+        },
             pybind11::arg("componentParent") = nullptr,
             pybind11::arg("setLabels") = true)
         .def("homology", &Triangulation<2>::homology,

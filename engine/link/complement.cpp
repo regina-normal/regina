@@ -200,26 +200,13 @@ Triangulation<3>* Link::complement(bool simplify) const {
 
     if (! ans->isConnected()) {
         // Replace ans with the connected sum of its components.
-        Container parent;
-        ans->splitIntoComponents(&parent, false /* setLabels */);
-
-        // Use the first component to form the connected sum.
-        Triangulation<3>* newAns = static_cast<Triangulation<3>*>(
-            parent.firstChild());
-
-        Triangulation<3>* comp = static_cast<Triangulation<3>*>(
-            newAns->nextSibling());
-        while (comp) {
-            newAns->connectedSumWith(*comp);
-            comp = static_cast<Triangulation<3>*>(comp->nextSibling());
-        }
-
-        newAns->makeOrphan();
+        auto comp = ans->triangulateComponents();
         delete ans;
-        ans = newAns;
 
-        // The remaining components will be destroyed when parent goes
-        // out of scope (i.e., now).
+        auto it = comp.begin();
+        ans = it->release();
+        for (++it; it != comp.end(); ++it)
+            ans->connectedSumWith(**it);
     }
 
     size_t idealVertices = 0;

@@ -93,6 +93,38 @@ print('Step 2')
 f = None # destroys f
 print('Step 3')
 
+print('Triangulated components (3-D)')
+print('Step 1')
+p = Example3.poincareHomologySphere()
+p.insertTriangulation(p)
+pw = Watcher(p, 'p')
+comp = p.triangulateComponents()
+cw0 = Watcher(comp[0], 'comp0')
+cw1 = Watcher(comp[1], 'comp1')
+print('Step 2')
+p.insertChildLast(comp[0])
+print('Step 3')
+comp = None # destroys comp[1] only
+print('Step 4')
+p = None # destroys p and comp[0]
+print('Step 5')
+
+print('Triangulated components (6-D)')
+print('Step 1')
+p = Example6.sphere()
+p.insertTriangulation(p)
+pw = Watcher(p, 'p')
+comp = p.triangulateComponents()
+cw0 = Watcher(comp[0], 'comp0')
+cw1 = Watcher(comp[1], 'comp1')
+print('Step 2')
+p.insertChildLast(comp[0])
+print('Step 3')
+comp = None # destroys comp[1] only
+print('Step 4')
+p = None # destroys p and comp[0]
+print('Step 5')
+
 print('Vertex link #1')
 print('Step 1')
 t = Example3.lens(7,1); tw = Watcher(t, 't1')

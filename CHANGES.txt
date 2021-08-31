@@ -961,6 +961,11 @@ Version 7.0  [ TODO ]
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
               The old names are kept as deprecated aliases.
+            - Routine splitIntoComponents() is replaced with a new routine
+              triangulateComponents() with different behaviour: it does not
+              insert the results into the packet tree, and does not assign
+              packet labels by default (but this is still an option).
+              The old splitIntoComponents() is kept but deprecated.
             - Routines findAllIsomorphisms() and findAllSubcomplexesIn()
               no longer take an output iterator; instead they take a callback
               action and an argument list.  Python supports both this new

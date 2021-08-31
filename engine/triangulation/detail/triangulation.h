@@ -41,6 +41,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -1168,13 +1169,50 @@ class TriangulationBase :
         /*@{*/
 
         /**
-         * Splits a disconnected triangulation into many smaller triangulations,
-         * one for each component.  The new component triangulations will be
-         * inserted as children of the given parent packet.  The original
-         * triangulation (i.e., this triangulation) will be left unchanged.
+         * Returns the individual connected components of this triangulation.
          *
-         * If the given parent packet is \c null, the new component
-         * triangulations will be inserted as children of this triangulation.
+         * This triangulation will not be modified.  The components will
+         * be returned as a vector of newly created triangulations.
+         *
+         * This function is new to Regina 7.0, and it has two important
+         * changes of behaviour from the old splitIntoComponents() from
+         * Regina 6.0.1 and earlier:
+         *
+         * - This function does not insert the resulting components into
+         *   the packet tree.
+         *
+         * - This function does not assign labels to the new components
+         *   by default.  You can still do this by passing the optional
+         *   \a setLabels argument as \c true.
+         *
+         * This function wraps each component in a std::unique_ptr, so you
+         * do not need to worry about looping through and destroying them
+         * individually.  However, note that (since you cannot copy a
+         * std::unique_ptr) this means you will need to iterate by reference:
+         *
+         * \code{.cpp}
+         * for (const auto& comp : t.triangulateComponents()) {
+         *     std::cout << comp->size() << std::endl;
+         *     ...
+         * }
+         * \endcode
+         *
+         * @param setLabels \c true if the new component triangulations
+         * should be assigned sensible packet labels based on the label of this
+         * triangulation, or \c false if they should be left without labels.
+         * @return a list of newly created individual component triangulations.
+         */
+        std::vector<std::unique_ptr<Triangulation<dim>>> triangulateComponents(
+            bool setLabels = false) const;
+
+        /**
+         * Deprecated routine that identifies the individual connected
+         * comonents of this triangulation.
+         *
+         * The component triangulations will be newly created and inserted as
+         * children of the given packet \a componentParent.
+         * If \a componentParent is \c null, they will be inserted into
+         * the packet tree as children of this triangulation.
          *
          * By default, this routine will assign sensible packet labels to each
          * of the new component triangulations.  If these component
@@ -1182,6 +1220,13 @@ class TriangulationBase :
          * larger algorithm, then labels are unnecessary - in this case
          * you can pass \a setLabels as \c false to avoid the (small) overhead
          * that these packet labels incur.
+         *
+         * \deprecated You should use the new routine triangulateComponents()
+         * instead, but note that this comes with two changes of behaviour.
+         * First, triangulateComponents() does not insert the resulting
+         * components into the packet tree; you will need to do this yourself
+         * if you want it.  Second, the \a setLabels argument defaults
+         * to \c false in triangulateComponents(), as opposed to \c true here.
          *
          * @param componentParent the packet beneath which the new
          * component triangulations will be inserted, or \c null if they
@@ -1191,8 +1236,8 @@ class TriangulationBase :
          * they should be left without labels at all.
          * @return the number of new component triangulations constructed.
          */
-        size_t splitIntoComponents(Packet* componentParent = nullptr,
-            bool setLabels = true);
+        [[deprecated]] size_t splitIntoComponents(
+            Packet* componentParent = nullptr, bool setLabels = true);
 
         /*@}*/
         /**
@@ -2997,24 +3042,21 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 }
 
 template <int dim>
-size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
-        bool setLabels) {
+std::vector<std::unique_ptr<Triangulation<dim>>>
+        TriangulationBase<dim>::triangulateComponents(bool setLabels) const {
     // Knock off the empty triangulation first.
     if (simplices_.empty())
-        return 0;
-
-    if (! componentParent)
-        componentParent = static_cast<Triangulation<dim>*>(this);
+        return { };
 
     // Create the new component triangulations.
     // Note that the following line forces a skeletal recalculation.
     size_t nComp = countComponents();
 
     // Initialise the component triangulations.
-    Triangulation<dim>** newTris = new Triangulation<dim>*[nComp];
-    size_t whichComp;
-    for (whichComp = 0; whichComp < nComp; ++whichComp)
-        newTris[whichComp] = new Triangulation<dim>();
+    std::vector<std::unique_ptr<Triangulation<dim>>> ans;
+    ans.reserve(nComp);
+    for (size_t i = 0; i < nComp; ++i)
+        ans.push_back(std::make_unique<Triangulation<dim>>());
 
     // Clone the simplices, sorting them into the new components.
     Simplex<dim>** newSimp = new Simplex<dim>*[size()];
@@ -3024,7 +3066,7 @@ size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
     int facet;
 
     for (simpPos = 0; simpPos < size(); ++simpPos)
-        newSimp[simpPos] = newTris[simplices_[simpPos]->component()->index()]->
+        newSimp[simpPos] = ans[simplices_[simpPos]->component()->index()]->
             newSimplex(simplices_[simpPos]->description());
 
     // Clone the simplex gluings also.
@@ -3042,23 +3084,28 @@ size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
         }
     }
 
-    // Insert the component triangulations into the packet tree and clean up.
-    for (whichComp = 0; whichComp < nComp; ++whichComp) {
-        componentParent->insertChildLast(newTris[whichComp]);
-
-        if (setLabels) {
+    if (setLabels) {
+        for (size_t i = 0; i < nComp; ++i) {
             std::ostringstream label;
-            label << "Component #" << (whichComp + 1);
-            newTris[whichComp]->setLabel(
-                static_cast<Triangulation<dim>*>(this)->
+            label << "Component #" << (i + 1);
+            ans[i]->setLabel(static_cast<const Triangulation<dim>*>(this)->
                 adornedLabel(label.str()));
         }
     }
 
     delete[] newSimp;
-    delete[] newTris;
+    return ans;
+}
 
-    return whichComp;
+template <int dim>
+size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
+        bool setLabels) {
+    auto comp = triangulateComponents(setLabels);
+    if (! componentParent)
+        componentParent = static_cast<Triangulation<dim>*>(this);
+    for (auto& c : comp)
+        componentParent->insertChildLast(c.release());
+    return comp.size();
 }
 
 template <int dim>

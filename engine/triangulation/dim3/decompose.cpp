@@ -119,7 +119,8 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
             else if (crushed->countComponents() == 1)
                 toProcess.insertChildLast(crushed);
             else {
-                crushed->splitIntoComponents(&toProcess, false);
+                for (auto& comp : crushed->triangulateComponents())
+                    toProcess.insertChildLast(comp.release());
                 delete crushed;
             }
         } else {
@@ -307,7 +308,8 @@ bool Triangulation<3>::isThreeSphere() const {
             else if (crushed->countComponents() == 1)
                 toProcess.insertChildLast(crushed);
             else {
-                crushed->splitIntoComponents(&toProcess, false);
+                for (auto& comp : crushed->triangulateComponents())
+                    toProcess.insertChildLast(comp.release());
                 delete crushed;
             }
         } else {
@@ -453,9 +455,6 @@ bool Triangulation<3>::isSolidTorus() const {
     // This observation simplifies the crushing cases later on.
 
     // Pull out the big guns: normal surface time.
-    Triangulation<3>* crushed;
-    Packet* p;
-    Triangulation<3>* comp;
     while (true) {
         // INVARIANT: working is homeomorphic to our original manifold.
         if (working->countVertices() > 1) {
@@ -484,20 +483,18 @@ bool Triangulation<3>::isSolidTorus() const {
         // - undo connected sum decompositions;
         // - cut along properly embedded discs;
         // - gain and/or lose 3-balls and/or 3-spheres.
-        crushed = s->crush();
+        std::unique_ptr<Triangulation<3>> crushed(s->crush());
         delete working;
         working = nullptr;
 
         crushed->intelligentSimplify();
-        crushed->splitIntoComponents(nullptr, false);
-        for (p = crushed->firstChild(); p; p = p->nextSibling()) {
+
+        for (auto& comp : crushed->triangulateComponents()) {
             // Examine each connected component after crushing.
-            comp = static_cast<Triangulation<3>*>(p);
             if (comp->isClosed()) {
                 // A closed piece.
                 // Must be a 3-sphere, or else we didn't have a solid torus.
                 if (! comp->isThreeSphere()) {
-                    delete crushed;
                     return *(solidTorus_ = false);
                 }
             } else if (comp->countBoundaryComponents() > 1) {
@@ -508,13 +505,11 @@ bool Triangulation<3>::isSolidTorus() const {
                     "isSolidTorus() that should not exist." << std::endl;
 
                 // At any rate, it means we did not have a solid torus.
-                delete crushed;
                 return *(solidTorus_ = false);
             } else if (comp->boundaryComponent(0)->eulerChar() == 2) {
                 // A component with sphere boundary.
                 // Must be a 3-ball, or else we didn't have a solid torus.
                 if (! comp->isBall()) {
-                    delete crushed;
                     return *(solidTorus_ = false);
                 }
             } else {
@@ -530,7 +525,7 @@ bool Triangulation<3>::isSolidTorus() const {
                         "components detected in isSolidTorus(), which "
                         "should not be possible." << std::endl;
                 }
-                working = comp;
+                working = comp.release();
             }
         }
 
@@ -539,14 +534,11 @@ bool Triangulation<3>::isSolidTorus() const {
             // The only way this can happen is if we had a solid torus
             // (and we crushed and/or cut along a compressing disc
             // during the crushing operation).
-            delete crushed;
             return *(solidTorus_ = true);
         }
 
         // We have the original manifold in working, but this time with
         // fewer tetrahedra.  Around we go again.
-        working->makeOrphan();
-        delete crushed;
     }
 }
 
@@ -742,7 +734,8 @@ bool Triangulation<3>::isIrreducible() const {
             else if (crushed->countComponents() == 1)
                 toProcess.insertChildLast(crushed);
             else {
-                crushed->splitIntoComponents(&toProcess, false);
+                for (auto& comp : crushed->triangulateComponents())
+                    toProcess.insertChildLast(comp.release());
                 delete crushed;
             }
         } else {
@@ -894,29 +887,23 @@ bool Triangulation<3>::hasCompressingDisc() const {
             crush = search.buildSurface().crush();
             use.reset();
 
-            crush->splitIntoComponents();
-            comp = static_cast<Triangulation<3>*>(crush->firstChild());
-            while (comp) {
+            for (auto& comp : crush->triangulateComponents()) {
                 if (comp->countBoundaryComponents() == 1 &&
                         comp->boundaryComponent(0)->eulerChar()
                         == minBdryEuler) {
                     // This must be our original manifold.
-                    comp->makeOrphan();
+                    use = std::move(comp);
                     break;
                 }
-
-                comp = static_cast<Triangulation<3>*>(comp->nextSibling());
             }
-
             delete crush;
 
-            if (! comp) {
+            if (! use) {
                 // We must have compressed.
                 return *(compressingDisc_ = true);
             }
 
             // Around we go again, but this time with a smaller triangulation.
-            use.reset(comp);
         }
     } else {
         // Sigh.  Enumerate all vertex normal surfaces.

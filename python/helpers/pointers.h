@@ -30,11 +30,55 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation-bindings.h"
+/*! \file python/helpers/pointers.h
+ *  \brief Assists with converting C++ smart pointers to Regina's SafePtr.
+ */
 
-CONVERT_FROM_UNIQUE_PTR(regina::Triangulation<7>)
+#ifndef __REGINA_PYTHON_POINTERS_H
+#ifndef __DOXYGEN
+#define __REGINA_PYTHON_POINTERS_H
+#endif
 
-void addTriangulations7(pybind11::module_& m) {
-    addTriangulation<7>(m, "Triangulation7");
+/**
+ * Tell pybind11 how to convert a C++ std::unique_ptr into Regina's SafePtr.
+ *
+ * The macro CONVERT_FROM_UNIQUE_PTR(T) needs to appear at the start of every
+ * source file where we bind a function that returns a std::unique_ptr<T>,
+ * but where pybind11 holds T using regina::SafePtr.  The macro should
+ * appear in the global namespace.
+ *
+ * It appears that without this, the returned object is never destroyed
+ * (and also there is no warning from the compiler that something is wrong).
+ * I'm not sure if pybind11 is taking a deep copy of the object, or if it's
+ * just releasing the std::unique_ptr without claiming ownership itself;
+ * the answer is buried deep within pybind11/cast.h.
+ *
+ * But regardless: here is a fix.
+ *
+ * It would be better if we could find a fix where the compiler enforces
+ * its use.  At the moment we have to be vigilant about remembering to use
+ * this macro, with the possible penalty of a memory leak if we do not.
+ *
+ * It would also be better if the macro could enforce that T is actually held
+ * by regina::SafePtr, so that we do not accidentally use this macro with the
+ * wrong type(s) T.  Probably this just requires the right static_assert.
+ */
+#define CONVERT_FROM_UNIQUE_PTR(T) \
+namespace pybind11::detail { \
+template <> \
+struct type_caster<std::unique_ptr<T>> { \
+    public: \
+        PYBIND11_TYPE_CASTER(T*, _("unique_ptr")); \
+        bool load(handle, bool) { \
+            return false; \
+        } \
+        static handle cast(std::unique_ptr<T> src, return_value_policy policy, \
+                handle parent) { \
+            return pybind11::detail::type_caster_base<T>::cast(src.release(), \
+                policy, parent); \
+        } \
+}; \
 }
+
+#endif
 

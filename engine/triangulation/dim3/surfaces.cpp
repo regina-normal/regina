@@ -238,15 +238,9 @@ bool Triangulation<3>::hasSplittingSurface() const {
     // has a splitting surface.
 
     if (!isConnected()) {
-        Container c;
-        // The call to splitIntoComponents() will not change this triangulation,
-        // since we pass a different parent packet (c).
-        // Therefore it is safe to cast away the const here.
-        const_cast<Triangulation<3>*>(this)->splitIntoComponents(&c);
-        for (Packet* child : c.children())
-            if (! static_cast<Triangulation<3>*>(child)->hasSplittingSurface())
+        for (const auto& comp : triangulateComponents())
+            if (! comp->hasSplittingSurface())
                 return *(splittingSurface_ = false);
-        // All the components have splitting surfaces.
         return *(splittingSurface_ = true);
     }
 

@@ -33,6 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
+#include "../helpers.h"
 #include "triangulation/generic.h"
 #include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
@@ -142,7 +143,19 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("isConnected", &Triangulation<dim>::isConnected)
         .def("orient", &Triangulation<dim>::orient)
         .def("reflect", &Triangulation<dim>::reflect)
-        .def("splitIntoComponents", &Triangulation<dim>::splitIntoComponents,
+        .def("triangulateComponents",
+            &Triangulation<dim>::triangulateComponents,
+            pybind11::arg("setLabels") = false)
+        .def("splitIntoComponents", [](Triangulation<dim>& t,
+                regina::Packet* componentParent, bool setLabels) {
+            // This is deprecated, so we reimplement it ourselves.
+            auto comp = t.triangulateComponents(setLabels);
+            if (! componentParent)
+                componentParent = &t;
+            for (auto& c : comp)
+                componentParent->insertChildLast(c.release());
+            return comp.size();
+        },
             pybind11::arg("componentParent") = nullptr,
             pybind11::arg("setLabels") = true)
         .def("eulerCharTri", &Triangulation<dim>::eulerCharTri)

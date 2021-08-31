@@ -936,27 +936,17 @@ class LinkTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                regina::Container parent;
                 cut->intelligentSimplify();
-                cut->splitIntoComponents(&parent);
+                auto comp = cut->triangulateComponents();
+                delete cut;
 
-                Triangulation<3>* c1 = static_cast<Triangulation<3>*>(
-                    parent.firstChild());
-                Triangulation<3>* c2 = static_cast<Triangulation<3>*>(
-                    parent.lastChild());
-
-                if ((sigMatches(c1->isoSig(), TREFOIL_SIGS) &&
-                         c2->isSolidTorus()) ||
-                        (sigMatches(c2->isoSig(), TREFOIL_SIGS) &&
-                         c1->isSolidTorus())) {
+                if ((sigMatches(comp[0]->isoSig(), TREFOIL_SIGS) &&
+                         comp[1]->isSolidTorus()) ||
+                        (sigMatches(comp[1]->isoSig(), TREFOIL_SIGS) &&
+                         comp[0]->isSolidTorus())) {
                     // We have the correct manifold!
-                    delete cut;
                     return;
                 }
-
-                // c1 and c2 will be deleted automatically as parent goes out
-                // of scope.
-                delete cut;
             }
 
             std::ostringstream msg;

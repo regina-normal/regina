@@ -859,8 +859,8 @@ class TriangulationTest : public CppUnit::TestFixture {
             // We have a non-empty connected triangulation.
             if (tri->isOrientable()) {
                 // We should simply come away with two identical copies of tri.
-                regina::Container parent;
-                if (cover.splitIntoComponents(&parent) != 2) {
+                auto components = cover.triangulateComponents();
+                if (components.size() != 2) {
                     std::ostringstream msg;
                     msg << tri->label()
                         << ": Orientable double cover does not "
@@ -868,10 +868,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                Triangulation<dim>* child = static_cast<Triangulation<dim>*>(
-                    parent.firstChild());
-                while (child) {
-                    if (! tri->isIsomorphicTo(*child)) {
+                for (const auto& c : components) {
+                    if (! tri->isIsomorphicTo(*c)) {
                         std::ostringstream msg;
                         msg << tri->label()
                             << ": Orientable double cover "
@@ -879,9 +877,6 @@ class TriangulationTest : public CppUnit::TestFixture {
                             "original.";
                         CPPUNIT_FAIL(msg.str());
                     }
-
-                    child = static_cast<Triangulation<dim>*>(
-                        child->nextSibling());
                 }
             } else {
                 // We should come away with a proper connected double cover.
