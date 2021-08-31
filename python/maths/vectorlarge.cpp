@@ -61,7 +61,10 @@ void addVectorLarge(pybind11::module_& m) {
         .def("__getitem__", [](const VectorLarge& v, size_t index) {
             return v[index];
         }, pybind11::return_value_policy::reference_internal)
-        .def("setElement", &VectorLarge::setElement) // deprecated
+        .def("setElement", [](VectorLarge& v, size_t index, // deprecated
+                const regina::Integer& value) {
+            v[index] = value;
+        })
         .def("__setitem__", [](VectorLarge& v, size_t index,
                 const regina::Integer& value) {
             v[index] = value;
