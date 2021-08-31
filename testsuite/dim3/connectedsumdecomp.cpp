@@ -81,12 +81,10 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
         Triangulation<3>* verifyThreeSphere(Triangulation<3>* tri,
                 const std::string& triName) {
-            Container summands;
-            unsigned long ans = tri->connectedSumDecomposition(&summands);
+            auto ans = tri->summands();
 
             CPPUNIT_ASSERT_MESSAGE("The 3-sphere " + triName +
-                " is reported to have prime summands.",
-                ans == 0 && summands.countChildren() == 0);
+                " is reported to have prime summands.", ans.empty());
 
             return tri;
         }
@@ -99,20 +97,14 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 const std::string& triName, const std::string& manifold) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            Container summands;
-            unsigned long ans = tri->connectedSumDecomposition(&summands);
+            auto ans = tri->summands();
 
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
-                " is reported to be a 3-sphere.",
-                ans > 0 && summands.firstChild() != 0);
+                " is reported to be a 3-sphere.", ans.size() > 0);
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
-                " is reported to be composite.", ans == 1 &&
-                summands.firstChild() == summands.lastChild());
+                " is reported to be composite.", ans.size() == 1);
 
-            Triangulation<3>* summand = static_cast<Triangulation<3>*>(
-                summands.firstChild());
-
-            auto stdTri = StandardTriangulation::recognise(summand);
+            auto stdTri = StandardTriangulation::recognise(ans.front().get());
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri.get() != 0);
 
@@ -129,11 +121,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                     manifold != "L(3,1)")
                 CPPUNIT_ASSERT_MESSAGE("The single prime summand of " +
                     triName + " is not 0-efficient.",
-                    summand->isZeroEfficient());
+                    ans.front()->isZeroEfficient());
 
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " has an inconsistent first homology group.",
-                summand->homology() == tri->homology());
+                ans.front()->homology() == tri->homology());
 
             return tri;
         }
@@ -151,29 +143,20 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 const std::string& manifold2) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            Container summands;
-            unsigned long ans = tri->connectedSumDecomposition(&summands);
+            auto ans = tri->summands();
 
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
-                " is reported to be a 3-sphere.",
-                ans > 0 && summands.firstChild() != 0);
+                " is reported to be a 3-sphere.", ans.size() > 0);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
-                " is reported to be prime.", ans > 1 &&
-                summands.firstChild() != summands.lastChild());
+                " is reported to be prime.", ans.size() > 1);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
-                " is reported to have more than two summands.", ans == 2 &&
-                summands.firstChild()->nextSibling() == summands.lastChild());
+                " is reported to have more than two summands.", ans.size() ==2);
 
-            Triangulation<3>* summand1 = static_cast<Triangulation<3>*>(
-                summands.firstChild());
-            Triangulation<3>* summand2 = static_cast<Triangulation<3>*>(
-                summands.lastChild());
-
-            auto stdTri1 = StandardTriangulation::recognise(summand1);
+            auto stdTri1 = StandardTriangulation::recognise(ans[0].get());
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri1.get() != 0);
 
-            auto stdTri2 = StandardTriangulation::recognise(summand2);
+            auto stdTri2 = StandardTriangulation::recognise(ans[1].get());
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri2.get() != 0);
 
@@ -185,19 +168,12 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
 
-            // Obtain the manifold names in lexicographical order.
+            // Arrange the manifolds with their names in lexicographical order.
             std::string stdName1 = stdManifold1->name();
             std::string stdName2 = stdManifold2->name();
             if (stdName2 < stdName1) {
-                std::string tmp = stdName2;
-                stdName2 = stdName1;
-                stdName1 = tmp;
-
-                // Swap the summands also so we can correctly analyse
-                // them later.
-                Triangulation<3>* tmpTri = summand2;
-                summand2 = summand1;
-                summand1 = tmpTri;
+                std::swap(stdName1, stdName2);
+                std::swap(ans[0], ans[1]);
             }
 
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
@@ -208,8 +184,8 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 stdName2 == manifold2);
 
             // Test that the homologies are consistent.
-            AbelianGroup combined(summand1->homology());
-            combined.addGroup(summand2->homology());
+            AbelianGroup combined(ans[0]->homology());
+            combined.addGroup(ans[1]->homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
                 tri->homology() == combined);
@@ -220,12 +196,12 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                     manifold1 != "L(3,1)")
                 CPPUNIT_ASSERT_MESSAGE("The first prime summand of " +
                     triName + " is not 0-efficient.",
-                    summand1->isZeroEfficient());
+                    ans[0]->isZeroEfficient());
             if (manifold2 != "RP3" && manifold2 != "S2 x S1" &&
                     manifold2 != "L(3,1)")
                 CPPUNIT_ASSERT_MESSAGE("The second prime summand of " +
                     triName + " is not 0-efficient.",
-                    summand2->isZeroEfficient());
+                    ans[1]->isZeroEfficient());
 
             // All above board.
             return tri;
@@ -241,35 +217,28 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 const std::string& triName) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            Container summands;
-            unsigned long ans = tri->connectedSumDecomposition(&summands);
+            auto ans = tri->summands();
 
-            Triangulation<3>* summand1 = static_cast<Triangulation<3>*>(
-                summands.firstChild());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
-                " is reported to be a 3-sphere.", ans > 0 && summand1 != 0);
-            Triangulation<3>* summand2 = static_cast<Triangulation<3>*>(
-                summand1->nextSibling());
+                " is reported to be a 3-sphere.", ans.size() > 0);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
-                " is reported to be prime.", ans > 1 && summand2 != 0);
-            Triangulation<3>* summand3 = static_cast<Triangulation<3>*>(
-                summand2->nextSibling());
+                " is reported to be prime.", ans.size() > 1);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have only two prime summands.",
-                ans > 2 && summand3 != 0);
+                ans.size() > 2);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
-                " is reported to have more than three summands.", ans == 3 &&
-                summand3 == summands.lastChild());
+                " is reported to have more than three summands.",
+                ans.size() == 3);
 
-            auto stdTri1 = StandardTriangulation::recognise(summand1);
+            auto stdTri1 = StandardTriangulation::recognise(ans[0].get());
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri1.get() != 0);
 
-            auto stdTri2 = StandardTriangulation::recognise(summand2);
+            auto stdTri2 = StandardTriangulation::recognise(ans[1].get());
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri2.get() != 0);
 
-            auto stdTri3 = StandardTriangulation::recognise(summand3);
+            auto stdTri3 = StandardTriangulation::recognise(ans[2].get());
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri3.get() != 0);
 
@@ -295,9 +264,9 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 stdName1 == "RP3" && stdName2 == "RP3" && stdName3 == "RP3");
 
             // Test that the homologies are consistent.
-            AbelianGroup combined(summand1->homology());
-            combined.addGroup(summand2->homology());
-            combined.addGroup(summand3->homology());
+            AbelianGroup combined(ans[0]->homology());
+            combined.addGroup(ans[1]->homology());
+            combined.addGroup(ans[2]->homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
                 tri->homology() == combined);
@@ -446,10 +415,10 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             if (! (tri->isValid() && tri->isClosed() && tri->isConnected()))
                 return;
 
-            Container parent;
-            long ncomp = tri->connectedSumDecomposition(&parent);
-
-            if (ncomp == -1) {
+            std::vector<std::unique_ptr<Triangulation<3>>> ans;
+            try {
+                ans = tri->summands();
+            } catch (const regina::Unsolved&) {
                 // The routine reported an embedded two-sided projective plane.
                 if (tri->isOrientable()) {
                     std::ostringstream msg;
@@ -461,20 +430,10 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 return;
             }
 
-            if (ncomp != parent.countChildren()) {
-                std::ostringstream msg;
-                msg << "Triangulation " << tri->label()
-                    << " reports a different number of connected sum "
-                    "components from how many it actually builds.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
             AbelianGroup h1;
             Triangulation<3>* term;
             bool foundNor = false;
-            for (regina::Packet* p = parent.firstChild(); p;
-                    p = p->nextSibling()) {
-                term = static_cast<Triangulation<3>*>(p);
+            for (const auto& term : ans) {
                 if (! term->isOrientable())
                     foundNor = true;
                 if (! term->isZeroEfficient()) {

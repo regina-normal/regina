@@ -1147,39 +1147,49 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             "slow for larger triangulations.\n\n"
             "Please be patient."), ui));
 
-        // If there are already children of this triangulation, insert
-        // the new triangulations at a deeper level.
-        Packet* base;
-        if (tri->firstChild()) {
-            base = new regina::Container();
-            tri->insertChildLast(base);
-            base->setLabel(tri->adornedLabel("Summands"));
-        } else
-            base = tri;
-
         // Form the decomposition.
-        long nSummands = tri->connectedSumDecomposition(base);
-
-        // Let the user know what happened.
-        dlg.reset();
-        if (nSummands < 0) {
+        std::vector<std::unique_ptr<Triangulation<3>>> ans;
+        try {
+            ans = tri->summands(true);
+        } catch (regina::Unsolved&) {
+            dlg.reset();
             ReginaSupport::sorry(ui,
                 tr("<qt>This manifold contains an embedded two-sided "
                 "projective plane.<p>"
                 "Regina cannot always compute connected "
                 "sum decompositions in such cases, and this triangulation "
                 "in particular is one such case that it cannot resolve.</qt>"));
-        } else if (nSummands == 0) {
+            return;
+        }
+
+        // Let the user know what happened.
+        dlg.reset();
+        if (ans.empty()) {
             ReginaSupport::info(ui,
                 tr("This is the 3-sphere."),
                 tr("It has no prime summands."));
         } else {
             // There is at least one new summand triangulation.
+            //
+            // Insert them all into the packet tree.
+            // If there are already children of this triangulation, insert
+            // the new triangulations at a deeper level.
+            Packet* base;
+            if (tri->firstChild()) {
+                base = new regina::Container();
+                tri->insertChildLast(base);
+                base->setLabel(tri->adornedLabel("Summands"));
+            } else
+                base = tri;
+
+            for (auto& s : ans)
+                base->insertChildLast(s.release());
+
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
                 base->lastChild());
 
-            if (nSummands == 1) {
+            if (ans.size() == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
                 // 0-efficient triangulations.
                 Triangulation<3>* small = static_cast<Triangulation<3>*>
@@ -1221,7 +1231,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             } else
                 ReginaSupport::info(ui,
                     tr("This manifold decomposes into %1 prime summands.").
-                    arg(nSummands));
+                    arg(ans.size()));
         }
 
         // We might have learned something new for the recognition tab

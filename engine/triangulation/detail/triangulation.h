@@ -1209,10 +1209,10 @@ class TriangulationBase :
          * Deprecated routine that identifies the individual connected
          * comonents of this triangulation.
          *
-         * The component triangulations will be newly created and inserted as
-         * children of the given packet \a componentParent.
-         * If \a componentParent is \c null, they will be inserted into
-         * the packet tree as children of this triangulation.
+         * The component triangulations will be inserted as children of the
+         * given packet \a componentParent.  If \a componentParent is \c null,
+         * they will be inserted into the packet tree as children of this
+         * triangulation.
          *
          * By default, this routine will assign sensible packet labels to each
          * of the new component triangulations.  If these component

@@ -988,6 +988,12 @@ Version 7.0  [ TODO ]
         Class Triangulation<3>:
             - All of the changes listed for Triangulation<dim> above.
             - New routine generalAngleStructure().
+            - Routine connectedSumDecomposition() is replaced with a new routine
+              summands() with different behaviour: it does not insert the
+              results into the packet tree, it does not assign packet labels
+              by default (but this is still an option), and it throws on error
+              (instead of returning -1).  The old connectedSumDecomposition()
+              is kept but deprecated.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.  This function is now also available
@@ -1035,6 +1041,8 @@ Version 7.0  [ TODO ]
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
             - Added short and detailed output functions.
+        Class Unsolved:
+            - New exception class.
         Class Vector:
             - New operator !=.
             - New constructors that take iterator ranges and initialiser lists.

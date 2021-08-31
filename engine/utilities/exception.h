@@ -138,8 +138,55 @@ class InvalidInput : public std::runtime_error {
 };
 
 /**
+ * An exception thrown when a mathematical function is not able to solve
+ * a particular instance of a problem.
+ *
+ * Details of the error can be accessed through the inherited member
+ * function what().
+ *
+ * \ifacespython Not present.
+ */
+class Unsolved : public std::runtime_error {
+    public:
+        /**
+         * Creates a new exception with the given error message.
+         *
+         * This constructor may throw std::bad_alloc.
+         *
+         * @param msg a human-readable description of the error.
+         */
+        Unsolved(const std::string& msg) : std::runtime_error(msg) {
+        }
+
+        /**
+         * Creates a new exception with the given error message.
+         *
+         * This constructor may throw std::bad_alloc.
+         *
+         * @param msg a human-readable description of the error.
+         */
+        Unsolved(const char* msg) : std::runtime_error(msg) {
+        }
+
+        /**
+         * Creates a new copy of the given exception.
+         */
+        Unsolved(const Unsolved&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        Unsolved& operator = (const Unsolved&) noexcept =
+            default;
+};
+
+/**
  * An exception thrown when a set of normal surface/hypersurface matching
  * equations could not be created for a given triangulation.
+ *
+ * \ifacespython Not present.
  */
 class NoMatchingEquations : public std::exception {
     public:

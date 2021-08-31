@@ -359,31 +359,33 @@
         return;
     }
 
-    regina::Packet* base = new regina::Container();
-    __block long nSummands = 0;
+    __block std::vector<std::unique_ptr<Triangulation<3>>> summands;
     [ReginaHelper runWithHUD:@"Decomposing…"
                         code:^{
-                            nSummands = self.packet->connectedSumDecomposition(base);
+                            try {
+                                summands = self.packet->summands(true);
+                            } catch (regina::Unsolved&) {
+                                // We can detect this by having a non-orientable triangulation with an empty summands list.
+                            }
                         }
                      cleanup:^{
-                         if (nSummands < 0) {
-                             delete base;
+                         if (summands.empty() && ! self.packet->isOrientable()) {
+                             // This is the case that throws an exception above.
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Two-Sided Projective Plane"
                                                                              message:@"This manifold contains an embedded two-sided projective plane.  Regina cannot always compute connected sum decompositions in such cases, and this happens to be one such case that it cannot resolve."
                                                                             delegate:nil
                                                                    cancelButtonTitle:@"Close"
                                                                    otherButtonTitles:nil];
                              [alert show];
-                         } else if (nSummands == 0) {
-                             delete base;
+                         } else if (summands.empty()) {
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S³"
                                                                              message:@"This is the 3-sphere.  It has no prime summands."
                                                                             delegate:nil
                                                                    cancelButtonTitle:@"Close"
                                                                    otherButtonTitles:nil];
                              [alert show];
-                         } else if (nSummands == 1) {
-                             regina::Triangulation<3>* small = static_cast<regina::Triangulation<3>*>(base->firstChild());
+                         } else if (summands.size() == 1) {
+                             const regina::Triangulation<3>* small = summands.front().get();
 
                              // Special-case S2xS1, S2x~S1 and RP3, which do not have
                              // 0-efficient triangulations.
@@ -427,11 +429,10 @@
                                  [alert show];
                              }
 
-                             small->reparent(self.packet);
-                             delete base;
+                             self.packet->insertChildLast(small);
                              [ReginaHelper viewPacket:small];
                          } else {
-                             UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Prime Summands", nSummands]
+                             UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Prime Summands", summands.size()]
                                                                              message:@"This is a composite manifold.  I have constructed a new triangulation for each summand."
                                                                             delegate:nil
                                                                    cancelButtonTitle:@"Close"
@@ -441,16 +442,19 @@
                              if (self.packet->firstChild()) {
                                  // This packet already has children.
                                  // Insert the summands at a deeper level.
+                                 regina::Packet* base = new regina::Container();
                                  base->setLabel(self.packet->adornedLabel("Summands"));
                                  self.packet->insertChildLast(base);
+                                 for (auto& s : summands)
+                                     base->insertChildLast(s.release());
                                  [ReginaHelper viewChildren:base];
                              } else {
-                                 base->transferChildren(self.packet);
-                                 delete base;
+                                 for (auto& s : summands)
+                                     self.packet->insertChildLast(s.release());
                                  [ReginaHelper viewChildren:self.packet];
                              }
                          }
-                         
+
                          // We might have learned something new for the recognition tab to show.
                          [self reloadPacket];
                      }];

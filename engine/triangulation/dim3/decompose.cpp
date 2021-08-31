@@ -42,18 +42,15 @@
 
 namespace regina {
 
-long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
-        bool setLabels) {
+std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands(
+        bool setLabels) const {
     // Precondition checks.
     if (! (isValid() && isClosed() && isConnected()))
-        return 0;
+        return { };
 
     // Do we already know the answer?
     if (threeSphere_.has_value() && *threeSphere_)
-        return 0;
-
-    if (! primeParent)
-        primeParent = this;
+        return { };
 
     bool initOrientable = isOrientable();
 
@@ -73,8 +70,7 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
     Container toProcess;
     toProcess.insertChildLast(working);
 
-    std::list<Triangulation<3>*> primeComponents;
-    unsigned long whichComp = 0;
+    std::vector<std::unique_ptr<Triangulation<3>>> primeComponents;
 
     Triangulation<3>* processing;
     Triangulation<3>* crushed;
@@ -96,18 +92,12 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
             if (! crushed->isValid()) {
                 // We must have had an embedded two-sided projective plane.
                 // Abort.
-
-                delete crushed;
-
-                std::list<Triangulation<3>*>::iterator it;
-                for (it = primeComponents.begin();
-                        it != primeComponents.end(); ++it)
-                    delete *it;
-
+                //
                 // All children of toProcess will be deleted automatically
                 // with toProcess itself (which is on the stack).
-
-                return -1;
+                delete crushed;
+                throw regina::Unsolved("Found an embedded two-sided "
+                    "projective plane");
             }
 
             crushed->intelligentSimplify();
@@ -129,7 +119,8 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
             // Is it a 3-sphere?
             if (! processing->isOrientable()) {
                 // Definitely not a sphere.
-                primeComponents.push_back(processing);
+                primeComponents.push_back(
+                    std::unique_ptr<Triangulation<3>>(processing));
             } else {
                 // Orientable, and so possibly a sphere.  Test this precisely.
                 if (processing->countVertices() > 1) {
@@ -158,7 +149,8 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
                         delete processing;
                     } else {
                         // It's a non-trivial prime component!
-                        primeComponents.push_back(processing);
+                        primeComponents.push_back(
+                            std::unique_ptr<Triangulation<3>>(processing));
                     }
                 }
             }
@@ -168,9 +160,8 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
     // Run a final homology check and put back our missing S2xS1, S2x~S1,
     // RP3 and L(3,1) terms.
     unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
-    for (std::list<Triangulation<3>*>::iterator it = primeComponents.begin();
-            it != primeComponents.end(); it++) {
-        const AbelianGroup& homology = (*it)->homology();
+    for (const auto& c : primeComponents) {
+        const AbelianGroup& homology = c->homology();
         finalZ += homology.rank();
         finalZ2 += homology.torsionRank(2);
         finalZ3 += homology.torsionRank(3);
@@ -190,41 +181,37 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
             t0->join(2, t1, Perm<4>(1, 3, 2, 0));
             t0->join(3, t1, Perm<4>(2, 0, 1, 3));
         }
-        primeComponents.push_back(working);
+        primeComponents.push_back(std::unique_ptr<Triangulation<3>>(working));
         irreducible_ = false; // Implied by the S2xS1 or S2x~S1 summand.
         zeroEfficient_ = false; // Implied by the S2xS1 or S2x~S1 summand.
     }
     while (finalZ2++ < initZ2) {
         working = new Triangulation<3>();
         working->insertLayeredLensSpace(2, 1);
-        primeComponents.push_back(working);
+        primeComponents.push_back(std::unique_ptr<Triangulation<3>>(working));
     }
     while (finalZ3++ < initZ3) {
         working = new Triangulation<3>();
         working->insertLayeredLensSpace(3, 1);
-        primeComponents.push_back(working);
+        primeComponents.push_back(std::unique_ptr<Triangulation<3>>(working));
     }
 
     // All done!
-    for (std::list<Triangulation<3>*>::iterator it = primeComponents.begin();
-            it != primeComponents.end(); it++) {
-        primeParent->insertChildLast(*it);
-
-        if (setLabels) {
+    if (setLabels) {
+        size_t whichComp = 1;
+        for (const auto& c : primeComponents) {
             std::ostringstream label;
-            label << "Summand #" << (whichComp + 1);
-            (*it)->setLabel(adornedLabel(label.str()));
+            label << "Summand #" << (whichComp++);
+            c->setLabel(adornedLabel(label.str()));
         }
-
-        whichComp++;
     }
 
     // Set irreducibility while we're at it.
-    if (whichComp > 1) {
+    if (primeComponents.size() > 1) {
         threeSphere_ = false;
         irreducible_ = false;
         zeroEfficient_ = false;
-    } else if (whichComp == 1) {
+    } else if (primeComponents.size() == 1) {
         threeSphere_ = false;
         if (! irreducible_.has_value()) {
             // If our manifold is S2xS1 or S2x~S1 then it is *not* irreducible;
@@ -233,13 +220,13 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
             // (and therefore irreducible.known() will be true).
             irreducible_ = true;
         }
-    } else if (whichComp == 0) {
+    } else if (primeComponents.size() == 0) {
         threeSphere_ = true;
         irreducible_ = true;
         haken_ = false;
     }
 
-    return whichComp;
+    return primeComponents;
 }
 
 bool Triangulation<3>::isThreeSphere() const {
@@ -651,22 +638,18 @@ bool Triangulation<3>::knowsTxI() const {
 
 Packet* Triangulation<3>::makeZeroEfficient() {
     // Extract a connected sum decomposition.
-    Container* connSum = new Container();
-    connSum->setLabel(adornedLabel("Decomposition"));
-
-    long ans = connectedSumDecomposition(connSum, true);
-    if (ans > 1) {
+    auto ans = summands(true);
+    if (ans.size() > 1) {
         // Composite!
+        Container* connSum = new Container();
+        connSum->setLabel(adornedLabel("Decomposition"));
+        for (auto& s : ans)
+            connSum->insertChildLast(s.release());
         return connSum;
-    } else if (ans == 1) {
+    } else if (ans.size() == 1) {
         // Prime.
-        Triangulation<3>* newTri = dynamic_cast<Triangulation<3>*>(
-            connSum->lastChild());
-        if (! isIsomorphicTo(*newTri)) {
-            removeAllTetrahedra();
-            insertTriangulation(*newTri);
-        }
-        delete connSum;
+        if (! isIsomorphicTo(*ans.front()))
+            swap(*ans.front());
         return nullptr;
     } else {
         // 3-sphere.
@@ -674,7 +657,6 @@ Packet* Triangulation<3>::makeZeroEfficient() {
             removeAllTetrahedra();
             insertLayeredLensSpace(1,0);
         }
-        delete connSum;
         return nullptr;
     }
 }

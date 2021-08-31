@@ -2265,10 +2265,8 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
-                regina::Container parent;
                 clearProperties(*tri);
-                long comps = tri->connectedSumDecomposition(&parent);
-                if (comps != 0) {
+                if (! tri->summands().empty()) {
                     std::ostringstream msg;
                     msg << "The 3-sphere " << tri->label()
                         << " was reported as having one or more "
@@ -2303,10 +2301,8 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
-                regina::Container parent;
                 clearProperties(*tri);
-                long comps = tri->connectedSumDecomposition(&parent);
-                if (comps == 0) {
+                if (tri->summands().empty()) {
                     std::ostringstream msg;
                     msg << "The non-3-sphere " << tri->label()
                         << " was reported as having no "
@@ -2374,16 +2370,15 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
-                regina::Container parent;
                 clearProperties(*tri);
-                long comps = tri->connectedSumDecomposition(&parent);
-                if (expected && comps != 0) {
+                auto comps = tri->summands();
+                if (expected && ! comps.empty()) {
                     std::ostringstream msg;
                     msg << "The census 3-sphere " << tri->label()
                         << " was reported as having one or more "
                         "connected sum component.";
                     CPPUNIT_FAIL(msg.str());
-                } else if (comps == 0 && ! expected) {
+                } else if (comps.empty() && ! expected) {
                     std::ostringstream msg;
                     msg << "The census non-3-sphere " << tri->label()
                         << " was reported as having no "
@@ -3805,37 +3800,40 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->size() > 10)
                 return;
 
-            long nOld = tri->connectedSumDecomposition();
-            if (nOld < 0 && ! tri->isOrientable()) {
-                // One of those cases where connected sum decomposition
-                // legitimately fails.  The following tests are no use
-                // for us here.
-                return;
+            std::vector<std::unique_ptr<Triangulation<3>>> sOld, sNew;
+            try {
+                sOld = tri->summands();
+                sNew = t.summands();
+            } catch (const regina::Unsolved&) {
+                if (tri->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ": tri and/or tri # tri failed to "
+                        "compute connected sum decomposition.";
+                    CPPUNIT_FAIL(msg.str());
+                } else {
+                    // One of those cases where connected sum decomposition
+                    // legitimately fails.  The following tests are no use
+                    // for us here.
+                    return;
+                }
             }
 
-            long nNew = t.connectedSumDecomposition();
-            if (nNew >= 0 || tri->isOrientable()) {
-                if (nNew != 2 * nOld) {
+            if (sNew.size() != 2 * sOld.size()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": tri # tri has " << sNew.size()
+                    << " summands, not " << (2 * sOld.size()) << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (sOld.size() == 1) {
+                // There should be two summands, each homeomorphic
+                // to the original.
+                if (sNew[0]->homology() != tri->homology() ||
+                        sNew[1]->homology() != tri->homology()) {
                     std::ostringstream msg;
                     msg << tri->label() << ": tri # tri has "
-                        << nNew << " summands, not " << (2 * nOld) << ".";
+                        "summands with the wrong homology.";
                     CPPUNIT_FAIL(msg.str());
-                }
-
-                if (nOld == 1) {
-                    // There should be two summands, each homeomorphic
-                    // to the original.
-                    Triangulation<3>* c1 = static_cast<Triangulation<3>*>(
-                        t.firstChild());
-                    Triangulation<3>* c2 = static_cast<Triangulation<3>*>(
-                        c1->nextSibling());
-                    if (c1->homology() != tri->homology() ||
-                            c2->homology() != tri->homology()) {
-                        std::ostringstream msg;
-                        msg << tri->label() << ": tri # tri has "
-                            "summands with the wrong homology.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
                 }
             }
         }

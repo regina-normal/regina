@@ -364,8 +364,22 @@ void addTriangulation3(pybind11::module_& m) {
         },
             pybind11::arg("componentParent") = nullptr,
             pybind11::arg("setLabels") = true)
-        .def("connectedSumDecomposition",
-            &Triangulation<3>::connectedSumDecomposition,
+        .def("summands", &Triangulation<3>::summands,
+            pybind11::arg("setLabels") = false)
+        .def("connectedSumDecomposition", [](Triangulation<3>& t,
+                regina::Packet* primeParent, bool setLabels) -> long {
+            // This is deprecated, so we reimplement it ourselves.
+            if (! primeParent)
+                primeParent = &t;
+            try {
+                auto ans = t.summands(setLabels);
+                for (auto& s : ans)
+                    primeParent->insertChildLast(s.release());
+                return ans.size();
+            } catch (const regina::Unsolved&) {
+                return -1;
+            }
+        },
             pybind11::arg("primeParent") = nullptr,
             pybind11::arg("setLabels") = true)
         .def("isThreeSphere", &Triangulation<3>::isThreeSphere)

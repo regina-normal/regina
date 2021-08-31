@@ -55,6 +55,7 @@
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/boolset.h"
+#include "utilities/exception.h"
 #include "utilities/markedvector.h"
 
 // NOTE: More #includes for faces, components and boundary components
@@ -1908,36 +1909,49 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * Splits this triangulation into its connected sum
-         * decomposition.  The individual prime 3-manifold triangulations
-         * that make up this decomposition will be inserted as children
-         * of the given parent packet.  The original triangulation will
-         * be left unchanged.
+         * Computes the connected sum decomposition of this triangulation.
+         *
+         * This triangulation will not be modified.  The prime summands
+         * will be returned as a vector of newly created triangulations.
          *
          * For non-orientable triangulations, this routine is only guaranteed
          * to succeed if the original manifold contains no embedded two-sided
          * projective planes.  If the manifold \e does contain embedded
          * two-sided projective planes, then this routine might still succeed
          * but it might fail; however, such a failure will always be detected,
-         * and in such a case this routine will return -1 instead (without
-         * building any prime summands at all).
+         * and in such a case this routine will throw an exception of type
+         * regina::Unsolved.
          *
          * Note that this routine is currently only available for closed
          * triangulations; see the list of preconditions for full details.
+         * If this triangulation is a 3-sphere then this routine will return
+         * an empty list.
          *
-         * If the given parent packet is \c nullptr, the new prime summand
-         * triangulations will be inserted as children of this triangulation.
+         * This function is new to Regina 7.0, and it has some important
+         * changes of behaviour from the old connectedSumDecomposition() from
+         * Regina 6.0.1 and earlier:
          *
-         * This routine can optionally assign unique (and sensible)
-         * packet labels to each of the new prime summand triangulations.
-         * Note however that uniqueness testing may be slow, so this
-         * assignment of labels should be disabled if the summand
-         * triangulations are only temporary objects used as part
-         * of a larger routine.
+         * - This function does not insert the resulting components into
+         *   the packet tree.
          *
-         * If this is a triangulation of a 3-sphere then no prime summand
-         * triangulations will be created at all, and this routine will
-         * return 0.
+         * - If this routine fails because of an embedded two-sided projective
+         *   plane, then it throws an exception instead of returning -1.
+         *
+         * - This function does not assign labels to the new summands
+         *   by default.  You can still do this by passing the optional
+         *   \a setLabels argument as \c true.
+         *
+         * This function wraps each summand in a std::unique_ptr, so you
+         * do not need to worry about looping through and destroying them
+         * individually.  However, note that (since you cannot copy a
+         * std::unique_ptr) this means you will need to iterate by reference:
+         *
+         * \code{.cpp}
+         * for (const auto& s : t.summands()) {
+         *     std::cout << comp->homology().str() << std::endl;
+         *     ...
+         * }
+         * \endcode
          *
          * The underlying algorithm appears in "A new approach to crushing
          * 3-manifold triangulations", Discrete and Computational
@@ -1945,7 +1959,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * Jaco-Rubinstein 0-efficiency algorithm, and works in both
          * orientable and non-orientable settings.
          *
-         * \warning Users are strongly advised to check the return value if
+         * \warning Users are strongly advised to check for exceptions if
          * embedded two-sided projective planes are a possibility, since in
          * such a case this routine might fail (as explained above).
          * Note however that this routine might still succeed, and so success
@@ -1955,6 +1969,52 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * surface theory and so can be very slow for larger triangulations.
          * For 3-sphere testing, see the routine isThreeSphere() which
          * uses faster methods where possible.
+         *
+         * \pre This triangulation is valid, closed and connected.
+         *
+         * @param setLabels \c true if the new prime summand triangulations
+         * should be assigned sensible packet labels based on the label of this
+         * triangulation, or \c false if they should be left without labels.
+         * @return a list of newly created triangulations of prime summands.
+         */
+        std::vector<std::unique_ptr<Triangulation<3>>> summands(
+            bool setLabels = false) const;
+
+        /**
+         * Deprecated routine that identifies the summands of the
+         * connected sum decomposition.
+         *
+         * Since Regina 7.0, this routine has been replaced by summands(),
+         * which offers a cleaner interface to the same mathematical task.
+         * Indeed, this routine simply calls summands() but wraps it in extra
+         * code to emulate the behaviour from Regina 6.0.1 and earlier.
+         * See summands() for full details of how this routine works,
+         * and when and how it could fail.
+         *
+         * The individual prime summands will be inserted as children of the
+         * given packet \a primeParent.  If \a primeParent is \c null, they
+         * will be inserted into the packet tree as children of this
+         * triangulation.
+         *
+         * By default, this routine will assign sensible packet labels to each
+         * of the new component triangulations.  If these component
+         * triangulations are only temporary objects used as part of some
+         * larger algorithm, then labels are unnecessary - in this case
+         * you can pass \a setLabels as \c false to avoid the (small) overhead
+         * that these packet labels incur.
+         *
+         * It is possible that this routine will fail for some
+         * non-orientable triangulations (again, see summands() for details).
+         * In such a situation, this routine will return -1 and no prime
+         * summands will be inserted beneath the given parent.
+         *
+         * \deprecated You should use the new routine summands() instead.
+         * Note however that summands() comes with some changes of behaviour.
+         * First, summands() does not insert the resulting components into the
+         * packet tree; you will need to do this yourself if you want it.
+         * Second, the \a setLabels argument defaults to \c false in summands(),
+         * as opposed to \c true here.  Finally, whereas this routine
+         * returns -1 if it fails, summands() will instead throw an exception.
          *
          * \pre This triangulation is valid, closed and connected.
          *
@@ -1969,8 +2029,9 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * because this is a non-orientable triangulation with embedded
          * two-sided projective planes.
          */
-        long connectedSumDecomposition(Packet* primeParent = nullptr,
-            bool setLabels = true);
+        [[deprecated]] long connectedSumDecomposition(
+            Packet* primeParent = nullptr, bool setLabels = true);
+
         /**
          * Determines whether this is a triangulation of a 3-sphere.
          *
@@ -3414,6 +3475,20 @@ inline unsigned long Triangulation<3>::homologyH2Z2() const {
 inline const Triangulation<3>::TuraevViroSet&
         Triangulation<3>::allCalculatedTuraevViro() const {
     return turaevViroCache_;
+}
+
+inline long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
+        bool setLabels) {
+    if (! primeParent)
+        primeParent = this;
+    try {
+        auto ans = summands(setLabels);
+        for (auto& s : ans)
+            primeParent->insertChildLast(s.release());
+        return ans.size();
+    } catch (const regina::Unsolved&) {
+        return -1;
+    }
 }
 
 template <typename Action, typename... Args>
