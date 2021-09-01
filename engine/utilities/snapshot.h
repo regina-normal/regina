@@ -164,10 +164,11 @@ class SnapshotWriteError : public std::exception {
  *
  * - Whenever an object of type \a T changes, it \e must call
  *   Snapshottable<T>::takeSnapshot() from within the modifying member
- *   function, \e before the change takes place.  If the object does not have
- *   a current snapshot, this is very fast (a single test for a null pointer).
- *   If the object does have a current snapshot, then this will be expensive
- *   since it will trigger a deep copy.
+ *   function, \e before the change takes place (though there are a handful
+ *   of exceptions to this requirement, described in the Snapshottable class
+ *   notes).  If the object does not have a current snapshot, this is very fast
+ *   (a single test for a null pointer).  If the object does have a current
+ *   snapshot, then this will be expensive since it will trigger a deep copy.
  *
  * - Likewise, in the destructor for \a T, the first call should be to
  *   Snapshottable<T>::takeSnapshot().
@@ -285,10 +286,21 @@ class Snapshot {
  *   call the corresponding operations from Snapshottable<T>.
  *
  * - Every modifying member function must call Snapshottable<T>::takeSnapshot()
- *   before the modification takes place.
+ *   before the modification takes place.  There are a handful of exceptions
+ *   to this requirement, as described below.
  *
  * - The destructor must likewise call Snapshottable<T>::takeSnapshot() before
  *   any data is destroyed.
+ *
+ * There are some situations where an object of type \a T is modified but
+ * does \e not need to call takeSnapshot().  These include:
+ *
+ * - move, copy and swap operations, since these are required to call the
+ *   base class implementations from Snapshottable<T>, which take care of
+ *   any snapshotting that is required;
+ *
+ * - modifications of objects that are freshly constructed, and cannot
+ *   possibly have snapshots that refer to them yet.
  *
  * \ifacespython Not present.
  */
@@ -333,7 +345,7 @@ class Snapshottable {
          */
         Snapshottable(Snapshottable&& src) noexcept : snapshot_(src.snapshot_) {
             if (snapshot_) {
-                snapshot_->value_ = this;
+                snapshot_->value_ = static_cast<T*>(this);
                 src.snapshot_ = nullptr;
             }
         }
@@ -387,7 +399,7 @@ class Snapshottable {
                 snapshot_->freeze();
             snapshot_ = src.snapshot_;
             if (snapshot_) {
-                snapshot_->value_ = this;
+                snapshot_->value_ = static_cast<T*>(this);
                 src.snapshot_ = nullptr;
             }
             return *this;
@@ -411,9 +423,9 @@ class Snapshottable {
         void swap(Snapshottable& other) noexcept {
             std::swap(snapshot_, other.snapshot_);
             if (snapshot_)
-                snapshot_->value_ = this;
+                snapshot_->value_ = static_cast<T*>(this);
             if (other.snapshot_)
-                other.snapshot_->value_ = std::addressof(other);
+                other.snapshot_->value_ = static_cast<T*>(&other);
         }
 
         /**
