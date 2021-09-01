@@ -41,6 +41,7 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/generic.h"
 #include "triangulation/homologicaldata.h"
 
 #define SHOW_SIZE(T) std::cout << #T << ": " \
@@ -112,6 +113,7 @@ int main(int argc, char* argv[]) {
     SHOW_SIZE(Triangulation<2>);
     SHOW_SIZE(Triangulation<3>);
     SHOW_SIZE(Triangulation<4>);
+    SHOW_SIZE(Triangulation<5>);
     SHOW_SIZE(HomologicalData);
     std::cout << std::endl;
 
