@@ -895,6 +895,9 @@ Version 7.0  [ TODO ]
               snappedBall() now returns by reference, not pointer.
             - Added copy construction and copy assignment.
             - Deprecated clone().  Just use the copy constructor instead.
+        Class Snapshot, SnapshotRef, Snapshottable:
+            - A new suite of classes for taking snapshots of a large
+              object at a fixed moment in time.
         Class SFSpace:
             - Renamed classType enumeration to ClassType.  The old name
               is kept as a deprecated alias.
