@@ -582,6 +582,8 @@ void TriangulationBase<dim>::clearBaseProperties() {
 
 template <int dim>
 void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
+    Snapshottable<Triangulation<dim>>::swap(other);
+
     // Simplices:
     simplices_.swap(other.simplices_);
 

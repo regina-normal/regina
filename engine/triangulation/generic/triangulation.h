@@ -440,6 +440,7 @@ inline Triangulation<dim>::Triangulation(const Triangulation& copy,
 
 template <int dim>
 inline Triangulation<dim>::~Triangulation() {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     clearAllProperties();
 }
 
@@ -456,6 +457,7 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
     ChangeEventSpan span1(*this);
     ChangeEventSpan span2(other);
 
+    // Note: swapBaseData() calls Snapshottable::swap().
     this->swapBaseData(other);
 }
 

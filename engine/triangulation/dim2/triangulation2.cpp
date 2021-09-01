@@ -57,6 +57,7 @@ void Triangulation<2>::swap(Triangulation<2>& other) {
     ChangeEventSpan span1(*this);
     ChangeEventSpan span2(other);
 
+    // Note: swapBaseData() calls Snapshottable::swap().
     swapBaseData(other);
 }
 

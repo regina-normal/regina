@@ -984,6 +984,7 @@ inline Triangulation<4>::Triangulation() : knownSimpleLinks_(false) {
 }
 
 inline Triangulation<4>::~Triangulation() {
+    Snapshottable<Triangulation<4>>::takeSnapshot();
     clearAllProperties();
 }
 

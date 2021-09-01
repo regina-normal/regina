@@ -3375,6 +3375,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
 // that use them (this fixes DLL-related warnings in the windows port)
 
 inline Triangulation<3>::~Triangulation() {
+    Snapshottable<Triangulation<3>>::takeSnapshot();
     clearAllProperties();
 }
 

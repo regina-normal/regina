@@ -235,6 +235,7 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
     ChangeEventSpan span1(*this);
     ChangeEventSpan span2(other);
 
+    // Note: swapBaseData() calls Snapshottable::swap().
     swapBaseData(other);
 
     // Properties stored directly:

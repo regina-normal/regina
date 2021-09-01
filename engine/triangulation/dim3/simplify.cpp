@@ -888,6 +888,7 @@ void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
         return;
 
     TopologyLock lock(*this);
+    Snapshottable<Triangulation<3>>::takeSnapshot();
     ChangeEventSpan span(*this);
 
     // Run a breadth-first search over all tetrahedra.

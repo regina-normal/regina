@@ -633,6 +633,7 @@ inline const std::string& SimplexBase<dim>::description() const {
 
 template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
+    tri_->template Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(*tri_);
     description_ = desc;
 }
@@ -721,6 +722,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return 0;
 
+    tri_->template Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
     Simplex<dim>* you = adj_[myFacet];
@@ -736,6 +738,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
 template <int dim>
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         Perm<dim+1> gluing) {
+    tri_->template Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
     assert(tri_ == you->tri_);

@@ -60,6 +60,7 @@
 #include "triangulation/alias/simplex.h"
 #include "utilities/listview.h"
 #include "utilities/sigutils.h"
+#include "utilities/snapshot.h"
 
 namespace regina {
 
@@ -184,7 +185,7 @@ namespace detail {
  * This must be between 2 and 15 inclusive.
  */
 template <int dim>
-class TriangulationBase :
+class TriangulationBase : public Snapshottable<Triangulation<dim>>,
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
@@ -1878,8 +1879,8 @@ class TriangulationBase :
 
         /**
          * Swaps all data that is managed by this base class, including
-         * simplices, skeletal data and other cached properties, with the
-         * given triangulation.
+         * simplices, skeletal data, cached properties and the snapshotting
+         * data, with the given triangulation.
          *
          * Note that TriangulationBase never calls this routine itself.
          * Typically swapBaseData() is only ever called by
@@ -2209,6 +2210,7 @@ inline TriangulationBase<dim>::TriangulationBase(
 template <int dim>
 TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
         bool cloneProps) :
+        Snapshottable<Triangulation<dim>>(copy),
         topologyLock_(0), calculatedSkeleton_(false) {
     // We don't fire a change event here since this is a constructor.
     // There should be nobody listening on events yet.
@@ -2268,8 +2270,10 @@ inline const Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) const {
 
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex() {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
+
     Simplex<dim>* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
@@ -2278,8 +2282,10 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex() {
 
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
+
     Simplex<dim>* s = new Simplex<dim>(desc,
         static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
@@ -2289,6 +2295,7 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
 
 template <int dim>
 inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
 
@@ -2301,6 +2308,7 @@ inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
 
 template <int dim>
 inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
 
@@ -2314,6 +2322,7 @@ inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
 
 template <int dim>
 inline void TriangulationBase<dim>::removeAllSimplices() {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
 
@@ -2326,6 +2335,9 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
 
 template <int dim>
 void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
+    dest.Snapshottable<Triangulation<dim>>::takeSnapshot();
+
     typename Triangulation<dim>::ChangeEventSpan span1(
         static_cast<Triangulation<dim>&>(*this));
     typename Triangulation<dim>::ChangeEventSpan span2(dest);
@@ -2531,6 +2543,7 @@ inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
 template <int dim>
 void TriangulationBase<dim>::insertTriangulation(
         const Triangulation<dim>& source) {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
 
@@ -2570,6 +2583,7 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
     if (nSimplices == 0)
         return;
 
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
 
@@ -2743,6 +2757,7 @@ void TriangulationBase<dim>::orient() {
     ensureSkeleton();
 
     TopologyLock lock(*this);
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
 
@@ -2782,6 +2797,7 @@ void TriangulationBase<dim>::reflect() {
     ensureSkeleton();
 
     TopologyLock lock(*this);
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
 

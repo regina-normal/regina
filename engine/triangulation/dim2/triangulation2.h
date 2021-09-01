@@ -386,6 +386,7 @@ inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
 }
 
 inline Triangulation<2>::~Triangulation() {
+    Snapshottable<Triangulation<2>>::takeSnapshot();
     clearAllProperties();
 }
 
