@@ -120,6 +120,7 @@ bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
                 // Since we are allowed to change alt, we use swap(),
                 // which avoids yet another round of remaking the tetrahedron
                 // gluings.
+                // Ensure only one event pair is fired from these changes.
                 Packet::ChangeEventSpan span(original);
                 original.swap(alt);
                 original.intelligentSimplify();

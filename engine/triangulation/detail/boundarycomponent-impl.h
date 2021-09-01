@@ -131,6 +131,7 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
         mainTri.template countFaces<dim-1>()];
 
     Triangulation<dim-1>* ans = new Triangulation<dim-1>();
+    // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim-1>::ChangeEventSpan span(*ans);
 
     for (auto s : allFacets)

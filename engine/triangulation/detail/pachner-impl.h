@@ -255,6 +255,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
 
         // Perform the move.
         TopologyLock lock(*this);
+        // Ensure only one event pair is fired in this sequence of changes.
         typename Triangulation<dim>::ChangeEventSpan span(
             static_cast<Triangulation<dim>&>(*this));
 
@@ -306,6 +307,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             return true; // You can always do this move.
 
         TopologyLock lock(*this);
+        // Ensure only one event pair is fired in this sequence of changes.
         typename Triangulation<dim>::ChangeEventSpan span(
             static_cast<Triangulation<dim>&>(*this));
 
@@ -484,6 +486,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
 
         // Perform the move.
         TopologyLock lock(*this);
+        // Ensure only one event pair is fired in this sequence of changes.
         typename Triangulation<dim>::ChangeEventSpan span(
             static_cast<Triangulation<dim>&>(*this));
 

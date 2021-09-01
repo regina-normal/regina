@@ -551,6 +551,7 @@ Triangulation<dim>* Isomorphism<dim>::apply(
     unsigned long t;
     int f;
 
+    // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
     for (t = 0; t < nSimplices_; t++)
         tet[t] = ans->newSimplex();

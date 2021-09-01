@@ -307,6 +307,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         const std::string& sig) {
     std::unique_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
 
+    // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
 
     const char* c = sig.c_str();

@@ -2827,6 +2827,7 @@ void TriangulationBase<dim>::makeDoubleCover() {
     if (sheetSize == 0)
         return;
 
+    // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>&>(*this));
 
@@ -2925,6 +2926,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
         return;
 
     Triangulation<dim> staging;
+    // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(staging);
 
     static_assert(standardDim(dim),
@@ -3002,6 +3004,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     Simplex<dim>** cone = new Simplex<dim>*[nFaces];
 
     Triangulation<dim> staging;
+    // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span1(staging);
 
     for (Face<dim, dim - 1>* f : faces<dim - 1>()) {
@@ -3041,6 +3044,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
     // Now join the new simplices to the boundary facets of the original
     // triangulation.
+    // Again, ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span2(
         static_cast<Triangulation<dim>&>(*this));
 

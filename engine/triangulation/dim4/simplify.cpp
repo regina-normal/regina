@@ -208,6 +208,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
 
     // Perform the move.
     TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -307,6 +308,7 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
 
     // Perform the move.
     TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -394,6 +396,7 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
 
     // Actually perform the move.
     TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span(*this);
 
     // Unglue faces from the doomed pentachora and glue them to each other.
@@ -914,6 +917,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
 
     // Perform the move.
     TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span(*this);
     Perm<5> topPerm, botPerm;
     Pentachoron<4> *top, *bot;

@@ -48,6 +48,7 @@ bool Triangulation<3>::idealToFinite() {
         return false;
 
     Triangulation<3> staging;
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span1(staging);
 
     Tetrahedron<3> **newTet = new Tetrahedron<3>*[32*numOldTet];
@@ -134,6 +135,7 @@ bool Triangulation<3>::idealToFinite() {
             }
     }
 
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span2(*this);
 
     swap(staging);
@@ -165,6 +167,7 @@ void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
         tet = simplices_.front();
     }
 
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span(*this);
 
     // We will attach a pair of triangular prisms to face 123 of tet.
@@ -213,6 +216,7 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // From here we can assume that each triangulation contains at least
     // one tetrahedron.
 
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span(*this);
 
     Tetrahedron<3>* toPuncture[2];

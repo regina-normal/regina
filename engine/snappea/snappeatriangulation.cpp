@@ -767,6 +767,7 @@ void SnapPeaTriangulation::sync() {
     // the Triangulation<3> data if it has.
     syncing_ = true;
     {
+        // Ensure only one event pair is fired in this sequence of changes.
         ChangeEventSpan span(*this);
 
         // Deal with the combinatorial data and cusps first.
@@ -884,6 +885,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
 
 void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
         Triangulation<3>& dest) {
+    // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span(dest);
 
     regina::snappea::TriangulationData* tData;
