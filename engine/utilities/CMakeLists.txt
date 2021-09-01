@@ -42,6 +42,7 @@ if (${REGINA_INSTALL_DEV})
     sequence.h
     shortarray.h
     sigutils.h
+    snapshot.h
     stringutils.h
     stringutils-impl.h
     tightencoding.h

@@ -31,7 +31,10 @@
  **************************************************************************/
 
 /*! \file utilities/exception.h
- *  \brief Defines exception types thrown by Regina.
+ *  \brief Defines some general exception types thrown by Regina.
+ *  Note that some exceptions that are specific to a particular piece of
+ *  machinery (e.g., snapshotting and SnapPea-related exceptions) are
+ *  defined in other headers alongside that machinery.
  */
 
 #ifndef __REGINA_EXCEPTION_H
