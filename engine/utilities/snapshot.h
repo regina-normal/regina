@@ -217,7 +217,7 @@ class Snapshot {
         "Snapshot<T> requires T to be derived from Snapshottable<T>.");
 
     private:
-        T* value_;
+        const T* value_;
             /**< The object as it was when this snapshot was created.
                  We maintain this as a two-way link: value_->snapshot_
                  must also point to this object. */
@@ -233,7 +233,7 @@ class Snapshot {
          * snapshot was triggered by the creation of a new SnapshotRef,
          * and so the initial reference count will be set to 1.
          */
-        Snapshot(T* src) : value_(src), owner_(false), refCount_(1) {
+        Snapshot(const T* src) : value_(src), owner_(false), refCount_(1) {
         }
         /**
          * Destroys this snapshot.  If we took our own deep copy then this
@@ -269,6 +269,7 @@ class Snapshot {
         }
 
     friend class Snapshottable<T>;
+    friend class SnapshotRef<T>;
 };
 
 /**
@@ -307,7 +308,7 @@ class Snapshot {
 template <class T>
 class Snapshottable {
     private:
-        Snapshot<T>* snapshot_;
+        mutable Snapshot<T>* snapshot_;
             /**< The unique snapshot of this object in its present state,
                  or \c null if this object is not currently enrolled in
                  the snapshotting machinery. */
@@ -463,7 +464,7 @@ class Snapshottable {
             if (snapshot_)
                 ++snapshot_->refCount_;
             else
-                snapshot_ = new Snapshot(this);
+                snapshot_ = new Snapshot<T>(static_cast<const T*>(this));
             return snapshot_;
         }
 
@@ -685,7 +686,7 @@ class SnapshotRef {
          * @return a reference to the snapshot of the type \a T object.
          */
         const T* operator -> () const {
-            return *snapshot_->value_;
+            return snapshot_->value_;
         }
 };
 
