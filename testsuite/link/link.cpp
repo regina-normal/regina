@@ -824,7 +824,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testComplementS3(Link* l) {
             Triangulation<3>* c = l->complement();
-            if (! c->isThreeSphere()) {
+            if (! c->isSphere()) {
                 std::ostringstream msg;
                 msg << l->label() << " complement: not a 3-sphere "
                     "as expected.";

@@ -44,7 +44,7 @@ Face<4, 0>::~Face() {
 void Face<4, 0>::writeTextShort(std::ostream& out) const {
     if (! link_->isClosed())
         out << "Boundary ";
-    else if (link_->isThreeSphere())
+    else if (link_->isSphere())
         out << "Internal ";
     else
         out << "Ideal ";

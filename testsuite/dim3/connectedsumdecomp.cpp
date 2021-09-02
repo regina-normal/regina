@@ -451,7 +451,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
-                if (term->isThreeSphere()) {
+                if (term->isSphere()) {
                     std::ostringstream msg;
                     msg << "Triangulation " << tri->label()
                         << " reports a 3-sphere summand "

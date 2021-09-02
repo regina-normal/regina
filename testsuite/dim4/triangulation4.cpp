@@ -1279,7 +1279,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                                 "is not a closed 3-manifold.";
                             CPPUNIT_FAIL(msg.str());
                         }
-                        if (link->isThreeSphere()) {
+                        if (link->isSphere()) {
                             std::ostringstream msg;
                             msg << tri->label() << ", vertex "
                                 << i << ": "
@@ -1288,7 +1288,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else {
-                        if (! link->isThreeSphere()) {
+                        if (! link->isSphere()) {
                             std::ostringstream msg;
                             msg << tri->label() << ", vertex "
                                 << i << ": "

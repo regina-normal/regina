@@ -1773,7 +1773,7 @@ void HomologicalData::computeEmbeddabilityString() {
         { // no boundary : orientable
             if (torRankV.size()==0) 
             { // no torsion : no boundary, orientable
-                if (tri_.knowsThreeSphere() && tri_.isThreeSphere())
+                if (tri_.knowsSphere() && tri_.isSphere())
                     embeddabilityString = "This manifold is S^3.";
                 else if (dualHomology(1).isTrivial())
                     embeddabilityString = "Manifold is a homology 3-sphere.";

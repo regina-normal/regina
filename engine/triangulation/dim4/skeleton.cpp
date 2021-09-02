@@ -167,7 +167,7 @@ void Triangulation<4>::calculateVertexLinks() {
                 vertex->boundaryComponent_->push_back(vertex);
                 boundaryComponents_.push_back(vertex->boundaryComponent_);
             } else if ((! knownSimpleLinks_) &&
-                    ! vertex->link_->isThreeSphere()) {
+                    ! vertex->link_->isSphere()) {
                 // The vertex is fine but it's not a 3-sphere.
                 // We have an ideal triangulation.
                 ideal_ = vertex->component()->ideal_ = vertex->ideal_ = true;

@@ -2249,7 +2249,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 tri->setLabel(name);
 
             clearProperties(*tri);
-            if (! tri->isThreeSphere()) {
+            if (! tri->isSphere()) {
                 CPPUNIT_FAIL(("The 3-sphere " + tri->label() +
                     " is not recognised as such.").c_str());
             }
@@ -2258,7 +2258,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
             clearProperties(big);
-            if (! big.isThreeSphere()) {
+            if (! big.isSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-sphere "
                     + tri->label() + " is not recognised as such.").c_str());
             }
@@ -2284,7 +2284,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 tri->setLabel(name);
 
             clearProperties(*tri);
-            if (tri->isThreeSphere()) {
+            if (tri->isSphere()) {
                 CPPUNIT_FAIL(("The non-3-sphere " + tri->label() +
                     " is recognised as a 3-sphere.").c_str());
             }
@@ -2293,7 +2293,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
             clearProperties(big);
-            if (big.isThreeSphere()) {
+            if (big.isSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-sphere "
                     + tri->label()
                     + " is recognised as a 3-sphere.").c_str());
@@ -2346,7 +2346,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // What did 3-sphere recognition say?
             clearProperties(*tri);
-            bool found = tri->isThreeSphere();
+            bool found = tri->isSphere();
 
             clearProperties(*tri);
             bool expected = (tri->isValid() &&
@@ -3545,7 +3545,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
                 Triangulation<3> tmp1(snap);
                 tmp1.pinchEdge(tmp1.edge(1));
-                if (! tmp1.isThreeSphere())
+                if (! tmp1.isSphere())
                     CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 1 "
                         "does not give a 3-sphere.");
 
@@ -4630,7 +4630,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
                     tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
                     0, 1, 1);
-                if (! tmp.isThreeSphere()) {
+                if (! tmp.isSphere()) {
                     std::ostringstream msg;
                     msg << orig.label() << ": filling along meridian "
                         "does not give the 3-sphere.";

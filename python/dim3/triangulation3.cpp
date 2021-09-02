@@ -383,8 +383,10 @@ void addTriangulation3(pybind11::module_& m) {
         },
             pybind11::arg("primeParent") = nullptr,
             pybind11::arg("setLabels") = true)
-        .def("isThreeSphere", &Triangulation<3>::isThreeSphere)
-        .def("knowsThreeSphere", &Triangulation<3>::knowsThreeSphere)
+        .def("isSphere", &Triangulation<3>::isSphere)
+        .def("isThreeSphere", &Triangulation<3>::isSphere) // deprecated
+        .def("knowsSphere", &Triangulation<3>::knowsSphere)
+        .def("knowsThreeSphere", &Triangulation<3>::knowsSphere) // deprecated
         .def("isBall", &Triangulation<3>::isBall)
         .def("knowsBall", &Triangulation<3>::knowsBall)
         .def("makeZeroEfficient", [](Triangulation<3>& t) -> regina::Packet* {
