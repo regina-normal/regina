@@ -33,6 +33,7 @@
 #include <cctype>
 #include <cerrno>
 #include <cstdlib>
+#include <cstring>
 #include <mutex>
 #include "maths/integer.h"
 #include "maths/numbertheory.h"
