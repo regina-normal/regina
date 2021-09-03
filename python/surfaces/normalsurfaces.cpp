@@ -69,6 +69,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             pybind11::arg("which") = regina::NS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
+        .def(pybind11::init<const NormalSurfaces&, regina::NormalTransform>())
         .def("coords", &NormalSurfaces::coords)
         .def("which", &NormalSurfaces::which)
         .def("algorithm", &NormalSurfaces::algorithm)
@@ -103,17 +104,98 @@ void addNormalSurfaces(pybind11::module_& m) {
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::NS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::NS_ALG_DEFAULT)
-        .def("quadToStandard", &NormalSurfaces::quadToStandard)
-        .def("quadOctToStandardAN", &NormalSurfaces::quadOctToStandardAN)
-        .def("standardToQuad", &NormalSurfaces::standardToQuad)
-        .def("standardANToQuadOct", &NormalSurfaces::standardANToQuadOct)
+        .def("quadToStandard", [](const NormalSurfaces& src)
+                -> NormalSurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                auto ans = new NormalSurfaces(src,
+                    regina::NS_CONV_REDUCED_TO_STD);
+                if (src.parent())
+                    src.parent()->insertChildLast(ans);
+                return ans;
+            } catch (const regina::FailedPrecondition&) {
+                return nullptr;
+            }
+        })
+        .def("quadOctToStandardAN", [](const NormalSurfaces& src)
+                -> NormalSurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                auto ans = new NormalSurfaces(src,
+                    regina::NS_CONV_REDUCED_TO_STD);
+                if (src.parent())
+                    src.parent()->insertChildLast(ans);
+                return ans;
+            } catch (const regina::FailedPrecondition&) {
+                return nullptr;
+            }
+        })
+        .def("standardToQuad", [](const NormalSurfaces& src)
+                -> NormalSurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                auto ans = new NormalSurfaces(src,
+                    regina::NS_CONV_STD_TO_REDUCED);
+                if (src.parent())
+                    src.parent()->insertChildLast(ans);
+                return ans;
+            } catch (const regina::FailedPrecondition&) {
+                return nullptr;
+            }
+        })
+        .def("standardANToQuadOct", [](const NormalSurfaces& src)
+                -> NormalSurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                auto ans = new NormalSurfaces(src,
+                    regina::NS_CONV_STD_TO_REDUCED);
+                if (src.parent())
+                    src.parent()->insertChildLast(ans);
+                return ans;
+            } catch (const regina::FailedPrecondition&) {
+                return nullptr;
+            }
+        })
         .def("filter", &NormalSurfaces::filter)
-        .def("filterForLocallyCompatiblePairs",
-            &NormalSurfaces::filterForLocallyCompatiblePairs)
-        .def("filterForDisjointPairs",
-            &NormalSurfaces::filterForDisjointPairs)
-        .def("filterForPotentiallyIncompressible",
-            &NormalSurfaces::filterForPotentiallyIncompressible)
+        .def("filterForLocallyCompatiblePairs", [](const NormalSurfaces& src)
+                -> NormalSurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                auto ans = new NormalSurfaces(src,
+                    regina::NS_FILTER_COMPATIBLE);
+                if (src.parent())
+                    src.parent()->insertChildLast(ans);
+                return ans;
+            } catch (const regina::FailedPrecondition&) {
+                return nullptr;
+            }
+        })
+        .def("filterForDisjointPairs", [](const NormalSurfaces& src)
+                -> NormalSurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                auto ans = new NormalSurfaces(src,
+                    regina::NS_FILTER_DISJOINT);
+                if (src.parent())
+                    src.parent()->insertChildLast(ans);
+                return ans;
+            } catch (const regina::FailedPrecondition&) {
+                return nullptr;
+            }
+        })
+        .def("filterForPotentiallyIncompressible", [](const NormalSurfaces& src)
+                -> NormalSurfaces* {
+            // This is deprecated, so we reimplement it here ourselves.
+            try {
+                auto ans = new NormalSurfaces(src,
+                    regina::NS_FILTER_INCOMPRESSIBLE);
+                if (src.parent())
+                    src.parent()->insertChildLast(ans);
+                return ans;
+            } catch (const regina::FailedPrecondition&) {
+                return nullptr;
+            }
+        })
         .def("recreateMatchingEquations",
             &NormalSurfaces::recreateMatchingEquations)
         .def("saveCSVStandard", &NormalSurfaces::saveCSVStandard,

@@ -1491,12 +1491,12 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             }
 
             // Only test standard-to-quad if the preconditions for
-            // standardToQuad() hold.
+            // NS_CONV_STD_TO_REDUCED hold.
             if (tri->isValid() && ! tri->isIdeal()) {
                 NormalSurfaces quadDirect(*tri, NS_QUAD);
-                std::unique_ptr<NormalSurfaces> quadConv(
-                    stdDirect.standardToQuad());
-                if (! identical(quadDirect, *quadConv)) {
+                NormalSurfaces quadConv(stdDirect,
+                    regina::NS_CONV_STD_TO_REDUCED);
+                if (! identical(quadDirect, quadConv)) {
                     std::ostringstream msg;
                     msg << "Direct enumeration vs conversion gives different "
                         "surfaces in quadrilateral coordinates for "
@@ -1552,12 +1552,12 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             }
 
             // Only test standard-to-quad if the preconditions for
-            // standardToQuad() hold.
+            // NS_CONV_STD_TO_REDUCED hold.
             if (tri->isValid() && ! tri->isIdeal()) {
                 NormalSurfaces quadDirect(*tri, NS_AN_QUAD_OCT);
-                std::unique_ptr<NormalSurfaces> quadConv(
-                    stdDirect.standardANToQuadOct());
-                if (! identical(quadDirect, *quadConv)) {
+                NormalSurfaces quadConv(stdDirect,
+                    regina::NS_CONV_STD_TO_REDUCED);
+                if (! identical(quadDirect, quadConv)) {
                     std::ostringstream msg;
                     msg << "Direct enumeration vs conversion gives different "
                         "surfaces in quadrilateral-octagon coordinates for "

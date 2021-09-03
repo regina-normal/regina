@@ -584,13 +584,12 @@ class TreeTraversal : public BanConstraint {
  * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
- * \warning Although the tree traversal algorithm can run in standard
- * normal or almost normal coordinates, this is not recommended: it is likely
- * to be \e much slower than in quadrilateral or quadrilateral-octagon
- * coordinates respectively.  Instead you should enumerate vertex
- * solutions using quadrilateral or quadrilateral-octagon coordinates, and
- * then run the conversion procedure NormalSurfaces::quadToStandard()
- * or NormalSurfaces::quadOctToStandardAN().
+ * \warning Although the tree traversal algorithm can run in standard normal
+ * or almost normal coordinates, this is not recommended: it is likely to be
+ * \e much slower than in quadrilateral or quadrilateral-octagon coordinates
+ * respectively.  Instead you should enumerate vertex solutions using
+ * quadrilateral or quadrilateral-octagon coordinates, and then use the
+ * "transform constructor" <tt>NormalSurfaces(..., NS_CONV_REDUCED_TO_STD)</tt>.
  *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.

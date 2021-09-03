@@ -36,48 +36,22 @@
 
 namespace regina {
 
-NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
-    // And off we go!
-    const Triangulation<3>& owner = triangulation();
-
-    // Run some basic sanity checks, and prepare a final surface list.
-    if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
-        return nullptr;
-    if (owner.isIdeal() || ! owner.isValid())
-        return nullptr;
-
-    bool almostNormal;
-    NormalSurfaces* ans;
-    switch (coords_) {
-        case NS_STANDARD:
-            almostNormal = false;
-            ans = new NormalSurfaces(NS_QUAD,
-                NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM, triangulation_);
-            break;
-        case NS_AN_STANDARD:
-            almostNormal = true;
-            ans = new NormalSurfaces(NS_AN_QUAD_OCT,
-                NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM, triangulation_);
-            break;
-        default:
-            return nullptr;
-    }
-
+void NormalSurfaces::buildReducedFromStandard(
+        const std::vector<NormalSurface>& stdList) {
     // Get the empty triangulation out of the way now.
-    unsigned long n = owner.size();
-    if (n == 0) {
-        if (parent())
-            parent()->insertChildLast(ans);
-        return ans;
-    }
+    unsigned long n = triangulation_->size();
+    if (n == 0)
+        return;
+
+    bool almostNormal = allowsAlmostNormal();
 
     // We need to get rid of vertex links entirely before we start.
     // Build a new list of pointers to the (non-vertex-linking) surfaces
     // that we are interested in.
-    const NormalSurface** use = new const NormalSurface*[surfaces_.size()];
+    const NormalSurface** use = new const NormalSurface*[stdList.size()];
     size_t nUse = 0;
 
-    for (const NormalSurface& s : surfaces_)
+    for (const NormalSurface& s : stdList)
         if (! s.isVertexLinking())
             use[nUse++] = &s;
 
@@ -143,7 +117,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
             // Not doing so is harmless but a bit wasteful.
             // However, the entire standard-to-quad conversion is also
             // somewhat unnecessary and wasteful, so leave this alone for now.
-            ans->surfaces_.push_back(*use[i]);
+            surfaces_.push_back(*use[i]);
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if
@@ -158,11 +132,6 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     }
 
     delete[] use;
-
-    // All done!
-    if (parent())
-        parent()->insertChildLast(ans);
-    return ans;
 }
 
 } // namespace regina

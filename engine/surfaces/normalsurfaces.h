@@ -280,11 +280,42 @@ class NormalSurfaces : public Packet {
             ProgressTracker* tracker = nullptr);
 
         /**
+         * A unified constructor for transforming one normal surface list
+         * into another.
+         *
+         * The available transformations include:
+         *
+         * - conversions between vertex surfaces in different coordinate
+         *   systems, which were formerly provided by the deprecated functions
+         *   quadToStandard(), quadOctToStandardAN(), standardToQuad()
+         *   and standardANToQuadOct();
+         *
+         * - filters that select a subset of surfaces, which were formerly
+         *   provided by the deprecated functions filter(),
+         *   filterForLocallyCompatiblePairs(), filterForDisjointPairs(),
+         *   and filterForPotentiallyIncompressible().
+         *
+         * Each transformation comes with its own set of preconditions,
+         * as documented alongside the various NormalTransform enumeration
+         * constants.  These preconditions will be checked, and if any of them
+         * fails then this constructor will throw a FailedPrecondition
+         * exception.
+         *
+         * Unlike the old conversion and filter functions, this constructor
+         * will \e not insert the new normal surface list into the packet tree.
+         *
+         * @param src the normal surface list that we wish to transform;
+         * this will not be modified.
+         * @param transform the specific transformation to apply.
+         */
+        NormalSurfaces(const NormalSurfaces& src, NormalTransform transform);
+
+        /**
          * Deprecated routine to enumerate normal surfaces within a given
          * triangulation.
          *
-         * This static routine is identical to calling the class
-         * constructor with the given arguments, but with two differences:
+         * This static routine is identical to calling the class "enumeration
+         * constructor" with the given arguments, but with two differences:
          *
          * - Unlike the class constructor, this routine will also insert
          *   the normal surface list beneath \a owner in the packet tree.
@@ -296,10 +327,10 @@ class NormalSurfaces : public Packet {
          * - If there is an error, then the class constructor will throw
          *   an exception, whereas this routine will simply return \c null.
          *
-         * See the class constructor for details on how this routine works
-         * and what the arguments mean.
+         * See the class "enumeration constructor" for details on how this
+         * routine works and what the arguments mean.
          *
-         * \deprecated Just call the NormalSurfaces constructor.
+         * \deprecated Just call the NormalSurfaces "enumeration constructor".
          *
          * \ifacespython For this deprecated function, the progress tracker
          * argument is omitted.  It is still possible to enumerate in
@@ -493,167 +524,132 @@ class NormalSurfaces : public Packet {
         virtual bool dependsOnParent() const override;
 
         /**
-         * Converts the set of all embedded vertex normal surfaces in
-         * quadrilateral space to the set of all embedded vertex normal
-         * surfaces in standard (tri-quad) space.  The initial list in
-         * quadrilateral space is taken to be this normal surface list;
-         * the final list in standard space will be inserted as a new
-         * child packet of the underlying triangulation (specifically, as
-         * the final child).  As a convenience, the final list will also
-         * be returned from this routine.
+         * Deprecated function that converts the set of all embedded
+         * vertex normal surfaces in quadrilateral space to the set of all
+         * embedded vertex normal surfaces in standard (tri-quad) space.
+         * The input list will be taken as this list; the output list
+         * will be returned and also inserted into the packet tree (see below).
          *
-         * This routine can only be used with normal surfaces, not almost
-         * normal surfaces.  For almost normal surfaces, see the similar
-         * routine quadOctToStandardAN().
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD)</tt>, but
+         * with two key differences:
          *
-         * This procedure is available for any triangulation whose vertex
-         * links are all spheres and/or discs, and is \e much faster than
-         * enumerating surfaces directly in standard tri-quad coordinates.
-         * The underlying algorithm is described in detail in "Converting
-         * between quadrilateral and standard solution sets in normal
-         * surface theory", Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009),
-         * 2121-2174.
+         * - Unlike the transform constructor, this routine will also insert
+         *   the output list into the packet tree, beneath the same parent
+         *   packet as this (i.e., the same parent as the input list).
          *
-         * Typically users do not need to call this routine directly,
-         * since the standard enumerate() routine will use it implicitly
-         * where possible.  That is, when asked for standard vertex surfaces,
-         * enumerate() will first find all \e quadrilateral vertex surfaces
-         * and then use this procedure to convert them to standard vertex
-         * surfaces; this is generally orders of magnitude faster than
-         * enumerating surfaces directly in standard coordinates.
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * Nevertheless, this standalone routine is provided as a convenience
-         * for users who already have a set of quadrilateral vertex surfaces,
-         * and who simply wish to convert them to a set of standard
-         * vertex surfaces without the cost of implicitly enumerating the
-         * quadrilateral vertex surfaces again.
+         * See the class "transform constructor" for details on how this
+         * routine works and what the arguments mean.  See the NormalList
+         * enumeration (in particular, the NS_CONV_REDUCED_TO_STD value)
+         * for the preconditions on the triangulation and the input list.
          *
-         * It should be noted that this routine does \e not simply convert
-         * vectors from one form to another; instead it converts a full
-         * solution set of vertex surfaces in quadrilateral coordinates to a
-         * full solution set of vertex surfaces in standard coordinates.
-         * Typically there are many more vertex surfaces in standard
-         * coordinates (all of which this routine will find).
+         * \deprecated Just call the NormalSurfaces "transform constructor".
          *
-         * This routine will run some very basic sanity checks before
-         * starting.  Specifically, it will check the validity and vertex
-         * links of the underlying triangulation, and will verify that
-         * the coordinate system and embedded-only flag are set to
-         * NS_QUAD and \c true respectively.  If any of
-         * these checks fails, this routine will do nothing and return \c null.
-         *
-         * \pre The underlying triangulation (the parent packet of this
-         * normal surface list) is valid, and the link of every vertex
-         * is either a sphere or a disc.
-         * \pre This normal surface list is precisely the set of all
-         * embedded vertex normal surfaces in quadrilateral space; no more,
-         * no less.  Moreover, these vectors are stored using quadrilateral
-         * coordinates.  Typically this means that it was obtained through
-         * enumerate(), with the coordinate system set to NS_QUAD and
-         * with \a embeddedOnly set to \c true.
-         *
-         * @return a full list of vertex normal surfaces in standard (tri-quad)
-         * coordinates, or \c null if any of the basic sanity checks failed.
+         * @return a full list of vertex normal surfaces in standard normal
+         * coordinates, or \c null if any of the preconditions were not
+         * satisfied.
          */
-        NormalSurfaces* quadToStandard() const;
+        [[deprecated]] NormalSurfaces* quadToStandard() const;
 
         /**
-         * Converts the set of all embedded vertex almost normal surfaces in
-         * quadrilateral-octagon space to the set of all embedded vertex
-         * almost normal surfaces in the standard tri-quad-oct space.
+         * Deprecated function that converts the set of all embedded vertex
+         * surfaces in quadrilateral-octagon space to the set of all embedded
+         * vertex surfaces in standard almost normal (tri-quad-oct) space.
+         * The input list will be taken as this list; the output list will be
+         * returned and also inserted into the packet tree (see below).
          *
-         * This routine is the almost normal analogue to the
-         * quadToStandard() conversion routine; see the quadToStandard()
-         * documentation for further information.
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD)</tt>, but
+         * with two key differences:
          *
-         * \pre The underlying triangulation (the parent packet of this
-         * normal surface list) is valid, and the link of every vertex
-         * is either a sphere or a disc.
-         * \pre This surface list is precisely the set of all embedded vertex
-         * almost normal surfaces in quadrilateral-octagon space; no more,
-         * no less.  Moreover, these vectors are stored using
-         * quadrilateral-octagon coordinates.  Typically this means that it
-         * was obtained through enumerate(), with the coordinate system set to
-         * NS_AN_QUAD_OCT and with \a embeddedOnly set to \c true.
+         * - Unlike the transform constructor, this routine will also insert
+         *   the output list into the packet tree, beneath the same parent
+         *   packet as this (i.e., the same parent as the input list).
          *
-         * @return a full list of vertex almost normal surfaces in standard
-         * tri-quad-oct coordinates, or \c null if any of the basic sanity
-         * checks failed.
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
+         *
+         * See the class "transform constructor" for details on how this
+         * routine works and what the arguments mean.  See the NormalList
+         * enumeration (in particular, the NS_CONV_REDUCED_TO_STD value)
+         * for the preconditions on the triangulation and the input list.
+         *
+         * \deprecated Just call the NormalSurfaces "transform constructor".
+         *
+         * @return a full list of vertex surfaces in standard almost normal
+         * coordinates, or \c null if any of the preconditions were not
+         * satisfied.
          */
-        NormalSurfaces* quadOctToStandardAN() const;
+        [[deprecated]] NormalSurfaces* quadOctToStandardAN() const;
 
         /**
-         * Converts the set of all embedded vertex normal surfaces in
-         * standard (tri-quad) space to the set of all embedded vertex
-         * normal surfaces in quadrilateral space.  The initial list in
-         * standard space is taken to be this normal surface list;
-         * the final list in quadrilateral space will be inserted as a new
-         * child packet of the underlying triangulation (specifically, as
-         * the final child).  As a convenience, the final list will also
-         * be returned from this routine.
+         * Deprecated function that converts the set of all embedded
+         * vertex normal surfaces in standard (tri-quad) space to the set of
+         * all embedded vertex normal surfaces in quadrilateral space.
+         * The input list will be taken as this list; the output list
+         * will be returned and also inserted into the packet tree (see below).
          *
-         * This routine can only be used with normal surfaces, not almost
-         * normal surfaces.  For almost normal surfaces, see the similar
-         * routine standardANToQuadOct().
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED)</tt>, but
+         * with two key differences:
          *
-         * This procedure is available for any triangulation whose vertex
-         * links are all spheres and/or discs.  The underlying algorithm
-         * is described in detail in "Converting between quadrilateral and
-         * standard solution sets in normal surface theory",
-         * Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009), 2121-2174.
+         * - Unlike the transform constructor, this routine will also insert
+         *   the output list into the packet tree, beneath the same parent
+         *   packet as this (i.e., the same parent as the input list).
          *
-         * It should be noted that this routine does \e not simply convert
-         * vectors from one form to another; instead it converts a full
-         * solution set of vertex surfaces in standard coordinates to a
-         * full solution set of vertex surfaces in quadrilateral coordinates.
-         * Typically there are far fewer vertex surfaces in quadrilateral
-         * coordinates (all of which this routine will find).
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * This routine will run some very basic sanity checks before
-         * starting.  Specifically, it will check the validity and vertex
-         * links of the underlying triangulation, and will verify that
-         * the coordinate system and embedded-only flag are set to
-         * NS_STANDARD and \c true respectively.  If any of
-         * these checks fails, this routine will do nothing and return \c null.
+         * See the class "transform constructor" for details on how this
+         * routine works and what the arguments mean.  See the NormalList
+         * enumeration (in particular, the NS_CONV_STD_TO_REDUCED value)
+         * for the preconditions on the triangulation and the input list.
          *
-         * \pre The underlying triangulation (the parent packet of this
-         * normal surface list) is valid, and the link of every vertex
-         * is either a sphere or a disc.
-         * \pre This normal surface list is precisely the set of all
-         * embedded vertex normal surfaces in standard (tri-quad) space;
-         * no more, no less.  Moreover, these vectors are stored using
-         * standard coordinates.  Typically this means that this list was
-         * obtained through enumerate(), with the coordinate system set to
-         * NS_STANDARD and with \a embeddedOnly set to \c true.
+         * \deprecated Just call the NormalSurfaces "transform constructor".
          *
          * @return a full list of vertex normal surfaces in quadrilateral
-         * coordinates, or \c null if any of the basic sanity checks failed.
+         * coordinates, or \c null if any of the preconditions were not
+         * satisfied.
          */
-        NormalSurfaces* standardToQuad() const;
+        [[deprecated]] NormalSurfaces* standardToQuad() const;
 
         /**
-         * Converts the set of all embedded vertex almost normal surfaces in
-         * standard tri-quad-oct space to the set of all embedded vertex
-         * almost normal surfaces in the smaller quadrilateral-octagon space.
+         * Deprecated function that converts the set of all embedded vertex
+         * surfaces in standard almost normal (tri-quad-oct) space to the set
+         * of all embedded vertex surfaces in quadrilateral-octagon space.
+         * The input list will be taken as this list; the output list
+         * will be returned and also inserted into the packet tree (see below).
          *
-         * This routine is the almost normal analogue to the
-         * standardToQuad() conversion routine; see the standardToQuad()
-         * documentation for further information.
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED)</tt>, but
+         * with two key differences:
          *
-         * \pre The underlying triangulation (the parent packet of this
-         * normal surface list) is valid, and the link of every vertex
-         * is either a sphere or a disc.
-         * \pre This normal surface list is precisely the set of all
-         * embedded vertex almost normal surfaces in standard tri-quad-oct
-         * space; no more, no less.  Typically this means that it was obtained
-         * through enumerate(), with the coordinate system set to
-         * NS_AN_STANDARD and with \a embeddedOnly set to \c true.
+         * - Unlike the transform constructor, this routine will also insert
+         *   the output list into the packet tree, beneath the same parent
+         *   packet as this (i.e., the same parent as the input list).
          *
-         * @return a full list of vertex almost normal surfaces in
-         * quadrilateral-octagon coordinates, or \c null if any of the basic
-         * sanity checks failed.
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
+         *
+         * See the class "transform constructor" for details on how this
+         * routine works and what the arguments mean.  See the NormalList
+         * enumeration (in particular, the NS_CONV_STD_TO_REDUCED value)
+         * for the preconditions on the triangulation and the input list.
+         *
+         * \deprecated Just call the NormalSurfaces "transform constructor".
+         *
+         * @return a full list of vertex surfaces in quadrilateral-octagon
+         * coordinates, or \c null if any of the preconditions were not
+         * satisfied.
          */
-        NormalSurfaces* standardANToQuadOct() const;
+        [[deprecated]] NormalSurfaces* standardANToQuadOct() const;
 
         /**
          * Sorts the surfaces in this list according to the given criterion.
@@ -1094,19 +1090,11 @@ class NormalSurfaces : public Packet {
          * Converts a set of embedded vertex normal surfaces in
          * (quad or quad-oct) space to a set of embedded vertex normal
          * surfaces in (standard normal or standard almost normal) space.
-         * The original (quad or quad-oct) space surfaces are passed in
-         * the argument \a quadList, and the resulting (standard normal
-         * or standard almost normal) space surfaces will be inserted
-         * directly into this list.
+         * The original surfaces are passed in the argument \a reducedList,
+         * and the resulting surfaces will be inserted directly into this list.
          *
-         * See quadToStandard() and quadOctToStandardAN() for full details
+         * See NormalTransform::NS_CONV_REDUCED_TO_STD for full details
          * and preconditions for this procedure.
-         *
-         * This routine is designed to work with surface lists that are
-         * still under construction.  As such, it ignores the packet
-         * tree completely.  The parent packet is ignored (and not changed);
-         * instead the underlying triangulation is passed explicitly as
-         * the argument \a triangulation.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -1120,20 +1108,16 @@ class NormalSurfaces : public Packet {
          * file that needs it.
          *
          * \pre The coordinate system for this surface list is set to
-         * NS_STANDARD or NS_AN_STANDARD, according to whether we are doing
-         * the work for quadToStandard() or quadOctToStandardAN() respectively,
-         * and the embedded-only flag is set to \c true.
-         * \pre The given triangulation is valid and non-empty, and the link
+         * NS_STANDARD or NS_AN_STANDARD, and the embedded-only flag is \c true.
+         * \pre The underlying triangulation is valid, and the link
          * of every vertex is either a sphere or a disc.
          *
-         * @param triangulation the triangulation upon which this list of
-         * surfaces is to be based.
          * @param reducedList a full list of vertex surfaces in
-         * (quad or quad-oct) coordinates for the given triangulation.
+         * (quad or quad-oct) coordinates for the underlying triangulation.
          * @param tracker a progress tracker to be used for progress reporting
          * and cancellation requests, or \c null if this is not required.
          */
-        void buildStandardFromReduced(const Triangulation<3>& triangulation,
+        void buildStandardFromReduced(
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker = nullptr);
 
@@ -1151,37 +1135,35 @@ class NormalSurfaces : public Packet {
          * \pre The template argument \a BitmaskType can support
          * bitmasks of size 7 \a n (if we are using normal surfaces) or size
          * 10 \a n (if we are using almost normal surfaces), where \a n is
-         * the number of tetrahedra in the given triangulation.
+         * the number of tetrahedra in the underlying triangulation.
+         * \pre The underlying triangulation (in addition to the other
+         * preconditions) is non-empty.
          */
         template <class BitmaskType>
         void buildStandardFromReducedUsing(
-            const Triangulation<3>& triangulation,
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker);
 
         /**
-         * Converts a set of embedded vertex surfaces in (quad or quad-oct)
-         * space to a set of embedded vertex surfaces in (standard normal or
-         * standard almost normal) space.
+         * Converts a set of embedded vertex normal surfaces in
+         * (standard normal or almost normal) space to a set of embedded
+         * vertex normal surfaces in (quad or quad-oct) space.
+         * The original surfaces are passed in the argument \a stdList, and the
+         * resulting surfaces will be inserted directly into this list.
          *
-         * This is a generic implementation that performs the real work
-         * for both quadToStandard() and quadOctToStandardAN().  See each
-         * of those routines for further details as well as relevant
-         * preconditions and postconditions.
-         */
-        NormalSurfaces* internalReducedToStandard() const;
-
-        /**
-         * Converts a set of embedded vertex surfaces in
-         * (standard normal or standard almost normal) space to a set of
-         * embedded vertex surfaces in (quad or quad-oct) space.
+         * See NormalTransform::NS_CONV_STD_TO_REDUCED for full details
+         * and preconditions for this procedure.
          *
-         * This is a generic implementation that performs the real work
-         * for both standardToQuad() and standardANToQuadOct().  See each
-         * of those routines for further details as well as relevant
-         * preconditions and postconditions.
+         * \pre The coordinate system for this surface list is set to NS_QUAD
+         * or NS_AN_QUAD_OCT, and the embedded-only flag is set to \c true.
+         * \pre The underlying triangulation is valid, and the link
+         * of every vertex is either a sphere or a disc.
+         *
+         * @param stdList a full list of vertex surfaces in standard normal or
+         * almost normal coordinates for the underlying triangulation.
          */
-        NormalSurfaces* internalStandardToReduced() const;
+        void buildReducedFromStandard(
+            const std::vector<NormalSurface>& stdList);
 
         /**
          * Contains the code responsible for all normal surface enumeration.
@@ -1505,19 +1487,47 @@ inline void NormalSurfaces::sort(Comparison&& comp) {
 }
 
 inline NormalSurfaces* NormalSurfaces::quadToStandard() const {
-    return internalReducedToStandard();
+    try {
+        auto ans = new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
+        if (parent())
+            parent()->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
 }
 
 inline NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
-    return internalReducedToStandard();
+    try {
+        auto ans = new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
+        if (parent())
+            parent()->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
 }
 
 inline NormalSurfaces* NormalSurfaces::standardToQuad() const {
-    return internalStandardToReduced();
+    try {
+        auto ans = new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
+        if (parent())
+            parent()->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
 }
 
 inline NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
-    return internalStandardToReduced();
+    try {
+        auto ans = new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
+        if (parent())
+            parent()->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator() {

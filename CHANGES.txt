@@ -579,7 +579,8 @@ Version 7.0  [ TODO ]
               that was originally used can be safely modified or even deleted.
             - Now supports enumeration in prism coordinates (HS_PRISM).
             - Replaced enumerate() with a class constructor; this will
-              throw an exception on error (instead of returning null).
+              throw an exception on error (instead of returning null),
+              and will not insert the new list into the packet tree.
               The old enumerate() function is kept as a deprecated alias,
               but Python users can no longer use it with a progress tracker.
             - New function hypersurfaces() for simpler iteration.
@@ -637,9 +638,16 @@ Version 7.0  [ TODO ]
               triangulation at the time of creation.  The triangulation
               that was originally used can be safely modified or even deleted.
             - Replaced enumerate() with a class constructor; this will
-              throw an exception on error (instead of returning null).
+              throw an exception on error (instead of returning null),
+              and will not insert the new list into the packet tree.
               The old enumerate() function is kept as a deprecated alias,
               but Python users can no longer use it with a progress tracker.
+            - Replaced quadToStandard(), quadOctToStandardAN(), standardToQuad()
+              and standardANToQuadOct() with a single class constructor
+              that takes a NormalTransform,; this will throw an exception on
+              error (instead of returning null), and will not insert the new
+              list into the packet tree.  The old functions are kept as
+              deprecated aliases.
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
@@ -657,6 +665,8 @@ Version 7.0  [ TODO ]
         Class NormalSurfaceVector, NormalHypersurfaceVector:
             - Removed completely.  Normal surfaces/hypersurfaces now hold
               their coordinates using a plain Vector<LargeInteger>.
+        Enum NormalTransform:
+            - New enumeration to support conversions and filters.
         Class NSVectorMirrored:
             - Changed makeMirror() to take its triangulation by reference,
               not by pointer.  Also removed the static versions of makeMirror();

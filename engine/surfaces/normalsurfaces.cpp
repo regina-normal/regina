@@ -47,6 +47,97 @@ MatrixInt NormalSurfaces::recreateMatchingEquations() const {
     return *makeMatchingEquations(triangulation(), coords_);
 }
 
+namespace {
+    inline constexpr NormalCoords transformCoords(NormalCoords src,
+            NormalTransform t) {
+        switch (t) {
+            case NS_CONV_REDUCED_TO_STD:
+                switch (src) {
+                    case NS_QUAD: return NS_STANDARD;
+                    case NS_AN_QUAD_OCT: return NS_AN_STANDARD;
+                    default:
+                        throw FailedPrecondition("Reduced-to-standard "
+                            "conversion is only available from coordinate "
+                            "systems NS_QUAD and NS_AN_QUAD_OCT");
+                }
+            case NS_CONV_STD_TO_REDUCED:
+                switch (src) {
+                    case NS_STANDARD: return NS_QUAD;
+                    case NS_AN_STANDARD: return NS_AN_QUAD_OCT;
+                    default:
+                        throw FailedPrecondition("Standard-to-reduced "
+                            "conversion is only available from coordinate "
+                            "systems NS_STANDARD and NS_AN_STANDARD");
+                }
+            default:
+                return src;
+        }
+    }
+
+    inline NormalList transformList(NormalList src, NormalTransform t) {
+        switch (t) {
+            case NS_CONV_REDUCED_TO_STD:
+            case NS_CONV_STD_TO_REDUCED:
+                if (src != (NS_EMBEDDED_ONLY | NS_VERTEX))
+                    throw FailedPrecondition("Conversion between "
+                        "standard and reduced coordinate systems requires "
+                        "the source list to contain exactly all "
+                        "embedded vertex surfaces");
+                return src;
+            case NS_FILTER_COMPATIBLE:
+            case NS_FILTER_DISJOINT:
+            case NS_FILTER_INCOMPRESSIBLE:
+                return NS_CUSTOM | NS_EMBEDDED_ONLY;
+            default:
+                return NS_CUSTOM;
+        }
+    }
+
+    inline NormalAlg transformAlg(NormalAlg src, NormalTransform t) {
+        switch (t) {
+            case NS_CONV_REDUCED_TO_STD:
+                return src | NS_VERTEX_VIA_REDUCED;
+            default:
+                return NS_ALG_CUSTOM;
+        }
+    }
+}
+
+NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
+        NormalTransform transform) :
+        NormalSurfaces(transformCoords(src.coords_, transform),
+            transformList(src.which_, transform),
+            transformAlg(src.algorithm_, transform), src.triangulation_) {
+    switch (transform) {
+        case NS_CONV_REDUCED_TO_STD:
+            if (src.triangulation_->isIdeal() ||
+                    ! src.triangulation_->isValid())
+                throw FailedPrecondition("Conversion from reduced to "
+                    "standard coordinate systems requires a "
+                    "valid, non-ideal triangulation");
+
+            buildStandardFromReduced(src.surfaces_);
+            break;
+        case NS_CONV_STD_TO_REDUCED:
+            if (src.triangulation_->isIdeal() ||
+                    ! src.triangulation_->isValid())
+                throw FailedPrecondition("Conversion from standard to "
+                    "reduced coordinate systems requires a "
+                    "valid, non-ideal triangulation");
+
+            buildReducedFromStandard(src.surfaces_);
+            break;
+        case NS_FILTER_COMPATIBLE:
+        case NS_FILTER_DISJOINT:
+        case NS_FILTER_INCOMPRESSIBLE:
+            throw FailedPrecondition(
+                "TODO: Not yet implemented");
+        default:
+            throw FailedPrecondition(
+                "The transformation type was not recognised");
+    }
+}
+
 void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
     out << "Number of surfaces is " << size() << '\n';
     for (const NormalSurface& s : surfaces_) {

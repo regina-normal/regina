@@ -301,7 +301,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
         // Expand to the standard the solution set.
         if (tracker_)
             tracker_->newStage("Expanding to standard solution set", 0.1);
-        list_->buildStandardFromReduced(triang, e.list_->surfaces_, tracker_);
+        list_->buildStandardFromReduced(e.list_->surfaces_, tracker_);
 
         // Clean up.
         delete e.list_;

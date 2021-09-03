@@ -137,4 +137,12 @@ void addNormalFlags(pybind11::module_& m) {
     regina::python::add_eq_operators(a);
 
     pybind11::implicitly_convertible<NormalAlgFlags, NormalAlg>();
+
+    pybind11::enum_<regina::NormalTransform>(m, "NormalTransform")
+        .value("NS_CONV_REDUCED_TO_STD", regina::NS_CONV_REDUCED_TO_STD)
+        .value("NS_CONV_STD_TO_REDUCED", regina::NS_CONV_STD_TO_REDUCED)
+        .value("NS_FILTER_COMPATIBLE", regina::NS_FILTER_COMPATIBLE)
+        .value("NS_FILTER_DISJOINT", regina::NS_FILTER_DISJOINT)
+        .value("NS_FILTER_INCOMPRESSIBLE", regina::NS_FILTER_INCOMPRESSIBLE)
+        .export_values();
 }
