@@ -142,8 +142,12 @@ void addPacket(pybind11::module_& m) {
             overload_cast<const std::string&>(&Packet::firstTreePacket))
         .def("findPacketLabel",
             overload_cast<const std::string&>(&Packet::findPacketLabel))
-        .def("dependsOnParent", &Packet::dependsOnParent)
-        .def("isPacketEditable", &Packet::isPacketEditable)
+        .def("dependsOnParent", [](const Packet&) { // deprecated
+            return false;
+        })
+        .def("isPacketEditable", [](const Packet&) { // deprecated
+            return true;
+        })
         .def("clone", &Packet::clone,
             pybind11::arg("cloneDescendants") = false,
             pybind11::arg("end") = true)
