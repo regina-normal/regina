@@ -250,7 +250,6 @@ class PDF : public Packet {
         virtual void writeTextShort(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
@@ -299,10 +298,6 @@ inline size_t PDF::size() const {
 
 inline void PDF::writeTextShort(std::ostream& o) const {
     o << "PDF packet (" << size_ << (size_ == 1 ? " byte)" : " bytes)");
-}
-
-inline bool PDF::dependsOnParent() const {
-    return false;
 }
 
 inline Packet* PDF::internalClonePacket(Packet*) const {

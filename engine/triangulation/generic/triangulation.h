@@ -235,7 +235,6 @@ class Triangulation :
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
 
         /*@}*/
         /**
@@ -545,11 +544,6 @@ void Triangulation<dim>::writeTextLong(std::ostream& out) const {
         out << '\n';
     }
     out << '\n';
-}
-
-template <int dim>
-inline bool Triangulation<dim>::dependsOnParent() const {
-    return false;
 }
 
 template <int dim>

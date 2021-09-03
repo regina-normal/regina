@@ -223,7 +223,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
 
         /*@}*/
         /**
@@ -1005,10 +1004,6 @@ inline Triangulation<4>::~Triangulation() {
 inline void Triangulation<4>::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << size()
         << (size() == 1 ? " pentachoron" : " pentachora");
-}
-
-inline bool Triangulation<4>::dependsOnParent() const {
-    return false;
 }
 
 inline Pentachoron<4>* Triangulation<4>::newPentachoron() {

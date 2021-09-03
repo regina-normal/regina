@@ -729,8 +729,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * This routine takes small constant time.
          *
          * \pre This packet has a parent.
-         * \pre This packet does not depend on its parent; see
-         * dependsOnParent() for details.
          *
          * \ifacespython After makeOrphan() is called, this packet will
          * become the root of a new packet tree that is owned by Python.
@@ -753,8 +751,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * If you wish to reparent \e all of the children of a given
          * packet, see transferChildren() instead.
          *
-         * \pre This packet does not depend on its parent; see
-         * dependsOnParent() for details.
          * \pre The given parent is not a descendant of this packet.
          *
          * @param newParent the new parent of this packet, i.e., the
@@ -776,8 +772,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * This is equivalent to calling reparent() on each child, but
          * should be somewhat faster if there are many children to move.
          *
-         * \pre None of the children of this packet depend on their
-         * current parent; see dependsOnParent() for details.
          * \pre The given parent is not a descendant of this packet.
          *
          * @param newParent the new parent beneath which the children
@@ -1107,23 +1101,54 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         /*@{*/
 
         /**
-         * Determines if this packet depends upon its parent.
-         * This is true if the parent cannot be altered without
-         * invalidating or otherwise upsetting this packet.
+         * Deprecated routine that always returns \c false.
          *
-         * @return \c true if and only if this packet depends on
-         * its parent.
+         * In Regina 6.0.1 and earlier, this routine was used to determine
+         * if this packet depends upon its parent (i.e., whether the parent
+         * cannot be altered without invalidating or otherwise upsetting this
+         * packet).  This used to be true for normal surface/hypersurface lists
+         * and angle structure lists, which would refer to the parent packet
+         * as their underlying triangulation.
+         *
+         * Since Regina 7.0, this behaviour has changed: no packets rely
+         * upon their location within the packet tree, and in particular
+         * normal surface/hypersurface lists and angle structure lists
+         * can be freely moved around, and triangulation packets that
+         * were used to create them can be modified or even deleted without
+         * causing problems.
+         *
+         * Therefore, as of Regina 7.0, this routine always returns \c false.
+         *
+         * (Also, as of Regina 7.0 this routine is no longer virtual,
+         * which means subclasses cannot override this new behaviour.)
+         *
+         * \deprecated This routine no longer has any purpose.
+         *
+         * @return \c false.
          */
-        virtual bool dependsOnParent() const = 0;
+        [[deprecated]] bool dependsOnParent() const;
         /**
-         * Determines whether this packet can be altered without
-         * invalidating or otherwise upsetting any of its immediate
-         * children.  Descendants further down the packet tree are not
-         * (and should not need to be) considered.
+         * Deprecated routine that always returns \c true.
          *
-         * @return \c true if and only if this packet may be edited.
+         * In Regina 6.0.1 and earlier, this routine was used to determine
+         * whether this packet could be altered without invalidating or
+         * otherwise upsetting any of its immediate children.  This used to be
+         * true for triangulations that contained normal surface/hypersurface
+         * lists and/or angle structure lists.
+         *
+         * Since Regina 7.0, this behaviour has changed: no packets rely
+         * upon their location within the packet tree, and in particular
+         * triangulations that contain normal surface/hypersurface lists
+         * or angle structure lists can be freely modified, moved around
+         * or even deleted without causing problems.
+         *
+         * Therefore, as of Regina 7.0, this routine always returns \c true.
+         *
+         * \deprecated This routine no longer has any purpose.
+         *
+         * @return \c true.
          */
-        bool isPacketEditable() const;
+        [[deprecated]] bool isPacketEditable() const;
 
         /*@}*/
         /**
@@ -2610,6 +2635,14 @@ inline PacketDescendants Packet::descendants() const {
 
 inline PacketChildren Packet::children() const {
     return PacketChildren(this);
+}
+
+inline bool Packet::dependsOnParent() const {
+    return false;
+}
+
+inline bool Packet::isPacketEditable() const {
+    return true;
 }
 
 inline Packet::ChangeEventSpan::ChangeEventSpan(Packet& packet) :

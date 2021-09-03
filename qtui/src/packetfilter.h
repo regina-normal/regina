@@ -70,18 +70,6 @@ class AllPacketsFilter : public PacketFilter {
 };
 
 /**
- * A packet filter that accepts only packets that can be happily
- * separated from their parents.
- */
-class StandaloneFilter : public PacketFilter {
-    public:
-        /**
-         * PacketFilter overrides.
-         */
-        virtual bool accept(regina::Packet* packet);
-};
-
-/**
  * A packet filter that only accepts packets of a single fixed packet type.
  *
  * The template argument T must be one of the available packet types.
@@ -142,10 +130,6 @@ inline PacketFilter::~PacketFilter() {
 
 inline bool AllPacketsFilter::accept(regina::Packet*) {
     return true;
-}
-
-inline bool StandaloneFilter::accept(regina::Packet* packet) {
-    return ! packet->dependsOnParent();
 }
 
 #endif

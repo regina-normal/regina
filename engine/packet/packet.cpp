@@ -595,16 +595,6 @@ size_t Packet::totalTreeSize() const {
     return tot;
 }
 
-bool Packet::isPacketEditable() const {
-    Packet* tmp = firstTreeChild_;
-    while (tmp) {
-        if (tmp->dependsOnParent())
-            return false;
-        tmp = tmp->nextTreeSibling_;
-    }
-    return true;
-}
-
 Packet* Packet::clone(bool cloneDescendants, bool end) const {
     if (treeParent_ == 0)
         return 0;

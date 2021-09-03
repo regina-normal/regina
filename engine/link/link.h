@@ -2432,7 +2432,6 @@ class Link : public Packet {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
 
         /*@}*/
         /**
@@ -4706,10 +4705,6 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
 inline void Link::useTreeDecomposition(TreeDecomposition td) {
     prepareTreeDecomposition(td);
     niceTreeDecomposition_ = std::move(td);
-}
-
-inline bool Link::dependsOnParent() const {
-    return false;
 }
 
 inline Packet* Link::internalClonePacket(Packet*) const {

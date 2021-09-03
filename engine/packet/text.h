@@ -114,7 +114,6 @@ class Text : public Packet {
         virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
@@ -160,10 +159,6 @@ inline void Text::writeTextShort(std::ostream& o) const {
 
 inline void Text::writeTextLong(std::ostream& o) const {
     o << text_ << '\n';
-}
-
-inline bool Text::dependsOnParent() const {
-    return false;
 }
 
 inline Packet* Text::internalClonePacket(Packet*) const {

@@ -1621,7 +1621,6 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
 
-        virtual bool dependsOnParent() const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
 
@@ -1794,10 +1793,6 @@ inline unsigned SnapPeaTriangulation::countFilledCusps() const {
 
 inline const Cusp* SnapPeaTriangulation::cusp(unsigned whichCusp) const {
     return (cusp_ ? cusp_ + whichCusp : nullptr);
-}
-
-inline bool SnapPeaTriangulation::dependsOnParent() const {
-    return false;
 }
 
 inline SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {

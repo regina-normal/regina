@@ -362,7 +362,6 @@ class AngleStructures : public Packet {
         virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
 
     protected:
         /**
@@ -469,10 +468,6 @@ inline bool AngleStructures::spansTaut() const {
     if (! doesSpanTaut_.has_value())
         calculateSpanTaut();
     return *doesSpanTaut_;
-}
-
-inline bool AngleStructures::dependsOnParent() const {
-    return true;
 }
 
 inline AngleStructures::AngleStructures(bool tautOnly, AngleAlg algHints,

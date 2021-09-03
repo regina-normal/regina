@@ -186,7 +186,6 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
 
         /*@}*/
         /**
@@ -407,10 +406,6 @@ inline Triangulation<2>::~Triangulation() {
 inline void Triangulation<2>::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << simplices_.size()
         << (simplices_.size() == 1 ? " triangle" : " triangles");
-}
-
-inline bool Triangulation<2>::dependsOnParent() const {
-    return false;
 }
 
 inline Triangle<2>* Triangulation<2>::newTriangle() {

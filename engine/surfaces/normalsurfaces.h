@@ -537,7 +537,6 @@ class NormalSurfaces : public Packet {
         virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
 
         /**
          * Deprecated function that converts the set of all embedded
@@ -1441,10 +1440,6 @@ inline bool NormalSurfaces::allowsNonCompact() const {
 
 inline bool NormalSurfaces::allowsSpun() const {
     return NormalEncoding(coords_).couldBeNonCompact();
-}
-
-inline bool NormalSurfaces::dependsOnParent() const {
-    return true;
 }
 
 template <typename Comparison>

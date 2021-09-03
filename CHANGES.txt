@@ -680,6 +680,8 @@ Version 7.0  [ TODO ]
         Class Packet:
             - Inner class ChangeEventSpan's constructor now takes its
               argument by reference.
+            - Routines dependsOnParent() and isPacketEditable() are
+              deprecated, and now always return false and true respectively.
         Class PacketInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).

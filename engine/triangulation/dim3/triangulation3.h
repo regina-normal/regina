@@ -354,7 +354,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
 
         /*@}*/
         /**
@@ -3425,10 +3424,6 @@ inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
 
 inline Packet* Triangulation<3>::internalClonePacket(Packet*) const {
     return new Triangulation<3>(*this);
-}
-
-inline bool Triangulation<3>::dependsOnParent() const {
-    return false;
 }
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {

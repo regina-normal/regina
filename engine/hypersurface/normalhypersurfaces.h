@@ -384,7 +384,6 @@ class NormalHypersurfaces : public Packet {
         virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
 
         /**
          * Sorts the hypersurfaces in this list according to the given
@@ -819,10 +818,6 @@ inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
 
 inline bool NormalHypersurfaces::allowsNonCompact() const {
     return HyperEncoding(coords_).couldBeNonCompact();
-}
-
-inline bool NormalHypersurfaces::dependsOnParent() const {
-    return true;
 }
 
 template <typename Comparison>

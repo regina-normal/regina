@@ -269,7 +269,6 @@ class Script : public Packet, public PacketListener {
         virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
 
         virtual void packetWasRenamed(Packet* packet) override;
         virtual void packetToBeDestroyed(PacketShell packet) override;
@@ -325,10 +324,6 @@ inline void Script::removeAllVariables() {
 
 inline void Script::writeTextShort(std::ostream& o) const {
     o << "Python script";
-}
-
-inline bool Script::dependsOnParent() const {
-    return false;
 }
 
 } // namespace regina

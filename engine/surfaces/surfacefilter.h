@@ -249,7 +249,6 @@ class SurfaceFilter : public Packet {
         virtual void writeTextShort(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
 
     protected:
         /**
@@ -518,10 +517,6 @@ inline void SurfaceFilter::writeXMLFilterData(std::ostream&) const {
 
 inline void SurfaceFilter::writeTextShort(std::ostream& o) const {
     o << filterTypeName();
-}
-
-inline bool SurfaceFilter::dependsOnParent() const {
-    return false;
 }
 
 inline Packet* SurfaceFilter::internalClonePacket(Packet*) const {

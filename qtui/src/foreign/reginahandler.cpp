@@ -55,19 +55,11 @@ regina::Packet* ReginaHandler::importData(const QString& fileName,
 }
 
 PacketFilter* ReginaHandler::canExport() const {
-    return new StandaloneFilter();
+    return new AllPacketsFilter();
 }
 
 bool ReginaHandler::exportData(regina::Packet* data,
         const QString& fileName, QWidget* parentWidget) const {
-    if (data->dependsOnParent()) {
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("I cannot export this packet subtree on its own."), 
-            QObject::tr("<qt>This is because the root packet <i>%1</i> "
-            "must stay connected to its parent.</qt>").
-            arg(QString(data->humanLabel().c_str()).toHtmlEscaped()));
-        return false;
-    }
     if (! data->save(QFile::encodeName(fileName), compressed)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 

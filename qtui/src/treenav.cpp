@@ -43,17 +43,6 @@ void ReginaMain::moveShallow() {
     if (! packet)
         return;
 
-    if (packet->dependsOnParent()) {
-        ReginaSupport::info(this,
-            tr("This packet must stay with its current parent."),
-            tr("This is because it relies on information stored "
-            "in its parent (e.g., a normal surface list that stores "
-            "coordinates relative to its parent triangulation).  "
-            "If you want to move this packet to a higher level in the tree, "
-            "try moving its parent instead."));
-        return;
-    }
-
     regina::Packet* parent = packet->parent();
     regina::Packet* grandparent = parent->parent();
     if (! grandparent) {
@@ -73,17 +62,6 @@ void ReginaMain::moveDeep() {
     regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
-
-    if (packet->dependsOnParent()) {
-        ReginaSupport::info(this,
-            tr("This packet must stay with its current parent."),
-            tr("This is because it relies on information stored "
-            "in its parent (e.g., a normal surface list that stores "
-            "coordinates relative to its parent triangulation).  "
-            "If you want to move this packet to a deeper level in the tree, "
-            "try moving its parent instead."));
-        return;
-    }
 
     bool down = true;
     regina::Packet* newParent = packet->nextSibling();

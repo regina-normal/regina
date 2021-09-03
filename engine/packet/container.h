@@ -88,7 +88,6 @@ class Container : public Packet {
         virtual void writeTextShort(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
@@ -108,10 +107,6 @@ inline Container::Container(const std::string& label) {
 
 inline void Container::writeTextShort(std::ostream& o) const {
     o << "Container";
-}
-
-inline bool Container::dependsOnParent() const {
-    return false;
 }
 
 inline Packet* Container::internalClonePacket(Packet*) const {
