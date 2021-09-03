@@ -262,7 +262,7 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
             /**< Is this triangulation valid?  See isValid() for details
                  on what this means. */
 
-        int topologyLock_;
+        uint8_t topologyLock_;
             /**< If non-zero, this will cause
                  Triangulation<dim>::clearAllProperties() to preserve any
                  computed properties that related to the manifold (as
@@ -2130,6 +2130,15 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
          * long as any one of these locks still exists.  Multiple locks
          * do not necessarily need to be nested (i.e., the order of
          * destruction does not need to be the reverse order of construction).
+         *
+         * Regina is currently only able to handle 255 distinct locks on
+         * the same triangulation at a time.  This should be enormously more
+         * than enough (since external users cannot construct TopologyLock
+         * objects, and Regina's own code should not be recursing deeply
+         * inside TopologyLock scopes).  However, even if there are somehow
+         * more than 255 locks, the worst that will happen is some CPU wastage:
+         * some properties may be cleared and need to be recomputed when this
+         * was not mathematically necessary.
          *
          * TopologyLock objects are not copyable, movable or swappable.
          * In particular, Regina does not offer any way for a TopologyLock
