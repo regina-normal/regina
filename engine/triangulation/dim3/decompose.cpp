@@ -220,7 +220,7 @@ std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands(
     return primeComponents;
 }
 
-bool Triangulation<3>::isThreeSphere() const {
+bool Triangulation<3>::isSphere() const {
     if (threeSphere_.has_value())
         return *threeSphere_;
 
@@ -326,7 +326,7 @@ bool Triangulation<3>::isThreeSphere() const {
     return true;
 }
 
-bool Triangulation<3>::knowsThreeSphere() const {
+bool Triangulation<3>::knowsSphere() const {
     if (threeSphere_.has_value())
         return true;
 
@@ -352,11 +352,11 @@ bool Triangulation<3>::isBall() const {
         return false;
     }
 
-    // Pass straight to isThreeSphere (which in turn will check faster things
+    // Pass straight to isSphere (which in turn will check faster things
     // like homology before pulling out the big guns).
     //
     // Cone the boundary to a point (i.e., fill it with a ball), then
-    // call isThreeSphere() on the resulting closed triangulation.
+    // call isSphere() on the resulting closed triangulation.
 
     Triangulation<3> working(*this, false);
     working.intelligentSimplify();
@@ -365,7 +365,7 @@ bool Triangulation<3>::isBall() const {
     // Simplify again in case our coning was inefficient.
     working.intelligentSimplify();
 
-    threeBall_ = working.isThreeSphere();
+    threeBall_ = working.isSphere();
     return *threeBall_;
 }
 
@@ -456,7 +456,7 @@ bool Triangulation<3>::isSolidTorus() const {
             if (comp->isClosed()) {
                 // A closed piece.
                 // Must be a 3-sphere, or else we didn't have a solid torus.
-                if (! comp->isThreeSphere()) {
+                if (! comp->isSphere()) {
                     return *(solidTorus_ = false);
                 }
             } else if (comp->countBoundaryComponents() > 1) {

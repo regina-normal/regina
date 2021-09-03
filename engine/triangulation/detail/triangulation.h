@@ -249,9 +249,15 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
                 >::subdimension;
         }
 
+        MarkedVector<Component<dim>> components_;
+            /**< The connected components that form the triangulation.
+                 This list is only filled if/when the skeleton of the
+                 triangulation is computed. */
+
     protected:
         MarkedVector<BoundaryComponent<dim>> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
+
         bool valid_;
             /**< Is this triangulation valid?  See isValid() for details
                  on what this means. */
@@ -273,10 +279,6 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
         bool calculatedSkeleton_;
             /**< Has the skeleton been calculated?  This is only done
                  "on demand", when a skeletal property is first queried. */
-        MarkedVector<Component<dim>> components_;
-            /**< The connected components that form the triangulation.
-                 This list is only filled if/when the skeleton of the
-                 triangulation is computed. */
         bool orientable_;
             /**< Is the triangulation orientable?  This property is only set
                  if/when the skeleton of the triangulation is computed. */

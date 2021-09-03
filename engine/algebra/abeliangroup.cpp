@@ -30,44 +30,38 @@
  *                                                                        *
  **************************************************************************/
 
+#include <algorithm>
 #include "algebra/abeliangroup.h"
 #include "maths/matrixops.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
 
-const Integer& AbelianGroup::invariantFactor(size_t index) const {
-    std::multiset<Integer>::const_iterator it = invariantFactors.begin();
-    advance(it, index);
-    return *it;
-}
-
 void AbelianGroup::addTorsionElement(const Integer& degree,
         unsigned mult) {
     // If there are no current torsion elements, just throw in the new
     // ones.
-    if (invariantFactors.empty()) {
+    if (invariantFactors_.empty()) {
         for (unsigned j=0; j<mult; j++)
-            invariantFactors.insert(invariantFactors.begin(), degree);
+            invariantFactors_.push_back(degree);
         return;
     }
 
     // Build a presentation matrix for the torsion.
-    size_t len = invariantFactors.size() + mult;
+    size_t len = invariantFactors_.size() + mult;
     MatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
     unsigned i=0;
-    std::multiset<Integer>::const_iterator it;
-    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
+    for (const auto& f : invariantFactors_) {
+        a.entry(i,i) = f;
+        ++i;
     }
 
     // Put the passed torsion elements beneath.
     for (unsigned j=0; j<mult; j++) {
         a.entry(i,i) = degree;
-        i++;
+        ++i;
     }
 
     // Go calculate!
@@ -78,21 +72,20 @@ void AbelianGroup::addTorsionElement(const Integer& degree,
 void AbelianGroup::addTorsionElements(const std::multiset<Integer>&
         torsion) {
     // Build a presentation matrix for the torsion.
-    size_t len = invariantFactors.size() + torsion.size();
+    size_t len = invariantFactors_.size() + torsion.size();
     MatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
     unsigned i=0;
-    std::multiset<Integer>::const_iterator it;
-    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
+    for (const auto& f : invariantFactors_) {
+        a.entry(i,i) = f;
+        ++i;
     }
 
     // Put the passed torsion elements beneath.
-    for (it = torsion.begin(); it != torsion.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
+    for (const auto& f : torsion) {
+        a.entry(i,i) = f;
+        ++i;
     }
 
     // Go calculate!
@@ -102,7 +95,7 @@ void AbelianGroup::addTorsionElements(const std::multiset<Integer>&
 
 void AbelianGroup::addGroup(const MatrixInt& presentation) {
     // Prepare to calculate invariant factors.
-    size_t len = invariantFactors.size();
+    size_t len = invariantFactors_.size();
     MatrixInt a(len + presentation.rows(), len + presentation.columns());
 
     // Fill in the complete presentation matrix.
@@ -111,13 +104,12 @@ void AbelianGroup::addGroup(const MatrixInt& presentation) {
     for (i=0; i<presentation.rows(); i++)
         for (j=0; j<presentation.columns(); j++)
             a.entry(len + i, len + j) = presentation.entry(i, j);
-    
+
     // Fill in the invariant factors in the top.
     i = 0;
-    std::multiset<Integer>::const_iterator it;
-    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
+    for (const auto& f : invariantFactors_) {
+        a.entry(i,i) = f;
+        ++i;
     }
 
     // Go calculate!
@@ -129,31 +121,29 @@ void AbelianGroup::addGroup(const AbelianGroup& group) {
     rank_ += group.rank_;
 
     // Work out the torsion elements.
-    if (invariantFactors.empty()) {
+    if (invariantFactors_.empty()) {
         // Copy the other group's factors!
-        invariantFactors = group.invariantFactors;
+        invariantFactors_ = group.invariantFactors_;
         return;
     }
-    if (group.invariantFactors.empty())
+    if (group.invariantFactors_.empty())
         return;
 
     // We will have to calculate the invariant factors ourselves.
-    size_t len = invariantFactors.size() + group.invariantFactors.size();
+    size_t len = invariantFactors_.size() + group.invariantFactors_.size();
     MatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
     unsigned i = 0;
-    std::multiset<Integer>::const_iterator it;
-    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
+    for (const auto& f : invariantFactors_) {
+        a.entry(i,i) = f;
+        ++i;
     }
 
     // Put the other group's invariant factors beneath.
-    for (it = group.invariantFactors.begin();
-            it != group.invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
+    for (const auto& f : group.invariantFactors_) {
+        a.entry(i,i) = f;
+        ++i;
     }
 
     // Go calculate!
@@ -162,13 +152,13 @@ void AbelianGroup::addGroup(const AbelianGroup& group) {
 }
 
 unsigned AbelianGroup::torsionRank(const Integer& degree) const {
-    std::multiset<Integer>::const_reverse_iterator it;
     unsigned ans = 0;
     // Because we have SNF, we can bail as soon as we reach a factor
     // that is not divisible by degree.
-    for (it = invariantFactors.rbegin(); it != invariantFactors.rend(); it++)
+    for (auto it = invariantFactors_.rbegin();
+            it != invariantFactors_.rend(); ++it)
         if (((*it) % degree) == 0)
-            ans++;
+            ++ans;
         else
             return ans;
     return ans;
@@ -187,15 +177,14 @@ void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
         writtenSomething = true;
     }
 
-    std::multiset<Integer>::const_iterator it =
-        invariantFactors.begin();
+    auto it = invariantFactors_.begin();
     Integer currDegree;
     unsigned currMult = 0;
     while(true) {
-        if (it != invariantFactors.end()) {
+        if (it != invariantFactors_.end()) {
             if ((*it) == currDegree) {
-                currMult++;
-                it++;
+                ++currMult;
+                ++it;
                 continue;
             }
         }
@@ -210,11 +199,11 @@ void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
                 out << "Z_" << currDegree.stringValue();
             writtenSomething = true;
         }
-        if (it == invariantFactors.end())
+        if (it == invariantFactors_.end())
             break;
         currDegree = *it;
         currMult = 1;
-        it++;
+        ++it;
     }
 
     if (! writtenSomething)
@@ -223,7 +212,7 @@ void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
 
 void AbelianGroup::replaceTorsion(const MatrixInt& matrix) {
     // Delete any preexisting torsion.
-    invariantFactors.clear();
+    invariantFactors_.clear();
 
     // Run up the diagonal until we hit 1.
     // Hopefully this will be faster than running down the diagonal
@@ -238,21 +227,22 @@ void AbelianGroup::replaceTorsion(const MatrixInt& matrix) {
     }
     while (i > 0) {
         if (matrix.entry(i-1, i-1) == 0)
-            rank_++;
+            ++rank_;
         else if (matrix.entry(i-1, i-1) == 1)
-            return;
+            break;
         else
-            invariantFactors.insert(invariantFactors.begin(),
-                matrix.entry(i-1, i-1));
-        i--;
+            invariantFactors_.push_back(matrix.entry(i-1, i-1));
+        --i;
     }
+
+    // We inserted the invariant factors in reverse order; fix this now.
+    std::reverse(invariantFactors_.begin(), invariantFactors_.end());
 }
 
 void AbelianGroup::writeXMLData(std::ostream& out) const {
     out << "<abeliangroup rank=\"" << rank_ << "\"> ";
-    for (std::multiset<Integer>::const_iterator it =
-            invariantFactors.begin(); it != invariantFactors.end(); it++)
-        out << (*it) << ' ';
+    for (const auto& f : invariantFactors_)
+        out << f << ' ';
     out << "</abeliangroup>";
 }
 

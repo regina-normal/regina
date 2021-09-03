@@ -447,7 +447,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             // Watch the comment for S^3 change once we run a
             // three-sphere recognition.
             verifyEmbeddability(*s3, "S^3", "Manifold is a homology 3-sphere.");
-            s3->isThreeSphere();
+            s3->isSphere();
             verifyEmbeddability(*s3, "S^3", "This manifold is S^3.");
 
             verifyEmbeddability(*s2xs1, "S^2 x S^1", "No information.");

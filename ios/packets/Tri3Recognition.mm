@@ -126,7 +126,7 @@
                 // should finish quickly and give results consistent with
                 // the combinatorial routines.
                 if ([manifoldName isEqualToString:@"S3"]) {
-                    self.packet->isThreeSphere();
+                    self.packet->isSphere();
                 } else if ([manifoldName isEqualToString:@"B3"]) {
                     self.packet->isBall();
                 } else if ([manifoldName isEqualToString:@"B2 x S1"]) {
@@ -146,7 +146,7 @@
     if (self.packet->isClosed() && ! self.packet->isEmpty()) {
         [propertyList addObject:@PROP_SPHERE];
         if (self.packet->size() <= 6)
-            self.packet->isThreeSphere();
+            self.packet->isSphere();
     } else if (self.packet->countBoundaryComponents() > 0) {
         // Real boundary only:
         if (self.packet->hasBoundaryTriangles()) {
@@ -236,7 +236,7 @@
     if (isHyp.has_value())
         return;
 
-    if (self.packet->isClosed() && self.packet->knowsThreeSphere() && self.packet->isThreeSphere())
+    if (self.packet->isClosed() && self.packet->knowsSphere() && self.packet->isSphere())
         isHyp = false;
     else if (self.packet->hasBoundaryTriangles() && self.packet->knowsBall() && self.packet->isBall())
         isHyp = false;
@@ -252,10 +252,10 @@
 {
     switch (property) {
         case PROP_SPHERE:
-            if (self.packet->knowsThreeSphere()) {
-                if (self.packet->isThreeSphere() && ! manifoldName)
+            if (self.packet->knowsSphere()) {
+                if (self.packet->isSphere() && ! manifoldName)
                     self.manifold.text = manifoldName = @"S3";
-                return [TextHelper yesNoString:self.packet->isThreeSphere() yes:@"Yes" no:@"No"];
+                return [TextHelper yesNoString:self.packet->isSphere() yes:@"Yes" no:@"No"];
             }
             return nil;
         case PROP_BALL:
@@ -316,7 +316,7 @@
                         code:^{
                             switch (static_cast<PropertyCell*>(cell).property) {
                                 case PROP_SPHERE:
-                                    self.packet->isThreeSphere(); break;
+                                    self.packet->isSphere(); break;
                                 case PROP_BALL:
                                     self.packet->isBall(); break;
                                 case PROP_SOLIDTORUS:

@@ -59,7 +59,7 @@ namespace {
 
         if (t.size() <= 10) {
             // This is small enough to just find the answer exactly.
-            return t.isThreeSphere();
+            return t.isSphere();
         }
 
         // It seems quite hard to find a 3-sphere triangulation that
@@ -81,7 +81,7 @@ namespace {
         while (t.intelligentSimplify())
             ;
         if (t.size() <= 10)
-            return t.isThreeSphere();
+            return t.isSphere();
 
         // Okay: both the triangulation and the fundamental group have
         // resisted our simplification attempts - let's call this a
@@ -102,7 +102,7 @@ namespace {
         // this time.
         t.simplifyExhaustive();
         if (t.size() <= 10)
-            return t.isThreeSphere();
+            return t.isSphere();
 
         // Okay: the triangulation has resisted even exhaustive
         // simplification (at least at a basic level), so let's call

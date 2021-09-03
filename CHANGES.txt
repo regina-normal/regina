@@ -1041,6 +1041,8 @@ Version 7.0  [ TODO ]
               std::optional<NormalSurface>, not a newly allocated pointer
               that may be null.
             - Renamed findStrictAngleStructure() to strictAngleStructure(),
+            - Renamed isThreeSphere() and knowsThreeSphere() to isSphere() and
+              knowsSphere().  The old names are kept as deprecated aliases.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and

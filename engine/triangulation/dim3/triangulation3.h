@@ -1989,7 +1989,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * \warning The algorithms used in this routine rely on normal
          * surface theory and so can be very slow for larger triangulations.
-         * For 3-sphere testing, see the routine isThreeSphere() which
+         * For 3-sphere testing, see the routine isSphere() which
          * uses faster methods where possible.
          *
          * \pre This triangulation is valid, closed and connected.
@@ -2064,29 +2064,36 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * \warning The algorithms used in this routine rely on normal
          * surface theory and so can be very slow for larger
          * triangulations (although faster tests are used where possible).
-         * The routine knowsThreeSphere() can be called to see if this
+         * The routine knowsSphere() can be called to see if this
          * property is already known or if it happens to be very fast to
          * calculate for this triangulation.
          *
          * @return \c true if and only if this is a 3-sphere triangulation.
          */
-        bool isThreeSphere() const;
+        bool isSphere() const;
+        /**
+         * Deprecated function to test if this is a 3-sphere triangulation.
+         *
+         * \deprecated This routine has been renamed isSphere().
+         *
+         * @return \c true if and only if this is the 3-sphere.
+         */
+        [[deprecated]] bool isThreeSphere() const;
         /**
          * Is it already known (or trivial to determine) whether or not this
-         * is a triangulation of a 3-sphere?  See isThreeSphere() for
+         * is a triangulation of a 3-sphere?  See isSphere() for
          * further details.
          *
-         * If this property is indeed already known, future calls to
-         * isThreeSphere() will be very fast (simply returning the
-         * precalculated value).
+         * If this property is indeed already known, future calls to isSphere()
+         * will be very fast (simply returning the precalculated value).
          *
          * If this property is not already known, this routine will
          * nevertheless run some very fast preliminary tests to see if the
          * answer is obviously no.  If so, it will store \c false as the
-         * precalculated value for isThreeSphere() and this routine will
+         * precalculated value for isSphere() and this routine will
          * return \c true.
          *
-         * Otherwise a call to isThreeSphere() may potentially require more
+         * Otherwise a call to isSphere() may potentially require more
          * significant work, and so this routine will return \c false.
          *
          * \warning This routine does not actually tell you \e whether
@@ -2096,11 +2103,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsThreeSphere() const;
+        bool knowsSphere() const;
+        /**
+         * Deprecated function to determine if it is already known (or
+         * trivial to determine) whether this is a 3-sphere triangulation.
+         *
+         * \deprecated This routine has been renamed knowsSphere().
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        [[deprecated]] bool knowsThreeSphere() const;
         /**
          * Determines whether this is a triangulation of a 3-dimensional ball.
          *
-         * This routine is based on isThreeSphere(), which in turn combines
+         * This routine is based on isSphere(), which in turn combines
          * Rubinstein's 3-sphere recognition algorithm with Jaco and
          * Rubinstein's 0-efficiency prime decomposition algorithm.
          *
@@ -3463,6 +3480,14 @@ inline bool Triangulation<3>::isStandard() const {
 inline bool Triangulation<3>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
+}
+
+inline bool Triangulation<3>::isThreeSphere() const {
+    return isSphere();
+}
+
+inline bool Triangulation<3>::knowsThreeSphere() const {
+    return knowsSphere();
 }
 
 inline bool Triangulation<3>::knowsZeroEfficient() const {

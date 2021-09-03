@@ -373,7 +373,7 @@ void Tri3SurfacesUI::refresh() {
             // should finish quickly and give results consistent with
             // the combinatorial routines.
             if (name == "S3") {
-                tri->isThreeSphere();
+                tri->isSphere();
             } else if (name == "B3") {
                 tri->isBall();
             } else if (name == "B2 x S1") {
@@ -443,9 +443,9 @@ void Tri3SurfacesUI::refresh() {
         threeSphere->setVisible(true);
         btnThreeSphere->setVisible(true);
 
-        if (tri->knowsThreeSphere() ||
+        if (tri->knowsSphere() ||
                 tri->size() <= autoCalcThreshold) {
-            if (tri->isThreeSphere()) {
+            if (tri->isSphere()) {
                 threeSphere->setText(tr("True"));
                 QPalette pal = threeSphere->palette();
                 pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
@@ -779,7 +779,7 @@ void Tri3SurfacesUI::calculateThreeSphere() {
         "3-sphere recognition can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->isThreeSphere();
+    tri->isSphere();
     delete dlg;
 
     refresh();
