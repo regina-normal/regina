@@ -89,11 +89,13 @@ namespace {
     };
 }
 
-NormalHypersurfaces::NormalHypersurfaces(Triangulation<4>& owner,
+NormalHypersurfaces::NormalHypersurfaces(const Triangulation<4>& triangulation,
         HyperCoords coords, HyperList which, HyperAlg algHints,
         ProgressTracker* tracker) :
-        coords_(coords), which_(which), algorithm_(algHints) {
-    std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algHints) {
+    std::optional<MatrixInt> eqns = makeMatchingEquations(
+        triangulation, coords);
     if (! eqns) {
         if (tracker)
             tracker->setFinished();
@@ -104,11 +106,37 @@ NormalHypersurfaces::NormalHypersurfaces(Triangulation<4>& owner,
         // We pass the matching equations as an argument to the thread
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
-        std::thread([=, &owner](MatrixInt e) {
-            Enumerator(this, &owner, e, tracker).enumerate();
+        std::thread([=](MatrixInt e) {
+            Enumerator(this, e, tracker, nullptr).enumerate();
         }, std::move(*eqns)).detach();
     } else
-        Enumerator(this, &owner, *eqns, tracker).enumerate();
+        Enumerator(this, *eqns, tracker, nullptr).enumerate();
+}
+
+NormalHypersurfaces* NormalHypersurfaces::enumerate(
+        Triangulation<4>& owner, HyperCoords coords, HyperList which,
+        HyperAlg algHints, ProgressTracker* tracker) {
+    // Like the constructor, but (1) we have tree insertion; and (2) we
+    // need to convert exceptions to null returns.
+    std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
+    if (! eqns) {
+        if (tracker)
+            tracker->setFinished();
+        return nullptr;
+    }
+
+    NormalHypersurfaces* ans = new NormalHypersurfaces(coords, which, algHints,
+        owner);
+    if (tracker) {
+        // We pass the matching equations as an argument to the thread
+        // function so we can be sure that the equations are moved into
+        // the thread before they are destroyed.
+        std::thread([=, &owner](MatrixInt e) {
+            Enumerator(ans, e, tracker, &owner).enumerate();
+        }, std::move(*eqns)).detach();
+    } else
+        Enumerator(ans, *eqns, tracker, &owner).enumerate();
+    return ans;
 }
 
 void NormalHypersurfaces::Enumerator::enumerate() {
@@ -126,8 +154,8 @@ void NormalHypersurfaces::Enumerator::enumerate() {
         fillFundamental();
 
     // Insert the results into the packet tree, but only once they are ready.
-    if (! (tracker_ && tracker_->isCancelled()))
-        triang_->insertChildLast(list_);
+    if (treeParent_ && ! (tracker_ && tracker_->isCancelled()))
+        treeParent_->insertChildLast(list_);
 
     if (tracker_)
         tracker_->setFinished();
@@ -142,7 +170,7 @@ void NormalHypersurfaces::Enumerator::fillVertex() {
 
     // ----- Run the enumeration algorithm -----
 
-    if (triang_->isEmpty()) {
+    if (list_->triangulation_->isEmpty()) {
         // Handle the empty triangulation separately.
         // Nothing to do here.
     } else {
@@ -157,24 +185,24 @@ void NormalHypersurfaces::Enumerator::fillVertex() {
 void NormalHypersurfaces::Enumerator::fillVertexDD() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         EnumConstraints c = makeEmbeddedConstraints(
-            *triang_, list_->coords_);
+            *list_->triangulation_, list_->coords_);
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalHypersurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, &c, tracker_);
     } else {
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalHypersurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, nullptr, tracker_);
     }
 }
 
 void NormalHypersurfaces::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
-    if (triang_->isEmpty()) {
+    if (list_->triangulation_->isEmpty()) {
         list_->algorithm_ = HS_HILBERT_DUAL; /* shrug */
         return;
     }
@@ -212,8 +240,9 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
     NormalHypersurfaces vtx(list_->coords_,
         HS_VERTEX | (list_->which_.has(HS_EMBEDDED_ONLY) ?
             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
-        list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator e(&vtx, triang_, std::move(eqns_), nullptr);
+        list_->algorithm_ /* passes through any vertex enumeration flags */,
+        list_->triangulation_);
+    Enumerator e(&vtx, std::move(eqns_), nullptr, nullptr);
     e.fillVertex();
 
     // We cannot use eqns_ beyond this point, since we moved it into e.
@@ -237,17 +266,18 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalHypersurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, shadows.begin(), shadows.end(), &c, tracker_);
     } else {
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalHypersurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, shadows.begin(), shadows.end(), nullptr, tracker_);
     }
 }
@@ -259,17 +289,18 @@ void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalHypersurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, &c, tracker_);
     } else {
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalHypersurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, nullptr, tracker_);
     }
 }

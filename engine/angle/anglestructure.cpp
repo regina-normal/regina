@@ -120,18 +120,22 @@ void AngleStructure::calculateType() const {
         // This structure is taut.
         flags_ |= flagTaut;
 
+        // Get a local reference to the triangulation so we do not have
+        // to repeatedly bounce through the snapshot.
+        const Triangulation<3>& tri(*triangulation_);
+
         // Is it veering also?
         bool veering = true;
-        if (triangulation_->isOrientable()) {
-            long nEdges = triangulation_->countEdges();
+        if (tri.isOrientable()) {
+            long nEdges = tri.countEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
             const Tetrahedron<3>* tet;
             int orient;
             long e;
-            for (unsigned i = 0; i < triangulation_->size();
+            for (unsigned i = 0; i < tri.size();
                     ++i) {
-                tet = triangulation_->tetrahedron(i);
+                tet = tri.tetrahedron(i);
                 orient = tet->orientation();
                 if (vector_[3 * i] > 0) {
                     // Edges 0,5 are marked as pi.

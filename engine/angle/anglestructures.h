@@ -72,12 +72,22 @@ struct PacketInfo<PACKET_ANGLESTRUCTURES> {
 
 /**
  * A packet representing a collection of angle structures on a triangulation.
- * Such a packet must always be a child packet of the triangulation on
- * which the angle structures lie.  If this triangulation changes, the
- * information contained in this packet will become invalid.
  *
- * Since Regina 7.0, you can (and should) create angle structure lists
- * using the class constructor.  There is no need to use enumerate() any more.
+ * There are some important changes to this class as of Regina 7.0:
+ *
+ * - An angle structure list does \e not need to be a child packet of the
+ *   underlying triangulation, and indeed does not need to interact with
+ *   the packet tree at all.
+ *
+ * - You are welcome to modify or even destroy the original triangulation;
+ *   if you do then this list will automatically make a private copy of the
+ *   original triangulation as an ongoing reference.  Different angle
+ *   structure lists (and normal surface lists) can all share the same
+ *   private copy, so this is not an expensive process.
+ *
+ * - You should now create angle structure lists using the class constructor
+ *   (but which, unlike the old enumerate(), does not insert the list
+ *   into the packet tree).  There is no need to use enumerate() any more.
  */
 class AngleStructures : public Packet {
     REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES)
@@ -85,10 +95,21 @@ class AngleStructures : public Packet {
     private:
         std::vector<AngleStructure> structures_;
             /**< Contains all angle structures in this list. */
+
+        SnapshotRef<Triangulation<3>> triangulation_;
+            /**< The triangulation on which these angle structures lie. */
+
         bool tautOnly_;
             /**< Stores whether we are only interested in taut structures.
                  This is an option selected by the user before enumeration
                  takes place. */
+
+        AngleAlg algorithm_;
+            /**< Stores the details of the enumeration algorithm that was used
+                 to generate this list.  This might not be the same as the
+                 \a algHints flag that was originally passed to the class
+                 constructor (e.g., if invalid or inappropriate flags were
+                 passed). */
 
         mutable std::optional<bool> doesSpanStrict_;
             /**< Does the convex span of this list include a strict
@@ -104,7 +125,8 @@ class AngleStructures : public Packet {
 
     public:
         /**
-         * Enumerates all angle structures on the given triangulation.
+         * A unified constructor for enumerating various classes of
+         * angle structures on a given triangulation.
          *
          * If \a tautOnly is \c false (the default), then this new list will
          * be filled with all vertices of the angle structure solution space.
@@ -112,21 +134,24 @@ class AngleStructures : public Packet {
          * the taut angle structures (a subset of the vertex angle structures);
          * these are usually much faster to enumerate.
          *
-         * The angle structure list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this angle structure list, and must not
-         * change while this angle structure list remains in existence.
+         * The AngleAlg argument is a combination of flags that allows
+         * you to control the underlying enumeration algorithm.  These
+         * flags are treated as hints only: if your selection of
+         * algorithm is invalid, unavailable or unsupported then Regina
+         * will choose something more appropriate.  Unless you have
+         * some specialised need, the default AS_ALG_DEFAULT (which
+         * makes no hints at all) will allow Regina to choose what it
+         * thinks will be the most efficient method.
+         *
+         * Unlike the old enumerate() function, the new angle structure
+         * list will \e not be inserted into the packet tree.  Moreover,
+         * the given triangulation may change or even be destroyed
+         * without causing problems.  See the class notes for details.
          *
          * If a progress tracker is passed:
          *
          * - The angle structure enumeration will take place in a new thread.
-         *   This constructor will return immediately, but the new angle
-         *   structure list will not be inserted into the packet tree
-         *   until the enumeration is complete.
-         *
-         * - If the user cancels the operation from another thread, then the
-         *   angle structure list will \e never be inserted into the packet
-         *   tree.  The caller of this constructor will still need to delete it.
+         *   This constructor will return immediately.
          *
          * - For progress tracking, this routine will declare and work through
          *   a series of stages whose combined weights sum to 1; typically this
@@ -137,30 +162,48 @@ class AngleStructures : public Packet {
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
          *
-         * @param owner the triangulation for which the vertex
+         * @param triangulation the triangulation for which the vertex
          * angle structures will be enumerated.
          * @param tautOnly \c true if only taut structures are to be
          * enuemrated, or \c false if we should enumerate all vertices
          * of the angle structure solution space.
+         * @param algHints passes requests to Regina for which specific
+         * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          */
-        AngleStructures(Triangulation<3>& owner, bool tautOnly = false,
+        AngleStructures(const Triangulation<3>& triangulation,
+            bool tautOnly = false, AngleAlg algHints = AS_ALG_DEFAULT,
             ProgressTracker* tracker = nullptr);
 
         /**
          * Returns the triangulation on which these angle structures lie.
          *
-         * The triangulation is also accessible via the packet tree as
-         * parent(); this routine simply adds the convenience of casting
-         * down to the correct triangulation class.
+         * This will be a snapshot frozen in time of the triangulation
+         * that was originally passed to the AngleStructures constructor.
          *
-         * If you need non-const access to the triangulation (e.g., to
-         * rename the packet), use parent(); however, remember that a
-         * triangulation that owns angle structures or normal surfaces
-         * must \e not change its tetrahedra or their gluings.
+         * This will return a correct result even if the original triangulation
+         * has since been modified or destroyed.  However, in order to ensure
+         * this behaviour, it is possible that at different points in time
+         * this function may return references to different C++ objects.
          *
-         * @return a reference to the corresponding triangulation.
+         * The rules for using the triangulation() reference are:
+         *
+         * - Do not keep the resulting reference as a long-term reference or
+         *   pointer of your own, since in time you may find yourself referring
+         *   to the wrong object (see above).  Just call this function again.
+         *
+         * - You must respect the read-only nature of the result (i.e.,
+         *   you must not cast the constness away).  The snapshotting
+         *   process detects modifications, and modifying the frozen
+         *   snapshot may result in an exception being thrown.
+         *
+         * \warning As of Regina 7.0, you \e cannot access this triangulation
+         * via the packet tree as parent().  This is because angle structure
+         * lists can now be kept anywhere in the packet tree, or can be kept
+         * as standalone objects outside the packet tree entirely.
+         *
+         * @return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
 
@@ -173,6 +216,21 @@ class AngleStructures : public Packet {
          * procedure allowed for any angle structures.
          */
         bool isTautOnly() const;
+
+        /**
+         * Returns details of the algorithm that was used to enumerate
+         * this list.
+         *
+         * These may not be the same AngleAlg flags that were passed to
+         * the class constructor.  In particular, default values will have been
+         * explicitly filled in, invalid and/or redundant values will have
+         * been removed, and unavailable and/or unsupported combinations
+         * of algorithm flags will be replaced with whatever algorithm was
+         * actually used.
+         *
+         * @return details of the algorithm used to enumerate this list.
+         */
+        AngleAlg algorithm() const;
 
         /**
          * Returns the number of angle structures stored in this list.
@@ -206,8 +264,7 @@ class AngleStructures : public Packet {
          */
         auto structures() const;
         /**
-         * Returns the angle structure at the requested index in this
-         * list.
+         * Returns the angle structure at the requested index in this list.
          *
          * @param index the index of the requested angle structure in
          * this list; this must be between 0 and size()-1 inclusive.
@@ -232,8 +289,7 @@ class AngleStructures : public Packet {
          * is equivalent to testing whether any convex combination of
          * the angle structures in this list is a taut structure.
          *
-         * See AngleStructure::isTaut() for details on taut
-         * structures.
+         * See AngleStructure::isTaut() for details on taut structures.
          *
          * @return \c true if and only if a taut structure can be produced.
          */
@@ -243,12 +299,24 @@ class AngleStructures : public Packet {
          * Deprecated routine to enumerate angle structures on a given
          * triangulation.
          *
-         * This static routine is identical to calling the class
-         * constructor with the given arguments.
+         * This static routine is almost identical to calling the class
+         * constructor with the given arguments.  The only difference is
+         * that, unlike the class constructor, this routine will also insert
+         * the angle structure list beneath \a owner in the packet tree.
+         * If a progress tracker is passed (which means the enumeration runs
+         * in a background thread), the tree insertion will not happen until
+         * the enumeration has finished (and if the user cancels the operation,
+         * the insertion will not happen at all).
          *
-         * See the class constructor for details on what the arguments mean.
+         * See the class constructor for details on how this routine
+         * works and what the various arguments mean.
          *
          * \deprecated Just call the AngleStructures constructor.
+         *
+         * \ifacespython For this deprecated function, the progress tracker
+         * argument is omitted.  It is still possible to enumerate in
+         * the background with a progress tracker, but for that you will
+         * need to call the class constructor instead.
          *
          * @param owner the triangulation for which the vertex
          * angle structures will be enumerated.
@@ -264,28 +332,31 @@ class AngleStructures : public Packet {
             ProgressTracker* tracker = nullptr);
 
         /**
-         * A slower, alternative method to enumerate all taut angle structures
-         * on the given triangulation.  A list containing all taut angle
-         * structures will be returned.
+         * Deprecated routine to enumerate all taut angle structures
+         * on the given triangulation using the double description method.
          *
-         * The algorithm used by this routine is based on the double
-         * description method.  The algorithm used by enumerate() (the
-         * preferred method) is instead based on linear programming, and is
-         * typically \e much faster than this routine for larger triangulations.
+         * This static routine is almost identical to calling the class
+         * constructor with the \c tautOnly argument set to \c true and
+         * the \a algHints argument set to AS_ALG_DD.  The only difference is
+         * that, unlike the class constructor, this routine will also insert
+         * the angle structure list beneath \a owner in the packet tree.
          *
-         * The angle structure list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this angle structure list, and must not
-         * change while this angle structure list remains in existence.
+         * Note that default algorithm used by the class constructor for
+         * taut angle structures is the tree traversal method, which is
+         * based on linear programming, and which is typically \e much faster
+         * than the double description method for larger triangulations.
          *
          * \warning This routine is slow, and users will not want to call it
          * unless they have some specialised need.
+         *
+         * \deprecated Just call the AngleStructures constructor.
          *
          * @param owner the triangulation for which the taut angle structures
          * will be enumerated.
          * @return the newly created angle structure list.
          */
-        static AngleStructures* enumerateTautDD(Triangulation<3>& owner);
+        [[deprecated]] static AngleStructures* enumerateTautDD(
+            Triangulation<3>& owner);
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
@@ -302,8 +373,13 @@ class AngleStructures : public Packet {
          * enuemrated (when the time comes for enumeration to be performed),
          * or \c false if we should enumerate all vertices of the angle
          * structure solution space.
+         * @param algHints contains requests for which specific
+         * enumeration algorithm should be used.
+         * @param triangulation the triangulation on which the angle
+         * structures will lie.
          */
-        AngleStructures(bool tautOnly);
+        AngleStructures(bool tautOnly, AngleAlg algHints,
+            const Triangulation<3>& triangulation);
 
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out) const override;
@@ -321,21 +397,20 @@ class AngleStructures : public Packet {
 
     private:
         /**
-         * The main code that actually performs the angle structure
-         * enumeration.
+         * The main code that actually performs the angle structure enumeration.
          *
          * \pre This list is empty (i.e., contains no angle structures),
          * but all of its enumeration parameters have been set.
-         * \pre This list has not yet been inserted into the packet tree.
          *
-         * @param triang the triangulation upon which this angle
-         * structure list will be based.
          * @param tracker the progress tracker to use for progress
          * reporting and cancellation polling, or \c null if these
          * capabilities are not required.
+         * @param treeParent the parent packet in the tree, if we should
+         * insert the angle structure list into the packet tree once the
+         * enumeration has finished, or \c null if we should not.
          */
-        void enumerateInternal(Triangulation<3>& triang,
-            ProgressTracker* tracker = nullptr);
+        void enumerateInternal(ProgressTracker* tracker,
+            Packet* treeParent);
 
     friend class regina::XMLAngleStructuresReader;
 };
@@ -360,8 +435,16 @@ MatrixInt makeAngleEquations(const Triangulation<3>& tri);
 
 // Inline functions for AngleStructures
 
+inline const Triangulation<3>& AngleStructures::triangulation() const {
+    return *triangulation_;
+}
+
 inline bool AngleStructures::isTautOnly() const {
     return tautOnly_;
+}
+
+inline AngleAlg AngleStructures::algorithm() const {
+    return algorithm_;
 }
 
 inline size_t AngleStructures::size() const {
@@ -372,8 +455,7 @@ inline auto AngleStructures::structures() const {
     return ListView(structures_);
 }
 
-inline const AngleStructure& AngleStructures::structure(
-        size_t index) const {
+inline const AngleStructure& AngleStructures::structure(size_t index) const {
     return structures_[index];
 }
 
@@ -393,13 +475,10 @@ inline bool AngleStructures::dependsOnParent() const {
     return true;
 }
 
-inline AngleStructures* AngleStructures::enumerate(Triangulation<3>& owner,
-        bool tautOnly, ProgressTracker* tracker) {
-    return new AngleStructures(owner, tautOnly, tracker);
-}
-
-inline AngleStructures::AngleStructures(bool tautOnly) :
-        tautOnly_(tautOnly) {
+inline AngleStructures::AngleStructures(bool tautOnly, AngleAlg algHints,
+        const Triangulation<3>& triangulation) :
+        triangulation_(triangulation), tautOnly_(tautOnly),
+        algorithm_(algHints) {
 }
 
 } // namespace regina

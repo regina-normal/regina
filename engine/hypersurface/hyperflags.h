@@ -153,10 +153,10 @@ inline HyperList operator | (HyperListFlags lhs, HyperListFlags rhs) {
  *
  * These options are typically combined in a bitwise fashion using the
  * HyperAlg type, and then passed to enumeration routines such as
- * NormalHypersurfaces::enumerate().
+ * the NormalHypersurfaces class constructor.
  *
  * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as HyperList objects (and they can be
+ * they are treated by Python as HyperAlg objects (and they can be
  * combined and/or queried as such).
  * The underlying enumeration type is not exposed to Python.
  */
@@ -254,7 +254,7 @@ enum HyperAlgFlags {
 };
 
 /**
- * A combination of flags for types of normal surface lists.
+ * A combination of flags for normal hypersurface enumeration algorithms.
  *
  * \ifacespython This is present, and all values in the HyperAlgFlags
  * enumeration type are treated as members of this HyperAlg class.

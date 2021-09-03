@@ -338,6 +338,20 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         /*@{*/
 
+        using Snapshottable<Triangulation<3>>::isReadOnlySnapshot;
+
+        /**
+         * Indicates whether some other object in the calculation engine
+         * is responsible for ultimately destroying this triangulation.
+         *
+         * This overrides the implementation from Packet, since triangulations
+         * can be snapshotted.
+         *
+         * @return \c true if and only if some other object owns this
+         * triangulation.
+         */
+        bool hasOwner() const;
+
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
         virtual bool dependsOnParent() const override;
@@ -903,7 +917,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @return \c true if and only if this triangulation is
          * 0-efficient.
          */
-        bool isZeroEfficient();
+        bool isZeroEfficient() const;
         /**
          * Is it already known whether or not this triangulation is
          * 0-efficient?
@@ -945,13 +959,10 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * triangulation, and so the surface cannot be used after this
          * triangulation is destroyed.
          *
-         * \warning This routine may, in some scenarios, temporarily modify the
-         * packet tree by creating and then destroying a normal surface list.
-         *
          * @return a non-vertex-linking normal sphere or disc, or no value if
          * none exists.
          */
-        std::optional<NormalSurface> nonTrivialSphereOrDisc();
+        std::optional<NormalSurface> nonTrivialSphereOrDisc() const;
         /**
          * A deprecated alias for nonTrivialSphereOrDisc(), which searches for
          * a non-vertex-linking normal sphere or disc within this triangulation.
@@ -962,7 +973,8 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @return a non-vertex-linking normal sphere or disc, or no value if
          * none exists.
          */
-        [[deprecated]] std::optional<NormalSurface> hasNonTrivialSphereOrDisc();
+        [[deprecated]] std::optional<NormalSurface> hasNonTrivialSphereOrDisc()
+            const;
         /**
          * Searches for an octagonal almost normal 2-sphere within this
          * triangulation.  If such a surface exists, this routine is
@@ -976,13 +988,10 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * and 0-efficient.  These preconditions are almost certainly more
          * restrictive than they need to be, but we stay safe for now.
          *
-         * \warning This routine may, in some scenarios, temporarily modify the
-         * packet tree by creating and then destroying a normal surface list.
-         *
          * @return an octagonal almost normal 2-sphere, or no value if
          * none exists.
          */
-        std::optional<NormalSurface> octagonalAlmostNormalSphere();
+        std::optional<NormalSurface> octagonalAlmostNormalSphere() const;
         /**
          * A deprecated alias for octagonalAlmostNormalSphere(), which searches
          * for an octagonal almost normal 2-sphere within this triangulation.
@@ -997,7 +1006,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * none exists.
          */
         [[deprecated]] std::optional<NormalSurface>
-            hasOctagonalAlmostNormalSphere();
+            hasOctagonalAlmostNormalSphere() const;
         /**
          * Searches for a strict angle structure on this triangulation.
          * Recall that a \e strict angle structure is one in which every
@@ -1933,7 +1942,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * two-sided projective planes, then this routine might still succeed
          * but it might fail; however, such a failure will always be detected,
          * and in such a case this routine will throw an exception of type
-         * regina::Unsolved.
+         * regina::UnsolvedCase.
          *
          * Note that this routine is currently only available for closed
          * triangulations; see the list of preconditions for full details.
@@ -3461,12 +3470,12 @@ inline bool Triangulation<3>::knowsZeroEfficient() const {
 }
 
 inline std::optional<NormalSurface>
-        Triangulation<3>::hasNonTrivialSphereOrDisc() {
+        Triangulation<3>::hasNonTrivialSphereOrDisc() const {
     return nonTrivialSphereOrDisc();
 }
 
 inline std::optional<NormalSurface>
-        Triangulation<3>::hasOctagonalAlmostNormalSphere() {
+        Triangulation<3>::hasOctagonalAlmostNormalSphere() const {
     return octagonalAlmostNormalSphere();
 }
 
@@ -3504,7 +3513,7 @@ inline long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
         for (auto& s : ans)
             primeParent->insertChildLast(s.release());
         return ans.size();
-    } catch (const regina::Unsolved&) {
+    } catch (const regina::UnsolvedCase&) {
         return -1;
     }
 }
@@ -3551,6 +3560,11 @@ inline void Triangulation<3>::recognizer(std::ostream& out) const {
 
 inline bool Triangulation<3>::saveRecognizer(const char* filename) const {
     return saveRecogniser(filename);
+}
+
+inline bool Triangulation<3>::hasOwner() const {
+    return Packet::hasOwner() ||
+        Snapshottable<Triangulation<3>>::isReadOnlySnapshot();
 }
 
 } // namespace regina

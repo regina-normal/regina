@@ -33,6 +33,7 @@
 #include "regina-config.h"
 #include "packet/container.h"
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 #include "eventids.h"
 #include "examplesaction.h"

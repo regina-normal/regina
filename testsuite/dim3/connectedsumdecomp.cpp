@@ -418,7 +418,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             std::vector<std::unique_ptr<Triangulation<3>>> ans;
             try {
                 ans = tri->summands();
-            } catch (const regina::Unsolved&) {
+            } catch (const regina::UnsolvedCase&) {
                 // The routine reported an embedded two-sided projective plane.
                 if (tri->isOrientable()) {
                     std::ostringstream msg;

@@ -69,7 +69,7 @@ namespace regina {
  * vertex link.
  */
 
-std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
+std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() const {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return std::nullopt;
@@ -117,12 +117,10 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
         } else if (s.eulerChar() == 1) {
             if (s.hasRealBoundary()) {
                 // Must be a disc.
-                NormalSurface ans = s;
-                return ans;
+                return s;
             } else if (! s.isTwoSided()) {
                 // A projective plane that doubles to a sphere.
-                NormalSurface ans = s.doubleSurface();
-                return ans;
+                return s.doubleSurface();
             }
         }
     }
@@ -130,7 +128,8 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
     return std::nullopt;
 }
 
-std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
+std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere()
+        const {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return std::nullopt;
@@ -195,8 +194,7 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
                 }
             if (found && ! broken) {
                 // This is it!
-                NormalSurface ans = s;
-                return ans;
+                return s;
             }
         }
     }
@@ -204,23 +202,18 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
     return std::nullopt;
 }
 
-bool Triangulation<3>::isZeroEfficient() {
+bool Triangulation<3>::isZeroEfficient() const {
     if (! zeroEfficient_.has_value()) {
         if (hasTwoSphereBoundaryComponents())
             zeroEfficient_ = false;
-        else {
-            // Operate on a clone of this triangulation, to avoid
-            // changing the real packet tree.
-            Triangulation<3> clone(*this, false);
-            if (clone.nonTrivialSphereOrDisc()) {
-                zeroEfficient_ = false;
-            } else {
-                zeroEfficient_ = true;
+        else if (nonTrivialSphereOrDisc()) {
+            zeroEfficient_ = false;
+        } else {
+            zeroEfficient_ = true;
 
-                // Things implied by 0-efficiency:
-                if (isValid() && isClosed() && isConnected())
-                    irreducible_ = true;
-            }
+            // Things implied by 0-efficiency:
+            if (isValid() && isClosed() && isConnected())
+                irreducible_ = true;
         }
     }
     return *zeroEfficient_;

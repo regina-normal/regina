@@ -33,6 +33,7 @@
 // Regina core includes:
 #include "maths/matrix.h"
 #include "hypersurface/normalhypersurfaces.h"
+#include "triangulation/dim4.h"
 
 // UI includes:
 #include "./coordinates.h" // Use ./ to avoid picking up the iOS header.

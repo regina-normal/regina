@@ -153,10 +153,10 @@ inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
  *
  * These options are typically combined in a bitwise fashion using the
  * NormalAlg type, and then passed to enumeration routines such as
- * NormalSurfaces::enumerate().
+ * the NormalSurfaces class constructor.
  *
  * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as NormalList objects (and they can be
+ * they are treated by Python as NormalAlg objects (and they can be
  * combined and/or queried as such).
  * The underlying enumeration type is not exposed to Python.
  */
@@ -344,7 +344,7 @@ enum NormalAlgFlags {
 };
 
 /**
- * A combination of flags for types of normal surface lists.
+ * A combination of flags for normal surface enumeration algorithms.
  *
  * \ifacespython This is present, and all values in the NormalAlgFlags
  * enumeration type are treated as members of this NormalAlg class.

@@ -66,12 +66,12 @@ void addNormalSurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
         .def(pybind11::init<const NormalSurface&>())
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>())
-        .def(pybind11::init<Triangulation<3>&, regina::NormalEncoding,
+        .def(pybind11::init<const Triangulation<3>&, regina::NormalEncoding,
             const regina::Vector<regina::LargeInteger>&>())
-        .def(pybind11::init<Triangulation<3>&, regina::NormalCoords,
+        .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
             const regina::Vector<regina::LargeInteger>&>())
-        .def(pybind11::init([](Triangulation<3>& t, regina::NormalEncoding enc,
-                pybind11::list values) {
+        .def(pybind11::init([](const Triangulation<3>& t,
+                regina::NormalEncoding enc, pybind11::list values) {
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
             if (values.size() != v.size())
                 throw pybind11::index_error(
@@ -85,8 +85,8 @@ void addNormalSurface(pybind11::module_& m) {
             }
             return new NormalSurface(t, enc, std::move(v));
         }))
-        .def(pybind11::init([](Triangulation<3>& t, regina::NormalCoords coords,
-                pybind11::list values) {
+        .def(pybind11::init([](const Triangulation<3>& t,
+                regina::NormalCoords coords, pybind11::list values) {
             regina::NormalEncoding enc(coords);
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
             if (values.size() != v.size())
@@ -119,7 +119,8 @@ void addNormalSurface(pybind11::module_& m) {
         .def("edgeWeight", &NormalSurface::edgeWeight)
         .def("arcs", &NormalSurface::arcs)
         .def("octPosition", &NormalSurface::octPosition)
-        .def("triangulation", &NormalSurface::triangulation)
+        .def("triangulation", &NormalSurface::triangulation,
+            pybind11::return_value_policy::reference_internal)
         .def("name", &NormalSurface::name)
         .def("setName", &NormalSurface::setName)
         .def("writeRawVector", [](const NormalSurface& s) { // deprecated

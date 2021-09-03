@@ -1151,7 +1151,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
         std::vector<std::unique_ptr<Triangulation<3>>> ans;
         try {
             ans = tri->summands(true);
-        } catch (regina::Unsolved&) {
+        } catch (regina::UnsolvedCase&) {
             dlg.reset();
             ReginaSupport::sorry(ui,
                 tr("<qt>This manifold contains an embedded two-sided "

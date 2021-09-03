@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "enumerate/treelp.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using regina::LPSystem;

@@ -108,10 +108,13 @@ namespace {
     }
 }
 
-NormalSurfaces::NormalSurfaces(Triangulation<3>& owner, NormalCoords coords,
-        NormalList which, NormalAlg algHints, ProgressTracker* tracker) :
-        coords_(coords), which_(which), algorithm_(algHints) {
-    std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
+NormalSurfaces::NormalSurfaces(const Triangulation<3>& triangulation,
+        NormalCoords coords, NormalList which, NormalAlg algHints,
+        ProgressTracker* tracker) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algHints) {
+    std::optional<MatrixInt> eqns = makeMatchingEquations(
+        triangulation, coords);
     if (! eqns) {
         if (tracker)
             tracker->setFinished();
@@ -122,11 +125,36 @@ NormalSurfaces::NormalSurfaces(Triangulation<3>& owner, NormalCoords coords,
         // We pass the matching equations as an argument to the thread
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
-        std::thread([=, &owner](MatrixInt e) {
-            Enumerator(this, &owner, e, tracker).enumerate();
+        std::thread([=](MatrixInt e) {
+            Enumerator(this, e, tracker, nullptr).enumerate();
         }, std::move(*eqns)).detach();
     } else
-        Enumerator(this, &owner, *eqns, tracker).enumerate();
+        Enumerator(this, *eqns, tracker, nullptr).enumerate();
+}
+
+NormalSurfaces* NormalSurfaces::enumerate(Triangulation<3>& owner,
+        NormalCoords coords, NormalList which, NormalAlg algHints,
+        ProgressTracker* tracker) {
+    // Like the constructor, but (1) we have tree insertion; and (2) we
+    // need to convert exceptions to null returns.
+    std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
+    if (! eqns) {
+        if (tracker)
+            tracker->setFinished();
+        return nullptr;
+    }
+
+    NormalSurfaces* ans = new NormalSurfaces(coords, which, algHints, owner);
+    if (tracker) {
+        // We pass the matching equations as an argument to the thread
+        // function so we can be sure that the equations are moved into
+        // the thread before they are destroyed.
+        std::thread([=, &owner](MatrixInt e) {
+            Enumerator(ans, e, tracker, &owner).enumerate();
+        }, std::move(*eqns)).detach();
+    } else
+        Enumerator(ans, *eqns, tracker, &owner).enumerate();
+    return ans;
 }
 
 void NormalSurfaces::Enumerator::enumerate() {
@@ -144,8 +172,8 @@ void NormalSurfaces::Enumerator::enumerate() {
         fillFundamental();
 
     // Insert the results into the packet tree, but only once they are ready.
-    if (! (tracker_ && tracker_->isCancelled()))
-        triang_->insertChildLast(list_);
+    if (treeParent_ && ! (tracker_ && tracker_->isCancelled()))
+        treeParent_->insertChildLast(list_);
 
     if (tracker_)
         tracker_->setFinished();
@@ -155,6 +183,10 @@ void NormalSurfaces::Enumerator::fillVertex() {
     // ----- Decide which algorithm to use -----
 
     // Here we will set the algorithm_ flag to precisely what we plan to do.
+
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<3>& triang(*list_->triangulation_);
 
     // First clear out all irrelevant options.
     list_->algorithm_ &= (
@@ -171,8 +203,8 @@ void NormalSurfaces::Enumerator::fillVertex() {
         // If not, switch back to standard-direct.
         if (list_->algorithm_.has(NS_VERTEX_VIA_REDUCED) &&
                 ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
-                    triang_->isValid() &&
-                    (! triang_->isIdeal())))
+                    triang.isValid() &&
+                    (! triang.isIdeal())))
                 list_->algorithm_ ^=
                     (NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
     } else {
@@ -214,7 +246,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
     // ----- Run the enumeration algorithm -----
 
-    if (triang_->isEmpty()) {
+    if (triang.isEmpty()) {
         // Handle the empty triangulation separately.
         list_->algorithm_ = NS_VERTEX_DD; /* shrug */
         // Nothing to do.
@@ -244,10 +276,11 @@ void NormalSurfaces::Enumerator::fillVertex() {
             NS_AN_QUAD_OCT);
         Enumerator e(
             new NormalSurfaces(small, list_->which_,
-                list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED),
-            triang_,
-            *makeMatchingEquations(*triang_, small),
-            tracker_);
+                list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED,
+                list_->triangulation_),
+            *makeMatchingEquations(triang, small),
+            tracker_,
+            nullptr);
         if (list_->algorithm_.has(NS_VERTEX_TREE)) {
             if (tracker_)
                 tracker_->newStage("Enumerating reduced solution set\n"
@@ -268,7 +301,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
         // Expand to the standard the solution set.
         if (tracker_)
             tracker_->newStage("Expanding to standard solution set", 0.1);
-        list_->buildStandardFromReduced(*triang_, e.list_->surfaces_, tracker_);
+        list_->buildStandardFromReduced(triang, e.list_->surfaces_, tracker_);
 
         // Clean up.
         delete e.list_;
@@ -277,17 +310,18 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
 void NormalSurfaces::Enumerator::fillVertexDD() {
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, &c, tracker_);
     } else {
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, nullptr, tracker_);
     }
 }
@@ -325,20 +359,20 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     switch (list_->coords_) {
         case NS_STANDARD:
-            eqns = *makeMatchingEquations(*triang_, NS_STANDARD);
-            maxColsRHS = triang_->size() * 5;
+            eqns = *makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
+            maxColsRHS = list_->triangulation_->size() * 5;
             break;
         case NS_QUAD:
-            eqns = *makeMatchingEquations(*triang_, NS_QUAD);
-            maxColsRHS = triang_->size();
+            eqns = *makeMatchingEquations(*list_->triangulation_, NS_QUAD);
+            maxColsRHS = list_->triangulation_->size();
             break;
         case NS_AN_STANDARD:
-            eqns = *makeMatchingEquations(*triang_, NS_STANDARD);
-            maxColsRHS = triang_->size() * 5 + 1;
+            eqns = *makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
+            maxColsRHS = list_->triangulation_->size() * 5 + 1;
             break;
         case NS_AN_QUAD_OCT:
-            eqns = *makeMatchingEquations(*triang_, NS_QUAD);
-            maxColsRHS = triang_->size() + 1;
+            eqns = *makeMatchingEquations(*list_->triangulation_, NS_QUAD);
+            maxColsRHS = list_->triangulation_->size() + 1;
             break;
         // TODO: Support NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED here.
         default:
@@ -461,7 +495,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         // equations as the first step of the enumeration process, we are
         // assured that LPConstraintNonSpun can be used without problems.
         TreeEnumeration<LPConstraintNonSpun, BanNone, Integer> search(
-            *triang_, list_->coords_);
+            *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
             if (tracker_ && tracker_->isCancelled())
@@ -469,7 +503,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         }
     } else {
         TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
-            *triang_, list_->coords_);
+            *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
             if (tracker_ && tracker_->isCancelled())
@@ -480,7 +514,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
 
 void NormalSurfaces::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
-    if (triang_->isEmpty()) {
+    if (list_->triangulation_->isEmpty()) {
         list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
         return;
     }
@@ -516,17 +550,18 @@ void NormalSurfaces::Enumerator::fillFundamentalDual() {
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, &c, tracker_);
     } else {
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, nullptr, tracker_);
     }
 }
@@ -539,17 +574,18 @@ void NormalSurfaces::Enumerator::fillFundamentalCD() {
             "Enumerating Hilbert basis\n(Contejean-Devie method)");
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
         HilbertCD::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, &c);
     } else {
         HilbertCD::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, eqns_, nullptr);
     }
 }
@@ -569,8 +605,9 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
     NormalSurfaces vtx(list_->coords_,
         NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-        list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator e(&vtx, triang_, std::move(eqns_), nullptr);
+        list_->algorithm_ /* passes through any vertex enumeration flags */,
+        list_->triangulation_);
+    Enumerator e(&vtx, std::move(eqns_), nullptr, nullptr);
     e.fillVertex();
 
     // We cannot use eqns below here, since we moved it into e.
@@ -594,17 +631,18 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, shadows.begin(), shadows.end(), &c, tracker_);
     } else {
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }, shadows.begin(), shadows.end(), nullptr, tracker_);
     }
 }
@@ -653,8 +691,8 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         // Fetch validity constraints from the registry.
         std::unique_ptr<EnumConstraints> constraints =
             (list_->which_.has(NS_EMBEDDED_ONLY) ?
-            std::make_unique<EnumConstraints>(
-                makeEmbeddedConstraints(*triang_, list_->coords_)) :
+            std::make_unique<EnumConstraints>(makeEmbeddedConstraints(
+                *list_->triangulation_, list_->coords_)) :
             nullptr);
 
         const std::vector<std::vector<mpz_class>> basis =
@@ -683,8 +721,8 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
                     v[i].setRaw(b[i].get_mpz_t());
                     v[i].tryReduce();
                 }
-                list_->surfaces_.push_back(NormalSurface(*triang_,
-                    list_->coords_, std::move(v)));
+                list_->surfaces_.push_back(NormalSurface(
+                    list_->triangulation_, list_->coords_, std::move(v)));
             }
         }
     }

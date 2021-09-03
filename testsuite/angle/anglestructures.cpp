@@ -449,7 +449,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         static void verifyTreeVsDD(Triangulation<3>* tri) {
             AngleStructures all(*tri, false);
             AngleStructures tautTree(*tri, true);
-            AngleStructures* tautDD = AngleStructures::enumerateTautDD(*tri);
+            AngleStructures tautDD(*tri, true, regina::AS_ALG_DD);
             bool strictTree = tri->hasStrictAngleStructure();
 
             if (all.isTautOnly()) {
@@ -466,15 +466,29 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! tautDD->isTautOnly()) {
+            if (! tautDD.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (DD) gives "
                     "incorrect flags for " << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
+            if (tautTree.algorithm() != regina::AS_ALG_TREE) {
+                std::ostringstream msg;
+                msg << "Taut angle structure enumeration (tree) gives "
+                    "incorrect algorithm for " << tri->label() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tautDD.algorithm() != regina::AS_ALG_DD) {
+                std::ostringstream msg;
+                msg << "Taut angle structure enumeration (DD) gives "
+                    "incorrect algorithm for " << tri->label() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             if (all.spansTaut() != tautTree.spansTaut() ||
-                    all.spansTaut() != tautDD->spansTaut()) {
+                    all.spansTaut() != tautDD.spansTaut()) {
                 std::ostringstream msg;
                 msg << "Flag for spansTaut() mismatched between "
                     "different enumeration methods for "
@@ -497,7 +511,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! identical(tautTree, *tautDD)) {
+            if (! identical(tautTree, tautDD)) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration gives "
                     "different solutions for tree vs DD for "
@@ -512,8 +526,6 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     "for "<< tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete tautDD;
         }
 
         void tautStrictTreeVsDD() {

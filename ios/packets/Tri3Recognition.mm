@@ -364,7 +364,7 @@
                         code:^{
                             try {
                                 summands = self.packet->summands(true);
-                            } catch (regina::Unsolved&) {
+                            } catch (regina::UnsolvedCase&) {
                                 // We can detect this by having a non-orientable triangulation with an empty summands list.
                             }
                         }

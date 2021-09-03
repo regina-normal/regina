@@ -49,6 +49,7 @@
 #include "maths/vector.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
+#include "utilities/snapshot.h"
 
 namespace regina {
 
@@ -71,14 +72,16 @@ typedef Matrix<Integer, true> MatrixInt;
  * such as tetrahedra(), prisms(), edgeWeight() and so on are independent
  * of the underlying vector encoding being used.
  *
- * Importantly, the vector encoding will always need to be interpreted
- * relative to the underlying 4-manifold triangulation.  This means that,
- * if the underlying triangulation ever changes, this NormalHypersurface object
- * will become invalid.
- *
  * Note that non-compact hypersurfaces (surfaces with infinitely many pieces)
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * will return LargeInteger::infinity where appropriate.
+ *
+ * Since Regina 7.0, you can modify or even destroy the original
+ * triangulation that was used to create this normal hypersurface.  If you do,
+ * then this normal hypersurface will automatically make a private copy of
+ * the original triangulation as an ongoing reference.  Different normal
+ * hypersurfaces can all share the same private copy, so this is not an
+ * expensive process.
  *
  * Internally, a normal hypersurface is represented by a Vector<LargeInteger>
  * (possibly using a different coordinate system from the one in which
@@ -112,10 +115,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
                  coordinate vector. */
         Vector<LargeInteger> vector_;
             /**< Contains the coordinates of the normal hypersurface. */
-        const Triangulation<4>* triangulation_;
-            /**< The triangulation in which this normal hypersurface resides.
-                 This is kept as a pointer to support the assignment
-                 operator; it must never be \c null. */
+        SnapshotRef<Triangulation<4>> triangulation_;
+            /**< The triangulation in which this normal hypersurface resides. */
 
         std::string name_;
             /**< An optional name associated with this hypersurface. */
@@ -144,24 +145,45 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
     public:
         /**
          * Creates a new copy of the given normal hypersurface.
-         *
-         * @param other the normal hypersurface to clone.
          */
         NormalHypersurface(const NormalHypersurface&) = default;
 
         /**
-         * Creates a new copy of the given normal hypersurface.
+         * Creates a new copy of the given normal hypersurface, but
+         * relocated to the given triangulation.
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given triangulation is either the same as, or is
          * combinatorially identical to, the triangulation in which
-         * \a other resides.
+         * \a src resides.
          *
-         * @param other the normal hypersurface to copy.
+         * @param src the normal hypersurface to copy.
          * @param triangulation the triangulation in which this new
          * hypersurface will reside.
          */
-        NormalHypersurface(const NormalHypersurface& other,
+        NormalHypersurface(const NormalHypersurface& src,
             const Triangulation<4>& triangulation);
+
+        /**
+         * Creates a new copy of the given normal hypersurface, but
+         * relocated to the given triangulation.
+         *
+         * \pre The given triangulation is either the same as, or is
+         * combinatorially identical to, the triangulation in which
+         * \a src resides.
+         *
+         * \ifacespython Not present.
+         *
+         * @param src the normal hypersurface to copy.
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this new hypersurface will reside.
+         */
+        NormalHypersurface(const NormalHypersurface& src,
+            const SnapshotRef<Triangulation<4>>& triangulation);
 
         /**
          * Moves the given hypersurface into this new normal hypersurface.
@@ -179,15 +201,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * encoding: NormalHypersurface will sometimes convert the vector to
          * use a different encoding for its own internal storage.
          *
-         * This constructor takes a deep copy of the given vector.
-         * There is a move version also, for situations where you can make
-         * your vector an rvalue reference.  Note that none of the
-         * constructors ever copy the triangulation: a normal hypersurface
-         * always maintains just a reference to its enclosing triangulation.
-         *
          * Despite what is said in the class notes, it is okay if the
          * given vector encoding does not include tetrahedron coordinates.
          * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the given
@@ -214,22 +235,21 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * encoding: NormalHypersurface will sometimes convert the vector to
          * use a different encoding for its own internal storage.
          *
-         * This constructor moves the contents of the given vector into
-         * this surface, and therefore runs in fast constant time.
-         * Note that none of the constructors ever copy the triangulation:
-         * a normal hypersurface always maintains just a reference to its
-         * enclosing triangulation.
-         *
          * Despite what is said in the class notes, it is okay if the
          * given vector encoding does not include tetrahedron coordinates.
          * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
-         * you prefer) pass a Python list of integers.
+         * \ifacespython Not present, but you can use the version that
+         * copies \a vector.
          *
          * @param triang the triangulation in which this normal hypersurface
          * resides.
@@ -243,6 +263,64 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
 
         /**
          * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given vector encoding.
+         *
+         * There is no guarantee that this hypersurface will keep the given
+         * encoding: NormalHypersurface will sometimes convert the vector to
+         * use a different encoding for its own internal storage.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given vector encoding does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the given
+         * encoding.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         * @param enc indicates precisely how the given vector encodes a normal
+         * hypersurface.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
+            HyperEncoding enc, const Vector<LargeInteger>& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given vector encoding.
+         *
+         * There is no guarantee that this hypersurface will keep the given
+         * encoding: NormalHypersurface will sometimes convert the vector to
+         * use a different encoding for its own internal storage.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given vector encoding does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the given
+         * encoding.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation and copies \a vector.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         * @param enc indicates precisely how the given vector encodes a normal
+         * hypersurface.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
+            HyperEncoding enc, Vector<LargeInteger>&& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
@@ -253,15 +331,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * In the same spirit, there is no guarantee that this hypersurface will
          * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
          *
-         * This constructor takes a deep copy of the given vector.
-         * There is a move version also, for situations where you can make
-         * your vector an rvalue reference.  Note that none of the
-         * constructors ever copy the triangulation: a normal hypersurface
-         * always maintains just a reference to its enclosing triangulation.
-         *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
          * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
@@ -292,22 +369,21 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * In the same spirit, there is no guarantee that this hypersurface will
          * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
          *
-         * This constructor moves the contents of the given vector into
-         * this surface, and therefore runs in fast constant time.
-         * Note that none of the constructors ever copy the triangulation:
-         * a normal hypersurface always maintains just a reference to its
-         * enclosing triangulation.
-         *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
          * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
          * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
-         * you prefer) pass a Python list of integers.
+         * \ifacespython Not present, but you can use the version that
+         * copies \a vector.
          *
          * @param triang the triangulation in which this normal hypersurface
          * resides.
@@ -318,6 +394,72 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
             Vector<LargeInteger>&& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given coordinate system.
+         *
+         * It is assumed that this hypersurface uses the vector encoding
+         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * if you are extracting the vector from some other normal hypersurface,
+         * since Regina may internally convert to use a different encoding from
+         * whatever was used during enumeration and/or read from file.
+         * In the same spirit, there is no guarantee that this hypersurface will
+         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given coordinate system does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the encoding
+         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         * @param coords the coordinate system from which the vector
+         * encoding will be deduced.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
+            HyperCoords coords, const Vector<LargeInteger>& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given coordinate system.
+         *
+         * It is assumed that this hypersurface uses the vector encoding
+         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * if you are extracting the vector from some other normal hypersurface,
+         * since Regina may internally convert to use a different encoding from
+         * whatever was used during enumeration and/or read from file.
+         * In the same spirit, there is no guarantee that this hypersurface will
+         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given coordinate system does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the encoding
+         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation and copies \a vector.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         * @param coords the coordinate system from which the vector
+         * encoding will be deduced.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
+            HyperCoords coords, Vector<LargeInteger>&& vector);
 
         /**
          * Deprecated routine that creates a newly allocated clone of this
@@ -451,6 +593,25 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
 
         /**
          * Returns the triangulation in which this normal hypersurface resides.
+         *
+         * This will be a snapshot frozen in time of the triangulation
+         * that was originally passed to the NormalHypersurface constructor.
+         *
+         * This will return a correct result even if the original triangulation
+         * has since been modified or destroyed.  However, in order to ensure
+         * this behaviour, it is possible that at different points in time
+         * this function may return references to different C++ objects.
+         *
+         * The rules for using the triangulation() reference are:
+         *
+         * - Do not keep the resulting reference as a long-term reference or
+         *   pointer of your own, since in time you may find yourself referring
+         *   to the wrong object (see above).  Just call this function again.
+         *
+         * - You must respect the read-only nature of the result (i.e.,
+         *   you must not cast the constness away).  The snapshotting
+         *   process detects modifications, and modifying the frozen
+         *   snapshot may result in an exception being thrown.
          *
          * @return a reference to the underlying triangulation.
          */
@@ -838,7 +999,7 @@ void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept;
 
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         HyperEncoding enc, const Vector<LargeInteger>& vector) :
-        enc_(enc), vector_(vector), triangulation_(&tri) {
+        enc_(enc), vector_(vector), triangulation_(tri) {
     // This call to storesTetrahedra() is unnecessary, but we'd like it
     // accessible to the inline version.  (Same goes for the similar
     // occurrences of storesTetrahedra() in the constructors below.)
@@ -848,14 +1009,30 @@ inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
 
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         HyperEncoding enc, Vector<LargeInteger>&& vector) :
-        enc_(enc), vector_(std::move(vector)), triangulation_(&tri) {
+        enc_(enc), vector_(std::move(vector)), triangulation_(tri) {
     if (! enc_.storesTetrahedra())
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
 
+inline NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri,
+        HyperEncoding enc, const Vector<LargeInteger>& vector) :
+        enc_(enc), vector_(vector), triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(*tri, vector_, enc_);
+}
+
+inline NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri,
+        HyperEncoding enc, Vector<LargeInteger>&& vector) :
+        enc_(enc), vector_(std::move(vector)), triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(*tri, vector_, enc_);
+}
+
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         HyperCoords coords, const Vector<LargeInteger>& vector) :
-        enc_(coords), vector_(vector), triangulation_(&tri) {
+        enc_(coords), vector_(vector), triangulation_(tri) {
     if (! enc_.storesTetrahedra())
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
@@ -863,17 +1040,42 @@ inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         HyperCoords coords, Vector<LargeInteger>&& vector) :
         enc_(coords), vector_(std::move(vector)),
-        triangulation_(&tri) {
+        triangulation_(tri) {
     if (! enc_.storesTetrahedra())
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
 
-inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other,
+inline NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri,
+        HyperCoords coords, const Vector<LargeInteger>& vector) :
+        enc_(coords), vector_(vector), triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(*tri, vector_, enc_);
+}
+
+inline NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri,
+        HyperCoords coords, Vector<LargeInteger>&& vector) :
+        enc_(coords), vector_(std::move(vector)),
+        triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(*tri, vector_, enc_);
+}
+
+inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
         const Triangulation<4>& triangulation) :
-        NormalHypersurface(other) {
-    // We will happily accept one redundant pointer assignment as the
+        NormalHypersurface(src) {
+    // We will happily accept one redundant SnapshotRef assignment as the
     // cost of removing many lines of code.
-    triangulation_ = &triangulation;
+    triangulation_ = triangulation;
+}
+
+inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
+        const SnapshotRef<Triangulation<4>>& triangulation) :
+        NormalHypersurface(src) {
+    // We will happily accept one redundant SnapshotRef assignment as the
+    // cost of removing many lines of code.
+    triangulation_ = triangulation;
 }
 
 inline NormalHypersurface* NormalHypersurface::clone() const {
@@ -883,7 +1085,7 @@ inline NormalHypersurface* NormalHypersurface::clone() const {
 inline void NormalHypersurface::swap(NormalHypersurface& other) noexcept {
     std::swap(enc_, other.enc_);
     vector_.swap(other.vector_);
-    std::swap(triangulation_, other.triangulation_);
+    triangulation_.swap(other.triangulation_);
 
     name_.swap(other.name_);
     orientable_.swap(other.orientable_);
@@ -970,7 +1172,7 @@ inline NormalHypersurface NormalHypersurface::operator + (
     // Given our current conditions on vector storage, both underlying
     // integer vectors should store both tetrahedra and prisms.
     // This means that we can just add the vectors directly.
-    return NormalHypersurface(*triangulation_, enc_ + rhs.enc_,
+    return NormalHypersurface(triangulation_, enc_ + rhs.enc_,
             vector_ + rhs.vector_);
 }
 

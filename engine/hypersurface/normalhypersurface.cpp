@@ -79,7 +79,7 @@ bool NormalHypersurface::isCompact() const {
 NormalHypersurface NormalHypersurface::doubleHypersurface() const {
     // Don't use the copy constructor, since we want to choose which
     // properties we keep.
-    NormalHypersurface ans(*triangulation_, enc_, vector_);
+    NormalHypersurface ans(triangulation_, enc_, vector_);
 
     ans.vector_ += ans.vector_;
 
@@ -211,9 +211,13 @@ void NormalHypersurface::calculateRealBoundary() const {
         return;
     }
 
-    size_t tot = triangulation_->size();
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<4>& tri(*triangulation_);
+
+    size_t tot = tri.size();
     for (size_t index = 0; index < tot; index++) {
-        const Pentachoron<4>* pent = triangulation_->pentachoron(index);
+        const Pentachoron<4>* pent = tri.pentachoron(index);
         if (pent->hasBoundary()) {
             // Check for piece types with boundary
             for (int type = 0; type < 10; type++) {

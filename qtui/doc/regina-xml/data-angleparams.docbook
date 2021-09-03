@@ -34,8 +34,12 @@ angleparams ::=</synopsis>
       <entry><emphasis role="bold">Type</emphasis></entry>
      </row>
      <row>
+      <entry><sgmltag>algorithm</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
       <entry><sgmltag>tautonly</sgmltag></entry>
-      <entry><type>CDATA</type></entry>
+      <entry><type>CDATA</type> (required)</entry>
      </row>
     </tbody>
    </tgroup>
@@ -71,6 +75,30 @@ angleparams ::=</synopsis>
  <refsect1>
   <title>Attributes</title>
   <variablelist>
+  <varlistentry>
+    <term><sgmltag>algorithm</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies the algorithm that was used to enumerate these angle
+      structures.
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from the <classname>AngleAlgFlags</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 32, which represents the
+      <classname>AngleAlgFlags</classname> constant
+      <literal>AS_ALG_DD</literal>.
+     </para>
+     <para>
+      &regina; versions&nbsp;6.0.1 and earlier did not write this
+      attribute.  If it is missing, it will be treated as
+      <literal>AS_ALG_LEGACY</literal>.
+     </para>
+    </listitem>
+   </varlistentry>
    <varlistentry>
     <term><sgmltag>tautonly</sgmltag></term>
     <listitem>
@@ -80,9 +108,11 @@ angleparams ::=</synopsis>
       vertex angle structures are enumerated.
      </para>
      <para>
-      If not specified, this defaults to <literal>F</literal>
-      (which is consistent with earler versions of &regina; in which
-      taut-only enumeration was not an option).
+      &regina; versions&nbsp;4.6 and earlier did not write this
+      attribute (and indeed, they omitted the entire &xml-angleparams; element).
+      If it is missing, it will be treated as <literal>F</literal>
+      (since taut enumeration was not offered in those very old versions
+      of &regina;).
      </para>
     </listitem>
    </varlistentry>

@@ -3804,7 +3804,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             try {
                 sOld = tri->summands();
                 sNew = t.summands();
-            } catch (const regina::Unsolved&) {
+            } catch (const regina::UnsolvedCase&) {
                 if (tri->isOrientable()) {
                     std::ostringstream msg;
                     msg << tri->label() << ": tri and/or tri # tri failed to "

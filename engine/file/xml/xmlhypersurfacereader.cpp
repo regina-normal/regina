@@ -51,7 +51,7 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
     // If this file was created before Regina 7.0, then it will not include
     // a vector encoding.  For those earlier versions of Regina, the encoding
     // is meant to be deduced from the enclosing list's coordinate system.
-    if (vecLen_ < 0 || ! tri_)
+    if (vecLen_ < 0)
         return;
 
     std::vector<std::string> tokens;
@@ -77,10 +77,10 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
     }
 
     if (vecEnc_ != 0)
-        surface_ = NormalHypersurface(*tri_,
+        surface_ = NormalHypersurface(tri_,
             HyperEncoding::fromIntValue(vecEnc_), std::move(vec));
     else
-        surface_ = NormalHypersurface(*tri_, coords_, std::move(vec));
+        surface_ = NormalHypersurface(tri_, coords_, std::move(vec));
     if (! name_.empty())
         surface_->setName(name_);
 }
@@ -109,7 +109,8 @@ XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
     if (list_) {
         // The hypersurface list has already been created.
         if (subTagName == "hypersurface")
-            return new XMLNormalHypersurfaceReader(tri_, list_->coords_);
+            return new XMLNormalHypersurfaceReader(
+                list_->triangulation_, list_->coords_);
     } else {
         // The hypersurface list has not yet been created.
         if (subTagName == "params") {
@@ -123,14 +124,16 @@ XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
                     list_ = new NormalHypersurfaces(
                         static_cast<HyperCoords>(coords),
                         HyperList::fromInt(listType),
-                        HyperAlg::fromInt(algorithm));
+                        HyperAlg::fromInt(algorithm),
+                        *tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old prerelease format.
                     list_ = new NormalHypersurfaces(
                         static_cast<HyperCoords>(coords),
                         HS_LEGACY | (embedded ?
                             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
-                        HS_ALG_LEGACY);
+                        HS_ALG_LEGACY,
+                        *tri_);
                 }
             }
         }
@@ -141,11 +144,10 @@ XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
 void XMLNormalHypersurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (list_)
-        if (subTagName == "hypersurface")
-            if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
-                    subReader)->hypersurface())
-                list_->surfaces_.push_back(std::move(*s));
+    if (list_ && subTagName == "hypersurface")
+        if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+                subReader)->hypersurface())
+            list_->surfaces_.push_back(std::move(*s));
 }
 
 XMLPacketReader* NormalHypersurfaces::xmlReader(Packet* parent,

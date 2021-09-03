@@ -63,7 +63,7 @@ void addNormalSurfaces(pybind11::module_& m) {
 
     pybind11::class_<NormalSurfaces, regina::Packet,
             regina::SafePtr<NormalSurfaces>>(m, "NormalSurfaces")
-        .def(pybind11::init<Triangulation<3>&, regina::NormalCoords,
+        .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
                 regina::NormalList, regina::NormalAlg, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::NS_LIST_DEFAULT,
@@ -76,7 +76,8 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("allowsNonCompact", &NormalSurfaces::allowsNonCompact)
         .def("allowsSpun", &NormalSurfaces::allowsNonCompact) // deprecated
         .def("isEmbeddedOnly", &NormalSurfaces::isEmbeddedOnly)
-        .def("triangulation", &NormalSurfaces::triangulation)
+        .def("triangulation", &NormalSurfaces::triangulation,
+            pybind11::return_value_policy::reference_internal)
         .def("size", &NormalSurfaces::size)
         .def("surfaces", &NormalSurfaces::surfaces,
             pybind11::return_value_policy::reference_internal)
@@ -87,19 +88,21 @@ void addNormalSurfaces(pybind11::module_& m) {
         })
         .def_static("enumerate", [](Triangulation<3>& owner,
                 regina::NormalCoords coords, regina::NormalList which,
-                regina::NormalAlg algHints, ProgressTracker* tracker)
-                -> NormalSurfaces* {
+                regina::NormalAlg algHints) -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            // This means we can't use the progress tracker variant, which
+            // requires threading code internal to the NormalSurfaces class.
             try {
-                return new NormalSurfaces(owner, coords, which, algHints,
-                    tracker);
+                NormalSurfaces* ans = new NormalSurfaces(owner, coords, which,
+                    algHints);
+                owner.insertChildLast(ans);
+                return ans;
             } catch (const regina::NoMatchingEquations&) {
                 return nullptr;
             }
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::NS_LIST_DEFAULT,
-            pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("algHints") = regina::NS_ALG_DEFAULT)
         .def("quadToStandard", &NormalSurfaces::quadToStandard)
         .def("quadOctToStandardAN", &NormalSurfaces::quadOctToStandardAN)
         .def("standardToQuad", &NormalSurfaces::standardToQuad)

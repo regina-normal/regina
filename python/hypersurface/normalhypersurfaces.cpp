@@ -49,33 +49,37 @@ void addNormalHypersurfaces(pybind11::module_& m) {
 
     pybind11::class_<NormalHypersurfaces, regina::Packet,
             regina::SafePtr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
-        .def(pybind11::init<Triangulation<4>&, HyperCoords,
+        .def(pybind11::init<const Triangulation<4>&, HyperCoords,
                 regina::HyperList, regina::HyperAlg, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
-        .def_static("enumerate", [](Triangulation<4>& owner, HyperCoords coords,
-                regina::HyperList which, regina::HyperAlg algHints,
-                ProgressTracker* tracker) -> NormalHypersurfaces* {
+        .def_static("enumerate", [](Triangulation<4>& owner,
+                HyperCoords coords, regina::HyperList which,
+                regina::HyperAlg algHints) -> NormalHypersurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            // This means we can't use the progress tracker variant, which
+            // requires threading code internal to NormalHypersurfaces.
             try {
-                return new NormalHypersurfaces(owner, coords, which, algHints,
-                    tracker);
+                NormalHypersurfaces* ans = new NormalHypersurfaces(owner,
+                    coords, which, algHints);
+                owner.insertChildLast(ans);
+                return ans;
             } catch (const regina::NoMatchingEquations&) {
                 return nullptr;
             }
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,
-            pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("algHints") = regina::HS_ALG_DEFAULT)
         .def("recreateMatchingEquations",
             &NormalHypersurfaces::recreateMatchingEquations)
         .def("coords", &NormalHypersurfaces::coords)
         .def("which", &NormalHypersurfaces::which)
         .def("algorithm", &NormalHypersurfaces::algorithm)
         .def("isEmbeddedOnly", &NormalHypersurfaces::isEmbeddedOnly)
-        .def("triangulation", &NormalHypersurfaces::triangulation)
+        .def("triangulation", &NormalHypersurfaces::triangulation,
+            pybind11::return_value_policy::reference_internal)
         .def("size", &NormalHypersurfaces::size)
         .def("hypersurfaces", &NormalHypersurfaces::hypersurfaces,
             pybind11::return_value_policy::reference_internal)

@@ -1,6 +1,9 @@
 AbelianGroup : class
 Equality type : EqualityType.BY_VALUE
 
+AngleAlg : class
+Equality type : EqualityType.BY_VALUE
+
 AngleStructure : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1213,6 +1216,9 @@ Equality type : EqualityType.BY_VALUE
 FacetSpec9 : class
 Equality type : EqualityType.BY_VALUE
 
+FailedPrecondition : class
+Exception type
+
 FileInfo : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1302,6 +1308,9 @@ Equality type : EqualityType.BY_VALUE
 
 Integer : class
 Equality type : EqualityType.BY_VALUE
+
+InvalidInput : class
+Exception type
 
 Isomorphism10 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1419,6 +1428,9 @@ Equality type : EqualityType.BY_REFERENCE
 
 ModelLinkGraphNode : class
 Equality type : EqualityType.BY_REFERENCE
+
+NoMatchingEquations : class
+Exception type
 
 NormalAlg : class
 Equality type : EqualityType.BY_VALUE
@@ -1688,6 +1700,12 @@ Equality type : EqualityType.BY_VALUE
 SnapPeaCensusTri : class
 Equality type : EqualityType.BY_VALUE
 
+SnapPeaFatalError : class
+Exception type
+
+SnapPeaMemoryFull : class
+Exception type
+
 SnapPeaTriangulation : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1696,6 +1714,9 @@ Equality type : EqualityType.BY_REFERENCE
 
 SnappedTwoSphere : class
 Equality type : EqualityType.BY_REFERENCE
+
+SnapshotWriteError : class
+Exception type
 
 SpiralSolidTorus : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1902,6 +1923,9 @@ Equality type : EqualityType.BY_REFERENCE
 
 TypeTrie7 : class
 Equality type : EqualityType.BY_REFERENCE
+
+UnsolvedCase : class
+Exception type
 
 VectorInt : class
 Equality type : EqualityType.BY_VALUE

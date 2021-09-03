@@ -450,6 +450,34 @@ class Snapshottable {
                 snapshot_->freeze();
         }
 
+        /**
+         * Determines if this object is a read-only deep copy that was created
+         * by a snapshot.
+         *
+         * Recall that, if an image \a I of type \a T has a snapshot pointing
+         * to it, and if that image \a I is about to be modified or destroyed,
+         * then the snapshot will make an internal deep copy of \a I and refer
+         * to that instead.
+         *
+         * The purpose of this routine is to identify whether the current
+         * object is such a deep copy.  This may be important information,
+         * since a snapshot's deep copy is read-only: it must not be modified
+         * or destroyed by the outside world.  (Of course the only way to
+         * access this deep copy is via const reference from the SnapshotRef
+         * dereference operators, but there are settings in which this
+         * constness is "forgotten", such as Regina's Python bindings.)
+         *
+         * \ifacespython Although this Snapshottable base class is not
+         * visible to Python, the isReadOnlySnapshot() function is still
+         * visible as a member function of the class \a T.
+         *
+         * @return \c true if and only if this object is a deep copy that was
+         * taken by a Snapshot object of some original type \a T image.
+         */
+        bool isReadOnlySnapshot() const {
+            return snapshot_ && snapshot_->owner_;
+        }
+
     private:
         /**
          * Returns the current snapshot for this object, creating one if
@@ -515,7 +543,7 @@ class SnapshotRef {
          *
          * If you already have a snapshot reference \a R to the same object
          * in the same state, it is (slightly) cheaper to copy \a R instead
-         * of go through the source object \a src.
+         * of going through the source object \a src.
          *
          * @param src the underlying type \a T object whose current
          * snapshot we wish to maintain a reference to.
@@ -565,6 +593,33 @@ class SnapshotRef {
         ~SnapshotRef() {
             if (--snapshot_->refCount_ == 0)
                 delete snapshot_;
+        }
+        /**
+         * Sets this to be a snapshot of the given object in its current state.
+         *
+         * If you already have a snapshot reference \a R to the same object
+         * in the same state, it is (slightly) cheaper to assign from \a R
+         * instead of assigning from the source object \a src.
+         *
+         * If the old value of this reference was the last surviving reference
+         * to its underlying snapshot, then the old snapshot itself (along
+         * with its internal deep copy of the original object, if it made one)
+         * will be destroyed.
+         *
+         * Self-assignment (<tt>r = *r</tt>) is harmless, and will never cause
+         * the underlying snapshot to be destroyed.
+         *
+         * @param src the underlying type \a T object whose current
+         * snapshot we wish to make this a reference to.
+         * @return a reference to this object.
+         */
+        SnapshotRef& operator = (const T& src) {
+            if (snapshot_ != src.snapshot_) {
+                if (--snapshot_->refCount_ == 0)
+                    delete snapshot_;
+                snapshot_ = src.addSnapshotRef();
+            }
+            return *this;
         }
         /**
          * Sets this to be a copy of the given snapshot reference.

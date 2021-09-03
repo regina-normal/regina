@@ -1816,7 +1816,7 @@ Cg==
 </packet> <!-- LaTeX Document (PDF) -->
 <packet label="3-Manifolds and Knots"
 	type="Container" typeid="1"
-	id="EIV7SgEAAAA="
+	id="sEXwMQEAAAA="
 	parent="Sample Data File">
 <packet label="Layered Solid Torus"
 	type="3-Manifold Triangulation" typeid="3"
@@ -2381,7 +2381,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="32"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -2496,7 +2496,7 @@ CS_unknown
 <packet label="Python Script"
 	type="Script" typeid="7"
 	parent="Sample Data File">
-  <var name="tri" valueid="EIV7SgEAAAA=" value="3-Manifolds and Knots"/>
+  <var name="tri" valueid="sEXwMQEAAAA=" value="3-Manifolds and Knots"/>
   <text># This Python script runs through all 3-manifold triangulations and links
 # in this file.  It prints the first homology of each Regina triangulation,
 # the volume of each SnapPea triangulation, and the HOMFLY-PT polynomial of each link.

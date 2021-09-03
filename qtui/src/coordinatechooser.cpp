@@ -32,6 +32,7 @@
 
 // Regina core includes:
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "coordinatechooser.h"

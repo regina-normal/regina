@@ -55,10 +55,6 @@ void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
     }
 }
 
-const Triangulation<3>& NormalSurfaces::triangulation() const {
-    return *dynamic_cast<Triangulation<3>*>(parent());
-}
-
 void NormalSurfaces::writeTextShort(std::ostream& out) const {
     out << surfaces_.size();
 
@@ -130,11 +126,9 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
 
 Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {
     NormalSurfaces* ans = new NormalSurfaces(
-        coords_, which_, algorithm_);
-    for (const NormalSurface& s : surfaces_) {
-        ans->surfaces_.push_back(NormalSurface(s,
-            *static_cast<Triangulation<3>*>(parent)));
-    }
+        coords_, which_, algorithm_, *static_cast<Triangulation<3>*>(parent));
+    for (const NormalSurface& s : surfaces_)
+        ans->surfaces_.push_back(NormalSurface(s, ans->triangulation_));
     return ans;
 }
 

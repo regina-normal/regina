@@ -61,7 +61,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
     private:
         std::optional<NormalHypersurface> surface_;
             /**< The normal hypersurface currently being read. */
-        const Triangulation<4>* tri_;
+        SnapshotRef<Triangulation<4>> tri_;
             /**< The triangulation in which this hypersurface lives. */
         HyperCoords coords_;
             /**< The coordinate system used by this hypersurface. */
@@ -81,7 +81,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
          * @param tri the triangulation in which this normal hypersurface lives.
          * @param coords the coordinate system used by this normal hypersurface.
          */
-        XMLNormalHypersurfaceReader(const Triangulation<4>* tri,
+        XMLNormalHypersurfaceReader(const SnapshotRef<Triangulation<4>>& tri,
             HyperCoords coords);
 
         /**
@@ -140,7 +140,7 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
 // Inline functions for XMLNormalHypersurfaceReader
 
 inline XMLNormalHypersurfaceReader::XMLNormalHypersurfaceReader(
-        const Triangulation<4>* tri, HyperCoords coords) :
+        const SnapshotRef<Triangulation<4>>& tri, HyperCoords coords) :
         tri_(tri), coords_(coords), vecLen_(-1), vecEnc_(0) {
 }
 
@@ -153,7 +153,7 @@ inline std::optional<NormalHypersurface>&
 
 inline XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
         const Triangulation<4>* tri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), list_(0), tri_(tri) {
+        XMLPacketReader(resolver), list_(nullptr), tri_(tri) {
 }
 
 inline Packet* XMLNormalHypersurfacesReader::packet() {

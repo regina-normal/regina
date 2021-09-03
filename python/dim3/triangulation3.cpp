@@ -107,6 +107,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def(pybind11::init([](const regina::python::SnapPyObject& obj) {
             return new Triangulation<3>(obj.string_);
         }))
+        .def("isReadOnlySnapshot", &Triangulation<3>::isReadOnlySnapshot)
         .def("size", &Triangulation<3>::size)
         .def("countTetrahedra", &Triangulation<3>::countTetrahedra)
         .def("tetrahedra", &Triangulation<3>::tetrahedra,
@@ -377,7 +378,7 @@ void addTriangulation3(pybind11::module_& m) {
                 for (auto& s : ans)
                     primeParent->insertChildLast(s.release());
                 return ans.size();
-            } catch (const regina::Unsolved&) {
+            } catch (const regina::UnsolvedCase&) {
                 return -1;
             }
         },

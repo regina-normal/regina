@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Tests the behaviour of the packet cloning functions.
+# Tests Regina's mechanism for snapshotting triangulations.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -33,62 +33,32 @@
 
 from __future__ import print_function
 
-root = Container()
+class Watcher(PacketListener):
+    def __init__(self, packet, label):
+        PacketListener.__init__(self)
+        packet.setLabel(label)
+        packet.listen(self)
+    def packetToBeDestroyed(self, packet):
+        print('Destroying: ' + packet.label())
 
-# 3-D surface test:
+# Make sure that snapshotting works.
 
-tri = Example3.poincareHomologySphere()
-list = NormalSurfaces(tri, NS_STANDARD)
-tri.insertChildLast(list)
-root.insertChildLast(tri)
+t = Example3.whiteheadLink()
+w1 = Watcher(t, 'original')
+print(t.isoSig(), t.isReadOnlySnapshot())
 
-tri2 = tri.clone(True)
-list2 = tri2.firstChild()
+a = AngleStructures(t)
+print(a)
+print(a.triangulation().isoSig())
 
-s = list.surface(0)
-s2 = list2.surface(0)
+a.triangulation().pachner(t.tetrahedron(0))
+w2 = Watcher(a.triangulation(), 'snapshot')
+print(t.isoSig(), t.isReadOnlySnapshot())
+print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
 
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
-
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
-
-# 4-D hypersurface test:
-
-tri = Example4.s3xs1()
-list = NormalHypersurfaces(tri, HS_STANDARD)
-tri.insertChildLast(list)
-root.insertChildLast(tri)
-
-tri2 = tri.clone(True)
-list2 = tri2.firstChild()
-
-s = list.hypersurface(0)
-s2 = list2.hypersurface(0)
-
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
-
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
-
-# Angle structure test:
-
-tri = Example3.whiteheadLink()
-list = AngleStructures(tri)
-tri.insertChildLast(list)
-root.insertChildLast(tri)
-
-tri2 = tri.clone(True)
-list2 = tri2.firstChild()
-
-s = list.structure(0)
-s2 = list2.structure(0)
-
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
-
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
+print('Step 1')
+t = None
+print('Step 2')
+a = None
+print('Step 3')
 

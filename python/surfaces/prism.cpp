@@ -33,6 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "surfaces/prism.h"
 #include "surfaces/normalsurface.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using regina::PrismSpec;

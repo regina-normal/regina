@@ -53,7 +53,11 @@ def classInfo(name, object):
             try:
                 print('Equality type :', object.equalityType)
             except:
-                print('ERROR: No equality type')
+                # We allow this for exception types.
+                if object.__base__ is RuntimeError:
+                    print('Exception type')
+                else:
+                    print('ERROR: No equality type')
         else:
             print(name, ': typedef -> ', realName)
     print()

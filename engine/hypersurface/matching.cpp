@@ -35,6 +35,7 @@
 #include "maths/matrix.h"
 #include "maths/rational.h"
 #include "surfaces/normalsurface.h" // for quadDefn[][].
+#include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
 namespace regina {

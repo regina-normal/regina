@@ -191,6 +191,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
 
         if (dlg.run()) {
             ans->setLabel("Vertex normal hypersurfaces");
+            parent->insertChildLast(ans);
             return ans;
         } else {
             delete ans;
@@ -222,6 +223,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
 
         if (dlg.run()) {
             ans->setLabel("Fundamental normal hypersurfaces");
+            parent->insertChildLast(ans);
             return ans;
         } else {
             delete ans;

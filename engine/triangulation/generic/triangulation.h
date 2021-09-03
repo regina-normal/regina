@@ -219,6 +219,20 @@ class Triangulation :
          */
         /*@{*/
 
+        using Snapshottable<Triangulation<dim>>::isReadOnlySnapshot;
+
+        /**
+         * Indicates whether some other object in the calculation engine
+         * is responsible for ultimately destroying this triangulation.
+         *
+         * This overrides the implementation from Packet, since triangulations
+         * can be snapshotted.
+         *
+         * @return \c true if and only if some other object owns this
+         * triangulation.
+         */
+        bool hasOwner() const;
+
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
         virtual bool dependsOnParent() const override;
@@ -584,6 +598,12 @@ template <int dim>
 inline XMLPacketReader* Triangulation<dim>::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
     return new XMLTriangulationReader<dim>(resolver);
+}
+
+template <int dim>
+inline bool Triangulation<dim>::hasOwner() const {
+    return Packet::hasOwner() ||
+        Snapshottable<Triangulation<dim>>::isReadOnlySnapshot();
 }
 
 // Inline functions for DegreeLessThan / DegreeGreaterThan

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 #include "csvsurfacehandler.h"
 #include "reginasupport.h"

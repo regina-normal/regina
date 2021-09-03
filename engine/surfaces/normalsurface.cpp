@@ -87,7 +87,7 @@ LargeInteger NormalSurface::arcs(size_t triIndex, int triVertex) const {
 NormalSurface NormalSurface::doubleSurface() const {
     // Don't use the copy constructor, because we want to choose which
     // properties we keep.
-    NormalSurface ans(*triangulation_, enc_, vector_);
+    NormalSurface ans(triangulation_, enc_, vector_);
 
     ans.vector_ += ans.vector_;
 
@@ -186,7 +186,7 @@ bool NormalSurface::isSplitting() const {
 size_t NormalSurface::isCentral() const {
     size_t nTets = triangulation_->size();
     size_t tot = 0;
-    for (size_t tet = 0; tet < triangulation_->size(); tet++) {
+    for (size_t tet = 0; tet < nTets; tet++) {
         LargeInteger tetTot; // initialised to zero
         for (int type = 0; type < 4; type++)
             tetTot += triangles(tet, type);
@@ -270,7 +270,8 @@ void NormalSurface::calculateOctPosition() const {
         return;
     }
 
-    for (size_t tetIndex = 0; tetIndex < triangulation_->size(); ++tetIndex)
+    size_t nTets = triangulation_->size();
+    for (size_t tetIndex = 0; tetIndex < nTets; ++tetIndex)
         for (int type = 0; type < 3; ++type)
             if (octs(tetIndex, type) != 0) {
                 octPosition_ = DiscType(tetIndex, type);
@@ -317,9 +318,12 @@ void NormalSurface::calculateRealBoundary() const {
         return;
     }
 
-    size_t tot = triangulation_->size();
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<3>& tri(*triangulation_);
+    size_t tot = tri.size();
     for (size_t index = 0; index < tot; index++) {
-        const Tetrahedron<3>* tet = triangulation_->tetrahedron(index);
+        const Tetrahedron<3>* tet = tri.tetrahedron(index);
         if (tet->hasBoundary()) {
             // Check for disk types with boundary
             for (int type=0; type<3; type++)
@@ -449,7 +453,7 @@ NormalSurface NormalSurface::operator + (const NormalSurface& rhs) const {
     // The only possible difference is wrt storing octagons.
     //
     if (enc_.storesOctagons() == rhs.enc_.storesOctagons()) {
-        return NormalSurface(*triangulation_, enc_ + rhs.enc_,
+        return NormalSurface(triangulation_, enc_ + rhs.enc_,
             vector_ + rhs.vector_);
     } else if (enc_.storesOctagons()) {
         // We must have (blocks of 10 + blocks of 7).
@@ -460,7 +464,7 @@ NormalSurface NormalSurface::operator + (const NormalSurface& rhs) const {
                 v[posLeft++] += rhs.vector_[posRight++];
             posLeft += 3;
         }
-        return NormalSurface(*triangulation_, enc_ + rhs.enc_, std::move(v));
+        return NormalSurface(triangulation_, enc_ + rhs.enc_, std::move(v));
     } else {
         // We must have (blocks of 7 + blocks of 10).
         Vector<LargeInteger> v = rhs.vector_;
@@ -470,7 +474,7 @@ NormalSurface NormalSurface::operator + (const NormalSurface& rhs) const {
                 v[posRight++] += vector_[posLeft++];
             posRight += 3;
         }
-        return NormalSurface(*triangulation_, enc_ + rhs.enc_, std::move(v));
+        return NormalSurface(triangulation_, enc_ + rhs.enc_, std::move(v));
     }
 }
 

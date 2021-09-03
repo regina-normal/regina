@@ -60,28 +60,28 @@ class XMLNormalSurfaceReader : public XMLElementReader {
     private:
         std::optional<NormalSurface> surface_;
             /**< The normal surface currently being read. */
-        const Triangulation<3>* tri;
+        SnapshotRef<Triangulation<3>> tri_;
             /**< The triangulation in which this surface lives. */
-        NormalCoords coords;
+        NormalCoords coords_;
             /**< The coordinate system used by this surface. */
-        int vecEnc;
+        int vecEnc_;
             /**< The integer encoding used for the normal surface vector,
                  or 0 if this is unknown. */
-        long vecLen;
+        long vecLen_;
             /**< The length of the normal surface vector, or -1 if this
                  is unknown (since 0 is a valid vector length). */
-        std::string name;
+        std::string name_;
             /**< The optional name associated with this normal surface. */
 
     public:
         /**
          * Creates a new normal surface reader.
          *
-         * @param newTri the triangulation in which this normal surface lives.
-         * @param newCoords the coordinate system used by this normal surface.
+         * @param tri the triangulation in which this normal surface lives.
+         * @param coords the coordinate system used by this normal surface.
          */
-        XMLNormalSurfaceReader(const Triangulation<3>* newTri,
-            NormalCoords newCoords);
+        XMLNormalSurfaceReader(const SnapshotRef<Triangulation<3>>& tri,
+            NormalCoords coords);
 
         /**
          * Returns a reference to the normal surface that has been read.
@@ -109,16 +109,16 @@ class XMLNormalSurfaceReader : public XMLElementReader {
  */
 class XMLNormalSurfacesReader : public XMLPacketReader {
     private:
-        NormalSurfaces* list;
+        NormalSurfaces* list_;
             /**< The normal surface list currently being read. */
-        const Triangulation<3>* tri;
+        const Triangulation<3>* tri_;
             /**< The triangulation in which these normal surfaces live. */
 
     public:
         /**
          * Creates a new normal surface list reader.
          *
-         * @param newTri the triangulation in which these normal surfaces live.
+         * @param tri the triangulation in which these normal surfaces live.
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
@@ -138,8 +138,8 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
 // Inline functions for XMLNormalSurfaceReader
 
 inline XMLNormalSurfaceReader::XMLNormalSurfaceReader(
-        const Triangulation<3>* newTri, NormalCoords newCoords) :
-        tri(newTri), coords(newCoords), vecLen(-1), vecEnc(0) {
+        const SnapshotRef<Triangulation<3>>& tri, NormalCoords coords) :
+        tri_(tri), coords_(coords), vecLen_(-1), vecEnc_(0) {
 }
 
 inline std::optional<NormalSurface>& XMLNormalSurfaceReader::surface() {
@@ -149,12 +149,12 @@ inline std::optional<NormalSurface>& XMLNormalSurfaceReader::surface() {
 // Inline functions for XMLNormalSurfacesReader
 
 inline XMLNormalSurfacesReader::XMLNormalSurfacesReader(
-        const Triangulation<3>* newTri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), list(0), tri(newTri) {
+        const Triangulation<3>* tri, XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), list_(nullptr), tri_(tri) {
 }
 
 inline Packet* XMLNormalSurfacesReader::packet() {
-    return list;
+    return list_;
 }
 
 } // namespace regina

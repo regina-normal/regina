@@ -34,6 +34,7 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/filterregistry.h"
+#include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 
 #define TYPE_AND 1

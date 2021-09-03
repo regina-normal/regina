@@ -43,10 +43,6 @@
 
 namespace regina {
 
-const Triangulation<4>& NormalHypersurfaces::triangulation() const {
-    return *dynamic_cast<Triangulation<4>*>(parent());
-}
-
 void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
     out << surfaces_.size();
 
@@ -122,11 +118,9 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
 
 Packet* NormalHypersurfaces::internalClonePacket(Packet* parent) const {
     NormalHypersurfaces* ans = new NormalHypersurfaces(
-        coords_, which_, algorithm_);
-    for (const NormalHypersurface& s : surfaces_) {
-        ans->surfaces_.push_back(NormalHypersurface(s,
-            *static_cast<Triangulation<4>*>(parent)));
-    }
+        coords_, which_, algorithm_, *static_cast<Triangulation<4>*>(parent));
+    for (const NormalHypersurface& s : surfaces_)
+        ans->surfaces_.push_back(NormalHypersurface(s, ans->triangulation_));
     return ans;
 }
 

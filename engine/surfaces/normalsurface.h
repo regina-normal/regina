@@ -50,6 +50,7 @@
 #include "surfaces/normalcoords.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
+#include "utilities/snapshot.h"
 
 namespace regina {
 
@@ -214,15 +215,17 @@ typedef Matrix<Integer, true> MatrixInt;
  * such as triangles(), quads(), edgeWeight() and so on are independent
  * of the underlying vector encoding being used.
  *
- * Importantly, the vector encoding will always need to be interpreted
- * relative to the underlying 3-manifold triangulation.  This means that,
- * if the underlying triangulation ever changes, this NormalSurface object
- * will become invalid.
- *
  * Note that non-compact surfaces (surfaces with infinitely many discs,
  * such as spun-normal surfaces) are allowed; in these cases, the
  * corresponding lookup routines (such as triangles()) will return
  * LargeInteger::infinity where appropriate.
+ *
+ * Since Regina 7.0, you can modify or even destroy the original
+ * triangulation that was used to create this normal surface.  If you do,
+ * then this normal surface will automatically make a private copy of
+ * the original triangulation as an ongoing reference.  Different normal
+ * surfaces (and angle structures) can all share the same private copy,
+ * so this is not an expensive process.
  *
  * Internally, a normal surface is represented by a Vector<LargeInteger>
  * (possibly using a different coordinate system from the one in which
@@ -260,10 +263,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
                  coordinate vector. */
         Vector<LargeInteger> vector_;
             /**< Contains the coordinates of the normal surface. */
-        const Triangulation<3>* triangulation_;
-            /**< The triangulation in which this normal surface resides.
-                 This is kept as a pointer to support the assignment
-                 operator; it must never be \c null. */
+        SnapshotRef<Triangulation<3>> triangulation_;
+            /**< The triangulation in which this normal surface resides. */
 
         std::string name_;
             /**< An optional name associated with this surface. */
@@ -305,18 +306,41 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         NormalSurface(const NormalSurface&) = default;
 
         /**
-         * Creates a new copy of the given normal surface.
+         * Creates a new copy of the given normal surface, but relocated
+         * to the given triangulation.
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal surface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given triangulation is either the same as, or is
          * combinatorially identical to, the triangulation in which
-         * \a other resides.
+         * \a src resides.
          *
-         * @param other the normal surface to copy.
+         * @param src the normal surface to copy.
          * @param triangulation the triangulation in which this new surface
          * will reside.
          */
-        NormalSurface(const NormalSurface& other,
+        NormalSurface(const NormalSurface& src,
             const Triangulation<3>& triangulation);
+
+        /**
+         * Creates a new copy of the given normal surface, but relocated
+         * to the given triangulation.
+         *
+         * \pre The given triangulation is either the same as, or is
+         * combinatorially identical to, the triangulation in which
+         * \a src resides.
+         *
+         * \ifacespython Not present.
+         *
+         * @param src the normal surface to copy.
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this new surface will reside.
+         */
+        NormalSurface(const NormalSurface& src,
+            const SnapshotRef<Triangulation<3>>& triangulation);
 
         /**
          * Moves the given surface into this new normal surface.
@@ -334,15 +358,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * encoding: NormalSurface will sometimes convert the vector to
          * use a different encoding for its own internal storage.
          *
-         * This constructor takes a deep copy of the given vector.
-         * There is a move version also, for situations where you can make
-         * your vector an rvalue reference.  Note that none of the
-         * constructors ever copy the triangulation: a normal surface always
-         * maintains just a reference to its enclosing triangulation.
-         *
          * Despite what is said in the class notes, it is okay if the
          * given vector encoding does not include triangle coordinates.
          * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal surface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the given encoding.
@@ -368,22 +391,21 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * encoding: NormalSurface will sometimes convert the vector to
          * use a different encoding for its own internal storage.
          *
-         * This constructor moves the contents of the given vector into
-         * this surface, and therefore runs in fast constant time.
-         * Note that none of the constructors ever copy the triangulation:
-         * a normal surface always maintains just a reference to its
-         * enclosing triangulation.
-         *
          * Despite what is said in the class notes, it is okay if the
          * given vector encoding does not include triangle coordinates.
          * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal surface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
-         * you prefer) pass a Python list of integers.
+         * \ifacespython Not present, but you can use the version that
+         * copies \a vector.
          *
          * @param triang the triangulation in which this normal surface resides.
          * @param enc indicates precisely how the given vector encodes a normal
@@ -393,6 +415,64 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          */
         NormalSurface(const Triangulation<3>& triang, NormalEncoding enc,
             Vector<LargeInteger>&& vector);
+
+        /**
+         * Creates a new normal surface inside the given triangulation with the
+         * given coordinate vector, using the given vector encoding.
+         *
+         * There is no guarantee that this surface will keep the given
+         * encoding: NormalSurface will sometimes convert the vector to
+         * use a different encoding for its own internal storage.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given vector encoding does not include triangle coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * surface inside the given triangulation, using the given encoding.
+         * This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal surface resides.
+         * @param enc indicates precisely how the given vector encodes a normal
+         * surface.
+         * @param vector a vector containing the coordinates of the normal
+         * surface.
+         */
+        NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
+            NormalEncoding enc, const Vector<LargeInteger>& vector);
+
+        /**
+         * Creates a new normal surface inside the given triangulation with the
+         * given coordinate vector, using the given vector encoding.
+         *
+         * There is no guarantee that this surface will keep the given
+         * encoding: NormalSurface will sometimes convert the vector to
+         * use a different encoding for its own internal storage.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given vector encoding does not include triangle coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * surface inside the given triangulation, using the given encoding.
+         * This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation and copies \a vector.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal surface resides.
+         * @param enc indicates precisely how the given vector encodes a normal
+         * surface.
+         * @param vector a vector containing the coordinates of the normal
+         * surface.
+         */
+        NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
+            NormalEncoding enc, Vector<LargeInteger>&& vector);
 
         /**
          * Creates a new normal surface inside the given triangulation with the
@@ -406,15 +486,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * In the same spirit, there is no guarantee that this surface will
          * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
          *
-         * This constructor takes a deep copy of the given vector.
-         * There is a move version also, for situations where you can make
-         * your vector an rvalue reference.  Note that none of the
-         * constructors ever copy the triangulation: a normal surface always
-         * maintains just a reference to its enclosing triangulation.
-         *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
          * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal surface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
@@ -444,22 +523,21 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * In the same spirit, there is no guarantee that this surface will
          * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
          *
-         * This constructor moves the contents of the given vector into
-         * this surface, and therefore runs in fast constant time.
-         * Note that none of the constructors ever copy the triangulation:
-         * a normal surface always maintains just a reference to its
-         * enclosing triangulation.
-         *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
          * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal surface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
          * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
-         * you prefer) pass a Python list of integers.
+         * \ifacespython Not present, but you can use the version that
+         * copies \a vector.
          *
          * @param triang the triangulation in which this normal surface resides.
          * @param coords the coordinate system from which the vector
@@ -469,6 +547,72 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          */
         NormalSurface(const Triangulation<3>& triang, NormalCoords coords,
             Vector<LargeInteger>&& vector);
+
+        /**
+         * Creates a new normal surface inside the given triangulation with the
+         * given coordinate vector, using the given coordinate system.
+         *
+         * It is assumed that this surface uses the vector encoding described
+         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * are extracting the vector from some other normal surface, since
+         * Regina may internally convert to use a different encoding from
+         * whatever was used during enumeration and/or read from file.
+         * In the same spirit, there is no guarantee that this surface will
+         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given coordinate system does not include triangle coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * surface inside the given triangulation, using the encoding
+         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal surface resides.
+         * @param coords the coordinate system from which the vector
+         * encoding will be deduced.
+         * @param vector a vector containing the coordinates of the normal
+         * surface.
+         */
+        NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
+            NormalCoords coords, const Vector<LargeInteger>& vector);
+
+        /**
+         * Creates a new normal surface inside the given triangulation with the
+         * given coordinate vector, using the given coordinate system.
+         *
+         * It is assumed that this surface uses the vector encoding described
+         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * are extracting the vector from some other normal surface, since
+         * Regina may internally convert to use a different encoding from
+         * whatever was used during enumeration and/or read from file.
+         * In the same spirit, there is no guarantee that this surface will
+         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given coordinate system does not include triangle coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * surface inside the given triangulation, using the encoding
+         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation and copies \a vector.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal surface resides.
+         * @param coords the coordinate system from which the vector
+         * encoding will be deduced.
+         * @param vector a vector containing the coordinates of the normal
+         * surface.
+         */
+        NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
+            NormalCoords coords, Vector<LargeInteger>&& vector);
 
         /**
          * Deprecated routine that creates a newly allocated clone of this
@@ -665,6 +809,25 @@ class NormalSurface : public ShortOutput<NormalSurface> {
 
         /**
          * Returns the triangulation in which this normal surface resides.
+         *
+         * This will be a snapshot frozen in time of the triangulation
+         * that was originally passed to the NormalSurface constructor.
+         *
+         * This will return a correct result even if the original triangulation
+         * has since been modified or destroyed.  However, in order to ensure
+         * this behaviour, it is possible that at different points in time
+         * this function may return references to different C++ objects.
+         *
+         * The rules for using the triangulation() reference are:
+         *
+         * - Do not keep the resulting reference as a long-term reference or
+         *   pointer of your own, since in time you may find yourself referring
+         *   to the wrong object (see above).  Just call this function again.
+         *
+         * - You must respect the read-only nature of the result (i.e.,
+         *   you must not cast the constness away).  The snapshotting
+         *   process detects modifications, and modifying the frozen
+         *   snapshot may result in an exception being thrown.
          *
          * @return a reference to the underlying triangulation.
          */
@@ -1022,8 +1185,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
          *
-         * @return a pointer to the newly allocated resulting
-         * triangulation.
+         * @return a pointer to the newly allocated resulting triangulation.
          */
         Triangulation<3>* cutAlong() const;
 
@@ -1061,8 +1223,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
          *
-         * @return a pointer to the newly allocated resulting
-         * triangulation.
+         * @return a pointer to the newly allocated resulting triangulation.
          */
         Triangulation<3>* crush() const;
 
@@ -1389,7 +1550,7 @@ void swap(NormalSurface& a, NormalSurface& b) noexcept;
 
 inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         NormalEncoding enc, const Vector<LargeInteger>& vector) :
-        enc_(enc), vector_(vector), triangulation_(&tri) {
+        enc_(enc), vector_(vector), triangulation_(tri) {
     // This call to storesTriangles() is unnecessary, but we'd like it
     // accessible to the inline version.  (Same goes for the similar
     // occurrences of storesTriangles() in the constructors below.)
@@ -1399,14 +1560,30 @@ inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
 
 inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         NormalEncoding enc, Vector<LargeInteger>&& vector) :
-        enc_(enc), vector_(std::move(vector)), triangulation_(&tri) {
+        enc_(enc), vector_(std::move(vector)), triangulation_(tri) {
     if (! enc_.storesTriangles())
         enc_ = reconstructTriangles(tri, vector_, enc_);
 }
 
+inline NormalSurface::NormalSurface(
+        const SnapshotRef<Triangulation<3>>& tri,
+        NormalEncoding enc, const Vector<LargeInteger>& vector) :
+        enc_(enc), vector_(vector), triangulation_(tri) {
+    if (! enc_.storesTriangles())
+        enc_ = reconstructTriangles(*tri, vector_, enc_);
+}
+
+inline NormalSurface::NormalSurface(
+        const SnapshotRef<Triangulation<3>>& tri,
+        NormalEncoding enc, Vector<LargeInteger>&& vector) :
+        enc_(enc), vector_(std::move(vector)), triangulation_(tri) {
+    if (! enc_.storesTriangles())
+        enc_ = reconstructTriangles(*tri, vector_, enc_);
+}
+
 inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         NormalCoords coords, const Vector<LargeInteger>& vector) :
-        enc_(coords), vector_(vector), triangulation_(&tri) {
+        enc_(coords), vector_(vector), triangulation_(tri) {
     if (! enc_.storesTriangles())
         enc_ = reconstructTriangles(tri, vector_, enc_);
 }
@@ -1414,17 +1591,42 @@ inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
 inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         NormalCoords coords, Vector<LargeInteger>&& vector) :
         enc_(coords), vector_(std::move(vector)),
-        triangulation_(&tri) {
+        triangulation_(tri) {
     if (! enc_.storesTriangles())
         enc_ = reconstructTriangles(tri, vector_, enc_);
 }
 
-inline NormalSurface::NormalSurface(const NormalSurface& other,
+inline NormalSurface::NormalSurface(
+        const SnapshotRef<Triangulation<3>>& tri,
+        NormalCoords coords, const Vector<LargeInteger>& vector) :
+        enc_(coords), vector_(vector), triangulation_(tri) {
+    if (! enc_.storesTriangles())
+        enc_ = reconstructTriangles(*tri, vector_, enc_);
+}
+
+inline NormalSurface::NormalSurface(
+        const SnapshotRef<Triangulation<3>>& tri,
+        NormalCoords coords, Vector<LargeInteger>&& vector) :
+        enc_(coords), vector_(std::move(vector)),
+        triangulation_(tri) {
+    if (! enc_.storesTriangles())
+        enc_ = reconstructTriangles(*tri, vector_, enc_);
+}
+
+inline NormalSurface::NormalSurface(const NormalSurface& src,
         const Triangulation<3>& triangulation) :
-        NormalSurface(other) {
-    // We will happily accept one redundant pointer assignment as the
+        NormalSurface(src) {
+    // We will happily accept one redundant SnapshotRef assignment as the
     // cost of removing many lines of code.
-    triangulation_ = &triangulation;
+    triangulation_ = triangulation;
+}
+
+inline NormalSurface::NormalSurface(const NormalSurface& src,
+        const SnapshotRef<Triangulation<3>>& triangulation) :
+        NormalSurface(src) {
+    // We will happily accept one redundant SnapshotRef assignment as the
+    // cost of removing many lines of code.
+    triangulation_ = triangulation;
 }
 
 inline NormalSurface* NormalSurface::clone() const {
@@ -1434,7 +1636,7 @@ inline NormalSurface* NormalSurface::clone() const {
 inline void NormalSurface::swap(NormalSurface& other) noexcept {
     std::swap(enc_, other.enc_);
     vector_.swap(other.vector_);
-    std::swap(triangulation_, other.triangulation_);
+    triangulation_.swap(other.triangulation_);
 
     name_.swap(other.name_);
     octPosition_.swap(other.octPosition_);

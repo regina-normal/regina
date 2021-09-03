@@ -30,15 +30,31 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "snappea/snappeatriangulation.h"
+#include "utilities/exception.h"
+#include "utilities/snapshot.h"
+#include "../helpers.h"
 
-void addAngleFlags(pybind11::module_& m);
-void addAngleStructure(pybind11::module_& m);
-void addAngleStructures(pybind11::module_& m);
+// Bring in all our exception classes from all our headers.
 
-void addAngleClasses(pybind11::module_& m) {
-    addAngleFlags(m);
-    addAngleStructure(m);
-    addAngleStructures(m);
+void addException(pybind11::module_& m) {
+    // Derived from std::runtime_error:
+    pybind11::register_exception<regina::FailedPrecondition>(m,
+        "FailedPrecondition", PyExc_RuntimeError);
+    pybind11::register_exception<regina::InvalidInput>(m,
+        "InvalidInput", PyExc_RuntimeError);
+    pybind11::register_exception<regina::UnsolvedCase>(m,
+        "UnsolvedCase", PyExc_RuntimeError);
+    pybind11::register_exception<regina::SnapPeaFatalError>(m,
+        "SnapPeaFatalError", PyExc_RuntimeError);
+
+    // Derived from std::exception:
+    pybind11::register_exception<regina::NoMatchingEquations>(m,
+        "NoMatchingEquations", PyExc_RuntimeError);
+    pybind11::register_exception<regina::SnapshotWriteError>(m,
+        "SnapshotWriteError", PyExc_RuntimeError);
+    pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
+        "SnapPeaMemoryFull", PyExc_RuntimeError);
 }
 

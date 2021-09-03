@@ -33,6 +33,7 @@
 // Regina core includes:
 #include "hypersurface/normalhypersurface.h"
 #include "hypersurface/normalhypersurfaces.h"
+#include "triangulation/dim4.h"
 
 // UI includes:
 #include "compatcanvas.h"

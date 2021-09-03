@@ -185,7 +185,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -382,7 +382,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -581,7 +581,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -780,7 +780,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -972,7 +972,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -1144,7 +1144,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -1342,7 +1342,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -1516,7 +1516,7 @@ CS_unknown
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+  <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>

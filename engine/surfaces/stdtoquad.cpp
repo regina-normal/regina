@@ -51,13 +51,13 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     switch (coords_) {
         case NS_STANDARD:
             almostNormal = false;
-            ans = new NormalSurfaces(
-                NS_QUAD, NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
+            ans = new NormalSurfaces(NS_QUAD,
+                NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM, triangulation_);
             break;
         case NS_AN_STANDARD:
             almostNormal = true;
-            ans = new NormalSurfaces(
-                NS_AN_QUAD_OCT, NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
+            ans = new NormalSurfaces(NS_AN_QUAD_OCT,
+                NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM, triangulation_);
             break;
         default:
             return nullptr;
@@ -66,7 +66,8 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     // Get the empty triangulation out of the way now.
     unsigned long n = owner.size();
     if (n == 0) {
-        parent()->insertChildLast(ans);
+        if (parent())
+            parent()->insertChildLast(ans);
         return ans;
     }
 
@@ -159,7 +160,8 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     delete[] use;
 
     // All done!
-    parent()->insertChildLast(ans);
+    if (parent())
+        parent()->insertChildLast(ans);
     return ans;
 }
 

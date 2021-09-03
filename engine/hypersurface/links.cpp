@@ -52,7 +52,10 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
     if (! enc_.couldBeVertexLink())
         return nullptr;
 
-    size_t nPents = triangulation_->size();
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<4>& tri(*triangulation_);
+    size_t nPents = tri.size();
 
     // Check that there are no prism pieces.
     for (size_t pent = 0; pent < nPents; pent++) {
@@ -68,7 +71,7 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
     LargeInteger ansMult;
 
     for (size_t pent = 0; pent < nPents; pent++) {
-        const Pentachoron<4>* p = triangulation_->pentachoron(pent);
+        const Pentachoron<4>* p = tri.pentachoron(pent);
         for (int type = 0; type < 5; type++) {
             LargeInteger coord = tetrahedra(pent, type);
 
@@ -92,14 +95,17 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
 }
 
 const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
-    size_t nPents = triangulation_->size();
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<4>& tri(*triangulation_);
+    size_t nPents = tri.size();
 
     // Search through prism pieces for one and only one candidate edge.
     Edge<4>* ans = nullptr;
     LargeInteger ansMult;
 
     for (size_t pent = 0; pent < nPents; pent++) {
-        const Pentachoron<4>* p = triangulation_->pentachoron(pent);
+        const Pentachoron<4>* p = tri.pentachoron(pent);
         for (int type = 0; type < 10; type++) {
             LargeInteger coord = prisms(pent, type);
 
@@ -133,7 +139,7 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     // Finally, run through the tetrahedron piece types and make sure
     // that everything checks out.
     for (size_t pent = 0; pent < nPents; pent++) {
-        const Pentachoron<4>* p = triangulation_->pentachoron(pent);
+        const Pentachoron<4>* p = tri.pentachoron(pent);
         for (int type = 0; type < 5; type++) {
             Vertex<4>* v = p->vertex(type);
 

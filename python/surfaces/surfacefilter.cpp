@@ -34,6 +34,7 @@
 #include "../pybind11/stl.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/surfacefilter.h"
+#include "triangulation/dim3.h"
 #include "utilities/safeptr.h"
 #include "../helpers.h"
 

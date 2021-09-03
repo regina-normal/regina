@@ -58,7 +58,10 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
     if (! enc_.couldBeVertexLink())
         return nullptr;
 
-    size_t nTets = triangulation_->size();
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<3>& tri(*triangulation_);
+    size_t nTets = tri.size();
 
     // Check that there are no quad/oct discs.
     for (size_t tet = 0; tet < nTets; tet++) {
@@ -79,7 +82,7 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
     LargeInteger ansMult;
 
     for (size_t tet = 0; tet < nTets; tet++) {
-        const Tetrahedron<3>* t = triangulation_->tetrahedron(tet);
+        const Tetrahedron<3>* t = tri.tetrahedron(tet);
         for (int type = 0; type < 4; type++) {
             LargeInteger coord = triangles(tet, type);
 
@@ -103,7 +106,10 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
 }
 
 std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const {
-    size_t nTets = triangulation_->size();
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<3>& tri(*triangulation_);
+    size_t nTets = tri.size();
 
     // Check that there are no octagonal discs.
     if (enc_.storesOctagons())
@@ -127,7 +133,7 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
     int i;
 
     for (size_t tet = 0; tet < nTets; tet++) {
-        t = triangulation_->tetrahedron(tet);
+        t = tri.tetrahedron(tet);
         for (int type = 0; type < 3; type++) {
             coord = quads(tet, type);
             e[0] = t->edge(Edge<3>::edgeNumber[quadDefn[type][0]]
@@ -236,7 +242,7 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
     bool expectZero[2];
     int j;
     for (size_t tet = 0; tet < nTets; tet++) {
-        t = triangulation_->tetrahedron(tet);
+        t = tri.tetrahedron(tet);
         for (int type = 0; type < 4; type++) {
             v = t->vertex(type);
             coord = triangles(tet, type);

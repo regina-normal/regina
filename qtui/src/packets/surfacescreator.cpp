@@ -233,6 +233,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
         if (dlg.run()) {
             ans->setLabel(ui->tr("%1 vertex surfaces").arg(
                 Coordinates::adjective(coordSystem, true)).toStdString());
+            tri->insertChildLast(ans);
             return ans;
         } else {
             delete ans;
@@ -276,6 +277,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
         if (dlg.run()) {
             ans->setLabel(ui->tr("%1 fundamental surfaces").arg(
                 Coordinates::adjective(coordSystem, true)).toStdString());
+            tri->insertChildLast(ans);
             return ans;
         } else {
             delete ans;

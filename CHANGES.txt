@@ -36,11 +36,16 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
+        Enum AngleAlgFlags, Class AngleAlg:
+            - New flags to specifiy angle structure enumeration algorithms.
         Class AngleStructure, AngleStructureVector:
+            - Angle structures now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
             - The internal vector representation now uses Integer, not
               LargeInteger.
-            - The class AngleStructureVector has been removed, and is now a
-              deprecated typedef for Vector<Integer>.
+            - The class AngleStructureVector has been removed completely.
+              Just use Vector<Integer> instead.
             - Replaced rawVector() with vector(), which now returns a reference
               (not a pointer) and is now accessible through python.  The old
               rawVector() is kept but deprecated, and returns by reference also.
@@ -50,10 +55,18 @@ Version 7.0  [ TODO ]
             - Changed triangulation() to return a reference, not a pointer.
             - Constructors now take their arguments by reference (and,
               for the vector constructor, optionally an rvalue reference).
+            - Added variants of constructors that take a SnapshotRef of
+              a triangulation instead of a triangulation.
         Class AngleStructures:
-            - Replaced enumerate() with a class constructor; this will
-              throw an exception on error (instead of returning null).
-              The old enumerate() function is kept as a deprecated alias.
+            - Angle structure lists now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
+            - Replaced enumerate() and enumerateTautDD() with a unified class
+              constructor; this will throw an exception on error (instead of
+              returning null).  The new class constructor allows you to choose
+              your preferred enumeration algorithm via an AngleAlg argument.
+              The old enumerate() and enumerateTautDD() functions are kept as
+              deprecated aliases.
             - New function structures() for simpler iteration.
             - Changed triangulation() and surface() to return const references,
               not pointers.
@@ -534,6 +547,9 @@ Version 7.0  [ TODO ]
               NormalInfo class has been stripped down to just provide
               "human-readable name" functions.
         Class NormalHypersurface:
+            - Normal surfaces now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
             - Replaced rawVector() with vector(), which now returns a
               Vector<LargeInteger> by reference (not a Vector by pointer).
               The old name is kept but deprecated.
@@ -544,6 +560,8 @@ Version 7.0  [ TODO ]
             - Changed doubleHypersurface() to return by value, not by pointer.
             - Constructors now take their arguments by reference (and,
               for the vector constructors, optionally an rvalue reference).
+            - Added variants of constructors that take a SnapshotRef of
+              a triangulation instead of a triangulation.
             - New routine encoding(), which explains how to interpret
               the internal integer vector.
             - New routine reconstructTetrahedra(), which now makes this
@@ -556,10 +574,14 @@ Version 7.0  [ TODO ]
               hypersurfaces that use different coordinate systems.
             - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalHypersurfaces:
+            - Normal hypersurface lists now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
             - Now supports enumeration in prism coordinates (HS_PRISM).
             - Replaced enumerate() with a class constructor; this will
               throw an exception on error (instead of returning null).
-              The old enumerate() function is kept as a deprecated alias.
+              The old enumerate() function is kept as a deprecated alias,
+              but Python users can no longer use it with a progress tracker.
             - New function hypersurfaces() for simpler iteration.
             - Changed triangulation() and hypersurface() to return
               const references, not pointers.
@@ -569,6 +591,9 @@ Version 7.0  [ TODO ]
               two hypersurfaces by reference, not by pointer.
             - New function allowsNonCompact().
         Class NormalSurface:
+            - Normal surfaces now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
             - Replaced rawVector() with vector(), which now returns a
               Vector<LargeInteger> by reference (not a Vector by pointer).
               The old name is kept but deprecated.
@@ -581,6 +606,8 @@ Version 7.0  [ TODO ]
             - Changed doubleSurface() to return by value, not by pointer.
             - Constructors now take their arguments by reference (and,
               for the vector constructors, optionally an rvalue reference).
+            - Added variants of constructors that take a SnapshotRef of
+              a triangulation instead of a triangulation.
             - Removed systemAllowsOriented(), orientedTriangles() and
               orientedQuads() completely, since TONS are now handled by a
               completely different collection of classes.
@@ -606,9 +633,13 @@ Version 7.0  [ TODO ]
               surfaces that use different coordinate systems.
             - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalSurfaces:
+            - Normal surface lists now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
             - Replaced enumerate() with a class constructor; this will
               throw an exception on error (instead of returning null).
-              The old enumerate() function is kept as a deprecated alias.
+              The old enumerate() function is kept as a deprecated alias,
+              but Python users can no longer use it with a progress tracker.
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
@@ -895,7 +926,7 @@ Version 7.0  [ TODO ]
               snappedBall() now returns by reference, not pointer.
             - Added copy construction and copy assignment.
             - Deprecated clone().  Just use the copy constructor instead.
-        Class Snapshot, SnapshotRef, Snapshottable:
+        Class Snapshot, SnapshotRef, Snapshottable, SnapshotWriteError:
             - A new suite of classes for taking snapshots of a large
               object at a fixed moment in time.
         Class SFSpace:
@@ -1046,7 +1077,7 @@ Version 7.0  [ TODO ]
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
             - Added short and detailed output functions.
-        Class Unsolved:
+        Class UnsolvedCase:
             - New exception class.
         Class Vector:
             - New operator !=.

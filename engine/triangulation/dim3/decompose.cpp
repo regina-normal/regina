@@ -91,7 +91,7 @@ std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands(
                 //
                 // All elements of toProcess will be deleted automatically
                 // with toProcess itself (which is on the stack).
-                throw regina::Unsolved("Found an embedded two-sided "
+                throw regina::UnsolvedCase("Found an embedded two-sided "
                     "projective plane");
             }
 
@@ -789,8 +789,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
     // Off we go.
     // Work with a simplified triangulation.
     // We keep this as a pointer because we will be switching and changing
-    // triangulations; also we use a unique_ptr because we need it to fall
-    // off the stack *after* any of its normal surface lists go out of scope.
+    // triangulations.
     std::unique_ptr<Triangulation<3>> use(new Triangulation<3>(*this, false));
     use->intelligentSimplify();
 

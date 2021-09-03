@@ -294,12 +294,12 @@ NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
         case NS_QUAD:
             ans = new NormalSurfaces(
                 NS_STANDARD, NS_EMBEDDED_ONLY | NS_VERTEX,
-                algorithm_ | NS_VERTEX_VIA_REDUCED);
+                algorithm_ | NS_VERTEX_VIA_REDUCED, triangulation_);
             break;
         case NS_AN_QUAD_OCT:
             ans = new NormalSurfaces(
                 NS_AN_STANDARD, NS_EMBEDDED_ONLY | NS_VERTEX,
-                algorithm_ | NS_VERTEX_VIA_REDUCED);
+                algorithm_ | NS_VERTEX_VIA_REDUCED, triangulation_);
             break;
         default:
             return nullptr;
@@ -311,7 +311,8 @@ NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
     }
 
     // All done!
-    parent()->insertChildLast(ans);
+    if (parent())
+        parent()->insertChildLast(ans);
     return ans;
 }
 

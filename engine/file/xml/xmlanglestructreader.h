@@ -58,9 +58,9 @@ namespace regina {
  */
 class XMLAngleStructureReader : public XMLElementReader {
     private:
-        std::optional<AngleStructure> angles;
+        std::optional<AngleStructure> angles_;
             /**< The angle structure currently being read. */
-        Triangulation<3>* tri;
+        SnapshotRef<Triangulation<3>> tri_;
             /**< The triangulation on which this angle structure is placed. */
         long vecLen;
             /**< The length of corresponding angle structure vector. */
@@ -71,7 +71,7 @@ class XMLAngleStructureReader : public XMLElementReader {
          *
          * @param newTri the triangulation on which this angle structure lies.
          */
-        XMLAngleStructureReader(Triangulation<3>* newTri);
+        XMLAngleStructureReader(const SnapshotRef<Triangulation<3>>& tri);
 
         /**
          * Returns a reference to the angle structure that has been read.
@@ -99,9 +99,9 @@ class XMLAngleStructureReader : public XMLElementReader {
  */
 class XMLAngleStructuresReader : public XMLPacketReader {
     private:
-        AngleStructures* list;
+        AngleStructures* list_;
             /**< The angle structure list currently being read. */
-        Triangulation<3>* tri;
+        Triangulation<3>* tri_;
             /**< The triangulation on which these angle structures
                  are placed. */
 
@@ -109,12 +109,12 @@ class XMLAngleStructuresReader : public XMLPacketReader {
         /**
          * Creates a new angle structure list reader.
          *
-         * @param newTri the triangulation on which these angle
+         * @param tri the triangulation on which these angle
          * structures are placed.
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLAngleStructuresReader(Triangulation<3>* newTri,
+        XMLAngleStructuresReader(Triangulation<3>* tri,
             XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
@@ -123,6 +123,7 @@ class XMLAngleStructuresReader : public XMLPacketReader {
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
+        virtual void endElement() override;
 };
 
 /*@}*/
@@ -130,23 +131,22 @@ class XMLAngleStructuresReader : public XMLPacketReader {
 // Inline functions for XMLAngleStructureReader
 
 inline XMLAngleStructureReader::XMLAngleStructureReader(
-        Triangulation<3>* newTri) : tri(newTri), vecLen(-1) {
+        const SnapshotRef<Triangulation<3>>& tri) : tri_(tri), vecLen(-1) {
 }
 
 inline std::optional<AngleStructure>& XMLAngleStructureReader::structure() {
-    return angles;
+    return angles_;
 }
 
 // Inline functions for XMLAngleStructuresReader
 
 inline XMLAngleStructuresReader::XMLAngleStructuresReader(
-        Triangulation<3>* newTri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver),
-        list(new AngleStructures(false)), tri(newTri) {
+        Triangulation<3>* tri, XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), list_(nullptr), tri_(tri) {
 }
 
 inline Packet* XMLAngleStructuresReader::packet() {
-    return list;
+    return list_;
 }
 
 } // namespace regina

@@ -45,12 +45,12 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def(pybind11::init<const NormalHypersurface&>())
         .def(pybind11::init<const NormalHypersurface&,
             const Triangulation<4>&>())
-        .def(pybind11::init<Triangulation<4>&, regina::HyperEncoding,
+        .def(pybind11::init<const Triangulation<4>&, regina::HyperEncoding,
             const regina::Vector<regina::LargeInteger>&>())
-        .def(pybind11::init<Triangulation<4>&, regina::HyperCoords,
+        .def(pybind11::init<const Triangulation<4>&, regina::HyperCoords,
             const regina::Vector<regina::LargeInteger>&>())
-        .def(pybind11::init([](Triangulation<4>& t, regina::HyperEncoding enc,
-                pybind11::list values) {
+        .def(pybind11::init([](const Triangulation<4>& t,
+                regina::HyperEncoding enc, pybind11::list values) {
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
             if (values.size() != v.size())
                 throw pybind11::index_error(
@@ -64,8 +64,8 @@ void addNormalHypersurface(pybind11::module_& m) {
             }
             return new NormalHypersurface(t, enc, std::move(v));
         }))
-        .def(pybind11::init([](Triangulation<4>& t, regina::HyperCoords coords,
-                pybind11::list values) {
+        .def(pybind11::init([](const Triangulation<4>& t,
+                regina::HyperCoords coords, pybind11::list values) {
             regina::HyperEncoding enc(coords);
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
             if (values.size() != v.size())
@@ -95,7 +95,8 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def("tetrahedra", &NormalHypersurface::tetrahedra)
         .def("prisms", &NormalHypersurface::prisms)
         .def("edgeWeight", &NormalHypersurface::edgeWeight)
-        .def("triangulation", &NormalHypersurface::triangulation)
+        .def("triangulation", &NormalHypersurface::triangulation,
+            pybind11::return_value_policy::reference_internal)
         .def("name", &NormalHypersurface::name)
         .def("setName", &NormalHypersurface::setName)
         .def("writeRawVector", [](const NormalHypersurface& s) { // deprecated

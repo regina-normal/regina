@@ -149,7 +149,7 @@ class InvalidInput : public std::runtime_error {
  *
  * \ifacespython Not present.
  */
-class Unsolved : public std::runtime_error {
+class UnsolvedCase : public std::runtime_error {
     public:
         /**
          * Creates a new exception with the given error message.
@@ -158,7 +158,7 @@ class Unsolved : public std::runtime_error {
          *
          * @param msg a human-readable description of the error.
          */
-        Unsolved(const std::string& msg) : std::runtime_error(msg) {
+        UnsolvedCase(const std::string& msg) : std::runtime_error(msg) {
         }
 
         /**
@@ -168,20 +168,20 @@ class Unsolved : public std::runtime_error {
          *
          * @param msg a human-readable description of the error.
          */
-        Unsolved(const char* msg) : std::runtime_error(msg) {
+        UnsolvedCase(const char* msg) : std::runtime_error(msg) {
         }
 
         /**
          * Creates a new copy of the given exception.
          */
-        Unsolved(const Unsolved&) noexcept = default;
+        UnsolvedCase(const UnsolvedCase&) noexcept = default;
 
         /**
          * Sets this to be a copy of the given exception.
          *
          * @return a reference to this exception.
          */
-        Unsolved& operator = (const Unsolved&) noexcept =
+        UnsolvedCase& operator = (const UnsolvedCase&) noexcept =
             default;
 };
 

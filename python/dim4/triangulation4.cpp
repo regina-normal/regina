@@ -54,6 +54,7 @@ void addTriangulation4(pybind11::module_& m) {
         .def(pybind11::init<const Triangulation<4>&>())
         .def(pybind11::init<const Triangulation<4>&, bool>())
         .def(pybind11::init<const std::string&>())
+        .def("isReadOnlySnapshot", &Triangulation<4>::isReadOnlySnapshot)
         .def("size", &Triangulation<4>::size)
         .def("countPentachora", &Triangulation<4>::countPentachora)
         .def("pentachora", &Triangulation<4>::pentachora,

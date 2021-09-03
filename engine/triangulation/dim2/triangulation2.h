@@ -170,6 +170,20 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          */
         /*@{*/
 
+        using Snapshottable<Triangulation<2>>::isReadOnlySnapshot;
+
+        /**
+         * Indicates whether some other object in the calculation engine
+         * is responsible for ultimately destroying this triangulation.
+         *
+         * This overrides the implementation from Packet, since triangulations
+         * can be snapshotted.
+         *
+         * @return \c true if and only if some other object owns this
+         * triangulation.
+         */
+        bool hasOwner() const;
+
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
         virtual bool dependsOnParent() const override;
@@ -447,6 +461,11 @@ inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
 
 inline void Triangulation<2>::swapContents(Triangulation<2>& other) {
     swap(other);
+}
+
+inline bool Triangulation<2>::hasOwner() const {
+    return Packet::hasOwner() ||
+        Snapshottable<Triangulation<2>>::isReadOnlySnapshot();
 }
 
 } // namespace regina

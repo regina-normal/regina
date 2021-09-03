@@ -5,6 +5,7 @@ SET ( FILES
   base64.cpp
   bitmask.cpp
   boolset.cpp
+  exception.cpp
   i18nutils.cpp
   intutils.cpp
   osutils.cpp

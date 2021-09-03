@@ -94,13 +94,14 @@ regina::Packet* AngleStructureCreator::createPacket(
 
     regina::AngleStructures* ans = new regina::AngleStructures(
             *dynamic_cast<regina::Triangulation<3>*>(parentPacket),
-            tautOnly->isChecked(), &tracker);
+            tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
 
     if (dlg.run()) {
         if (tautOnly->isChecked())
             ans->setLabel("Taut angle structures");
         else
             ans->setLabel("Vertex angle structures");
+        parentPacket->insertChildLast(ans);
         return ans;
     } else {
         delete ans;

@@ -203,6 +203,7 @@ static NSArray* embText;
                 [alert show];
             } else {
                 ans->setLabel("Normal hypersurfaces");
+                self.spec.parent->insertChildLast(ans);
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];

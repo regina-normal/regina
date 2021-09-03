@@ -146,15 +146,25 @@ struct PacketInfo<PACKET_NORMALSURFACES> {
 
 /**
  * A packet representing a collection of normal surfaces in a 3-manifold.
- * Such a packet must always be a child packet of the triangulation from
- * which the surfaces were obtained.  If this triangulation changes, the
- * information contained in this packet will become invalid.
+ *
+ * There are some important changes to this class as of Regina 7.0:
+ *
+ * - A normal surface list does \e not need to be a child packet of the
+ *   underlying triangulation, and indeed does not need to interact with
+ *   the packet tree at all.
+ *
+ * - You are welcome to modify or even destroy the original triangulation;
+ *   if you do then this list will automatically make a private copy of the
+ *   original triangulation as an ongoing reference.  Different normal
+ *   surface lists (and angle structure lists) can all share the same
+ *   private copy, so this is not an expensive process.
+ *
+ * - You should now create normal surface lists using the class constructor
+ *   (but which, unlike the old enumerate(), does not insert the list
+ *   into the packet tree).  There is no need to use enumerate() any more.
  *
  * See the NormalSurface class notes for details of what to do
  * when introducing a new coordinate system.
- *
- * Since Regina 7.0, you can (and should) create normal surface lists
- * using the class constructor.  There is no need to use enumerate() any more.
  *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow enumeration with some coordinates explicitly set
@@ -172,6 +182,8 @@ class NormalSurfaces : public Packet {
     protected:
         std::vector<NormalSurface> surfaces_;
             /**< Contains all normal surfaces in this list. */
+        SnapshotRef<Triangulation<3>> triangulation_;
+            /**< The triangulation in which these normal surfaces lie. */
         NormalCoords coords_;
             /**< The coordinate system that was originally used to enumerate
                  the normal surfaces in this list. */
@@ -181,7 +193,7 @@ class NormalSurfaces : public Packet {
         NormalAlg algorithm_;
             /**< Stores the details of the enumeration algorithm that
                  was used to generate this list.  This might not be the
-                 same as the \a algorithmHints flag that was originally
+                 same as the \a algHints flag that was originally
                  passed to the enumeration routine (e.g., if invalid
                  or inappropriate flags were passed). */
 
@@ -218,21 +230,16 @@ class NormalSurfaces : public Packet {
          * The enumerated surfaces will be stored in this new normal
          * surface list, and their representations will be scaled down
          * to use the smallest possible integer coordinates.
-         * This normal surface list will be inserted into the packet tree as
-         * the last child of the given triangulation.  This triangulation
-         * \b must remain the parent of this normal surface list, and must not
-         * change while this normal surface list remains in existence.
+         *
+         * Unlike the old enumerate() function, the new normal surface
+         * list will \e not be inserted into the packet tree.  Moreover,
+         * the given triangulation may change or even be destroyed
+         * without causing problems.  See the class notes for details.
          *
          * If a progress tracker is passed:
          *
          * - The normal surface enumeration will take place in a new thread.
-         *   This constructor will return immediately, but the new normal
-         *   surface list will not be inserted into the packet tree until the
-         *   enumeration is complete.
-         *
-         * - If the user cancels the operation from another thread, then the
-         *   normal surface list will \e never be inserted into the packet tree.
-         *   The caller of this constructor will still need to delete it.
+         *   This constructor will return immediately.
          *
          * - For progress tracking, this routine will declare and work through
          *   a series of stages whose combined weights sum to 1; typically this
@@ -254,8 +261,8 @@ class NormalSurfaces : public Packet {
          *   coordinate systems, and all such coordinate systems are marked as
          *   such in the NormalCoords enum documentation.
          *
-         * @param owner the triangulation upon which this list of normal
-         * surfaces will be based.
+         * @param triangulation the triangulation upon which this list of
+         * normal surfaces will be based.
          * @param coords the coordinate system to be used.  This must be
          * one of the system that Regina is able to use for enumeration;
          * this is documented alongside each NormalCoords enum value.
@@ -266,7 +273,7 @@ class NormalSurfaces : public Packet {
          * be reported, or \c null if no progress reporting is required.
          */
         NormalSurfaces(
-            Triangulation<3>& owner,
+            const Triangulation<3>& triangulation,
             NormalCoords coords,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
@@ -277,13 +284,27 @@ class NormalSurfaces : public Packet {
          * triangulation.
          *
          * This static routine is identical to calling the class
-         * constructor with the given arguments, but with one difference:
-         * if there is an error, then the class constructor will throw
-         * an exception, whereas this routine will simply return \c null.
+         * constructor with the given arguments, but with two differences:
          *
-         * See the class constructor for details on what the arguments mean.
+         * - Unlike the class constructor, this routine will also insert
+         *   the normal surface list beneath \a owner in the packet tree.
+         *   If a progress tracker is passed (which means the enumeration runs
+         *   in a background thread), the tree insertion will not happen until
+         *   the enumeration has finished (and if the user cancels the
+         *   operation, the insertion will not happen at all).
+         *
+         * - If there is an error, then the class constructor will throw
+         *   an exception, whereas this routine will simply return \c null.
+         *
+         * See the class constructor for details on how this routine works
+         * and what the arguments mean.
          *
          * \deprecated Just call the NormalSurfaces constructor.
+         *
+         * \ifacespython For this deprecated function, the progress tracker
+         * argument is omitted.  It is still possible to enumerate in
+         * the background with a progress tracker, but for that you will
+         * need to call the class constructor instead.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -314,8 +335,8 @@ class NormalSurfaces : public Packet {
          * Returns details of which normal surfaces this list represents
          * within the underlying triangulation.
          *
-         * This may not be the same NormalList that was passed to
-         * enumerate().  In particular, default values will have been
+         * This may not be the same NormalList that was passed to the
+         * class constructor.  In particular, default values will have been
          * explicitly filled in (such as NS_VERTEX and/or NS_EMBEDDED_ONLY),
          * and invalid and/or redundant values will have been removed.
          *
@@ -326,8 +347,8 @@ class NormalSurfaces : public Packet {
          * Returns details of the algorithm that was used to enumerate
          * this list.
          *
-         * These may not be the same NormalAlg flags that were passed to
-         * enumerate().  In particular, default values will have been
+         * These may not be the same NormalAlg flags that were passed to the
+         * class constructor.  In particular, default values will have been
          * explicitly filled in, invalid and/or redundant values will have
          * been removed, and unavailable and/or unsupported combinations
          * of algorithm flags will be replaced with whatever algorithm was
@@ -385,18 +406,32 @@ class NormalSurfaces : public Packet {
         bool isEmbeddedOnly() const;
         /**
          * Returns the triangulation in which these normal surfaces live.
-         * 
-         * The triangulation is also accessible via the packet tree as
-         * parent(); this routine simply adds the convenience of casting
-         * down to the correct triangulation class.
          *
-         * If you need non-const access to the triangulation (e.g., to
-         * rename the packet), use parent(); however, remember that a
-         * triangulation that owns angle structures or normal surfaces
-         * must \e not change its tetrahedra or their gluings.
+         * This will be a snapshot frozen in time of the triangulation
+         * that was originally passed to the NormalSurfaces constructor.
          *
-         * @return a reference to the triangulation in which these surfaces
-         * live.
+         * This will return a correct result even if the original triangulation
+         * has since been modified or destroyed.  However, in order to ensure
+         * this behaviour, it is possible that at different points in time
+         * this function may return references to different C++ objects.
+         *
+         * The rules for using the triangulation() reference are:
+         *
+         * - Do not keep the resulting reference as a long-term reference or
+         *   pointer of your own, since in time you may find yourself referring
+         *   to the wrong object (see above).  Just call this function again.
+         *
+         * - You must respect the read-only nature of the result (i.e.,
+         *   you must not cast the constness away).  The snapshotting
+         *   process detects modifications, and modifying the frozen
+         *   snapshot may result in an exception being thrown.
+         *
+         * \warning As of Regina 7.0, you \e cannot access this triangulation
+         * via the packet tree as parent().  This is because normal surface
+         * lists can now be kept anywhere in the packet tree, or can be kept
+         * as standalone objects outside the packet tree entirely.
+         *
+         * @return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
         /**
@@ -1036,24 +1071,25 @@ class NormalSurfaces : public Packet {
         };
 
     protected:
-        /**
-         * Creates an empty list of normal surfaces with the given
-         * parameters.
-         *
-         * @param coords the coordinate system that will be used for
-         * enumeration when filling this list.
-         * @param which indicates which normal surfaces these will
-         * represent within the underlying triangulation.
-         * @param algorithm details of the enumeration algorithm that
-         * will be used to fill this list.
-         */
-        NormalSurfaces(NormalCoords coords, NormalList which,
-            NormalAlg algorithm);
-
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
+        /**
+         * Creates an empty list of normal surfaces with the given
+         * parameters.
+         */
+        NormalSurfaces(NormalCoords coords, NormalList which,
+            NormalAlg algorithm, const Triangulation<3>& triangulation);
+
+        /**
+         * Creates an empty list of normal surfaces with the given
+         * parameters.
+         */
+        NormalSurfaces(NormalCoords coords, NormalList which,
+            NormalAlg algorithm,
+            const SnapshotRef<Triangulation<3>>& triangulation);
+
         /**
          * Converts a set of embedded vertex normal surfaces in
          * (quad or quad-oct) space to a set of embedded vertex normal
@@ -1070,7 +1106,7 @@ class NormalSurfaces : public Packet {
          * still under construction.  As such, it ignores the packet
          * tree completely.  The parent packet is ignored (and not changed);
          * instead the underlying triangulation is passed explicitly as
-         * the argument \a owner.
+         * the argument \a triangulation.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -1090,14 +1126,14 @@ class NormalSurfaces : public Packet {
          * \pre The given triangulation is valid and non-empty, and the link
          * of every vertex is either a sphere or a disc.
          *
-         * @param owner the triangulation upon which this list of
+         * @param triangulation the triangulation upon which this list of
          * surfaces is to be based.
          * @param reducedList a full list of vertex surfaces in
          * (quad or quad-oct) coordinates for the given triangulation.
          * @param tracker a progress tracker to be used for progress reporting
          * and cancellation requests, or \c null if this is not required.
          */
-        void buildStandardFromReduced(const Triangulation<3>& owner,
+        void buildStandardFromReduced(const Triangulation<3>& triangulation,
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker = nullptr);
 
@@ -1118,7 +1154,8 @@ class NormalSurfaces : public Packet {
          * the number of tetrahedra in the given triangulation.
          */
         template <class BitmaskType>
-        void buildStandardFromReducedUsing(const Triangulation<3>& owner,
+        void buildStandardFromReducedUsing(
+            const Triangulation<3>& triangulation,
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker);
 
@@ -1153,8 +1190,6 @@ class NormalSurfaces : public Packet {
             private:
                 NormalSurfaces* list_;
                     /**< The surface list to be filled. */
-                Triangulation<3>* triang_;
-                    /**< The triangulation in which these surfaces lie. */
                 const MatrixInt& eqns_;
                     /**< The matching equations for the given triangulation in
                          the coordinate system corresponding to list_. */
@@ -1162,22 +1197,17 @@ class NormalSurfaces : public Packet {
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
                          or \c null if no progress tracker is in use. */
+                Packet* treeParent_;
+                    /**< The parent packet in the tree, if we should insert the
+                         finished list into the packet tree once enumeration
+                         has finished, or \c null if we should not. */
 
             public:
                 /**
                  * Creates a new functor with the given parameters.
-                 *
-                 * @param list the surface list to be filled.
-                 * @param triang the triangulation in which these surfaces lie.
-                 * @param eqns the matching equations for the given
-                 * triangulation in the coordinate system corresopnding to
-                 * \a list.
-                 * @param tracker the progress tracker to use for progress
-                 * reporting and cancellation polling, or \c null if these
-                 * capabilities are not required.
                  */
-                Enumerator(NormalSurfaces* list, Triangulation<3>* triang,
-                    const MatrixInt& eqns, ProgressTracker* tracker);
+                Enumerator(NormalSurfaces* list, const MatrixInt& eqns,
+                    ProgressTracker* tracker, Packet* treeParent);
 
                 /**
                  * Default move constructor.
@@ -1191,8 +1221,8 @@ class NormalSurfaces : public Packet {
                  * list_->algorithm_ have been sanity-checked.
                  *
                  * This routine fills \a list_ with surfaces, and then once
-                 * this is finished it inserts \a list_ into the packet
-                 * tree as a child of \a triang_.
+                 * this is finished it inserts \a list_ beneath \a treeParent_
+                 * if \a treeParent_ is non-null.
                  */
                 void enumerate();
 
@@ -1436,6 +1466,10 @@ inline bool NormalSurfaces::isEmbeddedOnly() const {
     return which_.has(NS_EMBEDDED_ONLY);
 }
 
+inline const Triangulation<3>& NormalSurfaces::triangulation() const {
+    return *triangulation_;
+}
+
 inline size_t NormalSurfaces::size() const {
     return surfaces_.size();
 }
@@ -1538,25 +1572,22 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors() const {
     return VectorIterator(surfaces_.end());
 }
 
-inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
-        NormalList which, NormalAlg algorithm) :
-        coords_(coords), which_(which), algorithm_(algorithm) {
+inline NormalSurfaces::NormalSurfaces(NormalCoords coords, NormalList which,
+        NormalAlg algorithm, const Triangulation<3>& triangulation) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algorithm) {
 }
 
-inline NormalSurfaces* NormalSurfaces::enumerate(Triangulation<3>& owner,
-        NormalCoords coords, NormalList which, NormalAlg algHints,
-        ProgressTracker* tracker) {
-    try {
-        return new NormalSurfaces(owner, coords, which, algHints, tracker);
-    } catch (const NoMatchingEquations&) {
-        return nullptr;
-    }
+inline NormalSurfaces::NormalSurfaces(NormalCoords coords, NormalList which,
+        NormalAlg algorithm,
+        const SnapshotRef<Triangulation<3>>& triangulation) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algorithm) {
 }
 
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
-        Triangulation<3>* triang, const MatrixInt& eqns,
-        ProgressTracker* tracker) :
-        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
+        const MatrixInt& eqns, ProgressTracker* tracker, Packet* treeParent) :
+        list_(list), eqns_(eqns), tracker_(tracker), treeParent_(treeParent) {
 }
 
 } // namespace regina

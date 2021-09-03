@@ -277,6 +277,7 @@ static NSArray* embText;
                         ans->setLabel("Normal surfaces"); break;
                 }
 
+                tri->insertChildLast(ans);
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];

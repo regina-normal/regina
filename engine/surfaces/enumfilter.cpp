@@ -38,16 +38,16 @@
 namespace regina {
 
 NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter* filter) const {
-    NormalSurfaces* ans = new NormalSurfaces(
-        coords_,
-            (which_ & (NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR)) | NS_CUSTOM,
-            algorithm_ | NS_ALG_CUSTOM);
+    NormalSurfaces* ans = new NormalSurfaces(coords_,
+        (which_ & (NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR)) | NS_CUSTOM,
+        algorithm_ | NS_ALG_CUSTOM, triangulation_);
 
     for (const NormalSurface& s : surfaces_)
         if (filter->accept(s))
             ans->surfaces_.push_back(s);
 
-    parent()->insertChildLast(ans);
+    if (parent())
+        parent()->insertChildLast(ans);
     return ans;
 }
 
@@ -57,8 +57,8 @@ NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
     if (! isEmbeddedOnly())
         return nullptr;
 
-    NormalSurfaces* ans = new NormalSurfaces(
-        coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
+    NormalSurfaces* ans = new NormalSurfaces(coords_,
+        NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM, triangulation_);
 
     // Find all surfaces that have a compatible partner.
     std::vector<NormalSurface>::const_iterator first, second;
@@ -75,7 +75,8 @@ NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
         }
     }
 
-    parent()->insertChildLast(ans);
+    if (parent())
+        parent()->insertChildLast(ans);
     return ans;
 }
 
@@ -84,8 +85,8 @@ NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
     if (! isEmbeddedOnly())
         return nullptr;
 
-    NormalSurfaces* ans = new NormalSurfaces(
-        coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
+    NormalSurfaces* ans = new NormalSurfaces(coords_,
+        NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM, triangulation_);
 
     // Collect all the surfaces that we might care about.
     // This means non-empty, connected and compact.
@@ -116,7 +117,8 @@ NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
         }
     }
 
-    parent()->insertChildLast(ans);
+    if (parent())
+        parent()->insertChildLast(ans);
     return ans;
 }
 
@@ -126,8 +128,8 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
     if (! isEmbeddedOnly())
         return nullptr;
 
-    NormalSurfaces* ans = new NormalSurfaces(
-        coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
+    NormalSurfaces* ans = new NormalSurfaces(coords_,
+        NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM, triangulation_);
 
     Triangulation<3>* t;
 #ifdef DEBUG
@@ -153,7 +155,8 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
         delete t;
     }
 
-    parent()->insertChildLast(ans);
+    if (parent())
+        parent()->insertChildLast(ans);
     return ans;
 }
 
