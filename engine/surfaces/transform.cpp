@@ -164,18 +164,17 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
     }
 }
 
-NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter* filter) const {
-    NormalSurfaces* ans = new NormalSurfaces(coords_,
-        (which_ & (NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR)) | NS_CUSTOM,
-        algorithm_ | NS_ALG_CUSTOM, triangulation_);
-
-    for (const NormalSurface& s : surfaces_)
-        if (filter->accept(s))
-            ans->surfaces_.push_back(s);
-
-    if (parent())
-        parent()->insertChildLast(ans);
-    return ans;
+NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
+        const SurfaceFilter& filter) :
+        NormalSurfaces(
+            src.coords_,
+            (src.which_ & (NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR)) |
+                NS_CUSTOM,
+            src.algorithm_ | NS_ALG_CUSTOM,
+            src.triangulation_) {
+    for (const NormalSurface& s : src.surfaces_)
+        if (filter.accept(s))
+            surfaces_.push_back(s);
 }
 
 } // namespace regina

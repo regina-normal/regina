@@ -42,6 +42,7 @@
 
 using regina::NormalSurfaces;
 using regina::ProgressTracker;
+using regina::SurfaceFilter;
 using regina::Triangulation;
 
 void addNormalSurfaces(pybind11::module_& m) {
@@ -156,7 +157,13 @@ void addNormalSurfaces(pybind11::module_& m) {
                 return nullptr;
             }
         })
-        .def("filter", &NormalSurfaces::filter)
+        .def("filter", [](const NormalSurfaces& src, const SurfaceFilter& f) {
+            // This is deprecated, so we reimplement it here ourselves.
+            auto ans = new NormalSurfaces(src, f);
+            if (src.parent())
+                src.parent()->insertChildLast(ans);
+            return ans;
+        })
         .def("filterForLocallyCompatiblePairs", [](const NormalSurfaces& src)
                 -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.

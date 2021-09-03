@@ -311,6 +311,22 @@ class NormalSurfaces : public Packet {
         NormalSurfaces(const NormalSurfaces& src, NormalTransform transform);
 
         /**
+         * A "filter constructor" that creates a new list filled with those
+         * surfaces from the given list that pass the given filter.
+         *
+         * Unlike the old filter() function, this constructor will \e not
+         * insert the new normal surface list into the packet tree.
+         *
+         * For this new filtered list, which() will include the NS_CUSTOM
+         * flag, and algorithm() will include the NS_ALG_CUSTOM flag.
+         *
+         * @param src the normal surface list that we wish to filter;
+         * this will not be modified.
+         * @param filter the filter to apply to the given list.
+         */
+        NormalSurfaces(const NormalSurfaces& src, const SurfaceFilter& filter);
+
+        /**
          * Deprecated routine to enumerate normal surfaces within a given
          * triangulation.
          *
@@ -674,24 +690,22 @@ class NormalSurfaces : public Packet {
         void sort(Comparison&& comp);
 
         /**
-         * Creates a new list filled with the surfaces from this list
-         * that pass the given filter.
+         * Deprecated function that creates a new list filled with those
+         * surfaces from this list that pass the given filter.
          *
-         * The new list will be inserted as a new child packet of the
-         * underlying triangulation (specifically, as the final child).  As a
-         * convenience, the new list will also be returned from this routine.
+         * This routine is identical to calling the "filter constructor"
+         * <tt>NormalSurfaces(*this, filter)</tt>, except that it also
+         * inserts the output list into the packet tree beneath the same
+         * parent packet as this (i.e., the same parent as the input list).
          *
-         * This original list is not altered in any way.  Likewise,
-         * the surfaces in the new list are deep copies of the originals
-         * (so they can be altered without affecting the original surfaces).
+         * See the "filter constructor" for details on how this routine works.
          *
-         * For the resulting list, which() will include the NS_CUSTOM
-         * flag, and algorithm() will include the NS_ALG_CUSTOM flag.
+         * \deprecated Just call the NormalSurfaces "filter constructor".
          *
-         * @return the new list, which will also have been inserted as
-         * a new child packet of the underlying triangulation.
+         * @return the new filtered list of surfaces.
          */
-        NormalSurfaces* filter(const SurfaceFilter* filter) const;
+        [[deprecated]] NormalSurfaces* filter(const SurfaceFilter& filter)
+            const;
 
         /**
          * Deprecated function to create a new list filled with those surfaces
@@ -1515,6 +1529,14 @@ inline NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
     } catch (const FailedPrecondition&) {
         return nullptr;
     }
+}
+
+inline NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter& filter)
+        const {
+    auto ans = new NormalSurfaces(*this, filter);
+    if (parent())
+        parent()->insertChildLast(ans);
+    return ans;
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator() {

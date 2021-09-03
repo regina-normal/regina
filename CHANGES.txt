@@ -650,6 +650,10 @@ Version 7.0  [ TODO ]
               exception on error (instead of returning null), and will not
               insert the new list into the packet tree.  The old functions
               are kept as deprecated aliases.
+            - Replaced filter() with a class constructor that takes a
+              SurfaceFilter; this will not insert the new list into the packet
+              tree.  The old function is kept as a deprecated alias, but
+              now takes its filter argument by reference (not by pointer).
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
