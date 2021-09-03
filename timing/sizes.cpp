@@ -38,6 +38,8 @@
 #include "subcomplex/trisolidtorus.h"
 #include "subcomplex/trivialtri.h"
 
+#include "surfaces/normalsurfaces.h"
+
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
@@ -109,11 +111,16 @@ int main(int argc, char* argv[]) {
     SHOW_SIZE(TrivialTri);
     std::cout << std::endl;
 
-    std::cout << "Triangulation Data:" << std::endl;
+    std::cout << "Packets:" << std::endl;
+    SHOW_SIZE(Packet);
     SHOW_SIZE(Triangulation<2>);
     SHOW_SIZE(Triangulation<3>);
     SHOW_SIZE(Triangulation<4>);
     SHOW_SIZE(Triangulation<5>);
+    SHOW_SIZE(NormalSurfaces);
+    std::cout << std::endl;
+
+    std::cout << "Other:" << std::endl;
     SHOW_SIZE(HomologicalData);
     std::cout << std::endl;
 
