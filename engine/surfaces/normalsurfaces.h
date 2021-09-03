@@ -199,8 +199,8 @@ class NormalSurfaces : public Packet {
 
     public:
         /**
-         * A unified constructor for enumerating various classes of normal
-         * surfaces within a given triangulation.
+         * A unified "enumeration constructor" for enumerating various classes
+         * of normal surfaces within a given triangulation.
          *
          * The NormalCoords argument allows you to specify an underlying
          * coordinate system in which to do the enumeration (e.g., standard
@@ -280,18 +280,18 @@ class NormalSurfaces : public Packet {
             ProgressTracker* tracker = nullptr);
 
         /**
-         * A unified constructor for transforming one normal surface list
-         * into another.
+         * A unified "transform constructor" for transforming one normal
+         * surface list into another.
          *
          * The available transformations include:
          *
          * - conversions between vertex surfaces in different coordinate
-         *   systems, which were formerly provided by the deprecated functions
-         *   quadToStandard(), quadOctToStandardAN(), standardToQuad()
+         *   systems, including those formerly provided by the deprecated
+         *   functions quadToStandard(), quadOctToStandardAN(), standardToQuad()
          *   and standardANToQuadOct();
          *
-         * - filters that select a subset of surfaces, which were formerly
-         *   provided by the deprecated functions filter(),
+         * - filters that select a subset of surfaces, including those
+         *   formerly provided by the deprecated functions
          *   filterForLocallyCompatiblePairs(), filterForDisjointPairs(),
          *   and filterForPotentiallyIncompressible().
          *
@@ -545,7 +545,8 @@ class NormalSurfaces : public Packet {
          * See the class "transform constructor" for details on how this
          * routine works and what the arguments mean.  See the NormalList
          * enumeration (in particular, the NS_CONV_REDUCED_TO_STD value)
-         * for the preconditions on the triangulation and the input list.
+         * for details on the algorithm, and for preconditions on the
+         * triangulation and the input list.
          *
          * \deprecated Just call the NormalSurfaces "transform constructor".
          *
@@ -577,7 +578,8 @@ class NormalSurfaces : public Packet {
          * See the class "transform constructor" for details on how this
          * routine works and what the arguments mean.  See the NormalList
          * enumeration (in particular, the NS_CONV_REDUCED_TO_STD value)
-         * for the preconditions on the triangulation and the input list.
+         * for details on the algorithm, and for preconditions on the
+         * triangulation and the input list.
          *
          * \deprecated Just call the NormalSurfaces "transform constructor".
          *
@@ -609,7 +611,8 @@ class NormalSurfaces : public Packet {
          * See the class "transform constructor" for details on how this
          * routine works and what the arguments mean.  See the NormalList
          * enumeration (in particular, the NS_CONV_STD_TO_REDUCED value)
-         * for the preconditions on the triangulation and the input list.
+         * for details on the algorithm, and for preconditions on the
+         * triangulation and the input list.
          *
          * \deprecated Just call the NormalSurfaces "transform constructor".
          *
@@ -641,7 +644,8 @@ class NormalSurfaces : public Packet {
          * See the class "transform constructor" for details on how this
          * routine works and what the arguments mean.  See the NormalList
          * enumeration (in particular, the NS_CONV_STD_TO_REDUCED value)
-         * for the preconditions on the triangulation and the input list.
+         * for details on the algorithm, and for preconditions on the
+         * triangulation and the input list.
          *
          * \deprecated Just call the NormalSurfaces "transform constructor".
          *
@@ -690,141 +694,90 @@ class NormalSurfaces : public Packet {
         NormalSurfaces* filter(const SurfaceFilter* filter) const;
 
         /**
-         * Creates a new list filled with the surfaces from this list
-         * that have at least one locally compatible partner.
-         * In other words, a surface \a S from this list will be placed
-         * in the new list if and only if there is some other surface \a T
-         * in this list for which \a S and \a T are locally compatible.
-         * See NormalSurface::locallyCompatible() for further details on
-         * compatibility testing.
+         * Deprecated function to create a new list filled with those surfaces
+         * from this list that have at least one locally compatible partner.
          *
-         * The new list will be inserted as a new child packet of the
-         * underlying triangulation (specifically, as the final child).  As a
-         * convenience, the new list will also be returned from this routine.
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_FILTER_COMPATIBLE)</tt>, but
+         * with two key differences:
          *
-         * This original list is not altered in any way.  Likewise,
-         * the surfaces in the new list are deep copies of the originals
-         * (so they can be altered without affecting the original surfaces).
+         * - Unlike the transform constructor, this routine will also insert
+         *   the output list into the packet tree, beneath the same parent
+         *   packet as this (i.e., the same parent as the input list).
          *
-         * For the resulting list, which() will include the NS_CUSTOM
-         * flag, and algorithm() will be precisely NS_ALG_CUSTOM.
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * \pre This list contains only embedded normal surfaces.  More
-         * precisely, isEmbeddedOnly() must return \c true.
+         * See the class "transform constructor" for details on how this
+         * routine works.  See the NormalList enumeration (in particular, the
+         * NS_FILTER_COMPATIBLE value) for more details on local compatibility
+         * and for preconditions on the input list.
          *
-         * \warning If this list contains a vertex link (plus at least
-         * one other surface), then the new list will be identical to
-         * the old (i.e., every surface will be copied across).
+         * \deprecated Just call the NormalSurfaces "transform constructor".
          *
-         * @return the new list, which will also have been inserted as
-         * a new child packet of the underlying triangulation.
+         * @return the new filtered list of surfaces.
          */
-        NormalSurfaces* filterForLocallyCompatiblePairs() const;
+        [[deprecated]] NormalSurfaces* filterForLocallyCompatiblePairs() const;
 
         /**
-         * Creates a new list filled with the surfaces from this list
-         * that have at least one disjoint partner.
-         * In other words, a surface \a S from this list will be placed
-         * in the new list if and only if there is some other surface \a T
-         * in this list for which \a S and \a T can be made to intersect
-         * nowhere at all, without changing either normal isotopy class.
-         * See NormalSurface::disjoint() for further details on disjointness
-         * testing.
+         * Deprecated function to create a new list filled with those surfaces
+         * from this list that have at least one disjoint partner.
          *
-         * This routine cannot deal with empty, disconnected or
-         * non-compact surfaces.  Such surfaces will be silently
-         * ignored, and will not be used in any disjointness tests (in
-         * particular, they will never be considered as a "disjoint partner"
-         * for any other surface).
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_FILTER_COMPATIBLE)</tt>, but
+         * with two key differences:
          *
-         * The new list will be inserted as a new child packet of the
-         * underlying triangulation (specifically, as the final child).  As a
-         * convenience, the new list will also be returned from this routine.
+         * - Unlike the transform constructor, this routine will also insert
+         *   the output list into the packet tree, beneath the same parent
+         *   packet as this (i.e., the same parent as the input list).
          *
-         * This original list is not altered in any way.  Likewise,
-         * the surfaces in the new list are deep copies of the originals
-         * (so they can be altered without affecting the original surfaces).
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * For the resulting list, which() will include the NS_CUSTOM
-         * flag, and algorithm() will be precisely NS_ALG_CUSTOM.
+         * See the class "transform constructor" for details on how this
+         * routine works.  See the NormalList enumeration (in particular, the
+         * NS_FILTER_COMPATIBLE value) for more details on disjointness testing,
+         * some important caveats, and for preconditions on the input list.
          *
-         * \pre This list contains only embedded normal surfaces.  More
-         * precisely, isEmbeddedOnly() must return \c true.
-         *
-         * \warning If this list contains a vertex link (plus at least
-         * one other surface), then the new list will be identical to
-         * the old (i.e., every surface will be copied across).
+         * \deprecated Just call the NormalSurfaces "transform constructor".
          *
          * \todo Deal properly with surfaces that are too large to handle.
          *
-         * @return the new list, which will also have been inserted as
-         * a new child packet of the underlying triangulation.
+         * @return the new filtered list of surfaces.
          */
-        NormalSurfaces* filterForDisjointPairs() const;
+        [[deprecated]] NormalSurfaces* filterForDisjointPairs() const;
 
         /**
-         * Creates a new list filled with only the surfaces from this list
-         * that "might" represent two-sided incompressible surfaces.
-         * More precisely, we consider all two-sided surfaces in this list,
-         * as well as the two-sided double covers of all one-sided surfaces
-         * in this list (see below for details on how one-sided surfaces
-         * are handled).  Each of these surfaces is examined using
-         * relatively fast heuristic tests for incompressibility.  Any
-         * surface that is definitely \e not incompressible is thrown
-         * away, and all other surfaces are placed in the new list.
+         * Deprecated function to create a new list filled with those surfaces
+         * from this list that "might" represent two-sided incompressible
+         * surfaces, according to fast heuristics.
          *
-         * Therefore, it is guaranteed that every incompressible surface
-         * from the old list will be placed in the new list.  However,
-         * it is not known whether any given surface in the new list is
-         * indeed incompressible.
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_FILTER_INCOMPRESSIBLE)</tt>, but
+         * with two key differences:
          *
-         * See NormalSurface::isIncompressible() for the definition of
-         * incompressibility that is used here.  Note in particular that
-         * spheres are \e never considered incompressible.
+         * - Unlike the transform constructor, this routine will also insert
+         *   the output list into the packet tree, beneath the same parent
+         *   packet as this (i.e., the same parent as the input list).
          *
-         * As indicated above, this filter works exclusively with two-sided
-         * surfaces.  If a surface in this list is one-sided, the heuristic
-         * incompressibility tests will be run on its two-sided double cover.
-         * Nevertheless, if the tests pass, the original one-sided surface
-         * (not the double cover) will be added to the new list.
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * The new list will be inserted as a new child packet of the
-         * underlying triangulation (specifically, as the final child).  As a
-         * convenience, the new list will also be returned from this routine.
+         * See the class "transform constructor" for details on how this
+         * routine works.  See the NormalList enumeration (in particular, the
+         * NS_FILTER_INCOMPRESSIBLE value) for more details on what "potential
+         * incompressibility" testing means, the heuristics behind it, and
+         * for preconditions on the triangulation and the input list.
          *
-         * This original list is not altered in any way.  Likewise,
-         * the surfaces in the new list are deep copies of the originals
-         * (so they can be altered without affecting the original surfaces).
+         * \deprecated Just call the NormalSurfaces "transform constructor".
          *
-         * Currently the heuristic tests include (i) throwing away
-         * all vertex links and thin edge links, and then
-         * (ii) cutting along the remaining surfaces and running
-         * Triangulation<3>::hasSimpleCompressingDisc() on the resulting
-         * bounded triangulations.  For more details on these tests
-         * see "The Weber-Seifert dodecahedral space is non-Haken",
-         * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
-         * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
-         *
-         * For the resulting list, which() will include the NS_CUSTOM
-         * flag, and algorithm() will be precisely NS_ALG_CUSTOM.
-         *
-         * \pre The underlying 3-manifold triangulation is valid and closed.
-         * In particular, it has no ideal vertices.
-         * \pre This list contains only embedded normal surfaces.  More
-         * precisely, isEmbeddedOnly() must return \c true.
-         * \pre This list contains only compact, connected normal surfaces.
-         * \pre No surfaces in this list contain any octagonal discs.
-         *
-         * \warning The behaviour of this routine is subject to change
-         * in future versions of Regina, since additional tests may be
-         * added to improve the power of this filtering.
-         *
-         * \todo Add progress tracking.
-         *
-         * @return the new list, which will also have been inserted as
-         * a new child packet of the underlying triangulation.
+         * @return the new filtered list of surfaces.
          */
-        NormalSurfaces* filterForPotentiallyIncompressible() const;
+        [[deprecated]] NormalSurfaces* filterForPotentiallyIncompressible()
+            const;
 
         /**
          * Returns the matching equations that were used to create this
@@ -1522,6 +1475,40 @@ inline NormalSurfaces* NormalSurfaces::standardToQuad() const {
 inline NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
     try {
         auto ans = new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
+        if (parent())
+            parent()->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+inline NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs() const {
+    try {
+        auto ans = new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
+        if (parent())
+            parent()->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+inline NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
+    try {
+        auto ans = new NormalSurfaces(*this, NS_FILTER_DISJOINT);
+        if (parent())
+            parent()->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+inline NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
+        const {
+    try {
+        auto ans = new NormalSurfaces(*this, NS_FILTER_INCOMPRESSIBLE);
         if (parent())
             parent()->insertChildLast(ans);
         return ans;

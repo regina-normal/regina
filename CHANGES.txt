@@ -642,12 +642,14 @@ Version 7.0  [ TODO ]
               and will not insert the new list into the packet tree.
               The old enumerate() function is kept as a deprecated alias,
               but Python users can no longer use it with a progress tracker.
-            - Replaced quadToStandard(), quadOctToStandardAN(), standardToQuad()
-              and standardANToQuadOct() with a single class constructor
-              that takes a NormalTransform,; this will throw an exception on
-              error (instead of returning null), and will not insert the new
-              list into the packet tree.  The old functions are kept as
-              deprecated aliases.
+            - Replaced quadToStandard(), quadOctToStandardAN(),
+              standardToQuad(), standardANToQuadOct(), filterForDisjointPairs(),
+              filterForLocallyCompatiblePairs() and
+              filterForPotentiallyIncompressible() with a single class
+              constructor that takes a NormalTransform; this will throw an
+              exception on error (instead of returning null), and will not
+              insert the new list into the packet tree.  The old functions
+              are kept as deprecated aliases.
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,

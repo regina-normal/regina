@@ -9,7 +9,6 @@ SET ( FILES
   disc.cpp
   disctype.cpp
   enumerator.cpp
-  enumfilter.cpp
   links.cpp
   matching.cpp
   normalsurface.cpp
@@ -19,6 +18,7 @@ SET ( FILES
   orientable.cpp
   quadtostd.cpp
   stdtoquad.cpp
+  transform.cpp
   triangles.cpp
   )
 
