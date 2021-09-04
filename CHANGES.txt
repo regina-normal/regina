@@ -964,8 +964,7 @@ Version 7.0  [ TODO ]
               not a newly allocated pointer that could be null.
             - Routine manifold() now returns a std::unique_ptr.
         Class SurfaceFilterInfo<...>:
-            - Routine name() has been changed to a class constant.
-              This change is backward incompatible (but probably affects noone).
+            - Removed completely.
         Class SurfaceFilterProperties:
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.

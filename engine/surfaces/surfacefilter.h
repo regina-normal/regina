@@ -59,26 +59,6 @@ class SurfaceFilterProperties;
  */
 
 /**
- * A template that stores information about a particular type of normal
- * surface filter.  Much of this information is given in the
- * form of compile-time constants and types.
- *
- * At a bare minimum, each specialisation of this template must provide:
- *
- * - a typedef \a Class that represents the corresponding
- *   SurfaceFilter descendant class;
- * - a static constexpr member <tt>const char* name</tt>, which gives
- *   the human-readable name of the filter type.
- *
- * \ifacespython Not present.
- *
- * \tparam filterType one of the #SurfaceFilterType constants, indicating
- * which type of filter we are querying.
- */
-template <SurfaceFilterType filterType>
-struct SurfaceFilterInfo;
-
-/**
  * Defines various constants, types and virtual functions for a
  * descendant class of SurfaceFilter.
  *
@@ -94,36 +74,17 @@ struct SurfaceFilterInfo;
  *
  * @param class_ the name of this descendant class of SurfaceFilter.
  * @param id the corresponding SurfaceFilterType constant.
+ * @param name a human-readable name for this filter type.
  */
-#define REGINA_SURFACE_FILTER(class_, id) \
+#define REGINA_SURFACE_FILTER(class_, id, name) \
     public: \
         static constexpr const SurfaceFilterType filterTypeID = id; \
         inline virtual SurfaceFilterType filterType() const override { \
             return id; \
         } \
         inline virtual std::string filterTypeName() const override { \
-            return SurfaceFilterInfo<id>::name; \
+            return name; \
         }
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
-    typedef SurfaceFilter Class;
-    static constexpr const char* name = "Default filter";
-};
-
-template <>
-struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
-    typedef SurfaceFilterCombination Class;
-    static constexpr const char* name = "Combination filter";
-};
-
-template <>
-struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
-    typedef SurfaceFilterProperties Class;
-    static constexpr const char* name = "Filter by basic properties";
-};
-#endif
 
 /**
  * A packet that accepts or rejects normal surfaces.
@@ -134,8 +95,6 @@ struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
  * <ul>
  *   <li>A new value must be added to the SurfaceFilterType enum in
  *   surfacefiltertype.h to represent the new filter type.</li>
- *   <li>A corresponding specialisation of SurfaceFilterInfo<> must be
- *   defined, typically in the same header as the new filter class.</li>
  *   <li>The macro REGINA_SURFACE_FILTER must be added to the beginning
  *   of the new filter class.  This will declare and define various
  *   constants, typedefs and virtual functions (see the REGINA_SURFACE_FILTER
@@ -240,7 +199,8 @@ class SurfaceFilter : public Packet {
  * filter.
  */
 class SurfaceFilterCombination : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(SurfaceFilterCombination, NS_FILTER_COMBINATION)
+    REGINA_SURFACE_FILTER(SurfaceFilterCombination, NS_FILTER_COMBINATION,
+        "Combination filter")
 
     private:
         bool usesAnd_;
@@ -296,7 +256,8 @@ class SurfaceFilterCombination : public SurfaceFilter {
  * basis of whether or not it is compact.
  */
 class SurfaceFilterProperties : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(SurfaceFilterProperties, NS_FILTER_PROPERTIES)
+    REGINA_SURFACE_FILTER(SurfaceFilterProperties, NS_FILTER_PROPERTIES,
+        "Filter by basic properties")
 
     private:
         std::set<LargeInteger> eulerChar_;
@@ -468,7 +429,7 @@ inline SurfaceFilterType SurfaceFilter::filterType() const {
 }
 
 inline std::string SurfaceFilter::filterTypeName() const {
-    return SurfaceFilterInfo<NS_FILTER_DEFAULT>::name;
+    return "Default filter";
 }
 
 inline void SurfaceFilter::writeXMLFilterData(std::ostream&) const {
