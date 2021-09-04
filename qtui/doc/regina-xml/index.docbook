@@ -23,7 +23,12 @@
 
   <!ENTITY eltaddedver "Added in &regina;&nbsp;">
   <!ENTITY eltdepver "Deprecated since &regina;&nbsp;">
+  <!ENTITY eltrmver "Removed in &regina;&nbsp;">
   <!ENTITY attraddedver "Added in &regina;&nbsp;">
+  <!ENTITY attrdepver "Deprecated since &regina;&nbsp;">
+  <!ENTITY eltrmdetail "<para>This element has been removed. It will not
+   be written to new data files, and it will be ignored when reading
+   older data files.</para>">
 
   <!ENTITY dataformat SYSTEM "dataformat.docbook">
   <!ENTITY % dataformat-entities SYSTEM "dataformat.ent">

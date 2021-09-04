@@ -15,14 +15,15 @@
 
  <refsynopsisdiv>
   <informaltable frame="all">
-   <tgroup cols="2">
+   <tgroup cols="3">
     <colspec colname="c1"/>
     <colspec colname="c2"/>
+    <colspec colname="c3"/>
     <tbody>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Content Model</emphasis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
 <synopsis>
 surface ::= (#PCDATA,
              &xml-compact-surface;?,
@@ -30,24 +31,28 @@ surface ::= (#PCDATA,
              &xml-orbl-surface;?, &xml-realbdry-surface;?,
              &xml-twosided;?)</synopsis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Attributes</emphasis>
      </entry></row>
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
+      <entry><emphasis role="bold">Version</emphasis></entry>
      </row>
      <row>
       <entry><sgmltag>enc</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
+      <entry>&attraddedver;7.0</entry>
      </row>
      <row>
       <entry><sgmltag>len</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>name</sgmltag></entry>
       <entry><type>CDATA</type></entry>
+      <entry></entry>
      </row>
     </tbody>
    </tgroup>

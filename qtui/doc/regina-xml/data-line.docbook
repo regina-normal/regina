@@ -29,6 +29,7 @@ line ::= (#PCDATA)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;4.96</para>
  </refsynopsisdiv>
 
  <refsect1>
