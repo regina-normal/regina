@@ -59,7 +59,6 @@ namespace regina {
 class NormalHypersurface;
 class NormalHypersurfaces;
 class ProgressTracker;
-class XMLPacketReader;
 
 /**
  * \weakgroup hypersurface
@@ -382,8 +381,6 @@ class NormalHypersurfaces : public Packet {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
         /**
          * Sorts the hypersurfaces in this list according to the given

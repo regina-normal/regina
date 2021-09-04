@@ -46,7 +46,6 @@
 
 namespace regina {
 
-class XMLPacketReader;
 class PDF;
 
 /**
@@ -248,8 +247,6 @@ class PDF : public Packet {
         bool savePDF(const char* filename) const;
 
         virtual void writeTextShort(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;

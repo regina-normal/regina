@@ -57,7 +57,6 @@ namespace regina {
 
 class ProgressTracker;
 class ProgressTrackerOpen;
-class XMLPacketReader;
 
 template <int> class XMLTriangulationReader;
 
@@ -926,9 +925,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
         bool idealToFinite();
 
         /*@}*/
-
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;

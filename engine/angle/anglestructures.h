@@ -54,7 +54,6 @@ namespace regina {
 
 class AngleStructures;
 class ProgressTracker;
-class XMLPacketReader;
 class XMLAngleStructuresReader;
 
 /**
@@ -360,8 +359,6 @@ class AngleStructures : public Packet {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
     protected:
         /**

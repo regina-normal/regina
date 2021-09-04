@@ -76,14 +76,28 @@ class XMLTreeResolver;
  * XMLPacketReader::abort() which will destroy whatever new packets
  * have already been created.
  *
+ * The XML packet reader should read exactly what Packet::writeXMLPacketData()
+ * writes, and vice versa.
+ *
+ * The packet reader may assume that its parent packet (if one exists) has
+ * already been read from the file.  The packet reader itself should not
+ * insert the new packet into the packet tree (the parent reader will do this).
+ *
+ * If the new packet needs to store pointers to other packets that might not
+ * have been read yet (such as a script packet that needs pointers to its
+ * variables), then it should queue a new XMLTreeResolutionTask to the
+ * XMLTreeResolver that was passed to its constructor.  After the complete data
+ * file has been read, XMLTreeResolver::resolve() will run all of its queued
+ * tasks, at which point the new packet can resolve any dangling references.
+ *
  * \ifacespython Not present.
  */
 class XMLPacketReader : public XMLElementReader {
     private:
-        std::string childLabel;
+        std::string childLabel_;
             /**< The packet label to give the child packet currently
                  being read. */
-        std::string childID;
+        std::string childID_;
             /**< The internal ID stored in the data file for the child packet
                  currently being read. */
 
@@ -185,7 +199,7 @@ inline XMLPacketReader::XMLPacketReader(XMLTreeResolver& resolver) :
 }
 
 inline Packet* XMLPacketReader::packet() {
-    return 0;
+    return nullptr;
 }
 
 inline XMLElementReader* XMLPacketReader::startContentSubElement(

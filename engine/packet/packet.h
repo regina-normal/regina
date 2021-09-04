@@ -57,8 +57,6 @@ class PacketChildren;
 class PacketDescendants;
 class PacketListener;
 class SubtreeIterator;
-class XMLPacketReader;
-class XMLTreeResolver;
 
 /**
  * \addtogroup packet Basic Packet Types
@@ -178,11 +176,9 @@ struct PacketInfo;
  *     (see the REGINA_PACKET macro documentation for details).
  *   <li>All abstract functions must be implemented, except for those
  *     already provided by REGINA_PACKET.</li>
- *   <li>A public function
- *     <tt>static XMLPacketReader* xmlReader(Packet* parent,
- *     XMLTreeResolver& resolver)</tt>
- *     must be declared and implemented.  See the notes for xmlReader()
- *     for further details.</li>
+ *   <li>An appropriate case should be added to
+ *     <tt>XMLPacketReader::startSubElement()</tt> so that the packet
+ *     can be read from Regina data files.</li>
  *   <li>Whenever the contents of the packet are changed, a local
  *     ChangeEventSpan must be declared on the stack to notify listeners of
  *     the change.</li>
@@ -1283,49 +1279,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         std::string internalID() const;
 
         /*@}*/
-        /**
-         * Returns a newly created XML element reader that will read the
-         * contents of a single XML packet element.  You may assume that
-         * the packet to be read is of the same type as the class in which
-         * you are implementing this routine.
-         * 
-         * The XML element reader should read exactly what
-         * writeXMLPacketData() writes, and vice versa.
-         *
-         * \a parent represents the packet which will become the new
-         * packet's parent in the tree structure, and may be assumed to
-         * have already been read from the file.  This information is
-         * for reference only, and does not need to be used.  The XML
-         * element reader can either insert or not insert the new packet
-         * beneath \a parent in the tree structure as it pleases.  Note
-         * however that \a parent will be 0 if the new packet is to
-         * become a tree matriarch.
-         *
-         * If the new packet needs to store pointers to other packets that
-         * might not have been read yet (such as a script packet that
-         * needs pointers to its variables), then it should queue a new
-         * XMLTreeResolutionTask to the given XMLTreeResolver.  After the
-         * complete data file has been read, XMLTreeResolver::resolve()
-         * will run all of its queued tasks, at which point the new packet can
-         * resolve any dangling references.
-         *
-         * This routine is not actually provided for Packet itself, but
-         * must be declared and implemented for every packet subclass that
-         * will be instantiated.
-         *
-         * \ifacespython Not present.
-         *
-         * @param parent the packet which will become the new packet's
-         * parent in the tree structure, or 0 if the new packet is to be
-         * tree matriarch.
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
-         * @return the newly created XML element reader.
-         */
-        #ifdef __DOXYGEN
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-        #endif
 
         // Make this class non-copyable.
         Packet(const Packet&) = delete;

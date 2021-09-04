@@ -44,7 +44,6 @@
 
 namespace regina {
 
-class XMLPacketReader;
 class Text;
 
 /**
@@ -112,8 +111,6 @@ class Text : public Packet {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;

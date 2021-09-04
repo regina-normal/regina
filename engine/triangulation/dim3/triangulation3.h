@@ -69,7 +69,6 @@ class Link;
 class NormalSurface;
 class ProgressTracker;
 class ProgressTrackerOpen;
-class XMLPacketReader;
 
 template <int> class XMLTriangulationReader;
 
@@ -3295,9 +3294,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         static Triangulation<3>* fromSnapPea(const std::string& snapPeaData);
 
         /*@}*/
-
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;

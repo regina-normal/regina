@@ -43,10 +43,6 @@
 #define __REGINA_TRIANGULATION_H
 #endif
 
-namespace regina {
-    template <int> class XMLTriangulationReader;
-}
-
 #include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
@@ -282,9 +278,6 @@ class Triangulation :
         [[deprecated]] void swapContents(Triangulation<dim>& other);
 
         /*@}*/
-
-        static XMLPacketReader* xmlReader(Packet* parent,
-                XMLTreeResolver& resolver);
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
@@ -586,12 +579,6 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
     out << "  </simplices>\n";
 
     detail::TriangulationBase<dim>::writeXMLBaseProperties(out);
-}
-
-template <int dim>
-inline XMLPacketReader* Triangulation<dim>::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLTriangulationReader<dim>(resolver);
 }
 
 template <int dim>

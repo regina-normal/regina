@@ -31,10 +31,18 @@
  **************************************************************************/
 
 #include "packet/packet.h"
+#include "file/xml/xmlanglestructreader.h"
+#include "file/xml/xmlfilterreader.h"
+#include "file/xml/xmlhypersurfacereader.h"
+#include "file/xml/xmllinkreader.h"
+#include "file/xml/xmlsurfacereader.h"
 #include "file/xml/xmlpacketreader.h"
+#include "file/xml/xmlpacketreaders.h"
+#include "file/xml/xmlsnappeareader.h"
 #include "file/xml/xmltreeresolver.h"
-#include "file/xml/xmltrireader.h"
-#include "packet/packetregistry.h"
+#include "file/xml/xmltrireader2.h"
+#include "file/xml/xmltrireader3.h"
+#include "file/xml/xmltrireader4.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -42,42 +50,82 @@ namespace regina {
 XMLElementReader* XMLPacketReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
+    auto it = subTagProps.find("label");
+    if (it != subTagProps.end())
+        childLabel_ = it->second;
+
+    it = subTagProps.find("id");
+    if (it != subTagProps.end())
+        childID_ = it->second;
+
     if (subTagName == "packet") {
-        Packet* me = packet();
-        if (! me)
-            return new XMLPacketReader(resolver_);
-
-        regina::xml::XMLPropertyDict::const_iterator it =
-            subTagProps.find("label");
-        if (it == subTagProps.end())
-            childLabel = "";
-        else
-            childLabel = it->second;
-
-        it = subTagProps.find("id");
-        if (it == subTagProps.end())
-            childID = "";
-        else
-            childID = it->second;
-
-        it = subTagProps.find("typeid");
+        auto it = subTagProps.find("typeid");
         if (it == subTagProps.end())
             return new XMLPacketReader(resolver_);
 
         long typeID;
         if (! valueOf((*it).second, typeID))
             return new XMLPacketReader(resolver_);
-        if (typeID <= 0)
-            return new XMLPacketReader(resolver_);
 
-        XMLElementReader* ans = forPacket(static_cast<PacketType>(typeID),
-            [=](auto info) {
-                return decltype(info)::Class::xmlReader(me, this->resolver_);
-            }, nullptr);
-        if (ans)
-            return ans;
-        else
-            return new XMLPacketReader(resolver_);
+        // We won't use the packet registry; instead here we explicitly list
+        // all the packet types that the file format supports.
+        switch (static_cast<PacketType>(typeID)) {
+            case PACKET_CONTAINER:
+                return new XMLContainerReader(resolver_);
+            case PACKET_TEXT:
+                return new XMLTextReader(resolver_);
+            case PACKET_TRIANGULATION3:
+                return new XMLTriangulationReader<3>(resolver_);
+            case PACKET_NORMALSURFACES:
+                return new XMLNormalSurfacesReader(
+                    dynamic_cast<Triangulation<3>*>(packet()), resolver_);
+            case PACKET_SCRIPT:
+                return new XMLScriptReader(resolver_);
+            case PACKET_SURFACEFILTER:
+                return new XMLFilterPacketReader(packet(), resolver_);
+            case PACKET_ANGLESTRUCTURES:
+                return new XMLAngleStructuresReader(
+                    dynamic_cast<Triangulation<3>*>(packet()), resolver_);
+            case PACKET_PDF:
+                return new XMLPDFReader(resolver_);
+            case PACKET_TRIANGULATION2:
+                return new XMLTriangulationReader<2>(resolver_);
+            case PACKET_TRIANGULATION4:
+                return new XMLTriangulationReader<4>(resolver_);
+            case PACKET_NORMALHYPERSURFACES:
+                return new XMLNormalHypersurfacesReader(
+                    dynamic_cast<Triangulation<4>*>(packet()), resolver_);
+            case PACKET_SNAPPEATRIANGULATION:
+                return new XMLSnapPeaReader(resolver_);
+            case PACKET_LINK:
+                return new XMLLinkReader(resolver_);
+#ifndef REGINA_LOWDIMONLY
+            case PACKET_TRIANGULATION5:
+                return new XMLTriangulationReader<5>(resolver_);
+            case PACKET_TRIANGULATION6:
+                return new XMLTriangulationReader<6>(resolver_);
+            case PACKET_TRIANGULATION7:
+                return new XMLTriangulationReader<7>(resolver_);
+            case PACKET_TRIANGULATION8:
+                return new XMLTriangulationReader<8>(resolver_);
+            case PACKET_TRIANGULATION9:
+                return new XMLTriangulationReader<9>(resolver_);
+            case PACKET_TRIANGULATION10:
+                return new XMLTriangulationReader<10>(resolver_);
+            case PACKET_TRIANGULATION11:
+                return new XMLTriangulationReader<11>(resolver_);
+            case PACKET_TRIANGULATION12:
+                return new XMLTriangulationReader<12>(resolver_);
+            case PACKET_TRIANGULATION13:
+                return new XMLTriangulationReader<13>(resolver_);
+            case PACKET_TRIANGULATION14:
+                return new XMLTriangulationReader<14>(resolver_);
+            case PACKET_TRIANGULATION15:
+                return new XMLTriangulationReader<15>(resolver_);
+#endif /* ! REGINA_LOWDIMONLY */
+            default:
+                return new XMLPacketReader(resolver_);
+        }
     } else if (subTagName == "tag") {
         if (Packet* me = packet()) {
             std::string packetTag = subTagProps.lookup("name");
@@ -91,29 +139,29 @@ XMLElementReader* XMLPacketReader::startSubElement(
 
 void XMLPacketReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (subTagName == "packet") {
-        Packet* child =
-            dynamic_cast<XMLPacketReader*>(subReader)->packet();
-        if (child) {
-            Packet* me = packet();
-            if (me) {
-                child->setLabel(childLabel);
-                if (! childID.empty())
-                    resolver_.storeID(childID, child);
+    auto childReader = dynamic_cast<XMLPacketReader*>(subReader);
+    if (childReader) {
+        if (Packet* child = childReader->packet()) {
+            if (Packet* me = packet()) {
+                if (! childLabel_.empty())
+                    child->setLabel(childLabel_);
+                if (! childID_.empty())
+                    resolver_.storeID(childID_, child);
                 if (! child->parent())
                     me->insertChildLast(child);
             } else
                 delete child;
         }
-    } else if (subTagName == "tag")
-        return;
-    else
+    } else if (subTagName != "tag") {
         endContentSubElement(subTagName, subReader);
+    }
+
+    childLabel_.clear();
+    childID_.clear();
 }
 
 void XMLPacketReader::abort(XMLElementReader* /* subReader */) {
-    Packet* me = packet();
-    if (me)
+    if (Packet* me = packet())
         if (! me->parent())
             delete me;
 }

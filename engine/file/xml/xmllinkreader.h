@@ -40,11 +40,12 @@
 #endif
 
 #include "regina-core.h"
-#include "link/link.h"
 #include "file/xml/xmlpacketreader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
+
+class Link;
 
 /**
  * \weakgroup link
@@ -181,92 +182,45 @@ class XMLLinkComponentsReader : public XMLElementReader {
 
 /*@}*/
 
-// Inline functions for XMLLinkReader
-
-inline XMLLinkReader::XMLLinkReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), link_(new Link()) {
-}
-
-inline Packet* XMLLinkReader::packet() {
-    return link_;
-}
-
-inline XMLElementReader* XMLLinkReader::startContentSubElement(
-        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
-    if (! link_)
-        return new XMLElementReader();
-
-    if (subTagName == "crossings")
-        return new XMLLinkCrossingsReader(link_);
-    else if (subTagName == "connections")
-        return new XMLLinkConnectionsReader(link_);
-    else if (subTagName == "components")
-        return new XMLLinkComponentsReader(link_);
-
-    return new XMLElementReader();
-}
-
-inline void XMLLinkReader::endContentSubElement(const std::string& subTagName,
-        XMLElementReader* reader) {
-    if (! link_)
-        return;
-
-    if (subTagName == "crossings") {
-        if (static_cast<XMLLinkCrossingsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = 0;
-        }
-    } else if (subTagName == "connections") {
-        if (static_cast<XMLLinkConnectionsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = 0;
-        }
-    } else if (subTagName == "components") {
-        if (static_cast<XMLLinkComponentsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = 0;
-        }
-    }
-}
-
 // Inline functions for XMLLinkCrossingsReader
 
-XMLLinkCrossingsReader::XMLLinkCrossingsReader(Link* link) :
+inline XMLLinkCrossingsReader::XMLLinkCrossingsReader(Link* link) :
         link_(link), size_(0) {
 }
 
-void XMLLinkCrossingsReader::startElement(const std::string&,
+inline void XMLLinkCrossingsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     if (! valueOf(props.lookup("size"), size_))
         link_ = 0;
 }
 
-bool XMLLinkCrossingsReader::broken() const {
+inline bool XMLLinkCrossingsReader::broken() const {
     return ! link_;
 }
 
 // Inline functions for XMLLinkConnectionsReader
 
-XMLLinkConnectionsReader::XMLLinkConnectionsReader(Link* link) : link_(link) {
+inline XMLLinkConnectionsReader::XMLLinkConnectionsReader(Link* link) :
+        link_(link) {
 }
 
-bool XMLLinkConnectionsReader::broken() const {
+inline bool XMLLinkConnectionsReader::broken() const {
     return ! link_;
 }
 
 // Inline functions for XMLLinkComponentsReader
 
-XMLLinkComponentsReader::XMLLinkComponentsReader(Link* link) :
+inline XMLLinkComponentsReader::XMLLinkComponentsReader(Link* link) :
         link_(link), size_(0) {
 }
 
-void XMLLinkComponentsReader::startElement(const std::string&,
+inline void XMLLinkComponentsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     if (! valueOf(props.lookup("size"), size_))
-        link_ = 0;
+        link_ = nullptr;
 }
 
-bool XMLLinkComponentsReader::broken() const {
+inline bool XMLLinkComponentsReader::broken() const {
     return ! link_;
 }
 

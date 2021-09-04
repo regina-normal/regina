@@ -59,7 +59,6 @@ namespace regina {
 class NormalSurfaces;
 class ProgressTracker;
 class SurfaceFilter;
-class XMLPacketReader;
 
 /**
  * \weakgroup surfaces
@@ -535,8 +534,6 @@ class NormalSurfaces : public Packet {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
         /**
          * Deprecated function that converts the set of all embedded

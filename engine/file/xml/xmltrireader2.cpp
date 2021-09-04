@@ -30,15 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/dim2.h"
 #include "file/xml/xmltrireader2.h"
 
 namespace regina {
-
-XMLPacketReader* Triangulation<2>::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLTriangulationReader<2>(resolver);
-}
 
 } // namespace regina
 

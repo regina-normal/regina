@@ -32,7 +32,6 @@
 
 #include "file/xml/xmlalgebrareader.h"
 #include "file/xml/xmltrireader3.h"
-#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -88,11 +87,6 @@ XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
     else if (subTagName == "H2")
         return new AbelianGroupPropertyReader(tri_->H2_);
     return new XMLElementReader();
-}
-
-XMLPacketReader* Triangulation<3>::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLTriangulationReader<3>(resolver);
 }
 
 } // namespace regina

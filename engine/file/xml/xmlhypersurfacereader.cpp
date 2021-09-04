@@ -150,11 +150,5 @@ void XMLNormalHypersurfacesReader::endContentSubElement(
             list_->surfaces_.push_back(std::move(*s));
 }
 
-XMLPacketReader* NormalHypersurfaces::xmlReader(Packet* parent,
-        XMLTreeResolver& resolver) {
-    return new XMLNormalHypersurfacesReader(
-        dynamic_cast<Triangulation<4>*>(parent), resolver);
-}
-
 } // namespace regina
 

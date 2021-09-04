@@ -36,8 +36,50 @@
 
 namespace regina {
 
-XMLPacketReader* Link::xmlReader(Packet*, XMLTreeResolver& resolver) {
-    return new XMLLinkReader(resolver);
+XMLLinkReader::XMLLinkReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), link_(new Link()) {
+}
+
+Packet* XMLLinkReader::packet() {
+    return link_;
+}
+
+XMLElementReader* XMLLinkReader::startContentSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (! link_)
+        return new XMLElementReader();
+
+    if (subTagName == "crossings")
+        return new XMLLinkCrossingsReader(link_);
+    else if (subTagName == "connections")
+        return new XMLLinkConnectionsReader(link_);
+    else if (subTagName == "components")
+        return new XMLLinkComponentsReader(link_);
+
+    return new XMLElementReader();
+}
+
+void XMLLinkReader::endContentSubElement(const std::string& subTagName,
+        XMLElementReader* reader) {
+    if (! link_)
+        return;
+
+    if (subTagName == "crossings") {
+        if (static_cast<XMLLinkCrossingsReader*>(reader)->broken()) {
+            delete link_;
+            link_ = nullptr;
+        }
+    } else if (subTagName == "connections") {
+        if (static_cast<XMLLinkConnectionsReader*>(reader)->broken()) {
+            delete link_;
+            link_ = nullptr;
+        }
+    } else if (subTagName == "components") {
+        if (static_cast<XMLLinkComponentsReader*>(reader)->broken()) {
+            delete link_;
+            link_ = nullptr;
+        }
+    }
 }
 
 void XMLLinkCrossingsReader::initialChars(const std::string& chars) {
@@ -51,7 +93,7 @@ void XMLLinkCrossingsReader::initialChars(const std::string& chars) {
         in >> c;
 
         if (! in) {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
 
@@ -60,7 +102,7 @@ void XMLLinkCrossingsReader::initialChars(const std::string& chars) {
         else if (c == '-')
             link_->crossings_.push_back(new Crossing(-1));
         else {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
     }
@@ -81,7 +123,7 @@ void XMLLinkConnectionsReader::initialChars(const std::string& chars) {
             in >> s;
 
             if ((! in) || s.length() < 2) {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
 
@@ -90,22 +132,22 @@ void XMLLinkConnectionsReader::initialChars(const std::string& chars) {
             else if (s[0] == '_')
                 adjSide = 0;
             else {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
 
             if (! valueOf(s.c_str() + 1, crossing)) {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
             if (/* crossing < 0 || */ crossing >= link_->size()) {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
 
             adj = link_->crossing(crossing);
             if (adj->prev_[adjSide]) {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
             link_->crossing(read)->next_[side] = adj->strand(adjSide);
@@ -126,7 +168,7 @@ void XMLLinkComponentsReader::initialChars(const std::string& chars) {
         in >> s;
 
         if ((! in) || s.length() < 2) {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
         
@@ -140,16 +182,16 @@ void XMLLinkComponentsReader::initialChars(const std::string& chars) {
         else if (s[0] == '_')
             strand = 0;
         else {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
 
         if (! valueOf(s.c_str() + 1, crossing)) {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
         if (/* crossing < 0 || */ crossing >= link_->size()) {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
 

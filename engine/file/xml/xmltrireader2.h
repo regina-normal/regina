@@ -41,6 +41,7 @@
 
 #include "regina-core.h"
 #include "file/xml/xmltrireader.h"
+#include "triangulation/dim2.h"
 
 namespace regina {
 

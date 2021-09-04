@@ -182,22 +182,5 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-XMLPacketReader* Container::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLContainerReader(resolver);
-}
-
-XMLPacketReader* PDF::xmlReader(Packet*, XMLTreeResolver& resolver) {
-    return new XMLPDFReader(resolver);
-}
-
-XMLPacketReader* Script::xmlReader(Packet*, XMLTreeResolver& resolver) {
-    return new XMLScriptReader(resolver);
-}
-
-XMLPacketReader* Text::xmlReader(Packet*, XMLTreeResolver& resolver) {
-    return new XMLTextReader(resolver);
-}
-
 } // namespace regina
 

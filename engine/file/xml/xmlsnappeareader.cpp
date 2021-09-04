@@ -60,10 +60,5 @@ void XMLSnapPeaReader::endContentSubElement(
     }
 }
 
-XMLPacketReader* SnapPeaTriangulation::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLSnapPeaReader(resolver);
-}
-
 } // namespace regina
 

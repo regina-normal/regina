@@ -1621,9 +1621,6 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
 
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-
         /*@}*/
         /**
          * \name Packet Listener Interface

@@ -47,7 +47,6 @@
 
 namespace regina {
 
-class XMLPacketReader;
 class Script;
 
 /**
@@ -267,8 +266,6 @@ class Script : public Packet, public PacketListener {
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
         virtual void packetWasRenamed(Packet* packet) override;
         virtual void packetToBeDestroyed(PacketShell packet) override;

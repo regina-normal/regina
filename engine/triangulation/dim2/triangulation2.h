@@ -53,8 +53,6 @@
 
 namespace regina {
 
-class XMLPacketReader;
-
 /**
  * \addtogroup dim2 2-Manifold Triangulations
  * Details for implementing triangulations of 2-manifolds.
@@ -341,9 +339,6 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
         bool isMinimal() const;
 
         /*@}*/
-
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;

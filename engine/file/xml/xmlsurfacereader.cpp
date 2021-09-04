@@ -167,11 +167,5 @@ void XMLNormalSurfacesReader::endContentSubElement(
             list_->surfaces_.push_back(std::move(*s));
 }
 
-XMLPacketReader* NormalSurfaces::xmlReader(Packet* parent,
-        XMLTreeResolver& resolver) {
-    return new XMLNormalSurfacesReader(
-        dynamic_cast<Triangulation<3>*>(parent), resolver);
-}
-
 } // namespace regina
 

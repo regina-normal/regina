@@ -170,11 +170,6 @@ void XMLFilterPacketReader::endContentSubElement(
             filter_ = dynamic_cast<XMLFilterReader*>(subReader)->filter();
 }
 
-XMLPacketReader* SurfaceFilter::xmlReader(Packet* parent,
-        XMLTreeResolver& resolver) {
-    return new XMLFilterPacketReader(parent, resolver);
-}
-
 XMLFilterReader* SurfaceFilter::xmlFilterReader(Packet*) {
     return new PlainFilterReader();
 }

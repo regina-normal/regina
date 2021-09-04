@@ -153,11 +153,5 @@ void XMLAngleStructuresReader::endElement() {
         list_ = new AngleStructures(false, AS_ALG_LEGACY, *tri_);
 }
 
-XMLPacketReader* AngleStructures::xmlReader(Packet* parent,
-        XMLTreeResolver& resolver) {
-    return new XMLAngleStructuresReader(
-        dynamic_cast<Triangulation<3>*>(parent), resolver);
-}
-
 } // namespace regina
 

@@ -52,7 +52,6 @@ class NormalSurface;
 class SurfaceFilter;
 class SurfaceFilterCombination;
 class SurfaceFilterProperties;
-class XMLPacketReader;
 class XMLFilterReader;
 
 /**
@@ -247,8 +246,6 @@ class SurfaceFilter : public Packet {
         static XMLFilterReader* xmlFilterReader(Packet* parent);
 
         virtual void writeTextShort(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
 
     protected:
         /**
