@@ -148,15 +148,18 @@ XMLElementReader* XMLFilterPacketReader::startContentSubElement(
     if (! filter_)
         if (subTagName == "filter") {
             int type;
+            // Run through all the filter types that the file format supports.
             if (valueOf(props.lookup("typeid"), type)) {
-                XMLElementReader* ans = forFilter(
-                    static_cast<SurfaceFilterType>(type), [=](auto info) {
-                        return decltype(info)::Class::xmlFilterReader(parent_);
-                    }, nullptr);
-                if (ans)
-                    return ans;
-                else
-                    return new XMLFilterReader();
+                switch (static_cast<SurfaceFilterType>(type)) {
+                    case NS_FILTER_DEFAULT:
+                        return new PlainFilterReader();
+                    case NS_FILTER_PROPERTIES:
+                        return new PropertiesReader();
+                    case NS_FILTER_COMBINATION:
+                        return new CombinationReader();
+                    default:
+                        return new XMLFilterReader();
+                }
             }
         }
     return new XMLElementReader();
@@ -168,18 +171,6 @@ void XMLFilterPacketReader::endContentSubElement(
     if (! filter_)
         if (subTagName == "filter")
             filter_ = dynamic_cast<XMLFilterReader*>(subReader)->filter();
-}
-
-XMLFilterReader* SurfaceFilter::xmlFilterReader(Packet*) {
-    return new PlainFilterReader();
-}
-
-XMLFilterReader* SurfaceFilterCombination::xmlFilterReader(Packet*) {
-    return new CombinationReader();
-}
-
-XMLFilterReader* SurfaceFilterProperties::xmlFilterReader(Packet*) {
-    return new PropertiesReader();
 }
 
 } // namespace regina

@@ -64,6 +64,9 @@ namespace regina {
  * its documentation for further notes on how the filter should be
  * constructed.
  *
+ * The XML filter reader should read exactly what
+ * SurfaceFilter::writeXMLFilterData() writes, and vice versa.
+ *
  * \ifacespython Not present.
  */
 class XMLFilterReader : public XMLElementReader {
@@ -82,9 +85,9 @@ class XMLFilterReader : public XMLElementReader {
          * it should continue to give the same non-zero return value
          * from this point onwards.
          *
-         * The default implementation returns 0.
+         * The default implementation returns \c null.
          *
-         * @return the filter that has been read, or 0 if filter reading
+         * @return the filter that has been read, or \c null if filter reading
          * is incomplete, the filter should be ignored or an error
          * occurred.
          */
@@ -104,19 +107,15 @@ class XMLFilterPacketReader : public XMLPacketReader {
     private:
         SurfaceFilter* filter_;
             /**< The surface filter currently being read. */
-        Packet* parent_;
-            /**< The parent packet of the filter currently being read. */
 
     public:
         /**
          * Creates a new surface filter packet reader.
          *
-         * @param newParent the parent packet of the filter to be read,
-         * or 0 if this filter is to be tree matriarch.
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLFilterPacketReader(Packet* newParent, XMLTreeResolver& resolver);
+        XMLFilterPacketReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
         virtual XMLElementReader* startContentSubElement(
@@ -134,14 +133,13 @@ inline XMLFilterReader::XMLFilterReader() {
 }
 
 inline SurfaceFilter* XMLFilterReader::filter() {
-    return 0;
+    return nullptr;
 }
 
 // Inline functions for XMLFilterPacketReader
 
-inline XMLFilterPacketReader::XMLFilterPacketReader(Packet* newParent,
-        XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), filter_(0), parent_(newParent) {
+inline XMLFilterPacketReader::XMLFilterPacketReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), filter_(nullptr) {
 }
 
 inline Packet* XMLFilterPacketReader::packet() {

@@ -52,7 +52,6 @@ class NormalSurface;
 class SurfaceFilter;
 class SurfaceFilterCombination;
 class SurfaceFilterProperties;
-class XMLFilterReader;
 
 /**
  * \weakgroup surfaces
@@ -215,30 +214,6 @@ class SurfaceFilter : public Packet {
          */
         virtual std::string filterTypeName() const;
 
-        /**
-         * Returns a newly created XML filter reader that will read the
-         * details of a particular type of surface filter.  You may
-         * assume that the filter to be read is of the same type as the
-         * class in which you are implementing this routine.
-         *
-         * The XML filter reader should read exactly what
-         * writeXMLFilterData() writes, and vice versa.
-         *
-         * \a parent represents the packet which will become the new
-         * filter's parent in the tree structure.  This information is
-         * for reference only, and need not be used.
-         * See the description of parameter \a parent in
-         * Packet::xmlReader() for further details.
-         *
-         * \ifacespython Not present.
-         *
-         * @param parent the packet which will become the new filter's
-         * parent in the tree structure, or 0 if the new filter is to be
-         * tree matriarch.
-         * @return the newly created XML filter reader.
-         */
-        static XMLFilterReader* xmlFilterReader(Packet* parent);
-
         virtual void writeTextShort(std::ostream& out) const override;
 
     protected:
@@ -308,7 +283,6 @@ class SurfaceFilterCombination : public SurfaceFilter {
 
         virtual bool accept(const NormalSurface& surface) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        static XMLFilterReader* xmlFilterReader(Packet* parent);
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
@@ -473,7 +447,6 @@ class SurfaceFilterProperties : public SurfaceFilter {
 
         virtual bool accept(const NormalSurface& surface) const override;
         virtual void writeTextLong(std::ostream& out) const override;
-        static XMLFilterReader* xmlFilterReader(Packet* parent);
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;

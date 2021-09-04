@@ -67,8 +67,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
         if (! valueOf((*it).second, typeID))
             return new XMLPacketReader(resolver_);
 
-        // We won't use the packet registry; instead here we explicitly list
-        // all the packet types that the file format supports.
+        // Run through all the packet types that the file format supports.
         switch (static_cast<PacketType>(typeID)) {
             case PACKET_CONTAINER:
                 return new XMLContainerReader(resolver_);
@@ -82,7 +81,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
             case PACKET_SCRIPT:
                 return new XMLScriptReader(resolver_);
             case PACKET_SURFACEFILTER:
-                return new XMLFilterPacketReader(packet(), resolver_);
+                return new XMLFilterPacketReader(resolver_);
             case PACKET_ANGLESTRUCTURES:
                 return new XMLAngleStructuresReader(
                     dynamic_cast<Triangulation<3>*>(packet()), resolver_);
