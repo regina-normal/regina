@@ -63,10 +63,6 @@ class SurfaceFilterProperties;
  * surface filter.  Much of this information is given in the
  * form of compile-time constants and types.
  *
- * To iterate through cases for a given value of SurfaceFilterInfo that is not
- * known until runtime, see the various forFilter() routines defined in
- * filterregistry.h.
- *
  * At a bare minimum, each specialisation of this template must provide:
  *
  * - a typedef \a Class that represents the corresponding
@@ -138,8 +134,6 @@ struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
  * <ul>
  *   <li>A new value must be added to the SurfaceFilterType enum in
  *   surfacefiltertype.h to represent the new filter type.</li>
- *   <li>The file filterregistry-impl.h must be updated to reflect the new
- *   filter type (the file itself contains instructions on how to do this).</li>
  *   <li>A corresponding specialisation of SurfaceFilterInfo<> must be
  *   defined, typically in the same header as the new filter class.</li>
  *   <li>The macro REGINA_SURFACE_FILTER must be added to the beginning
@@ -152,8 +146,9 @@ struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
  *   writing.</li>
  *   <li>Virtual functions accept(), internalClonePacket(), writeTextLong() and
  *   writeXMLFilterData() must be overridden.</li>
- *   <li>Static function xmlFilterReader() must be declared and
- *   implemented as described in the documentation below.</li>
+ *   <li>An appropriate case should be added to
+ *   <tt>XMLFilterPacketReader::startContentSubElement()</tt> so that the
+ *   filter can be read from Regina data files.</li>
  * </ul>
  *
  * \todo \feature Implement property \a lastAppliedTo.

@@ -32,7 +32,6 @@
 
 #include <list>
 #include "file/xml/xmlfilterreader.h"
-#include "surfaces/filterregistry.h"
 #include "utilities/stringutils.h"
 
 namespace regina {

@@ -1139,12 +1139,10 @@ Version 7.0  [ TODO ]
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
         Function forCoords():
-            - Removed completely.  See the new NormalEncoding class and
-              the redesigned NormalInfo class for details.
+            - Removed completely.  See the new NormalEncoding / HyperEncoding
+              and the redesigned NormalInfo / HyperInfo classes for details.
         Function forFilter():
-            - Completely rewritten to take advantage of C++14 generic lambdas.
-              Any code that used these functions will need to be completely
-              rewritten (but should now become substantially simpler).
+            - Removed completely.
         Function forPacket():
             - Removed completely.
         Function formSigCensus:
@@ -1195,6 +1193,8 @@ Version 7.0  [ TODO ]
         Header packet/packetregistry.h, packet/packetregistry-impl.h:
             - Removed completely.
         Header surfaces/coordregistry.h, surfaces/coordregistry-impl.h:
+            - Removed completely.
+        Header surfaces/filterregistry.h, surfaces/filterregistry-impl.h:
             - Removed completely.
         Header utilities/memutils.h:
             - Removed completely.

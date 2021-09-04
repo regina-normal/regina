@@ -34,8 +34,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     disc.h
     disctype.h
-    filterregistry.h
-    filterregistry-impl.h
     normalcoords.h
     normalflags.h
     normalsurface.h
