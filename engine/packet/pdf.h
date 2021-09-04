@@ -53,14 +53,6 @@ class PDF;
  * @{
  */
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_PDF> {
-    typedef PDF Class;
-    static constexpr const char* name = "PDF";
-};
-#endif
-
 /**
  * A packet that can hold a PDF document.
  *
@@ -69,7 +61,7 @@ struct PacketInfo<PACKET_PDF> {
  * reset().
  */
 class PDF : public Packet {
-    REGINA_PACKET(PDF, PACKET_PDF)
+    REGINA_PACKET(PDF, PACKET_PDF, "PDF")
 
     public:
         /**

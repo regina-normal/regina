@@ -59,14 +59,6 @@ namespace regina {
  * @{
  */
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_TRIANGULATION2> {
-    typedef Triangulation<2> Class;
-    static constexpr const char* name = "2-Manifold Triangulation";
-};
-#endif
-
 /**
  * Represents a 2-manifold triangulation.
  *
@@ -86,7 +78,8 @@ struct PacketInfo<PACKET_TRIANGULATION2> {
  */
 template <>
 class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
-    REGINA_PACKET(Triangulation<2>, PACKET_TRIANGULATION2)
+    REGINA_PACKET(Triangulation<2>, PACKET_TRIANGULATION2,
+        "2-Manifold Triangulation")
 
     public:
         typedef std::vector<Triangle<2>*>::const_iterator TriangleIterator;

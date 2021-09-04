@@ -591,14 +591,6 @@ class Crossing : public MarkedElement, public Output<Crossing> {
     friend class XMLLinkConnectionsReader;
 };
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_LINK> {
-    typedef Link Class;
-    static constexpr const char* name = "Link";
-};
-#endif
-
 /**
  * Represents a directed knot or link in the 3-sphere.
  *
@@ -612,7 +604,7 @@ struct PacketInfo<PACKET_LINK> {
  * interfere with the structure of the packet tree.
  */
 class Link : public Packet {
-    REGINA_PACKET(Link, PACKET_LINK)
+    REGINA_PACKET(Link, PACKET_LINK, "Link")
 
     private:
         MarkedVector<Crossing> crossings_;

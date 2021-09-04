@@ -137,14 +137,6 @@ class SnapPeaMemoryFull : public std::exception {
         }
 };
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
-    typedef SnapPeaTriangulation Class;
-    static constexpr const char* name = "SnapPea Triangulation";
-};
-#endif
-
 /**
  * Represents a single cusp of a SnapPea triangulation.
  * See the SnapPeaTriangulation class for further details.
@@ -361,7 +353,8 @@ class Cusp : public ShortOutput<Cusp> {
  * SnapPea and its successor SnapPy.
  */
 class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
-    REGINA_PACKET(SnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION)
+    REGINA_PACKET(SnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION,
+        "SnapPea Triangulation")
 
     public:
         /**

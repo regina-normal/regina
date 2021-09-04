@@ -54,14 +54,6 @@ class Script;
  * @{
  */
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_SCRIPT> {
-    typedef Script Class;
-    static constexpr const char* name = "Script";
-};
-#endif
-
 /**
  * A packet representing a Python script that can be run.
  *
@@ -81,7 +73,7 @@ struct PacketInfo<PACKET_SCRIPT> {
  *   will likewise notify listeners of the change.
  */
 class Script : public Packet, public PacketListener {
-    REGINA_PACKET(Script, PACKET_SCRIPT)
+    REGINA_PACKET(Script, PACKET_SCRIPT, "Script")
 
     private:
         std::string text_;

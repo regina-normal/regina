@@ -138,19 +138,9 @@ class Triangulation :
 
     private:
         /**
-         * Provides implementation details for REGINA_PACKET_FROM.
+         * Provides implementation details for the arguments to REGINA_PACKET.
          *
-         * We do not provide the specialisation PacketInfo<typeID> in this
-         * header, since this would force an instantiation of every class
-         * Triangulation<dim> every time this header is included.  Instead,
-         * PacketInfo<typeID> is specialised in packet/packetregistry-impl.h.
-         *
-         * As a result, we cannot use REGINA_PACKET (which requires
-         * PacketInfo<typeID> for its implementation details).  Instead we
-         * use REGINA_PACKET_FROM, which allows us to pass our own helper class
-         * for the implementation.  PacketTypeInfo is that helper class.
-         *
-         * See the documentation for REGINA_PACKET_FROM for further details.
+         * See the documentation for REGINA_PACKET for further details.
          */
         struct PacketTypeInfo {
             static constexpr const PacketType typeID = PacketType(100 + dim);
@@ -161,7 +151,9 @@ class Triangulation :
             }
         };
 
-    REGINA_PACKET_FROM(Triangulation<dim>, Triangulation<dim>::PacketTypeInfo);
+    REGINA_PACKET(Triangulation<dim>,
+        Triangulation<dim>::PacketTypeInfo::typeID,
+        Triangulation<dim>::PacketTypeInfo::name())
 
     protected:
         using detail::TriangulationBase<dim>::simplices_;

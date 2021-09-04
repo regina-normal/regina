@@ -78,14 +78,6 @@ template <int> class XMLTriangulationReader;
  * @{
  */
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_TRIANGULATION3> {
-    typedef Triangulation<3> Class;
-    static constexpr const char* name = "3-Manifold Triangulation";
-};
-#endif
-
 /**
  * Represents a 3-dimensional triangulation, typically of a 3-manifold.
  *
@@ -116,7 +108,8 @@ struct PacketInfo<PACKET_TRIANGULATION3> {
  */
 template <>
 class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
-    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3)
+    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3,
+        "3-Manifold Triangulation")
 
     public:
         typedef std::vector<Tetrahedron<3>*>::const_iterator

@@ -65,14 +65,6 @@ class ProgressTracker;
  * @{
  */
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_NORMALHYPERSURFACES> {
-    typedef NormalHypersurfaces Class;
-    static constexpr const char* name = "Normal Hypersurface List";
-};
-#endif
-
 /**
  * A packet representing a collection of normal hypersurfaces in a 4-manifold
  * triangulation.
@@ -97,7 +89,8 @@ struct PacketInfo<PACKET_NORMALHYPERSURFACES> {
  * when introducing a new coordinate system.
  */
 class NormalHypersurfaces : public Packet {
-    REGINA_PACKET(NormalHypersurfaces, PACKET_NORMALHYPERSURFACES)
+    REGINA_PACKET(NormalHypersurfaces, PACKET_NORMALHYPERSURFACES,
+        "Normal Hypersurface List")
 
     public:
         class VectorIterator;

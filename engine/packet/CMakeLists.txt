@@ -22,8 +22,6 @@ if (${REGINA_INSTALL_DEV})
     container.h
     packet.h
     pdf.h
-    packetregistry.h
-    packetregistry-impl.h
     packettype.h
     script.h
     text.h

@@ -31,8 +31,17 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "packet/packetregistry.h"
+#include "hypersurface/normalhypersurfaces.h"
+#include "link/link.h"
+#include "packet/container.h"
+#include "packet/script.h"
+#include "packet/text.h"
+#include "snappea/snappeatriangulation.h"
 #include "surfaces/filterregistry.h"
+#include "surfaces/normalsurfaces.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 // UI includes:
 #include "iconcache.h"

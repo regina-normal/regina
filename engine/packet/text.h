@@ -51,19 +51,11 @@ class Text;
  * @{
  */
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_TEXT> {
-    typedef Text Class;
-    static constexpr const char* name = "Text";
-};
-#endif
-
 /**
  * A packet representing a text string.
  */
 class Text : public Packet {
-    REGINA_PACKET(Text, PACKET_TEXT)
+    REGINA_PACKET(Text, PACKET_TEXT, "Text")
 
     private:
         std::string text_;

@@ -112,12 +112,6 @@ struct SurfaceFilterInfo;
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
-struct PacketInfo<PACKET_SURFACEFILTER> {
-    typedef SurfaceFilter Class;
-    static constexpr const char* name = "Surface Filter";
-};
-
-template <>
 struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
     typedef SurfaceFilter Class;
     static constexpr const char* name = "Default filter";
@@ -166,7 +160,7 @@ struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
  * \todo \feature Implement property \a lastAppliedTo.
  */
 class SurfaceFilter : public Packet {
-    REGINA_PACKET(SurfaceFilter, PACKET_SURFACEFILTER)
+    REGINA_PACKET(SurfaceFilter, PACKET_SURFACEFILTER, "Surface Filter")
 
     public:
         /**

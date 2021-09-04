@@ -683,8 +683,7 @@ Version 7.0  [ TODO ]
             - Routines dependsOnParent() and isPacketEditable() are
               deprecated, and now always return false and true respectively.
         Class PacketInfo<...>:
-            - Routine name() has been changed to a class constant.
-              This change is backward incompatible (but probably affects noone).
+            - Removed completely.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
@@ -1142,10 +1141,12 @@ Version 7.0  [ TODO ]
         Function forCoords():
             - Removed completely.  See the new NormalEncoding class and
               the redesigned NormalInfo class for details.
-        Function forFilter(), forPacket():
+        Function forFilter():
             - Completely rewritten to take advantage of C++14 generic lambdas.
               Any code that used these functions will need to be completely
               rewritten (but should now become substantially simpler).
+        Function forPacket():
+            - Removed completely.
         Function formSigCensus:
             - Replaced with SigCensus::formCensus(), which also uses a
               type-safe template-based mechanism for callbacks instead of a
@@ -1191,6 +1192,8 @@ Version 7.0  [ TODO ]
         Macro ENABLE_MEMBER_FOR_REGINA_INTEGER:
             - New macro for conditionally enabling or disabling member
               functions in template classes.
+        Header packet/packetregistry.h, packet/packetregistry-impl.h:
+            - Removed completely.
         Header surfaces/coordregistry.h, surfaces/coordregistry-impl.h:
             - Removed completely.
         Header utilities/memutils.h:

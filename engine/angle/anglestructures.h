@@ -61,14 +61,6 @@ class XMLAngleStructuresReader;
  * @{
  */
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_ANGLESTRUCTURES> {
-    typedef AngleStructures Class;
-    static constexpr const char* name = "Angle Structure List";
-};
-#endif
-
 /**
  * A packet representing a collection of angle structures on a triangulation.
  *
@@ -89,7 +81,8 @@ struct PacketInfo<PACKET_ANGLESTRUCTURES> {
  *   into the packet tree).  There is no need to use enumerate() any more.
  */
 class AngleStructures : public Packet {
-    REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES)
+    REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES,
+        "Angle Structure List")
 
     private:
         std::vector<AngleStructure> structures_;

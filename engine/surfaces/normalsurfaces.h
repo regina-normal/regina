@@ -135,14 +135,6 @@ enum SurfaceExportFields {
              value of this constant may change as a result. */
 };
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_NORMALSURFACES> {
-    typedef NormalSurfaces Class;
-    static constexpr const char* name = "Normal Surface List";
-};
-#endif
-
 /**
  * A packet representing a collection of normal surfaces in a 3-manifold.
  *
@@ -173,7 +165,7 @@ struct PacketInfo<PACKET_NORMALSURFACES> {
  * embedded surfaces.
  */
 class NormalSurfaces : public Packet {
-    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACES)
+    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACES, "Normal Surface List")
 
     public:
         class VectorIterator;

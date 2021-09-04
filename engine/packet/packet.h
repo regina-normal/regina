@@ -65,29 +65,6 @@ class SubtreeIterator;
  */
 
 /**
- * A template that stores information about a particular type of packet.
- * Much of this information is given in the form of compile-time constants
- * and types.
- *
- * To iterate through cases for a given value of PacketInfo that is not
- * known until runtime, see the various forPacket() routines defined in
- * packetregistry.h.
- *
- * At a bare minimum, each specialisation of this template must provide:
- *
- * - a typedef \a Class that represents the corresponding Packet subclass;
- * - a static constexpr member <tt>const char* name</tt>, which gives
- *   the human-readable name of the packet type.
- *
- * \ifacespython Not present.
- *
- * \tparam packetType one of the #PacketType constants, indicating
- * which type of packet we are querying.
- */
-template <PacketType packetType>
-struct PacketInfo;
-
-/**
  * Defines various constants, types and virtual functions for a
  * subclass of Packet.
  *
@@ -101,55 +78,18 @@ struct PacketInfo;
  * - declarations and implementations of the virtual functions
  *   Packet::type() and Packet::typeName().
  *
- * The implementation of this macro relies on the helper class PacketInfo<id>.
- * If the relevant specialisation of PacketInfo is not visible (as is the case,
- * for instance, with templated packet classes such as Triangulation<dim>),
- * then you may replace REGINA_PACKET with the macro REGINA_PACKET_FROM, which
- * allows you to provide an alternative implementation.
- *
  * @param class_ the name of this descendant class of Packet.
  * @param id the corresponding PacketType constant.
+ * @param name the human-readable name of this packet type.
  */
-#define REGINA_PACKET(class_, id) \
+#define REGINA_PACKET(class_, id, name) \
     public: \
         static constexpr const PacketType typeID = id; \
         inline virtual PacketType type() const override { \
             return id; \
         } \
         inline virtual std::string typeName() const override { \
-            return PacketInfo<id>::name; \
-        }
-
-/**
- * An alternative to REGINA_PACKET, for scenarios where the relevant PacketInfo
- * specialisation is not visible.  This is intended for use with template
- * classes such as Triangulation<dim>, where the corresponding PacketInfo
- * specialisations are defined in a separate header to avoid triggering
- * unwanted instantiations of every possible Triangulation class.
- *
- * Like REGINA_PACKET, this macro should be placed in the definition of the
- * relevant subclass of Packet, and in return it provides the same constants,
- * types and virtual functions that REGINA_PACKET does.  However, unlike
- * REGINA_PACKET, it does not rely on PacketInfo for its implementation.
- * Instead it calls upon the given class \a helper, which must provide:
- *
- * - a compile-time constant \a typeID which is equal to the PacketType
- *   constant corresponding to this packet class;
- * - a static function name() that returns a string giving the
- *   human-readable name of this packet type.
- *
- * @param class_ the name of this descendant class of Packet.
- * @param helper the helper class that provides the implementation details,
- * as described above.
- */
-#define REGINA_PACKET_FROM(class_, helper) \
-    public: \
-        static constexpr const PacketType typeID = helper::typeID; \
-        inline virtual PacketType type() const override { \
-            return helper::typeID; \
-        } \
-        inline virtual std::string typeName() const override { \
-            return helper::name(); \
+            return name; \
         }
 
 /**
@@ -162,18 +102,10 @@ struct PacketInfo;
  * <ul>
  *   <li>A new value must be added to the PacketType enum in packettype.h
  *     to represent the new packet type.</li>
- *   <li>The file packetregistry-impl.h must be updated to reflect the new
- *     packet type (the file itself contains instructions on how to do
- *     this).</li>
- *   <li>A corresponding specialisation of PacketInfo<> must be defined.
- *     This is typically placed in the same header as the new packet class,
- *     but in some cases (e.g., for templated packet classes) this may be
- *     undesirable.  At a bare minimum, this specialisation must be
- *     visible to the header packetregistry-impl.h.</li>
- *   <li>The macro REGINA_PACKET (or its alternative REGINA_PACKET_FROM)
- *     must be added to the beginning of the new packet class.  This will
- *     declare and define various constants, typedefs and virtual functions
- *     (see the REGINA_PACKET macro documentation for details).
+ *   <li>The macro REGINA_PACKET must be added to the beginning of the new
+ *     packet class.  This will declare and define various constants, typedefs
+ *     and virtual functions (see the REGINA_PACKET macro documentation for
+ *     details).
  *   <li>All abstract functions must be implemented, except for those
  *     already provided by REGINA_PACKET.</li>
  *   <li>An appropriate case should be added to

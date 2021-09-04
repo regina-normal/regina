@@ -52,20 +52,12 @@ class Container;
  * @{
  */
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_CONTAINER> {
-    typedef Container Class;
-    static constexpr const char* name = "Container";
-};
-#endif
-
 /**
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
  */
 class Container : public Packet {
-    REGINA_PACKET(Container, PACKET_CONTAINER)
+    REGINA_PACKET(Container, PACKET_CONTAINER, "Container")
 
     public:
         /**
