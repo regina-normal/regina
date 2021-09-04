@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>flags</refname>
-  <refpurpose>Deprecated: do not use</refpurpose>
+  <refpurpose>Removed: do not use</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,15 +40,12 @@ flags ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltrmver;4.93</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
-  <para>
-   This element is deprecated, and should no longer be used.
-   As of Regina&nbsp;4.93, this element will not be written, and will be
-   ignored when reading older data files.
-  </para>
+  &eltrmdetail;
   <para>
    A &xml-flags; element stores an arbitrary set of flags combined into
    a single integer.

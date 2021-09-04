@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-struct ::= (#PCDATA, &xml-flags;?)</synopsis>
+struct ::= (#PCDATA)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -142,10 +142,11 @@ struct ::= (#PCDATA, &xml-flags;?)</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    The following elements occur in <sgmltag>struct</sgmltag>:
-    <simplelist type="inline">
-     <member>&xml-flags;</member>
-    </simplelist>.
+    Element <sgmltag>struct</sgmltag> has no children.
+   </para>
+   <para>
+    Older versions of &regina; had a child &xml-flags; element;
+    however, this has since been removed, and should not be used.
    </para>
   </refsect2>
  </refsect1>
