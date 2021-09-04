@@ -21,6 +21,10 @@
   <!ENTITY utf8 "<acronym>UTF-8</acronym>">
   <!ENTITY xml "<acronym>XML</acronym>">
 
+  <!ENTITY eltaddedver "Added in &regina;&nbsp;">
+  <!ENTITY eltdepver "Deprecated since &regina;&nbsp;">
+  <!ENTITY attraddedver "Added in &regina;&nbsp;">
+
   <!ENTITY dataformat SYSTEM "dataformat.docbook">
   <!ENTITY % dataformat-entities SYSTEM "dataformat.ent">
   %dataformat-entities;
