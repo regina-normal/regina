@@ -88,6 +88,7 @@ packet ::= (<replaceable>type-specific content</replaceable>,
     <listitem><para>&xml-packet-normalhypersurfacelist;</para></listitem>
     <listitem><para>&xml-packet-pdf;</para></listitem>
     <listitem><para>&xml-packet-script;</para></listitem>
+    <listitem><para>&xml-packet-snappea;</para></listitem>
     <listitem><para>&xml-packet-surfacefilter;</para></listitem>
     <listitem><para>&xml-packet-text;</para></listitem>
    </itemizedlist>
