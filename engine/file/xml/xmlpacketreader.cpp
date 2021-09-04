@@ -56,15 +56,20 @@ constexpr int PACKET_TRIANGULATION_ANY = -3;
 constexpr int PACKET_V7_TEXT = -16;
 constexpr int PACKET_V7_PDF = -17;
 constexpr int PACKET_V7_SNAPPEA = -18;
+constexpr int PACKET_V7_FILTER_PROPERTIES = -19;
+constexpr int PACKET_V7_FILTER_COMBINATION = -20;
+constexpr int PACKET_V7_FILTER_PLAIN = -21;
 const std::map<std::string, int> packetXMLTags = {
     { "angles", PACKET_ANGLESTRUCTURES },
     { "container", PACKET_CONTAINER },
+    { "filtercomb", PACKET_V7_FILTER_COMBINATION },
+    { "filterplain", PACKET_V7_FILTER_PLAIN },
+    { "filterprops", PACKET_V7_FILTER_PROPERTIES },
     { "hypersurfaces", PACKET_NORMALHYPERSURFACES },
     { "link", PACKET_LINK },
     { "pdfdata", PACKET_V7_PDF },
     { "script", PACKET_SCRIPT },
     { "snappeadata", PACKET_V7_SNAPPEA },
-    { "surfacefilter", PACKET_SURFACEFILTER },
     { "surfaces", PACKET_NORMALSURFACES },
     { "textdata", PACKET_V7_TEXT },
 
@@ -96,18 +101,11 @@ XMLElementReader* XMLPacketReader::startSubElement(
             return new XMLElementReader();
         }
         // All remaining cases are genuine child packets.
-        auto prop = subTagProps.find("label");
-        if (prop != subTagProps.end())
-            childLabel_ = prop->second;
-
-        prop = subTagProps.find("id");
-        if (prop != subTagProps.end())
-            childID_ = prop->second;
-
+        // Confirm exactly what kind of child packet we are reading.
         if (xmlTagType == PACKET_LEGACY_CHILD) {
             // This is a <packet typeid=...>...</packet> element from the
             // older Regina 6.x file format.
-            prop = subTagProps.find("typeid");
+            auto prop = subTagProps.find("typeid");
             if (prop == subTagProps.end())
                 return new XMLPacketReader(resolver_);
             if (! valueOf(prop->second, xmlTagType))
@@ -116,7 +114,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
             // This is a new <tri dim="...">...</tri> element from the
             // newer Regina 7.0 file format.
             int dim;
-            prop = subTagProps.find("dim");
+            auto prop = subTagProps.find("dim");
             if (prop == subTagProps.end())
                 return new XMLPacketReader(resolver_);
             if (! valueOf(prop->second, dim))
@@ -131,78 +129,93 @@ XMLElementReader* XMLPacketReader::startSubElement(
             }
         }
 
+        // Fetch some properties that we will need once the child reader
+        // has actually created the packet.
+        auto prop = subTagProps.find("label");
+        if (prop != subTagProps.end())
+            childLabel_ = prop->second;
+
+        prop = subTagProps.find("id");
+        if (prop != subTagProps.end())
+            childID_ = prop->second;
+
         // Run through all the packet types that our file format understands.
         switch (xmlTagType) {
             case PACKET_CONTAINER:
-                return new XMLContainerReader(resolver_);
+                return childReader_ = new XMLContainerReader(resolver_);
             case PACKET_TEXT:
-                return new XMLLegacyTextReader(resolver_);
+                return childReader_ = new XMLLegacyTextReader(resolver_);
             case PACKET_V7_TEXT:
-                return new XMLTextReader(resolver_);
+                return childReader_ = new XMLTextReader(resolver_);
             case PACKET_TRIANGULATION3:
-                return new XMLTriangulationReader<3>(resolver_);
+                return childReader_ = new XMLTriangulationReader<3>(resolver_);
             case PACKET_NORMALSURFACES:
-                return new XMLNormalSurfacesReader(
+                return childReader_ = new XMLNormalSurfacesReader(
                     dynamic_cast<Triangulation<3>*>(packet()), resolver_);
             case PACKET_SCRIPT:
-                return new XMLScriptReader(resolver_);
+                return childReader_ = new XMLScriptReader(resolver_);
             case PACKET_SURFACEFILTER:
-                return new XMLFilterPacketReader(resolver_);
+                return childReader_ = new XMLLegacyFilterReader(resolver_);
+            case PACKET_V7_FILTER_PROPERTIES:
+                return childReader_ = new XMLPropertiesFilterReader(resolver_);
+            case PACKET_V7_FILTER_COMBINATION:
+                return childReader_ = new XMLCombinationFilterReader(resolver_);
+            case PACKET_V7_FILTER_PLAIN:
+                return childReader_ = new XMLPlainFilterReader(resolver_);
             case PACKET_ANGLESTRUCTURES:
-                return new XMLAngleStructuresReader(
+                return childReader_ = new XMLAngleStructuresReader(
                     dynamic_cast<Triangulation<3>*>(packet()), resolver_);
             case PACKET_PDF:
-                return new XMLLegacyPDFReader(resolver_);
+                return childReader_ = new XMLLegacyPDFReader(resolver_);
             case PACKET_V7_PDF:
-                return new XMLPDFReader(resolver_);
+                return childReader_ = new XMLPDFReader(resolver_);
             case PACKET_TRIANGULATION2:
-                return new XMLTriangulationReader<2>(resolver_);
+                return childReader_ = new XMLTriangulationReader<2>(resolver_);
             case PACKET_TRIANGULATION4:
-                return new XMLTriangulationReader<4>(resolver_);
+                return childReader_ = new XMLTriangulationReader<4>(resolver_);
             case PACKET_NORMALHYPERSURFACES:
-                return new XMLNormalHypersurfacesReader(
+                return childReader_ = new XMLNormalHypersurfacesReader(
                     dynamic_cast<Triangulation<4>*>(packet()), resolver_);
             case PACKET_SNAPPEATRIANGULATION:
-                return new XMLLegacySnapPeaReader(resolver_);
+                return childReader_ = new XMLLegacySnapPeaReader(resolver_);
             case PACKET_V7_SNAPPEA:
-                return new XMLSnapPeaReader(resolver_);
+                return childReader_ = new XMLSnapPeaReader(resolver_);
             case PACKET_LINK:
-                return new XMLLinkReader(resolver_);
+                return childReader_ = new XMLLinkReader(resolver_);
 #ifndef REGINA_LOWDIMONLY
             case PACKET_TRIANGULATION5:
-                return new XMLTriangulationReader<5>(resolver_);
+                return childReader_ = new XMLTriangulationReader<5>(resolver_);
             case PACKET_TRIANGULATION6:
-                return new XMLTriangulationReader<6>(resolver_);
+                return childReader_ = new XMLTriangulationReader<6>(resolver_);
             case PACKET_TRIANGULATION7:
-                return new XMLTriangulationReader<7>(resolver_);
+                return childReader_ = new XMLTriangulationReader<7>(resolver_);
             case PACKET_TRIANGULATION8:
-                return new XMLTriangulationReader<8>(resolver_);
+                return childReader_ = new XMLTriangulationReader<8>(resolver_);
             case PACKET_TRIANGULATION9:
-                return new XMLTriangulationReader<9>(resolver_);
+                return childReader_ = new XMLTriangulationReader<9>(resolver_);
             case PACKET_TRIANGULATION10:
-                return new XMLTriangulationReader<10>(resolver_);
+                return childReader_ = new XMLTriangulationReader<10>(resolver_);
             case PACKET_TRIANGULATION11:
-                return new XMLTriangulationReader<11>(resolver_);
+                return childReader_ = new XMLTriangulationReader<11>(resolver_);
             case PACKET_TRIANGULATION12:
-                return new XMLTriangulationReader<12>(resolver_);
+                return childReader_ = new XMLTriangulationReader<12>(resolver_);
             case PACKET_TRIANGULATION13:
-                return new XMLTriangulationReader<13>(resolver_);
+                return childReader_ = new XMLTriangulationReader<13>(resolver_);
             case PACKET_TRIANGULATION14:
-                return new XMLTriangulationReader<14>(resolver_);
+                return childReader_ = new XMLTriangulationReader<14>(resolver_);
             case PACKET_TRIANGULATION15:
-                return new XMLTriangulationReader<15>(resolver_);
+                return childReader_ = new XMLTriangulationReader<15>(resolver_);
 #endif /* ! REGINA_LOWDIMONLY */
             default:
-                return new XMLPacketReader(resolver_);
+                return childReader_ = new XMLPacketReader(resolver_);
         }
     }
 }
 
 void XMLPacketReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
-    auto childReader = dynamic_cast<XMLPacketReader*>(subReader);
-    if (childReader) {
-        if (Packet* child = childReader->packet()) {
+    if (childReader_) {
+        if (Packet* child = childReader_->packet()) {
             if (Packet* me = packet()) {
                 if (! childLabel_.empty())
                     child->setLabel(childLabel_);
@@ -213,13 +226,13 @@ void XMLPacketReader::endSubElement(const std::string& subTagName,
             } else
                 delete child;
         }
+        childLabel_.clear();
+        childID_.clear();
+        childReader_ = nullptr;
     } else if (subTagName != "tag") {
         // This sub-element was part of the packet's "real" content.
         endContentSubElement(subTagName, subReader);
     }
-
-    childLabel_.clear();
-    childID_.clear();
 }
 
 void XMLPacketReader::abort(XMLElementReader* /* subReader */) {

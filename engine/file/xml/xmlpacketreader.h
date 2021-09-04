@@ -94,12 +94,18 @@ class XMLTreeResolver;
  */
 class XMLPacketReader : public XMLElementReader {
     private:
+        XMLPacketReader* childReader_;
+            /**< The reader for the child packet currently being read.  This
+                 \e should be \c null if no child packet is being read, and it
+                 \e may be \c null if we know the child reader will return
+                 a \c null packet. */
         std::string childLabel_;
             /**< The packet label to give the child packet currently
-                 being read. */
+                 being read.  This must be empty if childReader_ is \c null. */
         std::string childID_;
             /**< The internal ID stored in the data file for the child packet
-                 currently being read. */
+                 currently being read.  This must be empty if childReader_ is
+                 \c null. */
 
     protected:
         XMLTreeResolver& resolver_;
@@ -195,7 +201,7 @@ class XMLPacketReader : public XMLElementReader {
 // Inline functions for XMLPacketReader
 
 inline XMLPacketReader::XMLPacketReader(XMLTreeResolver& resolver) :
-        resolver_(resolver) {
+        childReader_(nullptr), resolver_(resolver) {
 }
 
 inline Packet* XMLPacketReader::packet() {

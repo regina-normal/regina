@@ -51,62 +51,20 @@ namespace regina {
  */
 
 /**
- * An XML element reader that reads the specific details of a normal
- * surface filter.  These details are generally contained within a
- * <tt>\<filter\></tt> ... <tt>\</filter\></tt> pair.
- *
- * Generally a subclass of XMLFilterReader will be used to receive and
- * store filters that you care about.  However, if you simply wish to
- * ignore a particular filter (and all of its descendants), you can use
- * class XMLFilterReader itself for the filter(s) you wish to ignore.
- *
- * Routine filter() is used to return the filter that was read; see
- * its documentation for further notes on how the filter should be
- * constructed.
- *
- * The XML filter reader should read exactly what
- * SurfaceFilter::writeXMLFilterData() writes, and vice versa.
- *
- * \ifacespython Not present.
- */
-class XMLFilterReader : public XMLElementReader {
-    public:
-        /**
-         * Creates a new filter element reader.
-         */
-        XMLFilterReader();
-
-        /**
-         * Returns the newly allocated filter that has been read by
-         * this element reader.
-         *
-         * Deallocation of this new filter is not the responsibility of
-         * this class.  Once this routine gives a non-zero return value,
-         * it should continue to give the same non-zero return value
-         * from this point onwards.
-         *
-         * The default implementation returns \c null.
-         *
-         * @return the filter that has been read, or \c null if filter reading
-         * is incomplete, the filter should be ignored or an error
-         * occurred.
-         */
-        virtual SurfaceFilter* filter();
-};
-
-/**
- * An XML packet reader that reads a single surface filter.
+ * An XML packet reader that reads a single surface filter using the
+ * Regina 6.x file format.
  * The filter type will be determined by this class and an appropriate
- * XMLFilterReader will be used to process the type-specific details.
- *
- * \pre The parent XML element reader is in fact an XMLPacketReader.
+ * subclassed filter reader will be used to process the type-specific details.
  *
  * \ifacespython Not present.
  */
-class XMLFilterPacketReader : public XMLPacketReader {
+class XMLLegacyFilterReader : public XMLPacketReader {
     private:
-        SurfaceFilter* filter_;
-            /**< The surface filter currently being read. */
+        XMLPacketReader* dataReader_;
+            /**< The subclassed filter reader responsible for reading
+                 the "real" content. */
+        Packet* filter_;
+            /**< The filter that was read by \a dataReader_. */
 
     public:
         /**
@@ -115,7 +73,7 @@ class XMLFilterPacketReader : public XMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLFilterPacketReader(XMLTreeResolver& resolver);
+        XMLLegacyFilterReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
         virtual XMLElementReader* startContentSubElement(
@@ -125,24 +83,122 @@ class XMLFilterPacketReader : public XMLPacketReader {
             XMLElementReader* subReader) override;
 };
 
+/**
+ * An XML packet reader that reads a plain (non-subclassed) SurfaceFilter
+ * using the Regina 7.0 file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLPlainFilterReader : public XMLPacketReader {
+    private:
+        SurfaceFilter* filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
+         */
+        XMLPlainFilterReader(XMLTreeResolver& resolver);
+
+        virtual Packet* packet() override;
+};
+
+/**
+ * An XML packet reader that reads a single SurfaceFilterCombination filter
+ * using the Regina 7.0 file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLCombinationFilterReader : public XMLPacketReader {
+    private:
+        SurfaceFilterCombination* filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
+         */
+        XMLCombinationFilterReader(XMLTreeResolver& resolver);
+
+        virtual Packet* packet() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
+                const regina::xml::XMLPropertyDict& props) override;
+};
+
+/**
+ * An XML packet reader that reads a single SurfaceFilterProperties filter
+ * using the Regina 7.0 file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLPropertiesFilterReader : public XMLPacketReader {
+    private:
+        SurfaceFilterProperties* filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
+         */
+        XMLPropertiesFilterReader(XMLTreeResolver& resolver);
+
+        virtual Packet* packet() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
+                const regina::xml::XMLPropertyDict& props) override;
+        void endContentSubElement(const std::string& subTagName,
+                XMLElementReader* subReader) override;
+};
+
 /*@}*/
 
-// Inline functions for XMLFilterReader
+// Inline functions for XMLLegacyFilterReader
 
-inline XMLFilterReader::XMLFilterReader() {
-}
-
-inline SurfaceFilter* XMLFilterReader::filter() {
-    return nullptr;
-}
-
-// Inline functions for XMLFilterPacketReader
-
-inline XMLFilterPacketReader::XMLFilterPacketReader(XMLTreeResolver& resolver) :
+inline XMLLegacyFilterReader::XMLLegacyFilterReader(XMLTreeResolver& resolver) :
         XMLPacketReader(resolver), filter_(nullptr) {
 }
 
-inline Packet* XMLFilterPacketReader::packet() {
+inline Packet* XMLLegacyFilterReader::packet() {
+    return filter_;
+}
+
+// Inline functions for XMLPlainFilterReader:
+
+inline XMLPlainFilterReader::XMLPlainFilterReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), filter_(new SurfaceFilter()) {
+}
+
+inline Packet* XMLPlainFilterReader::packet() {
+    return filter_;
+}
+
+// Inline functions for XMLCombinationFilterReader:
+
+inline XMLCombinationFilterReader::XMLCombinationFilterReader(
+        XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), filter_(nullptr) {
+}
+
+inline Packet* XMLCombinationFilterReader::packet() {
+    return filter_;
+}
+
+// Inline functions for XMLPropertiesFilterReader:
+
+inline XMLPropertiesFilterReader::XMLPropertiesFilterReader(
+        XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), filter_(new SurfaceFilterProperties()) {
+}
+
+inline Packet* XMLPropertiesFilterReader::packet() {
     return filter_;
 }
 
