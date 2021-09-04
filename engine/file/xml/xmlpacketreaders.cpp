@@ -108,21 +108,9 @@ namespace {
     };
 }
 
-XMLElementReader* XMLPDFReader::startContentSubElement(
-        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "pdf")
-        return new XMLCharsReader();
-    else
-        return new XMLElementReader();
-}
-
-void XMLPDFReader::endContentSubElement(const std::string& subTagName,
-        XMLElementReader* subReader) {
-    if (subTagName == "pdf") {
-        std::string base64 = dynamic_cast<XMLCharsReader*>(subReader)->
-            chars();
-
-        // Strip out whitespace.
+namespace {
+    void extractPDFFromBase64(PDF& pdf, std::string base64) {
+        // Strip out the whitespace.
         std::string::iterator in = base64.begin();
         std::string::iterator out = base64.begin();
         while (in != base64.end()) {
@@ -139,7 +127,7 @@ void XMLPDFReader::endContentSubElement(const std::string& subTagName,
 
         // Is there any data at all?
         if (out == base64.begin()) {
-            pdf->reset();
+            pdf.reset();
             return;
         }
 
@@ -147,9 +135,21 @@ void XMLPDFReader::endContentSubElement(const std::string& subTagName,
         char* data;
         size_t dataLen;
         if (base64Decode(base64.c_str(), out - base64.begin(), &data, &dataLen))
-            pdf->reset(data, dataLen, PDF::OWN_NEW);
+            pdf.reset(data, dataLen, PDF::OWN_NEW);
         else
-            pdf->reset();
+            pdf.reset();
+    }
+}
+
+void XMLPDFReader::initialChars(const std::string& chars) {
+    extractPDFFromBase64(*pdf, chars);
+}
+
+void XMLLegacyPDFReader::endContentSubElement(const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (subTagName == "pdf") {
+        extractPDFFromBase64(*pdf,
+            dynamic_cast<XMLCharsReader*>(subReader)->chars());
     }
 }
 

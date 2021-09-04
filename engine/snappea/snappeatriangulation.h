@@ -53,6 +53,7 @@ namespace regina {
 
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;
+class XMLLegacySnapPeaReader;
 
 template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
@@ -1698,6 +1699,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
             const;
 
     friend class regina::XMLSnapPeaReader;
+    friend class regina::XMLLegacySnapPeaReader;
 };
 
 /**

@@ -47,31 +47,97 @@
 
 namespace regina {
 
+// These XML tags can appear beneath all packet types.
+// We map them to strings here to allow for real compiler-optimised
+// switch statements instead of long if/else lists.
+constexpr int PACKET_LEGACY_CHILD = -1;
+constexpr int PACKET_TAG = -2;
+constexpr int PACKET_TRIANGULATION_ANY = -3;
+constexpr int PACKET_V7_TEXT = -16;
+constexpr int PACKET_V7_PDF = -17;
+constexpr int PACKET_V7_SNAPPEA = -18;
+const std::map<std::string, int> packetXMLTags = {
+    { "angles", PACKET_ANGLESTRUCTURES },
+    { "container", PACKET_CONTAINER },
+    { "hypersurfaces", PACKET_NORMALHYPERSURFACES },
+    { "link", PACKET_LINK },
+    { "pdfdata", PACKET_V7_PDF },
+    { "script", PACKET_SCRIPT },
+    { "snappeadata", PACKET_V7_SNAPPEA },
+    { "surfacefilter", PACKET_SURFACEFILTER },
+    { "surfaces", PACKET_NORMALSURFACES },
+    { "textdata", PACKET_V7_TEXT },
+
+    { "tri", PACKET_TRIANGULATION_ANY },
+
+    { "packet", PACKET_LEGACY_CHILD },
+    { "tag", PACKET_TAG }
+};
+
 XMLElementReader* XMLPacketReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
-    auto it = subTagProps.find("label");
-    if (it != subTagProps.end())
-        childLabel_ = it->second;
+    auto xmlTag = packetXMLTags.find(subTagName);
+    if (xmlTag == packetXMLTags.end()) {
+        // This is part of the "real" content specific to the type of
+        // packet we are currently reading.
+        return startContentSubElement(subTagName, subTagProps);
+    } else {
+        int xmlTagType = xmlTag->second;
 
-    it = subTagProps.find("id");
-    if (it != subTagProps.end())
-        childID_ = it->second;
+        // This is something generic that can appear in all packets.
+        if (xmlTagType == PACKET_TAG) {
+            // We have <tag name="..."/>.
+            if (Packet* me = packet()) {
+                std::string packetTag = subTagProps.lookup("name");
+                if (! packetTag.empty())
+                    me->addTag(packetTag);
+            }
+            return new XMLElementReader();
+        }
+        // All remaining cases are genuine child packets.
+        auto prop = subTagProps.find("label");
+        if (prop != subTagProps.end())
+            childLabel_ = prop->second;
 
-    if (subTagName == "packet") {
-        auto it = subTagProps.find("typeid");
-        if (it == subTagProps.end())
-            return new XMLPacketReader(resolver_);
+        prop = subTagProps.find("id");
+        if (prop != subTagProps.end())
+            childID_ = prop->second;
 
-        long typeID;
-        if (! valueOf((*it).second, typeID))
-            return new XMLPacketReader(resolver_);
+        if (xmlTagType == PACKET_LEGACY_CHILD) {
+            // This is a <packet typeid=...>...</packet> element from the
+            // older Regina 6.x file format.
+            prop = subTagProps.find("typeid");
+            if (prop == subTagProps.end())
+                return new XMLPacketReader(resolver_);
+            if (! valueOf(prop->second, xmlTagType))
+                return new XMLPacketReader(resolver_);
+        } else if (xmlTagType == PACKET_TRIANGULATION_ANY) {
+            // This is a new <tri dim="...">...</tri> element from the
+            // newer Regina 7.0 file format.
+            int dim;
+            prop = subTagProps.find("dim");
+            if (prop == subTagProps.end())
+                return new XMLPacketReader(resolver_);
+            if (! valueOf(prop->second, dim))
+                return new XMLPacketReader(resolver_);
+            if (dim < 2 || dim > 15)
+                return new XMLPacketReader(resolver_);
+            switch (dim) {
+                case 2: xmlTagType = PACKET_TRIANGULATION2; break;
+                case 3: xmlTagType = PACKET_TRIANGULATION3; break;
+                case 4: xmlTagType = PACKET_TRIANGULATION4; break;
+                default: xmlTagType = 100 + dim; /* 105 .. 115 */ break;
+            }
+        }
 
-        // Run through all the packet types that the file format supports.
-        switch (static_cast<PacketType>(typeID)) {
+        // Run through all the packet types that our file format understands.
+        switch (xmlTagType) {
             case PACKET_CONTAINER:
                 return new XMLContainerReader(resolver_);
             case PACKET_TEXT:
+                return new XMLLegacyTextReader(resolver_);
+            case PACKET_V7_TEXT:
                 return new XMLTextReader(resolver_);
             case PACKET_TRIANGULATION3:
                 return new XMLTriangulationReader<3>(resolver_);
@@ -86,6 +152,8 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 return new XMLAngleStructuresReader(
                     dynamic_cast<Triangulation<3>*>(packet()), resolver_);
             case PACKET_PDF:
+                return new XMLLegacyPDFReader(resolver_);
+            case PACKET_V7_PDF:
                 return new XMLPDFReader(resolver_);
             case PACKET_TRIANGULATION2:
                 return new XMLTriangulationReader<2>(resolver_);
@@ -95,6 +163,8 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 return new XMLNormalHypersurfacesReader(
                     dynamic_cast<Triangulation<4>*>(packet()), resolver_);
             case PACKET_SNAPPEATRIANGULATION:
+                return new XMLLegacySnapPeaReader(resolver_);
+            case PACKET_V7_SNAPPEA:
                 return new XMLSnapPeaReader(resolver_);
             case PACKET_LINK:
                 return new XMLLinkReader(resolver_);
@@ -125,15 +195,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
             default:
                 return new XMLPacketReader(resolver_);
         }
-    } else if (subTagName == "tag") {
-        if (Packet* me = packet()) {
-            std::string packetTag = subTagProps.lookup("name");
-            if (! packetTag.empty())
-                me->addTag(packetTag);
-        }
-        return new XMLElementReader();
-    } else
-        return startContentSubElement(subTagName, subTagProps);
+    }
 }
 
 void XMLPacketReader::endSubElement(const std::string& subTagName,
@@ -152,6 +214,7 @@ void XMLPacketReader::endSubElement(const std::string& subTagName,
                 delete child;
         }
     } else if (subTagName != "tag") {
+        // This sub-element was part of the packet's "real" content.
         endContentSubElement(subTagName, subReader);
     }
 

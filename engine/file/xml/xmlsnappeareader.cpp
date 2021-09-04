@@ -36,7 +36,22 @@
 
 namespace regina {
 
-void XMLSnapPeaReader::endContentSubElement(
+void XMLSnapPeaReader::initialChars(const std::string& chars) {
+    try {
+        regina::snappea::Triangulation* data =
+            regina::snappea::read_triangulation_from_string(chars.c_str());
+        if (data) {
+            regina::snappea::find_complete_hyperbolic_structure(data);
+            regina::snappea::do_Dehn_filling(data);
+            snappea_->reset(data);
+        }
+    } catch (regina::SnapPeaFatalError& err) {
+        if (snappea_->data_)
+            snappea_->reset(0);
+    }
+}
+
+void XMLLegacySnapPeaReader::endContentSubElement(
         const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "snappea") {
         if (snappea_->data_) {

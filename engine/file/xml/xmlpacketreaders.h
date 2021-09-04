@@ -76,7 +76,8 @@ class XMLContainerReader : public XMLPacketReader {
 };
 
 /**
- * An XML packet reader that reads a single PDF packet.
+ * An XML packet reader that reads a single PDF packet using the
+ * Regina 7.0 file format.
  *
  * \ifacespython Not present.
  */
@@ -93,6 +94,30 @@ class XMLPDFReader : public XMLPacketReader {
          * dangling packet references after the entire XML file has been read.
          */
         XMLPDFReader(XMLTreeResolver& resolver);
+
+        virtual Packet* packet() override;
+        virtual void initialChars(const std::string& chars) override;
+};
+
+/**
+ * An XML packet reader that reads a single PDF packet using the
+ * Regina 6.x file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyPDFReader : public XMLPacketReader {
+    private:
+        PDF* pdf;
+            /**< The PDF packet currently being read. */
+
+    public:
+        /**
+         * Creates a new PDF reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
+         */
+        XMLLegacyPDFReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
         virtual XMLElementReader* startContentSubElement(
@@ -130,7 +155,8 @@ class XMLScriptReader : public XMLPacketReader {
 };
 
 /**
- * An XML packet reader that reads a single text packet.
+ * An XML packet reader that reads a single text packet using the
+ * Regina 7.0 file format.
  *
  * \ifacespython Not present.
  */
@@ -147,6 +173,30 @@ class XMLTextReader : public XMLPacketReader {
          * dangling packet references after the entire XML file has been read.
          */
         XMLTextReader(XMLTreeResolver& resolver);
+
+        virtual Packet* packet() override;
+        virtual void initialChars(const std::string& chars) override;
+};
+
+/**
+ * An XML packet reader that reads a single text packet using the
+ * Regina 6.x file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyTextReader : public XMLPacketReader {
+    private:
+        Text* text;
+            /**< The text packet currently being read. */
+
+    public:
+        /**
+         * Creates a new text packet reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
+         */
+        XMLLegacyTextReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
         virtual XMLElementReader* startContentSubElement(
@@ -178,6 +228,24 @@ inline Packet* XMLPDFReader::packet() {
     return pdf;
 }
 
+// Inline functions for XMLLegacyPDFReader
+
+inline XMLLegacyPDFReader::XMLLegacyPDFReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), pdf(new PDF()) {
+}
+
+inline Packet* XMLLegacyPDFReader::packet() {
+    return pdf;
+}
+
+inline XMLElementReader* XMLLegacyPDFReader::startContentSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (subTagName == "pdf")
+        return new XMLCharsReader();
+    else
+        return new XMLElementReader();
+}
+
 // Inline functions for XMLScriptReader
 
 inline XMLScriptReader::XMLScriptReader(XMLTreeResolver& resolver) :
@@ -198,7 +266,21 @@ inline Packet* XMLTextReader::packet() {
     return text;
 }
 
-inline XMLElementReader* XMLTextReader::startContentSubElement(
+inline void XMLTextReader::initialChars(const std::string& chars) {
+    text->setText(chars);
+}
+
+// Inline functions for XMLLegacyTextReader
+
+inline XMLLegacyTextReader::XMLLegacyTextReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), text(new Text()) {
+}
+
+inline Packet* XMLLegacyTextReader::packet() {
+    return text;
+}
+
+inline XMLElementReader* XMLLegacyTextReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "text")
         return new XMLCharsReader();
@@ -206,8 +288,8 @@ inline XMLElementReader* XMLTextReader::startContentSubElement(
         return new XMLElementReader();
 }
 
-inline void XMLTextReader::endContentSubElement(const std::string& subTagName,
-        XMLElementReader* subReader) {
+inline void XMLLegacyTextReader::endContentSubElement(
+        const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "text")
         text->setText(dynamic_cast<XMLCharsReader*>(subReader)->chars());
 }

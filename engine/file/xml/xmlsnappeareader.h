@@ -51,7 +51,8 @@ namespace regina {
  */
 
 /**
- * An XML packet reader that reads a single SnapPea triangulation.
+ * An XML packet reader that reads a single SnapPea triangulation using the
+ * Regina 7.0 file format.
  *
  * \ifacespython Not present.
  */
@@ -68,6 +69,30 @@ class XMLSnapPeaReader : public XMLPacketReader {
          * dangling packet references after the entire XML file has been read.
          */
         XMLSnapPeaReader(XMLTreeResolver& resolver);
+
+        virtual Packet* packet() override;
+        virtual void initialChars(const std::string& chars) override;
+};
+
+/**
+ * An XML packet reader that reads a single SnapPea triangulation using the
+ * Regina 6.x file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacySnapPeaReader : public XMLPacketReader {
+    private:
+        SnapPeaTriangulation* snappea_;
+            /**< The SnapPea triangulation currently being read. */
+
+    public:
+        /**
+         * Creates a new SnapPea triangulation reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
+         */
+        XMLLegacySnapPeaReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
         virtual XMLElementReader* startContentSubElement(
@@ -89,7 +114,18 @@ inline Packet* XMLSnapPeaReader::packet() {
     return snappea_;
 }
 
-inline XMLElementReader* XMLSnapPeaReader::startContentSubElement(
+// Inline functions for XMLSnapPeaReader
+
+inline XMLLegacySnapPeaReader::XMLLegacySnapPeaReader(
+        XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), snappea_(new SnapPeaTriangulation()) {
+}
+
+inline Packet* XMLLegacySnapPeaReader::packet() {
+    return snappea_;
+}
+
+inline XMLElementReader* XMLLegacySnapPeaReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "snappea")
         return new XMLCharsReader();
