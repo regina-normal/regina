@@ -3,7 +3,7 @@
      See ../regina.sgml for further details. -->
 
 <reference id="dataformat">
- <title>Data File Format</title>
+ <title>Current Data File Format</title>
 
  <partintro>
   <para>
@@ -27,8 +27,6 @@
  </partintro>
 
  &data-abeliangroup;
- &data-allowstrict;
- &data-allowtaut;
  &data-angleparams;
  &data-code;
  &data-compact-filter;
@@ -43,7 +41,6 @@
  &data-filter;
  &data-filter-combination;
  &data-filter-properties;
- &data-flags;
  &data-fundgroup;
  &data-group;
  &data-H1;
@@ -53,7 +50,6 @@
  &data-haken;
  &data-hypersurface;
  &data-irreducible;
- &data-line;
  &data-op;
  &data-orbl-filter;
  &data-orbl-surface;
@@ -97,10 +93,36 @@
  &data-threesphere;
  &data-triangle;
  &data-triangles;
- &data-turaevviro;
  &data-twosided;
  &data-txi;
  &data-var;
  &data-zeroeff;
+</reference>
 
+<reference id="deprecated">
+ <title>Deprecated and Removed Elements</title>
+
+ <partintro>
+  <para>
+   The following &xml; elements were used in older &regina; data files,
+   but are no longer part of the current file format.
+  </para>
+  <para>
+   Those elements that are marked as <emphasis>deprecated</emphasis> can still
+   be read by the current version of &regina;, but will not be written when
+   a data file is saved.
+  </para>
+  <para>
+   Those elements that are marked as <emphasis>removed</emphasis> can no
+   longer be read or written.  If &regina; attempts to read an old data file
+   containing removed element(s), those removed elements will be silently
+   ignored.
+  </para>
+ </partintro>
+
+ &data-allowstrict;
+ &data-allowtaut;
+ &data-flags;
+ &data-line;
+ &data-turaevviro;
 </reference>

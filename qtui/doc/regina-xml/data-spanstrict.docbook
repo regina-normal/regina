@@ -54,10 +54,6 @@ spanstrict ::=</synopsis>
    A <firstterm>strict</firstterm> angle structure has all angles
    strictly between (not including) 0 and &pi;.
   </para>
-  <para>
-   This element is identical to the old (and now deprecated) element
-   &xml-allowstrict;.
-  </para>
 
   <refsect2>
    <title>Parents</title>

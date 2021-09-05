@@ -57,10 +57,6 @@ spantaut ::=</synopsis>
    A <firstterm>taut</firstterm> angle structure contains only angles
    0 and &pi;.
   </para>
-  <para>
-   This element is identical to the old (and now deprecated) element
-   &xml-allowtaut;.
-  </para>
 
   <refsect2>
    <title>Parents</title>

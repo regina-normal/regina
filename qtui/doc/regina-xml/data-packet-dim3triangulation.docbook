@@ -97,14 +97,9 @@ packet ::= (&xml-tetrahedra;,
      <member>&xml-tetrahedra;</member>
      <member>&xml-threeball;</member>
      <member>&xml-threesphere;</member>
-     <member>&xml-turaevviro;</member>
      <member>&xml-txi;</member>
      <member>&xml-zeroeff;</member>
     </simplelist>.
-   </para>
-   <para>
-    Older versions of &regina; also had a child &xml-turaevviro; element;
-    however, this has since been removed, and should not be used.
    </para>
   </refsect2>
  </refsect1>

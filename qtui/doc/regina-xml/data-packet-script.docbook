@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-var;*, &xml-line;*, &xml-code;, &xml-text;?,
+packet ::= (&xml-var;*, &xml-code;,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -104,10 +104,8 @@ packet ::= (&xml-var;*, &xml-line;*, &xml-code;, &xml-text;?,
     a script packet:
     <simplelist type="inline">
      <member>&xml-code;</member>
-     <member>&xml-line;</member>
      <member>&xml-packet;</member>
      <member>&xml-tag;</member>
-     <member>&xml-text;</member>
      <member>&xml-var;</member>
     </simplelist>.
    </para>

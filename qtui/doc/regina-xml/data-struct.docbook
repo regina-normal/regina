@@ -101,10 +101,6 @@ struct ::= (#PCDATA)</synopsis>
    <para>
     Element <sgmltag>struct</sgmltag> has no children.
    </para>
-   <para>
-    Older versions of &regina; had a child &xml-flags; element;
-    however, this has since been removed, and should not be used.
-   </para>
   </refsect2>
  </refsect1>
 
