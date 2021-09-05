@@ -56,7 +56,7 @@ namespace {
 }
 
 void addPacket(pybind11::module_& m) {
-    pybind11::enum_<FileFormat>(m, "FileFormat")
+    pybind11::enum_<regina::FileFormat>(m, "FileFormat")
         .value("REGINA_XML_V3", regina::REGINA_XML_V3)
         .value("REGINA_XML_V7", regina::REGINA_XML_V7)
         .value("REGINA_XML_LATEST", regina::REGINA_XML_LATEST)
@@ -159,7 +159,8 @@ void addPacket(pybind11::module_& m) {
             pybind11::arg("cloneDescendants") = false,
             pybind11::arg("end") = true)
         .def("save",
-            overload_cast<const char*, bool>(&Packet::save, pybind11::const_),
+            overload_cast<const char*, bool, regina::FileFormat>(
+                &Packet::save, pybind11::const_),
             pybind11::arg(),
             pybind11::arg("compressed") = true,
             pybind11::arg("format") = regina::REGINA_XML_LATEST)
