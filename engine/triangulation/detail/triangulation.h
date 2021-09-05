@@ -1901,7 +1901,7 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
          *
          * This routine is typically called from within
          * Triangulation<dim>::writeXMLPacketData().  The XML elements
-         * that it writes are child elements of the \c packet element.
+         * that it writes are child elements of the \c tri element.
          *
          * @param out the output stream to which the XML should be written.
          */

@@ -219,9 +219,12 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
-void Triangulation<3>::writeXMLPacketData(std::ostream& out, FileFormat) const {
+void Triangulation<3>::writeXMLPacketData(std::ostream& out,
+        FileFormat format) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
+
+    writeXMLHeader(out, "tri", format, true, std::pair("dim", 3));
 
     // Write the tetrahedron gluings.
     Tetrahedron<3>* adjTet;
@@ -285,6 +288,8 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out, FileFormat) const {
         out << "  " << xmlValueTag("compressingdisc", *compressingDisc_) << '\n';
     if (haken_.has_value())
         out << "  " << xmlValueTag("haken", *haken_) << '\n';
+
+    writeXMLFooter(out, "tri", format);
 }
 
 Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,

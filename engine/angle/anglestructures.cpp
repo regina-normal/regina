@@ -210,7 +210,10 @@ void AngleStructures::writeTextLong(std::ostream& o) const {
     }
 }
 
-void AngleStructures::writeXMLPacketData(std::ostream& out, FileFormat) const {
+void AngleStructures::writeXMLPacketData(std::ostream& out,
+        FileFormat format) const {
+    writeXMLHeader(out, "angles", format);
+
     using regina::xml::xmlValueTag;
 
     // Write the enumeration parameters.
@@ -229,6 +232,8 @@ void AngleStructures::writeXMLPacketData(std::ostream& out, FileFormat) const {
     if (doesSpanTaut_.has_value())
         out << "  " << xmlValueTag("spantaut", *doesSpanTaut_)
             << '\n';
+
+    writeXMLFooter(out, "angles", format);
 }
 
 Packet* AngleStructures::internalClonePacket(Packet* parent) const {

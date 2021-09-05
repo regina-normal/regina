@@ -163,6 +163,8 @@ Packet* Script::internalClonePacket(Packet*) const {
 void Script::writeXMLPacketData(std::ostream& out, FileFormat format) const {
     using regina::xml::xmlEncodeSpecialChars;
 
+    writeXMLHeader(out, "script", format);
+
     for (std::map<std::string, Packet*>::const_iterator vit =
             variables.begin(); vit != variables.end(); vit++) {
         out << "  <var name=\"" << xmlEncodeSpecialChars((*vit).first)
@@ -179,6 +181,8 @@ void Script::writeXMLPacketData(std::ostream& out, FileFormat format) const {
         out << "  <text>" << xmlEncodeSpecialChars(text_) << "</text>\n";
     else
         out << "  <code>" << xmlEncodeSpecialChars(text_) << "</code>\n";
+
+    writeXMLFooter(out, "script", format);
 }
 
 void Script::packetWasRenamed(Packet*) {

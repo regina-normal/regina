@@ -45,14 +45,15 @@ namespace regina {
 
 namespace {
     /**
-     * Reads the outermost \<reginadata ...\> XML element.
+     * Reads the outermost \<regina ...\> or \<reginadata ...\> XML element.
      */
     class ReginaDataReader : public regina::XMLPacketReader {
         private:
             Container container;
                 /**< Sits above the entire packet tree read from file. */
             bool isReginaData;
-                /**< Are we actually reading a \<reginadata ...\> element? */
+                /**< Are we actually reading a \<regina ...\> or
+                     \<reginadata ...\> element? */
             std::string version_;
                 /**< The version of Regina that created this file, or
                      the empty string if this is not known. */
@@ -80,7 +81,7 @@ namespace {
             virtual void startElement(const std::string& n,
                     const regina::xml::XMLPropertyDict& props,
                     XMLElementReader*) override {
-                if (n == "reginadata") {
+                if (n == "regina" || n == "reginadata") {
                     isReginaData = true;
 
                     regina::xml::XMLPropertyDict::const_iterator it =

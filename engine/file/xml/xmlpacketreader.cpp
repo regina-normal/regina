@@ -64,7 +64,7 @@ const std::map<std::string, int> packetXMLTags = {
     { "container", PACKET_CONTAINER },
     { "filtercomb", PACKET_V7_FILTER_COMBINATION },
     { "filterplain", PACKET_V7_FILTER_PLAIN },
-    { "filterprops", PACKET_V7_FILTER_PROPERTIES },
+    { "filterprop", PACKET_V7_FILTER_PROPERTIES },
     { "hypersurfaces", PACKET_NORMALHYPERSURFACES },
     { "link", PACKET_LINK },
     { "pdfdata", PACKET_V7_PDF },

@@ -109,7 +109,10 @@ void NormalSurfaces::writeTextLong(std::ostream& out) const {
     writeAllSurfaces(out);
 }
 
-void NormalSurfaces::writeXMLPacketData(std::ostream& out, FileFormat) const {
+void NormalSurfaces::writeXMLPacketData(std::ostream& out,
+        FileFormat format) const {
+    writeXMLHeader(out, "surfaces", format);
+
     // Write the surface list parameters.
     out << "  <params "
         << "type=\"" << which_.intValue() << "\" "
@@ -122,6 +125,8 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out, FileFormat) const {
     // Write the individual surfaces.
     for (const NormalSurface& s : surfaces_)
         s.writeXMLData(out);
+
+    writeXMLFooter(out, "surfaces", format);
 }
 
 Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {

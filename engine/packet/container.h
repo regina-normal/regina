@@ -103,7 +103,10 @@ inline Packet* Container::internalClonePacket(Packet*) const {
     return new Container();
 }
 
-inline void Container::writeXMLPacketData(std::ostream&, FileFormat) const {
+inline void Container::writeXMLPacketData(std::ostream& out, FileFormat format)
+        const {
+    writeXMLHeader(out, "container", format);
+    writeXMLFooter(out, "container", format);
 }
 
 } // namespace regina

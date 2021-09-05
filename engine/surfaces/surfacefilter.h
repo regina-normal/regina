@@ -104,7 +104,7 @@ class SurfaceFilterProperties;
  *   \a cloneMe is of the same class as that whose constructor you are
  *   writing.</li>
  *   <li>Virtual functions accept(), internalClonePacket(), writeTextLong() and
- *   writeXMLFilterData() must be overridden.</li>
+ *   writeXMLPacketData() must be overridden.</li>
  *   <li>An appropriate case should be added to
  *   <tt>XMLFilterPacketReader::startContentSubElement()</tt> so that the
  *   filter can be read from Regina data files.</li>
@@ -171,18 +171,6 @@ class SurfaceFilter : public Packet {
         virtual void writeTextShort(std::ostream& out) const override;
 
     protected:
-        /**
-         * Writes a chunk of XML containing the details of this filter.
-         *
-         * You may assume that the filter opening tag (including the
-         * filter type) has already been written, and that the filter
-         * closing tag will be written immediately after this routine is
-         * called.  This routine need only write the additional details
-         * corresponding to this particular subclass of SurfaceFilter.
-         *
-         * @param out the output stream to which the XML should be written.
-         */
-        virtual void writeXMLFilterData(std::ostream& out) const;
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format) const override;
@@ -242,7 +230,8 @@ class SurfaceFilterCombination : public SurfaceFilter {
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLFilterData(std::ostream& out) const override;
+        virtual void writeXMLPacketData(std::ostream& out,
+            FileFormat format) const override;
 };
 
 /**
@@ -407,7 +396,8 @@ class SurfaceFilterProperties : public SurfaceFilter {
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLFilterData(std::ostream& out) const override;
+        virtual void writeXMLPacketData(std::ostream& out,
+            FileFormat format) const override;
 };
 
 /*@}*/
@@ -431,9 +421,6 @@ inline SurfaceFilterType SurfaceFilter::filterType() const {
 
 inline std::string SurfaceFilter::filterTypeName() const {
     return "Default filter";
-}
-
-inline void SurfaceFilter::writeXMLFilterData(std::ostream&) const {
 }
 
 inline void SurfaceFilter::writeTextShort(std::ostream& o) const {

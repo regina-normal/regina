@@ -1211,10 +1211,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * Typically this will be called from the root of the packet tree,
          * which will write the entire packet tree to the output stream.
          *
-         * The output from this routine cannot be used as a piece of an
-         * XML file; it must be the entire XML file.  For a piece of an
-         * XML file, see routine writeXMLPacketTree() instead.
-         *
          * \pre This packet does not depend upon its parent.
          *
          * \ifacespython The argument \a out is not present; instead the
@@ -1344,27 +1340,72 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         virtual Packet* internalClonePacket(Packet* parent) const = 0;
 
         /**
-         * Writes a chunk of XML containing the subtree with this packet
-         * as matriarch.  This is the preferred way of writing a packet
-         * tree to file.
+         * Writes the opening XML tag for this packet.
+         * This is typically called at the beginning of writeXMLPacketData().
+         *
+         * The generic packet attributes (such as \c label, \c id if
+         * required, and \c type / \c typeid if we are writing to the
+         * REGINA_XML_V3 format) will be included.
+         *
+         * If we are writing to the Regina 7.0 format or newer, then any
+         * additional attributes specified in \a attr will also be included.
+         * If we are writing to the REGINA_XML_V3 format, then \a attr
+         * will be ignored.
+         *
+         * @param out the output stream to which the opening XML tag
+         * should be written.
+         * @param element the name of the XML tag.  If we are writing to
+         * the REGINA_XML_V3 format, then this will be ignored (and may
+         * be \c null), and the tag name \c packet will be used instead.
+         * @param format indicates which of Regina's XML file formats to write.
+         * @param newline indicates whether the opening XML tag should be
+         * followed by a newline.  Normally this would be \c true, but
+         * if you need to avoid whitespace between the opening XML tag
+         * and the packet contents then you should pass \c false instead.
+         * @param attr any additional attributes to write to the XML tag;
+         * each attribute should a pair of the form (\a attribute, \a value).
+         * If we are writing to the REGINA_XML_V3 format, this will be ignored.
+         */
+        template <typename... Args>
+        void writeXMLHeader(std::ostream& out, const char* element,
+            FileFormat format, bool newline = true,
+            std::pair<const char*, Args>... attr) const;
+
+        /**
+         * Writes any generic XML sub-elements that come from the packet
+         * tree, followed by the closing XML tag for this packet.
+         * This is typically called at the end of writeXMLPacketData().
+         *
+         * The generic sub-elements include Regina's packet tags, as
+         * well as any child packets in the packet tree.
+         *
+         * There will be no whitespace before the first sub-element (or
+         * before the closing XML tag, if there are no generic sub-elements).
+         * The closing XML tag will be followed by a newline.
+         *
+         * @param out the output stream to which the closing XML tag
+         * should be written.
+         * @param element the name of the XML tag.  If we are writing to
+         * the REGINA_XML_V3 format, then this will be ignored (and may
+         * be \c null), and the tag name \c packet will be used instead.
+         * @param format indicates which of Regina's XML file formats to write.
+         */
+        void writeXMLFooter(std::ostream& out, const char* element,
+            FileFormat format) const;
+
+        /**
+         * Writes a chunk of XML containing the full subtree with this packet
+         * as matriarch.  This should begin with the packet opening XML tag
+         * and finish with the packet closing XML tag (typically followed by
+         * a newline).
          *
          * The output from this routine is only a piece of XML; it
          * should not be used as a complete XML file.  For a complete
          * XML file, see routine writeXMLFile() instead.
          *
-         * @param out the output stream to which the XML should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         */
-        void writeXMLPacketTree(std::ostream& out, FileFormat format) const;
-        /**
-         * Writes a chunk of XML containing the data for this packet only.
-         *
-         * You may assume that the packet opening tag (including
-         * the packet type and label) has already been written, and that
-         * all child packets followed by the corresponding packet closing
-         * tag will be written immediately after this routine is called.
-         * This routine need only write the internal data stored in
-         * this specific packet.
+         * Typical implementations would begin with writeXMLHeader(),
+         * then output any content specific to the packet type, and
+         * finish with writeXMLFooter().
          *
          * @param out the output stream to which the XML should be written.
          * @param format indicates which of Regina's XML file formats to write.
@@ -1447,6 +1488,21 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * they handle the event.
          */
         void fireDestructionEvent();
+
+        /**
+         * Writes the XML attributes that are common to every packet
+         * XML element and every file format.
+         *
+         * Currently this includes only the \c label attribute, and the
+         * \c id attribute if necessary.
+         *
+         * This is called from within writeXMLHeader().  It is split out
+         * into a separate routine so that we can keep its dependencies
+         * out of this C++ header.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeXMLPacketAttributes(std::ostream& out) const;
 
     public:
         /**
@@ -2572,6 +2628,23 @@ inline bool Packet::dependsOnParent() const {
 
 inline bool Packet::isPacketEditable() const {
     return true;
+}
+
+template <typename... Args>
+void Packet::writeXMLHeader(std::ostream& out, const char* element,
+        FileFormat format, bool newline, std::pair<const char*, Args>... args)
+        const {
+    if (format == REGINA_XML_V3) {
+        out << "<packet type=\"" << typeName()
+            << "\" typeid=\"" << type() << "\"\n\t";
+    } else {
+        out << '<' << element << ' ';
+        ((out << args.first << "=\"" << args.second << "\" "), ...);
+    }
+    writeXMLPacketAttributes(out);
+    out << '>';
+    if (newline)
+        out << '\n';
 }
 
 inline Packet::ChangeEventSpan::ChangeEventSpan(Packet& packet) :

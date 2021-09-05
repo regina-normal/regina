@@ -143,9 +143,12 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
-void Triangulation<2>::writeXMLPacketData(std::ostream& out, FileFormat) const {
+void Triangulation<2>::writeXMLPacketData(std::ostream& out,
+        FileFormat format) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
+
+    writeXMLHeader(out, "tri", format, true, std::pair("dim", 2));
 
     // Write the triangle gluings.
     Triangle<2>* adjTri;
@@ -169,6 +172,8 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out, FileFormat) const {
     out << "  </triangles>\n";
 
     writeXMLBaseProperties(out);
+
+    writeXMLFooter(out, "tri", format);
 }
 
 } // namespace regina

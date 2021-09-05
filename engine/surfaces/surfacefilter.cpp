@@ -46,14 +46,15 @@
 
 namespace regina {
 
-void SurfaceFilter::writeXMLPacketData(std::ostream& out, FileFormat) const {
-    out << "  <filter type=\""
-        << regina::xml::xmlEncodeSpecialChars(filterTypeName())
-        << "\" typeid=\"" << filterType() << "\">\n";
-
-    writeXMLFilterData(out);
-
-    out << "  </filter>\n";
+void SurfaceFilter::writeXMLPacketData(std::ostream& out,
+        FileFormat format) const {
+    writeXMLHeader(out, "filterplain", format);
+    if (format == REGINA_XML_V3) {
+        out << "  <filter type=\""
+            << regina::xml::xmlEncodeSpecialChars(filterTypeName())
+            << "\" typeid=\"" << filterType() << "\"/>\n";
+    }
+    writeXMLFooter(out, "filterplain", format);
 }
 
 bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
@@ -74,8 +75,20 @@ bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
     }
 }
 
-void SurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
+void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
+        FileFormat format) const {
+    writeXMLHeader(out, "filtercomb", format);
+    if (format == REGINA_XML_V3) {
+        out << "  <filter type=\""
+            << regina::xml::xmlEncodeSpecialChars(filterTypeName())
+            << "\" typeid=\"" << filterType() << "\">\n";
+    }
+
     out << "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n";
+
+    if (format == REGINA_XML_V3)
+        out << "  </filter>\n";
+    writeXMLFooter(out, "filtercomb", format);
 }
 
 LargeInteger SurfaceFilterProperties::eulerChar(size_t index) const {
@@ -121,8 +134,16 @@ void SurfaceFilterProperties::writeTextLong(std::ostream& o) const {
         o << "    Has real boundary: " << realBoundary_ << '\n';
 }
 
-void SurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
+void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
+        FileFormat format) const {
     using regina::xml::xmlValueTag;
+
+    writeXMLHeader(out, "filterprop", format);
+    if (format == REGINA_XML_V3) {
+        out << "  <filter type=\""
+            << regina::xml::xmlEncodeSpecialChars(filterTypeName())
+            << "\" typeid=\"" << filterType() << "\">\n";
+    }
 
     if (! eulerChar_.empty()) {
         out << "    <euler> ";
@@ -137,6 +158,10 @@ void SurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
         out << "    " << xmlValueTag("compact", compactness_) << '\n';
     if (realBoundary_ != BoolSet(true, true))
         out << "    " << xmlValueTag("realbdry", realBoundary_) << '\n';
+
+    if (format == REGINA_XML_V3)
+        out << "  </filter>\n";
+    writeXMLFooter(out, "filterprop", format);
 }
 
 } // namespace regina

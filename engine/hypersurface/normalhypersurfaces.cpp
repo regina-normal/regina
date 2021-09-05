@@ -102,7 +102,9 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
 }
 
 void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
-        FileFormat) const {
+        FileFormat format) const {
+    writeXMLHeader(out, "hypersurfaces", format);
+
     // Write the surface list parameters.
     out << "  <params "
         << "type=\"" << which_.intValue() << "\" "
@@ -115,6 +117,8 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
     // Write the individual hypersurfaces.
     for (auto it = surfaces_.begin(); it != surfaces_.end(); it++)
         it->writeXMLData(out);
+
+    writeXMLFooter(out, "hypersurfaces", format);
 }
 
 Packet* NormalHypersurfaces::internalClonePacket(Packet* parent) const {

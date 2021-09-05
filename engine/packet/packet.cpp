@@ -702,14 +702,15 @@ void Packet::writeXMLFile(std::ostream& out, FileFormat format) const {
     // Write the XML header.
     out << "<?xml version=\"1.0\"?>\n";
 
-    // Write the regina data opening tag including engine version.
-    out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
-
-    // Write the packet tree.
-    writeXMLPacketTree(out, format);
-
-    // Write the regina data closing tag.
-    out << "</reginadata>\n";
+    if (format == REGINA_XML_V3) {
+        out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
+        writeXMLPacketData(out, format);
+        out << "</reginadata>\n";
+    } else {
+        out << "<regina engine=\"" << regina::versionString() << "\">\n";
+        writeXMLPacketData(out, format);
+        out << "</regina>\n";
+    }
 }
 
 void Packet::fireEvent(void (PacketListener::*event)(Packet*)) {
@@ -757,45 +758,40 @@ void Packet::fireDestructionEvent() {
     }
 }
 
-void Packet::writeXMLPacketTree(std::ostream& out, FileFormat format) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlEncodeComment;
-
-    // Write the packet opening tag including packet label and type.
-    out << "<packet label=\"" << xmlEncodeSpecialChars(label_) << "\"\n";
-    out << "\ttype=\"" << typeName() << "\" typeid=\"" << type() << "\"\n";
+void Packet::writeXMLPacketAttributes(std::ostream& out) const {
+    out << "label=\"" << regina::xml::xmlEncodeSpecialChars(label_) << "\"";
 
     // If we appear as a variable in a script packet, then write an ID that the
     // script can reference.  We can look through our packet listeners to see
     // if this is necessary, since a Script always listens to its variables.
-    if (listeners_.get())
-        for (auto it = listeners_->begin(); it != listeners_->end(); ++it)
-            if (dynamic_cast<Script*>(*it)) {
-                out << "\tid=\"" << internalID() << "\"\n";
+    if (listeners_)
+        for (const auto* listener : *listeners_)
+            if (dynamic_cast<const Script*>(listener)) {
+                out << " id=\"" << internalID() << "\"";
                 break;
             }
+}
 
-    out << "\tparent=\"";
-    if (treeParent_)
-        out << xmlEncodeSpecialChars(treeParent_->label_);
-    out << "\">\n";
-
-    // Write the internal packet data.
-    writeXMLPacketData(out, format);
-
+void Packet::writeXMLFooter(std::ostream& out, const char* element,
+        FileFormat format) const {
     // Write any packet tags.
     if (tags_.get())
         for (std::set<std::string>::const_iterator it = tags_->begin();
                 it != tags_->end(); it++)
-            out << "  <tag name=\"" << xmlEncodeSpecialChars(*it) << "\"/>\n";
+            out << "<tag name=\"" << regina::xml::xmlEncodeSpecialChars(*it)
+                << "\"/>\n";
 
     // Write the child packets.
     for (Packet* p = firstTreeChild_; p; p = p->nextTreeSibling_)
-        p->writeXMLPacketTree(out, format);
+        p->writeXMLPacketData(out, format);
 
-    // Write the packet closing tag.
-    out << "</packet> <!-- " << xmlEncodeComment(label_)
-        << " (" << xmlEncodeComment(typeName()) << ") -->\n";
+    // Finish with the closing XML tag.
+    if (format != REGINA_XML_V3) {
+        out << "</" << element << ">\n";
+    } else {
+        out << "</packet> <!-- " << regina::xml::xmlEncodeComment(label_)
+            << " (" << regina::xml::xmlEncodeComment(typeName()) << ") -->\n";
+    }
 }
 
 std::string Packet::internalID() const {

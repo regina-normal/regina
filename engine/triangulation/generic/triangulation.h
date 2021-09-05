@@ -539,9 +539,11 @@ inline Packet* Triangulation<dim>::internalClonePacket(Packet* parent) const {
 
 template <int dim>
 void Triangulation<dim>::writeXMLPacketData(std::ostream& out,
-        FileFormat) const {
+        FileFormat format) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
+
+    writeXMLHeader(out, "tri", format, true, std::pair("dim", dim));
 
     // Write the simplex gluings.
     Simplex<dim>* adj;
@@ -573,6 +575,8 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out,
     out << "  </simplices>\n";
 
     detail::TriangulationBase<dim>::writeXMLBaseProperties(out);
+
+    writeXMLFooter(out, "tri", format);
 }
 
 template <int dim>

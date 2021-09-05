@@ -170,9 +170,12 @@ long Triangulation<4>::eulerCharManifold() const {
     return ans;
 }
 
-void Triangulation<4>::writeXMLPacketData(std::ostream& out, FileFormat) const {
+void Triangulation<4>::writeXMLPacketData(std::ostream& out,
+        FileFormat format) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
+
+    writeXMLHeader(out, "tri", format, true, std::pair("dim", 4));
 
     // Write the pentachoron gluings.
     Pentachoron<4>* adjPent;
@@ -201,6 +204,8 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out, FileFormat) const {
         H2_->writeXMLData(out);
         out << "</H2>\n";
     }
+
+    writeXMLFooter(out, "tri", format);
 }
 
 Triangulation<4>::Triangulation(const Triangulation& X) :
