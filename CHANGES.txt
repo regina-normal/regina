@@ -10,6 +10,10 @@ Regina - A Normal Surface Theory Calculator
 Version 7.0  [ TODO ]
 
     GENERAL:
+        - The file format has changed.  It is still XML-based, but older
+          versions of Regina will not be able to read files created by
+          Regina 7.0 or later.  Regina can of course still both read
+          the old format (transparently) and write it (if asked).
         - Now requires C++17 (not C++14).
         - Updated the bundled copy of Normaliz to version 3.8.9 (26 Sep 2020).
         - Updated the SnapPea kernel to the one shipped with SnapPy 2.8.
