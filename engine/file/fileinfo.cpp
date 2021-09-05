@@ -100,6 +100,7 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     ans.pathname_ = idPathname;
     ans.type_ = FileInfo::TYPE_XML;
     ans.typeDescription_ = "XML Regina data file";
+    ans.format_ = REGINA_XML_LATEST;
 
     // Make it an invalid file until we know otherwise.
     ans.invalid_ = true;
@@ -147,7 +148,11 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
         if (in.eof())
             return ans;
         in >> s;
-        if (s != "<reginadata")
+        if (s == "<regina")
+            ans.format_ = REGINA_XML_V7;
+        else if (s == "<reginadata")
+            ans.format_ = REGINA_XML_V3;
+        else
             return ans;
 
         // Next should be the engine version.
@@ -174,9 +179,20 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
 }
 
 void FileInfo::writeTextShort(std::ostream& out) const {
-    out << "File information: " << typeDescription_;
+    out << "File information: " << typeDescription_ << " (";
+    switch (format_) {
+        case REGINA_XML_V3:
+            out << "v3";
+            break;
+        case REGINA_XML_V7:
+            out << "v7";
+            break;
+        default:
+            out << "v?";
+    }
     if (compressed_)
-        out << " (compressed)";
+        out << ", compressed";
+    out << ')';
 }
 
 void FileInfo::writeTextLong(std::ostream& out) const {
@@ -184,6 +200,18 @@ void FileInfo::writeTextLong(std::ostream& out) const {
     if (compressed_)
         out << " (compressed)";
     out << '\n';
+
+    switch (format_) {
+        case REGINA_XML_V3:
+            out << "XML format: Regina 3.0-6.0.1\n";
+            break;
+        case REGINA_XML_V7:
+            out << "XML format: Regina 7.0+\n";
+            break;
+        default:
+            out << "XML format: Unknown\n";
+            break;
+    }
 
     if (invalid_)
         out << "File contains invalid metadata.\n";

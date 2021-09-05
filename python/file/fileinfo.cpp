@@ -43,6 +43,7 @@ void addFileInfo(pybind11::module_& m) {
         .def("pathname", &FileInfo::pathname)
         .def("type", &FileInfo::type)
         .def("typeDescription", &FileInfo::typeDescription)
+        .def("format", &FileInfo::format)
         .def("engine", &FileInfo::engine)
         .def("isCompressed", &FileInfo::isCompressed)
         .def("isInvalid", &FileInfo::isInvalid)

@@ -235,6 +235,7 @@ Version 7.0  [ TODO ]
             - Class constant TYPE_XML is now constexpr.
             - Routine identify() now returns a std::optional<FileInfo>,
               not a newly allocated pointer that could be null.
+            - New routine format().
         Class FuncDelete, FuncNew, FuncNewCopyPtr, FuncNewCopyRef,
                 FuncNewCopyClonePtr:
             - Removed completely, since C++ provides good alternatives nowadays.

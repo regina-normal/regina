@@ -40,8 +40,7 @@
 #endif
 
 #include <optional>
-#include "regina-core.h"
-#include "core/output.h"
+#include "packet/packet.h"
 
 namespace regina {
 
@@ -81,6 +80,8 @@ class FileInfo : public Output<FileInfo> {
                  constants defined in this class. */
         std::string typeDescription_;
             /**< A human-readable description of the type of data file. */
+        FileFormat format_;
+            /**< Indicates which of Regina's XML file formats the file uses. */
         std::string engine_;
             /**< The version of the calculation engine that wrote this file. */
         bool compressed_;
@@ -126,6 +127,12 @@ class FileInfo : public Output<FileInfo> {
          * @return a description of the type of data file.
          */
         const std::string& typeDescription() const;
+        /**
+         * Returns which of Regina's XML file formats the data file uses.
+         *
+         * @return the XML file format.
+         */
+        FileFormat format() const;
         /**
          * Returns the version of the calculation engine that wrote this file.
          *
@@ -235,6 +242,10 @@ inline int FileInfo::type() const {
 
 inline const std::string& FileInfo::typeDescription() const {
     return typeDescription_;
+}
+
+inline FileFormat FileInfo::format() const {
+    return format_;
 }
 
 inline const std::string& FileInfo::engine() const {
