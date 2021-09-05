@@ -746,7 +746,8 @@ bool SnapPeaTriangulation::saveSnapPea(const char* filename) const {
     return regina::snappea::write_triangulation(data_, filename);
 }
 
-void SnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
+void SnapPeaTriangulation::writeXMLPacketData(std::ostream& out,
+        FileFormat) const {
     if (! data_)
         return;
 

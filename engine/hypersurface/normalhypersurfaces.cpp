@@ -101,7 +101,8 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
     }
 }
 
-void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
+void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
+        FileFormat) const {
     // Write the surface list parameters.
     out << "  <params "
         << "type=\"" << which_.intValue() << "\" "

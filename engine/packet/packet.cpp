@@ -609,14 +609,15 @@ Packet* Packet::clone(bool cloneDescendants, bool end) const {
     return ans;
 }
 
-bool Packet::save(const char* filename, bool compressed) const {
+bool Packet::save(const char* filename, bool compressed, FileFormat format)
+        const {
     std::ofstream out(filename, std::ios_base::out | std::ios_base::binary);
     // We don't test whether the file was opened, since
     // save(std::ostream&, bool) tests this for us as the first thing it does.
-    return save(out, compressed);
+    return save(out, compressed, format);
 }
 
-bool Packet::save(std::ostream& s, bool compressed) const {
+bool Packet::save(std::ostream& s, bool compressed, FileFormat format) const {
     // Note: save(const char*, bool) relies on us testing here whether s
     // was successfully opened.  If anyone removes this test, then they
     // should add a corresponding test to save(const char*, bool) instead.
@@ -626,14 +627,14 @@ bool Packet::save(std::ostream& s, bool compressed) const {
     if (compressed) {
         try {
             zstr::ostream out(s);
-            writeXMLFile(out);
+            writeXMLFile(out, format);
         } catch (const zstr::Exception& e) {
             std::cerr << "ERROR: Could not save with compression: "
                 << e.what() << std::endl;
             return false;
         }
     } else {
-        writeXMLFile(s);
+        writeXMLFile(s, format);
     }
     return true;
 }
@@ -697,7 +698,7 @@ void Packet::removeAllTags() {
     }
 }
 
-void Packet::writeXMLFile(std::ostream& out) const {
+void Packet::writeXMLFile(std::ostream& out, FileFormat format) const {
     // Write the XML header.
     out << "<?xml version=\"1.0\"?>\n";
 
@@ -705,7 +706,7 @@ void Packet::writeXMLFile(std::ostream& out) const {
     out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
 
     // Write the packet tree.
-    writeXMLPacketTree(out);
+    writeXMLPacketTree(out, format);
 
     // Write the regina data closing tag.
     out << "</reginadata>\n";
@@ -756,7 +757,7 @@ void Packet::fireDestructionEvent() {
     }
 }
 
-void Packet::writeXMLPacketTree(std::ostream& out) const {
+void Packet::writeXMLPacketTree(std::ostream& out, FileFormat format) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlEncodeComment;
 
@@ -780,7 +781,7 @@ void Packet::writeXMLPacketTree(std::ostream& out) const {
     out << "\">\n";
 
     // Write the internal packet data.
-    writeXMLPacketData(out);
+    writeXMLPacketData(out, format);
 
     // Write any packet tags.
     if (tags_.get())
@@ -790,7 +791,7 @@ void Packet::writeXMLPacketTree(std::ostream& out) const {
 
     // Write the child packets.
     for (Packet* p = firstTreeChild_; p; p = p->nextTreeSibling_)
-        p->writeXMLPacketTree(out);
+        p->writeXMLPacketTree(out, format);
 
     // Write the packet closing tag.
     out << "</packet> <!-- " << xmlEncodeComment(label_)

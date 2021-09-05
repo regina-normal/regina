@@ -56,6 +56,13 @@ namespace {
 }
 
 void addPacket(pybind11::module_& m) {
+    pybind11::enum_<FileFormat>(m, "FileFormat")
+        .value("REGINA_XML_V3", regina::REGINA_XML_V3)
+        .value("REGINA_XML_V7", regina::REGINA_XML_V7)
+        .value("REGINA_XML_LATEST", regina::REGINA_XML_LATEST)
+        .export_values()
+        ;
+
     auto c1 = pybind11::class_<regina::PacketChildren>(m, "PacketChildren")
         .def("__iter__", [](regina::PacketChildren c) {
             return c.begin();
@@ -153,10 +160,12 @@ void addPacket(pybind11::module_& m) {
             pybind11::arg("end") = true)
         .def("save",
             overload_cast<const char*, bool>(&Packet::save, pybind11::const_),
-            pybind11::arg(), pybind11::arg("compressed") = true)
-        .def("writeXMLFile", [](const Packet& p) {
-            p.writeXMLFile(std::cout);
-        })
+            pybind11::arg(),
+            pybind11::arg("compressed") = true,
+            pybind11::arg("format") = regina::REGINA_XML_LATEST)
+        .def("writeXMLFile", [](const Packet& p, regina::FileFormat format) {
+            p.writeXMLFile(std::cout, format);
+        }, pybind11::arg("format") = regina::REGINA_XML_LATEST)
         .def("internalID", &Packet::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {
             return (s == p);

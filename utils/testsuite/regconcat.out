@@ -256,7 +256,7 @@ CS_unknown
 	type="Script" typeid="7"
 	parent="Sample Data File">
   <var name="tri" valueid="_" value="3-Manifolds"/>
-  <text># This Python script runs through all 3-manifold triangulations in this file
+  <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
 # See the Regina handbook for more elaborate sample Python sessions.
@@ -266,7 +266,7 @@ t = tri.firstChild()
 while t != None:
 	print t.label() + &quot;:&quot;, t.homology()
 	t = t.nextSibling()
-</text>
+</code>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 <packet label="Container"
@@ -453,7 +453,7 @@ CS_unknown
 	type="Script" typeid="7"
 	parent="Sample Data File">
   <var name="tri" valueid="_" value="3-Manifolds"/>
-  <text># This Python script runs through all 3-manifold triangulations in this file
+  <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
 # See the Regina handbook for more elaborate sample Python sessions.
@@ -463,7 +463,7 @@ t = tri.firstChild()
 while t != None:
 	print t.label() + &quot;:&quot;, t.homology()
 	t = t.nextSibling()
-</text>
+</code>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 <packet label="Container"
@@ -652,7 +652,7 @@ CS_unknown
 	type="Script" typeid="7"
 	parent="Sample Data File">
   <var name="tri" valueid="_" value="3-Manifolds"/>
-  <text># This Python script runs through all 3-manifold triangulations in this file
+  <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
 # See the Regina handbook for more elaborate sample Python sessions.
@@ -662,7 +662,7 @@ t = tri.firstChild()
 while t != None:
 	print t.label() + &quot;:&quot;, t.homology()
 	t = t.nextSibling()
-</text>
+</code>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 <packet label="Container"
@@ -851,7 +851,7 @@ CS_unknown
 	type="Script" typeid="7"
 	parent="Sample Data File">
   <var name="tri" valueid="_" value="3-Manifolds"/>
-  <text># This Python script runs through all 3-manifold triangulations in this file
+  <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
 # See the Regina handbook for more elaborate sample Python sessions.
@@ -861,7 +861,7 @@ t = tri.firstChild()
 while t != None:
 	print t.label() + &quot;:&quot;, t.homology()
 	t = t.nextSibling()
-</text>
+</code>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 <packet label="Container"
@@ -1043,7 +1043,7 @@ CS_unknown
 	type="Script" typeid="7"
 	parent="Sample Data File">
   <var name="tri" valueid="_" value="3-Manifolds"/>
-  <text># This Python script runs through all 3-manifold triangulations in this file
+  <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
 # See the Regina handbook for more elaborate sample Python sessions.
@@ -1053,7 +1053,7 @@ t = tri.firstChild()
 while t != None:
 	print t.label() + &quot;:&quot;, t.homology()
 	t = t.nextSibling()
-</text>
+</code>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 </packet> <!-- Combined Data (Container) -->
@@ -1215,7 +1215,7 @@ CS_unknown
 	type="Script" typeid="7"
 	parent="Sample Data File">
   <var name="tri" valueid="_" value="3-Manifolds"/>
-  <text># This Python script runs through all 3-manifold triangulations in this file
+  <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
 # See the Regina handbook for more elaborate sample Python sessions.
@@ -1225,7 +1225,7 @@ t = tri.firstChild()
 while t != None:
 	print t.label() + &quot;:&quot;, t.homology()
 	t = t.nextSibling()
-</text>
+</code>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 <packet label="Container"
@@ -1413,7 +1413,7 @@ CS_unknown
 	type="Script" typeid="7"
 	parent="Sample Data File">
   <var name="tri" valueid="_" value="3-Manifolds"/>
-  <text># This Python script runs through all 3-manifold triangulations in this file
+  <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
 # See the Regina handbook for more elaborate sample Python sessions.
@@ -1423,7 +1423,7 @@ t = tri.firstChild()
 while t != None:
 	print t.label() + &quot;:&quot;, t.homology()
 	t = t.nextSibling()
-</text>
+</code>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 </packet> <!-- Combined Data (Container) -->
@@ -1587,7 +1587,7 @@ CS_unknown
 	type="Script" typeid="7"
 	parent="Sample Data File">
   <var name="tri" valueid="_" value="3-Manifolds"/>
-  <text># This Python script runs through all 3-manifold triangulations in this file
+  <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
 # See the Regina handbook for more elaborate sample Python sessions.
@@ -1597,7 +1597,7 @@ t = tri.firstChild()
 while t != None:
 	print t.label() + &quot;:&quot;, t.homology()
 	t = t.nextSibling()
-</text>
+</code>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
 <packet label="Container"

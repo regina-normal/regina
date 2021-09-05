@@ -219,7 +219,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
-void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
+void Triangulation<3>::writeXMLPacketData(std::ostream& out, FileFormat) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 

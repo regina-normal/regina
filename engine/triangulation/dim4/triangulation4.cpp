@@ -170,7 +170,7 @@ long Triangulation<4>::eulerCharManifold() const {
     return ans;
 }
 
-void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
+void Triangulation<4>::writeXMLPacketData(std::ostream& out, FileFormat) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 

@@ -80,6 +80,11 @@ reginadata ::= (&xml-packet;)</synopsis>
       this data file.
      </para>
      <para>
+      If a newer version of &regina; exports to an older &regina; file format,
+      then the <sgmltag>engine</sgmltag> attribute will reflect the
+      newer version of &regina; that actually wrote the file.
+     </para>
+     <para>
       If this file was created by hand or by an external program, the
       <sgmltag>engine</sgmltag> attribute should reflect this (it might
       contain the name and version of the external program, for instance).

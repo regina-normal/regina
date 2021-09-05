@@ -156,7 +156,7 @@ void XMLLegacyPDFReader::endContentSubElement(const std::string& subTagName,
 XMLElementReader* XMLScriptReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "text")
+    if (subTagName == "code" || subTagName == "text")
         return new XMLCharsReader();
     else if (subTagName == "line") // Old-style
         return new XMLCharsReader();
@@ -168,7 +168,7 @@ XMLElementReader* XMLScriptReader::startContentSubElement(
 
 void XMLScriptReader::endContentSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (subTagName == "text")
+    if (subTagName == "code" || subTagName == "text")
         script->setText(dynamic_cast<XMLCharsReader*>(subReader)->chars());
     else if (subTagName == "line") { // Old-style
         script->append(dynamic_cast<XMLCharsReader*>(subReader)->chars());

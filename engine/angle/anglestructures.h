@@ -371,7 +371,8 @@ class AngleStructures : public Packet {
             const Triangulation<3>& triangulation);
 
         virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+        virtual void writeXMLPacketData(std::ostream& out,
+            FileFormat format) const override;
 
         /**
          * Calculate whether the convex span of this list includes a

@@ -150,7 +150,7 @@ bool PDF::savePDF(const char* filename) const {
     return true;
 }
 
-void PDF::writeXMLPacketData(std::ostream& out) const {
+void PDF::writeXMLPacketData(std::ostream& out, FileFormat) const {
     if (! data_) {
         // We have an empty PDF packet.
         out << "  <pdf encoding=\"null\"></pdf>\n";

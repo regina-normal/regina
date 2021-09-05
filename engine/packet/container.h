@@ -80,7 +80,8 @@ class Container : public Packet {
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+        virtual void writeXMLPacketData(std::ostream& out,
+            FileFormat format) const override;
 };
 
 /*@}*/
@@ -102,7 +103,7 @@ inline Packet* Container::internalClonePacket(Packet*) const {
     return new Container();
 }
 
-inline void Container::writeXMLPacketData(std::ostream&) const {
+inline void Container::writeXMLPacketData(std::ostream&, FileFormat) const {
 }
 
 } // namespace regina

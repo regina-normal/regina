@@ -222,6 +222,9 @@ Version 7.0  [ TODO ]
         Class FaithfulAssignment:
             - New type trait to identify which of Regina's integer types
               can be losslessly assigned to which others.
+        Enum FileFormat:
+            - New enumeration to indicate broad classes of interoperable
+              XML file formats.
         Class FileInfo:
             - Added a move constructor and move assignment operator.
             - Added member and global swap() functions.
@@ -682,6 +685,8 @@ Version 7.0  [ TODO ]
               argument by reference.
             - Routines dependsOnParent() and isPacketEditable() are
               deprecated, and now always return false and true respectively.
+            - Routines save() and writeXMLFile() now take an optional
+              XML file format argument.
         Class PacketInfo<...>:
             - Removed completely.
         Class Perm<n>:
@@ -1216,6 +1221,8 @@ Version 7.0  [ TODO ]
         - Gave some of the standard system icons (open, save, close, etc.)
           a long-awaited refresh.
     UTILITIES:
+        regconvert:
+            - Added options -3 and -7 to support old and new XML file formats.
         retriangulate:
             - Now works with knots as well as 3/4-manifold triangulations.
     TEST SUITE:

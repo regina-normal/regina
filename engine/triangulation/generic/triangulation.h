@@ -273,7 +273,8 @@ class Triangulation :
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+        virtual void writeXMLPacketData(std::ostream& out,
+            FileFormat format) const override;
 
     private:
         /**
@@ -537,7 +538,8 @@ inline Packet* Triangulation<dim>::internalClonePacket(Packet* parent) const {
 }
 
 template <int dim>
-void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
+void Triangulation<dim>::writeXMLPacketData(std::ostream& out,
+        FileFormat) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 

@@ -30,6 +30,7 @@
  &data-allowstrict;
  &data-allowtaut;
  &data-angleparams;
+ &data-code;
  &data-compact-filter;
  &data-compact-surface;
  &data-components;

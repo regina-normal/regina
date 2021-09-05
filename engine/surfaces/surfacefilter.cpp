@@ -46,7 +46,7 @@
 
 namespace regina {
 
-void SurfaceFilter::writeXMLPacketData(std::ostream& out) const {
+void SurfaceFilter::writeXMLPacketData(std::ostream& out, FileFormat) const {
     out << "  <filter type=\""
         << regina::xml::xmlEncodeSpecialChars(filterTypeName())
         << "\" typeid=\"" << filterType() << "\">\n";

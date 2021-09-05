@@ -264,7 +264,8 @@ class Script : public Packet, public PacketListener {
 
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+        virtual void writeXMLPacketData(std::ostream& out,
+            FileFormat format) const override;
 };
 
 /*@}*/

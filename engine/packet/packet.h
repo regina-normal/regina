@@ -65,6 +65,36 @@ class SubtreeIterator;
  */
 
 /**
+ * Represents a "roughly interoperable" class of Regina's XML file formats.
+ *
+ * Of course the XML file format is enhanced on a regular basis, as new
+ * XML elements and attributes are added.  This enumeration does not attempt
+ * to capture such incremental changes.
+ *
+ * Instead, this enumeration is intended to capture those large-scale changes
+ * that come with a major loss of backward compatibility, such as the changes
+ * introduced in Regina 7.0 whose XML files essentially cannot be read by
+ * older versions of Regina at all.
+ */
+enum FileFormat {
+    /**
+     * Indicates the XML file format used from Regina 3.0 (when XML was
+     * first used) through to Regina 6.0.1 inclusive.
+     */
+    REGINA_XML_V3 = 3,
+    /**
+     * Indicates the XML file format used from Regina 7.0 onwards.
+     */
+    REGINA_XML_V7 = 7,
+    /**
+     * An alias for whichever file format is newest.  The numerical
+     * value of this constant may change in future releases of Regina,
+     * if a major change to the file format should occur.
+     */
+    REGINA_XML_LATEST = REGINA_XML_V7
+};
+
+/**
  * Defines various constants, types and virtual functions for a
  * subclass of Packet.
  *
@@ -1134,9 +1164,13 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param filename the pathname of the file to write to.
          * @param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
+         * @param format indicates which of Regina's XML file formats to write.
+         * You should use the default (REGINA_XML_LATEST) unless you
+         * need your file to be readable by older versions of Regina.
          * @return \c true if and only if the file was successfully written.
          */
-        bool save(const char* filename, bool compressed = true) const;
+        bool save(const char* filename, bool compressed = true,
+            FileFormat format = REGINA_XML_LATEST) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1156,9 +1190,13 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param s the output stream to which to write.
          * @param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
+         * @param format indicates which of Regina's XML file formats to write.
+         * You should use the default (REGINA_XML_LATEST) unless you
+         * need your file to be readable by older versions of Regina.
          * @return \c true if and only if the data was successfully written.
          */
-        bool save(std::ostream& s, bool compressed = true) const;
+        bool save(std::ostream& s, bool compressed = true,
+            FileFormat format = REGINA_XML_LATEST) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1184,8 +1222,12 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param out the output stream to which the XML data file should
          * be written.
+         * @param format indicates which of Regina's XML file formats to write.
+         * You should use the default (REGINA_XML_LATEST) unless you
+         * need your file to be readable by older versions of Regina.
          */
-        void writeXMLFile(std::ostream& out) const;
+        void writeXMLFile(std::ostream& out,
+            FileFormat format = REGINA_XML_LATEST) const;
 
         /**
          * Returns a unique string ID that identifies this packet.
@@ -1311,11 +1353,11 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * XML file, see routine writeXMLFile() instead.
          *
          * @param out the output stream to which the XML should be written.
+         * @param format indicates which of Regina's XML file formats to write.
          */
-        void writeXMLPacketTree(std::ostream& out) const;
+        void writeXMLPacketTree(std::ostream& out, FileFormat format) const;
         /**
-         * Writes a chunk of XML containing the data for this packet
-         * only.
+         * Writes a chunk of XML containing the data for this packet only.
          *
          * You may assume that the packet opening tag (including
          * the packet type and label) has already been written, and that
@@ -1325,8 +1367,10 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * this specific packet.
          *
          * @param out the output stream to which the XML should be written.
+         * @param format indicates which of Regina's XML file formats to write.
          */
-        virtual void writeXMLPacketData(std::ostream& out) const = 0;
+        virtual void writeXMLPacketData(std::ostream& out,
+            FileFormat format) const = 0;
 
     private:
         /**

@@ -35,7 +35,7 @@
 
 namespace regina {
 
-void Text::writeXMLPacketData(std::ostream& out) const {
+void Text::writeXMLPacketData(std::ostream& out, FileFormat) const {
     out << "  <text>" << regina::xml::xmlEncodeSpecialChars(text_)
         << "</text>\n";
 }

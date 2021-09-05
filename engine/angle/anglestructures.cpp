@@ -210,7 +210,7 @@ void AngleStructures::writeTextLong(std::ostream& o) const {
     }
 }
 
-void AngleStructures::writeXMLPacketData(std::ostream& out) const {
+void AngleStructures::writeXMLPacketData(std::ostream& out, FileFormat) const {
     using regina::xml::xmlValueTag;
 
     // Write the enumeration parameters.
