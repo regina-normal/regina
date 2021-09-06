@@ -1,8 +1,13 @@
 <?xml version="1.0"?>
 <regina engine="7.0">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!</textdata>
-<container label="3-Manifolds" id="oGHBGaN/AAA=">
+<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
+</pdfdata>
+<pdfdata encoding="base64" label="Dummy PDF">
+dGVzdAo=
+</pdfdata>
+</textdata>
+<container label="3-Manifolds and Links" id="AGNBMuJ/AAA=">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
   <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
@@ -19,6 +24,38 @@
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
+<surfaces label="Quad vertex surfaces">
+  <params type="5" algorithm="16" flavourid="1"
+	flavour="Quad normal"/>
+  <surface enc="535" len="21" name=""> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
+	<euler value="0"/>
+	<orbl value="T"/>
+	<twosided value="T"/>
+	<connected value="T"/>
+	<realbdry value="F"/>
+	<compact value="T"/> </surface>
+  <surface enc="535" len="21" name=""> 0 1 7 1 18 1
+	<euler value="0"/>
+	<orbl value="F"/>
+	<twosided value="F"/>
+	<connected value="T"/>
+	<realbdry value="F"/>
+	<compact value="T"/> </surface>
+  <surface enc="535" len="21" name=""> 2 1 3 1 9 1 10 1 19 1
+	<euler value="1"/>
+	<orbl value="F"/>
+	<twosided value="T"/>
+	<connected value="T"/>
+	<realbdry value="F"/>
+	<compact value="T"/> </surface>
+  <surface enc="535" len="21" name=""> 1 1 8 1 20 1
+	<euler value="0"/>
+	<orbl value="T"/>
+	<twosided value="F"/>
+	<connected value="T"/>
+	<realbdry value="F"/>
+	<compact value="T"/> </surface>
+</surfaces>
 </tri>
 <snappeadata label="Figure 8 Knot Complement">% Triangulation
 m004
@@ -59,6 +96,21 @@ CS_unknown
   <spantaut value="T"/>
 </angles>
 </snappeadata>
+<link label="Whitehead link">
+  <crossings size="5">
+  - - + + -
+  </crossings>
+  <connections>
+  _1 ^1
+  _2 ^4
+  _4 ^3
+  _0 ^2
+  _3 ^0
+  </connections>
+  <components size="2">
+  ^0 _0
+  </components>
+</link>
 </container>
 <container label="4-Manifolds">
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
@@ -85,15 +137,33 @@ CS_unknown
   <simplex> 1 4 0 0 1 2 </simplex>
 </tri>
 </container>
+<container label="Higher Dimensions">
+<tri dim="5" size="2" perm="index" label="B4 x~ S1">
+  <simplex> 1 601 -1 -1 -1 -1 -1 -1 -1 -1 1 154 </simplex>
+  <simplex> 0 600 -1 -1 -1 -1 -1 -1 -1 -1 0 153 </simplex>
+</tri>
+<tri dim="8" size="2" perm="imagepack" label="8-sphere">
+  <simplex> 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 </simplex>
+  <simplex> 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 </simplex>
+</tri>
+</container>
 <container label="Normal Surface Filters">
+<filtercomb label="Filter">
+    <op type="or"/>
+<filterprop label="Discs">
+    <euler> 1 </euler>
+    <compact value="T-"/>
+    <realbdry value="T-"/>
+</filterprop>
 <filterprop label="Tori and Annuli">
     <euler> 0 </euler>
     <orbl value="T-"/>
     <compact value="T-"/>
 </filterprop>
+</filtercomb>
 </container>
 <script label="Python Script">
-  <var name="tri" valueid="oGHBGaN/AAA=" value="3-Manifolds"/>
+  <var name="tri" valueid="AGNBMuJ/AAA=" value="3-Manifolds and Links"/>
   <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
