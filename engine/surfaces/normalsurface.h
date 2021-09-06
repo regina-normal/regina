@@ -46,6 +46,7 @@
 #include "core/output.h"
 #include "maths/perm.h"
 #include "maths/vector.h"
+#include "packet/packet.h"
 #include "surfaces/disctype.h"
 #include "surfaces/normalcoords.h"
 #include "triangulation/forward.h"
@@ -59,6 +60,8 @@ namespace regina {
  * Normal surfaces in 3-manifold triangulations.
  * @{
  */
+
+class NormalSurfaces;
 
 /**
  * Lists which quadrilateral types separate which pairs of vertices in a
@@ -885,8 +888,13 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
+         * @param format indicates which of Regina's XML file formats to write.
+         * @param list the enclosing normal hypersurface list.  Currently this
+         * is only relevant when writing to the older REGINA_XML_V3 format;
+         * it will be ignored (and may be \c null) for newer file formats.
          */
-        void writeXMLData(std::ostream& out) const;
+        void writeXMLData(std::ostream& out, FileFormat format,
+            const NormalSurfaces* list) const;
 
         /**
          * Determines if this normal surface is empty (has no discs

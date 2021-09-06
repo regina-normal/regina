@@ -33,7 +33,6 @@
 #include <algorithm>
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
-#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
@@ -409,22 +408,47 @@ std::optional<MatrixInt> NormalSurface::boundaryIntersections() const {
     return slopes;
 }
 
-void NormalSurface::writeXMLData(std::ostream& out) const {
+void NormalSurface::writeXMLData(std::ostream& out, FileFormat format,
+        const NormalSurfaces* list) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    // Write the opening tag including vector length.
-    size_t vecLen = vector_.size();
-    out << "  <surface "
-        "enc=\"" << enc_.intValue() << "\" "
-        "len=\"" << vecLen << "\" "
-        "name=\"" << xmlEncodeSpecialChars(name_) << "\">";
+    bool stripTriangles = (format == REGINA_XML_V3 && list &&
+        enc_.storesTriangles() &&
+        ! NormalEncoding(list->coords()).storesTriangles());
 
-    // Write all non-zero entries.
-    for (size_t i = 0; i < vecLen; i++) {
-        LargeInteger entry = vector_[i];
-        if (entry != 0)
-            out << ' ' << i << ' ' << entry;
+    if (! stripTriangles) {
+        // Write the opening tag including vector length.
+        size_t vecLen = vector_.size();
+        out << "  <surface";
+        if (format != REGINA_XML_V3)
+            out << " enc=\"" << enc_.intValue() << '\"';
+        out << " len=\"" << vecLen << '\"';
+        if (format == REGINA_XML_V3 || ! name_.empty())
+            out << " name=\"" << xmlEncodeSpecialChars(name_) << '\"';
+        out << '>';
+
+        // Write all non-zero entries.
+        for (size_t i = 0; i < vecLen; i++) {
+            LargeInteger entry = vector_[i];
+            if (entry != 0)
+                out << ' ' << i << ' ' << entry;
+        }
+    } else {
+        // We know this is REGINA_XML_V3.
+        int oldBlock = enc_.block();
+        int newBlock = oldBlock - 4;
+        size_t nBlocks = vector_.size() / oldBlock;
+
+        out << "  <surface len=\"" << (nBlocks * newBlock) << "\""
+            " name=\"" << xmlEncodeSpecialChars(name_) << "\">";
+
+        for (size_t i = 0; i < nBlocks; ++i)
+            for (int j = 0; j < newBlock; ++j) {
+                LargeInteger entry = vector_[(i * oldBlock) + j + 4];
+                if (entry != 0)
+                    out << ' ' << ((i * newBlock) + j) << ' ' << entry;
+            }
     }
 
     // Write properties.

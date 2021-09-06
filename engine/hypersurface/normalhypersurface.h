@@ -47,6 +47,7 @@
 #include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/vector.h"
+#include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 #include "utilities/snapshot.h"
@@ -58,6 +59,8 @@ namespace regina {
  * Normal hypersurfaces in 4-manifold triangulations.
  * @{
  */
+
+class NormalHypersurfaces;
 
 template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
@@ -667,8 +670,13 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
+         * @param format indicates which of Regina's XML file formats to write.
+         * @param list the enclosing normal hypersurface list.  Currently this
+         * is only relevant when writing to the older REGINA_XML_V3 format;
+         * it will be ignored (and may be \c null) for newer file formats.
          */
-        void writeXMLData(std::ostream& out) const;
+        void writeXMLData(std::ostream& out, FileFormat format,
+            const NormalHypersurfaces* list) const;
 
         /**
          * Determines if this normal hypersurface is empty (has no

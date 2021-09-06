@@ -116,7 +116,7 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
 
     // Write the individual hypersurfaces.
     for (auto it = surfaces_.begin(); it != surfaces_.end(); it++)
-        it->writeXMLData(out);
+        it->writeXMLData(out, format, this);
 
     writeXMLFooter(out, "hypersurfaces", format);
 }

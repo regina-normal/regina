@@ -124,7 +124,7 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out,
 
     // Write the individual surfaces.
     for (const NormalSurface& s : surfaces_)
-        s.writeXMLData(out);
+        s.writeXMLData(out, format, this);
 
     writeXMLFooter(out, "surfaces", format);
 }

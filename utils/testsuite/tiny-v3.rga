@@ -71,7 +71,7 @@ dGVzdAo=
 	<connected value="T"/>
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
-  <surface len="9" name=""> 7 1
+  <surface len="9" name="RP²"> 7 1
 	<euler value="1"/>
 	<orbl value="F"/>
 	<twosided value="T"/>
@@ -169,7 +169,7 @@ CS_unknown
   <hypersurface len="30" name=""> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface len="30" name=""> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
   <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
-  <hypersurface len="30" name=""> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
+  <hypersurface len="30" name="Vertex link"> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
 </packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
 </packet> <!-- Twisted S³ x~ S¹ (4_Manifold Triangulation) -->
 </packet> <!-- 4_Manifolds (Container) -->

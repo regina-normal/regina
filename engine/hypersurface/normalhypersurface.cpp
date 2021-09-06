@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "hypersurface/normalhypersurface.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "utilities/xmlutils.h"
@@ -104,22 +104,47 @@ void NormalHypersurface::writeTextShort(std::ostream& out) const {
     }
 }
 
-void NormalHypersurface::writeXMLData(std::ostream& out) const {
+void NormalHypersurface::writeXMLData(std::ostream& out, FileFormat format,
+        const NormalHypersurfaces* list) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    // Write the opening tag including vector length.
-    size_t vecLen = vector_.size();
-    out << "  <hypersurface "
-        "enc=\"" << enc_.intValue() << "\" "
-        "len=\"" << vecLen << "\" "
-        "name=\"" << xmlEncodeSpecialChars(name_) << "\">";
+    bool stripTetrahedra = (format == REGINA_XML_V3 && list &&
+        enc_.storesTetrahedra() &&
+        ! HyperEncoding(list->coords()).storesTetrahedra());
 
-    // Write all non-zero entries.
-    for (size_t i = 0; i < vecLen; i++) {
-        LargeInteger entry = vector_[i];
-        if (entry != 0)
-            out << ' ' << i << ' ' << entry;
+    if (! stripTetrahedra) {
+        // Write the opening tag including vector length.
+        size_t vecLen = vector_.size();
+        out << "  <hypersurface";
+        if (format != REGINA_XML_V3)
+            out << " enc=\"" << enc_.intValue() << '\"';
+        out << " len=\"" << vecLen << '\"';
+        if (format == REGINA_XML_V3 || ! name_.empty())
+            out << " name=\"" << xmlEncodeSpecialChars(name_) << '\"';
+        out << '>';
+
+        // Write all non-zero entries.
+        for (size_t i = 0; i < vecLen; i++) {
+            LargeInteger entry = vector_[i];
+            if (entry != 0)
+                out << ' ' << i << ' ' << entry;
+        }
+    } else {
+        // We know this is REGINA_XML_V3.
+        int oldBlock = enc_.block();
+        int newBlock = oldBlock - 5;
+        size_t nBlocks = vector_.size() / oldBlock;
+
+        out << "  <hypersurface len=\"" << (nBlocks * newBlock) << "\""
+            " name=\"" << xmlEncodeSpecialChars(name_) << "\">";
+
+        for (size_t i = 0; i < nBlocks; ++i)
+            for (int j = 0; j < newBlock; ++j) {
+                LargeInteger entry = vector_[(i * oldBlock) + j + 5];
+                if (entry != 0)
+                    out << ' ' << ((i * newBlock) + j) << ' ' << entry;
+            }
     }
 
     // Write properties.

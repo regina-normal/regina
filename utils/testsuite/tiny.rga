@@ -7,7 +7,7 @@
 dGVzdAo=
 </pdfdata>
 </textdata>
-<container label="3-Manifolds and Links" id="AGNBMuJ/AAA=">
+<container label="3-Manifolds and Links" id="AGPBG6d/AAA=">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
   <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
@@ -27,28 +27,28 @@ dGVzdAo=
 <surfaces label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
-  <surface enc="535" len="21" name=""> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
+  <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
-  <surface enc="535" len="21" name=""> 0 1 7 1 18 1
+  <surface enc="535" len="21"> 0 1 7 1 18 1
 	<euler value="0"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
-  <surface enc="535" len="21" name=""> 2 1 3 1 9 1 10 1 19 1
+  <surface enc="535" len="21" name="RP²"> 2 1 3 1 9 1 10 1 19 1
 	<euler value="1"/>
 	<orbl value="F"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
-  <surface enc="535" len="21" name=""> 1 1 8 1 20 1
+  <surface enc="535" len="21"> 1 1 8 1 20 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="F"/>
@@ -119,11 +119,11 @@ CS_unknown
 <hypersurfaces label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
-  <hypersurface enc="287" len="30" name=""> 10 1 25 1 </hypersurface>
-  <hypersurface enc="287" len="30" name=""> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
-  <hypersurface enc="287" len="30" name=""> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
-  <hypersurface enc="287" len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
-  <hypersurface enc="287" len="30" name=""> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
+  <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
+  <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
+  <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
+  <hypersurface enc="287" len="30"> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
+  <hypersurface enc="287" len="30" name="Vertex link"> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
 </hypersurfaces>
 </tri>
 </container>
@@ -163,7 +163,7 @@ CS_unknown
 </filtercomb>
 </container>
 <script label="Python Script">
-  <var name="tri" valueid="AGNBMuJ/AAA=" value="3-Manifolds and Links"/>
+  <var name="tri" valueid="AGPBG6d/AAA=" value="3-Manifolds and Links"/>
   <code># This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
 #
