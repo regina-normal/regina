@@ -161,6 +161,8 @@ void PDF::writeXMLPacketData(std::ostream& out, FileFormat format) const {
         // Either we have an empty PDF packet, or the base64 conversion failed.
         writeXMLHeader(out, "pdfdata", format, true,
             std::pair("encoding", "null"));
+        if (format == REGINA_XML_V3)
+            out << "  <pdf encoding=\"null\"></pdf>\n";
         writeXMLFooter(out, "pdfdata", format);
         return;
     }
