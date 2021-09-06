@@ -543,12 +543,13 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out,
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    writeXMLHeader(out, "tri", format, true, std::pair("dim", dim));
+    constexpr bool useSnIndex = (Perm<dim + 1>::codeType == PERM_CODE_INDEX);
+
+    writeXMLHeader(out, "tri", format, true,
+        std::pair("dim", dim), std::pair("size", simplices_.size()),
+        std::pair("perm", (useSnIndex ? "index" : "imagepack")));
 
     // Write the simplex gluings.
-    Simplex<dim>* adj;
-    int facet;
-
     // We will send permutation codes directly to the output stream.
     // This requires them to be numeric types (not character types).
     static_assert(! (
@@ -558,21 +559,45 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out,
         "The generic implementation of Triangulation<dim>::writeXMLPacketData "
         "requires permutation codes to be numeric types.");
 
-    out << "  <simplices size=\"" << simplices_.size() << "\">\n";
-    for (auto s : simplices_) {
-        out << "    <simplex desc=\"" <<
-            xmlEncodeSpecialChars(s->description()) << "\"> ";
-        for (facet = 0; facet <= dim; ++facet) {
-            adj = s->adjacentSimplex(facet);
-            if (adj) {
-                out << adj->index() << ' '
-                    << s->adjacentGluing(facet).imagePack() << ' ';
-            } else
-                out << "-1 -1 ";
+    if (format == REGINA_XML_V3) {
+        out << "  <simplices size=\"" << simplices_.size() << "\">\n";
+        for (auto s : simplices_) {
+            out << "    <simplex desc=\"" <<
+                xmlEncodeSpecialChars(s->description()) << "\"> ";
+            for (int facet = 0; facet <= dim; ++facet) {
+                Simplex<dim>* adj = s->adjacentSimplex(facet);
+                if (adj) {
+                    out << adj->index() << ' '
+                        << s->adjacentGluing(facet).imagePack() << ' ';
+                } else
+                    out << "-1 -1 ";
+            }
+            out << "</simplex>\n";
         }
-        out << "</simplex>\n";
+        out << "  </simplices>\n";
+    } else {
+        for (auto s : simplices_) {
+            if (s->description().empty())
+                out << "  <simplex> ";
+            else
+                out << "  <simplex desc=\"" <<
+                    xmlEncodeSpecialChars(s->description()) << "\"> ";
+            for (int facet = 0; facet <= dim; ++facet) {
+                Simplex<dim>* adj = s->adjacentSimplex(facet);
+                if (adj) {
+                    if constexpr (useSnIndex) {
+                        out << adj->index() << ' '
+                            << s->adjacentGluing(facet).SnIndex() << ' ';
+                    } else {
+                        out << adj->index() << ' '
+                            << s->adjacentGluing(facet).imagePack() << ' ';
+                    }
+                } else
+                    out << "-1 -1 ";
+            }
+            out << "</simplex>\n";
+        }
     }
-    out << "  </simplices>\n";
 
     detail::TriangulationBase<dim>::writeXMLBaseProperties(out);
 

@@ -175,27 +175,45 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out,
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    writeXMLHeader(out, "tri", format, true, std::pair("dim", 4));
+    writeXMLHeader(out, "tri", format, true,
+        std::pair("dim", 4), std::pair("size", simplices_.size()),
+        std::pair("perm", "index"));
 
     // Write the pentachoron gluings.
-    Pentachoron<4>* adjPent;
-    int facet;
-
-    out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
-    for (Pentachoron<4>* p : simplices_) {
-        out << "    <pent desc=\"" <<
-            xmlEncodeSpecialChars(p->description()) << "\"> ";
-        for (facet = 0; facet < 5; ++facet) {
-            adjPent = p->adjacentPentachoron(facet);
-            if (adjPent) {
-                out << adjPent->index() << ' '
-                    << p->adjacentGluing(facet).imagePack() << ' ';
-            } else
-                out << "-1 -1 ";
+    if (format == REGINA_XML_V3) {
+        out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
+        for (Pentachoron<4>* p : simplices_) {
+            out << "    <pent desc=\"" <<
+                xmlEncodeSpecialChars(p->description()) << "\"> ";
+            for (int facet = 0; facet < 5; ++facet) {
+                Pentachoron<4>* adjPent = p->adjacentPentachoron(facet);
+                if (adjPent) {
+                    out << adjPent->index() << ' '
+                        << p->adjacentGluing(facet).imagePack() << ' ';
+                } else
+                    out << "-1 -1 ";
+            }
+            out << "</pent>\n";
         }
-        out << "</pent>\n";
+        out << "  </pentachora>\n";
+    } else {
+        for (Pentachoron<4>* p : simplices_) {
+            if (p->description().empty())
+                out << "  <simplex> ";
+            else
+                out << "  <simplex desc=\"" <<
+                    xmlEncodeSpecialChars(p->description()) << "\"> ";
+            for (int facet = 0; facet < 5; ++facet) {
+                Pentachoron<4>* adjPent = p->adjacentPentachoron(facet);
+                if (adjPent) {
+                    out << adjPent->index() << ' '
+                        << p->adjacentGluing(facet).SnIndex() << ' ';
+                } else
+                    out << "-1 -1 ";
+            }
+            out << "</simplex>\n";
+        }
     }
-    out << "  </pentachora>\n";
 
     writeXMLBaseProperties(out);
 

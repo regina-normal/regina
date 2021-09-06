@@ -68,8 +68,14 @@ class XMLTriangulationReader<3> : public XMLTriangulationReaderBase<3> {
          *
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
+         * @param size the total number of tetrahedra in the triangulation.
+         * This should be 0 if we are reading the old Regina 6.x file format.
+         * @param permIndex \c true if permutations are stored as indices into
+         * Sn, or \c false if they are stored as image packs.
+         * This will be ignored when reading the old Regina 6.x file format.
          */
-        XMLTriangulationReader(XMLTreeResolver& resolver);
+        XMLTriangulationReader(XMLTreeResolver& resolver, size_t size,
+            bool permIndex);
 
         /**
          * Returns an XML element reader for the given optional property of a
@@ -100,8 +106,8 @@ class XMLTriangulationReader<3> : public XMLTriangulationReaderBase<3> {
 // Inline functions for XMLTriangulationReader<3>
 
 inline XMLTriangulationReader<3>::XMLTriangulationReader(
-        XMLTreeResolver& resolver) :
-        XMLTriangulationReaderBase<3>(resolver) {
+        XMLTreeResolver& resolver, size_t size, bool permIndex) :
+        XMLTriangulationReaderBase<3>(resolver, size, permIndex) {
 }
 
 } // namespace regina

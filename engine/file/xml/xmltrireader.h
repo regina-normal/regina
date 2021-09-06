@@ -54,15 +54,16 @@ namespace regina {
  */
 
 /**
- * Internal class that indicates the XML tags and attributes used to describe
- * top-dimensional simplices in a <i>dim</i>-dimensional triangulation.
+ * Internal class that indicates the XML tags and attributes used in the
+ * old Regina 6.x file format to describe top-dimensional simplices in a
+ * <i>dim</i>-dimensional triangulation.
  *
  * \ifacespython Not present.
  *
  * \tparam dim The dimension of the triangulation in question.
  */
 template <int dim>
-struct XMLTriangulationTags {
+struct XMLLegacyTriangulationTags {
     static constexpr const char* simplices = "simplices";
         /**< The XML tag that stores the set of all top-dimensional
              simplices for a <i>dim</i>-dimensional triangulation. */
@@ -76,21 +77,21 @@ struct XMLTriangulationTags {
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
 template <>
-struct XMLTriangulationTags<4> {
+struct XMLLegacyTriangulationTags<4> {
     static constexpr const char* simplices = "pentachora";
     static constexpr const char* simplex = "pent";
     static constexpr const char* size = "npent";
 };
 
 template <>
-struct XMLTriangulationTags<3> {
+struct XMLLegacyTriangulationTags<3> {
     static constexpr const char* simplices = "tetrahedra";
     static constexpr const char* simplex = "tet";
     static constexpr const char* size = "ntet";
 };
 
 template <>
-struct XMLTriangulationTags<2> {
+struct XMLLegacyTriangulationTags<2> {
     static constexpr const char* simplices = "triangles";
     static constexpr const char* simplex = "triangle";
     static constexpr const char* size = "ntriangles";
@@ -120,6 +121,9 @@ class XMLSimplexReader : public XMLElementReader {
             /**< The triangulation containing the simplices being read. */
         Simplex<dim>* simplex_;
             /**< The specific simplex being read. */
+        bool permIndex_;
+            /**< \c true if permutations are stored as indices into Sn, or
+                 \c false if they are stored as image packs. */
 
     public:
         /**
@@ -131,8 +135,13 @@ class XMLSimplexReader : public XMLElementReader {
          * @param tri the triangulation containing the simplex being read.
          * @param whichSimplex the index of the simplex being read
          * within the triangulation \a tri.
+         * @param permIndex \c true if permutations are stored as indices into
+         * Sn, or \c false if they are stored as image packs.
+         * This must always be specified, regardless of which XML file format
+         * we are reading.
          */
-        XMLSimplexReader(Triangulation<dim>* tri, size_t whichSimplex);
+        XMLSimplexReader(Triangulation<dim>* tri, size_t whichSimplex,
+            bool permIndex);
 
         virtual void startElement(const std::string&,
                 const regina::xml::XMLPropertyDict& props, XMLElementReader*)
@@ -142,8 +151,9 @@ class XMLSimplexReader : public XMLElementReader {
 };
 
 /**
- * Helper class that reads the XML element for the set of all top-dimensional
- * simplices in a <i>dim</i>-dimensional triangulation.
+ * Helper class that reads the XML element in the old Regina 6.x format
+ * for the set of all top-dimensional simplices in a <i>dim</i>-dimensional
+ * triangulation.
  * In other words, this reads the contents of a single &lt;simplices&gt;
  * element for dimension \a dim &ge; 5, or a single &lt;triangles&gt;,
  * &lt;tetrahedra&gt; or &lt;pentachora&gt; element for dimension
@@ -157,14 +167,13 @@ class XMLSimplexReader : public XMLElementReader {
  * \tparam dim The dimension of the triangulation being read.
  */
 template <int dim>
-class XMLSimplicesReader : public XMLElementReader {
+class XMLLegacySimplicesReader : public XMLElementReader {
     private:
         Triangulation<dim>* tri_;
             /**< The triangulation to contain the simplices being read. */
-        size_t readSimplices_;
-            /**< The number of simplices in the triangulation, as defined by
-                 the \c size attribute of this tag (or, in standard dimensions,
-                 the \c ntriangles, \c ntet or \c npent attribute instead). */
+        size_t& readSimplices_;
+            /**< Used to update the number of top-dimensional simplices that
+                 have been read so far. */
 
     public:
         /**
@@ -174,8 +183,11 @@ class XMLSimplicesReader : public XMLElementReader {
          * be created by this reader.
          *
          * @param tri the triangulation being read.
+         * @param readSimplices a reference to the counter that needs to
+         * track the number of top-dimensional simplices read so far.
          */
-        XMLSimplicesReader(Triangulation<dim>* tri);
+        XMLLegacySimplicesReader(Triangulation<dim>* tri,
+            size_t& readSimplices);
 
         virtual void startElement(const std::string&,
                 const regina::xml::XMLPropertyDict& props, XMLElementReader*)
@@ -204,6 +216,12 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
     protected:
         Triangulation<dim>* tri_;
             /**< The triangulation currently being read. */
+        bool permIndex_;
+            /**< \c true if permutations are stored as indices into Sn, or
+                 \c false if they are stored as image packs. */
+        size_t readSimplices_;
+            /**< Maintains the number of top-dimensional simplices that
+                 have been read so far. */
 
     public:
         /**
@@ -211,8 +229,15 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          *
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
+         * @param size the total number of top-dimensional simplices in the
+         * triangulation.  This should be 0 if we are reading the old
+         * Regina 6.x file format.
+         * @param permIndex \c true if permutations are stored as indices into
+         * Sn, or \c false if they are stored as image packs.
+         * This will be ignored when reading the old Regina 6.x file format.
          */
-        XMLTriangulationReaderBase(XMLTreeResolver& resolver);
+        XMLTriangulationReaderBase(XMLTreeResolver& resolver, size_t size,
+            bool permIndex);
 
         virtual Packet* packet() override;
         virtual XMLElementReader* startContentSubElement(
@@ -329,8 +354,15 @@ class XMLTriangulationReader : public XMLTriangulationReaderBase<dim> {
          *
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
+         * @param size the total number of top-dimensional simplices in the
+         * triangulation.  This should be 0 if we are reading the old
+         * Regina 6.x file format.
+         * @param permIndex \c true if permutations are stored as indices into
+         * Sn, or \c false if they are stored as image packs.
+         * This will be ignored when reading the old Regina 6.x file format.
          */
-        XMLTriangulationReader(XMLTreeResolver& resolver);
+        XMLTriangulationReader(XMLTreeResolver& resolver, size_t size,
+            bool permIndex);
 
         /**
          * Returns an XML element reader for the given optional property of a
@@ -368,14 +400,17 @@ template <> class XMLTriangulationReader<4>;
 
 template <int dim>
 inline XMLSimplexReader<dim>::XMLSimplexReader(
-        Triangulation<dim>* tri, size_t whichSimplex) :
-        tri_(tri), simplex_(tri->simplices()[whichSimplex]) {
+        Triangulation<dim>* tri, size_t whichSimplex, bool permIndex) :
+        tri_(tri), simplex_(tri->simplices()[whichSimplex]),
+        permIndex_(permIndex) {
 }
 
 template <int dim>
 inline void XMLSimplexReader<dim>::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
-    simplex_->setDescription(props.lookup("desc"));
+    auto desc = props.find("desc");
+    if (desc != props.end())
+        simplex_->setDescription(desc->second);
 }
 
 template <int dim>
@@ -395,21 +430,27 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
             continue;
 
         if constexpr (dim == 2) {
-            // In dimension 2, we store permutations as indices into S3.
-            typename Perm<dim + 1>::Index permCode;
-            if (! valueOf(tokens[2 * k + 1], permCode))
+            // Image packs are not supported at all by Perm<3>.
+            typename Perm<dim + 1>::Index permIndex;
+            if (! valueOf(tokens[2 * k + 1], permIndex))
                 continue;
-            if (permCode < 0 || permCode >= Perm<dim + 1>::nPerms)
+            if (permIndex < 0 || permIndex >= Perm<dim + 1>::nPerms)
                 continue;
-            perm = Perm<dim + 1>::Sn[permCode];
+            perm = Perm<dim + 1>::Sn[permIndex];
+        } else if (permIndex_) {
+            typename Perm<dim + 1>::Index permIndex;
+            if (! valueOf(tokens[2 * k + 1], permIndex))
+                continue;
+            if (permIndex < 0 || permIndex >= Perm<dim + 1>::nPerms)
+                continue;
+            perm = Perm<dim + 1>::Sn[permIndex];
         } else {
-            // All other dimensions store permutations as image packs.
-            typename Perm<dim + 1>::ImagePack permCode;
-            if (! valueOf(tokens[2 * k + 1], permCode))
+            typename Perm<dim + 1>::ImagePack imagePack;
+            if (! valueOf(tokens[2 * k + 1], imagePack))
                 continue;
-            if (! Perm<dim + 1>::isImagePack(permCode))
+            if (! Perm<dim + 1>::isImagePack(imagePack))
                 continue;
-            perm = Perm<dim + 1>::fromImagePack(permCode);
+            perm = Perm<dim + 1>::fromImagePack(imagePack);
         }
 
         adjSimp = tri_->simplices()[simpIndex];
@@ -425,29 +466,31 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
     }
 }
 
-// Implementation details for XMLSimplicesReader
+// Implementation details for XMLLegacySimplicesReader
 
 template <int dim>
-inline XMLSimplicesReader<dim>::XMLSimplicesReader(Triangulation<dim>* tri) :
-        tri_(tri), readSimplices_(0) {
+inline XMLLegacySimplicesReader<dim>::XMLLegacySimplicesReader(
+        Triangulation<dim>* tri, size_t& readSimplices) :
+        tri_(tri), readSimplices_(readSimplices) {
 }
 
 template <int dim>
-void XMLSimplicesReader<dim>::startElement(const std::string& /* tagName */,
+void XMLLegacySimplicesReader<dim>::startElement(
+        const std::string& /* tagName */,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
-    long nSimplices;
-    if (valueOf(props.lookup(XMLTriangulationTags<dim>::size), nSimplices))
-        for ( ; nSimplices > 0; --nSimplices)
+    long size;
+    if (valueOf(props.lookup(XMLLegacyTriangulationTags<dim>::size), size))
+        for ( ; size > 0; --size)
             tri_->newSimplex();
 }
 
 template <int dim>
-XMLElementReader* XMLSimplicesReader<dim>::startSubElement(
+XMLElementReader* XMLLegacySimplicesReader<dim>::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
-    if (subTagName == XMLTriangulationTags<dim>::simplex) {
+    if (subTagName == XMLLegacyTriangulationTags<dim>::simplex) {
         if (readSimplices_ < tri_->size())
-            return new XMLSimplexReader<dim>(tri_, readSimplices_++);
+            return new XMLSimplexReader<dim>(tri_, readSimplices_++, dim == 2);
         else
             return new XMLElementReader();
     } else
@@ -458,8 +501,11 @@ XMLElementReader* XMLSimplicesReader<dim>::startSubElement(
 
 template <int dim>
 inline XMLTriangulationReaderBase<dim>::XMLTriangulationReaderBase(
-        XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), tri_(new Triangulation<dim>()) {
+        XMLTreeResolver& resolver, size_t size, bool permIndex) :
+        XMLPacketReader(resolver), tri_(new Triangulation<dim>()),
+        permIndex_(permIndex), readSimplices_(0) {
+    for ( ; size > 0; --size)
+        tri_->newSimplex();
 }
 
 template <int dim>
@@ -471,10 +517,17 @@ template <int dim>
 XMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
-    if (subTagName == XMLTriangulationTags<dim>::simplices)
-        return new XMLSimplicesReader<dim>(tri_);
-    return static_cast<XMLTriangulationReader<dim>*>(this)->
-        startPropertySubElement(subTagName, subTagProps);
+    if (subTagName == "simplex") {
+        if (readSimplices_ < tri_->size())
+            return new XMLSimplexReader<dim>(tri_, readSimplices_++,
+                permIndex_);
+        else
+            return new XMLElementReader();
+    } else if (subTagName == XMLLegacyTriangulationTags<dim>::simplices)
+        return new XMLLegacySimplicesReader<dim>(tri_, readSimplices_);
+    else
+        return static_cast<XMLTriangulationReader<dim>*>(this)->
+            startPropertySubElement(subTagName, subTagProps);
 }
 
 template <int dim>
@@ -486,8 +539,8 @@ inline void XMLTriangulationReaderBase<dim>::endContentSubElement(
 
 template <int dim>
 inline XMLTriangulationReader<dim>::XMLTriangulationReader(
-        XMLTreeResolver& resolver) :
-        XMLTriangulationReaderBase<dim>(resolver) {
+        XMLTreeResolver& resolver, size_t size, bool permIndex) :
+        XMLTriangulationReaderBase<dim>(resolver, size, permIndex) {
 }
 
 template <int dim>

@@ -224,28 +224,47 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out,
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    writeXMLHeader(out, "tri", format, true, std::pair("dim", 3));
+    writeXMLHeader(out, "tri", format, true,
+        std::pair("dim", 3), std::pair("size", simplices_.size()),
+        std::pair("perm", "index"));
 
     // Write the tetrahedron gluings.
-    Tetrahedron<3>* adjTet;
-    int face;
-
-    out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
-    for (Tetrahedron<3>* t : simplices_) {
-        out << "    <tet desc=\"" <<
-            xmlEncodeSpecialChars(t->description()) << "\"> ";
-        for (face = 0; face < 4; face++) {
-            adjTet = t->adjacentTetrahedron(face);
-            if (adjTet) {
-                out << adjTet->index() << ' '
-                    << static_cast<int>(t->adjacentGluing(face).imagePack())
-                    << ' ';
-            } else
-                out << "-1 -1 ";
+    if (format == REGINA_XML_V3) {
+        out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
+        for (Tetrahedron<3>* t : simplices_) {
+            out << "    <tet desc=\"" <<
+                xmlEncodeSpecialChars(t->description()) << "\"> ";
+            for (int face = 0; face < 4; face++) {
+                Tetrahedron<3>* adjTet = t->adjacentTetrahedron(face);
+                if (adjTet) {
+                    out << adjTet->index() << ' '
+                        << static_cast<int>(t->adjacentGluing(face).imagePack())
+                        << ' ';
+                } else
+                    out << "-1 -1 ";
+            }
+            out << "</tet>\n";
         }
-        out << "</tet>\n";
+        out << "  </tetrahedra>\n";
+    } else {
+        for (Tetrahedron<3>* t : simplices_) {
+            if (t->description().empty())
+                out << "  <simplex> ";
+            else
+                out << "  <simplex desc=\"" <<
+                    xmlEncodeSpecialChars(t->description()) << "\"> ";
+            for (int face = 0; face < 4; face++) {
+                Tetrahedron<3>* adjTet = t->adjacentTetrahedron(face);
+                if (adjTet) {
+                    out << adjTet->index() << ' '
+                        << static_cast<int>(t->adjacentGluing(face).SnIndex())
+                        << ' ';
+                } else
+                    out << "-1 -1 ";
+            }
+            out << "</simplex>\n";
+        }
     }
-    out << "  </tetrahedra>\n";
 
     writeXMLBaseProperties(out);
 

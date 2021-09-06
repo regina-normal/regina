@@ -102,6 +102,12 @@ XMLElementReader* XMLPacketReader::startSubElement(
         }
         // All remaining cases are genuine child packets.
         // Confirm exactly what kind of child packet we are reading.
+
+        // We will need to fetch and store the following two properties
+        // for triangulations.
+        long size = 0;
+        bool permIndex = (xmlTagType == PACKET_TRIANGULATION2);
+
         if (xmlTagType == PACKET_LEGACY_CHILD) {
             // This is a <packet typeid=...>...</packet> element from the
             // older Regina 6.x file format.
@@ -127,6 +133,23 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 case 4: xmlTagType = PACKET_TRIANGULATION4; break;
                 default: xmlTagType = 100 + dim; /* 105 .. 115 */ break;
             }
+
+            // Fetch the number of top-dimensional simplices.
+            prop = subTagProps.find("size");
+            if (! (prop != subTagProps.end() && valueOf(prop->second, size) &&
+                    size >= 0))
+                return new XMLPacketReader(resolver_);
+
+            // Identify how permutations are stored.
+            prop = subTagProps.find("perm");
+            if (prop == subTagProps.end())
+                return new XMLPacketReader(resolver_);
+            if (prop->second == "index")
+                permIndex = true;
+            else if (prop->second == "imagepack")
+                permIndex = false;
+            else
+                return new XMLPacketReader(resolver_);
         }
 
         // Fetch some properties that we will need once the child reader
@@ -148,7 +171,8 @@ XMLElementReader* XMLPacketReader::startSubElement(
             case PACKET_V7_TEXT:
                 return childReader_ = new XMLTextReader(resolver_);
             case PACKET_TRIANGULATION3:
-                return childReader_ = new XMLTriangulationReader<3>(resolver_);
+                return childReader_ = new XMLTriangulationReader<3>(
+                    resolver_, size, permIndex);
             case PACKET_NORMALSURFACES:
                 return childReader_ = new XMLNormalSurfacesReader(
                     dynamic_cast<Triangulation<3>*>(packet()), resolver_);
@@ -170,9 +194,11 @@ XMLElementReader* XMLPacketReader::startSubElement(
             case PACKET_V7_PDF:
                 return childReader_ = new XMLPDFReader(resolver_);
             case PACKET_TRIANGULATION2:
-                return childReader_ = new XMLTriangulationReader<2>(resolver_);
+                return childReader_ = new XMLTriangulationReader<2>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION4:
-                return childReader_ = new XMLTriangulationReader<4>(resolver_);
+                return childReader_ = new XMLTriangulationReader<4>(
+                    resolver_, size, permIndex);
             case PACKET_NORMALHYPERSURFACES:
                 return childReader_ = new XMLNormalHypersurfacesReader(
                     dynamic_cast<Triangulation<4>*>(packet()), resolver_);
@@ -184,27 +210,38 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 return childReader_ = new XMLLinkReader(resolver_);
 #ifndef REGINA_LOWDIMONLY
             case PACKET_TRIANGULATION5:
-                return childReader_ = new XMLTriangulationReader<5>(resolver_);
+                return childReader_ = new XMLTriangulationReader<5>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION6:
-                return childReader_ = new XMLTriangulationReader<6>(resolver_);
+                return childReader_ = new XMLTriangulationReader<6>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION7:
-                return childReader_ = new XMLTriangulationReader<7>(resolver_);
+                return childReader_ = new XMLTriangulationReader<7>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION8:
-                return childReader_ = new XMLTriangulationReader<8>(resolver_);
+                return childReader_ = new XMLTriangulationReader<8>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION9:
-                return childReader_ = new XMLTriangulationReader<9>(resolver_);
+                return childReader_ = new XMLTriangulationReader<9>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION10:
-                return childReader_ = new XMLTriangulationReader<10>(resolver_);
+                return childReader_ = new XMLTriangulationReader<10>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION11:
-                return childReader_ = new XMLTriangulationReader<11>(resolver_);
+                return childReader_ = new XMLTriangulationReader<11>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION12:
-                return childReader_ = new XMLTriangulationReader<12>(resolver_);
+                return childReader_ = new XMLTriangulationReader<12>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION13:
-                return childReader_ = new XMLTriangulationReader<13>(resolver_);
+                return childReader_ = new XMLTriangulationReader<13>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION14:
-                return childReader_ = new XMLTriangulationReader<14>(resolver_);
+                return childReader_ = new XMLTriangulationReader<14>(
+                    resolver_, size, permIndex);
             case PACKET_TRIANGULATION15:
-                return childReader_ = new XMLTriangulationReader<15>(resolver_);
+                return childReader_ = new XMLTriangulationReader<15>(
+                    resolver_, size, permIndex);
 #endif /* ! REGINA_LOWDIMONLY */
             default:
                 return childReader_ = new XMLPacketReader(resolver_);
