@@ -189,7 +189,7 @@ TEST: regconvert -3 @TESTDIR@/tiny.rga
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
-    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
+    <tet desc="Happy π day!"> 2 54 2 156 0 135 0 120 </tet>
     <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
@@ -353,7 +353,7 @@ Output (compressed):
 </packet> <!-- Container (Container) -->
 </reginadata>
 ============================================================
-TEST: regconvert -3 @TESTDIR@/tiny.rga @TESTOUT@
+TEST: regconvert -3 @TESTDIR@/tiny-v3.rga @TESTOUT@
 --------------------
 --------------------
 Exit code: 0
@@ -373,7 +373,7 @@ Output (compressed):
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
-    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
+    <tet desc="Happy π day!"> 2 54 2 156 0 135 0 120 </tet>
     <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
@@ -555,7 +555,7 @@ Output (compressed):
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
-    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
+    <tet desc="Happy π day!"> 2 54 2 156 0 135 0 120 </tet>
     <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
@@ -715,7 +715,7 @@ TEST: regconvert -3 -u @TESTDIR@/b5.rga
 --------------------
 Exit code: 0
 ============================================================
-TEST: regconvert -3 -u @TESTDIR@/tiny.rga
+TEST: regconvert -3 -u @TESTDIR@/tiny-v3.rga
 --------------------
 <?xml version="1.0"?>
 <reginadata engine="_">
@@ -731,7 +731,7 @@ TEST: regconvert -3 -u @TESTDIR@/tiny.rga
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
-    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
+    <tet desc="Happy π day!"> 2 54 2 156 0 135 0 120 </tet>
     <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
@@ -915,7 +915,7 @@ Output:
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
-    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
+    <tet desc="Happy π day!"> 2 54 2 156 0 135 0 120 </tet>
     <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>

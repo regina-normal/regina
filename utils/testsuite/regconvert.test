@@ -42,11 +42,11 @@ regconvert @TESTDIR@/b5.rga @INVALIDFILE@
 regconvert -3 @TESTDIR@/b5.rga
 regconvert -3 @TESTDIR@/tiny.rga
 regconvert -3 @TESTDIR@/b5.rga @TESTOUT@
-regconvert -3 @TESTDIR@/tiny.rga @TESTOUT@
+regconvert -3 @TESTDIR@/tiny-v3.rga @TESTOUT@
 regconvert -3 -x @TESTDIR@/b5.rga @TESTOUT@
 regconvert -3 -x @TESTDIR@/tiny.rga @TESTOUT@
 regconvert -3 -u @TESTDIR@/b5.rga
-regconvert -3 -u @TESTDIR@/tiny.rga
+regconvert -3 -u @TESTDIR@/tiny-v3.rga
 regconvert -3 -u @TESTDIR@/b5.rga @TESTOUT@
 regconvert -3 -u @TESTDIR@/tiny.rga @TESTOUT@
 # Note: this test framework does not let us test the case old-file == new-file.

@@ -112,7 +112,7 @@ File @INVALIDFILE@ could not be read.
 <container label="3-Manifolds" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
-  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
@@ -248,7 +248,7 @@ File @BADFILE@ could not be read.
 <container label="3-Manifolds" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
-  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
@@ -386,7 +386,7 @@ Output (compressed):
 <container label="3-Manifolds" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
-  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
@@ -524,7 +524,7 @@ Output (compressed):
 <container label="3-Manifolds" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
-  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
@@ -655,7 +655,7 @@ TEST: regconcat @TESTDIR@/tiny.rga
 <container label="3-Manifolds" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
-  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
@@ -772,7 +772,7 @@ TEST: regconcat @TESTDIR@/tiny.rga @TESTDIR@/b5.rga
 <container label="3-Manifolds" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
-  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
@@ -909,7 +909,7 @@ Output (compressed):
 <container label="3-Manifolds" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
-  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
@@ -1028,7 +1028,7 @@ Output (compressed):
 <container label="3-Manifolds" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
-  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex desc="Happy π day!"> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
