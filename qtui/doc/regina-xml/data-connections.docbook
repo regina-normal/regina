@@ -69,7 +69,7 @@ connections ::= (#PCDATA)</synopsis>
    <para>
     The following elements contain <sgmltag>connections</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-link;</member>
+     <member>&xml-link;</member>
     </simplelist>.
    </para>
   </refsect2>

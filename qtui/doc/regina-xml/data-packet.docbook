@@ -10,7 +10,8 @@
 
  <refnamediv>
   <refname>packet</refname>
-  <refpurpose>A single packet in a data file</refpurpose>
+  <refpurpose>Replaced by different elements for different
+   packet types</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -69,10 +70,18 @@ packet ::= (<replaceable>type-specific content</replaceable>,
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
+   to store every packet in the entire packet tree that makes up a
+   &regina; data file.
+   Since &regina;&nbsp;7.0, each packet type has its own &xml; element,
+   and &xml-packet; is no longer used.
+  </para>
   <para>
    A &xml-packet; element represents a single packet in a &regina; data
    file.  A packet is a single data object, such as a triangulation, a

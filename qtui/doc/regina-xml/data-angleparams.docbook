@@ -113,8 +113,8 @@ angleparams ::=</synopsis>
       vertex angle structures are enumerated.
      </para>
      <para>
-      &regina; versions&nbsp;4.6 and earlier did not write this
-      attribute (and indeed, they omitted the entire &xml-angleparams; element).
+      &regina; versions&nbsp;4.6 and earlier did not write this attribute
+      (and indeed, they omitted the entire &xml-angleparams; element).
       If it is missing, it will be treated as <literal>F</literal>
       (since taut enumeration was not offered in those very old versions
       of &regina;).

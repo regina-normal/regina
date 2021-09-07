@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-pdf">
+<refentry id="data-pdfdata">
  <refmeta>
-  <refentrytitle>pdf</refentrytitle>
+  <refentrytitle>pdfdata</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>pdf</refname>
-  <refpurpose>Replaced by &xml-pdfdata;</refpurpose>
+  <refname>pdfdata</refname>
+  <refpurpose>A &pdf; packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,12 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-pdf ::= (#PCDATA)</synopsis>
+pdfdata ::= (#PCDATA,
+             &xml-tag;*,
+             &packetsyn1;
+             &packetsyn2;
+             &packetsyn3;
+             &packetsyn4;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -37,50 +42,54 @@ pdf ::= (#PCDATA)</synopsis>
       <entry><sgmltag>encoding</sgmltag></entry>
       <entry><type>CDATA</type> (required)</entry>
      </row>
+     &packetattrlist2col;
     </tbody>
    </tgroup>
   </informaltable>
-  <para>&eltdepver;7.0</para>
+  <para>&eltaddedver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   This element was used in the past to store the contents of a &pdf; packet.
-   Since &regina;&nbsp;7.0, &pdf; packets now store their content
-   directly in the character data of the &xml-pdfdata; element
-   (which replaces the old &xml-packet; element for &pdf; packets).
+   This represents a <emphasis>&pdf; packet</emphasis>,
+   one of the many types of packet that together form the
+   <emphasis>packet tree</emphasis> that a user sees when they open a
+   &regina; data file.
   </para>
   <para>
-   A &xml-pdf; element contains a single &pdf; document, encoded in
-   a printable format.  The precise encoding format is specified by the
-   <sgmltag>encoding</sgmltag> attribute (see below).
+   A &pdf; packet stores a single &pdf; document.
+   This document is encoded in a printable format, using the encoding
+   specified by the <sgmltag>encoding</sgmltag> attribute (see below).
+   The encoded data is contained in the character data that appears before
+   the first child &xml; element.
   </para>
   <para>
-   Whitespace and line breaks within this element are not relevant and
-   can be ignored.
+   Whitespace and line breaks within the encoded data
+   are not relevant, and can be ignored.
   </para>
+  &packetchilddesc;
 
   <refsect2>
    <title>Parents</title>
-   <para>
-    The following elements contain <sgmltag>pdf</sgmltag>:
-    <simplelist type="inline">
-     <member>&xml-packet-pdf;</member>
-    </simplelist>.
-   </para>
+   &packetparents;
   </refsect2>
 
   <refsect2>
    <title>Children</title>
    <para>
-    Element <sgmltag>pdf</sgmltag> has no children.
+    Element <sgmltag>pdfdata</sgmltag> has no children that are
+    specific to &pdf; packets.
    </para>
+   &packetchildren;
   </refsect2>
  </refsect1>
 
  <refsect1>
   <title>Attributes</title>
+  <para>
+   The following attributes are specific to &pdf; packets:
+  </para>
   <variablelist>
    <varlistentry>
     <term><sgmltag>encoding</sgmltag></term>
@@ -93,5 +102,6 @@ pdf ::= (#PCDATA)</synopsis>
     </para></listitem>
    </varlistentry>
   </variablelist>
+ &packetattrdesc;
  </refsect1>
 </refentry>

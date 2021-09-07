@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>triangles</refname>
-  <refpurpose>The triangles forming a 2-manifold triangulation</refpurpose>
+  <refpurpose>Replaced by &xml-tri;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,10 +40,20 @@ triangles ::= (&xml-triangle;*)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was used in the past to store all triangles
+   in a 2-manifold triangulation.
+   Since &regina;&nbsp;7.0, these triangles are now stored directly
+   within the &xml-tri; element (which replaces the old
+   &xml-packet; element for triangulation packets), and each triangle
+   is encoded in a &xml-simplex; element (as opposed to the &xml-triangle;
+   elements described here).
+  </para>
   <para>
    A &xml-triangles; element stores the entire set of triangles forming a
    2-manifold triangulation.

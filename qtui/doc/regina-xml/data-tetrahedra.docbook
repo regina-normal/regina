@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>tetrahedra</refname>
-  <refpurpose>The tetrahedra forming a 3-dimensional triangulation</refpurpose>
+  <refpurpose>Replaced by &xml-tri;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,10 +40,20 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was used in the past to store all tetrahedra
+   in a 3-dimensional triangulation.
+   Since &regina;&nbsp;7.0, these tetrahedra are now stored directly
+   within the &xml-tri; element (which replaces the old
+   &xml-packet; element for triangulation packets), and each tetrahedron
+   is encoded in a &xml-simplex; element (as opposed to the &xml-tet;
+   elements described here).
+  </para>
   <para>
    A &xml-tetrahedra; element stores the entire set of tetrahedra forming a
    3-dimensional triangulation.

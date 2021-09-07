@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-link">
+<refentry id="data-link">
  <refmeta>
-  <refentrytitle>packet (link)</refentrytitle>
+  <refentrytitle>link</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (link)</refname>
-  <refpurpose>Replaced by &xml-link;</refpurpose>
+  <refname>link</refname>
+  <refpurpose>A knot/link packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,36 +24,38 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-crossings;, &xml-connections;, &xml-components;,
-            &xml-tag;*, &xml-packet;*)</synopsis>
+link ::= (&xml-crossings;, &xml-connections;, &xml-components;,
+          &xml-tag;*,
+          &packetsyn1;
+          &packetsyn2;
+          &packetsyn3;
+          &packetsyn4;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
-      See the general &xml-packet; element documentation.
-     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     &packetattrlist2col;
     </tbody>
    </tgroup>
   </informaltable>
-  <para>&eltdepver;7.0</para>
+  <para>&eltaddedver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
-   to store every packet in the entire packet tree that makes up a
+   This represents a <emphasis>knot/link packet</emphasis>,
+   one of the many types of packet that together form the
+   <emphasis>packet tree</emphasis> that a user sees when they open a
    &regina; data file.
-   This page describes how the &xml-packet; element was structured when
-   storing a knot/link packet.
-   Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
-   in particular, knot/link packets are now stored using the
-   &xml-link; element.
   </para>
   <para>
-   A <emphasis>knot/link</emphasis>
-   packet stores the diagram of an oriented link in 3-dimensional space.
+   A knot/link packet stores the diagram of an oriented link in
+   3-dimensional space.
   </para>
   <para>
    The number of crossings in the diagram and the signs of these
@@ -63,37 +65,31 @@ packet ::= (&xml-crossings;, &xml-connections;, &xml-components;,
    The child &xml-components; element stores a starting point for each
    component of the link.
   </para>
-  <para>
-   The roles played by the child &xml-tag; and &xml-packet; elements are
-   described in the general &xml-packet; element documentation.
-  </para>
+  &packetchilddesc;
 
   <refsect2>
    <title>Parents</title>
-   <para>
-    The following elements contain <sgmltag>packet</sgmltag> for
-    a knot/link packet:
-    <simplelist type="inline">
-     <member>&xml-packet;</member>
-     <member>&xml-reginadata;</member>
-    </simplelist>.
-   </para>
+   &packetparents;
   </refsect2>
 
   <refsect2>
    <title>Children</title>
    <para>
-    The following elements occur in <sgmltag>packet</sgmltag> for
-    a knot/link packet:
+    The following elements occur in <sgmltag>link</sgmltag>,
+    and are specific to the knot/link packet type:
     <simplelist type="inline">
      <member>&xml-components;</member>
      <member>&xml-connections;</member>
      <member>&xml-crossings;</member>
-     <member>&xml-packet;</member>
-     <member>&xml-tag;</member>
     </simplelist>.
    </para>
+   &packetchildren;
   </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  &packetattrdesc;
  </refsect1>
 
  <refsect1>
@@ -102,7 +98,7 @@ packet ::= (&xml-crossings;, &xml-connections;, &xml-components;,
    The following &xml; snippet represents the Whitehead link.
   </para>
   <programlisting>
-&lt;packet label=&quot;Whitehead link&quot; type=&quot;Link&quot; typeid=&quot;17&quot; parent=&quot;&quot;&gt;
+&lt;link label=&quot;Whitehead link&quot;&gt;
 &lt;crossings size=&quot;5&quot;&gt;
 - - + + -
 &lt;/crossings&gt;
@@ -116,7 +112,7 @@ _3 ^0
 &lt;components size=&quot;2&quot;&gt;
 ^0 _0
 &lt;/components&gt;
-&lt;/packet&gt;
+&lt;/link&gt;
   </programlisting>
  </refsect1>
 </refentry>

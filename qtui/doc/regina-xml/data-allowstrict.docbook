@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>allowstrict</refname>
-  <refpurpose>Deprecated: see &xml-spanstrict;</refpurpose>
+  <refpurpose>Replaced by &xml-spanstrict;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>

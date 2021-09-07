@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-reginadata">
+<refentry id="data-regina">
  <refmeta>
-  <refentrytitle>reginadata</refentrytitle>
+  <refentrytitle>regina</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>reginadata</refname>
-  <refpurpose>Replaced by &xml-regina;</refpurpose>
+  <refname>regina</refname>
+  <refpurpose>An entire &regina; data file</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,10 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-reginadata ::= (&xml-packet;)</synopsis>
+regina ::= &packetsyn1;
+           &packetsyn2;
+           &packetsyn3;
+           &packetsyn4;</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -40,44 +43,34 @@ reginadata ::= (&xml-packet;)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
-  <para>&eltdepver;7.0</para>
+  <para>&eltaddedver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   This element was renamed to &xml-regina; when &regina; switched to
-   its third-generation file format in &regina;&nbsp;7.0.
-   If &regina; sees a data file whose root element is &xml-reginadata;
-   (not &xml-regina;), it will understand this to be a older second-generation
-   data file, and it will still be able to read it.  New data
-   files should use &xml-regina; as their root elements instead.
+   A &xml-regina; element is the top-level element for
+   a third-generation &regina; data file.  Its single child element
+   represents the root of the packet tree stored in this data file.
   </para>
   <para>
-   A &xml-reginadata; element is the top-level element for a
-   second-generation &regina; data file.
-   Whereas the newer &xml-regina; stores different types of packets
-   using their own element types (&xml-container;, &xml-tri;, etc.),
-   the older &xml-reginadata; stores every packet using a &xml-packet; element.
-   The single child &xml-packet; of a &xml-reginadata; element represents
-   the root of the packet tree stored in this data file.
+   This third-generation file format is the current format,
+   and was first introduced with &regina;&nbsp;7.0.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
     Being the top-level element of a data file,
-    <sgmltag>reginadata</sgmltag> has no parents.
+    <sgmltag>regina</sgmltag> has no parents.
    </para>
   </refsect2>
 
   <refsect2>
    <title>Children</title>
    <para>
-    The following elements occur in <sgmltag>reginadata</sgmltag>:
-    <simplelist type="inline">
-     <member>&xml-packet;</member>
-    </simplelist>.
+    The following elements may occur in <sgmltag>regina</sgmltag>:
+    &allpackets;
    </para>
   </refsect2>
  </refsect1>

@@ -7,14 +7,37 @@
 
  <partintro>
   <para>
-   Since &regina; version 3.0, data files are now saved in an optionally
+   &regina; data files are saved in an optionally
    compressed &xml; format.  If a data file is compressed, it can be piped
    through <command>gunzip</command> to recover the plain text &xml;.
   </para>
   <para>
    This reference chapter documents the various &xml; elements that form
    a &regina; data file and how they are used.  The top-level element
-   for a data file is &xml-reginadata;.
+   for a modern (third-generation) data file is &xml-regina;.
+  </para>
+  <para>
+   &regina;'s file format has gone through a few major changes over the years:
+   <itemizedlist>
+    <listitem><para>
+     The <emphasis>third-generation</emphasis> format was introduced in
+     &regina;&nbsp;7.0, and is the format described here.
+     It is an &xml;-based format whose root element is &xml-regina;.
+    </para></listitem>
+    <listitem><para>
+     The <emphasis>second-generation</emphasis> format was used by &regina;
+     versions 3.0&ndash;6.0.1.
+     &regina; can transparently read second-generation data files, and it can
+     also write to them on request.
+     This is also an &xml;-based format, but whose root element is
+     &xml-reginadata;.
+    </para></listitem>
+    <listitem><para>
+     The <emphasis>first-generation</emphasis> format was a binary format
+     used by &regina;&nbsp;2.4 and earlier, and was discontinued in mid-2002.
+     &regina; can no longer read or write to it at all.
+    </para></listitem>
+   </itemizedlist>
   </para>
   <para>
    Regarding international characters:
@@ -28,6 +51,7 @@
 
  &data-abeliangroup;
  &data-angleparams;
+ &data-angles;
  &data-code;
  &data-compact-filter;
  &data-compact-surface;
@@ -35,12 +59,13 @@
  &data-compressingdisc;
  &data-connected;
  &data-connections;
+ &data-container;
  &data-crossings;
  &data-euler-filter;
  &data-euler-surface;
- &data-filter;
- &data-filter-combination;
- &data-filter-properties;
+ &data-filtercomb;
+ &data-filterplain;
+ &data-filterprop;
  &data-fundgroup;
  &data-group;
  &data-H1;
@@ -49,50 +74,33 @@
  &data-H2;
  &data-haken;
  &data-hypersurface;
+ &data-hypersurfaces;
  &data-irreducible;
+ &data-link;
  &data-op;
  &data-orbl-filter;
  &data-orbl-surface;
- &data-packet;
- &data-packet-dim2triangulation;
- &data-packet-dim3triangulation;
- &data-packet-dim4triangulation;
- &data-packet-triangulation;
- &data-packet-anglestructurelist;
- &data-packet-container;
- &data-packet-link;
- &data-packet-normalsurfacelist;
- &data-packet-normalhypersurfacelist;
- &data-packet-pdf;
- &data-packet-script;
- &data-packet-snappea;
- &data-packet-surfacefilter;
- &data-packet-text;
  &data-params;
- &data-pent;
- &data-pentachora;
- &data-pdf;
+ &data-pdfdata;
  &data-realbdry-filter;
  &data-realbdry-surface;
- &data-reginadata;
+ &data-regina;
  &data-reln;
+ &data-script;
  &data-simplex;
- &data-simplices;
- &data-snappea;
+ &data-snappeadata;
  &data-solidtorus;
  &data-spanstrict;
  &data-spantaut;
  &data-splitsfce;
  &data-struct;
  &data-surface;
+ &data-surfaces;
  &data-tag;
- &data-tet;
- &data-tetrahedra;
- &data-text;
+ &data-textdata;
  &data-threeball;
  &data-threesphere;
- &data-triangle;
- &data-triangles;
+ &data-tri;
  &data-twosided;
  &data-txi;
  &data-var;
@@ -122,7 +130,36 @@
 
  &data-allowstrict;
  &data-allowtaut;
+ &data-filter;
+ &data-filter-combination;
+ &data-filter-properties;
  &data-flags;
  &data-line;
+ &data-packet;
+ &data-packet-dim2triangulation;
+ &data-packet-dim3triangulation;
+ &data-packet-dim4triangulation;
+ &data-packet-triangulation;
+ &data-packet-anglestructurelist;
+ &data-packet-container;
+ &data-packet-link;
+ &data-packet-normalhypersurfacelist;
+ &data-packet-normalsurfacelist;
+ &data-packet-pdf;
+ &data-packet-script;
+ &data-packet-snappea;
+ &data-packet-surfacefilter;
+ &data-packet-text;
+ &data-pent;
+ &data-pentachora;
+ &data-pdf;
+ &data-reginadata;
+ &data-simplices;
+ &data-snappea;
+ &data-tet;
+ &data-tetrahedra;
+ &data-text;
+ &data-triangle;
+ &data-triangles;
  &data-turaevviro;
 </reference>

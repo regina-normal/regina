@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>line</refname>
-  <refpurpose>Deprecated: see &xml-packet-script; for details</refpurpose>
+  <refpurpose>Replaced by &xml-code;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>

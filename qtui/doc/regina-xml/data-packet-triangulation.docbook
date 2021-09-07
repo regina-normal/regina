@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>packet (<replaceable>dim</replaceable>-dimensional triangulation)</refname>
-  <refpurpose>A <replaceable>dim</replaceable>-dimensional triangulation packet</refpurpose>
+  <refpurpose>Replaced by &xml-tri;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -37,10 +37,21 @@ packet ::= (&xml-simplices;,
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
+   to store every packet in the entire packet tree that makes up a
+   &regina; data file.
+   This page describes how the &xml-packet; element was structured when
+   storing a higher-dimensional triangulation.
+   Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
+   in particular, all triangulations are now stored using the
+   &xml-tri; element.
+  </para>
   <para>
    This type of <emphasis>triangulation</emphasis>
    packet stores a <replaceable>dim</replaceable>-dimensional triangulation,

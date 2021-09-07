@@ -45,7 +45,7 @@ code ::= (#PCDATA)</synopsis>
    <para>
     The following elements contain <sgmltag>code</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-script;</member>
+     <member>&xml-script;</member>
     </simplelist>.
    </para>
   </refsect2>

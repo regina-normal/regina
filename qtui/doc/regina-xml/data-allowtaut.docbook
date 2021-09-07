@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>allowtaut</refname>
-  <refpurpose>Deprecated: see &xml-spantaut;</refpurpose>
+  <refpurpose>Replaced by &xml-spantaut;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>

@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>text</refname>
-  <refpurpose>An arbitrary amount of text</refpurpose>
+  <refpurpose>Replaced by &xml-textdata; and &xml-code;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -29,10 +29,20 @@ text ::= (#PCDATA)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was used in the past to store the contents of a text packet,
+   and also the &python; code in a script packet.
+   Since &regina;&nbsp;7.0, text packets now store their text content
+   directly in the character data of the &xml-textdata; element
+   (which replaces the old &xml-packet; element for text packets),
+   and script packets now store their &python; code in a new
+   &xml-code; element instead.
+  </para>
   <para>
    A &xml-text; element simply contains an arbitrary amount of text.
    Whitespace and line breaks are relevant and are considered
