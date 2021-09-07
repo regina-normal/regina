@@ -64,8 +64,8 @@
  &data-euler-filter;
  &data-euler-surface;
  &data-filtercomb;
- &data-filterplain;
  &data-filterprop;
+ &data-filtertrivial;
  &data-fundgroup;
  &data-group;
  &data-H1;

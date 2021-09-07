@@ -34,8 +34,8 @@
      <member>&xml-angles;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
-     <member>&xml-filterplain;</member>
      <member>&xml-filterprop;</member>
+     <member>&xml-filtertrivial;</member>
      <member>&xml-hypersurfaces;</member>
      <member>&xml-link;</member>
      <member>&xml-pdfdata;</member>
@@ -49,15 +49,15 @@
   <!ENTITY packetsyn1 "(&xml-container;|&xml-textdata;|&xml-script;|&xml-pdfdata;|">
   <!ENTITY packetsyn2 " &xml-tri;|&xml-link;|&xml-snappeadata;|">
   <!ENTITY packetsyn3 " &xml-angles;|&xml-surfaces;|&xml-hypersurfaces;|">
-  <!ENTITY packetsyn4 " &xml-filterplain;|&xml-filtercomb;|&xml-filterprop;)">
+  <!ENTITY packetsyn4 " &xml-filtercomb;|&xml-filterprop;|&xml-filtertrivial;)">
   <!ENTITY packetchildren "<para>
     The following children can occur in all packet elements:
     <simplelist type='inline'>
      <member>&xml-angles;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
-     <member>&xml-filterplain;</member>
      <member>&xml-filterprop;</member>
+     <member>&xml-filtertrivial;</member>
      <member>&xml-hypersurfaces;</member>
      <member>&xml-link;</member>
      <member>&xml-pdfdata;</member>
@@ -77,8 +77,8 @@
      <member>&xml-angles;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
-     <member>&xml-filterplain;</member>
      <member>&xml-filterprop;</member>
+     <member>&xml-filtertrivial;</member>
      <member>&xml-hypersurfaces;</member>
      <member>&xml-link;</member>
      <member>&xml-pdfdata;</member>

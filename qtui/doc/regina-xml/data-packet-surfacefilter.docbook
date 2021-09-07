@@ -10,8 +10,8 @@
 
  <refnamediv>
   <refname>packet (surface filter)</refname>
-  <refpurpose>Replaced by &xml-filtercomb;, &xml-filterplain; and
-   &xml-filterprop;</refpurpose>
+  <refpurpose>Replaced by &xml-filtercomb;, &xml-filterprop; and
+   &xml-filtertrivial;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -50,7 +50,7 @@ packet ::= (&xml-filter;,
    storing a surface filter.
    Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
    in particular, surface filter packets are now stored using the
-   &xml-filtercomb;, &xml-filterplain; and &xml-filterprop; elements.
+   &xml-filtercomb;, &xml-filterprop; and &xml-filtertrivial; elements.
   </para>
   <para>
    A <emphasis>surface filter</emphasis> packet can be

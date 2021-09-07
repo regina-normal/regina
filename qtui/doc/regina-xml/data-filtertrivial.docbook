@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-filtercomb">
+<refentry id="data-filtertrivial">
  <refmeta>
-  <refentrytitle>filtercomb</refentrytitle>
+  <refentrytitle>filtertrivial</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>filtercomb</refname>
-  <refpurpose>A logical combination surface filter</refpurpose>
+  <refname>filtertrivial</refname>
+  <refpurpose>A trivial surface filter</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,12 +24,11 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-filtercomb ::= (&xml-op;,
-                &xml-tag;*,
-                &packetsyn1;
-                &packetsyn2;
-                &packetsyn3;
-                &packetsyn4;*)</synopsis>
+filtertrivial ::= (&xml-tag;*,
+                   &packetsyn1;
+                   &packetsyn2;
+                   &packetsyn3;
+                   &packetsyn4;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -48,21 +47,15 @@ filtercomb ::= (&xml-op;,
  <refsect1>
   <title>Description</title>
   <para>
-   This represents a <emphasis>combination filter packet</emphasis>,
+   This represents a <emphasis>trivial filter packet</emphasis>,
    one of the many types of packet that together form the
    <emphasis>packet tree</emphasis> that a user sees when they open a
    &regina; data file, and also one of the different types of filter
    that users can create to refine a set of normal surfaces.
   </para>
   <para>
-   A <emphasis>combination filter</emphasis> uses a
-   logical operation to combine other normal surface filters into a
-   single more complex surface filter.
-  </para>
-  <para>
-   The filters being combined must be immediate children of this filter
-   in the packet tree.  The child &xml-op; element indicates which
-   logical operation will used to combine them.
+   A <emphasis>trivial filter</emphasis> accepts every surface.
+   There is little reason to use such a filter in practice.
   </para>
   &packetchilddesc;
 
@@ -74,11 +67,8 @@ filtercomb ::= (&xml-op;,
   <refsect2>
    <title>Children</title>
    <para>
-    The following elements occur in <sgmltag>filtercomb</sgmltag>,
-    and are specific to the combination filter type:
-    <simplelist type="inline">
-     <member>&xml-op;</member>
-    </simplelist>.
+    Element <sgmltag>filtertrivial</sgmltag> has no children that are
+    specific to trivial filters.
    </para>
    &packetchildren;
   </refsect2>

@@ -29,6 +29,7 @@ code ::= (#PCDATA)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltaddedver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>

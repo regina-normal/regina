@@ -42,6 +42,17 @@ filter ::= (&xml-compact-filter;?, &xml-euler-filter;?,
  <refsect1>
   <title>Description</title>
   <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-filter; element was used
+   to store different types of normal surface filters, and was held
+   within an enclosing &xml-packet-surfacefilter; element.
+   This page describes how the &xml-filter; element was structured when
+   storing a property filter.
+   Since &regina;&nbsp;7.0, each filter type now has its own &xml; element,
+   which also serves as the &xml; element for the filter packet.
+   In particular, property filters are now stored using the
+   &xml-filterprop; element.
+  </para>
+  <para>
    A <emphasis>property filter</emphasis>
    filters normal surfaces by examining basic topological properties
    such as orientability and Euler characteristic.

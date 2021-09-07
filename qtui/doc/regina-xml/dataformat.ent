@@ -22,8 +22,8 @@
 <!ENTITY data-filter-combination SYSTEM "data-filter-combination.docbook">
 <!ENTITY data-filter-properties SYSTEM "data-filter-properties.docbook">
 <!ENTITY data-filtercomb SYSTEM "data-filtercomb.docbook">
-<!ENTITY data-filterplain SYSTEM "data-filterplain.docbook">
 <!ENTITY data-filterprop SYSTEM "data-filterprop.docbook">
+<!ENTITY data-filtertrivial SYSTEM "data-filtertrivial.docbook">
 <!ENTITY data-flags SYSTEM "data-flags.docbook">
 <!ENTITY data-fundgroup SYSTEM "data-fundgroup.docbook">
 <!ENTITY data-group SYSTEM "data-group.docbook">
@@ -133,10 +133,10 @@
  '<link linkend="data-filter-properties"><sgmltag>filter</sgmltag> (properties)</link>'>
 <!ENTITY xml-filtercomb
  '<link linkend="data-filtercomb"><sgmltag>filtercomb</sgmltag></link>'>
-<!ENTITY xml-filterplain
- '<link linkend="data-filterplain"><sgmltag>filterplain</sgmltag></link>'>
 <!ENTITY xml-filterprop
  '<link linkend="data-filterprop"><sgmltag>filterprop</sgmltag></link>'>
+<!ENTITY xml-filtertrivial
+ '<link linkend="data-filtertrivial"><sgmltag>filtertrivial</sgmltag></link>'>
 <!ENTITY xml-flags
  '<link linkend="data-flags"><sgmltag>flags</sgmltag></link>'>
 <!ENTITY xml-fundgroup
