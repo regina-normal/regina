@@ -53,7 +53,7 @@ op ::=</synopsis>
    <para>
     The following elements contain <sgmltag>op</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-filter-combination;</member>
+     <member>&xml-filtercomb;</member>
     </simplelist>.
    </para>
   </refsect2>

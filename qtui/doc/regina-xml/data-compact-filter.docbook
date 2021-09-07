@@ -56,7 +56,7 @@ compact ::=</synopsis>
     The following elements contain <sgmltag>compact</sgmltag> (in the
     context of a constraint on surface properties):
     <simplelist type="inline">
-     <member>&xml-filter-properties;</member>
+     <member>&xml-filterprop;</member>
     </simplelist>.
    </para>
   </refsect2>

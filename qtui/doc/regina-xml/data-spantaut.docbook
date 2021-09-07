@@ -63,7 +63,7 @@ spantaut ::=</synopsis>
    <para>
     The following elements contain <sgmltag>spantaut</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-anglestructurelist;</member>
+     <member>&xml-angles;</member>
     </simplelist>.
    </para>
   </refsect2>

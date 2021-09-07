@@ -79,8 +79,8 @@ params ::=</synopsis>
    <para>
     The following elements contain <sgmltag>param</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-normalhypersurfacelist;</member>
-     <member>&xml-packet-normalsurfacelist;</member>
+     <member>&xml-hypersurfaces;</member>
+     <member>&xml-surfaces;</member>
     </simplelist>.
    </para>
   </refsect2>

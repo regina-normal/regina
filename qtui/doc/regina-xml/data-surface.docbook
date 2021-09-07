@@ -79,7 +79,7 @@ surface ::= (#PCDATA,
     Since &regina;&nbsp;7.0, the specific vector encoding being used is now
     explicitly specified in the <sgmltag>enc</sgmltag> attribute.
     This might or might not be deducible from the coordinate system
-    specified in the parent &xml-packet-normalsurfacelist;.
+    specified in the parent &xml-surfaces;.
     The parent list's coordinate system should only be used as a fallback if
     the <sgmltag>enc</sgmltag> attribute is not present.
    </para>
@@ -101,7 +101,7 @@ surface ::= (#PCDATA,
    <para>
     The following elements contain <sgmltag>surface</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-normalsurfacelist;</member>
+     <member>&xml-surfaces;</member>
     </simplelist>.
    </para>
   </refsect2>

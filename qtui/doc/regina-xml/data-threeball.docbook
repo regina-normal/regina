@@ -54,7 +54,7 @@ threeball ::=</synopsis>
    <para>
     The following elements contain <sgmltag>threeball</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-dim3triangulation;</member>
+     <member>&xml-tri;</member>
     </simplelist>.
    </para>
   </refsect2>
