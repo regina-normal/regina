@@ -55,7 +55,7 @@ namespace regina {
 
 /**
  * Internal class that indicates the XML tags and attributes used in the
- * old Regina 6.x file format to describe top-dimensional simplices in a
+ * old second-generation file format to describe top-dimensional simplices in a
  * <i>dim</i>-dimensional triangulation.
  *
  * \ifacespython Not present.
@@ -151,7 +151,7 @@ class XMLSimplexReader : public XMLElementReader {
 };
 
 /**
- * Helper class that reads the XML element in the old Regina 6.x format
+ * Helper class that reads the XML element in the old second-generation format
  * for the set of all top-dimensional simplices in a <i>dim</i>-dimensional
  * triangulation.
  * In other words, this reads the contents of a single &lt;simplices&gt;
@@ -230,11 +230,11 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          * @param size the total number of top-dimensional simplices in the
-         * triangulation.  This should be 0 if we are reading the old
-         * Regina 6.x file format.
+         * triangulation.  This should be 0 if we are reading the
+         * second-generation file format.
          * @param permIndex \c true if permutations are stored as indices into
          * Sn, or \c false if they are stored as image packs.
-         * This will be ignored when reading the old Regina 6.x file format.
+         * This will be ignored when reading the second-generation file format.
          */
         XMLTriangulationReaderBase(XMLTreeResolver& resolver, size_t size,
             bool permIndex);
@@ -356,10 +356,10 @@ class XMLTriangulationReader : public XMLTriangulationReaderBase<dim> {
          * dangling packet references after the entire XML file has been read.
          * @param size the total number of top-dimensional simplices in the
          * triangulation.  This should be 0 if we are reading the old
-         * Regina 6.x file format.
+         * second-generation file format.
          * @param permIndex \c true if permutations are stored as indices into
          * Sn, or \c false if they are stored as image packs.
-         * This will be ignored when reading the old Regina 6.x file format.
+         * This will be ignored when reading the second-generation file format.
          */
         XMLTriangulationReader(XMLTreeResolver& resolver, size_t size,
             bool permIndex);

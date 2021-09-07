@@ -49,7 +49,7 @@ namespace regina {
 void SurfaceFilter::writeXMLPacketData(std::ostream& out,
         FileFormat format) const {
     writeXMLHeader(out, "filterplain", format);
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
             << "\" typeid=\"" << filterType() << "\"/>\n";
@@ -78,7 +78,7 @@ bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
 void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
         FileFormat format) const {
     writeXMLHeader(out, "filtercomb", format);
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
             << "\" typeid=\"" << filterType() << "\">\n";
@@ -86,7 +86,7 @@ void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
 
     out << "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n";
 
-    if (format == REGINA_XML_V3)
+    if (format == REGINA_XML_GEN_2)
         out << "  </filter>\n";
     writeXMLFooter(out, "filtercomb", format);
 }
@@ -139,7 +139,7 @@ void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
     using regina::xml::xmlValueTag;
 
     writeXMLHeader(out, "filterprop", format);
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
             << "\" typeid=\"" << filterType() << "\">\n";
@@ -159,7 +159,7 @@ void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
     if (realBoundary_ != BoolSet(true, true))
         out << "    " << xmlValueTag("realbdry", realBoundary_) << '\n';
 
-    if (format == REGINA_XML_V3)
+    if (format == REGINA_XML_GEN_2)
         out << "  </filter>\n";
     writeXMLFooter(out, "filterprop", format);
 }

@@ -413,7 +413,7 @@ void NormalSurface::writeXMLData(std::ostream& out, FileFormat format,
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    bool stripTriangles = (format == REGINA_XML_V3 && list &&
+    bool stripTriangles = (format == REGINA_XML_GEN_2 && list &&
         enc_.storesTriangles() &&
         ! NormalEncoding(list->coords()).storesTriangles());
 
@@ -421,10 +421,10 @@ void NormalSurface::writeXMLData(std::ostream& out, FileFormat format,
         // Write the opening tag including vector length.
         size_t vecLen = vector_.size();
         out << "  <surface";
-        if (format != REGINA_XML_V3)
+        if (format != REGINA_XML_GEN_2)
             out << " enc=\"" << enc_.intValue() << '\"';
         out << " len=\"" << vecLen << '\"';
-        if (format == REGINA_XML_V3 || ! name_.empty())
+        if (format == REGINA_XML_GEN_2 || ! name_.empty())
             out << " name=\"" << xmlEncodeSpecialChars(name_) << '\"';
         out << '>';
 
@@ -435,7 +435,7 @@ void NormalSurface::writeXMLData(std::ostream& out, FileFormat format,
                 out << ' ' << i << ' ' << entry;
         }
     } else {
-        // We know this is REGINA_XML_V3.
+        // We know this is REGINA_XML_GEN_2.
         int oldBlock = enc_.block();
         int newBlock = oldBlock - 4;
         size_t nBlocks = vector_.size() / oldBlock;

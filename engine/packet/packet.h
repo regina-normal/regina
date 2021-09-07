@@ -47,6 +47,7 @@
 
 #include "regina-core.h"
 #include "core/output.h"
+#include "file/fileformat.h"
 #include "packet/packettype.h"
 #include "utilities/safepointeebase.h"
 
@@ -63,36 +64,6 @@ class SubtreeIterator;
  * Packet administration and some basic packet types.
  * @{
  */
-
-/**
- * Represents a "roughly interoperable" class of Regina's XML file formats.
- *
- * Of course the XML file format is enhanced on a regular basis, as new
- * XML elements and attributes are added.  This enumeration does not attempt
- * to capture such incremental changes.
- *
- * Instead, this enumeration is intended to capture those large-scale changes
- * that come with a major loss of backward compatibility, such as the changes
- * introduced in Regina 7.0 whose XML files essentially cannot be read by
- * older versions of Regina at all.
- */
-enum FileFormat {
-    /**
-     * Indicates the XML file format used from Regina 3.0 (when XML was
-     * first used) through to Regina 6.0.1 inclusive.
-     */
-    REGINA_XML_V3 = 3,
-    /**
-     * Indicates the XML file format used from Regina 7.0 onwards.
-     */
-    REGINA_XML_V7 = 7,
-    /**
-     * An alias for whichever file format is newest.  The numerical
-     * value of this constant may change in future releases of Regina,
-     * if a major change to the file format should occur.
-     */
-    REGINA_XML_LATEST = REGINA_XML_V7
-};
 
 /**
  * Defines various constants, types and virtual functions for a
@@ -1165,12 +1136,13 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
          * @param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_XML_LATEST) unless you
+         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
+         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
          * @return \c true if and only if the file was successfully written.
          */
         bool save(const char* filename, bool compressed = true,
-            FileFormat format = REGINA_XML_LATEST) const;
+            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1191,12 +1163,13 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
          * @param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_XML_LATEST) unless you
+         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
+         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
          * @return \c true if and only if the data was successfully written.
          */
         bool save(std::ostream& s, bool compressed = true,
-            FileFormat format = REGINA_XML_LATEST) const;
+            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
 
         /**
          * Writes the subtree rooted at this packet to the given output
@@ -1219,11 +1192,12 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param out the output stream to which the XML data file should
          * be written.
          * @param format indicates which of Regina's XML file formats to write.
-         * You should use the default (REGINA_XML_LATEST) unless you
+         * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
+         * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
          */
         void writeXMLFile(std::ostream& out,
-            FileFormat format = REGINA_XML_LATEST) const;
+            FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
 
         /**
          * Returns a unique string ID that identifies this packet.
@@ -1345,17 +1319,17 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * The generic packet attributes (such as \c label, \c id if
          * required, and \c type / \c typeid if we are writing to the
-         * REGINA_XML_V3 format) will be included.
+         * second-generation format REGINA_XML_GEN_2) will be included.
          *
-         * If we are writing to the Regina 7.0 format or newer, then any
-         * additional attributes specified in \a attr will also be included.
-         * If we are writing to the REGINA_XML_V3 format, then \a attr
-         * will be ignored.
+         * If we are writing to the third-generation file format or newer,
+         * then any additional attributes specified in \a attr will also be
+         * included.  If we are writing to the second-generation format
+         * REGINA_XML_GEN_2, then \a attr will be ignored.
          *
          * @param out the output stream to which the opening XML tag
          * should be written.
          * @param element the name of the XML tag.  If we are writing to
-         * the REGINA_XML_V3 format, then this will be ignored (and may
+         * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * @param format indicates which of Regina's XML file formats to write.
          * @param newline indicates whether the opening XML tag should be
@@ -1364,7 +1338,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * and the packet contents then you should pass \c false instead.
          * @param attr any additional attributes to write to the XML tag;
          * each attribute should a pair of the form (\a attribute, \a value).
-         * If we are writing to the REGINA_XML_V3 format, this will be ignored.
+         * When writing to the REGINA_XML_GEN_2 format, this will be ignored.
          */
         template <typename... Args>
         void writeXMLHeader(std::ostream& out, const char* element,
@@ -1386,7 +1360,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param out the output stream to which the closing XML tag
          * should be written.
          * @param element the name of the XML tag.  If we are writing to
-         * the REGINA_XML_V3 format, then this will be ignored (and may
+         * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * @param format indicates which of Regina's XML file formats to write.
          */
@@ -2634,7 +2608,7 @@ template <typename... Args>
 void Packet::writeXMLHeader(std::ostream& out, const char* element,
         FileFormat format, bool newline, std::pair<const char*, Args>... args)
         const {
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "<packet type=\"" << typeName()
             << "\" typeid=\"" << type() << "\"\n\t";
     } else {

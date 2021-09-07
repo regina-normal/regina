@@ -30,15 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "file/fileformat.h"
+#include "../helpers.h"
 
-void addFileFormat(pybind11::module_& m);
-void addFileInfo(pybind11::module_& m);
-void addGlobalDirs(pybind11::module_& m);
-
-void addFileClasses(pybind11::module_& m) {
-    addFileFormat(m);
-    addFileInfo(m);
-    addGlobalDirs(m);
+void addFileFormat(pybind11::module_& m) {
+    pybind11::enum_<regina::FileFormat>(m, "FileFormat")
+        .value("REGINA_BINARY_GEN_1", regina::REGINA_BINARY_GEN_1)
+        .value("REGINA_XML_GEN_2", regina::REGINA_XML_GEN_2)
+        .value("REGINA_XML_GEN_3", regina::REGINA_XML_GEN_3)
+        .value("REGINA_CURRENT_FILE_FORMAT", regina::REGINA_CURRENT_FILE_FORMAT)
+        .export_values()
+        ;
 }
 

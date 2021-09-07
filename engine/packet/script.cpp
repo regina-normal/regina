@@ -177,7 +177,7 @@ void Script::writeXMLPacketData(std::ostream& out, FileFormat format) const {
         out << "\"/>\n";
     }
 
-    if (format == REGINA_XML_V3)
+    if (format == REGINA_XML_GEN_2)
         out << "  <text>" << xmlEncodeSpecialChars(text_) << "</text>\n";
     else
         out << "  <code>" << xmlEncodeSpecialChars(text_) << "</code>\n";

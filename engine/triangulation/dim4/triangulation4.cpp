@@ -180,7 +180,7 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out,
         std::pair("perm", "index"));
 
     // Write the pentachoron gluings.
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
         for (Pentachoron<4>* p : simplices_) {
             out << "    <pent desc=\"" <<

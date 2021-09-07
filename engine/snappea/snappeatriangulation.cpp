@@ -748,12 +748,12 @@ bool SnapPeaTriangulation::saveSnapPea(const char* filename) const {
 
 void SnapPeaTriangulation::writeXMLPacketData(std::ostream& out,
         FileFormat format) const {
-    writeXMLHeader(out, "snappeadata", format, format == REGINA_XML_V3);
+    writeXMLHeader(out, "snappeadata", format, format == REGINA_XML_GEN_2);
     if (data_) {
-        if (format == REGINA_XML_V3)
+        if (format == REGINA_XML_GEN_2)
             out << "  <snappea>";
         out << regina::xml::xmlEncodeSpecialChars(snapPea());
-        if (format == REGINA_XML_V3)
+        if (format == REGINA_XML_GEN_2)
             out << "</snappea>\n";
     }
     writeXMLFooter(out, "snappeadata", format);
