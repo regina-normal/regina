@@ -110,7 +110,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
 
         if (xmlTagType == PACKET_LEGACY_CHILD) {
             // This is a <packet typeid=...>...</packet> element from the
-            // older Regina 6.x file format.
+            // older second-generation file format.
             auto prop = subTagProps.find("typeid");
             if (prop == subTagProps.end())
                 return new XMLPacketReader(resolver_);
@@ -118,7 +118,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 return new XMLPacketReader(resolver_);
         } else if (xmlTagType == PACKET_TRIANGULATION_ANY) {
             // This is a new <tri dim="...">...</tri> element from the
-            // newer Regina 7.0 file format.
+            // newer third-generation file format.
             int dim;
             auto prop = subTagProps.find("dim");
             if (prop == subTagProps.end())

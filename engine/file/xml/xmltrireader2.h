@@ -69,10 +69,10 @@ class XMLTriangulationReader<2> : public XMLTriangulationReaderBase<2> {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          * @param size the total number of triangles in the triangulation.
-         * This should be 0 if we are reading the old Regina 6.x file format.
+         * This should be 0 if we are reading the second-generation file format.
          * @param permIndex \c true if permutations are stored as indices into
          * Sn, or \c false if they are stored as image packs.
-         * This will be ignored when reading the old Regina 6.x file format.
+         * This will be ignored when reading the second-generation file format.
          */
         XMLTriangulationReader(XMLTreeResolver& resolver, size_t size,
             bool permIndex);

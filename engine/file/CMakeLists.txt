@@ -16,6 +16,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    fileformat.h
     fileinfo.h
     globaldirs.h
     DESTINATION "${INCLUDEDIR}/file" COMPONENT Development)

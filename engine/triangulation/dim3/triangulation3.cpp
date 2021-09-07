@@ -229,7 +229,7 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out,
         std::pair("perm", "index"));
 
     // Write the tetrahedron gluings.
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
         for (Tetrahedron<3>* t : simplices_) {
             out << "    <tet desc=\"" <<

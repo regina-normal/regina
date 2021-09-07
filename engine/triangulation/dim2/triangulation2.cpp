@@ -153,7 +153,7 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out,
         std::pair("perm", "index"));
 
     // Write the triangle gluings.
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "  <triangles ntriangles=\"" << simplices_.size() << "\">\n";
         for (Triangle<2>* t : simplices_) {
             out << "    <triangle desc=\"" <<

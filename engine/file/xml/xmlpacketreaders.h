@@ -76,8 +76,7 @@ class XMLContainerReader : public XMLPacketReader {
 };
 
 /**
- * An XML packet reader that reads a single PDF packet using the
- * Regina 7.0 file format.
+ * An XML packet reader that reads a single PDF packet.
  *
  * \ifacespython Not present.
  */
@@ -101,7 +100,7 @@ class XMLPDFReader : public XMLPacketReader {
 
 /**
  * An XML packet reader that reads a single PDF packet using the
- * Regina 6.x file format.
+ * older second-generation file format.
  *
  * \ifacespython Not present.
  */
@@ -155,8 +154,7 @@ class XMLScriptReader : public XMLPacketReader {
 };
 
 /**
- * An XML packet reader that reads a single text packet using the
- * Regina 7.0 file format.
+ * An XML packet reader that reads a single text packet.
  *
  * \ifacespython Not present.
  */
@@ -180,7 +178,7 @@ class XMLTextReader : public XMLPacketReader {
 
 /**
  * An XML packet reader that reads a single text packet using the
- * Regina 6.x file format.
+ * older second-generation file format.
  *
  * \ifacespython Not present.
  */

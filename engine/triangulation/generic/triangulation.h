@@ -559,7 +559,7 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out,
         "The generic implementation of Triangulation<dim>::writeXMLPacketData "
         "requires permutation codes to be numeric types.");
 
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "  <simplices size=\"" << simplices_.size() << "\">\n";
         for (auto s : simplices_) {
             out << "    <simplex desc=\"" <<

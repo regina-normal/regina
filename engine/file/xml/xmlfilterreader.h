@@ -52,7 +52,7 @@ namespace regina {
 
 /**
  * An XML packet reader that reads a single surface filter using the
- * Regina 6.x file format.
+ * older second-generation file format.
  * The filter type will be determined by this class and an appropriate
  * subclassed filter reader will be used to process the type-specific details.
  *
@@ -84,8 +84,7 @@ class XMLLegacyFilterReader : public XMLPacketReader {
 };
 
 /**
- * An XML packet reader that reads a plain (non-subclassed) SurfaceFilter
- * using the Regina 7.0 file format.
+ * An XML packet reader that reads a plain (non-subclassed) SurfaceFilter.
  *
  * \ifacespython Not present.
  */
@@ -107,8 +106,7 @@ class XMLPlainFilterReader : public XMLPacketReader {
 };
 
 /**
- * An XML packet reader that reads a single SurfaceFilterCombination filter
- * using the Regina 7.0 file format.
+ * An XML packet reader that reads a single SurfaceFilterCombination filter.
  *
  * \ifacespython Not present.
  */
@@ -132,8 +130,7 @@ class XMLCombinationFilterReader : public XMLPacketReader {
 };
 
 /**
- * An XML packet reader that reads a single SurfaceFilterProperties filter
- * using the Regina 7.0 file format.
+ * An XML packet reader that reads a single SurfaceFilterProperties filter.
  *
  * \ifacespython Not present.
  */

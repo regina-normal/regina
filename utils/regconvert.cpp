@@ -38,11 +38,11 @@ void usage(const char* progName, const std::string& error = std::string()) {
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -3 | -7 ] [ -x | -u ]"
+    std::cerr << "    " << progName << " [ -2 | -3 ] [ -x | -u ]"
         << " <old-file> [ <new-file> ]\n";
     std::cerr << std::endl;
-    std::cerr << "    -7 : Convert to the new Regina 7.0 file format (default)\n";
-    std::cerr << "    -3 : Convert to the old Regina 3.0 file format\n";
+    std::cerr << "    -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1\n";
+    std::cerr << "    -3 : Convert to the current third-generation file format (default)\n";
     std::cerr << std::endl;
     std::cerr << "    -x : Convert to compressed XML (default)\n";
     std::cerr << "    -u : Convert to uncompressed XML\n";
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
                         "More than one file type has been specified.");
                 else
                     typeOpt = optChar;
-            } else if (optChar == '3' || optChar == '7') {
+            } else if (optChar == '2' || optChar == '3') {
                 if (versionOpt)
                     usage(argv[0],
                         "More than one file format version has been specified.");
@@ -101,8 +101,8 @@ int main(int argc, char* argv[]) {
     // Add default options.
     if (! typeOpt)
         typeOpt = (newFile.empty() ? 'u' : 'x');
-    regina::FileFormat version =
-        (versionOpt == '3' ? regina::REGINA_XML_V3 : regina::REGINA_XML_V7);
+    regina::FileFormat version = (versionOpt == '2' ?
+        regina::REGINA_XML_GEN_2 : regina::REGINA_XML_GEN_3);
 
     // Check we're allowed to use stdout if we've asked for it.
     if (newFile.empty() && typeOpt != 'u')

@@ -165,7 +165,29 @@ Welcome to Regina!
 
 ************************************************************
 *
-* Label: 3-Manifolds
+* Label: Empty PDF
+* Type: PDF
+* Parent: Read Me
+*
+************************************************************
+
+PDF packet (0 bytes)
+
+
+************************************************************
+*
+* Label: Dummy PDF
+* Type: PDF
+* Parent: Read Me
+*
+************************************************************
+
+PDF packet (5 bytes)
+
+
+************************************************************
+*
+* Label: 3-Manifolds and Links
 * Type: Container
 * Parent: Sample Data File
 *
@@ -178,7 +200,7 @@ Container
 *
 * Label: Layered Solid Torus
 * Type: 3-Manifold Triangulation
-* Parent: 3-Manifolds
+* Parent: 3-Manifolds and Links
 *
 ************************************************************
 
@@ -226,7 +248,7 @@ Triangles:
 *
 * Label: RP² x S¹
 * Type: 3-Manifold Triangulation
-* Parent: 3-Manifolds
+* Parent: 3-Manifolds and Links
 *
 ************************************************************
 
@@ -279,9 +301,26 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 
 ************************************************************
 *
+* Label: Quad vertex surfaces
+* Type: Normal Surface List
+* Parent: RP² x S¹
+*
+************************************************************
+
+Embedded, vertex surfaces
+Coordinates: Quad normal
+Number of surfaces is 4
+1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0 || 1 1 1 1 ; 0 0 0
+1 0 0 0 ; 0 0 0 || 1 0 0 0 ; 0 0 0 || 0 0 0 0 ; 1 0 0
+0 0 1 1 ; 0 0 0 || 0 0 1 1 ; 0 0 0 || 0 0 0 0 ; 0 1 0
+0 1 0 0 ; 0 0 0 || 0 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 1
+
+
+************************************************************
+*
 * Label: Figure 8 Knot Complement
 * Type: SnapPea Triangulation
-* Parent: 3-Manifolds
+* Parent: 3-Manifolds and Links
 *
 ************************************************************
 
@@ -337,6 +376,22 @@ Cusps:
 1 0 0 ; 0 1 0
 1/2 0 1/2 ; 1 0 0
 0 1 0 ; 0 1/2 1/2
+
+
+************************************************************
+*
+* Label: Whitehead link
+* Type: Link
+* Parent: 3-Manifolds and Links
+*
+************************************************************
+
+5-crossing, 2-component link
+
+Component 0: ^0 _1 ^4 _3 ^2 _4
+Component 1: _0 ^1 _2 ^3
+
+Crossings: -0 -1 +2 +3 -4
 
 
 ************************************************************
@@ -494,6 +549,55 @@ Edges:
 
 ************************************************************
 *
+* Label: Higher Dimensions
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: B4 x~ S1
+* Type: 5-Manifold Triangulation
+* Parent: Higher Dimensions
+*
+************************************************************
+
+Triangulation with 2 5-simplices
+
+f-vector: 2, 10, 20, 20, 10, 2
+
+  Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
+  ---------+-----------------------------------------------------------------------------------
+        0  |              1 (12354)    boundary    boundary    boundary    boundary   1 (01234)
+        1  |              0 (12345)    boundary    boundary    boundary    boundary   0 (01243)
+
+
+
+************************************************************
+*
+* Label: 8-sphere
+* Type: 8-Manifold Triangulation
+* Parent: Higher Dimensions
+*
+************************************************************
+
+Triangulation with 2 8-simplices
+
+f-vector: 9, 36, 84, 126, 126, 84, 36, 9, 2
+
+  Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
+  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (01234567)   1 (01234568)   1 (01234578)   1 (01234678)   1 (01235678)   1 (01245678)   1 (01345678)   1 (02345678)   1 (12345678)
+        1  |              0 (01234567)   0 (01234568)   0 (01234578)   0 (01234678)   0 (01235678)   0 (01245678)   0 (01345678)   0 (02345678)   0 (12345678)
+
+
+
+************************************************************
+*
 * Label: Normal Surface Filters
 * Type: Container
 * Parent: Sample Data File
@@ -505,9 +609,34 @@ Container
 
 ************************************************************
 *
-* Label: Tori and Annuli
+* Label: Filter
 * Type: Surface Filter
 * Parent: Normal Surface Filters
+*
+************************************************************
+
+OR combination normal surface filter
+
+
+************************************************************
+*
+* Label: Discs
+* Type: Surface Filter
+* Parent: Filter
+*
+************************************************************
+
+Filter normal surfaces with restrictions:
+    Euler characteristic: 1
+    Compactness: { true }
+    Has real boundary: { true }
+
+
+************************************************************
+*
+* Label: Tori and Annuli
+* Type: Surface Filter
+* Parent: Filter
 *
 ************************************************************
 
@@ -525,7 +654,7 @@ Filter normal surfaces with restrictions:
 *
 ************************************************************
 
-Variable: tri = 3-Manifolds
+Variable: tri = 3-Manifolds and Links
 
 # This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
@@ -568,7 +697,29 @@ Welcome to Regina!
 
 ************************************************************
 *
-* Label: 3-Manifolds
+* Label: Empty PDF
+* Type: PDF
+* Parent: Read Me
+*
+************************************************************
+
+PDF packet (0 bytes)
+
+
+************************************************************
+*
+* Label: Dummy PDF
+* Type: PDF
+* Parent: Read Me
+*
+************************************************************
+
+PDF packet (5 bytes)
+
+
+************************************************************
+*
+* Label: 3-Manifolds and Links
 * Type: Container
 * Parent: Sample Data File
 *
@@ -581,7 +732,7 @@ Container
 *
 * Label: Layered Solid Torus
 * Type: 3-Manifold Triangulation
-* Parent: 3-Manifolds
+* Parent: 3-Manifolds and Links
 *
 ************************************************************
 
@@ -629,7 +780,7 @@ Triangles:
 *
 * Label: RP² x S¹
 * Type: 3-Manifold Triangulation
-* Parent: 3-Manifolds
+* Parent: 3-Manifolds and Links
 *
 ************************************************************
 
@@ -682,9 +833,26 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 
 ************************************************************
 *
+* Label: Quad vertex surfaces
+* Type: Normal Surface List
+* Parent: RP² x S¹
+*
+************************************************************
+
+Embedded, vertex surfaces
+Coordinates: Quad normal
+Number of surfaces is 4
+1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0 || 1 1 1 1 ; 0 0 0
+1 0 0 0 ; 0 0 0 || 1 0 0 0 ; 0 0 0 || 0 0 0 0 ; 1 0 0
+0 0 1 1 ; 0 0 0 || 0 0 1 1 ; 0 0 0 || 0 0 0 0 ; 0 1 0
+0 1 0 0 ; 0 0 0 || 0 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 1
+
+
+************************************************************
+*
 * Label: Figure 8 Knot Complement
 * Type: SnapPea Triangulation
-* Parent: 3-Manifolds
+* Parent: 3-Manifolds and Links
 *
 ************************************************************
 
@@ -740,6 +908,22 @@ Cusps:
 1 0 0 ; 0 1 0
 1/2 0 1/2 ; 1 0 0
 0 1 0 ; 0 1/2 1/2
+
+
+************************************************************
+*
+* Label: Whitehead link
+* Type: Link
+* Parent: 3-Manifolds and Links
+*
+************************************************************
+
+5-crossing, 2-component link
+
+Component 0: ^0 _1 ^4 _3 ^2 _4
+Component 1: _0 ^1 _2 ^3
+
+Crossings: -0 -1 +2 +3 -4
 
 
 ************************************************************
@@ -897,6 +1081,55 @@ Edges:
 
 ************************************************************
 *
+* Label: Higher Dimensions
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: B4 x~ S1
+* Type: 5-Manifold Triangulation
+* Parent: Higher Dimensions
+*
+************************************************************
+
+Triangulation with 2 5-simplices
+
+f-vector: 2, 10, 20, 20, 10, 2
+
+  Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
+  ---------+-----------------------------------------------------------------------------------
+        0  |              1 (12354)    boundary    boundary    boundary    boundary   1 (01234)
+        1  |              0 (12345)    boundary    boundary    boundary    boundary   0 (01243)
+
+
+
+************************************************************
+*
+* Label: 8-sphere
+* Type: 8-Manifold Triangulation
+* Parent: Higher Dimensions
+*
+************************************************************
+
+Triangulation with 2 8-simplices
+
+f-vector: 9, 36, 84, 126, 126, 84, 36, 9, 2
+
+  Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
+  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (01234567)   1 (01234568)   1 (01234578)   1 (01234678)   1 (01235678)   1 (01245678)   1 (01345678)   1 (02345678)   1 (12345678)
+        1  |              0 (01234567)   0 (01234568)   0 (01234578)   0 (01234678)   0 (01235678)   0 (01245678)   0 (01345678)   0 (02345678)   0 (12345678)
+
+
+
+************************************************************
+*
 * Label: Normal Surface Filters
 * Type: Container
 * Parent: Sample Data File
@@ -908,9 +1141,34 @@ Container
 
 ************************************************************
 *
-* Label: Tori and Annuli
+* Label: Filter
 * Type: Surface Filter
 * Parent: Normal Surface Filters
+*
+************************************************************
+
+OR combination normal surface filter
+
+
+************************************************************
+*
+* Label: Discs
+* Type: Surface Filter
+* Parent: Filter
+*
+************************************************************
+
+Filter normal surfaces with restrictions:
+    Euler characteristic: 1
+    Compactness: { true }
+    Has real boundary: { true }
+
+
+************************************************************
+*
+* Label: Tori and Annuli
+* Type: Surface Filter
+* Parent: Filter
 *
 ************************************************************
 
@@ -928,7 +1186,7 @@ Filter normal surfaces with restrictions:
 *
 ************************************************************
 
-Variable: tri = 3-Manifolds
+Variable: tri = 3-Manifolds and Links
 
 # This Python script runs through all 3-manifold triangulations in this file
 # and prints the first homology of each.
@@ -943,7 +1201,7 @@ while t != None:
 
 
 
-17 total packets in file.
+26 total packets in file.
 --------------------
 Exit code: 0
 ============================================================
@@ -951,19 +1209,28 @@ TEST: regfiledump -l @TESTDIR@/tiny.rga
 --------------------
 Sample Data File (Container)
 Read Me (Text)
-3-Manifolds (Container)
+Empty PDF (PDF)
+Dummy PDF (PDF)
+3-Manifolds and Links (Container)
 Layered Solid Torus (3-Manifold Triangulation)
 RP² x S¹ (3-Manifold Triangulation)
 Note (Text)
+Quad vertex surfaces (Normal Surface List)
 Figure 8 Knot Complement (SnapPea Triangulation)
 Angle Structures (Angle Structure List)
+Whitehead link (Link)
 4-Manifolds (Container)
 Twisted S³ x~ S¹ (4-Manifold Triangulation)
 Normal Hypersurfaces (Normal Hypersurface List)
 2-Manifolds (Container)
 Klein Bottle, version 1 (2-Manifold Triangulation)
 Klein Bottle, version 2 (2-Manifold Triangulation)
+Higher Dimensions (Container)
+B4 x~ S1 (5-Manifold Triangulation)
+8-sphere (8-Manifold Triangulation)
 Normal Surface Filters (Container)
+Filter (Surface Filter)
+Discs (Surface Filter)
 Tori and Annuli (Surface Filter)
 Python Script (Script)
 --------------------
@@ -973,29 +1240,38 @@ TEST: regfiledump -l -c @TESTDIR@/tiny.rga
 --------------------
 Sample Data File (Container)
 Read Me (Text)
-3-Manifolds (Container)
+Empty PDF (PDF)
+Dummy PDF (PDF)
+3-Manifolds and Links (Container)
 Layered Solid Torus (3-Manifold Triangulation)
 RP² x S¹ (3-Manifold Triangulation)
 Note (Text)
+Quad vertex surfaces (Normal Surface List)
 Figure 8 Knot Complement (SnapPea Triangulation)
 Angle Structures (Angle Structure List)
+Whitehead link (Link)
 4-Manifolds (Container)
 Twisted S³ x~ S¹ (4-Manifold Triangulation)
 Normal Hypersurfaces (Normal Hypersurface List)
 2-Manifolds (Container)
 Klein Bottle, version 1 (2-Manifold Triangulation)
 Klein Bottle, version 2 (2-Manifold Triangulation)
+Higher Dimensions (Container)
+B4 x~ S1 (5-Manifold Triangulation)
+8-sphere (8-Manifold Triangulation)
 Normal Surface Filters (Container)
+Filter (Surface Filter)
+Discs (Surface Filter)
 Tori and Annuli (Surface Filter)
 Python Script (Script)
 
-17 total packets in file.
+26 total packets in file.
 --------------------
 Exit code: 0
 ============================================================
 TEST: regfiledump -n @TESTDIR@/tiny.rga
 --------------------
-17 total packets in file.
+26 total packets in file.
 --------------------
 Exit code: 0
 ============================================================

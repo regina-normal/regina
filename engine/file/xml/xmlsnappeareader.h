@@ -51,8 +51,7 @@ namespace regina {
  */
 
 /**
- * An XML packet reader that reads a single SnapPea triangulation using the
- * Regina 7.0 file format.
+ * An XML packet reader that reads a single SnapPea triangulation.
  *
  * \ifacespython Not present.
  */
@@ -76,7 +75,7 @@ class XMLSnapPeaReader : public XMLPacketReader {
 
 /**
  * An XML packet reader that reads a single SnapPea triangulation using the
- * Regina 6.x file format.
+ * older second-generation file format.
  *
  * \ifacespython Not present.
  */

@@ -702,7 +702,7 @@ void Packet::writeXMLFile(std::ostream& out, FileFormat format) const {
     // Write the XML header.
     out << "<?xml version=\"1.0\"?>\n";
 
-    if (format == REGINA_XML_V3) {
+    if (format == REGINA_XML_GEN_2) {
         out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
         writeXMLPacketData(out, format);
         out << "</reginadata>\n";
@@ -786,7 +786,7 @@ void Packet::writeXMLFooter(std::ostream& out, const char* element,
         p->writeXMLPacketData(out, format);
 
     // Finish with the closing XML tag.
-    if (format != REGINA_XML_V3) {
+    if (format != REGINA_XML_GEN_2) {
         out << "</" << element << ">\n";
     } else {
         out << "</packet> <!-- " << regina::xml::xmlEncodeComment(label_)

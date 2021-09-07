@@ -98,9 +98,7 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     FileInfo ans;
     ans.compressed_ = compressed;
     ans.pathname_ = idPathname;
-    ans.type_ = FileInfo::TYPE_XML;
-    ans.typeDescription_ = "XML Regina data file";
-    ans.format_ = REGINA_XML_LATEST;
+    ans.format_ = REGINA_CURRENT_FILE_FORMAT;
 
     // Make it an invalid file until we know otherwise.
     ans.invalid_ = true;
@@ -149,9 +147,9 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
             return ans;
         in >> s;
         if (s == "<regina")
-            ans.format_ = REGINA_XML_V7;
+            ans.format_ = REGINA_XML_GEN_3;
         else if (s == "<reginadata")
-            ans.format_ = REGINA_XML_V3;
+            ans.format_ = REGINA_XML_GEN_2;
         else
             return ans;
 
@@ -179,39 +177,17 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
 }
 
 void FileInfo::writeTextShort(std::ostream& out) const {
-    out << "File information: " << typeDescription_ << " (";
-    switch (format_) {
-        case REGINA_XML_V3:
-            out << "v3";
-            break;
-        case REGINA_XML_V7:
-            out << "v7";
-            break;
-        default:
-            out << "v?";
-    }
+    out << "File information: " << formatDescription();
     if (compressed_)
         out << ", compressed";
-    out << ')';
 }
 
 void FileInfo::writeTextLong(std::ostream& out) const {
-    out << "Regina data\n" << typeDescription_;
+    // All supported file types are XML.
+    out << "Regina data: " << formatDescription();
     if (compressed_)
-        out << " (compressed)";
+        out << ", compressed";
     out << '\n';
-
-    switch (format_) {
-        case REGINA_XML_V3:
-            out << "XML format: Regina 3.0-6.0.1\n";
-            break;
-        case REGINA_XML_V7:
-            out << "XML format: Regina 7.0+\n";
-            break;
-        default:
-            out << "XML format: Unknown\n";
-            break;
-    }
 
     if (invalid_)
         out << "File contains invalid metadata.\n";
