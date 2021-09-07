@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>filter (combination)</refname>
-  <refpurpose>A logical combination surface filter</refpurpose>
+  <refpurpose>Replaced by &xml-filtercomb;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -35,6 +35,7 @@ filter ::= (&xml-op;)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>

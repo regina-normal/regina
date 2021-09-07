@@ -10,7 +10,8 @@
 
  <refnamediv>
   <refname>filter</refname>
-  <refpurpose>A normal surface filter</refpurpose>
+  <refpurpose>Replaced by different elements for different filter
+   types</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -49,6 +50,7 @@ filter ::= (<replaceable>type-specific content</replaceable>)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>

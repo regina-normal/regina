@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>filter (properties)</refname>
-  <refpurpose>A surface filter that uses basic properties</refpurpose>
+  <refpurpose>Replaced by &xml-filterprop;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -36,6 +36,7 @@ filter ::= (&xml-compact-filter;?, &xml-euler-filter;?,
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
