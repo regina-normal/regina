@@ -123,6 +123,7 @@ PYBIND11_MODULE(regina, m) {
     // Components from subdirectories (in approximate dependency order):
 
     addUtilitiesClasses(m);
+    addFileClasses(m); // needs to come before Packet
     addProgressClasses(m);
     addMathsClasses(m);
     addAlgebraClasses(m);
@@ -130,7 +131,6 @@ PYBIND11_MODULE(regina, m) {
     addTriangulationClasses(m);
     addCensusClasses(m);
     addDim4Classes(m);
-    addFileClasses(m);
     addForeignClasses(m);
     addSplitClasses(m);
     addSnapPeaClasses(m);
