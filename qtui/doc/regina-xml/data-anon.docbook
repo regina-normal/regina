@@ -1,0 +1,97 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-anon">
+ <refmeta>
+  <refentrytitle>anon</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>anon</refname>
+  <refpurpose>A collection of anonymous packets</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+anon ::= (&packetsyn1;
+          &packetsyn2;
+          &packetsyn3;
+          &packetsyn4;
+          &packetsyn5;*)</synopsis>
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.0</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   This element holds <emphasis>anonymous packets</emphasis>.
+   These are packets that can be included in a &regina; data file,
+   but will not appear in the packet tree when the user opens the file,
+   and are not guaranteed to be saved if/when the user saves the file again.
+  </para>
+  <para>
+   Anonymous packets were introduced to support normal surface lists,
+   normal hypersurface lists and angle structure lists whose underlying
+   triangulations have changed or been deleted, and which therefore
+   need to carry around private &ldquo;snapshots&rdquo; of these
+   triangulations as they used to look at some earlier point in time.
+  </para>
+  <para>
+   When reading a data file, &regina; will parse and construct any
+   anonymous packets that it finds, and will give later packets the
+   opportunity to use and/or make copies of this data if they choose.
+   Once the &xml; parsing is complete, any anonymous packets that were
+   read will be destroyed immediately, before the final packet tree
+   is returned to the user.
+  </para>
+  <para>
+   More precisely, a packet <replaceable>P</replaceable> will be given
+   the opportunity to use and/or copy an anonymous packet
+   <replaceable>A</replaceable> if and only if
+   <replaceable>P</replaceable> appears after <replaceable>A</replaceable>
+   in a pre-order depth-first traversal of the full packet tree.
+   Typically <replaceable>P</replaceable> would refer to
+   <replaceable>A</replaceable> using its <sgmltag>id</sgmltag> attribute.
+  </para>
+  <para>
+   Inside an &xml-anon; element, the packet tree structure is irrelevant.
+   All parent/child relationships are ignored, and all anonymous packets
+   will be stored together in a central &ldquo;anonymous pool&rdquo;.
+   In particular, an &xml-anon; element that appears as a descendant of
+   some other &xml-anon; element has no additional effect.
+   Likewise, any &xml-tag; elements that appear inside an &xml-anon;
+   element will simply be ignored.
+  </para>
+  <para>
+   An anonymous packet can be &ldquo;de-anonymised&rdquo; later in the
+   &xml; data file using an &xml-anonref; element, which has the effect of
+   moving an anonymous packet into the &ldquo;real&rdquo; packet tree.
+  </para>
+  &packetchilddesc;
+
+  <refsect2>
+   <title>Parents</title>
+   &packetparents;
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   &packetchildren;
+  </refsect2>
+ </refsect1>
+</refentry>

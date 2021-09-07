@@ -28,7 +28,8 @@ container ::= (&xml-tag;*,
                &packetsyn1;
                &packetsyn2;
                &packetsyn3;
-               &packetsyn4;*)</synopsis>
+               &packetsyn4;
+               &packetsyn5;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -67,7 +68,7 @@ container ::= (&xml-tag;*,
    <title>Children</title>
    <para>
     Element <sgmltag>textdata</sgmltag> has no children that are
-    specific to text packets.
+    specific to container packets.
    </para>
    &packetchildren;
   </refsect2>

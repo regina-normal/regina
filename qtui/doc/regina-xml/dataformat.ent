@@ -7,6 +7,8 @@
 <!ENTITY data-allowtaut SYSTEM "data-allowtaut.docbook">
 <!ENTITY data-angleparams SYSTEM "data-angleparams.docbook">
 <!ENTITY data-angles SYSTEM "data-angles.docbook">
+<!ENTITY data-anon SYSTEM "data-anon.docbook">
+<!ENTITY data-anonref SYSTEM "data-anonref.docbook">
 <!ENTITY data-code SYSTEM "data-code.docbook">
 <!ENTITY data-compact-filter SYSTEM "data-compact-filter.docbook">
 <!ENTITY data-compact-surface SYSTEM "data-compact-surface.docbook">
@@ -103,6 +105,10 @@
  '<link linkend="data-angleparams"><sgmltag>angleparams</sgmltag></link>'>
 <!ENTITY xml-angles
  '<link linkend="data-angles"><sgmltag>angles</sgmltag></link>'>
+<!ENTITY xml-anon
+ '<link linkend="data-anon"><sgmltag>anon</sgmltag></link>'>
+<!ENTITY xml-anonref
+ '<link linkend="data-anonref"><sgmltag>anonref</sgmltag></link>'>
 <!ENTITY xml-code
  '<link linkend="data-code"><sgmltag>code</sgmltag></link>'>
 <!ENTITY xml-compact-filter

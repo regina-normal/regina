@@ -32,6 +32,8 @@
 
   <!ENTITY allpackets "<simplelist type='inline'>
      <member>&xml-angles;</member>
+     <member>&xml-anon;</member>
+     <member>&xml-anonref;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
      <member>&xml-filterprop;</member>
@@ -49,11 +51,14 @@
   <!ENTITY packetsyn1 "(&xml-container;|&xml-textdata;|&xml-script;|&xml-pdfdata;|">
   <!ENTITY packetsyn2 " &xml-tri;|&xml-link;|&xml-snappeadata;|">
   <!ENTITY packetsyn3 " &xml-angles;|&xml-surfaces;|&xml-hypersurfaces;|">
-  <!ENTITY packetsyn4 " &xml-filtercomb;|&xml-filterprop;|&xml-filtertrivial;)">
+  <!ENTITY packetsyn4 " &xml-filtercomb;|&xml-filterprop;|&xml-filtertrivial;|">
+  <!ENTITY packetsyn5 " &xml-anon;|&xml-anonref;)">
   <!ENTITY packetchildren "<para>
     The following children can occur in all packet elements:
     <simplelist type='inline'>
      <member>&xml-angles;</member>
+     <member>&xml-anon;</member>
+     <member>&xml-anonref;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
      <member>&xml-filterprop;</member>
@@ -75,6 +80,8 @@
     The following elements can contain any packet element (including this):
     <simplelist type='inline'>
      <member>&xml-angles;</member>
+     <member>&xml-anon;</member>
+     <member>&xml-anonref;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
      <member>&xml-filterprop;</member>
@@ -102,23 +109,16 @@
     immediate children of this packet in the packet tree.
    </para>">
   <!ENTITY packetattrlist2col "<row>
-    <entry><sgmltag>label</sgmltag></entry>
+    <entry><sgmltag>id</sgmltag></entry>
     <entry><type>CDATA</type></entry>
    </row>
    <row>
-    <entry><sgmltag>id</sgmltag></entry>
+    <entry><sgmltag>label</sgmltag></entry>
     <entry><type>CDATA</type></entry>
    </row>">
   <!ENTITY packetattrdesc "<para>The following attributes are common to all
     packet types:</para>
    <variablelist>
-    <varlistentry>
-     <term><sgmltag>label</sgmltag></term>
-     <listitem><para>
-      The name given by the user to this particular packet within the overall
-      packet tree.
-     </para></listitem>
-    </varlistentry>
     <varlistentry>
      <term><sgmltag>id</sgmltag></term>
      <listitem>
@@ -142,6 +142,13 @@
        save it again, the packet IDs are allowed to change.
       </para>
      </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><sgmltag>label</sgmltag></term>
+     <listitem><para>
+      The name given by the user to this particular packet within the overall
+      packet tree.
+     </para></listitem>
     </varlistentry>
    </variablelist>">
 

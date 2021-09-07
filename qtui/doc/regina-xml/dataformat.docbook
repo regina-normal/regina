@@ -52,6 +52,8 @@
  &data-abeliangroup;
  &data-angleparams;
  &data-angles;
+ &data-anon;
+ &data-anonref;
  &data-code;
  &data-compact-filter;
  &data-compact-surface;

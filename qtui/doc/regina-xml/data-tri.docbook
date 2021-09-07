@@ -33,7 +33,8 @@ tri ::= (&xml-simplex;*,
          &packetsyn1;
          &packetsyn2;
          &packetsyn3;
-         &packetsyn4;*)</synopsis>
+         &packetsyn4;
+         &packetsyn5;*)</synopsis>
      </entry></row>
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>

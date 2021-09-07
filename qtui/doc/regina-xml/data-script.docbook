@@ -29,7 +29,8 @@ script ::= (&xml-var;*, &xml-code;,
             &packetsyn1;
             &packetsyn2;
             &packetsyn3;
-            &packetsyn4;*)</synopsis>
+            &packetsyn4;
+            &packetsyn5;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
