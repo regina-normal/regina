@@ -54,10 +54,10 @@
 namespace regina {
 
 class Packet;
-class PacketChildren;
-class PacketDescendants;
 class PacketListener;
-class SubtreeIterator;
+template <bool> class PacketChildren;
+template <bool> class PacketDescendants;
+template <bool> class SubtreeIterator;
 
 /**
  * \addtogroup packet Basic Packet Types
@@ -151,15 +151,15 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
             /**< The label for this individual packet of information. */
 
         Packet* treeParent_;
-            /**< Parent packet in the tree structure (0 if none). */
+            /**< Parent packet in the tree (\c null if none). */
         Packet* firstTreeChild_;
-            /**< First child packet in the tree structure (0 if none). */
+            /**< First child packet in the tree (\c null if none). */
         Packet* lastTreeChild_;
-            /**< Last child packet in the tree structure (0 if none). */
+            /**< Last child packet in the tree (\c null if none). */
         Packet* prevTreeSibling_;
-            /**< Previous sibling packet in the tree structure (0 if none). */
+            /**< Previous sibling packet in the tree (\c null if none). */
         Packet* nextTreeSibling_;
-            /**< Next sibling packet in the tree structure (0 if none). */
+            /**< Next sibling packet in the tree (\c null if none). */
 
         std::unique_ptr<std::set<std::string>> tags_;
             /**< The set of all tags associated with this packet. */
@@ -191,9 +191,9 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * \ifacespython Not present.
          *
          * @param parent the parent beneath which to insert this packet,
-         * or 0 if this packet is to be the matriarch of a new tree.
+         * or \c null if this packet is to be the matriarch of a new tree.
          */
-        Packet(Packet* parent = 0);
+        Packet(Packet* parent = nullptr);
 
         /**
          * Destructor that also orphans this packet and destroys
@@ -482,7 +482,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * This routine takes small constant time.
          *
-         * @return the parent packet, or 0 if there is none.
+         * @return the parent packet, or \c null if there is none.
          */
         Packet* parent() const;
 
@@ -492,7 +492,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * This routine takes small constant time.
          *
-         * @return the first child packet, or 0 if there is none.
+         * @return the first child packet, or \c null if there is none.
          */
         Packet* firstChild() const;
 
@@ -502,7 +502,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * This routine takes small constant time.
          *
-         * @return the last child packet, or 0 if there is none.
+         * @return the last child packet, or \c null if there is none.
          */
         Packet* lastChild() const;
 
@@ -513,7 +513,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * This routine takes small constant time.
          *
-         * @return the next sibling of this packet, or 0 if there is
+         * @return the next sibling of this packet, or \c null if there is
          * none.
          */
         Packet* nextSibling() const;
@@ -525,7 +525,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * This routine takes small constant time.
          *
-         * @return the previous sibling of this packet, or 0 if there is
+         * @return the previous sibling of this packet, or \c null if there is
          * none.
          */
         Packet* prevSibling() const;
@@ -644,7 +644,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param newChild the child to insert.
          * @param prevChild the preexisting child of this packet after
-         * which \a newChild will be inserted, or 0 if \a newChild
+         * which \a newChild will be inserted, or \c null if \a newChild
          * is to be the first child of this packet.
          */
         void insertChildAfter(Packet* newChild, Packet* prevChild);
@@ -776,8 +776,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         /*@{*/
 
         /**
-         * Returns an iterator at the beginning of the range of packets
-         * in the subtree rooted at this packet.
+         * Returns a non-const iterator at the beginning of the range of
+         * packets in the subtree rooted at this packet.
          *
          * Subtree iteration is depth-first, where a parent packet is always
          * processed before its descendants.  Therefore the iterator returned
@@ -800,13 +800,15 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *     ...
          * \endcode
          *
+         * Since Regina 7.0, the return type is templated in order to support
+         * both const and non-const iteration.  It is recommended that you
+         * just use \c auto if you need to store a local copy of the returned
+         * iterator.
+         *
          * See also descendants() for iterating through just the strict
          * descendants in the subtree (i.e., excluding this packet itself),
          * and children() for iterating just through the immediate children
          * of this packet (not the full subtree).
-         *
-         * \note This routine is non-const because \e dereferencing
-         * a SubtreeIterator returns a non-const packet pointer.
          *
          * \ifacespython As well as treating each packet as an iterable
          * object, Regina supplies a member function <tt>Packet.subtree()</tt>
@@ -816,10 +818,10 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @return an iterator at the beginning of this subtree.
          */
-        SubtreeIterator begin();
+        SubtreeIterator<false> begin();
 
         /**
-         * Returns an iterator beyond the end of the range of packets
+         * Returns a non-const iterator beyond the end of the range of packets
          * in the subtree rooted at this packet.
          *
          * In C++, the begin() and end() routines allow you to iterate through
@@ -833,7 +835,54 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @return an iterator beyond the end of this subtree.
          */
-        SubtreeIterator end();
+        SubtreeIterator<false> end();
+
+        /**
+         * Returns a const iterator at the beginning of the range of packets
+         * in the subtree rooted at this packet.
+         *
+         * Subtree iteration is depth-first, where a parent packet is always
+         * processed before its descendants.  Therefore the iterator returned
+         * by begin() will always point to this packet itself.
+         *
+         * The begin() and end() routines allow you to iterate through
+         * an entire packet subtree using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * const Packet* subtree = ...;
+         * for (const Packet* p : *subtree) { ... }
+         * \endcode
+         *
+         * Since Regina 7.0, the return type is templated in order to support
+         * both const and non-const iteration.  It is recommended that you
+         * just use \c auto if you need to store a local copy of the returned
+         * iterator.
+         *
+         * See also descendants() for iterating through just the strict
+         * descendants in the subtree (i.e., excluding this packet itself),
+         * and children() for iterating just through the immediate children
+         * of this packet (not the full subtree).
+         *
+         * \ifacespython Not present, but the non-const version is available.
+         *
+         * @return an iterator at the beginning of this subtree.
+         */
+        SubtreeIterator<true> begin() const;
+
+        /**
+         * Returns a const iterator beyond the end of the range of packets
+         * in the subtree rooted at this packet.
+         *
+         * In C++, the begin() and end() routines allow you to iterate through
+         * an entire packet subtree using C++11 range-based \c for loops.
+         *
+         * See the begin() documentation for further details.
+         *
+         * \ifacespython Not present, but the non-const version is available.
+         *
+         * @return an iterator beyond the end of this subtree.
+         */
+        SubtreeIterator<true> end() const;
 
         /**
          * Returns a lightweight object for iterating through all
@@ -867,6 +916,11 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * returns a small iterator that visits each descendant as required.
          * In particular, this routine has small constant time and memory.
          *
+         * Since Regina 7.0, the return type is templated in order to support
+         * both const and non-const iteration.  It is recommended that you
+         * just use \c auto if you need to store a local copy of the returned
+         * object.
+         *
          * See also begin() and end() for iterating through the entire
          * subtree \e including this packet, and children() for iterating
          * over just this packet's immediate children.
@@ -874,7 +928,47 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return an object for iterating through the strict descendants
          * of this packet.
          */
-        PacketDescendants descendants() const;
+        PacketDescendants<false> descendants();
+
+        /**
+         * Returns a lightweight object for iterating through all
+         * strict descendants of this packet in the packet tree.
+         *
+         * The order of iteration is exactly the same as when iterating
+         * over the full subtree rooted at this packet (as offered by
+         * Packet::begin() and Packet::end()), except that the iteration
+         * \e excludes this packet itself.  In particular, the iteration is
+         * depth-first, and each packet in the subtree is processed
+         * before its own descendants.
+         *
+         * This routine allows you to iterate through all strict descendants
+         * of a given packet using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * const Packet* parent = ...;
+         * for (const Packet* desc : parent->descendants()) { ... }
+         * \endcode
+         *
+         * This function returns a lightweight object in the sense that it does
+         * not generate a full list of descendants in advance, but instead just
+         * returns a small iterator that visits each descendant as required.
+         * In particular, this routine has small constant time and memory.
+         *
+         * Since Regina 7.0, the return type is templated in order to support
+         * both const and non-const iteration.  It is recommended that you
+         * just use \c auto if you need to store a local copy of the returned
+         * object.
+         *
+         * See also begin() and end() for iterating through the entire
+         * subtree \e including this packet, and children() for iterating
+         * over just this packet's immediate children.
+         *
+         * \ifacespython Not present, but the non-const version is available.
+         *
+         * @return an object for iterating through the strict descendants
+         * of this packet.
+         */
+        PacketDescendants<true> descendants() const;
 
         /**
          * Returns a lightweight object for iterating through the
@@ -901,13 +995,50 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * just returns a small iterator that visits each child as required.
          * In particular, this routine has small constant time and memory.
          *
+         * Since Regina 7.0, the return type is templated in order to support
+         * both const and non-const iteration.  It is recommended that you
+         * just use \c auto if you need to store a local copy of the returned
+         * object.
+         *
          * See begin() and end(), as well as descendants(), for iterating
          * through the subtree rooted at this packet (not just the immediate
          * children).
          *
          * @return an object for iterating through the children of this packet.
          */
-        PacketChildren children() const;
+        PacketChildren<false> children();
+
+        /**
+         * Returns a lightweight object for iterating through the
+         * immediate children of this packet.
+         *
+         * This routine allows you to iterate through the immediate children
+         * of a given packet using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * const Packet* parent = ...;
+         * for (const Packet* child : parent->children()) { ... }
+         * \endcode
+         *
+         * This function returns a lightweight object in the sense that it
+         * does not generate a full list of children in advance, but instead
+         * just returns a small iterator that visits each child as required.
+         * In particular, this routine has small constant time and memory.
+         *
+         * Since Regina 7.0, the return type is templated in order to support
+         * both const and non-const iteration.  It is recommended that you
+         * just use \c auto if you need to store a local copy of the returned
+         * object.
+         *
+         * See begin() and end(), as well as descendants(), for iterating
+         * through the subtree rooted at this packet (not just the immediate
+         * children).
+         *
+         * \ifacespython Not present, but the non-const version is available.
+         *
+         * @return an object for iterating through the children of this packet.
+         */
+        PacketChildren<true> children() const;
 
         /**
          * Finds the next packet after this in a complete depth-first
@@ -919,7 +1050,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @return the next packet, or 0 if this is the last packet in
+         * @return the next packet, or \c null if this is the last packet in
          * such an iteration.
          */
         Packet* nextTreePacket();
@@ -934,7 +1065,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @return the next packet, or 0 if this is the last packet in
+         * @return the next packet, or \c null if this is the last packet in
          * such an iteration.
          */
         const Packet* nextTreePacket() const;
@@ -951,7 +1082,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param type the type of packet to search for, as returned by
          * typeName().  Note that string comparisons are case sensitive.
-         * @return the first such packet, or 0 if there are no packets of
+         * @return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
         Packet* firstTreePacket(const std::string& type);
@@ -968,7 +1099,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param type the type of packet to search for, as returned by
          * typeName().  Note that string comparisons are case sensitive.
-         * @return the first such packet, or 0 if there are no packets of
+         * @return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
         const Packet* firstTreePacket(const std::string& type) const;
@@ -982,7 +1113,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param type the type of packet to search for, as returned by
          * typeName().  Note that string comparisons are case sensitive.
-         * @return the next such packet, or 0 if this is the last packet
+         * @return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
         Packet* nextTreePacket(const std::string& type);
@@ -996,7 +1127,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param type the type of packet to search for, as returned by
          * typeName().  Note that string comparisons are case sensitive.
-         * @return the next such packet, or 0 if this is the last packet
+         * @return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
         const Packet* nextTreePacket(const std::string& type) const;
@@ -1007,7 +1138,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * comparisons are case sensitive.
          *
          * @param label the label to search for.
-         * @return the packet with the requested label, or 0 if there is
+         * @return the packet with the requested label, or \c null if there is
          * no such packet.
          */
         Packet* findPacketLabel(const std::string& label);
@@ -1018,7 +1149,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * comparisons are case sensitive.
          *
          * @param label the label to search for.
-         * @return the packet with the requested label, or 0 if there is
+         * @return the packet with the requested label, or \c null if there is
          * no such packet.
          */
         const Packet* findPacketLabel(const std::string& label) const;
@@ -1104,7 +1235,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * the end of the parent's list of children (the default), or
          * \c false if the new packet should be inserted as the sibling
          * immediately after this packet.
-         * @return the newly inserted packet, or 0 if this packet has no
+         * @return the newly inserted packet, or \c null if this packet has no
          * parent.
          */
         Packet* clone(bool cloneDescendants = false, bool end = true) const;
@@ -1183,8 +1314,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * Typically this will be called from the root of the packet tree,
          * which will write the entire packet tree to the output stream.
-         *
-         * \pre This packet does not depend upon its parent.
          *
          * \ifacespython The argument \a out is not present; instead the
          * XML data is written to standard output.
@@ -1565,6 +1694,9 @@ Packet* open(std::istream& in);
  * A forward iterator for iterating through all immediate children of a
  * given packet.
  *
+ * \tparam const_ Indicates whether this iterator should offer const or
+ * non-const access to the child packets.
+ *
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
@@ -1572,22 +1704,26 @@ Packet* open(std::istream& in);
  * then ChildIterator implements <tt>next()</tt>, which either returns
  * the next child packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
+ * All iteration in Python is non-const (i.e., Python exclusively uses
+ * the classes where \a const_ is \c false).
  */
+template <bool const_>
 class ChildIterator {
     public:
+        typedef typename std::conditional<const_, const Packet*, Packet*>::type
+                value_type;
+            /**< Indicates what the iterator points to. */
         typedef std::forward_iterator_tag iterator_category;
             /**< Declares this to be a forward iterator type. */
-        typedef regina::Packet* value_type;
-            /**< Indicates what the iterator points to. */
         typedef ptrdiff_t difference_type;
             /**< The type obtained by subtracting iterators. */
-        typedef regina::Packet* const* pointer;
+        typedef value_type const* pointer;
             /**< A pointer to \a value_type. */
-        typedef regina::Packet* const& reference;
+        typedef value_type const& reference;
             /**< A reference to \a value_type. */
 
     private:
-        Packet* current_;
+        value_type current_;
             /**< The child packet that this iterator is pointing to, or
                  \c null for a past-the-end iterator. */
 
@@ -1613,9 +1749,9 @@ class ChildIterator {
          * is via Packet::children().
          *
          * @param current the child packet that the new iterator should
-         * point to, or 0 if the new iterator should be past-the-end.
+         * point to, or \c null if the new iterator should be past-the-end.
          */
-        ChildIterator(Packet* current);
+        ChildIterator(value_type current);
 
         /**
          * Default copy assignment operator.
@@ -1668,7 +1804,7 @@ class ChildIterator {
          *
          * @return the current packet.
          */
-        Packet* const& operator * () const;
+        value_type const& operator * () const;
 };
 
 /**
@@ -1678,30 +1814,37 @@ class ChildIterator {
  * The order of iteration is depth-first, where a parent packet is always
  * processed before its descendants.
  *
+ * \tparam const_ Indicates whether this iterator should offer const or
+ * non-const access to the packet tree.
+ *
  * \ifacespython Instead of the C++ interface described here, in Python
  * this class implements the Python iterable/iterator interface.  It implements
  * the function <tt>__iter__()</tt>, which returns the iterator object itself;
  * it also implements <tt>next()</tt>, which either returns the next packet
  * in the subtree iteration or else throws a <tt>StopException</tt> if there
  * are no more packets to return.
+ * All iteration in Python is non-const (i.e., Python exclusively uses
+ * the classes where \a const_ is \c false).
  */
+template <bool const_>
 class SubtreeIterator {
     public:
+        typedef typename std::conditional<const_, const Packet*, Packet*>::type
+                value_type;
+            /**< Indicates what the iterator points to. */
         typedef std::forward_iterator_tag iterator_category;
             /**< Declares this to be a forward iterator type. */
-        typedef regina::Packet* value_type;
-            /**< Indicates what the iterator points to. */
         typedef ptrdiff_t difference_type;
             /**< The type obtained by subtracting iterators. */
-        typedef regina::Packet* const* pointer;
+        typedef value_type const* pointer;
             /**< A pointer to \a value_type. */
-        typedef regina::Packet* const& reference;
+        typedef value_type const& reference;
             /**< A reference to \a value_type. */
 
     private:
-        const Packet* subtree_;
+        value_type subtree_;
             /**< The root of the packet subtree that we are iterating over. */
-        Packet* current_;
+        value_type current_;
             /**< The packet that this iterator is pointing to, or
                  \c null for a past-the-end iterator. */
 
@@ -1735,7 +1878,7 @@ class SubtreeIterator {
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
          */
-        SubtreeIterator(Packet* subtree);
+        SubtreeIterator(value_type subtree);
         /**
          * Creates a new iterator pointing to the given packet within
          * the given subtree.
@@ -1748,11 +1891,12 @@ class SubtreeIterator {
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
          * @param current the packet within the subtree that the new iterator
-         * should point to, or 0 if the new iterator should be past-the-end.
+         * should point to, or \c null if the new iterator should be
+         * past-the-end.
          * If \a current is not null, then it must be equal to or a
          * descendant of \a subtree.
          */
-        SubtreeIterator(const Packet* subtree, Packet* current);
+        SubtreeIterator(value_type subtree, value_type current);
 
         /**
          * Default copy assignment operator.
@@ -1813,7 +1957,7 @@ class SubtreeIterator {
          *
          * @return the current packet.
          */
-        Packet* const& operator * () const;
+        value_type const& operator * () const;
 };
 
 /**
@@ -1841,6 +1985,9 @@ class SubtreeIterator {
  * functions.  Copies of a PacketChildren will iterate over the children
  * of the same underlying packet.
  *
+ * \tparam const_ Indicates whether this iterator should offer const or
+ * non-const access to the child packets.
+ *
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
@@ -1848,10 +1995,13 @@ class SubtreeIterator {
  * then ChildIterator implements <tt>next()</tt>, which either returns
  * the next child packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
+ * All iteration in Python is non-const (i.e., Python exclusively uses
+ * the classes where \a const_ is \c false).
  */
+template <bool const_>
 class PacketChildren {
     private:
-        const Packet* parent_;
+        typename ChildIterator<const_>::value_type parent_;
             /**< The packet whose children we are iterating through. */
 
     public:
@@ -1869,7 +2019,7 @@ class PacketChildren {
          *
          * @param parent the packet whose children we will iterate through.
          */
-        PacketChildren(const Packet* parent);
+        PacketChildren(typename ChildIterator<const_>::value_type parent);
 
         /**
          * Default copy assignment operator.
@@ -1886,7 +2036,7 @@ class PacketChildren {
          *
          * @return the beginning iterator.
          */
-        ChildIterator begin() const;
+        ChildIterator<const_> begin() const;
         /**
          * Returns an iterator at the end of the range of children.
          *
@@ -1895,7 +2045,7 @@ class PacketChildren {
          *
          * @return the past-the-end iterator.
          */
-        ChildIterator end() const;
+        ChildIterator<const_> end() const;
 };
 
 /**
@@ -1923,6 +2073,9 @@ class PacketChildren {
  * functions.  Copies of a PacketDescendants will iterate over the descendants
  * of the same underlying packet.
  *
+ * \tparam const_ Indicates whether this iterator should offer const or
+ * non-const access to the packet tree.
+ *
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketDescendants and SubtreeIterator together implement the
  * Python iterable/iterator interface.  The class PacketDescendants has just
@@ -1930,10 +2083,13 @@ class PacketChildren {
  * then SubtreeIterator implements <tt>next()</tt>, which either returns
  * the next descendant packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
+ * All iteration in Python is non-const (i.e., Python exclusively uses
+ * the classes where \a const_ is \c false).
  */
+template <bool const_>
 class PacketDescendants {
     private:
-        const Packet* subtree_;
+        typename SubtreeIterator<const_>::value_type subtree_;
             /**< The packet whose strict descendants we are iterating over. */
 
     public:
@@ -1952,7 +2108,7 @@ class PacketDescendants {
          * @param subtree the packet whose strict descendants we will iterate
          * through.
          */
-        PacketDescendants(const Packet* subtree);
+        PacketDescendants(typename SubtreeIterator<const_>::value_type subtree);
 
         /**
          * Default copy assignment operator.
@@ -1971,7 +2127,7 @@ class PacketDescendants {
          *
          * @return the beginning iterator.
          */
-        SubtreeIterator begin() const;
+        SubtreeIterator<const_> begin() const;
         /**
          * Returns an iterator at the end of the range of strict descendants.
          *
@@ -1980,7 +2136,7 @@ class PacketDescendants {
          *
          * @return the past-the-end iterator.
          */
-        SubtreeIterator end() const;
+        SubtreeIterator<const_> end() const;
 };
 
 /**
@@ -2473,21 +2629,30 @@ class PacketListener {
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
-inline SubtreeIterator::SubtreeIterator() : subtree_(0), current_(0) {
+template <bool const_>
+inline SubtreeIterator<const_>::SubtreeIterator() :
+        subtree_(nullptr), current_(nullptr) {
 }
 
-inline SubtreeIterator::SubtreeIterator(Packet* subtree) :
+template <bool const_>
+inline SubtreeIterator<const_>::SubtreeIterator(value_type subtree) :
         subtree_(subtree), current_(subtree) {
 }
 
-inline SubtreeIterator::SubtreeIterator(const Packet* subtree,
-        Packet* current) : subtree_(subtree), current_(current) {
+template <bool const_>
+inline SubtreeIterator<const_>::SubtreeIterator(value_type subtree,
+        value_type current) : subtree_(subtree), current_(current) {
 }
 
-inline PacketChildren::PacketChildren(const Packet* parent) : parent_(parent) {
+template <bool const_>
+inline PacketChildren<const_>::PacketChildren(
+        typename ChildIterator<const_>::value_type parent) :
+        parent_(parent) {
 }
 
-inline PacketDescendants::PacketDescendants(const Packet* subtree) :
+template <bool const_>
+inline PacketDescendants<const_>::PacketDescendants(
+        typename SubtreeIterator<const_>::value_type subtree) :
         subtree_(subtree) {
 }
 
@@ -2500,13 +2665,13 @@ inline void PacketListener::packetWasChanged(Packet*) {
 // Inline functions for Packet
 
 inline Packet::Packet(Packet* parent) :
-        firstTreeChild_(0), lastTreeChild_(0),
-        prevTreeSibling_(0), nextTreeSibling_(0), changeEventSpans_(0),
-        inDestructor_(false) {
+        firstTreeChild_(nullptr), lastTreeChild_(nullptr),
+        prevTreeSibling_(nullptr), nextTreeSibling_(nullptr),
+        changeEventSpans_(0), inDestructor_(false) {
     if (parent)
         parent->insertChildLast(this);
     else
-        treeParent_ = 0;
+        treeParent_ = nullptr;
 }
 
 inline void Packet::writeTextLong(std::ostream& out) const {
@@ -2580,20 +2745,36 @@ inline bool Packet::hasOwner() const {
     return treeParent_;
 }
 
-inline SubtreeIterator Packet::begin() {
-    return SubtreeIterator(this);
+inline SubtreeIterator<false> Packet::begin() {
+    return SubtreeIterator<false>(this);
 }
 
-inline SubtreeIterator Packet::end() {
-    return SubtreeIterator(this, nullptr);
+inline SubtreeIterator<false> Packet::end() {
+    return SubtreeIterator<false>(this, nullptr);
 }
 
-inline PacketDescendants Packet::descendants() const {
-    return PacketDescendants(this);
+inline SubtreeIterator<true> Packet::begin() const {
+    return SubtreeIterator<true>(this);
 }
 
-inline PacketChildren Packet::children() const {
-    return PacketChildren(this);
+inline SubtreeIterator<true> Packet::end() const {
+    return SubtreeIterator<true>(this, nullptr);
+}
+
+inline PacketDescendants<false> Packet::descendants() {
+    return PacketDescendants<false>(this);
+}
+
+inline PacketDescendants<true> Packet::descendants() const {
+    return PacketDescendants<true>(this);
+}
+
+inline PacketChildren<false> Packet::children() {
+    return PacketChildren<false>(this);
+}
+
+inline PacketChildren<true> Packet::children() const {
+    return PacketChildren<true>(this);
 }
 
 inline bool Packet::dependsOnParent() const {
@@ -2638,44 +2819,60 @@ inline Packet::ChangeEventSpan::~ChangeEventSpan() {
 
 // Inline functions for child/subtree iterators and related classes
 
-inline ChildIterator::ChildIterator() : current_(0) {
+template <bool const_>
+inline ChildIterator<const_>::ChildIterator() : current_(nullptr) {
 }
 
-inline ChildIterator::ChildIterator(Packet* current) : current_(current) {
+template <bool const_>
+inline ChildIterator<const_>::ChildIterator(value_type current) :
+        current_(current) {
 }
 
-inline bool ChildIterator::operator == (const ChildIterator& rhs) const {
+template <bool const_>
+inline bool ChildIterator<const_>::operator == (const ChildIterator& rhs)
+        const {
     return current_ == rhs.current_;
 }
 
-inline bool ChildIterator::operator != (const ChildIterator& rhs) const {
+template <bool const_>
+inline bool ChildIterator<const_>::operator != (const ChildIterator& rhs)
+        const {
     return current_ != rhs.current_;
 }
 
-inline ChildIterator& ChildIterator::operator ++ () {
+template <bool const_>
+inline ChildIterator<const_>& ChildIterator<const_>::operator ++ () {
     current_ = current_->nextSibling();
     return *this;
 }
 
-inline ChildIterator ChildIterator::operator ++ (int) {
-    Packet* ret = current_;
+template <bool const_>
+inline ChildIterator<const_> ChildIterator<const_>::operator ++ (int) {
+    value_type ret = current_;
     current_ = current_->nextSibling();
     return ChildIterator(ret);
 }
 
-inline Packet* const& ChildIterator::operator * () const {
+template <bool const_>
+inline typename ChildIterator<const_>::value_type const&
+        ChildIterator<const_>::operator * () const {
     return current_;
 }
 
-inline bool SubtreeIterator::operator == (const SubtreeIterator& rhs) const {
+template <bool const_>
+inline bool SubtreeIterator<const_>::operator == (const SubtreeIterator& rhs)
+        const {
     return current_ == rhs.current_;
 }
 
-inline bool SubtreeIterator::operator != (const SubtreeIterator& rhs) const {
+template <bool const_>
+inline bool SubtreeIterator<const_>::operator != (const SubtreeIterator& rhs)
+        const {
     return current_ != rhs.current_;
 }
 
-inline SubtreeIterator& SubtreeIterator::operator ++ () {
+template <bool const_>
+inline SubtreeIterator<const_>& SubtreeIterator<const_>::operator ++ () {
     if (current_->firstChild())
         current_ = current_->firstChild();
     else {
@@ -2689,30 +2886,37 @@ inline SubtreeIterator& SubtreeIterator::operator ++ () {
     return *this;
 }
 
-inline SubtreeIterator SubtreeIterator::operator ++ (int) {
-    Packet* ret = current_;
+template <bool const_>
+inline SubtreeIterator<const_> SubtreeIterator<const_>::operator ++ (int) {
+    value_type ret = current_;
     ++(*this);
     return SubtreeIterator(subtree_, ret);
 }
 
-inline Packet* const& SubtreeIterator::operator * () const {
+template <bool const_>
+inline typename SubtreeIterator<const_>::reference
+        SubtreeIterator<const_>::operator * () const {
     return current_;
 }
 
-inline ChildIterator PacketChildren::begin() const {
-    return ChildIterator(parent_->firstChild());
+template <bool const_>
+inline ChildIterator<const_> PacketChildren<const_>::begin() const {
+    return ChildIterator<const_>(parent_->firstChild());
 }
 
-inline ChildIterator PacketChildren::end() const {
-    return ChildIterator(nullptr);
+template <bool const_>
+inline ChildIterator<const_> PacketChildren<const_>::end() const {
+    return ChildIterator<const_>(nullptr);
 }
 
-inline SubtreeIterator PacketDescendants::begin() const {
-    return SubtreeIterator(subtree_, subtree_->firstChild());
+template <bool const_>
+inline SubtreeIterator<const_> PacketDescendants<const_>::begin() const {
+    return SubtreeIterator<const_>(subtree_, subtree_->firstChild());
 }
 
-inline SubtreeIterator PacketDescendants::end() const {
-    return SubtreeIterator(subtree_, nullptr);
+template <bool const_>
+inline SubtreeIterator<const_> PacketDescendants<const_>::end() const {
+    return SubtreeIterator<const_>(subtree_, nullptr);
 }
 
 // Inline functions for PacketShell

@@ -77,7 +77,7 @@ void dumpNoPacket(std::ostream& out, const std::string& packetLabel,
     }
 }
 
-void dumpPacketHeader(std::ostream& out, Packet* p) {
+void dumpPacketHeader(std::ostream& out, const Packet* p) {
     out << separator << '\n';
     out << "*\n";
     out << "* Label: " << p->humanLabel() << '\n';
@@ -98,7 +98,7 @@ void dumpPacketHeader(std::ostream& out, Packet* p) {
     out << separator << '\n';
 }
 
-void dumpPacket(std::ostream& out, Packet* p, char dumpOpt) {
+void dumpPacket(std::ostream& out, const Packet* p, char dumpOpt) {
     if (dumpOpt == 'l')
         out << p->fullName() << '\n';
     else if (dumpOpt == 'f') {
@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
 
     if (dumpOpt != 'n') {
         if (packets.empty())
-            for (Packet* p : *tree)
+            for (const Packet* p : *tree)
                 dumpPacket(out, p, dumpOpt);
         else
             for (StringList::const_iterator it = packets.begin();

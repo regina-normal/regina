@@ -56,32 +56,32 @@ namespace {
 }
 
 void addPacket(pybind11::module_& m) {
-    auto c1 = pybind11::class_<regina::PacketChildren>(m, "PacketChildren")
-        .def("__iter__", [](regina::PacketChildren c) {
+    auto c1 = pybind11::class_<PacketChildren<false>>(m, "PacketChildren")
+        .def("__iter__", [](PacketChildren<false> c) {
             return c.begin();
         })
         ;
     regina::python::add_eq_operators(c1);
 
-    auto c2 = pybind11::class_<regina::PacketDescendants>(m, "PacketDescendants")
-        .def("__iter__", [](regina::PacketDescendants d) {
+    auto c2 = pybind11::class_<PacketDescendants<false>>(m, "PacketDescendants")
+        .def("__iter__", [](PacketDescendants<false> d) {
             return d.begin();
         })
         ;
     regina::python::add_eq_operators(c2);
 
-    auto c3 = pybind11::class_<regina::ChildIterator>(m, "ChildIterator")
-        .def("next", next<ChildIterator>) // for python 2
-        .def("__next__", next<ChildIterator>) // for python 3
+    auto c3 = pybind11::class_<ChildIterator<false>>(m, "ChildIterator")
+        .def("next", next<ChildIterator<false>>) // for python 2
+        .def("__next__", next<ChildIterator<false>>) // for python 3
         ;
     regina::python::add_eq_operators(c3);
 
-    auto c4 = pybind11::class_<regina::SubtreeIterator>(m, "SubtreeIterator")
+    auto c4 = pybind11::class_<SubtreeIterator<false>>(m, "SubtreeIterator")
         .def("__iter__", [](pybind11::object const& it) {
             return it;
         })
-        .def("next", next<SubtreeIterator>) // for python 2
-        .def("__next__", next<SubtreeIterator>) // for python 3
+        .def("next", next<SubtreeIterator<false>>) // for python 2
+        .def("__next__", next<SubtreeIterator<false>>) // for python 3
         ;
     regina::python::add_eq_operators(c4);
 
@@ -130,10 +130,10 @@ void addPacket(pybind11::module_& m) {
         .def("moveToFirst", &Packet::moveToFirst)
         .def("moveToLast", &Packet::moveToLast)
         .def("sortChildren", &Packet::sortChildren)
-        .def("__iter__", &Packet::begin)
-        .def("children", &Packet::children)
-        .def("descendants", &Packet::descendants)
-        .def("subtree", &Packet::begin)
+        .def("__iter__", overload_cast<>(&Packet::begin)) // non-const
+        .def("children", overload_cast<>(&Packet::children)) // non-const
+        .def("descendants", overload_cast<>(&Packet::descendants)) // non-const
+        .def("subtree", overload_cast<>(&Packet::begin)) // non-const
         .def("nextTreePacket",
             overload_cast<>(&Packet::nextTreePacket))
         .def("nextTreePacket",

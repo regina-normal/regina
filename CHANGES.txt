@@ -694,6 +694,11 @@ Version 7.0  [ TODO ]
               deprecated, and now always return false and true respectively.
             - Routines save() and writeXMLFile() now take an optional
               XML file format argument.
+            - Iteration routines begin(), end(), children(), descendants()
+              now come in const and non-const versions, and the corresponding
+              iterator / iteration classes ChildIterator, SubtreeIterator,
+              PacketChildren, PacketDescendants are now templated
+              according to constness.
         Class PacketInfo<...>:
             - Removed completely.
         Class Perm<n>:
