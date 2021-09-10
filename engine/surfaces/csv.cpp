@@ -146,8 +146,7 @@ namespace {
             if (s.isSplitting())
                 out << "\"Splitting\"";
             else {
-                LargeInteger tot = s.isCentral();
-                if (tot != 0)
+                if (size_t tot = s.isCentral())
                     out << "\"Central (" << tot << ")\"";
             }
             out << ',';

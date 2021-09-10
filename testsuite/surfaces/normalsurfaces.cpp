@@ -287,7 +287,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 const char* surfaceName, int euler, bool connected,
                 bool orient, bool twoSided, bool compact, bool realBdry,
                 bool vertexLink, unsigned edgeLink,
-                unsigned long central, bool splitting) {
+                size_t central, bool splitting) {
             // Begin with the compactness test so we know which other
             // tests may be performed.
             {
@@ -418,7 +418,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 unsigned long expectedCount, int euler,
                 bool connected, bool orient, bool twoSided,
                 bool realBdry, bool vertexLink, unsigned edgeLink,
-                unsigned long central, bool splitting) {
+                size_t central, bool splitting) {
             unsigned long tot = 0;
 
             for (const NormalSurface& s : list.surfaces()) {

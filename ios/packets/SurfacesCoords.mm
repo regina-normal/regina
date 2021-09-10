@@ -503,11 +503,10 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         }
         case PROP_TYPE:
         {
-            regina::LargeInteger tot;
             if (s->isSplitting())
                 cell.textLabel.text = @"Splitting";
-            else if (! (tot = s->isCentral()).isZero())
-                cell.textLabel.text = [NSString stringWithFormat:@"Central (%ld)", tot.longValue()];
+            else if (size_t tot = s->isCentral())
+                cell.textLabel.text = [NSString stringWithFormat:@"Central (%ld)", tot];
             else
                 cell.textLabel.text = @"";
             cell.textLabel.textAlignment = NSTextAlignmentLeft;

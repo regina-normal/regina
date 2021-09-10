@@ -201,11 +201,10 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return QVariant();
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 5)) {
-            regina::LargeInteger tot;
             if (s.isSplitting())
                 return tr("Splitting");
-            else if ((tot = s.isCentral()) != 0)
-                return tr("Central (%1)").arg(tot.longValue());
+            else if (size_t tot = s.isCentral())
+                return tr("Central (%1)").arg(tot);
             else
                 return QVariant();
         } else if (surfaces_->allowsAlmostNormal() &&
