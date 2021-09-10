@@ -210,9 +210,21 @@ void AngleStructures::writeTextLong(std::ostream& o) const {
     }
 }
 
+void AngleStructures::addPacketRefs(PacketRefs& refs) const {
+    refs.insert({ std::addressof(*triangulation_), false });
+}
+
 void AngleStructures::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
-    writeXMLHeader(out, "angles", format);
+        FileFormat format, bool anon, PacketRefs& refs) const {
+    const Triangulation<3>* tri = std::addressof(*triangulation_);
+    // We know from addPacketRefs() that refs contains the triangulation.
+    if (! refs.find(tri)->second) {
+        // The triangulation has not yet been written to file.  Do it now.
+        writeXMLAnon(out, format, refs, tri);
+    }
+
+    writeXMLHeader(out, "angles", format, anon, refs,
+        true, std::pair("tri", tri->internalID()));
 
     using regina::xml::xmlValueTag;
 
@@ -233,7 +245,7 @@ void AngleStructures::writeXMLPacketData(std::ostream& out,
         out << "  " << xmlValueTag("spantaut", *doesSpanTaut_)
             << '\n';
 
-    writeXMLFooter(out, "angles", format);
+    writeXMLFooter(out, "angles", format, anon, refs);
 }
 
 Packet* AngleStructures::internalClonePacket(Packet* parent) const {

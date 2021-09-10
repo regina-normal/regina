@@ -206,7 +206,7 @@ dGVzdAo=
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
 <packet type="3-Manifold Triangulation" typeid="3"
-	label="RP² x S¹">
+	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
     <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
@@ -255,7 +255,7 @@ dGVzdAo=
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
 </packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
-	label="Figure 8 Knot Complement">
+	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
 m004
 geometric_solution  2.02988321
@@ -317,7 +317,7 @@ CS_unknown
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
 <packet type="4-Manifold Triangulation" typeid="11"
-	label="Twisted S³ x~ S¹">
+	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
     <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>
@@ -480,7 +480,7 @@ dGVzdAo=
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
 <packet type="3-Manifold Triangulation" typeid="3"
-	label="RP² x S¹">
+	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
     <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
@@ -529,7 +529,7 @@ dGVzdAo=
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
 </packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
-	label="Figure 8 Knot Complement">
+	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
 m004
 geometric_solution  2.02988321
@@ -591,7 +591,7 @@ CS_unknown
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
 <packet type="4-Manifold Triangulation" typeid="11"
-	label="Twisted S³ x~ S¹">
+	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
     <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>
@@ -752,7 +752,7 @@ dGVzdAo=
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
 <packet type="3-Manifold Triangulation" typeid="3"
-	label="RP² x S¹">
+	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
     <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
@@ -801,7 +801,7 @@ dGVzdAo=
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
 </packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
-	label="Figure 8 Knot Complement">
+	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
 m004
 geometric_solution  2.02988321
@@ -863,7 +863,7 @@ CS_unknown
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
 <packet type="4-Manifold Triangulation" typeid="11"
-	label="Twisted S³ x~ S¹">
+	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
     <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>
@@ -1018,7 +1018,7 @@ dGVzdAo=
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
 <packet type="3-Manifold Triangulation" typeid="3"
-	label="RP² x S¹">
+	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
     <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
@@ -1067,7 +1067,7 @@ dGVzdAo=
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
 </packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
-	label="Figure 8 Knot Complement">
+	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
 m004
 geometric_solution  2.02988321
@@ -1129,7 +1129,7 @@ CS_unknown
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
 <packet type="4-Manifold Triangulation" typeid="11"
-	label="Twisted S³ x~ S¹">
+	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
     <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>
@@ -1292,7 +1292,7 @@ dGVzdAo=
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
 <packet type="3-Manifold Triangulation" typeid="3"
-	label="RP² x S¹">
+	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
     <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
@@ -1341,7 +1341,7 @@ dGVzdAo=
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
 </packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
-	label="Figure 8 Knot Complement">
+	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
 m004
 geometric_solution  2.02988321
@@ -1403,7 +1403,7 @@ CS_unknown
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
 <packet type="4-Manifold Triangulation" typeid="11"
-	label="Twisted S³ x~ S¹">
+	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
     <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>

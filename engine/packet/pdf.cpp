@@ -150,7 +150,8 @@ bool PDF::savePDF(const char* filename) const {
     return true;
 }
 
-void PDF::writeXMLPacketData(std::ostream& out, FileFormat format) const {
+void PDF::writeXMLPacketData(std::ostream& out, FileFormat format,
+        bool anon, PacketRefs& refs) const {
     char* base64 = nullptr;
     size_t len64 = 0;
 
@@ -159,15 +160,15 @@ void PDF::writeXMLPacketData(std::ostream& out, FileFormat format) const {
 
     if (! base64) {
         // Either we have an empty PDF packet, or the base64 conversion failed.
-        writeXMLHeader(out, "pdfdata", format, true,
+        writeXMLHeader(out, "pdfdata", format, anon, refs, true,
             std::pair("encoding", "null"));
         if (format == REGINA_XML_GEN_2)
             out << "  <pdf encoding=\"null\"></pdf>\n";
-        writeXMLFooter(out, "pdfdata", format);
+        writeXMLFooter(out, "pdfdata", format, anon, refs);
         return;
     }
 
-    writeXMLHeader(out, "pdfdata", format, true,
+    writeXMLHeader(out, "pdfdata", format, anon, refs, true,
         std::pair("encoding", "base64"));
     if (format == REGINA_XML_GEN_2)
         out << "  <pdf encoding=\"base64\">\n";
@@ -187,7 +188,7 @@ void PDF::writeXMLPacketData(std::ostream& out, FileFormat format) const {
 
     if (format == REGINA_XML_GEN_2)
         out << "  </pdf>\n";
-    writeXMLFooter(out, "pdfdata", format);
+    writeXMLFooter(out, "pdfdata", format, anon, refs);
 
     delete[] base64;
 }

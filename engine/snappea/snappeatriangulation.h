@@ -1628,7 +1628,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
 
     private:
         /**

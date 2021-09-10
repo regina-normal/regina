@@ -946,10 +946,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * within this triangulation.  If such a surface exists within
          * this triangulation, this routine is guaranteed to find one.
          *
-         * Note that the surface returned (if any) depends upon this
-         * triangulation, and so the surface cannot be used after this
-         * triangulation is destroyed.
-         *
          * @return a non-vertex-linking normal sphere or disc, or no value if
          * none exists.
          */
@@ -970,10 +966,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * Searches for an octagonal almost normal 2-sphere within this
          * triangulation.  If such a surface exists, this routine is
          * guaranteed to find one.
-         *
-         * Note that the surface returned (if any) depends upon this
-         * triangulation, and so the surface cannot be used after this
-         * triangulation is destroyed.
          *
          * \pre This triangulation is valid, closed, orientable, connected,
          * and 0-efficient.  These preconditions are almost certainly more
@@ -3291,7 +3283,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
 
     private:
         /**

@@ -101,9 +101,21 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
     }
 }
 
+void NormalHypersurfaces::addPacketRefs(PacketRefs& refs) const {
+    refs.insert({ std::addressof(*triangulation_), false });
+}
+
 void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
-    writeXMLHeader(out, "hypersurfaces", format);
+        FileFormat format, bool anon, PacketRefs& refs) const {
+    const Triangulation<4>* tri = std::addressof(*triangulation_);
+    // We know from addPacketRefs() that refs contains the triangulation.
+    if (! refs.find(tri)->second) {
+        // The triangulation has not yet been written to file.  Do it now.
+        writeXMLAnon(out, format, refs, tri);
+    }
+
+    writeXMLHeader(out, "hypersurfaces", format, anon, refs,
+        true, std::pair("tri", tri->internalID()));
 
     // Write the surface list parameters.
     out << "  <params "
@@ -118,7 +130,7 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
     for (auto it = surfaces_.begin(); it != surfaces_.end(); it++)
         it->writeXMLData(out, format, this);
 
-    writeXMLFooter(out, "hypersurfaces", format);
+    writeXMLFooter(out, "hypersurfaces", format, anon, refs);
 }
 
 Packet* NormalHypersurfaces::internalClonePacket(Packet* parent) const {

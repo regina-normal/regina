@@ -274,7 +274,7 @@ class Triangulation :
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
 
     private:
         /**
@@ -539,13 +539,13 @@ inline Packet* Triangulation<dim>::internalClonePacket(Packet* parent) const {
 
 template <int dim>
 void Triangulation<dim>::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
+        FileFormat format, bool anon, PacketRefs& refs) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
     constexpr bool useSnIndex = (Perm<dim + 1>::codeType == PERM_CODE_INDEX);
 
-    writeXMLHeader(out, "tri", format, true,
+    writeXMLHeader(out, "tri", format, anon, refs, true,
         std::pair("dim", dim), std::pair("size", simplices_.size()),
         std::pair("perm", (useSnIndex ? "index" : "imagepack")));
 
@@ -601,7 +601,7 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out,
 
     detail::TriangulationBase<dim>::writeXMLBaseProperties(out);
 
-    writeXMLFooter(out, "tri", format);
+    writeXMLFooter(out, "tri", format, anon, refs);
 }
 
 template <int dim>

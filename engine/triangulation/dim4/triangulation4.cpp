@@ -171,11 +171,11 @@ long Triangulation<4>::eulerCharManifold() const {
 }
 
 void Triangulation<4>::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
+        FileFormat format, bool anon, PacketRefs& refs) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    writeXMLHeader(out, "tri", format, true,
+    writeXMLHeader(out, "tri", format, anon, refs, true,
         std::pair("dim", 4), std::pair("size", simplices_.size()),
         std::pair("perm", "index"));
 
@@ -223,7 +223,7 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out,
         out << "</H2>\n";
     }
 
-    writeXMLFooter(out, "tri", format);
+    writeXMLFooter(out, "tri", format, anon, refs);
 }
 
 Triangulation<4>::Triangulation(const Triangulation& X) :

@@ -220,11 +220,11 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
 }
 
 void Triangulation<3>::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
+        FileFormat format, bool anon, PacketRefs& refs) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    writeXMLHeader(out, "tri", format, true,
+    writeXMLHeader(out, "tri", format, anon, refs, true,
         std::pair("dim", 3), std::pair("size", simplices_.size()),
         std::pair("perm", "index"));
 
@@ -308,7 +308,7 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out,
     if (haken_.has_value())
         out << "  " << xmlValueTag("haken", *haken_) << '\n';
 
-    writeXMLFooter(out, "tri", format);
+    writeXMLFooter(out, "tri", format, anon, refs);
 }
 
 Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,

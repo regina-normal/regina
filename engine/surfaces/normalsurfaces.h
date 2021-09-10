@@ -1024,7 +1024,8 @@ class NormalSurfaces : public Packet {
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
+        virtual void addPacketRefs(PacketRefs& refs) const override;
 
     private:
         /**

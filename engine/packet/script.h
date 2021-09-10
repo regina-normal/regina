@@ -265,7 +265,8 @@ class Script : public Packet, public PacketListener {
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
+        virtual void addPacketRefs(PacketRefs& refs) const override;
 };
 
 /*@}*/
@@ -314,6 +315,12 @@ inline void Script::removeAllVariables() {
 
 inline void Script::writeTextShort(std::ostream& o) const {
     o << "Python script";
+}
+
+inline void Script::addPacketRefs(PacketRefs& refs) const {
+    for (const auto& v : variables)
+        if (v.second)
+            refs.insert({ v.second, false });
 }
 
 } // namespace regina

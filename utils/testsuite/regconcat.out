@@ -122,7 +122,7 @@ dGVzdAo=
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </tri>
-<tri dim="3" size="3" perm="index" label="RP² x S¹">
+<tri dim="3" size="3" perm="index" label="RP² x S¹" id="_">
   <simplex> 1 0 1 0 2 11 2 2 </simplex>
   <simplex> 0 0 0 0 2 21 2 12 </simplex>
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
@@ -131,7 +131,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces label="Quad vertex surfaces">
+<surfaces tri="_" label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -164,7 +164,7 @@ dGVzdAo=
 	<compact value="T"/> </surface>
 </surfaces>
 </tri>
-<snappeadata label="Figure 8 Knot Complement">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="_">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -192,7 +192,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles label="Angle Structures">
+<angles tri="_" label="Angle Structures">
   <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
@@ -220,10 +220,10 @@ CS_unknown
 </link>
 </container>
 <container label="4-Manifolds">
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces label="Normal Hypersurfaces">
+<hypersurfaces tri="_" label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
@@ -328,7 +328,7 @@ dGVzdAo=
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </tri>
-<tri dim="3" size="3" perm="index" label="RP² x S¹">
+<tri dim="3" size="3" perm="index" label="RP² x S¹" id="_">
   <simplex> 1 0 1 0 2 11 2 2 </simplex>
   <simplex> 0 0 0 0 2 21 2 12 </simplex>
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
@@ -337,7 +337,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces label="Quad vertex surfaces">
+<surfaces tri="_" label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -370,7 +370,7 @@ dGVzdAo=
 	<compact value="T"/> </surface>
 </surfaces>
 </tri>
-<snappeadata label="Figure 8 Knot Complement">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="_">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -398,7 +398,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles label="Angle Structures">
+<angles tri="_" label="Angle Structures">
   <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
@@ -426,10 +426,10 @@ CS_unknown
 </link>
 </container>
 <container label="4-Manifolds">
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces label="Normal Hypersurfaces">
+<hypersurfaces tri="_" label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
@@ -536,7 +536,7 @@ dGVzdAo=
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </tri>
-<tri dim="3" size="3" perm="index" label="RP² x S¹">
+<tri dim="3" size="3" perm="index" label="RP² x S¹" id="_">
   <simplex> 1 0 1 0 2 11 2 2 </simplex>
   <simplex> 0 0 0 0 2 21 2 12 </simplex>
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
@@ -545,7 +545,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces label="Quad vertex surfaces">
+<surfaces tri="_" label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -578,7 +578,7 @@ dGVzdAo=
 	<compact value="T"/> </surface>
 </surfaces>
 </tri>
-<snappeadata label="Figure 8 Knot Complement">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="_">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -606,7 +606,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles label="Angle Structures">
+<angles tri="_" label="Angle Structures">
   <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
@@ -634,10 +634,10 @@ CS_unknown
 </link>
 </container>
 <container label="4-Manifolds">
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces label="Normal Hypersurfaces">
+<hypersurfaces tri="_" label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
@@ -744,7 +744,7 @@ dGVzdAo=
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </tri>
-<tri dim="3" size="3" perm="index" label="RP² x S¹">
+<tri dim="3" size="3" perm="index" label="RP² x S¹" id="_">
   <simplex> 1 0 1 0 2 11 2 2 </simplex>
   <simplex> 0 0 0 0 2 21 2 12 </simplex>
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
@@ -753,7 +753,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces label="Quad vertex surfaces">
+<surfaces tri="_" label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -786,7 +786,7 @@ dGVzdAo=
 	<compact value="T"/> </surface>
 </surfaces>
 </tri>
-<snappeadata label="Figure 8 Knot Complement">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="_">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -814,7 +814,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles label="Angle Structures">
+<angles tri="_" label="Angle Structures">
   <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
@@ -842,10 +842,10 @@ CS_unknown
 </link>
 </container>
 <container label="4-Manifolds">
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces label="Normal Hypersurfaces">
+<hypersurfaces tri="_" label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
@@ -945,7 +945,7 @@ dGVzdAo=
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </tri>
-<tri dim="3" size="3" perm="index" label="RP² x S¹">
+<tri dim="3" size="3" perm="index" label="RP² x S¹" id="_">
   <simplex> 1 0 1 0 2 11 2 2 </simplex>
   <simplex> 0 0 0 0 2 21 2 12 </simplex>
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
@@ -954,7 +954,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces label="Quad vertex surfaces">
+<surfaces tri="_" label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -987,7 +987,7 @@ dGVzdAo=
 	<compact value="T"/> </surface>
 </surfaces>
 </tri>
-<snappeadata label="Figure 8 Knot Complement">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="_">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -1015,7 +1015,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles label="Angle Structures">
+<angles tri="_" label="Angle Structures">
   <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
@@ -1043,10 +1043,10 @@ CS_unknown
 </link>
 </container>
 <container label="4-Manifolds">
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces label="Normal Hypersurfaces">
+<hypersurfaces tri="_" label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
@@ -1132,7 +1132,7 @@ dGVzdAo=
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </tri>
-<tri dim="3" size="3" perm="index" label="RP² x S¹">
+<tri dim="3" size="3" perm="index" label="RP² x S¹" id="_">
   <simplex> 1 0 1 0 2 11 2 2 </simplex>
   <simplex> 0 0 0 0 2 21 2 12 </simplex>
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
@@ -1141,7 +1141,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces label="Quad vertex surfaces">
+<surfaces tri="_" label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -1174,7 +1174,7 @@ dGVzdAo=
 	<compact value="T"/> </surface>
 </surfaces>
 </tri>
-<snappeadata label="Figure 8 Knot Complement">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="_">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -1202,7 +1202,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles label="Angle Structures">
+<angles tri="_" label="Angle Structures">
   <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
@@ -1230,10 +1230,10 @@ CS_unknown
 </link>
 </container>
 <container label="4-Manifolds">
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces label="Normal Hypersurfaces">
+<hypersurfaces tri="_" label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
@@ -1339,7 +1339,7 @@ dGVzdAo=
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </tri>
-<tri dim="3" size="3" perm="index" label="RP² x S¹">
+<tri dim="3" size="3" perm="index" label="RP² x S¹" id="_">
   <simplex> 1 0 1 0 2 11 2 2 </simplex>
   <simplex> 0 0 0 0 2 21 2 12 </simplex>
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
@@ -1348,7 +1348,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces label="Quad vertex surfaces">
+<surfaces tri="_" label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -1381,7 +1381,7 @@ dGVzdAo=
 	<compact value="T"/> </surface>
 </surfaces>
 </tri>
-<snappeadata label="Figure 8 Knot Complement">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="_">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -1409,7 +1409,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles label="Angle Structures">
+<angles tri="_" label="Angle Structures">
   <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
@@ -1437,10 +1437,10 @@ CS_unknown
 </link>
 </container>
 <container label="4-Manifolds">
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces label="Normal Hypersurfaces">
+<hypersurfaces tri="_" label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
@@ -1528,7 +1528,7 @@ dGVzdAo=
   <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 </tri>
-<tri dim="3" size="3" perm="index" label="RP² x S¹">
+<tri dim="3" size="3" perm="index" label="RP² x S¹" id="_">
   <simplex> 1 0 1 0 2 11 2 2 </simplex>
   <simplex> 0 0 0 0 2 21 2 12 </simplex>
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
@@ -1537,7 +1537,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces label="Quad vertex surfaces">
+<surfaces tri="_" label="Quad vertex surfaces">
   <params type="5" algorithm="16" flavourid="1"
 	flavour="Quad normal"/>
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -1570,7 +1570,7 @@ dGVzdAo=
 	<compact value="T"/> </surface>
 </surfaces>
 </tri>
-<snappeadata label="Figure 8 Knot Complement">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="_">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -1598,7 +1598,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles label="Angle Structures">
+<angles tri="_" label="Angle Structures">
   <angleparams tautonly="F" algorithm="16384"/>
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
@@ -1626,10 +1626,10 @@ CS_unknown
 </link>
 </container>
 <container label="4-Manifolds">
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces label="Normal Hypersurfaces">
+<hypersurfaces tri="_" label="Normal Hypersurfaces">
   <params type="5" algorithm="32" flavourid="0"
 	flavour="Standard normal (tet-prism)"/>
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>

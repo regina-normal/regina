@@ -747,8 +747,9 @@ bool SnapPeaTriangulation::saveSnapPea(const char* filename) const {
 }
 
 void SnapPeaTriangulation::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
-    writeXMLHeader(out, "snappeadata", format, format == REGINA_XML_GEN_2);
+        FileFormat format, bool anon, PacketRefs& refs) const {
+    writeXMLHeader(out, "snappeadata", format, anon, refs,
+        format == REGINA_XML_GEN_2);
     if (data_) {
         if (format == REGINA_XML_GEN_2)
             out << "  <snappea>";
@@ -756,7 +757,7 @@ void SnapPeaTriangulation::writeXMLPacketData(std::ostream& out,
         if (format == REGINA_XML_GEN_2)
             out << "</snappea>\n";
     }
-    writeXMLFooter(out, "snappeadata", format);
+    writeXMLFooter(out, "snappeadata", format, anon, refs);
 }
 
 void SnapPeaTriangulation::packetWasChanged(Packet* packet) {

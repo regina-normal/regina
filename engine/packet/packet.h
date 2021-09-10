@@ -42,6 +42,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <map>
 #include <memory>
 #include <set>
 
@@ -1425,6 +1426,14 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         };
 
     protected:
+        typedef std::map<const Packet*, bool> PacketRefs;
+            /**< Used during the XML output routines to manage references
+                 between packets in an XML data file.
+                 If some packet needs to refer to a packet \a P, then
+                 \a P will appear as a key this map; the corresponding
+                 value will be \c false initially, and will change to
+                 \c true once \a P has been written to the XML file. */
+
         /**
          * Makes a newly allocated copy of this packet.
          * This routine should <b>not</b> insert the new packet into the
@@ -1455,12 +1464,21 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * included.  If we are writing to the second-generation format
          * REGINA_XML_GEN_2, then \a attr will be ignored.
          *
+         * If this packet appears as a key in the \a refs map, or if the
+         * \a anon argument indicates that we are in an anonymous block,
+         * then this routine will set <tt>refs[this]</tt> as \c true
+         * to record that this packet is now being written to XML.
+         *
          * @param out the output stream to which the opening XML tag
          * should be written.
          * @param element the name of the XML tag.  If we are writing to
          * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * @param format indicates which of Regina's XML file formats to write.
+         * @param anon \c true if this packet is being written within an
+         * anonymous block.  If so, then the packet ID will always be written.
+         * @param refs manages the necessary references between packets
+         * in the XML file; see the PacketRefs documentation for details.
          * @param newline indicates whether the opening XML tag should be
          * followed by a newline.  Normally this would be \c true, but
          * if you need to avoid whitespace between the opening XML tag
@@ -1471,8 +1489,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          */
         template <typename... Args>
         void writeXMLHeader(std::ostream& out, const char* element,
-            FileFormat format, bool newline = true,
-            std::pair<const char*, Args>... attr) const;
+            FileFormat format, bool anon, PacketRefs& refs,
+            bool newline = true, std::pair<const char*, Args>... attr) const;
 
         /**
          * Writes any generic XML sub-elements that come from the packet
@@ -1492,29 +1510,99 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * @param format indicates which of Regina's XML file formats to write.
+         * @param anon \c true if this packet is being written within an
+         * anonymous block.  If so, then any packet tags and/or child packets
+         * will not be written.
+         * @param refs manages the necessary references between packets
+         * in the XML file; see the PacketRefs documentation for details.
          */
         void writeXMLFooter(std::ostream& out, const char* element,
-            FileFormat format) const;
+            FileFormat format, bool anon, PacketRefs& refs) const;
+
+        /**
+         * Writes the given packet inside its own anonymous block.
+         *
+         * This could (for example) be called as the first step in
+         * writeXMLPacketData() if the packet needs some dependency \a p
+         * to have been explicitly written to file and this has not been
+         * done yet.
+         *
+         * This function simply creates an \c anon XML block, and within
+         * it calls <tt>p->writeXMLPacketData()</tt> with the \a anon
+         * argument set to \c true.
+         *
+         * @param out the output stream to which the anonymous block
+         * should be written.
+         * @param format indicates which of Regina's XML file formats to write.
+         * @param refs manages the necessary references between packets
+         * in the XML file; see the PacketRefs documentation for details.
+         * @param p the packet to write inside the anonymous block.
+         */
+        void writeXMLAnon(std::ostream& out, FileFormat format,
+            PacketRefs& refs, const Packet* p) const;
 
         /**
          * Writes a chunk of XML containing the full subtree with this packet
-         * as matriarch.  This should begin with the packet opening XML tag
-         * and finish with the packet closing XML tag (typically followed by
-         * a newline).
+         * as matriarch.  This should contain:
+         *
+         * - any anonymous packets that need to be written before this packet
+         *   (but first check \a refs to ensure these packets have not already
+         *   been written);
+         *
+         * - the packet opening XML tag, typically written using
+         *   writeXMLHeader();
+         *
+         * - the packet contents;
+         *
+         * - any packet tags, any child packets, a closing XML tag and a
+         *   final newline, all typically written using writeXMLFooter().
          *
          * The output from this routine is only a piece of XML; it
          * should not be used as a complete XML file.  For a complete
          * XML file, see routine writeXMLFile() instead.
          *
-         * Typical implementations would begin with writeXMLHeader(),
-         * then output any content specific to the packet type, and
-         * finish with writeXMLFooter().
-         *
          * @param out the output stream to which the XML should be written.
          * @param format indicates which of Regina's XML file formats to write.
+         * @param anon \c true if this packet is being written within an
+         * anonymous block.  If so, then the packet ID must be included,
+         * and any packet tags and/or child packets must be excluded.
+         * @param refs manages the necessary references between packets
+         * in the XML file; see the PacketRefs documentation for details.
          */
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const = 0;
+            FileFormat format, bool anon, PacketRefs& refs) const = 0;
+
+        /**
+         * Records which other packets this packet refers to within the
+         * overall packet tree.  For each packet \a p that this packet
+         * refers to, this routine should insert the pair (\a p, \c false)
+         * into the given map.
+         *
+         * This will be run before writing the packet tree to an XML data file.
+         * By recording that this packet refers to some other packet \a p,
+         * this will ensure that the XML header for \a p will include an
+         * explicit ID that this packet can then refer to.
+         *
+         * Later on, as the XML is written, the value <tt>refs[p]</tt> will be
+         * changed from \c false to \c true once \a p has been written.
+         *
+         * If your packet requires that the \e contents of \a p appear
+         * before this packet it the XML data file, then writeXMLPacketData()
+         * should check \a refs to see if \a p has already been written,
+         * and if not, it should write \a p in a new anonymous block.
+         *
+         * It is fine if \a p does not actually belong to this packet tree.
+         * However, in this case writeXMLPacketData() \e must take
+         * responsibility to ensure that \a p is written to file.
+         * This would need to be done via writeXMLAnon(); moreover, as
+         * before, it should only be done only after checking \a refs to
+         * ensure this \a p has not already been written.
+         *
+         * The default implementation of this routine does nothing.
+         *
+         * @param refs the map in which any dependencies should be recorded.
+         */
+        virtual void addPacketRefs(PacketRefs& refs) const;
 
     private:
         /**
@@ -1603,9 +1691,19 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * into a separate routine so that we can keep its dependencies
          * out of this C++ header.
          *
+         * If this packet appears as a key in the \a refs map, or if the
+         * \a anon argument indicates that we are in an anonymous block,
+         * then this routine will set <tt>refs[this]</tt> as \c true
+         * to record that this packet is now being written to XML.
+         *
          * @param out the output stream to which to write.
+         * @param anon \c true if this packet is being written within an
+         * anonymous block.  If so, then the packet ID will always be written.
+         * @param refs manages the necessary references between packets
+         * in the XML file; see the PacketRefs documentation for details.
          */
-        void writeXMLPacketAttributes(std::ostream& out) const;
+        void writeXMLPacketAttributes(std::ostream& out, bool anon,
+            PacketRefs& refs) const;
 
     public:
         /**
@@ -2787,8 +2885,8 @@ inline bool Packet::isPacketEditable() const {
 
 template <typename... Args>
 void Packet::writeXMLHeader(std::ostream& out, const char* element,
-        FileFormat format, bool newline, std::pair<const char*, Args>... args)
-        const {
+        FileFormat format, bool anon, PacketRefs& refs, bool newline,
+        std::pair<const char*, Args>... args) const {
     if (format == REGINA_XML_GEN_2) {
         out << "<packet type=\"" << typeName()
             << "\" typeid=\"" << type() << "\"\n\t";
@@ -2796,10 +2894,16 @@ void Packet::writeXMLHeader(std::ostream& out, const char* element,
         out << '<' << element << ' ';
         ((out << args.first << "=\"" << args.second << "\" "), ...);
     }
-    writeXMLPacketAttributes(out);
+
+    // This sets refs[this] = true if required.
+    writeXMLPacketAttributes(out, anon, refs);
+
     out << '>';
     if (newline)
         out << '\n';
+}
+
+inline void Packet::addPacketRefs(PacketRefs&) const {
 }
 
 inline Packet::ChangeEventSpan::ChangeEventSpan(Packet& packet) :

@@ -173,7 +173,7 @@ class SurfaceFilter : public Packet {
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
 };
 
 /**
@@ -231,7 +231,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
 };
 
 /**
@@ -397,7 +397,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
 };
 
 /*@}*/

@@ -336,7 +336,7 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format) const override;
+            FileFormat format, bool anon, PacketRefs& refs) const override;
 
     private:
         /**

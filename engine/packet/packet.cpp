@@ -702,13 +702,20 @@ void Packet::writeXMLFile(std::ostream& out, FileFormat format) const {
     // Write the XML header.
     out << "<?xml version=\"1.0\"?>\n";
 
+    // Do a first pass through the tree to work out what packets
+    // need to be referenced by others.
+    std::map<const Packet*, bool> refs;
+    for (const Packet* p : *this)
+        p->addPacketRefs(refs);
+
+    // Now write the full packet tree.
     if (format == REGINA_XML_GEN_2) {
         out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
-        writeXMLPacketData(out, format);
+        writeXMLPacketData(out, format, false /* anon */, refs);
         out << "</reginadata>\n";
     } else {
         out << "<regina engine=\"" << regina::versionString() << "\">\n";
-        writeXMLPacketData(out, format);
+        writeXMLPacketData(out, format, false /* anon */, refs);
         out << "</regina>\n";
     }
 }
@@ -758,32 +765,47 @@ void Packet::fireDestructionEvent() {
     }
 }
 
-void Packet::writeXMLPacketAttributes(std::ostream& out) const {
+void Packet::writeXMLPacketAttributes(std::ostream& out, bool anon,
+        PacketRefs& refs) const {
     out << "label=\"" << regina::xml::xmlEncodeSpecialChars(label_) << "\"";
 
-    // If we appear as a variable in a script packet, then write an ID that the
-    // script can reference.  We can look through our packet listeners to see
-    // if this is necessary, since a Script always listens to its variables.
-    if (listeners_)
-        for (const auto* listener : *listeners_)
-            if (dynamic_cast<const Script*>(listener)) {
-                out << " id=\"" << internalID() << "\"";
-                break;
-            }
+    auto pos = refs.find(this);
+    if (pos != refs.end()) {
+        out << " id=\"" << internalID() << "\"";
+        pos->second = true; // Indicate that the packet is now being written
+    } else if (anon) {
+        // Although nobody *asked* for this packet to be referred to,
+        // it is still being written as anonymous block.  It's not clear
+        // how such a situation could arise in practice, but regardless,
+        // we should note that the packet has been "written ahead" so
+        // that we correctly use an anonref when we see it in the packet tree.
+        out << " id=\"" << internalID() << "\"";
+        refs.insert({ this, true });
+    }
 }
 
 void Packet::writeXMLFooter(std::ostream& out, const char* element,
-        FileFormat format) const {
-    // Write any packet tags.
-    if (tags_.get())
-        for (std::set<std::string>::const_iterator it = tags_->begin();
-                it != tags_->end(); it++)
-            out << "<tag name=\"" << regina::xml::xmlEncodeSpecialChars(*it)
-                << "\"/>\n";
+        FileFormat format, bool anon, PacketRefs& refs) const {
+    if (! anon) {
+        // Write any packet tags.
+        if (tags_.get())
+            for (const auto& t : *tags_)
+                out << "<tag name=\"" << regina::xml::xmlEncodeSpecialChars(t)
+                    << "\"/>\n";
 
-    // Write the child packets.
-    for (Packet* p = firstTreeChild_; p; p = p->nextTreeSibling_)
-        p->writeXMLPacketData(out, format);
+        // Write the child packets.
+        for (Packet* p = firstTreeChild_; p; p = p->nextTreeSibling_) {
+            auto pos = refs.find(p);
+            if (pos != refs.end() && pos->second) {
+                // This packet has already been written.
+                out << "<anonref id=\"" << p->internalID() << "\">\n";
+                // Close the tag with writeXMLFooter(), so that we still
+                // get tags and children.
+                p->writeXMLFooter(out, "anonref", format, anon, refs);
+            } else
+                p->writeXMLPacketData(out, format, anon, refs);
+        }
+    }
 
     // Finish with the closing XML tag.
     if (format != REGINA_XML_GEN_2) {
@@ -792,6 +814,13 @@ void Packet::writeXMLFooter(std::ostream& out, const char* element,
         out << "</packet> <!-- " << regina::xml::xmlEncodeComment(label_)
             << " (" << regina::xml::xmlEncodeComment(typeName()) << ") -->\n";
     }
+}
+
+void Packet::writeXMLAnon(std::ostream& out, FileFormat format,
+        PacketRefs& refs, const Packet* p) const {
+    out << "<anon>\n";
+    p->writeXMLPacketData(out, format, true /* anon */, refs);
+    out << "</anon>\n";
 }
 
 std::string Packet::internalID() const {

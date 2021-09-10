@@ -47,14 +47,14 @@
 namespace regina {
 
 void SurfaceFilter::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
-    writeXMLHeader(out, "filterplain", format);
+        FileFormat format, bool anon, PacketRefs& refs) const {
+    writeXMLHeader(out, "filterplain", format, anon, refs);
     if (format == REGINA_XML_GEN_2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
             << "\" typeid=\"" << filterType() << "\"/>\n";
     }
-    writeXMLFooter(out, "filterplain", format);
+    writeXMLFooter(out, "filterplain", format, anon, refs);
 }
 
 bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
@@ -76,8 +76,8 @@ bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
 }
 
 void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
-    writeXMLHeader(out, "filtercomb", format);
+        FileFormat format, bool anon, PacketRefs& refs) const {
+    writeXMLHeader(out, "filtercomb", format, anon, refs);
     if (format == REGINA_XML_GEN_2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
@@ -88,7 +88,7 @@ void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
 
     if (format == REGINA_XML_GEN_2)
         out << "  </filter>\n";
-    writeXMLFooter(out, "filtercomb", format);
+    writeXMLFooter(out, "filtercomb", format, anon, refs);
 }
 
 LargeInteger SurfaceFilterProperties::eulerChar(size_t index) const {
@@ -135,10 +135,10 @@ void SurfaceFilterProperties::writeTextLong(std::ostream& o) const {
 }
 
 void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
-        FileFormat format) const {
+        FileFormat format, bool anon, PacketRefs& refs) const {
     using regina::xml::xmlValueTag;
 
-    writeXMLHeader(out, "filterprop", format);
+    writeXMLHeader(out, "filterprop", format, anon, refs);
     if (format == REGINA_XML_GEN_2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
@@ -161,7 +161,7 @@ void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
 
     if (format == REGINA_XML_GEN_2)
         out << "  </filter>\n";
-    writeXMLFooter(out, "filterprop", format);
+    writeXMLFooter(out, "filterprop", format, anon, refs);
 }
 
 } // namespace regina
