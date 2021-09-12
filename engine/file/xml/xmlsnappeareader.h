@@ -64,12 +64,12 @@ class XMLSnapPeaReader : public XMLPacketReader {
         /**
          * Creates a new SnapPea triangulation reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLSnapPeaReader(XMLTreeResolver& resolver);
+        XMLSnapPeaReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual void initialChars(const std::string& chars) override;
 };
 
@@ -88,12 +88,12 @@ class XMLLegacySnapPeaReader : public XMLPacketReader {
         /**
          * Creates a new SnapPea triangulation reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLegacySnapPeaReader(XMLTreeResolver& resolver);
+        XMLLegacySnapPeaReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -105,22 +105,27 @@ class XMLLegacySnapPeaReader : public XMLPacketReader {
 
 // Inline functions for XMLSnapPeaReader
 
-inline XMLSnapPeaReader::XMLSnapPeaReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), snappea_(new SnapPeaTriangulation()) {
+inline XMLSnapPeaReader::XMLSnapPeaReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        snappea_(new SnapPeaTriangulation()) {
 }
 
-inline Packet* XMLSnapPeaReader::packet() {
+inline Packet* XMLSnapPeaReader::packetToCommit() {
     return snappea_;
 }
 
-// Inline functions for XMLSnapPeaReader
+// Inline functions for XMLLegacySnapPeaReader
 
 inline XMLLegacySnapPeaReader::XMLLegacySnapPeaReader(
-        XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), snappea_(new SnapPeaTriangulation()) {
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        snappea_(new SnapPeaTriangulation()) {
 }
 
-inline Packet* XMLLegacySnapPeaReader::packet() {
+inline Packet* XMLLegacySnapPeaReader::packetToCommit() {
     return snappea_;
 }
 

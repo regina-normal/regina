@@ -227,8 +227,9 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
         /**
          * Creates a new triangulation reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
          * @param size the total number of top-dimensional simplices in the
          * triangulation.  This should be 0 if we are reading the
          * second-generation file format.
@@ -236,10 +237,11 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          * Sn, or \c false if they are stored as image packs.
          * This will be ignored when reading the second-generation file format.
          */
-        XMLTriangulationReaderBase(XMLTreeResolver& resolver, size_t size,
-            bool permIndex);
+        XMLTriangulationReaderBase(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id,
+            size_t size, bool permIndex);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -352,8 +354,9 @@ class XMLTriangulationReader : public XMLTriangulationReaderBase<dim> {
         /**
          * Creates a new triangulation reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters not explained here are the same as for the
+         * (grand)parent class XMLPacketReader.
+         *
          * @param size the total number of top-dimensional simplices in the
          * triangulation.  This should be 0 if we are reading the old
          * second-generation file format.
@@ -361,8 +364,9 @@ class XMLTriangulationReader : public XMLTriangulationReaderBase<dim> {
          * Sn, or \c false if they are stored as image packs.
          * This will be ignored when reading the second-generation file format.
          */
-        XMLTriangulationReader(XMLTreeResolver& resolver, size_t size,
-            bool permIndex);
+        XMLTriangulationReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id,
+            size_t size, bool permIndex);
 
         /**
          * Returns an XML element reader for the given optional property of a
@@ -501,15 +505,17 @@ XMLElementReader* XMLLegacySimplicesReader<dim>::startSubElement(
 
 template <int dim>
 inline XMLTriangulationReaderBase<dim>::XMLTriangulationReaderBase(
-        XMLTreeResolver& resolver, size_t size, bool permIndex) :
-        XMLPacketReader(resolver), tri_(new Triangulation<dim>()),
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id, size_t size, bool permIndex) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        tri_(new Triangulation<dim>()),
         permIndex_(permIndex), readSimplices_(0) {
     for ( ; size > 0; --size)
         tri_->newSimplex();
 }
 
 template <int dim>
-inline Packet* XMLTriangulationReaderBase<dim>::packet() {
+inline Packet* XMLTriangulationReaderBase<dim>::packetToCommit() {
     return tri_;
 }
 
@@ -539,8 +545,10 @@ inline void XMLTriangulationReaderBase<dim>::endContentSubElement(
 
 template <int dim>
 inline XMLTriangulationReader<dim>::XMLTriangulationReader(
-        XMLTreeResolver& resolver, size_t size, bool permIndex) :
-        XMLTriangulationReaderBase<dim>(resolver, size, permIndex) {
+        XMLTreeResolver& resolver, Packet* parent, bool anon,
+        std::string label, std::string id, size_t size, bool permIndex) :
+        XMLTriangulationReaderBase<dim>(resolver, parent, anon,
+            std::move(label), std::move(id), size, permIndex) {
 }
 
 template <int dim>

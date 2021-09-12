@@ -8,7 +8,7 @@ Usage:
 --------------------
 Exit code: 1
 ============================================================
-TEST: regfiletype @TESTDIR@/test-v3.rga
+TEST: regfiletype @TESTDIR@/test-v2.rga
 --------------------
 Regina data: Second-generation XML format (Regina 3.0-6.0.1)
 Engine 5.0
@@ -48,9 +48,9 @@ Unknown file format or file could not be opened.
 --------------------
 Exit code: 0
 ============================================================
-TEST: regfiletype @TESTDIR@/test-v3.rga @TESTDIR@/b5.rga
+TEST: regfiletype @TESTDIR@/test-v2.rga @TESTDIR@/b5.rga
 --------------------
-[ @TESTDIR@/test-v3.rga ]
+[ @TESTDIR@/test-v2.rga ]
 Regina data: Second-generation XML format (Regina 3.0-6.0.1)
 Engine 5.0
 
@@ -61,9 +61,9 @@ Engine 4.91
 --------------------
 Exit code: 0
 ============================================================
-TEST: regfiletype @TESTDIR@/test-v3.rga @TESTDIR@/test.rga @INVALIDFILE@ @BADFILE@ @TESTDIR@/b5.rga @TESTDIR@/8-or.rga
+TEST: regfiletype @TESTDIR@/test-v2.rga @TESTDIR@/test.rga @INVALIDFILE@ @BADFILE@ @TESTDIR@/b5.rga @TESTDIR@/8-or.rga
 --------------------
-[ @TESTDIR@/test-v3.rga ]
+[ @TESTDIR@/test-v2.rga ]
 Regina data: Second-generation XML format (Regina 3.0-6.0.1)
 Engine 5.0
 

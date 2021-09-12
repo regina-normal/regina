@@ -40,7 +40,7 @@
 #define __REGINA_XMLTREERESOLVER_H
 #endif
 
-#include "regina-core.h"
+#include "packet/container.h"
 #include <list>
 #include <map>
 
@@ -94,35 +94,56 @@ class XMLTreeResolutionTask {
 };
 
 /**
- * Provides a mechanism to resolve dangling packet references after a
- * complete packet tree has been read from an XML data file.
+ * Provides a mechanism to resolve cross-references between packets in
+ * an XML data file, and to manage the anonymous packet pool.
  *
- * There are situations in which, when reading an XML data file, the data
- * stored in an individual packet cannot be fully constructed until after
- * the entire data file has been read.  For instance, a packet might need to
- * store pointers or references to other packets that could appear later in
- * the packet tree (e.g., a script storing pointers to its variables).
+ * This class has three main tasks:
  *
- * This problem is solved by the XMLTreeResolver class.  The complete
- * process of reading an XML data file works as follows:
+ * - To allow immediate lookups by ID for packets that should have already
+ *   been read from the XML data file (e.g., a normal surface list
+ *   that needs to reference its enclosing triangulation);
  *
- * - The top-level routine managing the file I/O constructs a new
- *   XMLTreeResolver.  This resolver is then passed to each
- *   XMLPacketReader in turn as each individual packet is read.
+ * - To allow delayed lookups by ID after the complete packet tree has
+ *   been read from the XML data file, thereby resolving "dangling references"
+ *   where an ID is referenced before the corresonding packet appears
+ *   (e.g. a script packet referencing its variables);
+ *
+ * - To manage an "anonymous pool" of packets that appear with an
+ *   \<anon\> block within the XML data file.
+ *
+ * The complete process of reading an XML data file works as follows:
+ *
+ * - The top-level routine managing the file I/O should construct a new
+ *   XMLTreeResolver.  This resolver is then passed to each XMLPacketReader
+ *   in turn as each individual packet is read.
+ *
+ * - If a packet appears with an ID in the data file, this should be
+ *   registered via storeID().
+ *
+ * - If a packet appears within an anonymousl block, this should be
+ *   registered via storeAnon() (note that such packets are typically
+ *   useless unless storeID() was called also).
+ *
+ * - If an XMLPacketReader needs to perform an immediate lookup, it
+ *   should call resolve().
  *
  * - If an XMLPacketReader is not able to fully flesh out its data
- *   because it requires information that is not yet available, it
- *   should create a new XMLTreeResolutionTask and queue this task to
- *   the resolver via XMLTreeResolver::queueTask().
+ *   because it references packets that may not yet have been read, it
+ *   should create a new XMLTreeResolutionTask and queue this as a
+ *   "delayed lookup task" via queueTask().  Each such task should be an
+ *   instance of a subclass of XMLTreeResolutionTask, whose virtual resolve()
+ *   function is overridden to perform whatever "fleshing out" work is
+ *   required for the type of packet under consideration.
  *
  * - Once the entire packet tree has been read, the top-level file I/O
- *   manager will call XMLTreeResolver::resolve().  This will run
+ *   manager should call resolveDelayed().  This will run
  *   XMLTreeResolutionTask::resolve() for each task in turn, whereby any
  *   missing data for individual packets can be resolved.
  *
- * Each task should be an instance of a subclass of XMLTreeResolutionTask,
- * whose virtual resolve() function is overridden to perform whatever
- * "fleshing out" work is required for the type of packet under consideration.
+ * - At any time, a packet can be "extracted" from the anonymous pool
+ *   by calling Packet::makeOrphan().  It will still remain registered by
+ *   its ID.  After the file reading is complete, any packets that were stored
+ *   in the anonymous pool and not subsequently extracted will be destroyed.
  */
 class XMLTreeResolver {
     public:
@@ -136,6 +157,9 @@ class XMLTreeResolver {
                  corresponding packets. */
         std::list<XMLTreeResolutionTask*> tasks_;
             /**< The list of tasks that have been queued for processing. */
+        Container anonPool;
+            /**< Stores all packets that were registered via storeAnon()
+                 as appearing within anonymous blocks. */
 
     public:
         /**
@@ -162,11 +186,11 @@ class XMLTreeResolver {
         /**
          * Stores the fact that the given packet is stored in the data
          * file using the given internal ID.  Associations between IDs
-         * and packets can be queried through the ids() function.
-         * See ids() for further information on internal IDs.
+         * and packets can be queried through the resolve() function.
+         * See resolve() for further information on internal IDs.
          *
          * This will be called automatically by XMLPacketReader as it
-         * processes packet tags in the data file.  Users and/or subclasses
+         * processes packet elements in the data file.  Users and/or subclasses
          * of XMLPacketReader do not need to call this function themselves.
          *
          * @param id the internal ID of the given packet, as stored in
@@ -174,44 +198,54 @@ class XMLTreeResolver {
          * @param packet the corresponding packet.
          */
         void storeID(const std::string& id, Packet* packet);
+        /**
+         * Stores the given packet in the "anonymous pool".
+         *
+         * This will be called automatically by XMLPacketReader as it
+         * processes packets that appear within an \<anon\> block.
+         * Users and/or subclasses of XMLPacketReader do not need to
+         * call this function themselves.
+         *
+         * @param packet the packet to insert into the anonymous pool.
+         */
+        void storeAnon(Packet* packet);
 
         /**
-         * Returns the map from internal IDs to packets, as stored in
-         * the data file.
+         * Identifies if some packet has been registered as having the given ID
+         * within the the XML data file.
          *
          * Packets in a data file may have individual string IDs stored
-         * alongside them, in the \a id attribute of the
-         * <tt>&lt;packet&gt;</tt> tag.  These strings are optional,
-         * and do not need to be human-readable.
+         * alongside them, in the \a id attribute of the corresponding XML tag.
+         * These strings are optional, and do not need to be human-readable.
          * Although packets are not required to have IDs, any IDs that \e are
          * stored must be unique (i.e., two different packets cannot
          * share the same ID).
          *
-         * Note that IDs read from the data file need not bear any
-         * relation to the IDs that are returned from Packet::internalID(),
-         * although this is typically how they are constructed when a
-         * file is saved.
+         * If a packet has an ID in the XML data file but the packet has not
+         * yet been read, it will not be located by this routine (though
+         * this is not a problem for "delayed resolution" tasks, which
+         * are only performed once the entire file has been read).
+         * If a packet does not have an ID in the XML data file, it cannot
+         * be located via this routine at all.
          *
-         * This map will be fleshed out as the data file is read.  In
-         * particular, since each task runs XMLTreeResolutionTask::resolve()
-         * only after the entire tree has been read, tasks may assume that
-         * this map contains all IDs that were explicitly stored in the
-         * data file.
+         * Note that IDs read from the data file need not bear any relation
+         * to the IDs that are returned from Packet::internalID(), although
+         * this is typically how they are constructed when a file is saved.
          *
-         * Only packets with IDs will appear in this map (i.e., there may well
-         * be packets in the data file that do not appear in this map at all).
-         *
-         * @return the map from internal file IDs to packets.
+         * @param id the string ID to query.
+         * @return the packet with the given ID, or \c null is no such
+         * packet has been registered so far.
          */
-        const IDMap& ids() const;
+        Packet* resolve(const std::string& id) const;
 
         /**
          * Calls XMLTreeResolutionTask::resolve() for all queued tasks.
          *
          * The tasks will then be destroyed and removed from the queue
-         * (so subsequent calls to resolve() are safe and will do nothing).
+         * (so subsequent calls to resolveDelayed() are safe and will do
+         * nothing).
          */
-        void resolve();
+        void resolveDelayed();
 
         // Make this class non-copyable.
         XMLTreeResolver(const XMLTreeResolver&) = delete;
@@ -231,9 +265,10 @@ inline XMLTreeResolver::XMLTreeResolver() {
 }
 
 inline XMLTreeResolver::~XMLTreeResolver() {
-    for (std::list<XMLTreeResolutionTask*>::iterator it = tasks_.begin();
-            it != tasks_.end(); ++it)
-        delete *it;
+    for (XMLTreeResolutionTask* task : tasks_)
+        delete task;
+
+    // All packets in the anonymous pool will be deleted at this point also.
 }
 
 inline void XMLTreeResolver::queueTask(XMLTreeResolutionTask* task) {
@@ -244,15 +279,19 @@ inline void XMLTreeResolver::storeID(const std::string& id, Packet* packet) {
     ids_.insert(std::make_pair(id, packet));
 }
 
-inline const XMLTreeResolver::IDMap& XMLTreeResolver::ids() const {
-    return ids_;
+inline void XMLTreeResolver::storeAnon(Packet* packet) {
+    anonPool.insertChildLast(packet);
 }
 
-inline void XMLTreeResolver::resolve() {
-    for (std::list<XMLTreeResolutionTask*>::iterator it = tasks_.begin();
-            it != tasks_.end(); ++it) {
-        (*it)->resolve(*this);
-        delete *it;
+inline Packet* XMLTreeResolver::resolve(const std::string& id) const {
+    auto pos = ids_.find(id);
+    return (pos == ids_.end() ? nullptr : pos->second);
+}
+
+inline void XMLTreeResolver::resolveDelayed() {
+    for (XMLTreeResolutionTask* task : tasks_) {
+        task->resolve(*this);
+        delete task;
     }
     tasks_.clear();
 }

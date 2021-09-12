@@ -151,6 +151,8 @@ void XMLAngleStructuresReader::endElement() {
     // everything in this XML element is optional.
     if (! list_)
         list_ = new AngleStructures(false, AS_ALG_LEGACY, *tri_);
+
+    XMLPacketReader::endElement();
 }
 
 } // namespace regina

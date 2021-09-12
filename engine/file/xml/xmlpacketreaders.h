@@ -54,6 +54,45 @@ namespace regina {
  */
 
 /**
+ * An XML packet reader that resolves an anonref element.
+ *
+ * Immediately upon construction, this reader will attempt to resolve
+ * the given ID.  If successful, the corresopnding packet will be removed
+ * from its current location (either the packet tree or the anonymous pool),
+ * with the assumption that it will be re-inserted when this anonref element
+ * commits its packet.
+ *
+ * \ifacespython Not present.
+ */
+class XMLAnonRefReader : public XMLPacketReader {
+    private:
+        Packet* packet;
+            /**< The container currently being read. */
+
+    public:
+        /**
+         * Creates a new anonref reader.
+         *
+         * The \a id argument is the ID that should be resolved (and,
+         * after resolution, the packet will retain this ID).
+         *
+         * If the \a label argument is non-empty, then this will overwrite any
+         * existing packet label.  If the \a label argument is empty, then
+         * the packet will retain the label that it had before resolution.
+         *
+         * If \a anon is \c true, then when it is finally committed, the
+         * packet will be put back into the anonymous pool (so the use
+         * of anonref is redundant but harmless in this case).
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLAnonRefReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
+
+        virtual Packet* packetToCommit() override;
+};
+
+/**
  * An XML packet reader that reads a single container.
  *
  * \ifacespython Not present.
@@ -67,12 +106,12 @@ class XMLContainerReader : public XMLPacketReader {
         /**
          * Creates a new container reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLContainerReader(XMLTreeResolver& resolver);
+        XMLContainerReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
 };
 
 /**
@@ -89,12 +128,12 @@ class XMLPDFReader : public XMLPacketReader {
         /**
          * Creates a new PDF reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLPDFReader(XMLTreeResolver& resolver);
+        XMLPDFReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual void initialChars(const std::string& chars) override;
 };
 
@@ -113,12 +152,12 @@ class XMLLegacyPDFReader : public XMLPacketReader {
         /**
          * Creates a new PDF reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLegacyPDFReader(XMLTreeResolver& resolver);
+        XMLLegacyPDFReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -140,12 +179,12 @@ class XMLScriptReader : public XMLPacketReader {
         /**
          * Creates a new script reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLScriptReader(XMLTreeResolver& resolver);
+        XMLScriptReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -167,12 +206,12 @@ class XMLTextReader : public XMLPacketReader {
         /**
          * Creates a new text packet reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLTextReader(XMLTreeResolver& resolver);
+        XMLTextReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual void initialChars(const std::string& chars) override;
 };
 
@@ -191,12 +230,12 @@ class XMLLegacyTextReader : public XMLPacketReader {
         /**
          * Creates a new text packet reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLegacyTextReader(XMLTreeResolver& resolver);
+        XMLLegacyTextReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -206,33 +245,48 @@ class XMLLegacyTextReader : public XMLPacketReader {
 
 /*@}*/
 
-// Inline functions for XMLContainerReader
+// Inline functions for XMLAnonRefReader
 
-inline XMLContainerReader::XMLContainerReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), container(new Container()) {
+inline Packet* XMLAnonRefReader::packetToCommit() {
+    return packet;
 }
 
-inline Packet* XMLContainerReader::packet() {
+// Inline functions for XMLContainerReader
+
+inline XMLContainerReader::XMLContainerReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        container(new Container()) {
+}
+
+inline Packet* XMLContainerReader::packetToCommit() {
     return container;
 }
 
 // Inline functions for XMLPDFReader
 
-inline XMLPDFReader::XMLPDFReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), pdf(new PDF()) {
+inline XMLPDFReader::XMLPDFReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        pdf(new PDF()) {
 }
 
-inline Packet* XMLPDFReader::packet() {
+inline Packet* XMLPDFReader::packetToCommit() {
     return pdf;
 }
 
 // Inline functions for XMLLegacyPDFReader
 
-inline XMLLegacyPDFReader::XMLLegacyPDFReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), pdf(new PDF()) {
+inline XMLLegacyPDFReader::XMLLegacyPDFReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        pdf(new PDF()) {
 }
 
-inline Packet* XMLLegacyPDFReader::packet() {
+inline Packet* XMLLegacyPDFReader::packetToCommit() {
     return pdf;
 }
 
@@ -246,21 +300,27 @@ inline XMLElementReader* XMLLegacyPDFReader::startContentSubElement(
 
 // Inline functions for XMLScriptReader
 
-inline XMLScriptReader::XMLScriptReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), script(new Script()) {
+inline XMLScriptReader::XMLScriptReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        script(new Script()) {
 }
 
-inline Packet* XMLScriptReader::packet() {
+inline Packet* XMLScriptReader::packetToCommit() {
     return script;
 }
 
 // Inline functions for XMLTextReader
 
-inline XMLTextReader::XMLTextReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), text(new Text()) {
+inline XMLTextReader::XMLTextReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        text(new Text()) {
 }
 
-inline Packet* XMLTextReader::packet() {
+inline Packet* XMLTextReader::packetToCommit() {
     return text;
 }
 
@@ -270,11 +330,14 @@ inline void XMLTextReader::initialChars(const std::string& chars) {
 
 // Inline functions for XMLLegacyTextReader
 
-inline XMLLegacyTextReader::XMLLegacyTextReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), text(new Text()) {
+inline XMLLegacyTextReader::XMLLegacyTextReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        text(new Text()) {
 }
 
-inline Packet* XMLLegacyTextReader::packet() {
+inline Packet* XMLLegacyTextReader::packetToCommit() {
     return text;
 }
 

@@ -63,11 +63,11 @@ namespace {
              * Create a new top-level reader.
              */
             ReginaDataReader(XMLTreeResolver& resolver) :
-                    XMLPacketReader(resolver),
+                    XMLPacketReader(resolver, nullptr, false, {}, {}),
                     isReginaData(false) {
             }
 
-            virtual Packet* packet() override {
+            virtual Packet* packetToCommit() override {
                 if (isReginaData)
                     return &container;
                 else
@@ -264,14 +264,14 @@ Packet* open(std::istream& s) {
 
         // See if we read anything.
         // If so, break it away from the top-level container and return it.
-        Packet* p = reader.packet();
+        Packet* p = reader.packetToCommit();
         if (p) {
             p = p->firstChild();
             if (p)
                 p->makeOrphan();
 
             // Resolve any dangling packet references.
-            resolver.resolve();
+            resolver.resolveDelayed();
 
             return p;
         } else

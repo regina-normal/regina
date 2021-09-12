@@ -64,12 +64,12 @@ class XMLLinkReader : public XMLPacketReader {
         /**
          * Creates a new knot/link reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLinkReader(XMLTreeResolver& resolver);
+        XMLLinkReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;

@@ -116,6 +116,14 @@ void NormalSurfaces::addPacketRefs(PacketRefs& refs) const {
 void NormalSurfaces::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
     const Triangulation<3>* tri = std::addressof(*triangulation_);
+
+    if (format == REGINA_XML_GEN_2 && tri != parent()) {
+        // The second-generation format required tri == parent(), and
+        // Regina <= 6.0.1 cannot handle lists *without* this property at all.
+        // Do not write this list (or its descendants) at all.
+        return;
+    }
+
     // We know from addPacketRefs() that refs contains the triangulation.
     if (! refs.find(tri)->second) {
         // The triangulation has not yet been written to file.  Do it now.

@@ -70,12 +70,12 @@ class XMLLegacyFilterReader : public XMLPacketReader {
         /**
          * Creates a new surface filter packet reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLegacyFilterReader(XMLTreeResolver& resolver);
+        XMLLegacyFilterReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -97,12 +97,12 @@ class XMLPlainFilterReader : public XMLPacketReader {
         /**
          * Creates a new surface filter packet reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLPlainFilterReader(XMLTreeResolver& resolver);
+        XMLPlainFilterReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
 };
 
 /**
@@ -119,12 +119,12 @@ class XMLCombinationFilterReader : public XMLPacketReader {
         /**
          * Creates a new surface filter packet reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLCombinationFilterReader(XMLTreeResolver& resolver);
+        XMLCombinationFilterReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         XMLElementReader* startContentSubElement(const std::string& subTagName,
                 const regina::xml::XMLPropertyDict& props) override;
 };
@@ -143,12 +143,12 @@ class XMLPropertiesFilterReader : public XMLPacketReader {
         /**
          * Creates a new surface filter packet reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLPropertiesFilterReader(XMLTreeResolver& resolver);
+        XMLPropertiesFilterReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         XMLElementReader* startContentSubElement(const std::string& subTagName,
                 const regina::xml::XMLPropertyDict& props) override;
         void endContentSubElement(const std::string& subTagName,
@@ -159,43 +159,53 @@ class XMLPropertiesFilterReader : public XMLPacketReader {
 
 // Inline functions for XMLLegacyFilterReader
 
-inline XMLLegacyFilterReader::XMLLegacyFilterReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), filter_(nullptr) {
+inline XMLLegacyFilterReader::XMLLegacyFilterReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        filter_(nullptr) {
 }
 
-inline Packet* XMLLegacyFilterReader::packet() {
+inline Packet* XMLLegacyFilterReader::packetToCommit() {
     return filter_;
 }
 
 // Inline functions for XMLPlainFilterReader:
 
-inline XMLPlainFilterReader::XMLPlainFilterReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), filter_(new SurfaceFilter()) {
+inline XMLPlainFilterReader::XMLPlainFilterReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        filter_(new SurfaceFilter()) {
 }
 
-inline Packet* XMLPlainFilterReader::packet() {
+inline Packet* XMLPlainFilterReader::packetToCommit() {
     return filter_;
 }
 
 // Inline functions for XMLCombinationFilterReader:
 
 inline XMLCombinationFilterReader::XMLCombinationFilterReader(
-        XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), filter_(nullptr) {
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        filter_(nullptr) {
 }
 
-inline Packet* XMLCombinationFilterReader::packet() {
+inline Packet* XMLCombinationFilterReader::packetToCommit() {
     return filter_;
 }
 
 // Inline functions for XMLPropertiesFilterReader:
 
 inline XMLPropertiesFilterReader::XMLPropertiesFilterReader(
-        XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), filter_(new SurfaceFilterProperties()) {
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        filter_(new SurfaceFilterProperties()) {
 }
 
-inline Packet* XMLPropertiesFilterReader::packet() {
+inline Packet* XMLPropertiesFilterReader::packetToCommit() {
     return filter_;
 }
 

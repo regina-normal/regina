@@ -52,7 +52,9 @@ namespace regina {
 // switch statements instead of long if/else lists.
 constexpr int PACKET_LEGACY_CHILD = -1;
 constexpr int PACKET_TAG = -2;
-constexpr int PACKET_TRIANGULATION_ANY = -3;
+constexpr int PACKET_ANON = -3;
+constexpr int PACKET_ANONREF = -4;
+constexpr int PACKET_TRIANGULATION_ANY = -5;
 constexpr int PACKET_V7_TEXT = -16;
 constexpr int PACKET_V7_PDF = -17;
 constexpr int PACKET_V7_SNAPPEA = -18;
@@ -75,6 +77,8 @@ const std::map<std::string, int> packetXMLTags = {
 
     { "tri", PACKET_TRIANGULATION_ANY },
 
+    { "anon", PACKET_ANON },
+    { "anonref", PACKET_ANONREF },
     { "packet", PACKET_LEGACY_CHILD },
     { "tag", PACKET_TAG }
 };
@@ -86,21 +90,30 @@ XMLElementReader* XMLPacketReader::startSubElement(
     if (xmlTag == packetXMLTags.end()) {
         // This is part of the "real" content specific to the type of
         // packet we are currently reading.
-        return startContentSubElement(subTagName, subTagProps);
+        // Only process it if we have not yet committed the packet.
+        if (! packet_) {
+            readingContent_ = true;
+            return startContentSubElement(subTagName, subTagProps);
+        } else
+            return new XMLElementReader();
     } else {
-        int xmlTagType = xmlTag->second;
-
         // This is something generic that can appear in all packets.
+        // If we have not yet finalised the packet content, do it now.
+        commit();
+
+        int xmlTagType = xmlTag->second;
         if (xmlTagType == PACKET_TAG) {
             // We have <tag name="..."/>.
-            if (Packet* me = packet()) {
-                std::string packetTag = subTagProps.lookup("name");
-                if (! packetTag.empty())
-                    me->addTag(packetTag);
-            }
+            std::string packetTag = subTagProps.lookup("name");
+            if (packet_ && ! packetTag.empty())
+                packet_->addTag(packetTag);
             return new XMLElementReader();
         }
         // All remaining cases are genuine child packets.
+        // Ensure that we have somewhere to *put* the child packets.
+        if (! (packet_ || anon_))
+            return new XMLElementReader();
+
         // Confirm exactly what kind of child packet we are reading.
 
         // We will need to fetch and store the following two properties
@@ -113,20 +126,20 @@ XMLElementReader* XMLPacketReader::startSubElement(
             // older second-generation file format.
             auto prop = subTagProps.find("typeid");
             if (prop == subTagProps.end())
-                return new XMLPacketReader(resolver_);
+                return new XMLElementReader();
             if (! valueOf(prop->second, xmlTagType))
-                return new XMLPacketReader(resolver_);
+                return new XMLElementReader();
         } else if (xmlTagType == PACKET_TRIANGULATION_ANY) {
             // This is a new <tri dim="...">...</tri> element from the
             // newer third-generation file format.
             int dim;
             auto prop = subTagProps.find("dim");
             if (prop == subTagProps.end())
-                return new XMLPacketReader(resolver_);
+                return new XMLElementReader();
             if (! valueOf(prop->second, dim))
-                return new XMLPacketReader(resolver_);
+                return new XMLElementReader();
             if (dim < 2 || dim > 15)
-                return new XMLPacketReader(resolver_);
+                return new XMLElementReader();
             switch (dim) {
                 case 2: xmlTagType = PACKET_TRIANGULATION2; break;
                 case 3: xmlTagType = PACKET_TRIANGULATION3; break;
@@ -138,144 +151,206 @@ XMLElementReader* XMLPacketReader::startSubElement(
             prop = subTagProps.find("size");
             if (! (prop != subTagProps.end() && valueOf(prop->second, size) &&
                     size >= 0))
-                return new XMLPacketReader(resolver_);
+                return new XMLElementReader();
 
             // Identify how permutations are stored.
             prop = subTagProps.find("perm");
             if (prop == subTagProps.end())
-                return new XMLPacketReader(resolver_);
+                return new XMLElementReader();
             if (prop->second == "index")
                 permIndex = true;
             else if (prop->second == "imagepack")
                 permIndex = false;
             else
-                return new XMLPacketReader(resolver_);
+                return new XMLElementReader();
         }
 
         // Fetch some properties that we will need once the child reader
         // has actually created the packet.
-        auto prop = subTagProps.find("label");
-        if (prop != subTagProps.end())
-            childLabel_ = prop->second;
-
-        prop = subTagProps.find("id");
-        if (prop != subTagProps.end())
-            childID_ = prop->second;
+        std::string childLabel = subTagProps.lookup("label");
+        std::string childID = subTagProps.lookup("id");
 
         // Run through all the packet types that our file format understands.
         switch (xmlTagType) {
+            case PACKET_ANON:
+                return new XMLPacketReader(resolver_, packet_, true,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_ANONREF:
+                return new XMLAnonRefReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
             case PACKET_CONTAINER:
-                return childReader_ = new XMLContainerReader(resolver_);
-            case PACKET_TEXT:
-                return childReader_ = new XMLLegacyTextReader(resolver_);
-            case PACKET_V7_TEXT:
-                return childReader_ = new XMLTextReader(resolver_);
-            case PACKET_TRIANGULATION3:
-                return childReader_ = new XMLTriangulationReader<3>(
-                    resolver_, size, permIndex);
-            case PACKET_NORMALSURFACES:
-                return childReader_ = new XMLNormalSurfacesReader(
-                    dynamic_cast<Triangulation<3>*>(packet()), resolver_);
-            case PACKET_SCRIPT:
-                return childReader_ = new XMLScriptReader(resolver_);
-            case PACKET_SURFACEFILTER:
-                return childReader_ = new XMLLegacyFilterReader(resolver_);
-            case PACKET_V7_FILTER_PROPERTIES:
-                return childReader_ = new XMLPropertiesFilterReader(resolver_);
-            case PACKET_V7_FILTER_COMBINATION:
-                return childReader_ = new XMLCombinationFilterReader(resolver_);
-            case PACKET_V7_FILTER_PLAIN:
-                return childReader_ = new XMLPlainFilterReader(resolver_);
-            case PACKET_ANGLESTRUCTURES:
-                return childReader_ = new XMLAngleStructuresReader(
-                    dynamic_cast<Triangulation<3>*>(packet()), resolver_);
-            case PACKET_PDF:
-                return childReader_ = new XMLLegacyPDFReader(resolver_);
-            case PACKET_V7_PDF:
-                return childReader_ = new XMLPDFReader(resolver_);
+                return new XMLContainerReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
             case PACKET_TRIANGULATION2:
-                return childReader_ = new XMLTriangulationReader<2>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<2>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
+            case PACKET_TRIANGULATION3:
+                return new XMLTriangulationReader<3>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION4:
-                return childReader_ = new XMLTriangulationReader<4>(
-                    resolver_, size, permIndex);
-            case PACKET_NORMALHYPERSURFACES:
-                return childReader_ = new XMLNormalHypersurfacesReader(
-                    dynamic_cast<Triangulation<4>*>(packet()), resolver_);
+                return new XMLTriangulationReader<4>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_SNAPPEATRIANGULATION:
-                return childReader_ = new XMLLegacySnapPeaReader(resolver_);
+                return new XMLLegacySnapPeaReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
             case PACKET_V7_SNAPPEA:
-                return childReader_ = new XMLSnapPeaReader(resolver_);
+                return new XMLSnapPeaReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
             case PACKET_LINK:
-                return childReader_ = new XMLLinkReader(resolver_);
+                return new XMLLinkReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_TEXT:
+                return new XMLLegacyTextReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_V7_TEXT:
+                return new XMLTextReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_SCRIPT:
+                return new XMLScriptReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_SURFACEFILTER:
+                return new XMLLegacyFilterReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_V7_FILTER_PROPERTIES:
+                return new XMLPropertiesFilterReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_V7_FILTER_COMBINATION:
+                return new XMLCombinationFilterReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_V7_FILTER_PLAIN:
+                return new XMLPlainFilterReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_PDF:
+                return new XMLLegacyPDFReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_V7_PDF:
+                return new XMLPDFReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID));
+            case PACKET_NORMALSURFACES: {
+                Triangulation<3>* tri;
+
+                auto prop = subTagProps.find("tri");
+                if (prop == subTagProps.end())
+                    tri = dynamic_cast<Triangulation<3>*>(packet_);
+                else
+                    tri = dynamic_cast<Triangulation<3>*>(
+                        resolver_.resolve(prop->second));
+
+                if (tri)
+                    return new XMLNormalSurfacesReader(resolver_, packet_,
+                        anon_, std::move(childLabel), std::move(childID), tri);
+                else
+                    return new XMLElementReader();
+            }
+            case PACKET_ANGLESTRUCTURES: {
+                Triangulation<3>* tri;
+
+                auto prop = subTagProps.find("tri");
+                if (prop == subTagProps.end())
+                    tri = dynamic_cast<Triangulation<3>*>(packet_);
+                else
+                    tri = dynamic_cast<Triangulation<3>*>(
+                        resolver_.resolve(prop->second));
+
+                if (tri)
+                    return new XMLAngleStructuresReader(resolver_, packet_,
+                        anon_, std::move(childLabel), std::move(childID), tri);
+                else
+                    return new XMLElementReader();
+            }
+            case PACKET_NORMALHYPERSURFACES: {
+                Triangulation<4>* tri;
+
+                auto prop = subTagProps.find("tri");
+                if (prop == subTagProps.end())
+                    tri = dynamic_cast<Triangulation<4>*>(packet_);
+                else
+                    tri = dynamic_cast<Triangulation<4>*>(
+                        resolver_.resolve(prop->second));
+
+                if (tri)
+                    return new XMLNormalHypersurfacesReader(resolver_, packet_,
+                        anon_, std::move(childLabel), std::move(childID), tri);
+                else
+                    return new XMLElementReader();
+            }
 #ifndef REGINA_LOWDIMONLY
             case PACKET_TRIANGULATION5:
-                return childReader_ = new XMLTriangulationReader<5>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<5>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION6:
-                return childReader_ = new XMLTriangulationReader<6>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<6>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION7:
-                return childReader_ = new XMLTriangulationReader<7>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<7>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION8:
-                return childReader_ = new XMLTriangulationReader<8>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<8>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION9:
-                return childReader_ = new XMLTriangulationReader<9>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<9>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION10:
-                return childReader_ = new XMLTriangulationReader<10>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<10>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION11:
-                return childReader_ = new XMLTriangulationReader<11>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<11>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION12:
-                return childReader_ = new XMLTriangulationReader<12>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<12>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION13:
-                return childReader_ = new XMLTriangulationReader<13>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<13>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION14:
-                return childReader_ = new XMLTriangulationReader<14>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<14>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
             case PACKET_TRIANGULATION15:
-                return childReader_ = new XMLTriangulationReader<15>(
-                    resolver_, size, permIndex);
+                return new XMLTriangulationReader<15>(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), size, permIndex);
 #endif /* ! REGINA_LOWDIMONLY */
             default:
-                return childReader_ = new XMLPacketReader(resolver_);
+                return new XMLElementReader();
         }
     }
 }
 
 void XMLPacketReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (childReader_) {
-        if (Packet* child = childReader_->packet()) {
-            if (Packet* me = packet()) {
-                if (! childLabel_.empty())
-                    child->setLabel(childLabel_);
-                if (! childID_.empty())
-                    resolver_.storeID(childID_, child);
-                if (! child->parent())
-                    me->insertChildLast(child);
-            } else
-                delete child;
-        }
-        childLabel_.clear();
-        childID_.clear();
-        childReader_ = nullptr;
-    } else if (subTagName != "tag") {
+    if (readingContent_) {
         // This sub-element was part of the packet's "real" content.
         endContentSubElement(subTagName, subReader);
+        readingContent_ = false;
     }
 }
 
+void XMLPacketReader::endElement() {
+    commit();
+}
+
 void XMLPacketReader::abort(XMLElementReader* /* subReader */) {
-    if (Packet* me = packet())
-        if (! me->parent())
-            delete me;
+    // Fetch the packet under construction if we don't have it already,
+    // so that we can destroy it.
+    if (! packet_)
+        packet_ = packetToCommit();
+    // The following code will also orphan packet_ from its parent.
+    delete packet_;
+    packet_ = nullptr;
+}
+
+void XMLPacketReader::commit() {
+    if (! packet_) {
+        if ((packet_ = packetToCommit())) {
+            if (! label_.empty())
+                packet_->setLabel(label_);
+            if (! id_.empty())
+                resolver_.storeID(id_, packet_);
+            if (anon_) {
+                resolver_.storeAnon(packet_);
+            } else if (parent_ && ! packet_->parent())
+                parent_->insertChildLast(packet_);
+        }
+    }
 }
 
 } // namespace regina

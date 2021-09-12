@@ -53,15 +53,19 @@ XMLElementReader* XMLLegacyFilterReader::startContentSubElement(
                 switch (static_cast<SurfaceFilterType>(type)) {
                     case NS_FILTER_DEFAULT:
                         return dataReader_ =
-                            new XMLPlainFilterReader(resolver_);
+                            new XMLPlainFilterReader(resolver_,
+                                parent_, anon_, label_, id_);
                     case NS_FILTER_PROPERTIES:
                         return dataReader_ =
-                            new XMLPropertiesFilterReader(resolver_);
+                            new XMLPropertiesFilterReader(resolver_,
+                                parent_, anon_, label_, id_);
                     case NS_FILTER_COMBINATION:
                         return dataReader_ =
-                            new XMLCombinationFilterReader(resolver_);
+                            new XMLCombinationFilterReader(resolver_,
+                                parent_, anon_, label_, id_);
                     default:
-                        return new XMLPacketReader(resolver_);
+                        return new XMLPacketReader(resolver_,
+                            parent_, anon_, label_, id_);
                 }
             }
         }
@@ -71,7 +75,7 @@ XMLElementReader* XMLLegacyFilterReader::startContentSubElement(
 void XMLLegacyFilterReader::endContentSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (dataReader_)
-        filter_ = dataReader_->packet();
+        filter_ = dataReader_->packetToCommit();
 }
 
 XMLElementReader* XMLCombinationFilterReader::startContentSubElement(

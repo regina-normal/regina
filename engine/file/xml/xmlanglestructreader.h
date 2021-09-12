@@ -109,15 +109,17 @@ class XMLAngleStructuresReader : public XMLPacketReader {
         /**
          * Creates a new angle structure list reader.
          *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
          * @param tri the triangulation on which these angle
-         * structures are placed.
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * structures are placed.  This must be non-null.
          */
-        XMLAngleStructuresReader(Triangulation<3>* tri,
-            XMLTreeResolver& resolver);
+        XMLAngleStructuresReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id,
+            Triangulation<3>* tri);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -141,11 +143,13 @@ inline std::optional<AngleStructure>& XMLAngleStructureReader::structure() {
 // Inline functions for XMLAngleStructuresReader
 
 inline XMLAngleStructuresReader::XMLAngleStructuresReader(
-        Triangulation<3>* tri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), list_(nullptr), tri_(tri) {
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id, Triangulation<3>* tri) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        list_(nullptr), tri_(tri) {
 }
 
-inline Packet* XMLAngleStructuresReader::packet() {
+inline Packet* XMLAngleStructuresReader::packetToCommit() {
     return list_;
 }
 

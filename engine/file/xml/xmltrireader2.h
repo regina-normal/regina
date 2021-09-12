@@ -66,16 +66,18 @@ class XMLTriangulationReader<2> : public XMLTriangulationReaderBase<2> {
         /**
          * Creates a new triangulation reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters not explained here are the same as for the
+         * (grand)parent class XMLPacketReader.
+         *
          * @param size the total number of triangles in the triangulation.
          * This should be 0 if we are reading the second-generation file format.
          * @param permIndex \c true if permutations are stored as indices into
          * Sn, or \c false if they are stored as image packs.
          * This will be ignored when reading the second-generation file format.
          */
-        XMLTriangulationReader(XMLTreeResolver& resolver, size_t size,
-            bool permIndex);
+        XMLTriangulationReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id,
+            size_t size, bool permIndex);
 
         /**
          * Returns an XML element reader for the given optional property of a
@@ -106,8 +108,10 @@ class XMLTriangulationReader<2> : public XMLTriangulationReaderBase<2> {
 // Inline functions for XMLTriangulationReader<2>
 
 inline XMLTriangulationReader<2>::XMLTriangulationReader(
-        XMLTreeResolver& resolver, size_t size, bool permIndex) :
-        XMLTriangulationReaderBase<2>(resolver, size, permIndex) {
+        XMLTreeResolver& resolver, Packet* parent, bool anon,
+        std::string label, std::string id, size_t size, bool permIndex) :
+        XMLTriangulationReaderBase<2>(resolver, parent, anon,
+            std::move(label), std::move(id), size, permIndex) {
 }
 
 inline XMLElementReader* XMLTriangulationReader<2>::startPropertySubElement(

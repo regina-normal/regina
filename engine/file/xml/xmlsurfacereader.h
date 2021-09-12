@@ -118,14 +118,17 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
         /**
          * Creates a new normal surface list reader.
          *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
          * @param tri the triangulation in which these normal surfaces live.
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * This must be non-null.
          */
-        XMLNormalSurfacesReader(const Triangulation<3>* newTri,
-            XMLTreeResolver& resolver);
+        XMLNormalSurfacesReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id,
+            Triangulation<3>* tri);
 
-        virtual Packet* packet() override;
+        virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -149,11 +152,13 @@ inline std::optional<NormalSurface>& XMLNormalSurfaceReader::surface() {
 // Inline functions for XMLNormalSurfacesReader
 
 inline XMLNormalSurfacesReader::XMLNormalSurfacesReader(
-        const Triangulation<3>* tri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), list_(nullptr), tri_(tri) {
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id, Triangulation<3>* tri) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        list_(nullptr), tri_(tri) {
 }
 
-inline Packet* XMLNormalSurfacesReader::packet() {
+inline Packet* XMLNormalSurfacesReader::packetToCommit() {
     return list_;
 }
 

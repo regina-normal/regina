@@ -97,23 +97,37 @@ class XMLTreeResolver;
  */
 class XMLPacketReader : public XMLElementReader {
     private:
-        XMLPacketReader* childReader_;
-            /**< The reader for the child packet currently being read.  This
-                 \e should be \c null if no child packet is being read, and it
-                 \e may be \c null if we know the child reader will return
-                 a \c null packet. */
-        std::string childLabel_;
-            /**< The packet label to give the child packet currently
-                 being read.  This must be empty if childReader_ is \c null. */
-        std::string childID_;
-            /**< The internal ID stored in the data file for the child packet
-                 currently being read.  This must be empty if childReader_ is
-                 \c null. */
+        Packet* packet_ { nullptr };
+            /**< The packet that has been read and constructed.  This is
+                 \c null until commit() is called, at which point it is
+                 non-null unless an error occurred during reading or
+                 reconstruction. */
+        bool readingContent_ { false };
+            /**< Identifies whether we are currently reading an XML sub-element
+                 that should contain data required to reconstruct this packet
+                 (as opposed to generic packet content such as packet
+                 tags or child packets).  This is set to \c true before
+                 calling startContentSubElement(), and is set to \c false
+                 again after calling endContentSubElement(). */
 
     protected:
         XMLTreeResolver& resolver_;
             /**< The master resolver that will be used to fix dangling packet
                  references after the entire XML file has been read. */
+
+        Packet* parent_;
+            /**< The location in the packet tree beneath which this packet
+                 should be inserted.  This may only be \c null if (i) \a anon
+                 is \c true, or (ii) this packet reader represents the root
+                 \<regina\> or \<reginadata\> element. */
+        bool anon_;
+            /**< Identifies whether this packet appears within an
+                 anonymous block. */
+        std::string label_;
+            /**< The label to assign to the packet being read. */
+        std::string id_;
+            /**< The string ID that uniquely identifies this packet in the
+                 XML data file, or the empty string if this packet has no ID. */
 
     public:
         /**
@@ -121,42 +135,57 @@ class XMLPacketReader : public XMLElementReader {
          *
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
+         * @param parent the location in the packet tree beneath which this
+         * packet will be inserted, once it has been constructed.  This \e must
+         * be non-null unless (i) \a anon is \c true, or (ii) this packet
+         * reader represents the root \<regina\> or \<reginadata\> element.
+         * @param anon \c true if this packet appears within an \<anon\> block.
+         * @param label the label that will be assigned to this packet,
+         * once it has been constructed.  If this is the empty string,
+         * the packet label will not be set (which typically means the packet
+         * will have the default empty label).
+         * @param id the string ID that identifies this packet in the packet
+         * tree, as used for cross-referencing between packets in the XML
+         * data file, or the empty string if this packet has no ID.
          */
-        XMLPacketReader(XMLTreeResolver& resolver);
+        XMLPacketReader(XMLTreeResolver& resolver, Packet* parent, bool anon,
+            std::string label, std::string id);
 
         /**
-         * Returns the newly allocated packet that has been read by
-         * this element reader.
+         * Returns the newly allocated packet that has been read and
+         * constructed by this element reader.
+         *
+         * This routine will be called at least once for every packet reader.
+         * The first time it is called will be after all packet-specific
+         * content should have been read (either immediately before processing
+         * packet tags and/or child packets, or during endElement() or abort()).
+         * See commit() for details on the precise timeline.
+         *
+         * This routine should therefore assume that it has received all
+         * the packet-specific data it will get, and should make its
+         * best attempt to construct a packet accordingly.  It may
+         * return \c null if this is not possible, in which case the
+         * packet being read (and all its descendants) may be dropped from
+         * the packet tree.
          *
          * Deallocation of this new packet is not the responsibility of
-         * this class.  Once this routine gives a non-zero return value,
-         * it should continue to give the same non-zero return value
-         * from this point onwards.
+         * this class; again see commit() for details on this.
          *
-         * If this routine is ever to give a non-zero return value, it
-         * \e must be giving that non-zero return value by the time the
-         * first child packet or packet tag is encountered; otherwise
-         * child packets will not be inserted into the packet tree and/or
-         * packet tags will not be added.
+         * Once this routine gives a non-null return value, this function must
+         * continue to give the same return value from this point onwards
+         * (however, typically this function would not be called again).
          *
-         * The newly allocated packet should not be given a packet
-         * label.  This will be done by XMLPacketReader::endSubElement().
+         * The newly allocated packet should not be given a packet label,
+         * and should not be inserted into the packet tree.  These tasks
+         * will be managed by commit().  Likewise, the newly allocated
+         * packet should not be given any packet tags or child packets.
          *
-         * The newly allocated packet may or may not be inserted in the
-         * packet tree structure; this does not matter (although if it
-         * is inserted it must be inserted in the correct place).
+         * The default implementation returns \c null.
          *
-         * The newly allocated packet should not be given any associated
-         * packet tags.  This will be done by
-         * XMLPacketReader::startSubElement().
-         *
-         * The default implementation returns 0.
-         *
-         * @return the packet that has been read, or 0 if packet reading
-         * is incomplete, the packet should be ignored or an error
-         * occurred.
+         * @return the packet that has been constructed, or \c null if
+         * this is not possible given the data that has been read.
          */
-        virtual Packet* packet();
+        virtual Packet* packetToCommit();
 
         /**
          * Used instead of startSubElement() for XML subelements that
@@ -191,23 +220,58 @@ class XMLPacketReader : public XMLElementReader {
         virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader);
 
+        virtual void endElement() override;
         virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
         virtual void abort(XMLElementReader *subReader) override;
+
+    protected:
+        /**
+         * Finishes off the packet under construction and inserts it
+         * into the packet tree.
+         *
+         * This routine will \e always be called for each packet reader:
+         * either when the first tag/packet child is seen, or (if there are
+         * no tags or child packets) from endElement(), or (if necessary)
+         * from abort().
+         *
+         * At this point at which this routine is called, the full contents
+         * of the current packet should have been read from XML, and should
+         * be accessible via the routine packetToCommit().  This routine will:
+         *
+         * - fetch the packet from packetToCommit(), set its label,
+         *   and register its ID with the resolver;
+         *
+         * - if \a anon_ is \c false, insert the packet in the tree beneath
+         *   \a parent_;
+         *
+         * - if \a anon_ is \c true, add the packet to the resolver's
+         *   anonymous pool.
+         *
+         * Therefore a side-effect of commit() is to ensure that the
+         * packet under construction has its ownership managed by some entity.
+         *
+         * It is safe to call this routine multiple times; once it
+         * receives and processes a non-null packet, subsequent calls
+         * will do nothing.
+         */
+        void commit();
 };
 
 /*@}*/
 
 // Inline functions for XMLPacketReader
 
-inline XMLPacketReader::XMLPacketReader(XMLTreeResolver& resolver) :
-        childReader_(nullptr), resolver_(resolver) {
+inline XMLPacketReader::XMLPacketReader(XMLTreeResolver& resolver,
+        Packet* parent, bool anon, std::string label, std::string id) :
+        resolver_(resolver), parent_(parent), anon_(anon),
+        label_(std::move(label)), id_(std::move(id)) {
 }
 
-inline Packet* XMLPacketReader::packet() {
+inline Packet* XMLPacketReader::packetToCommit() {
     return nullptr;
 }
 

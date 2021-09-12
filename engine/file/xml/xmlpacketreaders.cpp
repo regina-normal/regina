@@ -94,12 +94,9 @@ namespace {
             }
 
             inline void resolve(const XMLTreeResolver& resolver) {
-                Packet* resolution = 0;
-                if (! valueID_.empty()) {
-                    XMLTreeResolver::IDMap::const_iterator it =
-                        resolver.ids().find(valueID_);
-                    resolution = (it == resolver.ids().end() ? 0 : it->second);
-                }
+                Packet* resolution = nullptr;
+                if (! valueID_.empty())
+                    resolution = resolver.resolve(valueID_);
                 if ((! resolution) && (! valueLabel_.empty()))
                     resolution = script_->root()->findPacketLabel(valueLabel_);
 
@@ -180,6 +177,15 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
                 script, var->getName(),
                 var->getValueID(), var->getValueLabel()));
     }
+}
+
+XMLAnonRefReader::XMLAnonRefReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)) {
+    packet = res.resolve(id_);
+    if (packet)
+        packet->makeOrphan();
 }
 
 } // namespace regina

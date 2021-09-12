@@ -36,11 +36,13 @@
 
 namespace regina {
 
-XMLLinkReader::XMLLinkReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), link_(new Link()) {
+XMLLinkReader::XMLLinkReader(XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        link_(new Link()) {
 }
 
-Packet* XMLLinkReader::packet() {
+Packet* XMLLinkReader::packetToCommit() {
     return link_;
 }
 
