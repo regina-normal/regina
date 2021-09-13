@@ -642,6 +642,7 @@ Version 7.0  [ TODO ]
               old NormalSurfaceVector class.
             - New operator +.  At last!  Crucially, this operator can combine
               surfaces that use different coordinate systems.
+            - New routine components().
             - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalSurfaces:
             - Normal surface lists now hold a snapshot of the underlying

@@ -938,7 +938,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         LargeInteger eulerChar() const;
         /**
          * Returns whether or not this surface is orientable.
-         * 
+         *
+         * For our purposes, the empty surface is considered to be orientable.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
@@ -957,6 +959,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         /**
          * Returns whether or not this surface is two-sided.
          *
+         * For our purposes, the empty surface is considered to be two-sided.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
@@ -974,6 +978,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         bool isTwoSided() const;
         /**
          * Returns whether or not this surface is connected.
+         *
+         * For our purposes, the empty surface is considered to be connected.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
@@ -1001,6 +1007,25 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * @return \c true if and only if this surface has real boundary.
          */
         bool hasRealBoundary() const;
+
+        /**
+         * Splits this surface into connected components.
+         *
+         * A list of connected components will be returned.
+         * These components will always be encoded using standard
+         * (tri-quad or tri-quad-oct) coordinates, regardless of the
+         * internal vector encoding that is used by this surface.
+         *
+         * \pre This normal surface is embedded (not singular or immersed).
+         * \pre This normal surface is compact (has finitely many discs).
+         *
+         * \warning This routine explicitly builds the normal discs,
+         * and so may run out of memory if the normal coordinates
+         * are extremely large.
+         *
+         * @return the list of connected components.
+         */
+        std::vector<NormalSurface> components() const;
 
         /**
          * Determines whether or not this surface is vertex linking.
@@ -1333,6 +1358,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * same 3-manifold triangulation.
          * \pre Both this and the given surface are compact (have
          * finitely many discs), embedded, non-empty and connected.
+         *
+         * \warning This routine is slow, since it performs a depth-first
+         * search over the entire set of normal discs.
          *
          * @param other the other surface to test alongside this surface
          * for potential intersections.
