@@ -52,7 +52,6 @@
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/exception.h"
-#include "utilities/listview.h"
 
 namespace regina {
 
@@ -479,31 +478,6 @@ class NormalSurfaces : public Packet {
          */
         size_t size() const;
         /**
-         * Returns an object that allows iteration through and random access
-         * to all normal surfaces in this list.
-         *
-         * The object that is returned is lightweight, and can be happily
-         * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
-         *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
-         *
-         * \code{.cpp}
-         * for (const NormalSurface* s : list.surfaces()) { ... }
-         * \endcode
-         *
-         * The object that is returned will remain valid only for as
-         * long as this normal surface list exists.
-         *
-         * \ifacespython This routine returns a Python list.
-         *
-         * @return access to the list of all normal surfaces.
-         */
-        auto surfaces() const;
-        /**
          * Returns the surface at the requested index in this list.
          *
          * @param index the index of the requested surface in this list;
@@ -512,6 +486,47 @@ class NormalSurfaces : public Packet {
          * @return the normal surface at the requested index in this list.
          */
         const NormalSurface& surface(size_t index) const;
+        /**
+         * Returns an iterator at the beginning of this list of surfaces.
+         *
+         * The begin() and end() functions allow you to iterate through all
+         * surfaces in this list using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * NormalSurfaces list(...);
+         * for (const NormalSurface& s : list) { ... }
+         * \endcode
+         *
+         * In Python, a normal surface list can be treated as an iterable
+         * object:
+         *
+         * \code{.py}
+         * list = NormalSurfaces(...)
+         * for s in list:
+         *     ...
+         * \endcode
+         *
+         * The type that is returned will be a lightweight iterator type,
+         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
+         * The precise C++ type of the iterator is subject to change, so
+         * C++ users should use \c auto (just like this declaration does).
+         *
+         * @return an iterator at the beginning of this list.
+         */
+        auto begin() const;
+        /**
+         * Returns an iterator beyond the end of this list of surfaces.
+         *
+         * In C++, the begin() and end() routines allow you to iterate through
+         * all surfaces in this list using C++11 range-based \c for loops.
+         * In Python, a normal surface list can be treated as an iterable
+         * object.
+         *
+         * See the begin() documentation for further details.
+         *
+         * @return an iterator beyond the end of this list.
+         */
+        auto end() const;
         /**
          * Writes the number of surfaces in this list followed by the
          * details of each surface to the given output stream.  Output
@@ -1413,12 +1428,16 @@ inline size_t NormalSurfaces::size() const {
     return surfaces_.size();
 }
 
-inline auto NormalSurfaces::surfaces() const {
-    return ListView(surfaces_);
-}
-
 inline const NormalSurface& NormalSurfaces::surface(size_t index) const {
     return surfaces_[index];
+}
+
+inline auto NormalSurfaces::begin() const {
+    return surfaces_.begin();
+}
+
+inline auto NormalSurfaces::end() const {
+    return surfaces_.end();
 }
 
 inline bool NormalSurfaces::allowsAlmostNormal() const {

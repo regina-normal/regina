@@ -618,7 +618,7 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
     // reconstructed by NormalSurface at the end of the first pass above.
     std::vector<NSShadowVector> shadows;
     shadows.reserve(vtx.size());
-    for (const auto& s : vtx.surfaces())
+    for (const NormalSurface& s : vtx)
         shadows.push_back(NSShadowVector(s.vector(), s.encoding(),
             NormalEncoding(list_->coords_)));
 

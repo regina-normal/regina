@@ -421,7 +421,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 size_t central, bool splitting) {
             unsigned long tot = 0;
 
-            for (const NormalSurface& s : list.surfaces()) {
+            for (const NormalSurface& s : list) {
                 if (s.eulerChar() == euler &&
                         s.isConnected() == connected &&
                         s.isOrientable() == orient &&
@@ -619,7 +619,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             NormalSurfaces list(figure8, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 4);
-            for (const NormalSurface& s : list.surfaces())
+            for (const NormalSurface& s : list)
                 testSurface(s,
                     "the figure eight knot complement", "spun surface",
                     0 /* euler, N/A */, 0 /* connected, N/A */,
@@ -1708,7 +1708,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             // only those with chi=0.
             std::vector<const Vector<LargeInteger>*> filtered;
             NormalSurfaces all(tri, NS_STANDARD);
-            for (const NormalSurface& s : all.surfaces())
+            for (const NormalSurface& s : all)
                 if (s.eulerChar() == 0)
                     filtered.push_back(&s.vector());
 
@@ -2087,7 +2087,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             unsigned long expected;
 
             // We use the fact that each normal surface is connected.
-            for (const NormalSurface& s : list.surfaces()) {
+            for (const NormalSurface& s : list) {
                 t.reset(s.cutAlong());
                 t->intelligentSimplify();
 

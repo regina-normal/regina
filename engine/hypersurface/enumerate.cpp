@@ -253,7 +253,7 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
     // reconstructed by NormalSurface at the end of the first pass above.
     std::vector<HSShadowVector> shadows;
     shadows.reserve(vtx.size());
-    for (const auto& s : vtx.hypersurfaces())
+    for (const NormalHypersurface& s : vtx)
         shadows.push_back(HSShadowVector(s.vector(), s.encoding(),
             HyperEncoding(list_->coords_)));
 

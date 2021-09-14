@@ -134,7 +134,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 bool strict, bool taut) {
             unsigned long tot = 0;
 
-            for (const AngleStructure& s : list.structures())
+            for (const AngleStructure& s : list)
                 if (s.isStrict() == strict && s.isTaut() == taut)
                     ++tot;
 
@@ -210,7 +210,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             unsigned long j, k;
             regina::Rational tmp, tot;
             regina::Edge<3>* e;
-            for (const AngleStructure& s : a.structures()) {
+            for (const AngleStructure& s : a) {
                 for (j = 0; j < tri->size(); ++j) {
                     tot = 0;
                     for (k = 0; k < 3; ++k) {
@@ -315,11 +315,11 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
             unsigned nAll = 0, nTaut = 0;
 
-            for (const AngleStructure& a : all.structures())
+            for (const AngleStructure& a : all)
                 if (a.isTaut())
                     ++nAll;
 
-            for (const AngleStructure& a : taut.structures())
+            for (const AngleStructure& a : taut)
                 if (a.isTaut())
                     ++nTaut;
                 else {
@@ -418,11 +418,11 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             VecPtr* tautRaw = new VecPtr[nTaut + 1];
 
             unsigned long foundAll = 0;
-            for (const AngleStructure& a : all.structures())
+            for (const AngleStructure& a : all)
                 if (a.isTaut())
                     allRaw[foundAll++] = &(a.vector());
             unsigned long i = 0;
-            for (const AngleStructure& a : taut.structures())
+            for (const AngleStructure& a : taut)
                 tautRaw[i++] = &(a.vector());
 
             if (foundAll != nTaut) {

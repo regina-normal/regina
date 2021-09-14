@@ -52,7 +52,6 @@
 #include "maths/matrix.h"
 #include "packet/packet.h"
 #include "utilities/exception.h"
-#include "utilities/listview.h"
 
 namespace regina {
 
@@ -338,31 +337,6 @@ class NormalHypersurfaces : public Packet {
          */
         size_t size() const;
         /**
-         * Returns an object that allows iteration through and random access
-         * to all normal hypersurfaces in this list.
-         *
-         * The object that is returned is lightweight, and can be happily
-         * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
-         *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
-         *
-         * \code{.cpp}
-         * for (const NormalHypersurface* s : list.hypersurfaces()) { ... }
-         * \endcode
-         *
-         * The object that is returned will remain valid only for as
-         * long as this normal hypersurface list exists.
-         *
-         * \ifacespython This routine returns a Python list.
-         *
-         * @return access to the list of all normal hypersurfaces.
-         */
-        auto hypersurfaces() const;
-        /**
          * Returns the hypersurface at the requested index in this list.
          *
          * @param index the index of the requested hypersurface in this list;
@@ -371,6 +345,47 @@ class NormalHypersurfaces : public Packet {
          * @return the normal hypersurface at the requested index in this list.
          */
         const NormalHypersurface& hypersurface(size_t index) const;
+        /**
+         * Returns an iterator at the beginning of this list of hypersurfaces.
+         *
+         * The begin() and end() functions allow you to iterate through all
+         * hypersurfaces in this list using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * NormalHypersurfaces list(...);
+         * for (const NormalHypersurface& s : list) { ... }
+         * \endcode
+         *
+         * In Python, a normal hypersurface list can be treated as an iterable
+         * object:
+         *
+         * \code{.py}
+         * list = NormalHypersurfaces(...)
+         * for s in list:
+         *     ...
+         * \endcode
+         *
+         * The type that is returned will be a lightweight iterator type,
+         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
+         * The precise C++ type of the iterator is subject to change, so
+         * C++ users should use \c auto (just like this declaration does).
+         *
+         * @return an iterator at the beginning of this list.
+         */
+        auto begin() const;
+        /**
+         * Returns an iterator beyond the end of this list of hypersurfaces.
+         *
+         * In C++, the begin() and end() routines allow you to iterate through
+         * all hypersurfaces in this list using C++11 range-based \c for loops.
+         * In Python, a normal hypersurface list can be treated as an iterable
+         * object.
+         *
+         * See the begin() documentation for further details.
+         *
+         * @return an iterator beyond the end of this list.
+         */
+        auto end() const;
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
@@ -799,13 +814,17 @@ inline size_t NormalHypersurfaces::size() const {
     return surfaces_.size();
 }
 
-inline auto NormalHypersurfaces::hypersurfaces() const {
-    return ListView(surfaces_);
-}
-
 inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
         size_t index) const {
     return surfaces_[index];
+}
+
+inline auto NormalHypersurfaces::begin() const {
+    return surfaces_.begin();
+}
+
+inline auto NormalHypersurfaces::end() const {
+    return surfaces_.end();
 }
 
 inline bool NormalHypersurfaces::allowsNonCompact() const {

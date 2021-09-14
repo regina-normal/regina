@@ -163,7 +163,7 @@ bool process(const std::string& filename) {
             s = NormalSurfaces::enumerate(t, NS_QUAD);
 
             links = 0;
-            for (auto f : s->surfaces())
+            for (const NormalSurface& f : *s)
                 if (f->isThinEdgeLink().first)
                     ++links;
             out << t->size() << ' ' << links << " \""

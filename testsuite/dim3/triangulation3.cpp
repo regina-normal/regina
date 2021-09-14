@@ -2096,7 +2096,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             else {
                 expected = true;
                 NormalSurfaces s(*tri, regina::NS_STANDARD);
-                for (const NormalSurface& f : s.surfaces()) {
+                for (const NormalSurface& f : s) {
                     if (f.eulerChar() == 2 &&
                             (! f.hasRealBoundary()) &&
                             ! f.isVertexLinking()) {

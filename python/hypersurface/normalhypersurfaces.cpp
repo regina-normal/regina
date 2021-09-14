@@ -39,6 +39,7 @@
 #include "utilities/safeptr.h"
 #include "../helpers.h"
 
+using namespace regina::python;
 using regina::HyperCoords;
 using regina::NormalHypersurfaces;
 using regina::ProgressTracker;
@@ -46,6 +47,9 @@ using regina::Triangulation;
 
 void addNormalHypersurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
+
+    SafeIterator<NormalHypersurfaces>::addBindings(m,
+        "NormalHypersurfaceIterator");
 
     pybind11::class_<NormalHypersurfaces, regina::Packet,
             regina::SafePtr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
@@ -81,10 +85,11 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         .def("triangulation", &NormalHypersurfaces::triangulation,
             pybind11::return_value_policy::reference_internal)
         .def("size", &NormalHypersurfaces::size)
-        .def("hypersurfaces", &NormalHypersurfaces::hypersurfaces,
-            pybind11::return_value_policy::reference_internal)
         .def("hypersurface", &NormalHypersurfaces::hypersurface,
             pybind11::return_value_policy::reference_internal)
+        .def("__iter__", [](const NormalHypersurfaces& list) {
+            return SafeIterator(list);
+        })
         .def_property_readonly_static("typeID", [](pybind11::object) {
             // We cannot take the address of typeID, so use a getter function.
             return NormalHypersurfaces::typeID;
