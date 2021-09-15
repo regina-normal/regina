@@ -58,11 +58,12 @@ constexpr int PACKET_TRIANGULATION_ANY = -5;
 constexpr int PACKET_V7_TEXT = -16;
 constexpr int PACKET_V7_PDF = -17;
 constexpr int PACKET_V7_SNAPPEA = -18;
-constexpr int PACKET_V7_FILTER_PROPERTIES = -19;
-constexpr int PACKET_V7_FILTER_COMBINATION = -20;
-constexpr int PACKET_V7_FILTER_PLAIN = -21;
+constexpr int PACKET_V7_ANGLES = -19;
+constexpr int PACKET_V7_FILTER_PROPERTIES = -32;
+constexpr int PACKET_V7_FILTER_COMBINATION = -33;
+constexpr int PACKET_V7_FILTER_PLAIN = -34;
 const std::map<std::string, int> packetXMLTags = {
-    { "angles", PACKET_ANGLESTRUCTURES },
+    { "angles", PACKET_V7_ANGLES },
     { "container", PACKET_CONTAINER },
     { "filtercomb", PACKET_V7_FILTER_COMBINATION },
     { "filterplain", PACKET_V7_FILTER_PLAIN },
@@ -226,6 +227,9 @@ XMLElementReader* XMLPacketReader::startSubElement(
             case PACKET_V7_PDF:
                 return new XMLPDFReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
+            case PACKET_V7_ANGLES:
+                return new XMLAngleStructuresReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), subTagProps);
             case PACKET_NORMALSURFACES: {
                 Triangulation<3>* tri;
 
@@ -242,23 +246,14 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 else
                     return new XMLElementReader();
             }
-            case PACKET_ANGLESTRUCTURES: {
-                Triangulation<3>* tri;
-
-                auto prop = subTagProps.find("tri");
-                if (prop == subTagProps.end())
-                    tri = dynamic_cast<Triangulation<3>*>(packet_);
-                else
-                    tri = dynamic_cast<Triangulation<3>*>(
-                        resolver_.resolve(prop->second));
-
-                if (tri)
-                    return new XMLAngleStructuresReader(resolver_, packet_,
-                        anon_, std::move(childLabel), std::move(childID),
-                        tri, subTagProps);
+            case PACKET_ANGLESTRUCTURES:
+                if (Triangulation<3>* tri = dynamic_cast<Triangulation<3>*>(
+                        packet_))
+                    return new XMLLegacyAngleStructuresReader(resolver_,
+                        packet_, anon_, std::move(childLabel),
+                        std::move(childID), tri);
                 else
                     return new XMLElementReader();
-            }
             case PACKET_NORMALHYPERSURFACES: {
                 Triangulation<4>* tri;
 

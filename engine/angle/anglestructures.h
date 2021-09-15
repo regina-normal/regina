@@ -54,6 +54,7 @@ namespace regina {
 class AngleStructures;
 class ProgressTracker;
 class XMLAngleStructuresReader;
+class XMLLegacyAngleStructuresReader;
 
 /**
  * \weakgroup angle
@@ -421,6 +422,7 @@ class AngleStructures : public Packet {
             Packet* treeParent);
 
     friend class regina::XMLAngleStructuresReader;
+    friend class regina::XMLLegacyAngleStructuresReader;
 };
 
 /**
