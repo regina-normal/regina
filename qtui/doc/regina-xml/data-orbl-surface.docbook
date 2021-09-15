@@ -4,12 +4,12 @@
 
 <refentry id="data-orbl-surface">
  <refmeta>
-  <refentrytitle>orbl (surface)</refentrytitle>
+  <refentrytitle>orbl</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>orbl (surface)</refname>
+  <refname>orbl</refname>
   <refpurpose>Is a normal surface orientable?</refpurpose>
  </refnamediv>
 

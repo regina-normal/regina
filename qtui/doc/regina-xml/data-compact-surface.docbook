@@ -4,12 +4,12 @@
 
 <refentry id="data-compact-surface">
  <refmeta>
-  <refentrytitle>compact (surface)</refentrytitle>
+  <refentrytitle>compact</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>compact (surface)</refname>
+  <refname>compact</refname>
   <refpurpose>Is a normal surface/hypersurface compact?</refpurpose>
  </refnamediv>
 

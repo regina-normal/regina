@@ -54,7 +54,6 @@
  &data-anon;
  &data-anonref;
  &data-code;
- &data-compact-filter;
  &data-compact-surface;
  &data-components;
  &data-compressingdisc;
@@ -62,7 +61,6 @@
  &data-connections;
  &data-container;
  &data-crossings;
- &data-euler-filter;
  &data-euler-surface;
  &data-filtercomb;
  &data-filterprop;
@@ -78,11 +76,8 @@
  &data-hypersurfaces;
  &data-irreducible;
  &data-link;
- &data-op;
- &data-orbl-filter;
  &data-orbl-surface;
  &data-pdfdata;
- &data-realbdry-filter;
  &data-realbdry-surface;
  &data-regina;
  &data-reln;
@@ -131,11 +126,15 @@
  &data-allowstrict;
  &data-allowtaut;
  &data-angleparams;
+ &data-compact-filter;
+ &data-euler-filter;
  &data-filter;
  &data-filter-combination;
  &data-filter-properties;
  &data-flags;
  &data-line;
+ &data-op;
+ &data-orbl-filter;
  &data-packet;
  &data-packet-dim2triangulation;
  &data-packet-dim3triangulation;
@@ -155,6 +154,7 @@
  &data-pent;
  &data-pentachora;
  &data-pdf;
+ &data-realbdry-filter;
  &data-reginadata;
  &data-simplices;
  &data-snappea;

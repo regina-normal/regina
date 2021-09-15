@@ -114,7 +114,7 @@
 <!ENTITY xml-compact-filter
  '<link linkend="data-compact-filter"><sgmltag>compact</sgmltag> (filter)</link>'>
 <!ENTITY xml-compact-surface
- '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag> (surface)</link>'>
+ '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag></link>'>
 <!ENTITY xml-components
  '<link linkend="data-components"><sgmltag>components</sgmltag></link>'>
 <!ENTITY xml-compressingdisc
@@ -130,7 +130,7 @@
 <!ENTITY xml-euler-filter
  '<link linkend="data-euler-filter"><sgmltag>euler</sgmltag> (filter)</link>'>
 <!ENTITY xml-euler-surface
- '<link linkend="data-euler-surface"><sgmltag>euler</sgmltag> (surface)</link>'>
+ '<link linkend="data-euler-surface"><sgmltag>euler</sgmltag></link>'>
 <!ENTITY xml-filter
  '<link linkend="data-filter"><sgmltag>filter</sgmltag></link>'>
 <!ENTITY xml-filter-combination
@@ -174,7 +174,7 @@
 <!ENTITY xml-orbl-filter
  '<link linkend="data-orbl-filter"><sgmltag>orbl</sgmltag> (filter)</link>'>
 <!ENTITY xml-orbl-surface
- '<link linkend="data-orbl-surface"><sgmltag>orbl</sgmltag> (surface)</link>'>
+ '<link linkend="data-orbl-surface"><sgmltag>orbl</sgmltag></link>'>
 <!ENTITY xml-packet
  '<link linkend="data-packet"><sgmltag>packet</sgmltag></link>'>
 <!ENTITY xml-packet-anglestructurelist
@@ -218,7 +218,7 @@
 <!ENTITY xml-realbdry-filter
  '<link linkend="data-realbdry-filter"><sgmltag>realbdry</sgmltag> (filter)</link>'>
 <!ENTITY xml-realbdry-surface
- '<link linkend="data-realbdry-surface"><sgmltag>realbdry</sgmltag> (surface)</link>'>
+ '<link linkend="data-realbdry-surface"><sgmltag>realbdry</sgmltag></link>'>
 <!ENTITY xml-regina
  '<link linkend="data-regina"><sgmltag>regina</sgmltag></link>'>
 <!ENTITY xml-reginadata
