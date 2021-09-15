@@ -315,10 +315,10 @@ bool valueOf(const std::string& str, bool& dest);
  * Converts the entire given string to a set of booleans and reports whether
  * this conversion was successful.
  *
- * A set of booleans is represented by one of the four strings
- * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> or <tt>TF</tt>.  If the
- * conversion is unsuccessful, argument \a dest will be set to
- * the empty set and \c false will be returned.
+ * A set of booleans is represented by one of the four string codes
+ * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> or <tt>TF</tt>, as returned by
+ * BoolSet::stringCode().  If the conversion is unsuccessful, argument
+ * \a dest will be set to the empty set and \c false will be returned.
  *
  * \ifacespython Not present.
  *

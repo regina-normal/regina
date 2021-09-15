@@ -40,6 +40,7 @@
 #endif
 
 #include <iostream>
+#include <string>
 #include "regina-core.h"
 
 namespace regina {
@@ -327,15 +328,17 @@ class BoolSet {
          */
         constexpr unsigned char byteCode() const;
         /**
-         * Sets this boolean set to that represented by the given byte
-         * code.  See byteCode() for more information on byte codes.
+         * Sets this to be the boolean set represented by the given byte code.
+         * See byteCode() for more information on byte codes.
          *
-         * \pre \a code is 0, 1, 2 or 3.
+         * If \a code is not a value byte code, then this routine will
+         * do nothing and return \c false.
          *
          * @param code the byte code that will determine the new value
          * of this set.
+         * @return \c true if and only if \c code is a valid byte code.
          */
-        void setByteCode(unsigned char code);
+        bool setByteCode(unsigned char code);
         /**
          * Creates a boolean set from the given byte code.
          * See byteCode() for more information on byte codes.
@@ -360,6 +363,18 @@ class BoolSet {
          * @return the two-character string code representing this set.
          */
         const char* stringCode() const;
+        /**
+         * Sets this to be the boolean set represented by the given string code.
+         * See stringCode() for more information on string codes.
+         *
+         * If \a code is not a value string code, then this routine will
+         * do nothing and return \c false.
+         *
+         * @param code the string code that will determine the new value
+         * of this set.
+         * @return \c true if and only if \c code is a valid string code.
+         */
+        bool setStringCode(const std::string& code);
 
     friend std::ostream& operator << (std::ostream& out, BoolSet set);
 };
@@ -482,8 +497,12 @@ inline constexpr BoolSet BoolSet::operator ~ () const {
 inline constexpr unsigned char BoolSet::byteCode() const {
     return elements;
 }
-inline void BoolSet::setByteCode(unsigned char code) {
-    elements = code;
+inline bool BoolSet::setByteCode(unsigned char code) {
+    if (code < 4) {
+        elements = code;
+        return true;
+    } else
+        return false;
 }
 inline constexpr BoolSet BoolSet::fromByteCode(unsigned char code) {
     return BoolSet(code & eltTrue, code & eltFalse);

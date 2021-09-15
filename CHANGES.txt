@@ -111,7 +111,9 @@ Version 7.0  [ TODO ]
               Just use BoolSet(), true, false, or BoolSet(true, true).
             - Most routines that took a (const BoolSet&) now just take a
               BoolSet by value.
-            - New routine stringCode().
+            - New routines stringCode() and setStringCode().
+            - Routine setByteCode() now detects invalid codes, and
+              returns a boolean accordingly.
         Class BoundaryComponent<dim>:
             - Routines faces(), facets(), and the aliases vertices(), edges(),
               etc. no longer return a const reference to a std::vector, but
