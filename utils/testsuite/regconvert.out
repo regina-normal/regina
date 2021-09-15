@@ -1721,9 +1721,7 @@ CS_unknown
 
 </snappeadata>
 </anon>
-<surfaces tri="_" label="Tri-Quad Normal Surfaces">
-  <params type="5" algorithm="34" flavourid="0"
-	flavour="Standard normal (tri-quad)"/>
+<surfaces tri="_" type="5" algorithm="34" coords="0" label="Tri-Quad Normal Surfaces">
   <surface enc="279" len="14"> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -1743,9 +1741,7 @@ CS_unknown
   <simplex> 4 5 7 2 4 1 </simplex>
   <simplex> 5 5 5 3 6 4 </simplex>
 </tri>
-<surfaces tri="_" label="Quad Normal Surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad Normal Surfaces">
   <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 4 2 7 inf 8 inf 9 inf 10 inf 11 1
 	<compact value="F"/> </surface>
   <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 6 2 7 inf 8 inf 9 inf 10 inf 11 1
@@ -1783,9 +1779,7 @@ CS_unknown
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
 </tri>
 </anon>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>

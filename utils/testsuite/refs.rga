@@ -51,7 +51,7 @@ CS_unknown
 
 </snappeadata>
 <anon>
-<snappeadata label="Figure 8 Knot Complement" id="IJFhQQEAAAA=">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="cJthOUpWAAA=">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -81,9 +81,7 @@ CS_unknown
 
 </snappeadata>
 </anon>
-<surfaces tri="IJFhQQEAAAA=" label="Tri-Quad Normal Surfaces">
-  <params type="5" algorithm="34" flavourid="0"
-	flavour="Standard normal (tri-quad)"/>
+<surfaces tri="cJthOUpWAAA=" type="5" algorithm="34" coords="0" label="Tri-Quad Normal Surfaces">
   <surface enc="279" len="14"> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -92,7 +90,7 @@ CS_unknown
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
 </surfaces>
-<anonref id="IJFhQQEAAAA=">
+<anonref id="cJthOUpWAAA=">
 <tri dim="2" size="8" perm="index" label="Vertex Link">
   <simplex> 1 0 2 3 2 1 </simplex>
   <simplex> 0 0 3 1 3 5 </simplex>
@@ -103,9 +101,7 @@ CS_unknown
   <simplex> 4 5 7 2 4 1 </simplex>
   <simplex> 5 5 5 3 6 4 </simplex>
 </tri>
-<surfaces tri="IJFhQQEAAAA=" label="Quad Normal Surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="cJthOUpWAAA=" type="5" algorithm="16" coords="1" label="Quad Normal Surfaces">
   <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 4 2 7 inf 8 inf 9 inf 10 inf 11 1
 	<compact value="F"/> </surface>
   <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 6 2 7 inf 8 inf 9 inf 10 inf 11 1
@@ -116,7 +112,7 @@ CS_unknown
 	<compact value="F"/> </surface>
 </surfaces>
 </anonref>
-<angles tri="IJFhQQEAAAA=" tautonly="F" algorithm="32" label="Angle Structures">
+<angles tri="cJthOUpWAAA=" tautonly="F" algorithm="32" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -138,14 +134,12 @@ CS_unknown
   </fundgroup>
 </tri>
 <anon>
-<tri dim="4" size="2" perm="index" label="" id="0NJhQQEAAAA=">
+<tri dim="4" size="2" perm="index" label="" id="UDdhOUpWAAA=">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
 </tri>
 </anon>
-<hypersurfaces tri="0NJhQQEAAAA=" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="UDdhOUpWAAA=" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>

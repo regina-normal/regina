@@ -81,7 +81,6 @@
  &data-op;
  &data-orbl-filter;
  &data-orbl-surface;
- &data-params;
  &data-pdfdata;
  &data-realbdry-filter;
  &data-realbdry-surface;
@@ -152,6 +151,7 @@
  &data-packet-snappea;
  &data-packet-surfacefilter;
  &data-packet-text;
+ &data-params;
  &data-pent;
  &data-pentachora;
  &data-pdf;

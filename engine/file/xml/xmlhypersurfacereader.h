@@ -103,9 +103,6 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single normal hypersurface list.
  *
- * \pre The parent XML element reader is in fact an
- * XMLTriangulationReader<3>.
- *
  * \ifacespython Not present.
  */
 class XMLNormalHypersurfacesReader : public XMLPacketReader {
@@ -122,11 +119,45 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param tri the triangulation in which these normal hypersurfaces
-         * live.  This must be non-null.
+         * @param props the attributes of the \c hypersurfaces XML element.
          */
         XMLNormalHypersurfacesReader(XMLTreeResolver& resolver, Packet* parent,
             bool anon, std::string label, std::string id,
+            const regina::xml::XMLPropertyDict& props);
+
+        virtual Packet* packetToCommit() override;
+        virtual XMLElementReader* startContentSubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps) override;
+        virtual void endContentSubElement(const std::string& subTagName,
+            XMLElementReader* subReader) override;
+};
+
+/**
+ * An XML packet reader that reads a single normal hypersurface list
+ * using the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
+    private:
+        NormalHypersurfaces* list_;
+            /**< The normal hypersurface list currently being read. */
+        const Triangulation<4>* tri_;
+            /**< The triangulation in which these normal hypersurfaces live. */
+
+    public:
+        /**
+         * Creates a new normal hypersurface list reader.
+         *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param tri the triangulation in which these normal hypersurfaces
+         * live.  This must be non-null.
+         */
+        XMLLegacyNormalHypersurfacesReader(XMLTreeResolver& resolver,
+            Packet* parent, bool anon, std::string label, std::string id,
             Triangulation<4>* tri);
 
         virtual Packet* packetToCommit() override;
@@ -153,14 +184,20 @@ inline std::optional<NormalHypersurface>&
 
 // Inline functions for XMLNormalHypersurfacesReader
 
-inline XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
+inline Packet* XMLNormalHypersurfacesReader::packetToCommit() {
+    return list_;
+}
+
+// Inline functions for XMLLegacyNormalHypersurfacesReader
+
+inline XMLLegacyNormalHypersurfacesReader::XMLLegacyNormalHypersurfacesReader(
         XMLTreeResolver& res, Packet* parent, bool anon,
         std::string label, std::string id, Triangulation<4>* tri) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         list_(nullptr), tri_(tri) {
 }
 
-inline Packet* XMLNormalHypersurfacesReader::packetToCommit() {
+inline Packet* XMLLegacyNormalHypersurfacesReader::packetToCommit() {
     return list_;
 }
 

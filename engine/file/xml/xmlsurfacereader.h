@@ -102,9 +102,6 @@ class XMLNormalSurfaceReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single normal surface list.
  *
- * \pre The parent XML element reader is in fact an
- * XMLTriangulationReader<3>.
- *
  * \ifacespython Not present.
  */
 class XMLNormalSurfacesReader : public XMLPacketReader {
@@ -121,10 +118,44 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
+         * @param props the attributes of the \c surfaces XML element.
+         */
+        XMLNormalSurfacesReader(XMLTreeResolver& resolver, Packet* parent,
+            bool anon, std::string label, std::string id,
+            const regina::xml::XMLPropertyDict& props);
+
+        virtual Packet* packetToCommit() override;
+        virtual XMLElementReader* startContentSubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps) override;
+        virtual void endContentSubElement(const std::string& subTagName,
+            XMLElementReader* subReader) override;
+};
+
+/**
+ * An XML packet reader that reads a single normal surface list using
+ * the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
+    private:
+        NormalSurfaces* list_;
+            /**< The normal surface list currently being read. */
+        const Triangulation<3>* tri_;
+            /**< The triangulation in which these normal surfaces live. */
+
+    public:
+        /**
+         * Creates a new normal surface list reader.
+         *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
          * @param tri the triangulation in which these normal surfaces live.
          * This must be non-null.
          */
-        XMLNormalSurfacesReader(XMLTreeResolver& resolver, Packet* parent,
+        XMLLegacyNormalSurfacesReader(XMLTreeResolver& resolver, Packet* parent,
             bool anon, std::string label, std::string id,
             Triangulation<3>* tri);
 
@@ -151,14 +182,20 @@ inline std::optional<NormalSurface>& XMLNormalSurfaceReader::surface() {
 
 // Inline functions for XMLNormalSurfacesReader
 
-inline XMLNormalSurfacesReader::XMLNormalSurfacesReader(
+inline Packet* XMLNormalSurfacesReader::packetToCommit() {
+    return list_;
+}
+
+// Inline functions for XMLLegacyNormalSurfacesReader
+
+inline XMLLegacyNormalSurfacesReader::XMLLegacyNormalSurfacesReader(
         XMLTreeResolver& res, Packet* parent, bool anon,
         std::string label, std::string id, Triangulation<3>* tri) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         list_(nullptr), tri_(tri) {
 }
 
-inline Packet* XMLNormalSurfacesReader::packetToCommit() {
+inline Packet* XMLLegacyNormalSurfacesReader::packetToCommit() {
     return list_;
 }
 

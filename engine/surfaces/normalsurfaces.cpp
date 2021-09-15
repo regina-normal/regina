@@ -131,16 +131,21 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out,
     }
 
     writeXMLHeader(out, "surfaces", format, anon, refs,
-        true, std::pair("tri", tri->internalID()));
+        true, std::pair("tri", tri->internalID()),
+        std::pair("type", which_.intValue()),
+        std::pair("algorithm", algorithm_.intValue()),
+        std::pair("coords", coords_));
 
-    // Write the surface list parameters.
-    out << "  <params "
-        << "type=\"" << which_.intValue() << "\" "
-        << "algorithm=\"" << algorithm_.intValue() << "\" "
-        << "flavourid=\"" << coords_ << "\"\n";
-    out << "\tflavour=\""
-        << regina::xml::xmlEncodeSpecialChars(NormalInfo::name(coords_))
-        << "\"/>\n";
+    if (format == REGINA_XML_GEN_2) {
+        // Write the enumeration parameters.
+        out << "  <params "
+            << "type=\"" << which_.intValue() << "\" "
+            << "algorithm=\"" << algorithm_.intValue() << "\" "
+            << "flavourid=\"" << coords_ << "\"\n";
+        out << "\tflavour=\""
+            << regina::xml::xmlEncodeSpecialChars(NormalInfo::name(coords_))
+            << "\"/>\n";
+    }
 
     // Write the individual surfaces.
     for (const NormalSurface& s : surfaces_)

@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-hypersurfaces ::= (&xml-params;, &xml-hypersurface;*,
+hypersurfaces ::= (&xml-hypersurface;*,
                    &xml-tag;*,
                    &packetsyn1;
                    &packetsyn2;
@@ -40,8 +40,20 @@ hypersurfaces ::= (&xml-params;, &xml-hypersurface;*,
       <entry><emphasis role="bold">Type</emphasis></entry>
      </row>
      <row>
+      <entry><sgmltag>algorithm</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>coords</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
       <entry><sgmltag>tri</sgmltag></entry>
       <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>type</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
      </row>
      &packetattrlist2col;
     </tbody>
@@ -79,8 +91,9 @@ hypersurfaces ::= (&xml-params;, &xml-hypersurface;*,
   <para>
    The individual normal hypersurfaces in this list are contained in the
    child &xml-hypersurface; elements.
-   The parameters of the normal hypersurface enumeration that created this
-   list are stored in the child &xml-params; element.
+   Since &regina;&nbsp;7.0, the parameters of the normal hypersurface
+   enumeration that created this list are stored in the attributes; there is no
+   longer a child &xml-params; element.
   </para>
   &packetchilddesc;
 
@@ -95,7 +108,6 @@ hypersurfaces ::= (&xml-params;, &xml-hypersurface;*,
     The following elements occur in <sgmltag>hypersurfaces</sgmltag>,
     and are specific to the normal hypersurface list packet type:
     <simplelist type="inline">
-     <member>&xml-params;</member>
      <member>&xml-hypersurface;</member>
     </simplelist>.
    </para>
@@ -110,6 +122,45 @@ hypersurfaces ::= (&xml-params;, &xml-hypersurface;*,
   </para>
   <variablelist>
    <varlistentry>
+    <term><sgmltag>algorithm</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies the algorithm that was used to enumerate these normal
+      hypersurfaces.
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from the <classname>HyperAlgFlags</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 32, which is the
+      <classname>HyperAlgFlags</classname> constant
+      <literal>HS_VERTEX_DD</literal>, indicating that the double
+      description method was used.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>coords</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies which coordinate system was used in the normal hypersurface
+      enumeration.
+     </para>
+     <para>
+      This must be a non-negative integer that matches one of the
+      constants from the <classname>HyperCoords</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 1, which is the
+      constant <literal>HS_PRISM</literal> that represents
+      prism coordinates for normal hypersurfaces.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
     <term><sgmltag>tri</sgmltag></term>
     <listitem><para>
      The ID of the triangulation in which these normal hypersurfaces live.
@@ -117,6 +168,29 @@ hypersurfaces ::= (&xml-params;, &xml-hypersurface;*,
      4-dimensional triangulation that appears before this list in a
      pre-order depth-first traversal of the full packet tree.
     </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>type</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies exactly which normal hypersurfaces this list contains.
+      In particular, this flag indicates whether the list contains all
+      vertex hypersurfaces, all fundamental hypersurfaces, or some other
+      customised list.  It also indicates whether the list is
+      restricted to properly embedded hypersurfaces.
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from the <classname>HyperListFlags</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 5, which combines the
+      <classname>HyperListFlags</classname> constants
+      <literal>HS_EMBEDDED_ONLY</literal> (1) and
+      <literal>HS_VERTEX</literal> (4).
+     </para>
+    </listitem>
    </varlistentry>
   </variablelist>
   &packetattrdesc;

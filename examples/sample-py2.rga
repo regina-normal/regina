@@ -1804,8 +1804,8 @@ MNWYl6r83500AHwJ9wPCcxACMgkRVGSttkVPdMRAdEVfDMWIPO/s81hQhIQjXBEWDREXEeGLmIgS
 6mqpJSbkaRm83jb4AQKcEukKZW5kc3RyZWFtCmVuZG9iagpzdGFydHhyZWYKMTAxMjA5CiUlRU9G
 Cg==
 </pdfdata>
-<container label="3-Manifolds and Knots" id="MHPhUQEAAAA=">
-<tri dim="3" size="4" perm="index" label="Layered Solid Torus" id="oHXhUQEAAAA=">
+<container label="3-Manifolds and Knots" id="wHzDpzRWAAA=">
+<tri dim="3" size="4" perm="index" label="Layered Solid Torus" id="gBzFpzRWAAA=">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
   <simplex> 2 14 2 4 0 20 0 2 </simplex>
   <simplex> 3 21 3 3 1 20 1 2 </simplex>
@@ -1829,9 +1829,7 @@ Cg==
   <simplex> 11 2 15 4 10 1 </simplex>
   <simplex> 14 2 -1 -1 -1 -1 </simplex>
 </tri>
-<surfaces tri="oHXhUQEAAAA=" label="Almost Normal Surfaces">
-  <params type="5" algorithm="17" flavourid="102"
-	flavour="Standard almost normal (tri-quad-oct)"/>
+<surfaces tri="gBzFpzRWAAA=" type="5" algorithm="17" coords="102" label="Almost Normal Surfaces">
   <surface enc="314" len="40"> 0 1 1 1 2 1 3 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
 	<euler value="-1"/>
 	<orbl value="T"/>
@@ -2064,9 +2062,7 @@ Cg==
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
 </surfaces>
-<surfaces tri="oHXhUQEAAAA=" label="Fundamental Normal Surfaces">
-  <params type="9" algorithm="273" flavourid="0"
-	flavour="Standard normal (tri-quad)"/>
+<surfaces tri="gBzFpzRWAAA=" type="9" algorithm="273" coords="0" label="Fundamental Normal Surfaces">
   <surface enc="279" len="28"> 6 1 12 1 18 1 26 1
 	<euler value="-1"/>
 	<orbl value="F"/>
@@ -2260,7 +2256,7 @@ CS_unknown
   0.500000000000   0.500000000000
 
 </snappeadata>
-<snappeadata label="Figure 8 Knot Complement" id="IFziUQEAAAA=">% Triangulation
+<snappeadata label="Figure 8 Knot Complement" id="sGPGpzRWAAA=">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -2298,9 +2294,7 @@ CS_unknown
   <simplex> 4 5 7 2 4 1 </simplex>
   <simplex> 5 5 5 3 6 4 </simplex>
 </tri>
-<surfaces tri="IFziUQEAAAA=" label="Tri-Quad Normal Surfaces">
-  <params type="5" algorithm="34" flavourid="0"
-	flavour="Standard normal (tri-quad)"/>
+<surfaces tri="sGPGpzRWAAA=" type="5" algorithm="34" coords="0" label="Tri-Quad Normal Surfaces">
   <surface enc="279" len="14"> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -2309,9 +2303,7 @@ CS_unknown
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
 </surfaces>
-<surfaces tri="IFziUQEAAAA=" label="Quad Normal Surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="sGPGpzRWAAA=" type="5" algorithm="16" coords="1" label="Quad Normal Surfaces">
   <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 4 2 7 inf 8 inf 9 inf 10 inf 11 1
 	<compact value="F"/> </surface>
   <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 6 2 7 inf 8 inf 9 inf 10 inf 11 1
@@ -2321,7 +2313,7 @@ CS_unknown
   <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 5 1 7 inf 8 inf 9 inf 10 inf 13 2
 	<compact value="F"/> </surface>
 </surfaces>
-<angles tri="IFziUQEAAAA=" tautonly="F" algorithm="32" label="Angle Structures">
+<angles tri="sGPGpzRWAAA=" tautonly="F" algorithm="32" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -2343,12 +2335,10 @@ CS_unknown
 </group>
   </fundgroup>
 </tri>
-<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="8IviUQEAAAA=">
+<tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="wLfGpzRWAAA=">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="8IviUQEAAAA=" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="wLfGpzRWAAA=" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
@@ -2394,7 +2384,7 @@ CS_unknown
 </filtercomb>
 </container>
 <script label="Python Script">
-  <var name="tri" valueid="MHPhUQEAAAA=" value="3-Manifolds and Knots"/>
+  <var name="tri" valueid="wHzDpzRWAAA=" value="3-Manifolds and Knots"/>
   <code># This Python script runs through all 3-manifold triangulations and links
 # in this file.  It prints the first homology of each Regina triangulation,
 # the volume of each SnapPea triangulation, and the HOMFLY-PT polynomial of each link.

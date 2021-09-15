@@ -131,9 +131,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces tri="_" label="Quad vertex surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -222,9 +220,7 @@ CS_unknown
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
@@ -336,9 +332,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces tri="_" label="Quad vertex surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -427,9 +421,7 @@ CS_unknown
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
@@ -543,9 +535,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces tri="_" label="Quad vertex surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -634,9 +624,7 @@ CS_unknown
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
@@ -750,9 +738,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces tri="_" label="Quad vertex surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -841,9 +827,7 @@ CS_unknown
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
@@ -950,9 +934,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces tri="_" label="Quad vertex surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -1041,9 +1023,7 @@ CS_unknown
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
@@ -1136,9 +1116,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces tri="_" label="Quad vertex surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -1227,9 +1205,7 @@ CS_unknown
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
@@ -1342,9 +1318,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces tri="_" label="Quad vertex surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -1433,9 +1407,7 @@ CS_unknown
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
@@ -1530,9 +1502,7 @@ dGVzdAo=
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
-<surfaces tri="_" label="Quad vertex surfaces">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
+<surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
 	<euler value="0"/>
 	<orbl value="T"/>
@@ -1621,9 +1591,7 @@ CS_unknown
 <tri dim="4" size="2" perm="index" label="Twisted S³ x~ S¹" id="_">
   <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
   <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
-<hypersurfaces tri="_" label="Normal Hypersurfaces">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
+<hypersurfaces tri="_" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
   <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
   <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
   <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>

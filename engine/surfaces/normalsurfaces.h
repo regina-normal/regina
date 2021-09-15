@@ -1345,6 +1345,7 @@ class NormalSurfaces : public Packet {
         };
 
     friend class XMLNormalSurfacesReader;
+    friend class XMLLegacyNormalSurfacesReader;
 };
 
 /**

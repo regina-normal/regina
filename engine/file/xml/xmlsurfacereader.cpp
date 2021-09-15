@@ -32,6 +32,7 @@
 
 #include <vector>
 #include "file/xml/xmlsurfacereader.h"
+#include "file/xml/xmltreeresolver.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
@@ -120,7 +121,51 @@ XMLElementReader* XMLNormalSurfaceReader::startSubElement(
     return new XMLElementReader();
 }
 
+XMLNormalSurfacesReader::XMLNormalSurfacesReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id,
+        const regina::xml::XMLPropertyDict& props) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        list_(nullptr),
+        tri_(dynamic_cast<Triangulation<3>*>(
+            resolver_.resolve(props.lookup("tri")))) {
+    if (! tri_)
+        return;
+
+    // Extract the list parameters from the attributes.
+    int coords, listType, algorithm;
+    if (valueOf(props.lookup("coords"), coords) &&
+            valueOf(props.lookup("type"), listType) &&
+            valueOf(props.lookup("algorithm"), algorithm)) {
+        // Parameters look sane; create the empty list.
+        list_ = new NormalSurfaces(
+            static_cast<NormalCoords>(coords),
+            NormalList::fromInt(listType),
+            NormalAlg::fromInt(algorithm),
+            *tri_);
+    }
+}
+
 XMLElementReader* XMLNormalSurfacesReader::startContentSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& props) {
+    if (list_ && subTagName == "surface")
+        return new XMLNormalSurfaceReader(
+            list_->triangulation_, list_->coords_);
+    else
+        return new XMLElementReader();
+}
+
+void XMLNormalSurfacesReader::endContentSubElement(
+        const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (list_ && subTagName == "surface")
+        if (auto& s = dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
+                surface())
+            list_->surfaces_.push_back(std::move(*s));
+}
+
+XMLElementReader* XMLLegacyNormalSurfacesReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (list_) {
@@ -158,7 +203,7 @@ XMLElementReader* XMLNormalSurfacesReader::startContentSubElement(
     return new XMLElementReader();
 }
 
-void XMLNormalSurfacesReader::endContentSubElement(
+void XMLLegacyNormalSurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "surface")

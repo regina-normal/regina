@@ -32,6 +32,7 @@
 
 #include <vector>
 #include "file/xml/xmlhypersurfacereader.h"
+#include "file/xml/xmltreeresolver.h"
 #include "triangulation/dim4.h"
 #include "utilities/stringutils.h"
 
@@ -103,7 +104,51 @@ XMLElementReader* XMLNormalHypersurfaceReader::startSubElement(
     return new XMLElementReader();
 }
 
+XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id,
+        const regina::xml::XMLPropertyDict& props) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        list_(nullptr),
+        tri_(dynamic_cast<Triangulation<4>*>(
+            resolver_.resolve(props.lookup("tri")))) {
+    if (! tri_)
+        return;
+
+    // Extract the list parameters from the attributes.
+    int coords, listType, algorithm;
+    if (valueOf(props.lookup("coords"), coords) &&
+            valueOf(props.lookup("type"), listType) &&
+            valueOf(props.lookup("algorithm"), algorithm)) {
+        // Parameters look sane; create the empty list.
+        list_ = new NormalHypersurfaces(
+            static_cast<HyperCoords>(coords),
+            HyperList::fromInt(listType),
+            HyperAlg::fromInt(algorithm),
+            *tri_);
+    }
+}
+
 XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& props) {
+    if (list_ && subTagName == "hypersurface")
+        return new XMLNormalHypersurfaceReader(
+            list_->triangulation_, list_->coords_);
+    else
+        return new XMLElementReader();
+}
+
+void XMLNormalHypersurfacesReader::endContentSubElement(
+        const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (list_ && subTagName == "hypersurface")
+        if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+                subReader)->hypersurface())
+            list_->surfaces_.push_back(std::move(*s));
+}
+
+XMLElementReader* XMLLegacyNormalHypersurfacesReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (list_) {
@@ -141,7 +186,7 @@ XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
     return new XMLElementReader();
 }
 
-void XMLNormalHypersurfacesReader::endContentSubElement(
+void XMLLegacyNormalHypersurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "hypersurface")

@@ -733,6 +733,7 @@ class NormalHypersurfaces : public Packet {
         };
 
     friend class XMLNormalHypersurfacesReader;
+    friend class XMLLegacyNormalHypersurfacesReader;
 };
 
 /**

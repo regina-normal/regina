@@ -41,7 +41,7 @@ angles ::= (&xml-struct;*, &xml-spanstrict;?, &xml-spantaut;?,
      </row>
      <row>
       <entry><sgmltag>algorithm</sgmltag></entry>
-      <entry><type>CDATA</type> (required)</entry>
+      <entry><type>NUMBER</type> (required)</entry>
      </row>
      <row>
       <entry><sgmltag>tautonly</sgmltag></entry>

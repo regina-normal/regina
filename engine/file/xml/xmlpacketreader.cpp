@@ -58,7 +58,9 @@ constexpr int PACKET_TRIANGULATION_ANY = -5;
 constexpr int PACKET_V7_TEXT = -16;
 constexpr int PACKET_V7_PDF = -17;
 constexpr int PACKET_V7_SNAPPEA = -18;
-constexpr int PACKET_V7_ANGLES = -19;
+constexpr int PACKET_V7_SURFACES = -19;
+constexpr int PACKET_V7_HYPERSURFACES = -20;
+constexpr int PACKET_V7_ANGLES = -21;
 constexpr int PACKET_V7_FILTER_PROPERTIES = -32;
 constexpr int PACKET_V7_FILTER_COMBINATION = -33;
 constexpr int PACKET_V7_FILTER_PLAIN = -34;
@@ -68,12 +70,12 @@ const std::map<std::string, int> packetXMLTags = {
     { "filtercomb", PACKET_V7_FILTER_COMBINATION },
     { "filterplain", PACKET_V7_FILTER_PLAIN },
     { "filterprop", PACKET_V7_FILTER_PROPERTIES },
-    { "hypersurfaces", PACKET_NORMALHYPERSURFACES },
+    { "hypersurfaces", PACKET_V7_HYPERSURFACES },
     { "link", PACKET_LINK },
     { "pdfdata", PACKET_V7_PDF },
     { "script", PACKET_SCRIPT },
     { "snappeadata", PACKET_V7_SNAPPEA },
-    { "surfaces", PACKET_NORMALSURFACES },
+    { "surfaces", PACKET_V7_SURFACES },
     { "textdata", PACKET_V7_TEXT },
 
     { "tri", PACKET_TRIANGULATION_ANY },
@@ -227,25 +229,31 @@ XMLElementReader* XMLPacketReader::startSubElement(
             case PACKET_V7_PDF:
                 return new XMLPDFReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
+            case PACKET_V7_SURFACES:
+                return new XMLNormalSurfacesReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), subTagProps);
+            case PACKET_V7_HYPERSURFACES:
+                return new XMLNormalHypersurfacesReader(resolver_, packet_,
+                    anon_, std::move(childLabel), std::move(childID),
+                    subTagProps);
             case PACKET_V7_ANGLES:
                 return new XMLAngleStructuresReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);
-            case PACKET_NORMALSURFACES: {
-                Triangulation<3>* tri;
-
-                auto prop = subTagProps.find("tri");
-                if (prop == subTagProps.end())
-                    tri = dynamic_cast<Triangulation<3>*>(packet_);
-                else
-                    tri = dynamic_cast<Triangulation<3>*>(
-                        resolver_.resolve(prop->second));
-
-                if (tri)
-                    return new XMLNormalSurfacesReader(resolver_, packet_,
+            case PACKET_NORMALSURFACES:
+                if (Triangulation<3>* tri = dynamic_cast<Triangulation<3>*>(
+                        packet_))
+                    return new XMLLegacyNormalSurfacesReader(resolver_, packet_,
                         anon_, std::move(childLabel), std::move(childID), tri);
                 else
                     return new XMLElementReader();
-            }
+            case PACKET_NORMALHYPERSURFACES:
+                if (Triangulation<4>* tri = dynamic_cast<Triangulation<4>*>(
+                        packet_))
+                    return new XMLLegacyNormalHypersurfacesReader(resolver_,
+                        packet_, anon_, std::move(childLabel),
+                        std::move(childID), tri);
+                else
+                    return new XMLElementReader();
             case PACKET_ANGLESTRUCTURES:
                 if (Triangulation<3>* tri = dynamic_cast<Triangulation<3>*>(
                         packet_))
@@ -254,22 +262,6 @@ XMLElementReader* XMLPacketReader::startSubElement(
                         std::move(childID), tri);
                 else
                     return new XMLElementReader();
-            case PACKET_NORMALHYPERSURFACES: {
-                Triangulation<4>* tri;
-
-                auto prop = subTagProps.find("tri");
-                if (prop == subTagProps.end())
-                    tri = dynamic_cast<Triangulation<4>*>(packet_);
-                else
-                    tri = dynamic_cast<Triangulation<4>*>(
-                        resolver_.resolve(prop->second));
-
-                if (tri)
-                    return new XMLNormalHypersurfacesReader(resolver_, packet_,
-                        anon_, std::move(childLabel), std::move(childID), tri);
-                else
-                    return new XMLElementReader();
-            }
 #ifndef REGINA_LOWDIMONLY
             case PACKET_TRIANGULATION5:
                 return new XMLTriangulationReader<5>(resolver_, packet_, anon_,
