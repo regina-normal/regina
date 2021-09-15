@@ -232,14 +232,18 @@ void AngleStructures::writeXMLPacketData(std::ostream& out,
     }
 
     writeXMLHeader(out, "angles", format, anon, refs,
-        true, std::pair("tri", tri->internalID()));
+        true, std::pair("tri", tri->internalID()),
+        std::pair("tautonly", (tautOnly_ ? 'T' : 'F')),
+        std::pair("algorithm", algorithm_.intValue()));
 
     using regina::xml::xmlValueTag;
 
-    // Write the enumeration parameters.
-    out << "  <angleparams "
-        "tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\" "
-        "algorithm=\"" << algorithm_.intValue() << "\"/>\n";
+    if (format == REGINA_XML_GEN_2) {
+        // Write the enumeration parameters in a separate angleparams element.
+        out << "  <angleparams "
+            "tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\" "
+            "algorithm=\"" << algorithm_.intValue() << "\"/>\n";
+    }
 
     // Write the individual structures.
     for (const AngleStructure& a : structures_)

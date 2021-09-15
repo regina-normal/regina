@@ -133,6 +133,7 @@ void addNormalSurface(pybind11::module_& m) {
         .def("isTwoSided", &NormalSurface::isTwoSided)
         .def("isConnected", &NormalSurface::isConnected)
         .def("hasRealBoundary", &NormalSurface::hasRealBoundary)
+        .def("components", &NormalSurface::components)
         .def("isVertexLinking", &NormalSurface::isVertexLinking)
         .def("isVertexLink", &NormalSurface::isVertexLink,
             pybind11::return_value_policy::reference)

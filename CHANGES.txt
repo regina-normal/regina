@@ -71,7 +71,7 @@ Version 7.0  [ TODO ]
               your preferred enumeration algorithm via an AngleAlg argument.
               The old enumerate() and enumerateTautDD() functions are kept as
               deprecated aliases.
-            - New function structures() for simpler iteration.
+            - Added begin() and end() for iteration through angle strutures.
             - Changed triangulation() and surface() to return const references,
               not pointers.
             - Changed enumerate() and enumerateTautDD() to take the
@@ -593,7 +593,7 @@ Version 7.0  [ TODO ]
               and will not insert the new list into the packet tree.
               The old enumerate() function is kept as a deprecated alias,
               but Python users can no longer use it with a progress tracker.
-            - New function hypersurfaces() for simpler iteration.
+            - Added begin() and end() for iteration through hypersurfaces.
             - Changed triangulation() and hypersurface() to return
               const references, not pointers.
             - Changed enumerate() to take the triangulation argument by
@@ -642,6 +642,7 @@ Version 7.0  [ TODO ]
               old NormalSurfaceVector class.
             - New operator +.  At last!  Crucially, this operator can combine
               surfaces that use different coordinate systems.
+            - New routine components().
             - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalSurfaces:
             - Normal surface lists now hold a snapshot of the underlying
@@ -664,7 +665,7 @@ Version 7.0  [ TODO ]
               SurfaceFilter; this will not insert the new list into the packet
               tree.  The old function is kept as a deprecated alias, but
               now takes its filter argument by reference (not by pointer).
-            - New function surfaces() for simpler iteration.
+            - Added begin() and end() for iteration through surfaces.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
               not pointers.

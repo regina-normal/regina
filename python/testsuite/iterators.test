@@ -4,7 +4,7 @@
 # Copyright (c) 2019-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Tests iterators over packet children and subtrees.
+# Tests custom python iterators.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -77,3 +77,22 @@ for i in a.descendants():
 print('a as iterable:')
 for i in a:
     print(i.label())
+
+print('Angle structure iteration:')
+tot = 0
+for a in AngleStructures(Example3.figureEight()):
+    tot = tot + 1
+print(tot)
+
+print('Normal surface iteration:')
+tot = 0
+for s in NormalSurfaces(Example3.figureEight(), NS_QUAD):
+    tot = tot + 1
+print(tot)
+
+print('Normal hypersurface iteration:')
+tot = 0
+for s in NormalHypersurfaces(Example4.rp4(), HS_STANDARD):
+    tot = tot + 1
+print(tot)
+

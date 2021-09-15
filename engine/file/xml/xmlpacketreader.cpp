@@ -254,7 +254,8 @@ XMLElementReader* XMLPacketReader::startSubElement(
 
                 if (tri)
                     return new XMLAngleStructuresReader(resolver_, packet_,
-                        anon_, std::move(childLabel), std::move(childID), tri);
+                        anon_, std::move(childLabel), std::move(childID),
+                        tri, subTagProps);
                 else
                     return new XMLElementReader();
             }

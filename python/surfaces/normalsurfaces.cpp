@@ -40,6 +40,7 @@
 #include "utilities/safeptr.h"
 #include "../helpers.h"
 
+using namespace regina::python;
 using regina::NormalSurfaces;
 using regina::ProgressTracker;
 using regina::SurfaceFilter;
@@ -62,6 +63,8 @@ void addNormalSurfaces(pybind11::module_& m) {
 
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
 
+    SafeIterator<NormalSurfaces>::addBindings(m, "NormalSurfaceIterator");
+
     pybind11::class_<NormalSurfaces, regina::Packet,
             regina::SafePtr<NormalSurfaces>>(m, "NormalSurfaces")
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
@@ -81,8 +84,9 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("triangulation", &NormalSurfaces::triangulation,
             pybind11::return_value_policy::reference_internal)
         .def("size", &NormalSurfaces::size)
-        .def("surfaces", &NormalSurfaces::surfaces,
-            pybind11::return_value_policy::reference_internal)
+        .def("__iter__", [](const NormalSurfaces& list) {
+            return SafeIterator(list);
+        })
         .def("surface", &NormalSurfaces::surface,
             pybind11::return_value_policy::reference_internal)
         .def("writeAllSurfaces", [](const NormalSurfaces& s) {

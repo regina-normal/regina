@@ -167,7 +167,7 @@ void SurfacesSummaryUI::refresh() {
 
     regina::LargeInteger euler;
     std::pair<int, int> type;
-    for (const regina::NormalSurface& s : surfaces->surfaces()) {
+    for (const regina::NormalSurface& s : *surfaces) {
         if (! s.isCompact())
             ++spun;
         else if (s.hasRealBoundary()) {

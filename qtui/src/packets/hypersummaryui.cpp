@@ -174,7 +174,7 @@ void HyperSummaryUI::refresh() {
 
     std::string homology;
     std::pair<int, int> type;
-    for (const regina::NormalHypersurface& s : surfaces->hypersurfaces()) {
+    for (const regina::NormalHypersurface& s : *surfaces) {
         if (! s.isCompact())
             ++spun;
         else {

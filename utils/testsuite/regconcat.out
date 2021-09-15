@@ -192,8 +192,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles tri="_" label="Angle Structures">
-  <angleparams tautonly="F" algorithm="16384"/>
+<angles tri="_" tautonly="F" algorithm="16384" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -398,8 +397,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles tri="_" label="Angle Structures">
-  <angleparams tautonly="F" algorithm="16384"/>
+<angles tri="_" tautonly="F" algorithm="16384" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -606,8 +604,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles tri="_" label="Angle Structures">
-  <angleparams tautonly="F" algorithm="16384"/>
+<angles tri="_" tautonly="F" algorithm="16384" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -814,8 +811,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles tri="_" label="Angle Structures">
-  <angleparams tautonly="F" algorithm="16384"/>
+<angles tri="_" tautonly="F" algorithm="16384" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -1015,8 +1011,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles tri="_" label="Angle Structures">
-  <angleparams tautonly="F" algorithm="16384"/>
+<angles tri="_" tautonly="F" algorithm="16384" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -1202,8 +1197,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles tri="_" label="Angle Structures">
-  <angleparams tautonly="F" algorithm="16384"/>
+<angles tri="_" tautonly="F" algorithm="16384" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -1409,8 +1403,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles tri="_" label="Angle Structures">
-  <angleparams tautonly="F" algorithm="16384"/>
+<angles tri="_" tautonly="F" algorithm="16384" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -1598,8 +1591,7 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-<angles tri="_" label="Angle Structures">
-  <angleparams tautonly="F" algorithm="16384"/>
+<angles tri="_" tautonly="F" algorithm="16384" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>

@@ -99,7 +99,7 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() const {
     // appear as a vertex surface).  Otherwise fall back to standard coords.
     NormalSurfaces surfaces(*this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
-    for (const NormalSurface& s : surfaces.surfaces()) {
+    for (const NormalSurface& s : surfaces) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
         // (ii) working with a non-ideal triangulation; we know the
@@ -166,7 +166,7 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere()
     unsigned oct;
     bool found, broken;
     LargeInteger coord;
-    for (const NormalSurface& s : surfaces.surfaces()) {
+    for (const NormalSurface& s : surfaces) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are working with a non-ideal triangulation, we know the
         // vertex surfaces are compact.

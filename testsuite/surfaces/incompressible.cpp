@@ -74,7 +74,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
                 const std::string& triName) {
             NormalSurfaces s(*tri, regina::NS_STANDARD,
                 regina::NS_EMBEDDED_ONLY);
-            for (const NormalSurface& f : s.surfaces())
+            for (const NormalSurface& f : s)
                 verifyNotIncompressible(f, triName);
             return tri;
         }
@@ -83,7 +83,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
                 const std::string& triName) {
             NormalSurfaces s(*tri, regina::NS_STANDARD,
                 regina::NS_EMBEDDED_ONLY);
-            for (const NormalSurface& f : s.surfaces())
+            for (const NormalSurface& f : s)
                 if (f.isIncompressible())
                     return tri;
 
