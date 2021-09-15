@@ -51,11 +51,6 @@
 namespace regina {
 
 /**
- * \weakgroup census
- * @{
- */
-
-/**
  * A utility class for searching through all possible gluing permutation
  * sets that correspond to a given pentachoron facet pairing.  Subclasses of
  * GluingPermSearcher<4> correspond to specialised (and heavily optimised)
@@ -85,6 +80,8 @@ namespace regina {
  * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup census
  */
 template <>
 class GluingPermSearcher<4> {
@@ -1175,8 +1172,6 @@ class GluingPermSearcher<4> {
          */
         void edgeBdryDump(std::ostream& out);
 };
-
-/*@}*/
 
 // Inline functions for GluingPermSearcher<4>
 

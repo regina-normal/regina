@@ -51,11 +51,6 @@
 namespace regina {
 
 /**
- * \weakgroup census
- * @{
- */
-
-/**
  * A utility class for searching through all possible gluing permutation
  * sets that correspond to a given triangle edge pairing.  In the future,
  * there may be subclasses of GluingPermSearcher<2> that correspond to
@@ -77,6 +72,8 @@ namespace regina {
  * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup census
  */
 template <>
 class GluingPermSearcher<2> {
@@ -477,8 +474,6 @@ class GluingPermSearcher<2> {
          */
         virtual char dataTag() const;
 };
-
-/*@}*/
 
 // Inline functions for GluingPermSearcher<2>
 

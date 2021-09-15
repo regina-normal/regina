@@ -57,11 +57,6 @@ class XMLAngleStructuresReader;
 class XMLLegacyAngleStructuresReader;
 
 /**
- * \weakgroup angle
- * @{
- */
-
-/**
  * A packet representing a collection of angle structures on a triangulation.
  *
  * There are some important changes to this class as of Regina 7.0:
@@ -79,6 +74,8 @@ class XMLLegacyAngleStructuresReader;
  * - You should now create angle structure lists using the class constructor
  *   (but which, unlike the old enumerate(), does not insert the list
  *   into the packet tree).  There is no need to use enumerate() any more.
+ *
+ * \ingroup angle
  */
 class AngleStructures : public Packet {
     REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES,
@@ -438,10 +435,10 @@ class AngleStructures : public Packet {
  * @param tri the triangulation upon which these angle structure
  * equations will be based.
  * @return the resulting set of angle structure equations.
+ *
+ * \ingroup angle
  */
 MatrixInt makeAngleEquations(const Triangulation<3>& tri);
-
-/*@}*/
 
 // Inline functions for AngleStructures
 

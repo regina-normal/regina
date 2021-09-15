@@ -68,15 +68,12 @@
  *
  * To enable pruning on high-degree edges, set this macro to 1 (the default
  * for Regina's main source distribution); to disable it, set it to 0.
+ *
+ * \ingroup census
  */
 #define PRUNE_HIGH_DEG_EDGE_SET 1
 
 namespace regina {
-
-/**
- * \weakgroup census
- * @{
- */
 
 /**
  * A utility class for searching through all possible gluing permutation
@@ -103,6 +100,8 @@ namespace regina {
  * present, and the PurgeFlags constants are also made directly
  * available through the regina namespace.  Therefore there is no need
  * to explicitly access the class GluingPermSearcher<3> through Python.
+ *
+ * \ingroup census
  */
 template <>
 class GluingPermSearcher<3> {
@@ -689,6 +688,8 @@ class GluingPermSearcher<3> {
  * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup census
  */
 class EulerSearcher : public GluingPermSearcher<3> {
     protected:
@@ -1575,6 +1576,8 @@ class EulerSearcher : public GluingPermSearcher<3> {
  * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup census
  */
 class CompactSearcher : public GluingPermSearcher<3> {
     protected:
@@ -2406,6 +2409,8 @@ class CompactSearcher : public GluingPermSearcher<3> {
  * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup census
  */
 class ClosedPrimeMinSearcher : public CompactSearcher {
     private:
@@ -2702,6 +2707,8 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
  * triangulations, and so it does not support copying, moving or swapping.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup census
  */
 class HyperbolicMinSearcher : public EulerSearcher {
     private:
@@ -2864,8 +2871,6 @@ class HyperbolicMinSearcher : public EulerSearcher {
          */
         void splitEdgeClasses();
 };
-
-/*@}*/
 
 // Inline functions for GluingPermSearcher<3>
 

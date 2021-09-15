@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/angleflags.h
+/*! \file angles/angleflags.h
  *  \brief Defines constants and flags for angle structure enumeration.
  */
 
@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup angle
- * @{
- */
-
-/**
  * Represents options and variants of algorithms for enumerating various
  * types of angle structures on 3-manifold triangulations.
  *
@@ -61,6 +56,8 @@ namespace regina {
  * they are treated by Python as AngleAlg objects (and they can be
  * combined and/or queried as such).
  * The underlying enumeration type is not exposed to Python.
+ *
+ * \ingroup angle
  */
 enum AngleAlgFlags {
     /**
@@ -123,6 +120,8 @@ enum AngleAlgFlags {
  *
  * \ifacespython This is present, and all values in the AngleAlgFlags
  * enumeration type are treated as members of this AngleAlg class.
+ *
+ * \ingroup angle
  */
 typedef regina::Flags<AngleAlgFlags> AngleAlg;
 
@@ -132,12 +131,12 @@ typedef regina::Flags<AngleAlgFlags> AngleAlg;
  * @param lhs the first flag to combine.
  * @param rhs the second flag to combine.
  * @return the combination of both flags.
+ *
+ * \ingroup angle
  */
 inline AngleAlg operator | (AngleAlgFlags lhs, AngleAlgFlags rhs) {
     return AngleAlg(lhs) | rhs;
 }
-
-/*@}*/
 
 } // namespace regina
 

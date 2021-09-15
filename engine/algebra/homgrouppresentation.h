@@ -49,11 +49,6 @@ namespace regina {
 class GroupPresentation;
 
 /**
- * \weakgroup algebra
- * @{
- */
-
-/**
  * Represents a homomorphism between groups which are described via finite
  * presentations.
  *
@@ -75,6 +70,8 @@ class GroupPresentation;
  * \apinotfinal
  *
  * \todo Add a routine to attempt to verify validity of homomorphism.
+ *
+ * \ingroup algebra
  */
 class HomGroupPresentation : public Output<HomGroupPresentation> {
     private:
@@ -442,10 +439,10 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
  *
  * @param lhs the homomorphism whose contents should be swapped with \a rhs.
  * @param rhs the homomorphism whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(HomGroupPresentation& lhs, HomGroupPresentation& rhs) noexcept;
-
-/*@}*/
 
 inline HomGroupPresentation::HomGroupPresentation(
             GroupPresentation domain,

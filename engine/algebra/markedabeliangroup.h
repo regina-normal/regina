@@ -50,11 +50,6 @@ namespace regina {
 class HomMarkedAbelianGroup;
 
 /**
- * \weakgroup algebra
- * @{
- */
-
-/**
  * Represents a finitely generated abelian group given by a chain complex.
  *
  * This class is initialized with a chain complex.  The chain complex is given
@@ -90,6 +85,8 @@ class HomMarkedAbelianGroup;
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
  * \todo Testsuite additions: isBoundary(), boundaryMap(), writeAsBdry(),
  * cycleGen().
+ *
+ * \ingroup algebra
  */
 class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
     private:
@@ -690,6 +687,8 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
  *
  * @param lhs the group whose contents should be swapped with \a rhs.
  * @param rhs the group whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
 
@@ -740,6 +739,8 @@ void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
  * procedure to find a lift of a map if one exists.
  *
  * @author Ryan Budney
+ *
+ * \ingroup algebra
  */
 class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
     private:
@@ -1112,10 +1113,10 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
  *
  * @param lhs the homomorphism whose contents should be swapped with \a rhs.
  * @param rhs the homomorphism whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(HomMarkedAbelianGroup& lhs, HomMarkedAbelianGroup& rhs) noexcept;
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

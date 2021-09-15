@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup census
- * @{
- */
-
-/**
  * Represents a specific set of gluing permutations to complement a
  * particular pairwise matching of simplex facets.  Given a pairwise
  * matching of facets (as described by class FacetPairing<dim>),
@@ -104,6 +99,8 @@ namespace regina {
  *
  * \tparam dim the dimension of the underlying triangulation that is
  * being modelled.  This must be between 2 and 15 inclusive.
+ *
+ * \ingroup census
  */
 template <int dim>
 class GluingPerms {
@@ -569,11 +566,11 @@ class GluingPerms {
  *
  * @param a the first matrix whose contents should be swapped.
  * @param b the second matrix whose contents should be swapped.
+ *
+ * \ingroup census
  */
 template <int dim>
 void swap(GluingPerms<dim>& a, GluingPerms<dim>& b) noexcept;
-
-/*@}*/
 
 // Inline functions for GluingPerms
 

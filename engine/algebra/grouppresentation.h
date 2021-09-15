@@ -62,15 +62,12 @@ class HomGroupPresentation;
 class MarkedAbelianGroup;
 
 /**
- * \weakgroup algebra
- * @{
- */
-
-/**
  * Represents a power of a generator in a group presentation.
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup algebra
  */
 struct GroupExpressionTerm {
     unsigned long generator;
@@ -164,6 +161,8 @@ struct GroupExpressionTerm {
  * @param out the output stream to which to write.
  * @param term the term to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup algebra
  */
 std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
 
@@ -179,6 +178,8 @@ std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup algebra
  */
 class GroupExpression : public ShortOutput<GroupExpression> {
     private:
@@ -722,6 +723,8 @@ class GroupExpression : public ShortOutput<GroupExpression> {
  *
  * @param lhs the expression whose contents should be swapped with \a rhs.
  * @param rhs the expression whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept;
 
@@ -744,6 +747,8 @@ void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept;
  * objects directly from text strings.  We would like to have something like
  * GroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
+ *
+ * \ingroup algebra
  */
 class GroupPresentation : public Output<GroupPresentation> {
     protected:
@@ -1765,10 +1770,10 @@ class GroupPresentation : public Output<GroupPresentation> {
  *
  * @param lhs the presentation whose contents should be swapped with \a rhs.
  * @param rhs the presentation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept;
-
-/*@}*/
 
 // Inline functions for GroupExpressionTerm
 

@@ -48,9 +48,8 @@
 namespace regina {
 
 /**
- * \addtogroup census Census of Triangulations
+ * \defgroup census Census of Triangulations
  * Census lookup and enumeration for triangulations of various dimensions.
- * @{
  */
 
 /**
@@ -73,6 +72,8 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup census
  */
 class CensusDB {
     private:
@@ -191,6 +192,8 @@ class CensusDB {
  *
  * @param a the first database reference whose contents should be swapped.
  * @param b the second database reference whose contents should be swapped.
+ *
+ * \ingroup census
  */
 void swap(CensusDB& a, CensusDB& b) noexcept;
 
@@ -206,6 +209,8 @@ void swap(CensusDB& a, CensusDB& b) noexcept;
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup census
  */
 class CensusHit {
     private:
@@ -305,6 +310,8 @@ class CensusHit {
  *
  * @param a the first census hit whose contents should be swapped.
  * @param b the second census hit whose contents should be swapped.
+ *
+ * \ingroup census
  */
 void swap(CensusHit& a, CensusHit& b) noexcept;
 
@@ -321,6 +328,8 @@ void swap(CensusHit& a, CensusHit& b) noexcept;
  * If you need thread-safety, you can always call lookup() with an empty
  * string when initialising your program, and ensure this has finished before
  * you allow any subsequent "normal" calls to lookup() from other threads.
+ *
+ * \ingroup census
  */
 class Census {
     private:
@@ -424,8 +433,6 @@ class Census {
          */
         static CensusDB* standardDB(const char* filename, const char* desc);
 };
-
-/*@}*/
 
 // Inline functions for CensusDB:
 

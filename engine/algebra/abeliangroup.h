@@ -51,9 +51,8 @@ template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
 
 /**
- * \addtogroup algebra Algebraic Structures
+ * \defgroup algebra Algebraic Structures
  * Various algebraic structures.
- * @{
  */
 
 /**
@@ -74,6 +73,8 @@ typedef Matrix<Integer, true> MatrixInt;
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
+ *
+ * \ingroup algebra
  */
 class AbelianGroup : public ShortOutput<AbelianGroup, true> {
     protected:
@@ -445,10 +446,10 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
  *
  * @param lhs the group whose contents should be swapped with \a rhs.
  * @param rhs the group whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
-
-/*@}*/
 
 // Inline functions for AbelianGroup
 

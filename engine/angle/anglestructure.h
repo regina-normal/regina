@@ -55,9 +55,8 @@ template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
 
 /**
- * \addtogroup angle Angle Structures
+ * \defgroup angle Angle Structures
  * Angle structures on triangulations.
- * @{
  */
 
 /**
@@ -73,6 +72,8 @@ typedef Matrix<Integer, true> MatrixInt;
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup angle
  */
 class AngleStructure : public ShortOutput<AngleStructure> {
     private:
@@ -458,10 +459,10 @@ class AngleStructure : public ShortOutput<AngleStructure> {
  *
  * @param a the first angle structure whose contents should be swapped.
  * @param b the second angle structure whose contents should be swapped.
+ *
+ * \ingroup angle
  */
 void swap(AngleStructure& a, AngleStructure& b) noexcept;
-
-/*@}*/
 
 // Inline functions for AngleStructure
 

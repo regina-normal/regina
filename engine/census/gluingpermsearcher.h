@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup census
- * @{
- */
-
-/**
  * A utility class used to build a census of triangulations, by searching
  * through all possible sets of gluing permutations to match a given
  * facet pairing.
@@ -70,11 +65,11 @@ namespace regina {
  *
  * \ifacespython Not present, though some features of the specialisations
  * in \ref stddim "standard dimensions" are made available.
+ *
+ * \ingroup census
  */
 template <int dim>
 class GluingPermSearcher;
-
-/*@}*/
 
 } // namespace regina
 
