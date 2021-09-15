@@ -44,11 +44,6 @@ namespace regina {
 template <class> class SafePointeeBase;
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A reference counted smart pointer that supports alternate models of
  * ownership.  Specifically, there are two models of ownership for the
  * pointee (of type \a T):
@@ -88,6 +83,8 @@ template <class> class SafePointeeBase;
  * move and swap operations do not touch the underlying reference counts.
  *
  * @author Matthias Goerner
+ *
+ * \ingroup utilities
  */
 template<class T>
 class SafePtr {
@@ -229,11 +226,11 @@ private:
  *
  * @param a the first pointer whose pointee should be swapped.
  * @param b the second pointer whose pointee should be swapped.
+ *
+ * \ingroup utilities
  */
 template <class T>
 void swap(SafePtr<T>& a, SafePtr<T>& b) noexcept;
-
-/*@}*/
 
 // Inline functions:
 

@@ -49,11 +49,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A bitmask that can store arbitrarily many true-or-false bits.
  *
  * This bitmask packs the bits together, so that (unlike an array of bools)
@@ -85,6 +80,8 @@ namespace regina {
  * additional \c true bits in the "dead space" between the intended length
  * and the actual length, and this may have a flow-on effect for other
  * operations (such as subset testing, bit counting and so on).  Be careful!
+ *
+ * \ingroup utilities
  */
 class Bitmask {
     public:
@@ -519,6 +516,8 @@ class Bitmask {
  *
  * @param a the first bitmask whose contents should be swapped.
  * @param b the second bitmask whose contents should be swapped.
+ *
+ * \ingroup utilities
  */
 void swap(Bitmask& a, Bitmask& b) noexcept;
 
@@ -534,6 +533,8 @@ void swap(Bitmask& a, Bitmask& b) noexcept;
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 std::ostream& operator << (std::ostream& out, const Bitmask& mask);
 
@@ -550,6 +551,8 @@ class Bitmask1;
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
@@ -587,6 +590,8 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  * can hold the corresponding number of bits, and is guaranteed to be an
  * instance of either the C++ Bitmask1<T> class (where possible) or the
  * C++ Bitmask2<T,U> template class (if necessary).
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class Bitmask1 {
@@ -966,6 +971,8 @@ class Bitmask2;
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U>
 std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
@@ -1006,6 +1013,8 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  * can hold the corresponding number of bits, and is guaranteed to be an
  * instance of either the C++ Bitmask1<T> class (where possible) or the
  * C++ Bitmask2<T,U> template class (if necessary).
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U = T>
 class Bitmask2 {
@@ -1436,6 +1445,8 @@ class Bitmask2 {
  *
  * \ifacespython Not present, but in Python you can access essentially
  * the same optimised bitmask class via the name Bitmask8.
+ *
+ * \ingroup utilities
  */
 typedef Bitmask1<uint8_t> BitmaskLen8 [[deprecated]];
 
@@ -1453,6 +1464,8 @@ typedef Bitmask1<uint8_t> BitmaskLen8 [[deprecated]];
  *
  * \ifacespython Not present, but in Python you can access essentially
  * the same optimised bitmask class via the name Bitmask16.
+ *
+ * \ingroup utilities
  */
 typedef Bitmask1<uint16_t> BitmaskLen16 [[deprecated]];
 
@@ -1470,6 +1483,8 @@ typedef Bitmask1<uint16_t> BitmaskLen16 [[deprecated]];
  *
  * \ifacespython Not present, but in Python you can access essentially
  * the same optimised bitmask class via the name Bitmask32.
+ *
+ * \ingroup utilities
  */
 typedef Bitmask1<uint32_t> BitmaskLen32 [[deprecated]];
 
@@ -1487,10 +1502,10 @@ typedef Bitmask1<uint32_t> BitmaskLen32 [[deprecated]];
  *
  * \ifacespython Not present, but in Python you can access essentially
  * the same optimised bitmask class via the name Bitmask64.
+ *
+ * \ingroup utilities
  */
 typedef Bitmask1<uint64_t> BitmaskLen64 [[deprecated]];
-
-/*@}*/
 
 // Inline functions for Bitmask
 

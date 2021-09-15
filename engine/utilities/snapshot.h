@@ -51,15 +51,12 @@ template <class T> class SnapshotRef;
 template <class T> class Snapshottable;
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * An exception thrown when someone tries to modify the read-only deep copy
  * taken by a snapshot.  See the Snapshot class notes for more information.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class SnapshotWriteError : public std::exception {
     public:
@@ -210,6 +207,8 @@ class SnapshotWriteError : public std::exception {
  * and viewers shoudl always work through SnapshotRef<T>.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <class T>
 class Snapshot {
@@ -304,6 +303,8 @@ class Snapshot {
  *   possibly have snapshots that refer to them yet.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <class T>
 class Snapshottable {
@@ -528,6 +529,8 @@ class Snapshottable {
  * are more efficient (though all copy, move and swap operations are fast).
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <class T>
 class SnapshotRef {
@@ -756,13 +759,13 @@ class SnapshotRef {
  *
  * @param a the first snapshot reference to swap.
  * @param b the second snapshot reference to swap.
+ *
+ * \ingroup utilities
  */
 template <class T>
 void swap(SnapshotRef<T>& a, SnapshotRef<T>& b) noexcept {
     a.swap(b);
 }
-
-/*@}*/
 
 } // namespace regina
 

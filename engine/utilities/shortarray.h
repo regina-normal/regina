@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A short stack-based array of bounded size.
  *
  * ShortArray represents a stack-based array whose size is bounded above by
@@ -79,6 +74,8 @@ namespace regina {
  * For the same reason, it does not implement its own custom swap functions.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T, size_t maxSize>
 class ShortArray {
@@ -279,8 +276,6 @@ class ShortArray {
             size_ = 0;
         }
 };
-
-/*@}*/
 
 } // namespace regina
 

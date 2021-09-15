@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Offers threadsafe access to Regina's global uniform random bit generator.
  *
  * Regina has at its heart a global uniform random bit generator (URBG) that
@@ -95,6 +90,8 @@ namespace regina {
  * \ifacespython Python users only have access to the static member
  * functions in this class (which still supports basic random number
  * generation as well as reseeding).
+ *
+ * \ingroup utilities
  */
 class RandomEngine : std::scoped_lock<std::mutex> {
     private:
@@ -184,8 +181,6 @@ class RandomEngine : std::scoped_lock<std::mutex> {
         RandomEngine(const RandomEngine&) = delete;
         RandomEngine& operator = (const RandomEngine&) = delete;
 };
-
-/*@}*/
 
 // Inline functions for RandomEngine
 

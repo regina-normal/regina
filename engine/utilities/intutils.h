@@ -54,11 +54,6 @@ template <int bytes>
 class NativeInteger;
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Determines if the type \a T is one of Regina's own integer types
  * (either arbitrary precision or fixed size).
  *
@@ -67,6 +62,8 @@ class NativeInteger;
  *
  * The result will be available through the compile-time boolean constant
  * IsReginaInteger<T>::value.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 struct IsReginaInteger : public std::false_type {};
@@ -87,6 +84,8 @@ struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
  *
  * The result will be available through the compile-time boolean constant
  * IsReginaArbitraryPrecisionInteger<T>::value.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 struct IsReginaArbitraryPrecisionInteger : public std::false_type {};
@@ -118,6 +117,8 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  * silently make it one).
  *
  * \apinotfinal
+ *
+ * \ingroup utilities
  */
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
     template <typename... Args, typename Return = returnType> \
@@ -137,6 +138,8 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  * \return the number of bits required to store 0,...,<i>n</i>-1.
  *
  * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ *
+ * \ingroup utilities
  */
 template <typename IntType>
 constexpr int bitsRequired(IntType n) {
@@ -162,6 +165,8 @@ constexpr int bitsRequired(IntType n) {
  * \return the smallest integer power of two that is &ge; \a n.
  *
  * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ *
+ * \ingroup utilities
  */
 template <typename IntType>
 constexpr IntType nextPowerOfTwo(IntType n) {
@@ -178,6 +183,8 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  * \ifacespython Not present.
  *
  * @see IntOfMinSize
+ *
+ * \ingroup utilities
  */
 template <int bytes>
 struct IntOfSize {
@@ -210,6 +217,8 @@ struct IntOfSize {
  * \ifacespython Not present.
  *
  * @see IntOfSize
+ *
+ * \ingroup utilities
  */
 template <int bytes>
 struct IntOfMinSize {
@@ -312,6 +321,8 @@ struct IntOfSize<8> {
  * Currently this is only implemented for Regina's own integer types
  * (Integer, LargeInteger and NativeInteger).  If you attempt to use this
  * with other types (e.g., int or long), this struct will be undefined.
+ *
+ * \ingroup utilities
  */
 template <typename From, typename To>
 struct FaithfulAssignment;
@@ -334,8 +345,6 @@ struct FaithfulAssignment<IntegerBase<supportInfinity>, NativeInteger<bytes>> :
     public std::false_type {};
 
 #endif // __DOXYGEN
-
-/*@}*/
 
 } // namespace regina
 

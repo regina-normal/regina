@@ -53,11 +53,6 @@
 namespace regina::i18n {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Identifies the longest prefix of the given string that is valid UTF-8.
  *
  * The substring from <tt>s.begin()</tt> to the iterator that is
@@ -68,6 +63,8 @@ namespace regina::i18n {
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
  * @return an iterator marking the end of the longest valid UTF-8 prefix.
+ *
+ * \ingroup utilities
  */
 std::string::const_iterator utf8ValidTo(const std::string& s);
 
@@ -82,6 +79,8 @@ std::string::const_iterator utf8ValidTo(const std::string& s);
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
  * @return a pointer marking the end of the longest valid UTF-8 prefix.
+ *
+ * \ingroup utilities
  */
 const char* utf8ValidTo(const char* s);
 
@@ -91,6 +90,8 @@ const char* utf8ValidTo(const char* s);
  *
  * These routines use ::setlocale() to determine the current locale,
  * which means they respect environment variables such as LANG and LC_ALL.
+ *
+ * \ingroup utilities
  */
 class Locale {
     private:
@@ -128,6 +129,8 @@ class Locale {
  * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
  * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
  * General Public License.
+ *
+ * \ingroup utilities
  */
 class IConvStreamBuffer : public std::streambuf {
     private:
@@ -253,6 +256,8 @@ class IConvStreamBuffer : public std::streambuf {
  * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
  * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
  * General Public License.
+ *
+ * \ingroup utilities
  */
 class IConvStream : public std::ostream {
     private:
@@ -286,8 +291,6 @@ class IConvStream : public std::ostream {
         IConvStream(const IConvStream&) = delete;
         IConvStream& operator = (const IConvStream&) = delete;
 };
-
-/*@}*/
 
 // Inline functions for IConvStreamBuffer
 

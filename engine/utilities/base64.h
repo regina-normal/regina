@@ -72,17 +72,14 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Returns the number of base64 characters required to encode the given
  * number of bytes.  This is the number of characters used (excluding the
  * null terminator) by the routine base64Encode(const char*, size_t, char**).
  *
  * @param bytes the number of raw input bytes.
  * @return the corresponding number of base64 printable output characters.
+ *
+ * \ingroup utilities
  */
 size_t base64Length(size_t bytes);
 
@@ -98,6 +95,8 @@ size_t base64Length(size_t bytes);
  * @param ch any character.
  * @return \c true if the given character is one of the base64 printable
  * characters used in Regina, or \c false if it is not.
+ *
+ * \ingroup utilities
  */
 bool isBase64(char ch);
 
@@ -107,6 +106,8 @@ bool isBase64(char ch);
  *
  * This is the translation table as described in RFC1113.
  * It is presented as a string of length 64.
+ *
+ * \ingroup utilities
  */
 inline constexpr char base64Table[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -122,6 +123,8 @@ inline constexpr char base64Table[] =
  * Future versions of Regina may append new characters to the end of this
  * string, but the existing characters base64Spare[0], base64Spare[1], etc.
  * will not change.
+ *
+ * \ingroup utilities
  */
 inline constexpr char base64Spare[] = "_-.";
 
@@ -151,6 +154,8 @@ inline constexpr char base64Spare[] = "_-.";
  * @author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
+ *
+ * \ingroup utilities
  */
 void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
 
@@ -176,6 +181,8 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * @author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
+ *
+ * \ingroup utilities
  */
 size_t base64Encode(const char* in, size_t inlen, char** out);
 
@@ -211,6 +218,8 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * @author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
+ *
+ * \ingroup utilities
  */
 bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
 
@@ -250,10 +259,10 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * @author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
+ *
+ * \ingroup utilities
  */
 bool base64Decode(const char* in, size_t inlen, char** out, size_t* outlen);
-
-/*@}*/
 
 // Inline functions:
 

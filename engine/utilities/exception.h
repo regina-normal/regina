@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * An exception thrown when a function detects that its preconditions
  * have been violated.
  *
@@ -59,6 +54,8 @@ namespace regina {
  * function what().
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class FailedPrecondition : public std::runtime_error {
     public:
@@ -104,6 +101,8 @@ class FailedPrecondition : public std::runtime_error {
  * function what().
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class InvalidInput : public std::runtime_error {
     public:
@@ -148,6 +147,8 @@ class InvalidInput : public std::runtime_error {
  * function what().
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class UnsolvedCase : public std::runtime_error {
     public:
@@ -190,6 +191,8 @@ class UnsolvedCase : public std::runtime_error {
  * equations could not be created for a given triangulation.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class NoMatchingEquations : public std::exception {
     public:
@@ -216,8 +219,6 @@ class NoMatchingEquations : public std::exception {
             return "Could not create a set of matching equations";
         }
 };
-
-/*@}*/
 
 } // namespace regina
 

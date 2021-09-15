@@ -47,11 +47,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup utilities
- * @{
- */
-
 template <typename T>
 class Qitmask1;
 
@@ -67,6 +62,8 @@ class Qitmask1;
  * @param out the output stream to which to write.
  * @param mask the qitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
@@ -99,6 +96,8 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  * \pre Type \a T is an unsigned integral numeric type.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class Qitmask1 {
@@ -275,6 +274,8 @@ class Qitmask2;
  * @param out the output stream to which to write.
  * @param mask the qitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U>
 std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
@@ -309,6 +310,8 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U = T>
 class Qitmask2 {
@@ -510,6 +513,8 @@ class Qitmask2 {
  * \deprecated This typedef is deprecated; just use Qitmask1<uint8_t> instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 typedef Qitmask1<uint8_t> QitmaskLen8 [[deprecated]];
 
@@ -526,6 +531,8 @@ typedef Qitmask1<uint8_t> QitmaskLen8 [[deprecated]];
  * \deprecated This typedef is deprecated; just use Qitmask1<uint16_t> instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 typedef Qitmask1<uint16_t> QitmaskLen16 [[deprecated]];
 
@@ -542,6 +549,8 @@ typedef Qitmask1<uint16_t> QitmaskLen16 [[deprecated]];
  * \deprecated This typedef is deprecated; just use Qitmask1<uint32_t> instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 typedef Qitmask1<uint32_t> QitmaskLen32 [[deprecated]];
 
@@ -558,10 +567,10 @@ typedef Qitmask1<uint32_t> QitmaskLen32 [[deprecated]];
  * \deprecated This typedef is deprecated; just use Qitmask1<uint64_t> instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 typedef Qitmask1<uint64_t> QitmaskLen64 [[deprecated]];
-
-/*@}*/
 
 } // namespace regina
 

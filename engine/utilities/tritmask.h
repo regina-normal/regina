@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A small but extremely fast "ternary bitmask" class that can store up to
  * 8 * sizeof(\a T) "trits", each equal to 0, 1 or 2.
  *
@@ -76,6 +71,8 @@ namespace regina {
  * \pre Type \a T is an unsigned integral numeric type.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class Tritmask1 {
@@ -274,6 +271,8 @@ class Tritmask1 {
  * @param out the output stream to which to write.
  * @param mask the tritmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::ostream& operator << (std::ostream& out, const Tritmask1<T>& mask) {
@@ -306,6 +305,8 @@ std::ostream& operator << (std::ostream& out, const Tritmask1<T>& mask) {
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U = T>
 class Tritmask2 {
@@ -534,6 +535,8 @@ class Tritmask2 {
  * @param out the output stream to which to write.
  * @param mask the tritmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U>
 std::ostream& operator << (std::ostream& out, const Tritmask2<T, U>& mask) {
@@ -557,6 +560,8 @@ std::ostream& operator << (std::ostream& out, const Tritmask2<T, U>& mask) {
  * \deprecated This typedef is deprecated; just use Tritmask1<uint8_t> instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 typedef Tritmask1<uint8_t> TritmaskLen8 [[deprecated]];
 
@@ -573,6 +578,8 @@ typedef Tritmask1<uint8_t> TritmaskLen8 [[deprecated]];
  * \deprecated This typedef is deprecated; just use Tritmask1<uint16_t> instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 typedef Tritmask1<uint16_t> TritmaskLen16 [[deprecated]];
 
@@ -589,6 +596,8 @@ typedef Tritmask1<uint16_t> TritmaskLen16 [[deprecated]];
  * \deprecated This typedef is deprecated; just use Tritmask1<uint32_t> instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 typedef Tritmask1<uint32_t> TritmaskLen32 [[deprecated]];
 
@@ -605,10 +614,10 @@ typedef Tritmask1<uint32_t> TritmaskLen32 [[deprecated]];
  * \deprecated This typedef is deprecated; just use Tritmask1<uint64_t> instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 typedef Tritmask1<uint64_t> TritmaskLen64 [[deprecated]];
-
-/*@}*/
 
 } // namespace regina
 

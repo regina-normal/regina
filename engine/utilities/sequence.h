@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A lightweight class for storing a random-access sequence of objects.
  *
  * This class is intended as a lightweight substitute for std::vector,
@@ -69,6 +64,8 @@ namespace regina {
  * even when passing or returning objects by value.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class LightweightSequence {
@@ -442,6 +439,8 @@ class LightweightSequence {
  * @param out the output stream to which to write.
  * @param s the sequence to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
@@ -454,11 +453,11 @@ std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
  *
  * @param a the first sequence whose contents should be swapped.
  * @param b the second sequence whose contents should be swapped.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 void swap(LightweightSequence<T>& a, LightweightSequence<T>& b) noexcept;
-
-/*@}*/
 
 // Inline functions:
 

@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * An input stream that reads an array of characters in memory.
  *
  * This input stream does not take any responsibility for managing the
@@ -60,6 +55,8 @@ namespace regina {
  * The API for this class is subject to change in future versions of Regina.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class mem_istream : public std::istream {
     public:
@@ -89,6 +86,8 @@ class mem_istream : public std::istream {
  * The API for this class is subject to change in future versions of Regina.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class mem_streambuf : public std::streambuf {
     public:
@@ -124,8 +123,6 @@ class mem_streambuf : public std::streambuf {
         const char* current_;
             /**< The current position within the array being read. */
 };
-
-/*@}*/
 
 // Inline functions for mem_streambuf
 

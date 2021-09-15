@@ -46,11 +46,6 @@ namespace regina {
 template <class T> class SafePtr;
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A base class for objects of type \a T to be referenceable by a SafePtr.
  * Such objects are referred to as \e pointees of SafePtr.
  *
@@ -70,6 +65,8 @@ template <class T> class SafePtr;
  * SafePointeeBase<T>.
  *
  * @author Matthias Goerner
+ *
+ * \ingroup utilities
  */
 template <class T>
 class SafePointeeBase {
@@ -110,8 +107,6 @@ private:
     std::atomic<int> refCount_;
         /**< Counts how many SafePtr are pointing to this object. */
 };
-
-/*@}*/
 
 // Inline functions for SafePointeeBase
 

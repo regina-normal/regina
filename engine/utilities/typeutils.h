@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A struct that holds either a single value of type \a T or nothing at all,
  * depending on whether the given compile-time condition holds.
  *
@@ -65,6 +60,8 @@ namespace regina {
  * \c false if this struct should be empty.
  * \tparam T the data type to store.
  * \tparam defaultValue the value to assign the data member upon construction.
+ *
+ * \ingroup utilities
  */
 template <bool condition, typename T, T defaultValue>
 struct EnableIf {
@@ -77,8 +74,6 @@ template <typename T, T defaultValue>
 struct EnableIf<false, T, defaultValue> {
 };
 #endif // __DOXYGEN
-
-/*@}*/
 
 } // namespace regina
 

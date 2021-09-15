@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Writes time and memory usage for the current process to the given
  * output stream.  Information is gathered from the \c /proc filesystem,
  * which means that this routine will only write meaningful information
@@ -101,10 +96,10 @@ namespace regina {
  * shorter.
  *
  * @param out the output stream to which usage information will be written.
+ *
+ * \ingroup utilities
  */
 void writeResUsage(std::ostream& out);
-
-/*@}*/
 
 } // namespace regina
 

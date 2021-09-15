@@ -50,11 +50,6 @@ template <bool>
 class IntegerBase;
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Determines whether the given C++ string begins with the given prefix.
  *
  * \ifacespython Not present.
@@ -62,6 +57,8 @@ class IntegerBase;
  * @param str the full C++ string to examine.
  * @param prefix the prefix whose presence we are testing for.
  * @return \c true if and only if \a str begins with \a prefix.
+ *
+ * \ingroup utilities
  */
 bool startsWith(const std::string& str, const std::string& prefix);
 
@@ -79,6 +76,8 @@ bool startsWith(const std::string& str, const std::string& prefix);
  *
  * @param str the string to be stripped.
  * @return the resulting stripped string.
+ *
+ * \ingroup utilities
  */
 std::string stripWhitespace(const std::string& str);
 
@@ -97,6 +96,8 @@ std::string stripWhitespace(const std::string& str);
  * @param dest the variable in which to store the resulting 8-bit integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, int8_t& dest);
 /**
@@ -115,6 +116,8 @@ bool valueOf(const std::string& str, int8_t& dest);
  * 8-bit integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, uint8_t& dest);
 /**
@@ -132,6 +135,8 @@ bool valueOf(const std::string& str, uint8_t& dest);
  * @param dest the variable in which to store the resulting short integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, short& dest);
 /**
@@ -150,6 +155,8 @@ bool valueOf(const std::string& str, short& dest);
  * short integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, unsigned short& dest);
 /**
@@ -167,6 +174,8 @@ bool valueOf(const std::string& str, unsigned short& dest);
  * @param dest the variable in which to store the resulting integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, int& dest);
 /**
@@ -184,6 +193,8 @@ bool valueOf(const std::string& str, int& dest);
  * @param dest the variable in which to store the resulting unsigned integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, unsigned& dest);
 /**
@@ -201,6 +212,8 @@ bool valueOf(const std::string& str, unsigned& dest);
  * @param dest the variable in which to store the resulting long integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, long& dest);
 /**
@@ -219,6 +232,8 @@ bool valueOf(const std::string& str, long& dest);
  * integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, unsigned long& dest);
 /**
@@ -236,6 +251,8 @@ bool valueOf(const std::string& str, unsigned long& dest);
  * @param dest the variable in which to store the resulting long long integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, long long& dest);
 /**
@@ -254,6 +271,8 @@ bool valueOf(const std::string& str, long long& dest);
  * integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, unsigned long long& dest);
 /**
@@ -272,6 +291,8 @@ bool valueOf(const std::string& str, unsigned long long& dest);
  * precision integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 template <bool supportInfinity>
 bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest);
@@ -290,6 +311,8 @@ bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest);
  * @param dest the variable in which to store the resulting real number.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, double& dest);
 /**
@@ -309,6 +332,8 @@ bool valueOf(const std::string& str, double& dest);
  * @param dest the variable in which to store the resulting boolean.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, bool& dest);
 /**
@@ -325,6 +350,8 @@ bool valueOf(const std::string& str, bool& dest);
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting set of booleans.
  * @return \c true if the conversion was successful or \c false otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, BoolSet& dest);
 
@@ -344,6 +371,8 @@ bool valueOf(const std::string& str, BoolSet& dest);
  * be written; this must accept objects of type <tt>const std::string&</tt>.
  * @param str the string to decompose.
  * @return the number of tokens found.
+ *
+ * \ingroup utilities
  */
 template <class OutputIterator>
 unsigned basicTokenise(OutputIterator results, const std::string& str);
@@ -355,6 +384,8 @@ unsigned basicTokenise(OutputIterator results, const std::string& str);
  *
  * @param str the string on which to base the token.
  * @return the corresponding token.
+ *
+ * \ingroup utilities
  */
 std::string stringToToken(const char* str);
 
@@ -365,6 +396,8 @@ std::string stringToToken(const char* str);
  *
  * @param str the string on which to base the token.
  * @return the corresponding token.
+ *
+ * \ingroup utilities
  */
 std::string stringToToken(const std::string& str);
 
@@ -379,6 +412,8 @@ std::string stringToToken(const std::string& str);
  *
  * \ifacespython This template function is instantiated in Python for types
  * \a T = \c long, as well as const references to Integer and LargeInteger.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::string superscript(T value);
@@ -394,11 +429,11 @@ std::string superscript(T value);
  *
  * \ifacespython This template function is instantiated in Python for types
  * \a T = \c long, as well as const references to Integer and LargeInteger.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::string subscript(T value);
-
-/*@}*/
 
 } // namespace regina
 

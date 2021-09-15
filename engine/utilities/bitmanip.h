@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Contains implementation details for BitManipulator where we optimise
  * according to the underlying data type.
  *
@@ -60,6 +55,8 @@ namespace regina {
  *
  * @tparam T an unsigned integral numeric type, which we treat as a
  * sequence of \c true and/or \c false bits.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class BitManipulatorByType {
@@ -407,8 +404,6 @@ class BitManipulator :
             return chunkStart;
         }
 };
-
-/*@}*/
 
 } // namespace regina
 

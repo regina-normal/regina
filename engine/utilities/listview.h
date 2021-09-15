@@ -44,11 +44,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A lightweight object that can be used for iteration and random access
  * to all elements of a given list.
  *
@@ -67,6 +62,8 @@ namespace regina {
  * except for the copy semantics.  In particular, both std::vector and
  * regina::MarkedVector types (as well as many other standard container types)
  * are suitable.
+ *
+ * \ingroup utilities
  */
 template <class List>
 class ListView {
@@ -181,8 +178,6 @@ class ListView {
          */
         const_iterator end() const;
 };
-
-/*@}*/
 
 // Inline functions for ListView
 

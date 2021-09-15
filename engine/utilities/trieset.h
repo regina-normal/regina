@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A trie-like data structure for storing and retriving sets.
  * This class is useful when the \e elements of these sets are taken from a
  * fairly small universe, but where the \e number of sets being stored
@@ -88,6 +83,8 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup utilities
  */
 class TrieSet : public Output<TrieSet> {
     private:
@@ -290,10 +287,10 @@ class TrieSet : public Output<TrieSet> {
  *
  * @param a the first collection of sets whose contents should be swapped.
  * @param b the second collection of sets whose contents should be swapped.
+ *
+ * \ingroup utilities
  */
 void swap(TrieSet& a, TrieSet& b) noexcept;
-
-/*@}*/
 
 // Inline functions and template implementations for TrieSet
 

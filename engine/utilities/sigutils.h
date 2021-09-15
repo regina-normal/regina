@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * General helper tools for signatures that use base64 encodings.
  * These are (in particular) used in the default encodings for Regina's
  * own isomorphism signatures and knot signatures.
@@ -62,6 +57,8 @@ namespace regina {
  * signatures, and uses utilities/base64.h exclusively for encoding files.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 struct Base64SigEncoding {
     /**
@@ -217,8 +214,6 @@ struct Base64SigEncoding {
         result[2] = (val >> 4) & 3;
     }
 };
-
-/*@}*/
 
 } // namespace regina
 

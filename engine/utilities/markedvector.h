@@ -45,9 +45,8 @@
 namespace regina {
 
 /**
- * \addtogroup utilities Miscellaneous Utilities
+ * \defgroup utilities Miscellaneous Utilities
  * Miscellaneous helper classes and functions
- * @{
  */
 
 /**
@@ -75,6 +74,8 @@ namespace regina {
  * See MarkedVector for further information.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class MarkedElement {
     private:
@@ -149,6 +150,8 @@ class MarkedElement {
  * \pre The type \a T is a class derived from MarkedElement.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class MarkedVector : private std::vector<T*> {
@@ -335,11 +338,11 @@ class MarkedVector : private std::vector<T*> {
  *
  * @param a the first vector whose contents should be swapped.
  * @param b the second vector whose contents should be swapped.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 void swap(MarkedVector<T>& a, MarkedVector<T>& b) noexcept;
-
-/*@}*/
 
 // Inline functions for MarkedElement
 

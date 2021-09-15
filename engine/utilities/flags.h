@@ -42,11 +42,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A class representing a bitwise combination of flags defined by an
  * enumeration type.
  *
@@ -59,6 +54,8 @@ namespace regina {
  *
  * \ifacespython Present only for some particular enumeration types \a T,
  * when explicitly noted in the corresponding enum documentation.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class Flags {
@@ -454,8 +451,6 @@ class Flags {
         inline Flags(int init) : value_(init) {
         }
 };
-
-/*@}*/
 
 } // namespace regina
 
