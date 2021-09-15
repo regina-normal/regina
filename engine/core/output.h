@@ -47,11 +47,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup engine
- * @{
- */
-
 #ifndef __DOXYGEN
 template <class T, bool supportsUtf8 = false> struct Output;
 #else
@@ -118,6 +113,8 @@ template <class T, bool supportsUtf8 = false> struct Output;
  *
  * \ifacespython Not present, but the output routines str(), utf8() and
  * detail() will be provided directly through the various subclasses.
+ *
+ * \ingroup engine
  */
 template <class T, bool supportsUtf8 = false>
 struct Output {
@@ -166,6 +163,8 @@ struct Output {
  * @param out the output stream to which to write.
  * @param object the object to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup engine
  */
 template <class T, bool supportsUtf8>
 std::ostream& operator << (std::ostream& out,
@@ -205,6 +204,8 @@ std::ostream& operator << (std::ostream& out,
  *
  * \ifacespython Not present, but the output routines str(), utf8() and
  * detail() will be provided directly through the various subclasses.
+ *
+ * \ingroup engine
  */
 template <class T, bool supportsUtf8 = false>
 struct ShortOutput : public Output<T, supportsUtf8> {
@@ -237,6 +238,8 @@ struct ShortOutput : public Output<T, supportsUtf8> {
  * in the class \a T itself.
  *
  * \pre \a T is a class or struct type.
+ *
+ * \ingroup engine
  */
 template <class T>
 struct OutputBase {
@@ -262,8 +265,6 @@ struct OutputBase {
         typedef typename std::remove_reference<
             decltype(test(std::declval<T>()))>::type type;
 };
-
-/*@}*/
 
 // Inline functions
 
