@@ -65,6 +65,8 @@ class BoolSet {
             /**< A character with only the \c true member bit set. */
         static constexpr unsigned char eltFalse = 2;
             /**< A character with only the \c false member bit set. */
+        static constexpr char stringCodes[4][3] = { "--", "T-", "-F", "TF" };
+            /**< The string codes for all four boolean sets. */
 
     public:
         /**
@@ -345,6 +347,20 @@ class BoolSet {
          */
         constexpr static BoolSet fromByteCode(unsigned char code);
 
+        /**
+         * Returns the string code representing this boolean set.
+         * String codes are a more human-readable alternative to byte codes;
+         * in particular, they are used in XML data files.
+         *
+         * Every string code contains precisely two characters (plus a
+         * terminating null).
+         * Sets {}, {true}, {false} and {true, false} have
+         * string codes \c "--", \c "T-", \c "-F" and \c "TF" respectively.
+         *
+         * @return the two-character string code representing this set.
+         */
+        const char* stringCode() const;
+
     friend std::ostream& operator << (std::ostream& out, BoolSet set);
 };
 
@@ -471,6 +487,9 @@ inline void BoolSet::setByteCode(unsigned char code) {
 }
 inline constexpr BoolSet BoolSet::fromByteCode(unsigned char code) {
     return BoolSet(code & eltTrue, code & eltFalse);
+}
+inline const char* BoolSet::stringCode() const {
+    return stringCodes[elements];
 }
 
 } // namespace regina

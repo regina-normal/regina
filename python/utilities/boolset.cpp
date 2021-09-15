@@ -66,6 +66,7 @@ void addBoolSet(pybind11::module_& m) {
         .def("byteCode", &BoolSet::byteCode)
         .def("setByteCode", &BoolSet::setByteCode)
         .def_static("fromByteCode", &BoolSet::fromByteCode)
+        .def("stringCode", &BoolSet::stringCode)
         // We don't use the C++ sNone, sTrue, sFalse, sBoth constants here
         // because they are deprecated.
         .def_property_readonly_static("sNone", [](pybind11::object) {
