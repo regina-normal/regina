@@ -77,17 +77,15 @@ bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
 
 void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
-    writeXMLHeader(out, "filtercomb", format, anon, refs);
+    writeXMLHeader(out, "filtercomb", format, anon, refs,
+        true, std::pair("op", (usesAnd_ ? "and" : "or")));
     if (format == REGINA_XML_GEN_2) {
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
-            << "\" typeid=\"" << filterType() << "\">\n";
+            << "\" typeid=\"" << filterType() << "\">\n"
+               "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n"
+               "  </filter>\n";
     }
-
-    out << "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n";
-
-    if (format == REGINA_XML_GEN_2)
-        out << "  </filter>\n";
     writeXMLFooter(out, "filtercomb", format, anon, refs);
 }
 
@@ -138,29 +136,48 @@ void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
     using regina::xml::xmlValueTag;
 
-    writeXMLHeader(out, "filterprop", format, anon, refs);
     if (format == REGINA_XML_GEN_2) {
+        writeXMLHeader(out, "filterprop", format, anon, refs);
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
             << "\" typeid=\"" << filterType() << "\">\n";
-    }
 
-    if (! eulerChar_.empty()) {
-        out << "    <euler> ";
-        for (auto it = eulerChar_.begin(); it != eulerChar_.end(); ++it)
-            out << (*it) << ' ';
-        out << "</euler>\n";
-    }
+        if (! eulerChar_.empty()) {
+            out << "    <euler> ";
+            for (const auto& e : eulerChar_)
+                out << e << ' ';
+            out << "</euler>\n";
+        }
 
-    if (orientability_ != BoolSet(true, true))
-        out << "    " << xmlValueTag("orbl", orientability_) << '\n';
-    if (compactness_ != BoolSet(true, true))
-        out << "    " << xmlValueTag("compact", compactness_) << '\n';
-    if (realBoundary_ != BoolSet(true, true))
-        out << "    " << xmlValueTag("realbdry", realBoundary_) << '\n';
+        if (orientability_ != BoolSet(true, true))
+            out << "    " << xmlValueTag("orbl", orientability_) << '\n';
+        if (compactness_ != BoolSet(true, true))
+            out << "    " << xmlValueTag("compact", compactness_) << '\n';
+        if (realBoundary_ != BoolSet(true, true))
+            out << "    " << xmlValueTag("realbdry", realBoundary_) << '\n';
 
-    if (format == REGINA_XML_GEN_2)
         out << "  </filter>\n";
+    } else if (eulerChar_.empty()) {
+        writeXMLHeader(out, "filterprop", format, anon, refs, true,
+            std::pair("orbl", orientability_.stringCode()),
+            std::pair("compact", compactness_.stringCode()),
+            std::pair("realbdry", realBoundary_.stringCode()));
+    } else {
+        std::ostringstream euler;
+        bool first = true;
+        for (const auto& e : eulerChar_) {
+            if (first)
+                first = false;
+            else
+                euler << ',';
+            euler << e;
+        }
+        writeXMLHeader(out, "filterprop", format, anon, refs, true,
+            std::pair("orbl", orientability_.stringCode()),
+            std::pair("compact", compactness_.stringCode()),
+            std::pair("realbdry", realBoundary_.stringCode()),
+            std::pair("euler", euler.str()));
+    }
     writeXMLFooter(out, "filterprop", format, anon, refs);
 }
 

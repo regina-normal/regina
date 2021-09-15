@@ -320,18 +320,10 @@ CS_unknown
 </tri>
 </container>
 <container label="Normal Surface Filters">
-<filtercomb label="Tori, Annuli and Discs">
-    <op type="or"/>
-<filterprop label="Tori and Annuli">
-    <euler> 0 </euler>
-    <orbl value="T-"/>
-    <compact value="T-"/>
+<filtercomb op="or" label="Tori, Annuli and Discs">
+<filterprop orbl="T-" compact="T-" realbdry="TF" euler="0" label="Tori and Annuli">
 </filterprop>
-<filterprop label="Discs">
-    <euler> 1 </euler>
-    <orbl value="T-"/>
-    <compact value="T-"/>
-    <realbdry value="T-"/>
+<filterprop orbl="T-" compact="T-" realbdry="T-" euler="1" label="Discs">
 </filterprop>
 </filtercomb>
 </container>
