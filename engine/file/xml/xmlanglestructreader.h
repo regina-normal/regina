@@ -114,10 +114,11 @@ class XMLAngleStructuresReader : public XMLPacketReader {
          *
          * @param tri the triangulation on which these angle
          * structures are placed.  This must be non-null.
+         * @param props the attributes of the \c angles XML element.
          */
         XMLAngleStructuresReader(XMLTreeResolver& resolver, Packet* parent,
             bool anon, std::string label, std::string id,
-            Triangulation<3>* tri);
+            Triangulation<3>* tri, const regina::xml::XMLPropertyDict& props);
 
         virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
@@ -141,13 +142,6 @@ inline std::optional<AngleStructure>& XMLAngleStructureReader::structure() {
 }
 
 // Inline functions for XMLAngleStructuresReader
-
-inline XMLAngleStructuresReader::XMLAngleStructuresReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
-        std::string label, std::string id, Triangulation<3>* tri) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
-        list_(nullptr), tri_(tri) {
-}
 
 inline Packet* XMLAngleStructuresReader::packetToCommit() {
     return list_;

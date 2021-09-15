@@ -50,7 +50,6 @@
  </partintro>
 
  &data-abeliangroup;
- &data-angleparams;
  &data-angles;
  &data-anon;
  &data-anonref;
@@ -132,6 +131,7 @@
 
  &data-allowstrict;
  &data-allowtaut;
+ &data-angleparams;
  &data-filter;
  &data-filter-combination;
  &data-filter-properties;

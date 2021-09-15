@@ -24,8 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-angles ::= (&xml-angleparams;, &xml-struct;*,
-            &xml-spanstrict;?, &xml-spantaut;?,
+angles ::= (&xml-struct;*, &xml-spanstrict;?, &xml-spantaut;?,
             &xml-tag;*,
             &packetsyn1;
             &packetsyn2;
@@ -39,6 +38,14 @@ angles ::= (&xml-angleparams;, &xml-struct;*,
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>algorithm</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>tautonly</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
      </row>
      <row>
       <entry><sgmltag>tri</sgmltag></entry>
@@ -79,12 +86,9 @@ angles ::= (&xml-angleparams;, &xml-struct;*,
   <para>
    The individual angle structures in this list are contained in the
    child &xml-struct; elements.
-   The parameters of the angle structure enumeration that created this
-   list are stored in the child &xml-angleparams; element.  &regina;
-   versions 4.6 and earlier did not write this &xml-angleparams; element
-   (since there were no parameters to select), and so if the &xml-angleparams;
-   element is missing then all parameters are assumed to take on their
-   default values as described in the &xml-angleparams; documentation.
+   Since &regina;&nbsp;7.0, the parameters of the angle structure enumeration
+   that created this list are stored in the attributes; there is no
+   longer a child &xml-angleparams; element.
   </para>
   &packetchilddesc;
 
@@ -99,7 +103,6 @@ angles ::= (&xml-angleparams;, &xml-struct;*,
     The following elements occur in <sgmltag>angles</sgmltag>,
     and are specific to the angle structure list packet type:
     <simplelist type="inline">
-     <member>&xml-angleparams;</member>
      <member>&xml-spanstrict;</member>
      <member>&xml-spantaut;</member>
      <member>&xml-struct;</member>
@@ -115,6 +118,48 @@ angles ::= (&xml-angleparams;, &xml-struct;*,
    The following attributes are specific to angle structure lists:
   </para>
   <variablelist>
+   <varlistentry>
+    <term><sgmltag>algorithm</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies the algorithm that was used to enumerate these angle structures.
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from the <classname>AngleAlgFlags</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 32, which represents the
+      <classname>AngleAlgFlags</classname> constant
+      <literal>AS_ALG_DD</literal>.
+     </para>
+     <para>
+      &regina; versions&nbsp;6.0.1 and earlier did not store this
+      information in its data files at all.
+      If it is not provided, it will be treated as
+      <literal>AS_ALG_LEGACY</literal>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>tautonly</sgmltag></term>
+    <listitem>
+     <para>
+      Either <literal>T</literal> if only taut structures are
+      enumerated, or <literal>F</literal> if all
+      vertex angle structures are enumerated.
+     </para>
+     <para>
+      &regina; versions&nbsp;4.6 and earlier did not store this
+      information in its data files at all.
+      If it not provided through either this attribute or a (deprecated) child
+      &xml-angleparams; element, it will be treated as <literal>F</literal>
+      (since taut enumeration was not offered in those very old versions
+      of &regina;).
+     </para>
+    </listitem>
+   </varlistentry>
    <varlistentry>
     <term><sgmltag>tri</sgmltag></term>
     <listitem><para>
