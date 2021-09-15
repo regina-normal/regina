@@ -216,10 +216,10 @@ XMLElementReader* XMLPacketReader::startSubElement(
                     std::move(childLabel), std::move(childID));
             case PACKET_V7_FILTER_PROPERTIES:
                 return new XMLPropertiesFilterReader(resolver_, packet_, anon_,
-                    std::move(childLabel), std::move(childID));
+                    std::move(childLabel), std::move(childID), subTagProps);
             case PACKET_V7_FILTER_COMBINATION:
                 return new XMLCombinationFilterReader(resolver_, packet_, anon_,
-                    std::move(childLabel), std::move(childID));
+                    std::move(childLabel), std::move(childID), subTagProps);
             case PACKET_V7_FILTER_PLAIN:
                 return new XMLPlainFilterReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));

@@ -119,10 +119,37 @@ class XMLCombinationFilterReader : public XMLPacketReader {
         /**
          * Creates a new surface filter packet reader.
          *
-         * All parameters are the same as for the parent class XMLPacketReader.
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param props the attributes of the \c surfaces XML element.
          */
         XMLCombinationFilterReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+            bool anon, std::string label, std::string id,
+            const regina::xml::XMLPropertyDict& props);
+
+        virtual Packet* packetToCommit() override;
+};
+
+/**
+ * An XML packet reader that reads a single SurfaceFilterCombination filter
+ * using the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyCombinationFilterReader : public XMLPacketReader {
+    private:
+        SurfaceFilterCombination* filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLLegacyCombinationFilterReader(XMLTreeResolver& resolver,
+            Packet* parent, bool anon, std::string label, std::string id);
 
         virtual Packet* packetToCommit() override;
         XMLElementReader* startContentSubElement(const std::string& subTagName,
@@ -143,10 +170,37 @@ class XMLPropertiesFilterReader : public XMLPacketReader {
         /**
          * Creates a new surface filter packet reader.
          *
-         * All parameters are the same as for the parent class XMLPacketReader.
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param props the attributes of the \c surfaces XML element.
          */
         XMLPropertiesFilterReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+            bool anon, std::string label, std::string id,
+            const regina::xml::XMLPropertyDict& props);
+
+        virtual Packet* packetToCommit() override;
+};
+
+/**
+ * An XML packet reader that reads a single SurfaceFilterProperties filter
+ * using the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyPropertiesFilterReader : public XMLPacketReader {
+    private:
+        SurfaceFilterProperties* filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLLegacyPropertiesFilterReader(XMLTreeResolver& resolver,
+            Packet* parent, bool anon, std::string label, std::string id);
 
         virtual Packet* packetToCommit() override;
         XMLElementReader* startContentSubElement(const std::string& subTagName,
@@ -185,27 +239,39 @@ inline Packet* XMLPlainFilterReader::packetToCommit() {
 
 // Inline functions for XMLCombinationFilterReader:
 
-inline XMLCombinationFilterReader::XMLCombinationFilterReader(
+inline Packet* XMLCombinationFilterReader::packetToCommit() {
+    return filter_;
+}
+
+// Inline functions for XMLLegacyCombinationFilterReader:
+
+inline XMLLegacyCombinationFilterReader::XMLLegacyCombinationFilterReader(
         XMLTreeResolver& res, Packet* parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         filter_(nullptr) {
 }
 
-inline Packet* XMLCombinationFilterReader::packetToCommit() {
+inline Packet* XMLLegacyCombinationFilterReader::packetToCommit() {
     return filter_;
 }
 
 // Inline functions for XMLPropertiesFilterReader:
 
-inline XMLPropertiesFilterReader::XMLPropertiesFilterReader(
+inline Packet* XMLPropertiesFilterReader::packetToCommit() {
+    return filter_;
+}
+
+// Inline functions for XMLLegacyPropertiesFilterReader:
+
+inline XMLLegacyPropertiesFilterReader::XMLLegacyPropertiesFilterReader(
         XMLTreeResolver& res, Packet* parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         filter_(new SurfaceFilterProperties()) {
 }
 
-inline Packet* XMLPropertiesFilterReader::packetToCommit() {
+inline Packet* XMLLegacyPropertiesFilterReader::packetToCommit() {
     return filter_;
 }
 
