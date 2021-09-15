@@ -92,9 +92,6 @@ class XMLAngleStructureReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single angle structure list.
  *
- * \pre The parent XML element reader is in fact an
- * XMLTriangulationReader<3>.
- *
  * \ifacespython Not present.
  */
 class XMLAngleStructuresReader : public XMLPacketReader {
@@ -128,6 +125,43 @@ class XMLAngleStructuresReader : public XMLPacketReader {
         virtual void endElement() override;
 };
 
+/**
+ * An XML packet reader that reads a single angle structure list using
+ * the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyAngleStructuresReader : public XMLPacketReader {
+    private:
+        AngleStructures* list_;
+            /**< The angle structure list currently being read. */
+        Triangulation<3>* tri_;
+            /**< The triangulation on which these angle structures
+                 are placed. */
+
+    public:
+        /**
+         * Creates a new angle structure list reader.
+         *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param tri the triangulation on which these angle
+         * structures are placed.  This must be non-null.
+         */
+        XMLLegacyAngleStructuresReader(XMLTreeResolver& resolver,
+            Packet* parent, bool anon, std::string label, std::string id,
+            Triangulation<3>* tri);
+
+        virtual Packet* packetToCommit() override;
+        virtual XMLElementReader* startContentSubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps) override;
+        virtual void endContentSubElement(const std::string& subTagName,
+            XMLElementReader* subReader) override;
+        virtual void endElement() override;
+};
+
 /*@}*/
 
 // Inline functions for XMLAngleStructureReader
@@ -150,6 +184,19 @@ inline XMLAngleStructuresReader::XMLAngleStructuresReader(
 }
 
 inline Packet* XMLAngleStructuresReader::packetToCommit() {
+    return list_;
+}
+
+// Inline functions for XMLLegacyAngleStructuresReader
+
+inline XMLLegacyAngleStructuresReader::XMLLegacyAngleStructuresReader(
+        XMLTreeResolver& res, Packet* parent, bool anon,
+        std::string label, std::string id, Triangulation<3>* tri) :
+        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        list_(nullptr), tri_(tri) {
+}
+
+inline Packet* XMLLegacyAngleStructuresReader::packetToCommit() {
     return list_;
 }
 
