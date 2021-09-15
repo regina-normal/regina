@@ -46,15 +46,12 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A set of booleans.  Note that there are only four possible such sets.
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup utilities
  */
 class BoolSet {
     private:
@@ -388,6 +385,8 @@ class BoolSet {
  * @param out the output stream to which to write.
  * @param set the boolean set to write.
  * @return a reference to \a out.
+ *
+ * \ingroup utilities
  */
 std::ostream& operator << (std::ostream& out, BoolSet set);
 
