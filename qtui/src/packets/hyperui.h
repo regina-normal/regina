@@ -112,6 +112,8 @@ class HyperHeaderUI : public QObject, public PacketViewerTab,
          * PacketListener overrides.
          */
         void packetWasRenamed(regina::Packet* packet) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
 
     private slots:
         /**

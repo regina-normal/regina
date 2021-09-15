@@ -137,8 +137,10 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet) override;
-        
+        void packetWasRenamed(regina::Packet*) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
+
     public slots:
         /**
          * View the underlying triangulation.

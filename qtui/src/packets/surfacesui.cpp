@@ -45,6 +45,7 @@
 #include "reginamain.h"
 
 #include <QLabel>
+#include <QMessageBox>
 #include <QTextDocument>
 #include <QWhatsThis>
 
@@ -96,9 +97,11 @@ SurfacesHeaderUI::SurfacesHeaderUI(regina::NormalSurfaces* packet,
 
     ui = header;
 
-    // Listen for renaming events on the parent triangulation, since we
+    // Listen for events on the underlying triangulation, since we
     // display its label in the header.
-    packet->parent()->listen(this);
+    const regina::Triangulation<3>& tri = packet->triangulation();
+    if (! tri.isReadOnlySnapshot())
+        const_cast<regina::Triangulation<3>&>(tri).listen(this);
 }
 
 regina::Packet* SurfacesHeaderUI::getPacket() {
@@ -143,22 +146,67 @@ void SurfacesHeaderUI::refresh() {
         count = header->tr("%1 %2, %3 surfaces").arg(
             surfaces->size()).arg(sType).arg(sEmb);
 
+    QString triName;
+    const regina::Triangulation<3>& tri = surfaces->triangulation();
+    if (tri.isReadOnlySnapshot())
+        triName = tr("(private copy)");
+    else
+        triName = tri.humanLabel().c_str();
+
     header->setText(header->tr(
         "<qt>%1<br>Enumerated in %2 coordinates<br>"
         "Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(header->tr(Coordinates::name(surfaces->coords(), false))).
-        arg(QString(surfaces->triangulation().humanLabel().c_str()).
-            toHtmlEscaped()));
+        arg(triName.toHtmlEscaped()));
 }
 
 void SurfacesHeaderUI::viewTriangulation() {
-    enclosingPane->getMainWindow()->packetView(surfaces->parent(),
-        false /* visible in tree */, false /* select in tree */);
+    const regina::Triangulation<3>& tri = surfaces->triangulation();
+    if (tri.isReadOnlySnapshot()) {
+        QMessageBox msg(QMessageBox::Information,
+            tr("Create New Copy"),
+            tr("Should I create a new copy of this triangulation?"),
+            QMessageBox::Yes | QMessageBox::Cancel, ui);
+        msg.setInformativeText(tr("<qt>This list stores its own private copy "
+            "of the triangulation, since the original has changed or been "
+            "deleted.<p>"
+            "Would you like me to make a new copy "
+            "that you can view and edit?<p>"
+            "This list will continue to use its own private copy, so "
+            "you can edit or delete your new copy as you please.</qt>"));
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.exec() != QMessageBox::Yes)
+            return;
+
+        regina::Triangulation<3>* copy = new regina::Triangulation<3>(tri);
+        copy->setLabel(surfaces->adornedLabel("Triangulation"));
+        surfaces->insertChildLast(copy);
+
+        enclosingPane->getMainWindow()->packetView(copy, true, true);
+    } else {
+        enclosingPane->getMainWindow()->packetView(
+            const_cast<regina::Triangulation<3>*>(&tri),
+            false /* visible in tree */, false /* select in tree */);
+    }
 }
 
 void SurfacesHeaderUI::packetWasRenamed(regina::Packet*) {
-    // Assume it is the parent triangulation.
+    // Assume it is the underlying triangulation.
     refresh();
 }
 
+void SurfacesHeaderUI::packetWasChanged(regina::Packet* packet) {
+    // Assume it is the underlying triangulation.
+    if (packet != std::addressof(surfaces->triangulation())) {
+        // Our list has switched to use a local snapshot of the triangulation.
+        // It will be read-only from now on.
+        packet->unlisten(this);
+        refresh();
+    }
+}
+
+void SurfacesHeaderUI::packetToBeDestroyed(regina::PacketShell) {
+    // Assume it is the underlying triangulation.
+    refresh();
+}

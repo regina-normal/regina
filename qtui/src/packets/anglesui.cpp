@@ -41,6 +41,7 @@
 
 #include <QLabel>
 #include <QHeaderView>
+#include <QMessageBox>
 #include <QTextDocument>
 #include <QTreeView>
 #include <QVBoxLayout>
@@ -202,9 +203,11 @@ AngleStructureUI::AngleStructureUI(AngleStructures* packet,
 
     ui->setFocusProxy(table);
 
-    // Listen for renaming events on the parent triangulation, since we
+    // Listen for events on the underlying triangulation, since we
     // display its label in the header.
-    packet->parent()->listen(this);
+    const regina::Triangulation<3>& tri = packet->triangulation();
+    if (! tri.isReadOnlySnapshot())
+        const_cast<regina::Triangulation<3>&>(tri).listen(this);
 }
 
 AngleStructureUI::~AngleStructureUI() {
@@ -263,18 +266,49 @@ void AngleStructureUI::refreshHeader() {
             span.append(tr("NO Taut"));
     }
 
+    QString triName;
+    const regina::Triangulation<3>& tri = model->structures()->triangulation();
+    if (tri.isReadOnlySnapshot())
+        triName = tr("(private copy)");
+    else
+        triName = tri.humanLabel().c_str();
+
     stats->setText(tr(
         "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(span).
-        arg(QString(model->structures()->triangulation().
-            humanLabel().c_str()).toHtmlEscaped()));
+        arg(triName.toHtmlEscaped()));
 }
 
 void AngleStructureUI::viewTriangulation() {
-    enclosingPane->getMainWindow()->packetView(
-        model->structures()->parent(),
-        false /* visible in tree */, false /* select in tree */);
+    AngleStructures* list = model->structures();
+    const regina::Triangulation<3>& tri = list->triangulation();
+    if (tri.isReadOnlySnapshot()) {
+        QMessageBox msg(QMessageBox::Information,
+            tr("Create New Copy"),
+            tr("Should I create a new copy of this triangulation?"),
+            QMessageBox::Yes | QMessageBox::Cancel, ui);
+        msg.setInformativeText(tr("<qt>This list stores its own private copy "
+            "of the triangulation, since the original has changed or been "
+            "deleted.<p>"
+            "Would you like me to make a new copy "
+            "that you can view and edit?<p>"
+            "This list will continue to use its own private copy, so "
+            "you can edit or delete your new copy as you please.</qt>"));
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.exec() != QMessageBox::Yes)
+            return;
+
+        regina::Triangulation<3>* copy = new regina::Triangulation<3>(tri);
+        copy->setLabel(list->adornedLabel("Triangulation"));
+        list->insertChildLast(copy);
+
+        enclosingPane->getMainWindow()->packetView(copy, true, true);
+    } else {
+        enclosingPane->getMainWindow()->packetView(
+            const_cast<regina::Triangulation<3>*>(&tri),
+            false /* visible in tree */, false /* select in tree */);
+    }
 }
 
 void AngleStructureUI::columnResized(int section, int, int newSize) {
@@ -290,7 +324,21 @@ void AngleStructureUI::columnResized(int section, int, int newSize) {
 }
 
 void AngleStructureUI::packetWasRenamed(regina::Packet*) {
-    // Assume it is the parent triangulation.
+    // Assume it is the underlying triangulation.
     refreshHeader();
 }
 
+void AngleStructureUI::packetWasChanged(regina::Packet* packet) {
+    // Assume it is the underlying triangulation.
+    if (packet != std::addressof(model->structures()->triangulation())) {
+        // Our list has switched to use a local snapshot of the triangulation.
+        // It will be read-only from now on.
+        packet->unlisten(this);
+        refreshHeader();
+    }
+}
+
+void AngleStructureUI::packetToBeDestroyed(regina::PacketShell) {
+    // Assume it is the underlying triangulation.
+    refreshHeader();
+}
