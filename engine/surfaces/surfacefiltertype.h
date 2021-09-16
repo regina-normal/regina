@@ -44,16 +44,13 @@
 namespace regina {
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * Represents different types of filter classes that can be used to filter
  * lists of normal surfaces in 3-manifold triangulations.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
  * Regina to include your own filter class, you should choose an ID >= 10000.
+ *
+ * \ingroup surfaces
  */
 enum SurfaceFilterType {
     /**
@@ -72,8 +69,6 @@ enum SurfaceFilterType {
      */
     NS_FILTER_COMBINATION = 2
 };
-
-/*@}*/
 
 } // namespace regina
 

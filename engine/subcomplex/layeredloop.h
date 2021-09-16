@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layered loop component of a triangulation.
  *
  * A layered loop is a layered chain of \a n tetrahedra whose bottom
@@ -83,6 +78,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredLoop : public StandardTriangulation {
     private:
@@ -187,10 +184,10 @@ class LayeredLoop : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(LayeredLoop& a, LayeredLoop& b) noexcept;
-
-/*@}*/
 
 // Inline functions for LayeredLoop
 

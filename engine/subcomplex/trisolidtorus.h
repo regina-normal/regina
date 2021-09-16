@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a three-tetrahedron triangular solid torus in a triangulation.
  * A three-tetrahedron triangular solid torus is a three-tetrahedron
  * triangular prism with its two ends identified.
@@ -90,6 +85,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class TriSolidTorus : public StandardTriangulation {
     private:
@@ -309,8 +306,6 @@ class TriSolidTorus : public StandardTriangulation {
          */
         TriSolidTorus() = default;
 };
-
-/*@}*/
 
 // Inline functions for TriSolidTorus
 

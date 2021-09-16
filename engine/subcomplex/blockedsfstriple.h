@@ -51,11 +51,6 @@ namespace regina {
 class SatRegion;
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a blocked sequence of three Seifert fibred spaces joined
  * along connecting tori.  This is a particular type of triangulation
  * of a graph manifold, formed from three saturated regions whose
@@ -140,6 +135,8 @@ class SatRegion;
  * even when passing or returning objects by value.  Note, however, that
  * the only way to create objects of this class (aside from copying or moving)
  * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class BlockedSFSTriple : public StandardTriangulation {
     private:
@@ -299,10 +296,10 @@ class BlockedSFSTriple : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(BlockedSFSTriple& a, BlockedSFSTriple& b) noexcept;
-
-/*@}*/
 
 // Inline functions for BlockedSFSTriple
 

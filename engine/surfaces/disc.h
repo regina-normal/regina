@@ -52,11 +52,6 @@ namespace regina {
 template <typename TetData> class DiscSpecIterator;
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * Specifies a single normal disc in a normal surface.
  *
  * There are 10 disc types.  Types 0-3 represent triangles 0-3,
@@ -81,6 +76,8 @@ template <typename TetData> class DiscSpecIterator;
  * \pre The number of normal discs of a particular type
  * in a particular tetrahedron can be represented by a long integer.
  * \pre This class should only be used with \a embedded normal surfaces.
+ *
+ * \ingroup surfaces
  */
 struct DiscSpec {
     size_t tetIndex;
@@ -154,6 +151,8 @@ struct DiscSpec {
  * @param out the output stream to which to write.
  * @param spec the disc specifier to write.
  * @return a reference to \a out.
+ *
+ * \ingroup surfaces
  */
 std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
 
@@ -169,6 +168,8 @@ std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
  * @return \c true if normal discs of the given type are
  * numbered away from the given vertex, or \c false if they are
  * numbered towards the given vertex.
+ *
+ * \ingroup surfaces
  */
 bool numberDiscsAwayFromVertex(int discType, int vertex);
 
@@ -188,6 +189,8 @@ bool numberDiscsAwayFromVertex(int discType, int vertex);
  * is parallel.
  * @param edgeEnd the end vertex of the edge to which the normal arc is
  * parallel.
+ *
+ * \ingroup surfaces
  */
 bool discOrientationFollowsEdge(int discType, int vertex,
         int edgeStart, int edgeEnd);
@@ -212,6 +215,8 @@ bool discOrientationFollowsEdge(int discType, int vertex,
  * \todo \problong Have some error flag so we can barf politely if the number
  * of normal discs of a given type does not fit into an <tt>unsigned
  * long</tt>.  See how this affects DiscSetTetData also.
+ *
+ * \ingroup surfaces
  */
 class DiscSetTet {
     public:
@@ -367,6 +372,8 @@ class DiscSetTet {
  * value of \c b using <tt>a=b</tt>.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup surfaces
  */
 template <class T>
 class DiscSetTetData : public DiscSetTet {
@@ -591,6 +598,8 @@ class DiscSetTetData : public DiscSetTet {
  *
  * @param a the first disc set whose contents should be swapped.
  * @param b the second disc set whose contents should be swapped.
+ *
+ * \ingroup surfaces
  */
 template <class T>
 void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
@@ -624,6 +633,8 @@ void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
  * \ifacespython The only instance of this class that is available
  * through python is DiscSetSurface (i.e., the "vanilla" case where
  * \a TetData is the type DiscSetTet).
+ *
+ * \ingroup surfaces
  */
 template <class TetData>
 class DiscSetSurfaceDataImpl {
@@ -945,6 +956,8 @@ class DiscSetSurfaceDataImpl {
  *
  * @param a the first disc set whose contents should be swapped.
  * @param b the second disc set whose contents should be swapped.
+ *
+ * \ingroup surfaces
  */
 template <class T>
 void swap(DiscSetSurfaceDataImpl<T>& a, DiscSetSurfaceDataImpl<T>& b) noexcept {
@@ -956,6 +969,8 @@ void swap(DiscSetSurfaceDataImpl<T>& a, DiscSetSurfaceDataImpl<T>& b) noexcept {
  * within a particular normal surface.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup surfaces
  */
 template <typename T>
 using DiscSetSurfaceData = DiscSetSurfaceDataImpl<DiscSetTetData<T>>;
@@ -966,6 +981,8 @@ using DiscSetSurfaceData = DiscSetSurfaceDataImpl<DiscSetTetData<T>>;
  *
  * This structure can be used for iterating through disc types, and for
  * moving between adjacent disc types within a surface.
+ *
+ * \ingroup surfaces
  */
 using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
 
@@ -995,6 +1012,8 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  * DiscSpecIterator; then DiscSpecIterator implements <tt>next()</tt>, which
  * either returns the next normal disc in the set or else throws a
  * <tt>StopException</tt> if there are no more discs to return.
+ *
+ * \ingroup surfaces
  */
 template <class TetData>
 class DiscSpecIterator {
@@ -1173,8 +1192,6 @@ class DiscSpecIterator {
 
     friend class DiscSetSurfaceDataImpl<TetData>;
 };
-
-/*@}*/
 
 // Inline functions for DiscSpec
 

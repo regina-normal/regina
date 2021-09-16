@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a 3-manifold triangulation from the SnapPea cusped census.
  *
  * The SnapPea cusped census is the census of cusped hyperbolic 3-manifolds
@@ -87,6 +82,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class SnapPeaCensusTri: public StandardTriangulation {
     public:
@@ -239,10 +236,10 @@ class SnapPeaCensusTri: public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(SnapPeaCensusTri& a, SnapPeaCensusTri& b) noexcept;
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

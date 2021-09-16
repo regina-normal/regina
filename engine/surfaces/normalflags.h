@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * Represents different lists of normal surfaces that might be constructed
  * for a given 3-manifold triangulation.
  *
@@ -61,6 +56,8 @@ namespace regina {
  * they are treated by Python as NormalList objects (and they can be
  * combined and/or queried as such).
  * The underlying enumeration type is not exposed to Python.
+ *
+ * \ingroup surfaces
  */
 enum NormalListFlags {
     /**
@@ -133,6 +130,8 @@ enum NormalListFlags {
  *
  * \ifacespython This is present, and all values in the NormalListFlags
  * enumeration type are treated as members of this NormalList class.
+ *
+ * \ingroup surfaces
  */
 typedef regina::Flags<NormalListFlags> NormalList;
 
@@ -142,6 +141,8 @@ typedef regina::Flags<NormalListFlags> NormalList;
  * @param lhs the first flag to combine.
  * @param rhs the second flag to combine.
  * @return the combination of both flags.
+ *
+ * \ingroup surfaces
  */
 inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
     return NormalList(lhs) | rhs;
@@ -159,6 +160,8 @@ inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
  * they are treated by Python as NormalAlg objects (and they can be
  * combined and/or queried as such).
  * The underlying enumeration type is not exposed to Python.
+ *
+ * \ingroup surfaces
  */
 enum NormalAlgFlags {
     /**
@@ -348,6 +351,8 @@ enum NormalAlgFlags {
  *
  * \ifacespython This is present, and all values in the NormalAlgFlags
  * enumeration type are treated as members of this NormalAlg class.
+ *
+ * \ingroup surfaces
  */
 typedef regina::Flags<NormalAlgFlags> NormalAlg;
 
@@ -357,6 +362,8 @@ typedef regina::Flags<NormalAlgFlags> NormalAlg;
  * @param lhs the first flag to combine.
  * @param rhs the second flag to combine.
  * @return the combination of both flags.
+ *
+ * \ingroup surfaces
  */
 inline NormalAlg operator | (NormalAlgFlags lhs, NormalAlgFlags rhs) {
     return NormalAlg(lhs) | rhs;
@@ -369,6 +376,8 @@ inline NormalAlg operator | (NormalAlgFlags lhs, NormalAlgFlags rhs) {
  * Each type of transformation comes with its own preconditions on the
  * original normal surface list and/or its underlying triangulation; these
  * preconditions are documented alongside the individual enumeration values.
+ *
+ * \ingroup surfaces
  */
 enum NormalTransform {
     /**
@@ -540,8 +549,6 @@ enum NormalTransform {
      */
     NS_FILTER_INCOMPRESSIBLE = 0x30
 };
-
-/*@}*/
 
 } // namespace regina
 

@@ -51,11 +51,6 @@ namespace regina {
 class SatRegion;
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a blocked pair of Seifert fibred spaces joined along a single
  * connecting torus.  This is a particular type of triangulation of a graph
  * manifold, formed from two saturated regions whose torus boundaries are
@@ -102,6 +97,8 @@ class SatRegion;
  * even when passing or returning objects by value.  Note, however, that
  * the only way to create objects of this class (aside from copying or moving)
  * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class BlockedSFSPair : public StandardTriangulation {
     private:
@@ -228,10 +225,10 @@ class BlockedSFSPair : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(BlockedSFSPair& a, BlockedSFSPair& b) noexcept;
-
-/*@}*/
 
 // Inline functions for BlockedSFSPair
 

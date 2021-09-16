@@ -51,11 +51,6 @@ class SatRegion;
 class TxICore;
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Describes a triangulation of a graph manifold formed by joining a
  * bounded saturated region with a thin I-bundle over the torus,
  * possibly with layerings in between.
@@ -121,6 +116,8 @@ class TxICore;
  * even when passing or returning objects by value.  Note, however, that
  * the only way to create objects of this class (aside from copying or moving)
  * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class PluggedTorusBundle : public StandardTriangulation {
     private:
@@ -324,10 +321,10 @@ class PluggedTorusBundle : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(PluggedTorusBundle& a, PluggedTorusBundle& b) noexcept;
-
-/*@}*/
 
 // Inline functions for PluggedTorusBundle
 

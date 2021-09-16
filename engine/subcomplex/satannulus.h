@@ -50,11 +50,6 @@ namespace regina {
 class Matrix2;
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents an annulus formed from a pair of triangles in a Seifert fibred
  * space.  This annulus is saturated, i.e., a union of fibres.  More than
  * that, the fibres run parallel to the two boundary edges of the annulus.
@@ -125,6 +120,8 @@ class Matrix2;
  * accessed for writing through functions \a setTet() and \a setRoles(),
  * so for instance the second triangle vertex roles for the saturated annulus
  * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
+ *
+ * \ingroup subcomplex
  */
 struct SatAnnulus {
     Tetrahedron<3>* tet[2];
@@ -432,8 +429,6 @@ struct SatAnnulus {
      */
     void attachLST(Triangulation<3>* tri, long alpha, long beta) const;
 };
-
-/*@}*/
 
 // Inline functions for SatAnnulus
 

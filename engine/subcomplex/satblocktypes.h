@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * A degenerate zero-tetrahedron saturated block that corresponds to
  * attaching a Mobius band to a single annulus boundary.
  *
@@ -71,6 +66,8 @@ namespace regina {
  * This class does not support value semantics: it cannot be copied, swapped
  * or manually constructed.  Its memory is managed by the SatRegion class, and
  * blocks' locations in memory define them.  See SatRegion for further details.
+ *
+ * \ingroup subcomplex
  */
 class SatMobius : public SatBlock {
     private:
@@ -163,6 +160,8 @@ class SatMobius : public SatBlock {
  * This class does not support value semantics: it cannot be copied, swapped
  * or manually constructed.  Its memory is managed by the SatRegion class, and
  * blocks' locations in memory define them.  See SatRegion for further details.
+ *
+ * \ingroup subcomplex
  */
 class SatLST : public SatBlock {
     private:
@@ -268,6 +267,8 @@ class SatLST : public SatBlock {
  * or manually constructed.  Its memory is managed by the SatRegion class
  * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
+ *
+ * \ingroup subcomplex
  */
 class SatTriPrism : public SatBlock {
     private:
@@ -373,6 +374,8 @@ class SatTriPrism : public SatBlock {
  * or manually constructed.  Its memory is managed by the SatRegion class
  * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
+ *
+ * \ingroup subcomplex
  */
 class SatCube : public SatBlock {
     public:
@@ -451,6 +454,8 @@ class SatCube : public SatBlock {
  * or manually constructed.  Its memory is managed by the SatRegion class
  * (or for independently constructed models, the SatBlockModel class), and
  * blocks' locations in memory define them.  See SatRegion for further details.
+ *
+ * \ingroup subcomplex
  */
 class SatReflectorStrip : public SatBlock {
     public:
@@ -541,6 +546,8 @@ class SatReflectorStrip : public SatBlock {
  * This class does not support value semantics: it cannot be copied, swapped
  * or manually constructed.  Its memory is managed by the SatRegion class, and
  * blocks' locations in memory define them.  See SatRegion for further details.
+ *
+ * \ingroup subcomplex
  */
 class SatLayering : public SatBlock {
     private:
@@ -601,8 +608,6 @@ class SatLayering : public SatBlock {
 
     friend class SatRegion;
 };
-
-/*@}*/
 
 // Inline functions for SatMobius
 

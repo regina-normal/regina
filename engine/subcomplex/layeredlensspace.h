@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layered lens space component of a triangulation.
  * A layered lens space is considered to be any layered solid torus glued
  * to a degenerate (2,1,1) layered solid torus (i.e., a one-triangle mobius
@@ -69,6 +64,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredLensSpace : public StandardTriangulation {
     private:
@@ -202,10 +199,10 @@ class LayeredLensSpace : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(LayeredLensSpace& a, LayeredLensSpace& b) noexcept;
-
-/*@}*/
 
 // Inline functions for LayeredLensSpace
 

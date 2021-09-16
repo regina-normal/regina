@@ -53,11 +53,6 @@ class SatBlockModel;
 class SFSpace;
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a saturated block in a Seifert fibred space.  A saturated
  * block is a connected set of tetrahedra built from a subset of fibres
  * (no fibres may enter or exit the boundary of the block).  In addition,
@@ -121,6 +116,8 @@ class SFSpace;
  * swapped, or manually constructed.  Their memory is managed by the
  * SatRegion class (or in special cases the SatBlockModel class), and their
  * locations in memory define them.  See SatRegion for further details.
+ *
+ * \ingroup subcomplex
  */
 class SatBlock : public Output<SatBlock> {
     public:
@@ -733,6 +730,8 @@ class SatBlock : public Output<SatBlock> {
  * you cannot create generate your own models manually (aside from copying or
  * moving); instead you will need to use block-specific factory routines
  * such as SatTriPrism::model(), SatCube::model(), and so on.
+ *
+ * \ingroup subcomplex
  */
 class SatBlockModel {
     private:
@@ -826,10 +825,10 @@ class SatBlockModel {
  *
  * @param a the first model whose contents should be swapped.
  * @param b the second model whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(SatBlockModel& a, SatBlockModel& b) noexcept;
-
-/*@}*/
 
 // Inline functions for SatBlock
 

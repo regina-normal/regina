@@ -49,11 +49,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Describes how a single saturated block forms a part of a larger
  * saturated region.
  *
@@ -87,6 +82,8 @@ namespace regina {
  * Because of these new ownership semantics, SatBlockSpec is no longer
  * copyable.  However, it is both movable and swappable (it implements
  * C++ moves semantics and adheres to the C++ Swappable requirement).
+ *
+ * \ingroup subcomplex
  */
 class SatBlockSpec {
     private:
@@ -220,6 +217,8 @@ class SatBlockSpec {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept;
 
@@ -273,6 +272,8 @@ void swap(SatBlockSpec& a, SatBlockSpec& b) noexcept;
  * \todo \feature Have this class track the boundary components properly,
  * with annuli grouped and oriented according to the region boundaries (as
  * opposed to individual block boundaries).
+ *
+ * \ingroup subcomplex
  */
 class SatRegion : public Output<SatRegion> {
     private:
@@ -874,10 +875,10 @@ class SatRegion : public Output<SatRegion> {
  *
  * @param a the first region whose contents should be swapped.
  * @param b the second region whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(SatRegion& a, SatRegion& b) noexcept;
-
-/*@}*/
 
 // Inline functions for SatBlockSpec
 

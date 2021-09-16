@@ -50,11 +50,6 @@ namespace regina {
 class SnappedBall;
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a 2-sphere made from two snapped 3-balls in a triangulation.
  * This occurs when two snapped 3-balls are glued together at their
  * equators (note that this gluing does not have to extend to triangular faces).
@@ -72,6 +67,8 @@ class SnappedBall;
  * with no need for any specialised move operations or swap functions.
  * However, the only way to create them (aside from copying or moving)
  * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
     private:
@@ -177,8 +174,6 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          */
         SnappedTwoSphere(const SnappedBall& ball0, const SnappedBall& ball1);
 };
-
-/*@}*/
 
 // Inline functions for SnappedTwoSphere
 

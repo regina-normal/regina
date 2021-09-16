@@ -45,11 +45,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup surfaces
- * @{
- */
-
 class NormalSurface;
 
 /**
@@ -64,6 +59,8 @@ class NormalSurface;
  * with no need for any specialised move operations or swap functions.
  *
  * \pre This class should only be used with \a embedded normal surfaces.
+ *
+ * \ingroup surfaces
  */
 struct PrismSpec {
     size_t tetIndex;
@@ -129,10 +126,10 @@ struct PrismSpec {
  * @param out the output stream to which to write.
  * @param spec the prism specifier to write.
  * @return a reference to \a out.
+ *
+ * \ingroup surfaces
  */
 std::ostream& operator << (std::ostream& out, const PrismSpec& spec);
-
-/*@}*/
 
 // Inline functions for PrismSpec
 

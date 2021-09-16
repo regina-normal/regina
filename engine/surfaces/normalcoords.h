@@ -45,17 +45,14 @@
 namespace regina {
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * Represents different coordinate systems that can
  * be used for enumerating and/or displaying normal surfaces.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
  * Regina to include your own coordinate system, you should choose
  * an ID >= 10000.
+ *
+ * \ingroup surfaces
  */
 enum NormalCoords {
     /**
@@ -228,6 +225,8 @@ enum NormalCoords {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup surfaces
  */
 class NormalEncoding {
     private:
@@ -573,6 +572,8 @@ class NormalEncoding {
  * This class has become much simpler and more stripped-down since Regina 7.0.
  * Much of the functionality that was available in this class in Regina 6.0.1
  * and earlier can now be accessed through the new NormalEncoding class.
+ *
+ * \ingroup surfaces
  */
 class NormalInfo {
     public:
@@ -616,8 +617,6 @@ class NormalInfo {
             }
         }
 };
-
-/*@}*/
 
 } // namespace regina
 

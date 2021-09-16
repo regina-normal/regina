@@ -54,11 +54,6 @@ class SurfaceFilterCombination;
 class SurfaceFilterProperties;
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * Defines various constants, types and virtual functions for a
  * descendant class of SurfaceFilter.
  *
@@ -75,6 +70,8 @@ class SurfaceFilterProperties;
  * @param class_ the name of this descendant class of SurfaceFilter.
  * @param id the corresponding SurfaceFilterType constant.
  * @param name a human-readable name for this filter type.
+ *
+ * \ingroup surfaces
  */
 #define REGINA_SURFACE_FILTER(class_, id, name) \
     public: \
@@ -111,6 +108,8 @@ class SurfaceFilterProperties;
  * </ul>
  *
  * \todo \feature Implement property \a lastAppliedTo.
+ *
+ * \ingroup surfaces
  */
 class SurfaceFilter : public Packet {
     REGINA_PACKET(SurfaceFilter, PACKET_SURFACEFILTER, "Surface Filter")
@@ -186,6 +185,8 @@ class SurfaceFilter : public Packet {
  * If there are no immediate child filters, a normal surface will be
  * accepted if this is an \a and filter and rejected if this is an \a or
  * filter.
+ *
+ * \ingroup surfaces
  */
 class SurfaceFilterCombination : public SurfaceFilter {
     REGINA_SURFACE_FILTER(SurfaceFilterCombination, NS_FILTER_COMBINATION,
@@ -244,6 +245,8 @@ class SurfaceFilterCombination : public SurfaceFilter {
  * required to be both orientable and compact, and say that orientability
  * cannot be determined.  Then the surface will be accepted solely on the
  * basis of whether or not it is compact.
+ *
+ * \ingroup surfaces
  */
 class SurfaceFilterProperties : public SurfaceFilter {
     REGINA_SURFACE_FILTER(SurfaceFilterProperties, NS_FILTER_PROPERTIES,
@@ -399,8 +402,6 @@ class SurfaceFilterProperties : public SurfaceFilter {
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
-
-/*@}*/
 
 // Inline functions for SurfaceFilter
 

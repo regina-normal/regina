@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a spiralled solid torus in a triangulation.
  *
  * A spiralled solid torus is created by placing tetrahedra one upon
@@ -94,6 +89,8 @@ namespace regina {
  * even when passing or returning objects by value.  Note, however, that
  * the only way to create objects of this class (aside from copying or moving)
  * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class SpiralSolidTorus : public StandardTriangulation {
     private:
@@ -322,10 +319,10 @@ class SpiralSolidTorus : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(SpiralSolidTorus& a, SpiralSolidTorus& b) noexcept;
-
-/*@}*/
 
 // Inline functions for SpiralSolidTorus
 

@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Provides a triangulation of the product <tt>T x I</tt> (the
  * product of the torus and the interval).  Generally these
  * triangulations are only one tetrahedron thick (i.e., a "thin I-bundle"),
@@ -77,6 +72,8 @@ namespace regina {
  * that it describes (so you should not create excessive objects of this
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
+ *
+ * \ingroup subcomplex
  */
 class TxICore : public Output<TxICore> {
     protected:
@@ -382,6 +379,8 @@ class TxICore : public Output<TxICore> {
  * the case (\a n, \a k) = (9, 2).
  *
  * \image html diag92.png
+ *
+ * \ingroup subcomplex
  */
 class TxIDiagonalCore : public TxICore {
     private:
@@ -457,6 +456,8 @@ class TxIDiagonalCore : public TxICore {
  * are also included.
  *
  * \image html parallel.png
+ *
+ * \ingroup subcomplex
  */
 class TxIParallelCore : public TxICore {
     public:
@@ -477,8 +478,6 @@ class TxIParallelCore : public TxICore {
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
-
-/*@}*/
 
 // Inline functions for TxICore
 

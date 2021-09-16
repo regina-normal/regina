@@ -49,11 +49,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents an augmented triangular solid torus component of a
  * triangulation.  Such a component is obtained as follows.  Begin with
  * a three-tetrahedron triangular solid torus (as described by
@@ -91,6 +86,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class AugTriSolidTorus : public StandardTriangulation {
     public:
@@ -308,10 +305,10 @@ class AugTriSolidTorus : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept;
-
-/*@}*/
 
 // Inline functions for AugTriSolidTorus
 

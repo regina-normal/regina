@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layered chain in a triangulation.
  *
  * A layered chain is a set of \a n tetrahedra glued to each other by
@@ -90,6 +85,8 @@ namespace regina {
  * It implements the C++ Swappable requirement via its own member and global
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.
+ *
+ * \ingroup subcomplex
  */
 class LayeredChain : public StandardTriangulation {
     private:
@@ -271,10 +268,10 @@ class LayeredChain : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(LayeredChain& a, LayeredChain& b) noexcept;
-
-/*@}*/
 
 // Inline functions for LayeredChain
 

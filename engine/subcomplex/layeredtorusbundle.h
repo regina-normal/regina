@@ -51,11 +51,6 @@ namespace regina {
 class TxICore;
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Describes a layered torus bundle.  This is a triangulation of a
  * torus bundle over the circle formed as follows.
  *
@@ -83,6 +78,8 @@ class TxICore;
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredTorusBundle : public StandardTriangulation {
     private:
@@ -303,10 +300,10 @@ class LayeredTorusBundle : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(LayeredTorusBundle& a, LayeredTorusBundle& b) noexcept;
-
-/*@}*/
 
 // Inline functions for LayeredTorusBundle
 

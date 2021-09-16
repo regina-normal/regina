@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layering of zero or more tetrahedra upon a torus
  * boundary.
  *
@@ -110,6 +105,8 @@ namespace regina {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup subcomplex
  */
 class Layering {
     private:
@@ -423,8 +420,6 @@ class Layering {
             Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
             Matrix2& upperReln) const;
 };
-
-/*@}*/
 
 // Inline functions for Layering
 

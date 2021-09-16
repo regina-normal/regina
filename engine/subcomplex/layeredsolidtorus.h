@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layered solid torus in a triangulation.
  * A layered solid torus must contain at least one tetrahedron.
  *
@@ -70,6 +65,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredSolidTorus : public StandardTriangulation {
     private:
@@ -437,10 +434,10 @@ class LayeredSolidTorus : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(LayeredSolidTorus& a, LayeredSolidTorus& b) noexcept;
-
-/*@}*/
 
 // Inline functions for LayeredSolidTorus
 

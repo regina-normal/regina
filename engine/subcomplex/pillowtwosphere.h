@@ -49,11 +49,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a 2-sphere made from two triangles glued together along their
  * three edges.  The two triangles must be distinct and the three edges of
  * each triangle must also be distinct.  Neither of the triangles may be
@@ -72,6 +67,8 @@ namespace regina {
  * with no need for any specialised move operations or swap functions.
  * However, the only way to create them (aside from copying or moving)
  * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
     private:
@@ -167,8 +164,6 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
         PillowTwoSphere(Triangle<3>* tri0, Triangle<3>* tri1,
             Perm<4> triMapping);
 };
-
-/*@}*/
 
 // Inline functions for PillowTwoSphere
 

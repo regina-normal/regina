@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layered chain pair component of a triangulation.
  *
  * A layered chain pair consists of two layered chains (as described by
@@ -84,6 +79,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredChainPair : public StandardTriangulation {
     private:
@@ -172,10 +169,10 @@ class LayeredChainPair : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(LayeredChainPair& a, LayeredChainPair& b) noexcept;
-
-/*@}*/
 
 // Inline functions for LayeredChainPair
 

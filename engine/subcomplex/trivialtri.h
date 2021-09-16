@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents one of a few particular hard-coded trivial triangulations
  * that do not belong to any of the other larger families.
  *
@@ -63,6 +58,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class TrivialTri : public StandardTriangulation {
     public:
@@ -186,10 +183,10 @@ class TrivialTri : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(TrivialTri& a, TrivialTri& b) noexcept;
-
-/*@}*/
 
 // Inline functions for TrivialTri
 

@@ -53,10 +53,9 @@ class AbelianGroup;
 class Manifold;
 
 /**
- * \addtogroup subcomplex Standard Triangulations and Subcomplexes
+ * \defgroup subcomplex Standard Triangulations and Subcomplexes
  * Standard triangulations and subcomplexes of triangulations whose
  * structures are well-understood.
- * @{
  */
 
 /**
@@ -89,6 +88,8 @@ class Manifold;
  *
  * - provide member and global swap functions, for consistency across all
  *   StandardTriangulation subclasses.
+ *
+ * \ingroup subcomplex
  */
 class StandardTriangulation : public Output<StandardTriangulation> {
     public:
@@ -305,8 +306,6 @@ class StandardTriangulation : public Output<StandardTriangulation> {
             default;
 
 };
-
-/*@}*/
 
 // Inline functions for StandardTriangulation
 

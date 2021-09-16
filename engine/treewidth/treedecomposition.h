@@ -48,9 +48,8 @@
 namespace regina {
 
 /**
- * \addtogroup treewidth Treewidth
+ * \defgroup treewidth Treewidth
  * Treewidth and tree decompositions.
- * @{
  */
 
 class Link;
@@ -62,6 +61,8 @@ class TreeBag;
  *
  * Additional algorithms may be added to this list in future versions of
  * Regina.
+ *
+ * \ingroup treewidth
  */
 enum TreeDecompositionAlg {
     /**
@@ -95,6 +96,8 @@ enum TreeDecompositionAlg {
 
 /**
  * Indicates the relationship between two bags in a tree decomposition.
+ *
+ * \ingroup treewidth
  */
 enum BagComparison {
     /**
@@ -131,6 +134,8 @@ enum BagComparison {
  * See TreeDecomposition::makeNice() for further details, including how
  * TreeBag::type() and TreeBag::subtype() are defined for a nice tree
  * decomposition.
+ *
+ * \ingroup treewidth
  */
 enum NiceType {
     /**
@@ -200,6 +205,8 @@ enum NiceType {
  * they are often passed and compared by pointer.  End users are never
  * responsible for their memory management; this is all taken care of by
  * the TreeDecomposition to which they belong.
+ *
+ * \ingroup treewidth
  */
 class TreeBag : public ShortOutput<TreeBag> {
     private:
@@ -625,6 +632,8 @@ class TreeBag : public ShortOutput<TreeBag> {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup treewidth
  */
 class TreeDecomposition : public Output<TreeDecomposition> {
     protected:
@@ -1374,10 +1383,10 @@ class TreeDecomposition : public Output<TreeDecomposition> {
  *
  * @param a the first tree decomposition whose contents should be swapped.
  * @param b the second tree decomposition whose contents should be swapped.
+ *
+ * \ingroup treewidth
  */
 void swap(TreeDecomposition& a, TreeDecomposition& b) noexcept;
-
-/*@}*/
 
 // Inline functions for TreeBag
 

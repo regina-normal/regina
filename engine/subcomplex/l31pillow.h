@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a triangular pillow L(3,1) component of a triangulation.
  *
  * A triangular pillow L(3,1) is a two-tetrahedron two-vertex
@@ -68,6 +63,8 @@ namespace regina {
  * swap() functions, for consistency with the other StandardTriangulation
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class L31Pillow : public StandardTriangulation {
     private:
@@ -174,10 +171,10 @@ class L31Pillow : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(L31Pillow& a, L31Pillow& b) noexcept;
-
-/*@}*/
 
 // Inline functions for L31Pillow
 

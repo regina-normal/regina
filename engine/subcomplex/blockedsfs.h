@@ -51,11 +51,6 @@ class SatBlock;
 class SatRegion;
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a blocked Seifert fibred space (possibly with boundary).
  * This is a particular type of triangulation of a Seifert fibred space,
  * where this triangulation is formed from a single saturated region.
@@ -75,6 +70,8 @@ class SatRegion;
  * even when passing or returning objects by value.  Note, however, that
  * the only way to create objects of this class (aside from copying or moving)
  * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class BlockedSFS : public StandardTriangulation {
     private:
@@ -255,10 +252,10 @@ class BlockedSFS : public StandardTriangulation {
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
  */
 void swap(BlockedSFS& a, BlockedSFS& b) noexcept;
-
-/*@}*/
 
 // Inline functions for BlockedSFS
 

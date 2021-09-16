@@ -60,11 +60,6 @@ class ProgressTracker;
 class SurfaceFilter;
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * Used to describe a field, or a set of fields, that can be exported
  * alongside a normal surface list.  This enumeration type is used with
  * export routines such as NormalSurfaces::saveCSVStandard() or
@@ -79,6 +74,8 @@ class SurfaceFilter;
  * by combining the values for individual fields using bitwise \e or.
  *
  * The list of available fields may grow with future releases of Regina.
+ *
+ * \ingroup surfaces
  */
 enum SurfaceExportFields {
     surfaceExportName = 0x0001,
@@ -162,6 +159,8 @@ enum SurfaceExportFields {
  * \todo \feature Allow generating only closed surfaces.
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
+ *
+ * \ingroup surfaces
  */
 class NormalSurfaces : public Packet {
     REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACES, "Normal Surface List")
@@ -1371,6 +1370,8 @@ class NormalSurfaces : public Packet {
  * @return the resulting set of matching equations, or no value if
  * Regina is not able to construct them for the given combination of
  * triangulation and coordinate system.
+ *
+ * \ingroup surfaces
  */
 std::optional<MatrixInt> makeMatchingEquations(
     const Triangulation<3>& triangulation, NormalCoords coords);
@@ -1397,11 +1398,11 @@ std::optional<MatrixInt> makeMatchingEquations(
  * will be based.
  * @param coords the coordinate system to be used.
  * @return the set of validity constraints.
+ *
+ * \ingroup surfaces
  */
 EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
     NormalCoords coords);
-
-/*@}*/
 
 // Inline functions for NormalSurfaces
 
