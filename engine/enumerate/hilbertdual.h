@@ -80,11 +80,6 @@ namespace regina {
 class ProgressTracker;
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * Implements a modified dual algorithm for enumerating Hilbert bases.
  * This is based on the dual algorithm as described in
  * "Normaliz: Algorithms for affine monoids and rational cones",
@@ -96,6 +91,8 @@ class ProgressTracker;
  * this class should ever be created.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class HilbertDual {
     public:
@@ -456,8 +453,6 @@ class HilbertDual {
             const BitmaskType* constraintsBegin,
             const BitmaskType* constraintsEnd);
 };
-
-/*@}*/
 
 // Inline functions for HilbertDual::VecSpec
 

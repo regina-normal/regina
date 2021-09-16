@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * A trie that stores a set of type vectors of a fixed length.
  *
  * This class forms part of the tree traversal algorithm for enumerating
@@ -96,6 +91,8 @@ namespace regina {
  *
  * \ifacespython This is available only for the template parameters
  * \a nTypes = 4 and 7, under the names TypeTrie4 and TypeTrie7 respectively.
+ *
+ * \ingroup enumerate
  */
 template <int nTypes>
 class TypeTrie : public Output<TypeTrie<nTypes>> {
@@ -258,11 +255,11 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
  *
  * @param a the first trie whose contents should be swapped.
  * @param b the second trie whose contents should be swapped.
+ *
+ * \ingroup enumerate
  */
 template <int nTypes>
 void swap(TypeTrie<nTypes>& a, TypeTrie<nTypes>& b) noexcept;
-
-/*@}*/
 
 // Inline functions for TypeTrie
 

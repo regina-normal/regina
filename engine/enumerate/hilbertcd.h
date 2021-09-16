@@ -49,11 +49,6 @@
 namespace regina {
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * Implements a modified Contejean-Devie algorithm for enumerating Hilbert
  * bases.  This is based on the stack-based algorithm described in
  * "An efficient incremental algorithm for solving systems of linear
@@ -70,6 +65,8 @@ namespace regina {
  * HilbertDual instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class HilbertCD {
     public:
@@ -202,8 +199,6 @@ class HilbertCD {
         static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const EnumConstraints* constraints);
 };
-
-/*@}*/
 
 // Inline functions for HilbertCD::VecSpec
 

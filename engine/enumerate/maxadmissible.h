@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * Used to enumerate all maximal admissible faces of a polyhedral cone
  * under a given set of admissibility constraints.  See the routine
  * enumerate() for details.
@@ -60,6 +55,8 @@ namespace regina {
  * this class should ever be created.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class MaxAdmissible {
     public:
@@ -129,8 +126,6 @@ class MaxAdmissible {
         // Mark this class as non-constructible.
         MaxAdmissible() = delete;
 };
-
-/*@}*/
 
 } // namespace regina
 

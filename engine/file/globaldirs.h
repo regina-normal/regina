@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup file
- * @{
- */
-
-/**
  * Provides global routines that return directories in which various
  * components of Regina are installed on the system.
  *
@@ -62,6 +57,8 @@ namespace regina {
  * from the source tree), then you \e must call either setDirs() or deduceDirs()
  * when your application starts.  Otherwise the directories that GlobalDirs
  * returns might be incorrect, and might not even exist.
+ *
+ * \ingroup file
  */
 class GlobalDirs {
     public:
@@ -275,8 +272,6 @@ class GlobalDirs {
             /**< The directory containing Regina's API documentation. */
 };
 
-/*@}*/
-
 // Inline functions for GlobalDirs:
 
 inline std::string GlobalDirs::home() {
@@ -302,8 +297,6 @@ inline std::string GlobalDirs::examples() {
 inline std::string GlobalDirs::data() {
     return home_ + "/data";
 }
-
-
 
 } // namespace regina
 

@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup foreign
- * @{
- */
-
-/**
  * Reads a triangulation from the given Orb / Casson file.  A newly
  * allocated triangulation will be returned; it is the user's
  * responsibility to deallocate this when it is finished with.
@@ -72,10 +67,10 @@ namespace regina {
  * file, or 0 on error.
  *
  * @author Ryan Budney, also with code from Damien Heard
+ *
+ * \ingroup foreign
  */
 Triangulation<3>* readOrb(const char *filename);
-
-/*@}*/
 
 } // namespace regina
 

@@ -53,9 +53,8 @@ namespace regina {
 class ProgressTracker;
 
 /**
- * \addtogroup enumerate Vertex Enumeration
+ * \defgroup enumerate Vertex Enumeration
  * Polytope vertex enumeration algorithms.
- * @{
  */
 
 /**
@@ -68,6 +67,8 @@ class ProgressTracker;
  * this class should ever be created.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class DoubleDescription {
     public:
@@ -392,8 +393,6 @@ class DoubleDescription {
             const BitmaskType* constraintsEnd,
             ProgressTracker* tracker);
 };
-
-/*@}*/
 
 // Inline functions for DoubleDescription::RaySpec
 

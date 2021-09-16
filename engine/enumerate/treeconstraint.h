@@ -55,11 +55,6 @@ template <class LPConstraint, typename IntType> class LPData;
 class LPConstraintNone;
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * A base class for additional linear constraints that we can add to the
  * tableaux of normal surface or angle structure matching equations.  This is
  * used with TreeEnumeration, TreeSingleSoln and related algorithms for
@@ -99,6 +94,8 @@ class LPConstraintNone;
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class LPConstraintBase {
 #ifdef __DOXYGEN
@@ -407,6 +404,8 @@ class LPConstraintBase {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class LPConstraintSubspace : public LPConstraintBase {
 };
@@ -419,6 +418,8 @@ class LPConstraintSubspace : public LPConstraintBase {
  * functions and structs.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class LPConstraintNone : public LPConstraintSubspace {
     public:
@@ -479,6 +480,8 @@ class LPConstraintNone : public LPConstraintSubspace {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class LPConstraintEulerPositive : public LPConstraintBase {
     public:
@@ -526,6 +529,8 @@ class LPConstraintEulerPositive : public LPConstraintBase {
  *
  * The old name LPConstraintEuler should no longer be used, since Regina
  * now provides multiple constraint types relating to Euler characteristic.
+ *
+ * \ingroup enumerate
  */
 typedef LPConstraintEulerPositive LPConstraintEuler [[deprecated]];
 
@@ -550,6 +555,8 @@ typedef LPConstraintEulerPositive LPConstraintEuler [[deprecated]];
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class LPConstraintEulerZero : public LPConstraintSubspace {
     public:
@@ -622,6 +629,8 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class LPConstraintNonSpun : public LPConstraintSubspace {
     public:
@@ -731,6 +740,8 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class BanConstraintBase {
     protected:
@@ -867,6 +878,8 @@ class BanConstraintBase {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class BanNone {
     protected:
@@ -908,6 +921,8 @@ class BanNone {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class BanBoundary : public BanConstraintBase {
     protected:
@@ -968,6 +983,8 @@ class BanBoundary : public BanConstraintBase {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class BanTorusBoundary : public BanConstraintBase {
     protected:
@@ -992,8 +1009,6 @@ class BanTorusBoundary : public BanConstraintBase {
         void init(const int* columnPerm);
         static bool supported(NormalEncoding enc);
 };
-
-/*@}*/
 
 }
 

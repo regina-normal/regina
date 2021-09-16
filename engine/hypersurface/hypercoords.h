@@ -45,17 +45,14 @@
 namespace regina {
 
 /**
- * \weakgroup hypersurface
- * @{
- */
-
-/**
  * Represents different coordinate systems that can be used for enumerating
  * and/or displaying normal hypersurfaces within 4-manifold triangulations.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
  * Regina to include your own coordinate system, you should choose
  * an ID >= 10000.
+ *
+ * \ingroup hypersurface
  */
 enum HyperCoords {
     /**
@@ -102,6 +99,8 @@ enum HyperCoords {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup hypersurface
  */
 class HyperEncoding {
     private:
@@ -370,6 +369,8 @@ class HyperEncoding {
  * This class has become much simpler and more stripped-down since Regina 7.0.
  * Much of the functionality that was available in this class in Regina 6.0.1
  * and earlier can now be accessed through the new HyperEncoding class.
+ *
+ * \ingroup hypersurface
  */
 class HyperInfo {
     public:
@@ -399,8 +400,6 @@ class HyperInfo {
             }
         }
 };
-
-/*@}*/
 
 } // namespace regina
 

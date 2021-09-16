@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * A comparison object that sorts hyperplanes by position vectors.
  * This ordering is described in "Optimizing the double description
  * method for normal surface enumeration", B.A. Burton,
@@ -72,6 +67,8 @@ namespace regina {
  * copy-constructed cheaply, but it does not support assignments or swaps.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class PosOrder {
     private:
@@ -112,8 +109,6 @@ class PosOrder {
         // Make this class non-assignable, since \a matrix_ is a reference.
         PosOrder& operator = (const PosOrder&) = delete;
 };
-
-/*@}*/
 
 // Inline functions for PosOrder
 

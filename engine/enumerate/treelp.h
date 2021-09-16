@@ -57,11 +57,6 @@ template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * A matrix class for use with linear programming.
  *
  * This class is used in the tree traversal algorithms for enumerating
@@ -118,6 +113,8 @@ typedef Matrix<Integer, true> MatrixInt;
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 template <typename IntType>
 class LPMatrix {
@@ -412,6 +409,8 @@ class LPMatrix {
  *
  * @param a the first matrix whose contents should be swapped.
  * @param b the second matrix whose contents should be swapped.
+ *
+ * \ingroup enumerate
  */
 template <typename IntType>
 inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
@@ -438,6 +437,8 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 template <class LPConstraint>
 struct LPCol : public LPConstraint::Coefficients {
@@ -535,6 +536,8 @@ struct LPCol : public LPConstraint::Coefficients {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup enumerate
  */
 class LPSystem {
     private:
@@ -742,6 +745,8 @@ class LPSystem {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 template <class LPConstraint>
 class LPInitialTableaux {
@@ -1124,6 +1129,8 @@ class LPInitialTableaux {
  *
  * @param a the first matrix whose contents should be swapped.
  * @param b the second matrix whose contents should be swapped.
+ *
+ * \ingroup enumerate
  */
 template <typename IntType>
 inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
@@ -1254,6 +1261,8 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 template <class LPConstraint, typename IntType>
 class LPData {
@@ -1813,12 +1822,12 @@ class LPData {
  *
  * @param a the first tableaux whose contents should be swapped.
  * @param b the second tableaux whose contents should be swapped.
+ *
+ * \ingroup enumerate
  */
 template <class LPConstraint, typename IntType>
 inline void swap(LPData<LPConstraint, IntType>& a,
         LPData<LPConstraint, IntType>& b) noexcept;
-
-/*@}*/
 
 } // namespace regina
 

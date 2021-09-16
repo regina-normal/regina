@@ -42,11 +42,6 @@
 namespace regina {
 
 /**
- * \weakgroup file
- * @{
- */
-
-/**
  * Represents each generation of Regina's file formats.
  *
  * These constants are intended to capture "generational changes" to the
@@ -66,6 +61,8 @@ namespace regina {
  *
  * Of course, Regina can still read and write some older generation formats;
  * these abilities are indicated alongside the constants below.
+ *
+ * \ingroup file
  */
 enum FileFormat {
     /**

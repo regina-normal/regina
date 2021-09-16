@@ -51,11 +51,6 @@ namespace regina {
 class ProgressTracker;
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * A base class for searches that employ the tree traversal algorithm for
  * enumerating and locating vertex normal surfaces and taut angle structures.
  * Users should not use this base class directly; instead use one of the
@@ -165,6 +160,8 @@ class ProgressTracker;
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 template <class LPConstraint, typename BanConstraint, typename IntType>
 class TreeTraversal : public BanConstraint {
@@ -600,6 +597,8 @@ class TreeTraversal : public BanConstraint {
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
@@ -896,6 +895,8 @@ class TreeEnumeration :
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
@@ -1216,6 +1217,8 @@ class TautEnumeration :
  * \apinotfinal
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
@@ -1335,8 +1338,6 @@ class TreeSingleSoln :
          */
         bool cancelled();
 };
-
-/*@}*/
 
 // Inline functions
 

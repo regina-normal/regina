@@ -55,9 +55,8 @@
 namespace regina {
 
 /**
- * \addtogroup hypersurface Normal Hypersurfaces
+ * \defgroup hypersurface Normal Hypersurfaces
  * Normal hypersurfaces in 4-manifold triangulations.
- * @{
  */
 
 class NormalHypersurfaces;
@@ -110,6 +109,8 @@ typedef Matrix<Integer, true> MatrixInt;
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup hypersurface
  */
 class NormalHypersurface : public ShortOutput<NormalHypersurface> {
     protected:
@@ -998,10 +999,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
  *
  * @param a the first normal hypersurface whose contents should be swapped.
  * @param b the second normal hypersurface whose contents should be swapped.
+ *
+ * \ingroup hypersurface
  */
 void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept;
-
-/*@}*/
 
 // Inline functions for NormalHypersurface
 

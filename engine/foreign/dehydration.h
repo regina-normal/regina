@@ -46,9 +46,8 @@ namespace regina {
 class Container;
 
 /**
- * \addtogroup foreign Foreign File Formats
+ * \defgroup foreign Foreign File Formats
  * Reading and writing foreign file formats
- * @{
  */
 
 /**
@@ -93,12 +92,12 @@ class Container;
  * file that should be ignored completely.
  * @return a new container as described above, or 0 if an I/O error occurred
  * whilst reading the given file.
+ *
+ * \ingroup foreign
  */
 Container* readDehydrationList(const char *filename,
     unsigned colDehydrations = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
-
-/*@}*/
 
 } // namespace regina
 

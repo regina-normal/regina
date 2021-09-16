@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup hypersurface
- * @{
- */
-
-/**
  * Represents different lists of normal hypersurfaces that might be constructed
  * for a given 4-manifold triangulation.
  *
@@ -61,6 +56,8 @@ namespace regina {
  * they are treated by Python as HyperList objects (and they can be
  * combined and/or queried as such).
  * The underlying enumeration type is not exposed to Python.
+ *
+ * \ingroup hypersurface
  */
 enum HyperListFlags {
     /**
@@ -133,6 +130,8 @@ enum HyperListFlags {
  *
  * \ifacespython This is present, and all values in the HyperListFlags
  * enumeration type are treated as members of this HyperList class.
+ *
+ * \ingroup hypersurface
  */
 typedef regina::Flags<HyperListFlags> HyperList;
 
@@ -142,6 +141,8 @@ typedef regina::Flags<HyperListFlags> HyperList;
  * @param lhs the first flag to combine.
  * @param rhs the second flag to combine.
  * @return the combination of both flags.
+ *
+ * \ingroup hypersurface
  */
 inline HyperList operator | (HyperListFlags lhs, HyperListFlags rhs) {
     return HyperList(lhs) | rhs;
@@ -159,6 +160,8 @@ inline HyperList operator | (HyperListFlags lhs, HyperListFlags rhs) {
  * they are treated by Python as HyperAlg objects (and they can be
  * combined and/or queried as such).
  * The underlying enumeration type is not exposed to Python.
+ *
+ * \ingroup hypersurface
  */
 enum HyperAlgFlags {
     /**
@@ -258,6 +261,8 @@ enum HyperAlgFlags {
  *
  * \ifacespython This is present, and all values in the HyperAlgFlags
  * enumeration type are treated as members of this HyperAlg class.
+ *
+ * \ingroup hypersurface
  */
 typedef regina::Flags<HyperAlgFlags> HyperAlg;
 
@@ -267,12 +272,12 @@ typedef regina::Flags<HyperAlgFlags> HyperAlg;
  * @param lhs the first flag to combine.
  * @param rhs the second flag to combine.
  * @return the combination of both flags.
+ *
+ * \ingroup hypersurface
  */
 inline HyperAlg operator | (HyperAlgFlags lhs, HyperAlgFlags rhs) {
     return HyperAlg(lhs) | rhs;
 }
-
-/*@}*/
 
 } // namespace regina
 

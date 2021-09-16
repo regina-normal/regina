@@ -45,9 +45,8 @@
 namespace regina {
 
 /**
- * \addtogroup file File I/O
+ * \defgroup file File I/O
  * File formats and the filesystem
- * @{
  */
 
 /**
@@ -67,6 +66,8 @@ namespace regina {
  * requirement, though it does not implement (or need) its own custom swap()
  * function.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup file
  */
 class FileInfo : public Output<FileInfo> {
     private:
@@ -214,10 +215,10 @@ class FileInfo : public Output<FileInfo> {
  *
  * @param a the object whose contents should be swapped with \a b.
  * @param b the object whose contents should be swapped with \a a.
+ *
+ * \ingroup file
  */
 void swap(FileInfo& a, FileInfo& b) noexcept;
-
-/*@}*/
 
 // Inline functions for FileInfo
 

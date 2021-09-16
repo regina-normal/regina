@@ -46,11 +46,6 @@ namespace regina {
 class Container;
 
 /**
- * \weakgroup foreign
- * @{
- */
-
-/**
  * Reads a list of isomorphism signatures or knot signatures from the given
  * text file.  The file should contain one signature per line.
  * Signatures for knots or triangulations of any dimension are all accepted,
@@ -106,6 +101,8 @@ class Container;
  * file that should be ignored completely.
  * @return a new container as described above, or \c null if an I/O error
  * occurred whilst reading the given file.
+ *
+ * \ingroup foreign
  */
 template <class PacketType>
 Container* readSigList(const char *filename,
@@ -140,12 +137,12 @@ Container* readSigList(const char *filename,
  * file that should be ignored completely.
  * @return a new container, or \c null if an I/O error
  * occurred whilst reading the given file.
+ *
+ * \ingroup foreign
  */
 [[deprecated]] Container* readIsoSigList(const char *filename,
     unsigned dimension = 3, unsigned colSigs = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
-
-/*@}*/
 
 } // namespace regina
 

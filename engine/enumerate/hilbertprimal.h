@@ -49,11 +49,6 @@ namespace regina {
 class ProgressTracker;
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * Implements a modified primal algorithm for enumerating Hilbert bases.
  * This incorporates the primal algorithm described in
  * "Normaliz: Algorithms for affine monoids and rational cones",
@@ -72,6 +67,8 @@ class ProgressTracker;
  * this class should ever be created.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 class HilbertPrimal {
     public:
@@ -198,8 +195,6 @@ class HilbertPrimal {
         template <class VectorClass, class BitmaskType>
         static bool inFace(const VectorClass& ray, const BitmaskType& face);
 };
-
-/*@}*/
 
 } // namespace regina
 

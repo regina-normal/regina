@@ -60,11 +60,6 @@ class NormalHypersurfaces;
 class ProgressTracker;
 
 /**
- * \weakgroup hypersurface
- * @{
- */
-
-/**
  * A packet representing a collection of normal hypersurfaces in a 4-manifold
  * triangulation.
  *
@@ -86,6 +81,8 @@ class ProgressTracker;
  *
  * See the NormalHypersurface class notes for details of what to do
  * when introducing a new coordinate system.
+ *
+ * \ingroup hypersurface
  */
 class NormalHypersurfaces : public Packet {
     REGINA_PACKET(NormalHypersurfaces, PACKET_NORMALHYPERSURFACES,
@@ -761,6 +758,8 @@ class NormalHypersurfaces : public Packet {
  * @return the resulting set of matching equations, or no value if
  * Regina is not able to construct them for the given combination of
  * triangulation and coordinate system.
+ *
+ * \ingroup hypersurface
  */
 std::optional<MatrixInt> makeMatchingEquations(
     const Triangulation<4>& triangulation, HyperCoords coords);
@@ -783,11 +782,11 @@ std::optional<MatrixInt> makeMatchingEquations(
  * this must be one of the predefined coordinate system
  * constants in NormalHypersurfaces.
  * @return the set of validity constraints.
+ *
+ * \ingroup hypersurface
  */
 EnumConstraints makeEmbeddedConstraints(const Triangulation<4>& triangulation,
     HyperCoords coords);
-
-/*@}*/
 
 // Inline functions for NormalHypersurfaces
 

@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup enumerate
- * @{
- */
-
-/**
  * Represents an individual validity constraint for use with
  * polytope vertex enumeration.
  *
@@ -86,10 +81,10 @@ namespace regina {
  * and then walk through each constraint, filling the sets as appropriate.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup enumerate
  */
 typedef std::vector<std::set<unsigned long>> EnumConstraints;
-
-/*@}*/
 
 } // namespace regina
 
