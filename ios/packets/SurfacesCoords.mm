@@ -264,7 +264,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     
     regina::Triangulation<3>* ans = s->cutAlong();
     ans->intelligentSimplify();
-    ans->setLabel(self.packet->triangulation().adornedLabel("Cut #" + std::to_string(selectedRow - 1)));
+    ans->setLabel("Cut #" + std::to_string(selectedRow - 1));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -311,7 +311,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     regina::Triangulation<3>* ans = s->crush();
     ans->intelligentSimplify();
-    ans->setLabel(self.packet->triangulation().adornedLabel("Crushed #" + std::to_string(selectedRow - 1)));
+    ans->setLabel("Crushed #" + std::to_string(selectedRow - 1));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }

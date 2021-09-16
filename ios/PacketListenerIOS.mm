@@ -201,7 +201,7 @@ public:
 {
     self = [super init];
     if (self) {
-        _wrapper = new PacketListenerObjC((__bridge void*)delegate, listenChildren ? packet : 0);
+        _wrapper = new PacketListenerObjC((__bridge void*)delegate, listenChildren ? packet : nullptr);
         packet->listen(_wrapper);
 
         if (listenChildren)
@@ -221,7 +221,7 @@ public:
     // This implicitly calls packet->unlisten(_wrapper) on every packet that
     // we are listening to.
     delete _wrapper;
-    _wrapper = 0;
+    _wrapper = nullptr;
 }
 
 - (void)dealloc

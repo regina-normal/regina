@@ -94,6 +94,8 @@
 /**
  * Unregisters this listener from all packets that it is currently listening to.
  * This operation cannot be undone.
+ *
+ * This is safe to call multiple times (any call after the first will do nothing).
  */
 - (void)permanentlyUnlisten;
 
