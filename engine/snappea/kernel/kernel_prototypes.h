@@ -1053,7 +1053,7 @@ extern void tidy_peripheral_curves(Triangulation *manifold);
 extern Real safe_acos(Real x);
 extern Real safe_asin(Real x);
 extern Real safe_sqrt(Real x);
-/** @{ */
+/** @} */
 
 extern Real arcsinh(Real x);
 /**<

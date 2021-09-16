@@ -177,6 +177,15 @@ index 76c77fbbe..1c26a340f 100644
  extern void         o31_invert(O31Matrix m, O31Matrix m_inverse);
  extern FuncResult   gl4R_invert(GL4RMatrix m, GL4RMatrix m_inverse);
  extern void         o31_product(O31Matrix a, O31Matrix b, O31Matrix product);
+@@ -1053,7 +1053,7 @@ extern void tidy_peripheral_curves(Triangulation *manifold);
+ extern Real safe_acos(Real x);
+ extern Real safe_asin(Real x);
+ extern Real safe_sqrt(Real x);
+-/** @{ */
++/** @} */
+ 
+ extern Real arcsinh(Real x);
+ /**<
 diff --git a/engine/snappea/kernel/o31_matrices.c b/engine/snappea/kernel/o31_matrices.c
 index 36d64e642..281a21611 100644
 --- a/engine/snappea/kernel/o31_matrices.c
