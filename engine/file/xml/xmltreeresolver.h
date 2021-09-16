@@ -48,11 +48,6 @@ namespace regina {
 
 class Packet;
 
-/**
- * \weakgroup packet
- * @{
- */
-
 class XMLTreeResolver;
 
 /**
@@ -251,8 +246,6 @@ class XMLTreeResolver {
         XMLTreeResolver(const XMLTreeResolver&) = delete;
         XMLTreeResolver& operator = (const XMLTreeResolver&) = delete;
 };
-
-/*@}*/
 
 // Inline functions for XMLTreeResolutionTask
 

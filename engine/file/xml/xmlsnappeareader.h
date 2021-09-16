@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup snappea
- * @{
- */
-
-/**
  * An XML packet reader that reads a single SnapPea triangulation.
  *
  * \ifacespython Not present.
@@ -100,8 +95,6 @@ class XMLLegacySnapPeaReader : public XMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
-
-/*@}*/
 
 // Inline functions for XMLSnapPeaReader
 

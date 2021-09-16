@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup file
- * @{
- */
-
-/**
  * Provides the callbacks for an XMLParser required to parse an entire
  * file using a series of XMLElementReader objects.
  * See the XMLElementReader class notes for details of precisely how
@@ -155,8 +150,6 @@ class XMLCallback : public regina::xml::XMLParserCallback {
          */
         XMLElementReader* currentReader();
 };
-
-/*@}*/
 
 // Inline functions for XMLCallback
 

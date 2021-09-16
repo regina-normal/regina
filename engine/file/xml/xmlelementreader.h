@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup file
- * @{
- */
-
-/**
  * Used to read the contents of a single XML element.  Specifically, this
  * class concerns itself with reading and storing the contents between a
  * single opening tag and the corresponding closing tag.  It is not concerned
@@ -224,8 +219,6 @@ class XMLCharsReader : public XMLElementReader {
 
         virtual void initialChars(const std::string& chars) override;
 };
-
-/*@}*/
 
 // Inline functions for XMLElementReader
 

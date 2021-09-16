@@ -48,11 +48,6 @@ class Packet;
 class XMLTreeResolver;
 
 /**
- * \weakgroup packet
- * @{
- */
-
-/**
  * An XML element reader that reads the data for an individual packet.
  *
  * Generally a subclass of XMLPacketReader will be used to receive and
@@ -260,8 +255,6 @@ class XMLPacketReader : public XMLElementReader {
          */
         void commit();
 };
-
-/*@}*/
 
 // Inline functions for XMLPacketReader
 

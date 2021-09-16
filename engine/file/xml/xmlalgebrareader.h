@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup algebra
- * @{
- */
-
-/**
  * An XML element reader that reads a single abelian group.
  * An abelian group is generally contained within an
  * <tt>\<abeliangroup\></tt> ... <tt>\</abeliangroup\></tt> pair.
@@ -121,8 +116,6 @@ class XMLGroupPresentationReader : public XMLElementReader {
         virtual void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
-
-/*@}*/
 
 // Inline functions for XMLAbelianGroupReader
 

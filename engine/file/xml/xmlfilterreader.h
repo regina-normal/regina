@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * An XML packet reader that reads a single surface filter using the
  * older second-generation file format.
  * The filter type will be determined by this class and an appropriate
@@ -208,8 +203,6 @@ class XMLLegacyPropertiesFilterReader : public XMLPacketReader {
         void endContentSubElement(const std::string& subTagName,
                 XMLElementReader* subReader) override;
 };
-
-/*@}*/
 
 // Inline functions for XMLLegacyFilterReader
 

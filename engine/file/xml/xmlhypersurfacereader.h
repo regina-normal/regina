@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup hypersurface
- * @{
- */
-
-/**
  * An XML element reader that reads a single normal hypersurface in a
  * 4-manifold triangulation.
  *
@@ -167,8 +162,6 @@ class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
-
-/*@}*/
 
 // Inline functions for XMLNormalHypersurfaceReader
 

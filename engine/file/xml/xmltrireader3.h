@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * An XML packet reader that reads a single 3-dimensional triangulation.
  *
  * This is a specialisation of the generic XMLTriangulationReader class
@@ -102,8 +97,6 @@ class XMLTriangulationReader<3> : public XMLTriangulationReaderBase<3> {
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
 };
-
-/*@}*/
 
 // Inline functions for XMLTriangulationReader<3>
 

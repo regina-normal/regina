@@ -48,11 +48,6 @@ namespace regina {
 class Link;
 
 /**
- * \weakgroup link
- * @{
- */
-
-/**
  * An XML packet reader that reads a single knot or link.
  */
 class XMLLinkReader : public XMLPacketReader {
@@ -179,8 +174,6 @@ class XMLLinkComponentsReader : public XMLElementReader {
          */
         bool broken() const;
 };
-
-/*@}*/
 
 // Inline functions for XMLLinkCrossingsReader
 

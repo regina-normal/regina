@@ -49,11 +49,6 @@
 namespace regina {
 
 /**
- * \weakgroup packet
- * @{
- */
-
-/**
  * An XML packet reader that resolves an anonref element.
  *
  * Immediately upon construction, this reader will attempt to resolve
@@ -242,8 +237,6 @@ class XMLLegacyTextReader : public XMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
-
-/*@}*/
 
 // Inline functions for XMLAnonRefReader
 

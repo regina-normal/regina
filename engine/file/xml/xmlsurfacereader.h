@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * An XML element reader that reads a single normal surface.
  *
  * \ifacespython Not present.
@@ -166,8 +161,6 @@ class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
-
-/*@}*/
 
 // Inline functions for XMLNormalSurfaceReader
 

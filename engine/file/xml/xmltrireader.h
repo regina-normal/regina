@@ -49,11 +49,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Internal class that indicates the XML tags and attributes used in the
  * old second-generation file format to describe top-dimensional simplices in a
  * <i>dim</i>-dimensional triangulation.
@@ -397,8 +392,6 @@ class XMLTriangulationReader : public XMLTriangulationReaderBase<dim> {
 template <> class XMLTriangulationReader<2>;
 template <> class XMLTriangulationReader<3>;
 template <> class XMLTriangulationReader<4>;
-
-/*@}*/
 
 // Implementation details for XMLSimplexReader
 

@@ -53,11 +53,6 @@
 
 namespace regina::xml {
 
-/**
- * \weakgroup utilities
- * @{
- */
-
 class XMLParser;
 
 /**
@@ -302,8 +297,6 @@ class XMLParser {
  * @return the given string as a C++ string.
  */
 std::string xmlString(xmlChar* str, bool free = true);
-
-/*@}*/
 
 // Inline functions for XMLPropertyDict
 

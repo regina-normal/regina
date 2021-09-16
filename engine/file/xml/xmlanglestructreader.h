@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup angle
- * @{
- */
-
-/**
  * An XML element reader that reads a single angle structure.
  *
  * \ifacespython Not present.
@@ -159,8 +154,6 @@ class XMLLegacyAngleStructuresReader : public XMLPacketReader {
             XMLElementReader* subReader) override;
         virtual void endElement() override;
 };
-
-/*@}*/
 
 // Inline functions for XMLAngleStructureReader
 
