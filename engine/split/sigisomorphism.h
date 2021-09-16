@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup split
- * @{
- */
-
-/**
  * Represents a partial isomorphism between two splitting surface
  * signatures.  See class Signature for details on splitting surface
  * signatures.
@@ -74,6 +69,8 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup split
  */
 class SigPartialIsomorphism {
     private:
@@ -325,10 +322,10 @@ class SigPartialIsomorphism {
  *
  * @param a the first partial isomorphism whose contents should be swapped.
  * @param b the second partial isomorphism whose contents should be swapped.
+ *
+ * \ingroup split
  */
 void swap(SigPartialIsomorphism& a, SigPartialIsomorphism& b) noexcept;
-
-/*@}*/
 
 // Inline functions for SigPartialIsomorphism
 

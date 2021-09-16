@@ -50,9 +50,8 @@ class SigCensus;
 class SigPartialIsomorphism;
 
 /**
- * \addtogroup split Splitting Surfaces
+ * \defgroup split Splitting Surfaces
  * Splitting surfaces in triangulations.
- * @{
  */
 
 /**
@@ -96,6 +95,8 @@ class SigPartialIsomorphism;
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup split
  */
 class Signature : public ShortOutput<Signature> {
     private:
@@ -338,10 +339,10 @@ class Signature : public ShortOutput<Signature> {
  *
  * @param a the first signature whose contents should be swapped.
  * @param b the second signature whose contents should be swapped.
+ *
+ * \ingroup split
  */
 void swap(Signature& a, Signature& b) noexcept;
-
-/*@}*/
 
 // Inline functions for Signature
 

@@ -59,9 +59,8 @@ template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
 
 /**
- * \addtogroup snappea SnapPea Triangulations
+ * \defgroup snappea SnapPea Triangulations
  * Interfaces for accessing the SnapPea kernel
- * @{
  */
 
 /**
@@ -72,6 +71,8 @@ typedef Matrix<Integer, true> MatrixInt;
  * function what().
  *
  * \ifacespython Not present.
+ *
+ * \ingroup snappea
  */
 class SnapPeaFatalError : public std::runtime_error {
     public:
@@ -107,6 +108,8 @@ class SnapPeaFatalError : public std::runtime_error {
  * Details of the error can be accessed through the member function what().
  *
  * \ifacespython Not present.
+ *
+ * \ingroup snappea
  */
 class SnapPeaMemoryFull : public std::exception {
     public:
@@ -154,6 +157,8 @@ class SnapPeaMemoryFull : public std::exception {
  * they are often passed and compared by pointer.  End users are never
  * responsible for their memory management; this is all taken care of by
  * the SnapPeaTriangulation to which they belong.
+ *
+ * \ingroup snappea
  */
 class Cusp : public ShortOutput<Cusp> {
     private:
@@ -352,6 +357,8 @@ class Cusp : public ShortOutput<Cusp> {
  *
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
+ *
+ * \ingroup snappea
  */
 class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
     REGINA_PACKET(SnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION,
@@ -1725,10 +1732,10 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
  *
  * @param lhs the triangulation whose contents should be swapped with \a rhs.
  * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup snappea
  */
 void swap(SnapPeaTriangulation& lhs, SnapPeaTriangulation& rhs);
-
-/*@}*/
 
 // Inline functions for SnapPeaFatalError
 

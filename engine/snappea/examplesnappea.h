@@ -46,11 +46,6 @@ namespace regina {
 class SnapPeaTriangulation;
 
 /**
- * \weakgroup snappea
- * @{
- */
-
-/**
  * This class offers routines for constructing various example SnapPea
  * triangulations.  This is analagous to the (much richer)
  * Example<3> class.
@@ -58,6 +53,8 @@ class SnapPeaTriangulation;
  * Each of the routines in this class constructs a new triangulation from
  * scratch.  It is up to the caller of each routine to destroy the
  * triangulation that is returned.
+ *
+ * \ingroup snappea
  */
 class ExampleSnapPea {
     public:
@@ -104,8 +101,6 @@ class ExampleSnapPea {
         // Make this class non-constructible.
         ExampleSnapPea() = delete;
 };
-
-/*@}*/
 
 } // namespace regina
 

@@ -48,17 +48,14 @@
 namespace regina {
 
 /**
- * \weakgroup split
- * @{
- */
-
-/**
  * A class responsible for building censuses of splitting surface signatures.
  *
  * The main entry point for building a census is the static routine
  * formCensus().  End users cannot create their own objects of this class.
  *
  * See formCensus() for further information.
+ *
+ * \ingroup split
  */
 class SigCensus {
     public:
@@ -212,10 +209,10 @@ class SigCensus {
  * surface signatures.
  *
  * \deprecated This has been renamed to SigCensus::IsoList.
+ *
+ * \ingroup split
  */
 typedef SigCensus::IsoList SigIsoList [[deprecated]];
-
-/*@}*/
 
 // Inline functions for SigCensus
 
