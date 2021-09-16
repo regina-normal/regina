@@ -1478,7 +1478,6 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
         bool findAllSubcomplexesIn(const Triangulation<dim>& other,
             Action&& action, Args&&... args) const;
 
-        /*@}*/
         /**
          * Relabel the top-dimensional simplices and their vertices so that
          * this triangulation is in canonical form.  This is essentially
