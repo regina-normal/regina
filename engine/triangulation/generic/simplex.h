@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup generic
- * @{
- */
-
-/**
  * Represents a top-dimensional simplex in a <i>dim</i>-manifold triangulation.
  *
  * For example, for 3-manifolds this class represents a tetrahedron, and for
@@ -98,6 +93,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class Face<dim, dim> : public detail::SimplexBase<dim> {
@@ -137,12 +134,12 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using Simplex = Face<dim, dim>;
 #endif
-
-/*@}*/
 
 // Inline functions for Simplex
 

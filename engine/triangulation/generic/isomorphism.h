@@ -55,11 +55,6 @@
 namespace regina {
 
 /**
- * \weakgroup generic
- * @{
- */
-
-/**
  * Represents a combinatorial isomorphism from one <i>dim</i>-manifold
  * triangulation into another.
  *
@@ -110,6 +105,8 @@ namespace regina {
  * class works with.  This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class Isomorphism :
@@ -421,11 +418,11 @@ class Isomorphism :
  *
  * @param a the first isomorphism whose contents should be swapped.
  * @param b the second isomorphism whose contents should be swapped.
+ *
+ * \ingroup generic
  */
 template <int dim>
 void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept;
-
-/*@}*/
 
 // Inline functions for Isomorphism
 

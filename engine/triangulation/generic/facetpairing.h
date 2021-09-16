@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup generic
- * @{
- */
-
-/**
  * Represents the dual graph of a <i>dim</i>-manifold triangulation;
  * that is, the pairwise matching of facets of <i>dim</i>-dimensional simplices.
  *
@@ -86,6 +81,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class FacetPairing : public detail::FacetPairingBase<dim> {
@@ -196,11 +193,11 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
  *
  * @param a the first facet pairing whose contents should be swapped.
  * @param b the second facet pairing whose contents should be swapped.
+ *
+ * \ingroup generic
  */
 template <int dim>
 void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept;
-
-/*@}*/
 
 // Inline functions for FacetPairing
 

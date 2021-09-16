@@ -49,11 +49,6 @@ namespace regina {
 namespace regina::alias {
 
 /**
- * \weakgroup alias
- * @{
- */
-
-/**
  * Helper class that provides dimension-specific aliases for
  * face<subdim>(int) and faceMapping<subdim>(int), where reasonable,
  * for facial dimensions \a subdim &le; \a maxdim.
@@ -65,6 +60,8 @@ namespace regina::alias {
  *
  * The names of the aliases are determined by the facial dimensions \a subdim,
  * and these aliases are only provided for sufficiently small \a subdim.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim, int maxdim = dim - 1>
 class FaceOfSimplex : public FaceOfSimplex<Derived, dim, 3> {
@@ -99,6 +96,8 @@ class FaceOfSimplex : public FaceOfSimplex<Derived, dim, 3> {
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
  * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for all facial dimensions \a subdim &le; 3.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfSimplex<Derived, dim, 3> : public FaceOfSimplex<Derived, dim, 2> {
@@ -131,6 +130,8 @@ class FaceOfSimplex<Derived, dim, 3> : public FaceOfSimplex<Derived, dim, 2> {
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
  * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for all facial dimensions \a subdim &le; 2.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfSimplex<Derived, dim, 2> : public FaceOfSimplex<Derived, dim, 1> {
@@ -163,6 +164,8 @@ class FaceOfSimplex<Derived, dim, 2> : public FaceOfSimplex<Derived, dim, 1> {
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
  * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for all facial dimensions \a subdim &le; 1.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfSimplex<Derived, dim, 1> : public FaceOfSimplex<Derived, dim, 0> {
@@ -195,6 +198,8 @@ class FaceOfSimplex<Derived, dim, 1> : public FaceOfSimplex<Derived, dim, 0> {
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
  * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for facial dimension \a subdim = 0.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfSimplex<Derived, dim, 0> {
@@ -226,6 +231,8 @@ class FaceOfSimplex<Derived, dim, 0> {
  * provides dimension-specific aliases for face<subdim>(int) and
  * faceMapping<subdim>(int), where reasonable, for facial dimensions
  * \a subdim &le; \a maxdim.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfSimplex<Derived, dim, -1> {
@@ -243,6 +250,8 @@ class FaceOfSimplex<Derived, dim, -1> {
  *
  * The names of the aliases are determined by the facial dimensions \a subdim,
  * and these aliases are only provided for sufficiently small \a subdim.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim, int maxdim = dim - 1>
 class FaceOfTriangulation : public FaceOfTriangulation<Derived, dim, 3> {
@@ -276,6 +285,8 @@ class FaceOfTriangulation : public FaceOfTriangulation<Derived, dim, 3> {
  * functions of the form <tt>size_t countFaces<subdim>()</tt>
  * and <tt>Face<dim, subdim>* face<subdim>(size_t) const</tt>,
  * for all facial dimensions \a subdim &le; 3.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfTriangulation<Derived, dim, 3> :
@@ -308,6 +319,8 @@ class FaceOfTriangulation<Derived, dim, 3> :
  * functions of the form <tt>size_t countFaces<subdim>()</tt>
  * and <tt>Face<dim, subdim>* face<subdim>(size_t) const</tt>,
  * for all facial dimensions \a subdim &le; 2.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfTriangulation<Derived, dim, 2> :
@@ -340,6 +353,8 @@ class FaceOfTriangulation<Derived, dim, 2> :
  * functions of the form <tt>size_t countFaces<subdim>()</tt>
  * and <tt>Face<dim, subdim>* face<subdim>(size_t) const</tt>,
  * for all facial dimensions \a subdim &le; 1.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfTriangulation<Derived, dim, 1> :
@@ -372,6 +387,8 @@ class FaceOfTriangulation<Derived, dim, 1> :
  * functions of the form <tt>size_t countFaces<subdim>()</tt>
  * and <tt>Face<dim, subdim>* face<subdim>(size_t) const</tt>,
  * for facial dimension \a subdim = 0.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FaceOfTriangulation<Derived, dim, 0> {
@@ -408,6 +425,8 @@ class FaceOfTriangulation<Derived, dim, 0> {
  *
  * The names of the aliases are determined by the facial dimensions \a subdim,
  * and these aliases are only provided for sufficiently small \a subdim.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim, int maxdim = dim - 1>
 class FacesOfTriangulation : public FacesOfTriangulation<Derived, dim, 3> {
@@ -431,6 +450,8 @@ class FacesOfTriangulation : public FacesOfTriangulation<Derived, dim, 3> {
  * This is inherited by the class \a Derived, which must provide a template
  * function of the form <tt>faces<subdim>() const</tt>,
  * for facial dimensions \a subdim &le; 3.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FacesOfTriangulation<Derived, dim, 3> :
@@ -452,6 +473,8 @@ class FacesOfTriangulation<Derived, dim, 3> :
  * This is inherited by the class \a Derived, which must provide a template
  * function of the form <tt>faces<subdim>() const</tt>,
  * for facial dimensions \a subdim &le; 2.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FacesOfTriangulation<Derived, dim, 2> :
@@ -473,6 +496,8 @@ class FacesOfTriangulation<Derived, dim, 2> :
  * This is inherited by the class \a Derived, which must provide a template
  * function of the form <tt>faces<subdim>() const</tt>,
  * for facial dimensions \a subdim &le; 1.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FacesOfTriangulation<Derived, dim, 1> :
@@ -494,6 +519,8 @@ class FacesOfTriangulation<Derived, dim, 1> :
  * This is inherited by the class \a Derived, which must provide a template
  * function of the form <tt>faces<subdim>() const</tt>,
  * for facial dimension \a subdim = 0.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class FacesOfTriangulation<Derived, dim, 0> {
@@ -507,8 +534,6 @@ class FacesOfTriangulation<Derived, dim, 0> {
             return static_cast<const Derived*>(this)->template faces<0>();
         }
 };
-
-/*@}*/
 
 } // namespace regina::alias
 

@@ -44,11 +44,6 @@
 namespace regina::alias {
 
 /**
- * \weakgroup alias
- * @{
- */
-
-/**
  * Helper class that provides a dimension-specific alias for face(),
  * where reasonable.
  *
@@ -58,6 +53,8 @@ namespace regina::alias {
  * The name of the alias is determined by the dimension \a subdim, and
  * the alias is only provided for those dimensions \a subdim that are
  * sufficiently small.
+ *
+ * \ingroup alias
  */
 template <class Derived, int subdim>
 class FaceNumber {
@@ -68,6 +65,8 @@ class FaceNumber {
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class FaceNumber<Derived, 0> {
@@ -87,6 +86,8 @@ class FaceNumber<Derived, 0> {
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class FaceNumber<Derived, 1> {
@@ -106,6 +107,8 @@ class FaceNumber<Derived, 1> {
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class FaceNumber<Derived, 2> {
@@ -125,6 +128,8 @@ class FaceNumber<Derived, 2> {
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class FaceNumber<Derived, 3> {
@@ -144,6 +149,8 @@ class FaceNumber<Derived, 3> {
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>int face() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class FaceNumber<Derived, 4> {
@@ -157,8 +164,6 @@ class FaceNumber<Derived, 4> {
             return static_cast<const Derived*>(this)->face();
         }
 };
-
-/*@}*/
 
 } // namespace regina::alias
 

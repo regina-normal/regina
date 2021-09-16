@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup generic
- * @{
- */
-
-/**
  * A connected component of a <i>dim</i>-manifold triangulation.
  *
  * Components are highly temporary: whenever a triangulation changes, all
@@ -79,6 +74,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class Component : public detail::ComponentBase<dim> {
@@ -96,8 +93,6 @@ class Component : public detail::ComponentBase<dim> {
 
     friend class detail::TriangulationBase<dim>;
 };
-
-/*@}*/
 
 } // namespace regina
 

@@ -51,9 +51,8 @@
 #include "triangulation/detail/triangulation.h"
 
 /**
- * \addtogroup generic Generic triangulations
+ * \defgroup generic Generic triangulations
  * Details for implementing triangulations in arbitrary dimensions.
- * @{
  */
 
 namespace regina {
@@ -127,6 +126,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class Triangulation :
@@ -309,6 +310,8 @@ class Triangulation :
  *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim, int subdim>
 class DegreeLessThan {
@@ -372,6 +375,8 @@ class DegreeLessThan {
  *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim, int subdim>
 class DegreeGreaterThan {
@@ -416,8 +421,6 @@ class DegreeGreaterThan {
         // Make this class non-assignable, since \a tri_ is a reference.
         DegreeGreaterThan& operator = (const DegreeGreaterThan&) = delete;
 };
-
-/*@}*/
 
 // Inline functions for Triangulation
 

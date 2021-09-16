@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup generic
- * @{
- */
-
-/**
  * A component of the boundary of a <i>dim</i>-manifold triangulation.
  *
  * Regina recognises three types of boundary components:
@@ -123,6 +118,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class BoundaryComponent : public detail::BoundaryComponentBase<dim> {
@@ -135,8 +132,6 @@ class BoundaryComponent : public detail::BoundaryComponentBase<dim> {
     friend class Triangulation<dim>;
     friend class detail::TriangulationBase<dim>;
 };
-
-/*@}*/
 
 } // namespace regina
 

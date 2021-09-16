@@ -49,11 +49,6 @@ namespace regina {
 namespace regina::alias {
 
 /**
- * \weakgroup alias
- * @{
- */
-
-/**
  * Helper class that provides dimension-specific aliases for both const and
  * non-const versions of simpImage(unsigned) and facetPerm(unsigned), where
  * reasonable, for isomorphisms in dimension \a dim.
@@ -67,6 +62,8 @@ namespace regina::alias {
  *
  * The names of the aliases are determined by the dimension \a dim,
  * and these aliases are only provided for sufficiently small \a dim.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class IsomorphismImage {
@@ -82,6 +79,8 @@ class IsomorphismImage {
  * <tt>int simpImage(unsigned) const</tt>,
  * <tt>Perm<dim+1>& facetPerm(unsigned)</tt> and
  * <tt>Perm<dim+1> facetPerm(unsigned) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class IsomorphismImage<Derived, 2> {
@@ -130,6 +129,8 @@ class IsomorphismImage<Derived, 2> {
  * <tt>int simpImage(unsigned) const</tt>,
  * <tt>Perm<dim+1>& facetPerm(unsigned)</tt> and
  * <tt>Perm<dim+1> facetPerm(unsigned) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class IsomorphismImage<Derived, 3> {
@@ -176,6 +177,8 @@ class IsomorphismImage<Derived, 3> {
  * of the form
  * <tt>int& simpImage(unsigned)</tt> and
  * <tt>int simpImage(unsigned) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class IsomorphismImage<Derived, 4> {
@@ -197,8 +200,6 @@ class IsomorphismImage<Derived, 4> {
             return static_cast<const Derived*>(this)->simpImage(sourceSimp);
         }
 };
-
-/*@}*/
 
 } // namespace regina::alias
 

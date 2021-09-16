@@ -57,9 +57,8 @@
 namespace regina::alias {
 
 /**
- * \addtogroup alias Dimension-Specific Aliases
+ * \defgroup alias Dimension-Specific Aliases
  * Dimension-specific aliases for generic code
- * @{
  */
 
 /**
@@ -75,6 +74,8 @@ namespace regina::alias {
  * The names of the aliases are determined by the dimension \a dim, and
  * the aliases are only provided for those dimensions \a dim that are
  * sufficiently small.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class Simplices {
@@ -89,6 +90,8 @@ class Simplices {
  * the forms <tt>size_t size() const</tt>, <tt>auto simplices() const</tt>,
  * <tt>bool hasBoundaryFacets() const</tt>, and
  * <tt>size_t countBoundaryFacets() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class Simplices<Derived, 2> {
@@ -139,6 +142,8 @@ class Simplices<Derived, 2> {
  * the forms <tt>size_t size() const</tt>, <tt>auto simplices() const</tt>,
  * <tt>bool hasBoundaryFacets() const</tt>, and
  * <tt>size_t countBoundaryFacets() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class Simplices<Derived, 3> {
@@ -189,6 +194,8 @@ class Simplices<Derived, 3> {
  * the forms <tt>size_t size() const</tt>, <tt>auto simplices() const</tt>,
  * <tt>bool hasBoundaryFacets() const</tt>, and
  * <tt>size_t countBoundaryFacets() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class Simplices<Derived, 4> {
@@ -245,6 +252,8 @@ class Simplices<Derived, 4> {
  * The names of the aliases are determined by the dimension \a dim, and
  * the aliases are only provided for those dimensions \a dim that are
  * sufficiently small.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim, bool useConst>
 class SimplexAt {
@@ -255,6 +264,8 @@ class SimplexAt {
  *
  * This is inherited by the class \a Derived, which must provide a routine of
  * the form <tt>Simplex<dim>* simplex(size_t) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexAt<Derived, 2, false> {
@@ -275,6 +286,8 @@ class SimplexAt<Derived, 2, false> {
  * This is inherited by the class \a Derived, which must provide two routines
  * of the forms <tt>Simplex<dim>* simplex(size_t)</tt> and
  * <tt>const Simplex<dim>* simplex(size_t) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexAt<Derived, 2, true> {
@@ -303,6 +316,8 @@ class SimplexAt<Derived, 2, true> {
  *
  * This is inherited by the class \a Derived, which must provide a routine of
  * the form <tt>Simplex<dim>* simplex(size_t) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexAt<Derived, 3, false> {
@@ -323,6 +338,8 @@ class SimplexAt<Derived, 3, false> {
  * This is inherited by the class \a Derived, which must provide two routines
  * of the forms <tt>Simplex<dim>* simplex(size_t)</tt> and
  * <tt>const Simplex<dim>* simplex(size_t) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexAt<Derived, 3, true> {
@@ -351,6 +368,8 @@ class SimplexAt<Derived, 3, true> {
  *
  * This is inherited by the class \a Derived, which must provide a routine of
  * the form <tt>Simplex<dim>* simplex(size_t) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexAt<Derived, 4, false> {
@@ -371,6 +390,8 @@ class SimplexAt<Derived, 4, false> {
  * This is inherited by the class \a Derived, which must provide two routines
  * of the forms <tt>Simplex<dim>* simplex(size_t)</tt> and
  * <tt>const Simplex<dim>* simplex(size_t) const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexAt<Derived, 4, true> {
@@ -404,6 +425,8 @@ class SimplexAt<Derived, 4, true> {
  * The name of the alias is determined by the dimension \a dim, and
  * the alias is only provided for those dimensions \a dim that are
  * sufficiently small.
+ *
+ * \ingroup alias
  */
 template <class Derived, int dim>
 class SimplexVoid {
@@ -414,6 +437,8 @@ class SimplexVoid {
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexVoid<Derived, 2> {
@@ -433,6 +458,8 @@ class SimplexVoid<Derived, 2> {
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexVoid<Derived, 3> {
@@ -452,6 +479,8 @@ class SimplexVoid<Derived, 3> {
  *
  * This is inherited by the class \a Derived, which must provide a
  * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ *
+ * \ingroup alias
  */
 template <class Derived>
 class SimplexVoid<Derived, 4> {
@@ -465,8 +494,6 @@ class SimplexVoid<Derived, 4> {
             return static_cast<const Derived*>(this)->simplex();
         }
 };
-
-/*@}*/
 
 } // namespace regina::alias
 
