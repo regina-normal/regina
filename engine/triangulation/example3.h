@@ -47,9 +47,8 @@
 namespace regina {
 
 /**
- * \addtogroup triangulation Triangulations
+ * \defgroup triangulation Triangulations
  * Triangulations of manifolds in all supported dimensions.
- * @{
  */
 
 /**
@@ -62,6 +61,8 @@ namespace regina {
  *
  * This 3-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded and parameterised constructions.
+ *
+ * \ingroup triangulation
  */
 template <>
 class Example<3> : public detail::ExampleBase<3> {
@@ -300,8 +301,6 @@ class Example<3> : public detail::ExampleBase<3> {
 inline Triangulation<3>* Example<3>::s2xs1() {
     return sphereBundle();
 }
-
-/*@}*/
 
 } // namespace regina
 

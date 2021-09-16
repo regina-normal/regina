@@ -73,9 +73,8 @@ class ProgressTrackerOpen;
 template <int> class XMLTriangulationReader;
 
 /**
- * \addtogroup dim3 3-Manifold Triangulations
+ * \defgroup dim3 3-Manifold Triangulations
  * Details for implementing triangulations of 3-manifolds.
- * @{
  */
 
 /**
@@ -105,6 +104,8 @@ template <int> class XMLTriangulationReader;
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  *
  * \headerfile triangulation/dim3.h
+ *
+ * \ingroup dim3
  */
 template <>
 class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
@@ -3375,8 +3376,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
     friend class regina::detail::TriangulationBase<3>;
     friend class regina::XMLTriangulationReader<3>;
 };
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

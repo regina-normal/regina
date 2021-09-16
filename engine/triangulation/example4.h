@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Offers routines for constructing a variety of sample 4-dimensional
  * triangulations.
  *
@@ -61,6 +56,8 @@ namespace regina {
  *
  * This 4-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded and parameterised constructions.
+ *
+ * \ingroup triangulation
  */
 template <>
 class Example<4> : public detail::ExampleBase<4> {
@@ -239,8 +236,6 @@ class Example<4> : public detail::ExampleBase<4> {
          * (end: Constructions from 3-Manifold Triangulations)
          */
 };
-
-/*@}*/
 
 inline Triangulation<4>* Example<4>::fourSphere() {
     return sphere();

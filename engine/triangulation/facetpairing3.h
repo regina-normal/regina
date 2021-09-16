@@ -48,11 +48,6 @@ namespace regina {
 class FacePair;
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Represents the dual graph of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic FacetPairing class template;
@@ -65,6 +60,8 @@ class FacePair;
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup triangulation
  */
 template <>
 class FacetPairing<3> : public detail::FacetPairingBase<3> {
@@ -567,8 +564,6 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
     // Make sure the parent class can call the private constructor.
     friend class detail::FacetPairingBase<3>;
 };
-
-/*@}*/
 
 // Inline functions for FacetPairing<3>
 

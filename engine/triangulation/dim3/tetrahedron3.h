@@ -50,11 +50,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim3
- * @{
- */
-
-/**
  * Represents a tetrahedron within a 3-manifold triangulation.
  *
  * This class is typically referred to by the aliases Simplex<3> or
@@ -75,6 +70,8 @@ namespace regina {
  * the Triangulation to which they belong.
  *
  * \headerfile triangulation/dim3.h
+ *
+ * \ingroup dim3
  */
 template <>
 class Face<3, 3> : public detail::SimplexBase<3> {
@@ -120,8 +117,6 @@ template <>
 inline Edge<3>* detail::SimplexBase<3>::edge(int i, int j) const {
     return (i == j ? nullptr : edge(FaceNumbering<3, 1>::edgeNumber[i][j]));
 }
-
-/*@}*/
 
 // Inline functions for Simplex<3>
 

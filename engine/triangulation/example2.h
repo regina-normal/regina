@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Offers routines for constructing a variety of sample 2-dimensional
  * triangulations.
  *
@@ -61,6 +56,8 @@ namespace regina {
  *
  * This 2-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded constructions.
+ *
+ * \ingroup triangulation
  */
 template <>
 class Example<2> : public detail::ExampleBase<2> {
@@ -170,8 +167,6 @@ class Example<2> : public detail::ExampleBase<2> {
          */
         static Triangulation<2>* kb();
 };
-
-/*@}*/
 
 } // namespace regina
 

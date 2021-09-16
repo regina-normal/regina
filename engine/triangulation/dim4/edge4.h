@@ -50,11 +50,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim4
- * @{
- */
-
-/**
  * Represents an edge in the skeleton of a 4-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -70,6 +65,8 @@ namespace regina {
  * the Triangulation to which they belong.
  *
  * \headerfile triangulation/dim4.h
+ *
+ * \ingroup dim4
  */
 template <>
 class Face<4, 1> : public detail::FaceBase<4, 1> {
@@ -202,8 +199,6 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
     friend class Triangulation<4>;
     friend class detail::TriangulationBase<4>;
 };
-
-/*@}*/
 
 // Inline functions for Edge<4>
 

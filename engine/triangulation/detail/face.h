@@ -59,11 +59,6 @@ namespace regina::detail {
 template <int dim> class TriangulationBase;
 
 /**
- * \weakgroup detail
- * @{
- */
-
-/**
  * Helper class that provides core functionality for describing how a
  * <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation appears within
  * each top-dimensional simplex.
@@ -81,6 +76,8 @@ template <int dim> class TriangulationBase;
  * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim, int subdim>
 class FaceEmbeddingBase :
@@ -216,6 +213,8 @@ class FaceEmbeddingBase :
  * This must be between 2 and 15 inclusive.
  * \tparam codim the codimension (not dimension!) of the faces under
  * consideration.  This must be between 1 and \a dim inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim, int codim>
 struct FaceEmbeddingsList {
@@ -268,6 +267,8 @@ struct FaceEmbeddingsList<dim, 1> {
  * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class represents.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim, int subdim>
 class FaceBase :
@@ -753,8 +754,6 @@ class FaceBase :
     friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
 };
-
-/*@}*/
 
 // Inline functions for FaceEmbeddingBase
 

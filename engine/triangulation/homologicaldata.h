@@ -52,11 +52,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Data type that deals with all the detailed homological information in a
  * manifold.  This information includes:
  *
@@ -115,6 +110,8 @@ namespace regina {
  * A new and more flexible class called CellularData will take its place.
  *
  * @author Ryan Budney
+ *
+ * \ingroup triangulation
  */
 class HomologicalData : public ShortOutput<HomologicalData> {
 private:
@@ -807,10 +804,10 @@ public:
  *
  * @param a the first object whose contents should be swapped.
  * @param b the second object whose contents should be swapped.
+ *
+ * \ingroup triangulation
  */
 inline void swap(HomologicalData& a, HomologicalData& b) noexcept;
-
-/*@}*/
 
 // Inline functions for HomologicalData
 

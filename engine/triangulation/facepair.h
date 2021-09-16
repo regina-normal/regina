@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Represents a pair of tetrahedron face numbers.
  *
  * Note that we are not storing triangle numbers in a triangulation
@@ -69,6 +64,8 @@ namespace regina {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup triangulation
  */
 class FacePair {
     private:
@@ -304,6 +301,8 @@ class FacePair {
  * @param out the output stream to which to write.
  * @param pair the face pair to write.
  * @return a reference to \a out.
+ *
+ * \ingroup triangulation
  */
 std::ostream& operator << (std::ostream& out, const FacePair& pair);
 

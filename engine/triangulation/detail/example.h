@@ -47,11 +47,6 @@
 namespace regina::detail {
 
 /**
- * \weakgroup detail
- * @{
- */
-
-/**
  * Helper class that builds various <i>dim</i>-dimensional
  * triangulations from (<i>dim</i>-1)-dimensional triangulations.
  *
@@ -62,6 +57,8 @@ namespace regina::detail {
  * This must be between 2 and 15 inclusive.
  * \tparam available \c true if Regina supports (<i>dim</i>-1)-dimensional
  * triangulations, or \c false if not (in which case this class will be empty).
+ *
+ * \ingroup detail
  */
 template <int dim, bool available>
 class ExampleFromLowDim {
@@ -133,6 +130,8 @@ class ExampleFromLowDim {
  * This specialisation is used for dimensions in which
  * (<i>dim</i>-1)-dimensional triangulations are not supported.
  * As a result, this specialised class is empty.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class ExampleFromLowDim<dim, false> {
@@ -159,6 +158,8 @@ class ExampleFromLowDim<dim, false> {
  *
  * \tparam dim the dimension of the example triangulations to construct.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
@@ -246,8 +247,6 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         // Make this class non-constructible.
         ExampleBase() = delete;
 };
-
-/*@}*/
 
 // Inline functions for ExampleFromLowDim
 

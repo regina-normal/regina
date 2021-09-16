@@ -50,11 +50,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim2
- * @{
- */
-
-/**
  * Represents a triangle within a 2-manifold triangulation.
  *
  * This class is typically referred to by the aliases Simplex<2> or
@@ -75,6 +70,8 @@ namespace regina {
  * the Triangulation to which they belong.
  *
  * \headerfile triangulation/dim2.h
+ *
+ * \ingroup dim2
  */
 template <>
 class Face<2, 2> : public detail::SimplexBase<2> {
@@ -120,8 +117,6 @@ template <>
 inline Edge<2>* detail::SimplexBase<2>::edge(int i, int j) const {
     return (i == j ? nullptr : edge(3 - i - j));
 }
-
-/*@}*/
 
 // Inline functions for Simplex<2>
 

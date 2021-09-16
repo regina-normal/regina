@@ -67,6 +67,8 @@ namespace regina::detail {
  * one argument.
  * \tparam pos the index of the argument being requested.  Positions are
  * numbered from 0 upwards.
+ *
+ * \ingroup detail
  */
 template <typename Action, int pos>
 struct CallableArg;
@@ -139,6 +141,8 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  * text signature and a triangulation in its initial argument(s),
  * or \c false if we are storing an action whose argument list begins with
  * just a triangulation/link.
+ *
+ * \ingroup detail
  */
 template <class Object, bool withSig>
 struct RetriangulateActionFuncDetail;
@@ -161,6 +165,8 @@ struct RetriangulateActionFuncDetail<Object, false> {
  * The internal type used to store a callable action that is passed to a
  * retriangulation or link rewriting function.
  * See RetriangulateActionFuncDetail for details.
+ *
+ * \ingroup detail
  */
 template <class Object, bool withSig>
 using RetriangulateActionFunc =
@@ -202,6 +208,8 @@ using RetriangulateActionFunc =
  * retriangulation/rewriting function.
  * \tparam FirstArg the type of the first argument to \a Action; you should
  * not specify this directly, but instead allow the compiler to deduce it.
+ *
+ * \ingroup detail
  */
 template <class Object, typename Action,
         typename FirstArg = typename CallableArg<Action, 0>::type>

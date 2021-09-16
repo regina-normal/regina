@@ -50,11 +50,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim4
- * @{
- */
-
-/**
  * Represents a vertex in the skeleton of a 4-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -70,6 +65,8 @@ namespace regina {
  * the Triangulation to which they belong.
  *
  * \headerfile triangulation/dim4.h
+ *
+ * \ingroup dim4
  */
 template <>
 class Face<4, 0> : public detail::FaceBase<4, 0> {
@@ -224,8 +221,6 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
     friend class Triangulation<4>;
     friend class detail::TriangulationBase<4>;
 };
-
-/*@}*/
 
 // Inline functions for Vertex<4>
 

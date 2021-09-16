@@ -51,11 +51,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim3
- * @{
- */
-
-/**
  * Represents a connected component of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Component class template; see
@@ -72,6 +67,8 @@ namespace regina {
  * the Triangulation to which they belong.
  *
  * \headerfile triangulation/dim3.h
+ *
+ * \ingroup dim3
  */
 template <>
 class Component<3> : public detail::ComponentBase<3>,
@@ -190,8 +187,6 @@ class Component<3> : public detail::ComponentBase<3>,
     friend class Triangulation<3>;
     friend class detail::TriangulationBase<3>;
 };
-
-/*@}*/
 
 // Inline functions for Component<3>
 

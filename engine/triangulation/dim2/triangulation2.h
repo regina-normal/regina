@@ -54,9 +54,8 @@
 namespace regina {
 
 /**
- * \addtogroup dim2 2-Manifold Triangulations
+ * \defgroup dim2 2-Manifold Triangulations
  * Details for implementing triangulations of 2-manifolds.
- * @{
  */
 
 /**
@@ -75,6 +74,8 @@ namespace regina {
  * interfere with the structure of the packet tree.
  *
  * \headerfile triangulation/dim2.h
+ *
+ * \ingroup dim2
  */
 template <>
 class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
@@ -355,8 +356,6 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
     friend class regina::detail::SimplexBase<2>;
     friend class regina::detail::TriangulationBase<2>;
 };
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

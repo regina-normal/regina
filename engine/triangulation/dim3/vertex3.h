@@ -50,11 +50,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim3
- * @{
- */
-
-/**
  * Represents a vertex in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -70,6 +65,8 @@ namespace regina {
  * the Triangulation to which they belong.
  *
  * \headerfile triangulation/dim3.h
+ *
+ * \ingroup dim3
  */
 template <>
 class Face<3, 0> : public detail::FaceBase<3, 0> {
@@ -302,8 +299,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
     friend class Triangulation<3>;
     friend class detail::TriangulationBase<3>;
 };
-
-/*@}*/
 
 // Inline functions for Vertex<3>
 

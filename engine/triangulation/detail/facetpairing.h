@@ -52,11 +52,6 @@
 namespace regina::detail {
 
 /**
- * \weakgroup detail
- * @{
- */
-
-/**
  * Provides core functionality for facet pairings (that is, dual graphs) of
  * <i>dim</i>-dimensional triangulations.
  *
@@ -76,6 +71,8 @@ namespace regina::detail {
  *
  * \tparam dim the dimension of the triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
@@ -722,8 +719,6 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         void enumerateInternal(BoolSet boundary, int nBdryFacets,
             Action&& action, Args&&... args);
 };
-
-/*@}*/
 
 // Inline functions for FacetPairingBase
 

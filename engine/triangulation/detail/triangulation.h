@@ -70,6 +70,8 @@ template <int dim> class XMLTriangulationReaderBase;
  * The default encoding to use for isomorphism signatures.
  * This encoding represents an isomorphism signature as a std::string,
  * using only printable characters from the 7-bit ASCII range.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class IsoSigPrintable : public Base64SigEncoding {
@@ -156,9 +158,8 @@ class IsoSigPrintable : public Base64SigEncoding {
 namespace detail {
 
 /**
- * \addtogroup detail Implementation details
+ * \defgroup detail Implementation details
  * Implementation details that end users should not need to reference directly.
- * @{
  */
 
 /**
@@ -183,6 +184,8 @@ namespace detail {
  *
  * \tparam dim the dimension of the triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class TriangulationBase : public Snapshottable<Triangulation<dim>>,
@@ -2195,6 +2198,8 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
  *
  * @param lhs the triangulation whose contents should be swapped with \a rhs.
  * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup detail
  */
 template <int dim>
 void swap(Triangulation<dim>& lhs, Triangulation<dim>& rhs) {
@@ -2202,8 +2207,6 @@ void swap(Triangulation<dim>& lhs, Triangulation<dim>& rhs) {
 }
 
 namespace detail {
-
-/*@}*/
 
 // Inline functions for TriangulationBase
 

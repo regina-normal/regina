@@ -55,11 +55,6 @@ namespace regina::detail {
 template <int> class TriangulationBase;
 
 /**
- * \weakgroup detail
- * @{
- */
-
-/**
  * Helper class that provides core functionality for a top-dimensional
  * simplex in a <i>dim</i>-manifold triangulation.
  *
@@ -80,6 +75,8 @@ template <int> class TriangulationBase;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class SimplexBase :
@@ -607,8 +604,6 @@ class SimplexBase :
     friend class TriangulationBase<dim>;
     friend class Triangulation<dim>;
 };
-
-/*@}*/
 
 // Inline functions for SimplexBase
 

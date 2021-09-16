@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * A lightweight class used to refer to a particular facet of a particular
  * top-dimensional simplex in a <i>dim</i>-dimensional triangulation.
  * Only the simplex index and the facet number are stored.
@@ -79,6 +74,8 @@ namespace regina {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup triangulation
  */
 template <int dim>
 struct FacetSpec {
@@ -276,11 +273,11 @@ struct FacetSpec {
  * @param out the output stream to which to write.
  * @param spec the specifier to write.
  * @return a reference to \a out.
+ *
+ * \ingroup triangulation
  */
 template <int dim>
 std::ostream& operator << (std::ostream& out, const FacetSpec<dim>& spec);
-
-/*@}*/
 
 // Inline functions for FacetSpec
 

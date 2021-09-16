@@ -61,9 +61,8 @@ class ProgressTrackerOpen;
 template <int> class XMLTriangulationReader;
 
 /**
- * \addtogroup dim4 4-Manifold Triangulations
+ * \defgroup dim4 4-Manifold Triangulations
  * Details for implementing triangulations of 4-manifolds.
- * @{
  */
 
 /**
@@ -85,6 +84,8 @@ template <int> class XMLTriangulationReader;
  * interfere with the structure of the packet tree.
  *
  * \headerfile triangulation/dim4.h
+ *
+ * \ingroup dim4
  */
 template <>
 class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
@@ -970,8 +971,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
     friend class regina::detail::TriangulationBase<4>;
     friend class regina::XMLTriangulationReader<4>;
 };
-
-/*@}*/
 
 } // namespace regina
 // Some more headers that are required for inline functions:

@@ -53,11 +53,6 @@ namespace regina::detail {
 template <int> class TriangulationBase;
 
 /**
- * \weakgroup detail
- * @{
- */
-
-/**
  * Helper class that provides core functionality for a connected component
  * of a <i>dim</i>-manifold triangulation.
  *
@@ -77,6 +72,8 @@ template <int> class TriangulationBase;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class ComponentBase :
@@ -295,8 +292,6 @@ class ComponentBase :
     friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
 };
-
-/*@}*/
 
 // Inline functions for ComponentBase
 
