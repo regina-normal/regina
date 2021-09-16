@@ -55,11 +55,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a permutation of {0,1}.
  * This is a specialisation of the generic Perm template: it is highly
  * optimised, but also somewhat trivial (since there are only two
@@ -94,6 +89,8 @@ namespace regina {
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name Perm2.
+ *
+ * \ingroup maths
  */
 template <>
 class Perm<2> {
@@ -734,8 +731,6 @@ class Perm<2> {
          */
         constexpr Perm<2>(Code code);
 };
-
-/*@}*/
 
 // Inline functions for Perm<2>
 

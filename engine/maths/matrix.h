@@ -103,11 +103,6 @@ class Rational;
 template <class> class Vector;
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a matrix of elements of the given type \a T.
  *
  * As of Regina 5.96, the old subclasses of Matrix have now been merged into a
@@ -165,6 +160,8 @@ template <class> class Vector;
  * \tparam ring \c true if we should enable member functions that only
  * work when T represents an element of a ring.  This has a sensible default;
  * see above in the class documentation for details.
+ *
+ * \ingroup maths
  */
 template <class T, bool ring =
         ((std::is_integral<T>::value && ! std::is_same<T, bool>::value) ||
@@ -1500,6 +1497,8 @@ class Matrix : public Output<Matrix<T>> {
  *
  * @param a the first matrix whose contents should be swapped.
  * @param b the second matrix whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <typename T>
 inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
@@ -1513,10 +1512,10 @@ inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
  * algorithms over integer matrices.  Since the underlying type is
  * Regina's Integer class, calculations will be exact regardless of
  * how large the integers become.
+ *
+ * \ingroup maths
  */
 typedef Matrix<Integer> MatrixInt;
-
-/*@}*/
 
 } // namespace regina
 

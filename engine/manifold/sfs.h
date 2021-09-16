@@ -49,11 +49,6 @@ class AbelianGroup;
 class LensSpace;
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents an exceptional (<i>alpha</i>, <i>beta</i>) fibre in a Seifert
  * fibred space.
  *
@@ -75,6 +70,8 @@ class LensSpace;
  * to work with the old NExceptionalFibre class should be looked at closely
  * before being adapted to the new SFSFibre class (i.e., it may require
  * more than just substituting class names).
+ *
+ * \ingroup manifold
  */
 struct SFSFibre {
     long alpha;
@@ -150,6 +147,8 @@ struct SFSFibre {
  * @param out the output stream to which to write.
  * @param f the fibre to write.
  * @return the output stream \a out.
+ *
+ * \ingroup manifold
  */
 std::ostream& operator << (std::ostream& out, const SFSFibre& f);
 
@@ -208,6 +207,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * \todo \featurelong Implement recognition of more common names.
  * \todo \featurelong Implement triangulation construction and homology
  * calculation for more Seifert fibred spaces.
+ *
+ * \ingroup manifold
  */
 class SFSpace : public Manifold {
     public:
@@ -871,10 +872,10 @@ class SFSpace : public Manifold {
  *
  * @param a the first space whose contents should be swapped.
  * @param b the second space whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(SFSpace& a, SFSpace& b) noexcept;
-
-/*@}*/
 
 // Inline functions for SFSFibre
 

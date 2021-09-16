@@ -52,11 +52,6 @@ namespace regina {
 class Rational;
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * An optimised vector class of elements from a given ring T.
  * Various mathematical vector operations are available.
  *
@@ -100,6 +95,8 @@ class Rational;
  * \ifacespython Not present in general, although the specific types
  * Vector<Integer> and Vector<LargeInteger> are available under the names
  * VectorInt and VectorLarge respectively.
+ *
+ * \ingroup maths
  */
 template <class T>
 class Vector : public ShortOutput<Vector<T>> {
@@ -633,6 +630,8 @@ class Vector : public ShortOutput<Vector<T>> {
  *
  * @param a the first vector whose contents should be swapped.
  * @param b the second vector whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <typename T>
 inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
@@ -649,6 +648,8 @@ inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
  * @param out the output stream to which to write.
  * @param vector the vector to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 template <class T>
 std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
@@ -678,6 +679,8 @@ const T Vector<T>::minusOne(-1);
  *
  * \ifacespython This instance of the Vector template class is made
  * available to Python.
+ *
+ * \ingroup maths
  */
 typedef Vector<Integer> VectorInt;
 
@@ -689,6 +692,8 @@ typedef Vector<Integer> VectorInt;
  *
  * \ifacespython This instance of the Vector template class is made
  * available to Python.
+ *
+ * \ingroup maths
  */
 typedef Vector<LargeInteger> VectorLarge;
 
@@ -704,10 +709,10 @@ typedef Vector<LargeInteger> VectorLarge;
  * that it refers to remains in active use.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup maths
  */
 typedef Vector<LargeInteger> Ray [[deprecated]];
-
-/*@}*/
 
 } // namespace regina
 

@@ -44,11 +44,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Returns the binomial coefficient \a n choose \a k in constant time
  * for small arguments (\a n &le; 16).
  *
@@ -64,6 +59,8 @@ namespace regina {
  * @param k the parameter \a k in (\a n choose \a k); this must be
  * between 0 and \a n inclusive.
  * @return the binomial coefficient \a n choose \a k.
+ *
+ * \ingroup maths
  */
 constexpr int binomSmall(int n, int k);
 
@@ -85,6 +82,8 @@ constexpr int binomSmall(int n, int k);
  * @param k the parameter \a k in (\a n choose \a k); this must be
  * between 0 and \a n inclusive.
  * @return the binomial coefficient \a n choose \a k.
+ *
+ * \ingroup maths
  */
 constexpr long binomMedium(int n, int k);
 
@@ -99,6 +98,8 @@ namespace detail {
  * This array is used in the implementation of the function binomSmall().
  * End users should call binomSmall() instead of referring to this array
  * directly.
+ *
+ * \ingroup maths
  */
 inline constexpr int binomSmall_[17][17] = {
     {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -119,8 +120,6 @@ inline constexpr int binomSmall_[17][17] = {
     {1,15,105,455,1365,3003,5005,6435,6435,5005,3003,1365,455,105,15,1,0},
     {1,16,120,560,1820,4368,8008,11440,12870,11440,8008,4368,1820,560,120,16,1}
 };
-
-/*@}*/
 
 } // namespace detail
 

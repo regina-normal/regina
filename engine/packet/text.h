@@ -47,12 +47,9 @@ namespace regina {
 class Text;
 
 /**
- * \weakgroup packet
- * @{
- */
-
-/**
  * A packet representing a text string.
+ *
+ * \ingroup packet
  */
 class Text : public Packet {
     REGINA_PACKET(Text, PACKET_TEXT, "Text")
@@ -109,8 +106,6 @@ class Text : public Packet {
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
-
-/*@}*/
 
 // Inline functions for Text
 

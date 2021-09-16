@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a closed graph manifold formed by joining a
  * single bounded Seifert fibred space to itself along a torus.
  *
@@ -93,6 +88,8 @@ namespace regina {
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
+ *
+ * \ingroup manifold
  */
 class GraphLoop : public Manifold {
     private:
@@ -293,10 +290,10 @@ class GraphLoop : public Manifold {
  *
  * @param a the first graph manifold whose contents should be swapped.
  * @param b the second graph manifold whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(GraphLoop& a, GraphLoop& b) noexcept;
-
-/*@}*/
 
 // Inline functions for GraphLoop
 

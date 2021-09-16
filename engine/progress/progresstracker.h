@@ -46,9 +46,8 @@
 namespace regina {
 
 /**
- * \addtogroup progress Progress Tracking
+ * \defgroup progress Progress Tracking
  * Progress tracking for long operations
- * @{
  */
 
 /**
@@ -118,6 +117,8 @@ namespace regina {
  * you should always use either ProgressTracker or ProgressTrackerOpen
  * (according to whether you need percentage-based or open-ended
  * progress tracking respectively).
+ *
+ * \ingroup progress
  */
 class ProgressTrackerBase {
     protected:
@@ -234,6 +235,8 @@ class ProgressTrackerBase {
  * fractional weight (between 0 and 1 inclusive), and the percentage progress
  * of the entire calculation is taken to be the weighted sum of the progress
  * of the individual stages.  The weights of all stages should sum to 1.
+ *
+ * \ingroup progress
  */
 class ProgressTracker : public ProgressTrackerBase {
     private:
@@ -368,6 +371,8 @@ class ProgressTracker : public ProgressTrackerBase {
  * as the operation progresses.  There is no particular "end point" or
  * upper bound on the number of steps, and indeed the end point is often
  * unknown until the operation has finished.
+ *
+ * \ingroup progress
  */
 class ProgressTrackerOpen : public ProgressTrackerBase {
     private:
@@ -468,8 +473,6 @@ class ProgressTrackerOpen : public ProgressTrackerBase {
          */
         void setFinished();
 };
-
-/*@}*/
 
 // Inline functions for ProgressTrackerBase
 

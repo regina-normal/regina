@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a closed graph manifold formed by joining
  * three bounded Seifert fibred spaces along their torus boundaries.
  *
@@ -143,6 +138,8 @@ namespace regina {
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
+ *
+ * \ingroup manifold
  */
 class GraphTriple : public Manifold {
     private:
@@ -343,10 +340,10 @@ class GraphTriple : public Manifold {
  *
  * @param a the first graph manifold whose contents should be swapped.
  * @param b the second graph manifold whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(GraphTriple& a, GraphTriple& b) noexcept;
-
-/*@}*/
 
 // Inline functions for GraphTriple
 

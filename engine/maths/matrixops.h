@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Transforms the given integer matrix into Smith normal form.
  * Note that the given matrix need not be square and need not be of full
  * rank.
@@ -67,6 +62,8 @@ namespace regina {
  * coefficient explosion.
  *
  * @param matrix the matrix to transform.
+ *
+ * \ingroup maths
  */
 void smithNormalForm(MatrixInt& matrix);
 
@@ -112,6 +109,8 @@ void smithNormalForm(MatrixInt& matrix);
  * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 void smithNormalForm(MatrixInt& matrix,
         MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
@@ -159,6 +158,8 @@ void smithNormalForm(MatrixInt& matrix,
  * This is optional; you may pass a null pointer instead.
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 void metricalSmithNormalForm(MatrixInt& matrix,
         MatrixInt *rowSpaceBasis=nullptr, MatrixInt *rowSpaceBasisInv=nullptr,
@@ -179,6 +180,8 @@ void metricalSmithNormalForm(MatrixInt& matrix,
  *
  * @param matrix the matrix to examine and rearrange.
  * @return the rank of the given matrix.
+ *
+ * \ingroup maths
  */
 unsigned rowBasis(MatrixInt& matrix);
 
@@ -216,6 +219,8 @@ unsigned rowBasis(MatrixInt& matrix);
  * @param complement the square matrix that will be re-filled with the
  * "incremental" basis for the orthogonal complement of \a input.
  * @return the rank of the given matrix \a input.
+ *
+ * \ingroup maths
  */
 unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
 
@@ -278,6 +283,8 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * echelon form, this would be the list of all rows: 0,...,(M.rows()-1).
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<unsigned> &rowList);
@@ -310,6 +317,8 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  * This matrix will have precisely \a n rows.
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 MatrixInt preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& sublattice);
@@ -339,11 +348,11 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
  * as per the discussion above.
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 MatrixInt torsionAutInverse(const MatrixInt& input,
     const std::vector<Integer> &invF);
-
-/*@}*/
 
 } // namespace regina
 

@@ -46,11 +46,6 @@ namespace regina {
 class Link;
 
 /**
- * \weakgroup link
- * @{
- */
-
-/**
  * This class offers routines for constructing ready-made examples of
  * knots and links.  These examples may be useful for testing new
  * code, or for simply getting a feel for how Regina works.
@@ -64,6 +59,8 @@ class Link;
  *
  * Note that each of these routines constructs a new link from scratch.
  * It is up to the caller of each routine to destroy the link that is returned.
+ *
+ * \ingroup link
  */
 class ExampleLink {
     public:
@@ -207,8 +204,6 @@ class ExampleLink {
         // Make this class non-constructible.
         ExampleLink() = delete;
 };
-
-/*@}*/
 
 } // namespace regina
 

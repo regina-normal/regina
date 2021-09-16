@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a Laurent polynomial in the two variables \e x, \e y with
  * coefficients of type \a T.  A Laurent polynomial differs from an ordinary
  * polynomial in that it allows negative exponents (so, for example, you can
@@ -82,6 +77,8 @@ namespace regina {
  *
  * \ifacespython In Python, the class Laurent2 refers to the specific
  * template class Laurent2<Integer>.
+ *
+ * \ingroup maths
  */
 template <typename T>
 class Laurent2 : public ShortOutput<Laurent2<T>, true> {
@@ -570,6 +567,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
  *
  * @param a the first polynomial whose contents should be swapped.
  * @param b the second polynomial whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <typename T>
 void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
@@ -583,6 +582,8 @@ void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
  * @param poly the polynomial to multiply by.
  * @param scalar the scalar to multiply by.
  * @return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator * (Laurent2<T> poly,
@@ -597,6 +598,8 @@ Laurent2<T> operator * (Laurent2<T> poly,
  * @param scalar the scalar to multiply by.
  * @param poly the polynomial to multiply by.
  * @return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
@@ -615,6 +618,8 @@ Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
  * @param poly the polynomial to divide by the given scalar.
  * @param scalar the scalar factor to divide by.
  * @return the quotient of the given polynomial by the given scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator / (Laurent2<T> poly,
@@ -628,6 +633,8 @@ Laurent2<T> operator / (Laurent2<T> poly,
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
@@ -640,6 +647,8 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
@@ -652,6 +661,8 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
@@ -664,6 +675,8 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
@@ -673,6 +686,8 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  *
  * @param arg the polynomial to negate.
  * @return the negative of \a arg.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (Laurent2<T> arg);
@@ -685,6 +700,8 @@ Laurent2<T> operator - (Laurent2<T> arg);
  * @param lhs the polynomial to subtract from.
  * @param rhs the polynomial to subtract.
  * @return the first polynomial minus the second.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
@@ -697,6 +714,8 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  * @param lhs the polynomial to subtract from.
  * @param rhs the polynomial to subtract.
  * @return the first polynomial minus the second.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
@@ -709,6 +728,8 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  * @param lhs the polynomial to subtract from.
  * @param rhs the polynomial to subtract.
  * @return the first polynomial minus the second.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
@@ -721,6 +742,8 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  * @param lhs the polynomial to subtract from.
  * @param rhs the polynomial to subtract.
  * @return the first polynomial minus the second.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
@@ -733,11 +756,11 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  * @param lhs the first polynomial to multiply.
  * @param rhs the second polynomial to multiply.
  * @return the product of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
-
-/*@}*/
 
 template <typename T>
 const T Laurent2<T>::zero_(0);

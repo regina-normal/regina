@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a general lens space.
  *
  * The lens space L(\a p,\a q) is the 3-manifold you get by
@@ -66,6 +61,8 @@ namespace regina {
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
  * swap() functions, for consistency with the other manifold classes.
+ *
+ * \ingroup manifold
  */
 class LensSpace : public Manifold {
     private:
@@ -171,10 +168,10 @@ class LensSpace : public Manifold {
  *
  * @param a the first lens space whose contents should be swapped.
  * @param b the second lens space whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(LensSpace& a, LensSpace& b) noexcept;
-
-/*@}*/
 
 // Inline functions for LensSpace
 

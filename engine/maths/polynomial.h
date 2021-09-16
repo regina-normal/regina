@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a single-variable polynomial with coefficients of type \a T.
  * All exponents in the polynomial must be non-negative (so you can
  * represent <tt>2+3x</tt> but not <tt>1+1/x</tt>).
@@ -77,6 +72,8 @@ namespace regina {
  *
  * \ifacespython In Python, the class Polynomial refers to the specific
  * template class Polynomial<Rational>.
+ *
+ * \ingroup maths
  */
 template <typename T>
 class Polynomial : public ShortOutput<Polynomial<T>, true> {
@@ -647,6 +644,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
  *
  * @param a the first polynomial whose contents should be swapped.
  * @param b the second polynomial whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <typename T>
 void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept;
@@ -660,6 +659,8 @@ void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept;
  * @param poly the polynomial to multiply by.
  * @param scalar the scalar to multiply by.
  * @return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator * (Polynomial<T> poly,
@@ -674,6 +675,8 @@ Polynomial<T> operator * (Polynomial<T> poly,
  * @param scalar the scalar to multiply by.
  * @param poly the polynomial to multiply by.
  * @return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
@@ -692,6 +695,8 @@ Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
  * @param poly the polynomial to divide by the given scalar.
  * @param scalar the scalar factor to divide by.
  * @return the quotient of the given polynomial by the given scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator / (Polynomial<T> poly,
@@ -706,6 +711,8 @@ Polynomial<T> operator / (Polynomial<T> poly,
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
@@ -719,6 +726,8 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
@@ -732,6 +741,8 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
@@ -745,6 +756,8 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
@@ -754,6 +767,8 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
  *
  * @param arg the polynomial to negate.
  * @return the negative of \a arg.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator - (Polynomial<T> arg);
@@ -767,6 +782,8 @@ Polynomial<T> operator - (Polynomial<T> arg);
  * @param lhs the polynomial to sutract \a rhs from.
  * @param rhs the polynomial to subtract from \a lhs.
  * @return the difference of the two given polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
@@ -780,6 +797,8 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * @param lhs the polynomial to sutract \a rhs from.
  * @param rhs the polynomial to subtract from \a lhs.
  * @return the difference of the two given polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
@@ -793,6 +812,8 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
  * @param lhs the polynomial to sutract \a rhs from.
  * @param rhs the polynomial to subtract from \a lhs.
  * @return the difference of the two given polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
@@ -806,6 +827,8 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
  * @param lhs the polynomial to sutract \a rhs from.
  * @param rhs the polynomial to subtract from \a lhs.
  * @return the difference of the two given polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
@@ -816,6 +839,8 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
  * @param lhs the first polynomial to multiply.
  * @param rhs the second polynomial to multiply.
  * @return the product of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
@@ -849,11 +874,11 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * @param lhs the polynomial to divide by \a rhs.
  * @param rhs the polynomial that we will divide \a lhs by.
  * @return the quotient, as described above.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Polynomial<T> operator / (Polynomial<T> lhs, const Polynomial<T>& rhs);
-
-/*@}*/
 
 template <typename T>
 inline Polynomial<T>::Polynomial() : degree_(0), coeff_(new T[1]) {

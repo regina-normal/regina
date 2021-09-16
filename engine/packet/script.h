@@ -50,11 +50,6 @@ namespace regina {
 class Script;
 
 /**
- * \weakgroup packet
- * @{
- */
-
-/**
  * A packet representing a Python script that can be run.
  *
  * A script consists of two parts: (i) the \e text, which contains the
@@ -71,6 +66,8 @@ class Script;
  *   notify listeners that the script has changed;
  * - if \a P is deleted then \a V will take the value \c None, and the script
  *   will likewise notify listeners of the change.
+ *
+ * \ingroup packet
  */
 class Script : public Packet, public PacketListener {
     REGINA_PACKET(Script, PACKET_SCRIPT, "Script")
@@ -268,8 +265,6 @@ class Script : public Packet, public PacketListener {
             FileFormat format, bool anon, PacketRefs& refs) const override;
         virtual void addPacketRefs(PacketRefs& refs) const override;
 };
-
-/*@}*/
 
 // Inline functions for Script
 

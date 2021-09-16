@@ -49,9 +49,8 @@ namespace regina {
 class AbelianGroup;
 
 /**
- * \addtogroup manifold Standard 3-Manifolds
+ * \defgroup manifold Standard 3-Manifolds
  * Standard 3-manifolds whose structures are well-understood.
- * @{
  */
 
 /**
@@ -74,6 +73,8 @@ class AbelianGroup;
  *
  * - must provide member and global swap functions, for consistency across all
  *   Manifold subclasses.
+ *
+ * \ingroup manifold
  */
 class Manifold : public Output<Manifold> {
     public:
@@ -288,8 +289,6 @@ class Manifold : public Output<Manifold> {
          */
         Manifold& operator = (const Manifold&) = default;
 };
-
-/*@}*/
 
 // Inline functions for Manifold
 

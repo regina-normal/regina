@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a particularly simple closed surface bundle over the circle.
  * Only 2-sphere bundles, twisted 2-sphere bundles and projective plane
  * bundles are considered.
@@ -60,6 +55,8 @@ namespace regina {
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
  * swap() functions, for consistency with the other manifold classes.
+ *
+ * \ingroup manifold
  */
 class SimpleSurfaceBundle : public Manifold {
     public:
@@ -152,10 +149,10 @@ class SimpleSurfaceBundle : public Manifold {
  *
  * @param a the first surface bundle whose contents should be swapped.
  * @param b the second surface bundle whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(SimpleSurfaceBundle& a, SimpleSurfaceBundle& b) noexcept;
-
-/*@}*/
 
 // Inline functions for SimpleSurfaceBundle
 

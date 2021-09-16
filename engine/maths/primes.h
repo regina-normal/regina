@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * A helper class for finding primes and factorising integers.
  *
  * This class has two functions: (i) to maintain a list of known primes,
@@ -84,6 +79,8 @@ namespace regina {
  * of its methods are thread-safe.
  *
  * @author Ryan Budney, B.B.
+ *
+ * \ingroup maths
  */
 class Primes {
     private:
@@ -262,8 +259,6 @@ class Primes {
          */
         static void growPrimeList(unsigned long extras = 1);
 };
-
-/*@}*/
 
 // Inline functions for Primes
 

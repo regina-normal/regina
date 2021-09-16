@@ -50,11 +50,6 @@ namespace regina {
 class SFSpace;
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Provides an alternative representation of a single bounded
  * Seifert fibred space.  Such alternatives are made possible by altering
  * the curves made by the fibre and base orbifold on a boundary torus.
@@ -104,6 +99,8 @@ class SFSpace;
  * even when passing or returning objects by value.  Note, however, that
  * SFSAlt still requires a non-trivial (but constant sized) amount of data to
  * be copied even in a move operation.
+ *
+ * \ingroup manifold
  */
 class SFSAlt {
     private:
@@ -325,10 +322,10 @@ class SFSAlt {
  *
  * @param a the first alternative whose contents should be swapped.
  * @param b the second alternative whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(SFSAlt& a, SFSAlt& b) noexcept;
-
-/*@}*/
 
 // Inline functions for SFSAlt
 

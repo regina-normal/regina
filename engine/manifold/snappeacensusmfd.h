@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a 3-manifold from the SnapPea cusped census.
  *
  * The SnapPea cusped census is the census of cusped hyperbolic 3-manifolds
@@ -83,6 +78,8 @@ namespace regina {
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
  * swap() functions, for consistency with the other manifold classes.
+ *
+ * \ingroup manifold
  */
 class SnapPeaCensusManifold : public Manifold {
     public:
@@ -216,10 +213,10 @@ class SnapPeaCensusManifold : public Manifold {
  *
  * @param a the first census manifold whose contents should be swapped.
  * @param b the second census manifold whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept;
-
-/*@}*/
 
 // Inline functions for SnapPeaCensusManifold
 

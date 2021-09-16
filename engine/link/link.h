@@ -57,9 +57,8 @@
 namespace regina {
 
 /**
- * \addtogroup link Knots and Links
+ * \defgroup link Knots and Links
  * Knots and links in the 3-sphere
- * @{
  */
 
 class Crossing;
@@ -75,6 +74,8 @@ template <int> class Triangulation;
  * Here a \e framing refers to a choice of normal vector field along the
  * knot or link.  Equivalently, a framing refers to a choice of longitude
  * on the torus bounding each component of the link.
+ *
+ * \ingroup link
  */
 enum Framing {
     /**
@@ -134,6 +135,8 @@ enum Framing {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup link
  */
 class StrandRef {
     private:
@@ -384,6 +387,8 @@ class StrandRef {
  * @param out the output stream to which to write.
  * @param s the reference to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup link
  */
 std::ostream& operator << (std::ostream& out, const StrandRef& s);
 
@@ -424,6 +429,8 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  * they are often passed and compared by pointer.  End users are never
  * responsible for their memory management; this is all taken care of by
  * the Link to which they belong.
+ *
+ * \ingroup link
  */
 class Crossing : public MarkedElement, public Output<Crossing> {
     private:
@@ -602,6 +609,8 @@ class Crossing : public MarkedElement, public Output<Crossing> {
  * and global swap() functions.  However, like all packet types, it does
  * \e not implement a move constructor or move assignment, since this would
  * interfere with the structure of the packet tree.
+ *
+ * \ingroup link
  */
 class Link : public Packet {
     REGINA_PACKET(Link, PACKET_LINK, "Link")
@@ -4192,6 +4201,8 @@ class Link : public Packet {
  *
  * @param lhs the link whose contents should be swapped with \a rhs.
  * @param rhs the link whose contents should be swapped with \a lhs.
+ *
+ * \ingroup link
  */
 void swap(Link& lhs, Link& rhs);
 
@@ -4207,6 +4218,8 @@ void swap(Link& lhs, Link& rhs);
  * in particular, the dereference operator may return by value).
  *
  * \ifacespython Not present.
+ *
+ * \ingroup link
  */
 class CrossingIterator {
     public:
@@ -4320,6 +4333,8 @@ class CrossingIterator {
  * in particular, the dereference operator may return by value).
  *
  * \ifacespython Not present.
+ *
+ * \ingroup link
  */
 class ArcIterator {
     public:
@@ -4427,8 +4442,6 @@ class ArcIterator {
          */
         bool operator != (const ArcIterator& rhs) const;
 };
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

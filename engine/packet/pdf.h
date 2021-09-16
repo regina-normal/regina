@@ -49,16 +49,13 @@ namespace regina {
 class PDF;
 
 /**
- * \weakgroup packet
- * @{
- */
-
-/**
  * A packet that can hold a PDF document.
  *
  * This packet may or may not contain a PDF document at any given time.
  * This can be tested by calling isNull(), and can be changed by calling
  * reset().
+ *
+ * \ingroup packet
  */
 class PDF : public Packet {
     REGINA_PACKET(PDF, PACKET_PDF, "PDF")
@@ -245,8 +242,6 @@ class PDF : public Packet {
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
-
-/*@}*/
 
 // Inline functions for PDF
 

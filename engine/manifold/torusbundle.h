@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a torus bundle over the circle.  This is expressed as the
  * product of the torus and the interval, with the two torus boundaries
  * identified according to some specified monodromy.
@@ -78,6 +73,8 @@ namespace regina {
  *
  * \todo \feature Implement the == operator for finding conjugate and
  * inverse matrices.
+ *
+ * \ingroup manifold
  */
 class TorusBundle : public Manifold {
     private:
@@ -237,10 +234,10 @@ class TorusBundle : public Manifold {
  *
  * @param a the first torus bundle whose contents should be swapped.
  * @param b the second torus bundle whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(TorusBundle& a, TorusBundle& b) noexcept;
-
-/*@}*/
 
 // Inline functions for TorusBundle
 

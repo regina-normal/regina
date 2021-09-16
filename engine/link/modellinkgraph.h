@@ -45,11 +45,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup link
- * @{
- */
-
 class Link;
 class ModelLinkGraph;
 class ModelLinkGraphArc;
@@ -72,6 +67,8 @@ class ModelLinkGraphNode;
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup link
  */
 class ModelLinkGraphArc {
     private:
@@ -341,6 +338,8 @@ class ModelLinkGraphArc {
  * @param out the output stream to which to write.
  * @param a the arc reference to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup link
  */
 std::ostream& operator << (std::ostream& out, const ModelLinkGraphArc& a);
 
@@ -358,6 +357,8 @@ std::ostream& operator << (std::ostream& out, const ModelLinkGraphArc& a);
  * they are often passed and compared by pointer.  End users are never
  * responsible for their memory management; this is all taken care of by
  * the ModelLinkGraph to which they belong.
+ *
+ * \ingroup link
  */
 class ModelLinkGraphNode : public MarkedElement,
         public Output<ModelLinkGraphNode> {
@@ -465,6 +466,8 @@ class ModelLinkGraphNode : public MarkedElement,
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup link
  */
 class ModelLinkGraph : public Output<ModelLinkGraph> {
     private:
@@ -909,6 +912,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
  *
  * @param lhs the graph whose contents should be swapped with \a rhs.
  * @param rhs the graph whose contents should be swapped with \a lhs.
+ *
+ * \ingroup link
  */
 void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept;
 
@@ -929,6 +934,8 @@ void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept;
  * copied, swapped, or manually constructed.  Instead they are computed
  * properties of model graphs, and are only accessible via const reference
  * through the member function ModelLinkGraph::cells().
+ *
+ * \ingroup link
  */
 class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
     private:
@@ -1215,8 +1222,6 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
 
     friend class ModelLinkGraph;
 };
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

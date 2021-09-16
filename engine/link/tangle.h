@@ -44,11 +44,6 @@
 namespace regina {
 
 /**
- * \weakgroup link
- * @{
- */
-
-/**
  * Represents a 2-tangle in the 3-ball.  Regina does not allow closed
  * components in a tangle; in other words, a tangle in Regina is a
  * proper embedding of exactly two arcs in the 3-ball with the
@@ -84,6 +79,8 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup link
  */
 class Tangle : public Output<Tangle> {
     private:
@@ -863,10 +860,10 @@ class Tangle : public Output<Tangle> {
  *
  * @param lhs the tangle whose contents should be swapped with \a rhs.
  * @param rhs the tangle whose contents should be swapped with \a lhs.
+ *
+ * \ingroup link
  */
 void swap(Tangle& lhs, Tangle& rhs) noexcept;
-
-/*@}*/
 
 // Inline functions for Tangle
 

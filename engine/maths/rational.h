@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents an arbitrary precision rational number.
  * Calculations with Rational objects will be exact.
  *
@@ -75,6 +70,8 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup maths
  */
 class Rational {
     public:
@@ -484,6 +481,8 @@ class Rational {
  *
  * @param a the first rational whose contents should be swapped.
  * @param b the second rational whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 void swap(Rational& a, Rational& b) noexcept;
 
@@ -497,10 +496,10 @@ void swap(Rational& a, Rational& b) noexcept;
  * @param out the output stream to which to write.
  * @param rat the rational to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 std::ostream& operator << (std::ostream& out, const Rational& rat);
-
-/*@}*/
 
 // Inline functions for Rational
 

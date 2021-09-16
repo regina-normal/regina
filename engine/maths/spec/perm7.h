@@ -55,11 +55,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a permutation of {0,1,2,3,4,5,6}.
  * This is a specialisation of the generic Perm template: it is highly
  * optimised, and also offers some additional functionality.
@@ -101,6 +96,8 @@ namespace regina {
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name Perm7.
+ *
+ * \ingroup maths
  */
 template <>
 class Perm<7> {
@@ -1775,8 +1772,6 @@ class Perm<7> {
         template <typename Int>
         static constexpr Int convOrderedUnordered(Int index);
 };
-
-/*@}*/
 
 // Inline functions for Perm<7>
 

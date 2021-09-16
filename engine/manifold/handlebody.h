@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents an arbitrary handlebody.
  *
  * All optional Manifold routines except for Manifold::construct() are
@@ -59,6 +54,8 @@ namespace regina {
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
  * swap() functions, for consistency with the other manifold classes.
+ *
+ * \ingroup manifold
  */
 class Handlebody : public Manifold {
     private:
@@ -146,10 +143,10 @@ class Handlebody : public Manifold {
  *
  * @param a the first handlebody whose contents should be swapped.
  * @param b the second handlebody whose contents should be swapped.
+ *
+ * \ingroup manifold
  */
 void swap(Handlebody& a, Handlebody& b) noexcept;
-
-/*@}*/
 
 // Inline functions for Handlebody
 

@@ -44,15 +44,12 @@
 namespace regina {
 
 /**
- * \weakgroup packet
- * @{
- */
-
-/**
  * Represents the different types of packet that are available in Regina.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
  * Regina to include your own packet type, you should choose an ID >= 10000.
+ *
+ * \ingroup packet
  */
 enum PacketType {
     /**
@@ -156,8 +153,6 @@ enum PacketType {
     PACKET_TRIANGULATION15 = 115
 #endif /* ! REGINA_LOWDIMONLY */
 };
-
-/*@}*/
 
 } // namespace regina
 

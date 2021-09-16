@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a 2-by-2 integer matrix.  The advantage of using this class
  * over the larger Matrix class template (e.g., MatrixInt) is that this class
  * has less overhead.
@@ -61,6 +56,8 @@ namespace regina {
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
  * swap() functions, for consistency with the Matrix classes.
+ *
+ * \ingroup maths
  */
 class Matrix2 {
     private:
@@ -307,6 +304,8 @@ class Matrix2 {
  *
  * @param a the first matrix whose contents should be swapped.
  * @param b the second matrix whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 void swap(Matrix2& a, Matrix2& b) noexcept;
 
@@ -318,6 +317,8 @@ void swap(Matrix2& a, Matrix2& b) noexcept;
  * @param out the output stream to which to write.
  * @param mat the matrix to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 std::ostream& operator << (std::ostream& out, const Matrix2& mat);
 
@@ -332,6 +333,8 @@ std::ostream& operator << (std::ostream& out, const Matrix2& mat);
  * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
  * or \c false if either the matrices are equal or \a m2 is more
  * pleasing than \a m1.
+ *
+ * \ingroup maths
  */
 bool simpler(const Matrix2& m1, const Matrix2& m2);
 
@@ -351,11 +354,11 @@ bool simpler(const Matrix2& m1, const Matrix2& m2);
  * @return \c true if the first pair is deemed to be more pleasing than
  * the second pair, or \c false if either the ordered pairs are equal or
  * the second pair is more pleasing than the first.
+ *
+ * \ingroup maths
  */
 bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
         const Matrix2& pair2first, const Matrix2& pair2second);
-
-/*@}*/
 
 // Inline functions for Matrix2
 

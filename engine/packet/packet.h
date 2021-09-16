@@ -61,9 +61,8 @@ template <bool> class PacketDescendants;
 template <bool> class SubtreeIterator;
 
 /**
- * \addtogroup packet Basic Packet Types
+ * \defgroup packet Basic Packet Types
  * Packet administration and some basic packet types.
- * @{
  */
 
 /**
@@ -83,6 +82,8 @@ template <bool> class SubtreeIterator;
  * @param class_ the name of this descendant class of Packet.
  * @param id the corresponding PacketType constant.
  * @param name the human-readable name of this packet type.
+ *
+ * \ingroup packet
  */
 #define REGINA_PACKET(class_, id, name) \
     public: \
@@ -145,6 +146,8 @@ template <bool> class SubtreeIterator;
  *
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
+ *
+ * \ingroup packet
  */
 class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
     private:
@@ -1765,6 +1768,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
  *
  * @param filename the pathname of the file to read from.
  * @return the packet tree read from file, or 0 on error (as explained above).
+ *
+ * \ingroup packet
  */
 Packet* open(const char* filename);
 
@@ -1785,6 +1790,8 @@ Packet* open(const char* filename);
  *
  * @param in the input stream to read from.
  * @return the packet tree read from file, or 0 on error (as explained above).
+ *
+ * \ingroup packet
  */
 Packet* open(std::istream& in);
 
@@ -1804,6 +1811,8 @@ Packet* open(std::istream& in);
  * <tt>StopException</tt> if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
+ *
+ * \ingroup packet
  */
 template <bool const_>
 class ChildIterator {
@@ -1923,6 +1932,8 @@ class ChildIterator {
  * are no more packets to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
+ *
+ * \ingroup packet
  */
 template <bool const_>
 class SubtreeIterator {
@@ -2095,6 +2106,8 @@ class SubtreeIterator {
  * <tt>StopException</tt> if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
+ *
+ * \ingroup packet
  */
 template <bool const_>
 class PacketChildren {
@@ -2183,6 +2196,8 @@ class PacketChildren {
  * <tt>StopException</tt> if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
+ *
+ * \ingroup packet
  */
 template <bool const_>
 class PacketDescendants {
@@ -2249,6 +2264,8 @@ class PacketDescendants {
  * std::swap(), with no need for any specialised move operations or swap
  * functions.  Copies of a PacketShell will give access to the remains
  * of the same underlying packet.
+ *
+ * \ingroup packet
  */
 class PacketShell {
     private:
@@ -2403,6 +2420,8 @@ class PacketShell {
  * @param packet the packet to test against; this may be \c null.
  * @param shell the packet shell to test against.
  * @return \c true if and only if the given shell refers to the given packet.
+ *
+ * \ingroup packet
  */
 bool operator == (const Packet* packet, PacketShell shell);
 
@@ -2416,6 +2435,8 @@ bool operator == (const Packet* packet, PacketShell shell);
  * @param shell the packet shell to test against.
  * @return \c true if and only if the given shell does not refer to the
  * given packet.
+ *
+ * \ingroup packet
  */
 bool operator != (const Packet* packet, PacketShell shell);
 
@@ -2464,6 +2485,8 @@ bool operator != (const Packet* packet, PacketShell shell);
  * \ifacespython You can happily make a pure Python subclass of PacketListener,
  * and packets will call whichever functions you override when events occur,
  * just as they would for a native C++ subclass.
+ *
+ * \ingroup packet
  */
 class PacketListener {
     private:
@@ -2721,8 +2744,6 @@ class PacketListener {
      */
     friend class Packet;
 };
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)

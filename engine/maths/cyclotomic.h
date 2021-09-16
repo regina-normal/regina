@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents an element of a cyclotomic field.
  *
  * The cyclotomic field of order \a n extends the rationals with a
@@ -81,6 +76,8 @@ namespace regina {
  *
  * Although this class makes use of global data in its implementation, all
  * of its methods are thread-safe.
+ *
+ * \ingroup maths
  */
 class Cyclotomic : public ShortOutput<Cyclotomic, true> {
     public:
@@ -648,6 +645,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
  *
  * @param a the first field element whose contents should be swapped.
  * @param b the second field element whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 void swap(Cyclotomic& a, Cyclotomic& b) noexcept;
 
@@ -657,6 +656,8 @@ void swap(Cyclotomic& a, Cyclotomic& b) noexcept;
  * @param elt the field element to multiply by.
  * @param scalar the rational to multiply by.
  * @return the product of the given field element and rational.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
 
@@ -666,6 +667,8 @@ Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
  * @param scalar the rational to multiply by.
  * @param elt the field element to multiply by.
  * @return the product of the given field element and rational.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
 
@@ -677,6 +680,8 @@ Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
  * @param elt the field element to divide by the given rational.
  * @param scalar the rational to divide by.
  * @return the quotient of the given field element by the given rational.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
 
@@ -688,6 +693,8 @@ Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
  * @param lhs the first field element to add.
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
@@ -699,6 +706,8 @@ Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param lhs the first field element to add.
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
 
@@ -710,6 +719,8 @@ Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
  * @param lhs the first field element to add.
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
 
@@ -721,6 +732,8 @@ Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
  * @param lhs the first field element to add.
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
 
@@ -729,6 +742,8 @@ Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
  *
  * @param arg the field element to negate.
  * @return the negative of \a arg.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (Cyclotomic arg);
 
@@ -740,6 +755,8 @@ Cyclotomic operator - (Cyclotomic arg);
  * @param lhs the field element to subtract from.
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
@@ -751,6 +768,8 @@ Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param lhs the field element to subtract from.
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
 
@@ -762,6 +781,8 @@ Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
  * @param lhs the field element to subtract from.
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
 
@@ -773,6 +794,8 @@ Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
  * @param lhs the field element to subtract from.
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
 
@@ -784,6 +807,8 @@ Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
  * @param lhs the first field element to multiply.
  * @param rhs the second field element to multiply.
  * @return the product of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
@@ -796,10 +821,10 @@ Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param lhs the field element to divide by \a rhs.
  * @param rhs the field element to divide \a lhs by.
  * @return the result of dividing \a lhs by \a rhs.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator / (const Cyclotomic& lhs, const Cyclotomic& rhs);
-
-/*@}*/
 
 // Inline functions for Cyclotomic
 

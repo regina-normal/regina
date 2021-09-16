@@ -46,9 +46,8 @@
 namespace regina {
 
 /**
- * \addtogroup maths Mathematical Support
+ * \defgroup maths Mathematical Support
  * Underlying mathematical gruntwork.
- * @{
  */
 
 /**
@@ -61,6 +60,8 @@ namespace regina {
  *
  * @param k the number to reduce modulo \a modBase.
  * @param modBase the modular base in which to work.
+ *
+ * \ingroup maths
  */
 long reducedMod(long k, long modBase);
 
@@ -74,6 +75,8 @@ long reducedMod(long k, long modBase);
  * @param a one of the two integers to work with.
  * @param b the other integer with which to work.
  * @return the greatest common divisor of \a a and \a b.
+ *
+ * \ingroup maths
  */
 long gcd(long a, long b);
 
@@ -107,6 +110,8 @@ long gcd(long a, long b);
  * @param v a variable into which the final coefficient of \a b will be
  * placed.
  * @return the greatest common divisor of \a a and \a b.
+ *
+ * \ingroup maths
  */
 long gcdWithCoeffs(long a, long b, long& u, long& v);
 
@@ -123,6 +128,8 @@ long gcdWithCoeffs(long a, long b, long& u, long& v);
  * @param a one of the two integers to work with.
  * @param b the other integer with which to work.
  * @return the lowest common multiple of \a a and \a b.
+ *
+ * \ingroup maths
  */
 long lcm(long a, long b);
 
@@ -136,10 +143,10 @@ long lcm(long a, long b);
  * @param n the modular base in which to work.
  * @param k the number whose multiplicative inverse should be found.
  * @return the inverse \a v for which <tt>k * v == 1 (mod n)</tt>.
+ *
+ * \ingroup maths
  */
 unsigned long modularInverse(unsigned long n, unsigned long k);
-
-/*@}*/
 
 } // namespace regina
 

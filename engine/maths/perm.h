@@ -52,11 +52,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Returns the character used to express the integer \a i in a permutation.
  *
  * - For \a i = 0,...,9, this will be the usual digit representing \a i.
@@ -69,6 +64,8 @@ namespace regina {
  *
  * @param i the integer to represent; this must be between 0 and 35 inclusive.
  * @return the single character used to represent \a i.
+ *
+ * \ingroup maths
  */
 inline constexpr char digit(int i) {
     return (i < 10 ? '0' + i : 'a' + i - 10);
@@ -80,6 +77,8 @@ inline constexpr char digit(int i) {
  * @param n any non-negative integer; this must be at most 20
  * (since otherwise the factorial will overflow).
  * @return the factorial of \a n..
+ *
+ * \ingroup maths
  */
 inline constexpr int64_t factorial(int n) {
     return (n <= 1 ? 1 : factorial(n - 1) * n);
@@ -91,6 +90,8 @@ inline constexpr int64_t factorial(int n) {
  * class notes for more information on exactly how these codes are constructed.
  * The class constant Perm<n>::codeType indicates which type of code is used
  * for which \a n.
+ *
+ * \ingroup maths
  */
 enum PermCodeType {
     /**
@@ -160,6 +161,8 @@ enum PermCodeType {
  *
  * @tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.
+ *
+ * \ingroup maths
  */
 template <int n>
 class Perm {
@@ -798,6 +801,8 @@ class Perm {
  *
  * @tparam n the number of objects being permuted.
  * This must be between 3 and 16 inclusive.
+ *
+ * \ingroup maths
  */
 template <int n>
 inline std::ostream& operator << (std::ostream& out, const Perm<n>& p) {
@@ -812,8 +817,6 @@ template <> class Perm<4>;
 template <> class Perm<5>;
 template <> class Perm<6>;
 template <> class Perm<7>;
-
-/*@}*/
 
 // Inline functions for Perm
 

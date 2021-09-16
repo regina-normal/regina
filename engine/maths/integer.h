@@ -55,6 +55,8 @@
  * By making our own copy of such optimisation macros we can use
  * C++-style casts instead of C-style casts and avoid noisy compiler
  * warnings.  I'd love a better way of doing this.
+ *
+ * \ingroup maths
  */
 #ifdef __GNUC__
     #define mpz_cmp_si_cpp(z, si) \
@@ -68,11 +70,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup maths
- * @{
- */
-
 template <int bytes>
 class NativeInteger;
 
@@ -81,6 +78,8 @@ class NativeInteger;
  * should support infinity as an allowed value.
  *
  * See the IntegerBase class notes for details.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 struct InfinityBase;
@@ -91,6 +90,8 @@ struct InfinityBase;
  * support for infinity as an allowed value.
  *
  * End users should not use this class directly.
+ *
+ * \ingroup maths
  */
 template <>
 struct InfinityBase<true> {
@@ -101,6 +102,8 @@ struct InfinityBase<true> {
 /**
  * An empty internal base class inherited by Integer, which does not
  * support infinity as an allowed value.
+ *
+ * \ingroup maths
  */
 template <>
 struct InfinityBase<false> {
@@ -147,6 +150,8 @@ struct InfinityBase<false> {
  * \ifacespython Both variants of this template are available through Python.
  * For \a supportInfinity = \c false, use the name Integer.
  * For \a supportInfinity = \c true, use the name LargeInteger.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity = false>
 class IntegerBase : private InfinityBase<supportInfinity> {
@@ -1569,6 +1574,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
  * arbitrary precision integers with support for infinity.
  *
  * \ifacespython This typedef is available in Python.
+ *
+ * \ingroup maths
  */
 typedef IntegerBase<true> LargeInteger;
 
@@ -1577,6 +1584,8 @@ typedef IntegerBase<true> LargeInteger;
  * arbitrary precision integers without support for infinity.
  *
  * \ifacespython This typedef is available in Python.
+ *
+ * \ingroup maths
  */
 typedef IntegerBase<false> Integer;
 
@@ -1589,6 +1598,8 @@ typedef IntegerBase<false> Integer;
  *
  * @param a the first integer whose contents should be swapped.
  * @param b the second integer whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b)
@@ -1600,6 +1611,8 @@ void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b)
  * @param out the output stream to which to write.
  * @param i the integer to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 std::ostream& operator << (std::ostream& out,
@@ -1614,6 +1627,8 @@ std::ostream& operator << (std::ostream& out,
  * @param lhs the native integer to add.
  * @param rhs the large integer to add.
  * @return the sum \a lhs plus \a rhs.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 IntegerBase<supportInfinity> operator + (long lhs,
@@ -1628,6 +1643,8 @@ IntegerBase<supportInfinity> operator + (long lhs,
  * @param lhs the native integer to multiply.
  * @param rhs the large integer to multiply.
  * @return the product \a lhs times \a rhs.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 IntegerBase<supportInfinity> operator * (long lhs,
@@ -1646,6 +1663,8 @@ IntegerBase<supportInfinity> operator * (long lhs,
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
@@ -1661,6 +1680,8 @@ void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 std::string tightEncoding(IntegerBase<supportInfinity> value);
@@ -1694,6 +1715,8 @@ std::string tightEncoding(IntegerBase<supportInfinity> value);
  * there must be an appropriate specialisation IntOfSize<bytes>.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup maths
  */
 template <int bytes>
 class NativeInteger {
@@ -2355,6 +2378,8 @@ class NativeInteger {
  *
  * @param a the first integer whose contents should be swapped.
  * @param b the second integer whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <int bytes>
 void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
@@ -2365,6 +2390,8 @@ void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
  * @param out the output stream to which to write.
  * @param i the integer to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 template <int bytes>
 std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
@@ -2374,6 +2401,8 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  * underlying integer type is a native long.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup maths
  */
 typedef NativeInteger<sizeof(long)> NativeLong;
 
@@ -2383,10 +2412,10 @@ typedef NativeInteger<sizeof(long)> NativeLong;
  * \deprecated Use NativeLong instead.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup maths
  */
 [[deprecated]] typedef NativeLong NNativeLong;
-
-/*@}*/
 
 // Inline functions for IntegerBase
 

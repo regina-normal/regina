@@ -48,13 +48,10 @@ namespace regina {
 class Container;
 
 /**
- * \weakgroup packet
- * @{
- */
-
-/**
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
+ *
+ * \ingroup packet
  */
 class Container : public Packet {
     REGINA_PACKET(Container, PACKET_CONTAINER, "Container")
@@ -83,8 +80,6 @@ class Container : public Packet {
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
-
-/*@}*/
 
 // Inline functions for Container
 
