@@ -34,7 +34,6 @@
 #include "triangulation/dim4.h"
 
 // UI includes:
-#include "clickablelabel.h"
 #include "eventids.h"
 #include "iconcache.h"
 #include "tri4algebra.h"
@@ -89,28 +88,12 @@ Tri4HeaderUI::Tri4HeaderUI(regina::Triangulation<4>* packet,
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     uiLayout->addWidget(bar);
 
-    QBoxLayout* headerLayout = new QHBoxLayout(ui);
-    headerLayout->setContentsMargins(0, 0, 0, 0);
     header = new QLabel();
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
     header->setWhatsThis(QObject::tr("Displays a few basic properties of the "
         "triangulation, such as boundary and orientability."));
-    headerLayout->addWidget(header, 1);
-    locked = new ClickableLabel(IconCache::icon(IconCache::lock));
-    locked->setWhatsThis(tr(
-        "<qt>This triangulation cannot be changed, since it has "
-        "normal hypersurfaces that refer to it.<p>"
-        "Click on the padlock for more information.</qt>"));
-    locked->hide();
-    connect(locked, SIGNAL(clicked()), this, SLOT(lockedExplanation()));
-    headerLayout->addWidget(locked);
-    headerLayout->addSpacing(10);
-    uiLayout->addLayout(headerLayout);
-
-    // Register ourselves as a lister for child changes, so we can
-    // update the lock icon accordingly.
-    tri->listen(this);
+    uiLayout->addWidget(header);
 }
 
 regina::Packet* Tri4HeaderUI::getPacket() {
@@ -123,7 +106,6 @@ QWidget* Tri4HeaderUI::getInterface() {
 
 void Tri4HeaderUI::refresh() {
     header->setText(summaryInfo(tri));
-    refreshLock();
 }
 
 QString Tri4HeaderUI::summaryInfo(regina::Triangulation<4>* tri) {
@@ -158,44 +140,5 @@ QString Tri4HeaderUI::summaryInfo(regina::Triangulation<4>* tri) {
         QObject::tr("disconnected"));
 
     return msg;
-}
-
-void Tri4HeaderUI::lockedExplanation() {
-    if (tri->isPacketEditable())
-        return;
-
-    ReginaSupport::info(ui,
-        tr("This triangulation cannot be changed."),
-        tr("<qt>There are normal hypersurfaces "
-            "that refer to it, and so you cannot change its "
-            "pentachoron gluings.<p>"
-            "You may clone the triangulation (through the "
-            "<i>Packet Tree</i> menu in the main window), and then "
-            "edit the clone instead.</qt>"));
-}
-
-void Tri4HeaderUI::childWasAdded(regina::Packet* packet,
-        regina::Packet* child) {
-    // Be careful - we may not be in the GUI thread.
-    QApplication::postEvent(this, new QEvent(
-        (QEvent::Type)EVT_HEADER_CHILD_ADDED));
-}
-
-void Tri4HeaderUI::childWasRemoved(regina::Packet* packet,
-        regina::Packet*) {
-    if (packet) // not in packet's destructor
-        refreshLock();
-}
-
-void Tri4HeaderUI::refreshLock() {
-    if (tri->isPacketEditable())
-        locked->hide();
-    else
-        locked->show();
-}
-
-void Tri4HeaderUI::customEvent(QEvent* event) {
-    if (event->type() == EVT_HEADER_CHILD_ADDED)
-        refreshLock();
 }
 

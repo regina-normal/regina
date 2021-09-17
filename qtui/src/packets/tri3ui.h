@@ -41,7 +41,6 @@
 #include "triangulation/forward.h"
 #include "../packettabui.h"
 
-class ClickableLabel;
 class Tri3AlgebraUI;
 class Tri3GluingsUI;
 class Tri3SkeletonUI;
@@ -83,8 +82,7 @@ class Tri3UI : public PacketTabbedUI {
 /**
  * A header for the 3-manifold triangulation viewer.
  */
-class Tri3HeaderUI : public QObject, public PacketViewerTab,
-        public regina::PacketListener {
+class Tri3HeaderUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -98,7 +96,6 @@ class Tri3HeaderUI : public QObject, public PacketViewerTab,
          */
         QWidget* ui;
         QLabel* header;
-        ClickableLabel* locked;
         QToolBar* bar;
 
     public:
@@ -121,34 +118,9 @@ class Tri3HeaderUI : public QObject, public PacketViewerTab,
         void refresh() override;
 
         /**
-         * PacketListener overrides.
-         */
-        void childWasAdded(regina::Packet* packet, regina::Packet* child)
-            override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
-            override;
-
-        /**
          * Allow other UIs to access the summary information.
          */
         static QString summaryInfo(regina::Triangulation<3>* tri);
-
-    public slots:
-        /**
-         * Explain to the user what the padlock means.
-         */
-        void lockedExplanation();
-
-    protected:
-        /**
-         * Update the state of the padlock.
-         */
-        void refreshLock();
-
-        /**
-         * Allow GUI updates from a non-GUI thread.
-         */
-        void customEvent(QEvent* event) override;
 };
 
 inline QToolBar* Tri3HeaderUI::getToolBar() {
