@@ -39,7 +39,7 @@ namespace regina {
 XMLLinkReader::XMLLinkReader(XMLTreeResolver& res, Packet* parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
-        link_(new Link()) {
+        link_(new PacketOf<Link>()) {
 }
 
 Packet* XMLLinkReader::packetToCommit() {
@@ -52,11 +52,11 @@ XMLElementReader* XMLLinkReader::startContentSubElement(
         return new XMLElementReader();
 
     if (subTagName == "crossings")
-        return new XMLLinkCrossingsReader(link_);
+        return new XMLLinkCrossingsReader(std::addressof(link_->data()));
     else if (subTagName == "connections")
-        return new XMLLinkConnectionsReader(link_);
+        return new XMLLinkConnectionsReader(std::addressof(link_->data()));
     else if (subTagName == "components")
-        return new XMLLinkComponentsReader(link_);
+        return new XMLLinkComponentsReader(std::addressof(link_->data()));
 
     return new XMLElementReader();
 }

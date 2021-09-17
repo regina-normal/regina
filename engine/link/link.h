@@ -612,8 +612,8 @@ class Crossing : public MarkedElement, public Output<Crossing> {
  *
  * \ingroup link
  */
-class Link : public Packet {
-    REGINA_PACKET(Link, PACKET_LINK, "Link")
+class Link : public PacketData<Link>, public Output<Link> {
+    REGINA_PACKET_DATA(Link, PACKET_LINK, "Link")
 
     private:
         MarkedVector<Crossing> crossings_;
@@ -2431,8 +2431,8 @@ class Link : public Packet {
          */
         /*@{*/
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -3915,9 +3915,8 @@ class Link : public Packet {
         /*@}*/
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, std::map<const Packet*, bool>& refs) const;
 
     private:
         /**
@@ -4708,10 +4707,6 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
 inline void Link::useTreeDecomposition(TreeDecomposition td) {
     prepareTreeDecomposition(td);
     niceTreeDecomposition_ = std::move(td);
-}
-
-inline Packet* Link::internalClonePacket(Packet*) const {
-    return new Link(*this);
 }
 
 inline StrandRef Link::translate(const StrandRef& other) const {

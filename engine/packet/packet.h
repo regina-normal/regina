@@ -1745,6 +1745,95 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         bool hasOwner() const;
 };
 
+template <typename Held>
+class PacketOf : public Packet {
+    public:
+        static constexpr const PacketType typeID = Held::packetTypeID;
+
+    private:
+        Held data_;
+
+    public:
+        PacketOf() {
+            data_.packet_ = this;
+        }
+        PacketOf(const Held& data) : data_(data) {
+            data_.packet_ = this;
+        }
+        PacketOf(Held&& data) : data_(std::move(data)) {
+            data_.packet_ = this;
+        }
+        PacketOf(const PacketOf& src) : data_(src.data_) {
+            data_.packet_ = this;
+        }
+
+        inline virtual PacketType type() const override {
+            return typeID;
+        }
+        inline virtual std::string typeName() const override {
+            return Held::packetTypeName;
+        }
+
+        Held& data() {
+            return data_;
+        }
+        const Held& data() const {
+            return data_;
+        }
+
+        virtual void writeTextShort(std::ostream& out) const override {
+            data_.writeTextShort(out);
+        }
+        virtual void writeTextLong(std::ostream& out) const override {
+            data_.writeTextLong(out);
+        }
+
+    protected:
+        virtual Packet* internalClonePacket(Packet* parent) const override {
+            return new PacketOf(*this);
+        }
+        virtual void writeXMLPacketData(std::ostream& out, FileFormat format,
+                bool anon, PacketRefs& refs) const override {
+            data_.writeXMLPacketData(out, format, anon, refs);
+        }
+};
+
+#define REGINA_PACKET_DATA(class_, id, name) \
+    protected: \
+        static constexpr const PacketType packetTypeID = id; \
+        static constexpr const char* packetTypeName = name; \
+        friend class PacketOf<class_>;
+
+template <typename Held>
+class PacketData {
+    private:
+        PacketOf<Held>* packet_;
+
+    public:
+        PacketData() : packet_(nullptr) {}
+
+    protected:
+        class ChangeEventSpan {
+            private:
+                typename PacketOf<Held>::ChangeEventSpan* span_;
+
+            public:
+                ChangeEventSpan(PacketData& data) :
+                        span_(data.packet_ ?
+                            new typename PacketOf<Held>::ChangeEventSpan(
+                                *data.packet_) :
+                            nullptr) {
+                }
+                ~ChangeEventSpan() { delete span_; }
+
+                // Make this class non-copyable.
+                ChangeEventSpan(const ChangeEventSpan&) = delete;
+                ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
+        };
+
+    friend class PacketOf<Held>;
+};
+
 /**
  * Reads a Regina data file, and returns the corresponding packet tree.
  * This uses Regina's native XML file format; it does not matter whether

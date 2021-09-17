@@ -37,52 +37,52 @@ namespace regina {
 
 Link* ExampleLink::unknot() {
     Link* ans = new Link(1);
-    ans->setLabel("Unknot");
+    // ans->setLabel("Unknot");
     return ans;
 }
 
 Link* ExampleLink::trefoilLeft() {
     Link* ans = Link::fromData({ -1, -1, -1 }, { 1, -2, 3, -1, 2, -3 });
-    ans->setLabel("Left-hand trefoil");
+    // ans->setLabel("Left-hand trefoil");
     return ans;
 }
 
 Link* ExampleLink::trefoilRight() {
     Link* ans = Link::fromData({ +1, +1, +1 }, { 1, -2, 3, -1, 2, -3 });
-    ans->setLabel("Right-hand trefoil");
+    // ans->setLabel("Right-hand trefoil");
     return ans;
 }
 
 Link* ExampleLink::trefoil() {
     Link* ans = Link::fromData({ +1, +1, +1 }, { 1, -2, 3, -1, 2, -3 });
-    ans->setLabel("Trefoil");
+    // ans->setLabel("Trefoil");
     return ans;
 }
 
 Link* ExampleLink::figureEight() {
     Link* ans = Link::fromData({ +1, +1, -1, -1 },
         { -1, 2, -3, 4, -2, 1, -4, 3});
-    ans->setLabel("Figure eight knot");
+    // ans->setLabel("Figure eight knot");
     return ans;
 }
 
 Link* ExampleLink::hopf() {
     Link* ans = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
-    ans->setLabel("Hopf link");
+    // ans->setLabel("Hopf link");
     return ans;
 }
 
 Link* ExampleLink::whitehead() {
     Link* ans = Link::fromData({ -1, -1, +1, +1, -1 },
         { 1, -2, 5, -4, 3, -5 }, { -1, 2, -3, 4 });
-    ans->setLabel("Whitehead link");
+    // ans->setLabel("Whitehead link");
     return ans;
 }
 
 Link* ExampleLink::borromean() {
     Link* ans = Link::fromData({ +1, -1, +1, -1, +1, -1 },
         { 1, -2, 4, -5 }, { 3, -4, 6, -1 }, { 5, -6, 2, -3 });
-    ans->setLabel("Borromean rings");
+    // ans->setLabel("Borromean rings");
     return ans;
 }
 
@@ -90,7 +90,7 @@ Link* ExampleLink::monster() {
     Link* ans = Link::fromData({ -1, -1, +1, -1, +1, +1, +1, +1, +1, -1 },
         { 1, -2, 3, 4, 5, -6, 7, -8, 9, -3, 10, -1, 2, -10, -4, -9, 8, -5,
           6, -7 });
-    ans->setLabel("Monster unknot");
+    // ans->setLabel("Monster unknot");
     return ans;
 }
 
@@ -98,7 +98,7 @@ Link* ExampleLink::kinoshitaTerasaka() {
     Link* ans = Link::fromData({ -1, -1, +1, -1, -1, +1, -1, +1, +1, +1, -1 },
         { 1, -2, 3, 4, -5, -6, 2, -7, -8, 9, -4, 5, -10, 8, -9, 10, 11,
           -1, 6, -3, 7, -11 });
-    ans->setLabel("Kinoshita-Terasaka knot");
+    // ans->setLabel("Kinoshita-Terasaka knot");
     return ans;
 }
 
@@ -106,7 +106,7 @@ Link* ExampleLink::conway() {
     Link* ans = Link::fromData({ +1, -1, -1, -1, -1, -1, -1, +1, +1, +1, +1 },
         { 1, -2, 3, 4, -5, -6, 7, -1, 8, -3, 6, -7, 2, -8, -9, 10, -11,
           9, -4, 5, -10, 11 });
-    ans->setLabel("Conway knot");
+    // ans->setLabel("Conway knot");
     return ans;
 }
 
@@ -142,7 +142,7 @@ Link* ExampleLink::gordian() {
           89, 50, -129, 91, 41, 128, 87, 53, 25, 97, -136, -139, 111, 1, -125,
           -17, -102, 134, -140, 122, -106, -11, 82, 61, 130, -120, 119, 65,
           80, -141, -117, 34, 93, 76, 116, -115, 71, 26, 96, -137, 138, 112 });
-    ans->setLabel("Gordian unknot");
+    // ans->setLabel("Gordian unknot");
     return ans;
 }
 
@@ -165,7 +165,7 @@ Link* ExampleLink::gst() {
           -39, -11, -19, -25, 40, -41, -42, 43, 44, 31, -30, -24,
           -16, 3, -6, 39, 12, 20, 26, -40, 45, 46, -43, -36,
           37, 42, -46, -47, 48, -44, -35, 38, 41, -45, 47, -48 });
-    ans->setLabel("Gompf-Scharlemann-Thompson");
+    // ans->setLabel("Gompf-Scharlemann-Thompson");
     return ans;
 }
 

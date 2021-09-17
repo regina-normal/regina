@@ -52,7 +52,7 @@ class Link;
  */
 class XMLLinkReader : public XMLPacketReader {
     private:
-        Link* link_;
+        PacketOf<Link>* link_;
             /**< The link currently being read. */
 
     public:
