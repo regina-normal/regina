@@ -68,17 +68,6 @@ void HyperModel::rebuildUnicode() {
             columnCount(QModelIndex()) - 1);
 }
 
-void HyperModel::setReadWrite(bool readWrite) {
-    if (readWrite == isReadWrite)
-        return;
-
-    // Presumably a model reset is too severe, but I'm not sure what's
-    // actually necessary so let's just be safe.
-    beginResetModel();
-    readWrite = isReadWrite;
-    endResetModel();
-}
-
 QModelIndex HyperModel::index(int row, int column,
         const QModelIndex& parent) const {
     return createIndex(row, column,
@@ -255,7 +244,7 @@ QVariant HyperModel::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags HyperModel::flags(const QModelIndex& index) const {
-    if (index.column() == 1 && isReadWrite)
+    if (index.column() == 1)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -339,9 +328,9 @@ QString HyperModel::propertyColDesc(int whichCol) const {
 }
 
 HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), surfaces(packet),
-        isReadWrite(readWrite), currentlyResizing(false) {
+        currentlyResizing(false) {
     // Set up the UI.
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
@@ -367,7 +356,7 @@ HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
     hdrLayout->addStretch(1);
 
     // Set up the coordinate table.
-    model = new HyperModel(surfaces, readWrite);
+    model = new HyperModel(surfaces);
 
     table = new QTreeView();
     table->setItemsExpandable(false);
@@ -460,13 +449,6 @@ void HyperCoordinateUI::refresh() {
     }
 }
 
-void HyperCoordinateUI::setReadWrite(bool readWrite) {
-    isReadWrite = readWrite;
-
-    model->setReadWrite(readWrite);
-    updateActionStates();
-}
-
 void HyperCoordinateUI::triangulate() {
     if (table->selectionModel()->selectedIndexes().empty()) {
         ReginaSupport::info(ui,
@@ -495,9 +477,7 @@ void HyperCoordinateUI::triangulate() {
 }
 
 void HyperCoordinateUI::updateActionStates() {
-    actTriangulate->setEnabled(
-        isReadWrite &&
-        table->selectionModel()->hasSelection() &&
+    actTriangulate->setEnabled(table->selectionModel()->hasSelection() &&
         surfaces->isEmbeddedOnly());
 }
 

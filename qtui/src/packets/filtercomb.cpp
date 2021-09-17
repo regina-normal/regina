@@ -53,8 +53,6 @@ using regina::SurfaceFilterCombination;
 
 FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
         PacketPane* enclosingPane) : PacketUI(enclosingPane), filter(packet) {
-    bool readWrite = enclosingPane->isReadWrite();
-
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
@@ -75,13 +73,11 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
     QBoxLayout* typeOptionLayout = new QVBoxLayout();
     typeLayout->addLayout(typeOptionLayout);
     typeAnd = new QRadioButton(tr("AND (passes all)"), ui);
-    typeAnd->setEnabled(readWrite);
     typeAnd->setWhatsThis(tr("Combine the children of this filter "
         "using boolean AND.  A surface will pass this filter only when "
         "it passes every one of the child filters."));
     typeOptionLayout->addWidget(typeAnd);
     typeOr = new QRadioButton(tr("OR (passes any)"), ui);
-    typeOr->setEnabled(readWrite);
     typeOr->setWhatsThis(tr("Combine the children of this filter "
         "using boolean OR.  A surface will pass this filter only when "
         "it passes at least one of the child filters."));
@@ -169,11 +165,6 @@ QString FilterCombUI::getPacketMenuText() const {
 
 void FilterCombUI::refresh() {
     boolType->button(filter->usesAnd() ? ID_AND : ID_OR)->setChecked(true);
-}
-
-void FilterCombUI::setReadWrite(bool readWrite) {
-    typeAnd->setEnabled(readWrite);
-    typeOr->setEnabled(readWrite);
 }
 
 void FilterCombUI::packetWasRenamed(Packet* p) {

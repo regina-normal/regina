@@ -63,8 +63,7 @@ SurfacesUI::SurfacesUI(regina::NormalSurfaces* packet,
     // the default tab must be updated accordingly.
     addTab(new SurfacesSummaryUI(packet, this), tr("&Summary"));
 
-    coords = new SurfacesCoordinateUI(packet, this,
-        newEnclosingPane->isReadWrite());
+    coords = new SurfacesCoordinateUI(packet, this);
     addTab(coords, tr("Surface &Coordinates"));
 
     addTab(new SurfacesMatchingUI(packet, this), tr("&Matching Equations"));

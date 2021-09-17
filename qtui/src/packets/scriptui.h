@@ -64,22 +64,11 @@ class ScriptVarModel : public QAbstractItemModel {
          */
         regina::Script* script_;
 
-        /**
-         * Current state.
-         */
-        bool isReadWrite_;
-
     public:
         /**
          * Constructor.
          */
-        ScriptVarModel(regina::Script* script, bool readWrite);
-
-        /**
-         * Read-write state.
-         */
-        bool isReadWrite() const;
-        void setReadWrite(bool readWrite);
+        ScriptVarModel(regina::Script* script);
 
         /**
          * Force a complete refresh.
@@ -172,7 +161,6 @@ class ScriptUI : public QObject, public PacketUI {
         QString getPacketMenuText() const;
         void refresh();
         void endEdit();
-        void setReadWrite(bool readWrite);
 
     public slots:
         /**
@@ -209,20 +197,6 @@ class ScriptUI : public QObject, public PacketUI {
          */
         void updateTabWidth();
 };
-
-inline bool ScriptVarModel::isReadWrite() const {
-    return isReadWrite_;
-}
-
-inline void ScriptVarModel::setReadWrite(bool readWrite) {
-    if (isReadWrite_ != readWrite) {
-        // Edit flags will all change.
-        // A full model reset is probably too severe, but.. *shrug*
-        beginResetModel();
-        isReadWrite_ = readWrite;
-        endResetModel();
-    }
-}
 
 inline QModelIndex ScriptVarModel::parent(const QModelIndex&) const {
     // All items are top-level.

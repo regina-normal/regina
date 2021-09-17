@@ -71,16 +71,11 @@ class SurfaceModel : public QAbstractItemModel {
         unsigned* realIndex;
         unsigned nFiltered;
 
-        /**
-         * Internal status
-         */
-        bool isReadWrite;
-
     public:
         /**
          * Constructor and destructor.
          */
-        SurfaceModel(regina::NormalSurfaces* surfaces, bool readWrite);
+        SurfaceModel(regina::NormalSurfaces* surfaces);
         ~SurfaceModel();
 
         /**
@@ -98,11 +93,6 @@ class SurfaceModel : public QAbstractItemModel {
         void rebuild(regina::NormalCoords coordSystem_,
             regina::SurfaceFilter* filter);
         void rebuildUnicode();
-
-        /**
-         * Updating read/write status.
-         */
-        void setReadWrite(bool readWrite);
 
         /**
          * Overrides for describing and editing data in the model.
@@ -159,7 +149,6 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Internal status
          */
-        bool isReadWrite;
         bool currentlyResizing;
 
     public:
@@ -167,7 +156,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
          * Constructor and destructor.
          */
         SurfacesCoordinateUI(regina::NormalSurfaces* packet,
-            PacketTabbedUI* useParentUI, bool readWrite);
+            PacketTabbedUI* useParentUI);
         ~SurfacesCoordinateUI();
 
         /**
@@ -177,7 +166,6 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         regina::Packet* getPacket() override;
         QWidget* getInterface() override;
         const std::vector<QAction*>& getPacketTypeActions() override;
-        void setReadWrite(bool readWrite) override;
 
         /**
          * PacketListener overrides.

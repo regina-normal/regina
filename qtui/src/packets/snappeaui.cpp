@@ -34,7 +34,6 @@
 #include "snappea/snappeatriangulation.h"
 
 // UI includes:
-#include "eventids.h"
 #include "iconcache.h"
 #include "snappeaui.h"
 #include "snappeaalgebra.h"
@@ -61,8 +60,7 @@ SnapPeaUI::SnapPeaUI(regina::SnapPeaTriangulation* packet,
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabSnapPeaTri) {
     SnapPeaHeaderUI* header = new SnapPeaHeaderUI(packet, this);
-    shapes = new SnapPeaShapesUI(packet, this,
-        newEnclosingPane->isReadWrite());
+    shapes = new SnapPeaShapesUI(packet, this);
     gluings = new SnapPeaGluingsUI(packet, this);
     skeleton = new Tri3SkeletonUI(packet, this);
     algebra = new SnapPeaAlgebraUI(packet, this);

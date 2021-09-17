@@ -58,22 +58,11 @@ class GluingsModel4 : public QAbstractItemModel {
          */
         regina::Triangulation<4>* tri_;
 
-        /**
-         * Internal status
-         */
-        bool isReadWrite_;
-
     public:
         /**
          * Constructor.
          */
-        GluingsModel4(regina::Triangulation<4>* tri, bool readWrite);
-
-        /**
-         * Read-write state.
-         */
-        bool isReadWrite() const;
-        void setReadWrite(bool readWrite);
+        GluingsModel4(regina::Triangulation<4>* tri);
 
         /**
          * Force a complete refresh.
@@ -159,14 +148,13 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         QAction* actOrient;
         QAction* actBoundaryComponents;
         std::vector<QAction*> triActionList;
-        std::vector<QAction*> enableWhenWritable;
 
     public:
         /**
          * Constructor and destructor.
          */
         Tri4GluingsUI(regina::Triangulation<4>* packet,
-                PacketTabbedUI* useParentUI, bool readWrite);
+                PacketTabbedUI* useParentUI);
         ~Tri4GluingsUI();
 
         /**
@@ -186,7 +174,6 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         const std::vector<QAction*>& getPacketTypeActions();
         void refresh();
         void endEdit();
-        void setReadWrite(bool readWrite);
 
     public slots:
         /**
@@ -217,20 +204,6 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         void updateRemoveState();
         void updateActionStates();
 };
-
-inline bool GluingsModel4::isReadWrite() const {
-    return isReadWrite_;
-}
-
-inline void GluingsModel4::setReadWrite(bool readWrite) {
-    if (isReadWrite_ != readWrite) {
-        // Edit flags will all change.
-        // A full model reset is probably too severe, but.. *shrug*
-        beginResetModel();
-        isReadWrite_ = readWrite;
-        endResetModel();
-    }
-}
 
 inline QModelIndex GluingsModel4::parent(const QModelIndex&) const {
     // All items are top-level.

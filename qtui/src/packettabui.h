@@ -165,7 +165,6 @@ class PacketTabbedUI : public QObject, public PacketUI {
         virtual QWidget* getInterface();
         virtual void refresh();
         virtual void endEdit();
-        virtual void setReadWrite(bool readWrite);
 
     public slots:
         /**

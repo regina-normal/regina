@@ -209,7 +209,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
 }
 
 SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -259,11 +259,9 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
     actRandomise->setIcon(ReginaSupport::regIcon("randomise"));
     actRandomise->setToolTip(tr(
         "Randomise this triangulation"));
-    actRandomise->setEnabled(readWrite);
     actRandomise->setWhatsThis(tr("Randomise this triangulation.  "
         "The manifold will be randomly retriangulated using local moves "
         "that preserve the topology."));
-    enableWhenWritable.push_back(actRandomise);
     triActionList.push_back(actRandomise);
     requiresNonNull.push_back(actRandomise);
     connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
@@ -412,18 +410,6 @@ void SnapPeaShapesUI::refresh() {
 
 void SnapPeaShapesUI::endEdit() {
     cusps->endEdit();
-}
-
-void SnapPeaShapesUI::setReadWrite(bool readWrite) {
-    // Regardless of whether we allow edits, we can do nothing with a
-    // null triangulation.
-    if (tri->isNull())
-        readWrite = false;
-
-    for (auto action : enableWhenWritable)
-        action->setEnabled(readWrite);
-
-    updateNonNullActions();
 }
 
 void SnapPeaShapesUI::vertexLinks() {

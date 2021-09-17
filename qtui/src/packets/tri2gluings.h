@@ -58,22 +58,11 @@ class GluingsModel2 : public QAbstractItemModel {
          */
         regina::Triangulation<2>* tri_;
 
-        /**
-         * Internal status
-         */
-        bool isReadWrite_;
-
     public:
         /**
          * Constructor and destructor.
          */
-        GluingsModel2(regina::Triangulation<2>* tri, bool readWrite);
-
-        /**
-         * Read-write state.
-         */
-        bool isReadWrite() const;
-        void setReadWrite(bool readWrite);
+        GluingsModel2(regina::Triangulation<2>* tri);
 
         /**
          * Force a complete refresh.
@@ -155,14 +144,13 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         QAction* actRemoveTri;
         QAction* actOrient;
         std::vector<QAction*> triActionList;
-        std::vector<QAction*> enableWhenWritable;
 
     public:
         /**
          * Constructor and destructor.
          */
         Tri2GluingsUI(regina::Triangulation<2>* packet,
-                PacketTabbedUI* useParentUI, bool readWrite);
+                PacketTabbedUI* useParentUI);
         ~Tri2GluingsUI();
 
         /**
@@ -182,7 +170,6 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         const std::vector<QAction*>& getPacketTypeActions();
         void refresh();
         void endEdit();
-        void setReadWrite(bool readWrite);
 
     public slots:
         /**
@@ -206,20 +193,6 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         void updateRemoveState();
         void updateActionStates();
 };
-
-inline bool GluingsModel2::isReadWrite() const {
-    return isReadWrite_;
-}
-
-inline void GluingsModel2::setReadWrite(bool readWrite) {
-    if (isReadWrite_ != readWrite) {
-        // Edit flags will all change.
-        // A full model reset is probably too severe, but.. *shrug*
-        beginResetModel();
-        isReadWrite_ = readWrite;
-        endResetModel();
-    }
-}
 
 inline QModelIndex GluingsModel2::parent(const QModelIndex&) const {
     // All items are top-level.

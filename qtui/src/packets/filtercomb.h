@@ -87,7 +87,6 @@ class FilterCombUI : public QObject, public PacketUI,
         QWidget* getInterface() override;
         QString getPacketMenuText() const override;
         void refresh() override;
-        void setReadWrite(bool readWrite) override;
 
         /**
          * PacketListener overrides.

@@ -76,8 +76,7 @@ namespace {
     QRegExp reFacet("^[0-4][0-4][0-4][0-4]$");
 }
 
-GluingsModel4::GluingsModel4(Triangulation<4>* tri, bool readWrite) :
-        tri_(tri), isReadWrite_(readWrite) {
+GluingsModel4::GluingsModel4(Triangulation<4>* tri) : tri_(tri) {
 }
 
 void GluingsModel4::rebuild() {
@@ -149,10 +148,7 @@ QVariant GluingsModel4::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags GluingsModel4::flags(const QModelIndex& index) const {
-    if (isReadWrite_)
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
-    else
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 }
 
 bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
@@ -307,21 +303,17 @@ regina::Perm<5> GluingsModel4::facetStringToPerm(int srcFacet,
 }
 
 Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of facet gluings.
-    model = new GluingsModel4(packet, readWrite);
+    model = new GluingsModel4(packet);
     facetTable = new EditTableView();
     facetTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     facetTable->setModel(model);
 
-    if (readWrite) {
-        QAbstractItemView::EditTriggers flags(
-            QAbstractItemView::AllEditTriggers);
-        flags ^= QAbstractItemView::CurrentChanged;
-        facetTable->setEditTriggers(flags);
-    } else
-        facetTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    QAbstractItemView::EditTriggers flags(QAbstractItemView::AllEditTriggers);
+    flags ^= QAbstractItemView::CurrentChanged;
+    facetTable->setEditTriggers(flags);
 
     facetTable->setWhatsThis(tr("<qt>A table specifying which pentachoron "
         "facets are identified with which others.<p>"
@@ -356,10 +348,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     actAddPent->setText(tr("&Add Pent"));
     actAddPent->setIcon(ReginaSupport::regIcon("insert"));
     actAddPent->setToolTip(tr("Add a new pentachoron"));
-    actAddPent->setEnabled(readWrite);
     actAddPent->setWhatsThis(tr("Add a new pentachoron to this "
         "triangulation."));
-    enableWhenWritable.push_back(actAddPent);
     triActionList.push_back(actAddPent);
     connect(actAddPent, SIGNAL(triggered()), this, SLOT(addPent()));
 
@@ -386,28 +376,24 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     actSimplify->setIcon(ReginaSupport::regIcon("simplify"));
     actSimplify->setToolTip(tr(
         "Simplify the triangulation as far as possible"));
-    actSimplify->setEnabled(readWrite);
     actSimplify->setWhatsThis(tr("Simplify this triangulation to use fewer "
         "pentachora without changing the underlying 4-manifold or its "
         "PL structure.  This triangulation will be modified directly.<p>"
         "Note that there is no guarantee that the smallest possible number of "
         "pentachora will be achieved."));
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
-    enableWhenWritable.push_back(actSimplify);
     triActionList.push_back(actSimplify);
 
     QAction* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
         "Modify the triangulation using elementary moves"));
-    actEltMove->setEnabled(readWrite);
     actEltMove->setWhatsThis(tr("<qt>Perform elementary moves upon this "
         "triangulation.  <i>Elementary moves</i> are modifications local to "
         "a small number of pentachora that do not change the underlying "
         "4-manifold.<p>"
         "A dialog will be presented for you to select which "
         "elementary moves to apply.</qt>"));
-    enableWhenWritable.push_back(actEltMove);
     triActionList.push_back(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
@@ -420,7 +406,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
     actOrient->setToolTip(tr(
         "Relabel vertices of pentachora for consistent orientation"));
-    actOrient->setEnabled(readWrite);
     actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each pentachoron "
         "so that all pentachora are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent facets.<p>"
@@ -434,7 +419,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
         "Reverse the orientation of each pentachoron"));
-    actReflect->setEnabled(readWrite);
     actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each pentachoron "
         "so that the orientations of all pentachora are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
@@ -448,13 +432,11 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actBarycentricSubdivide->setEnabled(readWrite);
     actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
         "subdivision on this triangulation.  The triangulation will be "
         "changed directly.<p>"
         "This operation involves subdividing each pentachoron into "
         "120 smaller pentachora."));
-    enableWhenWritable.push_back(actBarycentricSubdivide);
     triActionList.push_back(actBarycentricSubdivide);
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
@@ -465,7 +447,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
 
     actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
-    actIdealToFinite->setEnabled(readWrite);
     actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 3-spheres nor 3-balls "
@@ -473,7 +454,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "This triangulation will be modified directly.  If there are no "
         "vertices of this type to truncate, this operation will have no "
         "effect."));
-    enableWhenWritable.push_back(actIdealToFinite);
     triActionList.push_back(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
@@ -482,7 +462,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     actFiniteToIdeal->setIcon(ReginaSupport::regIcon("cone"));
     actFiniteToIdeal->setToolTip(tr(
         "Convert real boundary components into ideal vertices"));
-    actFiniteToIdeal->setEnabled(readWrite);
     actFiniteToIdeal->setWhatsThis(tr("Convert this from a finite "
         "triangulation to an ideal triangulation.  Each real boundary "
         "component (formed from one or more boundary tetrahedra) will be "
@@ -491,7 +470,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "components will be filled in with balls.<p>"
         "This triangulation will be modified directly.  If there are no "
         "real boundary components, this operation will have no effect."));
-    enableWhenWritable.push_back(actFiniteToIdeal);
     triActionList.push_back(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
@@ -500,13 +478,11 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
         "Convert the triangulation to its orientable double cover"));
-    actDoubleCover->setEnabled(readWrite);
     actDoubleCover->setWhatsThis(tr("Convert a non-orientable "
         "triangulation into an orientable double cover.  This triangulation "
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
         "duplicated, resulting in a disconnected triangulation."));
-    enableWhenWritable.push_back(actDoubleCover);
     triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
@@ -597,24 +573,6 @@ void Tri4GluingsUI::refresh() {
 
 void Tri4GluingsUI::endEdit() {
     facetTable->endEdit();
-}
-
-void Tri4GluingsUI::setReadWrite(bool readWrite) {
-    model->setReadWrite(readWrite);
-
-    if (readWrite) {
-        QAbstractItemView::EditTriggers flags(
-            QAbstractItemView::AllEditTriggers);
-        flags ^= QAbstractItemView::CurrentChanged;
-        facetTable->setEditTriggers(flags);
-    } else
-        facetTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    for (auto action : enableWhenWritable)
-        action->setEnabled(readWrite);
-
-    updateRemoveState();
-    updateActionStates();
 }
 
 void Tri4GluingsUI::addPent() {
@@ -896,22 +854,12 @@ void Tri4GluingsUI::splitIntoComponents() {
 }
 
 void Tri4GluingsUI::updateRemoveState() {
-    // Are we read-write?
-    if (model->isReadWrite())
-        actRemovePent->setEnabled(
-            ! facetTable->selectionModel()->selectedIndexes().empty());
-    else
-        actRemovePent->setEnabled(false);
+    actRemovePent->setEnabled(
+        ! facetTable->selectionModel()->selectedIndexes().empty());
 }
 
 void Tri4GluingsUI::updateActionStates() {
-    if (! model->isReadWrite())
-        actOrient->setEnabled(false);
-    else if (! tri->isOrientable())
-        actOrient->setEnabled(false);
-    else
-        actOrient->setEnabled(! tri->isOriented());
-
+    actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
 }
 

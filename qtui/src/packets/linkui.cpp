@@ -57,8 +57,7 @@ using regina::Link;
 LinkUI::LinkUI(regina::Link* packet, PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabLink) {
     LinkHeaderUI* header = new LinkHeaderUI(packet, this);
-    crossings = new LinkCrossingsUI(packet, this,
-        newEnclosingPane->isReadWrite());
+    crossings = new LinkCrossingsUI(packet, this);
 
     crossings->fillToolBar(header->getToolBar());
 

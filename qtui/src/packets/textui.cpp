@@ -54,7 +54,6 @@ TextUI::TextUI(Text* packet, PacketPane* enclosingPane) :
     layout->setContentsMargins(0, 0, 0, 0);
 
     editWidget = new DocWidget<Text>(text, enclosingPane);
-    editWidget->setReadOnly(!enclosingPane->isReadWrite());
     editWidget->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     editIface = new PacketEditPlainTextEditor(editWidget);
     layout->addWidget(editWidget, 1);
@@ -81,9 +80,5 @@ QString TextUI::getPacketMenuText() const {
 
 void TextUI::refresh() {
     editWidget->refresh();
-}
-
-void TextUI::setReadWrite(bool readWrite) {
-    editWidget->setReadOnly(!readWrite);
 }
 

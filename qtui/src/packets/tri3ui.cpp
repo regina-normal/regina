@@ -34,7 +34,6 @@
 #include "triangulation/dim3.h"
 
 // UI includes:
-#include "eventids.h"
 #include "iconcache.h"
 #include "tri3algebra.h"
 #include "tri3composition.h"
@@ -59,7 +58,7 @@ Tri3UI::Tri3UI(regina::Triangulation<3>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri) {
     Tri3HeaderUI* header = new Tri3HeaderUI(packet, this);
-    gluings = new Tri3GluingsUI(packet, this, newEnclosingPane->isReadWrite());
+    gluings = new Tri3GluingsUI(packet, this);
     skeleton = new Tri3SkeletonUI(packet, this);
     algebra = new Tri3AlgebraUI(packet, this);
     surfaces = new Tri3SurfacesUI(packet, this);

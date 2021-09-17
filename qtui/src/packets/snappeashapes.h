@@ -115,7 +115,6 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
         QAction* actFill;
         QAction* actToRegina;
         std::vector<QAction*> triActionList;
-        std::vector<QAction*> enableWhenWritable;
         std::vector<QAction*> requiresNonNull;
 
     public:
@@ -123,7 +122,7 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
          * Constructor and destructor.
          */
         SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
-            PacketTabbedUI* useParentUI, bool readWrite);
+            PacketTabbedUI* useParentUI);
         ~SnapPeaShapesUI();
 
         /**
@@ -143,7 +142,6 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
         const std::vector<QAction*>& getPacketTypeActions();
         void refresh();
         void endEdit();
-        void setReadWrite(bool readWrite);
 
     public slots:
         /**

@@ -54,11 +54,8 @@
 using regina::NormalSurfaces;
 using regina::Packet;
 
-SurfaceModel::SurfaceModel(regina::NormalSurfaces* surfaces,
-        bool readWrite) :
-        surfaces_(surfaces),
-        coordSystem_(surfaces->coords()),
-        isReadWrite(readWrite) {
+SurfaceModel::SurfaceModel(regina::NormalSurfaces* surfaces) :
+        surfaces_(surfaces), coordSystem_(surfaces->coords()) {
     nFiltered = surfaces_->size();
     if (nFiltered == 0)
         realIndex = nullptr;
@@ -101,17 +98,6 @@ void SurfaceModel::rebuildUnicode() {
             coordSystem_ == regina::NS_TRIANGLE_ARCS)
         emit headerDataChanged(Qt::Horizontal, propertyColCount(),
             columnCount(QModelIndex()) - 1);
-}
-
-void SurfaceModel::setReadWrite(bool readWrite) {
-    if (readWrite == isReadWrite)
-        return;
-
-    // Presumably a model reset is too severe, but I'm not sure what's
-    // actually necessary so let's just be safe.
-    beginResetModel();
-    readWrite = isReadWrite;
-    endResetModel();
 }
 
 QModelIndex SurfaceModel::index(int row, int column,
@@ -353,7 +339,7 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags SurfaceModel::flags(const QModelIndex& index) const {
-    if (index.column() == 1 && isReadWrite)
+    if (index.column() == 1)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -450,9 +436,9 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
 }
 
 SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
-        isReadWrite(readWrite), currentlyResizing(false) {
+        currentlyResizing(false) {
     // Set up the UI.
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
@@ -495,7 +481,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
     filter->setWhatsThis(msg);
 
     // Set up the coordinate table.
-    model = new SurfaceModel(surfaces, readWrite);
+    model = new SurfaceModel(surfaces);
 
     table = new QTreeView();
     table->setItemsExpandable(false);
@@ -624,13 +610,6 @@ void SurfacesCoordinateUI::refresh() {
     }
 }
 
-void SurfacesCoordinateUI::setReadWrite(bool readWrite) {
-    isReadWrite = readWrite;
-
-    model->setReadWrite(readWrite);
-    updateActionStates();
-}
-
 void SurfacesCoordinateUI::packetToBeDestroyed(regina::PacketShell) {
     // Our currently applied filter is about to be destroyed.
     filter->setCurrentIndex(0); // (i.e., None)
@@ -694,8 +673,7 @@ void SurfacesCoordinateUI::crush() {
 }
 
 void SurfacesCoordinateUI::updateActionStates() {
-    bool canCrushOrCut = isReadWrite &&
-        table->selectionModel()->hasSelection() &&
+    bool canCrushOrCut = table->selectionModel()->hasSelection() &&
         (! surfaces->allowsAlmostNormal()) && surfaces->isEmbeddedOnly();
 
     actCutAlong->setEnabled(canCrushOrCut);

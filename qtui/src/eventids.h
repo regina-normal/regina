@@ -41,8 +41,6 @@
 
 enum {
     // PacketUI:
-    EVT_PANE_SET_READONLY = 2100,
-    EVT_PANE_SET_READWRITE = 2101,
     EVT_TREE_CHILD_ADDED = 2200,
 
     // ReginaMain:

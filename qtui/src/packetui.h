@@ -65,10 +65,6 @@ namespace regina {
  * user interaction.  The PacketManager class is responsible for
  * creating an interface component appropriate for a given packet.
  *
- * Each packet interface is either in read-write mode or in read-only
- * mode, and may be required to change modes throughout its life span.
- * See setReadWrite() for details.
- *
  * Subclasses will generally wish to override many of the PacketUI virtual
  * functions.
  */
@@ -183,19 +179,6 @@ class PacketUI {
          */
         virtual void endEdit();
 
-        /**
-         * Modify this interface to be read-write or read-only according
-         * to the given argument.
-         *
-         * This routine should never be called directly; instead
-         * PacketPane::setReadWrite() should be used.
-         *
-         * If this interface is incapable of editing packets (e.g.,
-         * interfaces for packet types that are inherently read-only
-         * such as containers), this routine need not do anything.
-         */
-        virtual void setReadWrite(bool readWrite) = 0;
-
     private:
         /**
          * An empty action list.
@@ -215,12 +198,6 @@ class PacketReadOnlyUI : public PacketUI {
          * Constructor.
          */
         PacketReadOnlyUI(PacketPane* newEnclosingPane);
-
-        /**
-         * An implementation of setReadWrite() that does nothing
-         * whatsoever.
-         */
-        virtual void setReadWrite(bool readWrite);
 };
 
 /**
@@ -273,11 +250,6 @@ class PacketPane : public QWidget, public regina::PacketListener {
         PacketUI* mainUI;
 
         /**
-         * Properties
-         */
-        bool readWrite;
-
-        /**
          * Internal actions
          */
         QAction* actClose;
@@ -315,25 +287,6 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * It is assumed that the given menu is empty.
          */
         void fillPacketTypeMenu(QMenu* menu);
-
-        /**
-         * Is this packet pane currently in read-write (as opposed to
-         * read-only) mode?
-         */
-        bool isReadWrite();
-
-        /**
-         * Attempts to put this pane into read-write or read-only mode
-         * as signalled by the \a allowReadWrite parameter.
-         *
-         * If \a allowReadWrite is \c true but nevertheless the pane
-         * cannot be put into read-write mode, i.e., if
-         * Packet::isPacketEditable() returns \c false or the
-         * underlying file is in read-only mode, then this routine will
-         * do nothing and return \c false.  Otherwise this routine will
-         * set the read-write status as requested and return \c true.
-         */
-        bool setReadWrite(bool allowReadWrite);
 
         /**
          * Are we allowed to close this packet pane?
@@ -375,10 +328,6 @@ class PacketPane : public QWidget, public regina::PacketListener {
         void packetWasChanged(regina::Packet* packet) override;
         void packetWasRenamed(regina::Packet* packet) override;
         void packetToBeDestroyed(regina::PacketShell packet) override;
-        void childWasAdded(regina::Packet* packet, regina::Packet* child)
-            override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
-            override;
 
     public slots:
         /**
@@ -413,12 +362,6 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * actions.  These slots are for internal use.
          */
         void updateClipboardActions();
-
-    protected:
-        /**
-         * Allow GUI updates from within a non-GUI thread.
-         */
-        void customEvent(QEvent* evt) override;
 };
 
 /**
@@ -450,9 +393,6 @@ inline PacketReadOnlyUI::PacketReadOnlyUI(PacketPane* newEnclosingPane) :
         PacketUI(newEnclosingPane) {
 }
 
-inline void PacketReadOnlyUI::setReadWrite(bool) {
-}
-
 inline regina::Packet* PacketPane::getPacket() {
     return mainUI->getPacket();
 }
@@ -463,10 +403,6 @@ inline ReginaMain* PacketPane::getMainWindow() {
 
 inline PacketUI* PacketPane::getUI() {
     return mainUI;
-}
-
-inline bool PacketPane::isReadWrite() {
-    return readWrite;
 }
 
 inline void PacketPane::refresh() {
