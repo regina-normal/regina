@@ -85,22 +85,22 @@ def displayIso(iso):
 # Full tests that we can run on a triangulation or link:
 ########################################################################
 
-def printBanner(obj, test, height, threads):
-    print(obj.label() + ' -> ' + test + ', height = ' + str(height) + \
+def printBanner(name, test, height, threads):
+    print(name + ' -> ' + test + ', height = ' + str(height) + \
         ', threads = ' + str(threads))
 
-def testDisplay(obj, height, threads):
-    printBanner(obj, 'display', height, threads)
-    if obj.type() == PACKET_LINK:
+def testDisplay(obj, name, height, threads):
+    printBanner(name, 'display', height, threads)
+    if obj.__class__ == Link:
         obj.rewrite(height, threads, display)
     else:
         obj.retriangulate(height, threads, display)
 
-def testStopAfter10(obj, height, threads):
-    printBanner(obj, 'stop after 10', height, threads)
+def testStopAfter10(obj, name, height, threads):
+    printBanner(name, 'stop after 10', height, threads)
     global count
     count = 0
-    if obj.type() == PACKET_LINK:
+    if obj.__class__ == Link:
         ans = obj.rewrite(height, threads, stopAfter10)
     else:
         ans = obj.retriangulate(height, threads, stopAfter10)
@@ -109,11 +109,11 @@ def testStopAfter10(obj, height, threads):
     else:
         print('    search ran to completion, count:', count)
 
-def testCollect(obj, height, threads):
-    printBanner(obj, 'collect', height, threads)
+def testCollect(obj, name, height, threads):
+    printBanner(name, 'collect', height, threads)
     global sigs
     sigs = []
-    if obj.type() == PACKET_LINK:
+    if obj.__class__ == Link:
         ans = obj.rewrite(height, threads, collect)
     else:
         ans = obj.retriangulate(height, threads, collect)
@@ -121,8 +121,8 @@ def testCollect(obj, height, threads):
     for i in sigs:
         print('    ' + i)
 
-def testCovers(link, sheets):
-    print(link.label() + ' -> all covers, sheets = ' + str(sheets))
+def testCovers(link, name, sheets):
+    print(name + ' -> all covers, sheets = ' + str(sheets))
     tri = SnapPeaTriangulation(link.complement())
     tri.enumerateCovers(sheets, SnapPeaTriangulation.all_covers, displayCover)
 
@@ -156,32 +156,32 @@ def testIso(inner, outer, countOnly = False):
 ########################################################################
 
 tri = Example3.poincareHomologySphere()
-testDisplay(tri, 1, 1)
-testDisplay(tri, 1, 2)
-testStopAfter10(tri, 1, 1)
-testStopAfter10(tri, 1, 2)
-testCollect(tri, 1, 1)
-testCollect(tri, 1, 2)
+testDisplay(tri, tri.label(), 1, 1)
+testDisplay(tri, tri.label(), 1, 2)
+testStopAfter10(tri, tri.label(), 1, 1)
+testStopAfter10(tri, tri.label(), 1, 2)
+testCollect(tri, tri.label(), 1, 1)
+testCollect(tri, tri.label(), 1, 2)
 testIso(tri, tri, True)
 print()
 
 tri = Example3.weeks()
-testDisplay(tri, 0, 1)
-testDisplay(tri, 0, 2)
-testStopAfter10(tri, 1, 1)
-testStopAfter10(tri, 1, 2)
-testCollect(tri, 0, 1)
-testCollect(tri, 0, 2)
+testDisplay(tri, tri.label(), 0, 1)
+testDisplay(tri, tri.label(), 0, 2)
+testStopAfter10(tri, tri.label(), 1, 1)
+testStopAfter10(tri, tri.label(), 1, 2)
+testCollect(tri, tri.label(), 0, 1)
+testCollect(tri, tri.label(), 0, 2)
 testIso(tri, tri)
 print()
 
 tri = Example4.cappellShaneson()
-testDisplay(tri, 0, 1)
-testDisplay(tri, 0, 2)
-testStopAfter10(tri, 2, 1)
-testStopAfter10(tri, 2, 2)
-testCollect(tri, 2, 1)
-testCollect(tri, 2, 2)
+testDisplay(tri, tri.label(), 0, 1)
+testDisplay(tri, tri.label(), 0, 2)
+testStopAfter10(tri, tri.label(), 2, 1)
+testStopAfter10(tri, tri.label(), 2, 2)
+testCollect(tri, tri.label(), 2, 1)
+testCollect(tri, tri.label(), 2, 2)
 testIso(tri, tri)
 print()
 
@@ -191,27 +191,27 @@ testIso(inner, outer)
 print()
 
 link = ExampleLink.trefoil()
-testDisplay(link, 0, 1)
-testDisplay(link, 0, 2)
+testDisplay(link, 'Trefoil', 0, 1)
+testDisplay(link, 'Trefoil', 0, 2)
 print()
 
 link = ExampleLink.figureEight()
-testStopAfter10(link, 1, 1)
-testStopAfter10(link, 1, 2)
-testCollect(link, 1, 1)
-testCollect(link, 1, 2)
+testStopAfter10(link, 'Figure eight knot', 1, 1)
+testStopAfter10(link, 'Figure eight knot', 1, 2)
+testCollect(link, 'Figure eight knot', 1, 1)
+testCollect(link, 'Figure eight knot', 1, 2)
 print()
 
 link = ExampleLink.monster()
-testStopAfter10(link, 1, 1)
-testStopAfter10(link, 1, 2)
+testStopAfter10(link, 'Monster unknot', 1, 1)
+testStopAfter10(link, 'Monster unknot', 1, 2)
 print()
 
 link = ExampleLink.trefoil()
-testCovers(link, 2)
-testCovers(link, 3)
-testCovers(link, 4)
-testCovers(link, 5)
+testCovers(link, 'Trefoil', 2)
+testCovers(link, 'Trefoil', 3)
+testCovers(link, 'Trefoil', 4)
+testCovers(link, 'Trefoil', 5)
 print()
 
 ########################################################################
