@@ -250,7 +250,7 @@ QSize CrossingDelegate::sizeHint(const QStyleOptionViewItem &option,
 }
 
 LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), link(packet), useCrossing(-1) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
@@ -323,13 +323,11 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actSimplify->setIcon(ReginaSupport::regIcon("simplify-link"));
     actSimplify->setToolTip(tr(
         "Simplify the knot or link as far as possible"));
-    actSimplify->setEnabled(readWrite);
     actSimplify->setWhatsThis(tr("Simplify this link to use fewer "
         "crossings.  This link will be modified directly.<p>"
         "This procedure uses only fast heuristics based on Reidemeister "
         "moves, and so there is no guarantee that the smallest possible "
         "number of crossings will be achieved."));
-    enableWhenWritable.push_back(actSimplify);
     actionList.push_back(actSimplify);
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
 
@@ -337,14 +335,12 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actMoves->setText(tr("Reidemeister &Moves..."));
     actMoves->setToolTip(tr(
         "Modify the link diagram using Reidemeister moves"));
-    actMoves->setEnabled(readWrite);
     actMoves->setWhatsThis(tr("Perform Reidemeister moves upon this "
         "link diagram.  <i>Reidemeister moves</i> are modifications "
         "local to a small number of crossings that do not change "
         "the underlying link.<p>"
         "A dialog will be presented for you to select which "
         "Reidemeister moves to apply."));
-    enableWhenWritable.push_back(actMoves);
     actionList.push_back(actMoves);
     connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
 
@@ -357,51 +353,43 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr("Reflect this link"));
-    actReflect->setEnabled(readWrite);
     actReflect->setWhatsThis(tr("Reflect this link about some axis in "
         "the plane.  Every crossing will change sign, but its upper "
         "and lower strands will remain the same."));
     actionList.push_back(actReflect);
-    enableWhenWritable.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
     QAction* actRotate = new QAction(this);
     actRotate->setText(tr("&Rotate"));
     actRotate->setIcon(ReginaSupport::regIcon("rotate"));
     actRotate->setToolTip(tr("Rotate this link"));
-    actRotate->setEnabled(readWrite);
     actRotate->setWhatsThis(tr("Rotate this link about some axis in "
         "the plane.  Every crossing will keep the same sign, but its upper "
         "and lower strands will be switched.<p>"
         "This operation simply produces a different diagram of the "
         "same link."));
     actionList.push_back(actRotate);
-    enableWhenWritable.push_back(actRotate);
     connect(actRotate, SIGNAL(triggered()), this, SLOT(rotate()));
 
     QAction* actReverse = new QAction(this);
     actReverse->setText(tr("Re&verse"));
     actReverse->setIcon(ReginaSupport::regIcon("reverse"));
     actReverse->setToolTip(tr("Reverse this link"));
-    actReverse->setEnabled(readWrite);
     actReverse->setWhatsThis(tr("Reverse the orientation of each component "
         "of this link.  Every crossing will keep the same sign and the "
         "same upper/lower strands, but the order in which you traverse "
         "the strands will be reversed."));
     actionList.push_back(actReverse);
-    enableWhenWritable.push_back(actReverse);
     connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
 
     QAction* actParallel = new QAction(this);
     actParallel->setText(tr("Parallel Ca&bles..."));
     actParallel->setIcon(ReginaSupport::regIcon("parallel"));
     actParallel->setToolTip(tr("Expand into parallel cables"));
-    actParallel->setEnabled(readWrite);
     actParallel->setWhatsThis(tr("Expands this link into many cables, "
         "all of which will be parallel according to a chosen framing.  "
         "This link will be modified directly."));
     actionList.push_back(actParallel);
-    enableWhenWritable.push_back(actParallel);
     connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
     QAction* actComposeWith = new QAction(this);
@@ -409,12 +397,10 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actComposeWith->setToolTip(
         tr("Make this into a composition with another link"));
-    actComposeWith->setEnabled(readWrite);
     actComposeWith->setWhatsThis(tr("Forms the composition of "
         "this link with some other link.  "
         "This link will be modified directly."));
     actionList.push_back(actComposeWith);
-    enableWhenWritable.push_back(actComposeWith);
     connect(actComposeWith, SIGNAL(triggered()), this, SLOT(composeWith()));
 
     sep = new QAction(this);
@@ -461,11 +447,6 @@ QWidget* LinkCrossingsUI::getInterface() {
 
 const std::vector<QAction*>& LinkCrossingsUI::getPacketTypeActions() {
     return actionList;
-}
-
-void LinkCrossingsUI::setReadWrite(bool readWrite) {
-    for (auto action : enableWhenWritable)
-        action->setEnabled(readWrite);
 }
 
 void LinkCrossingsUI::refresh() {

@@ -83,7 +83,6 @@ class TextUI : public QObject, public PacketUI {
         PacketEditIface* getEditIface();
         QString getPacketMenuText() const;
         void refresh();
-        void setReadWrite(bool readWrite);
 };
 
 inline PacketEditIface* TextUI::getEditIface() {

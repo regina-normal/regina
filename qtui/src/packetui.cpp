@@ -35,7 +35,6 @@
 #include "packet/packet.h"
 
 // UI includes:
-#include "eventids.h"
 #include "packeteditiface.h"
 #include "packetmanager.h"
 #include "packetui.h"
@@ -47,7 +46,6 @@
 #include <QAction>
 #include <QApplication>
 #include <QBoxLayout>
-#include <QEvent>
 #include <QFrame>
 #include <QLabel>
 #include <QMenu>
@@ -105,9 +103,6 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
     QBoxLayout* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
-
-    // Should we allow both read and write?
-    readWrite = newPacket->isPacketEditable();
 
     // Create the actions first, since PacketManager::createUI()
     // might want to modify them.
@@ -172,23 +167,6 @@ void PacketPane::fillPacketTypeMenu(QMenu* menu) {
         menu->addSeparator();
     }
     menu->addAction(actClose);
-}
-
-bool PacketPane::setReadWrite(bool allowReadWrite) {
-    if (allowReadWrite)
-        if (! (mainUI->getPacket()->isPacketEditable()))
-            return false;
-
-    if (readWrite == allowReadWrite)
-        return true;
-
-    // We are changing the status and we are allowed to.
-    readWrite = allowReadWrite;
-
-    mainUI->setReadWrite(allowReadWrite);
-    updateClipboardActions();
-
-    return true;
 }
 
 bool PacketPane::queryClose() {
@@ -270,22 +248,6 @@ void PacketPane::packetToBeDestroyed(regina::PacketShell) {
     close();
 }
 
-void PacketPane::childWasAdded(regina::Packet* packet, regina::Packet*) {
-    // Assume it's this packet.
-    // Watch out though.  We may not be in the GUI thread.
-    // Better do it all through Qt events.
-    if (packet->isPacketEditable() != readWrite)
-        QApplication::postEvent(this, new QEvent(
-            readWrite ? (QEvent::Type)EVT_PANE_SET_READONLY : (QEvent::Type)EVT_PANE_SET_READWRITE));
-}
-
-void PacketPane::childWasRemoved(regina::Packet* packet, regina::Packet*) {
-    // Assume it's this packet, though be careful: we might already be inside
-    // packet's destructor (in which case packet will be passed as null).
-    if (packet && packet->isPacketEditable() != readWrite)
-        setReadWrite(!readWrite);
-}
-
 bool PacketPane::close() {
     // Let whoever owns us handle the entire close event.
     // We'll come back to this class when they call queryClose().
@@ -313,13 +275,5 @@ void PacketPane::updateClipboardActions() {
         editCopy->setEnabled(iface ? iface->copyEnabled() : false);
     if (editPaste)
         editPaste->setEnabled(iface ? iface->pasteEnabled() : false);
-}
-
-void PacketPane::customEvent(QEvent* evt) {
-    int type = evt->type();
-    if (type == EVT_PANE_SET_READONLY)
-        setReadWrite(false);
-    else if (type == EVT_PANE_SET_READWRITE)
-        setReadWrite(true);
 }
 

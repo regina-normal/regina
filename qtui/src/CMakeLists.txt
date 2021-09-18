@@ -57,7 +57,6 @@ ENDIF(LIBGVC_FOUND)
 
 SET(SOURCES ${SOURCES}
   bigwidget.cpp
-  clickablelabel.cpp
   codecchooser.cpp
   columnlayout.cpp
   examplesaction.cpp

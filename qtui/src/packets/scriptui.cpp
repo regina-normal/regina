@@ -101,8 +101,7 @@ void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
     editor->setGeometry(option.rect);
 }
 
-ScriptVarModel::ScriptVarModel(Script* script, bool readWrite) :
-        script_(script), isReadWrite_(readWrite) {
+ScriptVarModel::ScriptVarModel(Script* script) : script_(script) {
 }
 
 void ScriptVarModel::rebuild() {
@@ -173,10 +172,7 @@ QVariant ScriptVarModel::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags ScriptVarModel::flags(const QModelIndex&) const {
-    if (isReadWrite_)
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
-    else
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 }
 
 bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
@@ -248,8 +244,6 @@ bool ScriptVarModel::nameUsedElsewhere(const QString& name, int exclude) const {
 
 ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), script(packet) {
-    bool readWrite = enclosingPane->isReadWrite();
-
     ui = new BigWidget(1, 2);
     QVBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -267,16 +261,11 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     layout->addWidget(splitter, 1);
 
-    model = new ScriptVarModel(packet, readWrite);
+    model = new ScriptVarModel(packet);
     varTable = new EditTableView();
     varTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     varTable->setModel(model);
-
-    if (readWrite )
-        varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    else
-        varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
+    varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     varTable->setWhatsThis(tr("<qt>A list of variables that will be "
         "set before the script is run.  Each variable may refer to a "
         "single packet.<p>"
@@ -295,7 +284,6 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
 
     editWidget = new DocWidget<Script, DocWidgetFinalNewline>(
         packet, splitter);
-    editWidget->setReadOnly(!readWrite);
     editWidget->setLineWrapMode(QPlainTextEdit::NoWrap);
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
@@ -328,7 +316,6 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actAdd->setText(tr("&Add Var"));
     actAdd->setIcon(ReginaSupport::regIcon("insert"));
     actAdd->setToolTip(tr("Add a new script variable"));
-    actAdd->setEnabled(readWrite);
     actAdd->setWhatsThis(tr("Add a new variable to this script.<p>"
         "A script may come with any number of variables, each of which "
         "refers to a single packet.  "
@@ -430,19 +417,6 @@ void ScriptUI::refresh() {
 void ScriptUI::endEdit() {
     varTable->endEdit();
     editWidget->commit();
-}
-
-void ScriptUI::setReadWrite(bool readWrite) {
-    model->setReadWrite(readWrite);
-
-    if (readWrite)
-        varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    else
-        varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    editWidget->setReadOnly(!readWrite);
-    actAdd->setEnabled(readWrite);
-    updateRemoveState();
 }
 
 void ScriptUI::addVariable() {

@@ -191,11 +191,6 @@ PacketUI* PacketTabbedUI::currentInterface() {
         return editorTab;
 }
 
-void PacketTabbedUI::setReadWrite(bool readWrite) {
-    if (editorTab)
-        editorTab->setReadWrite(readWrite);
-}
-
 void PacketTabbedUI::notifyTabSelected(int newTab) {
     // Remember this tab for next time.
     if (rememberTabSelection_)

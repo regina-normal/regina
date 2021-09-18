@@ -69,8 +69,7 @@ namespace {
 
 FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
         PacketPane* enclosingPane) :
-        PacketUI(enclosingPane), filter(packet),
-        allowReadWrite(enclosingPane->isReadWrite()), inNotify(false) {
+        PacketUI(enclosingPane), filter(packet), inNotify(false) {
     ui = new QWidget();
     ui->setWhatsThis(tr("Specify on this page which properties "
         "a normal surface must satisfy in order to be displayed by this "
@@ -213,21 +212,6 @@ void FilterPropUI::refresh() {
     eulerList->setText(filterECList());
 }
 
-void FilterPropUI::setReadWrite(bool readWrite) {
-    allowReadWrite = readWrite;
-
-    useOrient->setEnabled(readWrite);
-    useCompact->setEnabled(readWrite);
-    useBdry->setEnabled(readWrite);
-
-    enableDisableOrient();
-    enableDisableCompact();
-    enableDisableBdry();
-
-    eulerList->setEnabled(allowReadWrite);
-    eulerExpln->setEnabled(allowReadWrite);
-}
-
 bool FilterPropUI::notifyOptionsChanged() {
     // Sometimes notifyOptionsChanged() calls itself; this seems to be a
     // side-effect of the message box from ReginaSupport::info()
@@ -279,15 +263,15 @@ bool FilterPropUI::notifyOptionsChanged() {
 }
 
 void FilterPropUI::enableDisableOrient() {
-    optOrient->setEnabled(allowReadWrite && useOrient->isChecked());
+    optOrient->setEnabled(useOrient->isChecked());
 }
 
 void FilterPropUI::enableDisableCompact() {
-    optCompact->setEnabled(allowReadWrite && useCompact->isChecked());
+    optCompact->setEnabled(useCompact->isChecked());
 }
 
 void FilterPropUI::enableDisableBdry() {
-    optBdry->setEnabled(allowReadWrite && useBdry->isChecked());
+    optBdry->setEnabled(useBdry->isChecked());
 }
 
 BoolSet FilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
@@ -301,8 +285,7 @@ BoolSet FilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
     }
 }
 
-void FilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
-        BoolSet set) {
+void FilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt, BoolSet set) {
     if (set == BoolSet() || set == BoolSet(true, true)) {
         // No restrictions.
         // Note that we're essentially ignoring the empty set, which should
@@ -312,7 +295,7 @@ void FilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
     } else {
         use->setChecked(true);
         opt->setCurrentIndex(set.hasTrue() ? 0 : 1);
-        opt->setEnabled(allowReadWrite);
+        opt->setEnabled(true);
     }
 }
 

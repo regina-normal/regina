@@ -312,22 +312,18 @@ regina::Perm<4> GluingsModel3::faceStringToPerm(int srcFace, const QString& str)
 }
 
 Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
-    model = new GluingsModel3(packet, readWrite);
+    model = new GluingsModel3(packet, true /* read-write */);
     faceTable = new EditTableView();
     faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     faceTable->setModel(model);
 
-    if (readWrite) {
-        QAbstractItemView::EditTriggers flags(
-            QAbstractItemView::AllEditTriggers);
-        flags ^= QAbstractItemView::CurrentChanged;
-        faceTable->setEditTriggers(flags);
-    } else
-        faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
+    QAbstractItemView::EditTriggers flags(
+        QAbstractItemView::AllEditTriggers);
+    flags ^= QAbstractItemView::CurrentChanged;
+    faceTable->setEditTriggers(flags);
 
     faceTable->setWhatsThis(tr("<qt>A table specifying which tetrahedron "
         "faces are identified with which others.<p>"
@@ -361,10 +357,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actAddTet->setText(tr("&Add Tet"));
     actAddTet->setIcon(ReginaSupport::regIcon("insert"));
     actAddTet->setToolTip(tr("Add a new tetrahedron"));
-    actAddTet->setEnabled(readWrite);
     actAddTet->setWhatsThis(tr("Add a new tetrahedron to this "
         "triangulation."));
-    enableWhenWritable.push_back(actAddTet);
     triActionList.push_back(actAddTet);
     connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
 
@@ -390,7 +384,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actSimplify->setIcon(ReginaSupport::regIcon("simplify"));
     actSimplify->setToolTip(tr(
         "Simplify the triangulation as far as possible"));
-    actSimplify->setEnabled(readWrite);
     actSimplify->setWhatsThis(tr("Simplify this triangulation to use fewer "
         "tetrahedra without changing the underlying 3-manifold.  This "
         "triangulation will be modified directly.<p>"
@@ -401,21 +394,18 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "the <i>Make 0-Efficient</i> routine for a slower but more powerful "
         "reduction."));
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
-    enableWhenWritable.push_back(actSimplify);
     triActionList.push_back(actSimplify);
 
     QAction* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
         "Modify the triangulation using elementary moves"));
-    actEltMove->setEnabled(readWrite);
     actEltMove->setWhatsThis(tr("<qt>Perform elementary moves upon this "
         "triangulation.  <i>Elementary moves</i> are modifications local to "
         "a small number of tetrahedra that do not change the underlying "
         "3-manifold.<p>"
         "A dialog will be presented for you to select which "
         "elementary moves to apply.</qt>"));
-    enableWhenWritable.push_back(actEltMove);
     triActionList.push_back(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
@@ -428,13 +418,11 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
     actOrient->setToolTip(tr(
         "Relabel vertices of tetrahedra for consistent orientation"));
-    actOrient->setEnabled(readWrite);
     actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
         "so that all tetrahedra are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent faces.<p>"
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled.</qt>"));
-    enableWhenWritable.push_back(actOrient);
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
@@ -443,7 +431,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
         "Reverse the orientation of each tetrahedron"));
-    actReflect->setEnabled(readWrite);
     actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
         "so that the orientations of all tetrahedra are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
@@ -457,13 +444,11 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actBarycentricSubdivide->setEnabled(readWrite);
     actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
         "subdivision on this triangulation.  The triangulation will be "
         "changed directly.<p>"
         "This operation involves subdividing each tetrahedron into "
         "24 smaller tetrahedra."));
-    enableWhenWritable.push_back(actBarycentricSubdivide);
     triActionList.push_back(actBarycentricSubdivide);
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
@@ -473,7 +458,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
     actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
-    actIdealToFinite->setEnabled(readWrite);
     actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 2-spheres nor discs "
@@ -482,7 +466,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "vertices of this type to truncate, this operation will have no "
         "effect.<p>"
         "This action was previously called <i>Ideal to Finite</i>."));
-    enableWhenWritable.push_back(actIdealToFinite);
     triActionList.push_back(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
@@ -491,7 +474,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actFiniteToIdeal->setIcon(ReginaSupport::regIcon("cone"));
     actFiniteToIdeal->setToolTip(tr(
         "Convert real boundary components into ideal vertices"));
-    actFiniteToIdeal->setEnabled(readWrite);
     actFiniteToIdeal->setWhatsThis(tr("Convert this from a finite "
         "triangulation to an ideal triangulation.  Each real boundary "
         "component (formed from two or more boundary triangles) will be "
@@ -500,7 +482,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "components will be filled in with balls.<p>"
         "This triangulation will be modified directly.  If there are no "
         "real boundary components, this operation will have no effect."));
-    enableWhenWritable.push_back(actFiniteToIdeal);
     triActionList.push_back(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
@@ -509,13 +490,11 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
         "Convert the triangulation to its orientable double cover"));
-    actDoubleCover->setEnabled(readWrite);
     actDoubleCover->setWhatsThis(tr("Convert a non-orientable "
         "triangulation into an orientable double cover.  This triangulation "
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
         "duplicated, resulting in a disconnected triangulation."));
-    enableWhenWritable.push_back(actDoubleCover);
     triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
@@ -524,11 +503,9 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actPuncture->setIcon(ReginaSupport::regIcon("puncture"));
     actPuncture->setToolTip(tr(
         "Remove a ball from the interior of the triangulation"));
-    actPuncture->setEnabled(readWrite);
     actPuncture->setWhatsThis(tr("Removes a ball from the interior of "
         "this triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.push_back(actPuncture);
     triActionList.push_back(actPuncture);
     connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
 
@@ -537,11 +514,9 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
     actDrillEdge->setToolTip(tr(
         "Drill out a regular neighbourhood of an edge"));
-    actDrillEdge->setEnabled(readWrite);
     actDrillEdge->setWhatsThis(tr("Drill out a regular neighbourhood "
         "of an edge of this triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.push_back(actDrillEdge);
     triActionList.push_back(actDrillEdge);
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
 
@@ -550,11 +525,9 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actConnectedSumWith->setToolTip(tr(
         "Make this into a connected sum with another triangulation"));
-    actConnectedSumWith->setEnabled(readWrite);
     actConnectedSumWith->setWhatsThis(tr("Forms the connected sum "
         "of this triangulation with some other triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.push_back(actConnectedSumWith);
     triActionList.push_back(actConnectedSumWith);
     connect(actConnectedSumWith, SIGNAL(triggered()), this,
         SLOT(connectedSumWith()));
@@ -627,7 +600,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actZeroEff->setText(tr("Make &0-Efficient"));
     actZeroEff->setToolTip(tr(
         "Convert this into a 0-efficient triangulation if possible"));
-    actZeroEff->setEnabled(readWrite);
     actZeroEff->setWhatsThis(tr("<qt>Convert this into a 0-efficient "
         "triangulation of the same underlying 3-manifold, if possible.  "
         "This triangulation will be modified directly.<p>"
@@ -636,7 +608,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "Note also that some 3-manifolds (such as composite 3-manifolds) "
         "can never have 0-efficient triangulations.  You will be notified "
         "if this is the case.</qt>"));
-    enableWhenWritable.push_back(actZeroEff);
     triActionList.push_back(actZeroEff);
     connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
@@ -695,24 +666,6 @@ void Tri3GluingsUI::refresh() {
 
 void Tri3GluingsUI::endEdit() {
     faceTable->endEdit();
-}
-
-void Tri3GluingsUI::setReadWrite(bool readWrite) {
-    model->setReadWrite(readWrite);
-
-    if (readWrite) {
-        QAbstractItemView::EditTriggers flags(
-            QAbstractItemView::AllEditTriggers);
-        flags ^= QAbstractItemView::CurrentChanged;
-        faceTable->setEditTriggers(flags);
-    } else
-        faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    for (auto action : enableWhenWritable)
-        action->setEnabled(readWrite);
-
-    updateRemoveState();
-    updateActionStates();
 }
 
 void Tri3GluingsUI::addTet() {
@@ -1418,21 +1371,12 @@ void Tri3GluingsUI::toSnapPea() {
 }
 
 void Tri3GluingsUI::updateRemoveState() {
-    if (model->isReadWrite())
-        actRemoveTet->setEnabled(
-            ! faceTable->selectionModel()->selectedIndexes().empty());
-    else
-        actRemoveTet->setEnabled(false);
+    actRemoveTet->setEnabled(
+        ! faceTable->selectionModel()->selectedIndexes().empty());
 }
 
 void Tri3GluingsUI::updateActionStates() {
-    if (! model->isReadWrite())
-        actOrient->setEnabled(false);
-    else if (! tri->isOrientable())
-        actOrient->setEnabled(false);
-    else
-        actOrient->setEnabled(! tri->isOriented());
-
+    actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
 }
 

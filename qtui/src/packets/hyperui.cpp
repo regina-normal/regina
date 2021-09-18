@@ -63,8 +63,7 @@ HyperUI::HyperUI(regina::NormalHypersurfaces* packet,
     // the default tab must be updated accordingly.
     addTab(new HyperSummaryUI(packet, this), tr("&Summary"));
 
-    coords = new HyperCoordinateUI(packet, this,
-        newEnclosingPane->isReadWrite());
+    coords = new HyperCoordinateUI(packet, this);
     addTab(coords, tr("Hypersurface &Coordinates"));
 
     addTab(new HyperMatchingUI(packet, this), tr("&Matching Equations"));

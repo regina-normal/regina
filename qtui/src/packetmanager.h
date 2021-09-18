@@ -64,13 +64,6 @@ class PacketManager {
         /**
          * Returns a newly created interface appropriate for viewing or
          * editing the given packet.
-         *
-         * The interface will be created in read-write or read-only mode
-         * as appropriate.
-         *
-         * Note that the interface may be required to change its
-         * read-only or read-write status throughout its lifetime.
-         * See PacketUI::setReadWrite() for details.
          */
         static PacketUI* createUI(regina::Packet* packet,
             PacketPane* enclosingPane);

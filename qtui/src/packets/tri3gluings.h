@@ -70,12 +70,6 @@ class GluingsModel3 : public QAbstractItemModel {
         GluingsModel3(regina::Triangulation<3>* tri, bool readWrite);
 
         /**
-         * Read-write state.
-         */
-        bool isReadWrite() const;
-        void setReadWrite(bool readWrite);
-
-        /**
          * Force a complete refresh.
          */
         void rebuild();
@@ -157,14 +151,13 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         QAction* actOrient;
         QAction* actBoundaryComponents;
         std::vector<QAction*> triActionList;
-        std::vector<QAction*> enableWhenWritable;
 
     public:
         /**
          * Constructor and destructor.
          */
         Tri3GluingsUI(regina::Triangulation<3>* packet,
-                PacketTabbedUI* useParentUI, bool readWrite);
+                PacketTabbedUI* useParentUI);
         ~Tri3GluingsUI();
 
         /**
@@ -184,7 +177,6 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         const std::vector<QAction*>& getPacketTypeActions();
         void refresh();
         void endEdit();
-        void setReadWrite(bool readWrite);
 
     public slots:
         /**
@@ -221,20 +213,6 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         void updateRemoveState();
         void updateActionStates();
 };
-
-inline bool GluingsModel3::isReadWrite() const {
-    return isReadWrite_;
-}
-
-inline void GluingsModel3::setReadWrite(bool readWrite) {
-    if (isReadWrite_ != readWrite) {
-        // Edit flags will all change.
-        // A full model reset is probably too severe, but.. *shrug*
-        beginResetModel();
-        isReadWrite_ = readWrite;
-        endResetModel();
-    }
-}
 
 inline QModelIndex GluingsModel3::parent(const QModelIndex&) const {
     // All items are top-level.

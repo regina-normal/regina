@@ -63,16 +63,11 @@ class HyperModel : public QAbstractItemModel {
         regina::NormalHypersurfaces* surfaces_;
         regina::HyperCoords coordSystem_;
 
-        /**
-         * Internal status
-         */
-        bool isReadWrite;
-
     public:
         /**
          * Constructor and destructor.
          */
-        HyperModel(regina::NormalHypersurfaces* surfaces, bool readWrite);
+        HyperModel(regina::NormalHypersurfaces* surfaces);
 
         /**
          * Data retrieval.
@@ -85,11 +80,6 @@ class HyperModel : public QAbstractItemModel {
          */
         void rebuild(regina::HyperCoords coordSystem_);
         void rebuildUnicode();
-
-        /**
-         * Updating read/write status.
-         */
-        void setReadWrite(bool readWrite);
 
         /**
          * Overrides for describing and editing data in the model.
@@ -142,7 +132,6 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         /**
          * Internal status
          */
-        bool isReadWrite;
         bool currentlyResizing;
 
     public:
@@ -150,7 +139,7 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
          * Constructor and destructor.
          */
         HyperCoordinateUI(regina::NormalHypersurfaces* packet,
-            PacketTabbedUI* useParentUI, bool readWrite);
+            PacketTabbedUI* useParentUI);
         ~HyperCoordinateUI();
 
         /**
@@ -160,7 +149,6 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         regina::Packet* getPacket();
         QWidget* getInterface();
         const std::vector<QAction*>& getPacketTypeActions();
-        void setReadWrite(bool readWrite);
 
     public slots:
         /**
@@ -189,11 +177,8 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         void updatePreferences();
 };
 
-inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces,
-        bool readWrite) :
-        surfaces_(surfaces),
-        coordSystem_(surfaces->coords()),
-        isReadWrite(readWrite) {
+inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces) :
+        surfaces_(surfaces), coordSystem_(surfaces->coords()) {
 }
 
 inline regina::NormalHypersurfaces* HyperModel::surfaces() const {

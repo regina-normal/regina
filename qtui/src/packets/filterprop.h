@@ -81,7 +81,6 @@ class FilterPropUI : public QObject, public PacketUI {
         /**
          * Current state
          */
-        bool allowReadWrite;
         bool inNotify;
 
     public:
@@ -98,7 +97,6 @@ class FilterPropUI : public QObject, public PacketUI {
         QWidget* getInterface();
         QString getPacketMenuText() const;
         void refresh();
-        void setReadWrite(bool readWrite);
 
     public slots:
         /**
