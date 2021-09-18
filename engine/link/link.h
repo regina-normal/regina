@@ -605,10 +605,30 @@ class Crossing : public MarkedElement, public Output<Crossing> {
  * and it also supports components with no crossings (which form additional
  * unknot components of the overall link).
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead a Link is now a
+ * standalone mathematatical object, which makes it slimmer and faster
+ * for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own Link, it will not have any of the usual packet
+ *   infrastructure.  You cannot add it into the packet tree, and it will
+ *   not support a label, tags, child/parent packets, and/or event listeners.
+ *
+ * - To include a Link in the packet tree, you must create a new
+ *   PacketOf<Link>.  This \e is a packet type, and supports labels, tags,
+ *   child/parent packets, and event listeners.  It holds its own internal
+ *   Link, which you can access via PacketOf<Link>::data().
+ *
+ * - If you are adding new functions to this class that edit the link,
+ *   you must still remember to create a ChangeEventSpan.  This will
+ *   ensure that, if the link is being managed by a PacketOf<Link>,
+ *   then the appropriate packet change events will be fired.
+ *   All other events (aside from packetToBeChanged() and packetWasChanged()
+ *   are managed directly by the PacketOf<Link> wrapper class.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \ingroup link
  */
@@ -753,7 +773,6 @@ class Link : public PacketData<Link>, public Output<Link> {
         Link(size_t unknots);
         /**
          * Constructs a new copy of the given link.
-         * The packet tree structure and packet label are \e not copied.
          *
          * This will clone any computed properties (such as Jones
          * polynomial and so on) of the given link also.  If you want a
@@ -775,6 +794,25 @@ class Link : public PacketData<Link>, public Output<Link> {
          */
         Link(const Link& copy, bool cloneProps);
         /**
+         * Moves the given link into this new link.
+         * This is a fast (constant time) operation.
+         *
+         * All crossings that belong to \a src will be moved into this link,
+         * and so any Crossing pointers or StrandRef object will remain valid.
+         * Likewise, all cached properties will be moved into this link.
+         *
+         * The link that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this link
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the link to move.
+         */
+        Link(Link&& src) noexcept;
+        /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a link.
          *
@@ -789,8 +827,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          * - planar diagram codes, as used by fromPD().
          *
          * This list may grow in future versions of Regina.
-         *
-         * Regina will also set the packet label accordingly.
          *
          * If Regina cannot interpret the given string, this will be
          * left as the empty link.
@@ -940,6 +976,35 @@ class Link : public PacketData<Link>, public Output<Link> {
         /*@{*/
 
         /**
+         * Sets this to be a (deep) copy of the given link.
+         *
+         * @param copy the link to copy.
+         * @return a reference to this link.
+         */
+        Link& operator = (const Link& src);
+
+        /**
+         * Moves the contents of the given link into this link.
+         * This is a fast (constant time) operation.
+         *
+         * All crossings that belong to \a src will be moved into this link,
+         * and so any Crossing pointers or StrandRef object will remain valid.
+         * Likewise, all cached properties will be moved into this link.
+         *
+         * The link that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this link which may in turn call arbitrary code
+         * via any registered packet listeners.  It deliberately does \e not
+         * fire change events on \a src, since it assumes that \a src is about
+         * to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the link to move.
+         * @return a reference to this link.
+         */
+        Link& operator = (Link&& src);
+
+        /**
          * Swaps the contents of this and the given link.
          *
          * All crossings that belong to this link will be moved to \a other,
@@ -950,15 +1015,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * In particular, any Crossing pointers or references and any
          * StrandRef objects will remain valid.
          *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
-         *
          * This routine will behave correctly if \a other is in fact
          * this link.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
+         * fires change events on both links which may in turn call arbitrary
          * code via any registered packet listeners.
          *
          * @param other the link whose contents should be swapped with this.
@@ -3071,11 +3132,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * In summary, the output will consist of several lines of text:
          *
-         * - If this link has a packet label, then the output will begin with
-         *   a descriptive comment line of the form <tt>c <i>label</i></tt>.
-         *   Otherwise this initial comment line will be omitted.
-         *
-         * - Next will be a line of the form
+         * - The first line will be of the form
          *   <tt>p&nbsp;tw&nbsp;<i>num_vertices</i>&nbsp;<i>num_edges</i></tt>.
          *   Note that, since the underlying graph comes from a link diagram,
          *   we will always have \e num_edges equal to twice \e num_vertices.
@@ -3088,7 +3145,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          * An example of this text format is as follows:
          *
            \verbatim
-           c Figure eight knot
            p tw 4 8
            1 2
            1 4
@@ -3920,7 +3976,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * This must be called by any internal function that changes the link.
          *
          * In most cases this routine is followed immediately by firing
-         * a packet change event.
+         * a change event.
          */
         void clearAllProperties();
 
@@ -4241,7 +4297,7 @@ class XMLWriter<Link> {
  * See Link::swap() for more details.
  *
  * \note This swap function is \e not marked \c noexcept, since it
- * fires packet change events which may in turn call arbitrary
+ * fires change events on both links which may in turn call arbitrary
  * code via any registered packet listeners.
  *
  * @param lhs the link whose contents should be swapped with \a rhs.
@@ -4283,7 +4339,8 @@ class CrossingIterator {
 
     private:
         const Link* link_;
-            /**< The underlying link. */
+            /**< The underlying link.  This is stored by pointer to
+                 allow assignment; it must never be \c null. */
         size_t index_;
             /**< The index of the crossing that we are currently visiting. */
 
@@ -4398,7 +4455,8 @@ class ArcIterator {
 
     private:
         const Link* link_;
-            /**< The underlying link. */
+            /**< The underlying link.  This is stored by pointer to
+                 allow assignment; it must never be \c null. */
         size_t index_;
             /**< The index of the crossing that we are currently visiting. */
         bool upper_;

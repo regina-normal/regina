@@ -39,6 +39,7 @@
 namespace regina {
 
 Link::Link(const Link& cloneMe, bool cloneProps) {
+    crossings_.reserve(cloneMe.crossings_.size());
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
 
@@ -51,6 +52,7 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
         ++it;
     }
 
+    components_.reserve(cloneMe.components_.size());
     for (const StrandRef& comp : cloneMe.components_)
         components_.push_back(translate(comp));
 
@@ -62,6 +64,74 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
     homflyAZ_ = cloneMe.homflyAZ_;
     homflyLM_ = cloneMe.homflyLM_;
     bracket_ = cloneMe.bracket_;
+    niceTreeDecomposition_ = cloneMe.niceTreeDecomposition_;
+}
+
+Link::Link(Link&& src) noexcept :
+        components_(std::move(src.components_)),
+        jones_(std::move(src.jones_)),
+        homflyLM_(std::move(src.homflyLM_)),
+        homflyAZ_(std::move(src.homflyAZ_)),
+        bracket_(std::move(src.bracket_)),
+        niceTreeDecomposition_(std::move(src.niceTreeDecomposition_)) {
+    // We need src.crossings_ to be empty, so that src's destructor does not
+    // do anything unexpected.  Ensure this by using a swap instead of a move.
+    crossings_.swap(src.crossings_);
+}
+
+Link& Link::operator = (const Link& src) {
+    ChangeEventSpan span(*this);
+
+    for (Crossing* c : crossings_)
+        delete c;
+
+    crossings_.clear();
+    components_.clear();
+
+    crossings_.reserve(src.crossings_.size());
+    for (Crossing* c : src.crossings_)
+        crossings_.push_back(new Crossing(c->sign()));
+
+    auto it = src.crossings_.begin();
+    for (Crossing* c : crossings_) {
+        for (int i = 0; i < 2; ++i) {
+            c->next_[i] = translate((*it)->next_[i]);
+            c->prev_[i] = translate((*it)->prev_[i]);
+        }
+        ++it;
+    }
+
+    components_.reserve(src.components_.size());
+    for (const StrandRef& comp : src.components_)
+        components_.push_back(translate(comp));
+
+    // Clone properties:
+    jones_ = src.jones_;
+    homflyAZ_ = src.homflyAZ_;
+    homflyLM_ = src.homflyLM_;
+    bracket_ = src.bracket_;
+    niceTreeDecomposition_ = src.niceTreeDecomposition_;
+
+    return *this;
+}
+
+Link& Link::operator = (Link&& src) {
+    ChangeEventSpan span(*this);
+
+    // MarkedVector, pointers must eventually destroyed:
+    crossings_.swap(src.crossings_);
+
+    // std::vector, does not own its pointers:
+    components_ = std::move(src.components_);
+
+    jones_ = std::move(src.jones_);
+    homflyLM_ = std::move(src.homflyLM_);
+    homflyAZ_ = std::move(src.homflyAZ_);
+    bracket_ = std::move(src.bracket_);
+    niceTreeDecomposition_ = std::move(src.niceTreeDecomposition_);
+
+    // Let src dispose of the original crossings in its own destructor.
+    return *this;
 }
 
 Link::Link(const std::string& description) {

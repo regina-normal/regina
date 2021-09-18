@@ -30,29 +30,38 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/helpers.h
- *  \brief Various tools to assist with Python bindings for Regina.
+/*! \file python/helpers/packet.h
+ *  \brief Assists with packets that wrap standalone C++ types.
  */
 
-#ifndef __HELPERS_H
-#ifndef __DOXYGEN
-#define __HELPERS_H
-#endif
-
-#include "pybind11/pybind11.h"
-#include "helpers/equality.h"
-#include "helpers/output.h"
-#include "helpers/listview.h"
-#include "helpers/iterators.h"
-#include "helpers/packet.h"
-#include "helpers/pointers.h"
-
-// Inform pybind11 that SafePtr can be used as a holder type, and that it
-// is safe to construct multiple holders from the same T*.
-
 namespace regina {
-    template <typename T> class SafePtr;
-}
-PYBIND11_DECLARE_HOLDER_TYPE(T, regina::SafePtr<T>, true);
 
-#endif
+class Packet;
+template <class> class PacketOf;
+template <class> class SafePtr;
+
+namespace python {
+
+/**
+ * Adds Python bindings for the class PacketOf<Held>.
+ */
+template <class Held>
+void add_packet_wrapper(pybind11::module_& m, const char* className) {
+    pybind11::class_<regina::PacketOf<Held>, regina::Packet,
+            regina::SafePtr<regina::PacketOf<Held>>>(m, className)
+        .def(pybind11::init<>())
+        .def(pybind11::init<const Held&>())
+        .def(pybind11::init<const regina::PacketOf<Held>&>())
+        .def("data",
+            (Held&(regina::PacketOf<Held>::*)())(&regina::PacketOf<Held>::data),
+            pybind11::return_value_policy::reference_internal)
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return regina::PacketOf<Held>::typeID;
+        })
+    ;
+}
+
+} // namespace python
+} // namespace regina
+

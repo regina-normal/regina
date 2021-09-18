@@ -1830,7 +1830,7 @@ class PacketOf : public Packet {
 };
 
 #define REGINA_PACKET_DATA(class_, id, name) \
-    protected: \
+    private: \
         static constexpr const PacketType packetTypeID = id; \
         static constexpr const char* packetTypeName = name; \
         friend class PacketOf<class_>;
@@ -1839,9 +1839,15 @@ template <typename Held>
 class PacketData {
     private:
         PacketOf<Held>* packet_;
+            /** The packet holding this object, or \c null if the object
+                is standalone and not held by a PacketOf<Held>.
+                This pointer will be managed by the class PacketOf<Held>,
+                and should not be changed at all by this class. */
 
     public:
         PacketData() : packet_(nullptr) {}
+        PacketData(const PacketData&) : packet_(nullptr) {}
+        PacketData& operator = (const PacketData&) { return *this; }
 
     protected:
         class ChangeEventSpan {

@@ -186,7 +186,7 @@ class Tangle : public Output<Tangle> {
          *
          * The tangle that is passed (\a src) will no longer be usable.
          *
-         * @param src the integer to move.
+         * @param src the tangle to move.
          */
         Tangle(Tangle&& src) noexcept;
 

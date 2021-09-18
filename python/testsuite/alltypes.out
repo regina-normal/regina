@@ -1399,9 +1399,6 @@ Equality type : EqualityType.BY_VALUE
 Link : class
 Equality type : EqualityType.BY_REFERENCE
 
-LinkPacket : class
-Equality type : EqualityType.BY_REFERENCE
-
 Locale : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
@@ -1481,6 +1478,9 @@ PacketDescendants : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketListener : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfLink : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketShell : class

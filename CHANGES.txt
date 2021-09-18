@@ -14,6 +14,17 @@ Version 7.0  [ TODO ]
           versions of Regina will not be able to read files created by
           Regina 7.0 or later.  Regina can of course still both read
           the old format (transparently) and write it (if asked).
+        - The packet tree is now used purely for the GUI and for file I/O.
+          Mathematical objects such as triangulations, links, surface lists,
+          etc. are standalone, without the overhead of the full packet tree
+          infrastructure (so no labels, tags, listeners, or parent/child
+          relationships).  To use them with the full packet tree
+          infrastructure, use a PacketOf<...> wrapper.
+        - Normal surface/hypersurface lists and angle structure lists no
+          longer need their triangulations to sit above them in the
+          packet tree, and indeed their triangulations may change or
+          even be deleted.  Lists will maintain a "snapshot" of the original
+          triangulation if necessary.
         - Now requires C++17 (not C++14).
         - Updated the bundled copy of Normaliz to version 3.8.9 (26 Sep 2020).
         - Updated the SnapPea kernel to the one shipped with SnapPy 2.8.
@@ -473,6 +484,8 @@ Version 7.0  [ TODO ]
               and can take a pure Python function as its action argument.
             - Routine useTreeDecomposition() now takes its argument by
               value, not by const reference.
+            - Routine writePACE() no longer begins its output with a "c ..."
+              line, since links no longer have labels.
         Class ListOnCall:
             - Removed, since this class was not thread-safe and did not add
               anything non-trivial.
