@@ -4,6 +4,9 @@
 
 #include <iostream>
 
+#include "link/link.h"
+#include "link/tangle.h"
+
 #include "manifold/graphloop.h"
 #include "manifold/graphpair.h"
 #include "manifold/graphtriple.h"
@@ -38,6 +41,8 @@
 #include "subcomplex/trisolidtorus.h"
 #include "subcomplex/trivialtri.h"
 
+#include "angle/anglestructures.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "surfaces/normalsurfaces.h"
 
 #include "triangulation/dim2.h"
@@ -113,15 +118,22 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Packets:" << std::endl;
     SHOW_SIZE(Packet);
+    SHOW_SIZE(Link);
     SHOW_SIZE(Triangulation<2>);
     SHOW_SIZE(Triangulation<3>);
     SHOW_SIZE(Triangulation<4>);
     SHOW_SIZE(Triangulation<5>);
+    std::cout << std::endl;
+
+    std::cout << "Lists:" << std::endl;
+    SHOW_SIZE(AngleStructures);
+    SHOW_SIZE(NormalHypersurfaces);
     SHOW_SIZE(NormalSurfaces);
     std::cout << std::endl;
 
     std::cout << "Other:" << std::endl;
     SHOW_SIZE(HomologicalData);
+    SHOW_SIZE(Tangle);
     std::cout << std::endl;
 
     return 0;

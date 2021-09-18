@@ -110,8 +110,17 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
         if (! sig.empty()) {
             // Process this isomorphism signature.
             if ((object = PacketType::fromSig(sig))) {
-                object->setLabel(label.empty() ? sig : label);
-                ans->insertChildLast(object);
+                if constexpr (std::is_base_of<Packet, PacketType>::value) {
+                    object->setLabel(label.empty() ? sig : label);
+                    ans->insertChildLast(object);
+                } else {
+                    PacketOf<PacketType>* packet =
+                        new PacketOf<PacketType>(std::move(*object));
+                    delete object;
+
+                    packet->setLabel(label.empty() ? sig : label);
+                    ans->insertChildLast(packet);
+                }
             } else
                 errStrings = errStrings + '\n' + sig;
         }

@@ -298,7 +298,7 @@ CS_unknown
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
 <packet type="Link" typeid="17"
-	label="Whitehead link">
+    label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -312,7 +312,7 @@ CS_unknown
   <components size="2">
   ^0 _0
   </components>
-</packet> <!-- Whitehead link (Link) -->
+</packet> <!-- Link -->
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
@@ -572,7 +572,7 @@ CS_unknown
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
 <packet type="Link" typeid="17"
-	label="Whitehead link">
+    label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -586,7 +586,7 @@ CS_unknown
   <components size="2">
   ^0 _0
   </components>
-</packet> <!-- Whitehead link (Link) -->
+</packet> <!-- Link -->
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
@@ -844,7 +844,7 @@ CS_unknown
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
 <packet type="Link" typeid="17"
-	label="Whitehead link">
+    label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -858,7 +858,7 @@ CS_unknown
   <components size="2">
   ^0 _0
   </components>
-</packet> <!-- Whitehead link (Link) -->
+</packet> <!-- Link -->
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
@@ -1110,7 +1110,7 @@ CS_unknown
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
 <packet type="Link" typeid="17"
-	label="Whitehead link">
+    label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -1124,7 +1124,7 @@ CS_unknown
   <components size="2">
   ^0 _0
   </components>
-</packet> <!-- Whitehead link (Link) -->
+</packet> <!-- Link -->
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
@@ -1384,7 +1384,7 @@ CS_unknown
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
 <packet type="Link" typeid="17"
-	label="Whitehead link">
+    label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -1398,7 +1398,7 @@ CS_unknown
   <components size="2">
   ^0 _0
   </components>
-</packet> <!-- Whitehead link (Link) -->
+</packet> <!-- Link -->
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">

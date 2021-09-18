@@ -1001,24 +1001,6 @@ std::string Link::dumpConstruction() const {
     return out.str();
 }
 
-void Link::writeXMLPacketData(std::ostream& out, FileFormat format,
-        bool anon, std::map<const Packet*, bool>& refs) const {
-    writeXMLHeader(out, "link", format, anon, refs);
-    out << "  <crossings size=\"" << crossings_.size() << "\">\n ";
-    for (const Crossing* c : crossings_)
-        out << ' ' << (c->sign() == 1 ? '+' : '-');
-    out << "\n  </crossings>\n";
-    out << "  <connections>\n";
-    for (const Crossing* c : crossings_)
-        out << "  " << c->next_[1] << ' ' << c->next_[0] << '\n';
-    out << "  </connections>\n";
-    out << "  <components size=\"" << components_.size() << "\">\n ";
-    for (const StrandRef& s : components_)
-        out << ' ' << s;
-    out << "\n  </components>\n";
-    writeXMLFooter(out, "link", format, anon, refs);
-}
-
 std::string Link::pace() const {
     std::ostringstream out;
     writePACE(out);

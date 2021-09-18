@@ -44,6 +44,7 @@ using pybind11::overload_cast;
 using regina::Crossing;
 using regina::StrandRef;
 using regina::Link;
+using regina::PacketOf;
 
 void addLink(pybind11::module_& m) {
     pybind11::enum_<regina::Framing>(m, "Framing")
@@ -87,7 +88,21 @@ void addLink(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    pybind11::class_<Link, regina::Packet, regina::SafePtr<Link>>(m, "Link")
+    pybind11::class_<PacketOf<Link>, regina::Packet,
+            regina::SafePtr<PacketOf<Link>>>(m, "LinkPacket")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const Link&>())
+        .def(pybind11::init<const PacketOf<Link>&>())
+        .def("data",
+            (const Link&(PacketOf<Link>::*)() const)(&PacketOf<Link>::data),
+            pybind11::return_value_policy::reference_internal)
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return PacketOf<Link>::typeID;
+        })
+    ;
+
+    auto l = pybind11::class_<Link>(m, "Link")
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())
         .def(pybind11::init<const Link&>())
@@ -305,11 +320,9 @@ void addLink(pybind11::module_& m) {
         .def_readonly_static("homflyAZVarY", Link::homflyAZVarY)
         .def_readonly_static("homflyLMVarX", Link::homflyLMVarX)
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Link::typeID;
-        })
     ;
+    regina::python::add_output(l);
+    regina::python::add_eq_operators(l);
 
     m.def("swap", (void(*)(Link&, Link&))(regina::swap));
 }

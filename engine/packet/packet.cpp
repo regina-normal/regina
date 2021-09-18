@@ -784,8 +784,8 @@ void Packet::writeXMLPacketAttributes(std::ostream& out, bool anon,
     }
 }
 
-void Packet::writeXMLFooter(std::ostream& out, const char* element,
-        FileFormat format, bool anon, PacketRefs& refs) const {
+void Packet::writeXMLTreeData(std::ostream& out, FileFormat format,
+        bool anon, PacketRefs& refs) const {
     if (! anon) {
         // Write any packet tags.
         if (tags_.get())
@@ -806,6 +806,11 @@ void Packet::writeXMLFooter(std::ostream& out, const char* element,
                 p->writeXMLPacketData(out, format, anon, refs);
         }
     }
+}
+
+void Packet::writeXMLFooter(std::ostream& out, const char* element,
+        FileFormat format, bool anon, PacketRefs& refs) const {
+    writeXMLTreeData(out, format, anon, refs);
 
     // Finish with the closing XML tag.
     if (format != REGINA_XML_GEN_2) {
