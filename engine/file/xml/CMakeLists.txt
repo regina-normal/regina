@@ -8,6 +8,7 @@ SET ( FILES
   xmlfilterreader.cpp
   xmlhypersurfacereader.cpp
   xmllinkreader.cpp
+  xmllinkwriter.cpp
   xmlpacketreader.cpp
   xmlpacketreaders.cpp
   xmlreader.cpp

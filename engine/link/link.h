@@ -4239,55 +4239,6 @@ class Link : public PacketData<Link>, public Output<Link> {
     friend class XMLWriter<Link>;
 };
 
-template <>
-class XMLWriter<Link> {
-    private:
-        const Link& data_;
-        FileFormat format_;
-
-    public:
-        XMLWriter(const Link& data, FileFormat format) :
-                data_(data), format_(format) {
-        }
-
-        template <typename... Args>
-        void writeOpen(std::ostream& out,
-                std::pair<const char*, Args>... args) {
-            if (format_ == REGINA_XML_GEN_2) {
-                out << "<packet type=\"" << Link::packetTypeName
-                    << "\" typeid=\"" << Link::packetTypeID << "\"\n   ";
-            } else {
-                out << "<link";
-            }
-            ((out << ' ' << args.first << "=\"" << args.second << '\"'), ...);
-            out << ">\n";
-        }
-
-        void writeContent(std::ostream& out) {
-            out << "  <crossings size=\"" << data_.crossings_.size()
-                << "\">\n ";
-            for (const Crossing* c : data_.crossings_)
-                out << ' ' << (c->sign() == 1 ? '+' : '-');
-            out << "\n  </crossings>\n";
-            out << "  <connections>\n";
-            for (const Crossing* c : data_.crossings_)
-                out << "  " << c->next(1) << ' ' << c->next(0) << '\n';
-            out << "  </connections>\n";
-            out << "  <components size=\"" << data_.components_.size()
-                << "\">\n ";
-            for (const StrandRef& s : data_.components_)
-                out << ' ' << s;
-            out << "\n  </components>\n";
-        }
-
-        void writeClose(std::ostream& out) {
-            if (format_ == REGINA_XML_GEN_2)
-                out << "</packet> <!-- Link -->\n";
-            else
-                out << "</link>\n";
-        }
-};
-
 /**
  * Swaps the contents of the two given links.
  *

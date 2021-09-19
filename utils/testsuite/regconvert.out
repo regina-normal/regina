@@ -297,8 +297,7 @@ CS_unknown
   <spantaut value="T"/>
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
-<packet type="Link" typeid="17"
-    label="Whitehead link">
+<packet type="Link" typeid="17" label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -571,8 +570,7 @@ CS_unknown
   <spantaut value="T"/>
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
-<packet type="Link" typeid="17"
-    label="Whitehead link">
+<packet type="Link" typeid="17" label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -843,8 +841,7 @@ CS_unknown
   <spantaut value="T"/>
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
-<packet type="Link" typeid="17"
-    label="Whitehead link">
+<packet type="Link" typeid="17" label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -1109,8 +1106,7 @@ CS_unknown
   <spantaut value="T"/>
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
-<packet type="Link" typeid="17"
-    label="Whitehead link">
+<packet type="Link" typeid="17" label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
@@ -1383,8 +1379,7 @@ CS_unknown
   <spantaut value="T"/>
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
-<packet type="Link" typeid="17"
-    label="Whitehead link">
+<packet type="Link" typeid="17" label="Whitehead link">
   <crossings size="5">
   - - + + -
   </crossings>
