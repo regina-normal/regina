@@ -1849,7 +1849,6 @@ class PacketData {
         PacketData(const PacketData&) : packet_(nullptr) {}
         PacketData& operator = (const PacketData&) { return *this; }
 
-    protected:
         class ChangeEventSpan {
             private:
                 typename PacketOf<Held>::ChangeEventSpan* span_;

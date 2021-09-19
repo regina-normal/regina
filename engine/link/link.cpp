@@ -118,7 +118,7 @@ Link& Link::operator = (const Link& src) {
 Link& Link::operator = (Link&& src) {
     ChangeEventSpan span(*this);
 
-    // MarkedVector, pointers must eventually destroyed:
+    // MarkedVector, pointers must eventually be destroyed:
     crossings_.swap(src.crossings_);
 
     // std::vector, does not own its pointers:

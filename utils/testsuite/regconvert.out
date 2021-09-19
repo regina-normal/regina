@@ -352,20 +352,18 @@ CS_unknown
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
-<packet type="5-Manifold Triangulation" typeid="105"
-	label="B4 x~ S1">
+<packet type="5-Manifold Triangulation" typeid="105" label="B4 x~ S1">
   <simplices size="2">
     <simplex desc=""> 1 144453 -1 -1 -1 -1 -1 -1 -1 -1 1 19153 </simplex>
     <simplex desc=""> 0 115781 -1 -1 -1 -1 -1 -1 -1 -1 0 22737 </simplex>
   </simplices>
-</packet> <!-- B4 x~ S1 (5_Manifold Triangulation) -->
-<packet type="8-Manifold Triangulation" typeid="108"
-	label="8-sphere">
+</packet> <!-- Triangulation -->
+<packet type="8-Manifold Triangulation" typeid="108" label="8-sphere">
   <simplices size="2">
     <simplex desc=""> 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 </simplex>
     <simplex desc=""> 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 </simplex>
   </simplices>
-</packet> <!-- 8_sphere (8_Manifold Triangulation) -->
+</packet> <!-- Triangulation -->
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
@@ -625,20 +623,18 @@ CS_unknown
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
-<packet type="5-Manifold Triangulation" typeid="105"
-	label="B4 x~ S1">
+<packet type="5-Manifold Triangulation" typeid="105" label="B4 x~ S1">
   <simplices size="2">
     <simplex desc=""> 1 144453 -1 -1 -1 -1 -1 -1 -1 -1 1 19153 </simplex>
     <simplex desc=""> 0 115781 -1 -1 -1 -1 -1 -1 -1 -1 0 22737 </simplex>
   </simplices>
-</packet> <!-- B4 x~ S1 (5_Manifold Triangulation) -->
-<packet type="8-Manifold Triangulation" typeid="108"
-	label="8-sphere">
+</packet> <!-- Triangulation -->
+<packet type="8-Manifold Triangulation" typeid="108" label="8-sphere">
   <simplices size="2">
     <simplex desc=""> 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 </simplex>
     <simplex desc=""> 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 </simplex>
   </simplices>
-</packet> <!-- 8_sphere (8_Manifold Triangulation) -->
+</packet> <!-- Triangulation -->
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
@@ -896,20 +892,18 @@ CS_unknown
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
-<packet type="5-Manifold Triangulation" typeid="105"
-	label="B4 x~ S1">
+<packet type="5-Manifold Triangulation" typeid="105" label="B4 x~ S1">
   <simplices size="2">
     <simplex desc=""> 1 144453 -1 -1 -1 -1 -1 -1 -1 -1 1 19153 </simplex>
     <simplex desc=""> 0 115781 -1 -1 -1 -1 -1 -1 -1 -1 0 22737 </simplex>
   </simplices>
-</packet> <!-- B4 x~ S1 (5_Manifold Triangulation) -->
-<packet type="8-Manifold Triangulation" typeid="108"
-	label="8-sphere">
+</packet> <!-- Triangulation -->
+<packet type="8-Manifold Triangulation" typeid="108" label="8-sphere">
   <simplices size="2">
     <simplex desc=""> 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 </simplex>
     <simplex desc=""> 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 </simplex>
   </simplices>
-</packet> <!-- 8_sphere (8_Manifold Triangulation) -->
+</packet> <!-- Triangulation -->
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
@@ -1161,20 +1155,18 @@ CS_unknown
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
-<packet type="5-Manifold Triangulation" typeid="105"
-	label="B4 x~ S1">
+<packet type="5-Manifold Triangulation" typeid="105" label="B4 x~ S1">
   <simplices size="2">
     <simplex desc=""> 1 144453 -1 -1 -1 -1 -1 -1 -1 -1 1 19153 </simplex>
     <simplex desc=""> 0 115781 -1 -1 -1 -1 -1 -1 -1 -1 0 22737 </simplex>
   </simplices>
-</packet> <!-- B4 x~ S1 (5_Manifold Triangulation) -->
-<packet type="8-Manifold Triangulation" typeid="108"
-	label="8-sphere">
+</packet> <!-- Triangulation -->
+<packet type="8-Manifold Triangulation" typeid="108" label="8-sphere">
   <simplices size="2">
     <simplex desc=""> 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 </simplex>
     <simplex desc=""> 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 </simplex>
   </simplices>
-</packet> <!-- 8_sphere (8_Manifold Triangulation) -->
+</packet> <!-- Triangulation -->
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
@@ -1434,20 +1426,18 @@ CS_unknown
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
-<packet type="5-Manifold Triangulation" typeid="105"
-	label="B4 x~ S1">
+<packet type="5-Manifold Triangulation" typeid="105" label="B4 x~ S1">
   <simplices size="2">
     <simplex desc=""> 1 144453 -1 -1 -1 -1 -1 -1 -1 -1 1 19153 </simplex>
     <simplex desc=""> 0 115781 -1 -1 -1 -1 -1 -1 -1 -1 0 22737 </simplex>
   </simplices>
-</packet> <!-- B4 x~ S1 (5_Manifold Triangulation) -->
-<packet type="8-Manifold Triangulation" typeid="108"
-	label="8-sphere">
+</packet> <!-- Triangulation -->
+<packet type="8-Manifold Triangulation" typeid="108" label="8-sphere">
   <simplices size="2">
     <simplex desc=""> 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 1 36344967696 </simplex>
     <simplex desc=""> 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 0 36344967696 </simplex>
   </simplices>
-</packet> <!-- 8_sphere (8_Manifold Triangulation) -->
+</packet> <!-- Triangulation -->
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">

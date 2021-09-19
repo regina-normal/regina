@@ -337,6 +337,28 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
          */
         TriangulationBase(const TriangulationBase<dim>& copy, bool cloneProps);
         /**
+         * Moves the given triangulation into this new triangulation.
+         * This is a fast (constant time) operation.
+         *
+         * All top-dimensional simplices and skeletal objects (faces,
+         * components and boundary components) that belong to \a src will be
+         * moved into this triangulation, and so any pointers or references to
+         * Simplex<dim>, Face<dim, subdim>, Component<dim> or
+         * BoundaryComponent<dim> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the triangulation to move.
+         */
+        TriangulationBase(TriangulationBase&& src) noexcept;
+        /**
          * Destroys this triangulation.
          *
          * The simplices within this triangulation will also be destroyed.
@@ -475,9 +497,9 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
          */
         void removeAllSimplices();
         /**
-         * Moves the contents of this triangulation into the given
-         * destination triangulation, without destroying any pre-existing
-         * contents.
+         * Deprecated routine that moves the contents of this triangulation
+         * into the given destination triangulation, without destroying any
+         * pre-existing contents.
          *
          * All top-dimensional simplices that currently belong to \a dest
          * will remain there (and will keep the same indices in \a dest).
@@ -491,9 +513,12 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
          *
          * \pre \a dest is not this triangulation.
          *
+         * \deprecated Triangulation now supports move construction and move
+         * assignment, and so you should use that instead.
+         *
          * @param dest the triangulation into which simplices should be moved.
          */
-        void moveContentsTo(Triangulation<dim>& dest);
+        [[deprecated]] void moveContentsTo(Triangulation<dim>& dest);
 
         /*@}*/
         /**
@@ -1825,10 +1850,51 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
 
         /*@}*/
 
-        // Make this class non-assignable.
-        TriangulationBase& operator = (const TriangulationBase&) = delete;
-
     protected:
+        /**
+         * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * TriangulationBase never calls this operator itself; it is only
+         * ever called by the Triangulation<dim> assignment operator.
+         *
+         * @param copy the triangulation to copy.
+         * @return a reference to this triangulation.
+         */
+        TriangulationBase& operator = (const TriangulationBase& src);
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.  This is a fast (constant time) operation.
+         *
+         * All top-dimensional simplices and skeletal objects (faces,
+         * components and boundary components) that belong to \a src will be
+         * moved into this triangulation, and so any pointers or references to
+         * Simplex<dim>, Face<dim, subdim>, Component<dim> or
+         * BoundaryComponent<dim> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * TriangulationBase never calls this operator itself; it is only
+         * ever called by the Triangulation<dim> assignment operator.
+         *
+         * The link that is passed (\a src) will no longer be usable.
+         *
+         * \warning This operator does not touch any properties managed
+         * by the derived class Triangulation<dim>.  It is assumed that
+         * this is being called by the Triangulation<dim> assignment operator,
+         * and that this derived class operator will manage its own properties
+         * in whatever way it deems best.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * \e not fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the triangulation to move.
+         * @return a reference to this triangulation.
+         */
+        TriangulationBase& operator = (TriangulationBase&& src);
+
         /**
          * Ensures that all "on demand" skeletal objects have been calculated.
          */
@@ -1873,7 +1939,8 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
          * corresponding internal lists, as well as clearing other cached
          * properties and deallocating the corresponding memory where required.
          *
-         * Note that TriangulationBase never calls this routine itself.
+         * Note that TriangulationBase almost never calls this routine itself
+         * (the one exception is the copy assignment operator).
          * Typically clearBaseProperties() is only ever called by
          * Triangulation<dim>::clearAllProperties(), which in turn is called by
          * "atomic" routines that change the triangluation (before firing
@@ -2180,6 +2247,7 @@ class TriangulationBase : public Snapshottable<Triangulation<dim>>,
 
     template <int> friend class BoundaryComponentBase;
     friend class regina::XMLTriangulationReaderBase<dim>;
+    friend class regina::XMLWriter<Triangulation<dim>>;
 };
 
 } // namespace regina::detail -> namespace regina
@@ -2230,6 +2298,8 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
     // Likewise, we don't clearAllProperties() since no properties
     // will have been computed yet.
 
+    simplices_.reserve(copy.simplices_.size());
+
     SimplexIterator me, you;
     for (you = copy.simplices_.begin(); you != copy.simplices_.end(); ++you)
         simplices_.push_back(new Simplex<dim>((*you)->description(),
@@ -2244,7 +2314,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
                 (*me)->adj_[f] = simplices_[(*you)->adj_[f]->index()];
                 (*me)->gluing_[f] = (*you)->gluing_[f];
             } else
-                (*me)->adj_[f] = 0;
+                (*me)->adj_[f] = nullptr;
         }
     }
 
@@ -2253,6 +2323,105 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
         fundGroup_ = copy.fundGroup_;
         H1_ = copy.H1_;
     }
+}
+
+template <int dim>
+TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
+        noexcept :
+        Snapshottable<Triangulation<dim>>(std::move(src)),
+        valid_(src.valid_),
+        topologyLock_(0), // locks cannot move between objects
+        calculatedSkeleton_(src.calculatedSkeleton_),
+        orientable_(src.orientable_),
+        fundGroup_(std::move(src.fundGroup_)),
+        H1_(std::move(src.H1_)) {
+    // For our simplices and skeletal components, we use swaps instead
+    // of moves because we need to ensure that src's lists finish empty.
+    // Otherwise src will try to destroy the objects that they contain.
+    simplices_.swap(src.simplices_);
+    faces_.swap(src.faces_);
+    components_.swap(src.components_);
+    boundaryComponents_.swap(src.boundaryComponents_);
+}
+
+template <int dim>
+TriangulationBase<dim>& TriangulationBase<dim>::operator =
+        (const TriangulationBase<dim>& src) {
+    static_cast<Snapshottable<Triangulation<dim>>>(*this) = src;
+
+    typename Triangulation<dim>::ChangeEventSpan span(
+        static_cast<Triangulation<dim>&>(*this));
+
+    for (auto s : simplices_)
+        delete s;
+    simplices_.clear();
+
+    // We do not call Triangulation<dim>::clearAllProperties(), since we
+    // assume the derived class Triangulation<dim> will manage properties
+    // as it sees best.
+    // Instead we just clear the properties that we manage (which includes
+    // destroying all skeletal objects and setting calculatedSkeleton_ to
+    // false).
+    clearBaseProperties();
+
+    simplices_.reserve(src.simplices_.size());
+
+    SimplexIterator me, you;
+    for (you = src.simplices_.begin(); you != src.simplices_.end(); ++you)
+        simplices_.push_back(new Simplex<dim>((*you)->description(),
+            static_cast<Triangulation<dim>*>(this)));
+
+    // Copy the internal simplex data, including gluings.
+    int f;
+    for (me = simplices_.begin(), you = src.simplices_.begin();
+            me != simplices_.end(); ++me, ++you) {
+        for (f = 0; f <= dim; ++f) {
+            if ((*you)->adj_[f]) {
+                (*me)->adj_[f] = simplices_[(*you)->adj_[f]->index()];
+                (*me)->gluing_[f] = (*you)->gluing_[f];
+            } else
+                (*me)->adj_[f] = nullptr;
+        }
+    }
+
+    // Leave the skeleton to be recomputed on demand.
+
+    // Do not touch topologyLock_, since other objects are managing this.
+
+    // Clone properties:
+    valid_ = src.valid_;
+    orientable_ = src.orientable_;
+    fundGroup_ = src.fundGroup_;
+    H1_ = src.H1_;
+
+    return *this;
+}
+
+template <int dim>
+TriangulationBase<dim>& TriangulationBase<dim>::operator =
+        (TriangulationBase<dim>&& src) {
+    static_cast<Snapshottable<Triangulation<dim>>>(*this) = std::move(src);
+
+    typename Triangulation<dim>::ChangeEventSpan span(
+        static_cast<Triangulation<dim>&>(*this));
+
+    simplices_.swap(src.simplices_);
+    faces_.swap(src.faces_);
+    components_.swap(src.components_);
+    boundaryComponents_.swap(src.boundaryComponents_);
+
+    // Do not touch topologyLock_, since other objects are managing this.
+
+    valid_ = src.valid_;
+    calculatedSkeleton_ = src.calculatedSkeleton_;
+    orientable_ = src.orientable_;
+
+    fundGroup_ = std::move(src.fundGroup_);
+    H1_ = std::move(src.H1_);
+
+    // Let src dispose of the original simplices and skeletal objects in
+    // its own destructor.
+    return *this;
 }
 
 template <int dim>
@@ -3061,6 +3230,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     typename Triangulation<dim>::ChangeEventSpan span2(
         static_cast<Triangulation<dim>&>(*this));
 
+    // TODO static_cast<Triangulation<dim>&>(*this) = std::move(staging);
     staging.moveContentsTo(static_cast<Triangulation<dim>&>(*this));
 
     for (size_t i = 0; i < nFaces; ++i)

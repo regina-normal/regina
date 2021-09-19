@@ -16,7 +16,8 @@ SET ( FILES
   xmlsurfacereader.cpp
   xmltrireader2.cpp
   xmltrireader3.cpp
-  xmltrireader4.cpp)
+  xmltrireader4.cpp
+  xmltriwriter.cpp)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

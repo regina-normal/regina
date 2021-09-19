@@ -42,6 +42,7 @@
 #include "regina-core.h"
 #include "file/xml/xmlalgebrareader.h"
 #include "file/xml/xmlpacketreader.h"
+#include "file/xml/xmlwriter.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/stringutils.h"
 #include <vector>
@@ -209,7 +210,8 @@ class XMLLegacySimplicesReader : public XMLElementReader {
 template <int dim>
 class XMLTriangulationReaderBase : public XMLPacketReader {
     protected:
-        Triangulation<dim>* tri_;
+        std::conditional_t<dim <= 4, Triangulation<dim>*,
+                PacketOf<Triangulation<dim>>*> tri_;
             /**< The triangulation currently being read. */
         bool permIndex_;
             /**< \c true if permutations are stored as indices into Sn, or
@@ -501,10 +503,16 @@ inline XMLTriangulationReaderBase<dim>::XMLTriangulationReaderBase(
         XMLTreeResolver& res, Packet* parent, bool anon,
         std::string label, std::string id, size_t size, bool permIndex) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
-        tri_(new Triangulation<dim>()),
+        // tri_(new PacketOf<Triangulation<dim>>()),
+        tri_(new std::remove_pointer_t<decltype(tri_)>()),
         permIndex_(permIndex), readSimplices_(0) {
-    for ( ; size > 0; --size)
-        tri_->newSimplex();
+    if constexpr (dim <= 4) {
+        for ( ; size > 0; --size)
+            tri_->newSimplex();
+    } else {
+        for ( ; size > 0; --size)
+            tri_->data().newSimplex();
+    }
 }
 
 template <int dim>
@@ -516,6 +524,8 @@ template <int dim>
 XMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
+    if constexpr (dim <= 4) {
+
     if (subTagName == "simplex") {
         if (readSimplices_ < tri_->size())
             return new XMLSimplexReader<dim>(tri_, readSimplices_++,
@@ -527,6 +537,23 @@ XMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
     else
         return static_cast<XMLTriangulationReader<dim>*>(this)->
             startPropertySubElement(subTagName, subTagProps);
+
+    } else {
+
+    if (subTagName == "simplex") {
+        if (readSimplices_ < tri_->data().size())
+            return new XMLSimplexReader<dim>(
+                std::addressof(tri_->data()), readSimplices_++, permIndex_);
+        else
+            return new XMLElementReader();
+    } else if (subTagName == XMLLegacyTriangulationTags<dim>::simplices)
+        return new XMLLegacySimplicesReader<dim>(
+            std::addressof(tri_->data()), readSimplices_);
+    else
+        return static_cast<XMLTriangulationReader<dim>*>(this)->
+            startPropertySubElement(subTagName, subTagProps);
+
+    }
 }
 
 template <int dim>

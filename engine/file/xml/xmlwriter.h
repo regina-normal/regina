@@ -40,8 +40,12 @@
 #endif
 
 #include "regina-core.h"
+#include "file/fileformat.h"
+#include "maths/perm.h"
 
 namespace regina {
+
+template <int> class Triangulation;
 
 /**
  * Used to write one of Regina's objects to XML.
@@ -121,6 +125,26 @@ class XMLWriter {
         void close();
 };
 
+template <int dim>
+class XMLWriter<Triangulation<dim>> {
+    private:
+        static constexpr bool useSnIndex =
+            (Perm<dim + 1>::codeType == PERM_CODE_INDEX);
+
+        const Triangulation<dim>& data_;
+        std::ostream& out_;
+        FileFormat format_;
+
+    public:
+        XMLWriter(const Triangulation<dim>& data, std::ostream& out,
+            FileFormat format);
+
+        void openPre();
+        void openPost();
+        void writeContent();
+        void close();
+};
+
 template <typename T>
 XMLWriter<T>::XMLWriter(const T& data, std::ostream& out, FileFormat format) :
         data_(data), out_(out), format_(format) {
@@ -128,6 +152,17 @@ XMLWriter<T>::XMLWriter(const T& data, std::ostream& out, FileFormat format) :
 
 template <typename T>
 void XMLWriter<T>::openPost() {
+    out_ << ">\n";
+}
+
+template <int dim>
+XMLWriter<Triangulation<dim>>::XMLWriter(const Triangulation<dim>& data,
+        std::ostream& out, FileFormat format) :
+        data_(data), out_(out), format_(format) {
+}
+
+template <int dim>
+void XMLWriter<Triangulation<dim>>::openPost() {
     out_ << ">\n";
 }
 
