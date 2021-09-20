@@ -1477,6 +1477,9 @@ Equality type : EqualityType.BY_REFERENCE
 PacketDescendants : class
 Equality type : EqualityType.BY_REFERENCE
 
+PacketInfo : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 PacketListener : class
 Equality type : EqualityType.BY_REFERENCE
 

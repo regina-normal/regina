@@ -1085,12 +1085,11 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @param type the type of packet to search for, as returned by
-         * typeName().  Note that string comparisons are case sensitive.
+         * @param type the type of packet to search for.
          * @return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
-        Packet* firstTreePacket(const std::string& type);
+        Packet* firstTreePacket(PacketType type);
 
         /**
          * Finds the first packet of the requested type in a complete
@@ -1102,12 +1101,11 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @param type the type of packet to search for, as returned by
-         * typeName().  Note that string comparisons are case sensitive.
+         * @param type the type of packet to search for.
          * @return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
-        const Packet* firstTreePacket(const std::string& type) const;
+        const Packet* firstTreePacket(PacketType type) const;
 
         /**
          * Finds the next packet after this of the requested type in a
@@ -1116,12 +1114,11 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * The order of tree searching is described in
          * firstTreePacket().
          *
-         * @param type the type of packet to search for, as returned by
-         * typeName().  Note that string comparisons are case sensitive.
+         * @param type the type of packet to search for.
          * @return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
-        Packet* nextTreePacket(const std::string& type);
+        Packet* nextTreePacket(PacketType type);
 
         /**
          * Finds the next packet after this of the requested type in a
@@ -1130,12 +1127,11 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * The order of tree searching is described in
          * firstTreePacket().
          *
-         * @param type the type of packet to search for, as returned by
-         * typeName().  Note that string comparisons are case sensitive.
+         * @param type the type of packet to search for.
          * @return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
-        const Packet* nextTreePacket(const std::string& type) const;
+        const Packet* nextTreePacket(PacketType type) const;
 
         /**
          * Finds the packet with the requested label in the tree or
@@ -3019,6 +3015,28 @@ inline PacketChildren<false> Packet::children() {
 
 inline PacketChildren<true> Packet::children() const {
     return PacketChildren<true>(this);
+}
+
+inline Packet* Packet::firstTreePacket(PacketType t) {
+    return (type() == t ? this : nextTreePacket(t));
+}
+
+inline const Packet* Packet::firstTreePacket(PacketType t) const {
+    return (type() == t ? this : nextTreePacket(t));
+}
+
+inline Packet* Packet::nextTreePacket(PacketType t) {
+    for (Packet* ans = nextTreePacket(); ans; ans = ans->nextTreePacket())
+        if (ans->type() == t)
+            return ans;
+    return nullptr;
+}
+
+inline const Packet* Packet::nextTreePacket(PacketType t) const {
+    for (const Packet* ans = nextTreePacket(); ans; ans = ans->nextTreePacket())
+        if (ans->type() == t)
+            return ans;
+    return nullptr;
 }
 
 inline bool Packet::dependsOnParent() const {
