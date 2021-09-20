@@ -202,34 +202,34 @@ class PacketInfo {
                 case PACKET_LINK:
                     return "Link";
                 case PACKET_TRIANGULATION2:
-                    return "2-manifold triangulation";
+                    return "2-D triangulation";
                 case PACKET_TRIANGULATION3:
-                    return "3-manifold triangulation";
+                    return "3-D triangulation";
                 case PACKET_TRIANGULATION4:
-                    return "4-manifold triangulation";
+                    return "4-D triangulation";
             #ifndef REGINA_LOWDIMONLY
                 case PACKET_TRIANGULATION5:
-                    return "5-manifold triangulation";
+                    return "5-D triangulation";
                 case PACKET_TRIANGULATION6:
-                    return "6-manifold triangulation";
+                    return "6-D triangulation";
                 case PACKET_TRIANGULATION7:
-                    return "7-manifold triangulation";
+                    return "7-D triangulation";
                 case PACKET_TRIANGULATION8:
-                    return "8-manifold triangulation";
+                    return "8-D triangulation";
                 case PACKET_TRIANGULATION9:
-                    return "9-manifold triangulation";
+                    return "9-D triangulation";
                 case PACKET_TRIANGULATION10:
-                    return "10-manifold triangulation";
+                    return "10-D triangulation";
                 case PACKET_TRIANGULATION11:
-                    return "11-manifold triangulation";
+                    return "11-D triangulation";
                 case PACKET_TRIANGULATION12:
-                    return "12-manifold triangulation";
+                    return "12-D triangulation";
                 case PACKET_TRIANGULATION13:
-                    return "13-manifold triangulation";
+                    return "13-D triangulation";
                 case PACKET_TRIANGULATION14:
-                    return "14-manifold triangulation";
+                    return "14-D triangulation";
                 case PACKET_TRIANGULATION15:
-                    return "15-manifold triangulation";
+                    return "15-D triangulation";
             #endif /* ! REGINA_LOWDIMONLY */
                 default:
                     return "Unknown";

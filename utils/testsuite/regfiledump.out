@@ -561,7 +561,7 @@ Container
 ************************************************************
 *
 * Label: B4 x~ S1
-* Type: 5-Manifold Triangulation
+* Type: 5-D triangulation
 * Parent: Higher Dimensions
 *
 ************************************************************
@@ -580,7 +580,7 @@ f-vector: 2, 10, 20, 20, 10, 2
 ************************************************************
 *
 * Label: 8-sphere
-* Type: 8-Manifold Triangulation
+* Type: 8-D triangulation
 * Parent: Higher Dimensions
 *
 ************************************************************
@@ -1093,7 +1093,7 @@ Container
 ************************************************************
 *
 * Label: B4 x~ S1
-* Type: 5-Manifold Triangulation
+* Type: 5-D triangulation
 * Parent: Higher Dimensions
 *
 ************************************************************
@@ -1112,7 +1112,7 @@ f-vector: 2, 10, 20, 20, 10, 2
 ************************************************************
 *
 * Label: 8-sphere
-* Type: 8-Manifold Triangulation
+* Type: 8-D triangulation
 * Parent: Higher Dimensions
 *
 ************************************************************
@@ -1226,8 +1226,8 @@ Normal Hypersurfaces (Normal Hypersurface List)
 Klein Bottle, version 1 (2-Manifold Triangulation)
 Klein Bottle, version 2 (2-Manifold Triangulation)
 Higher Dimensions (Container)
-B4 x~ S1 (5-Manifold Triangulation)
-8-sphere (8-Manifold Triangulation)
+B4 x~ S1 (5-D triangulation)
+8-sphere (8-D triangulation)
 Normal Surface Filters (Container)
 Filter (Surface Filter)
 Discs (Surface Filter)
@@ -1257,8 +1257,8 @@ Normal Hypersurfaces (Normal Hypersurface List)
 Klein Bottle, version 1 (2-Manifold Triangulation)
 Klein Bottle, version 2 (2-Manifold Triangulation)
 Higher Dimensions (Container)
-B4 x~ S1 (5-Manifold Triangulation)
-8-sphere (8-Manifold Triangulation)
+B4 x~ S1 (5-D triangulation)
+8-sphere (8-D triangulation)
 Normal Surface Filters (Container)
 Filter (Surface Filter)
 Discs (Surface Filter)
