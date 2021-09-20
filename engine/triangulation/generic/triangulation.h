@@ -158,21 +158,7 @@ class Triangulation :
         "The generic implementation of Triangulation<dim> "
         "should not be used for Regina's standard dimensions.");
 
-    private:
-        static constexpr const PacketType packetTypeID = PacketType(100 + dim);
-        static constexpr const char* packetTypeName = (
-            dim == 5 ? "5-Manifold Triangulation" :
-            dim == 6 ? "6-Manifold Triangulation" :
-            dim == 7 ? "7-Manifold Triangulation" :
-            dim == 8 ? "8-Manifold Triangulation" :
-            dim == 9 ? "9-Manifold Triangulation" :
-            dim == 10 ? "10-Manifold Triangulation" :
-            dim == 11 ? "11-Manifold Triangulation" :
-            dim == 12 ? "12-Manifold Triangulation" :
-            dim == 13 ? "13-Manifold Triangulation" :
-            dim == 14 ? "14-Manifold Triangulation" :
-            dim == 15 ? "15-Manifold Triangulation" : "");
-        friend class PacketOf<Triangulation<dim>>;
+    REGINA_PACKET_DATA(Triangulation<dim>, PacketType(100 + dim))
 
     protected:
         using detail::TriangulationBase<dim>::simplices_;

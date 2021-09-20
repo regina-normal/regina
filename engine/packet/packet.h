@@ -1774,7 +1774,7 @@ class PacketOf : public Packet {
             return typeID;
         }
         inline virtual std::string typeName() const override {
-            return Held::packetTypeName;
+            return PacketInfo::name(typeID);
         }
 
         Held& data() {
@@ -1825,10 +1825,9 @@ class PacketOf : public Packet {
         }
 };
 
-#define REGINA_PACKET_DATA(class_, id, name) \
+#define REGINA_PACKET_DATA(class_, id) \
     private: \
         static constexpr const PacketType packetTypeID = id; \
-        static constexpr const char* packetTypeName = name; \
         friend class PacketOf<class_>;
 
 template <typename Held>
