@@ -703,8 +703,11 @@ Version 7.0  [ TODO ]
               iterator / iteration classes ChildIterator, SubtreeIterator,
               PacketChildren, PacketDescendants are now templated
               according to constness.
-        Class PacketInfo<...>:
-            - Removed completely.
+        Class PacketInfo:
+            - This used to be a template class.  It is now a non-templated
+              class, and has been stripped down to just a single static name()
+              function.  This function is constexpr, so you can still use it
+              at compile time if needed, but you can now use it at runtime also.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really

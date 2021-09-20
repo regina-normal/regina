@@ -154,6 +154,89 @@ enum PacketType {
 #endif /* ! REGINA_LOWDIMONLY */
 };
 
+/**
+ * A class used to query general information about different packet types.
+ *
+ * This class has become much simpler since Regina 7.0.  It is no longer
+ * templated, and instead just offers a name() function that is accessible at
+ * both compile time and runtime.
+ *
+ * \ingroup packet
+ */
+class PacketInfo {
+    public:
+        /**
+         * Returns a human-readable name for the given packet type.
+         *
+         * The first letter of the returned string will be upper-case,
+         * and all subsequent letters will be lower-case (except for
+         * special words such as "PDF" and "SnapPea", which will retain
+         * their internal upper-case letters where required).
+         *
+         * This routine is guaranteed to return a non-null string, even
+         * if \a packetType is not one of the PacketType enum values.
+         *
+         * @param packetType the packet type being queried.
+         * @return the name of the given packet type.
+         */
+        constexpr static const char* name(PacketType packetType) {
+            switch (packetType) {
+                case PACKET_CONTAINER:
+                    return "Container";
+                case PACKET_TEXT:
+                    return "Text";
+                case PACKET_NORMALSURFACES:
+                    return "Normal surface list";
+                case PACKET_SCRIPT:
+                    return "Script";
+                case PACKET_SURFACEFILTER:
+                    return "Surface filter";
+                case PACKET_ANGLESTRUCTURES:
+                    return "Angle structure list";
+                case PACKET_PDF:
+                    return "PDF";
+                case PACKET_NORMALHYPERSURFACES:
+                    return "Normal hypersurface list";
+                case PACKET_SNAPPEATRIANGULATION:
+                    return "SnapPea triangulation";
+                case PACKET_LINK:
+                    return "Link";
+                case PACKET_TRIANGULATION2:
+                    return "2-manifold triangulation";
+                case PACKET_TRIANGULATION3:
+                    return "3-manifold triangulation";
+                case PACKET_TRIANGULATION4:
+                    return "4-manifold triangulation";
+            #ifndef REGINA_LOWDIMONLY
+                case PACKET_TRIANGULATION5:
+                    return "5-manifold triangulation";
+                case PACKET_TRIANGULATION6:
+                    return "6-manifold triangulation";
+                case PACKET_TRIANGULATION7:
+                    return "7-manifold triangulation";
+                case PACKET_TRIANGULATION8:
+                    return "8-manifold triangulation";
+                case PACKET_TRIANGULATION9:
+                    return "9-manifold triangulation";
+                case PACKET_TRIANGULATION10:
+                    return "10-manifold triangulation";
+                case PACKET_TRIANGULATION11:
+                    return "11-manifold triangulation";
+                case PACKET_TRIANGULATION12:
+                    return "12-manifold triangulation";
+                case PACKET_TRIANGULATION13:
+                    return "13-manifold triangulation";
+                case PACKET_TRIANGULATION14:
+                    return "14-manifold triangulation";
+                case PACKET_TRIANGULATION15:
+                    return "15-manifold triangulation";
+            #endif /* ! REGINA_LOWDIMONLY */
+                default:
+                    return "Unknown";
+            }
+        }
+};
+
 } // namespace regina
 
 #endif
