@@ -703,6 +703,10 @@ Version 7.0  [ TODO ]
               iterator / iteration classes ChildIterator, SubtreeIterator,
               PacketChildren, PacketDescendants are now templated
               according to constness.
+            - Functions firstTreePacket(type) and nextTreePacket(type) now
+              take type as a PacketType, not a string.  The old functions
+              are removed completely, because the typeName() string is
+              not guaranteed to stay constant between releases.
         Class PacketInfo:
             - This used to be a template class.  It is now a non-templated
               class, and has been stripped down to just a single static name()
