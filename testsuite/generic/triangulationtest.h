@@ -38,6 +38,7 @@
 using regina::Isomorphism;
 using regina::Perm;
 using regina::Triangulation;
+using regina::Vertex;
 
 /**
  * Clear all computed properties of the given triangulation.
@@ -571,6 +572,8 @@ class TriangulationTest : public CppUnit::TestFixture {
 
         static void verifyCopyMove(const Triangulation<dim>& t,
                 const char* name) {
+            Vertex<dim>* v0 = (t.isEmpty() ? nullptr : t.vertex(0));
+
             Triangulation<dim> copy(t);
             if (! looksIdentical(copy, t)) {
                 std::ostringstream msg;
@@ -578,10 +581,25 @@ class TriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            Vertex<dim>* v1 = (copy.isEmpty() ? nullptr : copy.vertex(0));
+            if (v1 == v0 && ! t.isEmpty()) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed uses the same crossings.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             Triangulation<dim> move(std::move(copy));
             if (! looksIdentical(move, t)) {
                 std::ostringstream msg;
                 msg << name << ": move constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Vertex<dim>* v2 = (move.isEmpty() ? nullptr : move.vertex(0));
+            if (v2 != v1) {
+                std::ostringstream msg;
+                msg << name << ": move constructed does not use the "
+                    "same crossings.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -594,12 +612,27 @@ class TriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            Vertex<dim>* v3 = (copyAss.isEmpty() ? nullptr : copyAss.vertex(0));
+            if (v3 == v0 && ! t.isEmpty()) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned uses the same crossings.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             Triangulation<dim> moveAss;
             moveAss.newSimplex(); // Give it something to overwrite.
             moveAss = std::move(copyAss);
             if (! looksIdentical(moveAss, t)) {
                 std::ostringstream msg;
                 msg << name << ": move assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Vertex<dim>* v4 = (moveAss.isEmpty() ? nullptr : moveAss.vertex(0));
+            if (v4 != v3) {
+                std::ostringstream msg;
+                msg << name << ": move assigned does not use the "
+                    "same crossings.";
                 CPPUNIT_FAIL(msg.str());
             }
         }

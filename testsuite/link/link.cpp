@@ -231,6 +231,8 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testCopyMove(const Link& l, const char* name) {
+            Crossing* c0 = (l.size() > 0 ? l.crossing(0) : nullptr);
+
             Link copy(l);
             if (! looksIdentical(copy, l)) {
                 std::ostringstream msg;
@@ -238,10 +240,25 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            Crossing* c1 = (copy.size() > 0 ? copy.crossing(0) : nullptr);
+            if (c1 == c0 && l.size() > 0) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed uses the same crossings.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             Link move(std::move(copy));
             if (! looksIdentical(move, l)) {
                 std::ostringstream msg;
                 msg << name << ": move constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Crossing* c2 = (move.size() > 0 ? move.crossing(0) : nullptr);
+            if (c2 != c1) {
+                std::ostringstream msg;
+                msg << name << ": move constructed does not use the "
+                    "same crossings.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -253,11 +270,26 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            Crossing* c3 = (copyAss.size() > 0 ? copyAss.crossing(0) : nullptr);
+            if (c3 == c0 && l.size() > 0) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned uses the same crossings.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             Link moveAss(2); // A two-component unlink
             moveAss = std::move(copyAss);
             if (! looksIdentical(moveAss, l)) {
                 std::ostringstream msg;
                 msg << name << ": move assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Crossing* c4 = (moveAss.size() > 0 ? moveAss.crossing(0) : nullptr);
+            if (c4 != c3) {
+                std::ostringstream msg;
+                msg << name << ": move assigned does not use the "
+                    "same crossings.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
