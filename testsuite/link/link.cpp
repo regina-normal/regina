@@ -204,10 +204,10 @@ class LinkTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void sanity(Link* l, const std::string& name) {
+        void sanity(const Link& l, const std::string& name) {
             Crossing* c;
-            for (size_t i = 0; i < l->size(); ++i) {
-                c = l->crossing(i);
+            for (size_t i = 0; i < l.size(); ++i) {
+                c = l.crossing(i);
 
                 StrandRef lower(c, 0);
                 StrandRef upper(c, 1);
@@ -480,9 +480,8 @@ class LinkTest : public CppUnit::TestFixture {
                 absWritheSame += (writeComp >= 0 ? writeComp : -writeComp);
             }
 
-            Link* p;
             for (int k = 0; k <= 3; ++k) {
-                p = l.parallel(k, regina::FRAMING_BLACKBOARD);
+                Link* p = l.parallel(k, regina::FRAMING_BLACKBOARD);
                 if (p->countComponents() != k * l.countComponents()) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", blackboard) "
@@ -1476,7 +1475,7 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone, name);
+            sanity(clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
@@ -1503,7 +1502,7 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone, name);
+            sanity(clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
@@ -1524,7 +1523,7 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone, name);
+            sanity(clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
@@ -1547,7 +1546,7 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone, name);
+            sanity(clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
@@ -1579,7 +1578,7 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone, name);
+            sanity(clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
@@ -1602,7 +1601,7 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone, name);
+            sanity(clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
@@ -1626,7 +1625,7 @@ class LinkTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone, name);
+            sanity(clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
@@ -2141,7 +2140,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             clone.resolve(clone.crossing(crossing));
 
-            sanity(&clone, name);
+            sanity(clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
@@ -2556,14 +2555,10 @@ class LinkTest : public CppUnit::TestFixture {
             verifyOrientedGauss(rht_lht, "RH Trefoil # LH Trefoil");
         }
 
-        void verifyPDCode(const Link& link, const Link* expect,
+        void verifyPDCode(const Link& link, const Link& expect,
                 const char* name) {
             // The PD code will throw away zero-crossing components;
             // the "expect" argument should be the resulting diagram.
-            // If expect == nullptr then we will use the original link itself.
-            if (! expect)
-                expect = std::addressof(link);
-
             std::string code = link.pd();
 
             Link* recon = Link::fromPD(code);
@@ -2572,12 +2567,12 @@ class LinkTest : public CppUnit::TestFixture {
                 msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (recon->size() != expect->size()) {
+            if (recon->size() != expect.size()) {
                 std::ostringstream msg;
                 msg << name << ": reconstruction has incorrect size.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (recon->countComponents() != expect->countComponents()) {
+            if (recon->countComponents() != expect.countComponents()) {
                 std::ostringstream msg;
                 msg << name << ": reconstruction has "
                     "different number of components.";
@@ -2585,25 +2580,25 @@ class LinkTest : public CppUnit::TestFixture {
             }
             for (size_t i = 0; i < recon->countComponents(); ++i) {
                 if (recon->writheOfComponent(i) !=
-                        expect->writheOfComponent(i)) {
+                        expect.writheOfComponent(i)) {
                     std::ostringstream msg;
                     msg << name << ": reconstruction has "
                         "different writhe for component " << i << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-            if (recon->writhe() != expect->writhe()) {
+            if (recon->writhe() != expect.writhe()) {
                 std::ostringstream msg;
                 msg << name << ": reconstruction has different writhe.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (recon->linking() != expect->linking()) {
+            if (recon->linking() != expect.linking()) {
                 std::ostringstream msg;
                 msg << name << ": reconstruction has different linking number.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (expect->size() <= 20) {
-                if (recon->homfly() != expect->homfly()) {
+            if (expect.size() <= 20) {
+                if (recon->homfly() != expect.homfly()) {
                     std::ostringstream msg;
                     msg << name << ": reconstruction has "
                         "different HOMFLY-PT polynomial.";
@@ -2614,7 +2609,7 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void verifyPDCode(const Link& link, const char* name) {
-            verifyPDCode(link, nullptr, name);
+            verifyPDCode(link, link, name);
         }
 
         void pdCode() {
@@ -2650,10 +2645,10 @@ class LinkTest : public CppUnit::TestFixture {
             verifyPDCode(adams6_28, "Adams Fig. 6.28");
 
             // Cases where the PD code throws away zero-crossing components:
-            verifyPDCode(unknot0, &empty, "Unknot (0 crossings)");
-            verifyPDCode(unlink2_0, &empty, "Unlink (2 components)");
-            verifyPDCode(unlink3_0, &empty, "Unlink (3 components)");
-            verifyPDCode(trefoil_unknot0, &trefoilRight,
+            verifyPDCode(unknot0, empty, "Unknot (0 crossings)");
+            verifyPDCode(unlink2_0, empty, "Unlink (2 components)");
+            verifyPDCode(unlink3_0, empty, "Unlink (3 components)");
+            verifyPDCode(trefoil_unknot0, trefoilRight,
                 "Trefoil U unknot (separate)");
         }
 
