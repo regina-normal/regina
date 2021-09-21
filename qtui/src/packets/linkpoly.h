@@ -58,7 +58,7 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         /**
          * The link itself
          */
-        regina::Link* link;
+        regina::PacketOf<regina::Link>* link;
 
         /**
          * Internal components
@@ -77,7 +77,8 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        LinkPolynomialUI(regina::Link* useLink, PacketTabbedUI* useParentUI);
+        LinkPolynomialUI(regina::PacketOf<regina::Link>* useLink,
+            PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.

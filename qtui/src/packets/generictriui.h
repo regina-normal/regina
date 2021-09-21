@@ -102,8 +102,9 @@ class GenericTriangulationUI : public GenericTriangulationBase {
         /**
          * Constructor and destructor.
          */
-        GenericTriangulationUI(regina::Triangulation<dim>* packet,
-                PacketPane* newEnclosingPane);
+        GenericTriangulationUI(
+            regina::PacketOf<regina::Triangulation<dim>>* packet,
+            PacketPane* newEnclosingPane);
 
         /**
          * PacketUI overrides.

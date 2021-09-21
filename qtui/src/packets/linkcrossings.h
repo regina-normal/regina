@@ -76,7 +76,7 @@ class CrossingModel : public QAbstractItemModel {
                  Array index is (1 + sign + strand). */
 
     public:
-        CrossingModel(bool pictorial, regina::Link* link, int component);
+        CrossingModel(bool pictorial, regina::Link& link, int component);
         const regina::StrandRef& strandAt(const QModelIndex& index) const;
         bool isPictorial() const;
         void setPictorial(bool pictorial);
@@ -133,7 +133,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
-        regina::Link* link;
+        regina::PacketOf<regina::Link>* link;
  
         /**
          * Internal components
@@ -164,7 +164,8 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        LinkCrossingsUI(regina::Link* packet, PacketTabbedUI* useParentUI);
+        LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
+            PacketTabbedUI* useParentUI);
         ~LinkCrossingsUI();
 
         /**
@@ -223,7 +224,7 @@ class ParallelDialog : public QDialog {
     Q_OBJECT
 
     private:
-        regina::Link* link_;
+        regina::Link& link_;
 
         /**
          * Internal components
@@ -235,7 +236,7 @@ class ParallelDialog : public QDialog {
         /**
          * Constructor.
          */
-        ParallelDialog(QWidget* parent, regina::Link* link);
+        ParallelDialog(QWidget* parent, regina::Link& link);
 
     protected slots:
         /**

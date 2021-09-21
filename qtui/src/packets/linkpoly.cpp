@@ -57,7 +57,7 @@
 
 using regina::Packet;
 
-LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
+LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), link(packet) {
     ui = new QWidget();
@@ -219,10 +219,11 @@ QWidget* LinkPolynomialUI::getInterface() {
 void LinkPolynomialUI::refresh() {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
-    if (link->knowsJones() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
+    if (link->data().knowsJones() ||
+            link->data().size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         btnJones->setVisible(false);
 
-        const auto& polySqrtT = link->jones();
+        const auto& polySqrtT = link->data().jones();
         if (polySqrtT.isZero() || polySqrtT.minExp() % 2 == 0) {
             // We can express this as a polynomial in t.
             regina::Laurent<regina::Integer> scaled(polySqrtT);
@@ -250,22 +251,22 @@ void LinkPolynomialUI::refresh() {
         btnJones->setVisible(true);
     }
 
-    if (link->knowsHomfly() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
+    if (link->data().knowsHomfly() || link->data().size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         btnHomfly->setVisible(false);
         if (! btnLM->isChecked()) {
             if (unicode)
-                homfly->setText(link->homflyAZ().utf8(
+                homfly->setText(link->data().homflyAZ().utf8(
                     regina::Link::homflyAZVarX,
                     regina::Link::homflyAZVarY).c_str());
             else
-                homfly->setText(link->homflyAZ().str(
+                homfly->setText(link->data().homflyAZ().str(
                     "a", regina::Link::homflyAZVarY).c_str());
         } else {
             if (unicode)
-                homfly->setText(link->homflyLM().utf8(
+                homfly->setText(link->data().homflyLM().utf8(
                     "l", regina::Link::homflyLMVarY).c_str());
             else
-                homfly->setText(link->homflyLM().str(
+                homfly->setText(link->data().homflyLM().str(
                     "l", regina::Link::homflyLMVarY).c_str());
         }
         QPalette pal = homfly->palette();
@@ -279,12 +280,12 @@ void LinkPolynomialUI::refresh() {
         btnHomfly->setVisible(true);
     }
 
-    if (link->knowsBracket() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
+    if (link->data().knowsBracket() || link->data().size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         btnBracket->setVisible(false);
         if (unicode)
-            bracket->setText(link->bracket().utf8("A").c_str());
+            bracket->setText(link->data().bracket().utf8("A").c_str());
         else
-            bracket->setText(link->bracket().str("A").c_str());
+            bracket->setText(link->data().bracket().str("A").c_str());
         QPalette pal = bracket->palette();
         pal.setColor(bracket->foregroundRole(), Qt::black);
         bracket->setPalette(pal);
@@ -300,7 +301,7 @@ void LinkPolynomialUI::refresh() {
 void LinkPolynomialUI::calculateJones() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Jones polynomial"), ui);
-    link->jones(regina::ALG_DEFAULT, &tracker);
+    link->data().jones(regina::ALG_DEFAULT, &tracker);
     if (! dlg.run())
         return;
     dlg.hide();
@@ -313,7 +314,7 @@ void LinkPolynomialUI::calculateHomfly() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing HOMFLY-PT polynomial"),
         ui);
-    link->homfly(regina::ALG_DEFAULT, &tracker);
+    link->data().homfly(regina::ALG_DEFAULT, &tracker);
     if (! dlg.run())
         return;
     dlg.hide();
@@ -325,7 +326,7 @@ void LinkPolynomialUI::calculateHomfly() {
 void LinkPolynomialUI::calculateBracket() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Kauffman bracket"), ui);
-    link->jones(regina::ALG_DEFAULT, &tracker);
+    link->data().jones(regina::ALG_DEFAULT, &tracker);
     if (! dlg.run())
         return;
     dlg.hide();
@@ -335,7 +336,7 @@ void LinkPolynomialUI::calculateBracket() {
 }
 
 void LinkPolynomialUI::contextJones(const QPoint& pos) {
-    if (! link->knowsJones())
+    if (! link->data().knowsJones())
         return;
 
     QMenu m(tr("Context menu"), jones);
@@ -351,7 +352,7 @@ void LinkPolynomialUI::contextJones(const QPoint& pos) {
 }
 
 void LinkPolynomialUI::contextHomfly(const QPoint& pos) {
-    if (! link->knowsHomfly())
+    if (! link->data().knowsHomfly())
         return;
 
     QMenu m(tr("Context menu"), homfly);
@@ -367,7 +368,7 @@ void LinkPolynomialUI::contextHomfly(const QPoint& pos) {
 }
 
 void LinkPolynomialUI::contextBracket(const QPoint& pos) {
-    if (! link->knowsBracket())
+    if (! link->data().knowsBracket())
         return;
 
     QMenu m(tr("Context menu"), bracket);
@@ -395,7 +396,7 @@ void LinkPolynomialUI::copyBracket() {
 }
 
 void LinkPolynomialUI::copyJonesPlain() {
-    const auto& polySqrtT = link->jones();
+    const auto& polySqrtT = link->data().jones();
     if (polySqrtT.isZero() || polySqrtT.minExp() % 2 == 0) {
         // We can express this as a polynomial in t.
         regina::Laurent<regina::Integer> scaled(polySqrtT);
@@ -409,15 +410,15 @@ void LinkPolynomialUI::copyJonesPlain() {
 
 void LinkPolynomialUI::copyHomflyPlain() {
     if (! btnLM->isChecked())
-        QApplication::clipboard()->setText(link->homflyAZ().str("a", "z").
-            c_str());
+        QApplication::clipboard()->setText(
+            link->data().homflyAZ().str("a", "z").c_str());
     else
-        QApplication::clipboard()->setText(link->homflyLM().str("l", "m").
-            c_str());
+        QApplication::clipboard()->setText(
+            link->data().homflyLM().str("l", "m").c_str());
 }
 
 void LinkPolynomialUI::copyBracketPlain() {
-    QApplication::clipboard()->setText(link->bracket().str("A").c_str());
+    QApplication::clipboard()->setText(link->data().bracket().str("A").c_str());
 }
 
 void LinkPolynomialUI::homflyTypeChanged(bool checked) {

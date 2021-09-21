@@ -66,7 +66,8 @@ class LinkUI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        LinkUI(regina::Link* packet, PacketPane* newEnclosingPane);
+        LinkUI(regina::PacketOf<regina::Link>* packet,
+            PacketPane* newEnclosingPane);
         ~LinkUI();
 
         /**
@@ -85,7 +86,7 @@ class LinkHeaderUI : public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Link* link;
+        regina::PacketOf<regina::Link>* link;
 
         /**
          * Internal components
@@ -98,7 +99,8 @@ class LinkHeaderUI : public PacketViewerTab {
         /**
          * Constructor.
          */
-        LinkHeaderUI(regina::Link* packet, PacketTabbedUI* useParentUI);
+        LinkHeaderUI(regina::PacketOf<regina::Link>* packet,
+            PacketTabbedUI* useParentUI);
 
         /**
          * Component queries.
@@ -115,7 +117,7 @@ class LinkHeaderUI : public PacketViewerTab {
         /**
          * Allow other UIs to access the summary information.
          */
-        static QString summaryInfo(regina::Link* tri);
+        static QString summaryInfo(const regina::Link& link);
 };
 
 inline PacketEditIface* LinkUI::getEditIface() {

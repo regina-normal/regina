@@ -75,7 +75,7 @@ lt_symlist_t link_lt_preloaded_symbols[] = {
 #endif
 #endif
 
-LinkGraphUI::LinkGraphUI(regina::Link* useLink,
+LinkGraphUI::LinkGraphUI(regina::PacketOf<regina::Link>* useLink,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI),
         link(useLink) {
@@ -174,7 +174,7 @@ void LinkGraphUI::refresh() {
         "<i>Regina</i> again.</qt>"));
     return;
 #else
-    size_t n = link->size();
+    size_t n = link->data().size();
     if (n == 0) {
         showInfo(tr("<qt>This link is empty.</qt>"));
         return;
@@ -256,7 +256,7 @@ void LinkGraphUI::showError(const QString& msg) {
 }
 
 std::string LinkGraphUI::treeDecomp(bool nice, int& bags, int& width) {
-    regina::TreeDecomposition t(*link);
+    regina::TreeDecomposition t(link->data());
     if (nice)
         t.makeNice();
     bags = t.size();

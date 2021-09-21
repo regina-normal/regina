@@ -57,7 +57,7 @@ class LinkCodesUI : public QObject, public PacketViewerTab {
         /**
          * The link itself
          */
-        regina::Link* link;
+        regina::PacketOf<regina::Link>* link;
 
         /**
          * Internal components
@@ -71,7 +71,8 @@ class LinkCodesUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        LinkCodesUI(regina::Link* useLink, PacketTabbedUI* useParentUI);
+        LinkCodesUI(regina::PacketOf<regina::Link>* useLink,
+            PacketTabbedUI* useParentUI);
         ~LinkCodesUI();
 
         /**

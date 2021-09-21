@@ -155,7 +155,8 @@ QString R3Arg::display() const {
         .arg(displayCrossing[2]);
 }
 
-LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
+LinkMoveDialog::LinkMoveDialog(QWidget* parent,
+        regina::PacketOf<regina::Link>* useLink) :
         QDialog(parent), link(useLink) {
     setWindowTitle(tr("Reidemeister Moves"));
     QVBoxLayout *dialogLayout = new QVBoxLayout(this);
@@ -332,10 +333,10 @@ void LinkMoveDialog::packetWasRenamed(regina::Packet*) {
 }
 
 void LinkMoveDialog::packetWasChanged(regina::Packet*) {
-    if (link->size() == 1)
+    if (link->data().size() == 1)
         overview->setText(tr("1 crossing"));
     else
-        overview->setText(tr("%1 crossings").arg(link->size()));
+        overview->setText(tr("%1 crossings").arg(link->data().size()));
 
     fill();
 }
@@ -355,13 +356,13 @@ void LinkMoveDialog::clicked(QAbstractButton* btn) {
         use = box1up->currentIndex();
         if (use >= 0 && use < options1up.size()) {
             const R1UpArg& a(options1up[use]);
-            link->r1(a.strand, a.side, a.sign, true, true);
+            link->data().r1(a.strand, a.side, a.sign, true, true);
         }
     } else if (use1down->isChecked()) {
         use = box1down->currentIndex();
         if (use >= 0 && use < options1down.size()) {
             const R1DownArg& a(options1down[use]);
-            link->r1(a.crossing, true, true);
+            link->data().r1(a.crossing, true, true);
         }
     } else if (use2up->isChecked()) {
         use = box2upOver->currentIndex();
@@ -373,18 +374,18 @@ void LinkMoveDialog::clicked(QAbstractButton* btn) {
 
         const R2UpArg& over(options2upOver[use]);
         const R2UpArg& under(options2upUnder[useUnder]);
-        link->r2(over.strand, over.side, under.strand, under.side, true, true);
+        link->data().r2(over.strand, over.side, under.strand, under.side, true, true);
     } else if (use2down->isChecked()) {
         use = box2down->currentIndex();
         if (use >= 0 && use < options2down.size()) {
             const R2DownArg& a(options2down[use]);
-            link->r2(a.crossing, true, true);
+            link->data().r2(a.crossing, true, true);
         }
     } else if (use3->isChecked()) {
         use = box3->currentIndex();
         if (use >= 0 && use < options3.size()) {
             const R3Arg& a(options3[use]);
-            link->r3(a.crossing, a.side, true, true);
+            link->data().r3(a.crossing, a.side, true, true);
         }
     } else
         ReginaSupport::info(this, tr("Please select a move."));
@@ -412,15 +413,15 @@ void LinkMoveDialog::fill() {
     int strand, side;
 
     // R1 twist moves on arcs are always valid.
-    for (i = 0; i < link->size(); ++i)
+    for (i = 0; i < link->data().size(); ++i)
         for (strand = 0; strand < 2; ++strand)
             for (side = 0; side < 2; ++side) {
                 options1up.push_back(
-                    R1UpArg(link->crossing(i)->strand(strand), side, 1));
+                    R1UpArg(link->data().crossing(i)->strand(strand), side, 1));
                 options1up.push_back(
-                    R1UpArg(link->crossing(i)->strand(strand), side, -1));
+                    R1UpArg(link->data().crossing(i)->strand(strand), side, -1));
             }
-    if (link->r1(regina::StrandRef(), 0, 1, true, false)) {
+    if (link->data().r1(regina::StrandRef(), 0, 1, true, false)) {
         // We have unknot component(s) that we can use for R1 twists also.
         options1up.push_back(R1UpArg(regina::StrandRef(), 0, 1));
         options1up.push_back(R1UpArg(regina::StrandRef(), 0, -1));
@@ -428,16 +429,16 @@ void LinkMoveDialog::fill() {
     for (const auto& o : options1up)
         box1up->addItem(o.display());
 
-    for (i = 0; i < link->size(); ++i)
-        if (link->r1(link->crossing(i), true, false))
-            options1down.push_back(R1DownArg(link->crossing(i)));
+    for (i = 0; i < link->data().size(); ++i)
+        if (link->data().r1(link->data().crossing(i), true, false))
+            options1down.push_back(R1DownArg(link->data().crossing(i)));
     for (const auto& o : options1down)
         box1down->addItem(o.display());
 
     // R2 overlap moves can be done with any arc that is not the inside of a twist.
     // Note that, if you are the inside of a twist, then you cannot also be the outside of a twist.
-    for (i = 0; i < link->size(); ++i) {
-        regina::Crossing* crossing = link->crossing(i);
+    for (i = 0; i < link->data().size(); ++i) {
+        regina::Crossing* crossing = link->data().crossing(i);
         for (strand = 0; strand < 2; ++strand) {
             if (crossing->next(strand).crossing() == crossing) {
                 // We are part of a twist.
@@ -457,7 +458,8 @@ void LinkMoveDialog::fill() {
             }
         }
     }
-    if (link->countComponents() > 1 && link->r1(regina::StrandRef(), 0, 1, true, false)) {
+    if (link->data().countComponents() > 1 &&
+            link->data().r1(regina::StrandRef(), 0, 1, true, false)) {
         // We have unknot component(s), as identified by the R1 test, and we
         // can use R2 on this with any *different* component.
         options2upOver.push_back(R2UpArg(regina::StrandRef(), 0));
@@ -469,17 +471,17 @@ void LinkMoveDialog::fill() {
     // Trigger a refill of the under-strand chooser.
     changedR2UpOver(-1);
 
-    for (i = 0; i < link->size(); ++i)
-        if (link->r2(link->crossing(i), true, false))
-            options2down.push_back(R2DownArg(link->crossing(i)));
+    for (i = 0; i < link->data().size(); ++i)
+        if (link->data().r2(link->data().crossing(i), true, false))
+            options2down.push_back(R2DownArg(link->data().crossing(i)));
     std::sort(options2down.begin(), options2down.end());
     for (const auto& o : options2down)
         box2down->addItem(o.display());
 
-    for (i = 0; i < link->size(); ++i)
+    for (i = 0; i < link->data().size(); ++i)
         for (side = 0; side < 2; ++side)
-            if (link->r3(link->crossing(i), side, true, false))
-                options3.push_back(R3Arg(link->crossing(i), side));
+            if (link->data().r3(link->data().crossing(i), side, true, false))
+                options3.push_back(R3Arg(link->data().crossing(i), side));
     std::sort(options3.begin(), options3.end());
     for (const auto& o : options3)
         box3->addItem(o.display());
@@ -508,15 +510,15 @@ void LinkMoveDialog::changedR2UpOver(int) {
     // instead of iterating through all potential strands.
 
     int i, strand, side;
-    for (i = 0; i < link->size(); ++i)
+    for (i = 0; i < link->data().size(); ++i)
         for (strand = 0; strand < 2; ++strand)
             for (side = 0; side < 2; ++side)
-                if (link->r2(over.strand, over.side,
-                        link->crossing(i)->strand(strand), side,
+                if (link->data().r2(over.strand, over.side,
+                        link->data().crossing(i)->strand(strand), side,
                         true, false))
-                    options2upUnder.push_back(R2UpArg(link->crossing(i)->strand(strand), side));
+                    options2upUnder.push_back(R2UpArg(link->data().crossing(i)->strand(strand), side));
     for (side = 0; side < 2; ++side)
-        if (link->r2(over.strand, over.side,
+        if (link->data().r2(over.strand, over.side,
                 regina::StrandRef(), side,
                 true, false))
             options2upUnder.push_back(R2UpArg(regina::StrandRef(), side));

@@ -166,7 +166,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<Container*>(packet), enclosingPane);
         case PACKET_LINK:
             return new LinkUI(
-                dynamic_cast<Link*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Link>*>(packet), enclosingPane);
         case PACKET_NORMALSURFACES:
             return new SurfacesUI(
                 dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
@@ -207,37 +207,48 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
 #ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(
-                dynamic_cast<Triangulation<5>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<5>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION6:
             return new GenericTriangulationUI<6>(
-                dynamic_cast<Triangulation<6>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<6>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION7:
             return new GenericTriangulationUI<7>(
-                dynamic_cast<Triangulation<7>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<7>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION8:
             return new GenericTriangulationUI<8>(
-                dynamic_cast<Triangulation<8>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<8>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION9:
             return new GenericTriangulationUI<9>(
-                dynamic_cast<Triangulation<9>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<9>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION10:
             return new GenericTriangulationUI<10>(
-                dynamic_cast<Triangulation<10>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<10>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION11:
             return new GenericTriangulationUI<11>(
-                dynamic_cast<Triangulation<11>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<11>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION12:
             return new GenericTriangulationUI<12>(
-                dynamic_cast<Triangulation<12>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<12>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION13:
             return new GenericTriangulationUI<13>(
-                dynamic_cast<Triangulation<13>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<13>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION14:
             return new GenericTriangulationUI<14>(
-                dynamic_cast<Triangulation<14>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<14>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION15:
             return new GenericTriangulationUI<15>(
-                dynamic_cast<Triangulation<15>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<15>>*>(packet),
+                enclosingPane);
 #endif /* ! REGINA_LOWDIMONLY */
         default:
             return new DefaultPacketUI(packet, enclosingPane);

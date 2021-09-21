@@ -156,13 +156,14 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
         /**
          * Packet tree structure:
          */
-        regina::Link* link;
+        regina::PacketOf<regina::Link>* link;
 
     public:
         /**
          * Constructor and destructor.
          */
-        LinkMoveDialog(QWidget* parent, regina::Link* useLink);
+        LinkMoveDialog(QWidget* parent,
+            regina::PacketOf<regina::Link>* useLink);
         ~LinkMoveDialog();
 
         /**
