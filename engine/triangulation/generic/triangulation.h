@@ -151,7 +151,6 @@ namespace regina {
  */
 template <int dim>
 class Triangulation :
-        public PacketData<Triangulation<dim>>,
         public Output<Triangulation<dim>>,
         public detail::TriangulationBase<dim> {
     static_assert(! standardDim(dim),

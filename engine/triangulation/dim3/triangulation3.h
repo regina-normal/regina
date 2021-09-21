@@ -112,6 +112,9 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3,
         "3-Manifold Triangulation")
 
+    private:
+        using ChangeEventSpan = Packet::ChangeEventSpan;
+
     public:
         typedef std::vector<Tetrahedron<3>*>::const_iterator
                 TetrahedronIterator;

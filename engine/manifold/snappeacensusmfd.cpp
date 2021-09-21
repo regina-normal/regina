@@ -33,8 +33,8 @@
 #include "file/globaldirs.h"
 #include "manifold/snappeacensusmfd.h"
 #include "subcomplex/snappeacensustri.h"
-#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 #include <cstdio>
 #include <cstring>

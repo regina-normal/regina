@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include "split/signature.h"
-#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 namespace {
     static const int poincareAdj[5][4] = {

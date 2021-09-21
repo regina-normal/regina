@@ -410,7 +410,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             verifySigRP3x3("(aabcde)(cfg)(dgf)(b)(e)");
         }
 
-        static void testDecomp(Triangulation<3>* tri) {
+        static void testDecomp(Triangulation<3>* tri, const char* name) {
             // Checked the connectedSumDecomposition() preconditions.
             if (! (tri->isValid() && tri->isClosed() && tri->isConnected()))
                 return;
@@ -422,7 +422,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 // The routine reported an embedded two-sided projective plane.
                 if (tri->isOrientable()) {
                     std::ostringstream msg;
-                    msg << "Triangulation " << tri->label()
+                    msg << "Triangulation " << name
                         << " is orientable but reports an embedded "
                         "two-sided projective plane.";
                     CPPUNIT_FAIL(msg.str());
@@ -445,7 +445,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                             term->isoSig() == "cMcabbjaj" /* S2xS1 */ ||
                             term->isoSig() == "cPcbbbajs" /* S2x~S1 */))) {
                         std::ostringstream msg;
-                        msg << "Triangulation " << tri->label()
+                        msg << "Triangulation " << name
                             << " reports a non-zero-efficient summand "
                             << term->isoSig() << ".";
                         CPPUNIT_FAIL(msg.str());
@@ -453,7 +453,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 }
                 if (term->isSphere()) {
                     std::ostringstream msg;
-                    msg << "Triangulation " << tri->label()
+                    msg << "Triangulation " << name
                         << " reports a 3-sphere summand "
                         << term->isoSig() << ".";
                     CPPUNIT_FAIL(msg.str());
@@ -463,21 +463,21 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             if ((! foundNor) && (! tri->isOrientable())) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri->label()
+                msg << "Triangulation " << name
                     << " is non-orientable but none of its summands are.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (foundNor && tri->isOrientable()) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri->label()
+                msg << "Triangulation " << name
                     << " is orientable but one of its summands is not.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! (h1 == tri->homology())) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri->label()
+                msg << "Triangulation " << name
                     << " has first homology that does not match "
                     "the combination of its summands' first homologies.";
                 CPPUNIT_FAIL(msg.str());

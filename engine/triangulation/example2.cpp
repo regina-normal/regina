@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/example2.h"
 #include "triangulation/dim2.h"
+#include "triangulation/example2.h"
 #include <sstream>
 
 namespace regina {

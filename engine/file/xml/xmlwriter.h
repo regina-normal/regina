@@ -42,6 +42,7 @@
 #include "regina-core.h"
 #include "file/fileformat.h"
 #include "maths/perm.h"
+#include "packet/packet.h" // TODO: Remove
 
 namespace regina {
 

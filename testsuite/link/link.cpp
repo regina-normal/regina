@@ -115,16 +115,12 @@ class LinkTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             empty = new Link();
-            empty->setLabel("Empty link");
 
             unknot0 = new Link(1);
-            unknot0->setLabel("Unknot (0 crossings)");
 
             unknot1 = Link::fromData({ 1 }, { 1, -1 });
-            unknot1->setLabel("Unknot (1 crossing)");
 
             unknot3 = Link::fromData({ 1, 1, -1 }, { 1, -2, -3, -1, 2, 3 });
-            unknot3->setLabel("Unknot (3 crossings)");
 
             unknotMonster = ExampleLink::monster();
 
@@ -142,7 +138,6 @@ class LinkTest : public CppUnit::TestFixture {
                 trefoil_r1x2->r1(c->upper(), 0, -1, false, true);
                 trefoil_r1x2->r1(c->lower(), 1, +1, false, true);
             }
-            trefoil_r1x2->setLabel("Trefoil with 2 R1s");
 
             trefoil_r1x6 = ExampleLink::trefoilRight();
             {
@@ -157,7 +152,6 @@ class LinkTest : public CppUnit::TestFixture {
                 trefoil_r1x6->r1(c[2]->upper(), 0, +1, false, true);
                 trefoil_r1x6->r1(c[2]->lower(), 0, -1, false, true);
             }
-            trefoil_r1x6->setLabel("Trefoil with 6 R1s");
 
             figureEight_r1x2 = ExampleLink::figureEight();
             {
@@ -165,7 +159,6 @@ class LinkTest : public CppUnit::TestFixture {
                 figureEight_r1x2->r1(c->upper(), 0, -1, false, true);
                 figureEight_r1x2->r1(c->lower(), 1, +1, false, true);
             }
-            figureEight_r1x2->setLabel("Figure eight with 2 R1s");
 
             conway = ExampleLink::conway();
 
@@ -174,16 +167,12 @@ class LinkTest : public CppUnit::TestFixture {
             gst = ExampleLink::gst();
 
             unlink2_0 = new Link(2);
-            unlink2_0->setLabel("Unlink (2 components)");
 
             unlink3_0 = new Link(3);
-            unlink3_0->setLabel("Unlink (3 components)");
 
             unlink2_r2 = Link::fromData({ 1, -1 }, { 1, 2 }, { -1, -2 });
-            unlink2_r2->setLabel("Unlink (2 components via R2)");
 
             unlink2_r1r1 = Link::fromData({ -1, 1 }, { 1, -1 }, { -2, 2 });
-            unlink2_r1r1->setLabel("Unlink (2 components via R1+R1)");
 
             hopf = ExampleLink::hopf();
 
@@ -193,28 +182,22 @@ class LinkTest : public CppUnit::TestFixture {
 
             trefoil_unknot0 = Link::fromData({ 1, 1, 1 },
                 { 1, -2, 3, -1, 2, -3 }, { 0 });
-            trefoil_unknot0->setLabel("Trefoil U unknot (separate)");
 
             trefoil_unknot1 = Link::fromData(
                 { +1, +1, -1, +1 }, { 1, -2, 4, -1, 2, -4 }, { -3, 3 });
-            trefoil_unknot1->setLabel("Trefoil U unknot (separate + twist)");
 
             trefoil_unknot_overlap = Link::fromData(
                 { -1, +1, +1, +1, +1 }, { 2, -3, -4, -1, 5, -2, 3, -5 },
                 { 4, 1 });
-            trefoil_unknot_overlap->setLabel("Trefoil U unknot (with R2)");
 
             adams6_28 = Link::fromData({ +1, +1, -1, -1, +1, +1 },
                 { -2, 1, -5, 6 }, { 2, -3, 4, -6, 5, -4, 3, -1 });
-            adams6_28->setLabel("Adams, Figure 6.28");
 
             rht_rht = ExampleLink::trefoilRight();
             rht_rht->composeWith(*trefoilRight);
-            rht_rht->setLabel("RH Trefoil # RH Trefoil");
 
             rht_lht = ExampleLink::trefoilRight();
             rht_lht->composeWith(*trefoilLeft);
-            rht_lht->setLabel("RH Trefoil # LH Trefoil");
         }
 
         void tearDown() {
@@ -248,7 +231,7 @@ class LinkTest : public CppUnit::TestFixture {
             delete rht_lht;
         }
 
-        void sanity(Link* l) {
+        void sanity(Link* l, const std::string& name) {
             Crossing* c;
             for (size_t i = 0; i < l->size(); ++i) {
                 c = l->crossing(i);
@@ -258,129 +241,133 @@ class LinkTest : public CppUnit::TestFixture {
                 if (lower.next().prev() != lower ||
                         upper.next().prev() != upper) {
                     std::ostringstream msg;
-                    msg << l->label() << ": inconsistent next/prev links.";
+                    msg << name << ": inconsistent next/prev links.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
         }
 
-        void testComponents(Link* l, size_t expected) {
+        void testComponents(Link* l, size_t expected, const char* name) {
             if (l->countComponents() != expected) {
                 std::ostringstream msg;
-                msg << l->label() << ": expected " << expected
+                msg << name << ": expected " << expected
                     << " components, found " << l->countComponents() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void components() {
-            testComponents(empty, 0);
-            testComponents(unknot0, 1);
-            testComponents(unknot1, 1);
-            testComponents(unknot3, 1);
-            testComponents(unknotMonster, 1);
-            testComponents(unknotGordian, 1);
-            testComponents(trefoilLeft, 1);
-            testComponents(trefoilRight, 1);
-            testComponents(trefoil_r1x2, 1);
-            testComponents(trefoil_r1x6, 1);
-            testComponents(figureEight, 1);
-            testComponents(figureEight_r1x2, 1);
-            testComponents(conway, 1);
-            testComponents(kinoshitaTerasaka, 1);
-            testComponents(gst, 1);
-            testComponents(unlink2_0, 2);
-            testComponents(unlink3_0, 3);
-            testComponents(unlink2_r2, 2);
-            testComponents(unlink2_r1r1, 2);
-            testComponents(hopf, 2);
-            testComponents(whitehead, 2);
-            testComponents(borromean, 3);
-            testComponents(trefoil_unknot0, 2);
-            testComponents(trefoil_unknot1, 2);
-            testComponents(trefoil_unknot_overlap, 2);
-            testComponents(rht_rht, 1);
-            testComponents(rht_lht, 1);
+            testComponents(empty, 0, "Empty");
+            testComponents(unknot0, 1, "Unknot (0 crossings)");
+            testComponents(unknot1, 1, "Unknot (1 crossing)");
+            testComponents(unknot3, 1, "Unknot (3 crossings)");
+            testComponents(unknotMonster, 1, "Monster unknot");
+            testComponents(unknotGordian, 1, "Gordian unknot");
+            testComponents(trefoilLeft, 1, "LH Trefoil");
+            testComponents(trefoilRight, 1, "RH Trefoil");
+            testComponents(trefoil_r1x2, 1, "Trefoil with 2 R1s");
+            testComponents(trefoil_r1x6, 1, "Trefoil with 6 R1s");
+            testComponents(figureEight, 1, "Figure eight");
+            testComponents(figureEight_r1x2, 1, "Figure eight with 2 R1s");
+            testComponents(conway, 1, "Conway knot");
+            testComponents(kinoshitaTerasaka, 1, "Kinoshita-Terasaka knot");
+            testComponents(gst, 1, "GST");
+            testComponents(unlink2_0, 2, "Unlink (2 components)");
+            testComponents(unlink3_0, 3, "Unlink (3 components)");
+            testComponents(unlink2_r2, 2, "Unlink (2 components via R2)");
+            testComponents(unlink2_r1r1, 2, "Unlink (2 components via R1+R1)");
+            testComponents(hopf, 2, "Hopf link");
+            testComponents(whitehead, 2, "Whitehead link");
+            testComponents(borromean, 3, "Borromean rings");
+            testComponents(trefoil_unknot0, 2, "Trefoil U unknot (separate)");
+            testComponents(trefoil_unknot1, 2,
+                "Trefoil U unknot (separate + twist)");
+            testComponents(trefoil_unknot_overlap, 2,
+                "Trefoil U unknot (with R2)");
+            testComponents(rht_rht, 1, "RH Trefoil # RH Trefoil");
+            testComponents(rht_lht, 1, "RH Trefoil # LH Trefoil");
         }
 
-        void testLinking(const Link* l, long expected) {
+        void testLinking(const Link* l, long expected, const char* name) {
             long ans = l->linking();
             if (ans != expected) {
                 std::ostringstream msg;
-                msg << l->label() << ": expected lk = " << expected
+                msg << name << ": expected lk = " << expected
                     << ", computed " << ans << " instead.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void linking() {
-            testLinking(empty, 0);
-            testLinking(unknot0, 0);
-            testLinking(unknot1, 0);
-            testLinking(unknot3, 0);
-            testLinking(unknotMonster, 0);
-            testLinking(unknotGordian, 0);
-            testLinking(trefoilLeft, 0);
-            testLinking(trefoilRight, 0);
-            testLinking(trefoil_r1x2, 0);
-            testLinking(trefoil_r1x6, 0);
-            testLinking(figureEight, 0);
-            testLinking(figureEight_r1x2, 0);
-            testLinking(conway, 0);
-            testLinking(kinoshitaTerasaka, 0);
-            testLinking(gst, 0);
-            testLinking(unlink2_0, 0);
-            testLinking(unlink3_0, 0);
-            testLinking(unlink2_r2, 0);
-            testLinking(unlink2_r1r1, 0);
-            testLinking(hopf, 1);
-            testLinking(whitehead, 0);
-            testLinking(borromean, 0);
-            testLinking(trefoil_unknot0, 0);
-            testLinking(trefoil_unknot1, 0);
-            testLinking(trefoil_unknot_overlap, 0);
-            testLinking(rht_rht, 0);
-            testLinking(rht_lht, 0);
+            testLinking(empty, 0, "Empty");
+            testLinking(unknot0, 0, "Unknot (0 crossings)");
+            testLinking(unknot1, 0, "Unknot (1 crossing)");
+            testLinking(unknot3, 0, "Unknot (3 crossings)");
+            testLinking(unknotMonster, 0, "Monster unknot");
+            testLinking(unknotGordian, 0, "Gordian unknot");
+            testLinking(trefoilLeft, 0, "LH Trefoil");
+            testLinking(trefoilRight, 0, "RH Trefoil");
+            testLinking(trefoil_r1x2, 0, "Trefoil with 2 R1s");
+            testLinking(trefoil_r1x6, 0, "Trefoil with 6 R1s");
+            testLinking(figureEight, 0, "Figure eight");
+            testLinking(figureEight_r1x2, 0, "Figure eight with 2 R1s");
+            testLinking(conway, 0, "Conway knot");
+            testLinking(kinoshitaTerasaka, 0, "Kinoshita-Terasaka knot");
+            testLinking(gst, 0, "GST");
+            testLinking(unlink2_0, 0, "Unlink (2 components)");
+            testLinking(unlink3_0, 0, "Unlink (3 components)");
+            testLinking(unlink2_r2, 0, "Unlink (2 components via R2)");
+            testLinking(unlink2_r1r1, 0, "Unlink (2 components via R1+R1)");
+            testLinking(hopf, 1, "Hopf link");
+            testLinking(whitehead, 0, "Whitehead link");
+            testLinking(borromean, 0, "Borromean rings");
+            testLinking(trefoil_unknot0, 0, "Trefoil U unknot (separate)");
+            testLinking(trefoil_unknot1, 0,
+                "Trefoil U unknot (separate + twist)");
+            testLinking(trefoil_unknot_overlap, 0,
+                "Trefoil U unknot (with R2)");
+            testLinking(rht_rht, 0, "RH Trefoil # RH Trefoil");
+            testLinking(rht_lht, 0, "RH Trefoil # LH Trefoil");
         }
 
-        void verifyWrithe(const Link* l) {
+        void verifyWrithe(const Link* l, const char* name) {
             long sum = 0;
             for (long c = 0; c < l->countComponents(); ++c)
                 sum += l->writheOfComponent(c);
             if (sum + 2 * l->linking() != l->writhe()) {
                 std::ostringstream msg;
-                msg << l->label() << ": sum of component writhes + "
+                msg << name << ": sum of component writhes + "
                     "2 * linking number != writhe.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void writhe() {
-            verifyWrithe(unknot0);
-            verifyWrithe(unknot1);
-            verifyWrithe(unknot3);
-            verifyWrithe(unknotMonster);
-            verifyWrithe(unknotGordian);
-            verifyWrithe(trefoilLeft);
-            verifyWrithe(trefoilRight);
-            verifyWrithe(trefoil_r1x2);
-            verifyWrithe(trefoil_r1x6);
-            verifyWrithe(figureEight);
-            verifyWrithe(figureEight_r1x2);
-            verifyWrithe(conway);
-            verifyWrithe(kinoshitaTerasaka);
-            verifyWrithe(gst);
-            verifyWrithe(rht_rht);
-            verifyWrithe(rht_lht);
+            verifyWrithe(unknot0, "Unknot (0 crossings)");
+            verifyWrithe(unknot1, "Unknot (1 crossing)");
+            verifyWrithe(unknot3, "Unknot (3 crossings)");
+            verifyWrithe(unknotMonster, "Monster unknot");
+            verifyWrithe(unknotGordian, "Gordian unknot");
+            verifyWrithe(trefoilLeft, "LH Trefoil");
+            verifyWrithe(trefoilRight, "RH Trefoil");
+            verifyWrithe(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifyWrithe(trefoil_r1x6, "Trefoil with 6 R1s");
+            verifyWrithe(figureEight, "Figure eight");
+            verifyWrithe(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifyWrithe(conway, "Conway knot");
+            verifyWrithe(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyWrithe(gst, "GST");
+            verifyWrithe(rht_rht, "RH Trefoil # RH Trefoil");
+            verifyWrithe(rht_lht, "RH Trefoil # LH Trefoil");
         }
 
-        void verifySelfFrame(const Link* l) {
+        void verifySelfFrame(const Link* l, const char* name) {
             Link framed(*l);
             framed.selfFrame();
             long framedWrithe = framed.writhe();
             if (framedWrithe != 0) {
                 std::ostringstream msg;
-                msg << l->label() << ": self-framed version has writhe "
+                msg << name << ": self-framed version has writhe "
                     << framedWrithe << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -390,7 +377,7 @@ class LinkTest : public CppUnit::TestFixture {
                 auto framedJones = framed.jones();
                 if (jones != framedJones) {
                     std::ostringstream msg;
-                    msg << l->label() << ": self-framed version has different "
+                    msg << name << ": self-framed version has different "
                         "Jones polynomial (" << jones << " != "
                         << framedJones << ").";
                     CPPUNIT_FAIL(msg.str());
@@ -399,25 +386,25 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void selfFrame() {
-            verifySelfFrame(unknot0);
-            verifySelfFrame(unknot1);
-            verifySelfFrame(unknot3);
-            verifySelfFrame(unknotMonster);
-            verifySelfFrame(unknotGordian);
-            verifySelfFrame(trefoilLeft);
-            verifySelfFrame(trefoilRight);
-            verifySelfFrame(trefoil_r1x2);
-            verifySelfFrame(trefoil_r1x6);
-            verifySelfFrame(figureEight);
-            verifySelfFrame(figureEight_r1x2);
-            verifySelfFrame(conway);
-            verifySelfFrame(kinoshitaTerasaka);
-            verifySelfFrame(gst);
-            verifySelfFrame(rht_rht);
-            verifySelfFrame(rht_lht);
+            verifySelfFrame(unknot0, "Unknot (0 crossings)");
+            verifySelfFrame(unknot1, "Unknot (1 crossing)");
+            verifySelfFrame(unknot3, "Unknot (3 crossings)");
+            verifySelfFrame(unknotMonster, "Monster unknot");
+            verifySelfFrame(unknotGordian, "Gordian unknot");
+            verifySelfFrame(trefoilLeft, "LH Trefoil");
+            verifySelfFrame(trefoilRight, "RH Trefoil");
+            verifySelfFrame(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifySelfFrame(trefoil_r1x6, "Trefoil with 6 R1s");
+            verifySelfFrame(figureEight, "Figure eight");
+            verifySelfFrame(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifySelfFrame(conway, "Conway knot");
+            verifySelfFrame(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifySelfFrame(gst, "GST");
+            verifySelfFrame(rht_rht, "RH Trefoil # RH Trefoil");
+            verifySelfFrame(rht_lht, "RH Trefoil # LH Trefoil");
         }
 
-        void testParallel(const Link* l) {
+        void testParallel(const Link* l, const char* name) {
             long writhe = l->writhe();
             long linking = l->linking();
 
@@ -452,26 +439,26 @@ class LinkTest : public CppUnit::TestFixture {
                 p = l->parallel(k, regina::FRAMING_BLACKBOARD);
                 if (p->countComponents() != k * l->countComponents()) {
                     std::ostringstream msg;
-                    msg << l->label() << ": parallel(" << k << ", blackboard) "
+                    msg << name << ": parallel(" << k << ", blackboard) "
                         "has the wrong number of components.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (p->size() != k * k * l->size()) {
                     std::ostringstream msg;
-                    msg << l->label() << ": parallel(" << k << ", blackboard) "
+                    msg << name << ": parallel(" << k << ", blackboard) "
                         "has the wrong number of crossings.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (p->writhe() != k * k * writhe) {
                     std::ostringstream msg;
-                    msg << l->label() << ": parallel(" << k << ", blackboard) "
+                    msg << name << ": parallel(" << k << ", blackboard) "
                         "has the wrong writhe.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (p->linking() != k * k * linking +
                         (k * (k-1) * writheSame) / 2) {
                     std::ostringstream msg;
-                    msg << l->label() << ": parallel(" << k << ", blackboard) "
+                    msg << name << ": parallel(" << k << ", blackboard) "
                         "has the wrong linking number.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -480,26 +467,26 @@ class LinkTest : public CppUnit::TestFixture {
                 p = l->parallel(k, regina::FRAMING_SEIFERT);
                 if (p->countComponents() != k * l->countComponents()) {
                     std::ostringstream msg;
-                    msg << l->label() << ": parallel(" << k << ", seifert) "
+                    msg << name << ": parallel(" << k << ", seifert) "
                         "has the wrong number of components.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (p->size() != k * k * l->size() +
                         k * (k-1) * absWritheSame) {
                     std::ostringstream msg;
-                    msg << l->label() << ": parallel(" << k << ", seifert) "
+                    msg << name << ": parallel(" << k << ", seifert) "
                         "has the wrong number of crossings.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (p->writhe() != k * k * writhe - k * (k-1) * writheSame) {
                     std::ostringstream msg;
-                    msg << l->label() << ": parallel(" << k << ", seifert) "
+                    msg << name << ": parallel(" << k << ", seifert) "
                         "has the wrong writhe.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (p->linking() != k * k * linking) {
                     std::ostringstream msg;
-                    msg << l->label() << ": parallel(" << k << ", seifert) "
+                    msg << name << ": parallel(" << k << ", seifert) "
                         "has the wrong linking number.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -508,36 +495,37 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void parallel() {
-            testParallel(empty);
-            testParallel(unknot0);
-            testParallel(unknot1);
-            testParallel(unknot3);
-            testParallel(unknotMonster);
-            testParallel(unknotGordian);
-            testParallel(trefoilLeft);
-            testParallel(trefoilRight);
-            testParallel(trefoil_r1x2);
-            testParallel(trefoil_r1x6);
-            testParallel(figureEight);
-            testParallel(figureEight_r1x2);
-            testParallel(conway);
-            testParallel(kinoshitaTerasaka);
-            testParallel(gst);
-            testParallel(unlink2_0);
-            testParallel(unlink3_0);
-            testParallel(unlink2_r2);
-            testParallel(unlink2_r1r1);
-            testParallel(hopf);
-            testParallel(whitehead);
-            testParallel(borromean);
-            testParallel(trefoil_unknot0);
-            testParallel(trefoil_unknot1);
-            testParallel(trefoil_unknot_overlap);
-            testParallel(rht_rht);
-            testParallel(rht_lht);
+            testParallel(empty, "Empty");
+            testParallel(unknot0, "Unknot (0 crossings)");
+            testParallel(unknot1, "Unknot (1 crossing)");
+            testParallel(unknot3, "Unknot (3 crossings)");
+            testParallel(unknotMonster, "Monster unknot");
+            testParallel(unknotGordian, "Gordian unknot");
+            testParallel(trefoilLeft, "LH Trefoil");
+            testParallel(trefoilRight, "RH Trefoil");
+            testParallel(trefoil_r1x2, "Trefoil with 2 R1s");
+            testParallel(trefoil_r1x6, "Trefoil with 6 R1s");
+            testParallel(figureEight, "Figure eight");
+            testParallel(figureEight_r1x2, "Figure eight with 2 R1s");
+            testParallel(conway, "Conway knot");
+            testParallel(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            testParallel(gst, "GST");
+            testParallel(unlink2_0, "Unlink (2 components)");
+            testParallel(unlink3_0, "Unlink (3 components)");
+            testParallel(unlink2_r2, "Unlink (2 components via R2)");
+            testParallel(unlink2_r1r1, "Unlink (2 components via R1+R1)");
+            testParallel(hopf, "Hopf link");
+            testParallel(whitehead, "Whitehead link");
+            testParallel(borromean, "Borromean rings");
+            testParallel(trefoil_unknot0, "Trefoil U unknot (separate)");
+            testParallel(trefoil_unknot1,
+                "Trefoil U unknot (separate + twist)");
+            testParallel(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
+            testParallel(rht_rht, "RH Trefoil # RH Trefoil");
+            testParallel(rht_lht, "RH Trefoil # LH Trefoil");
         }
 
-        void testJones(Link* l, const char* expected) {
+        void testJones(Link* l, const char* expected, const char* name) {
             // Since we are computing the Jones polynomial multiple times
             // (using different algorithms), we work with clones of l
             // that do not clone any already-computed properties.
@@ -550,7 +538,7 @@ class LinkTest : public CppUnit::TestFixture {
 
                 if (s1.str() != expected) {
                     std::ostringstream msg;
-                    msg << l->label() << ": expected V(link) = " << expected
+                    msg << name << ": expected V(link) = " << expected
                         << ", found " << s1.str() << " using naive algorithm.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -561,38 +549,48 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (s2.str() != expected) {
                 std::ostringstream msg;
-                msg << l->label() << ": expected V(link) = " << expected
+                msg << name << ": expected V(link) = " << expected
                     << ", found " << s2.str() << " using treewidth algorithm.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void jones() {
-            testJones(empty, "0");
-            testJones(unknot0, "1");
-            testJones(unknot1, "1");
-            testJones(unknot3, "1");
-            testJones(unknotMonster, "1");
+            testJones(empty, "0", "Empty");
+            testJones(unknot0, "1", "Unknot (0 crossings)");
+            testJones(unknot1, "1", "Unknot (1 crossing)");
+            testJones(unknot3, "1", "Unknot (3 crossings)");
+            testJones(unknotMonster, "1", "Monster unknot");
             // The Gordian unknot is too large to compute V(link).
-            testJones(trefoilLeft, "x^-2 + x^-6 - x^-8");
-            testJones(trefoilRight, "-x^8 + x^6 + x^2");
-            testJones(trefoil_r1x2, "-x^8 + x^6 + x^2");
-            testJones(trefoil_r1x6, "-x^8 + x^6 + x^2");
-            testJones(figureEight, "x^4 - x^2 + 1 - x^-2 + x^-4");
-            testJones(figureEight_r1x2, "x^4 - x^2 + 1 - x^-2 + x^-4");
-            testJones(unlink2_0, "-x - x^-1");
-            testJones(unlink3_0, "x^2 + 2 + x^-2");
-            testJones(unlink2_r2, "-x - x^-1");
-            testJones(unlink2_r1r1, "-x - x^-1");
-            testJones(hopf, "-x^5 - x");
-            testJones(whitehead, "-x^3 + x - 2 x^-1 + x^-3 - 2 x^-5 + x^-7");
+            testJones(trefoilLeft, "x^-2 + x^-6 - x^-8", "LH Trefoil");
+            testJones(trefoilRight, "-x^8 + x^6 + x^2", "RH Trefoil");
+            testJones(trefoil_r1x2, "-x^8 + x^6 + x^2", "Trefoil with 2 R1s");
+            testJones(trefoil_r1x6, "-x^8 + x^6 + x^2", "Trefoil with 6 R1s");
+            testJones(figureEight, "x^4 - x^2 + 1 - x^-2 + x^-4",
+                "Figure eight");
+            testJones(figureEight_r1x2, "x^4 - x^2 + 1 - x^-2 + x^-4",
+                "Figure eight with 2 R1s");
+            testJones(unlink2_0, "-x - x^-1", "Unlink (2 components)");
+            testJones(unlink3_0, "x^2 + 2 + x^-2", "Unlink (3 components)");
+            testJones(unlink2_r2, "-x - x^-1", "Unlink (2 components via R2)");
+            testJones(unlink2_r1r1, "-x - x^-1",
+                "Unlink (2 components via R1+R1)");
+            testJones(hopf, "-x^5 - x", "Hopf link");
+            testJones(whitehead, "-x^3 + x - 2 x^-1 + x^-3 - 2 x^-5 + x^-7",
+                "Whitehead link");
             testJones(borromean,
-                "-x^6 + 3 x^4 - 2 x^2 + 4 - 2 x^-2 + 3 x^-4 - x^-6");
-            testJones(trefoil_unknot0, "x^9 - x^5 - x^3 - x");
-            testJones(trefoil_unknot1, "x^9 - x^5 - x^3 - x");
-            testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x");
-            testJones(rht_rht, "x^16 - 2 x^14 + x^12 - 2 x^10 + 2 x^8 + x^4");
-            testJones(rht_lht, "-x^6 + x^4 - x^2 + 3 - x^-2 + x^-4 - x^-6");
+                "-x^6 + 3 x^4 - 2 x^2 + 4 - 2 x^-2 + 3 x^-4 - x^-6",
+                "Borromean rings");
+            testJones(trefoil_unknot0, "x^9 - x^5 - x^3 - x",
+                "Trefoil U unknot (separate)");
+            testJones(trefoil_unknot1, "x^9 - x^5 - x^3 - x",
+                "Trefoil U unknot (separate + twist)");
+            testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x",
+                "Trefoil U unknot (with R2)");
+            testJones(rht_rht, "x^16 - 2 x^14 + x^12 - 2 x^10 + 2 x^8 + x^4",
+                "RH Trefoil # RH Trefoil");
+            testJones(rht_lht, "-x^6 + x^4 - x^2 + 3 - x^-2 + x^-4 - x^-6",
+                "RH Trefoil # LH Trefoil");
 
             // The following polynomials were computed using Regina,
             // using the naive algorithm (ALG_NAIVE).
@@ -600,17 +598,21 @@ class LinkTest : public CppUnit::TestFixture {
             // here they are simply being used to ensure that different
             // algorithms give the same results, and also that nothing breaks
             // in a subsequent release.
-            testJones(conway, "-x^8 + 2 x^6 - 2 x^4 + 2 x^2 + x^-4 - 2 x^-6 + 2 x^-8 - 2 x^-10 + x^-12");
-            testJones(kinoshitaTerasaka, "-x^8 + 2 x^6 - 2 x^4 + 2 x^2 + x^-4 - 2 x^-6 + 2 x^-8 - 2 x^-10 + x^-12");
+            testJones(conway, "-x^8 + 2 x^6 - 2 x^4 + 2 x^2 + x^-4 - 2 x^-6 + 2 x^-8 - 2 x^-10 + x^-12",
+                "Conway knot");
+            testJones(kinoshitaTerasaka, "-x^8 + 2 x^6 - 2 x^4 + 2 x^2 + x^-4 - 2 x^-6 + 2 x^-8 - 2 x^-10 + x^-12",
+                "Kinoshita-Terasaka knot");
 
             // The following polynomials were computed using Regina,
             // via the treewidth-based algorithm (ALG_TREEWIDTH).
             // This is because they are too large for the naive
             // algorithm to handle.
-            testJones(gst, "-x^32 + 3 x^30 - 4 x^28 + 3 x^26 - x^24 + x^22 - x^20 + x^18 - x^16 + 2 x^14 - 4 x^12 + 3 x^10 - x^8 - 3 x^6 + 5 x^4 - 5 x^2 + 5 - 3 x^-2 + 3 x^-4 - x^-6 + x^-12 - x^-14");
+            testJones(gst, "-x^32 + 3 x^30 - 4 x^28 + 3 x^26 - x^24 + x^22 - x^20 + x^18 - x^16 + 2 x^14 - 4 x^12 + 3 x^10 - x^8 - 3 x^6 + 5 x^4 - 5 x^2 + 5 - 3 x^-2 + 3 x^-4 - x^-6 + x^-12 - x^-14",
+                "GST");
         }
 
-        void testHomflyAZ(Link* l, bool reverse, const char* expected) {
+        void testHomflyAZ(Link* l, bool reverse, const char* expected,
+                const char* name) {
             // Since we are computing the HOMFLY polynomial multiple times
             // (using different algorithms), we work with clones of l
             // that do not clone any already-computed properties.
@@ -625,7 +627,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (s1.str() != expected) {
                 std::ostringstream msg;
-                msg << l->label() << ": expected homflyAZ(link) = " << expected
+                msg << name << ": expected homflyAZ(link) = " << expected
                     << ", found " << s1.str() << " using backtrack algorithm";
                 if (reverse)
                     msg << " with reversed link";
@@ -643,7 +645,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (s2.str() != expected) {
                 std::ostringstream msg;
-                msg << l->label() << ": expected homflyAZ(link) = " << expected
+                msg << name << ": expected homflyAZ(link) = " << expected
                     << ", found " << s2.str() << " using treewidth algorithm";
                 if (reverse)
                     msg << " with reversed link";
@@ -652,12 +654,13 @@ class LinkTest : public CppUnit::TestFixture {
             }
         }
 
-        void testHomflyAZ(Link* l, const char* expected) {
-            testHomflyAZ(l, false, expected);
-            testHomflyAZ(l, true, expected);
+        void testHomflyAZ(Link* l, const char* expected, const char* name) {
+            testHomflyAZ(l, false, expected, name);
+            testHomflyAZ(l, true, expected, name);
         }
 
-        void testHomflyLM(Link* l, bool reverse, const char* expected) {
+        void testHomflyLM(Link* l, bool reverse, const char* expected,
+                const char* name) {
             std::ostringstream s1;
             {
                 Link use(*l, false);
@@ -668,7 +671,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (s1.str() != expected) {
                 std::ostringstream msg;
-                msg << l->label() << ": expected homflyLM(link) = " << expected
+                msg << name << ": expected homflyLM(link) = " << expected
                     << ", found " << s1.str() << " using backtrack algorithm";
                 if (reverse)
                     msg << " with reversed link";
@@ -686,7 +689,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (s2.str() != expected) {
                 std::ostringstream msg;
-                msg << l->label() << ": expected homflyLM(link) = " << expected
+                msg << name << ": expected homflyLM(link) = " << expected
                     << ", found " << s2.str() << " using treewidth algorithm";
                 if (reverse)
                     msg << " with reversed link";
@@ -695,59 +698,75 @@ class LinkTest : public CppUnit::TestFixture {
             }
         }
 
-        void testHomflyLM(Link* l, const char* expected) {
-            testHomflyLM(l, false, expected);
-            testHomflyLM(l, true, expected);
+        void testHomflyLM(Link* l, const char* expected, const char* name) {
+            testHomflyLM(l, false, expected, name);
+            testHomflyLM(l, true, expected, name);
         }
 
         void homfly() {
-            testHomflyAZ(empty, "0");
-            testHomflyLM(empty, "0");
+            testHomflyAZ(empty, "0", "Empty");
+            testHomflyLM(empty, "0", "Empty");
 
-            testHomflyAZ(unknot0, "1");
-            testHomflyLM(unknot0, "1");
-            testHomflyAZ(unknot1, "1");
-            testHomflyLM(unknot1, "1");
-            testHomflyAZ(unknot3, "1");
-            testHomflyLM(unknot3, "1");
-            testHomflyAZ(unknotMonster, "1");
-            testHomflyLM(unknotMonster, "1");
+            testHomflyAZ(unknot0, "1", "Unknot (0 crossings)");
+            testHomflyLM(unknot0, "1", "Unknot (0 crossings)");
+            testHomflyAZ(unknot1, "1", "Unknot (1 crossing)");
+            testHomflyLM(unknot1, "1", "Unknot (1 crossing)");
+            testHomflyAZ(unknot3, "1", "Unknot (3 crossings)");
+            testHomflyLM(unknot3, "1", "Unknot (3 crossings)");
+            testHomflyAZ(unknotMonster, "1", "Monster unknot");
+            testHomflyLM(unknotMonster, "1", "Monster unknot");
             // The Gordian unknot is surely too large for this.
 
-            testHomflyLM(unlink2_0, "-x y^-1 - x^-1 y^-1");
-            testHomflyLM(unlink3_0, "x^2 y^-2 + 2 y^-2 + x^-2 y^-2");
-            testHomflyLM(unlink2_r2, "-x y^-1 - x^-1 y^-1");
-            testHomflyLM(unlink2_r1r1, "-x y^-1 - x^-1 y^-1");
+            testHomflyLM(unlink2_0, "-x y^-1 - x^-1 y^-1",
+                "Unlink (2 components)");
+            testHomflyLM(unlink3_0, "x^2 y^-2 + 2 y^-2 + x^-2 y^-2",
+                "Unlink (3 components)");
+            testHomflyLM(unlink2_r2, "-x y^-1 - x^-1 y^-1",
+                "Unlink (2 components via R2)");
+            testHomflyLM(unlink2_r1r1, "-x y^-1 - x^-1 y^-1",
+                "Unlink (2 components via R1+R1)");
 
-            testHomflyLM(trefoilLeft, "-x^4 + x^2 y^2 - 2 x^2");
-            testHomflyLM(trefoilRight, "x^-2 y^2 - 2 x^-2 - x^-4");
-            testHomflyAZ(trefoilRight, "x^-2 y^2 + 2 x^-2 - x^-4");
-            testHomflyLM(trefoil_r1x2, "x^-2 y^2 - 2 x^-2 - x^-4");
-            testHomflyLM(trefoil_r1x6, "x^-2 y^2 - 2 x^-2 - x^-4");
+            testHomflyLM(trefoilLeft, "-x^4 + x^2 y^2 - 2 x^2",
+                "LH Trefoil");
+            testHomflyLM(trefoilRight, "x^-2 y^2 - 2 x^-2 - x^-4",
+                "RH Trefoil");
+            testHomflyAZ(trefoilRight, "x^-2 y^2 + 2 x^-2 - x^-4",
+                "RH Trefoil");
+            testHomflyLM(trefoil_r1x2, "x^-2 y^2 - 2 x^-2 - x^-4",
+                "Trefoil with 2 R1s");
+            testHomflyLM(trefoil_r1x6, "x^-2 y^2 - 2 x^-2 - x^-4",
+                "Trefoil with 6 R1s");
 
-            testHomflyLM(figureEight, "-x^2 + y^2 - 1 - x^-2");
-            testHomflyLM(figureEight_r1x2, "-x^2 + y^2 - 1 - x^-2");
+            testHomflyLM(figureEight, "-x^2 + y^2 - 1 - x^-2", "Figure eight");
+            testHomflyLM(figureEight_r1x2, "-x^2 + y^2 - 1 - x^-2",
+                "Figure eight with 2 R1s");
 
-            testHomflyLM(hopf, "-x^-1 y + x^-1 y^-1 + x^-3 y^-1");
+            testHomflyLM(hopf, "-x^-1 y + x^-1 y^-1 + x^-3 y^-1", "Hopf link");
 
             testHomflyLM(trefoil_unknot0,
-                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1");
+                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1",
+                "Trefoil U unknot (separate)");
             testHomflyLM(trefoil_unknot1,
-                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1");
+                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1",
+                "Trefoil U unknot (separate + twist)");
             testHomflyLM(trefoil_unknot_overlap,
-                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1");
+                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1",
+                "Trefoil U unknot (with R2)");
 
             // This is different from Adams' claim regarding the HOMFLY
             // polynomial of this link.  But... Adams does get his arithmetic
             // wrong elsewhere, and a calculation by hand using the Skein
             // relation agrees with the polynomial below.
             testHomflyLM(adams6_28,
-                "x y - x^-1 y^3 + x^-1 y + 2 x^-3 y - x^-3 y^-1 - x^-5 y^-1");
+                "x y - x^-1 y^3 + x^-1 y + 2 x^-3 y - x^-3 y^-1 - x^-5 y^-1",
+                "Adams Fig. 6.28");
 
             testHomflyLM(rht_rht,
-                "x^-4 y^4 - 4 x^-4 y^2 + 4 x^-4 - 2 x^-6 y^2 + 4 x^-6 + x^-8");
+                "x^-4 y^4 - 4 x^-4 y^2 + 4 x^-4 - 2 x^-6 y^2 + 4 x^-6 + x^-8",
+                "RH Trefoil # RH Trefoil");
             testHomflyLM(rht_lht,
-                "-x^2 y^2 + 2 x^2 + y^4 - 4 y^2 + 5 - x^-2 y^2 + 2 x^-2");
+                "-x^2 y^2 + 2 x^2 + y^4 - 4 y^2 + 5 - x^-2 y^2 + 2 x^-2",
+                "RH Trefoil # LH Trefoil");
 
             // The following polynomials were computed using Regina,
             // using Kauffman's skein template algorithm (ALG_BACKTRACK).
@@ -756,13 +775,17 @@ class LinkTest : public CppUnit::TestFixture {
             // algorithms give the same results, and also that nothing breaks
             // in a subsequent release.
             testHomflyLM(whitehead,
-                "x^3 y - x y^3 + 2 x y - x y^-1 + x^-1 y - x^-1 y^-1");
+                "x^3 y - x y^3 + 2 x y - x y^-1 + x^-1 y - x^-1 y^-1",
+                "Whitehead link");
             testHomflyLM(borromean,
-                "-x^2 y^2 + x^2 y^-2 + y^4 - 2 y^2 + 2 y^-2 - x^-2 y^2 + x^-2 y^-2");
+                "-x^2 y^2 + x^2 y^-2 + y^4 - 2 y^2 + 2 y^-2 - x^-2 y^2 + x^-2 y^-2",
+                "Borromean rings");
             testHomflyLM(conway,
-                "x^4 y^4 - 3 x^4 y^2 + 2 x^4 - x^2 y^6 + 6 x^2 y^4 - 11 x^2 y^2 + 6 x^2 - y^6 + 6 y^4 - 11 y^2 + 7 + x^-2 y^4 - 3 x^-2 y^2 + 2 x^-2");
+                "x^4 y^4 - 3 x^4 y^2 + 2 x^4 - x^2 y^6 + 6 x^2 y^4 - 11 x^2 y^2 + 6 x^2 - y^6 + 6 y^4 - 11 y^2 + 7 + x^-2 y^4 - 3 x^-2 y^2 + 2 x^-2",
+                "Conway knot");
             testHomflyLM(kinoshitaTerasaka,
-                "x^4 y^4 - 3 x^4 y^2 + 2 x^4 - x^2 y^6 + 6 x^2 y^4 - 11 x^2 y^2 + 6 x^2 - y^6 + 6 y^4 - 11 y^2 + 7 + x^-2 y^4 - 3 x^-2 y^2 + 2 x^-2");
+                "x^4 y^4 - 3 x^4 y^2 + 2 x^4 - x^2 y^6 + 6 x^2 y^4 - 11 x^2 y^2 + 6 x^2 - y^6 + 6 y^4 - 11 y^2 + 7 + x^-2 y^4 - 3 x^-2 y^2 + 2 x^-2",
+                "Kinoshita-Terasaka knot");
 
             // On my machine, GST takes around 25 seconds for ALG_TREEWIDTH,
             // and 88 seconds for ALG_NAIVE.  This is probably still a
@@ -785,12 +808,12 @@ class LinkTest : public CppUnit::TestFixture {
             return false;
         }
 
-        void testComplementBasic(Link* l) {
+        void testComplementBasic(Link* l, const char* name) {
             Triangulation<3>* c = l->complement();
 
             if (c->countComponents() != 1) {
                 std::ostringstream msg;
-                msg << l->label() << " complement: expected 1 component, "
+                msg << name << " complement: expected 1 component, "
                     "found " << c->countComponents() << ".";
                 delete c;
                 CPPUNIT_FAIL(msg.str());
@@ -803,7 +826,7 @@ class LinkTest : public CppUnit::TestFixture {
                     ++ideal;
                 else if (t != regina::Vertex<3>::SPHERE) {
                     std::ostringstream msg;
-                    msg << l->label() << " complement: "
+                    msg << name << " complement: "
                         "contains a vertex with unexpected link type.";
                     delete c;
                     CPPUNIT_FAIL(msg.str());
@@ -812,7 +835,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (ideal != l->countComponents()) {
                 std::ostringstream msg;
-                msg << l->label() << " complement: expected "
+                msg << name << " complement: expected "
                     << l->countComponents() << " ideal vertices, "
                     "found " << ideal << ".";
                 delete c;
@@ -822,11 +845,11 @@ class LinkTest : public CppUnit::TestFixture {
             delete c;
         }
 
-        void testComplementS3(Link* l) {
+        void testComplementS3(Link* l, const char* name) {
             Triangulation<3>* c = l->complement();
             if (! c->isSphere()) {
                 std::ostringstream msg;
-                msg << l->label() << " complement: not a 3-sphere "
+                msg << name << " complement: not a 3-sphere "
                     "as expected.";
                 delete c;
                 CPPUNIT_FAIL(msg.str());
@@ -834,12 +857,11 @@ class LinkTest : public CppUnit::TestFixture {
             delete c;
         }
 
-        void testComplementUnknot(Link* l) {
+        void testComplementUnknot(Link* l, const char* name) {
             Triangulation<3>* c = l->complement();
             if (! c->isSolidTorus()) {
                 std::ostringstream msg;
-                msg << l->label() << " complement: not a solid torus "
-                    "as expected.";
+                msg << name << " complement: not a solid torus as expected.";
                 delete c;
                 CPPUNIT_FAIL(msg.str());
             }
@@ -847,7 +869,7 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementSig(Link* l,
-                std::initializer_list<const char*> expected) {
+                std::initializer_list<const char*> expected, const char* name) {
             Triangulation<3>* c = l->complement();
             std::string sig = c->isoSig();
             delete c;
@@ -857,7 +879,7 @@ class LinkTest : public CppUnit::TestFixture {
                     return;
 
             std::ostringstream msg;
-            msg << l->label() << " complement: isosig is " << sig << ", not ";
+            msg << name << " complement: isosig is " << sig << ", not ";
             auto e = expected.begin();
             msg << *e;
             for (++e; e != expected.end(); ++e)
@@ -866,7 +888,8 @@ class LinkTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL(msg.str());
         }
 
-        void testComplementCensus(Link* l, std::string prefix) {
+        void testComplementCensus(Link* l, std::string prefix,
+                const char* name) {
             Triangulation<3>* c = l->complement();
             std::string sig = c->isoSig();
             delete c;
@@ -878,18 +901,18 @@ class LinkTest : public CppUnit::TestFixture {
             }
 
             std::ostringstream msg;
-            msg << l->label() << " complement: isosig " << sig
+            msg << name << " complement: isosig " << sig
                 << " was not identified in the census as " << prefix
                 << "... .";
             CPPUNIT_FAIL(msg.str());
         }
 
-        void testComplementFree(Link* l, unsigned nGen) {
+        void testComplementFree(Link* l, unsigned nGen, const char* name) {
             Triangulation<3>* c = l->complement();
             const regina::GroupPresentation& fg = c->fundamentalGroup();
             if (fg.countGenerators() != nGen || fg.countRelations() != 0) {
                 std::ostringstream msg;
-                msg << l->label() << " complement: fundamental group is "
+                msg << name << " complement: fundamental group is "
                     "not recognised as free on " << nGen
                     << " generators as expected.";
                 delete c;
@@ -898,7 +921,8 @@ class LinkTest : public CppUnit::TestFixture {
             delete c;
         }
 
-        void testComplementFreeAbelian(Link* l, unsigned nGen) {
+        void testComplementFreeAbelian(Link* l, unsigned nGen,
+                const char* name) {
             std::ostringstream expected;
             expected << nGen << " Z";
 
@@ -906,7 +930,7 @@ class LinkTest : public CppUnit::TestFixture {
             const regina::GroupPresentation& fg = c->fundamentalGroup();
             if (fg.recogniseGroup() != expected.str()) {
                 std::ostringstream msg;
-                msg << l->label() << " complement: fundamental group is "
+                msg << name << " complement: fundamental group is "
                     "not recognised as free abelian on " << nGen
                     << " generators as expected.";
                 delete c;
@@ -915,7 +939,7 @@ class LinkTest : public CppUnit::TestFixture {
             delete c;
         }
 
-        void testComplementTrefoilUnknot(Link* l) {
+        void testComplementTrefoilUnknot(Link* l, const char* name) {
             std::unique_ptr<Triangulation<3>> c(l->complement());
 
             // Find a separating sphere.
@@ -931,7 +955,7 @@ class LinkTest : public CppUnit::TestFixture {
                     // Should never happen...
                     delete cut;
                     std::ostringstream msg;
-                    msg << l->label() << " complement contains a "
+                    msg << name << " complement contains a "
                         "non-separating 2-sphere.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -950,45 +974,48 @@ class LinkTest : public CppUnit::TestFixture {
             }
 
             std::ostringstream msg;
-            msg << l->label() << " complement could not be recognised "
+            msg << name << " complement could not be recognised "
                 "as coming from (trefoil U unknot).";
             CPPUNIT_FAIL(msg.str());
         }
 
         void complement() {
-            testComplementBasic(empty);
-            testComplementBasic(unknot0);
-            testComplementBasic(unknot1);
-            testComplementBasic(unknot3);
-            testComplementBasic(unknotMonster);
-            testComplementBasic(unknotGordian);
-            testComplementBasic(trefoilLeft);
-            testComplementBasic(trefoilRight);
-            testComplementBasic(trefoil_r1x2);
-            testComplementBasic(trefoil_r1x6);
-            testComplementBasic(figureEight);
-            testComplementBasic(figureEight_r1x2);
-            testComplementBasic(conway);
-            testComplementBasic(kinoshitaTerasaka);
-            testComplementBasic(gst);
-            testComplementBasic(unlink2_0);
-            testComplementBasic(unlink3_0);
-            testComplementBasic(unlink2_r2);
-            testComplementBasic(unlink2_r1r1);
-            testComplementBasic(hopf);
-            testComplementBasic(whitehead);
-            testComplementBasic(borromean);
-            testComplementBasic(trefoil_unknot0);
-            testComplementBasic(trefoil_unknot1);
-            testComplementBasic(trefoil_unknot_overlap);
-            testComplementBasic(rht_rht);
-            testComplementBasic(rht_lht);
+            testComplementBasic(empty, "Empty");
+            testComplementBasic(unknot0, "Unknot (0 crossings)");
+            testComplementBasic(unknot1, "Unknot (1 crossing)");
+            testComplementBasic(unknot3, "Unknot (3 crossings)");
+            testComplementBasic(unknotMonster, "Monster unknot");
+            testComplementBasic(unknotGordian, "Gordian unknot");
+            testComplementBasic(trefoilLeft, "LH Trefoil");
+            testComplementBasic(trefoilRight, "RH Trefoil");
+            testComplementBasic(trefoil_r1x2, "Trefoil with 2 R1s");
+            testComplementBasic(trefoil_r1x6, "Trefoil with 6 R1s");
+            testComplementBasic(figureEight, "Figure eight");
+            testComplementBasic(figureEight_r1x2, "Figure eight with 2 R1s");
+            testComplementBasic(conway, "Conway knot");
+            testComplementBasic(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            testComplementBasic(gst, "GST");
+            testComplementBasic(unlink2_0, "Unlink (2 components)");
+            testComplementBasic(unlink3_0, "Unlink (3 components)");
+            testComplementBasic(unlink2_r2, "Unlink (2 components via R2)");
+            testComplementBasic(unlink2_r1r1,
+                "Unlink (2 components via R1+R1)");
+            testComplementBasic(hopf, "Hopf link");
+            testComplementBasic(whitehead, "Whitehead link");
+            testComplementBasic(borromean, "Borromean rings");
+            testComplementBasic(trefoil_unknot0, "Trefoil U unknot (separate)");
+            testComplementBasic(trefoil_unknot1,
+                "Trefoil U unknot (separate + twist)");
+            testComplementBasic(trefoil_unknot_overlap,
+                "Trefoil U unknot (with R2)");
+            testComplementBasic(rht_rht, "RH Trefoil # RH Trefoil");
+            testComplementBasic(rht_lht, "RH Trefoil # LH Trefoil");
 
-            testComplementS3(empty);
-            testComplementUnknot(unknot0);
-            testComplementUnknot(unknot1);
-            testComplementUnknot(unknot3);
-            testComplementUnknot(unknotMonster);
+            testComplementS3(empty, "Empty");
+            testComplementUnknot(unknot0, "Unknot (0 crossings)");
+            testComplementUnknot(unknot1, "Unknot (1 crossing)");
+            testComplementUnknot(unknot3, "Unknot (3 crossings)");
+            testComplementUnknot(unknotMonster, "Monster unknot");
             // Too large! - testComplementUnknot(unknotGordian);
 
             // For some knots and links, it is reasonable to assume that
@@ -997,33 +1024,38 @@ class LinkTest : public CppUnit::TestFixture {
             // In some cases there are too many minimal triangulations
             // to list here, and so we use a census lookup.
             // cPcbbbadh 
-            testComplementSig(trefoilLeft, TREFOIL_SIGS);
-            testComplementSig(trefoilRight, TREFOIL_SIGS);
-            testComplementSig(trefoil_r1x2, TREFOIL_SIGS);
-            testComplementSig(trefoil_r1x6, TREFOIL_SIGS);
-            testComplementSig(figureEight, FIG8_SIGS);
-            testComplementSig(figureEight_r1x2, FIG8_SIGS);
-            testComplementCensus(whitehead, "m129 :");
-            testComplementCensus(borromean, "t12067 :");
+            testComplementSig(trefoilLeft, TREFOIL_SIGS, "LH Trefoil");
+            testComplementSig(trefoilRight, TREFOIL_SIGS, "RH Trefoil");
+            testComplementSig(trefoil_r1x2, TREFOIL_SIGS, "Trefoil with 2 R1s");
+            testComplementSig(trefoil_r1x6, TREFOIL_SIGS, "Trefoil with 6 R1s");
+            testComplementSig(figureEight, FIG8_SIGS, "Figure eight");
+            testComplementSig(figureEight_r1x2, FIG8_SIGS,
+                "Figure eight with 2 R1s");
+            testComplementCensus(whitehead, "m129 :", "Whitehead link");
+            testComplementCensus(borromean, "t12067 :", "Borromean rings");
 
             // For unlink complements, we can test that the fundamental
             // group is free.
-            testComplementFree(unlink2_0, 2);
-            testComplementFree(unlink3_0, 3);
-            testComplementFree(unlink2_r2, 2);
-            testComplementFree(unlink2_r1r1, 2);
+            testComplementFree(unlink2_0, 2, "Unlink (2 components)");
+            testComplementFree(unlink3_0, 3, "Unlink (3 components)");
+            testComplementFree(unlink2_r2, 2, "Unlink (2 components via R2)");
+            testComplementFree(unlink2_r1r1, 2,
+                "Unlink (2 components via R1+R1)");
 
             // For the Hopf link, we can test that the fundamental group
             // is free abelian.
-            testComplementFreeAbelian(hopf, 2);
+            testComplementFreeAbelian(hopf, 2, "Hopf link");
 
             // A specialised test for the complement of (trefoil U unknot).
-            testComplementTrefoilUnknot(trefoil_unknot0);
-            testComplementTrefoilUnknot(trefoil_unknot1);
-            testComplementTrefoilUnknot(trefoil_unknot_overlap);
+            testComplementTrefoilUnknot(trefoil_unknot0,
+                "Trefoil U unknot (separate)");
+            testComplementTrefoilUnknot(trefoil_unknot1,
+                "Trefoil U unknot (separate + twist)");
+            testComplementTrefoilUnknot(trefoil_unknot_overlap,
+                "Trefoil U unknot (with R2)");
         }
 
-        void verifyCountR1Up(Link* link, size_t expected) {
+        void verifyCountR1Up(Link* link, size_t expected, const char* name) {
             size_t total = 0;
 
             int cr, strand, side, sign;
@@ -1041,13 +1073,13 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (total != expected) {
                 std::ostringstream msg;
-                msg << link->label() << " offers " << total << " R1 moves "
+                msg << name << " offers " << total << " R1 moves "
                     "up, not " << expected << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
-        void verifyCountR1Down(Link* link, size_t expected) {
+        void verifyCountR1Down(Link* link, size_t expected, const char* name) {
             size_t total = 0;
 
             if (link->r1(nullptr, 1, 0))
@@ -1060,13 +1092,13 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (total != expected) {
                 std::ostringstream msg;
-                msg << link->label() << " offers " << total << " R1 moves "
+                msg << name << " offers " << total << " R1 moves "
                     "down, not " << expected << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
-        void verifyCountR2Up(Link* link, size_t expected) {
+        void verifyCountR2Up(Link* link, size_t expected, const char* name) {
             size_t total = 0;
 
             int cr1, cr2, str1, str2, side1, side2;
@@ -1099,18 +1131,18 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (total != expected) {
                 std::ostringstream msg;
-                msg << link->label() << " offers " << total << " R2 moves "
+                msg << name << " offers " << total << " R2 moves "
                     "up, not " << expected << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
-        void verifyCountR2Down(Link* link, size_t expected) {
-            verifyCountR2Down(link, expected, 2 * expected);
+        void verifyCountR2Down(Link* link, size_t expected, const char* name) {
+            verifyCountR2Down(link, expected, 2 * expected, name);
         }
 
         void verifyCountR2Down(Link* link, size_t expectedCr,
-                size_t expectedStr) {
+                size_t expectedStr, const char* name) {
             // Most of the time, expectedStr == expectedCr * 2.
             //
             // However, this can differ in the case of an unknotted loop
@@ -1131,7 +1163,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (total != expectedCr) {
                 std::ostringstream msg;
-                msg << link->label() << " offers " << total << " R2 moves "
+                msg << name << " offers " << total << " R2 moves "
                     "down by crossing, not " << expectedCr << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1148,13 +1180,13 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (total != expectedStr) {
                 std::ostringstream msg;
-                msg << link->label() << " offers " << total << " R2 moves "
+                msg << name << " offers " << total << " R2 moves "
                     "down by strand, not " << expectedStr << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
-        void verifyCountR3(Link* link, size_t expected) {
+        void verifyCountR3(Link* link, size_t expected, const char* name) {
             int cr, strand, side;
 
             size_t total = 0;
@@ -1169,7 +1201,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (total != expected) {
                 std::ostringstream msg;
-                msg << link->label() << " offers " << total << " R3 moves "
+                msg << name << " offers " << total << " R3 moves "
                     "by crossing, not " << expected << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1188,204 +1220,218 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (total != expected * 3) {
                 std::ostringstream msg;
-                msg << link->label() << " offers " << total << " R3 moves "
+                msg << name << " offers " << total << " R3 moves "
                     "by strand, not " << expected << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void r1Count() {
-            verifyCountR1Up(empty, 0);
-            verifyCountR1Down(empty, 0);
+            verifyCountR1Up(empty, 0, "Empty");
+            verifyCountR1Down(empty, 0, "Empty");
 
-            verifyCountR1Up(unknot0, 4);
-            verifyCountR1Down(unknot0, 0);
+            verifyCountR1Up(unknot0, 4, "Unknot (0 crossings)");
+            verifyCountR1Down(unknot0, 0, "Unknot (0 crossings)");
 
-            verifyCountR1Up(unknot1, 8);
-            verifyCountR1Down(unknot1, 1);
+            verifyCountR1Up(unknot1, 8, "Unknot (1 crossing)");
+            verifyCountR1Down(unknot1, 1, "Unknot (1 crossing)");
 
-            verifyCountR1Up(unknot3, 24);
-            verifyCountR1Down(unknot3, 0);
+            verifyCountR1Up(unknot3, 24, "Unknot (3 crossings)");
+            verifyCountR1Down(unknot3, 0, "Unknot (3 crossings)");
 
-            verifyCountR1Up(trefoilLeft, 24);
-            verifyCountR1Down(trefoilLeft, 0);
+            verifyCountR1Up(trefoilLeft, 24, "LH Trefoil");
+            verifyCountR1Down(trefoilLeft, 0, "LH Trefoil");
 
-            verifyCountR1Up(trefoilRight, 24);
-            verifyCountR1Down(trefoilRight, 0);
+            verifyCountR1Up(trefoilRight, 24, "RH Trefoil");
+            verifyCountR1Down(trefoilRight, 0, "RH Trefoil");
 
-            verifyCountR1Up(trefoil_r1x2, 40);
-            verifyCountR1Down(trefoil_r1x2, 2);
+            verifyCountR1Up(trefoil_r1x2, 40, "Trefoil with 2 R1s");
+            verifyCountR1Down(trefoil_r1x2, 2, "Trefoil with 2 R1s");
 
-            verifyCountR1Up(trefoil_r1x6, 72);
-            verifyCountR1Down(trefoil_r1x6, 6);
+            verifyCountR1Up(trefoil_r1x6, 72, "Trefoil with 6 R1s");
+            verifyCountR1Down(trefoil_r1x6, 6, "Trefoil with 6 R1s");
 
-            verifyCountR1Up(figureEight, 32);
-            verifyCountR1Down(figureEight, 0);
+            verifyCountR1Up(figureEight, 32, "Figure eight");
+            verifyCountR1Down(figureEight, 0, "Figure eight");
 
-            verifyCountR1Up(figureEight_r1x2, 48);
-            verifyCountR1Down(figureEight_r1x2, 2);
+            verifyCountR1Up(figureEight_r1x2, 48, "Figure eight with 2 R1s");
+            verifyCountR1Down(figureEight_r1x2, 2, "Figure eight with 2 R1s");
 
-            verifyCountR1Up(conway, 88);
-            verifyCountR1Down(conway, 0);
+            verifyCountR1Up(conway, 88, "Conway knot");
+            verifyCountR1Down(conway, 0, "Conway knot");
 
-            verifyCountR1Up(kinoshitaTerasaka, 88);
-            verifyCountR1Down(kinoshitaTerasaka, 0);
+            verifyCountR1Up(kinoshitaTerasaka, 88, "Kinoshita-Terasaka knot");
+            verifyCountR1Down(kinoshitaTerasaka, 0, "Kinoshita-Terasaka knot");
 
-            verifyCountR1Up(gst, 384);
-            verifyCountR1Down(gst, 0);
+            verifyCountR1Up(gst, 384, "GST");
+            verifyCountR1Down(gst, 0, "GST");
 
-            verifyCountR1Up(unlink2_0, 4);
-            verifyCountR1Down(unlink2_0, 0);
+            verifyCountR1Up(unlink2_0, 4, "Unlink (2 components)");
+            verifyCountR1Down(unlink2_0, 0, "Unlink (2 components)");
 
-            verifyCountR1Up(unlink3_0, 4);
-            verifyCountR1Down(unlink3_0, 0);
+            verifyCountR1Up(unlink3_0, 4, "Unlink (3 components)");
+            verifyCountR1Down(unlink3_0, 0, "Unlink (3 components)");
 
-            verifyCountR1Up(unlink2_r2, 16);
-            verifyCountR1Down(unlink2_r2, 0);
+            verifyCountR1Up(unlink2_r2, 16, "Unlink (2 components via R2)");
+            verifyCountR1Down(unlink2_r2, 0, "Unlink (2 components via R2)");
 
-            verifyCountR1Up(unlink2_r1r1, 16);
-            verifyCountR1Down(unlink2_r1r1, 2);
+            verifyCountR1Up(unlink2_r1r1, 16,
+                "Unlink (2 components via R1+R1)");
+            verifyCountR1Down(unlink2_r1r1, 2,
+                "Unlink (2 components via R1+R1)");
 
-            verifyCountR1Up(hopf, 16);
-            verifyCountR1Down(hopf, 0);
+            verifyCountR1Up(hopf, 16, "Hopf link");
+            verifyCountR1Down(hopf, 0, "Hopf link");
 
-            verifyCountR1Up(whitehead, 40);
-            verifyCountR1Down(whitehead, 0);
+            verifyCountR1Up(whitehead, 40, "Whitehead link");
+            verifyCountR1Down(whitehead, 0, "Whitehead link");
 
-            verifyCountR1Up(borromean, 48);
-            verifyCountR1Down(borromean, 0);
+            verifyCountR1Up(borromean, 48, "Borromean rings");
+            verifyCountR1Down(borromean, 0, "Borromean rings");
 
-            verifyCountR1Up(trefoil_unknot0, 28);
-            verifyCountR1Down(trefoil_unknot0, 0);
+            verifyCountR1Up(trefoil_unknot0, 28, "Trefoil U unknot (separate)");
+            verifyCountR1Down(trefoil_unknot0, 0,
+                "Trefoil U unknot (separate)");
 
-            verifyCountR1Up(trefoil_unknot1, 32);
-            verifyCountR1Down(trefoil_unknot1, 1);
+            verifyCountR1Up(trefoil_unknot1, 32,
+                "Trefoil U unknot (separate + twist)");
+            verifyCountR1Down(trefoil_unknot1, 1,
+                "Trefoil U unknot (separate + twist)");
 
-            verifyCountR1Up(trefoil_unknot_overlap, 40);
-            verifyCountR1Down(trefoil_unknot_overlap, 0);
+            verifyCountR1Up(trefoil_unknot_overlap, 40,
+                "Trefoil U unknot (with R2)");
+            verifyCountR1Down(trefoil_unknot_overlap, 0,
+                "Trefoil U unknot (with R2)");
 
-            verifyCountR1Up(adams6_28, 48);
-            verifyCountR1Down(adams6_28, 0);
+            verifyCountR1Up(adams6_28, 48, "Adams Fig. 6.28");
+            verifyCountR1Down(adams6_28, 0, "Adams Fig. 6.28");
         }
 
         void r2Count() {
-            verifyCountR2Up(empty, 0);
-            verifyCountR2Down(empty, 0);
+            verifyCountR2Up(empty, 0, "Empty");
+            verifyCountR2Down(empty, 0, "Empty");
 
-            verifyCountR2Up(unknot0, 0);
-            verifyCountR2Down(unknot0, 0);
+            verifyCountR2Up(unknot0, 0, "Unknot (0 crossings)");
+            verifyCountR2Down(unknot0, 0, "Unknot (0 crossings)");
 
-            verifyCountR2Up(unknot1, 2);
-            verifyCountR2Down(unknot1, 0);
+            verifyCountR2Up(unknot1, 2, "Unknot (1 crossing)");
+            verifyCountR2Down(unknot1, 0, "Unknot (1 crossing)");
 
-            verifyCountR2Up(unknot3, 18);
-            verifyCountR2Down(unknot3, 2);
+            verifyCountR2Up(unknot3, 18, "Unknot (3 crossings)");
+            verifyCountR2Down(unknot3, 2, "Unknot (3 crossings)");
 
-            verifyCountR2Up(trefoilLeft, 18);
-            verifyCountR2Down(trefoilLeft, 0);
+            verifyCountR2Up(trefoilLeft, 18, "LH Trefoil");
+            verifyCountR2Down(trefoilLeft, 0, "LH Trefoil");
 
-            verifyCountR2Up(trefoilRight, 18);
-            verifyCountR2Down(trefoilRight, 0);
+            verifyCountR2Up(trefoilRight, 18, "RH Trefoil");
+            verifyCountR2Down(trefoilRight, 0, "RH Trefoil");
 
-            verifyCountR2Up(trefoil_r1x2, 58);
-            verifyCountR2Down(trefoil_r1x2, 0);
+            verifyCountR2Up(trefoil_r1x2, 58, "Trefoil with 2 R1s");
+            verifyCountR2Down(trefoil_r1x2, 0, "Trefoil with 2 R1s");
 
-            verifyCountR2Up(trefoil_r1x6, 160);
-            verifyCountR2Down(trefoil_r1x6, 0);
+            verifyCountR2Up(trefoil_r1x6, 160, "Trefoil with 6 R1s");
+            verifyCountR2Down(trefoil_r1x6, 0, "Trefoil with 6 R1s");
 
-            verifyCountR2Up(figureEight, 28);
-            verifyCountR2Down(figureEight, 0);
+            verifyCountR2Up(figureEight, 28, "Figure eight");
+            verifyCountR2Down(figureEight, 0, "Figure eight");
 
-            verifyCountR2Up(figureEight_r1x2, 66);
-            verifyCountR2Down(figureEight_r1x2, 0);
+            verifyCountR2Up(figureEight_r1x2, 66, "Figure eight with 2 R1s");
+            verifyCountR2Down(figureEight_r1x2, 0, "Figure eight with 2 R1s");
 
-            verifyCountR2Up(conway, 120);
-            verifyCountR2Down(conway, 0);
+            verifyCountR2Up(conway, 120, "Conway knot");
+            verifyCountR2Down(conway, 0, "Conway knot");
 
-            verifyCountR2Up(kinoshitaTerasaka, 118);
-            verifyCountR2Down(kinoshitaTerasaka, 0);
+            verifyCountR2Up(kinoshitaTerasaka, 118, "Kinoshita-Terasaka knot");
+            verifyCountR2Down(kinoshitaTerasaka, 0, "Kinoshita-Terasaka knot");
 
-            verifyCountR2Up(gst, 612);
-            verifyCountR2Down(gst, 0);
+            verifyCountR2Up(gst, 612, "GST");
+            verifyCountR2Down(gst, 0, "GST");
 
-            verifyCountR2Up(unlink2_0, 4);
-            verifyCountR2Down(unlink2_0, 0);
+            verifyCountR2Up(unlink2_0, 4, "Unlink (2 components)");
+            verifyCountR2Down(unlink2_0, 0, "Unlink (2 components)");
 
-            verifyCountR2Up(unlink3_0, 4);
-            verifyCountR2Down(unlink3_0, 0);
+            verifyCountR2Up(unlink3_0, 4, "Unlink (3 components)");
+            verifyCountR2Down(unlink3_0, 0, "Unlink (3 components)");
 
-            verifyCountR2Up(unlink2_r2, 8);
-            verifyCountR2Down(unlink2_r2, 2);
+            verifyCountR2Up(unlink2_r2, 8, "Unlink (2 components via R2)");
+            verifyCountR2Down(unlink2_r2, 2, "Unlink (2 components via R2)");
 
-            verifyCountR2Up(unlink2_r1r1, 36);
-            verifyCountR2Down(unlink2_r1r1, 0);
+            verifyCountR2Up(unlink2_r1r1, 36,
+                "Unlink (2 components via R1+R1)");
+            verifyCountR2Down(unlink2_r1r1, 0,
+                "Unlink (2 components via R1+R1)");
 
-            verifyCountR2Up(hopf, 8);
-            verifyCountR2Down(hopf, 0);
+            verifyCountR2Up(hopf, 8, "Hopf link");
+            verifyCountR2Down(hopf, 0, "Hopf link");
 
-            verifyCountR2Up(whitehead, 40);
-            verifyCountR2Down(whitehead, 0);
+            verifyCountR2Up(whitehead, 40, "Whitehead link");
+            verifyCountR2Down(whitehead, 0, "Whitehead link");
 
-            verifyCountR2Up(borromean, 48);
-            verifyCountR2Down(borromean, 0);
+            verifyCountR2Up(borromean, 48, "Borromean rings");
+            verifyCountR2Down(borromean, 0, "Borromean rings");
 
-            verifyCountR2Up(trefoil_unknot0, 66);
-            verifyCountR2Down(trefoil_unknot0, 0);
+            verifyCountR2Up(trefoil_unknot0, 66, "Trefoil U unknot (separate)");
+            verifyCountR2Down(trefoil_unknot0, 0,
+                "Trefoil U unknot (separate)");
 
-            verifyCountR2Up(trefoil_unknot1, 116);
-            verifyCountR2Down(trefoil_unknot1, 0);
+            verifyCountR2Up(trefoil_unknot1, 116,
+                "Trefoil U unknot (separate + twist)");
+            verifyCountR2Down(trefoil_unknot1, 0,
+                "Trefoil U unknot (separate + twist)");
 
-            verifyCountR2Up(trefoil_unknot_overlap, 46);
-            verifyCountR2Down(trefoil_unknot_overlap, 2, 3);
+            verifyCountR2Up(trefoil_unknot_overlap, 46,
+                "Trefoil U unknot (with R2)");
+            verifyCountR2Down(trefoil_unknot_overlap, 2, 3,
+                "Trefoil U unknot (with R2)");
 
-            verifyCountR2Up(adams6_28, 54);
-            verifyCountR2Down(adams6_28, 0);
+            verifyCountR2Up(adams6_28, 54, "Adams Fig. 6.28");
+            verifyCountR2Down(adams6_28, 0, "Adams Fig. 6.28");
         }
 
         void r3Count() {
-            verifyCountR3(empty, 0);
-            verifyCountR3(unknot0, 0);
-            verifyCountR3(unknot1, 0);
-            verifyCountR3(unknot3, 2);
-            verifyCountR3(trefoilLeft, 0);
-            verifyCountR3(trefoilRight, 0);
-            verifyCountR3(trefoil_r1x2, 0);
-            verifyCountR3(trefoil_r1x6, 0);
-            verifyCountR3(figureEight, 0);
-            verifyCountR3(figureEight_r1x2, 0);
-            verifyCountR3(conway, 0);
-            verifyCountR3(kinoshitaTerasaka, 0);
-            verifyCountR3(gst, 10);
-            verifyCountR3(unlink2_0, 0);
-            verifyCountR3(unlink3_0, 0);
-            verifyCountR3(unlink2_r2, 0);
-            verifyCountR3(unlink2_r1r1, 0);
-            verifyCountR3(hopf, 0);
-            verifyCountR3(whitehead, 0);
-            verifyCountR3(borromean, 0);
-            verifyCountR3(trefoil_unknot0, 0);
-            verifyCountR3(trefoil_unknot1, 0);
-            verifyCountR3(trefoil_unknot_overlap, 0);
-            verifyCountR3(adams6_28, 0);
+            verifyCountR3(empty, 0, "Empty");
+            verifyCountR3(unknot0, 0, "Unknot (0 crossings)");
+            verifyCountR3(unknot1, 0, "Unknot (1 crossing)");
+            verifyCountR3(unknot3, 2, "Unknot (3 crossings)");
+            verifyCountR3(trefoilLeft, 0, "LH Trefoil");
+            verifyCountR3(trefoilRight, 0, "RH Trefoil");
+            verifyCountR3(trefoil_r1x2, 0, "Trefoil with 2 R1s");
+            verifyCountR3(trefoil_r1x6, 0, "Trefoil with 6 R1s");
+            verifyCountR3(figureEight, 0, "Figure eight");
+            verifyCountR3(figureEight_r1x2, 0, "Figure eight with 2 R1s");
+            verifyCountR3(conway, 0, "Conway knot");
+            verifyCountR3(kinoshitaTerasaka, 0, "Kinoshita-Terasaka knot");
+            verifyCountR3(gst, 10, "GST");
+            verifyCountR3(unlink2_0, 0, "Unlink (2 components)");
+            verifyCountR3(unlink3_0, 0, "Unlink (3 components)");
+            verifyCountR3(unlink2_r2, 0, "Unlink (2 components via R2)");
+            verifyCountR3(unlink2_r1r1, 0, "Unlink (2 components via R1+R1)");
+            verifyCountR3(hopf, 0, "Hopf link");
+            verifyCountR3(whitehead, 0, "Whitehead link");
+            verifyCountR3(borromean, 0, "Borromean rings");
+            verifyCountR3(trefoil_unknot0, 0, "Trefoil U unknot (separate)");
+            verifyCountR3(trefoil_unknot1, 0,
+                "Trefoil U unknot (separate + twist)");
+            verifyCountR3(trefoil_unknot_overlap, 0,
+                "Trefoil U unknot (with R2)");
+            verifyCountR3(adams6_28, 0, "Adams Fig. 6.28");
         }
 
         void verifyR1Down(const Link* l, int crossing,
-                const char* briefResult) {
+                const char* briefResult, const std::string& name) {
             Link clone(*l, false);
-            clone.setLabel(l->label());
 
             if (! clone.r1(clone.crossing(crossing))) {
                 std::ostringstream msg;
-                msg << l->label() << ": R1(" << crossing << ") is "
-                    "not allowed.";
+                msg << name << ": R1(" << crossing << ") is not allowed.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone);
+            sanity(&clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
-                msg << l->label() << ": R1(" << crossing << ") gives "
+                msg << name << ": R1(" << crossing << ") gives "
                     << clone.brief() << ", not " << briefResult
                     << " as expected.";
                 CPPUNIT_FAIL(msg.str());
@@ -1393,9 +1439,9 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void verifyR1Up(const Link* l, int crossing, int strand,
-                int side, int sign, const char* briefResult) {
+                int side, int sign, const char* briefResult,
+                const std::string& name) {
             Link clone(*l, false);
-            clone.setLabel(l->label());
 
             StrandRef s;
             if (crossing >= 0)
@@ -1403,16 +1449,16 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (! clone.r1(s, side, sign)) {
                 std::ostringstream msg;
-                msg << l->label() << ": R1(" << s << ", " << side << ", "
+                msg << name << ": R1(" << s << ", " << side << ", "
                     << sign << ") is not allowed.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone);
+            sanity(&clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
-                msg << l->label() << ": R1(" << s << ", " << side << ", "
+                msg << name << ": R1(" << s << ", " << side << ", "
                     << sign << ") gives " << clone.brief() << ", not "
                     << briefResult << " as expected.";
                 CPPUNIT_FAIL(msg.str());
@@ -1420,22 +1466,20 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void verifyR2Down(const Link* l, int crossing,
-                const char* briefResult) {
+                const char* briefResult, const std::string& name) {
             Link clone(*l, false);
-            clone.setLabel(l->label());
 
             if (! clone.r2(clone.crossing(crossing))) {
                 std::ostringstream msg;
-                msg << l->label() << ": R2(" << crossing << ") is "
-                    "not allowed.";
+                msg << name << ": R2(" << crossing << ") is not allowed.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone);
+            sanity(&clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
-                msg << l->label() << ": R2(" << crossing << ") gives "
+                msg << name << ": R2(" << crossing << ") gives "
                     << clone.brief() << ", not " << briefResult
                     << " as expected.";
                 CPPUNIT_FAIL(msg.str());
@@ -1443,23 +1487,22 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void verifyR2Down(const Link* l, int crossing, int strand,
-                const char* briefResult) {
+                const char* briefResult, const std::string& name) {
             Link clone(*l, false);
-            clone.setLabel(l->label());
 
             if (! clone.r2(clone.crossing(crossing)->strand(strand))) {
                 std::ostringstream msg;
-                msg << l->label() << ": R2("
+                msg << name << ": R2("
                     << (strand ? '^' : '_') << crossing
                     << ") is not allowed.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone);
+            sanity(&clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
-                msg << l->label() << ": R2("
+                msg << name << ": R2("
                     << (strand ? '^' : '_') << crossing << ") gives "
                     << clone.brief() << ", not " << briefResult
                     << " as expected.";
@@ -1469,9 +1512,9 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyR2Up(const Link* l, int upperCrossing, int upperStrand,
                 int upperSide, int lowerCrossing, int lowerStrand,
-                int lowerSide, const char* briefResult) {
+                int lowerSide, const char* briefResult,
+                const std::string& name) {
             Link clone(*l, false);
-            clone.setLabel(l->label());
 
             StrandRef upper, lower;
             if (upperCrossing >= 0)
@@ -1481,17 +1524,17 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (! clone.r2(upper, upperSide, lower, lowerSide)) {
                 std::ostringstream msg;
-                msg << l->label() << ": R2(" << upper << ", " << upperSide
+                msg << name << ": R2(" << upper << ", " << upperSide
                     << ", " << lower << ", " << lowerSide
                     << ") is not allowed.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone);
+            sanity(&clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
-                msg << l->label() << ": R2(" << upper << ", " << upperSide
+                msg << name << ": R2(" << upper << ", " << upperSide
                     << ", " << lower << ", " << lowerSide << ") gives "
                     << clone.brief() << ", not " << briefResult
                     << " as expected.";
@@ -1500,22 +1543,21 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void verifyR3(const Link* l, int crossing, int side,
-                const char* briefResult) {
+                const char* briefResult, const std::string& name) {
             Link clone(*l, false);
-            clone.setLabel(l->label());
 
             if (! clone.r3(clone.crossing(crossing), side)) {
                 std::ostringstream msg;
-                msg << l->label() << ": R3(" << crossing << ", "
+                msg << name << ": R3(" << crossing << ", "
                     << side << ") is not allowed.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone);
+            sanity(&clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
-                msg << l->label() << ": R3(" << crossing << ", "
+                msg << name << ": R3(" << crossing << ", "
                     << side << ") gives "
                     << clone.brief() << ", not " << briefResult
                     << " as expected.";
@@ -1524,23 +1566,22 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void verifyR3(const Link* l, int crossing, int strand, int side,
-                const char* briefResult) {
+                const char* briefResult, const std::string& name) {
             Link clone(*l, false);
-            clone.setLabel(l->label());
 
             if (! clone.r3(clone.crossing(crossing)->strand(strand), side)) {
                 std::ostringstream msg;
-                msg << l->label() << ": R3("
+                msg << name << ": R3("
                     << (strand ? '^' : '_') << crossing << ", " << side
                     << ") is not allowed.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            sanity(&clone);
+            sanity(&clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
-                msg << l->label() << ": R3(" << (strand ? '^' : '_')
+                msg << name << ": R3(" << (strand ? '^' : '_')
                     << crossing << ", " << side << ") gives "
                     << clone.brief() << ", not " << briefResult
                     << " as expected.";
@@ -1550,503 +1591,545 @@ class LinkTest : public CppUnit::TestFixture {
 
         void r123Perform() {
             Link* l;
+            std::string label;
 
             l = Link::fromData({ -1 }, { 1, -1 });
-            l->setLabel("One twist");
-            verifyR1Down(l, 0, "( )");
+            label = "One twist";
+            verifyR1Down(l, 0, "( )", label);
             delete l;
 
             l = Link::fromData({ 1, -1 }, { -1, 1, 2, -2 });
-            l->setLabel("Two twists (a)");
-            verifyR1Down(l, 0, "- ( ^0 _0 )");
-            verifyR2Down(l, 0, "( )");
-            verifyR2Down(l, 0, 1, "( )");
-            verifyR2Down(l, 1, 0, "( )");
+            label = "Two twists (a)";
+            verifyR1Down(l, 0, "- ( ^0 _0 )", label);
+            verifyR2Down(l, 0, "( )", label);
+            verifyR2Down(l, 0, 1, "( )", label);
+            verifyR2Down(l, 1, 0, "( )", label);
             delete l;
 
             l = Link::fromData({ 1, -1 }, { 1, 2, -2, -1 });
-            l->setLabel("Two twists (b)");
-            verifyR1Down(l, 0, "- ( ^0 _0 )");
-            verifyR2Down(l, 0, "( )");
-            verifyR2Down(l, 0, 1, "( )");
-            verifyR2Down(l, 1, 0, "( )");
+            label = "Two twists (b)";
+            verifyR1Down(l, 0, "- ( ^0 _0 )", label);
+            verifyR2Down(l, 0, "( )", label);
+            verifyR2Down(l, 0, 1, "( )", label);
+            verifyR2Down(l, 1, 0, "( )", label);
             delete l;
 
             l = Link::fromData({ 1, -1 }, { 2, -2, -1, 1 });
-            l->setLabel("Two twists (c)");
-            verifyR1Down(l, 0, "- ( ^0 _0 )");
-            verifyR2Down(l, 0, "( )");
-            verifyR2Down(l, 0, 1, "( )");
-            verifyR2Down(l, 1, 0, "( )");
+            label = "Two twists (c)";
+            verifyR1Down(l, 0, "- ( ^0 _0 )", label);
+            verifyR2Down(l, 0, "( )", label);
+            verifyR2Down(l, 0, 1, "( )", label);
+            verifyR2Down(l, 1, 0, "( )", label);
             delete l;
 
             l = Link::fromData({ 1, -1 }, { -2, -1, 1, 2 });
-            l->setLabel("Two twists (d)");
-            verifyR1Down(l, 0, "- ( _0 ^0 )");
-            verifyR2Down(l, 0, "( )");
-            verifyR2Down(l, 0, 1, "( )");
-            verifyR2Down(l, 1, 0, "( )");
+            label = "Two twists (d)";
+            verifyR1Down(l, 0, "- ( _0 ^0 )", label);
+            verifyR2Down(l, 0, "( )", label);
+            verifyR2Down(l, 0, 1, "( )", label);
+            verifyR2Down(l, 1, 0, "( )", label);
             delete l;
 
             l = Link::fromData({ 1, -1 }, { 1, 2 }, { -2, -1 });
-            l->setLabel("Overlapping loops");
-            verifyR2Down(l, 0, "( ) ( )");
-            verifyR2Down(l, 1, "( ) ( )");
-            verifyR2Down(l, 0, 0, "( ) ( )");
-            verifyR2Down(l, 0, 1, "( ) ( )");
-            verifyR2Down(l, 1, 0, "( ) ( )");
-            verifyR2Down(l, 1, 1, "( ) ( )");
+            label = "Overlapping loops";
+            verifyR2Down(l, 0, "( ) ( )", label);
+            verifyR2Down(l, 1, "( ) ( )", label);
+            verifyR2Down(l, 0, 0, "( ) ( )", label);
+            verifyR2Down(l, 0, 1, "( ) ( )", label);
+            verifyR2Down(l, 1, 0, "( ) ( )", label);
+            verifyR2Down(l, 1, 1, "( ) ( )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, -1 }, { -1, 1, 3, 2 }, { -2, -3 });
-            l->setLabel("Loop overlapping twist (a)");
-            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )");
-            verifyR3(l, 0, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
-            verifyR3(l, 0, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
-            verifyR3(l, 1, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
-            verifyR3(l, 1, 0, 1, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+            label = "Loop overlapping twist (a)";
+            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )", label);
+            verifyR3(l, 0, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )", label);
+            verifyR3(l, 0, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )", label);
+            verifyR3(l, 1, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )", label);
+            verifyR3(l, 1, 0, 1, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, -1 }, { 3, 2, -1, 1 }, { -2, -3 });
-            l->setLabel("Loop overlapping twist (b)");
-            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )");
-            verifyR3(l, 0, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
-            verifyR3(l, 0, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
-            verifyR3(l, 1, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
-            verifyR3(l, 1, 0, 1, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+            label = "Loop overlapping twist (b)";
+            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )", label);
+            verifyR3(l, 0, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )", label);
+            verifyR3(l, 0, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )", label);
+            verifyR3(l, 1, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )", label);
+            verifyR3(l, 1, 0, 1, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, -1 }, { 2, -1, 1, 3 }, { -2, -3 });
-            l->setLabel("Loop overlapping twist (c)");
-            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )");
-            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )");
-            verifyR3(l, 0, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
-            verifyR3(l, 0, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
-            verifyR3(l, 1, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
-            verifyR3(l, 1, 0, 1, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+            label = "Loop overlapping twist (c)";
+            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )", label);
+            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )", label);
+            verifyR3(l, 0, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )", label);
+            verifyR3(l, 0, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )", label);
+            verifyR3(l, 1, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )", label);
+            verifyR3(l, 1, 0, 1, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, 1 }, { 1, -1, -3, -2 }, { 2, 3 });
-            l->setLabel("Loop overlapping twist (d)");
-            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )");
-            verifyR3(l, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
-            verifyR3(l, 0, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
-            verifyR3(l, 1, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
-            verifyR3(l, 1, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+            label = "Loop overlapping twist (d)";
+            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR3(l, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )", label);
+            verifyR3(l, 0, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )", label);
+            verifyR3(l, 1, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )", label);
+            verifyR3(l, 1, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, 1 }, { -3, -2, 1, -1 }, { 2, 3 });
-            l->setLabel("Loop overlapping twist (e)");
-            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )");
-            verifyR3(l, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
-            verifyR3(l, 0, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
-            verifyR3(l, 1, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
-            verifyR3(l, 1, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+            label = "Loop overlapping twist (e)";
+            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR3(l, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )", label);
+            verifyR3(l, 0, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )", label);
+            verifyR3(l, 1, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )", label);
+            verifyR3(l, 1, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, 1 }, { -2, 1, -1, -3 }, { 2, 3 });
-            l->setLabel("Loop overlapping twist (f)");
-            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )");
-            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )");
-            verifyR3(l, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
-            verifyR3(l, 0, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
-            verifyR3(l, 1, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
-            verifyR3(l, 1, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+            label = "Loop overlapping twist (f)";
+            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )", label);
+            verifyR3(l, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )", label);
+            verifyR3(l, 0, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )", label);
+            verifyR3(l, 1, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )", label);
+            verifyR3(l, 1, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, 1, -1, 1, -1 }, { 5, 4 },
                 { 6, -6, -5, -3, 1, -1, -2, 2, 3, -4 });
-            l->setLabel("Three triangles (a)");
+            label = "Three triangles (a)";
             verifyR3(l, 4, 1,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )", label);
             verifyR3(l, 4, 1, 1,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )", label);
             verifyR3(l, 5, 0, 1,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )", label);
             verifyR3(l, 3, 0, 1,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )", label);
             verifyR3(l, 4, 0,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )", label);
             verifyR3(l, 4, 1, 0,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )", label);
             verifyR3(l, 4, 0, 1,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )", label);
             verifyR3(l, 2, 1, 1,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )", label);
             verifyR3(l, 1, 0,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )", label);
             verifyR3(l, 1, 1, 0,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )", label);
             verifyR3(l, 2, 0, 0,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )", label);
             verifyR3(l, 0, 0, 0,
-                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )", label);
             delete l;
 
             l = Link::fromData({ -1, +1, -1, +1, -1, +1 }, { -5, -4 },
                 { -6, 6, 5, 3, -1, 1, 2, -2, -3, 4 });
-            l->setLabel("Three triangles (b)");
+            label = "Three triangles (b)";
             verifyR3(l, 5, 1,
-                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )", label);
             verifyR3(l, 4, 0, 1,
-                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )", label);
             verifyR3(l, 5, 1, 1,
-                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )", label);
             verifyR3(l, 3, 1, 1,
-                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )", label);
             verifyR3(l, 4, 1,
-                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )", label);
             verifyR3(l, 4, 0, 0,
-                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )", label);
             verifyR3(l, 4, 1, 1,
-                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )", label);
             verifyR3(l, 2, 0, 1,
-                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )", label);
             verifyR3(l, 0, 0,
-                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )", label);
             verifyR3(l, 1, 0, 0,
-                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )", label);
             verifyR3(l, 2, 1, 0,
-                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )", label);
             verifyR3(l, 0, 1, 0,
-                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )", label);
             delete l;
 
             l = Link::fromData({ 1, 1, -1 }, { 1, -2, -3, -1, 2, 3 });
-            l->setLabel("Bad trefoil (a)");
-            verifyR2Down(l, 2, "+ ( _0 ^0 )");
-            verifyR2Down(l, 2, 1, "+ ( _0 ^0 )");
-            verifyR2Down(l, 2, 0, "+ ( _0 ^0 )");
-            verifyR3(l, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
-            verifyR3(l, 1, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
-            verifyR3(l, 2, 0, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
-            verifyR3(l, 0, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+            label = "Bad trefoil (a)";
+            verifyR2Down(l, 2, "+ ( _0 ^0 )", label);
+            verifyR2Down(l, 2, 1, "+ ( _0 ^0 )", label);
+            verifyR2Down(l, 2, 0, "+ ( _0 ^0 )", label);
+            verifyR3(l, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )", label);
+            verifyR3(l, 1, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )", label);
+            verifyR3(l, 2, 0, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )", label);
+            verifyR3(l, 0, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )", label);
             delete l;
 
             l = Link::fromData({ 1, 1, -1 }, { -3, -1, 2, 3, 1, -2 });
-            l->setLabel("Bad trefoil (b)");
-            verifyR2Down(l, 2, "+ ( ^0 _0 )");
-            verifyR2Down(l, 2, 1, "+ ( ^0 _0 )");
-            verifyR2Down(l, 2, 0, "+ ( ^0 _0 )");
-            verifyR3(l, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
-            verifyR3(l, 1, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
-            verifyR3(l, 2, 0, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
-            verifyR3(l, 0, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+            label = "Bad trefoil (b)";
+            verifyR2Down(l, 2, "+ ( ^0 _0 )", label);
+            verifyR2Down(l, 2, 1, "+ ( ^0 _0 )", label);
+            verifyR2Down(l, 2, 0, "+ ( ^0 _0 )", label);
+            verifyR3(l, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )", label);
+            verifyR3(l, 1, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )", label);
+            verifyR3(l, 2, 0, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )", label);
+            verifyR3(l, 0, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )", label);
             delete l;
 
             l = Link::fromData({ -1, -1, 1 }, { 1, -2, -3, -1, 2, 3 });
-            l->setLabel("Bad trefoil (c)");
-            verifyR2Down(l, 2, "- ( _0 ^0 )");
-            verifyR2Down(l, 2, 1, "- ( _0 ^0 )");
-            verifyR2Down(l, 2, 0, "- ( _0 ^0 )");
-            verifyR3(l, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
-            verifyR3(l, 1, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
-            verifyR3(l, 2, 0, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
-            verifyR3(l, 0, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+            label = "Bad trefoil (c)";
+            verifyR2Down(l, 2, "- ( _0 ^0 )", label);
+            verifyR2Down(l, 2, 1, "- ( _0 ^0 )", label);
+            verifyR2Down(l, 2, 0, "- ( _0 ^0 )", label);
+            verifyR3(l, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )", label);
+            verifyR3(l, 1, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )", label);
+            verifyR3(l, 2, 0, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )", label);
+            verifyR3(l, 0, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )", label);
             delete l;
 
             l = Link::fromData({ -1, -1, 1 }, { -3, -1, 2, 3, 1, -2 });
-            l->setLabel("Bad trefoil (d)");
-            verifyR2Down(l, 2, "- ( ^0 _0 )");
-            verifyR2Down(l, 2, 1, "- ( ^0 _0 )");
-            verifyR2Down(l, 2, 0, "- ( ^0 _0 )");
-            verifyR3(l, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
-            verifyR3(l, 1, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
-            verifyR3(l, 2, 0, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
-            verifyR3(l, 0, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+            label = "Bad trefoil (d)";
+            verifyR2Down(l, 2, "- ( ^0 _0 )", label);
+            verifyR2Down(l, 2, 1, "- ( ^0 _0 )", label);
+            verifyR2Down(l, 2, 0, "- ( ^0 _0 )", label);
+            verifyR3(l, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )", label);
+            verifyR3(l, 1, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )", label);
+            verifyR3(l, 2, 0, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )", label);
+            verifyR3(l, 0, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, 1, -1}, { 1, 2, -4, -3, -2, -1, 3, 4 });
-            l->setLabel("Bad figure eight (a)");
-            verifyR2Down(l, 0, "+- ( _1 _0 ^0 ^1 )");
-            verifyR2Down(l, 0, 1, "+- ( _1 _0 ^0 ^1 )");
-            verifyR2Down(l, 1, 0, "+- ( _1 _0 ^0 ^1 )");
-            verifyR2Down(l, 2, "-+ ( ^0 ^1 _1 _0 )");
-            verifyR2Down(l, 2, 1, "-+ ( ^0 ^1 _1 _0 )");
-            verifyR2Down(l, 3, 0, "-+ ( ^0 ^1 _1 _0 )");
-            verifyR3(l, 0, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
-            verifyR3(l, 0, 1, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
-            verifyR3(l, 0, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
-            verifyR3(l, 2, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+            label = "Bad figure eight (a)";
+            verifyR2Down(l, 0, "+- ( _1 _0 ^0 ^1 )", label);
+            verifyR2Down(l, 0, 1, "+- ( _1 _0 ^0 ^1 )", label);
+            verifyR2Down(l, 1, 0, "+- ( _1 _0 ^0 ^1 )", label);
+            verifyR2Down(l, 2, "-+ ( ^0 ^1 _1 _0 )", label);
+            verifyR2Down(l, 2, 1, "-+ ( ^0 ^1 _1 _0 )", label);
+            verifyR2Down(l, 3, 0, "-+ ( ^0 ^1 _1 _0 )", label);
+            verifyR3(l, 0, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )", label);
+            verifyR3(l, 0, 1, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )", label);
+            verifyR3(l, 0, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )", label);
+            verifyR3(l, 2, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, 1, -1}, { 2, -4, -3, -2, -1, 3, 4, 1 });
-            l->setLabel("Bad figure eight (b)");
-            verifyR2Down(l, 0, "+- ( _1 _0 ^0 ^1 )");
-            verifyR2Down(l, 0, 1, "+- ( _1 _0 ^0 ^1 )");
-            verifyR2Down(l, 1, 0, "+- ( _1 _0 ^0 ^1 )");
+            label = "Bad figure eight (b)";
+            verifyR2Down(l, 0, "+- ( _1 _0 ^0 ^1 )", label);
+            verifyR2Down(l, 0, 1, "+- ( _1 _0 ^0 ^1 )", label);
+            verifyR2Down(l, 1, 0, "+- ( _1 _0 ^0 ^1 )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, 1, -1}, { -2, -1, 3, 4, 1, 2, -4, -3 });
-            l->setLabel("Bad figure eight (c)");
-            verifyR2Down(l, 0, "+- ( ^0 ^1 _1 _0 )");
-            verifyR2Down(l, 0, 1, "+- ( ^0 ^1 _1 _0 )");
-            verifyR2Down(l, 1, 0, "+- ( ^0 ^1 _1 _0 )");
+            label = "Bad figure eight (c)";
+            verifyR2Down(l, 0, "+- ( ^0 ^1 _1 _0 )", label);
+            verifyR2Down(l, 0, 1, "+- ( ^0 ^1 _1 _0 )", label);
+            verifyR2Down(l, 1, 0, "+- ( ^0 ^1 _1 _0 )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, 1, -1}, { -1, 3, 4, 1, 2, -4, -3, -2 });
-            l->setLabel("Bad figure eight (d)");
-            verifyR2Down(l, 0, "+- ( ^0 ^1 _1 _0 )");
-            verifyR2Down(l, 0, 1, "+- ( ^0 ^1 _1 _0 )");
-            verifyR2Down(l, 1, 0, "+- ( ^0 ^1 _1 _0 )");
+            label = "Bad figure eight (d)";
+            verifyR2Down(l, 0, "+- ( ^0 ^1 _1 _0 )", label);
+            verifyR2Down(l, 0, 1, "+- ( ^0 ^1 _1 _0 )", label);
+            verifyR2Down(l, 1, 0, "+- ( ^0 ^1 _1 _0 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, -1, 1}, { -1, -2, 4, 3, 2, 1, -3, -4 });
-            l->setLabel("Bad figure eight (e)");
-            verifyR2Down(l, 1, "-+ ( ^1 ^0 _0 _1 )");
-            verifyR2Down(l, 0, 0, "-+ ( ^1 ^0 _0 _1 )");
-            verifyR2Down(l, 1, 1, "-+ ( ^1 ^0 _0 _1 )");
-            verifyR2Down(l, 3, "+- ( _0 _1 ^1 ^0 )");
-            verifyR2Down(l, 2, 0, "+- ( _0 _1 ^1 ^0 )");
-            verifyR2Down(l, 3, 1, "+- ( _0 _1 ^1 ^0 )");
-            verifyR3(l, 2, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
-            verifyR3(l, 0, 0, 1, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
-            verifyR3(l, 0, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
-            verifyR3(l, 2, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+            label = "Bad figure eight (e)";
+            verifyR2Down(l, 1, "-+ ( ^1 ^0 _0 _1 )", label);
+            verifyR2Down(l, 0, 0, "-+ ( ^1 ^0 _0 _1 )", label);
+            verifyR2Down(l, 1, 1, "-+ ( ^1 ^0 _0 _1 )", label);
+            verifyR2Down(l, 3, "+- ( _0 _1 ^1 ^0 )", label);
+            verifyR2Down(l, 2, 0, "+- ( _0 _1 ^1 ^0 )", label);
+            verifyR2Down(l, 3, 1, "+- ( _0 _1 ^1 ^0 )", label);
+            verifyR3(l, 2, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )", label);
+            verifyR3(l, 0, 0, 1, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )", label);
+            verifyR3(l, 0, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )", label);
+            verifyR3(l, 2, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, -1, 1}, { -2, 4, 3, 2, 1, -3, -4, -1 });
-            l->setLabel("Bad figure eight (f)");
-            verifyR2Down(l, 1, "-+ ( ^1 ^0 _0 _1 )");
-            verifyR2Down(l, 0, 0, "-+ ( ^1 ^0 _0 _1 )");
-            verifyR2Down(l, 1, 1, "-+ ( ^1 ^0 _0 _1 )");
+            label = "Bad figure eight (f)";
+            verifyR2Down(l, 1, "-+ ( ^1 ^0 _0 _1 )", label);
+            verifyR2Down(l, 0, 0, "-+ ( ^1 ^0 _0 _1 )", label);
+            verifyR2Down(l, 1, 1, "-+ ( ^1 ^0 _0 _1 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, -1, 1}, { 2, 1, -3, -4, -1, -2, 4, 3 });
-            l->setLabel("Bad figure eight (g)");
-            verifyR2Down(l, 1, "-+ ( _0 _1 ^1 ^0 )");
-            verifyR2Down(l, 0, 0, "-+ ( _0 _1 ^1 ^0 )");
-            verifyR2Down(l, 1, 1, "-+ ( _0 _1 ^1 ^0 )");
+            label = "Bad figure eight (g)";
+            verifyR2Down(l, 1, "-+ ( _0 _1 ^1 ^0 )", label);
+            verifyR2Down(l, 0, 0, "-+ ( _0 _1 ^1 ^0 )", label);
+            verifyR2Down(l, 1, 1, "-+ ( _0 _1 ^1 ^0 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, -1, 1}, { 1, -3, -4, -1, -2, 4, 3, 2 });
-            l->setLabel("Bad figure eight (h)");
-            verifyR2Down(l, 1, "-+ ( _0 _1 ^1 ^0 )");
-            verifyR2Down(l, 0, 0, "-+ ( _0 _1 ^1 ^0 )");
-            verifyR2Down(l, 1, 1, "-+ ( _0 _1 ^1 ^0 )");
+            label = "Bad figure eight (h)";
+            verifyR2Down(l, 1, "-+ ( _0 _1 ^1 ^0 )", label);
+            verifyR2Down(l, 0, 0, "-+ ( _0 _1 ^1 ^0 )", label);
+            verifyR2Down(l, 1, 1, "-+ ( _0 _1 ^1 ^0 )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, -1, -1, -1 },
                 { -2, -3, 4, -5, 1, 2, 3, -4, 5, -1 });
-            l->setLabel("Excessive trefoil (a)");
-            verifyR2Down(l, 0, "--- ( _0 ^1 _2 ^0 _1 ^2 )");
-            verifyR2Down(l, 0, 0, "--- ( _0 ^1 _2 ^0 _1 ^2 )");
-            verifyR2Down(l, 0, 1, "--- ( _0 ^1 _2 ^0 _1 ^2 )");
-            verifyR2Down(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 )");
-            verifyR2Down(l, 1, 0, "--- ( ^1 _2 ^0 _1 ^2 _0 )");
-            verifyR2Down(l, 1, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 )");
+            label = "Excessive trefoil (a)";
+            verifyR2Down(l, 0, "--- ( _0 ^1 _2 ^0 _1 ^2 )", label);
+            verifyR2Down(l, 0, 0, "--- ( _0 ^1 _2 ^0 _1 ^2 )", label);
+            verifyR2Down(l, 0, 1, "--- ( _0 ^1 _2 ^0 _1 ^2 )", label);
+            verifyR2Down(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 )", label);
+            verifyR2Down(l, 1, 0, "--- ( ^1 _2 ^0 _1 ^2 _0 )", label);
+            verifyR2Down(l, 1, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, 1, 1, 1 },
                 { 2, 3, -4, 5, -1, -2, -3, 4, -5, 1 });
-            l->setLabel("Excessive trefoil (b)");
-            verifyR2Down(l, 0, "+++ ( ^0 _1 ^2 _0 ^1 _2 )");
-            verifyR2Down(l, 0, 0, "+++ ( ^0 _1 ^2 _0 ^1 _2 )");
-            verifyR2Down(l, 0, 1, "+++ ( ^0 _1 ^2 _0 ^1 _2 )");
-            verifyR2Down(l, 1, "+++ ( _1 ^2 _0 ^1 _2 ^0 )");
-            verifyR2Down(l, 1, 0, "+++ ( _1 ^2 _0 ^1 _2 ^0 )");
-            verifyR2Down(l, 1, 1, "+++ ( _1 ^2 _0 ^1 _2 ^0 )");
+            label = "Excessive trefoil (b)";
+            verifyR2Down(l, 0, "+++ ( ^0 _1 ^2 _0 ^1 _2 )", label);
+            verifyR2Down(l, 0, 0, "+++ ( ^0 _1 ^2 _0 ^1 _2 )", label);
+            verifyR2Down(l, 0, 1, "+++ ( ^0 _1 ^2 _0 ^1 _2 )", label);
+            verifyR2Down(l, 1, "+++ ( _1 ^2 _0 ^1 _2 ^0 )", label);
+            verifyR2Down(l, 1, 0, "+++ ( _1 ^2 _0 ^1 _2 ^0 )", label);
+            verifyR2Down(l, 1, 1, "+++ ( _1 ^2 _0 ^1 _2 ^0 )", label);
             delete l;
 
             l = Link::fromData({ 1, -1, 1, -1, -1, 1, -1, -1 }, { -3, -4 },
                 { 1, -1, -2, 7, 6, 5, 4, 3, -5, -6, -7, 8, -8, 2 });
-            l->setLabel("Dangling twists (a)");
+            label = "Dangling twists (a)";
             verifyR1Down(l, 0,
-                "-+--+-- ( _1 _2 ) ( _0 ^5 ^4 ^3 ^2 ^1 _3 _4 _5 ^6 _6 ^0 )");
+                "-+--+-- ( _1 _2 ) ( _0 ^5 ^4 ^3 ^2 ^1 _3 _4 _5 ^6 _6 ^0 )",
+                label);
             verifyR1Down(l, 7,
-                "+-+--+- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^4 ^3 ^2 _4 _5 _6 ^1 )");
+                "+-+--+- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^4 ^3 ^2 _4 _5 _6 ^1 )",
+                label);
             verifyR2Down(l, 1,
-                "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )");
+                "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )", label);
             verifyR2Down(l, 1, 1,
-                "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )");
+                "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )", label);
             verifyR2Down(l, 0, 0,
-                "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )");
+                "+--+-- ( _0 _1 ) ( ^4 ^3 ^2 ^1 ^0 _2 _3 _4 ^5 _5 )", label);
             verifyR2Down(l, 6,
-                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
             verifyR2Down(l, 6, 1,
-                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
             verifyR2Down(l, 5, 0,
-                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
             verifyR2Down(l, 5,
-                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
             verifyR2Down(l, 5, 1,
-                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
             verifyR2Down(l, 4, 0,
-                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )");
+                "+-+--- ( _2 _3 ) ( ^0 _0 _1 ^4 ^3 ^2 _4 ^5 _5 ^1 )", label);
             verifyR2Down(l, 3,
-                "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )");
+                "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )", label);
             verifyR2Down(l, 3, 1,
-                "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )");
+                "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )", label);
             verifyR2Down(l, 2, 0,
-                "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )");
+                "+--+-- ( ) ( ^0 _0 _1 ^4 ^3 ^2 _2 _3 _4 ^5 _5 ^1 )", label);
             verifyR3(l, 4, 0,
-                "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )");
+                "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )",
+                label);
             verifyR3(l, 4, 1, 0,
-                "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )");
+                "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )",
+                label);
             verifyR3(l, 2, 0, 1,
-                "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )");
+                "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )",
+                label);
             verifyR3(l, 2, 1, 0,
-                "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )");
+                "+-+--+-- ( _2 _3 ) ( ^0 _0 _1 ^6 ^5 ^3 ^4 _4 ^2 _5 _6 ^7 _7 ^1 )",
+                label);
             delete l;
 
             l = Link::fromData({ 1, -1, 1, -1, -1, 1, -1, -1 }, { -3, -4 },
                 { 6, 5, 4, 3, -5, -6, -7, 8, -8, 2, 1, -1, -2, 7 });
-            l->setLabel("Dangling twists (b)");
+            label = "Dangling twists (b)";
             verifyR2Down(l, 6,
-                "+-+--- ( _2 _3 ) ( ^4 ^3 ^2 _4 ^5 _5 ^1 ^0 _0 _1 )");
+                "+-+--- ( _2 _3 ) ( ^4 ^3 ^2 _4 ^5 _5 ^1 ^0 _0 _1 )", label);
             verifyR2Down(l, 5,
-                "+-+--- ( _2 _3 ) ( ^3 ^2 _4 ^5 _5 ^1 ^0 _0 _1 ^4 )");
+                "+-+--- ( _2 _3 ) ( ^3 ^2 _4 ^5 _5 ^1 ^0 _0 _1 ^4 )", label);
             delete l;
 
             l = Link::fromData({ -1, 1, -1, 1, 1, -1, 1, 1 }, { 3, 4 },
                 { -1, 1, 2, -7, -6, -5, -4, -3, 5, 6, 7, -8, 8, -2 });
-            l->setLabel("Dangling twists (c)");
+            label = "Dangling twists (c)";
             verifyR1Down(l, 0,
-                "+-++-++ ( ^1 ^2 ) ( ^0 _5 _4 _3 _2 _1 ^3 ^4 ^5 _6 ^6 _0 )");
+                "+-++-++ ( ^1 ^2 ) ( ^0 _5 _4 _3 _2 _1 ^3 ^4 ^5 _6 ^6 _0 )",
+                label);
             verifyR1Down(l, 7,
-                "-+-++-+ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _4 _3 _2 ^4 ^5 ^6 _1 )");
+                "-+-++-+ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _4 _3 _2 ^4 ^5 ^6 _1 )",
+                label);
             verifyR2Down(l, 0,
-                "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )");
+                "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )", label);
             verifyR2Down(l, 0, 1,
-                "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )");
+                "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )", label);
             verifyR2Down(l, 1, 0,
-                "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )");
+                "-++-++ ( ^0 ^1 ) ( _4 _3 _2 _1 _0 ^2 ^3 ^4 _5 ^5 )", label);
             verifyR2Down(l, 5,
-                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
             verifyR2Down(l, 5, 1,
-                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
             verifyR2Down(l, 6, 0,
-                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
             verifyR2Down(l, 4,
-                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
             verifyR2Down(l, 4, 1,
-                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
             verifyR2Down(l, 5, 0,
-                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )");
+                "-+-+++ ( ^2 ^3 ) ( _0 ^0 ^1 _4 _3 _2 ^4 _5 ^5 _1 )", label);
             verifyR2Down(l, 2,
-                "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )");
+                "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )", label);
             verifyR2Down(l, 2, 1,
-                "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )");
+                "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )", label);
             verifyR2Down(l, 3, 0,
-                "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )");
+                "-++-++ ( ) ( _0 ^0 ^1 _4 _3 _2 ^2 ^3 ^4 _5 ^5 _1 )", label);
             verifyR3(l, 2, 1,
-                "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )");
+                "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )",
+                label);
             verifyR3(l, 2, 1, 1,
-                "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )");
+                "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )",
+                label);
             verifyR3(l, 2, 0, 0,
-                "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )");
+                "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )",
+                label);
             verifyR3(l, 4, 0, 0,
-                "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )");
+                "-+-++-++ ( ^2 ^3 ) ( _0 ^0 ^1 _6 _5 _3 _4 ^4 _2 ^5 ^6 _7 ^7 _1 )",
+                label);
             delete l;
 
             l = Link::fromData({ -1, 1, -1, 1, 1, -1, 1, 1 }, { 3, 4 },
                 { -6, -5, -4, -3, 5, 6, 7, -8, 8, -2, -1, 1, 2, -7 });
-            l->setLabel("Dangling twists (d)");
+            label = "Dangling twists (d)";
             verifyR2Down(l, 5,
-                "-+-+++ ( ^2 ^3 ) ( _4 _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 )");
+                "-+-+++ ( ^2 ^3 ) ( _4 _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 )", label);
             verifyR2Down(l, 4,
-                "-+-+++ ( ^2 ^3 ) ( _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 _4 )");
+                "-+-+++ ( ^2 ^3 ) ( _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 _4 )", label);
             delete l;
 
             l = Link::fromData({ 1, 1, -1, -1, -1 },
                 { 0 }, { -1, 2, -4, 3, -2, 1, -3, 4, 5, -5 }, { 0 }, { 0 });
-            l->setLabel("Figure eight with twist and three unknots");
+            label = "Figure eight with twist and three unknots";
             verifyR1Up(l, -1, 0, 0, -1,
-                "++---- ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+                "++---- ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, -1, 0, 0, 1,
-                "++---+ ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+                "++---+ ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, -1, 0, 1, -1,
-                "++---- ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+                "++---- ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, -1, 0, 1, 1,
-                "++---+ ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+                "++---+ ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, 4, 1, 0, -1,
-                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )");
+                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, 4, 1, 0, 1,
-                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )");
+                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, 4, 1, 1, -1,
-                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )");
+                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, 4, 1, 1, 1,
-                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )");
+                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, 1, 0, 0, -1,
-                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, 1, 0, 0, 1,
-                "++---+ ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+                "++---+ ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, 1, 0, 1, -1,
-                "++---- ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+                "++---- ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
+                label);
             verifyR1Up(l, 1, 0, 1, 1,
-                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )",
+                label);
             // Note: for R2, the implementation always adds the two new
             // crossings in the order (+, -).
             verifyR2Up(l, -1, 0, 0, -1, 0, 0, "++---+- "
-                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )");
+                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )",
+                label);
             verifyR2Up(l, -1, 0, 0, -1, 0, 1, "++---+- "
-                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )");
+                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )",
+                label);
             verifyR2Up(l, -1, 0, 1, -1, 0, 0, "++---+- "
-                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )");
+                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )",
+                label);
             verifyR2Up(l, -1, 0, 1, -1, 0, 1, "++---+- "
-                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )");
+                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )",
+                label);
             verifyR2Up(l, -1, 0, 0, 4, 0, 0, "++---+- "
-                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _6 _5 ) ( ) ( )");
+                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _6 _5 ) ( ) ( )",
+                label);
             verifyR2Up(l, -1, 0, 1, 4, 0, 0, "++---+- "
-                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _5 _6 ) ( ) ( )");
+                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _5 _6 ) ( ) ( )",
+                label);
             verifyR2Up(l, 4, 0, 0, -1, 0, 0, "++---+- "
-                "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^5 ^6 ) ( ) ( )");
+                "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^5 ^6 ) ( ) ( )",
+                label);
             verifyR2Up(l, 4, 0, 0, -1, 0, 1, "++---+- "
-                "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^6 ^5 ) ( ) ( )");
+                "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^6 ^5 ) ( ) ( )",
+                label);
             verifyR2Up(l, -1, 0, 0, 4, 1, 1, "++---+- "
-                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _6 _5 _4 ) ( ) ( )");
+                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _6 _5 _4 ) ( ) ( )",
+                label);
             verifyR2Up(l, -1, 0, 1, 4, 1, 1, "++---+- "
-                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )");
+                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )",
+                label);
             verifyR2Up(l, 4, 1, 1, -1, 0, 0, "++---+- "
-                "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 ^6 _4 ) ( ) ( )");
+                "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 ^6 _4 ) ( ) ( )",
+                label);
             verifyR2Up(l, 4, 1, 1, -1, 0, 1, "++---+- "
-                "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
+                "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )",
+                label);
             verifyR2Up(l, 4, 0, 0, 3, 1, 0, "++---+- "
-                "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 _4 ^5 ^6 ) ( ) ( )");
+                "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 _4 ^5 ^6 ) ( ) ( )",
+                label);
             verifyR2Up(l, 3, 1, 0, 4, 0, 0, "++---+- "
-                "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _4 _6 _5 ) ( ) ( )");
+                "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _4 _6 _5 ) ( ) ( )",
+                label);
             verifyR2Up(l, 4, 1, 1, 1, 0, 1, "++---+- "
-                "( ) ( _0 ^1 _3 ^2 _1 _5 _6 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
+                "( ) ( _0 ^1 _3 ^2 _1 _5 _6 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )",
+                label);
             verifyR2Up(l, 1, 0, 1, 4, 1, 1, "++---+- "
-                "( ) ( _0 ^1 _3 ^2 _1 ^6 ^5 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )");
+                "( ) ( _0 ^1 _3 ^2 _1 ^6 ^5 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )",
+                label);
             verifyR2Up(l, 2, 0, 0, 1, 1, 1, "++---+- "
-                "( ) ( _0 ^1 _6 _5 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _4 ) ( ) ( )");
+                "( ) ( _0 ^1 _6 _5 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _4 ) ( ) ( )",
+                label);
             verifyR2Up(l, 1, 1, 1, 2, 0, 0, "++---+- "
-                "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )");
+                "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )",
+                label);
             delete l;
         }
 
         void verifyResolve(const Link* l, int crossing,
-                const char* briefResult) {
+                const char* briefResult, const char* name) {
             Link clone(*l, false);
-            clone.setLabel(l->label());
 
             clone.resolve(clone.crossing(crossing));
 
-            sanity(&clone);
+            sanity(&clone, name);
 
             if (clone.brief() != briefResult) {
                 std::ostringstream msg;
-                msg << l->label() << ": resolve(" << crossing << ") gives "
+                msg << name << ": resolve(" << crossing << ") gives "
                     << clone.brief() << ", not " << briefResult
                     << " as expected.";
                 CPPUNIT_FAIL(msg.str());
@@ -2057,115 +2140,112 @@ class LinkTest : public CppUnit::TestFixture {
             Link* l;
 
             l = Link::fromData({ +1 }, { 1, -1 });
-            l->setLabel("One twist (a)");
-            verifyResolve(l, 0, "( ) ( )");
+            verifyResolve(l, 0, "( ) ( )", "One twist (a)");
             delete l;
 
             l = Link::fromData({ +1 }, { -1, 1 });
-            l->setLabel("One twist (b)");
-            verifyResolve(l, 0, "( ) ( )");
+            verifyResolve(l, 0, "( ) ( )", "One twist (b)");
             delete l;
 
             l = Link::fromData({ -1 }, { 1, -1 });
-            l->setLabel("One twist (c)");
-            verifyResolve(l, 0, "( ) ( )");
+            verifyResolve(l, 0, "( ) ( )", "One twist (c)");
             delete l;
 
             l = Link::fromData({ -1 }, { -1, 1 });
-            l->setLabel("One twist (d)");
-            verifyResolve(l, 0, "( ) ( )");
+            verifyResolve(l, 0, "( ) ( )", "One twist (d)");
             delete l;
 
             l = Link::fromData({ -1, +1, -1, -1 },
                 { 4, -1, 2, -2, 3, -4, 1, -3 });
-            l->setLabel("Trefoil with + twist (a)");
-            verifyResolve(l, 1, "--- ( ^2 _0 ^1 _2 ^0 _1 ) ( )");
+            verifyResolve(l, 1, "--- ( ^2 _0 ^1 _2 ^0 _1 ) ( )",
+                "Trefoil with + twist (a)");
             delete l;
 
             l = Link::fromData({ -1, +1, -1, -1 },
                 { 2, -2, 3, -4, 1, -3, 4, -1 });
-            l->setLabel("Trefoil with + twist (b)");
-            verifyResolve(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+            verifyResolve(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )",
+                "Trefoil with + twist (b)");
             delete l;
 
             l = Link::fromData({ -1, +1, -1, -1 },
                 { -2, 3, -4, 1, -3, 4, -1, 2 });
-            l->setLabel("Trefoil with + twist (c)");
-            verifyResolve(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+            verifyResolve(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )",
+                "Trefoil with + twist (c)");
             delete l;
 
             l = Link::fromData({ +1, -1, +1, +1 },
                 { 4, -1, -2, 2, 3, -4, 1, -3 });
-            l->setLabel("Trefoil with - twist (a)");
-            verifyResolve(l, 1, "+++ ( ^2 _0 ^1 _2 ^0 _1 ) ( )");
+            verifyResolve(l, 1, "+++ ( ^2 _0 ^1 _2 ^0 _1 ) ( )",
+                "Trefoil with - twist (a)");
             delete l;
 
             l = Link::fromData({ +1, -1, +1, +1 },
                 { -2, 2, 3, -4, 1, -3, 4, -1 });
-            l->setLabel("Trefoil with - twist (b)");
-            verifyResolve(l, 1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+            verifyResolve(l, 1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )",
+                "Trefoil with - twist (b)");
             delete l;
 
             l = Link::fromData({ +1, -1, +1, +1 },
                 { 2, 3, -4, 1, -3, 4, -1, -2 });
-            l->setLabel("Trefoil with - twist (c)");
-            verifyResolve(l, 1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+            verifyResolve(l, 1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )",
+                "Trefoil with - twist (c)");
             delete l;
 
             l = Link::fromData({ +1, +1, -1, -1 },
                 { 3, -1, 2, -3, 4, -2, 1, -4 });
-            l->setLabel("Figure eight (a)");
-            verifyResolve(l, 2, "++- ( _0 ^1 ) ( ^2 _1 ^0 _2 )");
+            verifyResolve(l, 2, "++- ( _0 ^1 ) ( ^2 _1 ^0 _2 )",
+                "Figure eight (a)");
             delete l;
 
             l = Link::fromData({ +1, +1, -1, -1 },
                 { -3, 4, -2, 1, -4, 3, -1, 2 });
-            l->setLabel("Figure eight (b)");
-            verifyResolve(l, 2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )");
+            verifyResolve(l, 2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )",
+                "Figure eight (b)");
             delete l;
 
             l = Link::fromData({ +1, +1, -1, -1 },
                 { 2, -3, 4, -2, 1, -4, 3, -1 });
-            l->setLabel("Figure eight (c)");
-            verifyResolve(l, 2, "++- ( ^1 _0 ) ( ^2 _1 ^0 _2 )");
+            verifyResolve(l, 2, "++- ( ^1 _0 ) ( ^2 _1 ^0 _2 )",
+                "Figure eight (c)");
             delete l;
 
             l = Link::fromData({ +1, +1, -1, -1 },
                 { 4, -2, 1, -4, 3, -1, 2, -3 });
-            l->setLabel("Figure eight (d)");
-            verifyResolve(l, 2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )");
+            verifyResolve(l, 2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )",
+                "Figure eight (d)");
             delete l;
 
             l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
                 { 2, -5, 6, -2, 1, 3, -4, -6, 5, -1 }, { -3, 4 });
-            l->setLabel("Figure eight with link (a)");
-            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )",
+                "Figure eight with link (a)");
             delete l;
 
             l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
                 { 2, -5, 6, -2, 1, 3, -4, -6, 5, -1 }, { 4, -3 });
-            l->setLabel("Figure eight with link (b)");
-            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )",
+                "Figure eight with link (b)");
             delete l;
 
             l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
                 { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { -3, 4 });
-            l->setLabel("Figure eight with link (c)");
-            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )",
+                "Figure eight with link (c)");
             delete l;
 
             l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
                 { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { 4, -3 });
-            l->setLabel("Figure eight with link (d)");
-            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )",
+                "Figure eight with link (d)");
             delete l;
         }
 
-        void verifyKnotSig(const Link* l, bool reflect, bool reverse) {
+        void verifyKnotSig(const Link* l, bool reflect, bool reverse,
+                const char* name) {
             std::string sig = l->knotSig(reflect, reverse);
             if (sig.empty()) {
                 std::ostringstream msg;
-                msg << l->label() << ": empty knotSig.";
+                msg << name << ": empty knotSig.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -2175,7 +2255,7 @@ class LinkTest : public CppUnit::TestFixture {
                 std::string altSig = alt.knotSig(reflect, reverse);
                 if (altSig != sig) {
                     std::ostringstream msg;
-                    msg << l->label() << ": rotation gives different knotSig.";
+                    msg << name << ": rotation gives different knotSig.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -2185,7 +2265,7 @@ class LinkTest : public CppUnit::TestFixture {
                 std::string altSig = alt.knotSig(reflect, reverse);
                 if (altSig != sig) {
                     std::ostringstream msg;
-                    msg << l->label() << ": reflection gives different knotSig.";
+                    msg << name << ": reflection gives different knotSig.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -2195,7 +2275,7 @@ class LinkTest : public CppUnit::TestFixture {
                 std::string altSig = alt.knotSig(reflect, reverse);
                 if (altSig != sig) {
                     std::ostringstream msg;
-                    msg << l->label() << ": reversal gives different knotSig.";
+                    msg << name << ": reversal gives different knotSig.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -2203,31 +2283,31 @@ class LinkTest : public CppUnit::TestFixture {
             Link* recon = Link::fromKnotSig(sig);
             if (! recon) {
                 std::ostringstream msg;
-                msg << l->label() << ": cannot reconstruct from knotSig.";
+                msg << name << ": cannot reconstruct from knotSig.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->size() != l->size()) {
                 std::ostringstream msg;
-                msg << l->label() << ": knotSig reconstruction has "
+                msg << name << ": knotSig reconstruction has "
                     "different size.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->countComponents() != l->countComponents()) {
                 std::ostringstream msg;
-                msg << l->label() << ": knotSig reconstruction has "
+                msg << name << ": knotSig reconstruction has "
                     "different number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->knotSig(reflect, reverse) != sig) {
                 std::ostringstream msg;
-                msg << l->label() << ": knotSig reconstruction has "
+                msg << name << ": knotSig reconstruction has "
                     "different knotSig.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (l->size() <= 20 && ! reflect) {
                 if (recon->jones() != l->jones()) {
                     std::ostringstream msg;
-                    msg << l->label() << ": knotSig reconstruction has "
+                    msg << name << ": knotSig reconstruction has "
                         "different Jones polynomial.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2235,19 +2315,19 @@ class LinkTest : public CppUnit::TestFixture {
             delete recon;
         }
 
-        void verifyKnotSig(const Link* l) {
-            verifyKnotSig(l, true, true);
-            verifyKnotSig(l, true, false);
-            verifyKnotSig(l, false, true);
-            verifyKnotSig(l, false, false);
+        void verifyKnotSig(const Link* l, const char* name) {
+            verifyKnotSig(l, true, true, name);
+            verifyKnotSig(l, true, false, name);
+            verifyKnotSig(l, false, true, name);
+            verifyKnotSig(l, false, false, name);
         }
 
         void verifyKnotSig(const Link* l, bool reflect, bool reverse,
-                const char* expect) {
+                const char* expect, const char* name) {
             std::string sig = l->knotSig(reflect, reverse);
             if (sig != expect) {
                 std::ostringstream msg;
-                msg << l->label() << ": knotSig("
+                msg << name << ": knotSig("
                     << (reflect ? 't' : 'f') << ", "
                     << (reverse ? 't' : 'f')
                     << ") is " << sig << ", not " << expect << ".";
@@ -2256,57 +2336,60 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void knotSig() {
-            verifyKnotSig(unknot0);
-            verifyKnotSig(unknot1);
-            verifyKnotSig(unknot3);
-            verifyKnotSig(unknotMonster);
-            verifyKnotSig(unknotGordian);
-            verifyKnotSig(trefoilLeft);
-            verifyKnotSig(trefoilRight);
-            verifyKnotSig(trefoil_r1x2);
-            verifyKnotSig(trefoil_r1x6);
-            verifyKnotSig(figureEight);
-            verifyKnotSig(figureEight_r1x2);
-            verifyKnotSig(conway);
-            verifyKnotSig(kinoshitaTerasaka);
-            verifyKnotSig(gst);
-            verifyKnotSig(rht_rht);
-            verifyKnotSig(rht_lht);
+            verifyKnotSig(unknot0, "Unknot (0 crossings)");
+            verifyKnotSig(unknot1, "Unknot (1 crossing)");
+            verifyKnotSig(unknot3, "Unknot (3 crossings)");
+            verifyKnotSig(unknotMonster, "Monster unknot");
+            verifyKnotSig(unknotGordian, "Gordian unknot");
+            verifyKnotSig(trefoilLeft, "LH Trefoil");
+            verifyKnotSig(trefoilRight, "RH Trefoil");
+            verifyKnotSig(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifyKnotSig(trefoil_r1x6, "Trefoil with 6 R1s");
+            verifyKnotSig(figureEight, "Figure eight");
+            verifyKnotSig(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifyKnotSig(conway, "Conway knot");
+            verifyKnotSig(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyKnotSig(gst, "GST");
+            verifyKnotSig(rht_rht, "RH Trefoil # RH Trefoil");
+            verifyKnotSig(rht_lht, "RH Trefoil # LH Trefoil");
 
-            verifyKnotSig(trefoilRight, true, true, "dabcabcv-");
-            verifyKnotSig(trefoilRight, false, true, "dabcabcv-");
-            verifyKnotSig(trefoilLeft, true, true, "dabcabcv-");
-            verifyKnotSig(trefoilLeft, false, true, "dabcabcva");
+            verifyKnotSig(trefoilRight, true, true, "dabcabcv-", "RH Trefoil");
+            verifyKnotSig(trefoilRight, false, true, "dabcabcv-", "RH Trefoil");
+            verifyKnotSig(trefoilLeft, true, true, "dabcabcv-", "LH Trefoil");
+            verifyKnotSig(trefoilLeft, false, true, "dabcabcva", "LH Trefoil");
 
             // A link where all four boolean options give different sigs.
             Link* l = Link::fromOrientedGauss(
                 "-<6 +>3 -<5 +>2 -<4 -<1 +>1 +>5 -<3 +>6 -<2 +>4");
-            l->setLabel("Antisymmetric knot");
-            verifyKnotSig(l, true,  true,  "gaabcdefbcfedPQ--");
-            verifyKnotSig(l, true,  false, "gaabcdefdcbefPQ--");
-            verifyKnotSig(l, false, true,  "gaabcdefbcfedPQaa");
-            verifyKnotSig(l, false, false, "gaabcdefdcbefPQaa");
+            verifyKnotSig(l, true,  true,  "gaabcdefbcfedPQ--",
+                "Antisymmetric knot");
+            verifyKnotSig(l, true,  false, "gaabcdefdcbefPQ--",
+                "Antisymmetric knot");
+            verifyKnotSig(l, false, true,  "gaabcdefbcfedPQaa",
+                "Antisymmetric knot");
+            verifyKnotSig(l, false, false, "gaabcdefdcbefPQaa",
+                "Antisymmetric knot");
             delete l;
         }
 
-        void verifyDT(const Link* l, bool alpha) {
+        void verifyDT(const Link* l, bool alpha, const char* name) {
             std::string code = l->dt(alpha);
 
             Link* recon = Link::fromDT(code);
             if (! recon) {
                 std::ostringstream msg;
-                msg << l->label() << ": cannot reconstruct from code.";
+                msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->size() != l->size()) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
+                msg << name << ": reconstruction has "
                     "different size.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->countComponents() != l->countComponents()) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
+                msg << name << ": reconstruction has "
                     "different number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2317,14 +2400,13 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (recon->knotSig(false) != l->knotSig(false)) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
-                    "different knot signature.";
+                msg << name << ": reconstruction has different knot signature.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (l->size() <= 20) {
                 if (recon->homfly() != l->homfly()) {
                     std::ostringstream msg;
-                    msg << l->label() << ": reconstruction has "
+                    msg << name << ": reconstruction has "
                         "different HOMFLY-PT polynomial.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2332,51 +2414,50 @@ class LinkTest : public CppUnit::TestFixture {
             delete recon;
         }
 
-        void verifyDT(const Link* l) {
+        void verifyDT(const Link* l, const char* name) {
             if (l->size() <= 26)
-                verifyDT(l, true);
-            verifyDT(l, false);
+                verifyDT(l, true, name);
+            verifyDT(l, false, name);
         }
 
         void dt() {
-            verifyDT(unknot0);
-            verifyDT(unknot1);
-            verifyDT(unknot3);
-            verifyDT(unknotMonster);
-            verifyDT(unknotGordian);
-            verifyDT(trefoilLeft);
-            verifyDT(trefoilRight);
-            verifyDT(figureEight);
-            verifyDT(conway);
-            verifyDT(kinoshitaTerasaka);
-            verifyDT(gst);
+            verifyDT(unknot0, "Unknot (0 crossings)");
+            verifyDT(unknot1, "Unknot (1 crossing)");
+            verifyDT(unknot3, "Unknot (3 crossings)");
+            verifyDT(unknotMonster, "Monster unknot");
+            verifyDT(unknotGordian, "Gordian unknot");
+            verifyDT(trefoilLeft, "LH Trefoil");
+            verifyDT(trefoilRight, "RH Trefoil");
+            verifyDT(figureEight, "Figure eight");
+            verifyDT(conway, "Conway knot");
+            verifyDT(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyDT(gst, "GST");
             // Luckily works despite ambiguity with composite knots:
-            verifyDT(rht_lht);
+            verifyDT(rht_lht, "RH Trefoil # LH Trefoil");
             // Broken by ambiguity with composite knots:
-            // verifyDT(trefoil_r1x2);
-            // verifyDT(trefoil_r1x6);
-            // verifyDT(figureEight_r1x2);
-            // verifyDT(rht_rht);
+            // verifyDT(trefoil_r1x2, "Trefoil with 2 R1s");
+            // verifyDT(trefoil_r1x6, "Trefoil with 6 R1s");
+            // verifyDT(figureEight_r1x2, "Figure eight with 2 R1s");
+            // verifyDT(rht_rht, "RH Trefoil # RH Trefoil");
         }
 
-        void verifyGauss(const Link* l) {
+        void verifyGauss(const Link* l, const char* name) {
             std::string code = l->gauss();
 
             Link* recon = Link::fromGauss(code);
             if (! recon) {
                 std::ostringstream msg;
-                msg << l->label() << ": cannot reconstruct from code.";
+                msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->size() != l->size()) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
-                    "different size.";
+                msg << name << ": reconstruction has different size.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->countComponents() != l->countComponents()) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
+                msg << name << ": reconstruction has "
                     "different number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2387,14 +2468,13 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (recon->knotSig(false) != l->knotSig(false)) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
-                    "different knot signature.";
+                msg << name << ": reconstruction has different knot signature.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (l->size() <= 20) {
                 if (recon->homfly() != l->homfly()) {
                     std::ostringstream msg;
-                    msg << l->label() << ": reconstruction has "
+                    msg << name << ": reconstruction has "
                         "different HOMFLY-PT polynomial.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2403,57 +2483,55 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void gauss() {
-            verifyGauss(unknot0);
-            verifyGauss(unknot1);
-            verifyGauss(unknot3);
-            verifyGauss(unknotMonster);
-            verifyGauss(unknotGordian);
-            verifyGauss(trefoilLeft);
-            verifyGauss(trefoilRight);
-            verifyGauss(figureEight);
-            verifyGauss(conway);
-            verifyGauss(kinoshitaTerasaka);
-            verifyGauss(gst);
+            verifyGauss(unknot0, "Unknot (0 crossings)");
+            verifyGauss(unknot1, "Unknot (1 crossing)");
+            verifyGauss(unknot3, "Unknot (3 crossings)");
+            verifyGauss(unknotMonster, "Monster unknot");
+            verifyGauss(unknotGordian, "Gordian unknot");
+            verifyGauss(trefoilLeft, "LH Trefoil");
+            verifyGauss(trefoilRight, "RH Trefoil");
+            verifyGauss(figureEight, "Figure eight");
+            verifyGauss(conway, "Conway knot");
+            verifyGauss(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyGauss(gst, "GST");
             // Luckily works despite ambiguity with composite knots:
-            verifyGauss(trefoil_r1x2);
-            verifyGauss(figureEight_r1x2);
-            verifyGauss(rht_rht);
+            verifyGauss(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifyGauss(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifyGauss(rht_rht, "RH Trefoil # RH Trefoil");
             // Broken by ambiguity with composite knots:
-            // verifyGauss(trefoil_r1x6);
-            // verifyGauss(rht_lht);
+            // verifyGauss(trefoil_r1x6, "Trefoil with 6 R1s");
+            // verifyGauss(rht_lht, "RH Trefoil # LH Trefoil");
         }
 
-        void verifyOrientedGauss(const Link* l) {
+        void verifyOrientedGauss(const Link* l, const char* name) {
             std::string code = l->orientedGauss();
 
             Link* recon = Link::fromOrientedGauss(code);
             if (! recon) {
                 std::ostringstream msg;
-                msg << l->label() << ": cannot reconstruct from code.";
+                msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->size() != l->size()) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
-                    "different size.";
+                msg << name << ": reconstruction has different size.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->countComponents() != l->countComponents()) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
+                msg << name << ": reconstruction has "
                     "different number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->orientedGauss() != code) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
-                    "different code.";
+                msg << name << ": reconstruction has different code.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (l->size() <= 20) {
                 if (recon->homfly() != l->homfly()) {
                     std::ostringstream msg;
-                    msg << l->label() << ": reconstruction has "
+                    msg << name << ": reconstruction has "
                         "different HOMFLY-PT polynomial.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2462,25 +2540,26 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void orientedGauss() {
-            verifyOrientedGauss(unknot0);
-            verifyOrientedGauss(unknot1);
-            verifyOrientedGauss(unknot3);
-            verifyOrientedGauss(unknotMonster);
-            verifyOrientedGauss(unknotGordian);
-            verifyOrientedGauss(trefoilLeft);
-            verifyOrientedGauss(trefoilRight);
-            verifyOrientedGauss(trefoil_r1x2);
-            verifyOrientedGauss(trefoil_r1x6);
-            verifyOrientedGauss(figureEight);
-            verifyOrientedGauss(figureEight_r1x2);
-            verifyOrientedGauss(conway);
-            verifyOrientedGauss(kinoshitaTerasaka);
-            verifyOrientedGauss(gst);
-            verifyOrientedGauss(rht_rht);
-            verifyOrientedGauss(rht_lht);
+            verifyOrientedGauss(unknot0, "Unknot (0 crossings)");
+            verifyOrientedGauss(unknot1, "Unknot (1 crossing)");
+            verifyOrientedGauss(unknot3, "Unknot (3 crossings)");
+            verifyOrientedGauss(unknotMonster, "Monster unknot");
+            verifyOrientedGauss(unknotGordian, "Gordian unknot");
+            verifyOrientedGauss(trefoilLeft, "LH Trefoil");
+            verifyOrientedGauss(trefoilRight, "RH Trefoil");
+            verifyOrientedGauss(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifyOrientedGauss(trefoil_r1x6, "Trefoil with 6 R1s");
+            verifyOrientedGauss(figureEight, "Figure eight");
+            verifyOrientedGauss(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifyOrientedGauss(conway, "Conway knot");
+            verifyOrientedGauss(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyOrientedGauss(gst, "GST");
+            verifyOrientedGauss(rht_rht, "RH Trefoil # RH Trefoil");
+            verifyOrientedGauss(rht_lht, "RH Trefoil # LH Trefoil");
         }
 
-        void verifyPDCode(const Link* link, const Link* expect = nullptr) {
+        void verifyPDCode(const Link* link, const Link* expect,
+                const char* name) {
             // The PD code will throw away zero-crossing components;
             // the "expect" argument should be the resulting diagram.
             // If expect == nullptr then we will use the original link itself.
@@ -2492,18 +2571,17 @@ class LinkTest : public CppUnit::TestFixture {
             Link* recon = Link::fromPD(code);
             if (! recon) {
                 std::ostringstream msg;
-                msg << link->label() << ": cannot reconstruct from code.";
+                msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->size() != expect->size()) {
                 std::ostringstream msg;
-                msg << link->label() << ": reconstruction has "
-                    "incorrect size.";
+                msg << name << ": reconstruction has incorrect size.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->countComponents() != expect->countComponents()) {
                 std::ostringstream msg;
-                msg << link->label() << ": reconstruction has "
+                msg << name << ": reconstruction has "
                     "different number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2511,27 +2589,25 @@ class LinkTest : public CppUnit::TestFixture {
                 if (recon->writheOfComponent(i) !=
                         expect->writheOfComponent(i)) {
                     std::ostringstream msg;
-                    msg << link->label() << ": reconstruction has "
+                    msg << name << ": reconstruction has "
                         "different writhe for component " << i << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
             if (recon->writhe() != expect->writhe()) {
                 std::ostringstream msg;
-                msg << link->label() << ": reconstruction has "
-                    "different writhe.";
+                msg << name << ": reconstruction has different writhe.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (recon->linking() != expect->linking()) {
                 std::ostringstream msg;
-                msg << link->label() << ": reconstruction has "
-                    "different linking number.";
+                msg << name << ": reconstruction has different linking number.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (expect->size() <= 20) {
                 if (recon->homfly() != expect->homfly()) {
                     std::ostringstream msg;
-                    msg << link->label() << ": reconstruction has "
+                    msg << name << ": reconstruction has "
                         "different HOMFLY-PT polynomial.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2539,46 +2615,52 @@ class LinkTest : public CppUnit::TestFixture {
             delete recon;
         }
 
+        void verifyPDCode(const Link* link, const char* name) {
+            verifyPDCode(link, nullptr, name);
+        }
+
         void pdCode() {
             // The empty link:
-            verifyPDCode(empty);
+            verifyPDCode(empty, "Empty");
 
             // Single-component knots:
-            verifyPDCode(unknot1);
-            verifyPDCode(unknot3);
-            verifyPDCode(unknotMonster);
-            verifyPDCode(unknotGordian);
-            verifyPDCode(trefoilLeft);
-            verifyPDCode(trefoilRight);
-            verifyPDCode(trefoil_r1x2);
-            verifyPDCode(trefoil_r1x6);
-            verifyPDCode(figureEight);
-            verifyPDCode(figureEight_r1x2);
-            verifyPDCode(conway);
-            verifyPDCode(kinoshitaTerasaka);
-            verifyPDCode(gst);
-            verifyPDCode(rht_rht);
-            verifyPDCode(rht_lht);
+            verifyPDCode(unknot1, "Unknot (1 crossing)");
+            verifyPDCode(unknot3, "Unknot (3 crossings)");
+            verifyPDCode(unknotMonster, "Monster unknot");
+            verifyPDCode(unknotGordian, "Gordian unknot");
+            verifyPDCode(trefoilLeft, "LH Trefoil");
+            verifyPDCode(trefoilRight, "RH Trefoil");
+            verifyPDCode(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifyPDCode(trefoil_r1x6, "Trefoil with 6 R1s");
+            verifyPDCode(figureEight, "Figure eight");
+            verifyPDCode(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifyPDCode(conway, "Conway knot");
+            verifyPDCode(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyPDCode(gst, "GST");
+            verifyPDCode(rht_rht, "RH Trefoil # RH Trefoil");
+            verifyPDCode(rht_lht, "RH Trefoil # LH Trefoil");
 
             // Links with multiple components:
-            verifyPDCode(unlink2_r2);
-            verifyPDCode(unlink2_r1r1);
-            verifyPDCode(hopf);
-            verifyPDCode(whitehead);
-            verifyPDCode(borromean);
-            verifyPDCode(trefoil_unknot1);
-            verifyPDCode(trefoil_unknot_overlap);
-            verifyPDCode(adams6_28);
+            verifyPDCode(unlink2_r2, "Unlink (2 components via R2)");
+            verifyPDCode(unlink2_r1r1, "Unlink (2 components via R1+R1)");
+            verifyPDCode(hopf, "Hopf link");
+            verifyPDCode(whitehead, "Whitehead link");
+            verifyPDCode(borromean, "Borromean rings");
+            verifyPDCode(trefoil_unknot1,
+                "Trefoil U unknot (separate + twist)");
+            verifyPDCode(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
+            verifyPDCode(adams6_28, "Adams Fig. 6.28");
 
             // Cases where the PD code throws away zero-crossing components:
-            verifyPDCode(unknot0, empty);
-            verifyPDCode(unlink2_0, empty);
-            verifyPDCode(unlink3_0, empty);
-            verifyPDCode(trefoil_unknot0, trefoilRight);
+            verifyPDCode(unknot0, empty, "Unknot (0 crossings)");
+            verifyPDCode(unlink2_0, empty, "Unlink (2 components)");
+            verifyPDCode(unlink3_0, empty, "Unlink (3 components)");
+            verifyPDCode(trefoil_unknot0, trefoilRight,
+                "Trefoil U unknot (separate)");
         }
 
         void verifyRewrite(const Link& link, int height, int threads,
-                bool track, size_t count) {
+                bool track, size_t count, const char* name) {
             // For now, this should only be called for knots that are
             // equivalent to their mirror image.
 
@@ -2607,43 +2689,43 @@ class LinkTest : public CppUnit::TestFixture {
 
                 if (! result) {
                     std::ostringstream msg;
-                    msg << link.label() <<
+                    msg << name <<
                         ": rewrite() could not start in the background.";
                     CPPUNIT_FAIL(msg.str());
                 }
             } else {
                 if (result != broken) {
                     std::ostringstream msg;
-                    msg << link.label() <<
-                        ": rewrite() return value differs from "
+                    msg << name << ": rewrite() return value differs from "
                         "action return values.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
             if (broken) {
                 std::ostringstream msg;
-                msg << link.label() << ": rewrite() changed the link.";
+                msg << name << ": rewrite() changed the link.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (count == 0) {
-                std::cerr << link.label() << " -> " << tot << std::endl;
+                std::cerr << name << " -> " << tot << std::endl;
                 return;
             }
             if (tot != count) {
                 std::ostringstream msg;
-                msg << link.label() << ": rewrite() with height "
+                msg << name << ": rewrite() with height "
                     << height << " gave " << tot
                     << " diagram(s) instead of " << count << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
-        void verifyRewrite(const Link* link, int height, size_t count) {
+        void verifyRewrite(const Link* link, int height, size_t count,
+                const char* name) {
             // Single-threaded, no tracker:
-            verifyRewrite(*link, height, 1, false, count);
+            verifyRewrite(*link, height, 1, false, count, name);
             // Multi-threaded, with and without tracker:
-            verifyRewrite(*link, height, 2, false, count);
-            verifyRewrite(*link, height, 2, true, count);
+            verifyRewrite(*link, height, 2, false, count, name);
+            verifyRewrite(*link, height, 2, true, count, name);
         }
 
         void rewrite() {
@@ -2654,19 +2736,19 @@ class LinkTest : public CppUnit::TestFixture {
             // an expected count of 0 will be treated as a request to display
             // the number of triangulations that were actually found.
             //
-            verifyRewrite(figureEight, 0, 1);
-            verifyRewrite(figureEight, 1, 8);
-            verifyRewrite(figureEight, 2, 137);
-            verifyRewrite(figureEight, 3, 2401);
-            verifyRewrite(unknot3, 0, 22);
-            verifyRewrite(unknot3, 1, 131);
-            verifyRewrite(unknot3, 2, 998);
-            verifyRewrite(rht_lht, 0, 1);
-            verifyRewrite(rht_lht, 1, 35);
-            verifyRewrite(rht_lht, 2, 1131);
-            verifyRewrite(figureEight_r1x2, 0, 137);
-            verifyRewrite(figureEight_r1x2, 1, 2401);
-            verifyRewrite(figureEight_r1x2, 2, 44985);
+            verifyRewrite(figureEight, 0, 1, "Figure eight");
+            verifyRewrite(figureEight, 1, 8, "Figure eight");
+            verifyRewrite(figureEight, 2, 137, "Figure eight");
+            verifyRewrite(figureEight, 3, 2401, "Figure eight");
+            verifyRewrite(unknot3, 0, 22, "Unknot (3 crossings)");
+            verifyRewrite(unknot3, 1, 131, "Unknot (3 crossings)");
+            verifyRewrite(unknot3, 2, 998, "Unknot (3 crossings)");
+            verifyRewrite(rht_lht, 0, 1, "RH Trefoil # LH Trefoil");
+            verifyRewrite(rht_lht, 1, 35, "RH Trefoil # LH Trefoil");
+            verifyRewrite(rht_lht, 2, 1131, "RH Trefoil # LH Trefoil");
+            verifyRewrite(figureEight_r1x2, 0, 137, "Figure eight with 2 R1s");
+            verifyRewrite(figureEight_r1x2, 1, 2401, "Figure eight with 2 R1s");
+            verifyRewrite(figureEight_r1x2, 2, 44985, "Figure eight with 2 R1s");
         }
 
         void swapping() {
@@ -2742,7 +2824,7 @@ class LinkTest : public CppUnit::TestFixture {
             return true;
         }
 
-        void verifyGroup(const Link* link) {
+        void verifyGroup(const Link* link, const char* name) {
             regina::GroupPresentation fromLink = link->group();
 
             Triangulation<3>* comp = link->complement();
@@ -2751,7 +2833,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (! lookIsomorphic(fromLink, fromComp)) {
                 std::ostringstream msg;
-                msg << link->label() << ": link group does not appear "
+                msg << name << ": link group does not appear "
                     "isomorphic to the complement's fundamental group.\n"
                     << fromLink.detail() << fromComp.detail() << std::endl;
                 CPPUNIT_FAIL(msg.str());
@@ -2759,7 +2841,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             if (fromLink.abelianRank() != link->countComponents()) {
                 std::ostringstream msg;
-                msg << link->label() << ": link group has abelian rank "
+                msg << name << ": link group has abelian rank "
                     << fromLink.abelianRank() << " instead of the "
                     "expected " << link->countComponents() << "." << std::endl;
                 CPPUNIT_FAIL(msg.str());
@@ -2768,38 +2850,38 @@ class LinkTest : public CppUnit::TestFixture {
 
         void group() {
             // The empty link:
-            verifyGroup(empty);
+            verifyGroup(empty, "Empty");
 
             // Single-component knots:
-            verifyGroup(unknot0);
-            verifyGroup(unknot1);
-            verifyGroup(unknot3);
-            verifyGroup(unknotMonster);
-            // verifyGroup(unknotGordian);
-            verifyGroup(trefoilLeft);
-            verifyGroup(trefoilRight);
-            verifyGroup(trefoil_r1x2);
-            verifyGroup(trefoil_r1x6);
-            verifyGroup(figureEight);
-            verifyGroup(figureEight_r1x2);
-            verifyGroup(conway);
-            verifyGroup(kinoshitaTerasaka);
-            verifyGroup(gst);
-            verifyGroup(rht_rht);
-            verifyGroup(rht_lht);
+            verifyGroup(unknot0, "Unknot (0 crossings)");
+            verifyGroup(unknot1, "Unknot (1 crossing)");
+            verifyGroup(unknot3, "Unknot (3 crossings)");
+            verifyGroup(unknotMonster, "Monster unknot");
+            // verifyGroup(unknotGordian, "Gordian unknot");
+            verifyGroup(trefoilLeft, "LH Trefoil");
+            verifyGroup(trefoilRight, "RH Trefoil");
+            verifyGroup(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifyGroup(trefoil_r1x6, "Trefoil with 6 R1s");
+            verifyGroup(figureEight, "Figure eight");
+            verifyGroup(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifyGroup(conway, "Conway knot");
+            verifyGroup(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyGroup(gst, "GST");
+            verifyGroup(rht_rht, "RH Trefoil # RH Trefoil");
+            verifyGroup(rht_lht, "RH Trefoil # LH Trefoil");
 
             // Links with multiple components:
-            verifyGroup(unlink2_0);
-            verifyGroup(unlink3_0);
-            verifyGroup(unlink2_r2);
-            verifyGroup(unlink2_r1r1);
-            verifyGroup(hopf);
-            verifyGroup(whitehead);
-            verifyGroup(borromean);
-            verifyGroup(trefoil_unknot0);
-            verifyGroup(trefoil_unknot1);
-            verifyGroup(trefoil_unknot_overlap);
-            verifyGroup(adams6_28);
+            verifyGroup(unlink2_0, "Unlink (2 components)");
+            verifyGroup(unlink3_0, "Unlink (3 components)");
+            verifyGroup(unlink2_r2, "Unlink (2 components via R2)");
+            verifyGroup(unlink2_r1r1, "Unlink (2 components via R1+R1)");
+            verifyGroup(hopf, "Hopf link");
+            verifyGroup(whitehead, "Whitehead link");
+            verifyGroup(borromean, "Borromean rings");
+            verifyGroup(trefoil_unknot0, "Trefoil U unknot (separate)");
+            verifyGroup(trefoil_unknot1, "Trefoil U unknot (separate + twist)");
+            verifyGroup(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
+            verifyGroup(adams6_28, "Adams Fig. 6.28");
         }
 };
 

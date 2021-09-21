@@ -85,6 +85,11 @@ class SimplexBase :
         public alias::FaceOfSimplex<SimplexBase<dim>, dim> {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
 
+    private:
+        using ChangeEventSpan = std::conditional_t<dim <= 4,
+            Packet::ChangeEventSpan,
+            typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
+
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -629,7 +634,7 @@ inline const std::string& SimplexBase<dim>::description() const {
 template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
     tri_->takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    ChangeEventSpan span(*tri_);
     description_ = desc;
 }
 
@@ -718,7 +723,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
         return 0;
 
     tri_->takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    ChangeEventSpan span(*tri_);
 
     Simplex<dim>* you = adj_[myFacet];
     int yourFacet = gluing_[myFacet][myFacet];
@@ -734,7 +739,7 @@ template <int dim>
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         Perm<dim+1> gluing) {
     tri_->takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    ChangeEventSpan span(*tri_);
 
     assert(tri_ == you->tri_);
     assert((! adj_[myFacet]) ||

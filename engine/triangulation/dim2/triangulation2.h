@@ -82,6 +82,9 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
     REGINA_PACKET(Triangulation<2>, PACKET_TRIANGULATION2,
         "2-Manifold Triangulation")
 
+    private:
+        using ChangeEventSpan = Packet::ChangeEventSpan;
+
     public:
         typedef std::vector<Triangle<2>*>::const_iterator TriangleIterator;
             /**< A dimension-specific alias for SimplexIterator,

@@ -446,7 +446,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             return ok;
         }
 
-        static void verifyTreeVsDD(Triangulation<3>* tri) {
+        static void verifyTreeVsDD(Triangulation<3>* tri, const char* name) {
             AngleStructures all(*tri, false);
             AngleStructures tautTree(*tri, true);
             AngleStructures tautDD(*tri, true, regina::AS_ALG_DD);
@@ -455,35 +455,35 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             if (all.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Vertex angle structure enumeration gives "
-                    "incorrect flags for " << tri->label() << ".";
+                    "incorrect flags for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! tautTree.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (tree) gives "
-                    "incorrect flags for " << tri->label() << ".";
+                    "incorrect flags for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! tautDD.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (DD) gives "
-                    "incorrect flags for " << tri->label() << ".";
+                    "incorrect flags for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tautTree.algorithm() != regina::AS_ALG_TREE) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (tree) gives "
-                    "incorrect algorithm for " << tri->label() << ".";
+                    "incorrect algorithm for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tautDD.algorithm() != regina::AS_ALG_DD) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (DD) gives "
-                    "incorrect algorithm for " << tri->label() << ".";
+                    "incorrect algorithm for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -491,31 +491,27 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     all.spansTaut() != tautDD.spansTaut()) {
                 std::ostringstream msg;
                 msg << "Flag for spansTaut() mismatched between "
-                    "different enumeration methods for "
-                    << tri->label() << ".";
+                    "different enumeration methods for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (all.spansStrict() && ! strictTree) {
                 std::ostringstream msg;
                 msg << "Finding a strict angle structure (tree) gives "
-                    "no solution when one should exist for "
-                    << tri->label() << ".";
+                    "no solution when one should exist for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
             if (strictTree && ! all.spansStrict()) {
                 std::ostringstream msg;
                 msg << "Finding a strict angle structure (tree) gives "
-                    "a solution when none should exist for "
-                    << tri->label() << ".";
+                    "a solution when none should exist for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! identical(tautTree, tautDD)) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration gives "
-                    "different solutions for tree vs DD for "
-                    << tri->label() << ".";
+                    "different solutions for tree vs DD for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -523,7 +519,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (tree) gives "
                     "different taut solutions from full vertex enumeration "
-                    "for "<< tri->label() << ".";
+                    "for "<< name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }

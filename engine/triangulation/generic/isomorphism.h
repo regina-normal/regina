@@ -113,6 +113,12 @@ class Isomorphism :
         public Output<Isomorphism<dim>>,
         public alias::IsomorphismImage<Isomorphism<dim>, dim> {
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
+
+    private:
+        using ChangeEventSpan = std::conditional_t<dim <= 4,
+            Packet::ChangeEventSpan,
+            typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
+
     protected:
         unsigned nSimplices_;
             /**< The number of simplices in the source triangulation. */
@@ -549,7 +555,7 @@ Triangulation<dim>* Isomorphism<dim>::apply(
     int f;
 
     // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(*ans);
+    ChangeEventSpan span(*ans);
     for (t = 0; t < nSimplices_; t++)
         tet[t] = ans->newSimplex();
 

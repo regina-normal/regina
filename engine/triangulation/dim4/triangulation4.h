@@ -92,6 +92,9 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
     REGINA_PACKET(Triangulation<4>, PACKET_TRIANGULATION4,
         "4-Manifold Triangulation")
 
+    private:
+        using ChangeEventSpan = Packet::ChangeEventSpan;
+
     public:
         typedef std::vector<Pentachoron<4>*>::const_iterator
                 PentachoronIterator;

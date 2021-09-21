@@ -364,6 +364,9 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
     REGINA_PACKET(SnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION,
         "SnapPea Triangulation")
 
+    private:
+        using ChangeEventSpan = Packet::ChangeEventSpan;
+
     public:
         /**
          * Describes the different types of solution that can be found when

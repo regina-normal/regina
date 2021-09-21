@@ -188,12 +188,19 @@ namespace detail {
  * \ingroup detail
  */
 template <int dim>
-class TriangulationBase : public Snapshottable<Triangulation<dim>>,
+class TriangulationBase :
+        public Snapshottable<Triangulation<dim>>,
+        public PacketData<Triangulation<dim>>,
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
         public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
+
+    private:
+        using ChangeEventSpan = std::conditional_t<dim <= 4,
+            Packet::ChangeEventSpan,
+            typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
 
     public:
         static constexpr int dimension = dim;
@@ -2349,8 +2356,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (const TriangulationBase<dim>& src) {
     static_cast<Snapshottable<Triangulation<dim>>>(*this) = src;
 
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     for (auto s : simplices_)
         delete s;
@@ -2402,8 +2408,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (TriangulationBase<dim>&& src) {
     static_cast<Snapshottable<Triangulation<dim>>>(*this) = std::move(src);
 
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     simplices_.swap(src.simplices_);
     faces_.swap(src.faces_);
@@ -2453,8 +2458,7 @@ inline const Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) const {
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex() {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     Simplex<dim>* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
@@ -2465,8 +2469,7 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex() {
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     Simplex<dim>* s = new Simplex<dim>(desc,
         static_cast<Triangulation<dim>*>(this));
@@ -2478,8 +2481,7 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
 template <int dim>
 inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     simplex->isolate();
     simplices_.erase(simplices_.begin() + simplex->index());
@@ -2491,8 +2493,7 @@ inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
 template <int dim>
 inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     Simplex<dim>* simplex = simplices_[index];
     simplex->isolate();
@@ -2505,8 +2506,7 @@ inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
 template <int dim>
 inline void TriangulationBase<dim>::removeAllSimplices() {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     for (auto s : simplices_)
         delete s;
@@ -2520,9 +2520,8 @@ void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     dest.Snapshottable<Triangulation<dim>>::takeSnapshot();
 
-    typename Triangulation<dim>::ChangeEventSpan span1(
-        static_cast<Triangulation<dim>&>(*this));
-    typename Triangulation<dim>::ChangeEventSpan span2(dest);
+    ChangeEventSpan span1(static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span2(dest);
 
     SimplexIterator it;
     for (it = simplices_.begin(); it != simplices_.end(); ++it) {
@@ -2726,8 +2725,7 @@ template <int dim>
 void TriangulationBase<dim>::insertTriangulation(
         const Triangulation<dim>& source) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     size_t nOrig = size();
     size_t nSource = source.size();
@@ -2766,8 +2764,7 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
         return;
 
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     size_t nOrig = size();
 
@@ -2940,8 +2937,7 @@ void TriangulationBase<dim>::orient() {
 
     TopologyLock lock(*this);
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     int f;
     for (auto s : simplices_)
@@ -2980,8 +2976,7 @@ void TriangulationBase<dim>::reflect() {
 
     TopologyLock lock(*this);
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     int f;
     for (auto s : simplices_) {
@@ -3010,8 +3005,7 @@ void TriangulationBase<dim>::makeDoubleCover() {
         return;
 
     // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     // Create a second sheet of simplices.
     Simplex<dim>** upper = new Simplex<dim>*[sheetSize];
@@ -3109,7 +3103,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
 
     Triangulation<dim> staging;
     // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(staging);
+    ChangeEventSpan span(staging);
 
     static_assert(standardDim(dim),
         "barycentricSubdivision() may only be used in standard dimensions.");
@@ -3187,7 +3181,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
     Triangulation<dim> staging;
     // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span1(staging);
+    ChangeEventSpan span1(staging);
 
     for (Face<dim, dim - 1>* f : faces<dim - 1>()) {
         if (f->degree() > 1) {
@@ -3227,8 +3221,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     // Now join the new simplices to the boundary facets of the original
     // triangulation.
     // Again, ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span2(
-        static_cast<Triangulation<dim>&>(*this));
+    ChangeEventSpan span2(static_cast<Triangulation<dim>&>(*this));
 
     // TODO static_cast<Triangulation<dim>&>(*this) = std::move(staging);
     staging.moveContentsTo(static_cast<Triangulation<dim>&>(*this));
@@ -3287,6 +3280,7 @@ std::vector<std::unique_ptr<Triangulation<dim>>>
         }
     }
 
+    if constexpr (dim <= 4)
     if (setLabels) {
         for (size_t i = 0; i < nComp; ++i) {
             std::ostringstream label;

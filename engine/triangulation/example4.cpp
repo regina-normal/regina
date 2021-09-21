@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/example4.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/example4.h"
 
 namespace regina {
 
