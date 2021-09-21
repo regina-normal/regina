@@ -234,18 +234,6 @@ class Triangulation :
 
         using Snapshottable<Triangulation<dim>>::isReadOnlySnapshot;
 
-        /**
-         * Indicates whether some other object in the calculation engine
-         * is responsible for ultimately destroying this triangulation.
-         *
-         * This overrides the implementation from Packet, since triangulations
-         * can be snapshotted.
-         *
-         * @return \c true if and only if some other object owns this
-         * triangulation.
-         */
-        bool hasOwner() const;
-
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
@@ -579,12 +567,6 @@ void Triangulation<dim>::writeTextLong(std::ostream& out) const {
         out << '\n';
     }
     out << '\n';
-}
-
-template <int dim>
-inline bool Triangulation<dim>::hasOwner() const {
-    return Packet::hasOwner() ||
-        Snapshottable<Triangulation<dim>>::isReadOnlySnapshot();
 }
 
 // Inline functions for DegreeLessThan / DegreeGreaterThan
