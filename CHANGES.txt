@@ -206,6 +206,8 @@ Version 7.0  [ TODO ]
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
               for triangulation faces).
+        Class ExampleLink:
+            - All examples now return by value, not by newly allocated pointer.
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.

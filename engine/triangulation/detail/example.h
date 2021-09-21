@@ -67,8 +67,9 @@ class ExampleFromLowDim {
         "dimension >= 3.");
 
     private:
-        using ChangeEventSpan =
-            typename PacketOf<Triangulation<dim>>::ChangeEventSpan;
+        using ChangeEventSpan = std::conditional_t<dim <= 4,
+            Packet::ChangeEventSpan,
+            typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
 
     public:
         /**
@@ -170,8 +171,9 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
     static_assert(dim >= 2, "Example requires dimension >= 2.");
 
     private:
-        using ChangeEventSpan =
-            typename PacketOf<Triangulation<dim>>::ChangeEventSpan;
+        using ChangeEventSpan = std::conditional_t<dim <= 4,
+            Packet::ChangeEventSpan,
+            typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
 
     public:
         /**

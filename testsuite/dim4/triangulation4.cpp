@@ -33,14 +33,14 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include <unistd.h>
-#include "triangulation/example4.h"
 #include "manifold/manifold.h"
 #include "progress/progresstracker.h"
 #include "subcomplex/standardtri.h"
-#include "triangulation/example3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/example3.h"
+#include "triangulation/example4.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/triangulationtest.h"

@@ -167,20 +167,14 @@ class CoversTest : public CppUnit::TestFixture {
         }
 
         template <int maxDegree>
-        void compareResults(Link* link, bool deleteAfter,
-                const char* name) {
-            compareResults<maxDegree>(link->complement(), true, name);
-            if (deleteAfter)
-                delete link;
+        void compareResults(const Link& link, const char* name) {
+            compareResults<maxDegree>(link.complement(), true, name);
         }
 
         template <int maxDegree>
-        void verifyResults(Link* link,
-                const std::vector<std::string>& expected,
-                bool deleteAfter, const char* name) {
-            verifyResults<maxDegree>(link->complement(), expected, true, name);
-            if (deleteAfter)
-                delete link;
+        void verifyResults(const Link& link,
+                const std::vector<std::string>& expected, const char* name) {
+            verifyResults<maxDegree>(link.complement(), expected, true, name);
         }
 
         void trivial() {
@@ -227,8 +221,7 @@ class CoversTest : public CppUnit::TestFixture {
         }
 
         void knots() {
-            compareResults<7>(regina::ExampleLink::trefoilRight(),
-                true, "Trefoil");
+            compareResults<7>(regina::ExampleLink::trefoilRight(), "Trefoil");
 
             // Each of the following invariants have been verified with SnapPea
             // and/or GAP.  However, SnapPea is slow to compute them for large
@@ -238,14 +231,14 @@ class CoversTest : public CppUnit::TestFixture {
             // We do not include index 7 tests for link19 or link20, since
             // these definitely slow down the test suite more than we'd like.
 
-            Link* conway = regina::ExampleLink::conway();
-            compareResults<5>(conway, false, "Conway knot");
+            Link conway = regina::ExampleLink::conway();
+            compareResults<5>(conway, "Conway knot");
             verifyResults<6>(conway,
                 { "2 Z", "2 Z + Z_12", "2 Z + Z_2 + Z_4", "2 Z + Z_3",
                   "2 Z + Z_3", "2 Z + Z_3", "2 Z + Z_3", "2 Z + Z_3",
                   "2 Z + Z_30", "2 Z + Z_6", "2 Z + Z_6", "3 Z", "3 Z + Z_2",
                   "3 Z + Z_2", "Z", "Z + Z_108" },
-                false, "Conway knot");
+                "Conway knot");
             verifyResults<7>(conway,
                 { "2 Z", "2 Z", "2 Z + Z_2", "3 Z", "3 Z", "3 Z", "3 Z", "3 Z",
                   "3 Z", "3 Z", "3 Z", "3 Z + 2 Z_2", "3 Z + 2 Z_2",
@@ -254,37 +247,36 @@ class CoversTest : public CppUnit::TestFixture {
                   "Z", "Z + 2 Z_2 + Z_4 + Z_12", "Z + 2 Z_2 + Z_4 + Z_12",
                   "Z + 2 Z_2 + Z_8 + Z_40", "Z + 2 Z_2 + Z_8 + Z_40",
                   "Z + Z_139", "Z + Z_1838", "Z + Z_2782" },
-                false, "Conway knot");
-            delete conway;
+                "Conway knot");
 
             Link* link19 = regina::Link::fromKnotSig(
                 "tabcadefghdijklmnoipkjplmefqrghbcsonqrsvvvvvvb-VzgZBa");
-            compareResults<3>(link19, false, "19-crossing knot");
-            verifyResults<4>(link19,
+            compareResults<3>(*link19, "19-crossing knot");
+            verifyResults<4>(*link19,
                 { "2 Z + Z_2" , "Z + Z_9 + Z_39411" },
-                false, "19-crossing knot");
-            verifyResults<5>(link19,
+                "19-crossing knot");
+            verifyResults<5>(*link19,
                 { "2 Z", "3 Z", "Z + 2 Z_6691" },
-                false, "19-crossing knot");
-            verifyResults<6>(link19,
+                "19-crossing knot");
+            verifyResults<6>(*link19,
                 { "2 Z + Z_157 + Z_628", "2 Z + Z_2 + Z_12", "2 Z + Z_4379",
                   "2 Z + Z_8758", "Z + 2 Z_2 + Z_314 + Z_1375006",
                   "Z + 2 Z_4 + Z_1819388", "Z + Z_628 + Z_324048" },
-                false, "19-crossing knot");
+                "19-crossing knot");
             delete link19;
 
             Link* link20 = regina::Link::fromKnotSig(
                 "uabcdbefgecdhifgjklmnhijopqlkqrsaoprtnmtsRktvvvfFyWJTFl");
-            compareResults<3>(link20, false, "20-crossing knot");
-            verifyResults<4>(link20,
+            compareResults<3>(*link20, "20-crossing knot");
+            verifyResults<4>(*link20,
                 { "2 Z + Z_140", "Z + Z_25 + Z_91675" },
-                false, "20-crossing knot");
-            verifyResults<5>(link20,
+                "20-crossing knot");
+            verifyResults<5>(*link20,
                 { "2 Z", "2 Z + Z_2", "3 Z + 2 Z_2", "3 Z + 2 Z_2",
                   "3 Z + Z_2 + Z_6", "3 Z + Z_2 + Z_6", "3 Z + Z_3",
                   "4 Z + Z_4", "Z + 2 Z_15061", "Z + Z_6 + Z_8638440" },
-                false, "20-crossing knot");
-            verifyResults<6>(link20,
+                "20-crossing knot");
+            verifyResults<6>(*link20,
                 { "2 Z + 2 Z_12", "2 Z + 2 Z_3", "2 Z + 2 Z_3", "2 Z + 2 Z_3",
                   "2 Z + 3 Z_2 + Z_36", "2 Z + 3 Z_2 + Z_36",
                   "2 Z + Z_2 + Z_114", "2 Z + Z_2 + Z_12", "2 Z + Z_2 + Z_12",
@@ -296,7 +288,7 @@ class CoversTest : public CppUnit::TestFixture {
                   "4 Z + Z_2", "4 Z + Z_2", "4 Z + Z_2", "5 Z", "5 Z",
                   "Z + 2 Z_2 + Z_248 + Z_40176",
                   "Z + 2 Z_2 + Z_496 + Z_1818832", "Z + Z_56161980" },
-                false, "20-crossing knot");
+                "20-crossing knot");
             delete link20;
         }
 

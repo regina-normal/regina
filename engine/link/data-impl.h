@@ -43,27 +43,24 @@
 #define __REGINA_DATA_IMPL_H
 #endif
 
+#include "utilities/exception.h"
+
 namespace regina {
 
 template <typename... Args>
-Link* Link::fromData(std::initializer_list<int> crossingSigns,
+Link Link::fromData(std::initializer_list<int> crossingSigns,
         std::initializer_list<Args>... components) {
-    Link* ans = new Link();
+    Link ans;
 
     for (auto sign : crossingSigns) {
         if (sign == 1 || sign == -1)
-            ans->crossings_.push_back(new Crossing(sign));
-        else {
-            std::cerr << "fromData(): crossing sign not +/-1" << std::endl;
-            delete ans;
-            return 0;
-        }
+            ans.crossings_.push_back(new Crossing(sign));
+        else
+            throw InvalidInput("fromData(): crossing sign not +/-1");
     }
 
-    if (! ans->addComponents(2 * crossingSigns.size(), components...)) {
-        delete ans;
-        return 0;
-    }
+    if (! ans.addComponents(2 * crossingSigns.size(), components...))
+        throw InvalidInput("fromData(): invalid component");
 
     return ans;
 }

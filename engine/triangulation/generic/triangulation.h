@@ -502,8 +502,8 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
     if (&other == this)
         return;
 
-    typename Triangulation<dim>::ChangeEventSpan span1(*this);
-    typename Triangulation<dim>::ChangeEventSpan span2(other);
+    typename PacketData<Triangulation<dim>>::ChangeEventSpan span1(*this);
+    typename PacketData<Triangulation<dim>>::ChangeEventSpan span2(other);
 
     // Note: swapBaseData() calls Snapshottable::swap().
     this->swapBaseData(other);

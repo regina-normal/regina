@@ -33,8 +33,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "angle/anglestructures.h"
 #include "surfaces/normalsurface.h"
-#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/angle/testangle.h"

@@ -54,12 +54,6 @@ class Link;
  * Regina's scripting interface, where working with pre-existing files
  * is more complicated than in the GUI.
  *
- * All of the methods in this class will assign an appropriate packet label
- * to the link that they return.
- *
- * Note that each of these routines constructs a new link from scratch.
- * It is up to the caller of each routine to destroy the link that is returned.
- *
  * \ingroup link
  */
 class ExampleLink {
@@ -67,87 +61,77 @@ class ExampleLink {
         /**
          * Returns a zero-crossing diagram of the unknot.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the unknot.
          */
-        static Link* unknot();
+        static Link unknot();
 
         /**
          * Returns the monster unknot, a 10-crossing diagram of the
          * unknot that is difficult to untangle.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the monster unknot.
          */
-        static Link* monster();
+        static Link monster();
 
         /**
          * Returns Haken's Gordian unknot, a 141-crossing diagram of the
          * unknot that is difficult to untangle.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the Gordian unknot.
          */
-        static Link* gordian();
+        static Link gordian();
 
         /**
          * Returns a three-crossing diagram of the left-hand trefoil.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the left-hand trefoil.
          */
-        static Link* trefoilLeft();
+        static Link trefoilLeft();
 
         /**
          * Returns a three-crossing diagram of the right-hand trefoil.
          * This returns the same knot as trefoil().
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the right-hand trefoil.
          */
-        static Link* trefoilRight();
+        static Link trefoilRight();
 
         /**
          * Returns a three-crossing diagram of the right-hand trefoil.
          * This returns the same knot as trefoilRight().
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the right-hand trefoil.
          */
-        static Link* trefoil();
+        static Link trefoil();
 
         /**
          * Returns a four-crossing diagram of the figure eight knot.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the figure eight knot.
          */
-        static Link* figureEight();
+        static Link figureEight();
 
         /**
          * Returns a two-crossing diagram of the Hopf link.
          * This is the variant in which both crossings are positive.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the Hopf link.
          */
-        static Link* hopf();
+        static Link hopf();
 
         /**
          * Returns a five-crossing diagram of the Whitehead link.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the Whitehead link.
          */
-        static Link* whitehead();
+        static Link whitehead();
 
         /**
          * Returns a six-crossing diagram of the Borromean rings.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the Borromean rings.
          */
-        static Link* borromean();
+        static Link borromean();
 
         /**
          * Returns the 11-crossing Conway knot.
@@ -155,10 +139,9 @@ class ExampleLink {
          * This is the reflection of \a K11n34 in the Knot Atlas, and is
          * a mutant of the Kinoshita-Terasaka knot.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the Conway knot.
          */
-        static Link* conway();
+        static Link conway();
 
         /**
          * Returns the 11-crossing Kinoshita-Terasaka knot.
@@ -166,10 +149,9 @@ class ExampleLink {
          * This is the reflection of \a K11n42 in the Knot Atlas, and is
          * a mutant of the Conway knot.  It has trivial Alexander polynomial.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the kinoshita-Terasaka knot.
          */
-        static Link* kinoshitaTerasaka();
+        static Link kinoshitaTerasaka();
 
         /**
          * Returns the (\a p,\a q) torus link.
@@ -185,7 +167,7 @@ class ExampleLink {
          * also be strictly non-negative.
          * @return the (\a p, \a q) torus link.
          */
-        static Link* torus(int p, int q);
+        static Link torus(int p, int q);
 
         /**
          * Returns a 48-crossing potential counterexample to the
@@ -196,10 +178,9 @@ class ExampleLink {
          * "Fibered knots and potential counterexamples to the property
          * 2R and slice-ribbon conjectures", arXiv:1103.1601.
          *
-         * @return a newly constructed link, which must be
-         * destroyed by the caller of this routine.
+         * @return the Gompf-Scharlemann-Thompson knot.
          */
-        static Link* gst();
+        static Link gst();
 
         // Make this class non-constructible.
         ExampleLink() = delete;

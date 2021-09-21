@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "triangulation/example2.h"
 #include "triangulation/dim2.h"
+#include "triangulation/example2.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/triangulationtest.h"

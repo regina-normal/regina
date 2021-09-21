@@ -32,9 +32,9 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+#include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 #include "triangulation/homologicaldata.h"
-#include "triangulation/dim3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::Example;

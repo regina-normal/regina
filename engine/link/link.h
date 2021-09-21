@@ -3303,6 +3303,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * hopf = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
          * \endcode
          *
+         * Unlike the other link reconstruction routines, this routine will
+         * throw an InvalidInput exception if a link could not be reconstructed
+         * from the given data.  (This is because this routine takes hard-coded
+         * data, and so there is no need to detect user errors at runtime.)
+         *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
@@ -3321,11 +3326,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @param components one list for each link component that
          * describes the crossings that are visited along that component,
          * as described in the detailed notes above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
         template <typename... Args>
-        static Link* fromData(std::initializer_list<int> crossingSigns,
+        static Link fromData(std::initializer_list<int> crossingSigns,
             std::initializer_list<Args>... components);
 
         /**

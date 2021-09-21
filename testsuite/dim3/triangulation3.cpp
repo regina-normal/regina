@@ -44,9 +44,9 @@
 #include "split/signature.h"
 #include "subcomplex/standardtri.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/example3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/triangulationtest.h"
