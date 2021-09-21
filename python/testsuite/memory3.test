@@ -75,9 +75,9 @@ print('Step 5')
 
 print('Vertices of triangulation: edge()')
 print('Step 1')
-t = Example5.sphere(); tw = Watcher(t, 't')
+t = PacketOfTriangulation5(Example5.sphere()); tw = Watcher(t, 't')
 print('Step 2')
-e = t.edge(0) # e keeps t alive
+e = t.data().edge(0) # e keeps t alive
 print('Step 3')
 t = None
 print('Step 4')
@@ -86,9 +86,9 @@ print('Step 5')
 
 print('Vertices of triangulation: faces<0>()')
 print('Step 1')
-t = Example5.sphere(); tw = Watcher(t, 't')
+t = PacketOfTriangulation5(Example5.sphere()); tw = Watcher(t, 't')
 print('Step 2')
-v = t.faces(0) # v keeps t alive
+v = t.data().faces(0) # v keeps t alive
 print('Step 3')
 t = None
 print('Step 4')

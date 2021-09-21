@@ -109,8 +109,7 @@ template <int> class XMLTriangulationReader;
  */
 template <>
 class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
-    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3,
-        "3-Manifold Triangulation")
+    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3, "3-D triangulation")
 
     private:
         using ChangeEventSpan = Packet::ChangeEventSpan;

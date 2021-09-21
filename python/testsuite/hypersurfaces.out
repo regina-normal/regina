@@ -560,7 +560,7 @@ Coordinates: Prism normal
 
 
 -------------------------------
-kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb
+L(8,3) x S1
 Vertex hypersurfaces (std)
 -------------------------------
 
@@ -581,7 +581,7 @@ Coordinates: Standard normal (tet-prism)
 
 
 -------------------------------
-kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb
+L(8,3) x S1
 Vertex hypersurfaces (prism)
 -------------------------------
 
@@ -600,7 +600,7 @@ Coordinates: Prism normal
 
 
 -------------------------------
-kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb
+L(8,3) x S1
 Fundamental surfaces (std, primal)
 -------------------------------
 
@@ -621,7 +621,7 @@ Coordinates: Standard normal (tet-prism)
 
 
 -------------------------------
-kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb
+L(8,3) x S1
 Fundamental surfaces (std, dual)
 -------------------------------
 
@@ -642,7 +642,7 @@ Coordinates: Standard normal (tet-prism)
 
 
 -------------------------------
-kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb
+L(8,3) x S1
 Fundamental surfaces (prism, primal)
 -------------------------------
 
@@ -661,7 +661,7 @@ Coordinates: Prism normal
 
 
 -------------------------------
-kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb
+L(8,3) x S1
 Fundamental surfaces (prism, dual)
 -------------------------------
 

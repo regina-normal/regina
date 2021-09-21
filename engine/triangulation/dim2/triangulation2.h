@@ -79,8 +79,7 @@ namespace regina {
  */
 template <>
 class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
-    REGINA_PACKET(Triangulation<2>, PACKET_TRIANGULATION2,
-        "2-Manifold Triangulation")
+    REGINA_PACKET(Triangulation<2>, PACKET_TRIANGULATION2, "2-D triangulation")
 
     private:
         using ChangeEventSpan = Packet::ChangeEventSpan;
