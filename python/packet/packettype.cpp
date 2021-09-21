@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "packet/packettype.h"
+#include "../helpers.h"
 
 void addPacketType(pybind11::module_& m) {
     pybind11::enum_<regina::PacketType>(m, "PacketType")
@@ -62,5 +63,10 @@ void addPacketType(pybind11::module_& m) {
         .value("PACKET_TRIANGULATION15", regina::PACKET_TRIANGULATION15)
 #endif
         .export_values();
+
+    auto i = pybind11::class_<regina::PacketInfo>(m, "PacketInfo")
+        .def_static("name", &regina::PacketInfo::name)
+        ;
+    regina::python::no_eq_operators(i);
 }
 

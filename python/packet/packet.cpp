@@ -42,6 +42,7 @@ using regina::Packet;
 using regina::PacketChildren;
 using regina::PacketDescendants;
 using regina::PacketShell;
+using regina::PacketType;
 using regina::SubtreeIterator;
 
 namespace {
@@ -137,9 +138,9 @@ void addPacket(pybind11::module_& m) {
         .def("nextTreePacket",
             overload_cast<>(&Packet::nextTreePacket))
         .def("nextTreePacket",
-            overload_cast<const std::string&>(&Packet::nextTreePacket))
+            overload_cast<PacketType>(&Packet::nextTreePacket))
         .def("firstTreePacket",
-            overload_cast<const std::string&>(&Packet::firstTreePacket))
+            overload_cast<PacketType>(&Packet::firstTreePacket))
         .def("findPacketLabel",
             overload_cast<const std::string&>(&Packet::findPacketLabel))
         .def("dependsOnParent", [](const Packet&) { // deprecated

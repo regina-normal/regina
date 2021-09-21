@@ -503,38 +503,6 @@ const Packet* Packet::nextTreePacket() const {
     return 0;
 }
 
-Packet* Packet::firstTreePacket(const std::string& type) {
-    if (typeName() == type)
-        return this;
-    return nextTreePacket(type);
-}
-
-const Packet* Packet::firstTreePacket(const std::string& type) const {
-    if (typeName() == type)
-        return this;
-    return nextTreePacket(type);
-}
-
-Packet* Packet::nextTreePacket(const std::string& type) {
-    Packet* ans = nextTreePacket();
-    while (ans) {
-        if (ans->typeName() == type)
-            return ans;
-        ans = ans->nextTreePacket();
-    }
-    return 0;
-}
-
-const Packet* Packet::nextTreePacket(const std::string& type) const {
-    const Packet* ans = nextTreePacket();
-    while (ans) {
-        if (ans->typeName() == type)
-            return ans;
-        ans = ans->nextTreePacket();
-    }
-    return 0;
-}
-
 Packet* Packet::findPacketLabel(const std::string& label) {
     if (label_ == label)
         return this;
