@@ -4060,6 +4060,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * This routine processes one link component, and then recursively
          * calls itself to process the remaining components.
          *
+         * Like fromData(), it throws an InvalidInput exception if an
+         * error or inconsistency is found in the given data.
+         *
          * @param strandsRemaining the expected sum of the lengths of
          * all components that still need to be processed.  This expected
          * sum is computed as twice the number of crossings minus the
@@ -4071,11 +4074,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @param otherComponents the remaining components still to be
          * processed; these will be processed by a recursive call to this
          * routine.
-         * @return \c true if and only if the components were successfully
-         * processed without errors.
          */
         template <typename... Args>
-        bool addComponents(size_t strandsRemaining,
+        void addComponents(size_t strandsRemaining,
             std::initializer_list<int> component,
             std::initializer_list<Args>... otherComponents);
 
@@ -4086,14 +4087,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * It is called when there are no more components remaining to
          * be processed.
          *
+         * Like fromData(), it throws an InvalidInput exception if an
+         * error or inconsistency is found in the given data, which
+         * for this terminating call simply means \a strandsRemaining != 0.
+         *
          * @param strandsRemaining the expected sum of the lengths of
          * all components that still need to be processed.  This expected
          * sum is computed as twice the number of crossings minus the
          * lengths of all components that have already been processed.
-         * @return \c true if and only if no errors are detected, which
-         * for this terminating call simply means \a strandsRemaining == 0.
          */
-        bool addComponents(size_t strandsRemaining);
+        void addComponents(size_t strandsRemaining);
 
         /**
          * Internal to bracketNaive().

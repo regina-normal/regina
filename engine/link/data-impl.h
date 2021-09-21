@@ -51,30 +51,23 @@ template <typename... Args>
 Link Link::fromData(std::initializer_list<int> crossingSigns,
         std::initializer_list<Args>... components) {
     Link ans;
-
     for (auto sign : crossingSigns) {
         if (sign == 1 || sign == -1)
             ans.crossings_.push_back(new Crossing(sign));
         else
             throw InvalidInput("fromData(): crossing sign not +/-1");
     }
-
-    if (! ans.addComponents(2 * crossingSigns.size(), components...))
-        throw InvalidInput("fromData(): invalid component");
-
+    ans.addComponents(2 * crossingSigns.size(), components...);
     return ans;
 }
 
-inline bool Link::addComponents(size_t strandsRemaining) {
-    if (strandsRemaining != 0) {
-        std::cerr << "fromData(): too few strands" << std::endl;
-        return false;
-    } else
-        return true;
+inline void Link::addComponents(size_t strandsRemaining) {
+    if (strandsRemaining != 0)
+        throw InvalidInput("fromData(): too few strands");
 }
 
 template <typename... Args>
-bool Link::addComponents(size_t strandsRemaining,
+void Link::addComponents(size_t strandsRemaining,
         std::initializer_list<int> component,
         std::initializer_list<Args>... otherComponents) {
     if (component.size() == 0) {
@@ -94,11 +87,8 @@ bool Link::addComponents(size_t strandsRemaining,
         int tmpStrand;
 
         auto it = component.begin();
-        if (*it == 0 || *it > n || *it < -n) {
-            std::cerr << "fromData(): crossing " << *it
-                << " out of range" << std::endl;
-            return false;
-        }
+        if (*it == 0 || *it > n || *it < -n)
+            throw InvalidInput("fromData(): crossing out of range");
         if (*it > 0) {
             tmpCross = *it;
             tmpStrand = 1;
@@ -115,11 +105,8 @@ bool Link::addComponents(size_t strandsRemaining,
         for (++it; it != component.end(); ++it) {
             prev = curr;
 
-            if (*it == 0 || *it > n || *it < -n) {
-                std::cerr << "fromData(): crossing " << *it
-                    << " out of range" << std::endl;
-                return false;
-            }
+            if (*it == 0 || *it > n || *it < -n)
+                throw InvalidInput("fromData(): crossing out of range");
             if (*it > 0) {
                 tmpCross = *it;
                 tmpStrand = 1;
@@ -131,49 +118,32 @@ bool Link::addComponents(size_t strandsRemaining,
             cr = crossings_[tmpCross - 1];
             curr = cr->strand(tmpStrand);
 
-            if (prev.crossing()->next_[prev.strand()]) {
-                std::cerr << "fromData(): multiple passes out of "
-                    << (prev.strand() == 0 ? "lower" : "upper")
-                    << " strand of crossing " << (prev.crossing()->index() + 1)
-                    << std::endl;
-                return false;
-            }
+            if (prev.crossing()->next_[prev.strand()])
+                throw InvalidInput("fromData(): multiple passes "
+                    "out of same strand of crossing");
             prev.crossing()->next_[prev.strand()] = curr;
 
-            if (curr.crossing()->prev_[curr.strand()]) {
-                std::cerr << "fromData(): multiple passes into "
-                    << (curr.strand() == 0 ? "lower" : "upper")
-                    << " strand of crossing " << (curr.crossing()->index() + 1)
-                    << std::endl;
-                return false;
-            }
+            if (curr.crossing()->prev_[curr.strand()])
+                throw InvalidInput("fromData(): multiple passes "
+                    "into same strand of crossing");
             curr.crossing()->prev_[curr.strand()] = prev;
         }
 
         prev = curr;
         curr = components_.back();
 
-        if (prev.crossing()->next_[prev.strand()]) {
-            std::cerr << "fromData(): multiple passes out of "
-                << (prev.strand() == 0 ? "lower" : "upper")
-                << " strand of crossing " << (prev.crossing()->index() + 1)
-                << std::endl;
-            return false;
-        }
+        if (prev.crossing()->next_[prev.strand()])
+            throw InvalidInput("fromData(): multiple passes "
+                "out of same strand of crossing");
         prev.crossing()->next_[prev.strand()] = curr;
 
-        if (curr.crossing()->prev_[curr.strand()]) {
-            std::cerr << "fromData(): multiple passes into "
-                << (curr.strand() == 0 ? "lower" : "upper")
-                << " strand of crossing " << (curr.crossing()->index() + 1)
-                << std::endl;
-            return false;
-        }
+        if (curr.crossing()->prev_[curr.strand()])
+            throw InvalidInput("fromData(): multiple passes "
+                "into same strand of crossing");
         curr.crossing()->prev_[curr.strand()] = prev;
     }
 
-    return addComponents(strandsRemaining - component.size(),
-        otherComponents...);
+    addComponents(strandsRemaining - component.size(), otherComponents...);
 }
 
 } // namespace regina
