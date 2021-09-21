@@ -1819,13 +1819,12 @@ class PacketData {
 
         class ChangeEventSpan {
             private:
-                typename PacketOf<Held>::ChangeEventSpan* span_;
+                Packet::ChangeEventSpan* span_;
 
             public:
                 ChangeEventSpan(PacketData& data) :
                         span_(data.packet_ ?
-                            new typename PacketOf<Held>::ChangeEventSpan(
-                                *data.packet_) :
+                            new Packet::ChangeEventSpan(*data.packet_) :
                             nullptr) {
                 }
                 ~ChangeEventSpan() { delete span_; }
