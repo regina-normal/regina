@@ -559,8 +559,13 @@ class TriangulationTest : public CppUnit::TestFixture {
                 return false;
             if (! a.isIdenticalTo(b))
                 return false;
-            if (a.isoSig() != b.isoSig())
-                return false;
+
+            // Test isosigs only in smaller dimensions, since the
+            // running time grows with (dim!).
+            if constexpr (dim <= 6)
+                if (a.isoSig() != b.isoSig())
+                    return false;
+
             return true;
         }
 
