@@ -199,7 +199,7 @@ Container
 ************************************************************
 *
 * Label: Layered Solid Torus
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: 3-Manifolds and Links
 *
 ************************************************************
@@ -247,7 +247,7 @@ Triangles:
 ************************************************************
 *
 * Label: RP² x S¹
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: 3-Manifolds and Links
 *
 ************************************************************
@@ -408,7 +408,7 @@ Container
 ************************************************************
 *
 * Label: Twisted S³ x~ S¹
-* Type: 4-Manifold Triangulation
+* Type: 4-D triangulation
 * Parent: 4-Manifolds
 *
 ************************************************************
@@ -484,7 +484,7 @@ Container
 ************************************************************
 *
 * Label: Klein Bottle, version 1
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: 2-Manifolds
 *
 ************************************************************
@@ -517,7 +517,7 @@ Edges:
 ************************************************************
 *
 * Label: Klein Bottle, version 2
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: 2-Manifolds
 *
 ************************************************************
@@ -731,7 +731,7 @@ Container
 ************************************************************
 *
 * Label: Layered Solid Torus
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: 3-Manifolds and Links
 *
 ************************************************************
@@ -779,7 +779,7 @@ Triangles:
 ************************************************************
 *
 * Label: RP² x S¹
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: 3-Manifolds and Links
 *
 ************************************************************
@@ -940,7 +940,7 @@ Container
 ************************************************************
 *
 * Label: Twisted S³ x~ S¹
-* Type: 4-Manifold Triangulation
+* Type: 4-D triangulation
 * Parent: 4-Manifolds
 *
 ************************************************************
@@ -1016,7 +1016,7 @@ Container
 ************************************************************
 *
 * Label: Klein Bottle, version 1
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: 2-Manifolds
 *
 ************************************************************
@@ -1049,7 +1049,7 @@ Edges:
 ************************************************************
 *
 * Label: Klein Bottle, version 2
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: 2-Manifolds
 *
 ************************************************************
@@ -1212,19 +1212,19 @@ Read Me (Text)
 Empty PDF (PDF)
 Dummy PDF (PDF)
 3-Manifolds and Links (Container)
-Layered Solid Torus (3-Manifold Triangulation)
-RP² x S¹ (3-Manifold Triangulation)
+Layered Solid Torus (3-D triangulation)
+RP² x S¹ (3-D triangulation)
 Note (Text)
 Quad vertex surfaces (Normal Surface List)
 Figure 8 Knot Complement (SnapPea Triangulation)
 Angle Structures (Angle Structure List)
 Whitehead link (Link)
 4-Manifolds (Container)
-Twisted S³ x~ S¹ (4-Manifold Triangulation)
+Twisted S³ x~ S¹ (4-D triangulation)
 Normal Hypersurfaces (Normal Hypersurface List)
 2-Manifolds (Container)
-Klein Bottle, version 1 (2-Manifold Triangulation)
-Klein Bottle, version 2 (2-Manifold Triangulation)
+Klein Bottle, version 1 (2-D triangulation)
+Klein Bottle, version 2 (2-D triangulation)
 Higher Dimensions (Container)
 B4 x~ S1 (5-D triangulation)
 8-sphere (8-D triangulation)
@@ -1243,19 +1243,19 @@ Read Me (Text)
 Empty PDF (PDF)
 Dummy PDF (PDF)
 3-Manifolds and Links (Container)
-Layered Solid Torus (3-Manifold Triangulation)
-RP² x S¹ (3-Manifold Triangulation)
+Layered Solid Torus (3-D triangulation)
+RP² x S¹ (3-D triangulation)
 Note (Text)
 Quad vertex surfaces (Normal Surface List)
 Figure 8 Knot Complement (SnapPea Triangulation)
 Angle Structures (Angle Structure List)
 Whitehead link (Link)
 4-Manifolds (Container)
-Twisted S³ x~ S¹ (4-Manifold Triangulation)
+Twisted S³ x~ S¹ (4-D triangulation)
 Normal Hypersurfaces (Normal Hypersurface List)
 2-Manifolds (Container)
-Klein Bottle, version 1 (2-Manifold Triangulation)
-Klein Bottle, version 2 (2-Manifold Triangulation)
+Klein Bottle, version 1 (2-D triangulation)
+Klein Bottle, version 2 (2-D triangulation)
 Higher Dimensions (Container)
 B4 x~ S1 (5-D triangulation)
 8-sphere (8-D triangulation)
@@ -1387,7 +1387,7 @@ Container
 ************************************************************
 *
 * Label: Poincaré homology sphere
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: Container
 *
 ************************************************************
@@ -1439,7 +1439,7 @@ Triangles:
 ************************************************************
 *
 * Label: Cappell-Shaneson knot complement
-* Type: 4-Manifold Triangulation
+* Type: 4-D triangulation
 * Parent: Container
 * Tags: 2-knot, 4-D
 *

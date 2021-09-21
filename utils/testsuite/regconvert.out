@@ -151,7 +151,7 @@ TEST: regconvert -2 @TESTDIR@/b5.rga
 <reginadata engine="_">
 <packet type="Container" typeid="1"
 	label="Container">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="B5">
   <tetrahedra ntet="8">
     <tet desc=""> 1 228 2 228 -1 -1 3 228 </tet>
@@ -167,7 +167,7 @@ TEST: regconvert -2 @TESTDIR@/b5.rga
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> </abeliangroup></H2>
-</packet> <!-- B5 (3_Manifold Triangulation) -->
+</packet> <!-- B5 (3_D triangulation) -->
 </packet> <!-- Container (Container) -->
 </reginadata>
 --------------------
@@ -195,7 +195,7 @@ dGVzdAo=
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
@@ -204,8 +204,8 @@ dGVzdAo=
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
-</packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
-<packet type="3-Manifold Triangulation" typeid="3"
+</packet> <!-- Layered Solid Torus (3_D triangulation) -->
+<packet type="3-D triangulation" typeid="3"
 	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
@@ -253,7 +253,7 @@ dGVzdAo=
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
-</packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
+</packet> <!-- RP² x S¹ (3_D triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
 	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
@@ -315,7 +315,7 @@ CS_unknown
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
-<packet type="4-Manifold Triangulation" typeid="11"
+<packet type="4-D triangulation" typeid="11"
 	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
@@ -331,24 +331,24 @@ CS_unknown
   <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
   <hypersurface len="30" name="Vertex link"> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
 </packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
-</packet> <!-- Twisted S³ x~ S¹ (4_Manifold Triangulation) -->
+</packet> <!-- Twisted S³ x~ S¹ (4_D triangulation) -->
 </packet> <!-- 4_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="2-Manifolds">
-<packet type="2-Manifold Triangulation" typeid="15"
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 1">
   <triangles ntriangles="2">
     <triangle desc=""> 1 1 1 5 1 0 </triangle>
     <triangle desc=""> 0 1 0 5 0 0 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 1 (2_Manifold Triangulation) -->
-<packet type="2-Manifold Triangulation" typeid="15"
+</packet> <!-- Klein Bottle, version 1 (2_D triangulation) -->
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 2">
   <triangles ntriangles="2">
     <triangle desc=""> 0 4 1 0 0 2 </triangle>
     <triangle desc=""> 1 4 0 0 1 2 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 2 (2_Manifold Triangulation) -->
+</packet> <!-- Klein Bottle, version 2 (2_D triangulation) -->
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
@@ -420,7 +420,7 @@ Output (compressed):
 <reginadata engine="_">
 <packet type="Container" typeid="1"
 	label="Container">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="B5">
   <tetrahedra ntet="8">
     <tet desc=""> 1 228 2 228 -1 -1 3 228 </tet>
@@ -436,7 +436,7 @@ Output (compressed):
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> </abeliangroup></H2>
-</packet> <!-- B5 (3_Manifold Triangulation) -->
+</packet> <!-- B5 (3_D triangulation) -->
 </packet> <!-- Container (Container) -->
 </reginadata>
 ============================================================
@@ -466,7 +466,7 @@ dGVzdAo=
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
@@ -475,8 +475,8 @@ dGVzdAo=
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
-</packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
-<packet type="3-Manifold Triangulation" typeid="3"
+</packet> <!-- Layered Solid Torus (3_D triangulation) -->
+<packet type="3-D triangulation" typeid="3"
 	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
@@ -524,7 +524,7 @@ dGVzdAo=
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
-</packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
+</packet> <!-- RP² x S¹ (3_D triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
 	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
@@ -586,7 +586,7 @@ CS_unknown
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
-<packet type="4-Manifold Triangulation" typeid="11"
+<packet type="4-D triangulation" typeid="11"
 	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
@@ -602,24 +602,24 @@ CS_unknown
   <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
   <hypersurface len="30" name="Vertex link"> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
 </packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
-</packet> <!-- Twisted S³ x~ S¹ (4_Manifold Triangulation) -->
+</packet> <!-- Twisted S³ x~ S¹ (4_D triangulation) -->
 </packet> <!-- 4_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="2-Manifolds">
-<packet type="2-Manifold Triangulation" typeid="15"
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 1">
   <triangles ntriangles="2">
     <triangle desc=""> 1 1 1 5 1 0 </triangle>
     <triangle desc=""> 0 1 0 5 0 0 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 1 (2_Manifold Triangulation) -->
-<packet type="2-Manifold Triangulation" typeid="15"
+</packet> <!-- Klein Bottle, version 1 (2_D triangulation) -->
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 2">
   <triangles ntriangles="2">
     <triangle desc=""> 0 4 1 0 0 2 </triangle>
     <triangle desc=""> 1 4 0 0 1 2 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 2 (2_Manifold Triangulation) -->
+</packet> <!-- Klein Bottle, version 2 (2_D triangulation) -->
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
@@ -689,7 +689,7 @@ Output (compressed):
 <reginadata engine="_">
 <packet type="Container" typeid="1"
 	label="Container">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="B5">
   <tetrahedra ntet="8">
     <tet desc=""> 1 228 2 228 -1 -1 3 228 </tet>
@@ -705,7 +705,7 @@ Output (compressed):
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> </abeliangroup></H2>
-</packet> <!-- B5 (3_Manifold Triangulation) -->
+</packet> <!-- B5 (3_D triangulation) -->
 </packet> <!-- Container (Container) -->
 </reginadata>
 ============================================================
@@ -735,7 +735,7 @@ dGVzdAo=
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
@@ -744,8 +744,8 @@ dGVzdAo=
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
-</packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
-<packet type="3-Manifold Triangulation" typeid="3"
+</packet> <!-- Layered Solid Torus (3_D triangulation) -->
+<packet type="3-D triangulation" typeid="3"
 	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
@@ -793,7 +793,7 @@ dGVzdAo=
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
-</packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
+</packet> <!-- RP² x S¹ (3_D triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
 	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
@@ -855,7 +855,7 @@ CS_unknown
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
-<packet type="4-Manifold Triangulation" typeid="11"
+<packet type="4-D triangulation" typeid="11"
 	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
@@ -871,24 +871,24 @@ CS_unknown
   <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
   <hypersurface len="30" name="Vertex link"> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
 </packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
-</packet> <!-- Twisted S³ x~ S¹ (4_Manifold Triangulation) -->
+</packet> <!-- Twisted S³ x~ S¹ (4_D triangulation) -->
 </packet> <!-- 4_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="2-Manifolds">
-<packet type="2-Manifold Triangulation" typeid="15"
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 1">
   <triangles ntriangles="2">
     <triangle desc=""> 1 1 1 5 1 0 </triangle>
     <triangle desc=""> 0 1 0 5 0 0 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 1 (2_Manifold Triangulation) -->
-<packet type="2-Manifold Triangulation" typeid="15"
+</packet> <!-- Klein Bottle, version 1 (2_D triangulation) -->
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 2">
   <triangles ntriangles="2">
     <triangle desc=""> 0 4 1 0 0 2 </triangle>
     <triangle desc=""> 1 4 0 0 1 2 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 2 (2_Manifold Triangulation) -->
+</packet> <!-- Klein Bottle, version 2 (2_D triangulation) -->
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
@@ -954,7 +954,7 @@ TEST: regconvert -2 -u @TESTDIR@/b5.rga
 <reginadata engine="_">
 <packet type="Container" typeid="1"
 	label="Container">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="B5">
   <tetrahedra ntet="8">
     <tet desc=""> 1 228 2 228 -1 -1 3 228 </tet>
@@ -970,7 +970,7 @@ TEST: regconvert -2 -u @TESTDIR@/b5.rga
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> </abeliangroup></H2>
-</packet> <!-- B5 (3_Manifold Triangulation) -->
+</packet> <!-- B5 (3_D triangulation) -->
 </packet> <!-- Container (Container) -->
 </reginadata>
 --------------------
@@ -998,7 +998,7 @@ dGVzdAo=
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
@@ -1007,8 +1007,8 @@ dGVzdAo=
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
-</packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
-<packet type="3-Manifold Triangulation" typeid="3"
+</packet> <!-- Layered Solid Torus (3_D triangulation) -->
+<packet type="3-D triangulation" typeid="3"
 	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
@@ -1056,7 +1056,7 @@ dGVzdAo=
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
-</packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
+</packet> <!-- RP² x S¹ (3_D triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
 	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
@@ -1118,7 +1118,7 @@ CS_unknown
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
-<packet type="4-Manifold Triangulation" typeid="11"
+<packet type="4-D triangulation" typeid="11"
 	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
@@ -1134,24 +1134,24 @@ CS_unknown
   <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
   <hypersurface len="30" name="Vertex link"> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
 </packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
-</packet> <!-- Twisted S³ x~ S¹ (4_Manifold Triangulation) -->
+</packet> <!-- Twisted S³ x~ S¹ (4_D triangulation) -->
 </packet> <!-- 4_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="2-Manifolds">
-<packet type="2-Manifold Triangulation" typeid="15"
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 1">
   <triangles ntriangles="2">
     <triangle desc=""> 1 1 1 5 1 0 </triangle>
     <triangle desc=""> 0 1 0 5 0 0 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 1 (2_Manifold Triangulation) -->
-<packet type="2-Manifold Triangulation" typeid="15"
+</packet> <!-- Klein Bottle, version 1 (2_D triangulation) -->
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 2">
   <triangles ntriangles="2">
     <triangle desc=""> 0 4 1 0 0 2 </triangle>
     <triangle desc=""> 1 4 0 0 1 2 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 2 (2_Manifold Triangulation) -->
+</packet> <!-- Klein Bottle, version 2 (2_D triangulation) -->
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
@@ -1223,7 +1223,7 @@ Output:
 <reginadata engine="_">
 <packet type="Container" typeid="1"
 	label="Container">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="B5">
   <tetrahedra ntet="8">
     <tet desc=""> 1 228 2 228 -1 -1 3 228 </tet>
@@ -1239,7 +1239,7 @@ Output:
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> </abeliangroup></H2>
-</packet> <!-- B5 (3_Manifold Triangulation) -->
+</packet> <!-- B5 (3_D triangulation) -->
 </packet> <!-- Container (Container) -->
 </reginadata>
 ============================================================
@@ -1269,7 +1269,7 @@ dGVzdAo=
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
-<packet type="3-Manifold Triangulation" typeid="3"
+<packet type="3-D triangulation" typeid="3"
 	label="Layered Solid Torus">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
@@ -1278,8 +1278,8 @@ dGVzdAo=
     <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
-</packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
-<packet type="3-Manifold Triangulation" typeid="3"
+</packet> <!-- Layered Solid Torus (3_D triangulation) -->
+<packet type="3-D triangulation" typeid="3"
 	label="RP² x S¹" id="_">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
@@ -1327,7 +1327,7 @@ dGVzdAo=
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
 </packet> <!-- Quad vertex surfaces (Normal Surface List) -->
-</packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
+</packet> <!-- RP² x S¹ (3_D triangulation) -->
 <packet type="SnapPea Triangulation" typeid="16"
 	label="Figure 8 Knot Complement" id="_">
   <snappea>% Triangulation
@@ -1389,7 +1389,7 @@ CS_unknown
 </packet> <!-- 3_Manifolds and Links (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
-<packet type="4-Manifold Triangulation" typeid="11"
+<packet type="4-D triangulation" typeid="11"
 	label="Twisted S³ x~ S¹" id="_">
   <pentachora npent="2">
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
@@ -1405,24 +1405,24 @@ CS_unknown
   <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
   <hypersurface len="30" name="Vertex link"> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
 </packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
-</packet> <!-- Twisted S³ x~ S¹ (4_Manifold Triangulation) -->
+</packet> <!-- Twisted S³ x~ S¹ (4_D triangulation) -->
 </packet> <!-- 4_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="2-Manifolds">
-<packet type="2-Manifold Triangulation" typeid="15"
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 1">
   <triangles ntriangles="2">
     <triangle desc=""> 1 1 1 5 1 0 </triangle>
     <triangle desc=""> 0 1 0 5 0 0 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 1 (2_Manifold Triangulation) -->
-<packet type="2-Manifold Triangulation" typeid="15"
+</packet> <!-- Klein Bottle, version 1 (2_D triangulation) -->
+<packet type="2-D triangulation" typeid="15"
 	label="Klein Bottle, version 2">
   <triangles ntriangles="2">
     <triangle desc=""> 0 4 1 0 0 2 </triangle>
     <triangle desc=""> 1 4 0 0 1 2 </triangle>
   </triangles>
-</packet> <!-- Klein Bottle, version 2 (2_Manifold Triangulation) -->
+</packet> <!-- Klein Bottle, version 2 (2_D triangulation) -->
 </packet> <!-- 2_Manifolds (Container) -->
 <packet type="Container" typeid="1"
 	label="Higher Dimensions">
@@ -1572,7 +1572,7 @@ CS_unknown
   0.500000000000   0.866025403784
 
 </snappea>
-<packet type="2-Manifold Triangulation" typeid="15"
+<packet type="2-D triangulation" typeid="15"
 	label="Vertex Link">
   <triangles ntriangles="8">
     <triangle desc=""> 1 0 2 3 2 1 </triangle>
@@ -1584,7 +1584,7 @@ CS_unknown
     <triangle desc=""> 4 5 7 2 4 1 </triangle>
     <triangle desc=""> 5 5 5 3 6 4 </triangle>
   </triangles>
-</packet> <!-- Vertex Link (2_Manifold Triangulation) -->
+</packet> <!-- Vertex Link (2_D triangulation) -->
 <packet type="Normal Surface List" typeid="6"
 	label="Quad Normal Surfaces">
   <params type="5" algorithm="16" flavourid="1"
@@ -1602,7 +1602,7 @@ CS_unknown
 </packet> <!-- 3_Manifolds and Knots (Container) -->
 <packet type="Container" typeid="1"
 	label="4-Manifolds">
-<packet type="4-Manifold Triangulation" typeid="11"
+<packet type="4-D triangulation" typeid="11"
 	label="Cappell-Shaneson Knot Complement">
   <pentachora npent="2">
     <pent desc=""> 0 17475 1 17496 1 17937 0 16593 1 10440 </pent>
@@ -1614,7 +1614,7 @@ CS_unknown
   <reln> 1^2 0^3 1^-1 0^-2 </reln>
 </group>
   </fundgroup>
-</packet> <!-- Cappell_Shaneson Knot Complement (4_Manifold Triangulation) -->
+</packet> <!-- Cappell_Shaneson Knot Complement (4_D triangulation) -->
 </packet> <!-- 4_Manifolds (Container) -->
 </packet> <!-- Sample Data File (Container) -->
 </reginadata>
