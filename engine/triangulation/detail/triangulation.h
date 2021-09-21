@@ -2320,7 +2320,7 @@ TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
 template <int dim>
 TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (const TriangulationBase<dim>& src) {
-    static_cast<Snapshottable<Triangulation<dim>>>(*this) = src;
+    Snapshottable<Triangulation<dim>>::operator =(src);
 
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
@@ -2372,7 +2372,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 template <int dim>
 TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (TriangulationBase<dim>&& src) {
-    static_cast<Snapshottable<Triangulation<dim>>>(*this) = std::move(src);
+    Snapshottable<Triangulation<dim>>::operator =(std::move(src));
 
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 

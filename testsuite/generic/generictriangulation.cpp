@@ -50,6 +50,7 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::ballBundle;
         using TriangulationTest<dim>::twistedBallBundle;
 
+        using TriangulationTest<dim>::verifyCopyMove;
         using TriangulationTest<dim>::verifyMakeCanonical;
         using TriangulationTest<dim>::verifyIsomorphismSignature;
         using TriangulationTest<dim>::verifyOrient;
@@ -80,6 +81,10 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
             f(ball, "Ball");
             f(ballBundle, "Ball bundle");
             f(twistedBallBundle, "Twisted ball bundle");
+        }
+
+        void copyMove() {
+            testManualAll(TriangulationTest<dim>::verifyCopyMove);
         }
 
         void makeCanonical() {
@@ -204,6 +209,7 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
 class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST_SUITE(Triangulation5Test);
 
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -233,6 +239,7 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
 class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST_SUITE(Triangulation6Test);
 
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -263,6 +270,7 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
 class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST_SUITE(Triangulation8Test);
 
+    CPPUNIT_TEST(copyMove);
     /**
      * Isomorphism-related routines have running times that include
      * a factor of (dim+1)!, which makes them too slow in higher dimensions.

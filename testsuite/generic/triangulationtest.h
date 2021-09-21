@@ -551,6 +551,54 @@ class TriangulationTest : public CppUnit::TestFixture {
                 regina::Example<dim>::twistedBallBundle());
         }
 
+        static bool looksIdentical(const Triangulation<dim>& a,
+                const Triangulation<dim>& b) {
+            if (a.size() != b.size())
+                return false;
+            if (a.countComponents() != b.countComponents())
+                return false;
+            if (! a.isIdenticalTo(b))
+                return false;
+            if (a.isoSig() != b.isoSig())
+                return false;
+            return true;
+        }
+
+        static void verifyCopyMove(const Triangulation<dim>& t,
+                const char* name) {
+            Triangulation<dim> copy(t);
+            if (! looksIdentical(copy, t)) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Triangulation<dim> move(std::move(copy));
+            if (! looksIdentical(move, t)) {
+                std::ostringstream msg;
+                msg << name << ": move constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Triangulation<dim> copyAss;
+            copyAss.newSimplex(); // Give it something to overwrite.
+            copyAss = t;
+            if (! looksIdentical(copyAss, t)) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Triangulation<dim> moveAss;
+            moveAss.newSimplex(); // Give it something to overwrite.
+            moveAss = std::move(copyAss);
+            if (! looksIdentical(moveAss, t)) {
+                std::ostringstream msg;
+                msg << name << ": move assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         static void verifyValid(const Triangulation<dim>& tri,
                 bool isValid, const char* name) {
             if (! isValid) {
