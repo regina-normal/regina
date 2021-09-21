@@ -35,6 +35,7 @@
 #include "file/fileformat.h"
 #include "file/xml/xmlwriter.h"
 #include "link/link.h"
+#include "packet/packet-impl.h"
 
 namespace regina {
 
@@ -73,6 +74,9 @@ void XMLWriter<Link>::close() {
     else
         out_ << "</link>\n";
 }
+
+template void PacketOf<Link>::writeXMLPacketData(std::ostream&, FileFormat,
+    bool, PacketRefs&) const;
 
 } // namespace regina
 

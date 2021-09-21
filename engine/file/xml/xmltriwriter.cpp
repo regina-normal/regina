@@ -34,6 +34,7 @@
 #include "regina-core.h"
 #include "file/fileformat.h"
 #include "file/xml/xmlwriter.h"
+#include "packet/packet-impl.h"
 #include "triangulation/generic.h"
 
 namespace regina {
@@ -125,6 +126,30 @@ template class XMLWriter<Triangulation<12>>;
 template class XMLWriter<Triangulation<13>>;
 template class XMLWriter<Triangulation<14>>;
 template class XMLWriter<Triangulation<15>>;
+
+
+template void PacketOf<Triangulation<5>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<6>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<7>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<8>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<9>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<10>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<11>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<12>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<13>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<14>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<15>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
 
 } // namespace regina
 

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,40 +30,55 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
-#include "packet/packet.h" // TODO: Remove
-#include "triangulation/generic.h"
-#include "../helpers.h"
+/*! \file packet/packet.h
+ *  \brief Contains some implementation details for packet wrapper classes.
+ *
+ *  This file is \e not included from packet.h, and it is not shipped with
+ *  Regina's development headers.  The routines it contains are explicitly
+ *  instantiated in Regina's calculation engine for all necessary packet types.
+ *
+ *  The reason for "quarantining" this file is because it relies on Regina's
+ *  XML headers, which are not part of Regina's public API.
+ */
 
-using regina::Component;
+#ifndef __REGINA_PACKET_IMPL_H
+#ifndef __DOXYGEN
+#define __REGINA_PACKET_IMPL_H
+#endif
 
-template <int dim>
-void addComponent(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<Component<dim>>(m, name)
-        .def("index", &Component<dim>::index)
-        .def("size", &Component<dim>::size)
-        .def("countBoundaryComponents",
-            &Component<dim>::countBoundaryComponents)
-        .def("simplices", &Component<dim>::simplices,
-            pybind11::return_value_policy::reference)
-        .def("simplex", &Component<dim>::simplex,
-            pybind11::return_value_policy::reference)
-        .def("boundaryComponents", &Component<dim>::boundaryComponents,
-            pybind11::return_value_policy::reference)
-        .def("boundaryComponent", &Component<dim>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("isValid", &Component<dim>::isValid)
-        .def("isOrientable", &Component<dim>::isOrientable)
-        .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets)
-        .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
-        // We cannot take the addresses of the following header-only properties,
-        // so we define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Component<dim>::dimension;
-        })
-    ;
-    regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+#include "packet/packet.h"
+#include "utilities/xmlutils.h"
+
+namespace regina {
+
+template <typename Held>
+void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
+        bool anon, PacketRefs& refs) const {
+    XMLWriter<Held> writer(data_, out, format);
+    writer.openPre();
+    out << " label=\"" << regina::xml::xmlEncodeSpecialChars(label())
+        << "\"";
+
+    auto pos = refs.find(this);
+    if (pos != refs.end()) {
+        // Someone has asked for this packet to store its ID.
+        out << " id=\"" << internalID() << "\"";
+        pos->second = true; // Indicate this packet is now being written↪.
+    } else if (anon) {
+        // Nobody *asked* for this packet to be referred to, but it is
+        // still being written as anonymous block.  It's not clear how
+        // such a situation could arise in practice, but regardless,
+        // we should note that the packet has been "written ahead".
+        out << " id=\"" << internalID() << "\"";
+        refs.insert({ this, true });
+    }
+
+    writer.openPost();
+    writer.writeContent();
+    writeXMLTreeData(out, format, anon, refs);
+    writer.close();
 }
 
+} // namespace regina
+
+#endif

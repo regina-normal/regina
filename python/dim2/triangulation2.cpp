@@ -158,18 +158,6 @@ void addTriangulation2(pybind11::module_& m) {
         .def("reflect", &Triangulation<2>::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents,
             pybind11::arg("setLabels") = false)
-        .def("splitIntoComponents", [](Triangulation<2>& t,
-                regina::Packet* componentParent, bool setLabels) {
-            // This is deprecated, so we reimplement it ourselves.
-            auto comp = t.triangulateComponents(setLabels);
-            if (! componentParent)
-                componentParent = &t;
-            for (auto& c : comp)
-                componentParent->insertChildLast(c.release());
-            return comp.size();
-        },
-            pybind11::arg("componentParent") = nullptr,
-            pybind11::arg("setLabels") = true)
         .def("homology", &Triangulation<2>::homology,
             pybind11::return_value_policy::reference_internal)
         .def("homologyH1", &Triangulation<2>::homologyH1,

@@ -354,18 +354,6 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("forceOriented") = false)
         .def("triangulateComponents", &Triangulation<3>::triangulateComponents,
             pybind11::arg("setLabels") = false)
-        .def("splitIntoComponents", [](Triangulation<3>& t,
-                regina::Packet* componentParent, bool setLabels) {
-            // This is deprecated, so we reimplement it ourselves.
-            auto comp = t.triangulateComponents(setLabels);
-            if (! componentParent)
-                componentParent = &t;
-            for (auto& c : comp)
-                componentParent->insertChildLast(c.release());
-            return comp.size();
-        },
-            pybind11::arg("componentParent") = nullptr,
-            pybind11::arg("setLabels") = true)
         .def("summands", &Triangulation<3>::summands,
             pybind11::arg("setLabels") = false)
         .def("connectedSumDecomposition", [](Triangulation<3>& t,

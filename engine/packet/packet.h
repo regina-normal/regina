@@ -51,7 +51,6 @@
 #include "file/fileformat.h"
 #include "packet/packettype.h"
 #include "utilities/safepointeebase.h"
-#include "utilities/xmlutils.h"
 
 namespace regina {
 
@@ -1796,33 +1795,7 @@ class PacketOf : public Packet {
             return new PacketOf(*this);
         }
         virtual void writeXMLPacketData(std::ostream& out, FileFormat format,
-                bool anon, PacketRefs& refs) const override {
-            XMLWriter<Held> writer(data_, out, format);
-            writer.openPre();
-            out << " label=\"" << regina::xml::xmlEncodeSpecialChars(label())
-                << "\"";
-
-            // TODO: Use refs for strings.
-
-            auto pos = refs.find(this);
-            if (pos != refs.end()) {
-                // Someone has asked for this packet to store its ID.
-                out << " id=\"" << internalID() << "\"";
-                pos->second = true; // Indicate this packet is now being written.
-            } else if (anon) {
-                // Nobody *asked* for this packet to be referred to, but it is
-                // still being written as anonymous block.  It's not clear how
-                // such a situation could arise in practice, but regardless,
-                // we should note that the packet has been "written ahead".
-                out << " id=\"" << internalID() << "\"";
-                refs.insert({ this, true });
-            }
-
-            writer.openPost();
-            writer.writeContent();
-            writeXMLTreeData(out, format, anon, refs);
-            writer.close();
-        }
+                bool anon, PacketRefs& refs) const override;
 };
 
 #define REGINA_PACKET_DATA(class_, id) \

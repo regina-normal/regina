@@ -1060,7 +1060,8 @@ Version 7.0  [ TODO ]
               triangulateComponents() with different behaviour: it does not
               insert the results into the packet tree, and does not assign
               packet labels by default (but this is still an option).
-              The old splitIntoComponents() is kept but deprecated.
+              The old splitIntoComponents() has been removed completely,
+              since it relied on triangulations living in the packet tree.
             - Routines findAllIsomorphisms() and findAllSubcomplexesIn()
               no longer take an output iterator; instead they take a callback
               action and an argument list.  Python supports both this new

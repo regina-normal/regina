@@ -1486,6 +1486,39 @@ Equality type : EqualityType.BY_REFERENCE
 PacketOfLink : class
 Equality type : EqualityType.BY_REFERENCE
 
+PacketOfTriangulation10 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation11 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation12 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation13 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation14 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation15 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation6 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation7 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation8 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation9 : class
+Equality type : EqualityType.BY_REFERENCE
+
 PacketShell : class
 Equality type : EqualityType.BY_VALUE
 

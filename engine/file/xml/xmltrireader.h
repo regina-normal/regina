@@ -42,7 +42,6 @@
 #include "regina-core.h"
 #include "file/xml/xmlalgebrareader.h"
 #include "file/xml/xmlpacketreader.h"
-#include "file/xml/xmlwriter.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/stringutils.h"
 #include <vector>

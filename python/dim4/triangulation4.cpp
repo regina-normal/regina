@@ -179,18 +179,6 @@ void addTriangulation4(pybind11::module_& m) {
         .def("reflect", &Triangulation<4>::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents,
             pybind11::arg("setLabels") = false)
-        .def("splitIntoComponents", [](Triangulation<4>& t,
-                regina::Packet* componentParent, bool setLabels) {
-            // This is deprecated, so we reimplement it ourselves.
-            auto comp = t.triangulateComponents(setLabels);
-            if (! componentParent)
-                componentParent = &t;
-            for (auto& c : comp)
-                componentParent->insertChildLast(c.release());
-            return comp.size();
-        },
-            pybind11::arg("componentParent") = nullptr,
-            pybind11::arg("setLabels") = true)
         .def("intelligentSimplify", &Triangulation<4>::intelligentSimplify)
         .def("simplifyToLocalMinimum",
             &Triangulation<4>::simplifyToLocalMinimum,

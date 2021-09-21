@@ -34,6 +34,7 @@
 #include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "../helpers.h"
+#include "packet/packet.h" // TODO: Remove
 #include "triangulation/generic.h"
 #include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
@@ -70,8 +71,7 @@ namespace {
 
 template <int dim>
 void addTriangulation(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<Triangulation<dim>, regina::Packet,
-            regina::SafePtr<Triangulation<dim>>>(m, name)
+    auto c = pybind11::class_<Triangulation<dim>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<dim>&>())
         .def(pybind11::init<const Triangulation<dim>&, bool>())
@@ -147,18 +147,6 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("triangulateComponents",
             &Triangulation<dim>::triangulateComponents,
             pybind11::arg("setLabels") = false)
-        .def("splitIntoComponents", [](Triangulation<dim>& t,
-                regina::Packet* componentParent, bool setLabels) {
-            // This is deprecated, so we reimplement it ourselves.
-            auto comp = t.triangulateComponents(setLabels);
-            if (! componentParent)
-                componentParent = &t;
-            for (auto& c : comp)
-                componentParent->insertChildLast(c.release());
-            return comp.size();
-        },
-            pybind11::arg("componentParent") = nullptr,
-            pybind11::arg("setLabels") = true)
         .def("eulerCharTri", &Triangulation<dim>::eulerCharTri)
         .def("fundamentalGroup", &Triangulation<dim>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal)
@@ -214,14 +202,15 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
         // We cannot take the addresses of the following properties, so we
         // define getter functions instead.
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            return Triangulation<dim>::typeID;
-        })
         .def_property_readonly_static("dimension", [](pybind11::object) {
             return Triangulation<dim>::dimension;
         })
     ;
     add_pachner<dim>::add(c);
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+    regina::python::add_packet_wrapper<Triangulation<dim>>(
+        m, (std::string("PacketOf") + name).c_str());
 
     m.def("swap",
         (void(*)(Triangulation<dim>&, Triangulation<dim>&))(regina::swap));
