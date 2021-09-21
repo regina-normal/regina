@@ -81,7 +81,7 @@ namespace {
         if (tri->isValid() &&
                 (! (finite == true && tri->isIdeal())) &&
                 (! (finite == false && ! tri->isIdeal()))) {
-            f(tri, tri->isoSig().c_str());
+            f(*tri, tri->isoSig().c_str());
         }
         delete tri;
     }
@@ -104,7 +104,7 @@ namespace {
         if (tri->isValid() &&
                 (! (finite == true && tri->isIdeal())) &&
                 (! (finite == false && ! tri->isIdeal()))) {
-            f(tri, tri->isoSig().c_str());
+            f(*tri, tri->isoSig().c_str());
         }
         delete tri;
     }

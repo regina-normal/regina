@@ -296,7 +296,7 @@ bool Triangulation<3>::order(bool force_oriented) {
 
     // apply the isomorphism
 
-    iso -> applyInPlace(this);
+    iso->applyInPlace(*this);
     delete iso;
 
     // consistency check

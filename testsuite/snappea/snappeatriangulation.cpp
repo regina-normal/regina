@@ -566,10 +566,10 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             delete f8;
         }
 
-        static void testStability(Triangulation<3>* tri, const char* name) {
+        static void testStability(const Triangulation<3>& tri, const char*) {
             // Just make sure SnapPea can work with the triangulation
             // without crashing.
-            SnapPeaTriangulation s(*tri);
+            SnapPeaTriangulation s(tri);
             s.volume();
             s.randomize();
             s.volume();

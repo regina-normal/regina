@@ -438,45 +438,45 @@ class Triangulation3Test : public TriangulationTest<3> {
          * obscenely large.
          */
         void testManualSmall(Triangulation3TestFunction f) {
-            f(&empty, "Empty triangulation");
-            f(&ball, "Single tetrahedron");
-            f(&s3, "S^3");
-            f(&sphere, "Generic S^3");
-            f(&simplicialSphere, "Simplicial S^3");
-            f(&sphereBundle, "S^2 x S^1");
-            f(&twistedSphereBundle, "S^2 x~ S^1");
-            f(&rp3_1, "RP^3 (1 vtx)");
-            f(&rp3_2, "RP^3 (2 vtx)");
-            f(&lens3_1, "L(3,1)");
-            f(&lens8_3, "L(8,3)");
-            f(&lens7_1_loop, "Layered loop L(7,1)");
-            f(&rp3rp3, "RP^3 # RP^3");
-            f(&q32xz3, "S^3 / Q_32 x Z_3");
-            f(&q28, "S^3 / Q_28");
-            f(&weberSeifert, "Weber-Seifert");
-            f(&lst3_4_7, "LST(3,4,7)");
-            f(&figure8, "Figure eight");
-            f(&trefoil, "Trefoil");
-            f(&rp2xs1, "RP^2 x S^1");
-            f(&ballBundle, "Solid torus");
-            f(&twistedBallBundle, "Solid Klein bottle");
-            f(&gieseking, "Gieseking");
-            f(&invalidEdges, "Triangulation with invalid edges");
-            f(&twoProjPlaneCusps, "Triangulation with RP^2 cusps");
-            f(&cuspedGenusTwoTorus, "Cusped solid genus 2 torus");
-            f(&pinchedSolidTorus, "Pinched solid torus");
-            f(&pinchedSolidKB, "Pinched solid Klein bottle");
-            f(&s3_large, "Large S^3");
-            f(&rp3_large, "Large RP^3");
-            f(&lens8_3_large, "Large L(8,3)");
-            f(&q20_large, "Large S^3 / Q_20");
-            f(&ball_large, "4-tetrahedron ball");
-            f(&ball_large_pillows, "4-tetrahedron pillow ball");
-            f(&ball_large_snapped, "3-tetrahedron snapped ball");
-            f(&singleTet_bary, "Subdivided tetrahedron");
-            f(&fig8_bary, "Subdivided figure eight");
-            f(&disjoint2, "Gieseking U (cusped genus 2 torus)");
-            f(&disjoint3,
+            f(empty, "Empty triangulation");
+            f(ball, "Single tetrahedron");
+            f(s3, "S^3");
+            f(sphere, "Generic S^3");
+            f(simplicialSphere, "Simplicial S^3");
+            f(sphereBundle, "S^2 x S^1");
+            f(twistedSphereBundle, "S^2 x~ S^1");
+            f(rp3_1, "RP^3 (1 vtx)");
+            f(rp3_2, "RP^3 (2 vtx)");
+            f(lens3_1, "L(3,1)");
+            f(lens8_3, "L(8,3)");
+            f(lens7_1_loop, "Layered loop L(7,1)");
+            f(rp3rp3, "RP^3 # RP^3");
+            f(q32xz3, "S^3 / Q_32 x Z_3");
+            f(q28, "S^3 / Q_28");
+            f(weberSeifert, "Weber-Seifert");
+            f(lst3_4_7, "LST(3,4,7)");
+            f(figure8, "Figure eight");
+            f(trefoil, "Trefoil");
+            f(rp2xs1, "RP^2 x S^1");
+            f(ballBundle, "Solid torus");
+            f(twistedBallBundle, "Solid Klein bottle");
+            f(gieseking, "Gieseking");
+            f(invalidEdges, "Triangulation with invalid edges");
+            f(twoProjPlaneCusps, "Triangulation with RP^2 cusps");
+            f(cuspedGenusTwoTorus, "Cusped solid genus 2 torus");
+            f(pinchedSolidTorus, "Pinched solid torus");
+            f(pinchedSolidKB, "Pinched solid Klein bottle");
+            f(s3_large, "Large S^3");
+            f(rp3_large, "Large RP^3");
+            f(lens8_3_large, "Large L(8,3)");
+            f(q20_large, "Large S^3 / Q_20");
+            f(ball_large, "4-tetrahedron ball");
+            f(ball_large_pillows, "4-tetrahedron pillow ball");
+            f(ball_large_snapped, "3-tetrahedron snapped ball");
+            f(singleTet_bary, "Subdivided tetrahedron");
+            f(fig8_bary, "Subdivided figure eight");
+            f(disjoint2, "Gieseking U (cusped genus 2 torus)");
+            f(disjoint3,
                 "(S^2 x S^1) U (B^3) U (Figure eight knot complement)");
         }
 
@@ -485,7 +485,7 @@ class Triangulation3Test : public TriangulationTest<3> {
          */
         void testManualAll(Triangulation3TestFunction f) {
             testManualSmall(f);
-            f(&lens100_1, "L(100,1)");
+            f(lens100_1, "L(100,1)");
         }
 
         void makeCanonical() {
@@ -1532,9 +1532,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Pinched solid Klein bottle");
         }
 
-        static void verifyVertexLinks(Triangulation<3>* tri, const char* name) {
-            for (unsigned long i = 0; i < tri->countVertices(); ++i) {
-                Vertex<3>* v = tri->vertex(i);
+        static void verifyVertexLinks(const Triangulation<3>& tri,
+                const char* name) {
+            for (unsigned long i = 0; i < tri.countVertices(); ++i) {
+                Vertex<3>* v = tri.vertex(i);
                 Isomorphism<3>* iso;
 
                 const Triangulation<2>* link = v->buildLink();
@@ -1611,12 +1612,12 @@ class Triangulation3Test : public TriangulationTest<3> {
                 }
 
                 unsigned j, k;
-                Tetrahedron<3>* tet;
+                const Tetrahedron<3>* tet;
                 Perm<4> perm;
                 const regina::Triangle<2> *t, *adj;
                 unsigned vNum;
                 for (j = 0; j < v->degree(); ++j) {
-                    tet = tri->tetrahedron(iso->tetImage(j));
+                    tet = tri.tetrahedron(iso->tetImage(j));
                     perm = iso->facePerm(j);
                     vNum = perm[3];
                     if (tet->vertex(vNum) != v) {
@@ -1645,7 +1646,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                                     << "link has extra adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
                             } else if (tet->adjacentTetrahedron(perm[k]) !=
-                                    tri->tetrahedron(iso->tetImage(
+                                    tri.tetrahedron(iso->tetImage(
                                     adj->index()))) {
                                 std::ostringstream msg;
                                 msg << name
@@ -2002,10 +2003,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Boundary H1(cusped solid genus two torus)", 4);
         }
 
-        static void verifyFundGroupVsH1(Triangulation<3>* tri,
+        static void verifyFundGroupVsH1(const Triangulation<3>& tri,
                 const char* name) {
             GroupPresentation* pi1 =
-                new GroupPresentation(tri->fundamentalGroup());
+                new GroupPresentation(tri.fundamentalGroup());
 
             pi1->intelligentSimplify();
 
@@ -2024,7 +2025,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             AbelianGroup abelian;
             abelian.addGroup(m);
 
-            if (abelian.detail() != tri->homology().detail()) {
+            if (abelian.detail() != tri.homology().detail()) {
                 std::ostringstream msg;
                 msg << "Abelianised fundamental group does not match H1 "
                     "for " << name << ".";
@@ -2033,40 +2034,40 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void fundGroupVsH1() {
-            verifyFundGroupVsH1(&empty, "Empty triangulation");
-            verifyFundGroupVsH1(&ball, "Single tetrahedron");
-            verifyFundGroupVsH1(&s3, "S^3");
-            verifyFundGroupVsH1(&sphere, "Generic S^3");
-            verifyFundGroupVsH1(&simplicialSphere, "Simplicial S^3");
-            verifyFundGroupVsH1(&sphereBundle, "S^2 x S^1");
-            verifyFundGroupVsH1(&twistedSphereBundle, "S^2 x~ S^1");
-            verifyFundGroupVsH1(&rp3_1, "RP^3 (1 vtx)");
-            verifyFundGroupVsH1(&rp3_2, "RP^3 (2 vtx)");
-            verifyFundGroupVsH1(&lens3_1, "L(3,1)");
-            verifyFundGroupVsH1(&lens7_1_loop, "Layered loop L(7,1)");
-            verifyFundGroupVsH1(&lens8_3, "L(8,3)");
-            verifyFundGroupVsH1(&lens8_3_large, "Large L(8,3)");
-            verifyFundGroupVsH1(&rp3rp3, "RP^3 # RP^3");
-            verifyFundGroupVsH1(&q28, "S^3 / Q_28");
-            verifyFundGroupVsH1(&weberSeifert, "Weber-Seifert");
-            verifyFundGroupVsH1(&q32xz3, "S^3 / Q_32 x Z_3");
-            verifyFundGroupVsH1(&lens100_1, "L(100,1)");
-            verifyFundGroupVsH1(&ball_large, "4-tetrahedron ball");
-            verifyFundGroupVsH1(&ball_large_pillows,
+            verifyFundGroupVsH1(empty, "Empty triangulation");
+            verifyFundGroupVsH1(ball, "Single tetrahedron");
+            verifyFundGroupVsH1(s3, "S^3");
+            verifyFundGroupVsH1(sphere, "Generic S^3");
+            verifyFundGroupVsH1(simplicialSphere, "Simplicial S^3");
+            verifyFundGroupVsH1(sphereBundle, "S^2 x S^1");
+            verifyFundGroupVsH1(twistedSphereBundle, "S^2 x~ S^1");
+            verifyFundGroupVsH1(rp3_1, "RP^3 (1 vtx)");
+            verifyFundGroupVsH1(rp3_2, "RP^3 (2 vtx)");
+            verifyFundGroupVsH1(lens3_1, "L(3,1)");
+            verifyFundGroupVsH1(lens7_1_loop, "Layered loop L(7,1)");
+            verifyFundGroupVsH1(lens8_3, "L(8,3)");
+            verifyFundGroupVsH1(lens8_3_large, "Large L(8,3)");
+            verifyFundGroupVsH1(rp3rp3, "RP^3 # RP^3");
+            verifyFundGroupVsH1(q28, "S^3 / Q_28");
+            verifyFundGroupVsH1(weberSeifert, "Weber-Seifert");
+            verifyFundGroupVsH1(q32xz3, "S^3 / Q_32 x Z_3");
+            verifyFundGroupVsH1(lens100_1, "L(100,1)");
+            verifyFundGroupVsH1(ball_large, "4-tetrahedron ball");
+            verifyFundGroupVsH1(ball_large_pillows,
                 "4-tetrahedron pillow ball");
-            verifyFundGroupVsH1(&ball_large_snapped,
+            verifyFundGroupVsH1(ball_large_snapped,
                 "3-tetrahedron snapped ball");
-            verifyFundGroupVsH1(&lst3_4_7, "LST(3,4,7)");
-            verifyFundGroupVsH1(&figure8, "Figure eight");
-            verifyFundGroupVsH1(&trefoil, "Trefoil");
-            verifyFundGroupVsH1(&knot18, "18-crossing knot");
-            verifyFundGroupVsH1(&rp2xs1, "RP^2 x S^1");
-            verifyFundGroupVsH1(&ballBundle, "Solid torus");
-            verifyFundGroupVsH1(&twistedBallBundle, "Solid Klein bottle");
-            verifyFundGroupVsH1(&gieseking, "Gieseking");
-            verifyFundGroupVsH1(&twoProjPlaneCusps,
+            verifyFundGroupVsH1(lst3_4_7, "LST(3,4,7)");
+            verifyFundGroupVsH1(figure8, "Figure eight");
+            verifyFundGroupVsH1(trefoil, "Trefoil");
+            verifyFundGroupVsH1(knot18, "18-crossing knot");
+            verifyFundGroupVsH1(rp2xs1, "RP^2 x S^1");
+            verifyFundGroupVsH1(ballBundle, "Solid torus");
+            verifyFundGroupVsH1(twistedBallBundle, "Solid Klein bottle");
+            verifyFundGroupVsH1(gieseking, "Gieseking");
+            verifyFundGroupVsH1(twoProjPlaneCusps,
                 "Triangulation with RP^2 cusps");
-            verifyFundGroupVsH1(&cuspedGenusTwoTorus,
+            verifyFundGroupVsH1(cuspedGenusTwoTorus,
                 "Cusped solid genus 2 torus");
 
             runCensusAllClosed(verifyFundGroupVsH1);
@@ -2116,18 +2117,18 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFundGroup(pinchedSolidKB, "Z", "Pinched solid Klein bottle");
         }
 
-        static void testZeroEfficiency(Triangulation<3>* tri,
+        static void testZeroEfficiency(const Triangulation<3>& tri,
                 const char* name) {
-            bool ans = tri->isZeroEfficient();
+            bool ans = tri.isZeroEfficient();
 
-            if (tri->isClosed() && tri->isConnected()) {
-                if (tri->countVertices() > 2 && ans) {
+            if (tri.isClosed() && tri.isConnected()) {
+                if (tri.countVertices() > 2 && ans) {
                     std::ostringstream msg;
                     msg << "Triangulation " << name
                         << " has >2 vertices but is reported as 0-efficient.";
                     CPPUNIT_FAIL(msg.str());
-                } else if (tri->countVertices() == 2 && ans &&
-                        (! tri->homology().isTrivial())) {
+                } else if (tri.countVertices() == 2 && ans &&
+                        (! tri.homology().isTrivial())) {
                     std::ostringstream msg;
                     msg << "Triangulation " << name
                         << " has 2 vertices and non-trivial homology "
@@ -2138,11 +2139,11 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Test it the long way, directly from the definition.
             bool expected;
-            if (tri->hasTwoSphereBoundaryComponents())
+            if (tri.hasTwoSphereBoundaryComponents())
                 expected = false;
             else {
                 expected = true;
-                NormalSurfaces s(*tri, regina::NS_STANDARD);
+                NormalSurfaces s(tri, regina::NS_STANDARD);
                 for (const NormalSurface& f : s) {
                     if (f.eulerChar() == 2 &&
                             (! f.hasRealBoundary()) &&
@@ -2290,98 +2291,99 @@ class Triangulation3Test : public TriangulationTest<3> {
                 q32xz3.isIrreducible());
         }
 
-        Triangulation<3>* verifyThreeSphere(Triangulation<3>* tri,
-                const char* name = 0) {
-            if (name)
-                tri->setLabel(name);
-
-            clearProperties(*tri);
-            if (! tri->isSphere()) {
-                CPPUNIT_FAIL(("The 3-sphere " + tri->label() +
-                    " is not recognised as such.").c_str());
+        void verifyThreeSphere(const Triangulation<3>& tri, const char* name) {
+            clearProperties(tri);
+            if (! tri.isSphere()) {
+                std::ostringstream msg;
+                msg << "The 3-sphere " << name <<
+                    " is not recognised as such.";
+                CPPUNIT_FAIL(msg.str());
             }
 
             // Try again with a barycentric subdivision.
-            Triangulation<3> big(*tri);
+            Triangulation<3> big(tri);
             big.barycentricSubdivision();
             clearProperties(big);
             if (! big.isSphere()) {
-                CPPUNIT_FAIL(("The barycentric subdivision of the 3-sphere "
-                    + tri->label() + " is not recognised as such.").c_str());
+                std::ostringstream msg;
+                msg << "The barycentric subdivision of the 3-sphere "
+                    << name << " is not recognised as such.";
+                CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
-                    tri->isConnected()) {
-                clearProperties(*tri);
-                if (! tri->summands().empty()) {
+            if (tri.isValid() && tri.isClosed() && tri.isOrientable() &&
+                    tri.isConnected()) {
+                clearProperties(tri);
+                if (! tri.summands().empty()) {
                     std::ostringstream msg;
-                    msg << "The 3-sphere " << tri->label()
+                    msg << "The 3-sphere " << name
                         << " was reported as having one or more "
                         "connected sum component.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-
-            return tri;
         }
 
-        Triangulation<3>* verifyNotThreeSphere(Triangulation<3>* tri,
-                const char* name = 0) {
-            if (name)
-                tri->setLabel(name);
-
-            clearProperties(*tri);
-            if (tri->isSphere()) {
-                CPPUNIT_FAIL(("The non-3-sphere " + tri->label() +
-                    " is recognised as a 3-sphere.").c_str());
+        void verifyNotThreeSphere(const Triangulation<3>& tri,
+                const char* name) {
+            clearProperties(tri);
+            if (tri.isSphere()) {
+                std::ostringstream msg;
+                msg << "The non-3-sphere " << name <<
+                    " is recognised as a 3-sphere.";
+                CPPUNIT_FAIL(msg.str());
             }
 
             // Try again with a barycentric subdivision.
-            Triangulation<3> big(*tri);
+            Triangulation<3> big(tri);
             big.barycentricSubdivision();
             clearProperties(big);
             if (big.isSphere()) {
-                CPPUNIT_FAIL(("The barycentric subdivision of the non-3-sphere "
-                    + tri->label()
-                    + " is recognised as a 3-sphere.").c_str());
+                std::ostringstream msg;
+                msg << "The barycentric subdivision of the non-3-sphere "
+                    << name << " is recognised as a 3-sphere.";
+                CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
-                    tri->isConnected()) {
-                clearProperties(*tri);
-                if (tri->summands().empty()) {
+            if (tri.isValid() && tri.isClosed() && tri.isOrientable() &&
+                    tri.isConnected()) {
+                clearProperties(tri);
+                if (tri.summands().empty()) {
                     std::ostringstream msg;
-                    msg << "The non-3-sphere " << tri->label()
+                    msg << "The non-3-sphere " << name
                         << " was reported as having no "
                         "connected sum components.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-
-            return tri;
         }
 
         void verifySigThreeSphere(const std::string& sigStr) {
-            delete verifyThreeSphere(generateFromSig(sigStr));
+            Triangulation<3>* t = generateFromSig(sigStr);
+            verifyThreeSphere(*t, sigStr.c_str());
+            delete t;
         }
 
         void verifySigNotThreeSphere(const std::string& sigStr) {
-            delete verifyNotThreeSphere(generateFromSig(sigStr));
+            Triangulation<3>* t = generateFromSig(sigStr);
+            verifyNotThreeSphere(*t, sigStr.c_str());
+            delete t;
         }
 
         void verifyIsoSigThreeSphere(const std::string& sigStr) {
             Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            t->setLabel(sigStr);
-            delete verifyThreeSphere(t);
+            verifyThreeSphere(*t, sigStr.c_str());
+            delete t;
         }
 
         void verifyIsoSigNotThreeSphere(const std::string& sigStr) {
             Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            t->setLabel(sigStr);
-            delete verifyNotThreeSphere(t);
+            verifyNotThreeSphere(*t, sigStr.c_str());
+            delete t;
         }
 
-        static void testThreeSphere6(Triangulation<3>* tri, const char* name) {
+        static void testThreeSphere6(const Triangulation<3>& tri,
+                const char* name) {
             // PRECONDITION: tri has <= 6 tetrahedra.
             //
             // We know from the closed orientable census data that the
@@ -2392,16 +2394,16 @@ class Triangulation3Test : public TriangulationTest<3> {
             // the Poincare homology sphere it is 0.947214.
 
             // What did 3-sphere recognition say?
-            clearProperties(*tri);
-            bool found = tri->isSphere();
+            clearProperties(tri);
+            bool found = tri.isSphere();
 
-            clearProperties(*tri);
-            bool expected = (tri->isValid() &&
-                         tri->isClosed() &&
-                         tri->isOrientable() &&
-                         tri->isConnected() &&
-                         tri->homology().isTrivial() &&
-                         tri->turaevViroApprox(5, 1) < 0.5);
+            clearProperties(tri);
+            bool expected = (tri.isValid() &&
+                         tri.isClosed() &&
+                         tri.isOrientable() &&
+                         tri.isConnected() &&
+                         tri.homology().isTrivial() &&
+                         tri.turaevViroApprox(5, 1) < 0.5);
 
             if (expected && ! found) {
                 std::ostringstream msg;
@@ -2415,10 +2417,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
-                    tri->isConnected()) {
-                clearProperties(*tri);
-                auto comps = tri->summands();
+            if (tri.isValid() && tri.isClosed() && tri.isOrientable() &&
+                    tri.isConnected()) {
+                clearProperties(tri);
+                auto comps = tri.summands();
                 if (expected && ! comps.empty()) {
                     std::ostringstream msg;
                     msg << "The census 3-sphere " << name
@@ -2455,8 +2457,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             // 3-spheres obtained as Lens spaces:
             tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(1,0);
-            tri->setLabel("L(1,0)");
-            delete verifyThreeSphere(tri);
+            verifyThreeSphere(*tri, "L(1,0)");
+            delete tri;
 
             // Non-3-spheres obtained from splitting surface signatures:
             verifySigNotThreeSphere("(aab)(b)");
@@ -2526,8 +2528,8 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // First, one out of the can:
             tri = Example<3>::poincareHomologySphere();
-            delete verifyNotThreeSphere(tri,
-                "Poincare homology sphere (example)");
+            verifyNotThreeSphere(*tri, "Poincare homology sphere (example)");
+            delete tri;
 
             // Poincare homology sphere as a plugged triangular solid torus:
             tri = new Triangulation<3>;
@@ -2545,53 +2547,58 @@ class Triangulation3Test : public TriangulationTest<3> {
             tet[2]->join(1, tet[4], Perm<4>(0,2,3,1));
             tet[2]->join(3, tet[3], Perm<4>(3,1,2,0));
             tet[3]->join(3, tet[4], Perm<4>(0,1,2,3));
-            delete verifyNotThreeSphere(tri,
-                "Poincare homology sphere (plugged)");
+            verifyNotThreeSphere(*tri, "Poincare homology sphere (plugged)");
+            delete tri;
 
             // Poincare homology sphere as an augmented triangular solid
             // torus:
             tri = new Triangulation<3>();
             tri->insertAugTriSolidTorus(2, -1, 3, 1, 5, -4);
-            delete verifyNotThreeSphere(tri,
-                "Poincare homology sphere (aug I)");
+            verifyNotThreeSphere(*tri, "Poincare homology sphere (aug I)");
+            delete tri;
 
             // Poincare homology sphere as another augmented triangular solid
             // torus:
             tri = new Triangulation<3>();
             tri->insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
-            delete verifyNotThreeSphere(tri,
-                "Poincare homology sphere (aug II)");
+            verifyNotThreeSphere(*tri, "Poincare homology sphere (aug II)");
+            delete tri;
 
             // Let's make sure silly things like balls aren't picked up.
             tri = new Triangulation<3>();
             tri->newTetrahedron();
-            delete verifyNotThreeSphere(tri, "Standalone tetrahedron");
+            verifyNotThreeSphere(*tri, "Standalone tetrahedron");
+            delete tri;
 
             tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
-            delete verifyNotThreeSphere(tri, "Snapped tetrahedron");
+            verifyNotThreeSphere(*tri, "Snapped tetrahedron");
+            delete tri;
 
             tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 2);
-            delete verifyNotThreeSphere(tri, "LST(1,2,3)");
+            verifyNotThreeSphere(*tri, "LST(1,2,3)");
+            delete tri;
 
             tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(3, 4);
-            delete verifyNotThreeSphere(tri, "LST(3,4,7)");
+            verifyNotThreeSphere(*tri, "LST(3,4,7)");
+            delete tri;
 
             tri = new Triangulation<3>();
-            delete verifyNotThreeSphere(tri, "Empty triangulation");
+            verifyNotThreeSphere(*tri, "Empty triangulation");
+            delete tri;
 
             // Some disconnected examples.
-            verifyNotThreeSphere(&disjoint2, "Disjoint, 2 components");
-            verifyNotThreeSphere(&disjoint3, "Disjoint, 3 components");
+            verifyNotThreeSphere(disjoint2, "Disjoint, 2 components");
+            verifyNotThreeSphere(disjoint3, "Disjoint, 3 components");
 
             tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(1,0);
             tri->insertLayeredLensSpace(1,0);
-            tri->setLabel("S^3 U S^3");
-            delete verifyNotThreeSphere(tri);
+            verifyNotThreeSphere(*tri, "S^3 U S^3");
+            delete tri;
 
             // An exhaustive census run:
             runCensusMinClosed(&testThreeSphere6);
@@ -2760,7 +2767,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             delete verifyNotThreeBall(tri, "B^3 U B^3");
         }
 
-        static void testSolidTorus4(Triangulation<3>* tri, const char* name) {
+        static void testSolidTorus4(const Triangulation<3>& tri,
+                const char* name) {
             // PRECONDITION: tri is not ideal, and has <= 4 tetrahedra.
             //
             // We know from the bounded orientable census data that the only
@@ -2769,21 +2777,21 @@ class Triangulation3Test : public TriangulationTest<3> {
             // eHLObcdddwuj, both representing SFS [D: (2,1) (3,-2)].
 
             // What did solid torus recognition say?
-            clearProperties(*tri);
-            bool found = tri->isSolidTorus();
+            clearProperties(tri);
+            bool found = tri.isSolidTorus();
 
-            clearProperties(*tri);
-            bool expected = (tri->isValid() &&
-                         (! tri->isIdeal()) &&
-                         tri->isOrientable() &&
-                         tri->isConnected() &&
-                         tri->countBoundaryComponents() == 1 &&
-                         tri->boundaryComponent(0)->eulerChar() == 0 &&
-                         tri->homology().isZ() &&
-                         (tri->size() < 4 ||
-                            (tri->size() == 4 &&
-                            tri->isoSig() != "eHLObcdddwun" &&
-                            tri->isoSig() != "eHLObcdddwuj")));
+            clearProperties(tri);
+            bool expected = (tri.isValid() &&
+                         (! tri.isIdeal()) &&
+                         tri.isOrientable() &&
+                         tri.isConnected() &&
+                         tri.countBoundaryComponents() == 1 &&
+                         tri.boundaryComponent(0)->eulerChar() == 0 &&
+                         tri.homology().isZ() &&
+                         (tri.size() < 4 ||
+                            (tri.size() == 4 &&
+                            tri.isoSig() != "eHLObcdddwun" &&
+                            tri.isoSig() != "eHLObcdddwuj")));
 
             if (expected && ! found) {
                 std::ostringstream msg;
@@ -3300,8 +3308,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyTVS2xS1(7); verifyTVS2xS1(8);
         }
 
-        static void verifyBary(Triangulation<3>* tri, const char* name) {
-            Triangulation<3> b(*tri);
+        static void verifyBary(const Triangulation<3>& tri, const char* name) {
+            Triangulation<3> b(tri);
             if (b.isOrientable())
                 b.orient();
 
@@ -3310,7 +3318,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Note that subdivisions can turn invalid into valid, but
             // they can never turn valid into invalid.
-            if (tri->isValid() && ! b.isValid()) {
+            if (tri.isValid() && ! b.isValid()) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks validity.";
                 CPPUNIT_FAIL(msg.str());
@@ -3318,13 +3326,13 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Subdivisions can also turn invalid into ideal.
             // Only consider the valid -> valid case here.
-            if (tri->isValid() && (tri->isIdeal() != b.isIdeal())) {
+            if (tri.isValid() && (tri.isIdeal() != b.isIdeal())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks idealness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->hasBoundaryTriangles() != b.hasBoundaryTriangles()) {
+            if (tri.hasBoundaryTriangles() != b.hasBoundaryTriangles()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks boundary triangles.";
@@ -3332,33 +3340,33 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // As with ideal, consider valid inputs only.
-            if (tri->isValid() && (tri->isClosed() != b.isClosed())) {
+            if (tri.isValid() && (tri.isClosed() != b.isClosed())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks closedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isOrientable() != b.isOrientable()) {
+            if (tri.isOrientable() != b.isOrientable()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isOrientable() != b.isOriented()) {
+            if (tri.isOrientable() != b.isOriented()) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isConnected() != b.isConnected()) {
+            if (tri.isConnected() != b.isConnected()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks connectedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->countComponents() != b.countComponents()) {
+            if (tri.countComponents() != b.countComponents()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks connected components.";
@@ -3367,7 +3375,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Invalid vertices can become new boundary components.
             // Only consider valid inputs here.
-            if (tri->isValid() && (tri->countBoundaryComponents() !=
+            if (tri.isValid() && (tri.countBoundaryComponents() !=
                     b.countBoundaryComponents())) {
                 std::ostringstream msg;
                 msg << name
@@ -3377,16 +3385,16 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // The same problem with invalid triangulations and boundary
             // components bites us with Euler characteristic also.
-            if (tri->isValid() &&
-                    (tri->eulerCharTri() != b.eulerCharTri())) {
+            if (tri.isValid() &&
+                    (tri.eulerCharTri() != b.eulerCharTri())) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks Euler char (tri).";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isValid() &&
-                    (tri->eulerCharManifold() != b.eulerCharManifold())) {
+            if (tri.isValid() &&
+                    (tri.eulerCharManifold() != b.eulerCharManifold())) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks Euler char (mfd).";
@@ -3395,25 +3403,25 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Now run more expensive tests that will be better with
             // *small* triangulations.
-            if (! tri->isValid())
+            if (! tri.isValid())
                 return;
 
             b.intelligentSimplify();
 
-            if (tri->isOrientable() != b.isOriented()) {
+            if (tri.isOrientable() != b.isOriented()) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision followed by "
                     "simplification breaks orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri->homology() == b.homology())) {
+            if (! (tri.homology() == b.homology())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri->homologyH2() == b.homologyH2())) {
+            if (! (tri.homologyH2() == b.homologyH2())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
@@ -3424,9 +3432,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualAll(verifyBary);
         }
 
-        static void verifyIdealToFinite(Triangulation<3>* tri,
+        static void verifyIdealToFinite(const Triangulation<3>& tri,
                 const char* name) {
-            Triangulation<3> finite(*tri);
+            Triangulation<3> finite(tri);
             finite.idealToFinite();
             clearProperties(finite);
 
@@ -3448,7 +3456,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
-            for (regina::Edge<3>* edge : tri->edges())
+            for (regina::Edge<3>* edge : tri.edges())
                 if (! edge->isValid())
                     ++oldInvEdges;
             for (regina::Edge<3>* edge : finite.edges())
@@ -3462,7 +3470,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Make sure we don't change the number of boundary components.
-            if (tri->countBoundaryComponents() !=
+            if (tri.countBoundaryComponents() !=
                     finite.countBoundaryComponents()) {
                 std::ostringstream msg;
                 msg << name << ": idealToFinite() changes "
@@ -3472,11 +3480,11 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // In the case of a valid triangulation, ensure that the
             // boundary components are topologically unchanged.
-            if (tri->isValid()) {
+            if (tri.isValid()) {
                 typedef std::pair<long, bool> BCSpec;
 
                 std::vector<BCSpec> bcOld;
-                for (BoundaryComponent<3>* bc : tri->boundaryComponents())
+                for (BoundaryComponent<3>* bc : tri.boundaryComponents())
                     bcOld.push_back(BCSpec(bc->eulerChar(),
                         bc->isOrientable()));
                 std::sort(bcOld.begin(), bcOld.end());
@@ -3500,9 +3508,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualAll(verifyIdealToFinite);
         }
 
-        static void verifyFiniteToIdeal(Triangulation<3>* tri,
+        static void verifyFiniteToIdeal(const Triangulation<3>& tri,
                 const char* name) {
-            Triangulation<3> ideal(*tri);
+            Triangulation<3> ideal(tri);
             ideal.finiteToIdeal();
             clearProperties(ideal);
 
@@ -3515,7 +3523,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
-            for (regina::Edge<3>* edge : tri->edges())
+            for (regina::Edge<3>* edge : tri.edges())
                 if (! edge->isValid())
                     ++oldInvEdges;
             for (regina::Edge<3>* edge : ideal.edges())
@@ -3530,11 +3538,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             // In the case of a valid triangulation, ensure that the
             // boundary components are topologically unchanged, except
             // for sphere which must vanish.
-            if (tri->isValid()) {
+            if (tri.isValid()) {
                 typedef std::pair<long, bool> BCSpec;
 
                 std::vector<BCSpec> bcOld;
-                for (BoundaryComponent<3>* bc : tri->boundaryComponents())
+                for (BoundaryComponent<3>* bc : tri.boundaryComponents())
                     if (bc->eulerChar() != 2)
                         bcOld.push_back(BCSpec(bc->eulerChar(),
                             bc->isOrientable()));
@@ -3636,19 +3644,20 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        static void verifyPuncture(Triangulation<3>* tri, const char* name) {
-            unsigned long n = tri->size();
+        static void verifyPuncture(const Triangulation<3>& tri,
+                const char* name) {
+            unsigned long n = tri.size();
             if (n == 0)
                 return;
 
             for (unsigned long i = 0; i <= n; ++i) {
-                Triangulation<3> punc(*tri);
-                Tetrahedron<3>* origTet;
+                Triangulation<3> punc(tri);
+                const Tetrahedron<3>* origTet;
                 if (i == n) {
-                    origTet = tri->tetrahedron(0);
+                    origTet = tri.tetrahedron(0);
                     punc.puncture();
                 } else {
-                    origTet = tri->tetrahedron(i);
+                    origTet = tri.tetrahedron(i);
                     punc.puncture(punc.tetrahedron(i));
                 }
 
@@ -3659,42 +3668,42 @@ class Triangulation3Test : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.isValid() != tri->isValid()) {
+                if (punc.isValid() != tri.isValid()) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture changes validity.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.isIdeal() != tri->isIdeal()) {
+                if (punc.isIdeal() != tri.isIdeal()) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture changes idealness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.isStandard() != tri->isStandard()) {
+                if (punc.isStandard() != tri.isStandard()) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture changes standardness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.isConnected() != tri->isConnected()) {
+                if (punc.isConnected() != tri.isConnected()) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture changes connectedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.isOrientable() != tri->isOrientable()) {
+                if (punc.isOrientable() != tri.isOrientable()) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture changes orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.isOriented() != tri->isOriented()) {
+                if (punc.isOriented() != tri.isOriented()) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture changes orientedness.";
@@ -3709,7 +3718,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 }
 
                 if (punc.countBoundaryComponents() !=
-                        tri->countBoundaryComponents() + 1) {
+                        tri.countBoundaryComponents() + 1) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture gives wrong # boundary components.";
@@ -3717,7 +3726,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 }
 
                 if (punc.countBoundaryTriangles() !=
-                        tri->countBoundaryTriangles() + 2) {
+                        tri.countBoundaryTriangles() + 2) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture gives wrong # boundary triangles.";
@@ -3758,29 +3767,29 @@ class Triangulation3Test : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.eulerCharTri() != tri->eulerCharTri() + 1) {
+                if (punc.eulerCharTri() != tri.eulerCharTri() + 1) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture gives wrong Euler characteristic (tri).";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.eulerCharManifold() != tri->eulerCharManifold() + 1) {
+                if (punc.eulerCharManifold() != tri.eulerCharManifold() + 1) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "
                         << "puncture gives wrong Euler characteristic (mfd).";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri->isValid()) {
-                    if (! (punc.homology() == tri->homology())) {
+                if (tri.isValid()) {
+                    if (! (punc.homology() == tri.homology())) {
                         std::ostringstream msg;
                         msg << name << ", tet " << i << ": "
                             << "puncture changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    AbelianGroup expectH2(tri->homologyH2());
+                    AbelianGroup expectH2(tri.homologyH2());
                     AbelianGroup foundH2(punc.homologyH2());
                     Component<3>* c = origTet->component();
                     if (! c->isClosed()) {
@@ -3809,18 +3818,18 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllIdeal(verifyPuncture, true);
         }
 
-        static void verifyConnectedSumWithSelf(Triangulation<3>* tri,
+        static void verifyConnectedSumWithSelf(const Triangulation<3>& tri,
                 const char* name) {
-            if (tri->countComponents() != 1)
+            if (tri.countComponents() != 1)
                 return;
 
-            Triangulation<3> t(*tri);
+            Triangulation<3> t(tri);
             t.connectedSumWith(t);
 
             // TODO: Check that homology doubles.
 
             // All of our remaining tests are for closed manifolds.
-            if (! tri->isClosed())
+            if (! tri.isClosed())
                 return;
 
             if (! t.isClosed()) {
@@ -3830,15 +3839,15 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // We are about to start running exponential-time algorithms.
-            if (tri->size() > 10)
+            if (tri.size() > 10)
                 return;
 
             std::vector<std::unique_ptr<Triangulation<3>>> sOld, sNew;
             try {
-                sOld = tri->summands();
+                sOld = tri.summands();
                 sNew = t.summands();
             } catch (const regina::UnsolvedCase&) {
-                if (tri->isOrientable()) {
+                if (tri.isOrientable()) {
                     std::ostringstream msg;
                     msg << name << ": tri and/or tri # tri failed to "
                         "compute connected sum decomposition.";
@@ -3861,8 +3870,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (sOld.size() == 1) {
                 // There should be two summands, each homeomorphic
                 // to the original.
-                if (sNew[0]->homology() != tri->homology() ||
-                        sNew[1]->homology() != tri->homology()) {
+                if (sNew[0]->homology() != tri.homology() ||
+                        sNew[1]->homology() != tri.homology()) {
                     std::ostringstream msg;
                     msg << name << ": tri # tri has "
                         "summands with the wrong homology.";
@@ -4142,16 +4151,17 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyRetriangulation("hLALPkbcbefgfghxwnxark", 3, 2);
         }
 
-        static void testReordering(Triangulation<3>* t, const char* name) {
-            Triangulation<3> a(*t);
+        static void testReordering(const Triangulation<3>& t,
+                const char* name) {
+            Triangulation<3> a(t);
             a.reorderTetrahedraBFS();
             clearProperties(a);
 
-            Triangulation<3> b(*t);
+            Triangulation<3> b(t);
             b.reorderTetrahedraBFS(true);
             clearProperties(b);
 
-            Triangulation<3>* c = Isomorphism<3>::random(t->size()).apply(t);
+            Triangulation<3>* c = Isomorphism<3>::random(t.size()).apply(t);
             clearProperties(*c);
 
             Triangulation<3> d(*c);
@@ -4162,28 +4172,28 @@ class Triangulation3Test : public TriangulationTest<3> {
             e.reorderTetrahedraBFS(true);
             clearProperties(e);
 
-            if (! t->isIsomorphicTo(a)) {
+            if (! t.isIsomorphicTo(a)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " changes its isomorphism class when its tetrahedra "
                     "are reordered in the forward direction.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t->isIsomorphicTo(b)) {
+            if (! t.isIsomorphicTo(b)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " changes its isomorphism class when its tetrahedra "
                     "are reordered in the reverse direction.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t->isIsomorphicTo(*c)) {
+            if (! t.isIsomorphicTo(*c)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " changes its isomorphism class when a random "
                     "isomorphism is applied.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t->isIsomorphicTo(d)) {
+            if (! t.isIsomorphicTo(d)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " changes its isomorphism class when a random "
@@ -4191,7 +4201,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     "reordered in the forward direction.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t->isIsomorphicTo(e)) {
+            if (! t.isIsomorphicTo(e)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " changes its isomorphism class when a random "
@@ -4267,9 +4277,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyPachnerSimplicial<k>();
         }
 
-        static void verifyMinimiseBoundaryDoesNothing(Triangulation<3>* tri,
-                const char* name) {
-            Triangulation<3> copy(*tri);
+        static void verifyMinimiseBoundaryDoesNothing(
+                const Triangulation<3>& tri, const char* name) {
+            Triangulation<3> copy(tri);
             if (copy.minimiseBoundary()) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() "
@@ -4277,7 +4287,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! copy.isIdenticalTo(*tri)) {
+            if (! copy.isIdenticalTo(tri)) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() "
                     "made changes when it should not.";
@@ -4285,21 +4295,21 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        static bool hasMinimalBoundary(const Triangulation<3>* tri) {
-            for (auto b : tri->boundaryComponents())
+        static bool hasMinimalBoundary(const Triangulation<3>& tri) {
+            for (auto b : tri.boundaryComponents())
                 if (b->countTriangles() > 2 && b->countVertices() > 1)
                     return false;
             return true;
         }
 
-        static void verifyMinimiseBoundary(Triangulation<3>* tri,
+        static void verifyMinimiseBoundary(const Triangulation<3>& tri,
                 const char* name) {
             if (hasMinimalBoundary(tri)) {
                 verifyMinimiseBoundaryDoesNothing(tri, name);
                 return;
             }
 
-            Triangulation<3> copy(*tri);
+            Triangulation<3> copy(tri);
             if (copy.isOrientable())
                 copy.orient();
 
@@ -4310,47 +4320,47 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (copy.isIsomorphicTo(*tri)) {
+            if (copy.isIsomorphicTo(tri)) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() "
                     "made no changes when it should.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! hasMinimalBoundary(&copy)) {
+            if (! hasMinimalBoundary(copy)) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() "
                     "did not minimise boundary.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->eulerCharTri() != copy.eulerCharTri()) {
+            if (tri.eulerCharTri() != copy.eulerCharTri()) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() changed "
                     "Euler characteristic (triangulation).";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->eulerCharManifold() != copy.eulerCharManifold()) {
+            if (tri.eulerCharManifold() != copy.eulerCharManifold()) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() changed "
                     "Euler characteristic (manifold).";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isOrientable() != copy.isOriented()) {
+            if (tri.isOrientable() != copy.isOriented()) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() broke orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->homology() != copy.homology()) {
+            if (tri.homology() != copy.homology()) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() changed homology.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            bool isOrig0eff = ! tri->nonTrivialSphereOrDisc();
+            bool isOrig0eff = ! tri.nonTrivialSphereOrDisc();
             bool isPost0eff = ! copy.nonTrivialSphereOrDisc();
 
             if (isOrig0eff && ! isPost0eff) {
@@ -4370,7 +4380,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             {
                 const char* sig = "gffjQafeefaaaa";
                 Triangulation<3>* tri = Triangulation<3>::fromIsoSig(sig);
-                verifyMinimiseBoundary(tri, sig);
+                verifyMinimiseBoundary(*tri, sig);
                 delete tri;
             }
         }
@@ -4417,7 +4427,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     unsigned idx = bdry->index();
 
                     Isomorphism<3> iso = Isomorphism<3>::random(t.size());
-                    iso.applyInPlace(&t);
+                    iso.applyInPlace(t);
 
                     Perm<4> p = iso.facetPerm(idx);
                     if (r1 <= 2) {

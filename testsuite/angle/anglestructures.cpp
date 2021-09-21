@@ -446,11 +446,12 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             return ok;
         }
 
-        static void verifyTreeVsDD(Triangulation<3>* tri, const char* name) {
-            AngleStructures all(*tri, false);
-            AngleStructures tautTree(*tri, true);
-            AngleStructures tautDD(*tri, true, regina::AS_ALG_DD);
-            bool strictTree = tri->hasStrictAngleStructure();
+        static void verifyTreeVsDD(const Triangulation<3>& tri,
+                const char* name) {
+            AngleStructures all(tri, false);
+            AngleStructures tautTree(tri, true);
+            AngleStructures tautDD(tri, true, regina::AS_ALG_DD);
+            bool strictTree = tri.hasStrictAngleStructure();
 
             if (all.isTautOnly()) {
                 std::ostringstream msg;

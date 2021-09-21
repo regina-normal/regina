@@ -41,13 +41,17 @@ using regina::Triangulation;
 
 /**
  * Clear all computed properties of the given triangulation.
+ *
+ * We allow the triangulation to be const, since the intent of this
+ * operation is to not change the triangulation, but just to force it to
+ * forget its cached properties.
  */
 template <int dim>
-void clearProperties(Triangulation<dim>& tri) {
+void clearProperties(const Triangulation<dim>& tri) {
     // Make and undo a trivial modification that will cause all
     // computed properties to be flushed.
-    tri.newSimplex();
-    tri.removeSimplexAt(tri.size() - 1);
+    const_cast<Triangulation<dim>&>(tri).newSimplex();
+    const_cast<Triangulation<dim>&>(tri).removeSimplexAt(tri.size() - 1);
 }
 
 /**
@@ -56,12 +60,12 @@ void clearProperties(Triangulation<dim>& tri) {
  */
 template <int dim, int subdim>
 struct FaceHelper {
-    static size_t count(Triangulation<dim>& tri) {
+    static size_t count(const Triangulation<dim>& tri) {
         return tri.template countFaces<subdim>();
     }
 
-    static regina::Face<dim, subdim>* face(
-            Triangulation<dim>& tri, size_t index) {
+    static regina::Face<dim, subdim>* face(Triangulation<dim>& tri,
+            size_t index) {
         return tri.template face<subdim>(index);
     }
 
@@ -74,7 +78,7 @@ struct FaceHelper {
 
 template <int dim>
 struct FaceHelper<dim, dim> {
-    static size_t count(Triangulation<dim>& tri) {
+    static size_t count(const Triangulation<dim>& tri) {
         return tri.size();
     }
 
@@ -618,21 +622,21 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyOrient(const Triangulation<dim>* original,
-                const Triangulation<dim>* oriented, const char* name) {
-            if (original->isOrientable() != oriented->isOrientable()) {
+        static void verifyOrient(const Triangulation<dim>& original,
+                const Triangulation<dim>& oriented, const char* name) {
+            if (original.isOrientable() != oriented.isOrientable()) {
                 std::ostringstream msg;
                 msg << "Oriented version of " << name
                     << " has different orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (original->isOrientable() && ! oriented->isOriented()) {
+            if (original.isOrientable() && ! oriented.isOriented()) {
                 std::ostringstream msg;
                 msg << "Oriented version of " << name
                     << " is not seen to be oriented.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! oriented->isIsomorphicTo(*original)) {
+            if (! oriented.isIsomorphicTo(original)) {
                 std::ostringstream msg;
                 msg << "Oriented version of " << name
                     << " is not isomorphic to the original.";
@@ -640,47 +644,49 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyOrient(Triangulation<dim>* tri, const char* name) {
+        static void verifyOrient(const Triangulation<dim>& tri,
+                const char* name) {
             const int trials = 10;
 
-            Triangulation<dim>* oriented = new Triangulation<dim>(*tri, false);
-            oriented->orient();
-            clearProperties(*oriented);
-            verifyOrient(tri, oriented, name);
-            delete oriented;
+            {
+                Triangulation<dim> oriented(tri, false);
+                oriented.orient();
+                clearProperties(oriented);
+                verifyOrient(tri, oriented, name);
+            }
 
             for (int i = 0; i < trials; ++i) {
                 Triangulation<dim>* t =
-                    Isomorphism<dim>::random(tri->size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size()).apply(tri);
 
                 t->orient();
                 clearProperties(*t);
-                verifyOrient(tri, t, name);
+                verifyOrient(tri, *t, name);
                 delete t;
             }
         }
 
-        static void verifyMakeCanonical(Triangulation<dim>* tri,
+        static void verifyMakeCanonical(const Triangulation<dim>& tri,
                 const char* name) {
             // Currently makeCanonical() insists on connected
             // triangulations only.
-            if (! tri->isConnected())
+            if (! tri.isConnected())
                 return;
 
             const int trials = 10;
 
-            Triangulation<dim> canonical(*tri);
+            Triangulation<dim> canonical(tri);
             canonical.makeCanonical();
             clearProperties(canonical);
 
             for (int i = 0; i < trials; ++i) {
                 Triangulation<dim>* t =
-                    Isomorphism<dim>::random(tri->size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size()).apply(tri);
 
                 t->makeCanonical();
                 clearProperties(*t);
 
-                if (! t->isIsomorphicTo(*tri)) {
+                if (! t->isIsomorphicTo(tri)) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
                         << name << " is non-isomorphic.";
@@ -697,9 +703,9 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyIsomorphismSignature(Triangulation<dim>* tri,
+        static void verifyIsomorphismSignature(const Triangulation<dim>& tri,
                 const char* name) {
-            std::string sig = tri->isoSig();
+            std::string sig = tri.isoSig();
 
             if (sig.empty()) {
                 std::ostringstream msg;
@@ -708,7 +714,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
-            if (tri->isEmpty()) {
+            if (tri.isEmpty()) {
                 if (sigSize != 0) {
                     std::ostringstream msg;
                     msg << name << ": isoSigSize() returns incorrect value: "
@@ -717,10 +723,10 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             } else {
                 size_t c;
-                for (c = 0; c < tri->countComponents(); ++c)
-                    if (sigSize == tri->component(c)->size())
+                for (c = 0; c < tri.countComponents(); ++c)
+                    if (sigSize == tri.component(c)->size())
                         break;
-                if (c == tri->countComponents()) {
+                if (c == tri.countComponents()) {
                     std::ostringstream msg;
                     msg << name << ": isoSigSize() returns incorrect value: "
                         << sigSize << '.';
@@ -735,7 +741,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     "signature \"" << sig << "\".";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! rebuild->isIsomorphicTo(*tri)) {
+            if (! rebuild->isIsomorphicTo(tri)) {
                 std::ostringstream msg;
                 msg << name << ": Reconstruction from \"" << sig
                     << "\" is not isomorphic to the original.";
@@ -752,7 +758,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     "signature \"" << sig << "\" with whitespace.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! rebuild->isIsomorphicTo(*tri)) {
+            if (! rebuild->isIsomorphicTo(tri)) {
                 std::ostringstream msg;
                 msg << name << ": Reconstruction from \"" << sig
                     << "\" with whitespace is not isomorphic to the original.";
@@ -760,13 +766,13 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
             delete rebuild;
 
-            if (tri->isEmpty())
+            if (tri.isEmpty())
                 return;
 
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
                 Triangulation<dim>* other =
-                    Isomorphism<dim>::random(tri->size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size()).apply(tri);
 
                 otherSig = other->isoSig();
                 if (otherSig != sig) {
@@ -779,8 +785,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete other;
             }
             for (unsigned i = 0; i < 10; ++i) {
-                Triangulation<dim> other(*tri);
-                Isomorphism<dim>::random(tri->size()).applyInPlace(&other);
+                Triangulation<dim> other(tri);
+                Isomorphism<dim>::random(tri.size()).applyInPlace(other);
 
                 otherSig = other.isoSig();
                 if (otherSig != sig) {
@@ -792,9 +798,9 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             }
 
-            if (tri->countComponents() == 1) {
+            if (tri.countComponents() == 1) {
                 Isomorphism<dim>* relabelling;
-                tri->isoSig(&relabelling);
+                tri.isoSig(&relabelling);
 
                 rebuild = Triangulation<dim>::fromIsoSig(sig);
                 Triangulation<dim>* relabel = relabelling->apply(tri);
@@ -845,16 +851,16 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyDoubleCover(Triangulation<dim>* tri,
+        static void verifyDoubleCover(const Triangulation<dim>& tri,
                 const char* name) {
             // PRE: tri is either empty or connected.
-            if (! tri->isConnected())
+            if (! tri.isConnected())
                 return;
 
-            Triangulation<dim> cover(*tri, false);
+            Triangulation<dim> cover(tri, false);
             cover.makeDoubleCover();
 
-            if (tri->isEmpty()) {
+            if (tri.isEmpty()) {
                 if (! cover.isEmpty())
                     CPPUNIT_FAIL("Empty triangulation: "
                         "Double cover is non-empty.");
@@ -862,7 +868,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             // We have a non-empty connected triangulation.
-            if (tri->isOrientable()) {
+            if (tri.isOrientable()) {
                 // We should simply come away with two identical copies of tri.
                 auto components = cover.triangulateComponents();
                 if (components.size() != 2) {
@@ -873,7 +879,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
 
                 for (const auto& c : components) {
-                    if (! tri->isIsomorphicTo(*c)) {
+                    if (! tri.isIsomorphicTo(*c)) {
                         std::ostringstream msg;
                         msg << name << ": Orientable double cover "
                             "contains a component not isomorphic to the "
@@ -897,7 +903,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (cover.size() != 2 * tri->size()) {
+                if (cover.size() != 2 * tri.size()) {
                     std::ostringstream msg;
                     msg << name << ": Orientable double cover does not "
                         "contain precisely twice as many simplices.";
@@ -905,7 +911,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
 
                 if (cover.template countFaces<dim-1>() !=
-                        2 * tri->template countFaces<dim-1>()) {
+                        2 * tri.template countFaces<dim-1>()) {
                     std::ostringstream msg;
                     msg << name << ": Orientable double cover does not "
                         "contain precisely twice as many "
@@ -913,24 +919,24 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri->isValid())
+                if (tri.isValid())
                     DoubleCoverHelper<dim, dim-2>::verifyFaceCounts(
-                        *tri, cover, name);
+                        tri, cover, name);
 
                 /**
                  * Commenting out this claim about homology groups,
                  * which is nonsense.
                 // We expect the first homology group to be identical,
                 // or to be missing a copy of Z_2.
-                if (tri->isValid() && (tri->homology() != cover.homology())) {
+                if (tri.isValid() && (tri.homology() != cover.homology())) {
                     regina::AbelianGroup hCover(cover.homology());
                     hCover.addTorsionElement(2);
-                    if (tri->homology() != hCover) {
+                    if (tri.homology() != hCover) {
                         std::ostringstream msg;
                         msg << name << ": Orientable double cover has H1 = "
                             << cover.homology().str()
                             << ", which does not match the original H1 = "
-                            << tri->homology().str() << '.';
+                            << tri.homology().str() << '.';
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
@@ -938,17 +944,17 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyBoundaryFacets(Triangulation<dim>* tri,
+        static void verifyBoundaryFacets(const Triangulation<dim>& tri,
                 const char* name) {
             unsigned long found = 0;
 
             unsigned long i, j;
-            for (i = 0; i < tri->size(); ++i)
+            for (i = 0; i < tri.size(); ++i)
                 for (j = 0; j <= dim; ++j)
-                    if (! tri->simplex(i)->adjacentSimplex(j))
+                    if (! tri.simplex(i)->adjacentSimplex(j))
                         ++found;
 
-            if (found != tri->countBoundaryFacets()) {
+            if (found != tri.countBoundaryFacets()) {
                 std::ostringstream msg;
                 msg << name << " reports the wrong number of boundary facets.";
                 CPPUNIT_FAIL(msg.str());
@@ -956,8 +962,8 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             unsigned long c;
             regina::Component<dim>* comp;
-            for (c = 0; c < tri->countComponents(); ++c) {
-                comp = tri->component(c);
+            for (c = 0; c < tri.countComponents(); ++c) {
+                comp = tri.component(c);
                 found = 0;
 
                 for (i = 0; i < comp->size(); ++i)
@@ -1018,9 +1024,9 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyBoundaryBuild(Triangulation<dim>* tri,
+        static void verifyBoundaryBuild(const Triangulation<dim>& tri,
                 const char* name) {
-            for (auto bc : tri->boundaryComponents())
+            for (auto bc : tri.boundaryComponents())
                 if (BoundaryTypeHelper<dim>::isReal(bc)) {
                     // We have a real boundary component.
                     const Triangulation<dim-1>* built = bc->build();
@@ -1099,11 +1105,11 @@ class TriangulationTest : public CppUnit::TestFixture {
         }
 
         template <int k>
-        static void verifyPachnerDetail(Triangulation<dim>* tri,
+        static void verifyPachnerDetail(const Triangulation<dim>& tri,
                 bool standardSimplex, const char* name) {
             // Tests Pachner moves on k-faces, and their inverses.
-            for (size_t i = 0; i < FaceHelper<dim, k>::count(*tri); ++i) {
-                Triangulation<dim> large(*tri);
+            for (size_t i = 0; i < FaceHelper<dim, k>::count(tri); ++i) {
+                Triangulation<dim> large(tri);
                 if (large.isOrientable())
                     large.orient();
 
@@ -1145,7 +1151,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
 
                 if (! res) {
-                    if (large.size() != tri->size()) {
+                    if (large.size() != tri.size()) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             "disallowed "
@@ -1153,8 +1159,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                             "changed # simplices.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    Triangulation<dim> oriented(*tri);
-                    if (tri->isOrientable())
+                    Triangulation<dim> oriented(tri);
+                    if (tri.isOrientable())
                         oriented.orient();
                     if (! large.isIdenticalTo(oriented)) {
                         std::ostringstream msg;
@@ -1169,7 +1175,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
                 // The move was performed.
 
-                if (large.size() != tri->size() + 2 * k - dim) {
+                if (large.size() != tri.size() + 2 * k - dim) {
                     std::ostringstream msg;
                     msg << name << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1177,7 +1183,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.isValid() != tri->isValid()) {
+                if (large.isValid() != tri.isValid()) {
                     std::ostringstream msg;
                     msg << name << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1185,7 +1191,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.isOrientable() != tri->isOrientable()) {
+                if (large.isOrientable() != tri.isOrientable()) {
                     std::ostringstream msg;
                     msg << name << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1193,7 +1199,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri->isOrientable() && ! large.isOriented()) {
+                if (tri.isOrientable() && ! large.isOriented()) {
                     std::ostringstream msg;
                     msg << name << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1201,7 +1207,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (! PachnerHelperClosed<dim>::testClosed(*tri, large)) {
+                if (! PachnerHelperClosed<dim>::testClosed(tri, large)) {
                     std::ostringstream msg;
                     msg << name << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1210,7 +1216,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
 
                 if (large.countBoundaryComponents() !=
-                        tri->countBoundaryComponents()) {
+                        tri.countBoundaryComponents()) {
                     std::ostringstream msg;
                     msg << name << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1218,7 +1224,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.eulerCharTri() != tri->eulerCharTri()) {
+                if (large.eulerCharTri() != tri.eulerCharTri()) {
                     std::ostringstream msg;
                     msg << name << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1226,8 +1232,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri->isValid()) {
-                    if (! (large.homologyH1() == tri->homologyH1())) {
+                if (tri.isValid()) {
+                    if (! (large.homologyH1() == tri.homologyH1())) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1235,7 +1241,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! PachnerHelperH2<dim>::testH2(*tri, large)) {
+                    if (! PachnerHelperH2<dim>::testH2(tri, large)) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1244,7 +1250,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     }
                 }
 
-                if (dim != 2 && large.isIsomorphicTo(*tri)) {
+                if (dim != 2 && large.isIsomorphicTo(tri)) {
                     std::ostringstream msg;
                     msg << name << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1255,13 +1261,13 @@ class TriangulationTest : public CppUnit::TestFixture {
                 // Randomly relabel the simplices, but preserve orientation.
                 Isomorphism<dim> iso = Isomorphism<dim>::random(large.size(),
                     true);
-                iso.applyInPlace(&large);
+                iso.applyInPlace(large);
                 clearProperties(large);
 
                 if (k == dim) {
                     // Shrink by edge collapse.
                     PachnerHelperCollapseEdge<dim>::verifyCollapseEdge(
-                        *tri, large, iso, i, name);
+                        tri, large, iso, i, name);
                 }
 
                 // Shrink by the inverse Pachner move.
@@ -1284,7 +1290,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! copy.isIsomorphicTo(*tri)) {
+                    if (! copy.isIsomorphicTo(tri)) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1293,7 +1299,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (tri->isOrientable() && ! copy.isOriented()) {
+                    if (tri.isOrientable() && ! copy.isOriented()) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1306,14 +1312,14 @@ class TriangulationTest : public CppUnit::TestFixture {
         }
 
         template <int k>
-        static void verifyPachner(Triangulation<dim>* tri, const char* name) {
+        static void verifyPachner(const Triangulation<dim>& tri,
+                const char* name) {
             verifyPachnerDetail<k>(tri, false, name);
         }
 
         template <int k>
         void verifyPachnerSimplicial() {
-            verifyPachnerDetail<k>(&simplicialSphere, true,
-                "Simplicial sphere");
+            verifyPachnerDetail<k>(simplicialSphere, true, "Simplicial sphere");
         }
 };
 

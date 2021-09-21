@@ -330,7 +330,7 @@ class Isomorphism :
          * @return the new isomorphic triangulation, or 0 if a problem
          * was encountered (i.e., an unmet precondition was noticed).
          */
-        Triangulation<dim>* apply(const Triangulation<dim>* original) const;
+        Triangulation<dim>* apply(const Triangulation<dim>& original) const;
 
         /**
          * Applies this isomorphism to the given triangulation,
@@ -361,7 +361,7 @@ class Isomorphism :
          * @param tri the triangulation to which this isomorphism
          * should be applied.
          */
-        void applyInPlace(Triangulation<dim>* tri) const;
+        void applyInPlace(Triangulation<dim>& tri) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -542,8 +542,8 @@ bool Isomorphism<dim>::isIdentity() const {
 
 template <int dim>
 Triangulation<dim>* Isomorphism<dim>::apply(
-        const Triangulation<dim>* original) const {
-    if (original->size() != nSimplices_)
+        const Triangulation<dim>& original) const {
+    if (original.size() != nSimplices_)
         return 0;
 
     if (nSimplices_ == 0)
@@ -561,13 +561,13 @@ Triangulation<dim>* Isomorphism<dim>::apply(
 
     for (t = 0; t < nSimplices_; t++)
         tet[simpImage_[t]]->setDescription(
-            original->simplex(t)->description());
+            original.simplex(t)->description());
 
     const Simplex<dim> *myTet, *adjTet;
     unsigned long adjTetIndex;
     Perm<dim+1> gluingPerm;
     for (t = 0; t < nSimplices_; t++) {
-        myTet = original->simplex(t);
+        myTet = original.simplex(t);
         for (f = 0; f <= dim; f++)
             if ((adjTet = myTet->adjacentSimplex(f))) {
                 // We have an adjacent simplex.
@@ -589,15 +589,15 @@ Triangulation<dim>* Isomorphism<dim>::apply(
 }
 
 template <int dim>
-void Isomorphism<dim>::applyInPlace(Triangulation<dim>* tri) const {
-    if (tri->size() != nSimplices_)
+void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
+    if (tri.size() != nSimplices_)
         return;
 
     if (nSimplices_ == 0)
         return;
 
     Triangulation<dim>* staging = apply(tri);
-    tri->swap(*staging);
+    tri.swap(*staging);
     delete staging;
 }
 

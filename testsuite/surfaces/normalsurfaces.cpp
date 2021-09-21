@@ -1445,13 +1445,13 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             testAlmostNormalLoopCtwGeneric(15);
         }
 
-        static void verifyConversions(Triangulation<3>* tri,
+        static void verifyConversions(const Triangulation<3>& tri,
                 const char* name) {
-            NormalSurfaces stdDirect(*tri, NS_STANDARD, NS_VERTEX,
+            NormalSurfaces stdDirect(tri, NS_STANDARD, NS_VERTEX,
                 NS_VERTEX_STD_DIRECT);
-            NormalSurfaces stdConv(*tri, NS_STANDARD, NS_VERTEX,
+            NormalSurfaces stdConv(tri, NS_STANDARD, NS_VERTEX,
                 NS_VERTEX_VIA_REDUCED);
-            if ((! tri->isEmpty()) &&
+            if ((! tri.isEmpty()) &&
                     (stdDirect.algorithm().has(NS_VERTEX_VIA_REDUCED) ||
                     ! stdDirect.algorithm().has(NS_VERTEX_STD_DIRECT))) {
                 std::ostringstream msg;
@@ -1459,8 +1459,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     "incorrect algorithm flags for " << name << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-            if (tri->isValid() && ! tri->isIdeal()) {
-                if ((! tri->isEmpty()) &&
+            if (tri.isValid() && ! tri.isIdeal()) {
+                if ((! tri.isEmpty()) &&
                         (stdConv.algorithm().has(NS_VERTEX_STD_DIRECT) ||
                         ! stdConv.algorithm().has(NS_VERTEX_VIA_REDUCED))) {
                     std::ostringstream msg;
@@ -1471,7 +1471,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             } else {
                 // Ideal or invalid triangluations should use the standard
                 // enumeration process regardless of what the user requested.
-                if ((! tri->isEmpty()) &&
+                if ((! tri.isEmpty()) &&
                         (stdConv.algorithm().has(NS_VERTEX_VIA_REDUCED) ||
                         ! stdConv.algorithm().has(NS_VERTEX_STD_DIRECT))) {
                     std::ostringstream msg;
@@ -1489,8 +1489,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Only test standard-to-quad if the preconditions for
             // NS_CONV_STD_TO_REDUCED hold.
-            if (tri->isValid() && ! tri->isIdeal()) {
-                NormalSurfaces quadDirect(*tri, NS_QUAD);
+            if (tri.isValid() && ! tri.isIdeal()) {
+                NormalSurfaces quadDirect(tri, NS_QUAD);
                 NormalSurfaces quadConv(stdDirect,
                     regina::NS_CONV_STD_TO_REDUCED);
                 if (! identical(quadDirect, quadConv)) {
@@ -1503,13 +1503,13 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyConversionsAN(Triangulation<3>* tri,
+        static void verifyConversionsAN(const Triangulation<3>& tri,
                 const char* name) {
-            NormalSurfaces stdDirect(*tri, NS_AN_STANDARD, NS_VERTEX,
+            NormalSurfaces stdDirect(tri, NS_AN_STANDARD, NS_VERTEX,
                 NS_VERTEX_STD_DIRECT);
-            NormalSurfaces stdConv(*tri, NS_AN_STANDARD, NS_VERTEX,
+            NormalSurfaces stdConv(tri, NS_AN_STANDARD, NS_VERTEX,
                 NS_VERTEX_VIA_REDUCED);
-            if ((! tri->isEmpty()) &&
+            if ((! tri.isEmpty()) &&
                     (stdDirect.algorithm().has(NS_VERTEX_VIA_REDUCED) ||
                     ! stdDirect.algorithm().has(NS_VERTEX_STD_DIRECT))) {
                 std::ostringstream msg;
@@ -1517,8 +1517,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     "incorrect algorithm flags for " << name << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-            if (tri->isValid() && ! tri->isIdeal()) {
-                if ((! tri->isEmpty()) &&
+            if (tri.isValid() && ! tri.isIdeal()) {
+                if ((! tri.isEmpty()) &&
                         (stdConv.algorithm().has(NS_VERTEX_STD_DIRECT) ||
                         ! stdConv.algorithm().has(NS_VERTEX_VIA_REDUCED))) {
                     std::ostringstream msg;
@@ -1529,7 +1529,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             } else {
                 // Ideal or invalid triangluations should use the standard
                 // enumeration process regardless of what the user requested.
-                if ((! tri->isEmpty()) &&
+                if ((! tri.isEmpty()) &&
                         (stdConv.algorithm().has(NS_VERTEX_VIA_REDUCED) ||
                         ! stdConv.algorithm().has(NS_VERTEX_STD_DIRECT))) {
                     std::ostringstream msg;
@@ -1548,8 +1548,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Only test standard-to-quad if the preconditions for
             // NS_CONV_STD_TO_REDUCED hold.
-            if (tri->isValid() && ! tri->isIdeal()) {
-                NormalSurfaces quadDirect(*tri, NS_AN_QUAD_OCT);
+            if (tri.isValid() && ! tri.isIdeal()) {
+                NormalSurfaces quadDirect(tri, NS_AN_QUAD_OCT);
                 NormalSurfaces quadConv(stdDirect,
                     regina::NS_CONV_STD_TO_REDUCED);
                 if (! identical(quadDirect, quadConv)) {
@@ -1563,15 +1563,15 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void standardQuadConversionsConstructed() {
-            verifyConversions(&empty, "Empty");
-            verifyConversions(&oneTet, "Lone tetrahedron");
-            verifyConversions(&S3, "S3");
-            verifyConversions(&loopC2, "C(2)");
-            verifyConversions(&loopCtw3, "C~(3)");
-            verifyConversions(&largeS3, "Large S3");
-            verifyConversions(&largeRP3, "Large RP3");
-            verifyConversions(&twistedKxI, "Twisted KxI");
-            verifyConversions(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+            verifyConversions(empty, "Empty");
+            verifyConversions(oneTet, "Lone tetrahedron");
+            verifyConversions(S3, "S3");
+            verifyConversions(loopC2, "C(2)");
+            verifyConversions(loopCtw3, "C~(3)");
+            verifyConversions(largeS3, "Large S3");
+            verifyConversions(largeRP3, "Large RP3");
+            verifyConversions(twistedKxI, "Twisted KxI");
+            verifyConversions(norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void standardQuadConversionsCensus() {
@@ -1582,15 +1582,15 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void standardANQuadOctConversionsConstructed() {
-            verifyConversionsAN(&empty, "Empty");
-            verifyConversionsAN(&oneTet, "Lone tetrahedron");
-            verifyConversionsAN(&S3, "S3");
-            verifyConversionsAN(&loopC2, "C(2)");
-            verifyConversionsAN(&loopCtw3, "C~(3)");
-            verifyConversionsAN(&largeS3, "Large S3");
-            verifyConversionsAN(&largeRP3, "Large RP3");
-            verifyConversionsAN(&twistedKxI, "Twisted KxI");
-            verifyConversionsAN(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+            verifyConversionsAN(empty, "Empty");
+            verifyConversionsAN(oneTet, "Lone tetrahedron");
+            verifyConversionsAN(S3, "S3");
+            verifyConversionsAN(loopC2, "C(2)");
+            verifyConversionsAN(loopCtw3, "C~(3)");
+            verifyConversionsAN(largeS3, "Large S3");
+            verifyConversionsAN(largeRP3, "Large RP3");
+            verifyConversionsAN(twistedKxI, "Twisted KxI");
+            verifyConversionsAN(norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void standardANQuadOctConversionsCensus() {
@@ -1601,17 +1601,18 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         template <regina::NormalCoords coords>
-        static void verifyTreeVsDD(Triangulation<3>* tri, const char* name) {
+        static void verifyTreeVsDD(const Triangulation<3>& tri,
+                const char* name) {
             std::unique_ptr<NormalSurfaces> dd;
             std::unique_ptr<NormalSurfaces> tree;
 
             try {
-                dd.reset(new NormalSurfaces(*tri, coords, NS_VERTEX,
+                dd.reset(new NormalSurfaces(tri, coords, NS_VERTEX,
                     NS_VERTEX_DD | NS_VERTEX_STD_DIRECT));
             } catch (const regina::NoMatchingEquations&) {
             }
             try {
-                tree.reset(new NormalSurfaces(*tri, coords, NS_VERTEX,
+                tree.reset(new NormalSurfaces(tri, coords, NS_VERTEX,
                     NS_VERTEX_TREE | NS_VERTEX_STD_DIRECT));
             } catch (const regina::NoMatchingEquations&) {
             }
@@ -1641,7 +1642,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 } else
                     return;
             }
-            if ((! tri->isEmpty()) &&
+            if ((! tri.isEmpty()) &&
                     (dd->algorithm().has(NS_VERTEX_TREE) ||
                     ! dd->algorithm().has(NS_VERTEX_DD))) {
                 std::ostringstream msg;
@@ -1650,7 +1651,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     << name << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-            if ((! tri->isEmpty()) &&
+            if ((! tri.isEmpty()) &&
                     (tree->algorithm().has(NS_VERTEX_DD) ||
                     ! tree->algorithm().has(NS_VERTEX_TREE))) {
                 std::ostringstream msg;
@@ -1753,18 +1754,18 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         template <regina::NormalCoords coords>
-        static void verifyFundPrimalVsDual(Triangulation<3>* tri,
+        static void verifyFundPrimalVsDual(const Triangulation<3>& tri,
                 const char* name) {
             std::unique_ptr<NormalSurfaces> primal;
             std::unique_ptr<NormalSurfaces> dual;
 
             try {
-                primal.reset(new NormalSurfaces(*tri, coords, NS_FUNDAMENTAL,
+                primal.reset(new NormalSurfaces(tri, coords, NS_FUNDAMENTAL,
                     NS_HILBERT_PRIMAL));
             } catch (const regina::NoMatchingEquations&) {
             }
             try {
-                dual.reset(new NormalSurfaces(*tri, coords, NS_FUNDAMENTAL,
+                dual.reset(new NormalSurfaces(tri, coords, NS_FUNDAMENTAL,
                     NS_HILBERT_DUAL));
             } catch (const regina::NoMatchingEquations&) {
             }
@@ -1794,7 +1795,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 } else
                     return;
             }
-            if ((! tri->isEmpty()) &&
+            if ((! tri.isEmpty()) &&
                     (primal->algorithm().has(NS_HILBERT_DUAL) ||
                     ! primal->algorithm().has(NS_HILBERT_PRIMAL))) {
                 std::ostringstream msg;
@@ -1803,7 +1804,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     << name << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-            if ((! tri->isEmpty()) &&
+            if ((! tri.isEmpty()) &&
                     (dual->algorithm().has(NS_HILBERT_PRIMAL) ||
                     ! dual->algorithm().has(NS_HILBERT_DUAL))) {
                 std::ostringstream msg;
@@ -1829,8 +1830,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             runCensusAllIdeal(verifyFundPrimalVsDual<coords>, true);
         }
 
-        static void testDisjoint(Triangulation<3>* tri, const char* name) {
-            NormalSurfaces list(*tri, NS_AN_STANDARD);
+        static void testDisjoint(const Triangulation<3>& tri,
+                const char* name) {
+            NormalSurfaces list(tri, NS_AN_STANDARD);
             unsigned long n = list.size();
 
             unsigned long i, j;
@@ -1920,16 +1922,16 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void disjointConstructed() {
-            testDisjoint(&oneTet, "Lone tetrahedron");
-            testDisjoint(&figure8, "Figure eight");
-            testDisjoint(&gieseking, "Gieseking");
-            testDisjoint(&S3, "S3");
-            testDisjoint(&loopC2, "C(2)");
-            testDisjoint(&loopCtw3, "C~(3)");
-            testDisjoint(&largeS3, "Large S3");
-            testDisjoint(&largeRP3, "Large RP3");
-            testDisjoint(&twistedKxI, "Twisted KxI");
-            testDisjoint(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+            testDisjoint(oneTet, "Lone tetrahedron");
+            testDisjoint(figure8, "Figure eight");
+            testDisjoint(gieseking, "Gieseking");
+            testDisjoint(S3, "S3");
+            testDisjoint(loopC2, "C(2)");
+            testDisjoint(loopCtw3, "C~(3)");
+            testDisjoint(largeS3, "Large S3");
+            testDisjoint(largeRP3, "Large RP3");
+            testDisjoint(twistedKxI, "Twisted KxI");
+            testDisjoint(norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void disjointCensus() {
@@ -1942,8 +1944,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
          * PRE: tri is valid with only one component, and all vertex
          * links are spheres or discs.
          */
-        static bool mightBeTwistedProduct(const Triangulation<3>* tri) {
-            if (tri->countBoundaryComponents() != 1)
+        static bool mightBeTwistedProduct(const Triangulation<3>& tri) {
+            if (tri.countBoundaryComponents() != 1)
                 return false;
 
             // Check the relationship between H1 and H1Bdry.
@@ -1951,8 +1953,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             //  -  H1 = (2g)Z, H1Bdry = (4g-2)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = Z_2 + (2g-3)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = (2g-2)Z;
-            const AbelianGroup& h1 = tri->homology();
-            const AbelianGroup& bdry = tri->homologyBdry();
+            const AbelianGroup& h1 = tri.homology();
+            const AbelianGroup& bdry = tri.homologyBdry();
 
             if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (2g)Z.
@@ -1980,7 +1982,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 return false;
 
             // Check that H1Rel is just Z_2.
-            if (! tri->homologyRel().isZn(2))
+            if (! tri.homologyRel().isZn(2))
                 return false;
 
             return true;
@@ -1990,13 +1992,13 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
          * PRE: tri is valid with only one component, and all vertex
          * links are spheres or discs.
          */
-        static bool mightBeUntwistedProduct(const Triangulation<3>* tri) {
-            if (tri->countBoundaryComponents() != 2)
+        static bool mightBeUntwistedProduct(const Triangulation<3>& tri) {
+            if (tri.countBoundaryComponents() != 2)
                 return false;
 
             // Check that both boundary components are homeomorphic.
-            BoundaryComponent<3>* b0 = tri->boundaryComponent(0);
-            BoundaryComponent<3>* b1 = tri->boundaryComponent(1);
+            BoundaryComponent<3>* b0 = tri.boundaryComponent(0);
+            BoundaryComponent<3>* b1 = tri.boundaryComponent(1);
 
             if (b0->eulerChar() != b1->eulerChar())
                 return false;
@@ -2007,8 +2009,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Check that H1 is of the form (k)Z or Z_2 + (k)Z, and that
             // H1Bdry = 2 H1.
-            const AbelianGroup& h1 = tri->homology();
-            const AbelianGroup& bdry = tri->homologyBdry();
+            const AbelianGroup& h1 = tri.homology();
+            const AbelianGroup& bdry = tri.homologyBdry();
 
             if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (k)Z.
@@ -2032,7 +2034,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 return false;
 
             // Check that H1Rel is just Z.
-            if (! tri->homologyRel().isZ())
+            if (! tri.homologyRel().isZ())
                 return false;
 
             return true;
@@ -2043,10 +2045,10 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         // or (iii) a double cover of the surface s.
         // Increment the relevant counters accordingly.
         static void checkBoundaryType(const NormalSurface& s,
-                const Triangulation<3>* tri, unsigned& foundS,
+                const Triangulation<3>& tri, unsigned& foundS,
                 unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
-            if (tri->countBoundaryComponents() == 1) {
-                const BoundaryComponent<3>* b = tri->boundaryComponent(0);
+            if (tri.countBoundaryComponents() == 1) {
+                const BoundaryComponent<3>* b = tri.boundaryComponent(0);
 
                 if (s.eulerChar() == b->eulerChar()
                         && s.isOrientable() == b->isOrientable())
@@ -2054,9 +2056,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 if (s.eulerChar() * 2 == b->eulerChar() &&
                         (b->isOrientable() || ! s.isOrientable()))
                     ++foundDoubleCover;
-            } else if (tri->countBoundaryComponents() == 2) {
-                const BoundaryComponent<3>* b0 = tri->boundaryComponent(0);
-                const BoundaryComponent<3>* b1 = tri->boundaryComponent(1);
+            } else if (tri.countBoundaryComponents() == 2) {
+                const BoundaryComponent<3>* b0 = tri.boundaryComponent(0);
+                const BoundaryComponent<3>* b1 = tri.boundaryComponent(1);
 
                 if (
                         s.eulerChar() == b0->eulerChar() &&
@@ -2070,8 +2072,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         /**
          * PRE: tri is valid and has only one component.
          */
-        static void testCutAlong(Triangulation<3>* tri, const char* name) {
-            NormalSurfaces list(*tri, NS_STANDARD);
+        static void testCutAlong(const Triangulation<3>& tri,
+                const char* name) {
+            NormalSurfaces list(tri, NS_STANDARD);
             std::unique_ptr<Triangulation<3>> t;
             std::unique_ptr<Triangulation<3>> tDouble;
 
@@ -2123,28 +2126,28 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri->isIdeal() && ! t->isIdeal()) {
+                if (tri.isIdeal() && ! t->isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for "
                         << name << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (tri->isIdeal() && ! tDouble->isIdeal()) {
+                if (tri.isIdeal() && ! tDouble->isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for "
                         << name << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if ((! tri->isIdeal()) && t->isIdeal()) {
+                if ((! tri.isIdeal()) && t->isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for "
                         << name << " (which is not ideal)"
                         << " gives an ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if ((! tri->isIdeal()) && tDouble->isIdeal()) {
+                if ((! tri.isIdeal()) && tDouble->isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for "
                         << name << " (which is not ideal)"
@@ -2152,14 +2155,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri->isOrientable() && ! t->isOrientable()) {
+                if (tri.isOrientable() && ! t->isOrientable()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for "
                         << name << " (which is orientable)"
                         << " gives a non-orientable triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (tri->isOrientable() && ! tDouble->isOrientable()) {
+                if (tri.isOrientable() && ! tDouble->isOrientable()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for "
                         << name << " (which is orientable)"
@@ -2183,7 +2186,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     }
 
                 // The remaining tests only work for closed triangulations.
-                if (! tri->isClosed())
+                if (! tri.isClosed())
                     continue;
 
                 // Check the boundaries of components of t.
@@ -2211,7 +2214,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
                 for (const auto& c : comp)
-                    checkBoundaryType(s, c.get(),
+                    checkBoundaryType(s, *c,
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
@@ -2244,7 +2247,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
                 for (const auto& c : compDouble)
-                    checkBoundaryType(s, c.get(),
+                    checkBoundaryType(s, *c,
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
@@ -2259,12 +2262,12 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 bool found = false;
                 for (const auto& c : compDouble) {
                     if (s.isTwoSided()) {
-                        if (mightBeUntwistedProduct(c.get())) {
+                        if (mightBeUntwistedProduct(*c)) {
                             found = true;
                             break;
                         }
                     } else {
-                        if (mightBeTwistedProduct(c.get())) {
+                        if (mightBeTwistedProduct(*c)) {
                             found = true;
                             break;
                         }
@@ -2280,16 +2283,16 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void cutAlongConstructed() {
-            testCutAlong(&oneTet, "Lone tetrahedron");
-            testCutAlong(&figure8, "Figure eight");
-            testCutAlong(&gieseking, "Gieseking");
-            testCutAlong(&S3, "S3");
-            testCutAlong(&loopC2, "C(2)");
-            testCutAlong(&loopCtw3, "C~(3)");
-            testCutAlong(&largeS3, "Large S3");
-            testCutAlong(&largeRP3, "Large RP3");
-            testCutAlong(&twistedKxI, "Twisted KxI");
-            testCutAlong(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+            testCutAlong(oneTet, "Lone tetrahedron");
+            testCutAlong(figure8, "Figure eight");
+            testCutAlong(gieseking, "Gieseking");
+            testCutAlong(S3, "S3");
+            testCutAlong(loopC2, "C(2)");
+            testCutAlong(loopCtw3, "C~(3)");
+            testCutAlong(largeS3, "Large S3");
+            testCutAlong(largeRP3, "Large RP3");
+            testCutAlong(twistedKxI, "Twisted KxI");
+            testCutAlong(norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void cutAlongCensus() {

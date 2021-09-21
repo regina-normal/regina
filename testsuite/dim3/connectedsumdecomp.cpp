@@ -410,17 +410,17 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             verifySigRP3x3("(aabcde)(cfg)(dgf)(b)(e)");
         }
 
-        static void testDecomp(Triangulation<3>* tri, const char* name) {
+        static void testDecomp(const Triangulation<3>& tri, const char* name) {
             // Checked the connectedSumDecomposition() preconditions.
-            if (! (tri->isValid() && tri->isClosed() && tri->isConnected()))
+            if (! (tri.isValid() && tri.isClosed() && tri.isConnected()))
                 return;
 
             std::vector<std::unique_ptr<Triangulation<3>>> ans;
             try {
-                ans = tri->summands();
+                ans = tri.summands();
             } catch (const regina::UnsolvedCase&) {
                 // The routine reported an embedded two-sided projective plane.
-                if (tri->isOrientable()) {
+                if (tri.isOrientable()) {
                     std::ostringstream msg;
                     msg << "Triangulation " << name
                         << " is orientable but reports an embedded "
@@ -461,21 +461,21 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 h1.addGroup(term->homology());
             }
 
-            if ((! foundNor) && (! tri->isOrientable())) {
+            if ((! foundNor) && (! tri.isOrientable())) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " is non-orientable but none of its summands are.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (foundNor && tri->isOrientable()) {
+            if (foundNor && tri.isOrientable()) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " is orientable but one of its summands is not.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (h1 == tri->homology())) {
+            if (! (h1 == tri.homology())) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " has first homology that does not match "

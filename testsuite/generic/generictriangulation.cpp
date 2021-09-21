@@ -71,15 +71,15 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
          * Run a given test over all hand-coded test cases.
          */
         void testManualAll(
-                void (*f)(regina::Triangulation<dim>*, const char*)) {
-            f(&empty, "Empty");
-            f(&sphere, "Sphere");
-            f(&simplicialSphere, "Simplicial sphere");
-            f(&sphereBundle, "Sphere bundle");
-            f(&twistedSphereBundle, "Twisted sphere bundle");
-            f(&ball, "Ball");
-            f(&ballBundle, "Ball bundle");
-            f(&twistedBallBundle, "Twisted ball bundle");
+                void (*f)(const regina::Triangulation<dim>&, const char*)) {
+            f(empty, "Empty");
+            f(sphere, "Sphere");
+            f(simplicialSphere, "Simplicial sphere");
+            f(sphereBundle, "Sphere bundle");
+            f(twistedSphereBundle, "Twisted sphere bundle");
+            f(ball, "Ball");
+            f(ballBundle, "Ball bundle");
+            f(twistedBallBundle, "Twisted ball bundle");
         }
 
         void makeCanonical() {

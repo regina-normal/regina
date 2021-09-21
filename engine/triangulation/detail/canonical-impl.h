@@ -227,7 +227,7 @@ bool TriangulationBase<dim>::makeCanonical() {
         return false;
 
     // Do it.
-    best.applyInPlace(static_cast<Triangulation<dim>*>(this));
+    best.applyInPlace(static_cast<Triangulation<dim>&>(*this));
     return true;
 }
 

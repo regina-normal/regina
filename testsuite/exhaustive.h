@@ -46,11 +46,11 @@
  * human-readable name.
  */
 
-typedef void (*Triangulation2TestFunction)(regina::Triangulation<2>*,
+typedef void (*Triangulation2TestFunction)(const regina::Triangulation<2>&,
     const char*);
-typedef void (*Triangulation3TestFunction)(regina::Triangulation<3>*,
+typedef void (*Triangulation3TestFunction)(const regina::Triangulation<3>&,
     const char*);
-typedef void (*Triangulation4TestFunction)(regina::Triangulation<4>*,
+typedef void (*Triangulation4TestFunction)(const regina::Triangulation<4>&,
     const char*);
 
 void runCensusMinClosed(Triangulation3TestFunction f, bool small_ = false);

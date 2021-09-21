@@ -117,19 +117,19 @@ class Triangulation2Test : public TriangulationTest<2> {
          * Run a given test over all hand-coded cases.
          */
         void testManualAll(Triangulation2TestFunction f) {
-            f(&empty, "Empty");
-            f(&sphere, "Sphere");
-            f(&simplicialSphere, "Simplicial sphere");
-            f(&s2Oct, "Octahedron boundary");
-            f(&sphereBundle, "Torus");
-            f(&torus2, "Genus 2 torus");
-            f(&rp2, "RP^2");
-            f(&twistedSphereBundle, "Klein bottle");
-            f(&ball, "Ball");
-            f(&ballBundle, "Annulus");
-            f(&twistedBallBundle, "Mobius band");
-            f(&disjoint2, "Torus U Mobius");
-            f(&disjoint3, "KB U Annulus U S^2");
+            f(empty, "Empty");
+            f(sphere, "Sphere");
+            f(simplicialSphere, "Simplicial sphere");
+            f(s2Oct, "Octahedron boundary");
+            f(sphereBundle, "Torus");
+            f(torus2, "Genus 2 torus");
+            f(rp2, "RP^2");
+            f(twistedSphereBundle, "Klein bottle");
+            f(ball, "Ball");
+            f(ballBundle, "Annulus");
+            f(twistedBallBundle, "Mobius band");
+            f(disjoint2, "Torus U Mobius");
+            f(disjoint3, "KB U Annulus U S^2");
         }
 
         void makeCanonical() {
@@ -153,8 +153,8 @@ class Triangulation2Test : public TriangulationTest<2> {
         }
 
         void boundaryEuler() {
-            testManualAll([](Triangulation<2>* tri, const char* name) {
-                for (auto bc : tri->boundaryComponents())
+            testManualAll([](const Triangulation<2>& tri, const char* name) {
+                for (auto bc : tri.boundaryComponents())
                     if (bc->eulerChar() != 0) {
                         std::ostringstream msg;
                         msg << name << ": Contains boundary component "
@@ -234,71 +234,71 @@ class Triangulation2Test : public TriangulationTest<2> {
             verifyEulerCharTri(disjoint3, 2, "KB U Annulus U S^2");
         }
 
-        static void verifyBary(Triangulation<2>* tri, const char* name) {
-            Triangulation<2> b(*tri);
+        static void verifyBary(const Triangulation<2>& tri, const char* name) {
+            Triangulation<2> b(tri);
             if (b.isOrientable())
                 b.orient();
 
             b.barycentricSubdivision();
             clearProperties(b);
 
-            if (tri->hasBoundaryEdges() != b.hasBoundaryEdges()) {
+            if (tri.hasBoundaryEdges() != b.hasBoundaryEdges()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks boundary edges.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isClosed() != b.isClosed()) {
+            if (tri.isClosed() != b.isClosed()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks closedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isOrientable() != b.isOrientable()) {
+            if (tri.isOrientable() != b.isOrientable()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isOrientable() != b.isOriented()) {
+            if (tri.isOrientable() != b.isOriented()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isConnected() != b.isConnected()) {
+            if (tri.isConnected() != b.isConnected()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks connectedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->countComponents() != b.countComponents()) {
+            if (tri.countComponents() != b.countComponents()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks connected components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->countBoundaryComponents() != b.countBoundaryComponents()) {
+            if (tri.countBoundaryComponents() != b.countBoundaryComponents()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks boundary components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->eulerCharTri() != b.eulerCharTri()) {
+            if (tri.eulerCharTri() != b.eulerCharTri()) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks Euler char (tri).";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri->homology() == b.homology())) {
+            if (! (tri.homology() == b.homology())) {
                 std::ostringstream msg;
                 msg << name
                     << ": Barycentric subdivision breaks H1.";
