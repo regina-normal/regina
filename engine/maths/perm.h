@@ -873,7 +873,7 @@ constexpr Perm<n> Perm<n>::SnLookup::operator[] (Perm<n>::Index i) const {
                     break;
                 } else {
                     // Set digit to (p-1) and carry.
-                    code |= ((p - 1) << ((n - p) * imageBits));
+                    code |= (Code(p - 1) << ((n - p) * imageBits));
                 }
             }
         } else {
