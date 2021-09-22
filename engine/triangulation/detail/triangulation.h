@@ -504,9 +504,8 @@ class TriangulationBase :
          */
         void removeAllSimplices();
         /**
-         * Deprecated routine that moves the contents of this triangulation
-         * into the given destination triangulation, without destroying any
-         * pre-existing contents.
+         * Moves the contents of this triangulation into the given destination
+         * triangulation, without destroying any pre-existing contents.
          *
          * All top-dimensional simplices that currently belong to \a dest
          * will remain there (and will keep the same indices in \a dest).
@@ -518,14 +517,17 @@ class TriangulationBase :
          *
          * Any pointers or references to Simplex<dim> objects will remain valid.
          *
-         * \pre \a dest is not this triangulation.
+         * If your intention is to \e replace the simplices in \a dest
+         * (i.e., you do not need to preserve the original contents),
+         * then consider using the move assignment operator instead
+         * (which is more streamlined and also moves across any cached
+         * properties from the source triangulation).
          *
-         * \deprecated Triangulation now supports move construction and move
-         * assignment, and so you should use that instead.
+         * \pre \a dest is not this triangulation.
          *
          * @param dest the triangulation into which simplices should be moved.
          */
-        [[deprecated]] void moveContentsTo(Triangulation<dim>& dest);
+        void moveContentsTo(Triangulation<dim>& dest);
 
         /*@}*/
         /**
@@ -2315,6 +2317,11 @@ TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
     faces_.swap(src.faces_);
     components_.swap(src.components_);
     boundaryComponents_.swap(src.boundaryComponents_);
+
+    // Simplices store their triangulations, and so this information needs
+    // to be updated.  Alas this means that moves are not constant time.
+    for (Simplex<dim>* s : simplices_)
+        s->tri_ = static_cast<Triangulation<dim>*>(this);
 }
 
 template <int dim>
@@ -2380,6 +2387,11 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
     faces_.swap(src.faces_);
     components_.swap(src.components_);
     boundaryComponents_.swap(src.boundaryComponents_);
+
+    // Simplices store their triangulations, and so this information needs
+    // to be updated.  Alas this means that moves are not constant time.
+    for (Simplex<dim>* s : simplices_)
+        s->tri_ = static_cast<Triangulation<dim>*>(this);
 
     // Do not touch topologyLock_, since other objects are managing this.
 
@@ -3181,7 +3193,6 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     // Again, ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span2(static_cast<Triangulation<dim>&>(*this));
 
-    // TODO static_cast<Triangulation<dim>&>(*this) = std::move(staging);
     staging.moveContentsTo(static_cast<Triangulation<dim>&>(*this));
 
     for (size_t i = 0; i < nFaces; ++i)

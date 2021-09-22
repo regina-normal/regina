@@ -1047,8 +1047,7 @@ Version 7.0  [ TODO ]
               according to the new callback requirements described above.
         Class Triangulation<dim>:
             - New constructor that takes a link and builds its complement.
-            - Now supports move construction and move assignment.  The old
-              routine moveContentsTo() is now deprecated.
+            - Now supports move construction and copy/move assignment.
             - New alias fromSig(), which is is identical to fromIsoSig().
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a

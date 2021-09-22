@@ -68,10 +68,9 @@ namespace regina {
  * This 2-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 2-manifolds.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \headerfile triangulation/dim2.h
  *
@@ -130,6 +129,28 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * should have all properties marked as unknown.
          */
         Triangulation(const Triangulation& copy, bool cloneProps);
+        /**
+         * Moves the given triangulation into this new triangulation.
+         * This is a fast (constant time) operation.
+         *
+         * All triangles and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into
+         * this triangulation, and so any pointers or references to
+         * Triangle<2>, Face<2, subdim>, Component<2> or
+         * BoundaryComponent<2> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the triangulation to move.
+         */
+        Triangulation(Triangulation&& src) noexcept = default;
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -217,6 +238,37 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * See removeAllSimplices() for further information.
          */
         void removeAllTriangles();
+
+        /**
+         * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (const Triangulation&) = default;
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.  This is a fast (constant time) operation.
+         *
+         * All triangles and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into
+         * this triangulation, and so any pointers or references to
+         * Triangle<2>, Face<2, subdim>, Component<2> or
+         * BoundaryComponent<2> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The link that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * \e not fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the triangulation to move.
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (Triangulation&& src) = default;
 
         /**
          * Swaps the contents of this and the given triangulation.

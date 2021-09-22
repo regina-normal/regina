@@ -1354,8 +1354,13 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         /*@}*/
 
         // Make this class non-copyable.
-        Packet(const Packet&) = delete;
-        Packet& operator = (const Packet&) = delete;
+        // Packet(const Packet&) = delete;
+        // Packet& operator = (const Packet&) = delete;
+
+        Packet(const Packet&) : Packet() {}
+        Packet(Packet&&) : Packet() {}
+        Packet& operator = (const Packet&) { return *this; }
+        Packet& operator = (Packet&&) { return *this; }
 
         /**
          * An object that facilitates firing packetToBeChanged() and
