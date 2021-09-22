@@ -45,6 +45,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST_SUITE(Triangulation2Test);
 
     // Generic tests:
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -130,6 +131,10 @@ class Triangulation2Test : public TriangulationTest<2> {
             f(twistedBallBundle, "Mobius band");
             f(disjoint2, "Torus U Mobius");
             f(disjoint3, "KB U Annulus U S^2");
+        }
+
+        void copyMove() {
+            testManualAll(verifyCopyMove);
         }
 
         void makeCanonical() {

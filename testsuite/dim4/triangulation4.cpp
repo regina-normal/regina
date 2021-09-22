@@ -64,6 +64,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST_SUITE(Triangulation4Test);
 
     // Generic tests:
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -304,6 +305,10 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(pillow_fourCycle, "Invalid 4-cycle pillow");
             f(disjoint2, "Disjoint(2)");
             // f(disjoint3, "Disjoint(3)");
+        }
+
+        void copyMove() {
+            testManualAll(verifyCopyMove);
         }
 
         void makeCanonical() {

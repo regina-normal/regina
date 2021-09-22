@@ -73,6 +73,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST_SUITE(Triangulation3Test);
 
     // Generic tests:
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -486,6 +487,10 @@ class Triangulation3Test : public TriangulationTest<3> {
         void testManualAll(Triangulation3TestFunction f) {
             testManualSmall(f);
             f(lens100_1, "L(100,1)");
+        }
+
+        void copyMove() {
+            testManualAll(verifyCopyMove);
         }
 
         void makeCanonical() {
