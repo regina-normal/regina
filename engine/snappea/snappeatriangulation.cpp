@@ -99,6 +99,59 @@ SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
     listen(this);
 }
 
+SnapPeaTriangulation::SnapPeaTriangulation(SnapPeaTriangulation&& src)
+        noexcept :
+        Triangulation<3>(std::move(src)),
+        data_(src.data_),
+        shape_(src.shape_),
+        cusp_(src.cusp_),
+        filledCusps_(src.filledCusps_),
+        fundGroupFilled_(std::move(src.fundGroupFilled_)),
+        h1Filled_(std::move(src.h1Filled_)),
+        syncing_(false) {
+    src.data_ = nullptr;
+    src.shape_ = nullptr;
+    src.cusp_ = nullptr;
+
+    listen(this);
+}
+
+SnapPeaTriangulation& SnapPeaTriangulation::operator = (
+        SnapPeaTriangulation&& src) {
+    // Use syncing_ to prevent change events from nullifying the snappea data.
+    syncing_ = true;
+
+    Triangulation<3>::operator = (std::move(src));
+
+    std::swap(data_, src.data_);
+    std::swap(shape_, src.shape_);
+    std::swap(cusp_, src.cusp_);
+
+    filledCusps_ = src.filledCusps_;
+    fundGroupFilled_ = std::move(src.fundGroupFilled_);
+    h1Filled_ = std::move(src.h1Filled_);
+
+    syncing_ = false;
+
+    // Let src dispose of the original data_, shape_ and cusp_ in its
+    // own destructor.
+    return *this;
+}
+
+SnapPeaTriangulation& SnapPeaTriangulation::operator = (
+        const SnapPeaTriangulation& src) {
+    regina::snappea::free_triangulation(data_);
+
+    if (src.data_)
+        regina::snappea::copy_triangulation(src.data_, &data_);
+    else
+        data_ = nullptr;
+
+    sync(); // fixes everything else
+
+    return *this;
+}
+
 SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr),
         filledCusps_(0), h1Filled_(false), syncing_(false) {
@@ -915,8 +968,7 @@ void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
 }
 
 void SnapPeaTriangulation::reset(regina::snappea::Triangulation* data) {
-    if (data_)
-        regina::snappea::free_triangulation(data_);
+    regina::snappea::free_triangulation(data_);
     data_ = data;
 
     sync();
