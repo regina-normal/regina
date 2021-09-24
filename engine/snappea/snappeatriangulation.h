@@ -283,11 +283,12 @@ class Cusp : public ShortOutput<Cusp> {
  *   automatically cause this to become a <b>null triangulation</b>,
  *   with no tetrahedra and no SnapPea data at all.
  *
- * - In particular, if you wish to swap the contents of two SnapPea
- *   triangulations, you \e must cast both to SnapPeaTriangulation before
- *   calling swap().  If either argument is presented as the parent class
- *   Triangulation<3> then the inherited Triangulation<3>::swap() will be
- *   called instead, which will (as above) nullify both SnapPea triangulations.
+ * - In particular, if you wish to assign one SnapPea triangulation to another,
+ *   or swap the contents of two SnapPea triangulations, then you \e must
+ *   cast both objects to SnapPeaTriangulation before performing the operation.
+ *   If either argument is presented as the parent class Triangulation<3> then
+ *   the inherited operation on Triangulation<3> will be called instead, which
+ *   will (as above) nullify one or both SnapPea triangulations respectively.
  *
  * Null triangulations appear more generally when Regina is unable to
  * represent data in SnapPea's native format.  You can test for a
@@ -336,10 +337,33 @@ class Cusp : public ShortOutput<Cusp> {
  * into exceptions (subclassed from SnapPeaException), which can be caught
  * and handled politely.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * Since Regina 7.0, this is no longer a "packet type" that can be inserted
+ * directly into the packet tree.  Instead a SnapPeaTriangulation is now a
+ * standalone mathematatical object, which makes it slimmer and faster
+ * for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own SnapPeaTriangulation, it will not have any of the
+ *   usual packet infrastructure.  You cannot add it into the packet tree, and
+ *   it will not support a label, tags, child/parent packets, and/or event
+ *   listeners.
+ *
+ * - To include a SnapPeaTriangulation in the packet tree, you must create a
+ *   new PacketOf<SnapPeaTriangulation>.  This \e is a packet type, and
+ *   supports labels, tags, child/parent packets, and event listeners.
+ *   It holds its own internal SnapPeaTriangulation, which you can access via
+ *   PacketOf<SnapPeaTriangulation>::data().
+ *
+ * - If you are adding new functions to this class that edit the
+ *   triangulation, you must still remember to create a ChangeEventSpan.
+ *   This will ensure that, if the triangulation is being managed by a
+ *   PacketOf<SnapPeaTriangulation>, then the appropriate packet change events
+ *   will be fired.  All other events (aside from packetToBeChanged() and
+ *   packetWasChanged() are managed directly by the
+ *   PacketOf<SnapPeaTriangulation> wrapper class.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
  * SnapPy (standard precision), as well as some additional code
@@ -556,16 +580,40 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         SnapPeaTriangulation(const std::string& fileNameOrContents);
 
         /**
-         * Creates a clone of the given SnapPea triangulation.
-         * This copy will be independent (i.e., this triangulation will
-         * not be affected if \a tri is later changed or destroyed).
+         * Creates a new copy of the given SnapPea triangulation.
          *
-         * If \a tri is a null triangulation then this will be a null
+         * If \a src is a null triangulation then this will be a null
          * triangulation also.  See isNull() for further details.
          *
-         * @param tri the SnapPea triangulation to clone.
+         * @param src the SnapPea triangulation to copy.
          */
-        SnapPeaTriangulation(const SnapPeaTriangulation& tri);
+        SnapPeaTriangulation(const SnapPeaTriangulation& src);
+
+        /**
+         * Moves the given SnapPea triangulation into this new triangulation.
+         *
+         * This is much faster than the copy constructor, but is still
+         * linear time.  This is because every tetrahedron must be adjusted
+         * to point back to this new triangulation instead of \a src.
+         *
+         * All tetrahedra, cusps and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into this
+         * triangulation, and so any pointers or references to Tetrahedron<3>,
+         * Cusp, Face<3, subdim>, Component<3> or BoundaryComponent<3> objects
+         * will remain valid.  Likewise, all cached properties will be moved
+         * into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the triangulation to move.
+         */
+        SnapPeaTriangulation(SnapPeaTriangulation&& src) noexcept;
 
         /**
          * Converts the given Regina triangulation to a SnapPea triangulation.
@@ -670,6 +718,61 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \name Tetrahedra
          */
         /*@{*/
+
+        /**
+         * Sets this to be a (deep) copy of the given SnapPea triangulation.
+         *
+         * \warning If you wish to copy the contents of one SnapPea
+         * triangulation into another, you \e must cast both to
+         * SnapPeaTriangulation before calling the assignment operator.  If
+         * either argument is presented as the parent class Triangulation<3>,
+         * then the Triangulation<3> assignment operator will be called
+         * instead; the result will be that (just like when you call any of
+         * the Triangulation<3> edit routines) this SnapPea triangulation will
+         * be reset to a null triangulation.  See the SnapPeaTriangulation
+         * class notes for further discussion.
+         *
+         * @return a reference to this triangulation.
+         */
+        SnapPeaTriangulation& operator = (const SnapPeaTriangulation& src);
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every tetrahedron must be adjusted to point
+         * back to this triangulation instead of \a src.
+         *
+         * All tetrahedra, cusps and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into this
+         * triangulation, and so any pointers or references to Tetrahedron<3>,
+         * Cusp, Face<3, subdim>, Component<3> or BoundaryComponent<3> objects
+         * will remain valid.  Likewise, all cached properties will be moved
+         * into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \warning If you wish to move the contents of one SnapPea
+         * triangulation into another, you \e must cast both to
+         * SnapPeaTriangulation before calling the assignment operator.  If
+         * either argument is presented as the parent class Triangulation<3>,
+         * then the Triangulation<3> assignment operator will be called
+         * instead; the result will be that (just like when you call any of
+         * the Triangulation<3> edit routines) this SnapPea triangulation will
+         * be reset to a null triangulation.  See the SnapPeaTriangulation
+         * class notes for further discussion.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * \e not fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the triangulation to move.
+         * @return a reference to this triangulation.
+         */
+        SnapPeaTriangulation& operator = (SnapPeaTriangulation&& src);
 
         /**
          * Swaps the contents of this and the given SnapPea triangulation.

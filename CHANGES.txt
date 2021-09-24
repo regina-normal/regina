@@ -962,6 +962,7 @@ Version 7.0  [ TODO ]
             - Most member functions are now explicitly marked as noexcept.
         Class SnapPeaTriangulation:
             - New constructor that takes a link and builds its complement.
+            - Now supports move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added new routine enumerateCovers(), which combines SnapPea's
               find_representations() and construct_cover().
