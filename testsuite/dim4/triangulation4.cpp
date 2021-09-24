@@ -196,7 +196,6 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             p[0] = ball_foldedPent.newPentachoron();
             p[0]->join(2, p[0], Perm<5>(2, 4));
-            ball_foldedPent.setLabel("Folded pentachoron");
 
             p[0] = ball_layerAndFold.newPentachoron();
             p[1] = ball_layerAndFold.newPentachoron();
@@ -204,7 +203,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             p[0]->join(1, p[1], Perm<5>());
             p[0]->join(2, p[1], Perm<5>());
             p[0]->join(3, p[0], Perm<5>(3, 4));
-            ball_layerAndFold.setLabel("Layered and folded ball");
 
             p[0] = pillow_twoCycle.newPentachoron();
             p[1] = pillow_twoCycle.newPentachoron();
@@ -213,7 +211,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             p[0]->join(2, p[1], Perm<5>());
             p[0]->join(3, p[1], Perm<5>());
             p[0]->join(4, p[1], Perm<5>(1, 2));
-            pillow_twoCycle.setLabel("Invalid 2-cycle pillow");
 
             p[0] = pillow_threeCycle.newPentachoron();
             p[1] = pillow_threeCycle.newPentachoron();
@@ -222,7 +219,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             p[0]->join(2, p[1], Perm<5>());
             p[0]->join(3, p[1], Perm<5>());
             p[0]->join(4, p[1], Perm<5>(2, 0, 1, 3, 4));
-            pillow_threeCycle.setLabel("Invalid 3-cycle pillow");
 
             p[0] = pillow_fourCycle.newPentachoron();
             p[1] = pillow_fourCycle.newPentachoron();
@@ -231,18 +227,15 @@ class Triangulation4Test : public TriangulationTest<4> {
             p[0]->join(2, p[1], Perm<5>());
             p[0]->join(3, p[1], Perm<5>());
             p[0]->join(4, p[1], Perm<5>(3, 2, 0, 1, 4));
-            pillow_fourCycle.setLabel("Invalid 4-cycle pillow");
 
             // Build disconnected triangulations from others that we
             // already have.
             disjoint2.insertTriangulation(sphereBundle);
             disjoint2.insertTriangulation(ball_layerAndFold);
-            disjoint2.setLabel("Disjoint union of two triangulations");
 
             disjoint3.insertTriangulation(rp4);
             disjoint3.insertTriangulation(ball_layerAndFold);
             disjoint3.insertTriangulation(idealPoincareProduct);
-            disjoint3.setLabel("Disjoint union of three triangulations");
         }
 
         void tearDown() {
