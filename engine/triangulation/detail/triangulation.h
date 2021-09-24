@@ -345,7 +345,10 @@ class TriangulationBase :
         TriangulationBase(const TriangulationBase<dim>& copy, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
-         * This is a fast (constant time) operation.
+         *
+         * This is much faster than the copy constructor, but is still linear
+         * time.  This is because every top-dimensional simplex must be
+         * adjusted to point back to this triangulation instead of \a src.
          *
          * All top-dimensional simplices and skeletal objects (faces,
          * components and boundary components) that belong to \a src will be
@@ -1839,7 +1842,11 @@ class TriangulationBase :
 
         /**
          * Moves the contents of the given triangulation into this
-         * triangulation.  This is a fast (constant time) operation.
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every top-dimensional simplex must be
+         * adjusted to point back to this triangulation instead of \a src.
          *
          * All top-dimensional simplices and skeletal objects (faces,
          * components and boundary components) that belong to \a src will be
@@ -1851,7 +1858,7 @@ class TriangulationBase :
          * TriangulationBase never calls this operator itself; it is only
          * ever called by the Triangulation<dim> assignment operator.
          *
-         * The link that is passed (\a src) will no longer be usable.
+         * The triangulation that is passed (\a src) will no longer be usable.
          *
          * \warning This operator does not touch any properties managed
          * by the derived class Triangulation<dim>.  It is assumed that

@@ -166,7 +166,10 @@ class Triangulation<4> :
         Triangulation(const Triangulation& copy, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
-         * This is a fast (constant time) operation.
+         *
+         * This is much faster than the copy constructor, but is still linear
+         * time.  This is because every pentachoron must be adjusted to point
+         * back to this new triangulation instead of \a src.
          *
          * All pentachora and skeletal objects (faces, components and
          * boundary components) that belong to \a src will be moved into
@@ -285,7 +288,11 @@ class Triangulation<4> :
 
         /**
          * Moves the contents of the given triangulation into this
-         * triangulation.  This is a fast (constant time) operation.
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every pentachoron must be adjusted to point
+         * back to this triangulation instead of \a src.
          *
          * All pentachora and skeletal objects (faces, components and
          * boundary components) that belong to \a src will be moved into
@@ -294,7 +301,7 @@ class Triangulation<4> :
          * BoundaryComponent<4> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
          *
-         * The link that is passed (\a src) will no longer be usable.
+         * The triangulation that is passed (\a src) will no longer be usable.
          *
          * \note This operator is \e not marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
