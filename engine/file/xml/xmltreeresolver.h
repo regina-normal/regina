@@ -119,8 +119,9 @@ class XMLTreeResolutionTask {
  *   registered via storeAnon() (note that such packets are typically
  *   useless unless storeID() was called also).
  *
- * - If an XMLPacketReader needs to perform an immediate lookup, it
- *   should call resolve().
+ * - If an XMLPacketReader needs to perform an immediate lookup, it should
+ *   call resolve(), or one of its variants (e.g., resolveAs() or
+ *   resolvePacketData()).
  *
  * - If an XMLPacketReader is not able to fully flesh out its data
  *   because it references packets that may not yet have been read, it
@@ -181,7 +182,8 @@ class XMLTreeResolver {
         /**
          * Stores the fact that the given packet is stored in the data
          * file using the given internal ID.  Associations between IDs
-         * and packets can be queried through the resolve() function.
+         * and packets can be queried through the resolve() function or its
+         * variants (e.g., resolveAs() or resolvePacketData()).
          * See resolve() for further information on internal IDs.
          *
          * This will be called automatically by XMLPacketReader as it
@@ -234,6 +236,54 @@ class XMLTreeResolver {
         Packet* resolve(const std::string& id) const;
 
         /**
+         * Identifies if some packet of the given type has been registered as
+         * having the given ID within the the XML data file.
+         *
+         * This is similar to resolve(), except that it will only find packets
+         * of the given type.  If there is a packet registered with the given
+         * ID but it is not equal to or derived from type \a PacketType, then
+         * then this routine will return \c null (as though the packet had not
+         * been found).
+         *
+         * See resolve() for more information on the general resolution
+         * process and string IDs.
+         *
+         * \tparam PacketType the type of packet that is required; this
+         * must be a subclass of Packet.
+         *
+         * @param id the string ID to query.
+         * @return the packet with the given ID, or \c null if either there is
+         * no such packet registered so far or if there is such a packet but
+         * its type is not equal to or derived from \a packetType.
+         */
+        template <typename PacketType>
+        PacketType* resolveAs(const std::string& id) const;
+
+        /**
+         * Identifies if some packet holding the given data type has been
+         * registered as having the given ID within the the XML data file.
+         *
+         * This is similar to resolve(), except that it will only find packets
+         * of type PacketOf<Held>.  If there is such a packet, then this
+         * routine will return a pointer to the corresponding \a Held data.
+         * Otherwise this routine will return \c null.
+         *
+         * See resolve() for more information on the general resolution
+         * process and string IDs.
+         *
+         * \tparam Held the data type that is required; this must be a
+         * type that can be stored in a PacketOf<Held>.
+         *
+         * @param id the string ID to query.
+         * @return the data held by the packet with the given ID, or \c null
+         * if either there is no such packet registered so far, or if there
+         * is such a packet but its type is not equal to or derived from
+         * PacketOf<Held>.
+         */
+        template <typename Held>
+        Held* resolvePacketData(const std::string& id) const;
+
+        /**
          * Calls XMLTreeResolutionTask::resolve() for all queued tasks.
          *
          * The tasks will then be destroyed and removed from the queue
@@ -279,6 +329,22 @@ inline void XMLTreeResolver::storeAnon(Packet* packet) {
 inline Packet* XMLTreeResolver::resolve(const std::string& id) const {
     auto pos = ids_.find(id);
     return (pos == ids_.end() ? nullptr : pos->second);
+}
+
+template <typename PacketType>
+inline PacketType* XMLTreeResolver::resolveAs(const std::string& id) const {
+    static_assert(std::is_base_of<Packet, PacketType>::value,
+        "XMLTreeResolver::resolveAs<T> requires T to be derived from Packet.");
+    return dynamic_cast<PacketType*>(resolve(id));
+}
+
+template <typename Held>
+inline Held* XMLTreeResolver::resolvePacketData(const std::string& id) const {
+    static_assert(std::is_base_of<PacketData<Held>, Held>::value,
+        "XMLTreeResolver::resolvePacketData<T> requires T to be a type "
+        "that is held by PacketOf<T>.");
+    auto p = dynamic_cast<PacketOf<Held>*>(resolve(id));
+    return (p ? std::addressof(p->data()) : nullptr);
 }
 
 inline void XMLTreeResolver::resolveDelayed() {

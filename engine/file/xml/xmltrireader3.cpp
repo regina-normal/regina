@@ -38,8 +38,8 @@ namespace regina {
 XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    XMLElementReader* base = propertyReader(subTagName, props);
-    if (base)
+    if (auto base = XMLTriangulationReaderBase<3>::startPropertySubElement(
+            subTagName, props))
         return base;
 
     // We don't read boundary component properties since they're stored

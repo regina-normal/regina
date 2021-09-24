@@ -36,6 +36,7 @@
 #include "utilities/i18nutils.h"
 
 using regina::Packet;
+using regina::PacketOf;
 using regina::Triangulation;
 
 bool subcomplexTesting = false;

@@ -43,7 +43,8 @@ template <int dim>
 void XMLWriter<Triangulation<dim>>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
         out_ << "<packet type=\"" << dim
-            << "-Manifold Triangulation\" typeid=\"" << (100 + dim) << '\"';
+            << "-Manifold Triangulation\" typeid=\""
+            << PacketOf<Triangulation<dim>>::typeID << '\"';
     } else {
         out_ << "<tri dim=\"" << dim
             << "\" size=\"" << data_.size()

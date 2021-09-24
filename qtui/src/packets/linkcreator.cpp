@@ -254,7 +254,8 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 QObject::tr("Please type a text code into the box provided."));
             return nullptr;
         }
-        regina::PacketOf<Link>* ans = new regina::PacketOf<Link>(use);
+        regina::PacketOf<Link>* ans = new regina::PacketOf<Link>(
+            std::in_place, use);
         if (! ans->data().isEmpty()) {
             ans->setLabel(use);
             return ans;

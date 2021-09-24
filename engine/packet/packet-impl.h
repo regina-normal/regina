@@ -30,15 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file packet/packet.h
+/*! \file packet/packet-impl.h
  *  \brief Contains some implementation details for packet wrapper classes.
  *
- *  This file is \e not included from packet.h, and it is not shipped with
- *  Regina's development headers.  The routines it contains are explicitly
- *  instantiated in Regina's calculation engine for all necessary packet types.
- *
- *  The reason for "quarantining" this file is because it relies on Regina's
- *  XML headers, which are not part of Regina's public API.
+ *  This file is \e not included from packet.h.  The routines it contains are
+ *  explicitly instantiated in Regina's calculation engine for all necessary
+ *  packet types, and so end users should not need to include this file
+ *  themselves.
  */
 
 #ifndef __REGINA_PACKET_IMPL_H
@@ -47,6 +45,7 @@
 #endif
 
 #include "packet/packet.h"
+#include "utilities/base64.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -77,6 +76,21 @@ void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
     writer.writeContent();
     writeXMLTreeData(out, format, anon, refs);
     writer.close();
+}
+
+template <typename Held>
+std::string PacketData<Held>::anonID() const {
+    char ptrAsBytes[sizeof(PacketData<Held>*)];
+    *(reinterpret_cast<const PacketData<Held>**>(&ptrAsBytes)) = this;
+
+    char* id = 0;
+    base64Encode(ptrAsBytes, sizeof(Packet*), &id);
+
+    std::string ans;
+    ans += regina::base64Spare[0];
+    ans += id;
+    delete[] id;
+    return ans;
 }
 
 } // namespace regina

@@ -21,6 +21,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     container.h
     packet.h
+    packet-impl.h
     pdf.h
     packettype.h
     script.h

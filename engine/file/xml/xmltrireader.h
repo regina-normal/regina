@@ -237,6 +237,29 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
             bool anon, std::string label, std::string id,
             size_t size, bool permIndex);
 
+        /**
+         * Returns an XML element reader for the given optional property of a
+         * <i>dim</i>-dimensional triangulation.
+         *
+         * If \a subTagName names an XML element that describes an optional
+         * property of a triangulation (such as \c H1 or \c fundgroup for
+         * 3-manifold triangulations), then this function should return
+         * a corresponding element reader.
+         *
+         * Otherwise this function should return a new XMLElementReader,
+         * which will cause the XML element to be ignored.
+         *
+         * @param subTagName the name of the XML subelement opening tag.
+         * @param subTagProps the properties associated with the
+         * subelement opening tag.
+         * @return a newly created element reader that will be used to
+         * parse the subelement.  This class should not take care of the
+         * new reader's destruction; that will be done by the parser.
+         */
+        XMLElementReader* startPropertySubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps);
+
         virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
@@ -304,26 +327,6 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
                 virtual void endSubElement(const std::string& subTagName,
                     XMLElementReader* subReader) override;
         };
-
-        /**
-         * Returns a reader for the generic triangulation property with the
-         * given subtag name.
-         *
-         * If \a subTagName refers to a property that is managed by the
-         * generic base class TriangulationBase<dim>, then this routine
-         * returns an appropriate element reader.  Otherwise this routine
-         * returns \c null.
-         *
-         * @param subTagName the name of the XML subelement opening tag.
-         * @param subTagProps the properties associated with the subelement
-         * opening tag.
-         * @return a newly created element reader if the corresponding
-         * triangulation property is managed by TriangulationBase<dim>, or
-         * \c null otherwise.
-         */
-        XMLElementReader* propertyReader(
-                const std::string& subTagName,
-                const regina::xml::XMLPropertyDict& subTagProps);
 };
 
 /**
@@ -363,29 +366,6 @@ class XMLTriangulationReader : public XMLTriangulationReaderBase<dim> {
         XMLTriangulationReader(XMLTreeResolver& resolver, Packet* parent,
             bool anon, std::string label, std::string id,
             size_t size, bool permIndex);
-
-        /**
-         * Returns an XML element reader for the given optional property of a
-         * <i>dim</i>-dimensional triangulation.
-         *
-         * If \a subTagName names an XML element that describes an optional
-         * property of a triangulation (such as \c H1 or \c fundgroup for
-         * 3-manifold triangulations), then this function should return
-         * a corresponding element reader.
-         *
-         * Otherwise this function should return a new XMLElementReader,
-         * which will cause the XML element to be ignored.
-         *
-         * @param subTagName the name of the XML subelement opening tag.
-         * @param subTagProps the properties associated with the
-         * subelement opening tag.
-         * @return a newly created element reader that will be used to
-         * parse the subelement.  This class should not take care of the
-         * new reader's destruction; that will be done by the parser.
-         */
-        XMLElementReader* startPropertySubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
 };
 
 // Note that some of our classes are specialised elsewhere.
@@ -634,17 +614,6 @@ inline void XMLTriangulationReaderBase<dim>::GroupPresentationPropertyReader::
         if (ans)
             prop_ = std::move(*ans);
     }
-}
-
-template <int dim>
-inline XMLElementReader* XMLTriangulationReaderBase<dim>::propertyReader(
-        const std::string& subTagName,
-        const regina::xml::XMLPropertyDict& subTagProps) {
-    if (subTagName == "fundgroup")
-        return new GroupPresentationPropertyReader(tri_->fundGroup_);
-    else if (subTagName == "H1")
-        return new AbelianGroupPropertyReader(tri_->H1_);
-    return 0;
 }
 
 } // namespace regina

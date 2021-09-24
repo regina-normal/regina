@@ -1773,6 +1773,11 @@ class PacketOf : public Packet {
         PacketOf(const PacketOf& src) : data_(src.data_) {
             data_.packet_ = this;
         }
+        template <typename... Args>
+        explicit PacketOf(std::in_place_t, Args&&... args) :
+                data_(std::forward<Args>(args)...) {
+            data_.packet_ = this;
+        }
 
         inline virtual PacketType type() const override {
             return typeID;
@@ -1821,6 +1826,11 @@ class PacketData {
         PacketData() : packet_(nullptr) {}
         PacketData(const PacketData&) : packet_(nullptr) {}
         PacketData& operator = (const PacketData&) { return *this; }
+
+        PacketOf<Held>* packet() { return packet_; }
+        const PacketOf<Held>* packet() const { return packet_; }
+
+        std::string anonID() const;
 
         class ChangeEventSpan {
             private:
