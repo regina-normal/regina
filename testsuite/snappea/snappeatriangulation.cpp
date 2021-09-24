@@ -53,6 +53,7 @@ using regina::Triangulation;
 class SnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(SnapPeaTriangulationTest);
 
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(incompatible);
     CPPUNIT_TEST(volume);
     CPPUNIT_TEST(flat);
@@ -245,6 +246,107 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        static void verifyCopyMove(const SnapPeaTriangulation<dim>& t,
+                const char* name) {
+            Vertex<dim>* v0 = (t.isEmpty() ? nullptr : t.vertex(0));
+
+            Triangulation<dim> copy(t);
+            if (! looksIdentical(copy, t)) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Vertex<dim>* v1 = (copy.isEmpty() ? nullptr : copy.vertex(0));
+            if (v1 == v0 && ! t.isEmpty()) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed uses the same crossings.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Triangulation<dim> move(std::move(copy));
+            if (! looksIdentical(move, t)) {
+                std::ostringstream msg;
+                msg << name << ": move constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Vertex<dim>* v2 = (move.isEmpty() ? nullptr : move.vertex(0));
+            if (v2 != v1) {
+                std::ostringstream msg;
+                msg << name << ": move constructed does not use the "
+                    "same crossings.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Triangulation<dim> copyAss;
+            copyAss.newSimplex(); // Give it something to overwrite.
+            copyAss = t;
+            if (! looksIdentical(copyAss, t)) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Vertex<dim>* v3 = (copyAss.isEmpty() ? nullptr : copyAss.vertex(0));
+            if (v3 == v0 && ! t.isEmpty()) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned uses the same crossings.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Triangulation<dim> moveAss;
+            moveAss.newSimplex(); // Give it something to overwrite.
+            moveAss = std::move(copyAss);
+            if (! looksIdentical(moveAss, t)) {
+                std::ostringstream msg;
+                msg << name << ": move assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Vertex<dim>* v4 = (moveAss.isEmpty() ? nullptr : moveAss.vertex(0));
+            if (v4 != v3) {
+                std::ostringstream msg;
+                msg << name << ": move assigned does not use the "
+                    "same crossings.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void copyMove() {
+            testCopyMove(m2_1, "M 2_1");
+            testCopyMove(m2_2, "M 2_2");
+            testCopyMove(m3_9, "M 3_9");
+            testCopyMove(m4_52, "M 4_52");
+            testCopyMove(m4_1_2, "M 4_1^2");
+            testCopyMove(m4_4_2, "M 4_4^2");
+
+            testCopyMove(n1_1, "N 1_1");
+            testCopyMove(n2_1, "N 2_1");
+            testCopyMove(n2_1_2, "N 2_1^2");
+            testCopyMove(n4_14, "N 4_14");
+            testCopyMove(n4_9_2, "N 4_9^2");
+            testCopyMove(n4_1_2_1, "N 4_1^2,1");
+
+            testCopyMove(closedHypOr, "or_0.94270736");
+            testCopyMove(closedHypNor, "nor_2.02988321");
+            testCopyMove(weberSeifert, "Weber-Seifert");
+
+            testCopyMove(flatOr, "Flat orientable");
+            testCopyMove(flatNor, "Flat non-orientable");
+            testCopyMove(degenerateOr, "Degenerate orientable");
+            testCopyMove(degenerateNor, "Degenerate non-orientable");
+
+            testCopyMove(empty, "Empty");
+            testCopyMove(lst123, "LST(1,2,3)");
+            testCopyMove(m2_1_m2_1, "M 2_1 U M 2_1");
+            testCopyMove(genusTwoTorusCusp, "Genus two torus cusp");
+            testCopyMove(projPlaneCusps, "Two projective plane cusps");
+            testCopyMove(genusFourNonOrCusp, "Genus four non-orientable cusp");
+            testCopyMove(cuspedTorus, "Cusped solid torus");
+            testCopyMove(edgeInvalid, "Two invalid edges");
         }
 
         void testIncompatible(Triangulation<3>& tri, const char* message) {
