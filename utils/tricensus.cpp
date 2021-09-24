@@ -173,9 +173,18 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         } else {
             std::ostringstream out;
             out << "Item " << (nSolns + 1);
-            tri->setLabel(out.str());
 
-            container->insertChildLast(tri);
+            if constexpr (dim <= 3) {
+                tri->setLabel(out.str());
+                container->insertChildLast(tri);
+            } else {
+                auto p = new regina::PacketOf<regina::Triangulation<dim>>(
+                    std::move(*tri));
+                delete tri;
+
+                p->setLabel(out.str());
+                container->insertChildLast(p);
+            }
         }
         nSolns++;
     } else {

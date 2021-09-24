@@ -203,7 +203,8 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<Triangulation<3>*>(packet), enclosingPane);
         case PACKET_TRIANGULATION4:
             return new Tri4UI(
-                dynamic_cast<Triangulation<4>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<4>>*>(packet),
+                enclosingPane);
 #ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(

@@ -68,7 +68,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             try {
                 NormalHypersurfaces* ans = new NormalHypersurfaces(owner,
                     coords, which, algHints);
-                owner.insertChildLast(ans);
+                if (regina::Packet* p = owner.packet())
+                    p->insertChildLast(ans);
                 return ans;
             } catch (const regina::NoMatchingEquations&) {
                 return nullptr;

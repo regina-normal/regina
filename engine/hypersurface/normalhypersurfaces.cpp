@@ -35,6 +35,7 @@
 #include "enumerate/doubledescription.h"
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
+#include "file/xml/xmlwriter.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
@@ -102,31 +103,54 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
 }
 
 void NormalHypersurfaces::addPacketRefs(PacketRefs& refs) const {
-    refs.insert({ std::addressof(*triangulation_), false });
+    if (const Packet* p = triangulation_->packet())
+        refs.insert({ p, false });
 }
 
 void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
-    const Triangulation<4>* tri = std::addressof(*triangulation_);
+    const Packet* tri = triangulation_->packet();
 
-    if (format == REGINA_XML_GEN_2 && tri != parent()) {
+    if (format == REGINA_XML_GEN_2 && ! (tri && tri == parent())) {
         // The second-generation format required tri == parent(), and
         // Regina <= 6.0.1 cannot handle lists *without* this property at all.
         // Do not write this list (or its descendants) at all.
         return;
     }
 
-    // We know from addPacketRefs() that refs contains the triangulation.
-    if (! refs.find(tri)->second) {
-        // The triangulation has not yet been written to file.  Do it now.
-        writeXMLAnon(out, format, refs, tri);
-    }
+    if (tri) {
+        // We know from addPacketRefs() that refs contains the triangulation.
+        if (! refs.find(tri)->second) {
+            // The triangulation has not yet been written to file.  Do it now.
+            writeXMLAnon(out, format, refs, tri);
+        }
 
-    writeXMLHeader(out, "hypersurfaces", format, anon, refs,
-        true, std::pair("tri", tri->internalID()),
-        std::pair("type", which_.intValue()),
-        std::pair("algorithm", algorithm_.intValue()),
-        std::pair("coords", coords_));
+        writeXMLHeader(out, "hypersurfaces", format, anon, refs, true,
+            std::pair("tri", tri->internalID()),
+            std::pair("type", which_.intValue()),
+            std::pair("algorithm", algorithm_.intValue()),
+            std::pair("coords", coords_));
+    } else {
+        // The triangulation is not a packet at all.
+        // Write it anonymously now, with an ID that is guaranteed not to
+        // match a packet ID.
+        std::string id = triangulation_->anonID();
+
+        out << "<anon>\n";
+        XMLWriter<Triangulation<4>> writer(*triangulation_, out, format);
+        writer.openPre();
+        out << " id=\"" << id << "\"";
+        writer.openPost();
+        writer.writeContent();
+        writer.close();
+        out << "</anon>\n";
+
+        writeXMLHeader(out, "hypersurfaces", format, anon, refs, true,
+            std::pair("tri", id),
+            std::pair("type", which_.intValue()),
+            std::pair("algorithm", algorithm_.intValue()),
+            std::pair("coords", coords_));
+    }
 
     if (format == REGINA_XML_GEN_2) {
         // Write the enumeration parameters.
@@ -146,12 +170,8 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
     writeXMLFooter(out, "hypersurfaces", format, anon, refs);
 }
 
-Packet* NormalHypersurfaces::internalClonePacket(Packet* parent) const {
-    NormalHypersurfaces* ans = new NormalHypersurfaces(
-        coords_, which_, algorithm_, *static_cast<Triangulation<4>*>(parent));
-    for (const NormalHypersurface& s : surfaces_)
-        ans->surfaces_.push_back(NormalHypersurface(s, ans->triangulation_));
-    return ans;
+Packet* NormalHypersurfaces::internalClonePacket(Packet*) const {
+    return new NormalHypersurfaces(*this);
 }
 
 } // namespace regina

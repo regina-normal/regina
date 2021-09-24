@@ -1504,6 +1504,9 @@ Equality type : EqualityType.BY_REFERENCE
 PacketOfTriangulation15 : class
 Equality type : EqualityType.BY_REFERENCE
 
+PacketOfTriangulation4 : class
+Equality type : EqualityType.BY_REFERENCE
+
 PacketOfTriangulation5 : class
 Equality type : EqualityType.BY_REFERENCE
 

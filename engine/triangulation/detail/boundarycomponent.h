@@ -84,7 +84,7 @@ class BoundaryComponentBase :
         public alias::FaceOfTriangulation<BoundaryComponentBase<dim>, dim>,
         public MarkedElement {
     private:
-        using ChangeEventSpan = std::conditional_t<dim <= 5,
+        using ChangeEventSpan = std::conditional_t<dim <= 4,
             Packet::ChangeEventSpan,
             typename PacketData<Triangulation<dim - 1>>::ChangeEventSpan>;
 

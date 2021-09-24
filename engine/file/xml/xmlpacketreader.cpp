@@ -42,7 +42,6 @@
 #include "file/xml/xmltreeresolver.h"
 #include "file/xml/xmltrireader2.h"
 #include "file/xml/xmltrireader3.h"
-#include "file/xml/xmltrireader4.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -247,11 +246,11 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 else
                     return new XMLElementReader();
             case PACKET_NORMALHYPERSURFACES:
-                if (Triangulation<4>* tri = dynamic_cast<Triangulation<4>*>(
+                if (auto tri = dynamic_cast<PacketOf<Triangulation<4>>*>(
                         packet_))
                     return new XMLLegacyNormalHypersurfacesReader(resolver_,
                         packet_, anon_, std::move(childLabel),
-                        std::move(childID), tri);
+                        std::move(childID), std::addressof(tri->data()));
                 else
                     return new XMLElementReader();
             case PACKET_ANGLESTRUCTURES:

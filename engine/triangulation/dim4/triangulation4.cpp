@@ -44,10 +44,8 @@ Triangulation<4>::Triangulation(const std::string& description) :
         knownSimpleLinks_(false) {
     Triangulation<4>* attempt;
 
-    if ((attempt = fromIsoSig(description))) {
+    if ((attempt = fromIsoSig(description)))
         swap(*attempt);
-        setLabel(description);
-    }
 
     delete attempt;
 }
@@ -168,62 +166,6 @@ long Triangulation<4>::eulerCharManifold() const {
     }
 
     return ans;
-}
-
-void Triangulation<4>::writeXMLPacketData(std::ostream& out,
-        FileFormat format, bool anon, PacketRefs& refs) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlValueTag;
-
-    writeXMLHeader(out, "tri", format, anon, refs, true,
-        std::pair("dim", 4), std::pair("size", simplices_.size()),
-        std::pair("perm", "index"));
-
-    // Write the pentachoron gluings.
-    if (format == REGINA_XML_GEN_2) {
-        out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
-        for (Pentachoron<4>* p : simplices_) {
-            out << "    <pent desc=\"" <<
-                xmlEncodeSpecialChars(p->description()) << "\"> ";
-            for (int facet = 0; facet < 5; ++facet) {
-                Pentachoron<4>* adjPent = p->adjacentPentachoron(facet);
-                if (adjPent) {
-                    out << adjPent->index() << ' '
-                        << p->adjacentGluing(facet).imagePack() << ' ';
-                } else
-                    out << "-1 -1 ";
-            }
-            out << "</pent>\n";
-        }
-        out << "  </pentachora>\n";
-    } else {
-        for (Pentachoron<4>* p : simplices_) {
-            if (p->description().empty())
-                out << "  <simplex> ";
-            else
-                out << "  <simplex desc=\"" <<
-                    xmlEncodeSpecialChars(p->description()) << "\"> ";
-            for (int facet = 0; facet < 5; ++facet) {
-                Pentachoron<4>* adjPent = p->adjacentPentachoron(facet);
-                if (adjPent) {
-                    out << adjPent->index() << ' '
-                        << p->adjacentGluing(facet).SnIndex() << ' ';
-                } else
-                    out << "-1 -1 ";
-            }
-            out << "</simplex>\n";
-        }
-    }
-
-    writeXMLBaseProperties(out);
-
-    if (H2_.has_value()) {
-        out << "  <H2>";
-        H2_->writeXMLData(out);
-        out << "</H2>\n";
-    }
-
-    writeXMLFooter(out, "tri", format, anon, refs);
 }
 
 Triangulation<4>::Triangulation(const Triangulation& X) :

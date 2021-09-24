@@ -35,6 +35,7 @@
 #include "file/fileformat.h"
 #include "file/xml/xmlwriter.h"
 #include "packet/packet-impl.h"
+#include "triangulation/dim4.h"
 #include "triangulation/generic.h"
 
 namespace regina {
@@ -65,10 +66,17 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
         "requires permutation codes to be numeric types.");
 
     if (format_ == REGINA_XML_GEN_2) {
-        out_ << "  <simplices size=\"" << data_.size() << "\">\n";
+        if constexpr (dim == 4)
+            out_ << "  <pentachora npent=\"" << data_.size() << "\">\n";
+        else
+            out_ << "  <simplices size=\"" << data_.size() << "\">\n";
         for (auto s : data_.simplices()) {
-            out_ << "    <simplex desc=\"" <<
-                regina::xml::xmlEncodeSpecialChars(s->description()) << "\"> ";
+            if constexpr (dim == 4)
+                out_ << "    <pent desc=\"";
+            else
+                out_ << "    <simplex desc=\"";
+            out_ << regina::xml::xmlEncodeSpecialChars(s->description())
+                << "\"> ";
             for (int facet = 0; facet <= dim; ++facet) {
                 Simplex<dim>* adj = s->adjacentSimplex(facet);
                 if (adj) {
@@ -77,9 +85,15 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
                 } else
                     out_ << "-1 -1 ";
             }
-            out_ << "</simplex>\n";
+            if constexpr (dim == 4)
+                out_ << "</pent>\n";
+            else
+                out_ << "</simplex>\n";
         }
-        out_ << "  </simplices>\n";
+        if constexpr (dim == 4)
+            out_ << "  </pentachora>\n";
+        else
+            out_ << "  </simplices>\n";
     } else {
         for (auto s : data_.simplices()) {
             if (s->description().empty())
@@ -106,6 +120,14 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
     }
 
     data_.writeXMLBaseProperties(out_);
+
+    if constexpr (dim == 4) {
+        if (data_.H2_.has_value()) {
+            out_ << "  <H2>";
+            data_.H2_->writeXMLData(out_);
+            out_ << "</H2>\n";
+        }
+    }
 }
 
 template <int dim>
@@ -116,6 +138,7 @@ void XMLWriter<Triangulation<dim>>::close() {
         out_ << "</tri>\n";
 }
 
+template class XMLWriter<Triangulation<4>>;
 template class XMLWriter<Triangulation<5>>;
 template class XMLWriter<Triangulation<6>>;
 template class XMLWriter<Triangulation<7>>;
@@ -128,7 +151,10 @@ template class XMLWriter<Triangulation<13>>;
 template class XMLWriter<Triangulation<14>>;
 template class XMLWriter<Triangulation<15>>;
 
+template std::string PacketData<Triangulation<4>>::anonID() const;
 
+template void PacketOf<Triangulation<4>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<5>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<6>>::writeXMLPacketData(std::ostream&,

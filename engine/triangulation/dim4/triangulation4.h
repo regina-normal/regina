@@ -87,11 +87,9 @@ template <int> class XMLTriangulationReader;
  * \ingroup dim4
  */
 template <>
-class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
-    REGINA_PACKET(Triangulation<4>, PACKET_TRIANGULATION4, "4-D triangulation")
-
-    private:
-        using ChangeEventSpan = Packet::ChangeEventSpan;
+class Triangulation<4> :
+        public Output<Triangulation<4>>, public detail::TriangulationBase<4> {
+    REGINA_PACKET_DATA(Triangulation<4>, PACKET_TRIANGULATION4)
 
     public:
         typedef std::vector<Pentachoron<4>*>::const_iterator
@@ -142,7 +140,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
         Triangulation();
         /**
          * Creates a copy of the given triangulation.
-         * The packet tree structure and packet label are \e not copied.
          *
          * This will clone any computed properties (such as homology,
          * fundamental group, and so on) of the given triangulation also.
@@ -200,8 +197,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          *
          * This list may grow in future versions of Regina.
          *
-         * Regina will also set the packet label accordingly.
-         *
          * If Regina cannot interpret the given string, this will be
          * left as the empty triangulation.
          *
@@ -215,7 +210,7 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * The constituent pentachora, the cellular structure and all other
          * properties will also be deallocated.
          */
-        virtual ~Triangulation();
+        ~Triangulation();
 
         /*@}*/
         /**
@@ -226,19 +221,23 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
         using Snapshottable<Triangulation<4>>::isReadOnlySnapshot;
 
         /**
-         * Indicates whether some other object in the calculation engine
-         * is responsible for ultimately destroying this triangulation.
+         * Writes a short text representation of this object to the
+         * given output stream.
          *
-         * This overrides the implementation from Packet, since triangulations
-         * can be snapshotted.
+         * \ifacespython Not present.
          *
-         * @return \c true if and only if some other object owns this
-         * triangulation.
+         * @param out the output stream to which to write.
          */
-        bool hasOwner() const;
-
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -321,16 +320,12 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * In particular, any pointers or references to Pentachoron<4> and/or
          * Face<4, subdim> objects will remain valid.
          *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
-         *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
-         * code via any registered packet listeners.
+         * fires change events on both triangulations which may in turn call
+         * arbitrary code via any registered packet listeners.
          *
          * @param other the triangulation whose contents should be
          * swapped with this.
@@ -974,11 +969,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
 
         /*@}*/
 
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
-
     private:
         /**
          * Clears any calculated properties, including skeletal data,
@@ -986,7 +976,7 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
-         * a packet change event.
+         * a change event.
          */
         void clearAllProperties();
 
@@ -1023,7 +1013,8 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
-    friend class regina::XMLTriangulationReader<4>;
+    friend class regina::XMLTriangulationReaderBase<4>;
+    friend class regina::XMLWriter<Triangulation<4>>;
 };
 
 } // namespace regina
@@ -1095,17 +1086,8 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
             std::forward<Args>(args)...));
 }
 
-inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {
-    return new Triangulation<4>(*this);
-}
-
 inline void Triangulation<4>::swapContents(Triangulation<4>& other) {
     swap(other);
-}
-
-inline bool Triangulation<4>::hasOwner() const {
-    return Packet::hasOwner() ||
-        Snapshottable<Triangulation<4>>::isReadOnlySnapshot();
 }
 
 } // namespace regina

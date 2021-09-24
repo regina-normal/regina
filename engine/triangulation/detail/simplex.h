@@ -86,7 +86,7 @@ class SimplexBase :
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
 
     private:
-        using ChangeEventSpan = std::conditional_t<dim <= 4,
+        using ChangeEventSpan = std::conditional_t<dim <= 3,
             Packet::ChangeEventSpan,
             typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
 

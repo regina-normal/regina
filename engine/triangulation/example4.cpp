@@ -38,7 +38,6 @@ namespace regina {
 
 Triangulation<4>* Example<4>::rp4() {
     Triangulation<4>* ans = new Triangulation<4>();
-    ans->setLabel("Real projective 4-space");
 
     // Thanks Ryan, you rock. :)
     Pentachoron<4>* p = ans->newPentachoron();
@@ -62,7 +61,6 @@ Triangulation<4>* Example<4>::rp4() {
 Triangulation<4>* Example<4>::cappellShaneson() {
     // Use the gluings described in arXiv:1109.3899.
     Triangulation<4>* ans = new Triangulation<4>();
-    ans->setLabel("Cappell-Shaneson knot complement");
 
     Pentachoron<4>* p = ans->newPentachoron();
     Pentachoron<4>* q = ans->newPentachoron();
@@ -223,8 +221,7 @@ Triangulation<4>* Example<4>::iBundle(
         const Triangulation<3>& base) {
     Triangulation<4>* ans = new Triangulation<4>();
     // Ensure only one event pair is fired in this sequence of changes.
-    Packet::ChangeEventSpan span(*ans);
-    ans->setLabel(base.label() + " x I");
+    ChangeEventSpan span(*ans);
 
     unsigned long n = base.size();
     if (n == 0)
@@ -278,8 +275,7 @@ Triangulation<4>* Example<4>::s1Bundle(
         const Triangulation<3>& base) {
     Triangulation<4>* ans = iBundle(base);
     // Ensure only one event pair is fired in this sequence of changes.
-    Packet::ChangeEventSpan span(*ans);
-    ans->setLabel(base.label() + " x S1");
+    ChangeEventSpan span(*ans);
 
     Perm<5> id;
     unsigned long n = base.size();
@@ -294,8 +290,7 @@ Triangulation<4>* Example<4>::bundleWithMonodromy(
         const Triangulation<3>& base, const Isomorphism<3>& monodromy) {
     Triangulation<4>* ans = iBundle(base);
     // Ensure only one event pair is fired in this sequence of changes.
-    Packet::ChangeEventSpan span(*ans);
-    ans->setLabel(base.label() + " x I / ~");
+    ChangeEventSpan span(*ans);
 
     unsigned long n = base.size();
     unsigned long i;

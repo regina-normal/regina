@@ -42,6 +42,7 @@
 #include "regina-core.h"
 #include "file/xml/xmlalgebrareader.h"
 #include "file/xml/xmlpacketreader.h"
+#include "triangulation/dim4.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/stringutils.h"
 #include <vector>
@@ -209,7 +210,7 @@ class XMLLegacySimplicesReader : public XMLElementReader {
 template <int dim>
 class XMLTriangulationReaderBase : public XMLPacketReader {
     protected:
-        std::conditional_t<dim <= 4, Triangulation<dim>*,
+        std::conditional_t<dim <= 3, Triangulation<dim>*,
                 PacketOf<Triangulation<dim>>*> tri_;
             /**< The triangulation currently being read. */
         bool permIndex_;
@@ -345,7 +346,7 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
  */
 template <int dim>
 class XMLTriangulationReader : public XMLTriangulationReaderBase<dim> {
-    static_assert(! standardDim(dim),
+    static_assert(dim >= 4,
         "The generic implementation of XMLTriangulationReader<dim> "
         "should not be used for Regina's standard dimensions.");
 
@@ -372,7 +373,6 @@ class XMLTriangulationReader : public XMLTriangulationReaderBase<dim> {
 // Do not explicitly drag in the specialised headers for now.
 template <> class XMLTriangulationReader<2>;
 template <> class XMLTriangulationReader<3>;
-template <> class XMLTriangulationReader<4>;
 
 // Implementation details for XMLSimplexReader
 
@@ -485,7 +485,7 @@ inline XMLTriangulationReaderBase<dim>::XMLTriangulationReaderBase(
         // tri_(new PacketOf<Triangulation<dim>>()),
         tri_(new std::remove_pointer_t<decltype(tri_)>()),
         permIndex_(permIndex), readSimplices_(0) {
-    if constexpr (dim <= 4) {
+    if constexpr (dim <= 3) {
         for ( ; size > 0; --size)
             tri_->newSimplex();
     } else {
@@ -503,7 +503,7 @@ template <int dim>
 XMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
-    if constexpr (dim <= 4) {
+    if constexpr (dim <= 3) {
 
     if (subTagName == "simplex") {
         if (readSimplices_ < tri_->size())
@@ -551,8 +551,27 @@ inline XMLTriangulationReader<dim>::XMLTriangulationReader(
 }
 
 template <int dim>
-inline XMLElementReader* XMLTriangulationReader<dim>::startPropertySubElement(
-        const std::string&, const regina::xml::XMLPropertyDict&) {
+inline XMLElementReader*
+        XMLTriangulationReaderBase<dim>::startPropertySubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& props) {
+    if constexpr (dim <= 3) {
+        if (subTagName == "fundgroup")
+            return new GroupPresentationPropertyReader(tri_->fundGroup_);
+        else if (subTagName == "H1")
+            return new AbelianGroupPropertyReader(tri_->H1_);
+    } else {
+        if (subTagName == "fundgroup")
+            return new GroupPresentationPropertyReader(tri_->data().fundGroup_);
+        else if (subTagName == "H1")
+            return new AbelianGroupPropertyReader(tri_->data().H1_);
+    }
+
+    if constexpr (dim == 4) {
+        if (subTagName == "H2")
+            return new AbelianGroupPropertyReader(tri_->data().H2_);
+    }
+
     return new XMLElementReader();
 }
 

@@ -197,8 +197,8 @@ class TriangulationBase :
         public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
-    private:
-        using ChangeEventSpan = std::conditional_t<dim <= 4,
+    protected:
+        using ChangeEventSpan = std::conditional_t<dim <= 3,
             Packet::ChangeEventSpan,
             typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
 
@@ -3249,7 +3249,7 @@ std::vector<std::unique_ptr<Triangulation<dim>>>
         }
     }
 
-    if constexpr (dim <= 4)
+    if constexpr (dim <= 3)
     if (setLabels) {
         for (size_t i = 0; i < nComp; ++i) {
             std::ostringstream label;

@@ -110,8 +110,8 @@ XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
         const regina::xml::XMLPropertyDict& props) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         list_(nullptr),
-        tri_(dynamic_cast<Triangulation<4>*>(
-            resolver_.resolve(props.lookup("tri")))) {
+        tri_(resolver_.resolvePacketData<Triangulation<4>>(
+            props.lookup("tri"))) {
     if (! tri_)
         return;
 
