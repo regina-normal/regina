@@ -126,8 +126,8 @@ def testCovers(link, name, sheets):
     tri = SnapPeaTriangulation(link.complement())
     tri.enumerateCovers(sheets, SnapPeaTriangulation.all_covers, displayCover)
 
-def testIso(inner, outer, countOnly = False):
-    comp = inner.label() + ' vs ' + outer.label()
+def testIso(inner, innerName, outer, outerName, countOnly = False):
+    comp = innerName + ' vs ' + outerName
     if not countOnly:
         print(comp + ' -> isomorphisms, display')
         inner.findAllIsomorphisms(outer, displayIso)
@@ -162,7 +162,7 @@ testStopAfter10(tri, tri.label(), 1, 1)
 testStopAfter10(tri, tri.label(), 1, 2)
 testCollect(tri, tri.label(), 1, 1)
 testCollect(tri, tri.label(), 1, 2)
-testIso(tri, tri, True)
+testIso(tri, 'Poincaré homology sphere', tri, 'Poincaré homology sphere', True)
 print()
 
 tri = Example3.weeks()
@@ -172,22 +172,22 @@ testStopAfter10(tri, tri.label(), 1, 1)
 testStopAfter10(tri, tri.label(), 1, 2)
 testCollect(tri, tri.label(), 0, 1)
 testCollect(tri, tri.label(), 0, 2)
-testIso(tri, tri)
+testIso(tri, 'Weeks manifold', tri, 'Weeks manifold')
 print()
 
 tri = Example4.cappellShaneson()
-testDisplay(tri, tri.label(), 0, 1)
-testDisplay(tri, tri.label(), 0, 2)
-testStopAfter10(tri, tri.label(), 2, 1)
-testStopAfter10(tri, tri.label(), 2, 2)
-testCollect(tri, tri.label(), 2, 1)
-testCollect(tri, tri.label(), 2, 2)
-testIso(tri, tri)
+testDisplay(tri, 'Cappell-Shaneson knot complement', 0, 1)
+testDisplay(tri, 'Cappell-Shaneson knot complement', 0, 2)
+testStopAfter10(tri, 'Cappell-Shaneson knot complement', 2, 1)
+testStopAfter10(tri, 'Cappell-Shaneson knot complement', 2, 2)
+testCollect(tri, 'Cappell-Shaneson knot complement', 2, 1)
+testCollect(tri, 'Cappell-Shaneson knot complement', 2, 2)
+testIso(tri, 'Cappell-Shaneson knot complement', tri, 'Cappell-Shaneson knot complement')
 print()
 
 inner = Example3.lst(1,2)
 outer = Example3.lens(8,3)
-testIso(inner, outer)
+testIso(inner, 'LST(1,2,3)', outer, 'L(8,3)')
 print()
 
 link = ExampleLink.trefoil()

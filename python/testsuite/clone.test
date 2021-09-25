@@ -52,10 +52,12 @@ s = list.surface(0)
 s2 = list2.surface(0)
 
 print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
+print(list2.triangulation() == tri)
+print(list2.triangulation() != tri2)
 
 print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
+print(s2.triangulation() == tri)
+print(s2.triangulation() != tri2)
 
 # 4-D hypersurface test:
 
@@ -92,8 +94,10 @@ s = list.structure(0)
 s2 = list2.structure(0)
 
 print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
+print(list2.triangulation() == tri)
+print(list2.triangulation() != tri2)
 
 print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
+print(s2.triangulation() == tri)
+print(s2.triangulation() != tri2)
 
