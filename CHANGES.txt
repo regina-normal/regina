@@ -87,6 +87,9 @@ Version 7.0  [ TODO ]
               not pointers.
             - Changed enumerate() and enumerateTautDD() to take the
               triangulation argument by reference, not by pointer.
+            - When cloning a packet tree, a cloned angle structure list
+              will now refer back to the original triangulation, not a
+              clone of the original triangulation.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
             - Routine augTorus() now returns a std::optional by const reference,
@@ -624,6 +627,9 @@ Version 7.0  [ TODO ]
             - Changed sort() so the comparison function must now take
               two hypersurfaces by reference, not by pointer.
             - New function allowsNonCompact().
+            - When cloning a packet tree, a cloned normal hypersurface list
+              will now refer back to the original triangulation, not a
+              clone of the original triangulation.
         Class NormalSurface:
             - Normal surfaces now hold a snapshot of the underlying
               triangulation at the time of creation.  The triangulation
@@ -702,6 +708,9 @@ Version 7.0  [ TODO ]
               handled by a completely different collection of classes.
             - Renamed allowsSpun() to allowsNonCompact(); the old name
               is kept as a deprecated alias.
+            - When cloning a packet tree, a cloned normal surface list
+              will now refer back to the original triangulation, not a
+              clone of the original triangulation.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
             - Removed completely.  Normal surfaces/hypersurfaces now hold
               their coordinates using a plain Vector<LargeInteger>.

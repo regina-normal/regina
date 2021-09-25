@@ -261,15 +261,7 @@ void AngleStructures::writeXMLPacketData(std::ostream& out,
 }
 
 Packet* AngleStructures::internalClonePacket(Packet* parent) const {
-    AngleStructures* ans = new AngleStructures(tautOnly_, algorithm_,
-        *static_cast<Triangulation<3>*>(parent));
-    for (const AngleStructure& s : structures_)
-        ans->structures_.push_back(AngleStructure(s, ans->triangulation_));
-
-    ans->doesSpanStrict_ = doesSpanStrict_;
-    ans->doesSpanTaut_ = doesSpanTaut_;
-
-    return ans;
+    return new AngleStructures(*this);
 }
 
 void AngleStructures::calculateSpanStrict() const {

@@ -1220,12 +1220,19 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * Clones this packet (and possibly its descendants), assigns to it
          * a suitable unused label and
          * inserts the clone into the tree as a sibling of this packet.
-         * 
+         *
          * Note that any string tags associated with this packet will
          * \e not be cloned.
          *
          * If this packet has no parent in the tree structure, no clone
-         * will be created and 0 will be returned.
+         * will be created and \c null will be returned.
+         *
+         * \note Since Regina 7.0, if a normal surface/hypersurface or
+         * angle structure list is cloned, then the new clone will refer
+         * back to the \e original triangulation, even if we are cloning
+         * an entire packet tree.  This is because there is no guarantee that
+         * the original triangulation was cloned also (it could live outside
+         * the cloned subtree, or might not be part of a packet tree at all).
          *
          * @param cloneDescendants \c true if the descendants of this
          * packet should also be cloned and inserted as descendants of

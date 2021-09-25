@@ -155,11 +155,7 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out,
 }
 
 Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {
-    NormalSurfaces* ans = new NormalSurfaces(
-        coords_, which_, algorithm_, *static_cast<Triangulation<3>*>(parent));
-    for (const NormalSurface& s : surfaces_)
-        ans->surfaces_.push_back(NormalSurface(s, ans->triangulation_));
-    return ans;
+    return new NormalSurfaces(*this);
 }
 
 } // namespace regina
