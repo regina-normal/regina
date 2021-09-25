@@ -208,7 +208,7 @@ class XMLLegacySimplicesReader : public XMLElementReader {
 template <int dim>
 class XMLTriangulationReader : public XMLPacketReader {
     protected:
-        std::conditional_t<dim <= 3, Triangulation<dim>*,
+        std::conditional_t<dim == 3, Triangulation<dim>*,
                 PacketOf<Triangulation<dim>>*> tri_;
             /**< The triangulation currently being read. */
         bool permIndex_;
@@ -443,7 +443,7 @@ inline XMLTriangulationReader<dim>::XMLTriangulationReader(
         // tri_(new PacketOf<Triangulation<dim>>()),
         tri_(new std::remove_pointer_t<decltype(tri_)>()),
         permIndex_(permIndex), readSimplices_(0) {
-    if constexpr (dim <= 3) {
+    if constexpr (dim == 3) {
         for ( ; size > 0; --size)
             tri_->newSimplex();
     } else {
@@ -461,7 +461,7 @@ template <int dim>
 XMLElementReader* XMLTriangulationReader<dim>::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
-    if constexpr (dim <= 3) {
+    if constexpr (dim == 3) {
 
     if (subTagName == "simplex") {
         if (readSimplices_ < tri_->size())
@@ -503,7 +503,7 @@ inline XMLElementReader*
         XMLTriangulationReader<dim>::startPropertySubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if constexpr (dim <= 3) {
+    if constexpr (dim == 3) {
         if (subTagName == "fundgroup")
             return new GroupPresentationPropertyReader(tri_->fundGroup_);
         else if (subTagName == "H1")

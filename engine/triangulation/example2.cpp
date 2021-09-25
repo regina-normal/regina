@@ -38,37 +38,31 @@ namespace regina {
 
 Triangulation<2>* Example<2>::sphereTetrahedron() {
     Triangulation<2>* ans = simplicialSphere();
-    ans->setLabel("Sphere (tetrahedron boundary)");
     return ans;
 }
 
 Triangulation<2>* Example<2>::torus() {
     Triangulation<2>* ans = sphereBundle();
-    ans->setLabel("Torus");
     return ans;
 }
 
 Triangulation<2>* Example<2>::kb() {
     Triangulation<2>* ans = twistedSphereBundle();
-    ans->setLabel("Klein bottle");
     return ans;
 }
 
 Triangulation<2>* Example<2>::disc() {
     Triangulation<2>* ans = ball();
-    ans->setLabel("Disc");
     return ans;
 }
 
 Triangulation<2>* Example<2>::annulus() {
     Triangulation<2>* ans = ballBundle();
-    ans->setLabel("Annulus");
     return ans;
 }
 
 Triangulation<2>* Example<2>::mobius() {
     Triangulation<2>* ans = twistedBallBundle();
-    ans->setLabel("M\u00F6bius band");
     return ans;
 }
 
@@ -113,15 +107,6 @@ Triangulation<2>* Example<2>::orientable(
                 0, ans->triangle(4 * genus + 3 * i - 1), Perm<3>(1, 2));
     }
 
-    // Set an appropriate packet label.
-    std::ostringstream s;
-    s << "Orientable, genus " << genus;
-    if (punctures == 1)
-        s << ", 1 puncture";
-    else if (punctures > 1)
-        s << ", " << punctures << " punctures";
-    ans->setLabel(s.str());
-
     return ans;
 }
 
@@ -149,21 +134,11 @@ Triangulation<2>* Example<2>::nonOrientable(
         ans->triangle(2 * genus + 3 * i - 2)->join(
             0, ans->triangle(2 * genus + 3 * i), Perm<3>(1, 2));
 
-    // Set an appropriate packet label.
-    std::ostringstream s;
-    s << "Non-orientable, genus " << genus;
-    if (punctures == 1)
-        s << ", 1 puncture";
-    else if (punctures > 1)
-        s << ", " << punctures << " punctures";
-    ans->setLabel(s.str());
-
     return ans;
 }
 
 Triangulation<2>* Example<2>::sphereOctahedron() {
     Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("Sphere (octahedron boundary)");
 
     Triangle<2>* r = ans->newTriangle();
     Triangle<2>* s = ans->newTriangle();
@@ -191,7 +166,6 @@ Triangulation<2>* Example<2>::sphereOctahedron() {
 
 Triangulation<2>* Example<2>::rp2() {
     Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("Projective plane");
 
     Triangle<2>* r = ans->newTriangle();
     Triangle<2>* s = ans->newTriangle();

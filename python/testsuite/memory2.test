@@ -113,20 +113,17 @@ print('Vertex link #1')
 print('Step 1')
 t = Example3.lens(7,1); tw = Watcher(t, 't1')
 print('Step 2')
-v = t.vertex(0).buildLink(); vw = Watcher(v, 'v1')
+v = t.vertex(0).buildLink()
 print('Step 3')
-t.insertChildLast(v)
+t = None # destroys t1 but not v1
 print('Step 4')
-t = None # destroys t
-print('Step 5')
-# v1 is orphaned but alive
-print(v); print(v.label()); print(v.parent())
+print(v.isoSig())
 
 print('Vertex link #2')
 print('Step 1')
 t = Example3.lens(7,1); tw = Watcher(t, 't2')
 print('Step 2')
-v = t.vertex(0).buildLink(); vw = Watcher(v, 'v2') # destroys v1
+v = t.vertex(0).buildLink() # destroys v1
 print('Step 3')
 t = None # destroys t2
 print('Step 4')
@@ -137,20 +134,18 @@ print('Vertex link detailed #1')
 print('Step 1')
 t = Example3.lens(7,1); tw = Watcher(t, 't3')
 print('Step 2')
-v = t.vertex(0).buildLinkDetail(); vw = Watcher(v[0], 'v3')
+v = t.vertex(0).buildLinkDetail()
 print('Step 3')
-t.insertChildLast(v[0])
-print('Step 4')
 t = None # destroys t3
-print('Step 5')
+print('Step 4')
 # v3 is orphaned but alive
-print(v[0]); print(v[0].label()); print(v[0].parent())
+print(v[0].isoSig())
 
 print('Vertex link detailed #2')
 print('Step 1')
 t = Example3.lens(7,1); tw = Watcher(t, 't4')
 print('Step 2')
-v = t.vertex(0).buildLinkDetail(); vw = Watcher(v[0], 'v4') # destroys v3
+v = t.vertex(0).buildLinkDetail() # destroys v3
 print('Step 3')
 t = None # destroys t4
 print('Step 4')

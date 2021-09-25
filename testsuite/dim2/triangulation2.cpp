@@ -93,22 +93,17 @@ class Triangulation2Test : public TriangulationTest<2> {
             TriangulationTest<2>::setUp();
 
             copyAndDelete(s2Oct, Example<2>::sphereOctahedron());
-            s2Oct.setLabel("Octahedron boundary");
 
             copyAndDelete(torus2, Example<2>::orientable(2, 0));
-            torus2.setLabel("Genus 2 torus");
 
             copyAndDelete(rp2, Example<2>::rp2());
-            rp2.setLabel("RP^2");
 
             disjoint2.insertTriangulation(sphereBundle);
             disjoint2.insertTriangulation(twistedBallBundle);
-            disjoint2.setLabel("Torus U Mobius");
 
             disjoint3.insertTriangulation(twistedSphereBundle);
             disjoint3.insertTriangulation(ballBundle);
             disjoint3.insertTriangulation(sphere);
-            disjoint3.setLabel("KB U Annulus U S^2");
         }
 
         void tearDown() {

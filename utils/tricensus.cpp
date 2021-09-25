@@ -174,7 +174,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
             std::ostringstream out;
             out << "Item " << (nSolns + 1);
 
-            if constexpr (dim <= 3) {
+            if constexpr (dim == 3) {
                 tri->setLabel(out.str());
                 container->insertChildLast(tri);
             } else {

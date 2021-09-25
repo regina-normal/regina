@@ -42,10 +42,8 @@ namespace regina {
 Triangulation<2>::Triangulation(const std::string& description) {
     Triangulation<2>* attempt;
 
-    if ((attempt = fromIsoSig(description))) {
+    if ((attempt = fromIsoSig(description)))
         swap(*attempt);
-        setLabel(description);
-    }
 
     delete attempt;
 }
@@ -141,58 +139,6 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
         out << '\n';
     }
     out << '\n';
-}
-
-void Triangulation<2>::writeXMLPacketData(std::ostream& out,
-        FileFormat format, bool anon, PacketRefs& refs) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlValueTag;
-
-    writeXMLHeader(out, "tri", format, anon, refs, true,
-        std::pair("dim", 2), std::pair("size", simplices_.size()),
-        std::pair("perm", "index"));
-
-    // Write the triangle gluings.
-    if (format == REGINA_XML_GEN_2) {
-        out << "  <triangles ntriangles=\"" << simplices_.size() << "\">\n";
-        for (Triangle<2>* t : simplices_) {
-            out << "    <triangle desc=\"" <<
-                xmlEncodeSpecialChars(t->description()) << "\"> ";
-            for (int edge = 0; edge < 3; ++edge) {
-                Triangle<2>* adjTri = t->adjacentTriangle(edge);
-                if (adjTri) {
-                    out << adjTri->index() << ' '
-                        << static_cast<int>(t->
-                            adjacentGluing(edge).permCode()) << ' ';
-                } else
-                    out << "-1 -1 ";
-            }
-            out << "</triangle>\n";
-        }
-        out << "  </triangles>\n";
-    } else {
-        for (Triangle<2>* t : simplices_) {
-            if (t->description().empty())
-                out << "  <simplex> ";
-            else
-                out << "  <simplex desc=\"" <<
-                    xmlEncodeSpecialChars(t->description()) << "\"> ";
-            for (int edge = 0; edge < 3; ++edge) {
-                Triangle<2>* adjTri = t->adjacentTriangle(edge);
-                if (adjTri) {
-                    out << adjTri->index() << ' '
-                        << static_cast<int>(t->
-                            adjacentGluing(edge).SnIndex()) << ' ';
-                } else
-                    out << "-1 -1 ";
-            }
-            out << "</simplex>\n";
-        }
-    }
-
-    writeXMLBaseProperties(out);
-
-    writeXMLFooter(out, "tri", format, anon, refs);
 }
 
 } // namespace regina

@@ -47,8 +47,7 @@ using regina::detail::TriangulationBase;
 CONVERT_FROM_UNIQUE_PTR(regina::Triangulation<2>)
 
 void addTriangulation2(pybind11::module_& m) {
-    auto c = pybind11::class_<Triangulation<2>, regina::Packet,
-            regina::SafePtr<Triangulation<2>>>(m, "Triangulation2")
+    auto c = pybind11::class_<Triangulation<2>>(m, "Triangulation2")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<2>&>())
         .def(pybind11::init<const Triangulation<2>&, bool>())
@@ -194,13 +193,14 @@ void addTriangulation2(pybind11::module_& m) {
         .def("dumpConstruction", &Triangulation<2>::dumpConstruction)
         // We cannot take the addresses of the following properties, so we
         // define getter functions instead.
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            return Triangulation<2>::typeID;
-        })
         .def_property_readonly_static("dimension", [](pybind11::object) {
             return Triangulation<2>::dimension;
         })
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+    regina::python::add_packet_wrapper<Triangulation<2>>(
+        m, "PacketOfTriangulation2");
 
     m.def("swap",
         (void(*)(Triangulation<2>&, Triangulation<2>&))(regina::swap));

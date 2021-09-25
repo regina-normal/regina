@@ -42,9 +42,9 @@ class Watcher(PacketListener):
 
 print('Vertices of triangulation: vertices()')
 print('Step 1')
-t = Example2.sphere(); tw = Watcher(t, 't')
+t = PacketOfTriangulation2(Example2.sphere()); tw = Watcher(t, 't')
 print('Step 2')
-v = t.vertices() # v keeps t alive
+v = t.data().vertices() # v keeps t alive
 print('Step 3')
 t = None
 print('Step 4')
@@ -119,9 +119,9 @@ print('Step 5')
 
 print('Vertices of triangulation: face<1>()')
 print('Step 1')
-t = Example2.sphere(); tw = Watcher(t, 't')
+t = PacketOfTriangulation2(Example2.sphere()); tw = Watcher(t, 't')
 print('Step 2')
-e = t.face(1, 0) # e keeps t alive
+e = t.data().face(1, 0) # e keeps t alive
 print('Step 3')
 t = None
 print('Step 4')
@@ -168,9 +168,9 @@ print('Step 7')
 
 print('Vertices of component')
 print('Step 1')
-t = Example2.sphere(); tw = Watcher(t, 't')
+t = PacketOfTriangulation2(Example2.sphere()); tw = Watcher(t, 't')
 print('Step 2')
-c = t.component(0) # c keeps t alive
+c = t.data().component(0) # c keeps t alive
 print('Step 3')
 # None of these keep t alive
 f1 = c.vertices()

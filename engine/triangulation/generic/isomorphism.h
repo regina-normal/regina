@@ -115,7 +115,7 @@ class Isomorphism :
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
 
     private:
-        using ChangeEventSpan = std::conditional_t<dim <= 3,
+        using ChangeEventSpan = std::conditional_t<dim == 3,
             Packet::ChangeEventSpan,
             typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
 

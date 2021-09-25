@@ -371,7 +371,23 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         bool hasOwner() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         virtual void writeTextShort(std::ostream& out) const override;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
         virtual void writeTextLong(std::ostream& out) const override;
 
         /*@}*/

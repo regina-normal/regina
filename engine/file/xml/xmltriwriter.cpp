@@ -35,6 +35,7 @@
 #include "file/fileformat.h"
 #include "file/xml/xmlwriter.h"
 #include "packet/packet-impl.h"
+#include "triangulation/dim2.h"
 #include "triangulation/dim4.h"
 #include "triangulation/generic.h"
 
@@ -56,22 +57,26 @@ void XMLWriter<Triangulation<dim>>::openPre() {
 template <int dim>
 void XMLWriter<Triangulation<dim>>::writeContent() {
     // Write the simplex gluings.
-    // We will send permutation codes directly to the output stream.
+    // We send permutation indices directly to the output stream.
     // This requires them to be numeric types (not character types).
     static_assert(! (
-            std::is_same<typename Perm<dim + 1>::Code, char>::value ||
-            std::is_same<typename Perm<dim + 1>::Code, unsigned char>::value
+            std::is_same<typename Perm<dim + 1>::Index, char>::value ||
+            std::is_same<typename Perm<dim + 1>::Index, unsigned char>::value
         ),
-        "The generic implementation of Triangulation<dim>::writeXMLPacketData "
-        "requires permutation codes to be numeric types.");
+        "XMLWriter<Triangulation<dim>> requires permutation indices to be "
+        "numeric types.");
 
     if (format_ == REGINA_XML_GEN_2) {
-        if constexpr (dim == 4)
+        if constexpr (dim == 2)
+            out_ << "  <triangles ntriangles=\"" << data_.size() << "\">\n";
+        else if constexpr (dim == 4)
             out_ << "  <pentachora npent=\"" << data_.size() << "\">\n";
         else
             out_ << "  <simplices size=\"" << data_.size() << "\">\n";
         for (auto s : data_.simplices()) {
-            if constexpr (dim == 4)
+            if constexpr (dim == 2)
+                out_ << "    <triangle desc=\"";
+            else if constexpr (dim == 4)
                 out_ << "    <pent desc=\"";
             else
                 out_ << "    <simplex desc=\"";
@@ -80,17 +85,37 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
             for (int facet = 0; facet <= dim; ++facet) {
                 Simplex<dim>* adj = s->adjacentSimplex(facet);
                 if (adj) {
-                    out_ << adj->index() << ' '
-                        << s->adjacentGluing(facet).imagePack() << ' ';
+                    if constexpr (dim == 2) {
+                        // We have already asserted that SnIndex() is a
+                        // numeric (not character) type.
+                        out_ << adj->index() << ' '
+                            << static_cast<int>(
+                                s->adjacentGluing(facet).SnIndex()) << ' ';
+                    } else {
+                        static_assert(! (
+                                std::is_same<typename Perm<dim + 1>::ImagePack,
+                                    char>::value ||
+                                std::is_same<typename Perm<dim + 1>::ImagePack,
+                                    unsigned char>::value
+                            ),
+                            "XMLWriter<Triangulation<dim>> requires "
+                            "permutation image packs to be numeric types.");
+                        out_ << adj->index() << ' '
+                            << s->adjacentGluing(facet).imagePack() << ' ';
+                    }
                 } else
                     out_ << "-1 -1 ";
             }
-            if constexpr (dim == 4)
+            if constexpr (dim == 2)
+                out_ << "</triangle>\n";
+            else if constexpr (dim == 4)
                 out_ << "</pent>\n";
             else
                 out_ << "</simplex>\n";
         }
-        if constexpr (dim == 4)
+        if constexpr (dim == 2)
+            out_ << "  </triangles>\n";
+        else if constexpr (dim == 4)
             out_ << "  </pentachora>\n";
         else
             out_ << "  </simplices>\n";
@@ -106,9 +131,19 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
                 Simplex<dim>* adj = s->adjacentSimplex(facet);
                 if (adj) {
                     if constexpr (useSnIndex) {
+                        // We have already asserted that SnIndex() is a
+                        // numeric (not character) type.
                         out_ << adj->index() << ' '
                             << s->adjacentGluing(facet).SnIndex() << ' ';
                     } else {
+                        static_assert(! (
+                                std::is_same<typename Perm<dim + 1>::ImagePack,
+                                    char>::value ||
+                                std::is_same<typename Perm<dim + 1>::ImagePack,
+                                    unsigned char>::value
+                            ),
+                            "XMLWriter<Triangulation<dim>> requires "
+                            "permutation image packs to be numeric types.");
                         out_ << adj->index() << ' '
                             << s->adjacentGluing(facet).imagePack() << ' ';
                     }
@@ -138,6 +173,7 @@ void XMLWriter<Triangulation<dim>>::close() {
         out_ << "</tri>\n";
 }
 
+template class XMLWriter<Triangulation<2>>;
 template class XMLWriter<Triangulation<4>>;
 template class XMLWriter<Triangulation<5>>;
 template class XMLWriter<Triangulation<6>>;
@@ -153,6 +189,8 @@ template class XMLWriter<Triangulation<15>>;
 
 template std::string PacketData<Triangulation<4>>::anonID() const;
 
+template void PacketOf<Triangulation<2>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<4>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<5>>::writeXMLPacketData(std::ostream&,
