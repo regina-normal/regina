@@ -64,7 +64,7 @@
 
 namespace regina {
 
-template <int dim> class XMLTriangulationReaderBase;
+template <int dim> class XMLTriangulationReader;
 
 /**
  * The default encoding to use for isomorphism signatures.
@@ -2228,7 +2228,7 @@ class TriangulationBase :
         };
 
     template <int> friend class BoundaryComponentBase;
-    friend class regina::XMLTriangulationReaderBase<dim>;
+    friend class regina::XMLTriangulationReader<dim>;
     friend class regina::XMLWriter<Triangulation<dim>>;
 };
 

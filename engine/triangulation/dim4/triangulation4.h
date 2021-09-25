@@ -1020,7 +1020,7 @@ class Triangulation<4> :
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
-    friend class regina::XMLTriangulationReaderBase<4>;
+    friend class regina::XMLTriangulationReader<4>;
     friend class regina::XMLWriter<Triangulation<4>>;
 };
 

@@ -40,8 +40,7 @@
 #include "file/xml/xmlpacketreaders.h"
 #include "file/xml/xmlsnappeareader.h"
 #include "file/xml/xmltreeresolver.h"
-#include "file/xml/xmltrireader2.h"
-#include "file/xml/xmltrireader3.h"
+#include "file/xml/xmltrireader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
