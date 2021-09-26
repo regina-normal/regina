@@ -53,7 +53,7 @@ namespace regina {
 template <typename Held>
 void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
-    XMLWriter<Held> writer(data_, out, format);
+    XMLWriter<Held> writer(*this, out, format);
     writer.openPre();
     out << " label=\"" << regina::xml::xmlEncodeSpecialChars(label())
         << "\"";

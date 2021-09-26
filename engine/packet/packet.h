@@ -59,6 +59,7 @@ class PacketListener;
 template <bool> class PacketChildren;
 template <bool> class PacketDescendants;
 template <bool> class SubtreeIterator;
+template <typename Held> class PacketData;
 
 /**
  * \defgroup packet Basic Packet Types
@@ -1759,31 +1760,31 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
 template <typename Held>
 class XMLWriter;
 
+enum PacketHeldBy {
+    HELD_BY_NONE = 0,
+    HELD_BY_PACKET = 1,
+    HELD_BY_SNAPPEA = 2
+};
+
 template <typename Held>
-class PacketOf : public Packet {
+class PacketOf : public Packet, public Held {
     public:
         static constexpr const PacketType typeID = Held::packetTypeID;
 
-    private:
-        Held data_;
-
     public:
         PacketOf() {
-            data_.packet_ = this;
+            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
-        PacketOf(const Held& data) : data_(data) {
-            data_.packet_ = this;
+        PacketOf(const Held& data) : Held(data) {
+            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
-        PacketOf(Held&& data) : data_(std::move(data)) {
-            data_.packet_ = this;
-        }
-        PacketOf(const PacketOf& src) : data_(src.data_) {
-            data_.packet_ = this;
+        PacketOf(Held&& data) : Held(std::move(data)) {
+            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
         template <typename... Args>
         explicit PacketOf(std::in_place_t, Args&&... args) :
-                data_(std::forward<Args>(args)...) {
-            data_.packet_ = this;
+                Held(std::forward<Args>(args)...) {
+            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
 
         inline virtual PacketType type() const override {
@@ -1794,17 +1795,17 @@ class PacketOf : public Packet {
         }
 
         Held& data() {
-            return data_;
+            return *this;
         }
         const Held& data() const {
-            return data_;
+            return *this;
         }
 
         virtual void writeTextShort(std::ostream& out) const override {
-            data_.writeTextShort(out);
+            Held::writeTextShort(out);
         }
         virtual void writeTextLong(std::ostream& out) const override {
-            data_.writeTextLong(out);
+            Held::writeTextLong(out);
         }
 
     protected:
@@ -1823,19 +1824,21 @@ class PacketOf : public Packet {
 template <typename Held>
 class PacketData {
     private:
-        PacketOf<Held>* packet_;
-            /** The packet holding this object, or \c null if the object
-                is standalone and not held by a PacketOf<Held>.
-                This pointer will be managed by the class PacketOf<Held>,
-                and should not be changed at all by this class. */
+        PacketHeldBy heldBy_ { HELD_BY_NONE };
 
     public:
-        PacketData() : packet_(nullptr) {}
-        PacketData(const PacketData&) : packet_(nullptr) {}
+        PacketData() {}
+        PacketData(const PacketData&) {}
         PacketData& operator = (const PacketData&) { return *this; }
 
-        PacketOf<Held>* packet() { return packet_; }
-        const PacketOf<Held>* packet() const { return packet_; }
+        PacketOf<Held>* packet() {
+            return heldBy_ == HELD_BY_PACKET ?
+                static_cast<PacketOf<Held>*>(this) : nullptr;
+        }
+        const PacketOf<Held>* packet() const {
+            return heldBy_ == HELD_BY_PACKET ?
+                static_cast<const PacketOf<Held>*>(this) : nullptr;
+        }
 
         std::string anonID() const;
 
@@ -1845,8 +1848,9 @@ class PacketData {
 
             public:
                 ChangeEventSpan(PacketData& data) :
-                        span_(data.packet_ ?
-                            new Packet::ChangeEventSpan(*data.packet_) :
+                        span_(data.heldBy_ == HELD_BY_PACKET ?
+                            new Packet::ChangeEventSpan(
+                                static_cast<PacketOf<Held>&>(data)) :
                             nullptr) {
                 }
                 ~ChangeEventSpan() { delete span_; }
