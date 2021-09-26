@@ -93,7 +93,7 @@ class XMLAngleStructuresReader : public XMLPacketReader {
     private:
         AngleStructures* list_;
             /**< The angle structure list currently being read. */
-        Triangulation<3>* tri_;
+        const Triangulation<3>* tri_;
             /**< The triangulation on which these angle structures
                  are placed. */
 
@@ -128,7 +128,7 @@ class XMLLegacyAngleStructuresReader : public XMLPacketReader {
     private:
         AngleStructures* list_;
             /**< The angle structure list currently being read. */
-        Triangulation<3>* tri_;
+        const Triangulation<3>* tri_;
             /**< The triangulation on which these angle structures
                  are placed. */
 
@@ -144,7 +144,7 @@ class XMLLegacyAngleStructuresReader : public XMLPacketReader {
          */
         XMLLegacyAngleStructuresReader(XMLTreeResolver& resolver,
             Packet* parent, bool anon, std::string label, std::string id,
-            Triangulation<3>* tri);
+            const Triangulation<3>* tri);
 
         virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
@@ -175,7 +175,7 @@ inline Packet* XMLAngleStructuresReader::packetToCommit() {
 
 inline XMLLegacyAngleStructuresReader::XMLLegacyAngleStructuresReader(
         XMLTreeResolver& res, Packet* parent, bool anon,
-        std::string label, std::string id, Triangulation<3>* tri) :
+        std::string label, std::string id, const Triangulation<3>* tri) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         list_(nullptr), tri_(tri) {
 }

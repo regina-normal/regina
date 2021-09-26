@@ -153,7 +153,7 @@ class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
          */
         XMLLegacyNormalHypersurfacesReader(XMLTreeResolver& resolver,
             Packet* parent, bool anon, std::string label, std::string id,
-            Triangulation<4>* tri);
+            const Triangulation<4>* tri);
 
         virtual Packet* packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
@@ -185,7 +185,7 @@ inline Packet* XMLNormalHypersurfacesReader::packetToCommit() {
 
 inline XMLLegacyNormalHypersurfacesReader::XMLLegacyNormalHypersurfacesReader(
         XMLTreeResolver& res, Packet* parent, bool anon,
-        std::string label, std::string id, Triangulation<4>* tri) :
+        std::string label, std::string id, const Triangulation<4>* tri) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         list_(nullptr), tri_(tri) {
 }
