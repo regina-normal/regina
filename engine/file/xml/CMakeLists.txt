@@ -13,6 +13,7 @@ SET ( FILES
   xmlpacketreaders.cpp
   xmlreader.cpp
   xmlsnappeareader.cpp
+  xmlsnappeawriter.cpp
   xmlsurfacereader.cpp
   xmltriwriter.cpp)
 
