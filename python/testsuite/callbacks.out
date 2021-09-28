@@ -505,13 +505,11 @@ Saturated region:
     0/2 --> 0/0 (reflected)
 
 
-Destroying covers
-Destroying packet
-Destroying packet
-Destroying packet
-Destroying packet
-Destroying packet
-Destroying packet
-Destroying original
-Destroying packet
-Done
+Enumerating covers:
+  mLvALvQQQceegjlkjiljklhhahhaaaghahg CoverType.irregular_cover
+  mLvALvQQQceegjlkjiljklhhahhaaaghahg CoverType.irregular_cover
+  mLvwMMMPQbegfijhkkklllhaahbabhhahbg CoverType.cyclic_cover
+  mLvwMMMPQbegfijhkkklllhaahbabhhahbg CoverType.cyclic_cover
+  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb CoverType.cyclic_cover
+  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb CoverType.cyclic_cover
+

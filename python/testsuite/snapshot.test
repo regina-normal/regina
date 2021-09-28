@@ -43,22 +43,23 @@ class Watcher(PacketListener):
 
 # Make sure that snapshotting works.
 
-t = Example3.whiteheadLink()
+t = PacketOfTriangulation3(Example3.whiteheadLink())
 w1 = Watcher(t, 'original')
-print(t.isoSig(), t.isReadOnlySnapshot())
+print(t.data().isoSig(), t.data().isReadOnlySnapshot())
 
-a = AngleStructures(t)
+a = AngleStructures(t.data())
 print(a)
 print(a.triangulation().isoSig())
 
-a.triangulation().pachner(t.tetrahedron(0))
-w2 = Watcher(a.triangulation(), 'snapshot')
-print(t.isoSig(), t.isReadOnlySnapshot())
+a.triangulation().pachner(t.data().tetrahedron(0))
+print(t.data().isoSig(), t.data().isReadOnlySnapshot())
 print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
 
 print('Step 1')
 t = None
 print('Step 2')
 a = None
+# This should destroy a.triangulation(), but since that does not have a
+# packet wrapper we cannot observe its destruction here.
 print('Step 3')
 

@@ -33,7 +33,7 @@
 
 from __future__ import print_function
 
-def dumpAngles(name, tri, tautOnly = False):
+def dumpAngles(name, tri, triName, tautOnly = False):
 	try:
 		slist = regina.AngleStructures(tri, tautOnly)
 	except:
@@ -45,7 +45,7 @@ def dumpAngles(name, tri, tautOnly = False):
 		return
 
 	print("-------------------------------")
-	print(slist.triangulation().label())
+	print(triName)
 	print(name)
 	print("-------------------------------")
 	print()
@@ -62,14 +62,13 @@ def dumpAngles(name, tri, tautOnly = False):
 	# Nothing else to say.
 	print()
 
-def angleStats(tri):
-	dumpAngles('Vertex angle structures', tri, False)
-	dumpAngles('Taut angle structures', tri, True)
+def angleStats(tri, triName):
+	dumpAngles('Vertex angle structures', tri, triName, False)
+	dumpAngles('Taut angle structures', tri, triName, True)
 
 t = regina.Triangulation3()
-t.setLabel("Empty triangulation")
-angleStats(t)
+angleStats(t, 'Empty triangulation')
 
-angleStats(regina.Example3.figureEight())
-angleStats(regina.Example3.whiteheadLink())
-angleStats(regina.Example3.poincareHomologySphere())
+angleStats(regina.Example3.figureEight(), 'Figure eight knot complement')
+angleStats(regina.Example3.whiteheadLink(), 'Whitehead link complement')
+angleStats(regina.Example3.poincareHomologySphere(), 'Poincaré homology sphere')

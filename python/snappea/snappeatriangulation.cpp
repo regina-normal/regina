@@ -125,10 +125,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
             pybind11::list ans;
             tri.enumerateCovers(sheets, type, [&](SnapPeaTriangulation& c,
                     SnapPeaTriangulation::CoverType t) {
-                SnapPeaTriangulation* result = new SnapPeaTriangulation;
-                result->swap(c);
                 pybind11::tuple pair(2);
-                pair[0] = pybind11::cast(result);
+                pair[0] = pybind11::cast(new SnapPeaTriangulation(std::move(c)));
                 pair[1] = t;
                 ans.append(pair);
             });

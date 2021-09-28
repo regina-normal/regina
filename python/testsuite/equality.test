@@ -69,9 +69,14 @@ print(a == b, a != b)
 # but different python wrappers.
 # In all cases these objects should be reported as equal.
 
+print('Packet:')
+a = Container()
+b = a.root()
+print(a == b, a != b)
+
 print('Triangulation3:')
 a = Triangulation3()
-b = a.root()
+b = a.newSimplex().triangulation()
 print(a == b, a != b)
 
 print('Tetrahedron3:')

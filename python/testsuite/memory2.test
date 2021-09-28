@@ -44,7 +44,7 @@ print('Script variables #1')
 print('Step 1')
 a = Container(); aw1 = Watcher(a, 'a1')
 print('Step 2')
-b = Triangulation3(); b.newSimplex(); bw1 = Watcher(b, 'b1')
+b = PacketOfTriangulation3(); b.data().newSimplex(); bw1 = Watcher(b, 'b1')
 print('Step 3')
 c = Script(); cw1 = Watcher(c, 'c1')
 print('Step 4')
@@ -66,7 +66,7 @@ print('Script variables #2')
 print('Step 1')
 a = Container(); aw2 = Watcher(a, 'a2')
 print('Step 2')
-b = Triangulation3(); b.newSimplex(); bw2 = Watcher(b, 'b2')
+b = PacketOfTriangulation3(); b.data().newSimplex(); bw2 = Watcher(b, 'b2')
 print('Step 3')
 c = Script(); cw2 = Watcher(c, 'c2') # destroys c1
 print('Step 4')
@@ -88,32 +88,16 @@ print(c); print(c.label()); print(c.parent())
 
 print('Example triangulation')
 print('Step 1')
-f = ExampleSnapPea.figureEight(); fw = Watcher(f, 'f')
+f = PacketOfSnapPeaTriangulation(ExampleSnapPea.figureEight()); fw = Watcher(f, 'f')
 print('Step 2')
 f = None # destroys f
 print('Step 3')
 
-print('Triangulated components (3-D)')
-print('Step 1')
-p = Example3.poincareHomologySphere()
-p.insertTriangulation(p)
-pw = Watcher(p, 'p')
-comp = p.triangulateComponents()
-cw0 = Watcher(comp[0], 'comp0')
-cw1 = Watcher(comp[1], 'comp1')
-print('Step 2')
-p.insertChildLast(comp[0])
-print('Step 3')
-comp = None # destroys comp[1] only
-print('Step 4')
-p = None # destroys p and comp[0]
-print('Step 5')
-
 print('Vertex link #1')
 print('Step 1')
-t = Example3.lens(7,1); tw = Watcher(t, 't1')
+t = PacketOfTriangulation3(Example3.lens(7,1)); tw = Watcher(t, 't1')
 print('Step 2')
-v = t.vertex(0).buildLink()
+v = t.data().vertex(0).buildLink()
 print('Step 3')
 t = None # destroys t1 but not v1
 print('Step 4')
@@ -121,9 +105,9 @@ print(v.isoSig())
 
 print('Vertex link #2')
 print('Step 1')
-t = Example3.lens(7,1); tw = Watcher(t, 't2')
+t = PacketOfTriangulation3(Example3.lens(7,1)); tw = Watcher(t, 't2')
 print('Step 2')
-v = t.vertex(0).buildLink() # destroys v1
+v = t.data().vertex(0).buildLink() # destroys v1
 print('Step 3')
 t = None # destroys t2
 print('Step 4')
@@ -132,9 +116,9 @@ print('Step 5')
 
 print('Vertex link detailed #1')
 print('Step 1')
-t = Example3.lens(7,1); tw = Watcher(t, 't3')
+t = PacketOfTriangulation3(Example3.lens(7,1)); tw = Watcher(t, 't3')
 print('Step 2')
-v = t.vertex(0).buildLinkDetail()
+v = t.data().vertex(0).buildLinkDetail()
 print('Step 3')
 t = None # destroys t3
 print('Step 4')
@@ -143,9 +127,9 @@ print(v[0].isoSig())
 
 print('Vertex link detailed #2')
 print('Step 1')
-t = Example3.lens(7,1); tw = Watcher(t, 't4')
+t = PacketOfTriangulation3(Example3.lens(7,1)); tw = Watcher(t, 't4')
 print('Step 2')
-v = t.vertex(0).buildLinkDetail() # destroys v3
+v = t.data().vertex(0).buildLinkDetail() # destroys v3
 print('Step 3')
 t = None # destroys t4
 print('Step 4')

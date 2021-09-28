@@ -42,7 +42,7 @@ print("-----------------------------------------------------------")
 print("Basic:")
 print()
 
-print(Example3.poincareHomologySphere().isoSig())
+print(PacketOfTriangulation3(Example3.poincareHomologySphere()).data().isoSig())
 print(Text("Hello World"))
 print(Text("Hello World").text())
 
@@ -51,9 +51,9 @@ print("-----------------------------------------------------------")
 print("Basic container tests:")
 print()
 
-t1 = Triangulation3()
-t2 = Example3.poincareHomologySphere()
-t3 = Example3.figureEight()
+t1 = PacketOfTriangulation3()
+t2 = PacketOfTriangulation3(Example3.poincareHomologySphere())
+t3 = PacketOfTriangulation3(Example3.figureEight())
 p = PDF()
 
 t = Text()
@@ -63,21 +63,21 @@ c.insertChildFirst(t1)
 
 print(c.countChildren())
 
-print(t1.isoSig())
-t1.newTetrahedron()
+print(t1.data().isoSig())
+t1.data().newTetrahedron()
 
 print(c.firstChild())
-print(c.firstChild().isoSig())
+print(c.firstChild().data().isoSig())
 
 t1 = None
 
-print(c.firstChild().isoSig())
+print(c.firstChild().data().isoSig())
 
 temp = c.lastChild()
 
-temp.newTetrahedron()
+temp.data().newTetrahedron()
 
-print(temp.isoSig())
+print(temp.data().isoSig())
 
 print()
 print("-----------------------------------------------------------")
@@ -87,7 +87,7 @@ print()
 c = None
 
 try:
-    print(temp.isoSig())
+    print(temp.data().isoSig())
 except RuntimeError:
     print("Got exception")
 
@@ -118,7 +118,7 @@ m = l.root()
 
 print(m == t2)
 
-print(m.isoSig())
+print(m.data().isoSig())
 
 m = None
 
@@ -157,23 +157,26 @@ print()
 d1 = Triangulation3(); d1.newTetrahedron()
 d2 = Triangulation3(); d2.newTetrahedron(); d2.newTetrahedron()
 d3 = Triangulation3(); d3.newTetrahedron(); d3.newTetrahedron(); d3.newTetrahedron()
-d1.insertChildLast(d2)
-d2.insertChildLast(d3)
+p1 = PacketOfTriangulation3(d1)
+p2 = PacketOfTriangulation3(d2)
+p3 = PacketOfTriangulation3(d3)
+p1.insertChildLast(p2)
+p2.insertChildLast(p3)
 
-print(d1)
-print(d2)
-print(d3)
+print(p1)
+print(p2)
+print(p3)
 
-d2.makeOrphan()
-print(d1)
-print(d2)
-print(d3)
+p2.makeOrphan()
+print(p1)
+print(p2)
+print(p3)
 
 try:
-    d2 = None
-    print(d1)
-    print(d2)
-    print(d3)
+    p2 = None
+    print(p1)
+    print(p2)
+    print(p3)
 except RuntimeError:
     print("Got exception")
 

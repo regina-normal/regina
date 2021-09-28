@@ -265,28 +265,18 @@ SatRegion.find(t, False, displayRegion)
 print()
 
 ########################################################################
-# Test SnapPeaTriangulation::enumerateCovers() object lifetimes:
+# Test the non-callback version of SnapPeaTriangulation::enumerateCovers():
 ########################################################################
 
-class Watcher(PacketListener):
-    def __init__(self, packet):
-        PacketListener.__init__(self)
-        packet.listen(self)
-    def packetToBeDestroyed(self, packet):
-        print('Destroying packet')
+# Now that triangulations are not packets, we cannot use packet listeners
+# to verify the lifetimes of the covers that are returned.  For now just
+# test that the routine seems to do the right thing.
 
-s = ExampleSnapPea.whiteheadLink()
-c = s.enumerateCovers(3, SnapPeaTriangulation.CoverEnumerationType.all_covers)
-
-watchers = [ Watcher(s) ] + [ Watcher(i[0]) for i in c ]
-
-# In python2 we are seeing i hold on to its last value, which means the
-# corresponding packet will not be destroyed.  Fix this by resetting i.
-i = None
-
-print('Destroying covers')
-c = None
-print('Destroying original')
-s = None
-print('Done')
-
+print('Enumerating covers:')
+c = [ (a[0].isoSig(), a[1]) for a in \
+    ExampleSnapPea.whiteheadLink().enumerateCovers(3, \
+    SnapPeaTriangulation.CoverEnumerationType.all_covers) ]
+c.sort()
+for i in c:
+    print('  ' + i[0], i[1])
+print()
