@@ -77,8 +77,7 @@ namespace regina {
  * \ingroup dim2
  */
 template <>
-class Triangulation<2> :
-        public Output<Triangulation<2>>, public detail::TriangulationBase<2> {
+class Triangulation<2> : public detail::TriangulationBase<2> {
     REGINA_PACKET_DATA(Triangulation<2>, PACKET_TRIANGULATION2)
 
     public:
@@ -177,32 +176,7 @@ class Triangulation<2> :
          */
         ~Triangulation();
 
-        /*@}*/
-        /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
         using Snapshottable<Triangulation<2>>::isReadOnlySnapshot;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -440,11 +414,6 @@ inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
 inline Triangulation<2>::~Triangulation() {
     Snapshottable<Triangulation<2>>::takeSnapshot();
     clearAllProperties();
-}
-
-inline void Triangulation<2>::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << simplices_.size()
-        << (simplices_.size() == 1 ? " triangle" : " triangles");
 }
 
 inline Triangle<2>* Triangulation<2>::newTriangle() {

@@ -191,6 +191,7 @@ template <int dim>
 class TriangulationBase :
         public Snapshottable<Triangulation<dim>>,
         public PacketData<Triangulation<dim>>,
+        public Output<Triangulation<dim>>,
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
@@ -558,13 +559,19 @@ class TriangulationBase :
         /**
          * Returns the number of <i>subdim</i>-faces in this triangulation.
          *
-         * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
-         * inclusive.
+         * For convenience, this routine explicitly supports the case
+         * \a subdim = \a dim.  This is \e not the case for the routines
+         * face() and faces(), which give access to individual faces (the
+         * reason relates to the fact that top-dimensional simplices are built
+         * manually, whereas lower-dimensional faces are deduced properties).
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>countFaces(subdim)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and
+         * \a dim inclusive.
          *
          * @return the number of <i>subdim</i>-faces.
          */
@@ -691,6 +698,9 @@ class TriangulationBase :
          * snapshot of the faces when this function is called, and will
          * \e not be kept up-to-date as the triangulation changes.
          *
+         * \tparam subdim the face dimension; this must be between 0 and
+         * <i>dim</i>-1 inclusive.
+         *
          * @return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
@@ -725,13 +735,13 @@ class TriangulationBase :
         /**
          * Returns the requested <i>subdim</i>-face of this triangulation.
          *
-         * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
-         * inclusive.
-         *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>face(subdim, index)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and
+         * <i>dim</i>-1 inclusive.
          *
          * @param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
@@ -1593,6 +1603,25 @@ class TriangulationBase :
          * \name Exporting Triangulations
          */
         /*@{*/
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /**
          * Constructs the isomorphism signature for this triangulation.
@@ -2531,8 +2560,12 @@ inline size_t TriangulationBase<dim>::countBoundaryComponents() const {
 template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::countFaces() const {
-    ensureSkeleton();
-    return std::get<subdim>(faces_).size();
+    if constexpr (subdim == dim)
+        return size();
+    else {
+        ensureSkeleton();
+        return std::get<subdim>(faces_).size();
+    }
 }
 
 template <int dim>
@@ -2864,6 +2897,247 @@ std::string TriangulationBase<dim>::dumpConstruction() const {
 "\n";
 
     return ans.str();
+}
+
+template <int dim>
+inline void TriangulationBase<dim>::writeTextShort(std::ostream& out) const {
+    if (simplices_.size() == 0)
+        out << "Empty " << dim << "-dimensional triangulation";
+    else {
+        out << "Triangulation with " << simplices_.size() << ' ';
+        if constexpr (dim == 2)
+            out << (simplices_.size() == 1 ? "triangle" : "triangles");
+        else if constexpr (dim == 3)
+            out << (simplices_.size() == 1 ? "tetrahedron" : "tetrahedra");
+        else if constexpr (dim == 4)
+            out << (simplices_.size() == 1 ? "pentachoron" : "pentachora");
+        else
+            out << dim << '-'
+                << (simplices_.size() == 1 ? "simplex" : "simplices");
+    }
+}
+
+template <int dim>
+void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
+    ensureSkeleton();
+
+    if constexpr (dim > 4) {
+        writeTextShort(out);
+        out << "\n\n";
+
+        out << "f-vector: ";
+        int i;
+        {
+            std::vector<size_t> f = detail::TriangulationBase<dim>::fVector();
+            for (i = 0; i < dim; ++i)
+                out << f[i] << ", ";
+            out << f[dim] << "\n\n";
+        }
+    } else {
+        out << "Size of the skeleton:\n";
+        if constexpr (dim >= 4)
+            out << "  Pentachora: " << countFaces<4>() << '\n';
+        if constexpr (dim >= 3)
+            out << "  Tetrahedra: " << countFaces<3>() << '\n';
+        out << "  Triangles: " << countFaces<2>() << '\n';
+        out << "  Edges: " << countFaces<1>() << '\n';
+        out << "  Vertices: " << countFaces<0>() << '\n';
+        out << '\n';
+    }
+
+    Simplex<dim>* simp;
+    Simplex<dim>* adj;
+    size_t pos;
+    int j;
+    Perm<dim+1> gluing;
+
+    if constexpr (dim == 2)
+        out << "Triangle gluing:\n  Triangle  |  glued to:";
+    else if constexpr (dim == 3)
+        out << "Tetrahedron gluing:\n  Tet  |  glued to:";
+    else if constexpr (dim == 4)
+        out << "Pentachoron gluing:\n  Pent  |  glued to:";
+    else
+        out << "  Simplex  |  glued to:";
+    for (int i = dim; i >= 0; --i) {
+        if constexpr (dim == 3)
+            out << "      (";
+        else
+            out << "     (";
+        for (j = 0; j <= dim; ++j)
+            if (j != i)
+                out << regina::digit(j);
+        out << ')';
+    }
+    out << '\n';
+    if constexpr (dim == 2)
+        out << "  ----------+-----------";
+    else if constexpr (dim == 3)
+        out << "  -----+-----------";
+    else if constexpr (dim == 4)
+        out << "  ------+-----------";
+    else
+        out << "  ---------+-----------";
+    for (int i = dim; i >= 0; --i)
+        for (j = 0; j < (dim == 3 ? 11 : 7 + dim); ++j)
+            out << '-';
+    out << '\n';
+    for (pos=0; pos < simplices_.size(); pos++) {
+        simp = simplices_[pos];
+        if constexpr (dim == 2)
+            out << "      ";
+        else if constexpr (dim == 3)
+            out << ' ';
+        else if constexpr (dim == 4)
+            out << "  ";
+        else
+            out << "     ";
+        out << std::setw(4) << pos << "  |           ";
+        for (int i = dim; i >= 0; --i) {
+            adj = simp->adjacentSimplex(i);
+            if (! adj) {
+                for (j = 0; j < (dim == 3 ? 3 : dim - 1); ++j)
+                    out << ' ';
+                out << "boundary";
+            } else {
+                gluing = simp->adjacentGluing(i);
+                out << std::setw(dim == 3 ? 5 : 4) << adj->index() << " (";
+                for (j = 0; j <= dim; ++j) {
+                    if (j != i)
+                        out << regina::digit(gluing[j]);
+                }
+                out << ")";
+            }
+        }
+        out << '\n';
+    }
+    out << '\n';
+
+    // For Regina's standard dimensions, write skeletal details also.
+
+    if constexpr (dim <= 4) {
+        out << "Vertices:\n";
+        if constexpr (dim == 2)
+            out << "  Triangle  |  vertex: ";
+        else if constexpr (dim == 3)
+            out << "  Tet  |  vertex: ";
+        else if constexpr (dim == 4)
+            out << "  Pent  |  vertex: ";
+        for (int i = 0; i <= dim; ++i)
+            out << "   " << i;
+        out << '\n';
+        if constexpr (dim == 2)
+            out << "  ----------+----------";
+        else if constexpr (dim == 3)
+            out << "  -----+----------";
+        else if constexpr (dim == 4)
+            out << "  ------+----------";
+        for (int i = 0; i <= dim; ++i)
+            out << "----";
+        out << '\n';
+        for (size_t triPos = 0; triPos < simplices_.size(); ++triPos) {
+            const Simplex<dim>* tri = simplices_[triPos];
+            if constexpr (dim == 2)
+                out << "      " << std::setw(4) << triPos << "  |          ";
+            else if constexpr (dim == 3)
+                out << " " << std::setw(4) << triPos << "  |          ";
+            else if constexpr (dim == 4)
+                out << "  " << std::setw(4) << triPos << "  |          ";
+            for (int i = 0; i <= dim; ++i)
+                out << ' ' << std::setw(3) << tri->vertex(i)->index();
+            out << '\n';
+        }
+        out << '\n';
+
+        out << "Edges:\n";
+        if constexpr (dim == 2)
+            out << "  Triangle  |  edge: ";
+        else if constexpr (dim == 3)
+            out << "  Tet  |  edge: ";
+        else if constexpr (dim == 4)
+            out << "  Pent  |  edge: ";
+        for (int i1 = 0; i1 < dim; ++i1)
+            for (int i2 = i1 + 1; i2 <= dim; ++i2)
+                out << "  " << i1 << i2;
+        out << '\n';
+        if constexpr (dim == 2)
+            out << "  ----------+--------";
+        else if constexpr (dim == 3)
+            out << "  -----+--------";
+        else if constexpr (dim == 4)
+            out << "  ------+--------";
+        for (int i = 0; i < ((dim * (dim + 1)) / 2); ++i)
+            out << "----";
+        out << '\n';
+        for (size_t triPos = 0; triPos < simplices_.size(); ++triPos) {
+            const Simplex<dim>* tri = simplices_[triPos];
+            if constexpr (dim == 2)
+                out << "      " << std::setw(4) << triPos << "  |        ";
+            else if constexpr (dim == 3)
+                out << " " << std::setw(4) << triPos << "  |        ";
+            else if constexpr (dim == 4)
+                out << "  " << std::setw(4) << triPos << "  |        ";
+            // Forward lexicographic numbering kicks in at dimension 3.
+            if constexpr (dim == 2) {
+                for (int i = 2; i >= 0; --i)
+                    out << ' ' << std::setw(3) << tri->edge(i)->index();
+            } else {
+                for (int i = 0; i < ((dim * (dim + 1)) / 2); ++i)
+                    out << ' ' << std::setw(3) << tri->edge(i)->index();
+            }
+            out << '\n';
+        }
+        out << '\n';
+
+        if constexpr (dim >= 3) {
+            out << "Triangles:\n";
+            if constexpr (dim == 3)
+                out << "  Tet  |  face: ";
+            else
+                out << "  Pent  |  triangle: ";
+            for (int i1 = 0; i1 < dim - 1; ++i1)
+                for (int i2 = i1 + 1; i2 < dim; ++i2)
+                    for (int i3 = i2 + 1; i3 <= dim; ++i3)
+                        out << ' ' << i1 << i2 << i3;
+            out << '\n';
+            if constexpr (dim == 3)
+                out << "  -----+--------";
+            else
+                out << "  ------+------------";
+            for (int i = 0; i < (dim == 3 ? 4 : 10); ++i)
+                out << "----";
+            out << '\n';
+            for (size_t tetPos = 0; tetPos < simplices_.size(); ++tetPos) {
+                const Simplex<dim>* tet = simplices_[tetPos];
+                if constexpr (dim == 3)
+                    out << "  " << std::setw(3) << tetPos << "  |        ";
+                else
+                    out << "  " << std::setw(4) << tetPos << "  |            ";
+                // Forward lexicographic numbering kicks in at dimension 5.
+                // Here we are only working with dimensions 3 and 4.
+                for (int face = (dim == 3 ? 3 : 9); face >= 0; face--)
+                    out << ' ' << std::setw(3) << tet->triangle(face)->index();
+                out << '\n';
+            }
+            out << '\n';
+        }
+
+        if constexpr (dim == 4) {
+            // Here the dimension is fixed, and so we can just hard-code
+            // everything for dimension 4 specifically.
+            out << "Tetrahedra:\n";
+            out << "  Pent  |  facet:  0123 0124 0134 0234 1234\n";
+            out << "  ------+----------------------------------\n";
+            for (size_t pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
+                const Simplex<dim>* pent = simplices_[pentPos];
+                out << "  " << std::setw(4) << pentPos << "  |         ";
+                for (int i = 4; i >= 0; --i)
+                    out << ' ' << std::setw(4) << pent->tetrahedron(i)->index();
+                out << '\n';
+            }
+            out << '\n';
+        }
+    }
 }
 
 template <int dim>

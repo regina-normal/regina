@@ -45,7 +45,7 @@ void addBoundaryComponent4(pybind11::module_& m) {
         .def("size", &BoundaryComponent<4>::size)
         .def("countRidges", &BoundaryComponent<4>::countRidges)
         .def("countFaces",
-            &regina::python::countFaces<BoundaryComponent<4>, 4>)
+            &regina::python::countFaces<BoundaryComponent<4>, 4, 3>)
         .def("countTetrahedra",
             &BoundaryComponent<4>::countTetrahedra)
         .def("countTriangles", &BoundaryComponent<4>::countTriangles)

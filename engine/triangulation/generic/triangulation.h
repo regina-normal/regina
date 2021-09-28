@@ -150,9 +150,7 @@ namespace regina {
  * \ingroup generic
  */
 template <int dim>
-class Triangulation :
-        public Output<Triangulation<dim>>,
-        public detail::TriangulationBase<dim> {
+class Triangulation : public detail::TriangulationBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Triangulation<dim> "
         "should not be used for Regina's standard dimensions.");
@@ -229,32 +227,7 @@ class Triangulation :
          */
         ~Triangulation();
 
-        /*@}*/
-        /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
         using Snapshottable<Triangulation<dim>>::isReadOnlySnapshot;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -523,73 +496,6 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
 template <int dim>
 inline void Triangulation<dim>::swapContents(Triangulation<dim>& other) {
     swap(other);
-}
-
-template <int dim>
-inline void Triangulation<dim>::writeTextShort(std::ostream& out) const {
-    if (simplices_.size() == 0)
-        out << "Empty " << dim << "-dimensional triangulation";
-    else
-        out << "Triangulation with " << simplices_.size() << ' ' << dim << '-'
-            << (simplices_.size() == 1 ? "simplex" : "simplices");
-}
-
-template <int dim>
-void Triangulation<dim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << "\n\n";
-
-    out << "f-vector: ";
-    int i;
-    {
-        std::vector<size_t> f = detail::TriangulationBase<dim>::fVector();
-        for (i = 0; i < dim; ++i)
-            out << f[i] << ", ";
-        out << f[dim] << "\n\n";
-    }
-
-    Simplex<dim>* simp;
-    Simplex<dim>* adj;
-    size_t pos;
-    int j;
-    Perm<dim+1> gluing;
-
-    out << "  Simplex  |  glued to:";
-    for (i = dim; i >= 0; --i) {
-        out << "     (";
-        for (j = 0; j <= dim; ++j)
-            if (j != i)
-                out << regina::digit(j);
-        out << ')';
-    }
-    out << '\n';
-    out << "  ---------+-----------";
-    for (i = dim; i >= 0; --i)
-        for (j = 0; j < 7 + dim; ++j)
-            out << '-';
-    out << '\n';
-    for (pos=0; pos < simplices_.size(); pos++) {
-        simp = simplices_[pos];
-        out << "     " << std::setw(4) << pos << "  |           ";
-        for (i = dim; i >= 0; --i) {
-            adj = simp->adjacentSimplex(i);
-            if (! adj) {
-                for (j = 0; j < dim - 1; ++j)
-                    out << ' ';
-                out << "boundary";
-            } else {
-                gluing = simp->adjacentGluing(i);
-                out << std::setw(4) << adj->index() << " (";
-                for (j = 0; j <= dim; ++j) {
-                    if (j != i)
-                        out << regina::digit(gluing[j]);
-                }
-                out << ")";
-            }
-        }
-        out << '\n';
-    }
-    out << '\n';
 }
 
 // Inline functions for DegreeLessThan / DegreeGreaterThan

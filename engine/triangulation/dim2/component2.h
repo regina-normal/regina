@@ -84,12 +84,19 @@ class Component<2> : public detail::ComponentBase<2>,
         /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
-         * \pre The template argument \a subdim is either 0 or 1.
+         * For convenience, this routine explicitly supports the case
+         * \a subdim = 2.  This is \e not the case for the routines
+         * face() and faces(), which give access to individual faces
+         * (the reason relates to the fact that triangles are built manually,
+         * whereas lower-dimensional faces are deduced properties).
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>countFaces(subdim)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and 2
+         * inclusive.
          *
          * @return the number of <i>subdim</i>-faces.
          */
@@ -125,8 +132,7 @@ class Component<2> : public detail::ComponentBase<2>,
          * form <tt>faces(subdim)</tt>.  It will then return a Python list
          * containing all the <i>subdim</i>-faces of the component.
          *
-         * \tparam subdim the dimension of the faces to query.
-         * For 2-dimensional components, this must be 0 or 1.
+         * \tparam subdim the face dimension; this must be either 0 or 1.
          *
          * @return access to the list of all <i>subdim</i>-faces.
          */
@@ -139,12 +145,12 @@ class Component<2> : public detail::ComponentBase<2>,
          * Note that the index of a face in the component need
          * not be the index of the same face in the overall triangulation.
          *
-         * \pre The template argument \a subdim is either 0 or 1.
-         *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>face(subdim, index)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be either 0 or 1.
          *
          * @param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
@@ -175,6 +181,11 @@ class Component<2> : public detail::ComponentBase<2>,
 
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
+template <>
+inline size_t Component<2>::countFaces<2>() const {
+    return size();
+}
+
 template <>
 inline size_t Component<2>::countFaces<1>() const {
     return edges_.size();

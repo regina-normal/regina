@@ -107,8 +107,7 @@ template <int> class XMLTriangulationReader;
  * \ingroup dim3
  */
 template <>
-class Triangulation<3> :
-        public Output<Triangulation<3>>, public detail::TriangulationBase<3> {
+class Triangulation<3> : public detail::TriangulationBase<3> {
     REGINA_PACKET_DATA(Triangulation<3>, PACKET_TRIANGULATION3)
 
     public:
@@ -346,12 +345,6 @@ class Triangulation<3> :
          */
         ~Triangulation();
 
-        /*@}*/
-        /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
         using Snapshottable<Triangulation<3>>::isReadOnlySnapshot;
 
         /**
@@ -429,25 +422,6 @@ class Triangulation<3> :
          * \c null if this data is not part of a SnapPea triangulation.
          */
         const SnapPeaTriangulation* isSnapPea() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -3613,11 +3587,6 @@ inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
     niceTreeDecomposition_ = ans;
 
     return *niceTreeDecomposition_;
-}
-
-inline void Triangulation<3>::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << simplices_.size()
-        << (simplices_.size() == 1 ? " tetrahedron" : " tetrahedra");
 }
 
 inline void Triangulation<3>::recognizer(std::ostream& out) const {

@@ -96,7 +96,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("countComponents", &Triangulation<dim>::countComponents)
         .def("countBoundaryComponents",
             &Triangulation<dim>::countBoundaryComponents)
-        .def("countFaces", &regina::python::countFaces<Triangulation<dim>, dim>)
+        .def("countFaces",
+            &regina::python::countFaces<Triangulation<dim>, dim, dim>)
         .def("fVector", &Triangulation<dim>::fVector)
         .def("components", &Triangulation<dim>::components,
             pybind11::return_value_policy::reference_internal)

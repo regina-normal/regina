@@ -170,6 +170,8 @@ Version 7.0  [ TODO ]
               C++ users should just use auto, and Python users are unaffected.
               See the analagous Triangulation<dim> changes for further details.
             - New compile-time constant dimension.
+            - Routine countFaces() (for those dimensions where it exists)
+              now supports the case subdim == dim.
         Class Cyclotomic:
             - Added member and global swap() functions.
             - Changed polynomial() to return by value, not by pointer.
@@ -1098,6 +1100,7 @@ Version 7.0  [ TODO ]
               now gone, and there are a lot fewer regina::alias classes.
             - FaceListSuite is gone, now merged into TriangulationBase.
             - The inner TopologyLock class now takes its argument by reference.
+            - Routine countFaces() now supports the case subdim == dim.
         Class Triangulation<3>:
             - All of the changes listed for Triangulation<dim> above.
             - New routine generalAngleStructure().

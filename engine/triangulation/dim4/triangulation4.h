@@ -87,8 +87,7 @@ template <int> class XMLTriangulationReader;
  * \ingroup dim4
  */
 template <>
-class Triangulation<4> :
-        public Output<Triangulation<4>>, public detail::TriangulationBase<4> {
+class Triangulation<4> : public detail::TriangulationBase<4> {
     REGINA_PACKET_DATA(Triangulation<4>, PACKET_TRIANGULATION4)
 
     public:
@@ -215,32 +214,7 @@ class Triangulation<4> :
          */
         ~Triangulation();
 
-        /*@}*/
-        /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
         using Snapshottable<Triangulation<4>>::isReadOnlySnapshot;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -1040,11 +1014,6 @@ inline Triangulation<4>::Triangulation() : knownSimpleLinks_(false) {
 inline Triangulation<4>::~Triangulation() {
     Snapshottable<Triangulation<4>>::takeSnapshot();
     clearAllProperties();
-}
-
-inline void Triangulation<4>::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << size()
-        << (size() == 1 ? " pentachoron" : " pentachora");
 }
 
 inline Pentachoron<4>* Triangulation<4>::newPentachoron() {

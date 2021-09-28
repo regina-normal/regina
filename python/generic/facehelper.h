@@ -247,13 +247,13 @@ void invalidFaceDimension(const char* functionName, int minDim, int maxDim);
 /**
  * The Python binding for the C++ template member function
  * T::countFaces<subdimArg>(), where the valid range for the C++ template
- * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
+ * parameter \a subdimArg is 0, ..., \a maxSubdim.
  */
-template <class T, int dim>
+template <class T, int dim, int maxSubdim>
 size_t countFaces(const T& t, int subdimArg) {
-    if (subdimArg < 0 || subdimArg >= dim)
-        invalidFaceDimension("countFaces", 0, dim - 1);
-    return FaceHelper<T, dim, dim - 1>::countFacesFrom(t, subdimArg);
+    if (subdimArg < 0 || subdimArg > maxSubdim)
+        invalidFaceDimension("countFaces", 0, maxSubdim);
+    return FaceHelper<T, dim, maxSubdim>::countFacesFrom(t, subdimArg);
 }
 
 /**

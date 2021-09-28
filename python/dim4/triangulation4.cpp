@@ -90,7 +90,7 @@ void addTriangulation4(pybind11::module_& m) {
         .def("countComponents", &Triangulation<4>::countComponents)
         .def("countBoundaryComponents",
             &Triangulation<4>::countBoundaryComponents)
-        .def("countFaces", &regina::python::countFaces<Triangulation<4>, 4>)
+        .def("countFaces", &regina::python::countFaces<Triangulation<4>, 4, 4>)
         .def("countVertices", &Triangulation<4>::countVertices)
         .def("countEdges", &Triangulation<4>::countEdges)
         .def("countTriangles", &Triangulation<4>::countTriangles)

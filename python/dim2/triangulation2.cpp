@@ -89,7 +89,7 @@ void addTriangulation2(pybind11::module_& m) {
         .def("countComponents", &Triangulation<2>::countComponents)
         .def("countBoundaryComponents",
             &Triangulation<2>::countBoundaryComponents)
-        .def("countFaces", &regina::python::countFaces<Triangulation<2>, 2>)
+        .def("countFaces", &regina::python::countFaces<Triangulation<2>, 2, 2>)
         .def("countVertices", &Triangulation<2>::countVertices)
         .def("countEdges", &Triangulation<2>::countEdges)
         .def("fVector", &Triangulation<2>::fVector)

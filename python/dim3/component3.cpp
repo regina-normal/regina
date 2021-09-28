@@ -43,7 +43,7 @@ void addComponent3(pybind11::module_& m) {
         .def("index", &Component<3>::index)
         .def("size", &Component<3>::size)
         .def("countTetrahedra", &Component<3>::countTetrahedra)
-        .def("countFaces", &regina::python::countFaces<Component<3>, 3>)
+        .def("countFaces", &regina::python::countFaces<Component<3>, 3, 3>)
         .def("countTriangles", &Component<3>::countTriangles)
         .def("countEdges", &Component<3>::countEdges)
         .def("countVertices", &Component<3>::countVertices)
