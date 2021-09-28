@@ -65,6 +65,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg("ignored") = false)
         .def(pybind11::init<const regina::Link&>())
         .def("swap", &SnapPeaTriangulation::swap)
+        .def("nullify", &SnapPeaTriangulation::nullify)
         .def("isNull", &SnapPeaTriangulation::isNull)
         .def("name", &SnapPeaTriangulation::name)
         .def("solutionType", &SnapPeaTriangulation::solutionType)

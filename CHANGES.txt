@@ -973,6 +973,7 @@ Version 7.0  [ TODO ]
             - New constructor that takes a link and builds its complement.
             - Now supports move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - New routine nullify().
             - Added new routine enumerateCovers(), which combines SnapPea's
               find_representations() and construct_cover().
             - Changed slopeEquations() to return a std::optional<MatrixInt>,
