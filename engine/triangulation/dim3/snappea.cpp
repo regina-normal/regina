@@ -88,7 +88,6 @@ Triangulation<3>* Triangulation<3>::readSnapPea(std::istream& in) {
 
     // Create the new tetrahedra.
     Triangulation<3>* triang = new Triangulation<3>();
-    triang->setLabel(name);
 
     unsigned numTet;
     in >> numTet;

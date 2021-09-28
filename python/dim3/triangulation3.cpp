@@ -39,8 +39,8 @@
 #include "link/link.h"
 #include "packet/container.h"
 #include "progress/progresstracker.h"
+#include "snappea/snappeatriangulation.h"
 #include "surfaces/normalsurface.h"
-#include "triangulation/dim3.h"
 #include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
 
@@ -97,8 +97,7 @@ namespace pybind11::detail {
 } // namespace pybind11::detail
 
 void addTriangulation3(pybind11::module_& m) {
-    auto c = pybind11::class_<Triangulation<3>, regina::Packet,
-            regina::SafePtr<Triangulation<3>>>(m, "Triangulation3")
+    auto c = pybind11::class_<Triangulation<3>>(m, "Triangulation3")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const Triangulation<3>&, bool>())
@@ -108,6 +107,8 @@ void addTriangulation3(pybind11::module_& m) {
             return new Triangulation<3>(obj.string_);
         }))
         .def("isReadOnlySnapshot", &Triangulation<3>::isReadOnlySnapshot)
+        .def("inAnyPacket", overload_cast<>(&Triangulation<3>::inAnyPacket))
+        .def("isSnapPea", overload_cast<>(&Triangulation<3>::isSnapPea))
         .def("size", &Triangulation<3>::size)
         .def("countTetrahedra", &Triangulation<3>::countTetrahedra)
         .def("tetrahedra", &Triangulation<3>::tetrahedra,
@@ -352,56 +353,14 @@ void addTriangulation3(pybind11::module_& m) {
         .def("reflect", &Triangulation<3>::reflect)
         .def("order", &Triangulation<3>::order,
             pybind11::arg("forceOriented") = false)
-        .def("triangulateComponents", &Triangulation<3>::triangulateComponents,
-            pybind11::arg("setLabels") = false)
-        .def("summands", &Triangulation<3>::summands,
-            pybind11::arg("setLabels") = false)
-        .def("connectedSumDecomposition", [](Triangulation<3>& t,
-                regina::Packet* primeParent, bool setLabels) -> long {
-            // This is deprecated, so we reimplement it ourselves.
-            if (! primeParent)
-                primeParent = &t;
-            try {
-                auto ans = t.summands(setLabels);
-                for (auto& s : ans)
-                    primeParent->insertChildLast(s.release());
-                return ans.size();
-            } catch (const regina::UnsolvedCase&) {
-                return -1;
-            }
-        },
-            pybind11::arg("primeParent") = nullptr,
-            pybind11::arg("setLabels") = true)
+        .def("triangulateComponents", &Triangulation<3>::triangulateComponents)
+        .def("summands", &Triangulation<3>::summands)
         .def("isSphere", &Triangulation<3>::isSphere)
         .def("isThreeSphere", &Triangulation<3>::isSphere) // deprecated
         .def("knowsSphere", &Triangulation<3>::knowsSphere)
         .def("knowsThreeSphere", &Triangulation<3>::knowsSphere) // deprecated
         .def("isBall", &Triangulation<3>::isBall)
         .def("knowsBall", &Triangulation<3>::knowsBall)
-        .def("makeZeroEfficient", [](Triangulation<3>& t) -> regina::Packet* {
-            // This is deprecated, so we reimplement it ourselves.
-            auto ans = t.summands(true);
-            if (ans.size() > 1) {
-                // Composite!
-                regina::Packet* connSum = new regina::Container();
-                connSum->setLabel(t.adornedLabel("Decomposition"));
-                for (auto& s : ans)
-                    connSum->insertChildLast(s.release());
-                return connSum;
-            } else if (ans.size() == 1) {
-                // Prime.
-                if (! t.isIsomorphicTo(*ans.front()))
-                    t.swap(*ans.front());
-                return nullptr;
-            } else {
-                // 3-sphere.
-                if (t.size() > 1) {
-                    t.removeAllTetrahedra();
-                    t.insertLayeredLensSpace(1,0);
-                }
-                return nullptr;
-            }
-        })
         .def("isSolidTorus", &Triangulation<3>::isSolidTorus)
         .def("knowsSolidTorus", &Triangulation<3>::knowsSolidTorus)
         .def("isTxI", &Triangulation<3>::isTxI)
@@ -478,13 +437,14 @@ void addTriangulation3(pybind11::module_& m) {
         })
         // We cannot take the addresses of the following properties, so we
         // define getter functions instead.
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            return Triangulation<3>::typeID;
-        })
         .def_property_readonly_static("dimension", [](pybind11::object) {
             return Triangulation<3>::dimension;
         })
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+    regina::python::add_packet_wrapper<Triangulation<3>>(
+        m, "PacketOfTriangulation3");
 
     // We do not define the global swap() yet for Triangulation<3>, since this
     // needs to come *after* the global swap() for the child class

@@ -55,7 +55,7 @@ namespace regina {
  * of the Orb / Casson file must simply be ``<tt>% orb</tt>''.
  *
  * If the file could not be read or if the data was not in the correct
- * format, 0 will be returned.
+ * format, \c null will be returned.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file \e name, and
@@ -64,7 +64,7 @@ namespace regina {
  *
  * @param filename the name of the Orb / Casson file from which to read.
  * @return a new triangulation containing the data read from the Orb / Casson
- * file, or 0 on error.
+ * file, or \c null on error.
  *
  * @author Ryan Budney, also with code from Damien Heard
  *

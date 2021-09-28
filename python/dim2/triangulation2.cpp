@@ -155,8 +155,7 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isMinimal", &Triangulation<2>::isMinimal)
         .def("orient", &Triangulation<2>::orient)
         .def("reflect", &Triangulation<2>::reflect)
-        .def("triangulateComponents", &Triangulation<2>::triangulateComponents,
-            pybind11::arg("setLabels") = false)
+        .def("triangulateComponents", &Triangulation<2>::triangulateComponents)
         .def("homology", &Triangulation<2>::homology,
             pybind11::return_value_policy::reference_internal)
         .def("homologyH1", &Triangulation<2>::homologyH1,

@@ -56,8 +56,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     regina::python::add_output(c1);
     regina::python::add_eq_operators(c1);
 
-    auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
-            regina::SafePtr<SnapPeaTriangulation>>(m, "SnapPeaTriangulation")
+    auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>>(
+            m, "SnapPeaTriangulation")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const SnapPeaTriangulation&>())
@@ -92,10 +92,11 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg(), pybind11::arg("whichCusp")= 0)
         .def("unfill", &SnapPeaTriangulation::unfill,
             pybind11::arg("whichCusp")= 0)
-        .def("filledTriangulation", overload_cast<>(
-            &SnapPeaTriangulation::filledTriangulation, pybind11::const_))
-        .def("filledTriangulation", overload_cast<unsigned>(
-            &SnapPeaTriangulation::filledTriangulation, pybind11::const_))
+        .def("filledPartial", overload_cast<>(
+            &SnapPeaTriangulation::filledPartial, pybind11::const_))
+        .def("filledPartial", overload_cast<unsigned>(
+            &SnapPeaTriangulation::filledPartial, pybind11::const_))
+        .def("filledAll", &SnapPeaTriangulation::filledAll)
         .def("slopeEquations", &SnapPeaTriangulation::slopeEquations)
         .def("fundamentalGroupFilled",
             &SnapPeaTriangulation::fundamentalGroupFilled,
@@ -139,11 +140,9 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
             pybind11::arg("enabled") = true)
         .def_static("disableKernelMessages",
             &SnapPeaTriangulation::disableKernelMessages)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return SnapPeaTriangulation::typeID;
-        })
     ;
+    regina::python::add_packet_wrapper<SnapPeaTriangulation>(
+        m, "PacketOfSnapPeaTriangulation");
 
     auto st = pybind11::enum_<SnapPeaTriangulation::SolutionType>(
             c2, "SolutionType")

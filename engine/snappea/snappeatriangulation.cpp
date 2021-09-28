@@ -53,6 +53,15 @@ namespace {
      * A mutex to protect kernelMessages.
      */
     static std::mutex snapMutex;
+
+    /**
+     * The generic name to give SnapPea triangulations when coming from a
+     * Triangulation<3> (which, as of Regina 7.0, no longer has a packet label).
+     *
+     * This is non-const because we store it in TriangulationData::name
+     * in-place, without performing deep copies.
+     */
+    char genericName[] = "Regina";
 }
 
 void Cusp::writeTextShort(std::ostream& out) const {
@@ -70,7 +79,7 @@ void Cusp::writeTextShort(std::ostream& out) const {
 SnapPeaTriangulation::SnapPeaTriangulation(
         const std::string& fileNameOrContents) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false), syncing_(false) {
+        filledCusps_(0), h1Filled_(false) {
     try {
         if (startsWith(fileNameOrContents, "% Triangulation"))
             data_ = regina::snappea::read_triangulation_from_string(
@@ -79,24 +88,22 @@ SnapPeaTriangulation::SnapPeaTriangulation(
             data_ = regina::snappea::read_triangulation(
                 fileNameOrContents.c_str());
 
-        if (data_) {
-            setLabel(get_triangulation_name(data_));
+        if (data_)
             sync();
-        }
     } catch (regina::SnapPeaFatalError& err) {
         data_ = nullptr;
     }
-    listen(this);
+    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false), syncing_(false) {
+        filledCusps_(0), h1Filled_(false) {
     if (tri.data_) {
         regina::snappea::copy_triangulation(tri.data_, &data_);
         sync();
     }
-    listen(this);
+    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(SnapPeaTriangulation&& src)
@@ -107,19 +114,17 @@ SnapPeaTriangulation::SnapPeaTriangulation(SnapPeaTriangulation&& src)
         cusp_(src.cusp_),
         filledCusps_(src.filledCusps_),
         fundGroupFilled_(std::move(src.fundGroupFilled_)),
-        h1Filled_(std::move(src.h1Filled_)),
-        syncing_(false) {
+        h1Filled_(std::move(src.h1Filled_)) {
     src.data_ = nullptr;
     src.shape_ = nullptr;
     src.cusp_ = nullptr;
 
-    listen(this);
+    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
 SnapPeaTriangulation& SnapPeaTriangulation::operator = (
         SnapPeaTriangulation&& src) {
-    // Use syncing_ to prevent change events from nullifying the snappea data.
-    syncing_ = true;
+    ChangeAndSyncSpan span(*this);
 
     Triangulation<3>::operator = (std::move(src));
 
@@ -131,8 +136,6 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
     fundGroupFilled_ = std::move(src.fundGroupFilled_);
     h1Filled_ = std::move(src.h1Filled_);
 
-    syncing_ = false;
-
     // Let src dispose of the original data_, shape_ and cusp_ in its
     // own destructor.
     return *this;
@@ -140,8 +143,9 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
 
 SnapPeaTriangulation& SnapPeaTriangulation::operator = (
         const SnapPeaTriangulation& src) {
-    regina::snappea::free_triangulation(data_);
+    ChangeAndSyncSpan span(*this);
 
+    regina::snappea::free_triangulation(data_);
     if (src.data_)
         regina::snappea::copy_triangulation(src.data_, &data_);
     else
@@ -154,16 +158,14 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
 
 SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false), syncing_(false) {
-    const SnapPeaTriangulation* clone =
-        dynamic_cast<const SnapPeaTriangulation*>(&tri);
-    if (clone) {
+        filledCusps_(0), h1Filled_(false) {
+    if (const SnapPeaTriangulation* clone = tri.isSnapPea()) {
         // We have a full SnapPea triangulation to clone.
         if (clone->data_) {
             regina::snappea::copy_triangulation(clone->data_, &data_);
             sync();
         }
-        listen(this);
+        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
         return;
     }
 
@@ -176,17 +178,17 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
             (! tri.isConnected()) ||
             (! tri.isValid()) ||
             (! tri.isStandard())) {
-        listen(this);
+        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
         return;
     }
     if (tri.size() >= INT_MAX) {
-        listen(this);
+        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
         return;
     }
 
     // Looks good; go build the SnapPea triangulation.
     regina::snappea::TriangulationData tData;
-    tData.name = strdup(tri.label().c_str());
+    tData.name = genericName;
     tData.num_tetrahedra = static_cast<int>(tri.size());
 
     // Fields recalculated by SnapPea:
@@ -229,10 +231,9 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     regina::snappea::data_to_triangulation(&tData, &data_);
 
     delete[] tData.tetrahedron_data;
-    free(tData.name);
 
     if (! data_) {
-        listen(this);
+        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
         return;
     }
 
@@ -268,7 +269,8 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     }
 
     sync();
-    listen(this);
+
+    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) {
@@ -276,10 +278,11 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) {
     SnapPeaTriangulation ans(*c);
     swap(ans);
     delete c;
+
+    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
 SnapPeaTriangulation::~SnapPeaTriangulation() {
-    unlisten(this);
     delete[] shape_;
     delete[] cusp_;
     regina::snappea::free_triangulation(data_);
@@ -289,26 +292,27 @@ void SnapPeaTriangulation::swap(SnapPeaTriangulation& other) {
     if (this == &other)
         return;
 
-    // Use syncing_ to prevent change events from nullifying the snappea data.
-    syncing_ = true;
-    other.syncing_ = true;
-    {
-        ChangeEventSpan span1(*this);
-        ChangeEventSpan span2(other);
+    ChangeAndSyncSpan span1(*this);
+    ChangeAndSyncSpan span2(other);
 
-        Triangulation<3>::swap(other);
+    Triangulation<3>::swap(other);
+    std::swap(data_, other.data_);
+    std::swap(shape_, other.shape_);
+    std::swap(cusp_, other.cusp_);
+    std::swap(filledCusps_, other.filledCusps_);
+    fundGroupFilled_.swap(other.fundGroupFilled_);
+    h1Filled_.swap(other.h1Filled_);
+}
 
-        std::swap(data_, other.data_);
-        std::swap(shape_, other.shape_);
-        std::swap(cusp_, other.cusp_);
-        std::swap(filledCusps_, other.filledCusps_);
-        fundGroupFilled_.swap(other.fundGroupFilled_);
-        h1Filled_.swap(other.h1Filled_);
+void SnapPeaTriangulation::nullify() {
+    if (! data_)
+        return;
 
-        // The change events will be fired at this point.
-    }
-    syncing_ = false;
-    other.syncing_ = false;
+    ChangeAndSyncSpan span(*this);
+
+    regina::snappea::free_triangulation(data_);
+    data_ = nullptr;
+    sync();
 }
 
 std::string SnapPeaTriangulation::name() const {
@@ -375,6 +379,10 @@ void SnapPeaTriangulation::unfill(unsigned whichCusp) {
         return;
     }
 
+    // We change the SnapPea data structures but not the inherited
+    // Triangulation<3>, and so a ChangeEventSpan is fine here.
+    PacketData<SnapPeaTriangulation>::ChangeEventSpan span(*this);
+
     regina::snappea::set_cusp_info(data_, whichCusp, true, 0, 0);
 
     // Update and refresh internal caches.
@@ -382,7 +390,7 @@ void SnapPeaTriangulation::unfill(unsigned whichCusp) {
     --filledCusps_;
 
     regina::snappea::do_Dehn_filling(data_);
-    syncFillings();
+    fillingsHaveChanged();
 }
 
 bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
@@ -418,6 +426,11 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
     bool wasComplete = cusp_[whichCusp].complete();
 
     // Do it.
+
+    // We change the SnapPea data structures but not the inherited
+    // Triangulation<3>, and so a ChangeEventSpan is fine here.
+    PacketData<SnapPeaTriangulation>::ChangeEventSpan span(*this);
+
     regina::snappea::set_cusp_info(data_, whichCusp, false, mReal, lReal);
 
     // Update and refresh internal caches.
@@ -427,77 +440,84 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
         ++filledCusps_;
 
     regina::snappea::do_Dehn_filling(data_);
-    syncFillings();
+    fillingsHaveChanged();
     return true;
 }
 
-Triangulation<3>* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
+SnapPeaTriangulation SnapPeaTriangulation::filledPartial(unsigned whichCusp)
         const {
     if (! data_)
-        return nullptr;
+        throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
+            "requires a non-null triangulation");
     if (cusp_[whichCusp].complete())
-        return nullptr;
+        throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
+            "requires the given cusp to have filling coefficients");
 
-    regina::snappea::Triangulation* t;
-    unsigned nCusps = countCusps();
-    if (nCusps == 1) {
-        t = regina::snappea::fill_cusps(data_, 0, data_->name,
-            1 /* fill_all_cusps = TRUE, which is 1 in SnapPea */);
+    size_t nCusps = countCusps();
 
-        if (! t)
-            return nullptr;
-        Triangulation<3>* ans = new Triangulation<3>();
-        fillRegina(t, *ans);
-        return ans;
-    } else {
-        regina::snappea::Boolean* fill_cusp =
-            new regina::snappea::Boolean[nCusps];
-        std::fill(fill_cusp, fill_cusp + nCusps, 0);
-        fill_cusp[whichCusp] = 1; /* TRUE in SnapPea */
-        t = regina::snappea::fill_cusps(data_, fill_cusp, data_->name, 0);
-        delete[] fill_cusp;
+    if (nCusps == 1)
+        throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
+            "requires at least one cusp to have no filling coefficients");
 
-        SnapPeaTriangulation* ans = new SnapPeaTriangulation();
-        if (t)
-            ans->reset(t);
-        return ans;
-    }
+    // Note: fill_cusps never returns null.
+    regina::snappea::Boolean* fill_cusp = new regina::snappea::Boolean[nCusps];
+    std::fill(fill_cusp, fill_cusp + nCusps, 0);
+    fill_cusp[whichCusp] = 1; /* TRUE in SnapPea */
+    regina::snappea::Triangulation* t = regina::snappea::fill_cusps(
+        data_, fill_cusp, data_->name, 0);
+    delete[] fill_cusp;
+
+    return SnapPeaTriangulation(t);
 }
 
-Triangulation<3>* SnapPeaTriangulation::filledTriangulation() const {
+SnapPeaTriangulation SnapPeaTriangulation::filledPartial() const {
     if (! data_)
-        return nullptr;
+        throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
+            "requires a non-null triangulation");
 
-    unsigned nCusps = countBoundaryComponents();
-    regina::snappea::Triangulation* t;
-    if (filledCusps_ == 0) {
-        // Fill no cusps.
-        return new SnapPeaTriangulation(*this);
-    } else if (filledCusps_ == nCusps) {
-        // Fill all cusps.
-        t = regina::snappea::fill_cusps(data_, 0, data_->name,
-            1 /* fill_all_cusps = TRUE, which is 1 in SnapPea */);
+    size_t nCusps = countBoundaryComponents();
 
-        if (! t)
-            return nullptr;
-        Triangulation<3>* ans = new Triangulation<3>();
-        fillRegina(t, *ans);
-        return ans;
-    } else {
-        // Fill some but not all cusps.
-        regina::snappea::Boolean* fill_cusp =
-            new regina::snappea::Boolean[nCusps];
-        for (unsigned i = 0; i < nCusps; ++i)
-            fill_cusp[i] = (cusp_[i].complete() ? 0 : 1 /* TRUE in SnapPea */);
-        t = regina::snappea::fill_cusps(data_, fill_cusp, data_->name, 0);
-        delete[] fill_cusp;
+    if (filledCusps_ == nCusps)
+        throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
+            "requires at least one cusp to have no filling coefficients");
 
-        if (! t)
-            return nullptr;
-        SnapPeaTriangulation* ans = new SnapPeaTriangulation();
-        ans->reset(t);
-        return ans;
-    }
+    if (filledCusps_ == 0)
+        return *this;
+
+    // Note: fill_cusps never returns null.
+    regina::snappea::Boolean* fill_cusp = new regina::snappea::Boolean[nCusps];
+    for (size_t i = 0; i < nCusps; ++i)
+        fill_cusp[i] = (cusp_[i].complete() ? 0 : 1 /* TRUE in SnapPea */);
+    regina::snappea::Triangulation* t = regina::snappea::fill_cusps(
+        data_, fill_cusp, data_->name, 0);
+    delete[] fill_cusp;
+
+    return SnapPeaTriangulation(t);
+}
+
+Triangulation<3> SnapPeaTriangulation::filledAll() const {
+    if (! data_)
+        throw FailedPrecondition("SnapPeaTriangulation::filledAll() "
+            "requires a non-null triangulation");
+
+    size_t nCusps = countBoundaryComponents();
+
+    if (filledCusps_ < nCusps)
+        throw FailedPrecondition("SnapPeaTriangulation::filledAll() "
+            "requires all cusps to have filling coefficients");
+
+    // There should be at least one cusp, but just in case:
+    if (filledCusps_ == 0)
+        return *this;
+
+    // Note: fill_cusps never returns null.
+    regina::snappea::Triangulation* t = regina::snappea::fill_cusps(
+        data_, 0, data_->name, 1 /* fill_all_cusps = TRUE */);
+
+    Triangulation<3> ans;
+    fillRegina(t, ans);
+    regina::snappea::free_triangulation(t);
+    return ans;
 }
 
 SnapPeaTriangulation* SnapPeaTriangulation::protoCanonise() const {
@@ -512,10 +532,7 @@ SnapPeaTriangulation* SnapPeaTriangulation::protoCanonise() const {
         return nullptr;
     }
 
-    SnapPeaTriangulation* ans = new SnapPeaTriangulation();
-    ans->setLabel(get_triangulation_name(data_));
-    ans->reset(tmp);
-    return ans;
+    return new SnapPeaTriangulation(tmp);
 }
 
 Triangulation<3>* SnapPeaTriangulation::canonise() const {
@@ -531,7 +548,6 @@ Triangulation<3>* SnapPeaTriangulation::canonise() const {
     }
 
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel(get_triangulation_name(data_));
     fillRegina(tmp, *ans);
     regina::snappea::free_triangulation(tmp);
     return ans;
@@ -540,6 +556,8 @@ Triangulation<3>* SnapPeaTriangulation::canonise() const {
 void SnapPeaTriangulation::randomise() {
     if (! data_)
         return;
+
+    ChangeAndSyncSpan span(*this);
 
     regina::snappea::randomize_triangulation(data_);
     sync();
@@ -799,36 +817,18 @@ bool SnapPeaTriangulation::saveSnapPea(const char* filename) const {
     return regina::snappea::write_triangulation(data_, filename);
 }
 
-void SnapPeaTriangulation::writeXMLPacketData(std::ostream& out,
-        FileFormat format, bool anon, PacketRefs& refs) const {
-    writeXMLHeader(out, "snappeadata", format, anon, refs,
-        format == REGINA_XML_GEN_2);
-    if (data_) {
-        if (format == REGINA_XML_GEN_2)
-            out << "  <snappea>";
-        out << regina::xml::xmlEncodeSpecialChars(snapPea());
-        if (format == REGINA_XML_GEN_2)
-            out << "</snappea>\n";
-    }
-    writeXMLFooter(out, "snappeadata", format, anon, refs);
-}
-
-void SnapPeaTriangulation::packetWasChanged(Packet* packet) {
-    // If the triangulation is changed "illegitimately", via the
-    // inherited Triangulation<3> interface, then convert this to a null
-    // triangulation.
-    if (packet == this && data_ && ! syncing_)
-        reset(nullptr);
+SnapPeaTriangulation::SnapPeaTriangulation(
+        regina::snappea::Triangulation* data) :
+        data_(data), shape_(nullptr), cusp_(nullptr),
+        filledCusps_(0), h1Filled_(false) {
+    sync();
+    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
 void SnapPeaTriangulation::sync() {
     // TODO: Check first whether anything has changed, and only resync
     // the Triangulation<3> data if it has.
-    syncing_ = true;
     {
-        // Ensure only one event pair is fired in this sequence of changes.
-        ChangeEventSpan span(*this);
-
         // Deal with the combinatorial data and cusps first.
         if (! isEmpty())
             removeAllTetrahedra();
@@ -857,16 +857,18 @@ void SnapPeaTriangulation::sync() {
                         ! (regina::snappea::Dehn_coefficients_are_integers(c)
                             && c->l == 0 && (c->m == 1 || c->m == -1))) {
                     // Abort!  Make this a null triangulation.
-                    // Note that reset() calls sync() again; this is
-                    // harmless as long as we return immediately afterwards.
-                    reset(nullptr);
-                    syncing_ = false;
+                    // We call sync() again, but this is harmless as long as
+                    // we return immediately afterwards.
+                    regina::snappea::free_triangulation(data_);
+                    data_ = nullptr;
+                    sync();
                     return;
                 } else if (c->topology == regina::snappea::torus_cusp &&
                         ! regina::snappea::Dehn_coefficients_are_relatively_prime_integers(c)) {
                     // Abort, as above.
-                    reset(nullptr);
-                    syncing_ = false;
+                    regina::snappea::free_triangulation(data_);
+                    data_ = nullptr;
+                    sync();
                     return;
                 } else {
                     cusp_[c->index].m_ = c->m;
@@ -891,21 +893,7 @@ void SnapPeaTriangulation::sync() {
         // Next, update all data that depend on the fillings (if any).
         // Most importantly, this includes the cache of tetrahedron shapes.
         fillingsHaveChanged();
-
-        // The packet change event (which we are listening to) will be
-        // fired at this point.
     }
-    syncing_ = false;
-}
-
-void SnapPeaTriangulation::syncFillings() {
-    syncing_ = true;
-    {
-        ChangeEventSpan span(*this);
-        fillingsHaveChanged();
-        // The packet change event will be fired at this point.
-    }
-    syncing_ = false;
 }
 
 void SnapPeaTriangulation::fillingsHaveChanged() {
@@ -945,7 +933,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
 void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
         Triangulation<3>& dest) {
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(dest);
+    Triangulation<3>::ChangeEventSpan span(dest);
 
     regina::snappea::TriangulationData* tData;
     regina::snappea::triangulation_to_data(src, &tData);
@@ -967,13 +955,6 @@ void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
     regina::snappea::free_triangulation_data(tData);
 }
 
-void SnapPeaTriangulation::reset(regina::snappea::Triangulation* data) {
-    regina::snappea::free_triangulation(data_);
-    data_ = data;
-
-    sync();
-}
-
 size_t SnapPeaTriangulation::enumerateCoversInternal(int sheets,
         CoverEnumerationType type,
         std::function<void(SnapPeaTriangulation&, CoverType)>&& action) const {
@@ -986,8 +967,8 @@ size_t SnapPeaTriangulation::enumerateCoversInternal(int sheets,
 
     size_t ans = 0;
     for (auto rep = reps->list; rep; rep = rep->next) {
-        SnapPeaTriangulation cover;
-        cover.reset(regina::snappea::construct_cover(data_, rep, sheets));
+        SnapPeaTriangulation cover(regina::snappea::construct_cover(
+            data_, rep, sheets));
         action(cover, static_cast<CoverType>(rep->covering_type));
         ++ans;
     }

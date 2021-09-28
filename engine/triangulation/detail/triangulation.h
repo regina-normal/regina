@@ -197,12 +197,9 @@ class TriangulationBase :
         public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
-    protected:
-        using ChangeEventSpan = std::conditional_t<dim == 3,
-            Packet::ChangeEventSpan,
-            typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
-
     public:
+        using typename PacketData<Triangulation<dim>>::ChangeEventSpan;
+
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
                  triangulation. */
@@ -1224,9 +1221,7 @@ class TriangulationBase :
          * - This function does not insert the resulting components into
          *   the packet tree.
          *
-         * - This function does not assign labels to the new components
-         *   by default.  You can still do this by passing the optional
-         *   \a setLabels argument as \c true.
+         * - This function does not assign labels to the new components.
          *
          * This function wraps each component in a std::unique_ptr, so you
          * do not need to worry about looping through and destroying them
@@ -1240,13 +1235,10 @@ class TriangulationBase :
          * }
          * \endcode
          *
-         * @param setLabels \c true if the new component triangulations
-         * should be assigned sensible packet labels based on the label of this
-         * triangulation, or \c false if they should be left without labels.
          * @return a list of newly created individual component triangulations.
          */
-        std::vector<std::unique_ptr<Triangulation<dim>>> triangulateComponents(
-            bool setLabels = false) const;
+        std::vector<std::unique_ptr<Triangulation<dim>>> triangulateComponents()
+            const;
 
         /*@}*/
         /**
@@ -3215,7 +3207,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
 template <int dim>
 std::vector<std::unique_ptr<Triangulation<dim>>>
-        TriangulationBase<dim>::triangulateComponents(bool setLabels) const {
+        TriangulationBase<dim>::triangulateComponents() const {
     // Knock off the empty triangulation first.
     if (simplices_.empty())
         return { };
@@ -3253,16 +3245,6 @@ std::vector<std::unique_ptr<Triangulation<dim>>>
                         (adjPos == simpPos && adjPerm[facet] > facet))
                     newSimp[simpPos]->join(facet, newSimp[adjPos], adjPerm);
             }
-        }
-    }
-
-    if constexpr (dim == 3)
-    if (setLabels) {
-        for (size_t i = 0; i < nComp; ++i) {
-            std::ostringstream label;
-            label << "Component #" << (i + 1);
-            ans[i]->setLabel(static_cast<const Triangulation<dim>*>(this)->
-                adornedLabel(label.str()));
         }
     }
 

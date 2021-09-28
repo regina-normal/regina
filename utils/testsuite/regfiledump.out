@@ -319,7 +319,7 @@ Number of surfaces is 4
 ************************************************************
 *
 * Label: Figure 8 Knot Complement
-* Type: SnapPea Triangulation
+* Type: SnapPea triangulation
 * Parent: 3-Manifolds and Links
 *
 ************************************************************
@@ -851,7 +851,7 @@ Number of surfaces is 4
 ************************************************************
 *
 * Label: Figure 8 Knot Complement
-* Type: SnapPea Triangulation
+* Type: SnapPea triangulation
 * Parent: 3-Manifolds and Links
 *
 ************************************************************
@@ -1216,7 +1216,7 @@ Layered Solid Torus (3-D triangulation)
 RP² x S¹ (3-D triangulation)
 Note (Text)
 Quad vertex surfaces (Normal Surface List)
-Figure 8 Knot Complement (SnapPea Triangulation)
+Figure 8 Knot Complement (SnapPea triangulation)
 Angle Structures (Angle Structure List)
 Whitehead link (Link)
 4-Manifolds (Container)
@@ -1247,7 +1247,7 @@ Layered Solid Torus (3-D triangulation)
 RP² x S¹ (3-D triangulation)
 Note (Text)
 Quad vertex surfaces (Normal Surface List)
-Figure 8 Knot Complement (SnapPea Triangulation)
+Figure 8 Knot Complement (SnapPea triangulation)
 Angle Structures (Angle Structure List)
 Whitehead link (Link)
 4-Manifolds (Container)

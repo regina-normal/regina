@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "file/xml/xmlwriter.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
@@ -110,31 +111,54 @@ void NormalSurfaces::writeTextLong(std::ostream& out) const {
 }
 
 void NormalSurfaces::addPacketRefs(PacketRefs& refs) const {
-    refs.insert({ std::addressof(*triangulation_), false });
+    if (const Packet* p = triangulation_->inAnyPacket())
+        refs.insert({ p, false });
 }
 
 void NormalSurfaces::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
-    const Triangulation<3>* tri = std::addressof(*triangulation_);
+    const Packet* triPacket = triangulation_->inAnyPacket();
 
-    if (format == REGINA_XML_GEN_2 && tri != parent()) {
+    if (format == REGINA_XML_GEN_2 && ! (triPacket && triPacket == parent())) {
         // The second-generation format required tri == parent(), and
         // Regina <= 6.0.1 cannot handle lists *without* this property at all.
         // Do not write this list (or its descendants) at all.
         return;
     }
 
-    // We know from addPacketRefs() that refs contains the triangulation.
-    if (! refs.find(tri)->second) {
-        // The triangulation has not yet been written to file.  Do it now.
-        writeXMLAnon(out, format, refs, tri);
-    }
+    if (triPacket) {
+        // We know from addPacketRefs() that refs contains the triangulation.
+        if (! refs.find(triPacket)->second) {
+            // The triangulation has not yet been written to file.  Do it now.
+            writeXMLAnon(out, format, refs, triPacket);
+        }
 
-    writeXMLHeader(out, "surfaces", format, anon, refs,
-        true, std::pair("tri", tri->internalID()),
-        std::pair("type", which_.intValue()),
-        std::pair("algorithm", algorithm_.intValue()),
-        std::pair("coords", coords_));
+        writeXMLHeader(out, "surfaces", format, anon, refs, true,
+            std::pair("tri", triPacket->internalID()),
+            std::pair("type", which_.intValue()),
+            std::pair("algorithm", algorithm_.intValue()),
+            std::pair("coords", coords_));
+    } else {
+        // The triangulation is not a packet at all.
+        // Write it anonymously now, with an ID that is guaranteed not to
+        // match a packet ID.
+        std::string id = triangulation_->anonID();
+
+        out << "<anon>\n";
+        XMLWriter<Triangulation<3>> writer(*triangulation_, out, format);
+        writer.openPre();
+        out << " id=\"" << id << "\"";
+        writer.openPost();
+        writer.writeContent();
+        writer.close();
+        out << "</anon>\n";
+
+        writeXMLHeader(out, "surfaces", format, anon, refs, true,
+            std::pair("tri", id),
+            std::pair("type", which_.intValue()),
+            std::pair("algorithm", algorithm_.intValue()),
+            std::pair("coords", coords_));
+    }
 
     if (format == REGINA_XML_GEN_2) {
         // Write the enumeration parameters.

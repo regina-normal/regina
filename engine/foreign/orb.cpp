@@ -360,7 +360,7 @@ Triangulation<3> *readTriangulation( std::istream &ts) {
     if (line != "% orb") {
         std::cerr << "Orb / Casson file is not in the correct format."
             << std::endl;
-        return 0;
+        return nullptr;
     }
 
     getline(ts, file_id);
@@ -369,13 +369,13 @@ Triangulation<3> *readTriangulation( std::istream &ts) {
     if (! verifyCassonFormat( cf )) {
         std::cerr << "Error verifying Orb / Casson file." << std::endl;
         freeCassonFormat( cf );
-        return 0;
+        return nullptr;
     }
 
     Triangulation<3>* manifold = cassonToTriangulation( cf );
     freeCassonFormat( cf );
 
-    manifold->setLabel(file_id);
+    // manifold->setLabel(file_id);
     return manifold;
 }
 
@@ -386,7 +386,7 @@ Triangulation<3> *readOrb(const char *filename) {
 
     if (! file) {
         std::cerr << "Error opening Orb / Casson file." << std::endl;
-        return 0;
+        return nullptr;
     }
 
     return readTriangulation(file);

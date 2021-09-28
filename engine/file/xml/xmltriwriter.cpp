@@ -36,6 +36,7 @@
 #include "file/xml/xmlwriter.h"
 #include "packet/packet-impl.h"
 #include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/generic.h"
 
@@ -69,6 +70,8 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
     if (format_ == REGINA_XML_GEN_2) {
         if constexpr (dim == 2)
             out_ << "  <triangles ntriangles=\"" << data_.size() << "\">\n";
+        else if constexpr (dim == 3)
+            out_ << "  <tetrahedra ntet=\"" << data_.size() << "\">\n";
         else if constexpr (dim == 4)
             out_ << "  <pentachora npent=\"" << data_.size() << "\">\n";
         else
@@ -76,6 +79,8 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
         for (auto s : data_.simplices()) {
             if constexpr (dim == 2)
                 out_ << "    <triangle desc=\"";
+            else if constexpr (dim == 3)
+                out_ << "    <tet desc=\"";
             else if constexpr (dim == 4)
                 out_ << "    <pent desc=\"";
             else
@@ -88,18 +93,16 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
                     if constexpr (dim == 2) {
                         // We have already asserted that SnIndex() is a
                         // numeric (not character) type.
-                        out_ << adj->index() << ' '
-                            << static_cast<int>(
-                                s->adjacentGluing(facet).SnIndex()) << ' ';
+                        out_ << adj->index() << ' ' << static_cast<int>(
+                            s->adjacentGluing(facet).SnIndex()) << ' ';
+                    } else if constexpr (sizeof(
+                            typename Perm<dim + 1>::ImagePack) == 1) {
+                        // Image packs are chars.  We need to make them numeric.
+                        out_ << adj->index() << ' ' << static_cast<int>(
+                            s->adjacentGluing(facet).imagePack()) << ' ';
                     } else {
-                        static_assert(! (
-                                std::is_same<typename Perm<dim + 1>::ImagePack,
-                                    char>::value ||
-                                std::is_same<typename Perm<dim + 1>::ImagePack,
-                                    unsigned char>::value
-                            ),
-                            "XMLWriter<Triangulation<dim>> requires "
-                            "permutation image packs to be numeric types.");
+                        // Image packs are numeric, but may be larger than int.
+                        // Just write them directly.
                         out_ << adj->index() << ' '
                             << s->adjacentGluing(facet).imagePack() << ' ';
                     }
@@ -108,6 +111,8 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
             }
             if constexpr (dim == 2)
                 out_ << "</triangle>\n";
+            else if constexpr (dim == 3)
+                out_ << "</tet>\n";
             else if constexpr (dim == 4)
                 out_ << "</pent>\n";
             else
@@ -115,6 +120,8 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
         }
         if constexpr (dim == 2)
             out_ << "  </triangles>\n";
+        else if constexpr (dim == 3)
+            out_ << "  </tetrahedra>\n";
         else if constexpr (dim == 4)
             out_ << "  </pentachora>\n";
         else
@@ -135,15 +142,14 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
                         // numeric (not character) type.
                         out_ << adj->index() << ' '
                             << s->adjacentGluing(facet).SnIndex() << ' ';
+                    } else if constexpr (sizeof(
+                            typename Perm<dim + 1>::ImagePack) == 1) {
+                        // Image packs are chars.  We need to make them numeric.
+                        out_ << adj->index() << ' ' << static_cast<int>(
+                            s->adjacentGluing(facet).imagePack()) << ' ';
                     } else {
-                        static_assert(! (
-                                std::is_same<typename Perm<dim + 1>::ImagePack,
-                                    char>::value ||
-                                std::is_same<typename Perm<dim + 1>::ImagePack,
-                                    unsigned char>::value
-                            ),
-                            "XMLWriter<Triangulation<dim>> requires "
-                            "permutation image packs to be numeric types.");
+                        // Image packs are numeric, but may be larger than int.
+                        // Just write them directly.
                         out_ << adj->index() << ' '
                             << s->adjacentGluing(facet).imagePack() << ' ';
                     }
@@ -156,7 +162,55 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
 
     data_.writeXMLBaseProperties(out_);
 
-    if constexpr (dim == 4) {
+    using regina::xml::xmlValueTag;
+
+    if constexpr (dim == 3) {
+        if (data_.H1Rel_.has_value()) {
+            out_ << "  <H1Rel>";
+            data_.H1Rel_->writeXMLData(out_);
+            out_ << "</H1Rel>\n";
+        }
+        if (data_.H1Bdry_.has_value()) {
+            out_ << "  <H1Bdry>";
+            data_.H1Bdry_->writeXMLData(out_);
+            out_ << "</H1Bdry>\n";
+        }
+        if (data_.H2_.has_value()) {
+            out_ << "  <H2>";
+            data_.H2_->writeXMLData(out_);
+            out_ << "</H2>\n";
+        }
+        if (data_.twoSphereBoundaryComponents_.has_value())
+            out_ << "  " << xmlValueTag("twosphereboundarycomponents",
+                *data_.twoSphereBoundaryComponents_) << '\n';
+        if (data_.negativeIdealBoundaryComponents_.has_value())
+            out_ << "  " << xmlValueTag("negativeidealboundarycomponents",
+                *data_.negativeIdealBoundaryComponents_) << '\n';
+        if (data_.zeroEfficient_.has_value())
+            out_ << "  " << xmlValueTag("zeroeff", *data_.zeroEfficient_)
+                << '\n';
+        if (data_.splittingSurface_.has_value())
+            out_ << "  " << xmlValueTag("splitsfce", *data_.splittingSurface_)
+                << '\n';
+        if (data_.threeSphere_.has_value())
+            out_ << "  " << xmlValueTag("threesphere", *data_.threeSphere_)
+                << '\n';
+        if (data_.threeBall_.has_value())
+            out_ << "  " << xmlValueTag("threeball", *data_.threeBall_) << '\n';
+        if (data_.solidTorus_.has_value())
+            out_ << "  " << xmlValueTag("solidtorus", *data_.solidTorus_)
+                << '\n';
+        if (data_.TxI_.has_value())
+            out_ << "  " << xmlValueTag("txi", *data_.TxI_) << '\n';
+        if (data_.irreducible_.has_value())
+            out_ << "  " << xmlValueTag("irreducible", *data_.irreducible_)
+                << '\n';
+        if (data_.compressingDisc_.has_value())
+            out_ << "  " << xmlValueTag("compressingdisc",
+                *data_.compressingDisc_) << '\n';
+        if (data_.haken_.has_value())
+            out_ << "  " << xmlValueTag("haken", *data_.haken_) << '\n';
+    } else if constexpr (dim == 4) {
         if (data_.H2_.has_value()) {
             out_ << "  <H2>";
             data_.H2_->writeXMLData(out_);
@@ -174,6 +228,7 @@ void XMLWriter<Triangulation<dim>>::close() {
 }
 
 template class XMLWriter<Triangulation<2>>;
+template class XMLWriter<Triangulation<3>>;
 template class XMLWriter<Triangulation<4>>;
 template class XMLWriter<Triangulation<5>>;
 template class XMLWriter<Triangulation<6>>;
@@ -187,9 +242,12 @@ template class XMLWriter<Triangulation<13>>;
 template class XMLWriter<Triangulation<14>>;
 template class XMLWriter<Triangulation<15>>;
 
+template std::string PacketData<Triangulation<3>>::anonID() const;
 template std::string PacketData<Triangulation<4>>::anonID() const;
 
 template void PacketOf<Triangulation<2>>::writeXMLPacketData(std::ostream&,
+    FileFormat, bool, PacketRefs&) const;
+template void PacketOf<Triangulation<3>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<4>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;

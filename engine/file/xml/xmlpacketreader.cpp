@@ -238,23 +238,20 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 return new XMLAngleStructuresReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);
             case PACKET_NORMALSURFACES:
-                if (Triangulation<3>* tri = dynamic_cast<Triangulation<3>*>(
-                        packet_))
+                if (auto tri = dynamic_cast<Triangulation<3>*>(packet_))
                     return new XMLLegacyNormalSurfacesReader(resolver_, packet_,
                         anon_, std::move(childLabel), std::move(childID), tri);
                 else
                     return new XMLElementReader();
             case PACKET_NORMALHYPERSURFACES:
-                if (auto tri = dynamic_cast<PacketOf<Triangulation<4>>*>(
-                        packet_))
+                if (auto tri = dynamic_cast<Triangulation<4>*>(packet_))
                     return new XMLLegacyNormalHypersurfacesReader(resolver_,
                         packet_, anon_, std::move(childLabel),
-                        std::move(childID), std::addressof(tri->data()));
+                        std::move(childID), tri);
                 else
                     return new XMLElementReader();
             case PACKET_ANGLESTRUCTURES:
-                if (Triangulation<3>* tri = dynamic_cast<Triangulation<3>*>(
-                        packet_))
+                if (auto tri = dynamic_cast<Triangulation<3>*>(packet_))
                     return new XMLLegacyAngleStructuresReader(resolver_,
                         packet_, anon_, std::move(childLabel),
                         std::move(childID), tri);

@@ -42,8 +42,8 @@
 
 namespace regina {
 
-std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands(
-        bool setLabels) const {
+std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands()
+        const {
     // Precondition checks.
     if (! (isValid() && isClosed() && isConnected()))
         return { };
@@ -188,14 +188,6 @@ std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands(
     }
 
     // All done!
-    if (setLabels) {
-        size_t whichComp = 1;
-        for (const auto& c : primeComponents) {
-            std::ostringstream label;
-            label << "Summand #" << (whichComp++);
-            c->setLabel(adornedLabel(label.str()));
-        }
-    }
 
     // Set irreducibility while we're at it.
     if (primeComponents.size() > 1) {
@@ -609,31 +601,6 @@ bool Triangulation<3>::knowsTxI() const {
 
     // More work is required.
     return false;
-}
-
-Packet* Triangulation<3>::makeZeroEfficient() {
-    // Extract a connected sum decomposition.
-    auto ans = summands(true);
-    if (ans.size() > 1) {
-        // Composite!
-        Container* connSum = new Container();
-        connSum->setLabel(adornedLabel("Decomposition"));
-        for (auto& s : ans)
-            connSum->insertChildLast(s.release());
-        return connSum;
-    } else if (ans.size() == 1) {
-        // Prime.
-        if (! isIsomorphicTo(*ans.front()))
-            swap(*ans.front());
-        return nullptr;
-    } else {
-        // 3-sphere.
-        if (size() > 1) {
-            removeAllTetrahedra();
-            insertLayeredLensSpace(1,0);
-        }
-        return nullptr;
-    }
 }
 
 bool Triangulation<3>::isIrreducible() const {

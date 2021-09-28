@@ -66,11 +66,6 @@ class ExampleFromLowDim {
         "The generic implementation of ExampleFromLowDim requires "
         "dimension >= 3.");
 
-    private:
-        using ChangeEventSpan = std::conditional_t<dim == 3,
-            Packet::ChangeEventSpan,
-            typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
-
     public:
         /**
          * Returns a double cone over the given (<i>dim-1</i>)-dimensional
@@ -170,11 +165,6 @@ template <int dim>
 class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
     static_assert(dim >= 2, "Example requires dimension >= 2.");
 
-    protected:
-        using ChangeEventSpan = std::conditional_t<dim == 3,
-            Packet::ChangeEventSpan,
-            typename PacketData<Triangulation<dim>>::ChangeEventSpan>;
-
     public:
         /**
          * Closed Triangulations
@@ -265,7 +255,7 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::singleCone(
         const Triangulation<dim-1>& base) {
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel("Single cone over " + base.label());
 
     size_t n = base.size();
@@ -310,7 +300,7 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::doubleCone(
         const Triangulation<dim-1>& base) {
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel("Double cone over " + base.label());
 
     size_t n = base.size();
@@ -364,7 +354,7 @@ Triangulation<dim>* ExampleBase<dim>::sphere() {
     // the identity map.
     Triangulation<dim>* ans = new Triangulation<dim>;
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel(std::string(Strings<dim>::dim) + "-sphere");
 
     Simplex<dim>* p = ans->newSimplex();
@@ -379,7 +369,7 @@ template <int dim>
 Triangulation<dim>* ExampleBase<dim>::simplicialSphere() {
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel(std::string("Standard simplicial ") +
     //    Strings<dim>::dim + "-sphere");
 
@@ -413,7 +403,7 @@ Triangulation<dim>* ExampleBase<dim>::sphereBundle() {
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel(std::string("S") + Strings<dim-1>::dim + " x S1");
 
     Simplex<dim>* p = ans->newSimplex();
@@ -447,7 +437,7 @@ Triangulation<dim>* ExampleBase<dim>::twistedSphereBundle() {
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel(std::string("S") + Strings<dim-1>::dim + " x~ S1");
 
     Simplex<dim>* p = ans->newSimplex();
@@ -479,7 +469,7 @@ template <int dim>
 Triangulation<dim>* ExampleBase<dim>::ball() {
     Triangulation<dim>* ans = new Triangulation<dim>;
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel(std::string(Strings<dim>::dim) + "-ball");
 
     ans->newSimplex();
@@ -493,7 +483,7 @@ Triangulation<dim>* ExampleBase<dim>::ballBundle() {
     // and we need to take its orientable double cover.
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x S1");
 
     // Now join facet 0 to a facet dim to join up the S1 loop.
@@ -525,7 +515,7 @@ Triangulation<dim>* ExampleBase<dim>::twistedBallBundle() {
     // with the second map to make it non-orientable.
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(*ans);
     // ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x~ S1");
 
     // Now join facet 0 to a facet dim to join up the S1 loop.

@@ -141,30 +141,18 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             Tetrahedron<3>* s;
 
             m2_1.insertRehydration("cabbbbaei");
-            m2_1.setLabel("M 2_1");
             m2_2.insertRehydration("cabbbbapt");
-            m2_2.setLabel("M 2_2");
             m3_9.insertRehydration("dagacccfwkn");
-            m3_9.setLabel("M 3_9");
             m4_52.insertRehydration("ebdbcdddaqhie");
-            m4_52.setLabel("M 4_52");
             m4_1_2.insertRehydration("eahbcdddhsssj");
-            m4_1_2.setLabel("M 4_1^2");
             m4_4_2.insertRehydration("ebdbcdddddddx");
-            m4_4_2.setLabel("M 4_4^2");
 
             n1_1.insertRehydration("baaaade");
-            n1_1.setLabel("N 1_1");
             n2_1.insertRehydration("cabbbbabw");
-            n2_1.setLabel("N 2_1");
             n2_1_2.insertRehydration("cabbbbcdw");
-            n2_1_2.setLabel("N 2_1^2");
             n4_14.insertRehydration("eahdccddakfhq");
-            n4_14.setLabel("N 4_14");
             n4_9_2.insertRehydration("ebdbcdddcemre");
-            n4_9_2.setLabel("N 4_9^2");
             n4_1_2_1.insertRehydration("eahbcdddjxxxj");
-            n4_1_2_1.setLabel("N 4_1^2,1");
 
             // Note: the non-orientable manifold below is the same as
             // Example<3>::smallClosedNonOrblHyperbolic()),
@@ -173,16 +161,10 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             // gives the same triangulation with a different labelling,
             // which seems to prod SnapPea into finding a better
             // (non_geometric) solution instead.
-            copyAndDelete(closedHypOr,
-                Example<3>::smallClosedOrblHyperbolic());
-            closedHypOr.setLabel("or_0.94270736");
+            copyAndDelete(closedHypOr, Example<3>::smallClosedOrblHyperbolic());
             copyAndDelete(closedHypNor, Triangulation<3>::fromIsoSig(
                 "lLLLALAQccegffiijkikkkknawmhvwcls"));
-            closedHypNor.setLabel("nor_2.02988321");
-
-            copyAndDelete(weberSeifert,
-                Example<3>::weberSeifert());
-            weberSeifert.setLabel("Weber-Seifert");
+            copyAndDelete(weberSeifert, Example<3>::weberSeifert());
 
             t = flatOr.newTetrahedron();
             s = flatOr.newTetrahedron();
@@ -545,14 +527,15 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "should not be representable in SnapPea format.");
         }
 
-        void testVolume(Triangulation<3>& tri, double vol, unsigned places) {
+        void testVolume(Triangulation<3>& tri, double vol, unsigned places,
+                const char* name) {
             // Verify the volume to the given number of decimal places.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
             SnapPeaTriangulation s(tri);
             {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.label() <<
+                msg << "Triangulation " << name <<
                     " could not be represented in SnapPea format.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(), ! s.isNull());
@@ -562,9 +545,8 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             double foundVol = s.volume(precision);
             if (precision < static_cast<int>(places)) {
                 std::ostringstream msg;
-                msg << "Volume for " << tri.label() <<
-                    " has a precision of " << precision
-                    << " places, which is less than the desired "
+                msg << "Volume for " << name << " has a precision of "
+                    << precision << " places, which is less than the desired "
                     << places << " places.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -575,7 +557,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             if (foundVol > vol + epsilon || foundVol < vol - epsilon) {
                 std::ostringstream msg;
-                msg << "Volume for " << tri.label() << " should be "
+                msg << "Volume for " << name << " should be "
                     << std::setprecision(
                         places + static_cast<int>(ceil(log10(vol))))
                     << vol << ", not "
@@ -587,23 +569,23 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void volume() {
-            testVolume(m2_1,   2.0298832128, 9);
-            testVolume(m2_2,   2.0298832128, 9);
-            testVolume(m3_9,   2.9441064867, 9);
-            testVolume(m4_52,  4.0597664256, 9);
-            testVolume(m4_1_2, 3.6638623767, 9);
-            testVolume(m4_4_2, 4.0597664256, 9);
+            testVolume(m2_1,   2.0298832128, 9, "M 2_1");
+            testVolume(m2_2,   2.0298832128, 9, "M 2_2");
+            testVolume(m3_9,   2.9441064867, 9, "M 3_9");
+            testVolume(m4_52,  4.0597664256, 9, "M 4_52");
+            testVolume(m4_1_2, 3.6638623767, 9, "M 4_1^2");
+            testVolume(m4_4_2, 4.0597664256, 9, "M 4_4^2");
 
-            testVolume(n1_1,     1.0149416064, 9);
-            testVolume(n2_1,     1.8319311884, 9);
-            testVolume(n2_1_2,   2.0298832128, 9);
-            testVolume(n4_14,    3.9696478012, 9);
-            testVolume(n4_9_2,   4.0597664256, 9);
-            testVolume(n4_1_2_1, 3.6638623767, 9);
+            testVolume(n1_1,     1.0149416064, 9, "N 1_1");
+            testVolume(n2_1,     1.8319311884, 9, "N 2_1");
+            testVolume(n2_1_2,   2.0298832128, 9, "N 2_1^2");
+            testVolume(n4_14,    3.9696478012, 9, "N 4_14");
+            testVolume(n4_9_2,   4.0597664256, 9, "N 4_9^2");
+            testVolume(n4_1_2_1, 3.6638623767, 9, "N 4_1^2,1");
 
-            testVolume(closedHypOr, 0.94270736, 7);
-            testVolume(closedHypNor, 2.02988321, 7);
-            testVolume(weberSeifert, 11.1990647, 6);
+            testVolume(closedHypOr, 0.94270736, 7, "or_0.94270736");
+            testVolume(closedHypNor, 2.02988321, 7, "nor_2.02988321");
+            testVolume(weberSeifert, 11.1990647, 6, "Weber-Seifert");
         }
 
         void testZeroVolume(const char* triName, double foundVol,
@@ -796,11 +778,11 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void testFilledHomology(const Triangulation<3>& tri, int m, int l,
-                const std::string& expectedH1) {
+                const std::string& expectedH1, const char* name) {
             SnapPeaTriangulation s(tri);
             if (s.isNull()) {
                 std::ostringstream msg;
-                msg << "Null SnapPea triangulation for " << tri.label() << ".";
+                msg << "Null SnapPea triangulation for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -809,14 +791,13 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             const regina::AbelianGroup* h1 = s.homologyFilled();
             if (! h1) {
                 std::ostringstream msg;
-                msg << "Could not compute filled homology for "
-                    << tri.label() << ".";
+                msg << "Could not compute filled homology for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
             if (h1->str() != expectedH1) {
                 std::ostringstream msg;
                 msg << "Filling (" << m << ", " << l << ") for "
-                    << tri.label() << " gives homology "
+                    << name << " gives homology "
                     << h1->str() << ", not " << expectedH1 << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -827,24 +808,24 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             // homology routines appear to be functioning correctly.
 
             // 1 boundary component, orientable:
-            testFilledHomology(m2_1, 0, 0, "Z");
-            testFilledHomology(m2_1, 1, 1, "0");
-            testFilledHomology(m2_1, -3, 7, "Z_3");
+            testFilledHomology(m2_1, 0, 0, "Z", "M 2_1");
+            testFilledHomology(m2_1, 1, 1, "0", "M 2_1");
+            testFilledHomology(m2_1, -3, 7, "Z_3", "M 2_1");
 
             // 2 boundary components, orientable:
-            testFilledHomology(m4_4_2, 0, 0, "2 Z");
-            testFilledHomology(m4_4_2, 1, 1, "Z");
-            testFilledHomology(m4_4_2, -3, 7, "Z + Z_3");
+            testFilledHomology(m4_4_2, 0, 0, "2 Z", "M 4_4^2");
+            testFilledHomology(m4_4_2, 1, 1, "Z", "M 4_4^2");
+            testFilledHomology(m4_4_2, -3, 7, "Z + Z_3", "M 4_4^2");
 
             // 1 boundary component, non-orientable:
-            testFilledHomology(n1_1, 0, 0, "Z");
-            testFilledHomology(n1_1, 1, 0, "Z");
-            testFilledHomology(n1_1, -1, 0, "Z");
+            testFilledHomology(n1_1, 0, 0, "Z", "N 1_1");
+            testFilledHomology(n1_1, 1, 0, "Z", "N 1_1");
+            testFilledHomology(n1_1, -1, 0, "Z", "N 1_1");
 
             // 2 boundary components, non-orientable:
-            testFilledHomology(n4_9_2, 0, 0, "Z + Z_2");
-            testFilledHomology(n4_9_2, 1, 0, "Z");
-            testFilledHomology(n4_9_2, -1, 0, "Z");
+            testFilledHomology(n4_9_2, 0, 0, "Z + Z_2", "N 4_9^2");
+            testFilledHomology(n4_9_2, 1, 0, "Z", "N 4_9^2");
+            testFilledHomology(n4_9_2, -1, 0, "Z", "N 4_9^2");
         }
 
         void swapping() {

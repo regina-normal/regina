@@ -1486,6 +1486,9 @@ Equality type : EqualityType.BY_REFERENCE
 PacketOfLink : class
 Equality type : EqualityType.BY_REFERENCE
 
+PacketOfSnapPeaTriangulation : class
+Equality type : EqualityType.BY_REFERENCE
+
 PacketOfTriangulation10 : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1505,6 +1508,9 @@ PacketOfTriangulation15 : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketOfTriangulation2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfTriangulation3 : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketOfTriangulation4 : class

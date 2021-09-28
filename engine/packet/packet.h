@@ -1755,6 +1755,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return \c true if and only if some other object owns this object.
          */
         bool hasOwner() const;
+
+    template <typename> friend class PacketData;
 };
 
 template <typename Held>
@@ -1794,13 +1796,6 @@ class PacketOf : public Packet, public Held {
             return PacketInfo::name(typeID);
         }
 
-        Held& data() {
-            return *this;
-        }
-        const Held& data() const {
-            return *this;
-        }
-
         virtual void writeTextShort(std::ostream& out) const override {
             Held::writeTextShort(out);
         }
@@ -1808,9 +1803,12 @@ class PacketOf : public Packet, public Held {
             Held::writeTextLong(out);
         }
 
+        PacketOf(const PacketOf&) = delete;
+        PacketOf& operator = (const PacketOf&) = delete;
+
     protected:
         virtual Packet* internalClonePacket(Packet* parent) const override {
-            return new PacketOf(*this);
+            return new PacketOf(static_cast<const Held&>(*this));
         }
         virtual void writeXMLPacketData(std::ostream& out, FileFormat format,
                 bool anon, PacketRefs& refs) const override;
@@ -1823,7 +1821,7 @@ class PacketOf : public Packet, public Held {
 
 template <typename Held>
 class PacketData {
-    private:
+    protected:
         PacketHeldBy heldBy_ { HELD_BY_NONE };
 
     public:
@@ -1831,6 +1829,34 @@ class PacketData {
         PacketData(const PacketData&) {}
         PacketData& operator = (const PacketData&) { return *this; }
 
+        /**
+         * Returns the packet that holds this data, if there is one.
+         *
+         * If this object is being held by a packet \a p of type PacketOf<Held>,
+         * then this packet \a p will be returned.  Otherwise, if this is a
+         * "standalone" object of type Held, then this routine will return
+         * \c null.
+         *
+         * There is a special case when dealing with a packet \a q that holds
+         * a SnapPea triangulation.  Here \a q is of type
+         * PacketOf<SnapPeaTriangulation>, and it holds a Triangulation<3>
+         * "indirectly" in the sense that SnapPeaTriangulation derives from
+         * Triangulation<3>.  In this scenario:
+         *
+         * - calling Triangulation<3>::packet() will return \c null,
+         *   since there is no "direct" PacketOf<Triangulation<3>>;
+         *
+         * - calling SnapPeaTriangulation::packet() will return the enclosing
+         *   packet \a q, since there is a PacketOf<SnapPeaTriangulation>;
+         *
+         * - calling the special routine Triangulation<3>::inAnyPacket() will
+         *   also return the "indirect" enclosing packet \a q.
+         *
+         * The latter function inAnyPacket() is specific to Triangulation<3>.
+         *
+         * @return the packet that holds this data, or \c null if this
+         * data is not (directly) held by a packet.
+         */
         PacketOf<Held>* packet() {
             return heldBy_ == HELD_BY_PACKET ?
                 static_cast<PacketOf<Held>*>(this) : nullptr;
@@ -1844,16 +1870,11 @@ class PacketData {
 
         class ChangeEventSpan {
             private:
-                Packet::ChangeEventSpan* span_;
+                PacketData& data_;
 
             public:
-                ChangeEventSpan(PacketData& data) :
-                        span_(data.heldBy_ == HELD_BY_PACKET ?
-                            new Packet::ChangeEventSpan(
-                                static_cast<PacketOf<Held>&>(data)) :
-                            nullptr) {
-                }
-                ~ChangeEventSpan() { delete span_; }
+                ChangeEventSpan(PacketData& data);
+                ~ChangeEventSpan();
 
                 // Make this class non-copyable.
                 ChangeEventSpan(const ChangeEventSpan&) = delete;
@@ -2980,6 +3001,33 @@ inline size_t Packet::countDescendants() const {
 
 inline bool Packet::hasOwner() const {
     return treeParent_;
+}
+
+template <typename Held>
+inline PacketData<Held>::ChangeEventSpan::ChangeEventSpan(PacketData& data) :
+        data_(data) {
+    static_assert(PacketOf<Held>::typeID != PACKET_TRIANGULATION3,
+        "The generic ChangeEventSpan constructor should not be "
+        "used with Triangulation<3>, which uses its own specialisation.");
+    if (data_.heldBy_ == HELD_BY_PACKET) {
+        auto& p = static_cast<PacketOf<Held>&>(data_);
+        if (! p.changeEventSpans_)
+            p.fireEvent(&PacketListener::packetToBeChanged);
+        ++p.changeEventSpans_;
+    }
+}
+
+template <typename Held>
+inline PacketData<Held>::ChangeEventSpan::~ChangeEventSpan() {
+    static_assert(PacketOf<Held>::typeID != PACKET_TRIANGULATION3,
+        "The generic ChangeEventSpan destructor should not be "
+        "used with Triangulation<3>, which uses its own specialisation.");
+    if (data_.heldBy_ == HELD_BY_PACKET) {
+        auto& p = static_cast<PacketOf<Held>&>(data_);
+        --p.changeEventSpans_;
+        if (! p.changeEventSpans_)
+            p.fireEvent(&PacketListener::packetWasChanged);
+    }
 }
 
 inline SubtreeIterator<false> Packet::begin() {

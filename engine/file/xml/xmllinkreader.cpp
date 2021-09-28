@@ -52,11 +52,11 @@ XMLElementReader* XMLLinkReader::startContentSubElement(
         return new XMLElementReader();
 
     if (subTagName == "crossings")
-        return new XMLLinkCrossingsReader(std::addressof(link_->data()));
+        return new XMLLinkCrossingsReader(link_);
     else if (subTagName == "connections")
-        return new XMLLinkConnectionsReader(std::addressof(link_->data()));
+        return new XMLLinkConnectionsReader(link_);
     else if (subTagName == "components")
-        return new XMLLinkComponentsReader(std::addressof(link_->data()));
+        return new XMLLinkComponentsReader(link_);
 
     return new XMLElementReader();
 }

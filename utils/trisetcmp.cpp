@@ -41,18 +41,18 @@ using regina::Triangulation;
 
 bool subcomplexTesting = false;
 
-bool compare(Triangulation<3>* t1, Triangulation<3>* t2) {
+bool compare(const Triangulation<3>* t1, const Triangulation<3>* t2) {
     if (subcomplexTesting)
         return t1->isContainedIn(*t2).has_value();
     else
         return t1->isIsomorphicTo(*t2).has_value();
 }
 
-bool compare(const Triangulation<4>& t1, const Triangulation<4>& t2) {
+bool compare(const Triangulation<4>* t1, const Triangulation<4>* t2) {
     if (subcomplexTesting)
-        return t1.isContainedIn(t2).has_value();
+        return t1->isContainedIn(*t2).has_value();
     else
-        return t1.isIsomorphicTo(t2).has_value();
+        return t1->isIsomorphicTo(*t2).has_value();
 }
 
 void usage(const char* progName, const std::string& error = std::string()) {
@@ -84,8 +84,9 @@ void runMatches(Packet* tree1, Packet* tree2, std::ostream& out) {
         if (p1->type() == regina::PACKET_TRIANGULATION3) {
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
                 if (p2->type() == regina::PACKET_TRIANGULATION3)
-                    if (compare(static_cast<Triangulation<3>*>(p1),
-                            static_cast<Triangulation<3>*>(p2))) {
+                    if (compare(
+                            static_cast<PacketOf<Triangulation<3>>*>(p1),
+                            static_cast<PacketOf<Triangulation<3>>*>(p2))) {
                         out << "    " << p1->humanLabel()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
                             << p2->humanLabel() << std::endl;
@@ -95,8 +96,8 @@ void runMatches(Packet* tree1, Packet* tree2, std::ostream& out) {
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
                 if (p2->type() == regina::PACKET_TRIANGULATION4)
                     if (compare(
-                            static_cast<PacketOf<Triangulation<4>>*>(p1)->data(),
-                            static_cast<PacketOf<Triangulation<4>>*>(p2)->data())) {
+                            static_cast<PacketOf<Triangulation<4>>*>(p1),
+                            static_cast<PacketOf<Triangulation<4>>*>(p2))) {
                         out << "    " << p1->label()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
                             << p2->label() << std::endl;
@@ -126,8 +127,9 @@ void runNonMatches(const std::string& file1, Packet* tree1,
             matched = false;
             for (p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
                 if (p2->type() == regina::PACKET_TRIANGULATION3)
-                    if (compare(static_cast<Triangulation<3>*>(p1),
-                            static_cast<Triangulation<3>*>(p2)))
+                    if (compare(
+                            static_cast<PacketOf<Triangulation<3>>*>(p1),
+                            static_cast<PacketOf<Triangulation<3>>*>(p2)))
                         matched = true;
             if (! matched) {
                 out << "    " << p1->humanLabel() << std::endl;
@@ -138,8 +140,8 @@ void runNonMatches(const std::string& file1, Packet* tree1,
             for (p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
                 if (p2->type() == regina::PACKET_TRIANGULATION4)
                     if (compare(
-                            static_cast<PacketOf<Triangulation<4>>*>(p1)->data(),
-                            static_cast<PacketOf<Triangulation<4>>*>(p2)->data()))
+                            static_cast<PacketOf<Triangulation<4>>*>(p1),
+                            static_cast<PacketOf<Triangulation<4>>*>(p2)))
                         matched = true;
             if (! matched) {
                 out << "    " << p1->label() << std::endl;

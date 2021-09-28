@@ -57,7 +57,7 @@ Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
     // Build the triangulation.
     Triangulation<3>* ans = new Triangulation<3>();
     // Ensure only one event pair is fired in this sequence of changes.
-    Packet::ChangeEventSpan span(*ans);
+    Triangulation<3>::ChangeEventSpan span(*ans);
 
     if (inclusion)
         *inclusion = new Isomorphism<4>(degree());

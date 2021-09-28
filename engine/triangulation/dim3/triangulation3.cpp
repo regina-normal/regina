@@ -38,6 +38,7 @@
 #include <stack>
 
 #include "link/link.h"
+#include "snappea/snappeatriangulation.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
@@ -48,16 +49,12 @@ Triangulation<3>::Triangulation(const std::string& description) :
         strictAngleStructure_(false), generalAngleStructure_(false) {
     Triangulation<3>* attempt;
 
-    if ((attempt = fromIsoSig(description))) {
+    if ((attempt = fromIsoSig(description)))
         swap(*attempt);
-        setLabel(description);
-    } else if ((attempt = rehydrate(description))) {
+    else if ((attempt = rehydrate(description)))
         swap(*attempt);
-        setLabel(description);
-    } else if ((attempt = fromSnapPea(description))) {
+    else if ((attempt = fromSnapPea(description)))
         swap(*attempt);
-        setLabel(attempt->label());
-    }
 
     delete attempt;
 }
@@ -217,98 +214,6 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
         out << '\n';
     }
     out << '\n';
-}
-
-void Triangulation<3>::writeXMLPacketData(std::ostream& out,
-        FileFormat format, bool anon, PacketRefs& refs) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlValueTag;
-
-    writeXMLHeader(out, "tri", format, anon, refs, true,
-        std::pair("dim", 3), std::pair("size", simplices_.size()),
-        std::pair("perm", "index"));
-
-    // Write the tetrahedron gluings.
-    if (format == REGINA_XML_GEN_2) {
-        out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
-        for (Tetrahedron<3>* t : simplices_) {
-            out << "    <tet desc=\"" <<
-                xmlEncodeSpecialChars(t->description()) << "\"> ";
-            for (int face = 0; face < 4; face++) {
-                Tetrahedron<3>* adjTet = t->adjacentTetrahedron(face);
-                if (adjTet) {
-                    out << adjTet->index() << ' '
-                        << static_cast<int>(t->adjacentGluing(face).imagePack())
-                        << ' ';
-                } else
-                    out << "-1 -1 ";
-            }
-            out << "</tet>\n";
-        }
-        out << "  </tetrahedra>\n";
-    } else {
-        for (Tetrahedron<3>* t : simplices_) {
-            if (t->description().empty())
-                out << "  <simplex> ";
-            else
-                out << "  <simplex desc=\"" <<
-                    xmlEncodeSpecialChars(t->description()) << "\"> ";
-            for (int face = 0; face < 4; face++) {
-                Tetrahedron<3>* adjTet = t->adjacentTetrahedron(face);
-                if (adjTet) {
-                    out << adjTet->index() << ' '
-                        << static_cast<int>(t->adjacentGluing(face).SnIndex())
-                        << ' ';
-                } else
-                    out << "-1 -1 ";
-            }
-            out << "</simplex>\n";
-        }
-    }
-
-    writeXMLBaseProperties(out);
-
-    if (H1Rel_.has_value()) {
-        out << "  <H1Rel>";
-        H1Rel_->writeXMLData(out);
-        out << "</H1Rel>\n";
-    }
-    if (H1Bdry_.has_value()) {
-        out << "  <H1Bdry>";
-        H1Bdry_->writeXMLData(out);
-        out << "</H1Bdry>\n";
-    }
-    if (H2_.has_value()) {
-        out << "  <H2>";
-        H2_->writeXMLData(out);
-        out << "</H2>\n";
-    }
-    if (twoSphereBoundaryComponents_.has_value())
-        out << "  " << xmlValueTag("twosphereboundarycomponents",
-            *twoSphereBoundaryComponents_) << '\n';
-    if (negativeIdealBoundaryComponents_.has_value())
-        out << "  " << xmlValueTag("negativeidealboundarycomponents",
-            *negativeIdealBoundaryComponents_) << '\n';
-    if (zeroEfficient_.has_value())
-        out << "  " << xmlValueTag("zeroeff", *zeroEfficient_) << '\n';
-    if (splittingSurface_.has_value())
-        out << "  " << xmlValueTag("splitsfce", *splittingSurface_) << '\n';
-    if (threeSphere_.has_value())
-        out << "  " << xmlValueTag("threesphere", *threeSphere_) << '\n';
-    if (threeBall_.has_value())
-        out << "  " << xmlValueTag("threeball", *threeBall_) << '\n';
-    if (solidTorus_.has_value())
-        out << "  " << xmlValueTag("solidtorus", *solidTorus_) << '\n';
-    if (TxI_.has_value())
-        out << "  " << xmlValueTag("txi", *TxI_) << '\n';
-    if (irreducible_.has_value())
-        out << "  " << xmlValueTag("irreducible", *irreducible_) << '\n';
-    if (compressingDisc_.has_value())
-        out << "  " << xmlValueTag("compressingdisc", *compressingDisc_) << '\n';
-    if (haken_.has_value())
-        out << "  " << xmlValueTag("haken", *haken_) << '\n';
-
-    writeXMLFooter(out, "tri", format, anon, refs);
 }
 
 Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
@@ -486,10 +391,7 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
 
     // Write header information.
     out << "% Triangulation\n";
-    if (label().empty())
-        out << "Regina_Triangulation\n";
-    else
-        out << stringToToken(label()) << '\n';
+    out << "Regina_Triangulation\n";
 
     // Write general details.
     out << "not_attempted 0.0\n";
@@ -608,6 +510,44 @@ bool Triangulation<3>::saveRecogniser(const char* filename) const {
         return false;
     recogniser(out);
     return true;
+}
+
+SnapPeaTriangulation* Triangulation<3>::isSnapPea() {
+    return (heldBy_ == HELD_BY_SNAPPEA ?
+        static_cast<SnapPeaTriangulation*>(this) : nullptr);
+}
+
+const SnapPeaTriangulation* Triangulation<3>::isSnapPea() const {
+    return (heldBy_ == HELD_BY_SNAPPEA ?
+        static_cast<const SnapPeaTriangulation*>(this) : nullptr);
+}
+
+Packet* Triangulation<3>::inAnyPacket() {
+    switch (heldBy_) {
+        case HELD_BY_PACKET:
+            return static_cast<PacketOf<Triangulation<3>>*>(this);
+        case HELD_BY_SNAPPEA:
+            return static_cast<PacketOf<SnapPeaTriangulation>*>(this);
+        case HELD_BY_NONE:
+            return nullptr;
+    }
+}
+
+const Packet* Triangulation<3>::inAnyPacket() const {
+    switch (heldBy_) {
+        case HELD_BY_PACKET:
+            return static_cast<const PacketOf<Triangulation<3>>*>(this);
+        case HELD_BY_SNAPPEA:
+            return static_cast<const PacketOf<SnapPeaTriangulation>*>(this);
+        case HELD_BY_NONE:
+            return nullptr;
+    }
+}
+
+void Triangulation<3>::nullifySnapPea() {
+    // This is in the .cpp file so we can keep snappeatriangulation.h
+    // out of the main Triangulation<3> headers.
+    static_cast<SnapPeaTriangulation*>(this)->nullify();
 }
 
 } // namespace regina

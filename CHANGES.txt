@@ -985,6 +985,9 @@ Version 7.0  [ TODO ]
               fundGroupFilled() and homologyFilled() now have a precondition
               that this must not be a null SnapPea triangulation (instead of
               the old behaviour of returning a null pointer).
+            - Replaced the old filledTriangulation() (which used a polymorphic
+              return type) with filledPartial() and filledAll() (whose return
+              types are known at compile time).
         Class SnappedBall:
             - Routine formsBall() is now called recognise(), and
               return a std::optional instead of a pointer that could be null.
@@ -1072,8 +1075,7 @@ Version 7.0  [ TODO ]
               The old names are kept as deprecated aliases.
             - Routine splitIntoComponents() is replaced with a new routine
               triangulateComponents() with different behaviour: it does not
-              insert the results into the packet tree, and does not assign
-              packet labels by default (but this is still an option).
+              insert the results into the packet tree or assign packet labels.
               The old splitIntoComponents() has been removed completely,
               since it relied on triangulations living in the packet tree.
             - Routines findAllIsomorphisms() and findAllSubcomplexesIn()
@@ -1100,12 +1102,13 @@ Version 7.0  [ TODO ]
             - New routine generalAngleStructure().
             - Routine connectedSumDecomposition() is replaced with a new routine
               summands() with different behaviour: it does not insert the
-              results into the packet tree, it does not assign packet labels
-              by default (but this is still an option), and it throws on error
-              (instead of returning -1).  The old connectedSumDecomposition()
-              is kept but deprecated.
-            - Routine makeZeroEfficient() is deprecated.  Instead call
-              summands(), which now formally guarantees 0-efficiency.
+              results into the packet tree or assign packet labels, and it
+              throws on error.  The old connectedSumDecomposition() has been
+              removed completely, since it relied on triangulations living
+              in the packet tree.
+            - Routine makeZeroEfficient() has been removed completely, since
+              it relied on triangulations living in the packet tree.  Instead
+              call summands(), which now formally guarantees 0-efficiency.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.  This function is now also available
@@ -1119,6 +1122,8 @@ Version 7.0  [ TODO ]
             - Renamed findStrictAngleStructure() to strictAngleStructure(),
             - Renamed isThreeSphere() and knowsThreeSphere() to isSphere() and
               knowsSphere().  The old names are kept as deprecated aliases.
+            - New routines inAnyPacket() and isSnapPea().
+            - Functions snapPea() and saveSnapPea() are no longer virtual.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and

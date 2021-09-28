@@ -72,7 +72,8 @@ void addAngleStructures(pybind11::module_& m) {
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to the AngleStructures class.
             AngleStructures* ans = new AngleStructures(owner, tautOnly);
-            owner.insertChildLast(ans);
+            if (regina::Packet* p = owner.packet())
+                p->insertChildLast(ans);
             return ans;
         }, pybind11::arg(),
             pybind11::arg("tautOnly") = false)
@@ -80,7 +81,8 @@ void addAngleStructures(pybind11::module_& m) {
             // This is deprecated, so we reimplement it here ourselves.
             AngleStructures* ans = new AngleStructures(owner, true,
                 regina::AS_ALG_DD);
-            owner.insertChildLast(ans);
+            if (regina::Packet* p = owner.packet())
+                p->insertChildLast(ans);
             return ans;
         })
         .def_property_readonly_static("typeID", [](pybind11::object) {

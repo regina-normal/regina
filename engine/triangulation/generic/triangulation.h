@@ -118,8 +118,8 @@ namespace regina {
  *
  * - To include a Triangulation in the packet tree, you must create a new
  *   PacketOf<Triangulation>.  This \e is a packet type, and supports labels,
- *   tags, child/parent packets, and event listeners.  It holds its own internal
- *   Triangulation, which you can access via PacketOf<Triangulation>::data().
+ *   tags, child/parent packets, and event listeners.  It derives from
+ *   Triangulation, and so inherits the full Triangulation interface.
  *
  * - If you are adding new functions to this class that edit the triangulation,
  *   you must still remember to create a ChangeEventSpan.  This will ensure
@@ -513,8 +513,8 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
     if (&other == this)
         return;
 
-    typename PacketData<Triangulation<dim>>::ChangeEventSpan span1(*this);
-    typename PacketData<Triangulation<dim>>::ChangeEventSpan span2(other);
+    typename Triangulation<dim>::ChangeEventSpan span1(*this);
+    typename Triangulation<dim>::ChangeEventSpan span2(other);
 
     // Note: swapBaseData() calls Snapshottable::swap().
     this->swapBaseData(other);

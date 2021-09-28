@@ -150,10 +150,10 @@ NormalSurfaces* NormalSurfaces::enumerate(Triangulation<3>& owner,
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
         std::thread([=, &owner](MatrixInt e) {
-            Enumerator(ans, e, tracker, &owner).enumerate();
+            Enumerator(ans, e, tracker, owner.packet()).enumerate();
         }, std::move(*eqns)).detach();
     } else
-        Enumerator(ans, *eqns, tracker, &owner).enumerate();
+        Enumerator(ans, *eqns, tracker, owner.packet()).enumerate();
     return ans;
 }
 

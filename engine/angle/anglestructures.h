@@ -309,7 +309,8 @@ class AngleStructures : public Packet {
          * This static routine is almost identical to calling the class
          * constructor with the given arguments.  The only difference is
          * that, unlike the class constructor, this routine will also insert
-         * the angle structure list beneath \a owner in the packet tree.
+         * the angle structure list beneath \a owner in the packet tree
+         * (but only if \a owner actually has a packet that contains it).
          * If a progress tracker is passed (which means the enumeration runs
          * in a background thread), the tree insertion will not happen until
          * the enumeration has finished (and if the user cancels the operation,
@@ -346,7 +347,8 @@ class AngleStructures : public Packet {
          * constructor with the \c tautOnly argument set to \c true and
          * the \a algHints argument set to AS_ALG_DD.  The only difference is
          * that, unlike the class constructor, this routine will also insert
-         * the angle structure list beneath \a owner in the packet tree.
+         * the angle structure list beneath \a owner in the packet tree
+         * (but only if \a owner actually has a packet that contains it).
          *
          * Note that default algorithm used by the class constructor for
          * taut angle structures is the tree traversal method, which is

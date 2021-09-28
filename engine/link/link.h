@@ -616,8 +616,8 @@ class Crossing : public MarkedElement, public Output<Crossing> {
  *
  * - To include a Link in the packet tree, you must create a new
  *   PacketOf<Link>.  This \e is a packet type, and supports labels, tags,
- *   child/parent packets, and event listeners.  It holds its own internal
- *   Link, which you can access via PacketOf<Link>::data().
+ *   child/parent packets, and event listeners.  It derives from Link,
+ *   and so inherits the full Link interface.
  *
  * - If you are adding new functions to this class that edit the link,
  *   you must still remember to create a ChangeEventSpan.  This will

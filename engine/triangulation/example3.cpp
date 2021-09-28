@@ -146,22 +146,17 @@ namespace regina {
 
 Triangulation<3>* Example<3>::solidKleinBottle() {
     Triangulation<3>* ans = twistedBallBundle();
-    ans->setLabel("Solid Klein bottle");
     return ans;
 }
 
 Triangulation<3>* Example<3>::threeSphere() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("3-sphere");
-
     ans->insertLayeredLensSpace(1, 0);
-
     return ans;
 }
 
 Triangulation<3>* Example<3>::bingsHouse() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Bing's house with two rooms");
 
     Tetrahedron<3>* r = ans->newTetrahedron();
     Tetrahedron<3>* s = ans->newTetrahedron();
@@ -178,7 +173,6 @@ Triangulation<3>* Example<3>::rp2xs1() {
     // construct RP^2 x S^1 by identifying the boundary triangles of a
     // three-tetrahedron solid Klein bottle.
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("RP2 x S1");
 
     Tetrahedron<3>* r = ans->newTetrahedron();
     Tetrahedron<3>* s = ans->newTetrahedron();
@@ -197,42 +191,29 @@ Triangulation<3>* Example<3>::rp3rp3() {
     // This can be generated as the enclosing triangulation of a splitting
     // surface, as described in chapter 4 of Benjamin Burton's PhD thesis.
     Triangulation<3>* ans = Signature::parse("aabccd.b.d")->triangulate();
-    ans->setLabel("RP3 # RP3");
     return ans;
 }
 
 Triangulation<3>* Example<3>::lens(size_t p, size_t q) {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->insertLayeredLensSpace(p, q);
-
-    std::ostringstream s;
-    s << "L(" << p << ',' << q << ')';
-    ans->setLabel(s.str());
-
     return ans;
 }
 
 Triangulation<3>* Example<3>::poincareHomologySphere() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Poincar\u00E9 homology sphere");
-
     ans->insertConstruction(5, poincareAdj, poincareGluings);
-
     return ans;
 }
 
 Triangulation<3>* Example<3>::weeks() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Weeks manifold");
-
     ans->insertConstruction(9, weeksAdj, weeksGluings);
-
     return ans;
 }
 
 Triangulation<3>* Example<3>::weberSeifert() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Weber-Seifert dodecahedral space");
 
     // Bah.  Dehydration strings are somewhat impenetrable,
     // but the alternative is 23 lines of hard-coded tetrahedron gluings.
@@ -249,19 +230,13 @@ Triangulation<3>* Example<3>::weberSeifert() {
 
 Triangulation<3>* Example<3>::smallClosedOrblHyperbolic() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Closed orientable hyperbolic 3-manifold");
-
     ans->insertConstruction(9, closedOrHypAdj, closedOrHypGluings);
-
     return ans;
 }
 
 Triangulation<3>* Example<3>::smallClosedNonOrblHyperbolic() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Closed non-orientable hyperbolic 3-manifold");
-
     ans->insertConstruction(11, closedNorHypAdj, closedNorHypGluings);
-
     return ans;
 }
 
@@ -271,7 +246,6 @@ Triangulation<3>* Example<3>::sphere600() {
     Triangulation<3>* ans = Triangulation<3>::fromIsoSig("-cyjvvvvvzzzvzzvvwvLLvLvPPvLvPzAPvzAMPzwLvzPvLPzwwMzvPzMzLwzMzMvALMLzvzMPwzwMALMvvMALzMPvAwvzwzMzAwvwwwwMAzMzQLMvzMPAwzzzMLPzvMzMMwwwwMzAwPMzvwzMzAwPMvAzMzAQLLvQzwwzPMvAzQMwwPzwLwPzLMAPPvQAvAMvzQLPwPAwPAMAMvPPzLMQvPzwMAwPAMwALMQwPzwPQwPAMwALMvwzQQAQzALMvMzvAMvwPAMwzvQMQvMzMzQMzzLPQzzMPzPAMMQMLzAwQAPPQPzvLPQzLzPQzLLQMzvMMPQzzPQPvLPzPPQPvzAwAPPQAzPQQLAQQAQPwvLPQPAPwvvzwvvLQMAQLLQQQQLLQQQQQLQQQQQAMMQMQAQialaoamapaqatavawazaPaBaRaCaFaTaHaVa3aIa6aLaXaNaZa7aOa+aebgbSanbWaqbrb0aubybAb2anb5aFbrb9aHbMbObabcbTbfbVbybYbObibkb4bmb6b9bpbGbtbIbecgcwbUbzbWbmcgcCb5bEb7btcycAcXbKbNbEcycZb8bQbSbLc+bPcScPcVc1b-b3bZcac4c7c4c+ccdlcccDcfcfdAcncscicKckclducScpdpcvc1crctdwc7cxdBdzcFcgdCcMcmdVcLdHcNcJcOdOc3c+cTdWdRcWcqdUc0cudKd2cYcRdcd-dbe6c-cyd9cddCdSdedbdYdaedepdLdidndkdteodwdxdTdzeKdvdsdweBd-dIeSdDdAdBeaeKeFdIdQdHdSeJdveVeNdPdTeWd4ebeVdXdWe5ede3d0d7d2dcf4dEeff6d8d0edfkf+dcegfjfiefemehetfNejewfle9eneufBfpemfqexfAfseueUezeJfIeyeAeXeKfKeDeFeFfefTfHeJehfSfMeMfOevf2fQeVfReyf1fVe4eJf5eKfZeifRf1eGfag3e6ebglf8e0fzfNf+eigafdgbfjgCfffkfTfjfSfagbgofxgWfpf4fDfrfhgsfygmgEfwfBf2fAf1figjgxgygNgIfLfOgUfVgPfQgQfWg3fNgOg4gYfUgZf5gZg5fVgWg4g5g7f8fcgPg+fch-fkgXgPgfgkhdhggfhlglhXgkhlhogpgtg0grgthsgzg6g0gvgwhAguhwgnh6gnhCgDgHg8gFgGgEhLgah8gJgMgHhKgFhshahshSgQhehTgghYgRhQhRh2gxh7gvh3gThTh+gbhIh-gGhYhYh9h+h9h+hihyhjhzhmh-h-hphqhJhrhKhbibilimilimininiBhChLhDhMhpipiviwiviwixixiziziOhZhPh0hShdiaiaiVhWh5hXh6hiicicirioioi2h3h7h4h8htiqiqiBiyiyiDiAiAirifigijihikisisiuiBiCiCiEiDiEiGiHiJiIiKiLiLiMiNiNiOiOiQiRiTiSiUiWiViVihjYiXiXiijYi0i1i3i2i4i6i5i5ijj8i7i7ikjnj8ioj+ibj-icjajejdjdjljgjfjfjmjpjgjqjrjsjijkjtjmjujvjojtjqjujwjsjvjwjxjxjxjgovcfbcfboivlbgmvpifdgtoulcepdbifdlcepdbavpaoupdfvlgtalacoigmivnospdvkgwlaojgripdsfgtarncgmwleauckoisidaplsfbgtgrncbgmwouckfoisvplgwqgrxceckoisvfdloshojxhncqbdpvnhvkqhsfxqxccckoisvfflgncqbcpgsfxoxckfoistlojxbdovkqqcncbgmwupgrexdvnhhsfbgtprugdwqeoeshhojwbdovkrqcgresdvnjhgdwneoeskhbcmoigklwxpvnhngijqruoeshsffqgmxigtirmrgmwqiwccxgtqlhppvnhnuoeshsxitgmwqiwqlhpvnjpoeskuagtirmrqahpvkrlgdwntagijqrlaaojwigresmagklwxiaagtcrorqhpggjfrlagkgwciatqhpgvwgntagrosgmauhqluaojgwoiaphxipalagvwgnovggrosgvoggvoojgwovgogovogvcojgwocgfffgcbbojgwocgffgcbojgwovgologvibgrosgvogpgovmdfigvwgnovgugvotecldpbficlpvpoudgtldla");
 
     ans->orient();
-    ans->setLabel("600-cell");
     return ans;
 }
 
@@ -281,17 +255,11 @@ Triangulation<3>* Example<3>::lst(size_t a, size_t b) {
 
     Triangulation<3>* ans = new Triangulation<3>();
     ans->insertLayeredSolidTorus(a, b);
-
-    std::ostringstream s;
-    s << "LST(" << a << ',' << b << ',' << (a + b) << ')';
-    ans->setLabel(s.str());
-
     return ans;
 }
 
 Triangulation<3>* Example<3>::figureEight() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Figure eight knot complement");
 
     // The two-tetrahedron figure eight knot complement is described at
     // the beginning of chapter 8 of Richard Rannard's PhD thesis.
@@ -307,7 +275,6 @@ Triangulation<3>* Example<3>::figureEight() {
 
 Triangulation<3>* Example<3>::trefoil() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Trefoil knot complement");
 
     Tetrahedron<3>* r = ans->newTetrahedron();
     Tetrahedron<3>* s = ans->newTetrahedron();
@@ -321,7 +288,6 @@ Triangulation<3>* Example<3>::trefoil() {
 
 Triangulation<3>* Example<3>::whiteheadLink() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Whitehead link complement");
 
     ans->insertConstruction(4, whiteheadAdj, whiteheadGluings);
 
@@ -330,7 +296,6 @@ Triangulation<3>* Example<3>::whiteheadLink() {
 
 Triangulation<3>* Example<3>::gieseking() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Gieseking manifold");
 
     Tetrahedron<3>* r = ans->newTetrahedron();
     r->join(0, r, Perm<4>(1, 2, 0, 3));
@@ -341,7 +306,6 @@ Triangulation<3>* Example<3>::gieseking() {
 
 Triangulation<3>* Example<3>::cuspedGenusTwoTorus() {
     Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Cusped genus two solid torus");
 
     // We create this by first constructing an ordinary solid genus two
     // torus and then converting the real boundary to an ideal vertex.

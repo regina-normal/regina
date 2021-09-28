@@ -59,7 +59,6 @@ Triangulation<3>* SnapPeaCensusManifold::construct() const {
     if (section_ == SEC_5) {
         if (index_ == 0) {
             ans = Example<3>::gieseking();
-            ans->setLabel("");
         } else if (index_ == 1) {
             ans = new Triangulation<3>();
             Tetrahedron<3>* r = ans->newTetrahedron();
@@ -86,10 +85,8 @@ Triangulation<3>* SnapPeaCensusManifold::construct() const {
             r->join(3, s, Perm<4>(1, 0, 2, 3));
         } else if (index_ == 4) {
             ans = Example<3>::figureEight();
-            ans->setLabel("");
         } else if (index_ == 129) {
             ans = Example<3>::whiteheadLink();
-            ans->setLabel("");
         }
     }
     if (ans)

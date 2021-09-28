@@ -145,8 +145,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("orient", &Triangulation<dim>::orient)
         .def("reflect", &Triangulation<dim>::reflect)
         .def("triangulateComponents",
-            &Triangulation<dim>::triangulateComponents,
-            pybind11::arg("setLabels") = false)
+            &Triangulation<dim>::triangulateComponents)
         .def("eulerCharTri", &Triangulation<dim>::eulerCharTri)
         .def("fundamentalGroup", &Triangulation<dim>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal)

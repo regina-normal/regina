@@ -51,10 +51,9 @@ void add_packet_wrapper(pybind11::module_& m, const char* className) {
             regina::SafePtr<regina::PacketOf<Held>>>(m, className)
         .def(pybind11::init<>())
         .def(pybind11::init<const Held&>())
-        .def(pybind11::init<const regina::PacketOf<Held>&>())
-        .def("data",
-            (Held&(regina::PacketOf<Held>::*)())(&regina::PacketOf<Held>::data),
-            pybind11::return_value_policy::reference_internal)
+        .def("data", [](regina::PacketOf<Held>* p) {
+            return static_cast<Held*>(p);
+        })
         .def_property_readonly_static("typeID", [](pybind11::object) {
             // We cannot take the address of typeID, so use a getter function.
             return regina::PacketOf<Held>::typeID;

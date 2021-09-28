@@ -41,13 +41,13 @@
 #endif
 
 #include "packet/container.h"
+#include "triangulation/dim3.h"
 #include <list>
 #include <map>
 
 namespace regina {
 
 class Packet;
-
 class XMLTreeResolver;
 
 /**
@@ -284,6 +284,24 @@ class XMLTreeResolver {
         Held* resolvePacketData(const std::string& id) const;
 
         /**
+         * Identifies if a 3-dimensional triangulation in either of
+         * Regina's or SnapPea's native formats has been registered as
+         * having the given ID within the the XML data file.
+         *
+         * This is similar to resolvePacketData(), except that it recognises
+         * packets that hold either Triagulation<3> or SnapPeaTriangulation
+         * objects (i.e., it is not restricted to a single packet type).
+         * See resolvePacketData() for further details.
+         *
+         * @param id the string ID to query.
+         * @return the triangulation held by the packet with the given ID,
+         * or \c null if either there is no such packet registered so far,
+         * or if there is such a packet but it does not hold one of Regina's
+         * 3-dimensional triangulation types.
+         */
+        const Triangulation<3>* resolveTri3(const std::string& id) const;
+
+        /**
          * Calls XMLTreeResolutionTask::resolve() for all queued tasks.
          *
          * The tasks will then be destroyed and removed from the queue
@@ -343,8 +361,7 @@ inline Held* XMLTreeResolver::resolvePacketData(const std::string& id) const {
     static_assert(std::is_base_of<PacketData<Held>, Held>::value,
         "XMLTreeResolver::resolvePacketData<T> requires T to be a type "
         "that is held by PacketOf<T>.");
-    auto p = dynamic_cast<PacketOf<Held>*>(resolve(id));
-    return (p ? std::addressof(p->data()) : nullptr);
+    return dynamic_cast<PacketOf<Held>*>(resolve(id));
 }
 
 inline void XMLTreeResolver::resolveDelayed() {

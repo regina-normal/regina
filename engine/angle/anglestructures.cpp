@@ -33,6 +33,7 @@
 #include "angle/anglestructures.h"
 #include "enumerate/doubledescription.h"
 #include "enumerate/treetraversal.h"
+#include "file/xml/xmlwriter.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
@@ -180,16 +181,16 @@ AngleStructures* AngleStructures::enumerate(Triangulation<3>& triangulation,
         triangulation);
     if (tracker)
         std::thread(&AngleStructures::enumerateInternal,
-            ans, tracker, &triangulation).detach();
+            ans, tracker, triangulation.packet()).detach();
     else
-        ans->enumerateInternal(nullptr, &triangulation);
+        ans->enumerateInternal(nullptr, triangulation.packet());
     return ans;
 }
 
 AngleStructures* AngleStructures::enumerateTautDD(
         Triangulation<3>& triangulation) {
     AngleStructures* ans = new AngleStructures(true, AS_ALG_DD, triangulation);
-    ans->enumerateInternal(nullptr /* tracker */, &triangulation);
+    ans->enumerateInternal(nullptr /* tracker */, triangulation.packet());
     return ans;
 }
 
@@ -211,30 +212,52 @@ void AngleStructures::writeTextLong(std::ostream& o) const {
 }
 
 void AngleStructures::addPacketRefs(PacketRefs& refs) const {
-    refs.insert({ std::addressof(*triangulation_), false });
+    if (const Packet* p = triangulation_->inAnyPacket())
+        refs.insert({ p, false });
 }
 
 void AngleStructures::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
-    const Triangulation<3>* tri = std::addressof(*triangulation_);
+    const Packet* triPacket = triangulation_->inAnyPacket();
 
-    if (format == REGINA_XML_GEN_2 && tri != parent()) {
+    if (format == REGINA_XML_GEN_2 && ! (triPacket && triPacket == parent())) {
         // The second-generation format required tri == parent(), and
         // Regina <= 6.0.1 cannot handle lists *without* this property at all.
         // Do not write this list (or its descendants) at all.
         return;
     }
 
-    // We know from addPacketRefs() that refs contains the triangulation.
-    if (! refs.find(tri)->second) {
-        // The triangulation has not yet been written to file.  Do it now.
-        writeXMLAnon(out, format, refs, tri);
-    }
+    if (triPacket) {
+        // We know from addPacketRefs() that refs contains the triangulation.
+        if (! refs.find(triPacket)->second) {
+            // The triangulation has not yet been written to file.  Do it now.
+            writeXMLAnon(out, format, refs, triPacket);
+        }
 
-    writeXMLHeader(out, "angles", format, anon, refs,
-        true, std::pair("tri", tri->internalID()),
-        std::pair("tautonly", (tautOnly_ ? 'T' : 'F')),
-        std::pair("algorithm", algorithm_.intValue()));
+        writeXMLHeader(out, "angles", format, anon, refs, true,
+            std::pair("tri", triPacket->internalID()),
+            std::pair("tautonly", (tautOnly_ ? 'T' : 'F')),
+            std::pair("algorithm", algorithm_.intValue()));
+    } else {
+        // The triangulation is not a packet at all.
+        // Write it anonymously now, with an ID that is guaranteed not to
+        // match a packet ID.
+        std::string id = triangulation_->anonID();
+
+        out << "<anon>\n";
+        XMLWriter<Triangulation<3>> writer(*triangulation_, out, format);
+        writer.openPre();
+        out << " id=\"" << id << "\"";
+        writer.openPost();
+        writer.writeContent();
+        writer.close();
+        out << "</anon>\n";
+
+        writeXMLHeader(out, "angles", format, anon, refs, true,
+            std::pair("tri", id),
+            std::pair("tautonly", (tautOnly_ ? 'T' : 'F')),
+            std::pair("algorithm", algorithm_.intValue()));
+    }
 
     using regina::xml::xmlValueTag;
 

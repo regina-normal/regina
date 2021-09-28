@@ -69,6 +69,7 @@ class Link;
 class NormalSurface;
 class ProgressTracker;
 class ProgressTrackerOpen;
+class SnapPeaTriangulation;
 
 template <int> class XMLTriangulationReader;
 
@@ -97,9 +98,8 @@ template <int> class XMLTriangulationReader;
  * (Compare homology with boundary homology).
  * \todo \featurelong Is the triangulation Haken?
  * \todo \featurelong What is the Heegaard genus?
- * \todo \featurelong Have a subcomplex as a child packet of a
- * triangulation.  Include routines to crush a subcomplex or to expand a
- * subcomplex to a normal surface.
+ * \todo \featurelong Have a subcomplex as a new type.  Include routines to
+ * crush a subcomplex or to expand a subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  *
  * \headerfile triangulation/dim3.h
@@ -107,11 +107,9 @@ template <int> class XMLTriangulationReader;
  * \ingroup dim3
  */
 template <>
-class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
-    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3, "3-D triangulation")
-
-    private:
-        using ChangeEventSpan = Packet::ChangeEventSpan;
+class Triangulation<3> :
+        public Output<Triangulation<3>>, public detail::TriangulationBase<3> {
+    REGINA_PACKET_DATA(Triangulation<3>, PACKET_TRIANGULATION3)
 
     public:
         typedef std::vector<Tetrahedron<3>*>::const_iterator
@@ -227,7 +225,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         Triangulation();
         /**
          * Creates a new copy of the given triangulation.
-         * The packet tree structure and packet label are \e not copied.
          *
          * This will clone any computed properties (such as homology,
          * fundamental group, and so on) of the given triangulation also.
@@ -300,8 +297,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * This list may grow in future versions of Regina.
          *
-         * Regina will also set the packet label accordingly.
-         *
          * If Regina cannot interpret the given string, this will be
          * left as the empty triangulation.
          *
@@ -349,7 +344,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * The constituent tetrahedra, the cellular structure and all other
          * properties will also be destroyed.
          */
-        virtual ~Triangulation();
+        ~Triangulation();
 
         /*@}*/
         /**
@@ -360,16 +355,80 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         using Snapshottable<Triangulation<3>>::isReadOnlySnapshot;
 
         /**
-         * Indicates whether some other object in the calculation engine
-         * is responsible for ultimately destroying this triangulation.
+         * Returns the packet that holds this data, even if it is held
+         * indirectly via a SnapPea triangulation.
          *
-         * This overrides the implementation from Packet, since triangulations
-         * can be snapshotted.
+         * This routine is similar to PacketOf<Triangulation<3>>::packet().
+         * In particular, if this triangulation is held directly by a
+         * 3-dimensional triangulation packet \a p, then this routine
+         * will return \a p.
          *
-         * @return \c true if and only if some other object owns this
-         * triangulation.
+         * The difference is when this triangulation is held "indirectly" by a
+         * SnapPea triangulation packet \a q (i.e., this is the inherited
+         * Triangulation<3> data belonging to the SnapPea triangulation).
+         * In such a scenario, Triangulation<3>::packet() will return \c null
+         * (since there is no "direct" 3-dimensional triangulation packet),
+         * but inAnyPacket() will return \a q (since the triangulation is
+         * still "indirectly" held by a different type of packet).
+         *
+         * @return the packet that holds this data (directly or indirectly),
+         * or \c null if this data is not held by either a 3-dimensional
+         * triangulation packet or a SnapPea triangulation packet.
          */
-        bool hasOwner() const;
+        Packet* inAnyPacket();
+        /**
+         * Returns the packet that holds this data, even if it is held
+         * indirectly via a SnapPea triangulation.
+         *
+         * This routine is similar to PacketOf<Triangulation<3>>::packet().
+         * In particular, if this triangulation is held directly by a
+         * 3-dimensional triangulation packet \a p, then this routine
+         * will return \a p.
+         *
+         * The difference is when this triangulation is held "indirectly" by a
+         * SnapPea triangulation packet \a q (i.e., this is the inherited
+         * Triangulation<3> data belonging to the SnapPea triangulation).
+         * In such a scenario, Triangulation<3>::packet() will return \c null
+         * (since there is no "direct" 3-dimensional triangulation packet),
+         * but inAnyPacket() will return \a q (since the triangulation is
+         * still "indirectly" held by a different type of packet).
+         *
+         * @return the packet that holds this data (directly or indirectly),
+         * or \c null if this data is not held by either a 3-dimensional
+         * triangulation packet or a SnapPea triangulation packet.
+         */
+        const Packet* inAnyPacket() const;
+
+        /**
+         * Returns the SnapPea triangulation that holds this data, if
+         * there is one.
+         *
+         * This routine essentially replaces a dynamic_cast, since the
+         * class Triangulation<3> is not polymorphic.
+         *
+         * If this object in fact belongs to a SnapPeaTriangulation \a t
+         * (through its inherited Triangulation<3> interface), then this
+         * routine will return \a t.  Otherwise it will return \c null.
+         *
+         * @return the SnapPea triangulation that holds this data, or
+         * \c null if this data is not part of a SnapPea triangulation.
+         */
+        SnapPeaTriangulation* isSnapPea();
+        /**
+         * Returns the SnapPea triangulation that holds this data, if
+         * there is one.
+         *
+         * This routine essentially replaces a dynamic_cast, since the
+         * class Triangulation<3> is not polymorphic.
+         *
+         * If this object in fact belongs to a SnapPeaTriangulation \a t
+         * (through its inherited Triangulation<3> interface), then this
+         * routine will return \a t.  Otherwise it will return \c null.
+         *
+         * @return the SnapPea triangulation that holds this data, or
+         * \c null if this data is not part of a SnapPea triangulation.
+         */
+        const SnapPeaTriangulation* isSnapPea() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -379,7 +438,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * @param out the output stream to which to write.
          */
-        virtual void writeTextShort(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const;
         /**
          * Writes a detailed text representation of this object to the
          * given output stream.
@@ -388,7 +447,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * @param out the output stream to which to write.
          */
-        virtual void writeTextLong(std::ostream& out) const override;
+        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -475,16 +534,12 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * In particular, any pointers or references to Tetrahedron<3> and/or
          * Face<3, subdim> objects will remain valid.
          *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
-         *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
-         * code via any registered packet listeners.
+         * fires change events on both triangulations which may in turn call
+         * arbitrary code via any registered packet listeners.
          *
          * @param other the triangulation whose contents should be
          * swapped with this.
@@ -2020,9 +2075,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * - If this routine fails because of an embedded two-sided projective
          *   plane, then it throws an exception instead of returning -1.
          *
-         * - This function does not assign labels to the new summands
-         *   by default.  You can still do this by passing the optional
-         *   \a setLabels argument as \c true.
+         * - This function does not assign labels to the new summands.
          *
          * This function wraps each summand in a std::unique_ptr, so you
          * do not need to worry about looping through and destroying them
@@ -2055,65 +2108,9 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed and connected.
          *
-         * @param setLabels \c true if the new prime summand triangulations
-         * should be assigned sensible packet labels based on the label of this
-         * triangulation, or \c false if they should be left without labels.
          * @return a list of newly created triangulations of prime summands.
          */
-        std::vector<std::unique_ptr<Triangulation<3>>> summands(
-            bool setLabels = false) const;
-
-        /**
-         * Deprecated routine that identifies the summands of the
-         * connected sum decomposition.
-         *
-         * Since Regina 7.0, this routine has been replaced by summands(),
-         * which offers a cleaner interface to the same mathematical task.
-         * Indeed, this routine simply calls summands() but wraps it in extra
-         * code to emulate the behaviour from Regina 6.0.1 and earlier.
-         * See summands() for full details of how this routine works,
-         * and when and how it could fail.
-         *
-         * The individual prime summands will be inserted as children of the
-         * given packet \a primeParent.  If \a primeParent is \c null, they
-         * will be inserted into the packet tree as children of this
-         * triangulation.
-         *
-         * By default, this routine will assign sensible packet labels to each
-         * of the new component triangulations.  If these component
-         * triangulations are only temporary objects used as part of some
-         * larger algorithm, then labels are unnecessary - in this case
-         * you can pass \a setLabels as \c false to avoid the (small) overhead
-         * that these packet labels incur.
-         *
-         * It is possible that this routine will fail for some
-         * non-orientable triangulations (again, see summands() for details).
-         * In such a situation, this routine will return -1 and no prime
-         * summands will be inserted beneath the given parent.
-         *
-         * \deprecated You should use the new routine summands() instead.
-         * Note however that summands() comes with some changes of behaviour.
-         * First, summands() does not insert the resulting components into the
-         * packet tree; you will need to do this yourself if you want it.
-         * Second, the \a setLabels argument defaults to \c false in summands(),
-         * as opposed to \c true here.  Finally, whereas this routine
-         * returns -1 if it fails, summands() will instead throw an exception.
-         *
-         * \pre This triangulation is valid, closed and connected.
-         *
-         * @param primeParent the packet beneath which the new prime
-         * summand triangulations will be inserted, or \c nullptr if they
-         * should be inserted directly beneath this triangulation.
-         * @param setLabels \c true if the new prime summand triangulations
-         * should be assigned unique packet labels, or \c false if
-         * they should be left without labels at all.
-         * @return the number of prime summands created, 0 if this
-         * triangulation is a 3-sphere, or -1 if this routine failed
-         * because this is a non-orientable triangulation with embedded
-         * two-sided projective planes.
-         */
-        [[deprecated]] long connectedSumDecomposition(
-            Packet* primeParent = nullptr, bool setLabels = true);
+        std::vector<std::unique_ptr<Triangulation<3>>> summands() const;
 
         /**
          * Determines whether this is a triangulation of a 3-sphere.
@@ -2218,53 +2215,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * or trivial to calculate.
          */
         bool knowsBall() const;
-        /**
-         * Deprecated routine that converts this into a 0-efficient
-         * triangulation of the same underlying 3-manifold.
-         *
-         * A triangulation is 0-efficient if its only normal spheres and discs
-         * are vertex linking, and if it has no 2-sphere boundary components.
-         *
-         * Note that this routine is currently only available for
-         * closed orientable triangulations; see the list of
-         * preconditions for details.  The 0-efficiency algorithm of
-         * Jaco and Rubinstein is used.
-         *
-         * If the underlying 3-manifold is prime, it can always be made
-         * 0-efficient (with the exception of the special cases RP3 and
-         * S2xS1 as noted below).  In this case the original triangulation
-         * will be modified directly and \c nullptr will be returned.
-         *
-         * If the underyling 3-manifold is RP3 or S2xS1, it cannot
-         * be made 0-efficient; in this case the original triangulation
-         * will be reduced to a two-tetrahedron minimal triangulation
-         * and \c nullptr will again be returned.
-         *
-         * If the underlying 3-manifold is not prime, it cannot be made
-         * 0-efficient.  In this case the original triangulation will
-         * remain unchanged and a new connected sum decomposition will
-         * be returned.  This will be presented as a newly allocated container
-         * packet with one child triangulation for each prime summand.
-         *
-         * \deprecated You should call summands() instead, which does
-         * everything that this routine can do but with a cleaner interface.
-         * Indeed, this function just calls summands() and wraps the result
-         * with extra code to reproduce the old makeZeroEfficient() behaviour.
-         *
-         * \warning The algorithms used in this routine rely on normal
-         * surface theory and so can be very slow for larger triangulations.
-         *
-         * \pre This triangulation is valid, closed, orientable and connected.
-         *
-         * \todo Preserve computed properties of the underlying manifold.
-         *
-         * @return \c nullptr if the underlying 3-manifold is prime (in which
-         * case the original triangulation was modified directly), or
-         * a newly allocated connected sum decomposition if the
-         * underlying 3-manifold is composite (in which case the
-         * original triangulation was not changed).
-         */
-        [[deprecated]] Packet* makeZeroEfficient();
         /**
          * Determines whether this is a triangulation of the solid
          * torus; that is, the unknot complement.  This routine can be
@@ -3086,19 +3036,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own Triangulation<3>
-         *   objects, then only the tetrahedron gluings and the manifold name
-         *   will be stored (the name will be derived from the packet label).
-         *   All other SnapPea-specific information (such as peripheral curves)
-         *   will be marked as unknown (since Regina does not track such
-         *   information itself), and of course other Regina-specific
-         *   information (such as the Turaev-Viro invariants) will not
-         *   be written to the SnapPea file at all.
+         * - Since this function is defined by Regina's own Triangulation<3>
+         *   class, only the tetrahedron gluings will be included in the SnapPea
+         *   data file.  All other SnapPea-specific information (such as
+         *   peripheral curves) will be marked as unknown, since Regina does not
+         *   track such information itself, and of course Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not be
+         *   included in the SnapPea file either.
          *
-         * - If you are calling this from the subclass SnapPeaTriangulation,
-         *   then all additional SnapPea-specific information will be written
-         *   to the file (indeed, the SnapPea kernel itself will be used to
-         *   produce the file contents).
+         * - The subclass SnapPeaTriangulation implements its own version
+         *   of this function, which writes all additional SnapPea-specific
+         *   information to the file (in fact it uses the SnapPea kernel itself
+         *   to produce the file contents).  However, to access that function
+         *   you must explicitly call SnapPeaTriangulation::snapPea()
+         *   (since Triangulation<3> is not a polymorphic class, and in
+         *   particular this function is not virtual).
          *
          * If you wish to export a triangulation to a SnapPea \e file, you
          * should call saveSnapPea() instead (which has better performance, and
@@ -3111,7 +3063,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
          */
-        virtual std::string snapPea() const;
+        std::string snapPea() const;
 
         /**
          * Writes the full contents of a SnapPea data file describing this
@@ -3119,19 +3071,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own Triangulation<3>
-         *   objects, then only the tetrahedron gluings and the manifold name
-         *   will be stored (the name will be derived from the packet label).
-         *   All other SnapPea-specific information (such as peripheral curves)
-         *   will be marked as unknown (since Regina does not track such
-         *   information itself), and of course other Regina-specific
-         *   information (such as the Turaev-Viro invariants) will not
-         *   be written to the SnapPea file at all.
+         * - Since this function is defined by Regina's own Triangulation<3>
+         *   class, only the tetrahedron gluings will be included in the SnapPea
+         *   data file.  All other SnapPea-specific information (such as
+         *   peripheral curves) will be marked as unknown, since Regina does not
+         *   track such information itself, and of course Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not be
+         *   included in the SnapPea file either.
          *
-         * - If you are calling this from the subclass SnapPeaTriangulation,
-         *   then all additional SnapPea-specific information will be written
-         *   to the file (indeed, the SnapPea kernel itself will be used to
-         *   produce the file contents).
+         * - The subclass SnapPeaTriangulation implements its own version
+         *   of this function, which writes all additional SnapPea-specific
+         *   information to the file (in fact it uses the SnapPea kernel itself
+         *   to produce the file contents).  However, to access that function
+         *   you must explicitly call SnapPeaTriangulation::snapPea()
+         *   (since Triangulation<3> is not a polymorphic class, and in
+         *   particular this function is not virtual).
          *
          * If you wish to extract the SnapPea data file as a string, you should
          * call the zero-argument routine snapPea() instead.  If you wish to
@@ -3147,7 +3101,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @param out the output stream to which the SnapPea data file
          * will be written.
          */
-        virtual void snapPea(std::ostream& out) const;
+        void snapPea(std::ostream& out) const;
 
         /**
          * Writes this triangulation to the given file using SnapPea's
@@ -3155,19 +3109,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own Triangulation<3>
-         *   objects, then only the tetrahedron gluings and the manifold name
-         *   will be stored (the name will be derived from the packet label).
-         *   All other SnapPea-specific information (such as peripheral curves)
-         *   will be marked as unknown (since Regina does not track such
-         *   information itself), and of course other Regina-specific
-         *   information (such as the Turaev-Viro invariants) will not
-         *   be written to the SnapPea file at all.
+         * - Since this function is defined by Regina's own Triangulation<3>
+         *   class, only the tetrahedron gluings will be included in the SnapPea
+         *   data file.  All other SnapPea-specific information (such as
+         *   peripheral curves) will be marked as unknown, since Regina does not
+         *   track such information itself, and of course Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not be
+         *   included in the SnapPea file either.
          *
-         * - If you are calling this from the subclass SnapPeaTriangulation,
-         *   then all additional SnapPea-specific information will be written
-         *   to the file (indeed, the SnapPea kernel itself will be used to
-         *   produce the file contents).
+         * - The subclass SnapPeaTriangulation implements its own version
+         *   of this function, which writes all additional SnapPea-specific
+         *   information to the file (in fact it uses the SnapPea kernel itself
+         *   to produce the file contents).  However, to access that function
+         *   you must explicitly call SnapPeaTriangulation::saveSnapPea()
+         *   (since Triangulation<3> is not a polymorphic class, and in
+         *   particular this function is not virtual).
          *
          * If this triangulation is empty, invalid, or contains boundary
          * triangles (which SnapPea cannot represent), then the file
@@ -3181,7 +3137,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @param filename the name of the SnapPea file to which to write.
          * @return \c true if and only if the file was successfully written.
          */
-        virtual bool saveSnapPea(const char* filename) const;
+        bool saveSnapPea(const char* filename) const;
 
         /**
          * Returns a string that expresses this triangulation in
@@ -3358,11 +3314,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
 
         /*@}*/
 
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
-
     private:
         /**
          * Clears any calculated properties, including skeletal data,
@@ -3370,7 +3321,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
-         * a packet change event.
+         * a change event.
          */
         void clearAllProperties();
 
@@ -3448,11 +3399,66 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         static Triangulation<3>* readSnapPea(std::istream& in);
 
+        /**
+         * Nullifies this SnapPea triangulation.
+         *
+         * \pre This Regina triangulation is in fact the inherited
+         * Triangulation<3> data for the derived class SnapPeaTriangulation.
+         *
+         * \note This trivial function exists simply so that we can make some
+         * other Triangulation<3> functions inline without needing to include
+         * the full SnapPea triangulation headers here in this file.
+         */
+        void nullifySnapPea();
+
     friend class regina::Face<3, 3>;
     friend class regina::detail::SimplexBase<3>;
     friend class regina::detail::TriangulationBase<3>;
+    friend class PacketData<Triangulation<3>>;
     friend class regina::XMLTriangulationReader<3>;
+    friend class regina::XMLWriter<Triangulation<3>>;
 };
+
+template <>
+inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
+        PacketData& data) : data_(data) {
+    switch (data_.heldBy_) {
+        case HELD_BY_SNAPPEA: {
+            // We will not nullify the triangulation until after the change,
+            // since the routine performing the change probably expects
+            // the original (non-empty) Triangulation<3> data.
+            break;
+        }
+        case HELD_BY_PACKET: {
+            auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
+            if (! p.changeEventSpans_)
+                p.fireEvent(&PacketListener::packetToBeChanged);
+            ++p.changeEventSpans_;
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+template <>
+inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
+    switch (data_.heldBy_) {
+        case HELD_BY_SNAPPEA: {
+            static_cast<Triangulation<3>&>(data_).nullifySnapPea();
+            break;
+        }
+        case HELD_BY_PACKET: {
+            auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
+            --p.changeEventSpans_;
+            if (! p.changeEventSpans_)
+                p.fireEvent(&PacketListener::packetWasChanged);
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
@@ -3478,10 +3484,6 @@ inline Triangulation<3>::Triangulation() :
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
-}
-
-inline Packet* Triangulation<3>::internalClonePacket(Packet*) const {
-    return new Triangulation<3>(*this);
 }
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {
@@ -3582,20 +3584,6 @@ inline const Triangulation<3>::TuraevViroSet&
     return turaevViroCache_;
 }
 
-inline long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
-        bool setLabels) {
-    if (! primeParent)
-        primeParent = this;
-    try {
-        auto ans = summands(setLabels);
-        for (auto& s : ans)
-            primeParent->insertChildLast(s.release());
-        return ans.size();
-    } catch (const regina::UnsolvedCase&) {
-        return -1;
-    }
-}
-
 template <typename Action, typename... Args>
 inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
@@ -3638,11 +3626,6 @@ inline void Triangulation<3>::recognizer(std::ostream& out) const {
 
 inline bool Triangulation<3>::saveRecognizer(const char* filename) const {
     return saveRecogniser(filename);
-}
-
-inline bool Triangulation<3>::hasOwner() const {
-    return Packet::hasOwner() ||
-        Snapshottable<Triangulation<3>>::isReadOnlySnapshot();
 }
 
 } // namespace regina

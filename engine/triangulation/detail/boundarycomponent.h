@@ -83,11 +83,6 @@ class BoundaryComponentBase :
         public alias::FacesOfTriangulation<BoundaryComponentBase<dim>, dim>,
         public alias::FaceOfTriangulation<BoundaryComponentBase<dim>, dim>,
         public MarkedElement {
-    private:
-        using ChangeEventSpan = std::conditional_t<dim == 4,
-            Packet::ChangeEventSpan,
-            typename PacketData<Triangulation<dim - 1>>::ChangeEventSpan>;
-
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the

@@ -194,37 +194,27 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             Tetrahedron<3>* s;
             Tetrahedron<3>* t;
 
-            // Some triangulations have no face identifications at all.
-            empty.setLabel("Empty");
+            // The empty triangulation has no face identifications at all.
 
             oneTet.newTetrahedron();
-            oneTet.setLabel("Lone tetrahedron");
 
             // Use pre-coded triangulations where we can.
-            copyAndDelete(figure8,
-                Example<3>::figureEight());
-            figure8.setLabel("Figure eight");
+            copyAndDelete(figure8, Example<3>::figureEight());
 
             copyAndDelete(gieseking, Example<3>::gieseking());
-            gieseking.setLabel("Gieseking manifold");
 
             // Layered loops can be constructed automatically.
             S3.insertLayeredLoop(1, false);
-            S3.setLabel("S3");
 
             loopC2.insertLayeredLoop(2, false);
-            loopC2.setLabel("C(2)");
 
             loopCtw3.insertLayeredLoop(3, true);
-            loopCtw3.setLabel("C~(3)");
 
             // Some non-minimal triangulations can be generated from
             // splitting surfaces.
             generateFromSig(largeS3, "abcd.abe.c.d.e");
-            largeS3.setLabel("Large S3");
 
             generateFromSig(largeRP3, "aabcd.be.c.d.e");
-            largeRP3.setLabel("Large RP3");
 
             // A 3-tetrahedron non-orientable twisted I-bundle over the
             // Klein bottle is described in Chapter 3 of Burton's PhD thesis.
@@ -236,12 +226,10 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             r->join(2, t, Perm<4>(1, 3, 2, 0));
             s->join(1, t, Perm<4>(0, 3, 2, 1));
             s->join(2, t, Perm<4>(3, 1, 0, 2));
-            twistedKxI.setLabel("Twisted KxI");
 
             // Build the 9-tetrahedron SFS from its dehydration string;
             // obscure but painless at least.
             norSFS.insertRehydration("jnnafaabcfighhihimgbpqpepbr");
-            norSFS.setLabel("SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void tearDown() {
@@ -272,10 +260,10 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void testSize(const NormalSurfaces& list,
-                const char* listType, unsigned long expectedSize) {
+                const char* listType, unsigned long expectedSize,
+                const char* triName) {
             std::ostringstream msg;
-            msg << "Number of " << listType << " for "
-                << list.triangulation().label()
+            msg << "Number of " << listType << " for " << triName
                 << " should be " << expectedSize << ", not "
                 << list.size() << '.';
 
@@ -418,7 +406,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 unsigned long expectedCount, int euler,
                 bool connected, bool orient, bool twoSided,
                 bool realBdry, bool vertexLink, unsigned edgeLink,
-                size_t central, bool splitting) {
+                size_t central, bool splitting,
+                const char* triName) {
             unsigned long tot = 0;
 
             for (const NormalSurface& s : list) {
@@ -446,10 +435,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             }
 
             std::ostringstream msg;
-            msg << "Number of " << surfaceType << " in "
-                    << list.triangulation().label()
-                    << " should be " << expectedCount << ", not "
-                    << tot << '.';
+            msg << "Number of " << surfaceType << " in " << triName
+                    << " should be " << expectedCount << ", not " << tot << '.';
             CPPUNIT_ASSERT_MESSAGE(msg.str(), expectedCount == tot);
         }
 
@@ -501,80 +488,87 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         void standardEmpty() {
             NormalSurfaces list(empty, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 0);
+            testSize(list, "standard normal surfaces", 0, "Empty");
         }
 
         void quadEmpty() {
             NormalSurfaces list(empty, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 0);
+            testSize(list, "quad normal surfaces", 0, "Empty");
         }
 
         void almostNormalEmpty() {
             NormalSurfaces list(empty, NS_AN_STANDARD);
 
-            testSize(list, "standard almost normal surfaces", 0);
+            testSize(list, "standard almost normal surfaces", 0, "Empty");
         }
 
         void standardOneTet() {
             NormalSurfaces list(oneTet, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 7);
+            testSize(list, "standard normal surfaces", 7, "Lone tetrahedron");
             countCompactSurfaces(list, "triangular discs", 4,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                1 /* central */, false /* splitting */);
+                1 /* central */, false /* splitting */,
+                "Lone tetrahedron");
             countCompactSurfaces(list, "quadrilateral discs", 3,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                1 /* central */, true /* splitting */);
+                1 /* central */, true /* splitting */,
+                "Lone tetrahedron");
         }
 
         void quadOneTet() {
             NormalSurfaces list(oneTet, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 3);
+            testSize(list, "quad normal surfaces", 3, "Lone tetrahedron");
             countCompactSurfaces(list, "quadrilateral discs", 3,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                1 /* central */, true /* splitting */);
+                1 /* central */, true /* splitting */,
+                "Lone tetrahedron");
         }
 
         void almostNormalOneTet() {
             NormalSurfaces list(oneTet, NS_AN_STANDARD);
 
-            testSize(list, "standard almost normal surfaces", 10);
+            testSize(list, "standard almost normal surfaces", 10,
+                "Lone tetrahedron");
             countCompactSurfaces(list, "triangular discs", 4,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                1 /* central */, false /* splitting */);
+                1 /* central */, false /* splitting */,
+                "Lone tetrahedron");
             countCompactSurfaces(list, "quadrilateral discs", 3,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                1 /* central */, true /* splitting */);
+                1 /* central */, true /* splitting */,
+                "Lone tetrahedron");
             countCompactSurfaces(list, "octagonal discs", 3,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                1 /* central */, false /* splitting */);
+                1 /* central */, false /* splitting */,
+                "Lone tetrahedron");
         }
 
         void standardGieseking() {
             NormalSurfaces list(gieseking, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 1);
-            testSurface(list.surface(0), "the Gieseking manifold",
+            testSize(list, "standard normal surfaces", 1, "Gieseking");
+            testSurface(list.surface(0), "Gieseking",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
@@ -586,14 +580,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         void quadGieseking() {
             NormalSurfaces list(gieseking, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 0);
+            testSize(list, "quad normal surfaces", 0, "Gieseking");
         }
 
         void almostNormalGieseking() {
             NormalSurfaces list(gieseking, NS_AN_STANDARD);
 
-            testSize(list, "standard almost normal surfaces", 1);
-            testSurface(list.surface(0), "the Gieseking manifold",
+            testSize(list, "standard almost normal surfaces", 1, "Gieseking");
+            testSurface(list.surface(0), "Gieseking",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
@@ -605,8 +599,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         void standardFigure8() {
             NormalSurfaces list(figure8, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 1);
-            testSurface(list.surface(0), "the figure eight knot complement",
+            testSize(list, "standard normal surfaces", 1, "Figure eight");
+            testSurface(list.surface(0), "Figure eight",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
@@ -618,10 +612,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         void quadFigure8() {
             NormalSurfaces list(figure8, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 4);
+            testSize(list, "quad normal surfaces", 4, "Figure eight");
             for (const NormalSurface& s : list)
-                testSurface(s,
-                    "the figure eight knot complement", "spun surface",
+                testSurface(s, "Figure eight", "spun surface",
                     0 /* euler, N/A */, 0 /* connected, N/A */,
                     0 /* orient, N/A */, 0 /* two-sided, N/A */,
                     false /* compact */, false /* realBdry */,
@@ -632,8 +625,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         void almostNormalFigure8() {
             NormalSurfaces list(figure8, NS_AN_STANDARD);
 
-            testSize(list, "standard almost normal surfaces", 1);
-            testSurface(list.surface(0), "the figure eight knot complement",
+            testSize(list, "standard almost normal surfaces", 1,
+                "Figure eight");
+            testSurface(list.surface(0), "Figure eight",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
@@ -645,504 +639,561 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         void standardS3() {
             NormalSurfaces list(S3, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 3);
+            testSize(list, "standard normal surfaces", 3, "S3");
             countCompactSurfaces(list,
                 "standard normal vertex linking spheres", 2,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "S3");
             countCompactSurfaces(list,
                 "standard normal double-edge linking tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                1 /* central */, true /* splitting */);
+                1 /* central */, true /* splitting */,
+                "S3");
         }
 
         void quadS3() {
             NormalSurfaces list(S3, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 1);
+            testSize(list, "quad normal surfaces", 1, "S3");
             countCompactSurfaces(list,
                 "quad normal double-edge linking tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                1 /* central */, true /* splitting */);
+                1 /* central */, true /* splitting */,
+                "S3");
         }
 
         void almostNormalS3() {
             NormalSurfaces list(S3, NS_AN_STANDARD);
 
-            testSize(list, "standard almost normal surfaces", 4);
+            testSize(list, "standard almost normal surfaces", 4, "S3");
             countCompactSurfaces(list,
                 "standard normal vertex linking spheres", 2,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "S3");
             countCompactSurfaces(list,
                 "standard normal double-edge linking tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                1 /* central */, true /* splitting */);
+                1 /* central */, true /* splitting */,
+                "S3");
             countCompactSurfaces(list,
                 "standard almost normal central 2-spheres", 1,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                1 /* central */, false /* splitting */);
+                1 /* central */, false /* splitting */,
+                "S3");
         }
 
         void standardLoopC2() {
             NormalSurfaces list(loopC2, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 5);
+            testSize(list, "standard normal surfaces", 5, "C(2)");
             countCompactSurfaces(list,
                 "standard normal vertex linking spheres", 2,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "C(2)");
             countCompactSurfaces(list,
                 "standard normal double-edge linking tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                2 /* central */, true /* splitting */);
+                2 /* central */, true /* splitting */,
+                "C(2)");
             countCompactSurfaces(list,
                 "standard normal splitting projective planes", 2,
                 1 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                2 /* central */, true /* splitting */);
+                2 /* central */, true /* splitting */,
+                "C(2)");
         }
 
         void quadLoopC2() {
             NormalSurfaces list(loopC2, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 3);
+            testSize(list, "quad normal surfaces", 3, "C(2)");
             countCompactSurfaces(list,
                 "quad normal double-edge linking tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                2 /* central */, true /* splitting */);
+                2 /* central */, true /* splitting */,
+                "C(2)");
             countCompactSurfaces(list,
                 "quad normal splitting projective planes", 2,
                 1 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                2 /* central */, true /* splitting */);
+                2 /* central */, true /* splitting */,
+                "C(2)");
         }
 
         void almostNormalLoopC2() {
             NormalSurfaces list(loopC2, NS_AN_STANDARD);
 
-            testSize(list, "standard almost normal surfaces", 5);
+            testSize(list, "standard almost normal surfaces", 5, "C(2)");
             countCompactSurfaces(list,
                 "standard normal vertex linking spheres", 2,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "C(2)");
             countCompactSurfaces(list,
                 "standard normal double-edge linking tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
-                2 /* central */, true /* splitting */);
+                2 /* central */, true /* splitting */,
+                "C(2)");
             countCompactSurfaces(list,
                 "standard normal splitting projective planes", 2,
                 1 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                2 /* central */, true /* splitting */);
+                2 /* central */, true /* splitting */,
+                "C(2)");
         }
 
         void standardLoopCtw3() {
             NormalSurfaces list(loopCtw3, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 5);
+            testSize(list, "standard normal surfaces", 5, "C~(3)");
             countCompactSurfaces(list,
                 "standard normal vertex linking spheres", 1,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "C~(3)");
             countCompactSurfaces(list,
                 "standard normal edge linking tori", 3,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "C~(3)");
             countCompactSurfaces(list,
                 "standard normal splitting Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                3 /* central */, true /* splitting */);
+                3 /* central */, true /* splitting */,
+                "C~(3)");
         }
 
         void quadLoopCtw3() {
             NormalSurfaces list(loopCtw3, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 4);
+            testSize(list, "quad normal surfaces", 4, "C~(3)");
             countCompactSurfaces(list,
                 "quad normal edge linking tori", 3,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "C~(3)");
             countCompactSurfaces(list,
                 "quad normal splitting Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                3 /* central */, true /* splitting */);
+                3 /* central */, true /* splitting */,
+                "C~(3)");
         }
 
         void almostNormalLoopCtw3() {
             NormalSurfaces list(loopCtw3, NS_AN_STANDARD);
 
-            testSize(list, "standard almost normal surfaces", 5);
+            testSize(list, "standard almost normal surfaces", 5, "C~(3)");
             countCompactSurfaces(list,
                 "standard normal vertex linking spheres", 1,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "C~(3)");
             countCompactSurfaces(list,
                 "standard normal edge linking tori", 3,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "C~(3)");
             countCompactSurfaces(list,
                 "standard normal splitting Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                3 /* central */, true /* splitting */);
+                3 /* central */, true /* splitting */,
+                "C~(3)");
         }
 
         void standardLargeS3() {
             NormalSurfaces list(largeS3, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 15);
+            testSize(list, "standard normal surfaces", 15, "Large S3");
             countCompactSurfaces(list,
                 "standard normal vertex linking non-central spheres", 2,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "standard normal vertex linking non-central spheres", 1,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                2 /* central */, false /* splitting */);
+                2 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "standard normal edge linking non-central spheres", 2,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "standard normal edge linking non-central tori", 2,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "standard normal edge linking central tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                5 /* central */, false /* splitting */);
+                5 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "standard normal miscellaneous spheres", 3,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "standard normal miscellaneous tori", 3,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "standard normal splitting genus two tori", 1,
                 -2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                5 /* central */, true /* splitting */);
+                5 /* central */, true /* splitting */,
+                "Large S3");
         }
 
         void quadLargeS3() {
             NormalSurfaces list(largeS3, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 4);
+            testSize(list, "quad normal surfaces", 4, "Large S3");
             countCompactSurfaces(list,
                 "quad normal edge linking non-central spheres", 2,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "quad normal edge linking non-central tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large S3");
             countCompactSurfaces(list,
                 "quad normal miscellaneous spheres", 1,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large S3");
         }
 
         void almostNormalLargeS3() {
             NormalSurfaces list(largeS3, NS_AN_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
-            testSize(list, "standard normal surfaces", 27);
+            testSize(list, "standard normal surfaces", 27, "Large S3");
         }
 
         void standardLargeRP3() {
             NormalSurfaces list(largeRP3, NS_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
-            testSize(list, "standard normal surfaces", 29);
+            testSize(list, "standard normal surfaces", 29, "Large RP3");
         }
 
         void quadLargeRP3() {
             NormalSurfaces list(largeRP3, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 5);
+            testSize(list, "quad normal surfaces", 5, "Large RP3");
             countCompactSurfaces(list,
                 "quad normal edge linking non-central spheres", 2,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large RP3");
             countCompactSurfaces(list,
                 "quad normal edge linking non-central tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large RP3");
             countCompactSurfaces(list,
                 "quad normal miscellaneous spheres", 1,
                 2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large RP3");
             countCompactSurfaces(list,
                 "quad normal miscellaneous projective planes", 1,
                 1 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Large RP3");
         }
 
         void almostNormalLargeRP3() {
             NormalSurfaces list(largeRP3, NS_AN_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
-            testSize(list, "standard normal surfaces", 59);
+            testSize(list, "standard normal surfaces", 59, "Large RP3");
         }
 
         void standardTwistedKxI() {
             NormalSurfaces list(twistedKxI, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 8);
+            testSize(list, "standard normal surfaces", 8, "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal vertex linking discs", 1,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal thin edge-linking annuli", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal splitting punctured tori", 1,
                 -1 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                3 /* central */, true /* splitting */);
+                3 /* central */, true /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal central 1-sided Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                3 /* central */, false /* splitting */);
+                3 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal central 2-sided Mobius bands", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                3 /* central */, false /* splitting */);
+                3 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal generic 1-sided Mobius bands", 2,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal generic 1-sided annuli", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
         }
 
         void quadTwistedKxI() {
             NormalSurfaces list(twistedKxI, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 6);
+            testSize(list, "quad normal surfaces", 6, "Twisted KxI");
             countCompactSurfaces(list,
                 "quad normal thin edge-linking annuli", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "quad normal central 1-sided Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                3 /* central */, false /* splitting */);
+                3 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "quad normal central 2-sided Mobius bands", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                3 /* central */, false /* splitting */);
+                3 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "quad normal generic 1-sided Mobius bands", 2,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "quad normal generic 1-sided annuli", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
         }
 
         void almostNormalTwistedKxI() {
             NormalSurfaces list(twistedKxI, NS_AN_STANDARD);
 
-            testSize(list, "standard almost normal surfaces", 13);
+            testSize(list, "standard almost normal surfaces", 13,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal vertex linking discs", 1,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal thin edge-linking annuli", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal splitting punctured tori", 1,
                 -1 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                3 /* central */, true /* splitting */);
+                3 /* central */, true /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal central 1-sided Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                3 /* central */, false /* splitting */);
+                3 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal central 2-sided Mobius bands", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                3 /* central */, false /* splitting */);
+                3 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal generic 1-sided Mobius bands", 2,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard normal generic 1-sided annuli", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard almost normal surfaces "
                     "(chi=-1, 1-sided, non-orbl)", 2,
@@ -1150,7 +1201,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard almost normal surfaces "
                     "(chi=-1, 1-sided, orbl)", 1,
@@ -1158,7 +1210,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
             countCompactSurfaces(list,
                 "standard almost normal surfaces "
                     "(chi=-2, 1-sided, non-orbl)", 2,
@@ -1166,13 +1219,15 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                "Twisted KxI");
         }
 
         void standardNorSFS() {
             NormalSurfaces list(norSFS, NS_STANDARD);
 
-            testSize(list, "standard normal surfaces", 25);
+            testSize(list, "standard normal surfaces", 25,
+                "SFS [RP2: (2,1) (2,1) (2,1)]");
 
             countCompactSurfaces(list,
                 "standard normal vertex linking spheres", 1,
@@ -1180,83 +1235,95 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal thin edge-linking Klein bottles", 6,
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal central(8) one-sided Klein bottles", 4,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                8 /* central */, false /* splitting */);
+                8 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal central(6) one-sided Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                6 /* central */, false /* splitting */);
+                6 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal miscellaneous one-sided Klein bottles", 4,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal central(9) one-sided tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                9 /* central */, false /* splitting */);
+                9 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal miscellaneous one-sided tori", 3,
                 0 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal two-sided genus two tori", 1,
                 -2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal two-sided genus two Klein bottles", 1,
                 -2 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal one-sided genus two Klein bottles", 2,
                 -2 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "standard normal central one-sided genus two Klein bottles", 1,
                 -2 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                9 /* central */, false /* splitting */);
+                9 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void quadNorSFS() {
             NormalSurfaces list(norSFS, NS_QUAD);
 
-            testSize(list, "quad normal surfaces", 21);
+            testSize(list, "quad normal surfaces", 21,
+                "SFS [RP2: (2,1) (2,1) (2,1)]");
 
             countCompactSurfaces(list,
                 "quad normal thin edge-linking Klein bottles", 6,
@@ -1264,56 +1331,64 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 false /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "quad normal central(8) one-sided Klein bottles", 4,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                8 /* central */, false /* splitting */);
+                8 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "quad normal central(6) one-sided Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                6 /* central */, false /* splitting */);
+                6 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "quad normal miscellaneous one-sided Klein bottles", 4,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "quad normal central(9) one-sided tori", 1,
                 0 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                9 /* central */, false /* splitting */);
+                9 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "quad normal miscellaneous one-sided tori", 3,
                 0 /* euler */, true /* connected */,
                 true /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "quad normal two-sided genus two tori", 1,
                 -2 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
             countCompactSurfaces(list,
                 "quad normal one-sided genus two Klein bottles", 1,
                 -2 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                    "SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void testStandardLoopCtwGeneric(unsigned len) {
@@ -1321,9 +1396,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             loop.insertLayeredLoop(len, true);
             NormalSurfaces list(loop, NS_STANDARD);
 
-            std::ostringstream name;
-            name << "the twisted layered loop C~(" << len << ")";
-            loop.setLabel(name.str());
+            std::ostringstream label;
+            label << "the twisted layered loop C~(" << len << ")";
+            const std::string name = label.str();
 
             // For standard normal and almost normal coordinates we just
             // count the surfaces (as opposed to in quad space, where we can
@@ -1348,7 +1423,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 }
             }
 
-            testSize(list, "standard normal surfaces", curr);
+            testSize(list, "standard normal surfaces", curr, name.c_str());
         }
 
         void testQuadLoopCtwGeneric(unsigned len) {
@@ -1356,25 +1431,27 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             loop.insertLayeredLoop(len, true);
             NormalSurfaces list(loop, NS_QUAD);
 
-            std::ostringstream name;
-            name << "the twisted layered loop C~(" << len << ")";
-            loop.setLabel(name.str());
+            std::ostringstream label;
+            label << "the twisted layered loop C~(" << len << ")";
+            const std::string name = label.str();
 
             // It is easy to prove in general that C~(len) has precisely
             // (len + 1) vertex surfaces, as described by the following tests.
-            testSize(list, "quad normal surfaces", len + 1);
+            testSize(list, "quad normal surfaces", len + 1, name.c_str());
             countCompactSurfaces(list, "quad normal edge linking tori", len,
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                0 /* central */, false /* splitting */);
+                0 /* central */, false /* splitting */,
+                name.c_str());
             countCompactSurfaces(list, "quad normal splitting Klein bottles", 1,
                 0 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
-                len /* central */, true /* splitting */);
+                len /* central */, true /* splitting */,
+                name.c_str());
         }
 
         void testAlmostNormalLoopCtwGeneric(unsigned len) {
@@ -1382,9 +1459,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             loop.insertLayeredLoop(len, true);
             NormalSurfaces list(loop, NS_AN_STANDARD);
 
-            std::ostringstream name;
-            name << "the twisted layered loop C~(" << len << ")";
-            loop.setLabel(name.str());
+            std::ostringstream label;
+            label << "the twisted layered loop C~(" << len << ")";
+            const std::string name = label.str();
 
             // For standard normal and almost normal coordinates we just
             // count the surfaces (as opposed to in quad space, where we can
@@ -1419,7 +1496,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 }
             }
 
-            testSize(list, "standard almost normal surfaces", curr);
+            testSize(list, "standard almost normal surfaces", curr,
+                name.c_str());
         }
 
         void largeDimensionsStandard() {

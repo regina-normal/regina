@@ -101,7 +101,8 @@ void addNormalSurfaces(pybind11::module_& m) {
             try {
                 NormalSurfaces* ans = new NormalSurfaces(owner, coords, which,
                     algHints);
-                owner.insertChildLast(ans);
+                if (regina::Packet* p = owner.packet())
+                    p->insertChildLast(ans);
                 return ans;
             } catch (const regina::NoMatchingEquations&) {
                 return nullptr;

@@ -176,8 +176,7 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("orient", &Triangulation<4>::orient)
         .def("reflect", &Triangulation<4>::reflect)
-        .def("triangulateComponents", &Triangulation<4>::triangulateComponents,
-            pybind11::arg("setLabels") = false)
+        .def("triangulateComponents", &Triangulation<4>::triangulateComponents)
         .def("intelligentSimplify", &Triangulation<4>::intelligentSimplify)
         .def("simplifyToLocalMinimum",
             &Triangulation<4>::simplifyToLocalMinimum,

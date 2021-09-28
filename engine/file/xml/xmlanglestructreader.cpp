@@ -87,8 +87,7 @@ XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
         Packet* parent, bool anon, std::string label, std::string id,
         const regina::xml::XMLPropertyDict& props) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
-        list_(nullptr), tri_(dynamic_cast<Triangulation<3>*>(
-            resolver_.resolve(props.lookup("tri")))) {
+        list_(nullptr), tri_(resolver_.resolveTri3(props.lookup("tri"))) {
     if (! tri_)
         return;
 

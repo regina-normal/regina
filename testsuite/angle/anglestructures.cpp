@@ -531,19 +531,20 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             runCensusAllBounded(verifyTreeVsDD); // May have partial solns.
         }
 
-        void verifyGeneralAngleStructure(Triangulation<3>* tri) {
-            const AngleStructure* ans = tri->generalAngleStructure();
+        static void verifyGeneralAngleStructure(const Triangulation<3>& tri,
+                const char* name) {
+            const AngleStructure* ans = tri.generalAngleStructure();
 
-            if (tri->isValid() && ! tri->hasBoundaryTriangles()) {
+            if (tri.isValid() && ! tri.hasBoundaryTriangles()) {
                 // A generalised angle structure exists iff every vertex
                 // link is a torus or Klein bottle.
-                for (const auto v : tri->vertices())
+                for (const auto v : tri.vertices())
                     if (v->linkEulerChar() != 0) {
                         // There should be no generalised angle structure.
                         if (ans) {
                             std::ostringstream msg;
                             msg << "Unexpected generalised angle structure "
-                                "found for " << tri->label() << ".";
+                                "found for " << name << ".";
                             CPPUNIT_FAIL(msg.str());
                         } else {
                             // Indeed there is no solution.
@@ -556,36 +557,35 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 if (! ans) {
                     std::ostringstream msg;
                     msg << "No generalised angle structure where one "
-                        "should exist for " << tri->label() << ".";
+                        "should exist for " << name << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
 
             if (ans) {
-                regina::MatrixInt m = regina::makeAngleEquations(*tri);
+                regina::MatrixInt m = regina::makeAngleEquations(tri);
 
                 const regina::VectorInt& vec = ans->vector();
                 if (vec.size() != m.columns()) {
                     std::ostringstream msg;
                     msg << "Generalised angle structure vector has "
-                        "wrong size for " << tri->label() << ".";
+                        "wrong size for " << name << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (! (m * vec).isZero()) {
                     std::ostringstream msg;
                     msg << "Generalised angle structure vector does not "
-                        "satisfy the angle equations for "
-                        << tri->label() << ".";
+                        "satisfy the angle equations for " << name << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
         }
 
         void generalAngleStructure() {
-            runCensusAllIdeal(verifyTreeVsDD);
-            runCensusAllClosed(verifyTreeVsDD);
-            runCensusAllBounded(verifyTreeVsDD);
+            runCensusAllIdeal(verifyGeneralAngleStructure);
+            runCensusAllClosed(verifyGeneralAngleStructure);
+            runCensusAllBounded(verifyGeneralAngleStructure);
         }
 };
 

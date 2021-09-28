@@ -30,91 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-#include <fstream>
-#include <sstream>
-
-#include "foreign/dehydration.h"
-#include "packet/container.h"
-#include "packet/text.h"
-#include "triangulation/dim3.h"
+#include "file/xml/xmltreeresolver.h"
+#include "snappea/snappeatriangulation.h"
 
 namespace regina {
 
-Container* readDehydrationList(const char *filename,
-        unsigned colDehydrations, int colLabels, unsigned long ignoreLines) {
-    // Open the file.
-    std::ifstream in(filename);
-    if (! in)
-        return 0;
-
-    // Ignore the specified number of lines.
-    std::string line;
-
-    unsigned long i;
-    for (i = 0; i < ignoreLines; i++) {
-        std::getline(in, line);
-        if (in.eof())
-            return new Container();
+const Triangulation<3>* XMLTreeResolver::resolveTri3(const std::string& id)
+        const {
+    Packet* packet = resolve(id);
+    if (packet) {
+        if (auto ans = dynamic_cast<PacketOf<Triangulation<3>>*>(packet))
+            return ans;
+        if (auto ans = dynamic_cast<PacketOf<SnapPeaTriangulation>*>(packet))
+            return ans;
     }
-
-    // Read in and process the remaining lines.
-    Container* ans = new Container();
-    std::string errStrings;
-
-    int col;
-    std::string token;
-
-    std::string dehydration;
-    std::string label;
-    Triangulation<3>* tri;
-
-    while(! in.eof()) {
-        // Read in the next line.
-        line.clear();
-        std::getline(in, line);
-
-        if (line.empty())
-            continue;
-
-        // Find the appropriate tokens.
-        std::istringstream tokens(line);
-
-        dehydration.clear();
-        label.clear();
-        for (col = 0; col <= static_cast<int>(colDehydrations) ||
-                col <= colLabels; col++) {
-            tokens >> token;
-            if (token.empty())
-                break;
-            if (col == static_cast<int>(colDehydrations))
-                dehydration = token;
-            if (col == colLabels)
-                label = token;
-        }
-
-        if (! dehydration.empty()) {
-            // Process this dehydration string.
-            PacketOf<Triangulation<3>>* tri = new PacketOf<Triangulation<3>>();
-            if (tri->insertRehydration(dehydration)) {
-                tri->setLabel(label.empty() ? dehydration : label);
-                ans->insertChildLast(tri);
-            } else {
-                errStrings = errStrings + '\n' + dehydration;
-                delete tri;
-            }
-        }
-    }
-
-    // Finish off.
-    if (! errStrings.empty()) {
-        Text* errPkt = new Text(std::string(
-            "The following dehydration string(s) could not be rehydrated:\n") +
-            errStrings);
-        errPkt->setLabel("Errors");
-        ans->insertChildLast(errPkt);
-    }
-
-    return ans;
+    return nullptr;
 }
 
 } // namespace regina
+

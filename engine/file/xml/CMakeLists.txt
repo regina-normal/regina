@@ -15,6 +15,7 @@ SET ( FILES
   xmlsnappeareader.cpp
   xmlsnappeawriter.cpp
   xmlsurfacereader.cpp
+  xmltreeresolver.cpp
   xmltriwriter.cpp)
 
 # Prepend folder name

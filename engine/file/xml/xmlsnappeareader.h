@@ -52,7 +52,7 @@ namespace regina {
  */
 class XMLSnapPeaReader : public XMLPacketReader {
     private:
-        SnapPeaTriangulation* snappea_;
+        PacketOf<SnapPeaTriangulation>* snappea_;
             /**< The SnapPea triangulation currently being read. */
 
     public:
@@ -76,7 +76,7 @@ class XMLSnapPeaReader : public XMLPacketReader {
  */
 class XMLLegacySnapPeaReader : public XMLPacketReader {
     private:
-        SnapPeaTriangulation* snappea_;
+        PacketOf<SnapPeaTriangulation>* snappea_;
             /**< The SnapPea triangulation currently being read. */
 
     public:
@@ -102,10 +102,12 @@ inline XMLSnapPeaReader::XMLSnapPeaReader(
         XMLTreeResolver& res, Packet* parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
-        snappea_(new SnapPeaTriangulation()) {
+        snappea_(nullptr) {
 }
 
 inline Packet* XMLSnapPeaReader::packetToCommit() {
+    if (! snappea_)
+        snappea_ = new PacketOf<SnapPeaTriangulation>(); // null triang.
     return snappea_;
 }
 
@@ -115,10 +117,12 @@ inline XMLLegacySnapPeaReader::XMLLegacySnapPeaReader(
         XMLTreeResolver& res, Packet* parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
-        snappea_(new SnapPeaTriangulation()) {
+        snappea_(nullptr) {
 }
 
 inline Packet* XMLLegacySnapPeaReader::packetToCommit() {
+    if (! snappea_)
+        snappea_ = new PacketOf<SnapPeaTriangulation>(); // null triang.
     return snappea_;
 }
 

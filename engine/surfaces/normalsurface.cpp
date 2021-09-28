@@ -356,8 +356,7 @@ void NormalSurface::calculateRealBoundary() const {
 
 std::optional<MatrixInt> NormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
-    const SnapPeaTriangulation* snapPea =
-        dynamic_cast<const SnapPeaTriangulation*>(&triangulation());
+    const SnapPeaTriangulation* snapPea = triangulation().isSnapPea();
     if (! snapPea)
         return std::nullopt;
 

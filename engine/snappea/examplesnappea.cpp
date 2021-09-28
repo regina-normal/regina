@@ -68,7 +68,6 @@ SnapPeaTriangulation* ExampleSnapPea::figureEight() {
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 "  0.500000000000   0.866025403784\n");
 
-    ans->setLabel("Figure eight knot complement");
     return ans;
 }
 
@@ -102,7 +101,6 @@ SnapPeaTriangulation* ExampleSnapPea::trefoil() {
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 "  2.000000000000   0.000000000000\n");
 
-    ans->setLabel("Trefoil knot complement");
     return ans;
 }
 
@@ -155,7 +153,6 @@ SnapPeaTriangulation* ExampleSnapPea::whiteheadLink() {
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 "  0.500000000000   0.500000000000\n");
 
-    ans->setLabel("Whitehead link complement");
     return ans;
 }
 
@@ -180,7 +177,6 @@ SnapPeaTriangulation* ExampleSnapPea::gieseking() {
 "  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
 "  0.500000000000   0.866025403784\n");
 
-    ans->setLabel("Gieseking manifold");
     return ans;
 }
 
@@ -250,7 +246,6 @@ SnapPeaTriangulation* ExampleSnapPea::x101() {
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 " -1.000000000000  -0.000000000000\n");
 
-    ans->setLabel("x101");
     return ans;
 }
 

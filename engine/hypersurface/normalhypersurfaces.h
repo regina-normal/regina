@@ -200,7 +200,7 @@ class NormalHypersurfaces : public Packet {
          * constructor with the given arguments, but with two differences:
          *
          * - Unlike the class constructor, this routine will also insert
-         *   the normal hypersurface list beneath \a owner in the packet tree.
+         *   the normal hypersurface list beneath \a owner in the packet tree
          *   (but only if \a owner actually has a packet that contains it).
          *   If a progress tracker is passed (which means the enumeration runs
          *   in a background thread), the tree insertion will not happen until
