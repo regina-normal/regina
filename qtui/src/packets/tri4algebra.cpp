@@ -48,7 +48,7 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Tri4AlgebraUI::Tri4AlgebraUI(regina::Triangulation<4>* packet,
+Tri4AlgebraUI::Tri4AlgebraUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
@@ -56,7 +56,8 @@ Tri4AlgebraUI::Tri4AlgebraUI(regina::Triangulation<4>* packet,
         tr("&Homology && Fund. Group"));
 }
 
-Tri4HomologyFundUI::Tri4HomologyFundUI(regina::Triangulation<4>* packet,
+Tri4HomologyFundUI::Tri4HomologyFundUI(
+        regina::PacketOf<regina::Triangulation<4>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();

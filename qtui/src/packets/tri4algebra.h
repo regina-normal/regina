@@ -55,7 +55,7 @@ class Tri4AlgebraUI : public PacketTabbedViewerTab {
         /**
          * Constructor.
          */
-        Tri4AlgebraUI(regina::Triangulation<4>* packet,
+        Tri4AlgebraUI(regina::PacketOf<regina::Triangulation<4>>* packet,
                 PacketTabbedUI* useParentUI);
 };
 
@@ -69,7 +69,7 @@ class Tri4HomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<4>* tri;
+        regina::PacketOf<regina::Triangulation<4>>* tri;
 
         /**
          * Internal components
@@ -86,7 +86,7 @@ class Tri4HomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        Tri4HomologyFundUI(regina::Triangulation<4>* packet,
+        Tri4HomologyFundUI(regina::PacketOf<regina::Triangulation<4>>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**

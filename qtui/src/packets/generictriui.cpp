@@ -143,24 +143,23 @@ QString GenericTriangulationUI<dim>::getPacketMenuText() const {
 
 template <int dim>
 void GenericTriangulationUI<dim>::refresh() {
-    const Triangulation<dim>& tri =
-        static_cast<regina::PacketOf<Triangulation<dim>>*>(packet)->data();
-    if (tri.isEmpty())
+    const auto tri = static_cast<regina::PacketOf<Triangulation<dim>>*>(packet);
+    if (tri->isEmpty())
         type->setText(QObject::tr("Empty"));
-    else if (! tri.isValid())
+    else if (! tri->isValid())
         type->setText(QObject::tr("INVALID TRIANGULATION!"));
     else {
         QString msg;
 
-        if (tri.isOrientable()) {
-            if (tri.isOriented())
+        if (tri->isOrientable()) {
+            if (tri->isOriented())
                 msg = QObject::tr("Orientable and oriented, ");
             else
                 msg = QObject::tr("Orientable but not oriented, ");
         } else
             msg = QObject::tr("Non-orientable, ");
 
-        if (tri.isConnected())
+        if (tri->isConnected())
             msg += QObject::tr("connected");
         else
             msg += QObject::tr("disconnected");
@@ -168,7 +167,7 @@ void GenericTriangulationUI<dim>::refresh() {
         type->setText(msg);
     }
 
-    std::vector<size_t> f = tri.fVector();
+    std::vector<size_t> f = tri->fVector();
     QString fStr = QObject::tr("f-vector: ( ");
     for (size_t i = 0; i < f.size(); ++i) {
         fStr += QString::number(f[i]);
@@ -178,7 +177,7 @@ void GenericTriangulationUI<dim>::refresh() {
     fStr += QObject::tr(" )");
     fVector->setText(fStr);
 
-    size_t nBdry = tri.countBoundaryFacets();
+    size_t nBdry = tri->countBoundaryFacets();
     if (nBdry == 0)
         boundary->setText(QObject::tr("No boundary facets"));
     else if (nBdry == 1)

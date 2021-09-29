@@ -220,40 +220,42 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        Triangulation<4>* ans = new Triangulation<4>();
+        auto ans = new regina::PacketOf<Triangulation<4>>();
         ans->setLabel("4-D triangulation");
         return ans;
     } else if (typeId == TRI_IBUNDLE) {
-        regina::Triangulation<3>* from = dynamic_cast<regina::Triangulation<3>*>(
-            iBundleFrom->selectedPacket());
+        regina::Packet* fromPacket = iBundleFrom->selectedPacket();
+        regina::Triangulation<3>* from =
+            dynamic_cast<regina::Triangulation<3>*>(fromPacket);
         if (! from) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "I-bundle from."));
             return nullptr;
         }
-        Triangulation<4>* ans = Example<4>::iBundle(*from);
+        auto ans = regina::makePacket(Example<4>::iBundle(*from));
         ans->intelligentSimplify();
-        if (from->label().empty())
+        if (fromPacket->label().empty())
             ans->setLabel("I-bundle");
         else
-            ans->setLabel(from->label() + " × I");
+            ans->setLabel(fromPacket->label() + " × I");
         return ans;
     } else if (typeId == TRI_S1BUNDLE) {
-        regina::Triangulation<3>* from = dynamic_cast<regina::Triangulation<3>*>(
-            s1BundleFrom->selectedPacket());
+        regina::Packet* fromPacket = s1BundleFrom->selectedPacket();
+        regina::Triangulation<3>* from =
+            dynamic_cast<regina::Triangulation<3>*>(fromPacket);
         if (! from) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "S¹-bundle from."));
             return nullptr;
         }
-        Triangulation<4>* ans = Example<4>::s1Bundle(*from);
+        auto ans = regina::makePacket(Example<4>::s1Bundle(*from));
         ans->intelligentSimplify();
-        if (from->label().empty())
+        if (fromPacket->label().empty())
             ans->setLabel("S¹-bundle");
         else
-            ans->setLabel(from->label() + " × S¹");
+            ans->setLabel(fromPacket->label() + " × S¹");
         return ans;
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
@@ -273,11 +275,9 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        Triangulation<4>* ans = Triangulation<4>::fromIsoSig(sig);
-        if (ans) {
-            ans->setLabel(sig);
+        if (auto ans = regina::makePacket(
+                Triangulation<4>::fromIsoSig(sig), sig))
             return ans;
-        }
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given "
             "isomorphism signature."),

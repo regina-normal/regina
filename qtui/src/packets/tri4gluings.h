@@ -130,7 +130,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
-        regina::Triangulation<4>* tri;
+        regina::PacketOf<regina::Triangulation<4>>* tri;
 
         /**
          * Internal components
@@ -153,7 +153,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        Tri4GluingsUI(regina::Triangulation<4>* packet,
+        Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
                 PacketTabbedUI* useParentUI);
         ~Tri4GluingsUI();
 

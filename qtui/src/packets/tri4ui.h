@@ -65,7 +65,7 @@ class Tri4UI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        Tri4UI(regina::Triangulation<4>* packet,
+        Tri4UI(regina::PacketOf<regina::Triangulation<4>>* packet,
             PacketPane* newEnclosingPane);
 
         /**
@@ -85,7 +85,7 @@ class Tri4HeaderUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<4>* tri;
+        regina::PacketOf<regina::Triangulation<4>>* tri;
 
         /**
          * Internal components
@@ -98,7 +98,7 @@ class Tri4HeaderUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        Tri4HeaderUI(regina::Triangulation<4>* packet,
+        Tri4HeaderUI(regina::PacketOf<regina::Triangulation<4>>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**

@@ -51,7 +51,7 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Tri4UI::Tri4UI(regina::Triangulation<4>* packet,
+Tri4UI::Tri4UI(regina::PacketOf<regina::Triangulation<4>>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim4Tri) {
     Tri4HeaderUI* header = new Tri4HeaderUI(packet, this);
@@ -75,7 +75,7 @@ QString Tri4UI::getPacketMenuText() const {
     return QObject::tr("&4-D Triangulation");
 }
 
-Tri4HeaderUI::Tri4HeaderUI(regina::Triangulation<4>* packet,
+Tri4HeaderUI::Tri4HeaderUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();

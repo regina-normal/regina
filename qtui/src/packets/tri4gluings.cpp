@@ -302,7 +302,7 @@ regina::Perm<5> GluingsModel4::facetStringToPerm(int srcFacet,
         regina::Tetrahedron<4>::ordering(srcFacet).inverse();
 }
 
-Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
+Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of facet gluings.
