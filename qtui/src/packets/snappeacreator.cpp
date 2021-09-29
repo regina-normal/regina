@@ -204,8 +204,7 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
                         "instead."));
                 return nullptr;
             }
-            auto ans = new regina::PacketOf<SnapPeaTriangulation>(
-                static_cast<const SnapPeaTriangulation&>(*fromSnapPea));
+            auto ans = new regina::PacketOf<SnapPeaTriangulation>(*fromSnapPea);
             ans->setLabel(fromSnapPea->label());
             return ans;
         }

@@ -80,10 +80,10 @@ using regina::Perm;
 using regina::SatRegion;
 using regina::Triangulation;
 
-Tri3CompositionUI::Tri3CompositionUI(
-        regina::PacketOf<regina::Triangulation<3>>* packet,
-        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        tri(packet), comparingTri(0), lastComponent(0) {
+Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
+        regina::Packet* triAsPacket, PacketTabbedUI* useParentUI) :
+        PacketViewerTab(useParentUI), tri_(tri), triAsPacket_(triAsPacket),
+        compare_(nullptr), lastComponent(nullptr) {
     // Set up the UI.
 
     ui = new QWidget();
@@ -187,7 +187,7 @@ Tri3CompositionUI::Tri3CompositionUI(
     label = new QLabel(tr("Compare with T ="), ui);
     label->setWhatsThis(msg);
     isoSelectArea->addWidget(label);
-    isoTest = new PacketChooser(tri->root(),
+    isoTest = new PacketChooser(triAsPacket->root(),
         new SubclassFilter<Triangulation<3>>(),
         PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     isoTest->setAutoUpdate(true);
@@ -214,7 +214,7 @@ Tri3CompositionUI::Tri3CompositionUI(
 }
 
 regina::Packet* Tri3CompositionUI::getPacket() {
-    return tri;
+    return triAsPacket_;
 }
 
 QWidget* Tri3CompositionUI::getInterface() {
@@ -228,17 +228,17 @@ void Tri3CompositionUI::refresh() {
     lastComponent = 0;
 
     // Show the isomorphism signature.
-    isoSig->setText(tri->isoSig().c_str());
+    isoSig->setText(tri_->isoSig().c_str());
     /*
     // If the signature is very long then add an ellipsis to the end.
     // Update: don't do this, since we would like clipboard copy to
     // capture the entire signature, not something with ... at the end.
     isoSig->setText(QFontMetrics(isoSig->font()).elidedText(
-        tri->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
+        tri_->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
     */
 
     // Try to identify the triangulation.
-    standard = regina::StandardTriangulation::recognise(tri);
+    standard = regina::StandardTriangulation::recognise(tri_);
     if (standard) {
         standardTri->setText(standard->name().c_str());
         standardTri->setStyleSheet(
@@ -285,7 +285,7 @@ void Tri3CompositionUI::packetToBeDestroyed(regina::PacketShell) {
     // Our current isomorphism test triangulation is about to be
     // destroyed.
     isoTest->setCurrentIndex(0); // (i.e., None)
-    comparingTri = 0; // Don't unlisten, the packet destructor will do that.
+    compare_ = nullptr; // The packet destructor will handle the unlisten.
     updateIsoPanel();
 }
 
@@ -293,23 +293,23 @@ void Tri3CompositionUI::updateIsoPanel() {
     // Update the packet chooser in case things have changed.
     isoTest->refreshContents();
 
-    if (isoTest->selectedPacket() != comparingTri) {
-        if (comparingTri)
-            comparingTri->unlisten(this);
-        comparingTri = dynamic_cast<Triangulation<3>*>(isoTest->selectedPacket());
-        if (comparingTri)
-            comparingTri->listen(this);
+    if (isoTest->selectedPacket() != compare_) {
+        if (compare_)
+            compare_->unlisten(this);
+        compare_ = isoTest->selectedPacket();
+        if (compare_)
+            compare_->listen(this);
     }
 
     // Run the isomorphism tests.
-    if (comparingTri) {
-        if ((isomorphism = tri->isIsomorphicTo(*comparingTri))) {
+    if (auto c = dynamic_cast<regina::Triangulation<3>*>(compare_)) {
+        if ((isomorphism = tri_->isIsomorphicTo(*c))) {
             isoResult->setText(tr("Result: Isomorphic (this = T)"));
             isoType = IsIsomorphic;
-        } else if ((isomorphism = tri->isContainedIn(*comparingTri))) {
+        } else if ((isomorphism = tri_->isContainedIn(*c))) {
             isoResult->setText(tr("Result: Subcomplex (this < T)"));
             isoType = IsSubcomplex;
-        } else if ((isomorphism = comparingTri->isContainedIn(*tri))) {
+        } else if ((isomorphism = c->isContainedIn(*tri_))) {
             isoResult->setText(tr("Result: Subcomplex (T < this)"));
             isoType = IsSupercomplex;
         } else {
@@ -326,15 +326,15 @@ void Tri3CompositionUI::updateIsoPanel() {
 }
 
 void Tri3CompositionUI::viewIsomorphism() {
-    if (isoType == NoRelationship || ! comparingTri)
+    if (isoType == NoRelationship || ! compare_)
         return;
 
     QString title, msg;
     QStringList isoDetails;
 
     isoDetails += QString("[%1]  &rarr;  [%2]").
-        arg(QString(tri->humanLabel().c_str()).toHtmlEscaped()).
-        arg(QString(comparingTri->humanLabel().c_str()).toHtmlEscaped());
+        arg(QString(triAsPacket_->humanLabel().c_str()).toHtmlEscaped()).
+        arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
     if (isoType == IsIsomorphic) {
         title = tr("Details of the isomorphism between "
@@ -344,9 +344,9 @@ void Tri3CompositionUI::viewIsomorphism() {
             "triangulation <i>%1</i>.<p>"
             "Each line represents a single tetrahedron and its four "
             "vertices.").
-            arg(QString(comparingTri->humanLabel().c_str()).toHtmlEscaped());
+            arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
-        for (unsigned long i = 0; i < tri->size(); i++)
+        for (unsigned long i = 0; i < isomorphism->size(); i++)
             isoDetails += QString("%1 (0123)  &rarr;  %2 (%3)").
                 arg(i).
                 arg(isomorphism->tetImage(i)).
@@ -361,18 +361,17 @@ void Tri3CompositionUI::viewIsomorphism() {
             "triangulation <i>%1</i>.<p>"
             "Each line represents a single tetrahedron and its four "
             "vertices.").
-            arg(QString(comparingTri->humanLabel().c_str()).toHtmlEscaped());
+            arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
         if (isoType == IsSubcomplex)
-            for (unsigned long i = 0; i < tri->size(); i++)
+            for (unsigned long i = 0; i < isomorphism->size(); i++)
                 isoDetails += QString("%1 (0123)  &rarr;  %2 (%3)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
                     arg(isomorphism->facePerm(i).str().c_str())
                     ;
         else
-            for (unsigned long i = 0;
-                    i < comparingTri->size(); i++)
+            for (unsigned long i = 0; i < isomorphism->size(); i++)
                 isoDetails += QString("%2 (%3)  &rarr;  %1 (0123)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
@@ -395,13 +394,13 @@ QTreeWidgetItem* Tri3CompositionUI::addComponentSection(const QString& text) {
 }
 
 void Tri3CompositionUI::findAugTriSolidTori() {
-    unsigned long nComps = tri->countComponents();
+    unsigned long nComps = tri_->countComponents();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
     for (unsigned long i = 0; i < nComps; i++) {
-        auto aug = regina::AugTriSolidTorus::recognise(tri->component(i));
+        auto aug = regina::AugTriSolidTorus::recognise(tri_->component(i));
         if (aug) {
             id = addComponentSection(tr(
                 "Augmented triangular solid torus ") + aug->name().c_str());
@@ -537,13 +536,13 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     QTreeWidgetItem* id;
     QTreeWidgetItem* detailsItem;
 
-    auto sfs = regina::BlockedSFS::recognise(tri);
+    auto sfs = regina::BlockedSFS::recognise(tri_);
     if (sfs) {
         id = addComponentSection(tr("Blocked Seifert Fibred Space"));
         describeSatRegion(sfs->region(), id);
     }
 
-    auto loop = regina::BlockedSFSLoop::recognise(tri);
+    auto loop = regina::BlockedSFSLoop::recognise(tri_);
     if (loop) {
         id = addComponentSection(tr("Blocked SFS Loop"));
 
@@ -555,7 +554,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(matrixString(loop->matchingReln())));
     }
 
-    auto pair = regina::BlockedSFSPair::recognise(tri);
+    auto pair = regina::BlockedSFSPair::recognise(tri_);
     if (pair) {
         id = addComponentSection(tr("Blocked SFS Pair"));
 
@@ -571,7 +570,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(matrixString(pair->matchingReln())));
     }
 
-    auto triple = regina::BlockedSFSTriple::recognise(tri);
+    auto triple = regina::BlockedSFSTriple::recognise(tri_);
     if (triple) {
         id = addComponentSection(tr("Blocked SFS Triple"));
 
@@ -596,7 +595,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(matrixString(triple->matchingReln(0))));
     }
 
-    auto bundle = regina::LayeredTorusBundle::recognise(tri);
+    auto bundle = regina::LayeredTorusBundle::recognise(tri_);
     if (bundle) {
         id = addComponentSection(tr("Layered Torus Bundle"));
 
@@ -613,7 +612,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(bundle->core().name().c_str()));
     }
 
-    auto pBundle = regina::PluggedTorusBundle::recognise(tri);
+    auto pBundle = regina::PluggedTorusBundle::recognise(tri_);
     if (pBundle) {
         id = addComponentSection(tr("Plugged Torus Bundle"));
 
@@ -632,13 +631,13 @@ void Tri3CompositionUI::findBlockedTriangulations() {
 }
 
 void Tri3CompositionUI::findL31Pillows() {
-    unsigned long nComps = tri->countComponents();
+    unsigned long nComps = tri_->countComponents();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
     for (unsigned long i = 0; i < nComps; i++) {
-        auto pillow = regina::L31Pillow::recognise(tri->component(i));
+        auto pillow = regina::L31Pillow::recognise(tri_->component(i));
         if (pillow) {
             id = addComponentSection(tr("L(3,1) pillow ") +
                 pillow->name().c_str());
@@ -656,13 +655,13 @@ void Tri3CompositionUI::findL31Pillows() {
 }
 
 void Tri3CompositionUI::findLayeredChainPairs() {
-    unsigned long nComps = tri->countComponents();
+    unsigned long nComps = tri_->countComponents();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
     for (unsigned long i = 0; i < nComps; i++) {
-        auto pair = regina::LayeredChainPair::recognise(tri->component(i));
+        auto pair = regina::LayeredChainPair::recognise(tri_->component(i));
         if (pair) {
             id = addComponentSection(tr("Layered chain pair ") +
                 pair->name().c_str());
@@ -680,13 +679,13 @@ void Tri3CompositionUI::findLayeredChainPairs() {
 }
 
 void Tri3CompositionUI::findLayeredLensSpaces() {
-    unsigned long nComps = tri->countComponents();
+    unsigned long nComps = tri_->countComponents();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
     for (unsigned long i = 0; i < nComps; i++) {
-        auto lens = regina::LayeredLensSpace::recognise(tri->component(i));
+        auto lens = regina::LayeredLensSpace::recognise(tri_->component(i));
         if (lens) {
             id = addComponentSection(tr("Layered lens space ") +
                 lens->name().c_str());
@@ -708,13 +707,13 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
 }
 
 void Tri3CompositionUI::findLayeredLoops() {
-    unsigned long nComps = tri->countComponents();
+    unsigned long nComps = tri_->countComponents();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
     for (unsigned long i = 0; i < nComps; i++) {
-        auto loop = regina::LayeredLoop::recognise(tri->component(i));
+        auto loop = regina::LayeredLoop::recognise(tri_->component(i));
         if (loop) {
             id = addComponentSection(tr("Layered loop ") +
                 loop->name().c_str());
@@ -744,7 +743,7 @@ void Tri3CompositionUI::findLayeredLoops() {
 }
 
 void Tri3CompositionUI::findLayeredSolidTori() {
-    unsigned long nTets = tri->size();
+    unsigned long nTets = tri_->size();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
@@ -752,7 +751,7 @@ void Tri3CompositionUI::findLayeredSolidTori() {
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
         auto torus = regina::LayeredSolidTorus::recogniseFromBase(
-            tri->tetrahedron(i));
+            tri_->tetrahedron(i));
         if (torus) {
             id = addComponentSection(tr("Layered solid torus ") +
                 torus->name().c_str());
@@ -784,7 +783,7 @@ void Tri3CompositionUI::findLayeredSolidTori() {
 }
 
 void Tri3CompositionUI::findPillowSpheres() {
-    unsigned long nTriangles = tri->countTriangles();
+    unsigned long nTriangles = tri_->countTriangles();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
@@ -793,9 +792,9 @@ void Tri3CompositionUI::findPillowSpheres() {
     regina::Triangle<3>* f1;
     regina::Triangle<3>* f2;
     for (i = 0; i < nTriangles; i++) {
-        f1 = tri->triangle(i);
+        f1 = tri_->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
-            f2 = tri->triangle(j);
+            f2 = tri_->triangle(j);
             auto pillow = regina::PillowTwoSphere::recognise(f1, f2);
             if (pillow) {
                 id = addComponentSection(tr("Pillow 2-sphere"));
@@ -816,13 +815,13 @@ void Tri3CompositionUI::findPillowSpheres() {
 }
 
 void Tri3CompositionUI::findPlugTriSolidTori() {
-    unsigned long nComps = tri->countComponents();
+    unsigned long nComps = tri_->countComponents();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
     for (unsigned long i = 0; i < nComps; i++) {
-        auto plug = regina::PlugTriSolidTorus::recognise(tri->component(i));
+        auto plug = regina::PlugTriSolidTorus::recognise(tri_->component(i));
         if (plug) {
             id = addComponentSection(tr("Plugged triangular solid torus ") +
                 plug->name().c_str());
@@ -864,13 +863,13 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
 }
 
 void Tri3CompositionUI::findSnappedBalls() {
-    unsigned long nTets = tri->size();
+    unsigned long nTets = tri_->size();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
 
     for (unsigned long i = 0; i < nTets; i++) {
-        auto ball = regina::SnappedBall::recognise(tri->tetrahedron(i));
+        auto ball = regina::SnappedBall::recognise(tri_->tetrahedron(i));
         if (ball) {
             id = addComponentSection(tr("Snapped 3-ball"));
 
@@ -885,7 +884,7 @@ void Tri3CompositionUI::findSnappedBalls() {
 }
 
 void Tri3CompositionUI::findSnappedSpheres() {
-    unsigned long nTets = tri->size();
+    unsigned long nTets = tri_->size();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
@@ -894,9 +893,9 @@ void Tri3CompositionUI::findSnappedSpheres() {
     regina::Tetrahedron<3>* t1;
     regina::Tetrahedron<3>* t2;
     for (i = 0; i < nTets; i++) {
-        t1 = tri->tetrahedron(i);
+        t1 = tri_->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
-            t2 = tri->tetrahedron(j);
+            t2 = tri_->tetrahedron(j);
             auto sphere = regina::SnappedTwoSphere::recognise(t1, t2);
             if (sphere) {
                 id = addComponentSection(tr("Snapped 2-sphere"));
@@ -916,7 +915,7 @@ void Tri3CompositionUI::findSnappedSpheres() {
 }
 
 void Tri3CompositionUI::findSpiralSolidTori() {
-    unsigned long nTets = tri->size();
+    unsigned long nTets = tri_->size();
 
     QTreeWidgetItem* id = nullptr;
     QTreeWidgetItem* detailsItem = nullptr;
@@ -925,7 +924,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
     int whichPerm;
     unsigned long i, j;
     for (i = 0; i < nTets; i++) {
-        tet = tri->tetrahedron(i);
+        tet = tri_->tetrahedron(i);
         for (whichPerm = 0; whichPerm < 24 /* size of S4 */; ++whichPerm) {
             if (Perm<4>::S4[whichPerm][0] > Perm<4>::S4[whichPerm][3])
                 continue;
@@ -934,7 +933,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
                 Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
-            if (! spiral->isCanonical(tri))
+            if (! spiral->isCanonical(tri_))
                 continue;
 
             // We've got one!

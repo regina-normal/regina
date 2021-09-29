@@ -1784,6 +1784,8 @@ class PacketOf : public Packet, public Held {
         PacketOf(const Held& data) : Held(data) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
+        PacketOf(const PacketOf<Held>& data) : Held(data) {
+        }
         PacketOf(Held&& data) : Held(std::move(data)) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
@@ -1807,7 +1809,6 @@ class PacketOf : public Packet, public Held {
             Held::writeTextLong(out);
         }
 
-        PacketOf(const PacketOf&) = delete;
         PacketOf& operator = (const PacketOf&) = delete;
 
     protected:

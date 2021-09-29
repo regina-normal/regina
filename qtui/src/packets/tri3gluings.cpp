@@ -891,7 +891,7 @@ void Tri3GluingsUI::drillEdge() {
             tr("Regina will drill out a regular neighbourhood around whichever "
                 "edge you choose."));
         if (e) {
-            regina::Triangulation<3>* ans = nullptr;
+            regina::PacketOf<Triangulation<3>>* ans = nullptr;
 
             // Avoid drillEdge() where possible, since that creates too
             // many tetrahedra.
@@ -939,7 +939,7 @@ void Tri3GluingsUI::drillEdge() {
                     // Topologically, this is just a puncture.
                     // Make sure that we puncture a tetrahedron that
                     // belongs to the correct connected component.
-                    ans = new regina::Triangulation<3>(*tri);
+                    ans = new regina::PacketOf<Triangulation<3>>(*tri);
                     ans->puncture(ans->tetrahedron(
                         e->front().tetrahedron()->index()));
                 } else if (e->vertex(0) != e->vertex(1) &&
@@ -959,7 +959,7 @@ void Tri3GluingsUI::drillEdge() {
                     // ideal vertex, or we are drilling an edge between
                     // two distinct ideal vertices.
                     // In both cases, pinchEdge() does what we want.
-                    ans = new regina::Triangulation<3>(*tri);
+                    ans = new regina::PacketOf<regina::Triangulation<3>>(*tri);
                     ans->pinchEdge(ans->edge(e->index()));
                 }
             }
@@ -975,18 +975,17 @@ void Tri3GluingsUI::drillEdge() {
 void Tri3GluingsUI::connectedSumWith() {
     endEdit();
 
-    regina::Triangulation<3>* other = static_cast<regina::Triangulation<3>*>(
-        PacketDialog::choose(ui,
+    regina::Packet* other = PacketDialog::choose(ui,
             tri->root(),
             new SubclassFilter<regina::Triangulation<3>>(),
             tr("Connected Sum"),
             tr("Sum this with which other triangulation?"),
             tr("Regina will form a connected sum of this triangulation "
                 "with whatever triangulation you choose here.  "
-                "The current triangulation will be modified directly.")));
+                "The current triangulation will be modified directly."));
 
     if (other)
-        tri->connectedSumWith(*other);
+        tri->connectedSumWith(*dynamic_cast<regina::Triangulation<3>*>(other));
 }
 
 void Tri3GluingsUI::boundaryComponents() {
@@ -1007,10 +1006,10 @@ void Tri3GluingsUI::boundaryComponents() {
                 "construct a 2-manifold triangulation from the "
                 "corresponding vertex link.</qt>"));
         if (chosen) {
-            regina::Triangulation<2>* ans = new regina::Triangulation<2>(
+            auto ans = new regina::PacketOf<Triangulation<2>>(
                 *chosen->build());
-            ans->setLabel(tr("Boundary component %1").arg(
-                chosen->index()).toUtf8().constData());
+            ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
+                toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -1037,10 +1036,10 @@ void Tri3GluingsUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            regina::Triangulation<2>* ans = new regina::Triangulation<2>(
+            auto ans = new regina::PacketOf<Triangulation<2>>(
                 *chosen->buildLink());
-            ans->setLabel(tr("Link of vertex %1").arg(
-                chosen->index()).toUtf8().constData());
+            ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
+                toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -1107,7 +1106,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
         // Form the decomposition.
         std::vector<std::unique_ptr<Triangulation<3>>> ans;
         try {
-            ans = tri->summands(true);
+            ans = tri->summands();
         } catch (regina::UnsolvedCase&) {
             dlg.reset();
             ReginaSupport::sorry(ui,
@@ -1139,8 +1138,13 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             } else
                 base = tri;
 
-            for (auto& s : ans)
-                base->insertChildLast(s.release());
+            size_t which = 0;
+            for (auto& s : ans) {
+                std::ostringstream label;
+                label << "Summand #" << ++which;
+                base->insertChildLast(regina::makePacket(s.release(),
+                    label.str()));
+            }
 
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
@@ -1149,8 +1153,9 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             if (ans.size() == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
                 // 0-efficient triangulations.
-                Triangulation<3>* small = static_cast<Triangulation<3>*>
-                    (base->firstChild());
+                Triangulation<3>* small =
+                    static_cast<regina::PacketOf<Triangulation<3>>*>(
+                    base->firstChild());
                 if (small->size() <= 2 && small->homology().isZ()) {
                     // The only closed prime manifolds with
                     // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
@@ -1220,7 +1225,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
         "slow for larger triangulations.\n\n"
         "Please be patient."), ui));
 
-    auto summands = tri->summands(true);
+    auto summands = tri->summands();
     dlg.reset();
 
     if (summands.empty()) {
@@ -1238,8 +1243,15 @@ void Tri3GluingsUI::makeZeroEfficient() {
         // Composite 3-manifold.
         Packet* decomp = new regina::Container();
         decomp->setLabel(tri->adornedLabel("Decomposition"));
-        for (auto& s : summands)
-            decomp->insertChildLast(s.release());
+
+        size_t which = 0;
+        for (auto& s : summands) {
+            std::ostringstream label;
+            label << "Summand #" << ++which;
+            decomp->insertChildLast(regina::makePacket(s.release(),
+                label.str()));
+        }
+
         tri->insertChildLast(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
             decomp->lastChild());
@@ -1351,14 +1363,15 @@ void Tri3GluingsUI::toSnapPea() {
         return;
     }
 
-    regina::SnapPeaTriangulation* ans = new regina::SnapPeaTriangulation(*tri,
-        true /* allow closed, since we have already check this */);
+    auto ans = new regina::PacketOf<regina::SnapPeaTriangulation>(std::in_place,
+        *tri, true /* allow closed, since we have already check this */);
     if (ans->isNull()) {
         ReginaSupport::sorry(ui,
             tr("I could not create a SnapPea triangulation."),
             tr("The SnapPea kernel would not accept the "
                 "triangulation, and I'm not sure why.  "
                 "Please report this to the Regina developers."));
+        delete ans;
         return;
     }
 

@@ -92,11 +92,15 @@ class Dim2EdgeGraphData : public FacetGraphData {
 
 class Dim3FaceGraphData : public FacetGraphData {
     private:
-        regina::PacketOf<regina::Triangulation<3>>* tri_;
+        // Both tri_ and triAsPacket_ represent the same object, which could be
+        // either a Triangulation<3> packet or a SnapPeaTriangulation packet.
+        regina::Triangulation<3>* tri_;
+        regina::Packet* triAsPacket_;
 
     public:
-        Dim3FaceGraphData(regina::PacketOf<regina::Triangulation<3>>* tri) :
-            tri_(tri) {}
+        Dim3FaceGraphData(regina::Triangulation<3>* tri,
+            regina::Packet* triAsPacket) :
+            tri_(tri), triAsPacket_(triAsPacket) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);

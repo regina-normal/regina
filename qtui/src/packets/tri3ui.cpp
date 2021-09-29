@@ -54,14 +54,14 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Tri3UI::Tri3UI(regina::Triangulation<3>* packet,
+Tri3UI::Tri3UI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri) {
     Tri3HeaderUI* header = new Tri3HeaderUI(packet, this);
     gluings = new Tri3GluingsUI(packet, this);
-    skeleton = new Tri3SkeletonUI(packet, this);
+    skeleton = new Tri3SkeletonUI(packet, packet, this);
     algebra = new Tri3AlgebraUI(packet, this);
-    surfaces = new Tri3SurfacesUI(packet, this);
+    surfaces = new Tri3SurfacesUI(packet, packet, this);
     snapPea = new Tri3SnapPeaUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
@@ -70,7 +70,8 @@ Tri3UI::Tri3UI(regina::Triangulation<3>* packet,
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
-    addTab(new Tri3CompositionUI(packet, this), QObject::tr("&Composition"));
+    addTab(new Tri3CompositionUI(packet, packet, this),
+        QObject::tr("&Composition"));
     addTab(surfaces, QObject::tr("&Recognition"));
     addTab(snapPea, QObject::tr("Snap&Pea"));
 }
@@ -83,7 +84,7 @@ QString Tri3UI::getPacketMenuText() const {
     return QObject::tr("3-D T&riangulation");
 }
 
-Tri3HeaderUI::Tri3HeaderUI(regina::Triangulation<3>* packet,
+Tri3HeaderUI::Tri3HeaderUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();

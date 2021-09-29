@@ -52,7 +52,7 @@ using regina::Packet;
 using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
-Tri3SnapPeaUI::Tri3SnapPeaUI(regina::Triangulation<3>* packet,
+Tri3SnapPeaUI::Tri3SnapPeaUI(regina::PacketOf<Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0) {
     ui = new QStackedWidget();
@@ -206,7 +206,7 @@ void Tri3SnapPeaUI::toSnapPea() {
         return;
     }
 
-    SnapPeaTriangulation* ans = new SnapPeaTriangulation(*snappeaTri);
+    auto ans = new regina::PacketOf<SnapPeaTriangulation>(*snappeaTri);
     if (ans->isNull()) {
         // This should never happen either...
         ui->setCurrentWidget(dataNull);

@@ -404,7 +404,7 @@ QString Dim3FaceGraphData::facetsName() {
 }
 
 regina::Packet* Dim3FaceGraphData::getPacket() {
-    return tri_;
+    return triAsPacket_;
 }
 
 std::string Dim4FacetGraphData::dual(bool withLabels) {

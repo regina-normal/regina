@@ -72,10 +72,14 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
             { NoRelationship, IsIsomorphic, IsSubcomplex, IsSupercomplex };
 
         /**
-         * Packet details
+         * Packet details:
+         * - tri_ and triAsPacket_ are the same object, which may be either
+         *   a Triangulation<3> or a SnapPeaTriangulation packet;
+         * - compare_ can likewise be either type of packet.
          */
-        regina::PacketOf<regina::Triangulation<3>>* tri;
-        regina::Triangulation<3>* comparingTri;
+        regina::Triangulation<3>* tri_;
+        regina::Packet* triAsPacket_;
+        regina::Packet* compare_;
         std::unique_ptr<regina::StandardTriangulation> standard;
         std::optional<regina::Isomorphism<3>> isomorphism;
         IsomorphismType isoType;
@@ -96,8 +100,8 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        Tri3CompositionUI(regina::PacketOf<regina::Triangulation<3>>* packet,
-                PacketTabbedUI* useParentUI);
+        Tri3CompositionUI(regina::Triangulation<3>* tri,
+            regina::Packet* triAsPacket, PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.

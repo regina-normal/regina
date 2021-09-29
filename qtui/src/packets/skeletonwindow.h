@@ -76,7 +76,7 @@ class SkeletalModel : public QAbstractItemModel {
         /**
          * General information about the subclass of model.
          */
-        virtual QString caption() const = 0;
+        virtual QString name() const = 0;
         virtual QString overview() const = 0;
 
         /**
@@ -134,7 +134,7 @@ class SkeletonWindow : public QDialog, public regina::PacketListener {
          * Update the display.
          */
         void refresh();
-        void updateCaption();
+        void updateCaption(const std::string& triLabel);
 
         /**
          * PacketListener overrides.
@@ -162,18 +162,18 @@ class Vertex3Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<3>>* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Vertex3Model(regina::PacketOf<regina::Triangulation<3>>* tri_);
+        Vertex3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -196,18 +196,18 @@ class Edge3Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<3>>* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Edge3Model(regina::PacketOf<regina::Triangulation<3>>* tri_);
+        Edge3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -230,18 +230,18 @@ class Triangle3Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<3>>* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Triangle3Model(regina::PacketOf<regina::Triangulation<3>>* tri_);
+        Triangle3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -264,18 +264,18 @@ class Component3Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<3>>* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Component3Model(regina::PacketOf<regina::Triangulation<3>>* tri_);
+        Component3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -298,18 +298,18 @@ class BoundaryComponent3Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<3>>* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        BoundaryComponent3Model(regina::PacketOf<regina::Triangulation<3>>* tri_);
+        BoundaryComponent3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -332,18 +332,18 @@ class Vertex2Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<2>>* tri;
+        regina::Triangulation<2>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Vertex2Model(regina::PacketOf<regina::Triangulation<2>>* tri_);
+        Vertex2Model(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -366,18 +366,18 @@ class Edge2Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<2>>* tri;
+        regina::Triangulation<2>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Edge2Model(regina::PacketOf<regina::Triangulation<2>>* tri_);
+        Edge2Model(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -400,18 +400,18 @@ class Component2Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<2>>* tri;
+        regina::Triangulation<2>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Component2Model(regina::PacketOf<regina::Triangulation<2>>* tri_);
+        Component2Model(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -434,18 +434,18 @@ class BoundaryComponent2Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<2>>* tri;
+        regina::Triangulation<2>* tri;
 
     public:
         /**
          * Constructor.
          */
-        BoundaryComponent2Model(regina::PacketOf<regina::Triangulation<2>>* tri_);
+        BoundaryComponent2Model(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -468,18 +468,18 @@ class Vertex4Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<4>>* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Vertex4Model(regina::PacketOf<regina::Triangulation<4>>* tri_);
+        Vertex4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -502,18 +502,18 @@ class Edge4Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<4>>* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Edge4Model(regina::PacketOf<regina::Triangulation<4>>* tri_);
+        Edge4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -536,18 +536,18 @@ class Triangle4Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<4>>* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Triangle4Model(regina::PacketOf<regina::Triangulation<4>>* tri_);
+        Triangle4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -570,18 +570,18 @@ class Tetrahedron4Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<4>>* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Tetrahedron4Model(regina::PacketOf<regina::Triangulation<4>>* tri_);
+        Tetrahedron4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -604,18 +604,18 @@ class Component4Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<4>>* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Component4Model(regina::PacketOf<regina::Triangulation<4>>* tri_);
+        Component4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -638,18 +638,18 @@ class BoundaryComponent4Model : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::PacketOf<regina::Triangulation<4>>* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        BoundaryComponent4Model(regina::PacketOf<regina::Triangulation<4>>* tri_);
+        BoundaryComponent4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
+        virtual QString name() const;
         virtual QString overview() const;
 
         /**
@@ -702,64 +702,53 @@ inline SkeletonWindow::~SkeletonWindow() {
     delete model;
 }
 
-inline void SkeletonWindow::updateCaption() {
-    setWindowTitle(model->caption());
+inline void SkeletonWindow::updateCaption(const std::string& triLabel) {
+    setWindowTitle(QString("%1 (%2)").arg(model->name(), triLabel.c_str()));
 }
 
 inline Vertex3Model::Vertex3Model(
-        regina::PacketOf<regina::Triangulation<3>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
 inline Edge3Model::Edge3Model(
-        regina::PacketOf<regina::Triangulation<3>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
 inline Triangle3Model::Triangle3Model(
-        regina::PacketOf<regina::Triangulation<3>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
 inline Component3Model::Component3Model(
-        regina::PacketOf<regina::Triangulation<3>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
 inline BoundaryComponent3Model::BoundaryComponent3Model(
-        regina::PacketOf<regina::Triangulation<3>>* tri_) : tri(tri_) {}
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
 inline Vertex2Model::Vertex2Model(
-        regina::PacketOf<regina::Triangulation<2>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<2>* tri_) : tri(tri_) {}
 
 inline Edge2Model::Edge2Model(
-        regina::PacketOf<regina::Triangulation<2>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<2>* tri_) : tri(tri_) {}
 
 inline Component2Model::Component2Model(
-        regina::PacketOf<regina::Triangulation<2>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<2>* tri_) : tri(tri_) {}
 
 inline BoundaryComponent2Model::BoundaryComponent2Model(
-        regina::PacketOf<regina::Triangulation<2>>* tri_) : tri(tri_) {}
+        regina::Triangulation<2>* tri_) : tri(tri_) {}
 
 inline Vertex4Model::Vertex4Model(
-        regina::PacketOf<regina::Triangulation<4>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 inline Edge4Model::Edge4Model(
-        regina::PacketOf<regina::Triangulation<4>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 inline Triangle4Model::Triangle4Model(
-        regina::PacketOf<regina::Triangulation<4>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 inline Tetrahedron4Model::Tetrahedron4Model(
-        regina::PacketOf<regina::Triangulation<4>>* tri_) : tri(tri_) {}
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 inline Component4Model::Component4Model(
-        regina::PacketOf<regina::Triangulation<4>>* tri_) :
-        tri(tri_) {}
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 inline BoundaryComponent4Model::BoundaryComponent4Model(
-        regina::PacketOf<regina::Triangulation<4>>* tri_) : tri(tri_) {}
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 #endif

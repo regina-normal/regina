@@ -778,10 +778,10 @@ void Tri4GluingsUI::boundaryComponents() {
                 "construct a 3-manifold triangulation from the corresponding "
                 "vertex link.</qt>"));
         if (chosen) {
-            regina::Triangulation<3>* ans = new regina::Triangulation<3>(
+            auto ans = new regina::PacketOf<regina::Triangulation<3>>(
                 *chosen->build());
-            ans->setLabel(tr("Boundary component %1").arg(
-                chosen->index()).toUtf8().constData());
+            ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
+                toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -808,10 +808,10 @@ void Tri4GluingsUI::vertexLinks() {
                 "the pentachoron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            regina::Triangulation<3>* ans = new regina::Triangulation<3>(
+            auto ans = new regina::PacketOf<Triangulation<3>>(
                 *chosen->buildLink());
-            ans->setLabel(tr("Link of vertex %1").arg(
-                chosen->index()).toUtf8().constData());
+            ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
+                toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
