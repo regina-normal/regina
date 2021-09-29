@@ -283,7 +283,7 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 "must be non-negative integers."),
                 QObject::tr("<qt>Example parameters are "
                 "<i>7,5</i>.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         unsigned long p = reTorusParams.cap(1).toULong();
@@ -323,11 +323,11 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
 
         ReginaSupport::info(parentWidget,
             QObject::tr("Please select an example knot or link."));
-        return 0;
+        return nullptr;
     }
 
     ReginaSupport::info(parentWidget,
         QObject::tr("Please select a knot/link type."));
-    return 0;
+    return nullptr;
 }
 

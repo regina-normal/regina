@@ -82,7 +82,7 @@ regina::Packet* AngleStructureCreator::createPacket(
             ui->tr("Angle structures must live within a 3-manifold "
             "triangulation.  Please select the corresponding triangulation "
             "as the location in the tree for your new angle structure list."));
-        return 0;
+        return nullptr;
     }
 
     // Remember our options for next time.
@@ -107,7 +107,7 @@ regina::Packet* AngleStructureCreator::createPacket(
         delete ans;
         ReginaSupport::info(parentWidget,
             ui->tr("The angle structure enumeration was cancelled."));
-        return 0;
+        return nullptr;
     }
 }
 

@@ -131,7 +131,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             ui->tr("Normal surfaces must live within a 3-manifold "
             "triangulation.  Please select the corresponding triangulation "
             "as the location in the tree for your new normal surface list."));
-        return 0;
+        return nullptr;
     }
 
     regina::NormalCoords coordSystem = coords->getCurrentSystem();
@@ -149,7 +149,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                 "only available for oriented ideal triangulations with "
                 "one torus cusp and no other boundary components or "
                 "internal vertices.").arg(name));
-        return 0;
+        return nullptr;
     }
 
     int basisId = basis->currentIndex();
@@ -168,7 +168,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                 "<i>almost normal</i> coordinate systems.<p>"
                 "Please check the box for embedded surfaces only, or "
                 "else select a different coordinate system.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         if (ReginaPrefSet::global().warnOnNonEmbedded) {
@@ -185,7 +185,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                 "Are you sure you wish to continue?</qt>"));
             msg.setDefaultButton(QMessageBox::Yes);
             if (msg.exec() != QMessageBox::Yes)
-                return 0;
+                return nullptr;
         }
     }
 
@@ -227,7 +227,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                     "surfaces.<p>"
                     "Please report this to the Regina developers.</qt>"));
             }
-            return 0;
+            return nullptr;
         }
 
         if (dlg.run()) {
@@ -239,7 +239,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal surface enumeration was cancelled."));
-            return 0;
+            return nullptr;
         }
     } else {
         regina::ProgressTracker tracker;
@@ -271,7 +271,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                     "surfaces.<p>"
                     "Please report this to the Regina developers.</qt>"));
             }
-            return 0;
+            return nullptr;
         }
 
         if (dlg.run()) {
@@ -283,7 +283,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal surface enumeration was cancelled."));
-            return 0;
+            return nullptr;
         }
     }
 }

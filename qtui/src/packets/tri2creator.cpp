@@ -246,7 +246,7 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The non-orientable genus "
                 "must be a positive integer."));
-            return 0;
+            return nullptr;
         }
         unsigned long punctures = norPunctures->text().toULong();
         return Example<2>::nonOrientable(genus, punctures);
@@ -265,7 +265,7 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
                 "2-dimensional isomorphism signatures (as used here) follow an "
                 "analogous scheme.</qt>"));
 
-            return 0;
+            return nullptr;
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
@@ -284,13 +284,13 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
             "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
             "2-dimensional isomorphism signatures (as used here) follow an "
             "analogous scheme.</qt>"));
-        return 0;
+        return nullptr;
     } else if (typeId == TRI_EXAMPLE) {
         return examples[exampleWhich->currentIndex()].create();
     }
 
     ReginaSupport::info(parentWidget,
         QObject::tr("Please select a triangulation type."));
-    return 0;
+    return nullptr;
 }
 

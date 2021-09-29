@@ -230,7 +230,7 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "I-bundle from."));
-            return 0;
+            return nullptr;
         }
         Triangulation<4>* ans = Example<4>::iBundle(*from);
         ans->intelligentSimplify();
@@ -246,7 +246,7 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "S¹-bundle from."));
-            return 0;
+            return nullptr;
         }
         Triangulation<4>* ans = Example<4>::s1Bundle(*from);
         ans->intelligentSimplify();
@@ -269,7 +269,7 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
                 "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
                 "4-dimensional isomorphism signatures (as used here) follow an "
                 "analogous scheme.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
@@ -288,13 +288,13 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
             "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
             "4-dimensional isomorphism signatures (as used here) follow an "
             "analogous scheme.</qt>"));
-        return 0;
+        return nullptr;
     } else if (typeId == TRI_EXAMPLE) {
         return examples[exampleWhich->currentIndex()].create();
     }
 
     ReginaSupport::info(parentWidget,
         QObject::tr("Please select a triangulation type."));
-    return 0;
+    return nullptr;
 }
 

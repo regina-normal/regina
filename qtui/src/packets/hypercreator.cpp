@@ -133,7 +133,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Normal hypersurfaces must live within a 4-manifold "
             "triangulation.  Please select the corresponding triangulation "
             "as the location in the tree for your new normal hypersurface list."));
-        return 0;
+        return nullptr;
     }
 
     regina::HyperCoords coordSystem = coords->getCurrentSystem();
@@ -156,7 +156,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
                 "Are you sure you wish to continue?</qt>"));
             msg.setDefaultButton(QMessageBox::Yes);
             if (msg.exec() != QMessageBox::Yes)
-                return 0;
+                return nullptr;
         }
     }
 
@@ -186,7 +186,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
                 ui->tr("<qt>I could not enumerate vertex normal "
                 "hypersurfaces.<p>"
                 "Please report this to the Regina developers.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         if (dlg.run()) {
@@ -197,7 +197,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal hypersurface enumeration was cancelled."));
-            return 0;
+            return nullptr;
         }
     } else {
         regina::ProgressTracker tracker;
@@ -218,7 +218,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
                 ui->tr("<qt>I could not enumerate fundamental normal "
                 "hypersurfaces.<p>"
                 "Please report this to the Regina developers.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         if (dlg.run()) {
@@ -229,7 +229,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal hypersurface enumeration was cancelled."));
-            return 0;
+            return nullptr;
         }
     }
 }
