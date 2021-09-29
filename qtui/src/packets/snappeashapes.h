@@ -99,7 +99,7 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         CuspModel* model;
-        regina::SnapPeaTriangulation* tri;
+        regina::PacketOf<regina::SnapPeaTriangulation>* tri;
 
         /**
          * Internal components
@@ -121,7 +121,7 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
+        SnapPeaShapesUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
             PacketTabbedUI* useParentUI);
         ~SnapPeaShapesUI();
 

@@ -47,7 +47,8 @@
 using regina::Packet;
 using regina::SnapPeaTriangulation;
 
-SnapPeaAlgebraUI::SnapPeaAlgebraUI(regina::SnapPeaTriangulation* packet,
+SnapPeaAlgebraUI::SnapPeaAlgebraUI(
+        regina::PacketOf<regina::SnapPeaTriangulation>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();

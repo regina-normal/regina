@@ -135,7 +135,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     convertFrom = new PacketChooser(mainWindow->getPacketTree(),
-        new SingleTypeFilter<regina::Triangulation<3>>(),
+        new SingleTypeFilter<regina::PacketOf<regina::Triangulation<3>>>(),
         PacketChooser::ROOT_AS_PACKET);
     convertFrom->setWhatsThis(expln);
     convertFrom->selectPacket(mainWindow->selectedPacket());
@@ -191,18 +191,9 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_CONVERT) {
-        Triangulation<3>* from = dynamic_cast<Triangulation<3>*>(
-            convertFrom->selectedPacket());
-        if (! from) {
-            ReginaSupport::info(parentWidget,
-                QObject::tr("Please select a triangulation to convert "
-                    "into SnapPea format."));
-            return nullptr;
-        }
-
-        SnapPeaTriangulation* fromSnapPea =
-            dynamic_cast<SnapPeaTriangulation*>(from);
-        if (fromSnapPea) {
+        regina::Packet* src = convertFrom->selectedPacket();
+        if (auto fromSnapPea =
+                dynamic_cast<regina::PacketOf<SnapPeaTriangulation>*>(src)) {
             if (fromSnapPea->isNull()) {
                 ReginaSupport::info(parentWidget,
                     QObject::tr("The source triangulation you have "
@@ -213,10 +204,20 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
                         "instead."));
                 return nullptr;
             }
-            SnapPeaTriangulation* ans =
-                new SnapPeaTriangulation(*fromSnapPea);
-            ans->setLabel(from->label());
+            auto ans = new regina::PacketOf<SnapPeaTriangulation>(
+                static_cast<const SnapPeaTriangulation&>(*fromSnapPea));
+            ans->setLabel(fromSnapPea->label());
             return ans;
+        }
+
+        auto from = dynamic_cast<regina::PacketOf<Triangulation<3>>*>(src);
+        if (! from) {
+            // We didn't get either a SnapPeaTriangulation *or* a
+            // Triangulation<3>.
+            ReginaSupport::info(parentWidget,
+                QObject::tr("Please select a triangulation to convert "
+                    "into SnapPea format."));
+            return nullptr;
         }
 
         if (from->isEmpty()) {
@@ -238,8 +239,8 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
             return nullptr;
         }
 
-        SnapPeaTriangulation* ans = new SnapPeaTriangulation(*from,
-            true /* allow closed, since we checked this above. */);
+        auto ans = new regina::PacketOf<SnapPeaTriangulation>(std::in_place,
+            *from, true /* allow closed, since we checked this above. */);
         if (ans->isNull()) {
             ReginaSupport::info(parentWidget,
                 QObject::tr("I was not able to convert this "
@@ -258,9 +259,9 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
         ans->setLabel(from->label());
         return ans;
     } else if (typeId == TRI_FILE) {
-        SnapPeaTriangulation* ans = new SnapPeaTriangulation(
+        auto ans = new regina::PacketOf<SnapPeaTriangulation>(std::in_place,
             fileContents->toPlainText().toUtf8().constData());
-        if ((! ans) || (ans->isNull())) {
+        if (ans->isNull()) {
             ReginaSupport::info(parentWidget,
                 QObject::tr("This does not appear to be a valid "
                     "SnapPea file."),
@@ -270,19 +271,24 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
                     "<tt>% Triangulation</tt></qt>"));
             return nullptr;
         }
+        ans->setLabel(ans->name());
         return ans;
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_GIESEKING:
-                return ExampleSnapPea::gieseking();
+                return makePacket(ExampleSnapPea::gieseking(),
+                    "Gieseking manifold");
             case EXAMPLE_FIG8:
-                return ExampleSnapPea::figureEight();
+                return makePacket(ExampleSnapPea::figureEight(),
+                    "Figure eight knot complement");
             case EXAMPLE_TREFOIL:
-                return ExampleSnapPea::trefoil();
+                return makePacket(ExampleSnapPea::trefoil(),
+                    "Trefoil knot complement");
             case EXAMPLE_WHITEHEAD:
-                return ExampleSnapPea::whiteheadLink();
+                return makePacket(ExampleSnapPea::whiteheadLink(),
+                    "Whitehead link complement");
             case EXAMPLE_X101:
-                return ExampleSnapPea::x101();
+                return makePacket(ExampleSnapPea::x101(), "x101");
         }
 
         ReginaSupport::info(parentWidget,

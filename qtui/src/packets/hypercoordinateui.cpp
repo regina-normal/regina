@@ -469,10 +469,9 @@ void HyperCoordinateUI::triangulate() {
     }
 
     // Go ahead and triangulate it.
-    regina::Triangulation<3>* ans = use.triangulate();
-    ans->setLabel("Hypersurface #" + std::to_string(whichSurface));
+    auto ans = makePacket(use.triangulate(),
+        "Hypersurface #" + std::to_string(whichSurface));
     surfaces->insertChildLast(ans);
-
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 

@@ -694,8 +694,7 @@ void LinkCrossingsUI::moves() {
 }
 
 void LinkCrossingsUI::complement() {
-    regina::Triangulation<3>* ans = link->complement();
-    ans->setLabel(link->adornedLabel("Complement"));
+    auto ans = makePacket(link->complement(), link->adornedLabel("Complement"));
     link->insertChildLast(ans);
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }

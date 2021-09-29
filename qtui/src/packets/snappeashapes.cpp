@@ -208,7 +208,8 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 }
 
-SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
+SnapPeaShapesUI::SnapPeaShapesUI(
+        regina::PacketOf<regina::SnapPeaTriangulation>* packet,
         PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     ui = new QWidget();
@@ -432,7 +433,7 @@ void SnapPeaShapesUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            regina::Triangulation<2>* ans = new regina::Triangulation<2>(
+            auto ans = new regina::PacketOf<regina::Triangulation<2>>(
                 *chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
@@ -450,7 +451,7 @@ void SnapPeaShapesUI::toRegina() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to convert."));
     else {
-        regina::Triangulation<3>* ans = new regina::Triangulation<3>(*tri);
+        auto ans = new regina::PacketOf<regina::Triangulation<3>>(*tri);
         ans->setLabel(tri->label());
         tri->insertChildLast(ans);
         enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -470,9 +471,9 @@ void SnapPeaShapesUI::fill() {
             tr("You can enter filling coefficients on the "
                 "<i>Shapes & Cusps</i> tab."));
     } else {
-        regina::Triangulation<3>* ans;
+        regina::Packet* ans;
         if (tri->countFilledCusps() == 1)
-            ans = tri->filledTriangulation();
+            ans = regina::makePacket(tri->filledTriangulation());
         else {
             int chosen = CuspDialog::choose(ui, tri, CuspChooser::filterFilled,
                 tr("Permanently Fill Cusps"),
@@ -482,9 +483,9 @@ void SnapPeaShapesUI::fill() {
             if (chosen == CuspChooser::CUSP_NO_SELECTION)
                 return;
             else if (chosen == CuspChooser::CUSP_ALL)
-                ans = tri->filledTriangulation();
+                ans = regina::makePacket(tri->filledTriangulation());
             else
-                ans = tri->filledTriangulation(chosen);
+                ans = regina::makePacket(tri->filledTriangulation(chosen));
         }
         if (! ans) {
             ReginaSupport::sorry(ui,
@@ -513,15 +514,13 @@ void SnapPeaShapesUI::canonise() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to canonise."));
     else {
-        regina::Triangulation<3>* ans = tri->canonise();
+        auto ans = makePacket(tri->canonise(), "Canonical retriangulation");
         if (! ans) {
             ReginaSupport::sorry(ui,
                 tr("The SnapPea kernel was not able to build the "
                 "canonical retriangulation of the "
                 "canonical cell decomposition."));
         } else {
-            ans->setLabel(tr("Canonical retriangulation").
-                toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }

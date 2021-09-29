@@ -55,7 +55,7 @@ class SnapPeaFileUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::SnapPeaTriangulation* tri;
+        regina::PacketOf<regina::SnapPeaTriangulation>* tri;
 
         /**
          * Internal components
@@ -68,7 +68,7 @@ class SnapPeaFileUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        SnapPeaFileUI(regina::SnapPeaTriangulation* packet,
+        SnapPeaFileUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
             PacketTabbedUI* useParentUI);
         ~SnapPeaFileUI();
 

@@ -637,11 +637,10 @@ void SurfacesCoordinateUI::cutAlong() {
 
     // Go ahead and cut along the surface.
     // Be nice and simplify the triangulation, which could be very large.
-    regina::Triangulation<3>* ans = toCutAlong.cutAlong();
+    auto ans = regina::makePacket(toCutAlong.cutAlong(),
+        "Cut #" + std::to_string(whichSurface));
     ans->intelligentSimplify();
-    ans->setLabel("Cut #" + std::to_string(whichSurface));
     surfaces->insertChildLast(ans);
-
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
@@ -665,10 +664,9 @@ void SurfacesCoordinateUI::crush() {
     }
 
     // Go ahead and crush it.
-    regina::Triangulation<3>* ans = toCrush.crush();
-    ans->setLabel("Crushed #" + std::to_string(whichSurface));
+    auto ans = regina::makePacket(toCrush.crush(),
+        "Crushed #" + std::to_string(whichSurface));
     surfaces->insertChildLast(ans);
-
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
