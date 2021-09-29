@@ -1897,6 +1897,14 @@ PacketOf<Held>* makePacket(Held* src) {
 }
 
 template <typename Held>
+PacketOf<Held>* makePacket(Held* src, const std::string& label) {
+    auto ans = makePacket(src);
+    if (ans)
+        ans->setLabel(label);
+    return ans;
+}
+
+template <typename Held>
 PacketOf<Held>* makePacket(Held&& src) {
     static_assert(std::is_class<Held>::value,
         "The template argument to makePacket() must be a plain class type.");
@@ -1904,7 +1912,7 @@ PacketOf<Held>* makePacket(Held&& src) {
 }
 
 template <typename Held>
-PacketOf<Held>* makePacket(Held&& src, const char* label) {
+PacketOf<Held>* makePacket(Held&& src, const std::string& label) {
     static_assert(std::is_class<Held>::value,
         "The template argument to makePacket() must be a plain class type.");
     PacketOf<Held>* ans = new PacketOf<Held>(std::move(src));
