@@ -155,8 +155,6 @@ class Triangulation : public detail::TriangulationBase<dim> {
         "The generic implementation of Triangulation<dim> "
         "should not be used for Regina's standard dimensions.");
 
-    REGINA_PACKET_DATA(Triangulation<dim>, PacketType(100 + dim))
-
     protected:
         using detail::TriangulationBase<dim>::simplices_;
 

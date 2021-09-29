@@ -43,7 +43,7 @@ template <>
 void XMLWriter<Link>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
         out_ << "<packet type=\"Link\" typeid=\""
-            << Link::packetTypeID << '\"';
+            << PacketOf<Link>::typeID << '\"';
     } else {
         out_ << "<link";
     }

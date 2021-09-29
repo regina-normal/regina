@@ -237,6 +237,54 @@ class PacketInfo {
         }
 };
 
+/**
+ * The packet type constant for a packet wrapping an object of type \a Held.
+ *
+ * This variable is only defined when \a Held is not itself a packet type,
+ * but instead is a standalone type that can (if desired) be wrapped in a
+ * packet of type PacketOf<Held>.  Examples of such types include Link and
+ * Triangulation<dim>.
+ *
+ * If \a Held is a full packet type itself (such as Container, Script, or
+ * PacketOf<...>), then this template variable is left undefined.
+ *
+ * \ifacespython Not present.
+ */
+template <typename Held>
+static constexpr PacketType packetTypeHolds;
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+
+class Link;
+class SnapPeaTriangulation;
+template <int> class Triangulation;
+
+template <>
+inline constexpr PacketType packetTypeHolds<Link> = PACKET_LINK;
+
+template <>
+inline constexpr PacketType packetTypeHolds<SnapPeaTriangulation> =
+    PACKET_SNAPPEATRIANGULATION;
+
+template <>
+inline constexpr PacketType packetTypeHolds<Triangulation<2>> =
+    PACKET_TRIANGULATION2;
+
+template <>
+inline constexpr PacketType packetTypeHolds<Triangulation<3>> =
+    PACKET_TRIANGULATION3;
+
+template <>
+inline constexpr PacketType packetTypeHolds<Triangulation<4>> =
+    PACKET_TRIANGULATION4;
+
+template <int dim>
+inline constexpr PacketType packetTypeHolds<Triangulation<dim>> =
+    PacketType(100 + dim);
+
+#endif // __DOXYGEN
+
 } // namespace regina
 
 #endif

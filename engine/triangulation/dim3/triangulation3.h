@@ -108,8 +108,6 @@ template <int> class XMLTriangulationReader;
  */
 template <>
 class Triangulation<3> : public detail::TriangulationBase<3> {
-    REGINA_PACKET_DATA(Triangulation<3>, PACKET_TRIANGULATION3)
-
     public:
         typedef std::vector<Tetrahedron<3>*>::const_iterator
                 TetrahedronIterator;

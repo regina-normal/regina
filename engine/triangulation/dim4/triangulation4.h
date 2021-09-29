@@ -88,8 +88,6 @@ template <int> class XMLTriangulationReader;
  */
 template <>
 class Triangulation<4> : public detail::TriangulationBase<4> {
-    REGINA_PACKET_DATA(Triangulation<4>, PACKET_TRIANGULATION4)
-
     public:
         typedef std::vector<Pentachoron<4>*>::const_iterator
                 PentachoronIterator;

@@ -991,6 +991,7 @@ Version 7.0  [ TODO ]
             - Replaced the old filledTriangulation() (which used a polymorphic
               return type) with filledPartial() and filledAll() (whose return
               types are known at compile time).
+            - New constructor that takes raw SnapPea kernel data.
         Class SnappedBall:
             - Routine formsBall() is now called recognise(), and
               return a std::optional instead of a pointer that could be null.
@@ -1250,6 +1251,9 @@ Version 7.0  [ TODO ]
             - Now returns a MatrixInt by value.
         Global constants base64Table, base64Spare:
             - Added to support the base64 encoding/decoding routines.
+        Global constant packetTypeHolds<T>:
+            - Added to support compile-time conversion from types held by
+              packet wrappers to the corresponding packet type constants.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.

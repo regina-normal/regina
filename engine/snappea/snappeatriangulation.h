@@ -387,8 +387,6 @@ class SnapPeaTriangulation :
         public Triangulation<3>,
         public PacketData<SnapPeaTriangulation>,
         public Output<SnapPeaTriangulation> {
-    REGINA_PACKET_DATA(SnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION)
-
     public:
         /**
          * Describes the different types of solution that can be found when
@@ -693,6 +691,29 @@ class SnapPeaTriangulation :
          * @param link the link whose complement we should build.
          */
         SnapPeaTriangulation(const Link& link);
+
+        /**
+         * Creates a new triangulation that holds the given raw data from
+         * the SnapPea kernel.
+         *
+         * Typical users will not be able to call this constructor, since the
+         * SnapPea kernel headers are not part of Regina's public API and are
+         * not shipped with Regina's development headers.
+         *
+         * This new triangulation will take ownership of \a data, and
+         * will use it directly as its native SnapPea representation.
+         * Nevertheless, this constructor is not constant time, since it
+         * also needs to construct a native Regina representation of the
+         * same triangulation.
+         *
+         * The given SnapPea kernel data may be \c null, in which case this
+         * will become a null SnapPea triangulation.
+         *
+         * \ifacespython Not present.
+         *
+         * @param data the raw SnapPea kernel data to use in this triangulation.
+         */
+        SnapPeaTriangulation(regina::snappea::Triangulation* data);
 
         /**
          * Destroys this triangulation.  All internal SnapPea data will
@@ -1850,17 +1871,6 @@ class SnapPeaTriangulation :
 
     private:
         /**
-         * Creates a new triangulation that holds the given SnapPea
-         * triangulation.  This object will take ownership of \a data.
-         *
-         * The given data may be \c null (in which case this will become
-         * a null triangulation).
-         *
-         * @param data the new SnapPea data for this object.
-         */
-        explicit SnapPeaTriangulation(regina::snappea::Triangulation* data);
-
-        /**
          * Synchronises the inherited Triangulation<3> data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
          * Also refreshes other internal properties and caches,
@@ -1954,9 +1964,6 @@ class SnapPeaTriangulation :
                     tri_.Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
                 }
         };
-
-    friend class regina::XMLSnapPeaReader;
-    friend class regina::XMLLegacySnapPeaReader;
 };
 
 /**

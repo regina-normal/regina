@@ -633,8 +633,6 @@ class Crossing : public MarkedElement, public Output<Crossing> {
  * \ingroup link
  */
 class Link : public PacketData<Link>, public Output<Link> {
-    REGINA_PACKET_DATA(Link, PACKET_LINK)
-
     private:
         MarkedVector<Crossing> crossings_;
             /**< The crossings in this link. */

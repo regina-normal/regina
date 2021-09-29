@@ -78,8 +78,6 @@ namespace regina {
  */
 template <>
 class Triangulation<2> : public detail::TriangulationBase<2> {
-    REGINA_PACKET_DATA(Triangulation<2>, PACKET_TRIANGULATION2)
-
     public:
         typedef std::vector<Triangle<2>*>::const_iterator TriangleIterator;
             /**< A dimension-specific alias for SimplexIterator,

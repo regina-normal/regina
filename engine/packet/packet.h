@@ -1768,10 +1768,14 @@ enum PacketHeldBy {
     HELD_BY_SNAPPEA = 2
 };
 
+/**
+ * TODO: Note that the corresponding constant packetTypeHolds<Held> needs to
+ * be specialised in packettype.h.
+ */
 template <typename Held>
 class PacketOf : public Packet, public Held {
     public:
-        static constexpr const PacketType typeID = Held::packetTypeID;
+        static constexpr const PacketType typeID = packetTypeHolds<Held>;
 
     public:
         PacketOf() {
@@ -1813,11 +1817,6 @@ class PacketOf : public Packet, public Held {
         virtual void writeXMLPacketData(std::ostream& out, FileFormat format,
                 bool anon, PacketRefs& refs) const override;
 };
-
-#define REGINA_PACKET_DATA(class_, id) \
-    private: \
-        static constexpr const PacketType packetTypeID = id; \
-        friend class PacketOf<class_>;
 
 template <typename Held>
 class PacketData {
