@@ -743,6 +743,8 @@ Version 7.0  [ TODO ]
               class, and has been stripped down to just a single static name()
               function.  This function is constexpr, so you can still use it
               at compile time if needed, but you can now use it at runtime also.
+        Enum PacketType:
+            - New constant PACKET_NONE.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really

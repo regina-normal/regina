@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include "triangulation/forward.h"
 
 namespace regina {
 
@@ -52,6 +53,12 @@ namespace regina {
  * \ingroup packet
  */
 enum PacketType {
+    /**
+     * Does not represent any of Regina's packet types.
+     *
+     * This can be used (for example) for initialising a PacketType variable.
+     */
+    PACKET_NONE = 0,
     /**
      * Represents a container packet, of class Container.
      */
@@ -240,18 +247,20 @@ class PacketInfo {
 /**
  * The packet type constant for a packet wrapping an object of type \a Held.
  *
- * This variable is only defined when \a Held is not itself a packet type,
+ * This variable is only meaningful when \a Held is not itself a packet type,
  * but instead is a standalone type that can (if desired) be wrapped in a
  * packet of type PacketOf<Held>.  Examples of such types include Link and
  * Triangulation<dim>.
  *
- * If \a Held is a full packet type itself (such as Container, Script, or
- * PacketOf<...>), then this template variable is left undefined.
+ * In all other cases, this variable will be PACKET_NONE.
+ *
+ * In particular, if \a Held is a full packet type itself (such as Container,
+ * Script, or PacketOf<...>), then this template variable will be PACKET_NONE.
  *
  * \ifacespython Not present.
  */
 template <typename Held>
-static constexpr PacketType packetTypeHolds;
+static constexpr PacketType packetTypeHolds = PACKET_NONE;
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.

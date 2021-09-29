@@ -36,6 +36,7 @@
 
 void addPacketType(pybind11::module_& m) {
     pybind11::enum_<regina::PacketType>(m, "PacketType")
+        .value("PACKET_NONE", regina::PACKET_NONE)
         .value("PACKET_CONTAINER", regina::PACKET_CONTAINER)
         .value("PACKET_TEXT", regina::PACKET_TEXT)
         .value("PACKET_SCRIPT", regina::PACKET_SCRIPT)
