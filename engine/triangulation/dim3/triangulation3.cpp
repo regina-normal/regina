@@ -448,7 +448,7 @@ Packet* Triangulation<3>::inAnyPacket() {
             return static_cast<PacketOf<Triangulation<3>>*>(this);
         case HELD_BY_SNAPPEA:
             return static_cast<PacketOf<SnapPeaTriangulation>*>(this);
-        case HELD_BY_NONE:
+        default:
             return nullptr;
     }
 }
@@ -459,7 +459,7 @@ const Packet* Triangulation<3>::inAnyPacket() const {
             return static_cast<const PacketOf<Triangulation<3>>*>(this);
         case HELD_BY_SNAPPEA:
             return static_cast<const PacketOf<SnapPeaTriangulation>*>(this);
-        case HELD_BY_NONE:
+        default:
             return nullptr;
     }
 }

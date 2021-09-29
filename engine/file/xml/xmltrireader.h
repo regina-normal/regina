@@ -326,11 +326,6 @@ class GroupPresentationPropertyReader : public XMLElementReader {
             XMLElementReader* subReader) override;
 };
 
-// Note that some of our classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class XMLTriangulationReader<2>;
-template <> class XMLTriangulationReader<3>;
-
 // Implementation details for XMLSimplexReader
 
 template <int dim>
