@@ -1303,6 +1303,13 @@ Version 7.0  [ TODO ]
         - The command-line utilities now have their own dedicated tests (in
           addition to the engine and python tests which were already present).
 
+Version 6.0.1  [ 12 February, 2021 ]
+
+    PYTHON:
+        - Fixed an issue where the Triangulation3 constructor could become
+          unusable in the graphical user interface.  This issue did not
+          affect command-line users (e.g., regina-python users).
+
 Version 6.0  [ 11 January, 2021 ]
 
     GENERAL:
