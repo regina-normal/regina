@@ -109,7 +109,7 @@ namespace {
     };
 }
 
-Tri3AlgebraUI::Tri3AlgebraUI(regina::Triangulation<3>* packet,
+Tri3AlgebraUI::Tri3AlgebraUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
@@ -119,7 +119,8 @@ Tri3AlgebraUI::Tri3AlgebraUI(regina::Triangulation<3>* packet,
     addTab(new Tri3CellularInfoUI(packet, this), tr("&Cellular Info"));
 }
 
-Tri3HomologyFundUI::Tri3HomologyFundUI(regina::Triangulation<3>* packet,
+Tri3HomologyFundUI::Tri3HomologyFundUI(
+        regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -298,7 +299,8 @@ void Tri3HomologyFundUI::updatePreferences() {
     refresh();
 }
 
-Tri3TuraevViroUI::Tri3TuraevViroUI(regina::Triangulation<3>* packet,
+Tri3TuraevViroUI::Tri3TuraevViroUI(
+        regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -613,7 +615,8 @@ void Tri3CellularInfoUI::refresh() {
     }
 }
 
-Tri3CellularInfoUI::Tri3CellularInfoUI(regina::Triangulation<3>* packet,
+Tri3CellularInfoUI::Tri3CellularInfoUI(
+        regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     QScrollArea* scroller = new QScrollArea();

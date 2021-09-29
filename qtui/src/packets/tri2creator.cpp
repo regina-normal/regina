@@ -233,13 +233,22 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        Triangulation<2>* ans = new Triangulation<2>();
+        auto ans = new regina::PacketOf<Triangulation<2>>();
         ans->setLabel("2-D triangulation");
         return ans;
     } else if (typeId == TRI_OR) {
         unsigned long genus = orGenus->text().toULong();
         unsigned long punctures = orPunctures->text().toULong();
-        return Example<2>::orientable(genus, punctures);
+
+        std::ostringstream s;
+        s << "Orientable, genus " << genus;
+        if (punctures == 1)
+            s << ", 1 puncture";
+        else if (punctures > 1)
+            s << ", " << punctures << " punctures";
+
+        return regina::makePacket(Example<2>::orientable(genus, punctures),
+            s.str());
     } else if (typeId == TRI_NOR) {
         unsigned long genus = norGenus->text().toULong();
         if (genus == 0) {
@@ -249,7 +258,16 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
             return nullptr;
         }
         unsigned long punctures = norPunctures->text().toULong();
-        return Example<2>::nonOrientable(genus, punctures);
+
+        std::ostringstream s;
+        s << "Non-orientable, genus " << genus;
+        if (punctures == 1)
+            s << ", 1 puncture";
+        else if (punctures > 1)
+            s << ", " << punctures << " punctures";
+
+        return regina::makePacket(Example<2>::nonOrientable(genus, punctures),
+            s.str());
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -269,11 +287,9 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        Triangulation<2>* ans = Triangulation<2>::fromIsoSig(sig);
-        if (ans) {
-            ans->setLabel(sig);
+        if (auto ans = regina::makePacket(
+                Triangulation<2>::fromIsoSig(sig), sig))
             return ans;
-        }
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given "
             "isomorphism signature."),

@@ -214,7 +214,7 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // Yes!  Go ahead and make the change.
-    regina::Packet::ChangeEventSpan span(*tri_);
+    regina::Triangulation<4>::ChangeEventSpan span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (p->adjacentSimplex(facet))
@@ -841,8 +841,12 @@ void Tri4GluingsUI::splitIntoComponents() {
             base = tri;
 
         // Make the split.
-        for (auto& c : tri->triangulateComponents(true))
-            base->insertChildLast(c.release());
+        size_t which = 0;
+        for (auto& c : tri->triangulateComponents()) {
+            std::ostringstream label;
+            label << "Component #" << ++which;
+            base->insertChildLast(regina::makePacket(c.release(), label.str()));
+        }
 
         // Make sure the new components are visible.
         enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());

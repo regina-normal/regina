@@ -76,7 +76,9 @@ QString AngleStructureCreator::parentWhatsThis() {
 regina::Packet* AngleStructureCreator::createPacket(
         regina::Packet* parentPacket, QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    if (! dynamic_cast<regina::Triangulation<3>*>(parentPacket)) {
+    regina::Triangulation<3>* tri =
+        dynamic_cast<regina::Triangulation<3>*>(parentPacket);
+    if (! tri) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
             ui->tr("Angle structures must live within a 3-manifold "
@@ -92,8 +94,7 @@ regina::Packet* AngleStructureCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
-    regina::AngleStructures* ans = new regina::AngleStructures(
-            *dynamic_cast<regina::Triangulation<3>*>(parentPacket),
+    regina::AngleStructures* ans = new regina::AngleStructures(*tri,
             tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
 
     if (dlg.run()) {

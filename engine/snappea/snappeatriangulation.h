@@ -1184,22 +1184,25 @@ class SnapPeaTriangulation :
          * The result will be another instance of SnapPeaTriangulation, with
          * at least one cusp remaining.
          *
-         * This routine requires at least one cusp to be complete (i.e., to
-         * have no filling coefficients assigned), since most of the SnapPea
-         * kernel requires its triangulations to have at least one cusp.
+         * This routine requires the manifold to have at least two cusps
+         * (i.e., the cusp being filled, plus at least one other).  This is
+         * because most of the SnapPea kernel routines require its
+         * triangulations to have at least one cusp.
+         *
+         * The error conditions are as follows:
          *
          * - If the given cusp has no filling coefficients assigned
          *   (i.e., it is complete), then it cannot be filled: instead
          *   this routine will throw a FailedPrecondition exception.
          *
-         * - If no other cusp is complete (i.e., all cusps have filling
-         *   coefficients), then this routine will likewise throw a
-         *   FailedPrecondition exception.  For such scenarios you should
-         *   call filledAll() instead.
+         * - If the manifold has only one cusp, then this routine will
+         *   likewise throw a FailedPrecondition exception.  For such
+         *   scenarios you should call filledAll() instead, which will
+         *   return a closed Regina triangulation.
          *
-         * - Otherwise, if at least one other cusp is complete, the result will
-         *   be a SnapPeaTriangulation with one fewer cusp.  The remaining cusps
-         *   may be reindexed, and all Cusp structures will be destroyed and
+         * - Otherwise, if there is at least one other cusp, the result will be
+         *   a SnapPeaTriangulation with one fewer cusp.  The remaining cusps
+         *   might be reindexed, and all Cusp structures will be destroyed and
          *   rebuilt.  Auxiliary information on the remaining cusps (such as
          *   peripheral curves) will be preserved, and SnapPea will
          *   automatically attempt to compute a hyperbolic structure on the
@@ -1213,8 +1216,7 @@ class SnapPeaTriangulation :
          *
          * \pre This is not a null triangulation.
          * \pre The given cusp is non-complete (i.e., has filling coefficients
-         * assigned), and at least one other cusp is complete (i.e., does not
-         * have filling coefficients assigned).
+         * assigned), and the manifold has at least one other cusp.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
@@ -1242,7 +1244,7 @@ class SnapPeaTriangulation :
          *
          * - If some but not all cusps are complete, then the result will
          *   be a SnapPeaTriangulation with fewer cusps.  The remaining cusps
-         *   may be reindexed, and all Cusp structures will be destroyed and
+         *   might be reindexed, and all Cusp structures will be destroyed and
          *   rebuilt.  Auxiliary information on the remaining cusps (such as
          *   peripheral curves) will be preserved, and SnapPea will
          *   automatically attempt to compute a hyperbolic structure on the

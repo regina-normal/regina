@@ -107,10 +107,9 @@ class TwoTypeFilter : public PacketFilter {
 };
 
 /**
- * A packet filter that only accepts packets of either a given packet type
+ * A packet filter that only accepts packets of either a given type
  * or any of its subclasses.
  *
- * The template argument T must be one of the available packet types.
  * The acceptance test will be performed by calling dynamic_cast<T*>
  * upon each packet being questioned.
  */

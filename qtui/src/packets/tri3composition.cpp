@@ -80,7 +80,8 @@ using regina::Perm;
 using regina::SatRegion;
 using regina::Triangulation;
 
-Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
+Tri3CompositionUI::Tri3CompositionUI(
+        regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet), comparingTri(0), lastComponent(0) {
     // Set up the UI.

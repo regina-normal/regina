@@ -55,7 +55,7 @@
 using regina::Packet;
 using regina::SnapPeaTriangulation;
 
-SnapPeaUI::SnapPeaUI(regina::SnapPeaTriangulation* packet,
+SnapPeaUI::SnapPeaUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabSnapPeaTri) {
@@ -91,7 +91,8 @@ QString SnapPeaUI::getPacketMenuText() const {
     return QObject::tr("&SnapPea Triangulation");
 }
 
-SnapPeaHeaderUI::SnapPeaHeaderUI(regina::SnapPeaTriangulation* packet,
+SnapPeaHeaderUI::SnapPeaHeaderUI(
+        regina::PacketOf<regina::SnapPeaTriangulation>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();

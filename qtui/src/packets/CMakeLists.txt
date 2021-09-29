@@ -46,8 +46,8 @@ SET ( FILES
   tri2skeleton.cpp
   tri2ui.cpp
   tri3algebra.cpp
-  tri3creator.cpp
   tri3composition.cpp
+  tri3creator.cpp
   tri3gluings.cpp
   tri3skeleton.cpp
   tri3snappea.cpp

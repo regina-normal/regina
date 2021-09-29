@@ -74,7 +74,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::Triangulation<3>* tri;
+        regina::PacketOf<regina::Triangulation<3>>* tri;
         regina::Triangulation<3>* comparingTri;
         std::unique_ptr<regina::StandardTriangulation> standard;
         std::optional<regina::Isomorphism<3>> isomorphism;
@@ -96,7 +96,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        Tri3CompositionUI(regina::Triangulation<3>* packet,
+        Tri3CompositionUI(regina::PacketOf<regina::Triangulation<3>>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -121,7 +121,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          * View the isomorphism details.
          */
         void viewIsomorphism();
-            
+
         /**
          * Support clipboard actions.
          */

@@ -49,7 +49,8 @@
 using regina::Triangulation;
 using regina::Packet;
 
-Tri2SkeletonUI::Tri2SkeletonUI(regina::Triangulation<2>* packet,
+Tri2SkeletonUI::Tri2SkeletonUI(
+        regina::PacketOf<regina::Triangulation<2>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim2TriSkeleton) {
@@ -58,7 +59,8 @@ Tri2SkeletonUI::Tri2SkeletonUI(regina::Triangulation<2>* packet,
         tr("&Graphs"));
 }
 
-Tri2SkelCompUI::Tri2SkelCompUI(regina::Triangulation<2>* packet,
+Tri2SkelCompUI::Tri2SkelCompUI(
+        regina::PacketOf<regina::Triangulation<2>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();

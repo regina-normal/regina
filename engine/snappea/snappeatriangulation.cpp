@@ -456,8 +456,9 @@ SnapPeaTriangulation SnapPeaTriangulation::filledPartial(unsigned whichCusp)
     size_t nCusps = countCusps();
 
     if (nCusps == 1)
-        throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
-            "requires at least one cusp to have no filling coefficients");
+        throw FailedPrecondition(
+            "SnapPeaTriangulation::filledPartial(unsigned) "
+            "requires the manifold to have at least two cusps");
 
     // Note: fill_cusps never returns null.
     regina::snappea::Boolean* fill_cusp = new regina::snappea::Boolean[nCusps];

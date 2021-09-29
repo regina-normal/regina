@@ -316,7 +316,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        Triangulation<3>* ans = new Triangulation<3>();
+        auto ans = new regina::PacketOf<Triangulation<3>>();
         ans->setLabel("3-D triangulation");
         return ans;
     } else if (typeId == TRI_LAYERED_LENS_SPACE) {
@@ -349,7 +349,10 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
             return nullptr;
         }
 
-        return Example<3>::lens(p, q);
+        std::ostringstream s;
+        s << "L(" << p << ',' << q << ')';
+
+        return regina::makePacket(Example<3>::lens(p, q), s.str());
     } else if (typeId == TRI_LAYERED_SOLID_TORUS) {
         if (! reLSTParams.exactMatch(lstParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -360,31 +363,30 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
             return nullptr;
         }
 
-        unsigned long a = reLSTParams.cap(1).toULong();
-        unsigned long b = reLSTParams.cap(2).toULong();
-        unsigned long c = reLSTParams.cap(3).toULong();
+        unsigned long param[3] {
+            reLSTParams.cap(1).toULong(),
+            reLSTParams.cap(2).toULong(),
+            reLSTParams.cap(3).toULong()
+        };
 
-        if (a == 0 && b == 0 && c == 0) {
+        std::sort(param, param + 3);
+
+        if (param[2] == 0) {
+            // All three parameters are zero.
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("At least one of the "
                 "layered solid torus parameters must be strictly "
                 "positive."));
             return nullptr;
         }
-        if (regina::gcd(a, b) != 1) {
+        if (regina::gcd(param[0], param[1]) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The layered "
                 "solid torus parameters must be relatively prime."));
             return nullptr;
         }
 
-        if (a + b == c)
-            return Example<3>::lst(a, b);
-        else if (a + c == b)
-            return Example<3>::lst(a, c);
-        else if (b + c == a)
-            return Example<3>::lst(b, c);
-        else {
+        if (param[0] + param[1] != param[2]) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("Two of the layered "
                 "solid torus parameters must add to give the third."),
@@ -393,6 +395,11 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "whereas the parameters <i>3,4,5</i> are not.</qt>"));
             return nullptr;
         }
+
+        std::ostringstream s;
+        s << "LST(" << param[0] << ',' << param[1] << ',' << param[2] << ')';
+
+        return regina::makePacket(Example<3>::lst(param[0], param[1]), s.str());
     } else if (typeId == TRI_SFS_SPHERE) {
         if (! reSFSAllParams.exactMatch(sfsParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -464,9 +471,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
             whichPair++;
         }
 
-        Triangulation<3>* ans = sfs.construct();
-        ans->setLabel(sfs.structure());
-        return ans;
+        return regina::makePacket(sfs.construct(), sfs.structure());
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -483,11 +488,9 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        Triangulation<3>* ans = Triangulation<3>::fromIsoSig(sig);
-        if (ans) {
-            ans->setLabel(sig);
+        if (auto ans = regina::makePacket(
+                Triangulation<3>::fromIsoSig(sig), sig))
             return ans;
-        }
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given "
             "isomorphism signature."),
@@ -510,7 +513,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
             return nullptr;
         }
 
-        Triangulation<3>* ans = new Triangulation<3>();
+        auto ans = new regina::PacketOf<Triangulation<3>>();
         std::string dehydString = reDehydration.cap(1).toUtf8().constData();
         if (! ans->insertRehydration(dehydString)) {
             delete ans;
@@ -554,9 +557,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "Burton, PhD thesis, available from the Regina website.</qt>"));
             return nullptr;
         }
-        Triangulation<3>* ans = sig->triangulate();
-        ans->setLabel(sigString);
-        return ans;
+        return regina::makePacket(sig->triangulate(), sigString);
     } else if (typeId == TRI_EXAMPLE) {
         return examples[exampleWhich->currentIndex()].create();
     }

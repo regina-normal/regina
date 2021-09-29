@@ -53,7 +53,7 @@ class Tri3SkeletonUI : public PacketTabbedViewerTab {
         /**
          * Constructor.
          */
-        Tri3SkeletonUI(regina::Triangulation<3>* packet,
+        Tri3SkeletonUI(regina::PacketOf<regina::Triangulation<3>>* packet,
                 PacketTabbedUI* useParentUI);
 };
 
@@ -67,7 +67,7 @@ class Tri3SkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<3>* tri;
+        regina::PacketOf<regina::Triangulation<3>>* tri;
 
         /**
          * Internal components
@@ -91,7 +91,7 @@ class Tri3SkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        Tri3SkelCompUI(regina::Triangulation<3>* packet,
+        Tri3SkelCompUI(regina::PacketOf<regina::Triangulation<3>>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**

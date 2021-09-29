@@ -208,7 +208,7 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // Yes!  Go ahead and make the change.
-    regina::Packet::ChangeEventSpan span(*tri_);
+    regina::Triangulation<2>::ChangeEventSpan span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(edge))
@@ -291,7 +291,7 @@ regina::Perm<3> GluingsModel2::edgeStringToPerm(int srcEdge,
         regina::Edge<2>::ordering(srcEdge).inverse();
 }
 
-Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
+Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of edge gluings.
@@ -589,8 +589,12 @@ void Tri2GluingsUI::splitIntoComponents() {
             base = tri;
 
         // Make the split.
-        for (auto& c : tri->triangulateComponents(true))
-            base->insertChildLast(c.release());
+        size_t which = 0;
+        for (auto& c : tri->triangulateComponents()) {
+            std::ostringstream label;
+            label << "Component #" << ++which;
+            base->insertChildLast(regina::makePacket(c.release(), label.str()));
+        }
 
         // Make sure the new components are visible.
         enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());

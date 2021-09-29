@@ -61,10 +61,9 @@ class ExampleCreator {
             return name_;
         }
 
-        regina::Triangulation<dim>* create() const {
-            regina::Triangulation<dim>* ans = (*creator_)();
-            ans->setLabel(name_.toUtf8().constData());
-            return ans;
+        regina::PacketOf<regina::Triangulation<dim>>* create() const {
+            return regina::makePacket((*creator_)(),
+                name_.toUtf8().constData());
         }
 };
 

@@ -472,9 +472,12 @@ void SnapPeaShapesUI::fill() {
                 "<i>Shapes & Cusps</i> tab."));
     } else {
         regina::Packet* ans;
-        if (tri->countFilledCusps() == 1)
-            ans = regina::makePacket(tri->filledTriangulation());
-        else {
+        if (tri->countFilledCusps() == 1) {
+            if (tri->countCompleteCusps() == 0)
+                ans = regina::makePacket(tri->filledAll());
+            else
+                ans = regina::makePacket(tri->filledPartial());
+        } else {
             int chosen = CuspDialog::choose(ui, tri, CuspChooser::filterFilled,
                 tr("Permanently Fill Cusps"),
                 tr("Permanently fill which cusp(s)?"),
@@ -482,10 +485,14 @@ void SnapPeaShapesUI::fill() {
                     "whatever cusp you choose."));
             if (chosen == CuspChooser::CUSP_NO_SELECTION)
                 return;
-            else if (chosen == CuspChooser::CUSP_ALL)
-                ans = regina::makePacket(tri->filledTriangulation());
-            else
-                ans = regina::makePacket(tri->filledTriangulation(chosen));
+            else if (chosen == CuspChooser::CUSP_ALL) {
+                if (tri->countCompleteCusps() == 0)
+                    ans = regina::makePacket(tri->filledAll());
+                else
+                    ans = regina::makePacket(tri->filledPartial());
+            } else {
+                ans = regina::makePacket(tri->filledPartial(chosen));
+            }
         }
         if (! ans) {
             ReginaSupport::sorry(ui,

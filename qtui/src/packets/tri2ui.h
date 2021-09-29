@@ -62,7 +62,7 @@ class Tri2UI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        Tri2UI(regina::Triangulation<2>* packet,
+        Tri2UI(regina::PacketOf<regina::Triangulation<2>>* packet,
             PacketPane* newEnclosingPane);
 
         /**
@@ -80,7 +80,7 @@ class Tri2HeaderUI : public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<2>* tri;
+        regina::PacketOf<regina::Triangulation<2>>* tri;
 
         /**
          * Internal components
@@ -93,7 +93,7 @@ class Tri2HeaderUI : public PacketViewerTab {
         /**
          * Constructor.
          */
-        Tri2HeaderUI(regina::Triangulation<2>* packet,
+        Tri2HeaderUI(regina::PacketOf<regina::Triangulation<2>>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**

@@ -73,7 +73,7 @@ class SnapPeaUI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        SnapPeaUI(regina::SnapPeaTriangulation* packet,
+        SnapPeaUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
             PacketPane* newEnclosingPane);
         ~SnapPeaUI();
 
@@ -95,7 +95,7 @@ class SnapPeaHeaderUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::SnapPeaTriangulation* tri;
+        regina::PacketOf<regina::SnapPeaTriangulation>* tri;
 
         /**
          * Internal components
@@ -108,7 +108,7 @@ class SnapPeaHeaderUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        SnapPeaHeaderUI(regina::SnapPeaTriangulation* packet,
+        SnapPeaHeaderUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
