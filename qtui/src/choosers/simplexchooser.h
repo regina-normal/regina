@@ -96,7 +96,7 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every simplex
          * will be offered.
          */
-        SimplexChooser(regina::Triangulation<dim>* tri,
+        SimplexChooser(regina::PacketOf<regina::Triangulation<dim>>* tri,
                 FilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -166,14 +166,14 @@ class SimplexDialog : public QDialog {
          * Constructor and destructor.
          */
         SimplexDialog(QWidget* parent,
-            regina::Triangulation<dim>* tri,
+            regina::PacketOf<regina::Triangulation<dim>>* tri,
             typename SimplexChooser<dim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::Simplex<dim>* choose(QWidget* parent,
-            regina::Triangulation<dim>* tri,
+            regina::PacketOf<regina::Triangulation<dim>>* tri,
             typename SimplexChooser<dim>::FilterFunc filter,
             const QString& title,
             const QString& message,
@@ -207,14 +207,14 @@ inline void SimplexChooser<dim>::packetToBeDestroyed(regina::PacketShell) {
 
 template <int dim>
 SimplexChooser<dim>::SimplexChooser(
-        regina::Triangulation<dim>* tri,
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         FilterFunc filter, QWidget* parent,
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
-        tri_->listen(this);
+        tri->listen(this);
     fill();
 }
 
@@ -261,7 +261,7 @@ void SimplexChooser<dim>::fill() {
 
 template <int dim>
 SimplexDialog<dim>::SimplexDialog(QWidget* parent,
-        regina::Triangulation<dim>* tri,
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         typename SimplexChooser<dim>::FilterFunc filter,
         const QString& title,
         const QString& message,
@@ -287,7 +287,7 @@ SimplexDialog<dim>::SimplexDialog(QWidget* parent,
 
 template <int dim>
 regina::Simplex<dim>* SimplexDialog<dim>::choose(QWidget* parent,
-        regina::Triangulation<dim>* tri,
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         typename SimplexChooser<dim>::FilterFunc filter,
         const QString& title,
         const QString& message,

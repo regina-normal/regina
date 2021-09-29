@@ -74,10 +74,11 @@ class FacetGraphData {
 
 class Dim2EdgeGraphData : public FacetGraphData {
     private:
-        regina::Triangulation<2>* tri_;
+        regina::PacketOf<regina::Triangulation<2>>* tri_;
 
     public:
-        Dim2EdgeGraphData(regina::Triangulation<2>* tri) : tri_(tri) {}
+        Dim2EdgeGraphData(regina::PacketOf<regina::Triangulation<2>>* tri) :
+            tri_(tri) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);
@@ -91,10 +92,11 @@ class Dim2EdgeGraphData : public FacetGraphData {
 
 class Dim3FaceGraphData : public FacetGraphData {
     private:
-        regina::Triangulation<3>* tri_;
+        regina::PacketOf<regina::Triangulation<3>>* tri_;
 
     public:
-        Dim3FaceGraphData(regina::Triangulation<3>* tri) : tri_(tri) {}
+        Dim3FaceGraphData(regina::PacketOf<regina::Triangulation<3>>* tri) :
+            tri_(tri) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);
@@ -108,10 +110,11 @@ class Dim3FaceGraphData : public FacetGraphData {
 
 class Dim4FacetGraphData : public FacetGraphData {
     private:
-        regina::Triangulation<4>* tri_;
+        regina::PacketOf<regina::Triangulation<4>>* tri_;
 
     public:
-        Dim4FacetGraphData(regina::Triangulation<4>* tri) : tri_(tri) {}
+        Dim4FacetGraphData(regina::PacketOf<regina::Triangulation<4>>* tri) :
+            tri_(tri) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);

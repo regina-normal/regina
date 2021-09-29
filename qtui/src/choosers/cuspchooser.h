@@ -100,7 +100,7 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every cusp
          * will be offered.
          */
-        CuspChooser(regina::SnapPeaTriangulation* tri,
+        CuspChooser(regina::PacketOf<regina::SnapPeaTriangulation>* tri,
                 CuspFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -177,14 +177,14 @@ class CuspDialog : public QDialog {
          * Constructor and destructor.
          */
         CuspDialog(QWidget* parent,
-            regina::SnapPeaTriangulation* tri,
+            regina::PacketOf<regina::SnapPeaTriangulation>* tri,
             CuspFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static int choose(QWidget* parent,
-            regina::SnapPeaTriangulation* tri,
+            regina::PacketOf<regina::SnapPeaTriangulation>* tri,
             CuspFilterFunc filter,
             const QString& title,
             const QString& message,

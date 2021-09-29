@@ -101,7 +101,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every edge/integer
          * combination will be offered.
          */
-        EdgeIntChooser(regina::Triangulation<3>* tri,
+        EdgeIntChooser(regina::PacketOf<regina::Triangulation<3>>* tri,
                 int argMin, int argMax, const QString& argDesc,
                 EdgeIntFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
@@ -172,7 +172,7 @@ class EdgeIntDialog : public QDialog {
          * Constructor and destructor.
          */
         EdgeIntDialog(QWidget* parent,
-            regina::Triangulation<3>* tri,
+            regina::PacketOf<regina::Triangulation<3>>* tri,
             int argMin, int argMax, const QString& argDesc,
             EdgeIntFilterFunc filter,
             const QString& title,
@@ -180,7 +180,7 @@ class EdgeIntDialog : public QDialog {
             const QString& whatsThis);
 
         static std::pair<regina::Edge<3>*, int> choose(QWidget* parent,
-            regina::Triangulation<3>* tri,
+            regina::PacketOf<regina::Triangulation<3>>* tri,
             int argMin, int argMax, const QString& argDesc,
             EdgeIntFilterFunc filter,
             const QString& title,

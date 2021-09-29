@@ -45,9 +45,11 @@
 
 namespace regina {
 
+template <typename> class PacketOf;
+
 /**
  * Reads a triangulation from the given Orb / Casson file.  A newly
- * allocated triangulation will be returned; it is the user's
+ * allocated triangulation packet will be returned; it is the user's
  * responsibility to deallocate this when it is finished with.
  *
  * The packet label of the new triangulation will be the manifold name
@@ -70,7 +72,7 @@ namespace regina {
  *
  * \ingroup foreign
  */
-Triangulation<3>* readOrb(const char *filename);
+PacketOf<Triangulation<3>>* readOrb(const char *filename);
 
 } // namespace regina
 

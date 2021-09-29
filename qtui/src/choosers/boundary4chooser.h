@@ -96,7 +96,8 @@ class BoundaryComponent4Chooser :
          * The given filter may be 0, in which case every boundary component
          * will be offered.
          */
-        BoundaryComponent4Chooser(regina::Triangulation<4>* tri,
+        BoundaryComponent4Chooser(
+                regina::PacketOf<regina::Triangulation<4>>* tri,
                 FilterFunc filter, QWidget* parent, bool autoUpdate = true);
 
         /**
@@ -164,14 +165,14 @@ class BoundaryComponent4Dialog : public QDialog {
          * Constructor and destructor.
          */
         BoundaryComponent4Dialog(QWidget* parent,
-            regina::Triangulation<4>* tri,
+            regina::PacketOf<regina::Triangulation<4>>* tri,
             BoundaryComponent4Chooser::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::BoundaryComponent<4>* choose(QWidget* parent,
-            regina::Triangulation<4>* tri,
+            regina::PacketOf<regina::Triangulation<4>>* tri,
             BoundaryComponent4Chooser::FilterFunc filter,
             const QString& title,
             const QString& message,

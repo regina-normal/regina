@@ -101,10 +101,10 @@ const int vertex_at_faces[4][4] =
  * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure.
  */
-Triangulation<3> *cassonToTriangulation( CassonFormat *cf )
+PacketOf<Triangulation<3>>* cassonToTriangulation( CassonFormat *cf )
  {
  int i;
- Triangulation<3> *triang = new Triangulation<3>();
+ PacketOf<Triangulation<3>>* triang = new PacketOf<Triangulation<3>>();
  // since CassonFormat does not allow naming of triangulations,
  //  triang is given a name in the readOrb() function.
  //  I try to mimic Triangulation<3>::readSnapPea and
@@ -353,7 +353,7 @@ void freeCassonFormat( CassonFormat *cf )
  * data structure, and to use standard C++ string and I/O streams
  * instead of Qt strings and I/O streams.
  */
-Triangulation<3> *readTriangulation( std::istream &ts) {
+PacketOf<Triangulation<3>>* readTriangulation( std::istream &ts) {
     std::string line, file_id;
 
     getline(ts, line);
@@ -372,16 +372,16 @@ Triangulation<3> *readTriangulation( std::istream &ts) {
         return nullptr;
     }
 
-    Triangulation<3>* manifold = cassonToTriangulation( cf );
+    PacketOf<Triangulation<3>>* manifold = cassonToTriangulation( cf );
     freeCassonFormat( cf );
 
-    // manifold->setLabel(file_id);
+    manifold->setLabel(file_id);
     return manifold;
 }
 
 } // End anonymous namespace
 
-Triangulation<3> *readOrb(const char *filename) {
+PacketOf<Triangulation<3>>* readOrb(const char *filename) {
     std::ifstream file(filename);
 
     if (! file) {

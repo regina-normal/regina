@@ -178,7 +178,8 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<Script*>(packet), enclosingPane);
         case PACKET_SNAPPEATRIANGULATION:
             return new SnapPeaUI(
-                dynamic_cast<SnapPeaTriangulation*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<SnapPeaTriangulation>*>(packet),
+                enclosingPane);
         case PACKET_SURFACEFILTER:
             switch (((SurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION:
@@ -197,10 +198,12 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<Text*>(packet), enclosingPane);
         case PACKET_TRIANGULATION2:
             return new Tri2UI(
-                dynamic_cast<Triangulation<2>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<2>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION3:
             return new Tri3UI(
-                dynamic_cast<Triangulation<3>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<3>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION4:
             return new Tri4UI(
                 dynamic_cast<regina::PacketOf<Triangulation<4>>*>(packet),

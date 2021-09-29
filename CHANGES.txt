@@ -1231,6 +1231,10 @@ Version 7.0  [ TODO ]
             - Removed completely.
         Function preImageOfLattice():
             - Now returns a MatrixInt by value.
+        Function readOrb():
+            - Like the other import function in foreign, this routine returns
+              a packet; this means that the return type has changed from
+              Triangulation<3> to PacketOfTriangulation<3>.
         Function readSigList(), readIsoSigList():
             - The old readIsoSigList() is now deprecated, in favour of a new
               template function readSigList() that can work with knots and

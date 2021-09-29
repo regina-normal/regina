@@ -95,13 +95,14 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         /**
          * Packet tree structure:
          */
-        regina::Triangulation<4>* tri;
+        regina::PacketOf<regina::Triangulation<4>>* tri;
 
     public:
         /**
          * Constructor and destructor.
          */
-        EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri);
+        EltMoveDialog4(QWidget* parent,
+            regina::PacketOf<regina::Triangulation<4>>* useTri);
         ~EltMoveDialog4();
 
         /**

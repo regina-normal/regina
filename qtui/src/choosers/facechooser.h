@@ -96,7 +96,7 @@ class FaceChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every subdim-face
          * will be offered.
          */
-        FaceChooser(regina::Triangulation<dim>* tri,
+        FaceChooser(regina::PacketOf<regina::Triangulation<dim>>* tri,
                 FilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -166,14 +166,14 @@ class FaceDialog : public QDialog {
          * Constructor and destructor.
          */
         FaceDialog(QWidget* parent,
-            regina::Triangulation<dim>* tri,
+            regina::PacketOf<regina::Triangulation<dim>>* tri,
             typename FaceChooser<dim, subdim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::Face<dim, subdim>* choose(QWidget* parent,
-            regina::Triangulation<dim>* tri,
+            regina::PacketOf<regina::Triangulation<dim>>* tri,
             typename FaceChooser<dim, subdim>::FilterFunc filter,
             const QString& title,
             const QString& message,
@@ -181,13 +181,14 @@ class FaceDialog : public QDialog {
 };
 
 template <int dim, int subdim>
-FaceChooser<dim, subdim>::FaceChooser(regina::Triangulation<dim>* tri,
+FaceChooser<dim, subdim>::FaceChooser(
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         FilterFunc filter, QWidget* parent, bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
-        tri_->listen(this);
+        tri->listen(this);
     fill();
 }
 
@@ -290,7 +291,7 @@ inline void FaceChooser<dim, subdim>::packetToBeDestroyed(regina::PacketShell) {
 
 template <int dim, int subdim>
 FaceDialog<dim, subdim>::FaceDialog(QWidget* parent,
-        regina::Triangulation<dim>* tri,
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         typename FaceChooser<dim, subdim>::FilterFunc filter,
         const QString& title,
         const QString& message,
@@ -316,7 +317,7 @@ FaceDialog<dim, subdim>::FaceDialog(QWidget* parent,
 
 template <int dim, int subdim>
 regina::Face<dim, subdim>* FaceDialog<dim, subdim>::choose(QWidget* parent,
-        regina::Triangulation<dim>* tri,
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         typename FaceChooser<dim, subdim>::FilterFunc filter,
         const QString& title,
         const QString& message,

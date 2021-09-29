@@ -42,8 +42,7 @@
 
 using regina::Edge;
 
-EdgeIntChooser::EdgeIntChooser(
-        regina::Triangulation<3>* tri,
+EdgeIntChooser::EdgeIntChooser(regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
@@ -52,7 +51,7 @@ EdgeIntChooser::EdgeIntChooser(
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
-        tri_->listen(this);
+        tri->listen(this);
     fill();
 }
 
@@ -121,7 +120,7 @@ void EdgeIntChooser::fill() {
 }
 
 EdgeIntDialog::EdgeIntDialog(QWidget* parent,
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
         const QString& title,
@@ -147,7 +146,7 @@ EdgeIntDialog::EdgeIntDialog(QWidget* parent,
 }
 
 std::pair<regina::Edge<3>*, int> EdgeIntDialog::choose(QWidget* parent,
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
         const QString& title,

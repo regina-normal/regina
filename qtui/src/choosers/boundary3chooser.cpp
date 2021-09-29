@@ -43,14 +43,14 @@
 using regina::BoundaryComponent;
 
 BoundaryComponent3Chooser::BoundaryComponent3Chooser(
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         BoundaryComponentFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
-        tri_->listen(this);
+        tri->listen(this);
     fill();
 }
 
@@ -119,7 +119,7 @@ void BoundaryComponent3Chooser::fill() {
 }
 
 BoundaryComponent3Dialog::BoundaryComponent3Dialog(QWidget* parent,
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         BoundaryComponentFilterFunc filter,
         const QString& title,
         const QString& message,
@@ -144,7 +144,7 @@ BoundaryComponent3Dialog::BoundaryComponent3Dialog(QWidget* parent,
 }
 
 regina::BoundaryComponent<3>* BoundaryComponent3Dialog::choose(QWidget* parent,
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         BoundaryComponentFilterFunc filter,
         const QString& title,
         const QString& message,
