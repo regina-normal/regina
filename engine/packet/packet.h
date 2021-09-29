@@ -1884,6 +1884,34 @@ class PacketData {
     friend class PacketOf<Held>;
 };
 
+template <typename Held>
+PacketOf<Held>* makePacket(Held* src) {
+    static_assert(std::is_class<Held>::value,
+        "The template argument to makePacket() must be a plain class type.");
+    if (src) {
+        PacketOf<Held>* ans = new PacketOf<Held>(std::move(*src));
+        delete src;
+        return ans;
+    } else
+        return nullptr;
+}
+
+template <typename Held>
+PacketOf<Held>* makePacket(Held&& src) {
+    static_assert(std::is_class<Held>::value,
+        "The template argument to makePacket() must be a plain class type.");
+    return new PacketOf<Held>(std::move(src));
+}
+
+template <typename Held>
+PacketOf<Held>* makePacket(Held&& src, const char* label) {
+    static_assert(std::is_class<Held>::value,
+        "The template argument to makePacket() must be a plain class type.");
+    PacketOf<Held>* ans = new PacketOf<Held>(std::move(src));
+    ans->setLabel(label);
+    return ans;
+}
+
 /**
  * Reads a Regina data file, and returns the corresponding packet tree.
  * This uses Regina's native XML file format; it does not matter whether

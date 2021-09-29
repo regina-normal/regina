@@ -174,7 +174,7 @@ void LinkGraphUI::refresh() {
         "<i>Regina</i> again.</qt>"));
     return;
 #else
-    size_t n = link->data().size();
+    size_t n = link->size();
     if (n == 0) {
         showInfo(tr("<qt>This link is empty.</qt>"));
         return;
@@ -256,7 +256,7 @@ void LinkGraphUI::showError(const QString& msg) {
 }
 
 std::string LinkGraphUI::treeDecomp(bool nice, int& bags, int& width) {
-    regina::TreeDecomposition t(link->data());
+    regina::TreeDecomposition t(*link);
     if (nice)
         t.makeNice();
     bags = t.size();

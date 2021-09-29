@@ -81,7 +81,6 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
 
     std::string sig;
     std::string label;
-    PacketType* object;
 
     while(! in.eof()) {
         // Read in the next line.
@@ -109,11 +108,7 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
 
         if (! sig.empty()) {
             // Process this isomorphism signature.
-            if ((object = PacketType::fromSig(sig))) {
-                PacketOf<PacketType>* packet =
-                    new PacketOf<PacketType>(std::move(*object));
-                delete object;
-
+            if (auto packet = makePacket(PacketType::fromSig(sig))) {
                 packet->setLabel(label.empty() ? sig : label);
                 ans->insertChildLast(packet);
             } else

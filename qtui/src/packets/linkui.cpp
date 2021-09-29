@@ -110,7 +110,7 @@ QWidget* LinkHeaderUI::getInterface() {
 }
 
 void LinkHeaderUI::refresh() {
-    header->setText(summaryInfo(link->data()));
+    header->setText(summaryInfo(*link));
 }
 
 QString LinkHeaderUI::summaryInfo(const regina::Link& link) {

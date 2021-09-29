@@ -51,6 +51,7 @@
 
 using regina::ExampleLink;
 using regina::Link;
+using regina::makePacket;
 
 namespace {
     /**
@@ -86,15 +87,6 @@ namespace {
      * Regular expressions describing different sets of parameters.
      */
     QRegExp reTorusParams("^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
-
-    /**
-     * Moves the given link into a new packet with the given label.
-     */
-    regina::Packet* wrap(Link&& l, const char* label) {
-        regina::PacketOf<Link>* ans = new regina::PacketOf<Link>(std::move(l));
-        ans->setLabel(label);
-        return ans;
-    };
 }
 
 LinkCreator::LinkCreator(ReginaMain* mainWindow) {
@@ -256,7 +248,7 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
         }
         regina::PacketOf<Link>* ans = new regina::PacketOf<Link>(
             std::in_place, use);
-        if (! ans->data().isEmpty()) {
+        if (! ans->isEmpty()) {
             ans->setLabel(use);
             return ans;
         }
@@ -291,34 +283,38 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
 
         std::ostringstream label;
         label << "Torus(" << p << ", " << q << ')';
-        return wrap(ExampleLink::torus(p, q), label.str().c_str());
+        return makePacket(ExampleLink::torus(p, q), label.str().c_str());
     } else if (typeId == LINK_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_BORROMEAN:
-                return wrap(ExampleLink::borromean(), "Borromean rings");
+                return makePacket(ExampleLink::borromean(), "Borromean rings");
             case EXAMPLE_CONWAY:
-                return wrap(ExampleLink::conway(), "Conway knot");
+                return makePacket(ExampleLink::conway(), "Conway knot");
             case EXAMPLE_FIGURE_EIGHT:
-                return wrap(ExampleLink::figureEight(), "Figure eight knot");
+                return makePacket(ExampleLink::figureEight(),
+                    "Figure eight knot");
             case EXAMPLE_GST:
-                return wrap(ExampleLink::gst(), "Gompf-Scharlemann-Thompson");
+                return makePacket(ExampleLink::gst(),
+                    "Gompf-Scharlemann-Thompson");
             case EXAMPLE_HOPF:
-                return wrap(ExampleLink::hopf(), "Hopf link");
+                return makePacket(ExampleLink::hopf(), "Hopf link");
             case EXAMPLE_KT:
-                return wrap(ExampleLink::kinoshitaTerasaka(),
+                return makePacket(ExampleLink::kinoshitaTerasaka(),
                     "Kinoshita-Terasaka knot");
             case EXAMPLE_TREFOIL_LEFT:
-                return wrap(ExampleLink::trefoilLeft(), "Left-hand trefoil");
+                return makePacket(ExampleLink::trefoilLeft(),
+                    "Left-hand trefoil");
             case EXAMPLE_TREFOIL_RIGHT:
-                return wrap(ExampleLink::trefoilRight(), "Right-hand trefoil");
+                return makePacket(ExampleLink::trefoilRight(),
+                    "Right-hand trefoil");
             case EXAMPLE_UNKNOT:
-                return wrap(ExampleLink::unknot(), "Unknot");
+                return makePacket(ExampleLink::unknot(), "Unknot");
             case EXAMPLE_MONSTER:
-                return wrap(ExampleLink::monster(), "Monster unknot");
+                return makePacket(ExampleLink::monster(), "Monster unknot");
             case EXAMPLE_GORDIAN:
-                return wrap(ExampleLink::gordian(), "Gordian unknot");
+                return makePacket(ExampleLink::gordian(), "Gordian unknot");
             case EXAMPLE_WHITEHEAD:
-                return wrap(ExampleLink::whitehead(), "Whitehead link");
+                return makePacket(ExampleLink::whitehead(), "Whitehead link");
         }
 
         ReginaSupport::info(parentWidget,

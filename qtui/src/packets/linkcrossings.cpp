@@ -465,7 +465,7 @@ void LinkCrossingsUI::refresh() {
     // If we now have fewer components than before, remove the extraneous
     // widgets.  The widgets should be deleted from bottom to top,
     // to avoid excessive re-layouts.
-    size_t n = link->data().countComponents();
+    size_t n = link->countComponents();
     if (componentLists.size() > n) {
         QAbstractItemModel* m;
         for (int i = componentLists.size() - 1; i >= n; --i) {
@@ -489,7 +489,7 @@ void LinkCrossingsUI::refresh() {
             layout->addWidget(label);
         }
 
-        if (! link->data().component(i).crossing()) {
+        if (! link->component(i).crossing()) {
             // We have a 0-crossing unknot.
             if (i < componentLists.size()) {
                 // This is an old component.
@@ -523,7 +523,7 @@ void LinkCrossingsUI::refresh() {
         }
 
         // We have actual crossings.
-        model = new CrossingModel(type->currentIndex() == 0, link->data(), i);
+        model = new CrossingModel(type->currentIndex() == 0, *link, i);
         if (i < componentLists.size()) {
             // This is an old component.
             // If the previous version also had crossings, we can just
@@ -580,7 +580,7 @@ void LinkCrossingsUI::refresh() {
         }
     }
 
-    if (link->data().size() == 0) {
+    if (link->size() == 0) {
         // There are no list views at all.
         // Add some extra space at the end to avoid the "no crossing" labels
         // spreading themselves across the entire widget.
@@ -590,13 +590,13 @@ void LinkCrossingsUI::refresh() {
 }
 
 void LinkCrossingsUI::simplify() {
-    if (link->data().isEmpty()) {
+    if (link->isEmpty()) {
         ReginaSupport::info(ui, tr("This link is empty."));
         return;
     }
 
-    if (! link->data().intelligentSimplify()) {
-        if (link->data().countComponents() > 1) {
+    if (! link->intelligentSimplify()) {
+        if (link->countComponents() > 1) {
             ReginaSupport::info(ui, tr("I could not simplify the link."),
                 tr("<qt>I have only tried fast heuristics so far.<p>"
                     "For knots I can try a more exaustive approach, "
@@ -608,7 +608,7 @@ void LinkCrossingsUI::simplify() {
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
         msgBox.setIcon(QMessageBox::Information);
-        if (link->data().countComponents() > 1)
+        if (link->countComponents() > 1)
             msgBox.setText(tr("I could not simplify the link."));
         else
             msgBox.setText(tr("I could not simplify the knot."));
@@ -625,17 +625,17 @@ void LinkCrossingsUI::simplify() {
 }
 
 void LinkCrossingsUI::simplifyExhaustive(int height) {
-    size_t initSize = link->data().size();
+    size_t initSize = link->size();
 
-    bool knot = (link->data().countComponents() == 1);
+    bool knot = (link->countComponents() == 1);
 
     regina::ProgressTrackerOpen tracker;
     ProgressDialogOpen dlg(&tracker, tr("Searching Reidemeister graph..."),
         (knot ? tr("Tried %1 knots") : tr("Tried %1 links")), ui);
 
-    link->data().simplifyExhaustive(height, regina::politeThreads(), &tracker);
+    link->simplifyExhaustive(height, regina::politeThreads(), &tracker);
 
-    if (dlg.run() && link->data().size() == initSize) {
+    if (dlg.run() && link->size() == initSize) {
         dlg.hide();
 
         QMessageBox msgBox(ui);
@@ -658,19 +658,19 @@ void LinkCrossingsUI::simplifyExhaustive(int height) {
 }
 
 void LinkCrossingsUI::reflect() {
-    link->data().reflect();
+    link->reflect();
 }
 
 void LinkCrossingsUI::rotate() {
-    link->data().rotate();
+    link->rotate();
 }
 
 void LinkCrossingsUI::reverse() {
-    link->data().reverse();
+    link->reverse();
 }
 
 void LinkCrossingsUI::parallel() {
-    ParallelDialog dlg(ui, link->data());
+    ParallelDialog dlg(ui, *link);
     dlg.exec();
 }
 
@@ -686,7 +686,7 @@ void LinkCrossingsUI::composeWith() {
                 "The current link will be modified directly.")));
 
     if (other)
-        link->data().composeWith(other->data());
+        link->composeWith(*other);
 }
 
 void LinkCrossingsUI::moves() {
@@ -694,7 +694,7 @@ void LinkCrossingsUI::moves() {
 }
 
 void LinkCrossingsUI::complement() {
-    regina::Triangulation<3>* ans = link->data().complement();
+    regina::Triangulation<3>* ans = link->complement();
     ans->setLabel(link->adornedLabel("Complement"));
     link->insertChildLast(ans);
     enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -745,14 +745,14 @@ void LinkCrossingsUI::contextCrossing(const QPoint& pos) {
 }
 
 void LinkCrossingsUI::changeCrossing() {
-    if (useCrossing >= 0 && useCrossing < link->data().size())
-        link->data().change(link->data().crossing(useCrossing));
+    if (useCrossing >= 0 && useCrossing < link->size())
+        link->change(link->crossing(useCrossing));
     useCrossing = -1;
 }
 
 void LinkCrossingsUI::resolveCrossing() {
-    if (useCrossing >= 0 && useCrossing < link->data().size())
-        link->data().resolve(link->data().crossing(useCrossing));
+    if (useCrossing >= 0 && useCrossing < link->size())
+        link->resolve(link->crossing(useCrossing));
     useCrossing = -1;
 }
 

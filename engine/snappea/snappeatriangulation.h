@@ -1858,7 +1858,7 @@ class SnapPeaTriangulation :
          *
          * @param data the new SnapPea data for this object.
          */
-        SnapPeaTriangulation(regina::snappea::Triangulation* data);
+        explicit SnapPeaTriangulation(regina::snappea::Triangulation* data);
 
         /**
          * Synchronises the inherited Triangulation<3> data so that the

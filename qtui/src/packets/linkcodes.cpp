@@ -124,13 +124,13 @@ void LinkCodesUI::refresh() {
             "is only available for knots of 26 or fewer crossings.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
-        if (link->data().countComponents() != 1) {
+        if (link->countComponents() != 1) {
             code->setPlainText(tr("Dowker-Thistlethwaite notation is currently "
                 "only available for knots."));
             return;
         }
-        std::string alpha = link->data().dt(true);
-        std::string numer = link->data().dt(false);
+        std::string alpha = link->dt(true);
+        std::string numer = link->dt(false);
         if (alpha.empty())
             ans = numer.c_str();
         else
@@ -143,12 +143,12 @@ void LinkCodesUI::refresh() {
             "on the sphere uniquely up to relabelling and/or reflection.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
-        if (link->data().countComponents() != 1) {
+        if (link->countComponents() != 1) {
             code->setPlainText(tr("Knot signatures are currently "
                 "only available for knots."));
             return;
         }
-        ans = link->data().knotSig().c_str();
+        ans = link->knotSig().c_str();
 
         code->setWordWrapMode(QTextOption::WrapAnywhere);
     } else if (type->currentIndex() == 3) {
@@ -157,7 +157,7 @@ void LinkCodesUI::refresh() {
             "in Jenkins' HOMFLY polynomial software.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
-        ans = link->data().jenkins().c_str();
+        ans = link->jenkins().c_str();
 
         code->setWordWrapMode(QTextOption::WordWrap);
     } else {
@@ -170,13 +170,13 @@ void LinkCodesUI::refresh() {
             "other strand passing by at each crossing.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
-        if (link->data().countComponents() != 1) {
+        if (link->countComponents() != 1) {
             code->setPlainText(tr("Gauss codes are currently "
                 "only available for knots."));
             return;
         }
-        ans = (std::string("Classical:\n") + link->data().gauss() +
-            "\n\nOriented:\n" + link->data().orientedGauss() + "\n").c_str();
+        ans = (std::string("Classical:\n") + link->gauss() +
+            "\n\nOriented:\n" + link->orientedGauss() + "\n").c_str();
 
         code->setWordWrapMode(QTextOption::WordWrap);
     }
