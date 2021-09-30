@@ -58,6 +58,8 @@ Triangulation<3>* Triangulation<3>::readSnapPea(std::istream& in) {
         return 0;
 
     // Read in the manifold name.
+    // Unfortunately Triangulation<3> has nowhere to put this, so for
+    // now we just read it and then forget about it.
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         return 0;

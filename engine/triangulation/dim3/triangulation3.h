@@ -3251,8 +3251,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Extracts the tetrahedron gluings from a string that contains the
          * full contents of a SnapPea data file.  All other SnapPea-specific
-         * information (such as peripheral curves) will be ignored, since
-         * Regina's Triangulation<3> class does not track such information itself.
+         * information (such as peripheral curves, and the manifold name) will
+         * be ignored, since Regina's Triangulation<3> class does not track
+         * such information itself.
          *
          * If you wish to preserve all SnapPea-specific information from the
          * data file, you should work with the SnapPeaTriangulation class
@@ -3356,7 +3357,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Reads the contents of a SnapPea data file from the given input
          * stream, and converts the result to a new Triangulation<3>.  Since
          * this returns a Triangulation<3>, it will lose some SnapPea-specific
-         * information in the process (such as peripheral curves).
+         * information in the process (such as peripheral curves, and the
+         * manifold name).
          *
          * If the input stream could not be read or if the data was not in the
          * correct format, \c nullptr will be returned.  Otherwise a newly
