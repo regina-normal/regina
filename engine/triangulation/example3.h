@@ -235,8 +235,7 @@ class Example<3> : public detail::ExampleBase<3> {
         /**
          * Returns a triangulation of the solid Klein bottle.
          * This is isomorphic to the triangulation returned by the
-         * generic routine twistedBallBundle(), though it will have a
-         * different packet label.
+         * generic routine twistedBallBundle().
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
