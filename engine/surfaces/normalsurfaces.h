@@ -31,8 +31,8 @@
  **************************************************************************/
 
 /*! \file surfaces/normalsurfaces.h
- *  \brief Contains a packet representing a collection of normal
- *  surfaces in a 3-manifold.
+ *  \brief Implements a collection of normal surfaces in a 3-manifold
+ *  triangulation.
  */
 
 #ifndef __REGINA_NORMALSURFACES_H
@@ -132,7 +132,7 @@ enum SurfaceExportFields {
 };
 
 /**
- * A packet representing a collection of normal surfaces in a 3-manifold.
+ * A collection of normal surfaces in a 3-manifold triangulation.
  *
  * There are some important changes to this class as of Regina 7.0:
  *
@@ -150,8 +150,34 @@ enum SurfaceExportFields {
  *   (but which, unlike the old enumerate(), does not insert the list
  *   into the packet tree).  There is no need to use enumerate() any more.
  *
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead a normal surface list
+ * is now a standalone mathematatical object, which makes it slimmer and
+ * faster for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own NormalSurfaces object, it will not have any of
+ *   the usual packet infrastructure.  You cannot add it into the packet tree,
+ *   and it will not support a label, tags, child/parent packets, and/or
+ *   event listeners.
+ *
+ * - To include an NormalSurfaces object in the packet tree, you must create
+ *   a new PacketOf<NormalSurfaces>.  This \e is a packet type, and supports
+ *   labels, tags, child/parent packets, and event listeners.  It derives from
+ *   NormalSurfaces, and so inherits the full NormalSurfaces interface.
+ *
+ * - If you are adding new functions to this class that edit the list,
+ *   you must still remember to create a ChangeEventSpan.  This will
+ *   ensure that, if the list is being managed by a PacketOf<NormalSurfaces>,
+ *   then the appropriate packet change events will be fired.
+ *   All other events (aside from packetToBeChanged() and packetWasChanged()
+ *   are managed directly by the PacketOf<NormalSurfaces> wrapper class.
+ *
  * See the NormalSurface class notes for details of what to do
  * when introducing a new coordinate system.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow enumeration with some coordinates explicitly set
@@ -162,9 +188,8 @@ enum SurfaceExportFields {
  *
  * \ingroup surfaces
  */
-class NormalSurfaces : public Packet {
-    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACES, "Normal Surface List")
-
+class NormalSurfaces :
+        public PacketData<NormalSurfaces>, public Output<NormalSurfaces> {
     public:
         class VectorIterator;
 
@@ -316,6 +341,66 @@ class NormalSurfaces : public Packet {
         NormalSurfaces(const NormalSurfaces& src, const SurfaceFilter& filter);
 
         /**
+         * Constructs a new copy of the given list.
+         */
+        NormalSurfaces(const NormalSurfaces&) = default;
+
+        /**
+         * Moves the given list into this new list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this list
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the list to move.
+         */
+        NormalSurfaces(NormalSurfaces&&) noexcept = default;
+
+        /**
+         * Sets this to be a (deep) copy of the given list.
+         *
+         * @param copy the list to copy.
+         * @return a reference to this list.
+         */
+        NormalSurfaces& operator = (const NormalSurfaces& src);
+
+        /**
+         * Moves the contents of the given list into this list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this list which may in turn call arbitrary code
+         * via any registered packet listeners.  It deliberately does \e not
+         * fire change events on \a src, since it assumes that \a src is about
+         * to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the list to move.
+         * @return a reference to this list.
+         */
+        NormalSurfaces& operator = (NormalSurfaces&& src);
+
+        /**
+         * Swaps the contents of this and the given list.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this list.
+         *
+         * \note This swap function is \e not marked \c noexcept, since it
+         * fires change events on both lists which may in turn call arbitrary
+         * code via any registered packet listeners.
+         *
+         * @param other the list whose contents should be swapped with this.
+         */
+        void swap(NormalSurfaces& other);
+
+        /**
          * Deprecated routine to enumerate normal surfaces within a given
          * triangulation.
          *
@@ -464,9 +549,9 @@ class NormalSurfaces : public Packet {
          *   snapshot may result in an exception being thrown.
          *
          * \warning As of Regina 7.0, you \e cannot access this triangulation
-         * via the packet tree as parent().  This is because normal surface
-         * lists can now be kept anywhere in the packet tree, or can be kept
-         * as standalone objects outside the packet tree entirely.
+         * via the packet tree as Packet::parent().  This is because normal
+         * surface lists can now be kept anywhere in the packet tree, or can
+         * be kept as standalone objects outside the packet tree entirely.
          *
          * @return a reference to the underlying triangulation.
          */
@@ -539,8 +624,24 @@ class NormalSurfaces : public Packet {
          */
         void writeAllSurfaces(std::ostream& out) const;
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /**
          * Deprecated function that converts the set of all embedded
@@ -571,7 +672,9 @@ class NormalSurfaces : public Packet {
          *
          * @return a full list of vertex normal surfaces in standard normal
          * coordinates, or \c null if any of the preconditions were not
-         * satisfied.
+         * satisfied.  This will be of type PacketOf<NormalSurfaces> if
+         * the list was successfully inserted into the packet tree, or
+         * of type NormalSurfaces if this list has no parent packet.
          */
         [[deprecated]] NormalSurfaces* quadToStandard() const;
 
@@ -604,7 +707,9 @@ class NormalSurfaces : public Packet {
          *
          * @return a full list of vertex surfaces in standard almost normal
          * coordinates, or \c null if any of the preconditions were not
-         * satisfied.
+         * satisfied.  This will be of type PacketOf<NormalSurfaces> if
+         * the list was successfully inserted into the packet tree, or
+         * of type NormalSurfaces if this list has no parent packet.
          */
         [[deprecated]] NormalSurfaces* quadOctToStandardAN() const;
 
@@ -637,7 +742,9 @@ class NormalSurfaces : public Packet {
          *
          * @return a full list of vertex normal surfaces in quadrilateral
          * coordinates, or \c null if any of the preconditions were not
-         * satisfied.
+         * satisfied.  This will be of type PacketOf<NormalSurfaces> if
+         * the list was successfully inserted into the packet tree, or
+         * of type NormalSurfaces if this list has no parent packet.
          */
         [[deprecated]] NormalSurfaces* standardToQuad() const;
 
@@ -670,7 +777,9 @@ class NormalSurfaces : public Packet {
          *
          * @return a full list of vertex surfaces in quadrilateral-octagon
          * coordinates, or \c null if any of the preconditions were not
-         * satisfied.
+         * satisfied.  This will be of type PacketOf<NormalSurfaces> if
+         * the list was successfully inserted into the packet tree, or
+         * of type NormalSurfaces if this list has no parent packet.
          */
         [[deprecated]] NormalSurfaces* standardANToQuadOct() const;
 
@@ -705,7 +814,10 @@ class NormalSurfaces : public Packet {
          *
          * \deprecated Just call the NormalSurfaces "filter constructor".
          *
-         * @return the new filtered list of surfaces.
+         * @return the new filtered list of surfaces.  This will be of type
+         * PacketOf<NormalSurfaces> if the list was successfully inserted
+         * into the packet tree, or of type NormalSurfaces if this list has
+         * no parent packet.
          */
         [[deprecated]] NormalSurfaces* filter(const SurfaceFilter& filter)
             const;
@@ -733,7 +845,10 @@ class NormalSurfaces : public Packet {
          *
          * \deprecated Just call the NormalSurfaces "transform constructor".
          *
-         * @return the new filtered list of surfaces.
+         * @return the new filtered list of surfaces.  This will be of type
+         * PacketOf<NormalSurfaces> if the list was successfully inserted
+         * into the packet tree, or of type NormalSurfaces if this list has
+         * no parent packet.
          */
         [[deprecated]] NormalSurfaces* filterForLocallyCompatiblePairs() const;
 
@@ -762,7 +877,10 @@ class NormalSurfaces : public Packet {
          *
          * \todo Deal properly with surfaces that are too large to handle.
          *
-         * @return the new filtered list of surfaces.
+         * @return the new filtered list of surfaces.  This will be of type
+         * PacketOf<NormalSurfaces> if the list was successfully inserted
+         * into the packet tree, or of type NormalSurfaces if this list has
+         * no parent packet.
          */
         [[deprecated]] NormalSurfaces* filterForDisjointPairs() const;
 
@@ -791,7 +909,10 @@ class NormalSurfaces : public Packet {
          *
          * \deprecated Just call the NormalSurfaces "transform constructor".
          *
-         * @return the new filtered list of surfaces.
+         * @return the new filtered list of surfaces.  This will be of type
+         * PacketOf<NormalSurfaces> if the list was successfully inserted
+         * into the packet tree, or of type NormalSurfaces if this list has
+         * no parent packet.
          */
         [[deprecated]] NormalSurfaces* filterForPotentiallyIncompressible()
             const;
@@ -856,7 +977,7 @@ class NormalSurfaces : public Packet {
          * @return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVStandard(const char* filename,
-            int additionalFields = regina::surfaceExportAll);
+            int additionalFields = regina::surfaceExportAll) const;
 
         /**
          * Exports the given list of normal surfaces as a plain text CSV
@@ -896,7 +1017,7 @@ class NormalSurfaces : public Packet {
          * @return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVEdgeWeight(const char* filename,
-            int additionalFields = regina::surfaceExportAll);
+            int additionalFields = regina::surfaceExportAll) const;
 
         /**
          * An iterator that gives access to the raw vectors for surfaces in
@@ -1035,12 +1156,6 @@ class NormalSurfaces : public Packet {
 
             friend class NormalSurfaces;
         };
-
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
-        virtual void addPacketRefs(PacketRefs& refs) const override;
 
     private:
         /**
@@ -1349,6 +1464,25 @@ class NormalSurfaces : public Packet {
 };
 
 /**
+ * Swaps the contents of the two given lists.
+ *
+ * This global routine simply calls NormalSurfaces::swap(); it is provided so
+ * that NormalSurfaces meets the C++ Swappable requirements.
+ *
+ * See NormalSurfaces::swap() for more details.
+ *
+ * \note This swap function is \e not marked \c noexcept, since it
+ * fires change events on both lists which may in turn call arbitrary
+ * code via any registered packet listeners.
+ *
+ * @param lhs the list whose contents should be swapped with \a rhs.
+ * @param rhs the list whose contents should be swapped with \a lhs.
+ *
+ * \ingroup surfaces
+ */
+void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
+
+/**
  * Generates the set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
  *
@@ -1407,6 +1541,32 @@ EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
 
 // Inline functions for NormalSurfaces
 
+inline NormalSurfaces& NormalSurfaces::operator = (const NormalSurfaces& src) {
+    ChangeEventSpan span(*this);
+
+    surfaces_ = src.surfaces_;
+    triangulation_ = src.triangulation_;
+    coords_ = src.coords_;
+    which_ = src.which_;
+    algorithm_ = src.algorithm_;
+
+    return *this;
+}
+
+inline NormalSurfaces& NormalSurfaces::operator = (NormalSurfaces&& src) {
+    ChangeEventSpan span(*this);
+
+    surfaces_ = std::move(src.surfaces_);
+    triangulation_ = std::move(src.triangulation_);
+
+    // Trivial data members:
+    coords_ = src.coords_;
+    which_ = src.which_;
+    algorithm_ = src.algorithm_;
+
+    return *this;
+}
+
 inline NormalCoords NormalSurfaces::coords() const {
     return coords_;
 }
@@ -1462,66 +1622,108 @@ inline void NormalSurfaces::sort(Comparison&& comp) {
 }
 
 inline NormalSurfaces* NormalSurfaces::quadToStandard() const {
+    const Packet* p = packet();
+    if (p)
+        p = p->parent();
+
     try {
-        auto ans = new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
-        if (parent())
-            parent()->insertChildLast(ans);
-        return ans;
+        if (p) {
+            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
+                NS_CONV_REDUCED_TO_STD);
+            p->insertChildLast(ans);
+            return ans;
+        } else
+            return new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
     } catch (const FailedPrecondition&) {
         return nullptr;
     }
 }
 
 inline NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
+    const Packet* p = packet();
+    if (p)
+        p = p->parent();
+
     try {
-        auto ans = new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
-        if (parent())
-            parent()->insertChildLast(ans);
-        return ans;
+        if (p) {
+            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
+                NS_CONV_REDUCED_TO_STD);
+            p->insertChildLast(ans);
+            return ans;
+        } else
+            return new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
     } catch (const FailedPrecondition&) {
         return nullptr;
     }
 }
 
 inline NormalSurfaces* NormalSurfaces::standardToQuad() const {
+    const Packet* p = packet();
+    if (p)
+        p = p->parent();
+
     try {
-        auto ans = new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
-        if (parent())
-            parent()->insertChildLast(ans);
-        return ans;
+        if (p) {
+            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
+                NS_CONV_STD_TO_REDUCED);
+            p->insertChildLast(ans);
+            return ans;
+        } else
+            return new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
     } catch (const FailedPrecondition&) {
         return nullptr;
     }
 }
 
 inline NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
+    const Packet* p = packet();
+    if (p)
+        p = p->parent();
+
     try {
-        auto ans = new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
-        if (parent())
-            parent()->insertChildLast(ans);
-        return ans;
+        if (p) {
+            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
+                NS_CONV_STD_TO_REDUCED);
+            p->insertChildLast(ans);
+            return ans;
+        } else
+            return new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
     } catch (const FailedPrecondition&) {
         return nullptr;
     }
 }
 
 inline NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs() const {
+    const Packet* p = packet();
+    if (p)
+        p = p->parent();
+
     try {
-        auto ans = new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
-        if (parent())
-            parent()->insertChildLast(ans);
-        return ans;
+        if (p) {
+            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
+                NS_FILTER_COMPATIBLE);
+            p->insertChildLast(ans);
+            return ans;
+        } else
+            return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
     } catch (const FailedPrecondition&) {
         return nullptr;
     }
 }
 
 inline NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
+    const Packet* p = packet();
+    if (p)
+        p = p->parent();
+
     try {
-        auto ans = new NormalSurfaces(*this, NS_FILTER_DISJOINT);
-        if (parent())
-            parent()->insertChildLast(ans);
-        return ans;
+        if (p) {
+            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
+                NS_FILTER_DISJOINT);
+            p->insertChildLast(ans);
+            return ans;
+        } else
+            return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
     } catch (const FailedPrecondition&) {
         return nullptr;
     }
@@ -1529,11 +1731,18 @@ inline NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
 
 inline NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
         const {
+    const Packet* p = packet();
+    if (p)
+        p = p->parent();
+
     try {
-        auto ans = new NormalSurfaces(*this, NS_FILTER_INCOMPRESSIBLE);
-        if (parent())
-            parent()->insertChildLast(ans);
-        return ans;
+        if (p) {
+            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
+                NS_FILTER_INCOMPRESSIBLE);
+            p->insertChildLast(ans);
+            return ans;
+        } else
+            return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
     } catch (const FailedPrecondition&) {
         return nullptr;
     }
@@ -1541,10 +1750,17 @@ inline NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
 
 inline NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter& filter)
         const {
-    auto ans = new NormalSurfaces(*this, filter);
-    if (parent())
-        parent()->insertChildLast(ans);
-    return ans;
+    const Packet* p = packet();
+    if (p)
+        p = p->parent();
+
+    if (p) {
+        auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this, filter);
+        p->insertChildLast(ans);
+        return ans;
+    } else {
+        return new NormalSurfaces(*this, filter);
+    }
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator() {
@@ -1610,6 +1826,10 @@ inline NormalSurfaces::NormalSurfaces(NormalCoords coords, NormalList which,
         const SnapshotRef<Triangulation<3>>& triangulation) :
         triangulation_(triangulation), coords_(coords), which_(which),
         algorithm_(algorithm) {
+}
+
+inline void swap(NormalSurfaces& lhs, NormalSurfaces& rhs) {
+    lhs.swap(rhs);
 }
 
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,

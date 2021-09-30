@@ -80,6 +80,22 @@ MatrixInt makeAngleEquations(const Triangulation<3>& tri) {
     return eqns;
 }
 
+void AngleStructures::swap(AngleStructures& other) {
+    if (std::addressof(other) == this)
+        return;
+
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    structures_.swap(other.structures_);
+    triangulation_.swap(other.triangulation_);
+    std::swap(tautOnly_, other.tautOnly_);
+    std::swap(algorithm_, other.algorithm_);
+
+    doesSpanStrict_.swap(other.doesSpanStrict_);
+    doesSpanTaut_.swap(other.doesSpanTaut_);
+}
+
 void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         Packet* treeParent) {
     // Form the matching equations.
@@ -131,7 +147,8 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         }
 
         if (treeParent && ! (tracker && tracker->isCancelled()))
-            treeParent->insertChildLast(this);
+            treeParent->insertChildLast(
+                static_cast<PacketOf<AngleStructures>*>(this));
 
         if (tracker)
             tracker->setFinished();
@@ -157,7 +174,8 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
 
         // All done!
         if (treeParent && ! (tracker && tracker->isCancelled()))
-            treeParent->insertChildLast(this);
+            treeParent->insertChildLast(
+                static_cast<PacketOf<AngleStructures>*>(this));
 
         if (tracker)
             tracker->setFinished();
@@ -177,20 +195,35 @@ AngleStructures::AngleStructures(const Triangulation<3>& triangulation,
 
 AngleStructures* AngleStructures::enumerate(Triangulation<3>& triangulation,
         bool tautOnly, ProgressTracker* tracker) {
-    AngleStructures* ans = new AngleStructures(tautOnly, AS_ALG_DEFAULT,
-        triangulation);
+    Packet* treeParent = triangulation.packet();
+    AngleStructures* ans;
+
+    if (treeParent)
+        ans = new PacketOf<AngleStructures>(std::in_place, tautOnly,
+            AS_ALG_DEFAULT, triangulation);
+    else
+        ans = new AngleStructures(tautOnly, AS_ALG_DEFAULT, triangulation);
+
     if (tracker)
         std::thread(&AngleStructures::enumerateInternal,
-            ans, tracker, triangulation.packet()).detach();
+            ans, tracker, treeParent).detach();
     else
-        ans->enumerateInternal(nullptr, triangulation.packet());
+        ans->enumerateInternal(nullptr, treeParent);
     return ans;
 }
 
 AngleStructures* AngleStructures::enumerateTautDD(
         Triangulation<3>& triangulation) {
-    AngleStructures* ans = new AngleStructures(true, AS_ALG_DD, triangulation);
-    ans->enumerateInternal(nullptr /* tracker */, triangulation.packet());
+    Packet* treeParent = triangulation.packet();
+    AngleStructures* ans;
+
+    if (treeParent)
+        ans = new PacketOf<AngleStructures>(std::in_place, true, AS_ALG_DD,
+            triangulation);
+    else
+        ans = new AngleStructures(true, AS_ALG_DD, triangulation);
+
+    ans->enumerateInternal(nullptr /* tracker */, treeParent);
     return ans;
 }
 
@@ -209,82 +242,6 @@ void AngleStructures::writeTextLong(std::ostream& o) const {
         a.writeTextShort(o);
         o << '\n';
     }
-}
-
-void AngleStructures::addPacketRefs(PacketRefs& refs) const {
-    if (const Packet* p = triangulation_->inAnyPacket())
-        refs.insert({ p, false });
-}
-
-void AngleStructures::writeXMLPacketData(std::ostream& out,
-        FileFormat format, bool anon, PacketRefs& refs) const {
-    const Packet* triPacket = triangulation_->inAnyPacket();
-
-    if (format == REGINA_XML_GEN_2 && ! (triPacket && triPacket == parent())) {
-        // The second-generation format required tri == parent(), and
-        // Regina <= 6.0.1 cannot handle lists *without* this property at all.
-        // Do not write this list (or its descendants) at all.
-        return;
-    }
-
-    if (triPacket) {
-        // We know from addPacketRefs() that refs contains the triangulation.
-        if (! refs.find(triPacket)->second) {
-            // The triangulation has not yet been written to file.  Do it now.
-            writeXMLAnon(out, format, refs, triPacket);
-        }
-
-        writeXMLHeader(out, "angles", format, anon, refs, true,
-            std::pair("tri", triPacket->internalID()),
-            std::pair("tautonly", (tautOnly_ ? 'T' : 'F')),
-            std::pair("algorithm", algorithm_.intValue()));
-    } else {
-        // The triangulation is not a packet at all.
-        // Write it anonymously now, with an ID that is guaranteed not to
-        // match a packet ID.
-        std::string id = triangulation_->anonID();
-
-        out << "<anon>\n";
-        XMLWriter<Triangulation<3>> writer(*triangulation_, out, format);
-        writer.openPre();
-        out << " id=\"" << id << "\"";
-        writer.openPost();
-        writer.writeContent();
-        writer.close();
-        out << "</anon>\n";
-
-        writeXMLHeader(out, "angles", format, anon, refs, true,
-            std::pair("tri", id),
-            std::pair("tautonly", (tautOnly_ ? 'T' : 'F')),
-            std::pair("algorithm", algorithm_.intValue()));
-    }
-
-    using regina::xml::xmlValueTag;
-
-    if (format == REGINA_XML_GEN_2) {
-        // Write the enumeration parameters in a separate angleparams element.
-        out << "  <angleparams "
-            "tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\" "
-            "algorithm=\"" << algorithm_.intValue() << "\"/>\n";
-    }
-
-    // Write the individual structures.
-    for (const AngleStructure& a : structures_)
-        a.writeXMLData(out);
-
-    // Write the properties.
-    if (doesSpanStrict_.has_value())
-        out << "  " << xmlValueTag("spanstrict", *doesSpanStrict_)
-            << '\n';
-    if (doesSpanTaut_.has_value())
-        out << "  " << xmlValueTag("spantaut", *doesSpanTaut_)
-            << '\n';
-
-    writeXMLFooter(out, "angles", format, anon, refs);
-}
-
-Packet* AngleStructures::internalClonePacket(Packet* parent) const {
-    return new AngleStructures(*this);
 }
 
 void AngleStructures::calculateSpanStrict() const {

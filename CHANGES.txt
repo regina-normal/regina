@@ -82,6 +82,7 @@ Version 7.0  [ TODO ]
               your preferred enumeration algorithm via an AngleAlg argument.
               The old enumerate() and enumerateTautDD() functions are kept as
               deprecated aliases.
+            - Added copy/move construction and copy/move assignment.
             - Added begin() and end() for iteration through angle strutures.
             - Changed triangulation() and surface() to return const references,
               not pointers.
@@ -621,6 +622,7 @@ Version 7.0  [ TODO ]
               and will not insert the new list into the packet tree.
               The old enumerate() function is kept as a deprecated alias,
               but Python users can no longer use it with a progress tracker.
+            - Added copy/move construction and copy/move assignment.
             - Added begin() and end() for iteration through hypersurfaces.
             - Changed triangulation() and hypersurface() to return
               const references, not pointers.
@@ -684,6 +686,7 @@ Version 7.0  [ TODO ]
               and will not insert the new list into the packet tree.
               The old enumerate() function is kept as a deprecated alias,
               but Python users can no longer use it with a progress tracker.
+            - Added copy/move construction and copy/move assignment.
             - Replaced quadToStandard(), quadOctToStandardAN(),
               standardToQuad(), standardANToQuadOct(), filterForDisjointPairs(),
               filterForLocallyCompatiblePairs() and

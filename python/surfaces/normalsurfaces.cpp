@@ -74,6 +74,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
         .def(pybind11::init<const NormalSurfaces&, regina::NormalTransform>())
+        .def(pybind11::init<const NormalSurfaces&>())
         .def("coords", &NormalSurfaces::coords)
         .def("which", &NormalSurfaces::which)
         .def("algorithm", &NormalSurfaces::algorithm)

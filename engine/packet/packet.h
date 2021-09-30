@@ -1771,6 +1771,8 @@ enum PacketHeldBy {
 /**
  * TODO: Note that the corresponding constant packetTypeHolds<Held> needs to
  * be specialised in packettype.h.
+ *
+ * TODO: Note that addPacketRefs() is currently hard-coded.
  */
 template <typename Held>
 class PacketOf : public Packet, public Held {
@@ -1817,8 +1819,19 @@ class PacketOf : public Packet, public Held {
         }
         virtual void writeXMLPacketData(std::ostream& out, FileFormat format,
                 bool anon, PacketRefs& refs) const override;
+        virtual void addPacketRefs(PacketRefs& refs) const override {
+            if constexpr (std::is_same<Held, NormalHypersurfaces>::value) {
+                if (const Packet* p = Held::triangulation().packet())
+                    refs.insert({ p, false });
+            } else if constexpr (std::is_same<Held, AngleStructures>::value ||
+                    std::is_same<Held, NormalSurfaces>::value) {
+                if (const Packet* p = Held::triangulation().inAnyPacket())
+                    refs.insert({ p, false });
+            }
+        }
 };
 
+// NOTE: All constructors and assignment operators are trivial
 template <typename Held>
 class PacketData {
     protected:

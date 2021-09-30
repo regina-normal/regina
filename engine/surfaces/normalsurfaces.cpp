@@ -48,6 +48,20 @@ MatrixInt NormalSurfaces::recreateMatchingEquations() const {
     return *makeMatchingEquations(triangulation(), coords_);
 }
 
+void NormalSurfaces::swap(NormalSurfaces& other) {
+    if (std::addressof(other) == this)
+        return;
+
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    surfaces_.swap(other.surfaces_);
+    triangulation_.swap(other.triangulation_);
+    std::swap(coords_, other.coords_);
+    std::swap(which_, other.which_);
+    std::swap(algorithm_, other.algorithm_);
+}
+
 void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
     out << "Number of surfaces is " << size() << '\n';
     for (const NormalSurface& s : surfaces_) {
@@ -108,11 +122,6 @@ void NormalSurfaces::writeTextLong(std::ostream& out) const {
     out << "Coordinates: " << NormalInfo::name(coords_) << '\n';
 
     writeAllSurfaces(out);
-}
-
-void NormalSurfaces::addPacketRefs(PacketRefs& refs) const {
-    if (const Packet* p = triangulation_->inAnyPacket())
-        refs.insert({ p, false });
 }
 
 void NormalSurfaces::writeXMLPacketData(std::ostream& out,
@@ -176,10 +185,6 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out,
         s.writeXMLData(out, format, this);
 
     writeXMLFooter(out, "surfaces", format, anon, refs);
-}
-
-Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {
-    return new NormalSurfaces(*this);
 }
 
 } // namespace regina

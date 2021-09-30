@@ -265,7 +265,10 @@ static constexpr PacketType packetTypeHolds = PACKET_NONE;
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.
 
+class AngleStructures;
 class Link;
+class NormalHypersurfaces;
+class NormalSurfaces;
 class SnapPeaTriangulation;
 template <int> class Triangulation;
 
@@ -291,6 +294,18 @@ inline constexpr PacketType packetTypeHolds<Triangulation<4>> =
 template <int dim>
 inline constexpr PacketType packetTypeHolds<Triangulation<dim>> =
     PacketType(100 + dim);
+
+template <>
+inline constexpr PacketType packetTypeHolds<AngleStructures> =
+    PACKET_ANGLESTRUCTURES;
+
+template <>
+inline constexpr PacketType packetTypeHolds<NormalSurfaces> =
+    PACKET_NORMALSURFACES;
+
+template <>
+inline constexpr PacketType packetTypeHolds<NormalHypersurfaces> =
+    PACKET_NORMALHYPERSURFACES;
 
 #endif // __DOXYGEN
 

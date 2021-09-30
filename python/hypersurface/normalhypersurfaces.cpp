@@ -59,6 +59,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
+        .def(pybind11::init<const NormalHypersurfaces&>())
         .def_static("enumerate", [](Triangulation<4>& owner,
                 HyperCoords coords, regina::HyperList which,
                 regina::HyperAlg algHints) -> NormalHypersurfaces* {

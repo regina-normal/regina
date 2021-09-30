@@ -31,8 +31,8 @@
  **************************************************************************/
 
 /*! \file hypersurface/normalhypersurfaces.h
- *  \brief Contains a packet representing a collection of normal
- *  hypersurfaces in a 4-manifold triangulation.
+ *  \brief Implements a collection of normal hypersurfaces in a
+ *  4-manifold triangulation.
  */
 
 #ifndef __REGINA_NORMALHYPERSURFACES_H
@@ -60,8 +60,7 @@ class NormalHypersurfaces;
 class ProgressTracker;
 
 /**
- * A packet representing a collection of normal hypersurfaces in a 4-manifold
- * triangulation.
+ * A collection of normal hypersurfaces in a 4-manifold triangulation.
  *
  * There are some important changes to this class as of Regina 7.0:
  *
@@ -79,15 +78,40 @@ class ProgressTracker;
  *   (but which, unlike the old enumerate(), does not insert the list
  *   into the packet tree).  There is no need to use enumerate() any more.
  *
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead a normal hypersurface list
+ * is now a standalone mathematatical object, which makes it slimmer and
+ * faster for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own NormalHypersurfaces object, it will not have any of
+ *   the usual packet infrastructure.  You cannot add it into the packet tree,
+ *   and it will not support a label, tags, child/parent packets, and/or
+ *   event listeners.
+ *
+ * - To include an NormalHypersurfaces object in the packet tree, you must
+ *   create a new PacketOf<NormalHypersurfaces>.  This \e is a packet type,
+ *   and supports labels, tags, child/parent packets, and event listeners.
+ *   It derives from NormalHypersurfaces, and so inherits the full
+ *   NormalHypersurfaces interface.
+ *
+ * - If you are adding new functions to this class that edit the list,
+ *   you must still remember to create a ChangeEventSpan.  This will ensure
+ *   that, if the list is being managed by a PacketOf<NormalHypersurfaces>,
+ *   then the appropriate packet change events will be fired.
+ *   All other events (aside from packetToBeChanged() and packetWasChanged()
+ *   are managed directly by the PacketOf<NormalHypersurfaces> wrapper class.
+ *
  * See the NormalHypersurface class notes for details of what to do
  * when introducing a new coordinate system.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \ingroup hypersurface
  */
-class NormalHypersurfaces : public Packet {
-    REGINA_PACKET(NormalHypersurfaces, PACKET_NORMALHYPERSURFACES,
-        "Normal Hypersurface List")
-
+class NormalHypersurfaces : public PacketData<NormalHyperurfaces>,
+        public Output<NormalHyperurfaces> {
     public:
         class VectorIterator;
 
@@ -191,6 +215,66 @@ class NormalHypersurfaces : public Packet {
             HyperList which = HS_LIST_DEFAULT,
             HyperAlg algHints = HS_ALG_DEFAULT,
             ProgressTracker* tracker = nullptr);
+
+        /**
+         * Constructs a new copy of the given list.
+         */
+        NormalHypersurfaces(const NormalHypersurfaces&) = default;
+
+        /**
+         * Moves the given list into this new list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this list
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the list to move.
+         */
+        NormalHypersurfaces(NormalHypersurfaces&&) noexcept = default;
+
+        /**
+         * Sets this to be a (deep) copy of the given list.
+         *
+         * @param copy the list to copy.
+         * @return a reference to this list.
+         */
+        NormalHypersurfaces& operator = (const NormalHypersurfaces& src);
+
+        /**
+         * Moves the contents of the given list into this list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this list which may in turn call arbitrary code
+         * via any registered packet listeners.  It deliberately does \e not
+         * fire change events on \a src, since it assumes that \a src is about
+         * to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the list to move.
+         * @return a reference to this list.
+         */
+        NormalHypersurfaces& operator = (NormalHypersurfaces&& src);
+
+        /**
+         * Swaps the contents of this and the given list.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this list.
+         *
+         * \note This swap function is \e not marked \c noexcept, since it
+         * fires change events on both lists which may in turn call arbitrary
+         * code via any registered packet listeners.
+         *
+         * @param other the list whose contents should be swapped with this.
+         */
+        void swap(NormalHypersurfaces& other);
 
         /**
          * Deprecated routine to enumerate normal hypersurfaces within a
@@ -320,9 +404,9 @@ class NormalHypersurfaces : public Packet {
          *   snapshot may result in an exception being thrown.
          *
          * \warning As of Regina 7.0, you \e cannot access this triangulation
-         * via the packet tree as parent().  This is because normal hypersurface
-         * lists can now be kept anywhere in the packet tree, or can be kept
-         * as standalone objects outside the packet tree entirely.
+         * via the packet tree as Packet::parent().  This is because normal
+         * hypersurface lists can now be kept anywhere in the packet tree, or
+         * can be kept as standalone objects outside the packet tree entirely.
          *
          * @return a reference to the underlying triangulation.
          */
@@ -385,8 +469,24 @@ class NormalHypersurfaces : public Packet {
          */
         auto end() const;
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /**
          * Sorts the hypersurfaces in this list according to the given
@@ -569,11 +669,6 @@ class NormalHypersurfaces : public Packet {
             friend class NormalHypersurfaces;
         };
 
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
-        virtual void addPacketRefs(PacketRefs& refs) const override;
-
     private:
         /**
          * Creates an empty list of normal hypersurfaces with the given
@@ -735,6 +830,25 @@ class NormalHypersurfaces : public Packet {
 };
 
 /**
+ * Swaps the contents of the two given lists.
+ *
+ * This global routine simply calls NormalHypersurfaces::swap(); it is
+ * provided so that NormalHypersurfaces meets the C++ Swappable requirements.
+ *
+ * See NormalHypersurfaces::swap() for more details.
+ *
+ * \note This swap function is \e not marked \c noexcept, since it
+ * fires change events on both lists which may in turn call arbitrary
+ * code via any registered packet listeners.
+ *
+ * @param lhs the list whose contents should be swapped with \a rhs.
+ * @param rhs the list whose contents should be swapped with \a lhs.
+ *
+ * \ingroup hypersurface
+ */
+void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
+
+/**
  * Generates the set of normal hypersurface matching equations for the
  * given triangulation using the given coordinate system.
  *
@@ -791,6 +905,34 @@ EnumConstraints makeEmbeddedConstraints(const Triangulation<4>& triangulation,
 
 // Inline functions for NormalHypersurfaces
 
+inline NormalHypersurfaces& NormalHypersurfaces::operator = (
+        const NormalHypersurfaces& src) {
+    ChangeEventSpan span(*this);
+
+    surfaces_ = src.surfaces_;
+    triangulation_ = src.triangulation_;
+    coords_ = src.coords_;
+    which_ = src.which_;
+    algorithm_ = src.algorithm_;
+
+    return *this;
+}
+
+inline NormalHypersurfaces& NormalHypersurfaces::operator = (
+        NormalHypersurfaces&& src) {
+    ChangeEventSpan span(*this);
+
+    surfaces_ = std::move(src.surfaces_);
+    triangulation_ = std::move(src.triangulation_);
+
+    // Trivial data members:
+    coords_ = src.coords_;
+    which_ = src.which_;
+    algorithm_ = src.algorithm_;
+
+    return *this;
+}
+
 inline HyperCoords NormalHypersurfaces::coords() const {
     return coords_;
 }
@@ -836,6 +978,10 @@ template <typename Comparison>
 inline void NormalHypersurfaces::sort(Comparison&& comp) {
     ChangeEventSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
+}
+
+inline void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs) {
+    lhs.swap(rhs);
 }
 
 inline MatrixInt NormalHypersurfaces::recreateMatchingEquations() const {

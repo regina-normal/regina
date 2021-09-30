@@ -31,8 +31,8 @@
  **************************************************************************/
 
 /*! \file angle/anglestructures.h
- *  \brief Contains a packet representing a collection of angle
- *  structures on a triangulation.
+ *  \brief Implements a collection of angle structures on a
+ *  3-manifold triangulation.
  */
 
 #ifndef __REGINA_ANGLESTRUCTURES_H
@@ -57,7 +57,7 @@ class XMLAngleStructuresReader;
 class XMLLegacyAngleStructuresReader;
 
 /**
- * A packet representing a collection of angle structures on a triangulation.
+ * A collection of angle structures on a 3-manifold triangulation.
  *
  * There are some important changes to this class as of Regina 7.0:
  *
@@ -75,12 +75,36 @@ class XMLLegacyAngleStructuresReader;
  *   (but which, unlike the old enumerate(), does not insert the list
  *   into the packet tree).  There is no need to use enumerate() any more.
  *
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead an angle structure list
+ * is now a standalone mathematatical object, which makes it slimmer and
+ * faster for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own AngleStructures object, it will not have any of
+ *   the usual packet infrastructure.  You cannot add it into the packet tree,
+ *   and it will not support a label, tags, child/parent packets, and/or
+ *   event listeners.
+ *
+ * - To include an AngleStructures object in the packet tree, you must create
+ *   a new PacketOf<AngleStructures>.  This \e is a packet type, and supports
+ *   labels, tags, child/parent packets, and event listeners.  It derives from
+ *   AngleStructures, and so inherits the full AngleStructures interface.
+ *
+ * - If you are adding new functions to this class that edit the list,
+ *   you must still remember to create a ChangeEventSpan.  This will
+ *   ensure that, if the list is being managed by a PacketOf<AngleStructures>,
+ *   then the appropriate packet change events will be fired.
+ *   All other events (aside from packetToBeChanged() and packetWasChanged()
+ *   are managed directly by the PacketOf<AngleStructures> wrapper class.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \ingroup angle
  */
-class AngleStructures : public Packet {
-    REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES,
-        "Angle Structure List")
-
+class AngleStructures :
+        public PacketData<AngleStructures>, public Output<AngleStructures> {
     private:
         std::vector<AngleStructure> structures_;
             /**< Contains all angle structures in this list. */
@@ -166,6 +190,66 @@ class AngleStructures : public Packet {
             ProgressTracker* tracker = nullptr);
 
         /**
+         * Constructs a new copy of the given list.
+         */
+        AngleStructures(const AngleStructures&) = default;
+
+        /**
+         * Moves the given list into this new list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this list
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the list to move.
+         */
+        AngleStructures(AngleStructures&&) noexcept = default;
+
+        /**
+         * Sets this to be a (deep) copy of the given list.
+         *
+         * @param copy the list to copy.
+         * @return a reference to this list.
+         */
+        AngleStructures& operator = (const AngleStructures& src);
+
+        /**
+         * Moves the contents of the given list into this list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this list which may in turn call arbitrary code
+         * via any registered packet listeners.  It deliberately does \e not
+         * fire change events on \a src, since it assumes that \a src is about
+         * to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the list to move.
+         * @return a reference to this list.
+         */
+        AngleStructures& operator = (AngleStructures&& src);
+
+        /**
+         * Swaps the contents of this and the given list.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this list.
+         *
+         * \note This swap function is \e not marked \c noexcept, since it
+         * fires change events on both lists which may in turn call arbitrary
+         * code via any registered packet listeners.
+         *
+         * @param other the list whose contents should be swapped with this.
+         */
+        void swap(AngleStructures& other);
+
+        /**
          * Returns the triangulation on which these angle structures lie.
          *
          * This will be a snapshot frozen in time of the triangulation
@@ -188,9 +272,9 @@ class AngleStructures : public Packet {
          *   snapshot may result in an exception being thrown.
          *
          * \warning As of Regina 7.0, you \e cannot access this triangulation
-         * via the packet tree as parent().  This is because angle structure
-         * lists can now be kept anywhere in the packet tree, or can be kept
-         * as standalone objects outside the packet tree entirely.
+         * via the packet tree as Packet::parent().  This is because angle
+         * structure lists can now be kept anywhere in the packet tree, or
+         * can be kept as standalone objects outside the packet tree entirely.
          *
          * @return a reference to the underlying triangulation.
          */
@@ -367,8 +451,24 @@ class AngleStructures : public Packet {
         [[deprecated]] static AngleStructures* enumerateTautDD(
             Triangulation<3>& owner);
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
     protected:
         /**
@@ -387,11 +487,6 @@ class AngleStructures : public Packet {
         AngleStructures(bool tautOnly, AngleAlg algHints,
             const Triangulation<3>& triangulation);
 
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
-        virtual void addPacketRefs(PacketRefs& refs) const override;
-
         /**
          * Calculate whether the convex span of this list includes a
          * strict angle structure.
@@ -409,6 +504,8 @@ class AngleStructures : public Packet {
          *
          * \pre This list is empty (i.e., contains no angle structures),
          * but all of its enumeration parameters have been set.
+         * \pre If \a treeParent is non-null, then this is actually the
+         * inherited interface of a PacketOf<AngleStructures>.
          *
          * @param tracker the progress tracker to use for progress
          * reporting and cancellation polling, or \c null if these
@@ -423,6 +520,25 @@ class AngleStructures : public Packet {
     friend class regina::XMLAngleStructuresReader;
     friend class regina::XMLLegacyAngleStructuresReader;
 };
+
+/**
+ * Swaps the contents of the two given lists.
+ *
+ * This global routine simply calls AngleStructures::swap(); it is provided so
+ * that AngleStructures meets the C++ Swappable requirements.
+ *
+ * See AngleStructures::swap() for more details.
+ *
+ * \note This swap function is \e not marked \c noexcept, since it
+ * fires change events on both lists which may in turn call arbitrary
+ * code via any registered packet listeners.
+ *
+ * @param lhs the list whose contents should be swapped with \a rhs.
+ * @param rhs the list whose contents should be swapped with \a lhs.
+ *
+ * \ingroup angle
+ */
+void swap(AngleStructures& lhs, AngleStructures& rhs);
 
 /**
  * Generates the set of angle structure equations for the given triangulation.
@@ -443,6 +559,37 @@ class AngleStructures : public Packet {
 MatrixInt makeAngleEquations(const Triangulation<3>& tri);
 
 // Inline functions for AngleStructures
+
+inline AngleStructures& AngleStructures::operator = (
+        const AngleStructures& src) {
+    ChangeEventSpan span(*this);
+
+    structures_ = src.structures_;
+    triangulation_ = src.triangulation_;
+    tautOnly_= src.tautOnly_;
+    algorithm_ = src.algorithm_;
+    doesSpanStrict_ = src.doesSpanStrict_;
+    doesSpanTaut_ = src.doesSpanTaut_;
+
+    return *this;
+}
+
+inline AngleStructures& AngleStructures::operator = (AngleStructures&& src) {
+    ChangeEventSpan span(*this);
+
+    structures_ = std::move(src.structures_);
+    triangulation_ = std::move(src.triangulation_);
+
+    // Trivial data members:
+    tautOnly_= src.tautOnly_;
+    algorithm_ = src.algorithm_;
+
+    // Non-trivial data members:
+    doesSpanStrict_ = std::move(src.doesSpanStrict_);
+    doesSpanTaut_ = std::move(src.doesSpanTaut_);
+
+    return *this;
+}
 
 inline const Triangulation<3>& AngleStructures::triangulation() const {
     return *triangulation_;
@@ -488,6 +635,10 @@ inline AngleStructures::AngleStructures(bool tautOnly, AngleAlg algHints,
         const Triangulation<3>& triangulation) :
         triangulation_(triangulation), tautOnly_(tautOnly),
         algorithm_(algHints) {
+}
+
+inline void swap(AngleStructures& lhs, AngleStructures& rhs) {
+    lhs.swap(rhs);
 }
 
 } // namespace regina

@@ -4,9 +4,11 @@
 SET ( FILES
   xmlalgebrareader.cpp
   xmlanglestructreader.cpp
+  xmlanglestructwriter.cpp
   xmlcallback.cpp
   xmlfilterreader.cpp
   xmlhypersurfacereader.cpp
+  xmlhypersurfacewriter.cpp
   xmllinkreader.cpp
   xmllinkwriter.cpp
   xmlpacketreader.cpp
@@ -15,6 +17,7 @@ SET ( FILES
   xmlsnappeareader.cpp
   xmlsnappeawriter.cpp
   xmlsurfacereader.cpp
+  xmlsurfacewriter.cpp
   xmltreeresolver.cpp
   xmltriwriter.cpp)
 

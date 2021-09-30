@@ -55,6 +55,7 @@ void addAngleStructures(pybind11::module_& m) {
             pybind11::arg("tautOnly") = false,
             pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
+        .def(pybind11::init<const AngleStructures&>())
         .def("triangulation", &AngleStructures::triangulation,
             pybind11::return_value_policy::reference_internal)
         .def("isTautOnly", &AngleStructures::isTautOnly)

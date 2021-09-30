@@ -44,6 +44,20 @@
 
 namespace regina {
 
+void NormalHypersurfaces::swap(NormalHypersurfaces& other) {
+    if (std::addressof(other) == this)
+        return;
+
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    surfaces_.swap(other.surfaces_);
+    triangulation_.swap(other.triangulation_);
+    std::swap(coords_, other.coords_);
+    std::swap(which_, other.which_);
+    std::swap(algorithm_, other.algorithm_);
+}
+
 void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
     out << surfaces_.size();
 
@@ -102,31 +116,26 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
     }
 }
 
-void NormalHypersurfaces::addPacketRefs(PacketRefs& refs) const {
-    if (const Packet* p = triangulation_->packet())
-        refs.insert({ p, false });
-}
-
 void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
         FileFormat format, bool anon, PacketRefs& refs) const {
-    const Packet* tri = triangulation_->packet();
+    const Packet* triPacket = triangulation_->packet();
 
-    if (format == REGINA_XML_GEN_2 && ! (tri && tri == parent())) {
+    if (format == REGINA_XML_GEN_2 && ! (triPacket && triPacket == parent())) {
         // The second-generation format required tri == parent(), and
         // Regina <= 6.0.1 cannot handle lists *without* this property at all.
         // Do not write this list (or its descendants) at all.
         return;
     }
 
-    if (tri) {
+    if (triPacket) {
         // We know from addPacketRefs() that refs contains the triangulation.
-        if (! refs.find(tri)->second) {
+        if (! refs.find(triPacket)->second) {
             // The triangulation has not yet been written to file.  Do it now.
-            writeXMLAnon(out, format, refs, tri);
+            writeXMLAnon(out, format, refs, triPacket);
         }
 
         writeXMLHeader(out, "hypersurfaces", format, anon, refs, true,
-            std::pair("tri", tri->internalID()),
+            std::pair("tri", triPacket->internalID()),
             std::pair("type", which_.intValue()),
             std::pair("algorithm", algorithm_.intValue()),
             std::pair("coords", coords_));
@@ -168,10 +177,6 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out,
         it->writeXMLData(out, format, this);
 
     writeXMLFooter(out, "hypersurfaces", format, anon, refs);
-}
-
-Packet* NormalHypersurfaces::internalClonePacket(Packet*) const {
-    return new NormalHypersurfaces(*this);
 }
 
 } // namespace regina
