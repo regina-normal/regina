@@ -101,7 +101,7 @@ class XMLNormalSurfaceReader : public XMLElementReader {
  */
 class XMLNormalSurfacesReader : public XMLPacketReader {
     private:
-        NormalSurfaces* list_;
+        PacketOf<NormalSurfaces>* list_;
             /**< The normal surface list currently being read. */
         const Triangulation<3>* tri_;
             /**< The triangulation in which these normal surfaces live. */
@@ -135,7 +135,7 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
  */
 class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
     private:
-        NormalSurfaces* list_;
+        PacketOf<NormalSurfaces>* list_;
             /**< The normal surface list currently being read. */
         const Triangulation<3>* tri_;
             /**< The triangulation in which these normal surfaces live. */

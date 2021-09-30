@@ -91,7 +91,7 @@ class XMLAngleStructureReader : public XMLElementReader {
  */
 class XMLAngleStructuresReader : public XMLPacketReader {
     private:
-        AngleStructures* list_;
+        PacketOf<AngleStructures>* list_;
             /**< The angle structure list currently being read. */
         const Triangulation<3>* tri_;
             /**< The triangulation on which these angle structures
@@ -126,7 +126,7 @@ class XMLAngleStructuresReader : public XMLPacketReader {
  */
 class XMLLegacyAngleStructuresReader : public XMLPacketReader {
     private:
-        AngleStructures* list_;
+        PacketOf<AngleStructures>* list_;
             /**< The angle structure list currently being read. */
         const Triangulation<3>* tri_;
             /**< The triangulation on which these angle structures

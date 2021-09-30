@@ -35,61 +35,21 @@
 #include "file/fileformat.h"
 #include "file/xml/xmlwriter.h"
 #include "angle/anglestructures.h"
+#include "triangulation/dim3.h"
 #include "packet/packet-impl.h"
 
 namespace regina {
 
 template <>
-bool XMLWriter<AngleStructures>::openPre() {
-    const Packet* triPacket = triangulation_->inAnyPacket();
-
-    if (format == REGINA_XML_GEN_2 && ! (triPacket && triPacket == parent())) {
-        // The second-generation format required tri == parent(), and
-        // Regina <= 6.0.1 cannot handle lists *without* this property at all.
-        // Do not write this list (or its descendants) at all.
-        return false;
-    }
-
-    if (triPacket) {
-        // We know from addPacketRefs() that refs contains the triangulation.
-        if (! refs.find(triPacket)->second) {
-            // The triangulation has not yet been written to file.  Do it now.
-            writeXMLAnon(out, format, refs, triPacket);
-        }
-
-        if (format_ == REGINA_XML_GEN_2) {
-            out_ << "<packet type=\"Angle Structures\" typeid=\""
-                << PACKET_ANGLESTRUCTURES << '\"';
-        } else {
-            out_ << "<angles "
-                "tri=\"" << triPacket->internalID() << "\" "
-                "tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\" "
-                "algorithm=\"" << algorithm_.intValue() << '\"';
-        }
+void XMLWriter<AngleStructures>::openPre() {
+    if (format_ == REGINA_XML_GEN_2) {
+        out_ << "<packet type=\"Angle Structures\" typeid=\""
+            << PACKET_ANGLESTRUCTURES << '\"';
     } else {
-        // The triangulation is not a packet at all.
-        // Write it anonymously now, with an ID that is guaranteed not to
-        // match a packet ID.
-        std::string id = triangulation_->anonID();
-
-        out << "<anon>\n";
-        XMLWriter<Triangulation<3>> writer(*triangulation_, out, format);
-        writer.openPre();
-        out << " id=\"" << id << "\"";
-        writer.openPost();
-        writer.writeContent();
-        writer.close();
-        out << "</anon>\n";
-
-        if (format_ == REGINA_XML_GEN_2) {
-            out_ << "<packet type=\"Angle Structures\" typeid=\""
-                << PACKET_ANGLESTRUCTURES << '\"';
-        } else {
-            out_ << "<angles "
-                "tri=\"" << id << "\" "
-                "tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\" "
-                "algorithm=\"" << algorithm_.intValue() << '\"';
-        }
+        out_ << "<angles "
+            "tri=\"" << triID_ << "\" "
+            "tautonly=\"" << (data_.tautOnly_ ? 'T' : 'F') << "\" "
+            "algorithm=\"" << data_.algorithm_.intValue() << '\"';
     }
 }
 
@@ -99,7 +59,7 @@ void XMLWriter<AngleStructures>::writeContent() {
 
     if (format_ == REGINA_XML_GEN_2) {
         // Write the enumeration parameters in a separate angleparams element.
-        out << "  <angleparams "
+        out_ << "  <angleparams "
             "tautonly=\"" << (data_.tautOnly_ ? 'T' : 'F') << "\" "
             "algorithm=\"" << data_.algorithm_.intValue() << "\"/>\n";
     }
@@ -109,10 +69,10 @@ void XMLWriter<AngleStructures>::writeContent() {
         a.writeXMLData(out_);
 
     // Write the properties.
-    if (doesSpanStrict_.has_value())
+    if (data_.doesSpanStrict_.has_value())
         out_ << "  " << xmlValueTag("spanstrict", *data_.doesSpanStrict_)
             << '\n';
-    if (doesSpanTaut_.has_value())
+    if (data_.doesSpanTaut_.has_value())
         out_ << "  " << xmlValueTag("spantaut", *data_.doesSpanTaut_) << '\n';
 }
 

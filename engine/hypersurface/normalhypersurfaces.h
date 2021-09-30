@@ -110,8 +110,8 @@ class ProgressTracker;
  *
  * \ingroup hypersurface
  */
-class NormalHypersurfaces : public PacketData<NormalHyperurfaces>,
-        public Output<NormalHyperurfaces> {
+class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
+        public Output<NormalHypersurfaces> {
     public:
         class VectorIterator;
 
@@ -669,7 +669,7 @@ class NormalHypersurfaces : public PacketData<NormalHyperurfaces>,
             friend class NormalHypersurfaces;
         };
 
-    private:
+    protected:
         /**
          * Creates an empty list of normal hypersurfaces with the given
          * parameters.
@@ -685,6 +685,7 @@ class NormalHypersurfaces : public PacketData<NormalHyperurfaces>,
             HyperAlg algorithm,
             const SnapshotRef<Triangulation<4>>& triangulation);
 
+    private:
         /**
          * Contains the code responsible for all normal hypersurface
          * enumeration.

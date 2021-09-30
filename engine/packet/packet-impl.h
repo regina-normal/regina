@@ -53,6 +53,54 @@ namespace regina {
 template <typename Held>
 void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
+    if constexpr (XMLWriter<Held>::requiresTriangulation) {
+        // This is one of Regina's surface/structure list types, that for
+        // the second-generation format required the triangulation to be
+        // the parent packet, and for the third-generation format requires
+        // the triangulation to have been written to file earlier than the list.
+        const Packet* triPacket;
+        if constexpr (XMLWriter<Held>::dimension == 3)
+            triPacket = this->triangulation().inAnyPacket();
+        else
+            triPacket = this->triangulation().packet();
+
+        if (format == REGINA_XML_GEN_2)
+            if (! (triPacket && triPacket == parent())) {
+                // The second-generation format required tri == parent(), and
+                // Regina <= 6.0.1 cannot handle lists *without* this property.
+                // Do not write this list (or its descendants) at all.
+                return;
+            }
+
+        std::string triID;
+        if (triPacket) {
+            // We know from addPacketRefs() that refs contains the
+            // triangulation.
+            triID = triPacket->internalID();
+
+            if (! refs.find(triPacket)->second) {
+                // The triangulation has not yet been written to file.
+                // Do it now.
+                writeXMLAnon(out, format, refs, triPacket);
+            }
+        } else {
+            // The triangulation is not a packet at all.
+            // Write it anonymously now, with an ID that is guaranteed not to
+            // match a packet ID.
+            triID = this->triangulation().anonID();
+
+            out << "<anon>\n";
+            XMLWriter<Triangulation<3>> writer(this->triangulation(), out,
+                format);
+            writer.openPre();
+            out << " id=\"" << triID << "\"";
+            writer.openPost();
+            writer.writeContent();
+            writer.close();
+            out << "</anon>\n";
+        }
+    }
+
     XMLWriter<Held> writer(*this, out, format);
     writer.openPre();
     out << " label=\"" << regina::xml::xmlEncodeSpecialChars(label())

@@ -102,7 +102,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
  */
 class XMLNormalHypersurfacesReader : public XMLPacketReader {
     private:
-        NormalHypersurfaces* list_;
+        PacketOf<NormalHypersurfaces>* list_;
             /**< The normal hypersurface list currently being read. */
         const Triangulation<4>* tri_;
             /**< The triangulation in which these normal hypersurfaces live. */
@@ -136,7 +136,7 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
  */
 class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
     private:
-        NormalHypersurfaces* list_;
+        PacketOf<NormalHypersurfaces>* list_;
             /**< The normal hypersurface list currently being read. */
         const Triangulation<4>* tri_;
             /**< The triangulation in which these normal hypersurfaces live. */

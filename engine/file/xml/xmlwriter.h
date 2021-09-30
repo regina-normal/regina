@@ -46,7 +46,26 @@
 
 namespace regina {
 
+class AngleStructures;
+class NormalHypersurfaces;
+class NormalSurfaces;
 template <int> class Triangulation;
+
+template <typename T>
+class XMLWriterRequiresTriangulation {
+    public:
+        static constexpr bool requiresTriangulation = false;
+};
+
+template <>
+class XMLWriterRequiresTriangulation<AngleStructures> {
+    public:
+        static constexpr bool requiresTriangulation = true;
+        static constexpr int dimension = 3;
+
+    protected:
+        std::string triID_;
+};
 
 /**
  * Used to write one of Regina's objects to XML.
@@ -64,7 +83,7 @@ template <int> class Triangulation;
  * TODO: Talk about implementations.
  */
 template <typename T>
-class XMLWriter {
+class XMLWriter : public XMLWriterRequiresTriangulation<T> {
     private:
         const T& data_;
             /**< The object to be written in XML. */
@@ -126,8 +145,13 @@ class XMLWriter {
         void close();
 };
 
+#ifndef __DOXYGEN
+
 template <int dim>
 class XMLWriter<Triangulation<dim>> {
+    public:
+        static constexpr bool requiresTriangulation = false;
+
     private:
         static constexpr bool useSnIndex =
             (Perm<dim + 1>::codeType == PERM_CODE_INDEX);
@@ -145,6 +169,8 @@ class XMLWriter<Triangulation<dim>> {
         void writeContent();
         void close();
 };
+
+#endif // __DOXYGEN
 
 template <typename T>
 XMLWriter<T>::XMLWriter(const T& data, std::ostream& out, FileFormat format) :

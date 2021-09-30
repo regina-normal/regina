@@ -1157,7 +1157,7 @@ class NormalSurfaces :
             friend class NormalSurfaces;
         };
 
-    private:
+    protected:
         /**
          * Creates an empty list of normal surfaces with the given
          * parameters.
@@ -1173,6 +1173,7 @@ class NormalSurfaces :
             NormalAlg algorithm,
             const SnapshotRef<Triangulation<3>>& triangulation);
 
+    private:
         /**
          * Converts a set of embedded vertex normal surfaces in
          * (quad or quad-oct) space to a set of embedded vertex normal
@@ -1623,14 +1624,13 @@ inline void NormalSurfaces::sort(Comparison&& comp) {
 
 inline NormalSurfaces* NormalSurfaces::quadToStandard() const {
     const Packet* p = packet();
-    if (p)
-        p = p->parent();
+    Packet* parent = (p ? p->parent() : nullptr);
 
     try {
-        if (p) {
+        if (parent) {
             auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
                 NS_CONV_REDUCED_TO_STD);
-            p->insertChildLast(ans);
+            parent->insertChildLast(ans);
             return ans;
         } else
             return new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
@@ -1641,14 +1641,13 @@ inline NormalSurfaces* NormalSurfaces::quadToStandard() const {
 
 inline NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
     const Packet* p = packet();
-    if (p)
-        p = p->parent();
+    Packet* parent = (p ? p->parent() : nullptr);
 
     try {
-        if (p) {
+        if (parent) {
             auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
                 NS_CONV_REDUCED_TO_STD);
-            p->insertChildLast(ans);
+            parent->insertChildLast(ans);
             return ans;
         } else
             return new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
@@ -1659,14 +1658,13 @@ inline NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
 
 inline NormalSurfaces* NormalSurfaces::standardToQuad() const {
     const Packet* p = packet();
-    if (p)
-        p = p->parent();
+    Packet* parent = (p ? p->parent() : nullptr);
 
     try {
-        if (p) {
+        if (parent) {
             auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
                 NS_CONV_STD_TO_REDUCED);
-            p->insertChildLast(ans);
+            parent->insertChildLast(ans);
             return ans;
         } else
             return new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
@@ -1677,14 +1675,13 @@ inline NormalSurfaces* NormalSurfaces::standardToQuad() const {
 
 inline NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
     const Packet* p = packet();
-    if (p)
-        p = p->parent();
+    Packet* parent = (p ? p->parent() : nullptr);
 
     try {
-        if (p) {
+        if (parent) {
             auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
                 NS_CONV_STD_TO_REDUCED);
-            p->insertChildLast(ans);
+            parent->insertChildLast(ans);
             return ans;
         } else
             return new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
@@ -1695,14 +1692,13 @@ inline NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
 
 inline NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs() const {
     const Packet* p = packet();
-    if (p)
-        p = p->parent();
+    Packet* parent = (p ? p->parent() : nullptr);
 
     try {
-        if (p) {
+        if (parent) {
             auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
                 NS_FILTER_COMPATIBLE);
-            p->insertChildLast(ans);
+            parent->insertChildLast(ans);
             return ans;
         } else
             return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
@@ -1713,14 +1709,13 @@ inline NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs() const {
 
 inline NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
     const Packet* p = packet();
-    if (p)
-        p = p->parent();
+    Packet* parent = (p ? p->parent() : nullptr);
 
     try {
-        if (p) {
+        if (parent) {
             auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
                 NS_FILTER_DISJOINT);
-            p->insertChildLast(ans);
+            parent->insertChildLast(ans);
             return ans;
         } else
             return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
@@ -1732,14 +1727,13 @@ inline NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
 inline NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
         const {
     const Packet* p = packet();
-    if (p)
-        p = p->parent();
+    Packet* parent = (p ? p->parent() : nullptr);
 
     try {
-        if (p) {
+        if (parent) {
             auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
                 NS_FILTER_INCOMPRESSIBLE);
-            p->insertChildLast(ans);
+            parent->insertChildLast(ans);
             return ans;
         } else
             return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
@@ -1751,12 +1745,11 @@ inline NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
 inline NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter& filter)
         const {
     const Packet* p = packet();
-    if (p)
-        p = p->parent();
+    Packet* parent = (p ? p->parent() : nullptr);
 
-    if (p) {
+    if (parent) {
         auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this, filter);
-        p->insertChildLast(ans);
+        parent->insertChildLast(ans);
         return ans;
     } else {
         return new NormalSurfaces(*this, filter);
