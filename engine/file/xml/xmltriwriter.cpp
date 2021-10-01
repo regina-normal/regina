@@ -245,6 +245,21 @@ template class XMLWriter<Triangulation<15>>;
 template std::string PacketData<Triangulation<3>>::anonID() const;
 template std::string PacketData<Triangulation<4>>::anonID() const;
 
+template void PacketOf<Triangulation<2>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<3>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<4>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<5>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<6>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<7>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<8>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<9>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<10>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<11>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<12>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<13>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<14>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<15>>::addPacketRefs(PacketRefs&) const;
+
 template void PacketOf<Triangulation<2>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<3>>::writeXMLPacketData(std::ostream&,

@@ -75,6 +75,7 @@ void XMLWriter<SnapPeaTriangulation>::close() {
         out_ << "</snappeadata>\n";
 }
 
+template void PacketOf<SnapPeaTriangulation>::addPacketRefs(PacketRefs&) const;
 template void PacketOf<SnapPeaTriangulation>::writeXMLPacketData(
     std::ostream&, FileFormat, bool, PacketRefs&) const;
 

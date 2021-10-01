@@ -75,6 +75,7 @@ void XMLWriter<Link>::close() {
         out_ << "</link>\n";
 }
 
+template void PacketOf<Link>::addPacketRefs(PacketRefs&) const;
 template void PacketOf<Link>::writeXMLPacketData(std::ostream&, FileFormat,
     bool, PacketRefs&) const;
 

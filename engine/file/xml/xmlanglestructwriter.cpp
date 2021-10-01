@@ -84,6 +84,7 @@ void XMLWriter<AngleStructures>::close() {
         out_ << "</angles>\n";
 }
 
+template void PacketOf<AngleStructures>::addPacketRefs(PacketRefs&) const;
 template void PacketOf<AngleStructures>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 

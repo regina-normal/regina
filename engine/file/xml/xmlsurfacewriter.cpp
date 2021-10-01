@@ -83,6 +83,7 @@ void XMLWriter<NormalSurfaces>::close() {
         out_ << "</surfaces>\n";
 }
 
+template void PacketOf<NormalSurfaces>::addPacketRefs(PacketRefs&) const;
 template void PacketOf<NormalSurfaces>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 
