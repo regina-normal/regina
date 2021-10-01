@@ -42,7 +42,6 @@
 #include "regina-core.h"
 #include "file/fileformat.h"
 #include "maths/perm.h"
-#include "packet/packet.h" // TODO: Remove
 
 namespace regina {
 
@@ -51,20 +50,23 @@ class NormalHypersurfaces;
 class NormalSurfaces;
 template <int> class Triangulation;
 
-template <typename T>
-class XMLWriterRequiresTriangulation {
+class XMLWriterRequiresNoTriangulation {
     public:
         static constexpr bool requiresTriangulation = false;
 };
 
-template <>
-class XMLWriterRequiresTriangulation<AngleStructures> {
+template <typename T>
+class XMLWriterRequiresTriangulation {
     public:
         static constexpr bool requiresTriangulation = true;
-        static constexpr int dimension = 3;
+        static constexpr int dimension = std::remove_reference<
+            decltype(std::declval<T>().triangulation())>::type::dimension;
 
     protected:
         std::string triID_;
+
+    public:
+        void wroteTriangulationID(std::string id) { triID_ = std::move(id); }
 };
 
 /**
@@ -83,7 +85,12 @@ class XMLWriterRequiresTriangulation<AngleStructures> {
  * TODO: Talk about implementations.
  */
 template <typename T>
-class XMLWriter : public XMLWriterRequiresTriangulation<T> {
+class XMLWriter : public std::conditional<
+        std::is_same<T, AngleStructures>::value ||
+        std::is_same<T, NormalHypersurfaces>::value ||
+        std::is_same<T, NormalSurfaces>::value,
+        XMLWriterRequiresTriangulation<T>,
+        XMLWriterRequiresNoTriangulation>::type {
     private:
         const T& data_;
             /**< The object to be written in XML. */

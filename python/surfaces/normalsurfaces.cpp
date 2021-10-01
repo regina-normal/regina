@@ -65,8 +65,7 @@ void addNormalSurfaces(pybind11::module_& m) {
 
     SafeIterator<NormalSurfaces>::addBindings(m, "NormalSurfaceIterator");
 
-    pybind11::class_<NormalSurfaces, regina::Packet,
-            regina::SafePtr<NormalSurfaces>>(m, "NormalSurfaces")
+    auto l = pybind11::class_<NormalSurfaces>(m, "NormalSurfaces")
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
                 regina::NormalList, regina::NormalAlg, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
@@ -75,6 +74,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             pybind11::arg("tracker") = nullptr)
         .def(pybind11::init<const NormalSurfaces&, regina::NormalTransform>())
         .def(pybind11::init<const NormalSurfaces&>())
+        .def("swap", &NormalSurfaces::swap)
         .def("coords", &NormalSurfaces::coords)
         .def("which", &NormalSurfaces::which)
         .def("algorithm", &NormalSurfaces::algorithm)
@@ -100,11 +100,13 @@ void addNormalSurfaces(pybind11::module_& m) {
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to the NormalSurfaces class.
             try {
-                NormalSurfaces* ans = new NormalSurfaces(owner, coords, which,
-                    algHints);
-                if (regina::Packet* p = owner.packet())
+                if (regina::Packet* p = owner.packet()) {
+                    auto ans = new regina::PacketOf<NormalSurfaces>(
+                        std::in_place, owner, coords, which, algHints);
                     p->insertChildLast(ans);
-                return ans;
+                    return ans;
+                } else
+                    return new NormalSurfaces(owner, coords, which, algHints);
             } catch (const regina::NoMatchingEquations&) {
                 return nullptr;
             }
@@ -217,10 +219,22 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
             pybind11::arg(),
             pybind11::arg("additionalFields") = regina::surfaceExportAll)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return NormalSurfaces::typeID;
-        })
     ;
+    regina::python::add_output(l);
+    regina::python::add_eq_operators(l);
+
+    auto& wrap = regina::python::add_packet_wrapper<NormalSurfaces>(
+        m, "PacketOfNormalSurfaces");
+    regina::python::add_packet_constructor<const Triangulation<3>&,
+            regina::NormalCoords, regina::NormalList, regina::NormalAlg,
+            ProgressTracker*>(wrap,
+        pybind11::arg(), pybind11::arg(),
+        pybind11::arg("which") = regina::NS_LIST_DEFAULT,
+        pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
+        pybind11::arg("tracker") = nullptr);
+    regina::python::add_packet_constructor<const NormalSurfaces&,
+        regina::NormalTransform>(wrap);
+
+    m.def("swap", (void(*)(NormalSurfaces&, NormalSurfaces&))(regina::swap));
 }
 

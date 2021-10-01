@@ -47,8 +47,7 @@ void addAngleStructures(pybind11::module_& m) {
 
     SafeIterator<AngleStructures>::addBindings(m, "AngleStructureIterator");
 
-    pybind11::class_<AngleStructures, regina::Packet,
-            regina::SafePtr<AngleStructures>>(m, "AngleStructures")
+    auto l = pybind11::class_<AngleStructures>(m, "AngleStructures")
         .def(pybind11::init<const Triangulation<3>&, bool, regina::AngleAlg,
                 ProgressTracker*>(),
             pybind11::arg(),
@@ -56,6 +55,7 @@ void addAngleStructures(pybind11::module_& m) {
             pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
         .def(pybind11::init<const AngleStructures&>())
+        .def("swap", &AngleStructures::swap)
         .def("triangulation", &AngleStructures::triangulation,
             pybind11::return_value_policy::reference_internal)
         .def("isTautOnly", &AngleStructures::isTautOnly)
@@ -68,27 +68,44 @@ void addAngleStructures(pybind11::module_& m) {
         })
         .def("spansStrict", &AngleStructures::spansStrict)
         .def("spansTaut", &AngleStructures::spansTaut)
-        .def_static("enumerate", [](Triangulation<3>& owner, bool tautOnly) {
+        .def_static("enumerate", [](Triangulation<3>& owner, bool tautOnly)
+                -> AngleStructures* {
             // This is deprecated, so we reimplement it here ourselves.
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to the AngleStructures class.
-            AngleStructures* ans = new AngleStructures(owner, tautOnly);
-            if (regina::Packet* p = owner.packet())
+            if (regina::Packet* p = owner.packet()) {
+                auto ans = new regina::PacketOf<AngleStructures>(std::in_place,
+                    owner, tautOnly);
                 p->insertChildLast(ans);
-            return ans;
+                return ans;
+            } else
+                return new AngleStructures(owner, tautOnly);
         }, pybind11::arg(),
             pybind11::arg("tautOnly") = false)
-        .def_static("enumerateTautDD", [](Triangulation<3>& owner) {
+        .def_static("enumerateTautDD", [](Triangulation<3>& owner)
+                -> AngleStructures* {
             // This is deprecated, so we reimplement it here ourselves.
-            AngleStructures* ans = new AngleStructures(owner, true,
-                regina::AS_ALG_DD);
-            if (regina::Packet* p = owner.packet())
+            if (regina::Packet* p = owner.packet()) {
+                auto ans = new regina::PacketOf<AngleStructures>(std::in_place,
+                    owner, true, regina::AS_ALG_DD);
                 p->insertChildLast(ans);
-            return ans;
-        })
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            return AngleStructures::typeID;
+                return ans;
+            } else
+                return new AngleStructures(owner, true, regina::AS_ALG_DD);
         })
     ;
+    regina::python::add_output(l);
+    regina::python::add_eq_operators(l);
+
+    auto& wrap = regina::python::add_packet_wrapper<AngleStructures>(
+        m, "PacketOfAngleStructures");
+    regina::python::add_packet_constructor<const Triangulation<3>&, bool,
+            regina::AngleAlg, ProgressTracker*>(wrap,
+        pybind11::arg(),
+        pybind11::arg("tautOnly") = false,
+        pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
+        pybind11::arg("tracker") = nullptr);
+
+    m.def("swap", (void(*)(AngleStructures&, AngleStructures&))(regina::swap));
 }
 

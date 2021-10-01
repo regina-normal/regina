@@ -44,12 +44,16 @@ namespace python {
 
 /**
  * Adds Python bindings for the class PacketOf<Held>.
+ *
+ * The new packet class will be given an "inherited copy constructor" which
+ * takes a single (const Held&).  All other constructors will need to be
+ * explicitly added using the pybind11::class_ object that is returned.
  */
 template <class Held>
-void add_packet_wrapper(pybind11::module_& m, const char* className) {
-    pybind11::class_<regina::PacketOf<Held>, regina::Packet,
+auto& add_packet_wrapper(pybind11::module_& m,
+        const char* className) {
+    return pybind11::class_<regina::PacketOf<Held>, regina::Packet,
             regina::SafePtr<regina::PacketOf<Held>>>(m, className)
-        .def(pybind11::init<>())
         .def(pybind11::init<const Held&>())
         .def("data", [](regina::PacketOf<Held>* p) {
             return static_cast<Held*>(p);
@@ -59,6 +63,15 @@ void add_packet_wrapper(pybind11::module_& m, const char* className) {
             return regina::PacketOf<Held>::typeID;
         })
     ;
+}
+
+// NOTE: Args must be explicitly given; PythonClass and Options are deduced.
+template <typename... Args, typename PythonClass, typename... Options>
+void add_packet_constructor(PythonClass& classWrapper, Options&&... options) {
+    classWrapper.def(pybind11::init([](Args... args) {
+        using WrappedType = typename PythonClass::type;
+        return new WrappedType(std::in_place, std::forward<Args>(args)...);
+    }), std::forward<Options>(options)...);
 }
 
 } // namespace python

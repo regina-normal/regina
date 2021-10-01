@@ -709,6 +709,9 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
             public:
                 /**
                  * Creates a new functor with the given parameters.
+                 *
+                 * \pre If \a treeParent is non-null, then list is actually
+                 * the inherited interface of a PacketOf<NormalHypersurfaces>.
                  */
                 Enumerator(NormalHypersurfaces* list, const MatrixInt& eqns,
                     ProgressTracker* tracker, Packet* treeParent);
@@ -828,6 +831,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
 
     friend class XMLNormalHypersurfacesReader;
     friend class XMLLegacyNormalHypersurfacesReader;
+    friend class XMLWriter<NormalHypersurfaces>;
 };
 
 /**

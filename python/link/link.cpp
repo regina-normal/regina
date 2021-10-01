@@ -308,7 +308,12 @@ void addLink(pybind11::module_& m) {
     ;
     regina::python::add_output(l);
     regina::python::add_eq_operators(l);
-    regina::python::add_packet_wrapper<Link>(m, "PacketOfLink");
+
+    auto& wrap = regina::python::add_packet_wrapper<Link>(m, "PacketOfLink");
+    regina::python::add_packet_constructor<>(wrap);
+    regina::python::add_packet_constructor<size_t>(wrap);
+    regina::python::add_packet_constructor<const Link&, bool>(wrap);
+    regina::python::add_packet_constructor<const std::string&>(wrap);
 
     m.def("swap", (void(*)(Link&, Link&))(regina::swap));
 }

@@ -443,8 +443,17 @@ void addTriangulation3(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-    regina::python::add_packet_wrapper<Triangulation<3>>(
+
+    auto& wrap = regina::python::add_packet_wrapper<Triangulation<3>>(
         m, "PacketOfTriangulation3");
+    regina::python::add_packet_constructor<>(wrap);
+    regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap);
+    regina::python::add_packet_constructor<const regina::Link&>(wrap);
+    regina::python::add_packet_constructor<const std::string&>(wrap);
+    wrap.def(pybind11::init([](const regina::python::SnapPyObject& obj) {
+        return new regina::PacketOf<Triangulation<3>>(std::in_place,
+            obj.string_);
+    }));
 
     // We do not define the global swap() yet for Triangulation<3>, since this
     // needs to come *after* the global swap() for the child class

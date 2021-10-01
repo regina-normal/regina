@@ -1275,6 +1275,9 @@ class NormalSurfaces :
             public:
                 /**
                  * Creates a new functor with the given parameters.
+                 *
+                 * \pre If \a treeParent is non-null, then list is actually
+                 * the inherited interface of a PacketOf<NormalSurfaces>.
                  */
                 Enumerator(NormalSurfaces* list, const MatrixInt& eqns,
                     ProgressTracker* tracker, Packet* treeParent);
@@ -1462,6 +1465,7 @@ class NormalSurfaces :
 
     friend class XMLNormalSurfacesReader;
     friend class XMLLegacyNormalSurfacesReader;
+    friend class XMLWriter<NormalSurfaces>;
 };
 
 /**

@@ -518,8 +518,8 @@ class AngleStructures :
             Packet* treeParent);
 
     friend class regina::XMLAngleStructuresReader;
-    friend class regina::XMLWriter<AngleStructures>;
     friend class regina::XMLLegacyAngleStructuresReader;
+    friend class regina::XMLWriter<AngleStructures>;
 };
 
 /**

@@ -51,8 +51,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
     SafeIterator<NormalHypersurfaces>::addBindings(m,
         "NormalHypersurfaceIterator");
 
-    pybind11::class_<NormalHypersurfaces, regina::Packet,
-            regina::SafePtr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
+    auto l = pybind11::class_<NormalHypersurfaces>(m, "NormalHypersurfaces")
         .def(pybind11::init<const Triangulation<4>&, HyperCoords,
                 regina::HyperList, regina::HyperAlg, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
@@ -60,6 +59,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr)
         .def(pybind11::init<const NormalHypersurfaces&>())
+        .def("swap", &NormalHypersurfaces::swap)
         .def_static("enumerate", [](Triangulation<4>& owner,
                 HyperCoords coords, regina::HyperList which,
                 regina::HyperAlg algHints) -> NormalHypersurfaces* {
@@ -67,11 +67,14 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to NormalHypersurfaces.
             try {
-                NormalHypersurfaces* ans = new NormalHypersurfaces(owner,
-                    coords, which, algHints);
-                if (regina::Packet* p = owner.packet())
+                if (regina::Packet* p = owner.packet()) {
+                    auto ans = new regina::PacketOf<NormalHypersurfaces>(
+                        std::in_place, owner, coords, which, algHints);
                     p->insertChildLast(ans);
-                return ans;
+                    return ans;
+                } else
+                    return new NormalHypersurfaces(owner, coords, which,
+                        algHints);
             } catch (const regina::NoMatchingEquations&) {
                 return nullptr;
             }
@@ -92,10 +95,20 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         .def("__iter__", [](const NormalHypersurfaces& list) {
             return SafeIterator(list);
         })
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return NormalHypersurfaces::typeID;
-        })
     ;
+    regina::python::add_output(l);
+    regina::python::add_eq_operators(l);
+
+    auto& wrap = regina::python::add_packet_wrapper<NormalHypersurfaces>(
+        m, "PacketOfNormalHypersurfaces");
+    regina::python::add_packet_constructor<const Triangulation<4>&, HyperCoords,
+            regina::HyperList, regina::HyperAlg, ProgressTracker*>(wrap,
+        pybind11::arg(), pybind11::arg(),
+        pybind11::arg("which") = regina::HS_LIST_DEFAULT,
+        pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
+        pybind11::arg("tracker") = nullptr);
+
+    m.def("swap",
+        (void(*)(NormalHypersurfaces&, NormalHypersurfaces&))(regina::swap));
 }
 

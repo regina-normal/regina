@@ -53,6 +53,8 @@ namespace regina {
 template <typename Held>
 void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
+    XMLWriter<Held> writer(*this, out, format);
+
     if constexpr (XMLWriter<Held>::requiresTriangulation) {
         // This is one of Regina's surface/structure list types, that for
         // the second-generation format required the triangulation to be
@@ -72,36 +74,36 @@ void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
                 return;
             }
 
-        std::string triID;
         if (triPacket) {
             // We know from addPacketRefs() that refs contains the
             // triangulation.
-            triID = triPacket->internalID();
-
             if (! refs.find(triPacket)->second) {
                 // The triangulation has not yet been written to file.
                 // Do it now.
                 writeXMLAnon(out, format, refs, triPacket);
             }
+
+            writer.wroteTriangulationID(triPacket->internalID());
         } else {
             // The triangulation is not a packet at all.
             // Write it anonymously now, with an ID that is guaranteed not to
             // match a packet ID.
-            triID = this->triangulation().anonID();
+            std::string triID = this->triangulation().anonID();
 
             out << "<anon>\n";
-            XMLWriter<Triangulation<3>> writer(this->triangulation(), out,
-                format);
-            writer.openPre();
+            XMLWriter<Triangulation<XMLWriter<Held>::dimension>> triWriter(
+                this->triangulation(), out, format);
+            triWriter.openPre();
             out << " id=\"" << triID << "\"";
-            writer.openPost();
-            writer.writeContent();
-            writer.close();
+            triWriter.openPost();
+            triWriter.writeContent();
+            triWriter.close();
             out << "</anon>\n";
+
+            writer.wroteTriangulationID(std::move(triID));
         }
     }
 
-    XMLWriter<Held> writer(*this, out, format);
     writer.openPre();
     out << " label=\"" << regina::xml::xmlEncodeSpecialChars(label())
         << "\"";

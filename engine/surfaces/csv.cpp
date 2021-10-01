@@ -155,7 +155,7 @@ namespace {
 }
 
 bool NormalSurfaces::saveCSVStandard(const char* filename,
-        int additionalFields) {
+        int additionalFields) const {
     std::ofstream out(filename);
     if (! out)
         return false;
@@ -226,7 +226,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
 }
 
 bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
-        int additionalFields) {
+        int additionalFields) const {
     std::ofstream out(filename);
     if (! out)
         return false;

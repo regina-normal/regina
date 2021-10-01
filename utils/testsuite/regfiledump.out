@@ -302,7 +302,7 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 ************************************************************
 *
 * Label: Quad vertex surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: RP² x S¹
 *
 ************************************************************
@@ -365,7 +365,7 @@ Cusps:
 ************************************************************
 *
 * Label: Angle Structures
-* Type: Angle Structure List
+* Type: Angle structure list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -455,7 +455,7 @@ Tetrahedra:
 ************************************************************
 *
 * Label: Normal Hypersurfaces
-* Type: Normal Hypersurface List
+* Type: Normal hypersurface list
 * Parent: Twisted S³ x~ S¹
 *
 ************************************************************
@@ -834,7 +834,7 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 ************************************************************
 *
 * Label: Quad vertex surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: RP² x S¹
 *
 ************************************************************
@@ -897,7 +897,7 @@ Cusps:
 ************************************************************
 *
 * Label: Angle Structures
-* Type: Angle Structure List
+* Type: Angle structure list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -987,7 +987,7 @@ Tetrahedra:
 ************************************************************
 *
 * Label: Normal Hypersurfaces
-* Type: Normal Hypersurface List
+* Type: Normal hypersurface list
 * Parent: Twisted S³ x~ S¹
 *
 ************************************************************
@@ -1215,13 +1215,13 @@ Dummy PDF (PDF)
 Layered Solid Torus (3-D triangulation)
 RP² x S¹ (3-D triangulation)
 Note (Text)
-Quad vertex surfaces (Normal Surface List)
+Quad vertex surfaces (Normal surface list)
 Figure 8 Knot Complement (SnapPea triangulation)
-Angle Structures (Angle Structure List)
+Angle Structures (Angle structure list)
 Whitehead link (Link)
 4-Manifolds (Container)
 Twisted S³ x~ S¹ (4-D triangulation)
-Normal Hypersurfaces (Normal Hypersurface List)
+Normal Hypersurfaces (Normal hypersurface list)
 2-Manifolds (Container)
 Klein Bottle, version 1 (2-D triangulation)
 Klein Bottle, version 2 (2-D triangulation)
@@ -1246,13 +1246,13 @@ Dummy PDF (PDF)
 Layered Solid Torus (3-D triangulation)
 RP² x S¹ (3-D triangulation)
 Note (Text)
-Quad vertex surfaces (Normal Surface List)
+Quad vertex surfaces (Normal surface list)
 Figure 8 Knot Complement (SnapPea triangulation)
-Angle Structures (Angle Structure List)
+Angle Structures (Angle structure list)
 Whitehead link (Link)
 4-Manifolds (Container)
 Twisted S³ x~ S¹ (4-D triangulation)
-Normal Hypersurfaces (Normal Hypersurface List)
+Normal Hypersurfaces (Normal hypersurface list)
 2-Manifolds (Container)
 Klein Bottle, version 1 (2-D triangulation)
 Klein Bottle, version 2 (2-D triangulation)
@@ -1280,7 +1280,7 @@ TEST: regfiledump @TESTDIR@/tiny.rga 'Normal Hypersurfaces'
 ************************************************************
 *
 * Label: Normal Hypersurfaces
-* Type: Normal Hypersurface List
+* Type: Normal hypersurface list
 * Parent: Twisted S³ x~ S¹
 *
 ************************************************************
@@ -1315,7 +1315,7 @@ TEST: regfiledump @TESTDIR@/tiny.rga 'Normal Hypersurfaces' Foo 'Read Me'
 ************************************************************
 *
 * Label: Normal Hypersurfaces
-* Type: Normal Hypersurface List
+* Type: Normal hypersurface list
 * Parent: Twisted S³ x~ S¹
 *
 ************************************************************
@@ -1353,7 +1353,7 @@ Exit code: 0
 ============================================================
 TEST: regfiledump -l @TESTDIR@/tiny.rga 'Normal Hypersurfaces'
 --------------------
-Normal Hypersurfaces (Normal Hypersurface List)
+Normal Hypersurfaces (Normal hypersurface list)
 --------------------
 Exit code: 0
 ============================================================
@@ -1365,7 +1365,7 @@ Exit code: 0
 ============================================================
 TEST: regfiledump -l @TESTDIR@/tiny.rga 'Normal Hypersurfaces' Foo 'Read Me'
 --------------------
-Normal Hypersurfaces (Normal Hypersurface List)
+Normal Hypersurfaces (Normal hypersurface list)
 ERROR: Foo -- No such packet.
 Read Me (Text)
 --------------------

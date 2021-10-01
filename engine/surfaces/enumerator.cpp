@@ -144,16 +144,24 @@ NormalSurfaces* NormalSurfaces::enumerate(Triangulation<3>& owner,
         return nullptr;
     }
 
-    NormalSurfaces* ans = new NormalSurfaces(coords, which, algHints, owner);
+    Packet* treeParent = owner.packet();
+    NormalSurfaces* ans;
+
+    if (treeParent)
+        ans = new PacketOf<NormalSurfaces>(std::in_place, coords, which,
+            algHints, owner);
+    else
+        ans = new NormalSurfaces(coords, which, algHints, owner);
+
     if (tracker) {
         // We pass the matching equations as an argument to the thread
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
         std::thread([=, &owner](MatrixInt e) {
-            Enumerator(ans, e, tracker, owner.packet()).enumerate();
+            Enumerator(ans, e, tracker, treeParent).enumerate();
         }, std::move(*eqns)).detach();
     } else
-        Enumerator(ans, *eqns, tracker, owner.packet()).enumerate();
+        Enumerator(ans, *eqns, tracker, treeParent).enumerate();
     return ans;
 }
 
@@ -173,7 +181,8 @@ void NormalSurfaces::Enumerator::enumerate() {
 
     // Insert the results into the packet tree, but only once they are ready.
     if (treeParent_ && ! (tracker_ && tracker_->isCancelled()))
-        treeParent_->insertChildLast(list_);
+        treeParent_->insertChildLast(
+            static_cast<PacketOf<NormalSurfaces>*>(list_));
 
     if (tracker_)
         tracker_->setFinished();
