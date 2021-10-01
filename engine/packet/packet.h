@@ -1557,15 +1557,12 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param out the output stream to which the closing XML tag
          * should be written.
-         * @param element the name of the XML tag.  If we are writing to
-         * the REGINA_XML_GEN_2 format, then this will be ignored (and may
-         * be \c null), and the tag name \c packet will be used instead.
          * @param format indicates which of Regina's XML file formats to write.
          * @param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
          */
         void writeXMLTreeData(std::ostream& out, FileFormat format,
-            bool anon, PacketRefs& refs) const;
+            PacketRefs& refs) const;
 
         /**
          * Writes the closing XML tag for this packet.
@@ -1870,24 +1867,112 @@ enum PacketHeldBy {
 };
 
 /**
- * TODO: Note that addPacketRefs() is currently hard-coded.
+ * A packet that stores a mathematical object of type \a Held.
+ *
+ * This is the class used for all of Regina's <i>wrapped packet types</i>.
+ * See the Packet class notes for general information about packets, and
+ * about the differences between \e wrapped and \e innate packet types.
+ *
+ * You can use a PacketOf<Held> in much the same way as you can use a "raw"
+ * object of type \a Held.  This class inherits the full interface from
+ * \a Held: you can query and manipulate its objects in the same way,
+ * and (using the std::in_place constructors) you can create them in the
+ * same way also.
+ *
+ * There are some important differences, however:
+ *
+ * - The \a Held class will typically support full value semantics, with full
+ *   support for copying, moving, and swapping (as is now common across most
+ *   of Regina's API).  In contrast, due the constraints of working with the
+ *   packet tree, PacketOf<Held> objects are typically passed by pointer,
+ *   copies and swaps do not touch the tree structure, and moves are not
+ *   supported at all.
+ *
+ * - The \a Held class will typically \e not be polymorphic.  In contrast,
+ *   PacketOf<Held> aquires polymorphism through its inherited Packet
+ *   interface.
+ *
+ * \ifacespython Since Python does not support templates, this class
+ * will have a name of the form PacketOfHeld.  For example, the C++ class
+ * Link is wrapped by the Python class \c PacketOfLink, and the C++ class
+ * Triangulation<3> is wrapped by the Python class \c PacketOfTriangulation3.
  */
 template <typename Held>
 class PacketOf : public Packet, public Held {
     REGINA_PACKET(packetTypeHolds<Held>, PacketInfo::name(typeID))
 
     public:
+        /**
+         * Creates a new packet.
+         *
+         * The \a Held object that it contains will be constructed using
+         * the default \a Held constructor.
+         *
+         * The packet will not be inserted into any packet tree, and
+         * will have an empty packet label.
+         */
         PacketOf() {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
+        /**
+         * Creates a new packet containing a deep copy of the given data.
+         *
+         * The packet will not be inserted into any packet tree, and
+         * will have an empty packet label.
+         *
+         * @param data the object to copy.
+         */
         PacketOf(const Held& data) : Held(data) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
+        /**
+         * Creates a new packet containing a deep copy of the given
+         * \a Held data, but without the surrounding packet infrastructure.
+         *
+         * Only the \a Held contents of \a data will be copied, not the packet
+         * infrastructure.  In particular, this new packet will not be inserted
+         * into the same packet tree as \a data, and will not be given the
+         * same packet label.
+         *
+         * @param data the object to copy.
+         */
         PacketOf(const PacketOf<Held>& data) : Held(data) {
+            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
+        /**
+         * Moves the given data into this new packet.
+         * This will typically be much faster than a deep copy, since it uses
+         * the move constructor for \a Held.
+         *
+         * The packet will not be inserted into any packet tree, and
+         * will have an empty packet label.
+         *
+         * The object that is passed (\a data) will no longer be usable.
+         *
+         * @param data the object to move.
+         */
         PacketOf(Held&& data) : Held(std::move(data)) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
+        /**
+         * Creates a new packet using one of \a Held's own constructors.
+         *
+         * The given arguments \a args will be forwarded directly to
+         * the appropriate \a Held constructor (using C++ perfect forwarding).
+         *
+         * The initial argument should just be \c std::in_place; this is so the
+         * compiler can disambiguate between these "forwarding constructors"
+         * and the other constructors for PacketOf<Held>.
+         *
+         * The new packet will not be inserted into any packet tree, and
+         * will have an empty packet label.
+         *
+         * \ifacespython The initial \c std::in_place argument is not present.
+         * Just use PacketOf(args...).
+         *
+         * @param args the arguments to be forwarded to the appropriate
+         * \a Held constructor.
+         */
         template <typename... Args>
         explicit PacketOf(std::in_place_t, Args&&... args) :
                 Held(std::forward<Args>(args)...) {
@@ -1901,6 +1986,7 @@ class PacketOf : public Packet, public Held {
             Held::writeTextLong(out);
         }
 
+        // Disable assignment, which would interfere with the packet tree.
         PacketOf& operator = (const PacketOf&) = delete;
 
     protected:
@@ -1912,29 +1998,71 @@ class PacketOf : public Packet, public Held {
         virtual void addPacketRefs(PacketRefs& refs) const override;
 };
 
-// NOTE: All constructors and assignment operators are trivial
+/**
+ * A lightweight helper class that allows an object of type \a Held to connect
+ * with the wrapped packet class that contains it.
+ *
+ * For every wrapped packet type of the form PacketOf<Held>, the corresponding
+ * class \a Held must derive from PacketData<Held>.  See the Packet class
+ * notes for more information about packets, and for what else must be
+ * implemented for each wrapped packet type.
+ *
+ * This base class is extremely lightweight: the only data that it contains
+ * is a single PacketHeldBy enumeration value.  All of the class constructors
+ * set this value to HELD_BY_NONE; it is the responsibility of subclasses
+ * (e.g., PacketOf<Held>) to change this where necessary.
+ */
 template <typename Held>
 class PacketData {
     protected:
         PacketHeldBy heldBy_ { HELD_BY_NONE };
+            /**< Indicates whether this \a Held object is in fact the
+                 inherited data for a PacketOf<Held>.  As a special case,
+                 this field is also used to indicate when a Triangulation<3>
+                 is in fact the inherited data for a SnapPeaTriangulation.
+                 See the PacketHeldBy enumeration for more details on
+                 the different values that this data member can take. */
 
     public:
+        /**
+         * Default constructor that sets \a heldBy_ to HELD_BY_NONE.
+         */
         PacketData() {}
+        /**
+         * Copy constructor that ignores its argument, and instead sets
+         * \a heldBy_ to HELD_BY_NONE.  This is because \a heldBy_ stores
+         * information about the C++ type of \e this object, not the object
+         * being copied.
+         *
+         * This constructor is provided so that \a Held can (if it wants) use
+         * an implicitly-declared copy or move constructor.
+         */
         PacketData(const PacketData&) {}
+        /**
+         * Assignment operator that ignores its argument and does nothing.
+         * This is because \a heldBy_ stores information about the C++ type
+         * of \e this object, not the object being copied.
+         *
+         * This operator is provided so that \a Held can (if it wants) use an
+         * implicitly-declared copy or move assignment operator.
+         *
+         * @return a reference to this object.
+         */
         PacketData& operator = (const PacketData&) { return *this; }
 
         /**
          * Returns the packet that holds this data, if there is one.
          *
          * If this object is being held by a packet \a p of type PacketOf<Held>,
-         * then this packet \a p will be returned.  Otherwise, if this is a
+         * then that packet \a p will be returned.  Otherwise, if this is a
          * "standalone" object of type Held, then this routine will return
          * \c null.
          *
          * There is a special case when dealing with a packet \a q that holds
          * a SnapPea triangulation.  Here \a q is of type
          * PacketOf<SnapPeaTriangulation>, and it holds a Triangulation<3>
-         * "indirectly" in the sense that SnapPeaTriangulation derives from
+         * "indirectly" in the sense that Packetof<SnapPeaTriangulation>
+         * derives from SnapPeaTriangulation, which in turn derives from
          * Triangulation<3>.  In this scenario:
          *
          * - calling Triangulation<3>::packet() will return \c null,
@@ -1946,7 +2074,8 @@ class PacketData {
          * - calling the special routine Triangulation<3>::inAnyPacket() will
          *   also return the "indirect" enclosing packet \a q.
          *
-         * The latter function inAnyPacket() is specific to Triangulation<3>.
+         * The function inAnyPacket() is specific to Triangulation<3>, and is
+         * not offered for other \a Held types.
          *
          * @return the packet that holds this data, or \c null if this
          * data is not (directly) held by a packet.
@@ -1955,19 +2084,110 @@ class PacketData {
             return heldBy_ == HELD_BY_PACKET ?
                 static_cast<PacketOf<Held>*>(this) : nullptr;
         }
+        /**
+         * Returns the packet that holds this data, if there is one.
+         *
+         * See the non-const version of this function for further details,
+         * and in particular for how this functions operations in the
+         * special case of a packet that holds a SnapPea triangulation.
+         *
+         * @return the packet that holds this data, or \c null if this
+         * data is not (directly) held by a packet.
+         */
         const PacketOf<Held>* packet() const {
             return heldBy_ == HELD_BY_PACKET ?
                 static_cast<const PacketOf<Held>*>(this) : nullptr;
         }
 
+        /**
+         * A unique string ID that can be used in place of a packet ID.
+         *
+         * This is an alternative to Packet::internalID(), and is designed
+         * for use when \a Held is not actually wrapped by a PacketOf<Held>.
+         * (An example of such a scenario is when a normal surface list
+         * needs to write its triangulation to file, but the triangulation
+         * is a standalone object that is not stored in a packet.)
+         *
+         * The ID that is returned will:
+         *
+         * - remain fixed throughout the lifetime of the program for a given
+         *   object, even if the contents of the object are changed;
+         *
+         * - not clash with the anonID() returned from any other object,
+         *   or with the internalID() returned from any packet of any type;
+         *
+         * These IDs are \e not preserved when copying or moving one
+         * object to another, and are not preserved when writing to a
+         * Regina data file and then reloading the file contents.
+         *
+         * \warning If this object \e is wrapped in a PacketOf<Held>, then
+         * anonID() and Packet::internalID() may return \e different values.
+         *
+         * See Packet::internalID() for further details.
+         *
+         * @return a unique ID that identifies this object.
+         */
         std::string anonID() const;
 
+        /**
+         * An object that facilitates firing packetToBeChanged() and
+         * packetWasChanged() events.
+         *
+         * This performs the same function as Packet::ChangeEventSpan;
+         * see that class for full details on how it works.  The main
+         * differences are:
+         *
+         * - If the underlying \a Held object is not actually part of a larger
+         *   PacketOf<Held>, then this ChangeEventSpan will do nothing.
+         *   In such a scenario, the ChangeEventSpan constructor and
+         *   destructor are both extremely cheap (each will make just a
+         *   single integer comparison).
+         *
+         * - If the underlying \a Held object \e is part of a PacketOf<Held>,
+         *   then this ChangeEventSpan will ensure that the appropriate
+         *   packet events are fired (just like Packet::ChangeEventSpan).
+         *
+         * Just like Packet::ChangeEventSpan, these objects can be nested
+         * so that only the outermost object will fire change events;
+         * furthermore, PacketData<Held>::ChangeEventSpan objects and
+         * Packet::ChangeEventSpan objects can be nested within each other.
+         *
+         * When working with PacketData<Triangulation<3>>, this class
+         * includes special code that nullifies a SnapPea triangulation
+         * when its inherited Triangulation<3> data changes unexpectedly.
+         * See the SnapPeaTriangulation class for details.
+         */
         class ChangeEventSpan {
             private:
                 PacketData& data_;
+                    /**< The object for which - if it belongs to a
+                         PacketOf<Held> - change events will be fired. */
 
             public:
+                /**
+                 * Creates a new change event object for the given
+                 * \a Held data.
+                 *
+                 * If \a data is part of a PacketOf<Held>, and this is the
+                 * only ChangeEventSpan currently in existence for \a data,
+                 * then this constructor will call
+                 * PacketListener::packetToBeChanged() for all
+                 * registered listeners for the packet.
+                 *
+                 * @param data the object whose data is about to change;
+                 * this may or may not be of the subclass PacketOf<Held>.
+                 */
                 ChangeEventSpan(PacketData& data);
+
+                /**
+                 * Destroys this change event object.
+                 *
+                 * If the underlying \a Held object is part of a
+                 * PacketOf<Held>, and this is the only ChangeEventSpan
+                 * currently in existence for it, then this destructor will
+                 * call PacketListener::packetWasChanged() for all
+                 * registered listeners for the packet.
+                 */
                 ~ChangeEventSpan();
 
                 // Make this class non-copyable.

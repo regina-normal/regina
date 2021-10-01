@@ -124,7 +124,8 @@ void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
 
     writer.openPost();
     writer.writeContent();
-    writeXMLTreeData(out, format, anon, refs);
+    if (! anon)
+        writeXMLTreeData(out, format, refs);
     writer.close();
 }
 

@@ -45,9 +45,11 @@ namespace python {
 /**
  * Adds Python bindings for the class PacketOf<Held>.
  *
- * The new packet class will be given an "inherited copy constructor" which
- * takes a single (const Held&) argument.  All other constructors that pass
- * their arguments through to Held(...) will need to be explicitly added by
+ * The new packet class will be given a deep copy constructor, which takes a
+ * single argument of type const Held&.
+ *
+ * For all other Held constructors (except for the copy constructor), you will
+ * need to add a corresponding "forwarding constructor" to this class by
  * calling add_packet_constructor() with the pybind11::class_ object that
  * this function returns.
  */
@@ -55,7 +57,7 @@ template <class Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     return pybind11::class_<regina::PacketOf<Held>, regina::Packet,
             regina::SafePtr<regina::PacketOf<Held>>>(m, className)
-        .def(pybind11::init<const Held&>())
+        .def(pybind11::init<const Held&>()) // also takes PacketOf<Held>
         .def("data", [](regina::PacketOf<Held>* p) {
             return static_cast<Held*>(p);
         }, pybind11::return_value_policy::reference_internal)
