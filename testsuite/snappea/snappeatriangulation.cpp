@@ -269,9 +269,9 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            SnapPeaTriangulation* figureEight = ExampleSnapPea::figureEight();
+            SnapPeaTriangulation figureEight = ExampleSnapPea::figureEight();
 
-            SnapPeaTriangulation copyAss(*figureEight);
+            SnapPeaTriangulation copyAss(figureEight);
             copyAss = t;
             if (! copyAss.isNull()) {
                 std::ostringstream msg;
@@ -279,15 +279,13 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            SnapPeaTriangulation moveAss(*figureEight);
+            SnapPeaTriangulation moveAss(figureEight);
             moveAss = std::move(copyAss);
             if (! moveAss.isNull()) {
                 std::ostringstream msg;
                 msg << name << ": move assigned not null.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete figureEight;
         }
 
         static void verifyCopyMove(const SnapPeaTriangulation& t,
@@ -830,75 +828,75 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
         void swapping() {
             {
-                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
-                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+                SnapPeaTriangulation a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation b = ExampleSnapPea::whiteheadLink();
 
-                a->volume();
-                b->volume();
+                a.volume();
+                b.volume();
 
-                swap(*a, *b);
+                swap(a, b);
 
-                if (a->isNull() || b->isNull()) {
+                if (a.isNull() || b.isNull()) {
                     CPPUNIT_FAIL("swap() nullified the triangulation(s).");
                 }
 
-                if (a->countCusps() != 2) {
+                if (a.countCusps() != 2) {
                     CPPUNIT_FAIL("swap() did not swap cusps correctly.");
                 }
-                if (std::floor(a->volume()) != 3) {
+                if (std::floor(a.volume()) != 3) {
                     CPPUNIT_FAIL("swap() did not swap snappea data correctly.");
                 }
 
-                std::iter_swap(a, b);
+                std::iter_swap(&a, &b);
 
-                if (a->countCusps() != 1) {
+                if (a.countCusps() != 1) {
                     CPPUNIT_FAIL(
                         "std::iter_swap() did not swap cusps correctly.");
                 }
-                if (std::floor(a->volume()) != 2) {
+                if (std::floor(a.volume()) != 2) {
                     CPPUNIT_FAIL(
                         "std::iter_swap() did not swap snappea data correctly.");
                 }
             }
             {
-                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
-                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+                SnapPeaTriangulation a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation b = ExampleSnapPea::whiteheadLink();
 
-                a->volume();
-                b->volume();
+                a.volume();
+                b.volume();
 
-                swap(static_cast<Triangulation<3>&>(*a), *b);
+                swap(static_cast<Triangulation<3>&>(a), b);
 
-                if (! (a->isNull() && b->isNull())) {
+                if (! (a.isNull() && b.isNull())) {
                     CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
                         "where required.");
                 }
             }
             {
-                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
-                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+                SnapPeaTriangulation a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation b = ExampleSnapPea::whiteheadLink();
 
-                a->volume();
-                b->volume();
+                a.volume();
+                b.volume();
 
-                swap(*a, static_cast<Triangulation<3>&>(*b));
+                swap(a, static_cast<Triangulation<3>&>(b));
 
-                if (! (a->isNull() && b->isNull())) {
+                if (! (a.isNull() && b.isNull())) {
                     CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
                         "where required.");
                 }
             }
             {
-                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
-                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+                SnapPeaTriangulation a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation b = ExampleSnapPea::whiteheadLink();
 
-                a->volume();
-                b->volume();
+                a.volume();
+                b.volume();
 
-                swap(static_cast<Triangulation<3>&>(*a),
-                    static_cast<Triangulation<3>&>(*b));
+                swap(static_cast<Triangulation<3>&>(a),
+                    static_cast<Triangulation<3>&>(b));
 
-                if (! (a->isNull() && b->isNull())) {
+                if (! (a.isNull() && b.isNull())) {
                     CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
                         "where required.");
                 }
