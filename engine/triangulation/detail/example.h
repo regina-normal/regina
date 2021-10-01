@@ -256,7 +256,6 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::singleCone(
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel("Single cone over " + base.label());
 
     size_t n = base.size();
     if (n == 0)
@@ -301,7 +300,6 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::doubleCone(
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel("Double cone over " + base.label());
 
     size_t n = base.size();
     if (n == 0)
@@ -355,7 +353,6 @@ Triangulation<dim>* ExampleBase<dim>::sphere() {
     Triangulation<dim>* ans = new Triangulation<dim>;
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel(std::string(Strings<dim>::dim) + "-sphere");
 
     Simplex<dim>* p = ans->newSimplex();
     Simplex<dim>* q = ans->newSimplex();
@@ -370,8 +367,6 @@ Triangulation<dim>* ExampleBase<dim>::simplicialSphere() {
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel(std::string("Standard simplicial ") +
-    //    Strings<dim>::dim + "-sphere");
 
     Simplex<dim>* simps[dim + 2]; // One for every vertex of the (dim+1)-simplex
     unsigned i, j, k;
@@ -404,7 +399,6 @@ Triangulation<dim>* ExampleBase<dim>::sphereBundle() {
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel(std::string("S") + Strings<dim-1>::dim + " x S1");
 
     Simplex<dim>* p = ans->newSimplex();
     Simplex<dim>* q = ans->newSimplex();
@@ -438,7 +432,6 @@ Triangulation<dim>* ExampleBase<dim>::twistedSphereBundle() {
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel(std::string("S") + Strings<dim-1>::dim + " x~ S1");
 
     Simplex<dim>* p = ans->newSimplex();
     Simplex<dim>* q = ans->newSimplex();
@@ -470,7 +463,6 @@ Triangulation<dim>* ExampleBase<dim>::ball() {
     Triangulation<dim>* ans = new Triangulation<dim>;
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel(std::string(Strings<dim>::dim) + "-ball");
 
     ans->newSimplex();
     return ans;
@@ -484,7 +476,6 @@ Triangulation<dim>* ExampleBase<dim>::ballBundle() {
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x S1");
 
     // Now join facet 0 to a facet dim to join up the S1 loop.
     int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }
@@ -516,7 +507,6 @@ Triangulation<dim>* ExampleBase<dim>::twistedBallBundle() {
     Triangulation<dim>* ans = new Triangulation<dim>();
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(*ans);
-    // ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x~ S1");
 
     // Now join facet 0 to a facet dim to join up the S1 loop.
     int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }

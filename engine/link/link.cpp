@@ -137,22 +137,16 @@ Link& Link::operator = (Link&& src) {
 Link::Link(const std::string& description) {
     Link* attempt;
 
-    if ((attempt = fromKnotSig(description))) {
+    if ((attempt = fromKnotSig(description)))
         swap(*attempt);
-        // setLabel(description);
-    } else if ((attempt = fromOrientedGauss(description))) {
+    else if ((attempt = fromOrientedGauss(description)))
         swap(*attempt);
-        // setLabel(description);
-    } else if ((attempt = fromGauss(description))) {
+    else if ((attempt = fromGauss(description)))
         swap(*attempt);
-        // setLabel(description);
-    } else if ((attempt = fromDT(description))) {
+    else if ((attempt = fromDT(description)))
         swap(*attempt);
-        // setLabel(description);
-    } else if ((attempt = fromPD(description))) {
+    else if ((attempt = fromPD(description)))
         swap(*attempt);
-        // setLabel(description);
-    }
 
     delete attempt;
 }
