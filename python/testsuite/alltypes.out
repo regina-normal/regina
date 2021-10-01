@@ -1483,7 +1483,16 @@ Equality type : EqualityType.NEVER_INSTANTIATED
 PacketListener : class
 Equality type : EqualityType.BY_REFERENCE
 
+PacketOfAngleStructures : class
+Equality type : EqualityType.BY_REFERENCE
+
 PacketOfLink : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfNormalHypersurfaces : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketOfNormalSurfaces : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketOfSnapPeaTriangulation : class

@@ -97,7 +97,7 @@ void addAngleStructures(pybind11::module_& m) {
     regina::python::add_output(l);
     regina::python::add_eq_operators(l);
 
-    auto& wrap = regina::python::add_packet_wrapper<AngleStructures>(
+    auto wrap = regina::python::add_packet_wrapper<AngleStructures>(
         m, "PacketOfAngleStructures");
     regina::python::add_packet_constructor<const Triangulation<3>&, bool,
             regina::AngleAlg, ProgressTracker*>(wrap,

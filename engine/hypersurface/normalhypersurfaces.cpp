@@ -35,7 +35,6 @@
 #include "enumerate/doubledescription.h"
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
-#include "file/xml/xmlwriter.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"

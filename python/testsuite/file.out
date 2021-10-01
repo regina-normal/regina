@@ -86,7 +86,7 @@ Triangles:
 ************************************************************
 *
 * Label: Tri-Quad Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -100,7 +100,7 @@ Number of surfaces is 1
 ************************************************************
 *
 * Label: Quad Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -117,7 +117,7 @@ inf inf inf inf ; 0 0 1 || inf inf inf inf ; 0 2 0
 ************************************************************
 *
 * Label: Angle Structures
-* Type: Angle Structure List
+* Type: Angle structure list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -181,7 +181,7 @@ Triangles:
 ************************************************************
 *
 * Label: Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Layered Solid Torus
 *
 ************************************************************
@@ -206,7 +206,7 @@ Number of surfaces is 12
 ************************************************************
 *
 * Label: Almost Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Layered Solid Torus
 *
 ************************************************************
@@ -570,7 +570,7 @@ Edges:
 ************************************************************
 *
 * Label: Tri-Quad Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -584,7 +584,7 @@ Number of surfaces is 1
 ************************************************************
 *
 * Label: Quad Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -601,7 +601,7 @@ inf inf inf inf ; 0 2 0 || inf inf inf inf ; 0 0 1
 ************************************************************
 *
 * Label: Angle Structures
-* Type: Angle Structure List
+* Type: Angle structure list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -665,7 +665,7 @@ Triangles:
 ************************************************************
 *
 * Label: Almost Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Layered Solid Torus
 *
 ************************************************************
@@ -711,7 +711,7 @@ Number of surfaces is 33
 ************************************************************
 *
 * Label: Fundamental Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Layered Solid Torus
 *
 ************************************************************

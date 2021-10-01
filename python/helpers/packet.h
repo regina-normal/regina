@@ -50,8 +50,7 @@ namespace python {
  * explicitly added using the pybind11::class_ object that is returned.
  */
 template <class Held>
-auto& add_packet_wrapper(pybind11::module_& m,
-        const char* className) {
+auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     return pybind11::class_<regina::PacketOf<Held>, regina::Packet,
             regina::SafePtr<regina::PacketOf<Held>>>(m, className)
         .def(pybind11::init<const Held&>())

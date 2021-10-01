@@ -140,7 +140,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def_static("disableKernelMessages",
             &SnapPeaTriangulation::disableKernelMessages)
     ;
-    auto& wrap = regina::python::add_packet_wrapper<SnapPeaTriangulation>(
+    auto wrap = regina::python::add_packet_wrapper<SnapPeaTriangulation>(
         m, "PacketOfSnapPeaTriangulation");
     regina::python::add_packet_constructor<>(wrap);
     regina::python::add_packet_constructor<const std::string&>(wrap);

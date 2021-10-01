@@ -116,12 +116,17 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("quadToStandard", [](const NormalSurfaces& src)
                 -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            const regina::Packet* p = src.packet();
+            regina::Packet* parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = new NormalSurfaces(src,
-                    regina::NS_CONV_REDUCED_TO_STD);
-                if (src.parent())
-                    src.parent()->insertChildLast(ans);
-                return ans;
+                if (parent) {
+                    auto ans = new regina::PacketOf<NormalSurfaces>(
+                        std::in_place, src, regina::NS_CONV_REDUCED_TO_STD);
+                    parent->insertChildLast(ans);
+                    return ans;
+                } else
+                    return new NormalSurfaces(src,
+                        regina::NS_CONV_REDUCED_TO_STD);
             } catch (const regina::FailedPrecondition&) {
                 return nullptr;
             }
@@ -129,12 +134,17 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("quadOctToStandardAN", [](const NormalSurfaces& src)
                 -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            const regina::Packet* p = src.packet();
+            regina::Packet* parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = new NormalSurfaces(src,
-                    regina::NS_CONV_REDUCED_TO_STD);
-                if (src.parent())
-                    src.parent()->insertChildLast(ans);
-                return ans;
+                if (parent) {
+                    auto ans = new regina::PacketOf<NormalSurfaces>(
+                        std::in_place, src, regina::NS_CONV_REDUCED_TO_STD);
+                    parent->insertChildLast(ans);
+                    return ans;
+                } else
+                    return new NormalSurfaces(src,
+                        regina::NS_CONV_REDUCED_TO_STD);
             } catch (const regina::FailedPrecondition&) {
                 return nullptr;
             }
@@ -142,12 +152,17 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("standardToQuad", [](const NormalSurfaces& src)
                 -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            const regina::Packet* p = src.packet();
+            regina::Packet* parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = new NormalSurfaces(src,
-                    regina::NS_CONV_STD_TO_REDUCED);
-                if (src.parent())
-                    src.parent()->insertChildLast(ans);
-                return ans;
+                if (parent) {
+                    auto ans = new regina::PacketOf<NormalSurfaces>(
+                        std::in_place, src, regina::NS_CONV_STD_TO_REDUCED);
+                    parent->insertChildLast(ans);
+                    return ans;
+                } else
+                    return new NormalSurfaces(src,
+                        regina::NS_CONV_STD_TO_REDUCED);
             } catch (const regina::FailedPrecondition&) {
                 return nullptr;
             }
@@ -155,32 +170,48 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("standardANToQuadOct", [](const NormalSurfaces& src)
                 -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            const regina::Packet* p = src.packet();
+            regina::Packet* parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = new NormalSurfaces(src,
-                    regina::NS_CONV_STD_TO_REDUCED);
-                if (src.parent())
-                    src.parent()->insertChildLast(ans);
-                return ans;
+                if (parent) {
+                    auto ans = new regina::PacketOf<NormalSurfaces>(
+                        std::in_place, src, regina::NS_CONV_STD_TO_REDUCED);
+                    parent->insertChildLast(ans);
+                    return ans;
+                } else
+                    return new NormalSurfaces(src,
+                        regina::NS_CONV_STD_TO_REDUCED);
             } catch (const regina::FailedPrecondition&) {
                 return nullptr;
             }
         })
-        .def("filter", [](const NormalSurfaces& src, const SurfaceFilter& f) {
+        .def("filter", [](const NormalSurfaces& src, const SurfaceFilter& f)
+                -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
-            auto ans = new NormalSurfaces(src, f);
-            if (src.parent())
-                src.parent()->insertChildLast(ans);
-            return ans;
+            const regina::Packet* p = src.packet();
+            regina::Packet* parent = (p ? p->parent() : nullptr);
+            if (parent) {
+                auto ans = new regina::PacketOf<NormalSurfaces>(
+                    std::in_place, src, f);
+                parent->insertChildLast(ans);
+                return ans;
+            } else
+                return new NormalSurfaces(src, f);
         })
         .def("filterForLocallyCompatiblePairs", [](const NormalSurfaces& src)
                 -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            const regina::Packet* p = src.packet();
+            regina::Packet* parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = new NormalSurfaces(src,
-                    regina::NS_FILTER_COMPATIBLE);
-                if (src.parent())
-                    src.parent()->insertChildLast(ans);
-                return ans;
+                if (parent) {
+                    auto ans = new regina::PacketOf<NormalSurfaces>(
+                        std::in_place, src, regina::NS_FILTER_COMPATIBLE);
+                    parent->insertChildLast(ans);
+                    return ans;
+                } else
+                    return new NormalSurfaces(src,
+                        regina::NS_FILTER_COMPATIBLE);
             } catch (const regina::FailedPrecondition&) {
                 return nullptr;
             }
@@ -188,12 +219,16 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("filterForDisjointPairs", [](const NormalSurfaces& src)
                 -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            const regina::Packet* p = src.packet();
+            regina::Packet* parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = new NormalSurfaces(src,
-                    regina::NS_FILTER_DISJOINT);
-                if (src.parent())
-                    src.parent()->insertChildLast(ans);
-                return ans;
+                if (parent) {
+                    auto ans = new regina::PacketOf<NormalSurfaces>(
+                        std::in_place, src, regina::NS_FILTER_DISJOINT);
+                    parent->insertChildLast(ans);
+                    return ans;
+                } else
+                    return new NormalSurfaces(src, regina::NS_FILTER_DISJOINT);
             } catch (const regina::FailedPrecondition&) {
                 return nullptr;
             }
@@ -201,12 +236,17 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("filterForPotentiallyIncompressible", [](const NormalSurfaces& src)
                 -> NormalSurfaces* {
             // This is deprecated, so we reimplement it here ourselves.
+            const regina::Packet* p = src.packet();
+            regina::Packet* parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = new NormalSurfaces(src,
-                    regina::NS_FILTER_INCOMPRESSIBLE);
-                if (src.parent())
-                    src.parent()->insertChildLast(ans);
-                return ans;
+                if (parent) {
+                    auto ans = new regina::PacketOf<NormalSurfaces>(
+                        std::in_place, src, regina::NS_FILTER_INCOMPRESSIBLE);
+                    parent->insertChildLast(ans);
+                    return ans;
+                } else
+                    return new NormalSurfaces(src,
+                        regina::NS_FILTER_INCOMPRESSIBLE);
             } catch (const regina::FailedPrecondition&) {
                 return nullptr;
             }
@@ -223,7 +263,7 @@ void addNormalSurfaces(pybind11::module_& m) {
     regina::python::add_output(l);
     regina::python::add_eq_operators(l);
 
-    auto& wrap = regina::python::add_packet_wrapper<NormalSurfaces>(
+    auto wrap = regina::python::add_packet_wrapper<NormalSurfaces>(
         m, "PacketOfNormalSurfaces");
     regina::python::add_packet_constructor<const Triangulation<3>&,
             regina::NormalCoords, regina::NormalList, regina::NormalAlg,

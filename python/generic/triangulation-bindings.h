@@ -210,7 +210,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    auto& wrap = regina::python::add_packet_wrapper<Triangulation<dim>>(
+    auto wrap = regina::python::add_packet_wrapper<Triangulation<dim>>(
         m, (std::string("PacketOf") + name).c_str());
     regina::python::add_packet_constructor<>(wrap);
     regina::python::add_packet_constructor<

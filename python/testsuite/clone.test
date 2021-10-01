@@ -41,19 +41,19 @@ root = Container()
 # 3-D surface test:
 
 tri = PacketOfTriangulation3(Example3.poincareHomologySphere())
-list = NormalSurfaces(tri.data(), NS_STANDARD)
+list = PacketOfNormalSurfaces(tri.data(), NS_STANDARD)
 tri.insertChildLast(list)
 root.insertChildLast(tri)
 
 tri2 = tri.clone(True)
 list2 = tri2.firstChild()
 
-s = list.surface(0)
-s2 = list2.surface(0)
+s = list.data().surface(0)
+s2 = list2.data().surface(0)
 
-print(list.triangulation() == tri.data())
-print(list2.triangulation() == tri.data())
-print(list2.triangulation() != tri2.data())
+print(list.data().triangulation() == tri.data())
+print(list2.data().triangulation() == tri.data())
+print(list2.data().triangulation() != tri2.data())
 
 print(s.triangulation() == tri.data())
 print(s2.triangulation() == tri.data())
@@ -62,19 +62,19 @@ print(s2.triangulation() != tri2.data())
 # 4-D hypersurface test:
 
 tri = PacketOfTriangulation4(Example4.s3xs1())
-list = NormalHypersurfaces(tri.data(), HS_STANDARD)
+list = PacketOfNormalHypersurfaces(tri.data(), HS_STANDARD)
 tri.insertChildLast(list)
 root.insertChildLast(tri)
 
 tri2 = tri.clone(True)
 list2 = tri2.firstChild()
 
-s = list.hypersurface(0)
-s2 = list2.hypersurface(0)
+s = list.data().hypersurface(0)
+s2 = list2.data().hypersurface(0)
 
-print(list.triangulation() == tri.data())
-print(list2.triangulation() == tri.data())
-print(list2.triangulation() != tri2.data())
+print(list.data().triangulation() == tri.data())
+print(list2.data().triangulation() == tri.data())
+print(list2.data().triangulation() != tri2.data())
 
 print(s.triangulation() == tri.data())
 print(s2.triangulation() == tri.data())
@@ -83,19 +83,19 @@ print(s2.triangulation() != tri2.data())
 # Angle structure test:
 
 tri = PacketOfTriangulation3(Example3.whiteheadLink())
-list = AngleStructures(tri.data())
+list = PacketOfAngleStructures(tri.data())
 tri.insertChildLast(list)
 root.insertChildLast(tri)
 
 tri2 = tri.clone(True)
 list2 = tri2.firstChild()
 
-s = list.structure(0)
-s2 = list2.structure(0)
+s = list.data().structure(0)
+s2 = list2.data().structure(0)
 
-print(list.triangulation() == tri.data())
-print(list2.triangulation() == tri.data())
-print(list2.triangulation() != tri2.data())
+print(list.data().triangulation() == tri.data())
+print(list2.data().triangulation() == tri.data())
+print(list2.data().triangulation() != tri2.data())
 
 print(s.triangulation() == tri.data())
 print(s2.triangulation() == tri.data())

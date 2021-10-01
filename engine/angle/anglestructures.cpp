@@ -33,7 +33,6 @@
 #include "angle/anglestructures.h"
 #include "enumerate/doubledescription.h"
 #include "enumerate/treetraversal.h"
-#include "file/xml/xmlwriter.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"

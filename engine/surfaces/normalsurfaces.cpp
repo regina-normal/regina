@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "file/xml/xmlwriter.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
