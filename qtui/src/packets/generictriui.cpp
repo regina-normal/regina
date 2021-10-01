@@ -31,7 +31,6 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "packet/packet.h" // TODO: Remove
 #include "triangulation/generic.h"
 
 // UI includes:

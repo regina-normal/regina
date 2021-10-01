@@ -32,7 +32,6 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "packet/packet.h" // TODO: Remove
 #include "triangulation/generic.h"
 #include "testsuite/generic/testgeneric.h"
 

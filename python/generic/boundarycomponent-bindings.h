@@ -32,7 +32,6 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
-#include "packet/packet.h" // TODO: Remove
 #include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"

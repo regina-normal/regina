@@ -32,7 +32,6 @@
 
 #include <stdexcept>
 #include <sstream>
-#include "packet/packet.h" // TODO: Remove
 #include "facehelper.h"
 
 namespace regina::python {

@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/packet.h" // TODO: Remove
 #include "triangulation/generic.h"
 #include "triangulation/detail/boundarycomponent-impl.h"
 
