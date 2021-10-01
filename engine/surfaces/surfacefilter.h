@@ -112,7 +112,7 @@ class SurfaceFilterProperties;
  * \ingroup surfaces
  */
 class SurfaceFilter : public Packet {
-    REGINA_PACKET(SurfaceFilter, PACKET_SURFACEFILTER, "Surface Filter")
+    REGINA_PACKET(PACKET_SURFACEFILTER, "Surface filter")
 
     public:
         /**

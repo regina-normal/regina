@@ -67,8 +67,7 @@ template <typename Held> class PacketData;
  */
 
 /**
- * Defines various constants, types and virtual functions for a
- * subclass of Packet.
+ * Defines various constants and virtual functions for a subclass of Packet.
  *
  * Every subclass of Packet \a must include REGINA_PACKET at the beginning
  * of the class definition.
@@ -80,13 +79,12 @@ template <typename Held> class PacketData;
  * - declarations and implementations of the virtual functions
  *   Packet::type() and Packet::typeName().
  *
- * @param class_ the name of this descendant class of Packet.
  * @param id the corresponding PacketType constant.
  * @param name the human-readable name of this packet type.
  *
  * \ingroup packet
  */
-#define REGINA_PACKET(class_, id, name) \
+#define REGINA_PACKET(id, name) \
     public: \
         static constexpr const PacketType typeID = id; \
         inline virtual PacketType type() const override { \
@@ -1771,8 +1769,7 @@ enum PacketHeldBy {
  */
 template <typename Held>
 class PacketOf : public Packet, public Held {
-    public:
-        static constexpr const PacketType typeID = packetTypeHolds<Held>;
+    REGINA_PACKET(packetTypeHolds<Held>, PacketInfo::name(typeID))
 
     public:
         PacketOf() {
@@ -1790,13 +1787,6 @@ class PacketOf : public Packet, public Held {
         explicit PacketOf(std::in_place_t, Args&&... args) :
                 Held(std::forward<Args>(args)...) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
-        }
-
-        inline virtual PacketType type() const override {
-            return typeID;
-        }
-        inline virtual std::string typeName() const override {
-            return PacketInfo::name(typeID);
         }
 
         virtual void writeTextShort(std::ostream& out) const override {

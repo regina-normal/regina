@@ -1274,6 +1274,8 @@ Version 7.0  [ TODO ]
         Macro ENABLE_MEMBER_FOR_REGINA_INTEGER:
             - New macro for conditionally enabling or disabling member
               functions in template classes.
+        Macro REGINA_PACKET:
+            - No longer takes an initial class argument.
         Header packet/packetregistry.h, packet/packetregistry-impl.h:
             - Removed completely.
         Header surfaces/coordregistry.h, surfaces/coordregistry-impl.h:

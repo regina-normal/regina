@@ -58,7 +58,7 @@ class PDF;
  * \ingroup packet
  */
 class PDF : public Packet {
-    REGINA_PACKET(PDF, PACKET_PDF, "PDF")
+    REGINA_PACKET(PACKET_PDF, "PDF")
 
     public:
         /**

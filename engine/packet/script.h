@@ -70,7 +70,7 @@ class Script;
  * \ingroup packet
  */
 class Script : public Packet, public PacketListener {
-    REGINA_PACKET(Script, PACKET_SCRIPT, "Script")
+    REGINA_PACKET(PACKET_SCRIPT, "Script")
 
     private:
         std::string text_;

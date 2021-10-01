@@ -52,7 +52,7 @@ class Text;
  * \ingroup packet
  */
 class Text : public Packet {
-    REGINA_PACKET(Text, PACKET_TEXT, "Text")
+    REGINA_PACKET(PACKET_TEXT, "Text")
 
     private:
         std::string text_;

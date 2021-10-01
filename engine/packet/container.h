@@ -54,7 +54,7 @@ class Container;
  * \ingroup packet
  */
 class Container : public Packet {
-    REGINA_PACKET(Container, PACKET_CONTAINER, "Container")
+    REGINA_PACKET(PACKET_CONTAINER, "Container")
 
     public:
         /**
