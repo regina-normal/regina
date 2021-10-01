@@ -744,6 +744,8 @@ Version 7.0  [ TODO ]
               take type as a PacketType, not a string.  The old functions
               are removed completely, because the typeName() string is
               not guaranteed to stay constant between releases.
+        Class PacketData<Held>, PacketOf<Held>:
+            - New template classes to support the new "wrapped" packet types.
         Class PacketInfo:
             - This used to be a template class.  It is now a non-templated
               class, and has been stripped down to just a single static name()
@@ -1236,6 +1238,9 @@ Version 7.0  [ TODO ]
         Function makeMatchingEquations():
             - Now takes a const reference (not a const pointer), and returns a
               std::optional<MatrixInt> instead of a pointer that could be null.
+        Function makePacket():
+            - A new suite of overload functions for converting mathematical
+              objects of type Held into wrapped packets of type PacketOf<Held>.
         Function makeZeroVector():
             - Removed completely.
         Function preImageOfLattice():

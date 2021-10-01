@@ -109,7 +109,9 @@ class XMLWriterRequiresTriangulation {
 };
 
 /**
- * Used to write one of Regina's objects to XML.
+ * Used to write one of Regina's objects to XML.  This is typically used
+ * by wrapped packets: the XML output code for PacketOf<T> uses XMLWriter<T>
+ * to do the "real" work.
  *
  * By calling openPre(), openPost(), writeContent() and close() in turn,
  * this object should output a single XML element (typically with
@@ -130,7 +132,7 @@ class XMLWriterRequiresTriangulation {
  *
  * - only then can you call openPre() to begin writing this object to file.
  *
- * The generic implementation of PacketOf<Held>::writeXMLPacketData()
+ * The generic implementation of PacketOf<T>::writeXMLPacketData()
  * handles all of this correctly.  The constant requiresTriangulation
  * and the function wroteTriangulation() are inherited through
  * the helper class XMLWriterRequiresTriangulation<T>.
@@ -140,8 +142,8 @@ class XMLWriterRequiresTriangulation {
  * \a T should be Link, not PacketOf<Link>).
  *
  * Most functions in this template class have no default implementations,
- * and instead are only implemented using specialisations for the particular
- * types \a T that are supported.
+ * and instead require a specialisation for each type \a T that is to be
+ * supported.  The only exceptions are the class constructor and openPost().
  */
 template <typename T>
 class XMLWriter :
@@ -164,6 +166,9 @@ class XMLWriter :
          * Creates a new writer that will write the given object as an
          * XML fragment.
          *
+         * This constructor has a default implementation, which simply
+         * stores the given arguments in the corresponding member variables.
+         *
          * @param data the object to be written in XML.
          * @param out the output stream to which the XML will be written.
          * @param format indicates which of Regina's XML file formats to use.
@@ -183,6 +188,9 @@ class XMLWriter :
          *
          * Once the caller has injected any additional attributes, it
          * should call openPost() to write the closing angle bracket.
+         *
+         * This function has no default implementation, and must be
+         * specialised for each support type \a T.
          */
         void openPre();
 
@@ -192,6 +200,11 @@ class XMLWriter :
          *
          * In most cases this is simply a closing angle bracket followed
          * by a newline.  See openPre() for further details.
+         *
+         * This function has a default implementation, which simply
+         * writes a closing angle bracket and a newline.  You may still
+         * specialise this if needed (e.g., if writing a newline is not
+         * appropriate for this particular type \a T).
          */
         void openPost();
 
@@ -203,11 +216,17 @@ class XMLWriter :
          *
          * It should not include general packet tree infrastructure,
          * such as packet tags and/or child packets.
+         *
+         * This function has no default implementation, and must be
+         * specialised for each support type \a T.
          */
         void writeContent();
 
         /**
          * Writes the closing XML element tag for the object being written.
+         *
+         * This function has no default implementation, and must be
+         * specialised for each support type \a T.
          */
         void close();
 };

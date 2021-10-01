@@ -97,31 +97,74 @@ template <typename Held> class XMLWriter;
 
 /**
  * Represents a packet of information that may be individually edited or
- * operated upon.  Packets are stored in a dependency tree,
- * where child packets fit within the context of (or otherwise
- * cannot live without) parent packets.
+ * operated upon.  Packets are stored in a tree structure, with
+ * child/parent relationships; the root of the tree represents a
+ * complete Regina data file.
  *
- * <b>When deriving classes from Packet:</b>
- * <ul>
- *   <li>A new value must be added to the PacketType enum in packettype.h
- *     to represent the new packet type.</li>
- *   <li>The macro REGINA_PACKET must be added to the beginning of the new
- *     packet class.  This will declare and define various constants, typedefs
- *     and virtual functions (see the REGINA_PACKET macro documentation for
- *     details).
- *   <li>All abstract functions must be implemented, except for those
- *     already provided by REGINA_PACKET.</li>
- *   <li>An appropriate case should be added to
- *     <tt>XMLPacketReader::startSubElement()</tt> so that the packet
- *     can be read from Regina data files.</li>
- *   <li>Whenever the contents of the packet are changed, a local
- *     ChangeEventSpan must be declared on the stack to notify listeners of
- *     the change.</li>
- * </ul>
+ * There are two types of packets: \e innate packets, and \e wrapped packets.
  *
- * Note that external objects can listen for events on packets, such as
- * when packets are changed or about to be destroyed.  See the
- * PacketListener class notes for details.
+ * - \e Innate packets are only relevant within the context of a data file.
+ *   Examples include containers (which are used to organise the packet tree),
+ *   or scripts (which stores Python code with variables bound to other packets
+ *   in the tree).  Each innate packet type is represented by its own
+ *   customised subclass of Packet (e.g., Container or Script).
+ *
+ * - \e Wrapped packets hold some other type, which can also act as a
+ *   standalone mathematical object.  Examples include packets that hold
+ *   triangulations, links, and normal surface lists.  Each wrapped packet type
+ *   is represented by a class of the form PacketOf<Held>, where \a Held
+ *   is the underlying mathematical type (e.g., Triangulation<3>, Link,
+ *   or NormalSurfaces).
+ *
+ * There are different requirements when creating a new packet type.
+ *
+ * To create a new innate packet type:
+ *
+ * - Add a new type constant to the PacketType enum;
+ *
+ * - Add corresponding cases to the routines in PacketInfo;
+ *
+ * - Create a new subclass \a C of Packet, which begins with the REGINA_PACKET
+ *   macro and implements all pure virtual functions (except for those
+ *   already provided by REGINA_PACKET);
+ *
+ * - Add an appropriate case to XMLPacketReader::startSubElement(), to
+ *   support reading from file;
+ *
+ * - For every routine in \a C that edits the packet contents, declare a
+ *   Packet::ChangeEventSpan on the stack while the modification takes place
+ *   so that listeners are notified (see the discussion below on event
+ *   listeners).
+ *
+ * To create a new wrapped packet type that holds an object of type \a Held:
+ *
+ * - Add a new type constant \a T to the PacketType enum;
+ *
+ * - Add a specialisation of the template constant packetTypeHolds<Held>,
+ *   which should take the value \a T;
+ *
+ * - Add corresponding cases to the routines in PacketInfo;
+ *
+ * - Add PacketData<Held> as a new base class for \a Held (this is very
+ *   lightweight, just adding a single enum variable);
+ *
+ * - Add specialisations that implement the routines in XMLWriter<Held>, to
+ *   support writing to file;
+ *
+ * - Add an appropriate case to XMLPacketReader::startSubElement(), to
+ *   support reading from file;
+ *
+ * - For every routine in \a Held that edits the packet contents, declare a
+ *   Held::ChangeEventSpan on the stack while the modification takes place.
+ *   This is again lightweight (if an object does not belong to a packet
+ *   then the cost is just two integer comparisions), and it will ensure that
+ *   if the object \e does belong to a packet then listeners are notified.
+ *
+ * External objects can listen for events on packets, such as when packets
+ * are changed or about to be destroyed.  This is useful (for example)
+ * when keeping a graphical user interface in sync with any changes that
+ * might be happening within the engine and/or via users' python scripts.
+ * See the PacketListener class notes for details.
  *
  * Packets are able to work with SafePtr smart pointers under fluid ownership
  * rules: they may be owned either by this C++ engine or by external
@@ -1786,16 +1829,47 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
     template <typename> friend class PacketData;
 };
 
+/**
+ * Internal constants that support wrapped packets.
+ *
+ * These constants indicate whether an object of type \a Held is in fact part
+ * of the inherited interface for a derived class of Held, which is typically
+ * the wrapped packet type PacketOf<Held>.  These constants are used as a
+ * lightweight (and significantly less rich) replacement for polymorphism,
+ * virtual functions and dynamic casts.
+ *
+ * These constants only know about two types of relationships:
+ *
+ * - an object of type \a Held being part of a larger PacketOf<Held>
+ *   (indicated by the constant HELD_BY_PACKET);
+ *
+ * - an object of type Triangulation<3> being part of a larger
+ *   SnapPeaTriangulation (indicated by the constant HELD_BY_SNAPPEA).
+ *
+ * Of course, a Triangulation<3> could belong to a SnapPeaTriangulation
+ * which is then held by a PacketOf<SnapPeaTriangulation>.  In this case
+ * the inherited PacketData<Triangulation<3>> will store HELD_BY_SNAPPEA, and
+ * the inherited PacketData<SnapPeaTriangulation> will store HELD_BY_PACKET.
+ */
 enum PacketHeldBy {
+    /**
+     * Indicates that the object is not held within either a wrapped packet or
+     * a SnapPea triangulation.
+     */
     HELD_BY_NONE = 0,
+    /**
+     * Indicates that an object of type \a Held is in fact the inherited
+     * data for a PacketOf<Held>.
+     */
     HELD_BY_PACKET = 1,
+    /**
+     * Indicates that a Triangulation<3> is in fact the inherited native
+     * Regina data for a SnapPeaTriangulation.
+     */
     HELD_BY_SNAPPEA = 2
 };
 
 /**
- * TODO: Note that the corresponding constant packetTypeHolds<Held> needs to
- * be specialised in packettype.h.
- *
  * TODO: Note that addPacketRefs() is currently hard-coded.
  */
 template <typename Held>
@@ -1904,6 +1978,28 @@ class PacketData {
     friend class PacketOf<Held>;
 };
 
+/**
+ * Converts a raw \a Held pointer into a new wrapped packet, without
+ * making a deep copy.
+ *
+ * The data will be moved out of \a src (using the \a Held move constructor),
+ * and then \a src will be destroyed.  If \a src is a temporary stack variable,
+ * you should use the rvalue reference version of this function instead.
+ *
+ * The pointer \a src may be \c null, in which case the return value
+ * will be \c null also.
+ *
+ * The packet that is returned will be newly allocated, and will have no
+ * packet label.
+ *
+ * \ifacespython This is not made available to Python, since Python will
+ * still maintain a reference to \a src (which will become unusable).
+ * Instead you can make a deep copy using the PacketOf<Held> constructor.
+ *
+ * @param src the \a Held object that will be moved into the new packet and
+ * then destroyed.
+ * @return the new wrapped packet, or \c null if \a src was \c null.
+ */
 template <typename Held>
 PacketOf<Held>* makePacket(Held* src) {
     static_assert(std::is_class<Held>::value,
@@ -1916,6 +2012,29 @@ PacketOf<Held>* makePacket(Held* src) {
         return nullptr;
 }
 
+/**
+ * Converts a raw \a Held pointer into a new wrapped packet, without
+ * making a deep copy.
+ *
+ * The data will be moved out of \a src (using the \a Held move constructor),
+ * and then \a src will be destroyed.  If \a src is a temporary stack variable,
+ * you should use the rvalue reference version of this function instead.
+ *
+ * The pointer \a src may be \c null, in which case the return value
+ * will be \c null also.
+ *
+ * The packet that is returned will be newly allocated, and will have
+ * the given packet label.
+ *
+ * \ifacespython This is not made available to Python, since Python will
+ * still maintain a reference to \a src (which will become unusable).
+ * Instead you can make a deep copy using the PacketOf<Held> constructor.
+ *
+ * @param src the \a Held object that will be moved into the new packet and
+ * then destroyed.
+ * @param label the label to assign to the new packet.
+ * @return the new wrapped packet, or \c null if \a src was \c null.
+ */
 template <typename Held>
 PacketOf<Held>* makePacket(Held* src, const std::string& label) {
     auto ans = makePacket(src);
@@ -1924,6 +2043,26 @@ PacketOf<Held>* makePacket(Held* src, const std::string& label) {
     return ans;
 }
 
+/**
+ * Converts a temporary \a Held object into a new wrapped packet, without
+ * making a deep copy.
+ *
+ * The data will be moved out of \a src (using the \a Held move constructor).
+ * If \a src was dynamically allocated, you may prefer to use the pointer
+ * version of this function (which does the same thing as this routine, but
+ * also deletes \a src after it is finished).
+ *
+ * The packet that is returned will be newly allocated, and will have no
+ * packet label.
+ *
+ * \ifacespython This is not made available to Python, since Python will
+ * still maintain a reference to \a src (which will become unusable).
+ * Instead you can make a deep copy using the PacketOf<Held> constructor.
+ *
+ * @param src the \a Held object that will be moved into the new packet;
+ * this will become unusable after this function returns.
+ * @return the new wrapped packet.
+ */
 template <typename Held>
 PacketOf<Held>* makePacket(Held&& src) {
     static_assert(std::is_class<Held>::value,
@@ -1931,6 +2070,27 @@ PacketOf<Held>* makePacket(Held&& src) {
     return new PacketOf<Held>(std::move(src));
 }
 
+/**
+ * Converts a temporary \a Held object into a new wrapped packet, without
+ * making a deep copy.
+ *
+ * The data will be moved out of \a src (using the \a Held move constructor).
+ * If \a src was dynamically allocated, you may prefer to use the pointer
+ * version of this function (which does the same thing as this routine, but
+ * also deletes \a src after it is finished).
+ *
+ * The packet that is returned will be newly allocated, and will have
+ * the given packet label.
+ *
+ * \ifacespython This is not made available to Python, since Python will
+ * still maintain a reference to \a src (which will become unusable).
+ * Instead you can make a deep copy using the PacketOf<Held> constructor.
+ *
+ * @param src the \a Held object that will be moved into the new packet;
+ * this will become unusable after this function returns.
+ * @param label the label to assign to the new packet.
+ * @return the new wrapped packet.
+ */
 template <typename Held>
 PacketOf<Held>* makePacket(Held&& src, const std::string& label) {
     static_assert(std::is_class<Held>::value,
