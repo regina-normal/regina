@@ -175,9 +175,9 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating vertex normal hypersurfaces"),
             parentWidget);
 
-        NormalHypersurfaces* ans;
+        regina::PacketOf<NormalHypersurfaces>* ans;
         try {
-            ans = new NormalHypersurfaces(
+            ans = new regina::PacketOf<NormalHypersurfaces>(std::in_place,
                 *tri,
                 coordSystem,
                 regina::HS_VERTEX | (embedded->isChecked() ?
@@ -207,9 +207,9 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating fundamental normal hypersurfaces"),
             parentWidget);
 
-        NormalHypersurfaces* ans;
+        regina::PacketOf<NormalHypersurfaces>* ans;
         try {
-            ans = new NormalHypersurfaces(
+            ans = new regina::PacketOf<NormalHypersurfaces>(std::in_place,
                 *tri,
                 coordSystem,
                 regina::HS_FUNDAMENTAL | (embedded->isChecked() ?

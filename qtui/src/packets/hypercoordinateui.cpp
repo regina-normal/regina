@@ -256,7 +256,7 @@ bool HyperModel::setData(const QModelIndex& index, const QVariant& value,
         // At present, NormalHypersurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
-        regina::Packet::ChangeEventSpan span(*surfaces_);
+        regina::NormalHypersurfaces::ChangeEventSpan span(*surfaces_);
         const_cast<regina::NormalHypersurface&>(
             surfaces_->hypersurface(index.row())).
             setName(value.toString().toUtf8().constData());
@@ -327,7 +327,8 @@ QString HyperModel::propertyColDesc(int whichCol) const {
     return tr("Unknown");
 }
 
-HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
+HyperCoordinateUI::HyperCoordinateUI(
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), surfaces(packet),
         currentlyResizing(false) {

@@ -128,7 +128,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
          * Packet details
          */
         SurfaceModel* model;
-        regina::NormalSurfaces* surfaces;
+        regina::PacketOf<regina::NormalSurfaces>* surfaces;
         regina::SurfaceFilter* appliedFilter;
 
         /**
@@ -155,7 +155,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Constructor and destructor.
          */
-        SurfacesCoordinateUI(regina::NormalSurfaces* packet,
+        SurfacesCoordinateUI(regina::PacketOf<regina::NormalSurfaces>* packet,
             PacketTabbedUI* useParentUI);
         ~SurfacesCoordinateUI();
 

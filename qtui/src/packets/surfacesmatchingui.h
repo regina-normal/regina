@@ -57,18 +57,13 @@ class MatchingModel : public QAbstractItemModel {
          * Details of the matching equations being displayed
          */
         std::optional<regina::MatrixInt> eqns_;
-        regina::NormalSurfaces* surfaces_;
+        const regina::NormalSurfaces* surfaces_;
 
     public:
         /**
          * Constructor.
          */
-        MatchingModel(regina::NormalSurfaces* surfaces);
-
-        /**
-         * Data retrieval.
-         */
-        regina::NormalSurfaces* surfaces() const;
+        MatchingModel(const regina::NormalSurfaces* surfaces);
 
         /**
          * Rebuild the model from scratch.
@@ -96,8 +91,9 @@ class SurfacesMatchingUI : public QObject, public PacketViewerTab {
 
     private:
         /**
-         * Matrix details
+         * Packet details
          */
+        regina::PacketOf<regina::NormalSurfaces>* surfaces;
         MatchingModel* model;
 
         /**
@@ -116,7 +112,7 @@ class SurfacesMatchingUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        SurfacesMatchingUI(regina::NormalSurfaces* packet,
+        SurfacesMatchingUI(regina::PacketOf<regina::NormalSurfaces>* packet,
                 PacketTabbedUI* useParentUI);
         ~SurfacesMatchingUI();
 
@@ -134,12 +130,8 @@ class SurfacesMatchingUI : public QObject, public PacketViewerTab {
         void columnResized(int section, int oldSize, int newSize);
 };
 
-inline MatchingModel::MatchingModel(regina::NormalSurfaces* surfaces) :
+inline MatchingModel::MatchingModel(const regina::NormalSurfaces* surfaces) :
         surfaces_(surfaces) {
-}
-
-inline regina::NormalSurfaces* MatchingModel::surfaces() const {
-    return surfaces_;
 }
 
 inline QModelIndex MatchingModel::index(int row, int column,

@@ -67,7 +67,7 @@ class SurfacesCompatibilityUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NormalSurfaces* surfaces;
+        regina::PacketOf<regina::NormalSurfaces>* surfaces;
 
         /**
          * Compatibility matrices
@@ -100,7 +100,8 @@ class SurfacesCompatibilityUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        SurfacesCompatibilityUI(regina::NormalSurfaces* packet,
+        SurfacesCompatibilityUI(
+            regina::PacketOf<regina::NormalSurfaces>* packet,
             PacketTabbedUI* useParentUI);
         ~SurfacesCompatibilityUI();
 

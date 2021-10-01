@@ -97,9 +97,10 @@ QVariant HyperMatchingModel::headerData(int section,
         return QVariant();
 }
 
-HyperMatchingUI::HyperMatchingUI(regina::NormalHypersurfaces* packet,
+HyperMatchingUI::HyperMatchingUI(
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        currentlyAutoResizing(false), everRefreshed(false) {
+        surfaces_(packet), currentlyAutoResizing(false), everRefreshed(false) {
     model = new HyperMatchingModel(packet);
 
     table = new QTreeView();
@@ -140,7 +141,7 @@ HyperMatchingUI::~HyperMatchingUI() {
 }
 
 regina::Packet* HyperMatchingUI::getPacket() {
-    return model->surfaces();
+    return surfaces_;
 }
 
 QWidget* HyperMatchingUI::getInterface() {

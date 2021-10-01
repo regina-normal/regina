@@ -65,7 +65,7 @@ class SurfacesUI : public PacketTabbedUI {
         /**
          * Constructor.
          */
-        SurfacesUI(regina::NormalSurfaces* packet,
+        SurfacesUI(regina::PacketOf<regina::NormalSurfaces>* packet,
             PacketPane* newEnclosingPane);
 
         /**
@@ -86,7 +86,7 @@ class SurfacesHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NormalSurfaces* surfaces;
+        regina::PacketOf<regina::NormalSurfaces>* surfaces;
 
         /**
          * Internal components
@@ -98,7 +98,7 @@ class SurfacesHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        SurfacesHeaderUI(regina::NormalSurfaces* packet,
+        SurfacesHeaderUI(regina::PacketOf<regina::NormalSurfaces>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**

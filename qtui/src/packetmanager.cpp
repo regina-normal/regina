@@ -160,7 +160,8 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
     switch (packet->type()) {
         case PACKET_ANGLESTRUCTURES:
             return new AngleStructureUI(
-                dynamic_cast<AngleStructures*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<AngleStructures>*>(packet),
+                    enclosingPane);
         case PACKET_CONTAINER:
             return new ContainerUI(
                 dynamic_cast<Container*>(packet), enclosingPane);
@@ -169,10 +170,12 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<regina::PacketOf<Link>*>(packet), enclosingPane);
         case PACKET_NORMALSURFACES:
             return new SurfacesUI(
-                dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<NormalSurfaces>*>(packet),
+                    enclosingPane);
         case PACKET_NORMALHYPERSURFACES:
             return new HyperUI(
-                dynamic_cast<NormalHypersurfaces*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<NormalHypersurfaces>*>(packet),
+                    enclosingPane);
         case PACKET_SCRIPT:
             return new ScriptUI(
                 dynamic_cast<Script*>(packet), enclosingPane);

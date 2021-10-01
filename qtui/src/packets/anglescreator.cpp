@@ -94,8 +94,8 @@ regina::Packet* AngleStructureCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
-    regina::AngleStructures* ans = new regina::AngleStructures(*tri,
-            tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
+    auto ans = new regina::PacketOf<regina::AngleStructures>(std::in_place,
+        *tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
 
     if (dlg.run()) {
         if (tautOnly->isChecked())

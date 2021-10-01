@@ -57,7 +57,8 @@ using regina::NormalHypersurfaces;
 using regina::Packet;
 
 HyperCompatibilityUI::HyperCompatibilityUI(
-        regina::NormalHypersurfaces* packet, PacketTabbedUI* useParentUI) :
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(0), layerLocal(0), requestedCalculation(false) {
     ui = new QWidget();

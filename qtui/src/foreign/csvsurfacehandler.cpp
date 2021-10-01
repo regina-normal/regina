@@ -43,7 +43,7 @@
 const CSVSurfaceHandler CSVSurfaceHandler::instance;
 
 PacketFilter* CSVSurfaceHandler::canExport() const {
-    return new SingleTypeFilter<regina::NormalSurfaces>();
+    return new SingleTypeFilter<regina::PacketOf<regina::NormalSurfaces>>();
 }
 
 bool CSVSurfaceHandler::exportData(regina::Packet* data,

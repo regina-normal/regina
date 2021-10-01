@@ -114,7 +114,7 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         HyperModel* model;
-        regina::NormalHypersurfaces* surfaces;
+        regina::PacketOf<regina::NormalHypersurfaces>* surfaces;
 
         /**
          * Internal components
@@ -138,7 +138,7 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        HyperCoordinateUI(regina::NormalHypersurfaces* packet,
+        HyperCoordinateUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
             PacketTabbedUI* useParentUI);
         ~HyperCoordinateUI();
 

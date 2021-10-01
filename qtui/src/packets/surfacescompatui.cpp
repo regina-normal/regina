@@ -57,7 +57,8 @@ using regina::NormalSurfaces;
 using regina::Packet;
 
 SurfacesCompatibilityUI::SurfacesCompatibilityUI(
-        regina::NormalSurfaces* packet, PacketTabbedUI* useParentUI) :
+        regina::PacketOf<regina::NormalSurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(0), matrixGlobal(0), layerLocal(0), layerGlobal(0),
         requestedCalculation(false) {

@@ -74,7 +74,8 @@ namespace {
 }
 
 SurfacesSummaryUI::SurfacesSummaryUI(
-        regina::NormalSurfaces* packet, PacketTabbedUI* useParentUI) :
+        regina::PacketOf<regina::NormalSurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
@@ -167,7 +168,8 @@ void SurfacesSummaryUI::refresh() {
 
     regina::LargeInteger euler;
     std::pair<int, int> type;
-    for (const regina::NormalSurface& s : *surfaces) {
+    for (const regina::NormalSurface& s :
+            static_cast<const regina::NormalSurfaces&>(*surfaces)) {
         if (! s.isCompact())
             ++spun;
         else if (s.hasRealBoundary()) {

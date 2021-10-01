@@ -75,7 +75,8 @@ namespace {
 }
 
 HyperSummaryUI::HyperSummaryUI(
-        regina::NormalHypersurfaces* packet, PacketTabbedUI* useParentUI) :
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
@@ -174,7 +175,8 @@ void HyperSummaryUI::refresh() {
 
     std::string homology;
     std::pair<int, int> type;
-    for (const regina::NormalHypersurface& s : *surfaces) {
+    for (const regina::NormalHypersurface& s :
+            static_cast<const regina::NormalHypersurfaces&>(*surfaces)) {
         if (! s.isCompact())
             ++spun;
         else {

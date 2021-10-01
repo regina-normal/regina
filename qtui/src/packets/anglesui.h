@@ -56,7 +56,7 @@ class AngleModel : public QAbstractItemModel {
         /**
          * Details of the angle structures being displayed
          */
-        regina::AngleStructures* structures_;
+        const regina::AngleStructures* structures_;
         unsigned nCoords;
 
     public:
@@ -64,11 +64,6 @@ class AngleModel : public QAbstractItemModel {
          * Constructor.
          */
         AngleModel(regina::AngleStructures* structures);
-
-        /**
-         * Data retrieval.
-         */
-        regina::AngleStructures* structures() const;
 
         /**
          * Rebuild the model from scratch.
@@ -99,6 +94,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * Packet details
          */
+        regina::PacketOf<regina::AngleStructures>* structures_;
         AngleModel* model;
 
         /**
@@ -117,7 +113,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * Constructor and destructor.
          */
-        AngleStructureUI(regina::AngleStructures* packet,
+        AngleStructureUI(regina::PacketOf<regina::AngleStructures>* packet,
                 PacketPane* newEnclosingPane);
         ~AngleStructureUI();
 
@@ -156,10 +152,6 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
 inline AngleModel::AngleModel(regina::AngleStructures* structures) :
         structures_(structures),
         nCoords(3 * structures_->triangulation().size()) {
-}
-
-inline regina::AngleStructures* AngleModel::structures() const {
-    return structures_;
 }
 
 inline QModelIndex AngleModel::index(int row, int column,

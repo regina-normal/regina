@@ -351,7 +351,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // At present, NormalSurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
-        regina::Packet::ChangeEventSpan span(*surfaces_);
+        regina::NormalSurfaces::ChangeEventSpan span(*surfaces_);
         const_cast<regina::NormalSurface&>(
             surfaces_->surface(realIndex[index.row()])).
             setName(value.toString().toUtf8().constData());
@@ -435,9 +435,10 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
     return tr("Unknown");
 }
 
-SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
+SurfacesCoordinateUI::SurfacesCoordinateUI(
+        regina::PacketOf<regina::NormalSurfaces>* packet,
         PacketTabbedUI* useParentUI) :
-        PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
+        PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(nullptr),
         currentlyResizing(false) {
     // Set up the UI.
     ui = new QWidget();

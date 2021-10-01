@@ -52,7 +52,7 @@
 using regina::Packet;
 using regina::NormalHypersurface;
 
-HyperUI::HyperUI(regina::NormalHypersurfaces* packet,
+HyperUI::HyperUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabHypersurfaceList) {
@@ -80,7 +80,8 @@ QString HyperUI::getPacketMenuText() const {
     return tr("&Normal Hypersurfaces");
 }
 
-HyperHeaderUI::HyperHeaderUI(regina::NormalHypersurfaces* packet,
+HyperHeaderUI::HyperHeaderUI(
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet) {
     header = new QLabel(0);

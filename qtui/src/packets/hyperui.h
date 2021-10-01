@@ -65,7 +65,7 @@ class HyperUI : public PacketTabbedUI {
         /**
          * Constructor.
          */
-        HyperUI(regina::NormalHypersurfaces* packet,
+        HyperUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
             PacketPane* newEnclosingPane);
 
         /**
@@ -86,7 +86,7 @@ class HyperHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NormalHypersurfaces* surfaces;
+        regina::PacketOf<regina::NormalHypersurfaces>* surfaces;
 
         /**
          * Internal components
@@ -98,7 +98,7 @@ class HyperHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        HyperHeaderUI(regina::NormalHypersurfaces* packet,
+        HyperHeaderUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**

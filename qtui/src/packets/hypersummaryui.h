@@ -56,7 +56,7 @@ class HyperSummaryUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NormalHypersurfaces* surfaces;
+        regina::PacketOf<regina::NormalHypersurfaces>* surfaces;
 
         /**
          * Internal components
@@ -74,7 +74,7 @@ class HyperSummaryUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        HyperSummaryUI(regina::NormalHypersurfaces* packet,
+        HyperSummaryUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
             PacketTabbedUI* useParentUI);
         ~HyperSummaryUI();
 

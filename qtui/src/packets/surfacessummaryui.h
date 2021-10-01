@@ -56,7 +56,7 @@ class SurfacesSummaryUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NormalSurfaces* surfaces;
+        regina::PacketOf<regina::NormalSurfaces>* surfaces;
 
         /**
          * Internal components
@@ -74,7 +74,7 @@ class SurfacesSummaryUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        SurfacesSummaryUI(regina::NormalSurfaces* packet,
+        SurfacesSummaryUI(regina::PacketOf<regina::NormalSurfaces>* packet,
             PacketTabbedUI* useParentUI);
         ~SurfacesSummaryUI();
 

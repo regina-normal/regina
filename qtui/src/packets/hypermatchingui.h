@@ -57,18 +57,13 @@ class HyperMatchingModel : public QAbstractItemModel {
          * Details of the matching equations being displayed
          */
         std::optional<regina::MatrixInt> eqns_;
-        regina::NormalHypersurfaces* surfaces_;
+        const regina::NormalHypersurfaces* surfaces_;
 
     public:
         /**
          * Constructor.
          */
-        HyperMatchingModel(regina::NormalHypersurfaces* surfaces);
-
-        /**
-         * Data retrieval.
-         */
-        regina::NormalHypersurfaces* surfaces() const;
+        HyperMatchingModel(const regina::NormalHypersurfaces* surfaces);
 
         /**
          * Rebuild the model from scratch.
@@ -96,8 +91,9 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
 
     private:
         /**
-         * Matrix details
+         * Packet details
          */
+        regina::PacketOf<regina::NormalHypersurfaces>* surfaces_;
         HyperMatchingModel* model;
 
         /**
@@ -116,7 +112,7 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        HyperMatchingUI(regina::NormalHypersurfaces* packet,
+        HyperMatchingUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
                 PacketTabbedUI* useParentUI);
         ~HyperMatchingUI();
 
@@ -135,12 +131,8 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
 };
 
 inline HyperMatchingModel::HyperMatchingModel(
-        regina::NormalHypersurfaces* surfaces) :
+        const regina::NormalHypersurfaces* surfaces) :
         surfaces_(surfaces) {
-}
-
-inline regina::NormalHypersurfaces* HyperMatchingModel::surfaces() const {
-    return surfaces_;
 }
 
 inline QModelIndex HyperMatchingModel::index(int row, int column,

@@ -140,9 +140,9 @@ QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-AngleStructureUI::AngleStructureUI(AngleStructures* packet,
+AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
-        currentlyAutoResizing(false) {
+        structures_(packet), currentlyAutoResizing(false) {
     ui = new BigWidget(1, 2);
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -214,7 +214,7 @@ AngleStructureUI::~AngleStructureUI() {
 }
 
 Packet* AngleStructureUI::getPacket() {
-    return model->structures();
+    return structures_;
 }
 
 QWidget* AngleStructureUI::getInterface() {
@@ -236,8 +236,8 @@ void AngleStructureUI::refreshHeader() {
     QString count, span;
 
     // Update the general statistics.
-    unsigned long nStructs = model->structures()->size();
-    if (model->structures()->isTautOnly()) {
+    size_t nStructs = structures_->size();
+    if (structures_->isTautOnly()) {
         if (nStructs == 0)
             count = tr("No taut angle structures");
         else if (nStructs == 1)
@@ -255,18 +255,18 @@ void AngleStructureUI::refreshHeader() {
             count = tr("%1 vertex angle structures").arg(nStructs);
 
         span = tr("Span includes: ");
-        if (model->structures()->spansStrict())
+        if (structures_->spansStrict())
             span.append(tr("Strict, "));
         else
             span.append(tr("NO Strict, "));
-        if (model->structures()->spansTaut())
+        if (structures_->spansTaut())
             span.append(tr("Taut"));
         else
             span.append(tr("NO Taut"));
     }
 
     QString triName;
-    const regina::Triangulation<3>& tri = model->structures()->triangulation();
+    const regina::Triangulation<3>& tri = structures_->triangulation();
     if (tri.isReadOnlySnapshot())
         triName = tr("(private copy)");
     else if (const Packet* p = tri.inAnyPacket())
@@ -282,8 +282,7 @@ void AngleStructureUI::refreshHeader() {
 }
 
 void AngleStructureUI::viewTriangulation() {
-    AngleStructures* list = model->structures();
-    const regina::Triangulation<3>& tri = list->triangulation();
+    const regina::Triangulation<3>& tri = structures_->triangulation();
     const Packet* triPkt = tri.inAnyPacket();
     if (! triPkt) {
         QMessageBox msg(QMessageBox::Information,
@@ -308,8 +307,8 @@ void AngleStructureUI::viewTriangulation() {
             return;
 
         auto copy = new regina::PacketOf<regina::Triangulation<3>>(tri);
-        copy->setLabel(list->adornedLabel("Triangulation"));
-        list->insertChildLast(copy);
+        copy->setLabel(structures_->adornedLabel("Triangulation"));
+        structures_->insertChildLast(copy);
 
         enclosingPane->getMainWindow()->packetView(copy, true, true);
     } else {
@@ -338,7 +337,7 @@ void AngleStructureUI::packetWasRenamed(regina::Packet*) {
 void AngleStructureUI::packetWasChanged(regina::Packet* packet) {
     // Assume it is the underlying triangulation.
     if (dynamic_cast<regina::PacketOf<regina::Triangulation<3>>*>(packet) !=
-            std::addressof(model->structures()->triangulation())) {
+            std::addressof(structures_->triangulation())) {
         // Our list has switched to use a local snapshot of the triangulation.
         // It will be read-only from now on.
         packet->unlisten(this);

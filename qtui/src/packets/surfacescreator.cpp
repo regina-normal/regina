@@ -202,9 +202,9 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating vertex normal surfaces"),
             parentWidget);
 
-        NormalSurfaces* ans;
+        regina::PacketOf<NormalSurfaces>* ans;
         try {
-            ans = new NormalSurfaces(
+            ans = new regina::PacketOf<NormalSurfaces>(std::in_place,
                 *tri,
                 coordSystem,
                 regina::NS_VERTEX | (embedded->isChecked() ?
@@ -247,9 +247,9 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating fundamental normal surfaces"),
             parentWidget);
 
-        NormalSurfaces* ans;
+        regina::PacketOf<NormalSurfaces>* ans;
         try {
-            ans = new NormalSurfaces(
+            ans = new regina::PacketOf<NormalSurfaces>(std::in_place,
                 *tri,
                 coordSystem,
                 regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
