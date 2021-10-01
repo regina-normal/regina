@@ -50,22 +50,61 @@ class NormalHypersurfaces;
 class NormalSurfaces;
 template <int> class Triangulation;
 
+/**
+ * Provides XMLWriter<T> with the class constant requiresTriangulation,
+ * for the case where a Regina object of type \a T does not require its
+ * underlying triangulation to be written to file before the object
+ * itself is written.
+ *
+ * See the XMLWriter template class for further details.
+ */
 class XMLWriterRequiresNoTriangulation {
     public:
+        /**
+         * Indicates whether a Regina object of type \a T requires its
+         * underlying triangulation to be written to file before the
+         * object itself is written.
+         */
         static constexpr bool requiresTriangulation = false;
 };
 
+/**
+ * Provides XMLWriter<T> with the class constant requiresTriangulation,
+ * plus other triangulation-related constants and functions, for the case
+ * where a Regina object of type \a T requires its underlying triangulation
+ * to be written to file before the object itself is written.
+ *
+ * See the XMLWriter template class for further details.
+ */
 template <typename T>
 class XMLWriterRequiresTriangulation {
     public:
+        /**
+         * Indicates whether a Regina object of type \a T requires its
+         * underlying triangulation to be written to file before the
+         * object itself is written.
+         */
         static constexpr bool requiresTriangulation = true;
+        /**
+         * The dimension of the underlying triangulation for a Regina
+         * object of type \a T.
+         */
         static constexpr int dimension = std::remove_reference<
             decltype(std::declval<T>().triangulation())>::type::dimension;
 
     protected:
         std::string triID_;
+            /**< The packet ID for the underlying triangulation.  This will
+                 be the empty string until wroteTriangulationID() is called. */
 
     public:
+        /**
+         * Informs XMLWriter<T> that the underlying triangulation has
+         * been written to file, and that its packet ID is \a id.
+         *
+         * This saves \a id in the field triID_, where XMLWriter<T> can
+         * then access it.
+         */
         void wroteTriangulationID(std::string id) { triID_ = std::move(id); }
 };
 
@@ -77,20 +116,41 @@ class XMLWriterRequiresTriangulation {
  * internal character data and/or child elements) that represents a
  * single Regina object of type \a T.
  *
+ * Some of Regina's data types (e.g., normal surface/hypersurface lists
+ * and angle structure lists) require the underlying triangulation to be
+ * written to file beforehand.  The user of this class is responsible for
+ * making sure that this happens - specifically, this means:
+ *
+ * - you should check the class constant XMLWriter<T>::requiresTriangulation
+ *   to determine if the triangulation might need to be written;
+ *
+ * - if so, you should ensure that the triangulation has been written
+ *   and then call XMLWriter<T>::wroteTriangulation(id) to communicate
+ *   back to this class the corresponding packet ID;
+ *
+ * - only then can you call openPre() to begin writing this object to file.
+ *
+ * The generic implementation of PacketOf<Held>::writeXMLPacketData()
+ * handles all of this correctly.  The constant requiresTriangulation
+ * and the function wroteTriangulation() are inherited through
+ * the helper class XMLWriterRequiresTriangulation<T>.
+ *
  * For types that can be enclosed in a PacketOf<...> wrapper, \a T should be
  * the underlying mathematical type (so, for example, for links the type
  * \a T should be Link, not PacketOf<Link>).
  *
- * Most functions in this template class have no default implementations.
- * TODO: Talk about implementations.
+ * Most functions in this template class have no default implementations,
+ * and instead are only implemented using specialisations for the particular
+ * types \a T that are supported.
  */
 template <typename T>
-class XMLWriter : public std::conditional<
-        std::is_same<T, AngleStructures>::value ||
-        std::is_same<T, NormalHypersurfaces>::value ||
-        std::is_same<T, NormalSurfaces>::value,
-        XMLWriterRequiresTriangulation<T>,
-        XMLWriterRequiresNoTriangulation>::type {
+class XMLWriter :
+        public std::conditional<
+                std::is_same<T, AngleStructures>::value ||
+                std::is_same<T, NormalHypersurfaces>::value ||
+                std::is_same<T, NormalSurfaces>::value,
+            XMLWriterRequiresTriangulation<T>,
+            XMLWriterRequiresNoTriangulation>::type {
     private:
         const T& data_;
             /**< The object to be written in XML. */
@@ -152,8 +212,6 @@ class XMLWriter : public std::conditional<
         void close();
 };
 
-#ifndef __DOXYGEN
-
 template <int dim>
 class XMLWriter<Triangulation<dim>> {
     public:
@@ -176,8 +234,6 @@ class XMLWriter<Triangulation<dim>> {
         void writeContent();
         void close();
 };
-
-#endif // __DOXYGEN
 
 template <typename T>
 XMLWriter<T>::XMLWriter(const T& data, std::ostream& out, FileFormat format) :

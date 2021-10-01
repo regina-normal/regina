@@ -1814,16 +1814,7 @@ class PacketOf : public Packet, public Held {
         }
         virtual void writeXMLPacketData(std::ostream& out, FileFormat format,
                 bool anon, PacketRefs& refs) const override;
-        virtual void addPacketRefs(PacketRefs& refs) const override {
-            if constexpr (std::is_same<Held, NormalHypersurfaces>::value) {
-                if (const Packet* p = Held::triangulation().packet())
-                    refs.insert({ p, false });
-            } else if constexpr (std::is_same<Held, AngleStructures>::value ||
-                    std::is_same<Held, NormalSurfaces>::value) {
-                if (const Packet* p = Held::triangulation().inAnyPacket())
-                    refs.insert({ p, false });
-            }
-        }
+        virtual void addPacketRefs(PacketRefs& refs) const override;
 };
 
 // NOTE: All constructors and assignment operators are trivial

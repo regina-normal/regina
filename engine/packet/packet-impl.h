@@ -129,6 +129,19 @@ void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
 }
 
 template <typename Held>
+void PacketOf<Held>::addPacketRefs(PacketRefs& refs) const override {
+    if constexpr (XMLWriter<Held>::requiresTriangulation) {
+        if constexpr (XMLWriter<Held>::dimension == 3)
+            if (const Packet* p = Held::triangulation().inAnyPacket())
+                refs.insert({ p, false });
+        } else {
+            if (const Packet* p = Held::triangulation().packet())
+                refs.insert({ p, false });
+        }
+    }
+}
+
+template <typename Held>
 std::string PacketData<Held>::anonID() const {
     char ptrAsBytes[sizeof(PacketData<Held>*)];
     *(reinterpret_cast<const PacketData<Held>**>(&ptrAsBytes)) = this;
