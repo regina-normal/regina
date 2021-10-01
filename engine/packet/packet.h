@@ -60,6 +60,7 @@ template <bool> class PacketChildren;
 template <bool> class PacketDescendants;
 template <bool> class SubtreeIterator;
 template <typename Held> class PacketData;
+template <typename Held> class XMLWriter;
 
 /**
  * \defgroup packet Basic Packet Types
@@ -1497,20 +1498,19 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
             FileFormat format, bool anon, PacketRefs& refs,
             bool newline = true, std::pair<const char*, Args>... attr) const;
 
-        void writeXMLTreeData(std::ostream& out, FileFormat format,
-            bool anon, PacketRefs& refs) const;
-
         /**
-         * Writes any generic XML sub-elements that come from the packet
-         * tree, followed by the closing XML tag for this packet.
-         * This is typically called at the end of writeXMLPacketData().
+         * Writes any generic XML sub-elements for this packet that come from
+         * the packet tree.  This is typically called towards the end of
+         * writeXMLPacketData(), just before the final call to writeXMLFooter().
          *
          * The generic sub-elements include Regina's packet tags, as
          * well as any child packets in the packet tree.
          *
-         * There will be no whitespace before the first sub-element (or
-         * before the closing XML tag, if there are no generic sub-elements).
-         * The closing XML tag will be followed by a newline.
+         * There will be no whitespace before the first sub-element (and
+         * so if there are no sub-elements at all then this routine will
+         * output nothing).
+         *
+         * \pre This packet is not contained within an anonymous block.
          *
          * @param out the output stream to which the closing XML tag
          * should be written.
@@ -1518,14 +1518,28 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
          * @param format indicates which of Regina's XML file formats to write.
-         * @param anon \c true if this packet is being written within an
-         * anonymous block.  If so, then any packet tags and/or child packets
-         * will not be written.
          * @param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
          */
+        void writeXMLTreeData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const;
+
+        /**
+         * Writes the closing XML tag for this packet.
+         * This is typically called at the end of writeXMLPacketData().
+         *
+         * There will be no whitespace before the closing XML tag.
+         * The tag will be followed by a newline.
+         *
+         * @param out the output stream to which the closing XML tag
+         * should be written.
+         * @param element the name of the XML tag.  If we are writing to
+         * the REGINA_XML_GEN_2 format, then this will be ignored (and may
+         * be \c null), and the tag name \c packet will be used instead.
+         * @param format indicates which of Regina's XML file formats to write.
+         */
         void writeXMLFooter(std::ostream& out, const char* element,
-            FileFormat format, bool anon, PacketRefs& refs) const;
+            FileFormat format) const;
 
         /**
          * Writes the given packet inside its own anonymous block.
@@ -1557,13 +1571,33 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *   (but first check \a refs to ensure these packets have not already
          *   been written);
          *
-         * - the packet opening XML tag, typically written using
-         *   writeXMLHeader();
+         * - the packet opening XML tag;
          *
          * - the packet contents;
          *
-         * - any packet tags, any child packets, a closing XML tag and a
-         *   final newline, all typically written using writeXMLFooter().
+         * - any packet tags and/or child packets (but only if we are
+         *   not inside an anonymous block);
+         *
+         * - a closing XML tag and a final newline.
+         *
+         * For native packet types, these five stages are typically
+         * implemented using:
+         *
+         * - optional calls to writeXMLAnon();
+         *
+         * - a single call to writeXMLHeader();
+         *
+         * - customised output;
+         *
+         * - a single call to writeXMLTreeData(), if \a anon is \c false;
+         *
+         * - a single call to writeXMLFooter().
+         *
+         * For wrapped packet types that use a PacketOf<Held> wrapper, you
+         * should instead just specialise the routines from XMLWriter<Held>.
+         * The PacketOf wrapper will take care of the tree-specific code
+         * (in particular, it will handle the calls to writeXMLAnon() and
+         * writeXMLTreeData()).
          *
          * The output from this routine is only a piece of XML; it
          * should not be used as a complete XML file.  For a complete
@@ -1751,9 +1785,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
 
     template <typename> friend class PacketData;
 };
-
-template <typename Held>
-class XMLWriter;
 
 enum PacketHeldBy {
     HELD_BY_NONE = 0,

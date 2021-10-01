@@ -73,9 +73,9 @@ class XMLTreeResolver;
  *
  * The XML packet reader should read everything that
  * Packet::writeXMLPacketData() writes, excluding the contents of
- * Packet::writeXMLHeader(), and Packet::writeXMLFooter() (i.e.,
- * excluding the packet open/close XML tags, any of Regina's packet tags,
- * and/or any child packets).
+ * Packet::writeXMLHeader(), Packet::writeXMLTreeData() and
+ * Packet::writeXMLFooter() (i.e., excluding the packet open/close XML tags,
+ * any of Regina's packet tags, and/or any child packets).
  *
  * The packet reader may assume that its parent packet (if one exists) has
  * already been read from the file.  The packet reader itself should not

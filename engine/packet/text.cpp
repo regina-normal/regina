@@ -45,7 +45,9 @@ void Text::writeXMLPacketData(std::ostream& out, FileFormat format,
     } else {
         out << regina::xml::xmlEncodeSpecialChars(text_);
     }
-    writeXMLFooter(out, "textdata", format, anon, refs);
+    if (! anon)
+        writeXMLTreeData(out, format, refs);
+    writeXMLFooter(out, "textdata", format);
 }
 
 } // namespace regina

@@ -183,7 +183,9 @@ void Script::writeXMLPacketData(std::ostream& out, FileFormat format,
     else
         out << "  <code>" << xmlEncodeSpecialChars(text_) << "</code>\n";
 
-    writeXMLFooter(out, "script", format, anon, refs);
+    if (! anon)
+        writeXMLTreeData(out, format, refs);
+    writeXMLFooter(out, "script", format);
 }
 
 void Script::packetWasRenamed(Packet*) {

@@ -753,33 +753,28 @@ void Packet::writeXMLPacketAttributes(std::ostream& out, bool anon,
 }
 
 void Packet::writeXMLTreeData(std::ostream& out, FileFormat format,
-        bool anon, PacketRefs& refs) const {
-    if (! anon) {
-        // Write any packet tags.
-        if (tags_.get())
-            for (const auto& t : *tags_)
-                out << "<tag name=\"" << regina::xml::xmlEncodeSpecialChars(t)
-                    << "\"/>\n";
+        PacketRefs& refs) const {
+    // Write any packet tags.
+    if (tags_.get())
+        for (const auto& t : *tags_)
+            out << "<tag name=\"" << regina::xml::xmlEncodeSpecialChars(t)
+                << "\"/>\n";
 
-        // Write the child packets.
-        for (Packet* p = firstTreeChild_; p; p = p->nextTreeSibling_) {
-            auto pos = refs.find(p);
-            if (pos != refs.end() && pos->second) {
-                // This packet has already been written.
-                out << "<anonref id=\"" << p->internalID() << "\">\n";
-                // Close the tag with writeXMLFooter(), so that we still
-                // get tags and children.
-                p->writeXMLFooter(out, "anonref", format, anon, refs);
-            } else
-                p->writeXMLPacketData(out, format, anon, refs);
-        }
+    // Write the child packets.
+    for (Packet* p = firstTreeChild_; p; p = p->nextTreeSibling_) {
+        auto pos = refs.find(p);
+        if (pos != refs.end() && pos->second) {
+            // This packet has already been written.
+            out << "<anonref id=\"" << p->internalID() << "\">\n";
+            p->writeXMLTreeData(out, format, refs);
+            out << "</anonref>\n";
+        } else
+            p->writeXMLPacketData(out, format, false, refs);
     }
 }
 
 void Packet::writeXMLFooter(std::ostream& out, const char* element,
-        FileFormat format, bool anon, PacketRefs& refs) const {
-    writeXMLTreeData(out, format, anon, refs);
-
+        FileFormat format) const {
     // Finish with the closing XML tag.
     if (format != REGINA_XML_GEN_2) {
         out << "</" << element << ">\n";

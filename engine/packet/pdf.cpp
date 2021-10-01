@@ -164,7 +164,9 @@ void PDF::writeXMLPacketData(std::ostream& out, FileFormat format,
             std::pair("encoding", "null"));
         if (format == REGINA_XML_GEN_2)
             out << "  <pdf encoding=\"null\"></pdf>\n";
-        writeXMLFooter(out, "pdfdata", format, anon, refs);
+        if (! anon)
+            writeXMLTreeData(out, format, refs);
+        writeXMLFooter(out, "pdfdata", format);
         return;
     }
 
@@ -188,7 +190,9 @@ void PDF::writeXMLPacketData(std::ostream& out, FileFormat format,
 
     if (format == REGINA_XML_GEN_2)
         out << "  </pdf>\n";
-    writeXMLFooter(out, "pdfdata", format, anon, refs);
+    if (! anon)
+        writeXMLTreeData(out, format, refs);
+    writeXMLFooter(out, "pdfdata", format);
 
     delete[] base64;
 }

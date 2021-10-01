@@ -101,7 +101,9 @@ inline Packet* Container::internalClonePacket(Packet*) const {
 inline void Container::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
     writeXMLHeader(out, "container", format, anon, refs);
-    writeXMLFooter(out, "container", format, anon, refs);
+    if (! anon)
+        writeXMLTreeData(out, format, refs);
+    writeXMLFooter(out, "container", format);
 }
 
 } // namespace regina
