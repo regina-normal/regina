@@ -129,9 +129,9 @@ void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
 }
 
 template <typename Held>
-void PacketOf<Held>::addPacketRefs(PacketRefs& refs) const override {
+void PacketOf<Held>::addPacketRefs(PacketRefs& refs) const {
     if constexpr (XMLWriter<Held>::requiresTriangulation) {
-        if constexpr (XMLWriter<Held>::dimension == 3)
+        if constexpr (XMLWriter<Held>::dimension == 3) {
             if (const Packet* p = Held::triangulation().inAnyPacket())
                 refs.insert({ p, false });
         } else {
