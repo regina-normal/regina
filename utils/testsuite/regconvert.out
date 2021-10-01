@@ -357,28 +357,28 @@ CS_unknown
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Filter">
   <filter type="Combination filter" typeid="2">
     <op type="or"/>
   </filter>
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Discs">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 1 </euler>
     <compact value="T-"/>
     <realbdry value="T-"/>
   </filter>
-</packet> <!-- Discs (Surface Filter) -->
-<packet type="Surface Filter" typeid="8"
+</packet> <!-- Discs (Surface filter) -->
+<packet type="Surface filter" typeid="8"
 	label="Tori and Annuli">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 0 </euler>
     <orbl value="T-"/>
     <compact value="T-"/>
   </filter>
-</packet> <!-- Tori and Annuli (Surface Filter) -->
-</packet> <!-- Filter (Surface Filter) -->
+</packet> <!-- Tori and Annuli (Surface filter) -->
+</packet> <!-- Filter (Surface filter) -->
 </packet> <!-- Normal Surface Filters (Container) -->
 <packet type="Script" typeid="7"
 	label="Python Script">
@@ -618,28 +618,28 @@ CS_unknown
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Filter">
   <filter type="Combination filter" typeid="2">
     <op type="or"/>
   </filter>
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Discs">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 1 </euler>
     <compact value="T-"/>
     <realbdry value="T-"/>
   </filter>
-</packet> <!-- Discs (Surface Filter) -->
-<packet type="Surface Filter" typeid="8"
+</packet> <!-- Discs (Surface filter) -->
+<packet type="Surface filter" typeid="8"
 	label="Tori and Annuli">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 0 </euler>
     <orbl value="T-"/>
     <compact value="T-"/>
   </filter>
-</packet> <!-- Tori and Annuli (Surface Filter) -->
-</packet> <!-- Filter (Surface Filter) -->
+</packet> <!-- Tori and Annuli (Surface filter) -->
+</packet> <!-- Filter (Surface filter) -->
 </packet> <!-- Normal Surface Filters (Container) -->
 <packet type="Script" typeid="7"
 	label="Python Script">
@@ -877,28 +877,28 @@ CS_unknown
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Filter">
   <filter type="Combination filter" typeid="2">
     <op type="or"/>
   </filter>
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Discs">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 1 </euler>
     <compact value="T-"/>
     <realbdry value="T-"/>
   </filter>
-</packet> <!-- Discs (Surface Filter) -->
-<packet type="Surface Filter" typeid="8"
+</packet> <!-- Discs (Surface filter) -->
+<packet type="Surface filter" typeid="8"
 	label="Tori and Annuli">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 0 </euler>
     <orbl value="T-"/>
     <compact value="T-"/>
   </filter>
-</packet> <!-- Tori and Annuli (Surface Filter) -->
-</packet> <!-- Filter (Surface Filter) -->
+</packet> <!-- Tori and Annuli (Surface filter) -->
+</packet> <!-- Filter (Surface filter) -->
 </packet> <!-- Normal Surface Filters (Container) -->
 <packet type="Script" typeid="7"
 	label="Python Script">
@@ -1130,28 +1130,28 @@ CS_unknown
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Filter">
   <filter type="Combination filter" typeid="2">
     <op type="or"/>
   </filter>
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Discs">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 1 </euler>
     <compact value="T-"/>
     <realbdry value="T-"/>
   </filter>
-</packet> <!-- Discs (Surface Filter) -->
-<packet type="Surface Filter" typeid="8"
+</packet> <!-- Discs (Surface filter) -->
+<packet type="Surface filter" typeid="8"
 	label="Tori and Annuli">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 0 </euler>
     <orbl value="T-"/>
     <compact value="T-"/>
   </filter>
-</packet> <!-- Tori and Annuli (Surface Filter) -->
-</packet> <!-- Filter (Surface Filter) -->
+</packet> <!-- Tori and Annuli (Surface filter) -->
+</packet> <!-- Filter (Surface filter) -->
 </packet> <!-- Normal Surface Filters (Container) -->
 <packet type="Script" typeid="7"
 	label="Python Script">
@@ -1391,28 +1391,28 @@ CS_unknown
 </packet> <!-- Higher Dimensions (Container) -->
 <packet type="Container" typeid="1"
 	label="Normal Surface Filters">
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Filter">
   <filter type="Combination filter" typeid="2">
     <op type="or"/>
   </filter>
-<packet type="Surface Filter" typeid="8"
+<packet type="Surface filter" typeid="8"
 	label="Discs">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 1 </euler>
     <compact value="T-"/>
     <realbdry value="T-"/>
   </filter>
-</packet> <!-- Discs (Surface Filter) -->
-<packet type="Surface Filter" typeid="8"
+</packet> <!-- Discs (Surface filter) -->
+<packet type="Surface filter" typeid="8"
 	label="Tori and Annuli">
   <filter type="Filter by basic properties" typeid="1">
     <euler> 0 </euler>
     <orbl value="T-"/>
     <compact value="T-"/>
   </filter>
-</packet> <!-- Tori and Annuli (Surface Filter) -->
-</packet> <!-- Filter (Surface Filter) -->
+</packet> <!-- Tori and Annuli (Surface filter) -->
+</packet> <!-- Filter (Surface filter) -->
 </packet> <!-- Normal Surface Filters (Container) -->
 <packet type="Script" typeid="7"
 	label="Python Script">

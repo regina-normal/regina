@@ -610,7 +610,7 @@ Container
 ************************************************************
 *
 * Label: Filter
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Normal Surface Filters
 *
 ************************************************************
@@ -621,7 +621,7 @@ OR combination normal surface filter
 ************************************************************
 *
 * Label: Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Filter
 *
 ************************************************************
@@ -635,7 +635,7 @@ Filter normal surfaces with restrictions:
 ************************************************************
 *
 * Label: Tori and Annuli
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Filter
 *
 ************************************************************
@@ -1142,7 +1142,7 @@ Container
 ************************************************************
 *
 * Label: Filter
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Normal Surface Filters
 *
 ************************************************************
@@ -1153,7 +1153,7 @@ OR combination normal surface filter
 ************************************************************
 *
 * Label: Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Filter
 *
 ************************************************************
@@ -1167,7 +1167,7 @@ Filter normal surfaces with restrictions:
 ************************************************************
 *
 * Label: Tori and Annuli
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Filter
 *
 ************************************************************
@@ -1229,9 +1229,9 @@ Higher Dimensions (Container)
 B4 x~ S1 (5-D triangulation)
 8-sphere (8-D triangulation)
 Normal Surface Filters (Container)
-Filter (Surface Filter)
-Discs (Surface Filter)
-Tori and Annuli (Surface Filter)
+Filter (Surface filter)
+Discs (Surface filter)
+Tori and Annuli (Surface filter)
 Python Script (Script)
 --------------------
 Exit code: 0
@@ -1260,9 +1260,9 @@ Higher Dimensions (Container)
 B4 x~ S1 (5-D triangulation)
 8-sphere (8-D triangulation)
 Normal Surface Filters (Container)
-Filter (Surface Filter)
-Discs (Surface Filter)
-Tori and Annuli (Surface Filter)
+Filter (Surface filter)
+Discs (Surface filter)
+Tori and Annuli (Surface filter)
 Python Script (Script)
 
 26 total packets in file.

@@ -359,7 +359,7 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 ************************************************************
 *
 * Label: Tori, Annuli and Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Container
 *
 ************************************************************
@@ -370,7 +370,7 @@ OR combination normal surface filter
 ************************************************************
 *
 * Label: Tori and Annuli
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Tori, Annuli and Discs
 *
 ************************************************************
@@ -384,7 +384,7 @@ Filter normal surfaces with restrictions:
 ************************************************************
 *
 * Label: Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Tori, Annuli and Discs
 *
 ************************************************************
@@ -983,7 +983,7 @@ Container
 ************************************************************
 *
 * Label: Tori, Annuli and Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Normal Surface Filters
 *
 ************************************************************
@@ -994,7 +994,7 @@ OR combination normal surface filter
 ************************************************************
 *
 * Label: Tori and Annuli
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Tori, Annuli and Discs
 *
 ************************************************************
@@ -1008,7 +1008,7 @@ Filter normal surfaces with restrictions:
 ************************************************************
 *
 * Label: Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Tori, Annuli and Discs
 *
 ************************************************************
