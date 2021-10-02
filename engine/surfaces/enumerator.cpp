@@ -503,6 +503,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         // matching equations.  Since we explicitly constructed the matching
         // equations as the first step of the enumeration process, we are
         // assured that LPConstraintNonSpun can be used without problems.
+        // TODO: Convert TreeEnumeration to use SnapshotRef
         TreeEnumeration<LPConstraintNonSpun, BanNone, Integer> search(
             *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
@@ -511,6 +512,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
                 break;
         }
     } else {
+        // TODO: Convert TreeEnumeration to use SnapshotRef
         TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
             *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
