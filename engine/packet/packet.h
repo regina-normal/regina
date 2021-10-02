@@ -227,20 +227,15 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         /*@{*/
 
         /**
-         * Constructor that inserts the new packet into the
-         * overall tree structure.  The new packet will be inserted as
-         * the last child of the given parent, and will be initialised
-         * with no children of its own.
+         * Constructor that initialises the packet to have no parent and
+         * no children.
          *
          * Note that Packet is an abstract class and cannot be
          * instantiated directly.
          *
          * \ifacespython Not present.
-         *
-         * @param parent the parent beneath which to insert this packet,
-         * or \c null if this packet is to be the matriarch of a new tree.
          */
-        Packet(Packet* parent = nullptr);
+        Packet();
 
         /**
          * Destructor that also orphans this packet and destroys
@@ -3367,14 +3362,10 @@ inline void PacketListener::packetWasChanged(Packet*) {
 
 // Inline functions for Packet
 
-inline Packet::Packet(Packet* parent) :
-        firstTreeChild_(nullptr), lastTreeChild_(nullptr),
+inline Packet::Packet() :
+        treeParent_(nullptr), firstTreeChild_(nullptr), lastTreeChild_(nullptr),
         prevTreeSibling_(nullptr), nextTreeSibling_(nullptr),
         changeEventSpans_(0), inDestructor_(false) {
-    if (parent)
-        parent->insertChildLast(this);
-    else
-        treeParent_ = nullptr;
 }
 
 inline void Packet::writeTextLong(std::ostream& out) const {

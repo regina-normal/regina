@@ -745,6 +745,7 @@ Version 7.0  [ TODO ]
               take type as a PacketType, not a string.  The old functions
               are removed completely, because the typeName() string is
               not guaranteed to stay constant between releases.
+            - Removed the "tree insertion constructor", which was never used.
         Class PacketData<Held>, PacketOf<Held>:
             - New template classes to support the new "wrapped" packet types.
         Class PacketInfo:
