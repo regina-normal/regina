@@ -46,7 +46,7 @@
 template <int dim>
 class ExampleCreator {
     public:
-        typedef regina::Triangulation<dim>* (*CreatorFunc)();
+        typedef regina::Triangulation<dim> (*CreatorFunc)();
 
     private:
         QString name_;

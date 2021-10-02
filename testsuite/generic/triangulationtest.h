@@ -529,27 +529,18 @@ class TriangulationTest : public CppUnit::TestFixture {
             /**< The twisted product B^(dim-1) x~ S^1. */
 
     public:
-        void copyAndDelete(Triangulation<dim>& dest,
-                Triangulation<dim>* source) {
-            dest.insertTriangulation(*source);
-            delete source;
-        }
-
         void setUp() {
             // The empty triangulation needs no initialisation whatsoever.
 
             // Some examples are ready-made via Example<dim>.
-            copyAndDelete(sphere, regina::Example<dim>::sphere());
-            copyAndDelete(simplicialSphere,
-                regina::Example<dim>::simplicialSphere());
-            copyAndDelete(sphereBundle, regina::Example<dim>::sphereBundle());
-            copyAndDelete(twistedSphereBundle,
-                regina::Example<dim>::twistedSphereBundle());
+            sphere = regina::Example<dim>::sphere();
+            simplicialSphere = regina::Example<dim>::simplicialSphere();
+            sphereBundle = regina::Example<dim>::sphereBundle();
+            twistedSphereBundle = regina::Example<dim>::twistedSphereBundle();
 
-            copyAndDelete(ball, regina::Example<dim>::ball());
-            copyAndDelete(ballBundle, regina::Example<dim>::ballBundle());
-            copyAndDelete(twistedBallBundle,
-                regina::Example<dim>::twistedBallBundle());
+            ball = regina::Example<dim>::ball();
+            ballBundle = regina::Example<dim>::ballBundle();
+            twistedBallBundle = regina::Example<dim>::twistedBallBundle();
         }
 
         static bool looksIdentical(const Triangulation<dim>& a,

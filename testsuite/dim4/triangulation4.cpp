@@ -169,27 +169,28 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // We can pull some of our triangulations straight out of the can
             // via Example<4>.
-            copyAndDelete(rp4, Example<4>::rp4());
+            rp4 = Example<4>::rp4();
 
             // Some of our triangulations are built from 3-manifold
             // triangulations.
-            Triangulation<3>* base;
+            {
+                Triangulation<3> base = Example<3>::threeSphere();
+                s4_doubleConeS3 = Example<4>::doubleCone(base);
+                ball_singleConeS3 = Example<4>::singleCone(base);
+            }
 
-            base = Example<3>::threeSphere();
-            copyAndDelete(s4_doubleConeS3, Example<4>::doubleCone(*base));
-            copyAndDelete(ball_singleConeS3, Example<4>::singleCone(*base));
-            delete base;
+            {
+                Triangulation<3> base = Example<3>::poincareHomologySphere();
+                idealPoincareProduct = Example<4>::doubleCone(base);
+                idealCappellShaneson = Example<4>::cappellShaneson();
+                mixedPoincareProduct = Example<4>::singleCone(base);
+            }
 
-            base = Example<3>::poincareHomologySphere();
-            copyAndDelete(idealPoincareProduct, Example<4>::doubleCone(*base));
-            copyAndDelete(idealCappellShaneson, Example<4>::cappellShaneson());
-            copyAndDelete(mixedPoincareProduct, Example<4>::singleCone(*base));
-            delete base;
-
-            base = Example<3>::figureEight();
-            copyAndDelete(idealFigEightProduct, Example<4>::doubleCone(*base));
-            copyAndDelete(mixedFigEightProduct, Example<4>::singleCone(*base));
-            delete base;
+            {
+                Triangulation<3> base = Example<3>::figureEight();
+                idealFigEightProduct = Example<4>::doubleCone(base);
+                mixedFigEightProduct = Example<4>::singleCone(base);
+            }
 
             // Build the rest manually.
             Pentachoron<4>* p[2];
@@ -1865,28 +1866,28 @@ class Triangulation4Test : public TriangulationTest<4> {
             if ((! tri.isValid()) || tri.isIdeal())
                 return;
 
-            Triangulation<4>* b = Example<4>::iBundle(tri);
+            Triangulation<4> b = Example<4>::iBundle(tri);
 
-            if (! b->isValid()) {
+            if (! b.isValid()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle gives an invalid triangulation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->isOrientable() != tri.isOrientable()) {
+            if (b.isOrientable() != tri.isOrientable()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle has mismatched orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->countComponents() != tri.countComponents()) {
+            if (b.countComponents() != tri.countComponents()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle has the wrong number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->eulerCharTri() != tri.eulerCharTri() ||
-                    b->eulerCharManifold() != tri.eulerCharManifold()) {
+            if (b.eulerCharTri() != tri.eulerCharTri() ||
+                    b.eulerCharManifold() != tri.eulerCharManifold()) {
                 std::ostringstream msg;
                 msg << name << ": "
                     << "iBundle gives the wrong Euler characteristic.";
@@ -1899,7 +1900,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 if (tri.component(i)->countBoundaryTriangles())
                     --expectBdryComp;
 
-            if (b->countBoundaryComponents() != expectBdryComp) {
+            if (b.countBoundaryComponents() != expectBdryComp) {
                 std::ostringstream msg;
                 msg << name << ": iBundle has the wrong number of "
                         "boundary components.";
@@ -1909,7 +1910,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             unsigned long expectBdryTets = 2 * tri.countTetrahedra() +
                 20 * tri.countBoundaryTriangles();
 
-            if (b->countBoundaryFacets() != expectBdryTets) {
+            if (b.countBoundaryFacets() != expectBdryTets) {
                 std::ostringstream msg;
                 msg << name << ": iBundle has the wrong number of "
                         "boundary tetrahedra.";
@@ -1920,21 +1921,19 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // Simplify the triangulation before running any more
             // expensive tests.
-            b->intelligentSimplify();
+            b.intelligentSimplify();
 
-            if (b->homologyH1() != tri.homologyH1()) {
+            if (b.homologyH1() != tri.homologyH1()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle gives a mismatched H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->homologyH2() != tri.homologyH2()) {
+            if (b.homologyH2() != tri.homologyH2()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle gives a mismatched H2.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete b;
         }
 
         void iBundle() {
@@ -1948,34 +1947,34 @@ class Triangulation4Test : public TriangulationTest<4> {
             if ((! tri.isValid()) || tri.isIdeal())
                 return;
 
-            Triangulation<4>* b = Example<4>::s1Bundle(tri);
+            Triangulation<4> b = Example<4>::s1Bundle(tri);
 
-            if (! b->isValid()) {
+            if (! b.isValid()) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle gives an invalid triangulation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->isOrientable() != tri.isOrientable()) {
+            if (b.isOrientable() != tri.isOrientable()) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle has mismatched orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->countComponents() != tri.countComponents()) {
+            if (b.countComponents() != tri.countComponents()) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle has the wrong number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->eulerCharTri() != 0 || b->eulerCharManifold() != 0) {
+            if (b.eulerCharTri() != 0 || b.eulerCharManifold() != 0) {
                 std::ostringstream msg;
                 msg << name << ": "
                     << "s1Bundle gives the wrong Euler characteristic.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->countBoundaryComponents() != tri.countBoundaryComponents()) {
+            if (b.countBoundaryComponents() != tri.countBoundaryComponents()) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle has the wrong number of "
                         "boundary components.";
@@ -1985,7 +1984,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             unsigned long expectBdryTets =
                 20 * tri.countBoundaryTriangles();
 
-            if (b->countBoundaryFacets() != expectBdryTets) {
+            if (b.countBoundaryFacets() != expectBdryTets) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle has the wrong number of "
                         "boundary tetrahedra.";
@@ -1994,12 +1993,12 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // Simplify the triangulation before running any more
             // expensive tests.
-            b->intelligentSimplify();
+            b.intelligentSimplify();
 
             regina::AbelianGroup expectH1(tri.homologyH1());
             expectH1.addRank();
 
-            if (b->homologyH1() != expectH1) {
+            if (b.homologyH1() != expectH1) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle gives incorrect H1.";
                 CPPUNIT_FAIL(msg.str());
@@ -2008,13 +2007,11 @@ class Triangulation4Test : public TriangulationTest<4> {
             regina::AbelianGroup expectH2(tri.homologyH2());
             expectH2.addGroup(tri.homology());
 
-            if (b->homologyH2() != expectH2) {
+            if (b.homologyH2() != expectH2) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle gives incorrect H2.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete b;
         }
 
         void s1Bundle() {
@@ -2030,38 +2027,37 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             tri.findAllIsomorphisms(tri, [&tri, name](
                     const Isomorphism<3>& aut) {
-                Triangulation<4>* b =
-                    Example<4>::bundleWithMonodromy(tri, aut);
+                Triangulation<4> b = Example<4>::bundleWithMonodromy(tri, aut);
 
-                if (! b->isValid()) {
+                if (! b.isValid()) {
                     std::ostringstream msg;
                     msg << name << ": bundleWithMonodromy gives an "
                         "invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (b->isOrientable() && ! tri.isOrientable()) {
+                if (b.isOrientable() && ! tri.isOrientable()) {
                     std::ostringstream msg;
                     msg << name << ": "
                         << "bundleWithMonodromy destroys non-orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (b->countComponents() != tri.countComponents()) {
+                if (b.countComponents() != tri.countComponents()) {
                     std::ostringstream msg;
                     msg << name << ": bundleWithMonodromy has the wrong number "
                         "of components.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (b->eulerCharTri() != 0 || b->eulerCharManifold() != 0) {
+                if (b.eulerCharTri() != 0 || b.eulerCharManifold() != 0) {
                     std::ostringstream msg;
                     msg << name << ": bundleWithMonodromy gives the wrong "
                         "Euler characteristic.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (b->countBoundaryComponents() !=
+                if (b.countBoundaryComponents() !=
                         tri.countBoundaryComponents()) {
                     std::ostringstream msg;
                     msg << name << ": "
@@ -2072,7 +2068,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
                 size_t expectBdryTets = 20 * tri.countBoundaryTriangles();
 
-                if (b->countBoundaryFacets() != expectBdryTets) {
+                if (b.countBoundaryFacets() != expectBdryTets) {
                     std::ostringstream msg;
                     msg << name << ": "
                         << "bundleWithMonodromy gives the wrong number of "
@@ -2085,7 +2081,6 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // combinatorial isomorphism, b must have (M x S1) as a
                 // finite sheeted cover.
 
-                delete b;
                 return false;
             });
         }

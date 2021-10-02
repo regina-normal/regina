@@ -171,11 +171,6 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
 
     public:
-        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
-            dest.insertTriangulation(*source);
-            delete source;
-        }
-
         void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
             auto sig = Signature::parse(sigStr);
             if (! sig)
@@ -199,9 +194,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             oneTet.newTetrahedron();
 
             // Use pre-coded triangulations where we can.
-            copyAndDelete(figure8, Example<3>::figureEight());
+            figure8 = Example<3>::figureEight();
 
-            copyAndDelete(gieseking, Example<3>::gieseking());
+            gieseking = Example<3>::gieseking();
 
             // Layered loops can be constructed automatically.
             S3.insertLayeredLoop(1, false);

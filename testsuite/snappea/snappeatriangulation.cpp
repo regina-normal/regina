@@ -127,11 +127,6 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                  vertices all have 2-sphere links. */
 
     public:
-        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
-            dest.insertTriangulation(*source);
-            delete source;
-        }
-
         void setUp() {
             // Keep the kernel quiet.  It interferes with the test
             // suite's running progress messages.
@@ -161,10 +156,14 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             // gives the same triangulation with a different labelling,
             // which seems to prod SnapPea into finding a better
             // (non_geometric) solution instead.
-            copyAndDelete(closedHypOr, Example<3>::smallClosedOrblHyperbolic());
-            copyAndDelete(closedHypNor, Triangulation<3>::fromIsoSig(
-                "lLLLALAQccegffiijkikkkknawmhvwcls"));
-            copyAndDelete(weberSeifert, Example<3>::weberSeifert());
+            closedHypOr = Example<3>::smallClosedOrblHyperbolic();
+            {
+                Triangulation<3>* tmp = Triangulation<3>::fromIsoSig(
+                    "lLLLALAQccegffiijkikkkknawmhvwcls");
+                closedHypNor = std::move(*tmp);
+                delete tmp;
+            }
+            weberSeifert = Example<3>::weberSeifert();
 
             t = flatOr.newTetrahedron();
             s = flatOr.newTetrahedron();
@@ -706,8 +705,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void spunBoundaries() {
-            Triangulation<3>* f8 = Example<3>::figureEight();
-            SnapPeaTriangulation t(*f8);
+            SnapPeaTriangulation t(Example<3>::figureEight());
 
             regina::NormalSurfaces s(t, regina::NS_QUAD);
             if (s.size() != 4)
@@ -757,8 +755,6 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             if (! found[3])
                 CPPUNIT_FAIL("Figure 8 knot complement: did not find "
                     "boundary slope (-1, -4).");
-
-            delete f8;
         }
 
         static void testStability(const Triangulation<3>& tri, const char*) {

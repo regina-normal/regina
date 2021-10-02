@@ -282,31 +282,29 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
-            copyAndDelete(weberSeifert, Example<3>::weberSeifert());
+            weberSeifert = Example<3>::weberSeifert();
 
-            copyAndDelete(figure8, Example<3>::figureEight());
+            figure8 = Example<3>::figureEight();
 
-            copyAndDelete(trefoil, Example<3>::trefoil());
+            trefoil = Example<3>::trefoil();
 
-            copyAndDelete(rp2xs1, Example<3>::rp2xs1());
+            rp2xs1 = Example<3>::rp2xs1();
 
             {
                 Link* k = Link::fromKnotSig(
                     "sabcdeafghidejklmnopqgcbfqhinmjrpolkrlLvnvvNdM9aE");
-                copyAndDelete(knot18, k->complement());
+                knot18 = k->complement();
                 delete k;
             }
 
-            copyAndDelete(gieseking, Example<3>::gieseking());
+            gieseking = Example<3>::gieseking();
 
-            copyAndDelete(cuspedGenusTwoTorus,
-                Example<3>::cuspedGenusTwoTorus());
+            cuspedGenusTwoTorus = Example<3>::cuspedGenusTwoTorus();
 
             singleTet_bary.newTetrahedron();
             singleTet_bary.barycentricSubdivision();
 
-            copyAndDelete(fig8_bary,
-                Example<3>::figureEight());
+            fig8_bary = Example<3>::figureEight();
             fig8_bary.barycentricSubdivision();
 
             // The rest alas must be done manually.
@@ -2496,9 +2494,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             // We'll build this a few different ways.
 
             // First, one out of the can:
-            tri = Example<3>::poincareHomologySphere();
-            verifyNotThreeSphere(*tri, "Poincare homology sphere (example)");
-            delete tri;
+            verifyNotThreeSphere(Example<3>::poincareHomologySphere(),
+                "Poincare homology sphere (example)");
 
             // Poincare homology sphere as a plugged triangular solid torus:
             tri = new Triangulation<3>;
@@ -2637,24 +2634,22 @@ class Triangulation3Test : public TriangulationTest<3> {
             return tri;
         }
 
-        Triangulation<3>* verifyNotThreeBall(Triangulation<3>* tri,
+        void verifyNotThreeBall(const Triangulation<3>& tri,
                 const std::string& triName) {
-            clearProperties(*tri);
-            if (tri->isBall()) {
+            clearProperties(const_cast<Triangulation<3>&>(tri));
+            if (tri.isBall()) {
                 CPPUNIT_FAIL(("The non-3-ball" + triName +
                     " is recognised as a 3-ball.").c_str());
             }
 
             // Try again with a barycentric subdivision.
-            Triangulation<3> big(*tri);
+            Triangulation<3> big(tri);
             big.barycentricSubdivision();
             clearProperties(big);
             if (big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-ball "
                     + triName + " is recognised as a 3-ball.").c_str());
             }
-
-            return tri;
         }
 
         void threeBallRecognition() {
@@ -2695,45 +2690,55 @@ class Triangulation3Test : public TriangulationTest<3> {
             delete verifyThreeBall(tri, "4-tetrahedron ball");
 
             // Non-balls:
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(1, 2);
-            delete verifyNotThreeBall(tri, "LST(1,2,3)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(1, 2);
+                verifyNotThreeBall(tri, "LST(1,2,3)");
+            }
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(3, 4);
-            delete verifyNotThreeBall(tri, "LST(3,4,7)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(3, 4);
+                verifyNotThreeBall(tri, "LST(3,4,7)");
+            }
 
-            tri = new Triangulation<3>();
-            delete verifyNotThreeBall(tri, "Empty triangulation");
+            verifyNotThreeBall(Triangulation<3>(), "Empty triangulation");
 
             // Make a punctured Poincare homology sphere.
-            tri = Example<3>::poincareHomologySphere();
-            tri->barycentricSubdivision();
-            tri->removeTetrahedronAt(0);
-            tri->intelligentSimplify();
-            delete verifyNotThreeBall(tri,
-                "Punctured Poincare homology sphere");
+            {
+                Triangulation<3> tri = Example<3>::poincareHomologySphere();
+                tri.barycentricSubdivision();
+                tri.removeTetrahedronAt(0);
+                tri.intelligentSimplify();
+                verifyNotThreeBall(tri, "Punctured Poincare homology sphere");
+            }
 
             // Throw in a couple of closed manifolds for good measure.
-            tri = new Triangulation<3>();
-            tri->insertLayeredLensSpace(1,0);
-            delete verifyNotThreeBall(tri, "L(1,0)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredLensSpace(1,0);
+                verifyNotThreeBall(tri, "L(1,0)");
+            }
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredLensSpace(2,1);
-            delete verifyNotThreeBall(tri, "L(2,1)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredLensSpace(2,1);
+                verifyNotThreeBall(tri, "L(2,1)");
+            }
 
-            tri = Example<3>::poincareHomologySphere();
-            delete verifyNotThreeBall(tri, "Poincare homology sphere");
+            verifyNotThreeBall(Example<3>::poincareHomologySphere(),
+                "Poincare homology sphere");
 
             // Some disconnected examples.
-            verifyNotThreeBall(&disjoint2, "Disjoint, 2 components");
-            verifyNotThreeBall(&disjoint3, "Disjoint, 3 components");
+            verifyNotThreeBall(disjoint2, "Disjoint, 2 components");
+            verifyNotThreeBall(disjoint3, "Disjoint, 3 components");
 
-            tri = new Triangulation<3>();
-            tri->newTetrahedron();
-            tri->newTetrahedron();
-            delete verifyNotThreeBall(tri, "B^3 U B^3");
+            {
+                Triangulation<3> tri;
+                tri.newTetrahedron();
+                tri.newTetrahedron();
+                verifyNotThreeBall(tri, "B^3 U B^3");
+            }
         }
 
         static void testSolidTorus4(const Triangulation<3>& tri,
@@ -2823,14 +2828,14 @@ class Triangulation3Test : public TriangulationTest<3> {
             return tri;
         }
 
-        Triangulation<3>* verifyNotSolidTorus(Triangulation<3>* tri,
+        void verifyNotSolidTorus(const Triangulation<3>& tri,
                 const char* triName) {
-            Triangulation<3> bounded(*tri);
+            Triangulation<3> bounded(tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
             clearProperties(bounded);
 
-            Triangulation<3> ideal(*tri);
+            Triangulation<3> ideal(tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
             clearProperties(ideal);
@@ -2867,8 +2872,6 @@ class Triangulation3Test : public TriangulationTest<3> {
                     << " was recognised as a solid torus.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            return tri;
         }
 
         void verifyIsoSigSolidTorus(const std::string& sigStr) {
@@ -2878,23 +2881,27 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void verifyIsoSigNotSolidTorus(const std::string& sigStr) {
             Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            delete verifyNotSolidTorus(t, sigStr.c_str());
+            verifyNotSolidTorus(*t, sigStr.c_str());
+            delete t;
         }
 
         void solidTorusRecognition() {
             Triangulation<3>* tri;
 
-            tri = new Triangulation<3>();
-            delete verifyNotSolidTorus(tri, "Empty triangulation");
+            verifyNotSolidTorus(Triangulation<3>(), "Empty triangulation");
 
-            tri = new Triangulation<3>();
-            tri->newTetrahedron();
-            delete verifyNotSolidTorus(tri, "Single tetrahedron");
+            {
+                Triangulation<3> tri;
+                tri.newTetrahedron();
+                verifyNotSolidTorus(tri, "Single tetrahedron");
+            }
 
-            tri = new Triangulation<3>();
-            Tetrahedron<3>* tet = tri->newTetrahedron();
-            tet->join(0, tet, Perm<4>(3, 1, 2, 0));
-            delete verifyNotSolidTorus(tri, "Snapped tetrahedron");
+            {
+                Triangulation<3> tri;
+                Tetrahedron<3>* tet = tri.newTetrahedron();
+                tet->join(0, tet, Perm<4>(3, 1, 2, 0));
+                verifyNotSolidTorus(tri, "Snapped tetrahedron");
+            }
 
             tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 2);
@@ -2915,8 +2922,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             tri = Triangulation<3>::fromIsoSig("cMcabbgds");
             delete verifySolidTorus(tri, "Ideal solid torus");
 
-            tri = Example<3>::figureEight();
-            delete verifyNotSolidTorus(tri, "Figure 8 Knot Complement");
+            verifyNotSolidTorus(Example<3>::figureEight(),
+                "Figure 8 Knot Complement");
 
             // Some knot complements (with real boundary):
             verifyIsoSigNotSolidTorus("fHLykbcdeedwuqs");
@@ -2942,25 +2949,31 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyIsoSigSolidTorus("iLAvPQacbbgehfgdicdffnf");
 
             // Throw in a couple of closed manifolds for good measure.
-            tri = new Triangulation<3>();
-            tri->insertLayeredLensSpace(1,0);
-            delete verifyNotSolidTorus(tri, "L(1,0)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredLensSpace(1,0);
+                verifyNotSolidTorus(tri, "L(1,0)");
+            }
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredLensSpace(2,1);
-            delete verifyNotSolidTorus(tri, "L(2,1)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredLensSpace(2,1);
+                verifyNotSolidTorus(tri, "L(2,1)");
+            }
 
-            tri = Example<3>::poincareHomologySphere();
-            delete verifyNotSolidTorus(tri, "Poincare homology sphere");
+            verifyNotSolidTorus(Example<3>::poincareHomologySphere(),
+                "Poincare homology sphere");
 
             // Some disconnected triangulations:
-            verifyNotSolidTorus(&disjoint2, "2-component manifold");
-            verifyNotSolidTorus(&disjoint3, "3-component manifold");
+            verifyNotSolidTorus(disjoint2, "2-component manifold");
+            verifyNotSolidTorus(disjoint3, "3-component manifold");
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(1, 2);
-            tri->insertLayeredSolidTorus(1, 2);
-            delete verifyNotSolidTorus(tri, "LST U LST");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(1, 2);
+                tri.insertLayeredSolidTorus(1, 2);
+                verifyNotSolidTorus(tri, "LST U LST");
+            }
 
             // An exhaustive census run:
             runCensusAllBounded(&testSolidTorus4);
@@ -4783,28 +4796,28 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void swapping() {
-            Triangulation<3>* a = Example<3>::figureEight();
-            Triangulation<3>* b = Example<3>::weberSeifert();
+            Triangulation<3> a = Example<3>::figureEight();
+            Triangulation<3> b = Example<3>::weberSeifert();
 
-            a->homology();
-            b->homology();
+            a.homology();
+            b.homology();
 
-            swap(*a, *b);
+            swap(a, b);
 
-            if (a->size() != 23) {
+            if (a.size() != 23) {
                 CPPUNIT_FAIL("swap() did not swap tetrahedra correctly.");
             }
-            if (! b->homology().isZ()) {
+            if (! b.homology().isZ()) {
                 CPPUNIT_FAIL("swap() did not swap properties correctly.");
             }
 
-            std::iter_swap(a, b);
+            std::iter_swap(&a, &b);
 
-            if (a->size() != 2) {
+            if (a.size() != 2) {
                 CPPUNIT_FAIL(
                     "std::iter_swap() did not swap tetrahedra correctly.");
             }
-            if (b->homology() != weberSeifert.homology()) {
+            if (b.homology() != weberSeifert.homology()) {
                 CPPUNIT_FAIL(
                     "std::iter_swap() did not swap properties correctly.");
             }

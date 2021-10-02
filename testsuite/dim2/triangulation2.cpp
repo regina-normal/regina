@@ -84,19 +84,14 @@ class Triangulation2Test : public TriangulationTest<2> {
             /**< A disjoint union of three triangulations. */
 
     public:
-        void copyAndDelete(Triangulation<2>& dest, Triangulation<2>* source) {
-            dest.insertTriangulation(*source);
-            delete source;
-        }
-
         void setUp() {
             TriangulationTest<2>::setUp();
 
-            copyAndDelete(s2Oct, Example<2>::sphereOctahedron());
+            s2Oct = Example<2>::sphereOctahedron();
 
-            copyAndDelete(torus2, Example<2>::orientable(2, 0));
+            torus2 = Example<2>::orientable(2, 0);
 
-            copyAndDelete(rp2, Example<2>::rp2());
+            rp2 = Example<2>::rp2();
 
             disjoint2.insertTriangulation(sphereBundle);
             disjoint2.insertTriangulation(twistedBallBundle);

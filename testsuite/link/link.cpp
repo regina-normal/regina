@@ -888,18 +888,17 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementBasic(const Link& l, const char* name) {
-            Triangulation<3>* c = l.complement();
+            Triangulation<3> c = l.complement();
 
-            if (c->countComponents() != 1) {
+            if (c.countComponents() != 1) {
                 std::ostringstream msg;
                 msg << name << " complement: expected 1 component, "
-                    "found " << c->countComponents() << ".";
-                delete c;
+                    "found " << c.countComponents() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             size_t ideal = 0;
-            for (auto v : c->vertices()) {
+            for (auto v : c.vertices()) {
                 regina::Vertex<3>::LinkType t = v->linkType();
                 if (t == regina::Vertex<3>::TORUS)
                     ++ideal;
@@ -907,7 +906,6 @@ class LinkTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << name << " complement: "
                         "contains a vertex with unexpected link type.";
-                    delete c;
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -917,41 +915,30 @@ class LinkTest : public CppUnit::TestFixture {
                 msg << name << " complement: expected "
                     << l.countComponents() << " ideal vertices, "
                     "found " << ideal << ".";
-                delete c;
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete c;
         }
 
         void testComplementS3(const Link& l, const char* name) {
-            Triangulation<3>* c = l.complement();
-            if (! c->isSphere()) {
+            if (! l.complement().isSphere()) {
                 std::ostringstream msg;
                 msg << name << " complement: not a 3-sphere "
                     "as expected.";
-                delete c;
                 CPPUNIT_FAIL(msg.str());
             }
-            delete c;
         }
 
         void testComplementUnknot(const Link& l, const char* name) {
-            Triangulation<3>* c = l.complement();
-            if (! c->isSolidTorus()) {
+            if (! l.complement().isSolidTorus()) {
                 std::ostringstream msg;
                 msg << name << " complement: not a solid torus as expected.";
-                delete c;
                 CPPUNIT_FAIL(msg.str());
             }
-            delete c;
         }
 
         void testComplementSig(const Link& l,
                 std::initializer_list<const char*> expected, const char* name) {
-            Triangulation<3>* c = l.complement();
-            std::string sig = c->isoSig();
-            delete c;
+            std::string sig = l.complement().isoSig();
 
             for (auto e : expected)
                 if (sig == e)
@@ -969,9 +956,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testComplementCensus(const Link& l, std::string prefix,
                 const char* name) {
-            Triangulation<3>* c = l.complement();
-            std::string sig = c->isoSig();
-            delete c;
+            std::string sig = l.complement().isoSig();
 
             auto hits = regina::Census::lookup(sig);
             for (const auto& hit : hits) {
@@ -988,17 +973,15 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testComplementFree(const Link& l, unsigned nGen,
                 const char* name) {
-            Triangulation<3>* c = l.complement();
-            const regina::GroupPresentation& fg = c->fundamentalGroup();
+            const regina::GroupPresentation fg =
+                l.complement().fundamentalGroup();
             if (fg.countGenerators() != nGen || fg.countRelations() != 0) {
                 std::ostringstream msg;
                 msg << name << " complement: fundamental group is "
                     "not recognised as free on " << nGen
                     << " generators as expected.";
-                delete c;
                 CPPUNIT_FAIL(msg.str());
             }
-            delete c;
         }
 
         void testComplementFreeAbelian(const Link& l, unsigned nGen,
@@ -1006,24 +989,20 @@ class LinkTest : public CppUnit::TestFixture {
             std::ostringstream expected;
             expected << nGen << " Z";
 
-            Triangulation<3>* c = l.complement();
-            const regina::GroupPresentation& fg = c->fundamentalGroup();
+            const regina::GroupPresentation fg =
+                l.complement().fundamentalGroup();
             if (fg.recogniseGroup() != expected.str()) {
                 std::ostringstream msg;
                 msg << name << " complement: fundamental group is "
                     "not recognised as free abelian on " << nGen
                     << " generators as expected.";
-                delete c;
                 CPPUNIT_FAIL(msg.str());
             }
-            delete c;
         }
 
         void testComplementTrefoilUnknot(const Link& l, const char* name) {
-            std::unique_ptr<Triangulation<3>> c(l.complement());
-
-            // Find a separating sphere.
-            regina::NormalSurfaces vtx(*c, regina::NS_STANDARD);
+            // Find a separating sphere in the complement.
+            regina::NormalSurfaces vtx(l.complement(), regina::NS_STANDARD);
             for (const regina::NormalSurface& s : vtx) {
                 if (s.eulerChar() != 2)
                     continue;
@@ -2851,10 +2830,8 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyGroup(const Link& link, const char* name) {
             regina::GroupPresentation fromLink = link.group();
-
-            Triangulation<3>* comp = link.complement();
-            regina::GroupPresentation fromComp = comp->fundamentalGroup();
-            delete comp;
+            regina::GroupPresentation fromComp =
+                link.complement().fundamentalGroup();
 
             if (! lookIsomorphic(fromLink, fromComp)) {
                 std::ostringstream msg;

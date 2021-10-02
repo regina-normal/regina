@@ -80,10 +80,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            Triangulation<3>* t = Example<3>::rp2xs1();
-            rp2xs1.insertTriangulation(*t);
-            delete t;
-
+            rp2xs1 = Example<3>::rp2xs1();
             lens8_1.insertLayeredLensSpace(8, 1);
             lens13_3.insertLayeredLensSpace(13, 3);
             twisted5.insertLayeredLoop(5, true);
