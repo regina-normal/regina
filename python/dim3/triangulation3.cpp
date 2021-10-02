@@ -101,7 +101,9 @@ void addTriangulation3(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const Triangulation<3>&, bool>())
-        .def(pybind11::init<const regina::Link&>())
+        .def(pybind11::init([](const regina::Link& link) { // deprecated
+            return new Triangulation<3>(link.complement());
+        }))
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init([](const regina::python::SnapPyObject& obj) {
             return new Triangulation<3>(obj.string_);
@@ -448,8 +450,10 @@ void addTriangulation3(pybind11::module_& m) {
         m, "PacketOfTriangulation3");
     regina::python::add_packet_constructor<>(wrap);
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap);
-    regina::python::add_packet_constructor<const regina::Link&>(wrap);
     regina::python::add_packet_constructor<const std::string&>(wrap);
+    wrap.def(pybind11::init([](const regina::Link& link) { // deprecated
+        return new regina::PacketOf<Triangulation<3>>(link.complement());
+    }));
     wrap.def(pybind11::init([](const regina::python::SnapPyObject& obj) {
         return new regina::PacketOf<Triangulation<3>>(std::in_place,
             obj.string_);
