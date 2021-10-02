@@ -60,10 +60,6 @@ namespace regina {
  * Regina's scripting interface, where working with pre-existing files
  * is more complicated than in the GUI.
  *
- * Note that each of these routines constructs a new triangulation from
- * scratch.  It is up to the caller of each routine to destroy the
- * triangulation that is returned.
- *
  * For Regina's \ref stddim "standard dimensions", this template is
  * specialised and offers many more example triangulations.  In order to
  * use these specialised classes, you will need to include the corresponding

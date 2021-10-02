@@ -268,19 +268,23 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
-         * Creates a new ideal triangulation representing the complement
-         * of the given link in the 3-sphere.
+         * Deprecated routine that creates a new ideal triangulation
+         * representing the complement of the given link in the 3-sphere.
          *
          * This is the same triangulation that is produced by
-         * Link::complement(); see that routine for further details.
+         * Link::complement(); however, this routine is slightly less
+         * efficient because it induces an additional move.
+         * See Link::complemenet() for further details.
          *
          * The triangulation will be simplified, but be aware that it
          * might still contain internal vertices (i.e., vertices whose
          * links are spheres).  This should, however, be a rare occurrence.
          *
+         * \deprecated Just call the more efficient Link::complement() instead.
+         *
          * @param link the link whose complement we should build.
          */
-        Triangulation(const Link& link);
+        [[deprecated]] Triangulation(const Link& link);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.

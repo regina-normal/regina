@@ -127,10 +127,9 @@ class CoversTest : public CppUnit::TestFixture {
         }
 
         template <int maxDegree>
-        void compareResults(Triangulation<3>* tri,
-                bool deleteAfter, const char* name) {
-            auto invSnapPea = viaSnapPea<maxDegree>(*tri);
-            auto invRegina = viaRegina<maxDegree>(*tri);
+        void compareResults(const Triangulation<3>& tri, const char* name) {
+            auto invSnapPea = viaSnapPea<maxDegree>(tri);
+            auto invRegina = viaRegina<maxDegree>(tri);
             // dumpCovers(std::cerr, name, invRegina);
             if (invSnapPea != invRegina) {
                 std::ostringstream msg;
@@ -144,16 +143,12 @@ class CoversTest : public CppUnit::TestFixture {
             if constexpr (maxDegree > 2) {
                 compareResults<maxDegree - 1>(tri, false, name);
             }
-
-            if (deleteAfter)
-                delete tri;
         }
 
         template <int degree>
-        void verifyResults(Triangulation<3>* tri,
-                const std::vector<std::string>& expected,
-                bool deleteAfter, const char* name) {
-            auto invRegina = viaRegina<degree>(*tri);
+        void verifyResults(const Triangulation<3>& tri,
+                const std::vector<std::string>& expected, const char* name) {
+            auto invRegina = viaRegina<degree>(tri);
             if (invRegina != expected) {
                 std::ostringstream msg;
                 msg << "Invariants differ for " << name << " : ";
@@ -162,36 +157,34 @@ class CoversTest : public CppUnit::TestFixture {
                 dumpCovers(msg, "Regina", invRegina);
                 CPPUNIT_FAIL(msg.str());
             }
-            if (deleteAfter)
-                delete tri;
         }
 
         template <int maxDegree>
         void compareResults(const Link& link, const char* name) {
-            compareResults<maxDegree>(link.complement(), true, name);
+            compareResults<maxDegree>(link.complement(), name);
         }
 
         template <int maxDegree>
         void verifyResults(const Link& link,
                 const std::vector<std::string>& expected, const char* name) {
-            verifyResults<maxDegree>(link.complement(), expected, true, name);
+            verifyResults<maxDegree>(link.complement(), expected, name);
         }
 
         void trivial() {
             // No covers:
-            compareResults<7>(regina::Example<3>::sphere(), true, "Sphere");
+            compareResults<7>(regina::Example<3>::sphere(), "Sphere");
         }
 
         void manifolds() {
             // No covers until we hit degree 5 and beyond:
             compareResults<7>(regina::Example<3>::poincareHomologySphere(),
-                true, "Poincare homology sphere");
+                "Poincare homology sphere");
 
             // Cover (which is trivial) only for degree 3:
-            compareResults<7>(regina::Example<3>::lens(3, 1), true, "L(3,1)");
+            compareResults<7>(regina::Example<3>::lens(3, 1), "L(3,1)");
 
             // Several covers for degree 5 and a few for degree 7:
-            compareResults<7>(regina::Example<3>::weeks(), true, "Weeks");
+            compareResults<7>(regina::Example<3>::weeks(), "Weeks");
 
             // Many, many covers for degree 5 (and a bit too slow to put
             // degree 6 in the test suite: takes half a second on my machine):

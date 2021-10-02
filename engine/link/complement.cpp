@@ -60,7 +60,7 @@ namespace {
     };
 }
 
-Triangulation<3>* Link::complement(bool simplify) const {
+Triangulation<3> Link::complement(bool simplify) const {
     // This implementation produces an oriented triangluation.
     // The orientation follows a right-hand rule, where the thumb points
     // from vertices 0 to 1, and the fingers point from vertice 2 to 3.
@@ -94,11 +94,11 @@ Triangulation<3>* Link::complement(bool simplify) const {
     //   side-effect is that our triangulation might be disconnected, and
     //   we fix this before returning by connect summing the pieces together.
 
-    Triangulation<3>* ans = new Triangulation<3>();
+    Triangulation<3> ans;
 
     // Empty link?  Just return the 3-sphere.
     if (components_.empty()) {
-        Tetrahedron<3>* t = ans->newTetrahedron();
+        Tetrahedron<3>* t = ans.newTetrahedron();
         t->join(0, t, Perm<4>(0,1));
         t->join(2, t, Perm<4>(2,3));
         return ans;
@@ -132,7 +132,7 @@ Triangulation<3>* Link::complement(bool simplify) const {
     // Create the local structure around each crossing:
     for (i = 0; i < n; ++i) {
         for (j = 0; j < 4; ++j)
-            ctet[i].tet[j] = ans->newTetrahedron();
+            ctet[i].tet[j] = ans.newTetrahedron();
         if (crossing(i)->sign() > 0) {
             ctet[i].tet[0]->join(0, ctet[i].tet[1], Perm<4>(2,3));
             ctet[i].tet[1]->join(1, ctet[i].tet[2], Perm<4>(2,3));
@@ -188,29 +188,28 @@ Triangulation<3>* Link::complement(bool simplify) const {
     // disconnected triangluations, as discussed in the comments at the
     // beginning of this routine.
 
-    if (ans->isEmpty()) {
+    if (ans.isEmpty()) {
         // We seem to have lost all our components (which therefore means
         // our link is a k-component unlink for some k).
         // Build a 3-sphere for now; we will pick up the missing unknot
         // components shortly.
-        Tetrahedron<3>* tet = ans->newTetrahedron();
+        Tetrahedron<3>* tet = ans.newTetrahedron();
         tet->join(0, tet, Perm<4>(0,1));
         tet->join(2, tet, Perm<4>(2,3));
     }
 
-    if (! ans->isConnected()) {
+    if (! ans.isConnected()) {
         // Replace ans with the connected sum of its components.
-        auto comp = ans->triangulateComponents();
-        delete ans;
+        auto comp = ans.triangulateComponents();
 
         auto it = comp.begin();
-        ans = it->release();
+        ans = std::move(**it);
         for (++it; it != comp.end(); ++it)
-            ans->connectedSumWith(**it);
+            ans.connectedSumWith(**it);
     }
 
     size_t idealVertices = 0;
-    for (auto v : ans->vertices())
+    for (auto v : ans.vertices())
         if (v->isIdeal())
             ++idealVertices;
 
@@ -226,15 +225,15 @@ Triangulation<3>* Link::complement(bool simplify) const {
         // We do this by prying open a face and inserting a punctured
         // unknot complement with a triangular pillow boundary.
 
-        Triangle<3>* f = ans->triangle(0);
+        Triangle<3>* f = ans.triangle(0);
         Tetrahedron<3>* tet0 = f->embedding(0).simplex();
         Perm<4> vert0 = f->embedding(0).vertices();
         Tetrahedron<3>* tet1 = f->embedding(1).simplex();
         Perm<4> vert1 = f->embedding(1).vertices();
 
-        ans->insertConstruction(6, puncturedUnknotAdjacencies,
+        ans.insertConstruction(6, puncturedUnknotAdjacencies,
             puncturedUnknotGluings);
-        Tetrahedron<3>* unknotBdry = ans->tetrahedra().back();
+        Tetrahedron<3>* unknotBdry = ans.tetrahedra().back();
         // Boundary triangles are 013 and 213.
 
         tet0->unjoin(vert0[3]);
@@ -246,7 +245,7 @@ Triangulation<3>* Link::complement(bool simplify) const {
 
     // Done!
     if (simplify)
-        ans->intelligentSimplify();
+        ans.intelligentSimplify();
     return ans;
 }
 

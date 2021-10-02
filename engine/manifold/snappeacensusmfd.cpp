@@ -52,13 +52,13 @@ namespace {
 }
 
 Triangulation<3>* SnapPeaCensusManifold::construct() const {
-    Triangulation<3>* ans = 0;
+    Triangulation<3>* ans = nullptr;
 
     // Hard-code a few special cases so that the numbering of tetrahedra
     // and vertices is compatible with earlier versions of Regina.
     if (section_ == SEC_5) {
         if (index_ == 0) {
-            ans = Example<3>::gieseking();
+            ans = new Triangulation<3>(Example<3>::gieseking());
         } else if (index_ == 1) {
             ans = new Triangulation<3>();
             Tetrahedron<3>* r = ans->newTetrahedron();
@@ -84,9 +84,9 @@ Triangulation<3>* SnapPeaCensusManifold::construct() const {
             r->join(2, s, Perm<4>(0, 3, 2, 1));
             r->join(3, s, Perm<4>(1, 0, 2, 3));
         } else if (index_ == 4) {
-            ans = Example<3>::figureEight();
+            ans = new Triangulation<3>(Example<3>::figureEight());
         } else if (index_ == 129) {
-            ans = Example<3>::whiteheadLink();
+            ans = new Triangulation<3>(Example<3>::whiteheadLink());
         }
     }
     if (ans)
@@ -106,7 +106,7 @@ Triangulation<3>* SnapPeaCensusManifold::construct() const {
         case SEC_7_NOR:
             file += "/snappea-census-sec7n.dat"; break;
         default:
-            return 0;
+            return nullptr;
     }
 
     FILE* dat = fopen(file.c_str(), "r");
@@ -123,7 +123,7 @@ Triangulation<3>* SnapPeaCensusManifold::construct() const {
                     << file << std::endl;
             else
                 std::cerr << "Error reading data file: " << file << std::endl;
-            return 0;
+            return nullptr;
         }
     }
     fclose(dat);

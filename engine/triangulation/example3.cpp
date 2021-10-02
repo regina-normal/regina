@@ -144,22 +144,17 @@ namespace {
 
 namespace regina {
 
-Triangulation<3>* Example<3>::solidKleinBottle() {
-    Triangulation<3>* ans = twistedBallBundle();
+Triangulation<3> Example<3>::threeSphere() {
+    Triangulation<3> ans;
+    ans.insertLayeredLensSpace(1, 0);
     return ans;
 }
 
-Triangulation<3>* Example<3>::threeSphere() {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertLayeredLensSpace(1, 0);
-    return ans;
-}
+Triangulation<3> Example<3>::bingsHouse() {
+    Triangulation<3> ans;
 
-Triangulation<3>* Example<3>::bingsHouse() {
-    Triangulation<3>* ans = new Triangulation<3>();
-
-    Tetrahedron<3>* r = ans->newTetrahedron();
-    Tetrahedron<3>* s = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans.newTetrahedron();
+    Tetrahedron<3>* s = ans.newTetrahedron();
     r->join(0, r, Perm<4>(0, 1));
     s->join(0, s, Perm<4>(0, 1));
     r->join(2, s, Perm<4>(3, 1, 2, 0));
@@ -168,15 +163,15 @@ Triangulation<3>* Example<3>::bingsHouse() {
     return ans;
 }
 
-Triangulation<3>* Example<3>::rp2xs1() {
+Triangulation<3> Example<3>::rp2xs1() {
     // Section 3.5.1 of Benjamin Burton's PhD thesis describes how to
     // construct RP^2 x S^1 by identifying the boundary triangles of a
     // three-tetrahedron solid Klein bottle.
-    Triangulation<3>* ans = new Triangulation<3>();
+    Triangulation<3> ans;
 
-    Tetrahedron<3>* r = ans->newTetrahedron();
-    Tetrahedron<3>* s = ans->newTetrahedron();
-    Tetrahedron<3>* t = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans.newTetrahedron();
+    Tetrahedron<3>* s = ans.newTetrahedron();
+    Tetrahedron<3>* t = ans.newTetrahedron();
     s->join(0, r, Perm<4>(0, 1, 2, 3));
     s->join(3, r, Perm<4>(3, 0, 1, 2));
     s->join(1, t, Perm<4>(3, 0, 1, 2));
@@ -187,33 +182,35 @@ Triangulation<3>* Example<3>::rp2xs1() {
     return ans;
 }
 
-Triangulation<3>* Example<3>::rp3rp3() {
+Triangulation<3> Example<3>::rp3rp3() {
     // This can be generated as the enclosing triangulation of a splitting
     // surface, as described in chapter 4 of Benjamin Burton's PhD thesis.
     Triangulation<3>* ans = Signature::parse("aabccd.b.d")->triangulate();
+    Triangulation<3> ret(std::move(*ans));
+    delete ans;
+    return ret;
+}
+
+Triangulation<3> Example<3>::lens(size_t p, size_t q) {
+    Triangulation<3> ans;
+    ans.insertLayeredLensSpace(p, q);
     return ans;
 }
 
-Triangulation<3>* Example<3>::lens(size_t p, size_t q) {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertLayeredLensSpace(p, q);
+Triangulation<3> Example<3>::poincareHomologySphere() {
+    Triangulation<3> ans;
+    ans.insertConstruction(5, poincareAdj, poincareGluings);
     return ans;
 }
 
-Triangulation<3>* Example<3>::poincareHomologySphere() {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertConstruction(5, poincareAdj, poincareGluings);
+Triangulation<3> Example<3>::weeks() {
+    Triangulation<3> ans;
+    ans.insertConstruction(9, weeksAdj, weeksGluings);
     return ans;
 }
 
-Triangulation<3>* Example<3>::weeks() {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertConstruction(9, weeksAdj, weeksGluings);
-    return ans;
-}
-
-Triangulation<3>* Example<3>::weberSeifert() {
-    Triangulation<3>* ans = new Triangulation<3>();
+Triangulation<3> Example<3>::weberSeifert() {
+    Triangulation<3> ans;
 
     // Bah.  Dehydration strings are somewhat impenetrable,
     // but the alternative is 23 lines of hard-coded tetrahedron gluings.
@@ -221,50 +218,52 @@ Triangulation<3>* Example<3>::weberSeifert() {
     // This triangulation was constructed by building a 60-tetrahedron
     // dodecahedron and identifying opposite pentagonal faces with a 3/10 twist,
     // and then simplifying down to one vertex and 23 tetrahedra.
-    ans->insertRehydration(
+    ans.insertRehydration(
         "xppphocgaeaaahimmnkontspmuuqrsvuwtvwwxwjjsvvcxxjjqattdwworrko");
-    ans->orient();
+    ans.orient();
 
     return ans;
 }
 
-Triangulation<3>* Example<3>::smallClosedOrblHyperbolic() {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertConstruction(9, closedOrHypAdj, closedOrHypGluings);
+Triangulation<3> Example<3>::smallClosedOrblHyperbolic() {
+    Triangulation<3> ans;
+    ans.insertConstruction(9, closedOrHypAdj, closedOrHypGluings);
     return ans;
 }
 
-Triangulation<3>* Example<3>::smallClosedNonOrblHyperbolic() {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertConstruction(11, closedNorHypAdj, closedNorHypGluings);
+Triangulation<3> Example<3>::smallClosedNonOrblHyperbolic() {
+    Triangulation<3> ans;
+    ans.insertConstruction(11, closedNorHypAdj, closedNorHypGluings);
     return ans;
 }
 
-Triangulation<3>* Example<3>::sphere600() {
+Triangulation<3> Example<3>::sphere600() {
     // See 600cell.py for the code that converts the Benedetti-Lutz
     // simplicial complex to a Regina triangulation.
     Triangulation<3>* ans = Triangulation<3>::fromIsoSig("-cyjvvvvvzzzvzzvvwvLLvLvPPvLvPzAPvzAMPzwLvzPvLPzwwMzvPzMzLwzMzMvALMLzvzMPwzwMALMvvMALzMPvAwvzwzMzAwvwwwwMAzMzQLMvzMPAwzzzMLPzvMzMMwwwwMzAwPMzvwzMzAwPMvAzMzAQLLvQzwwzPMvAzQMwwPzwLwPzLMAPPvQAvAMvzQLPwPAwPAMAMvPPzLMQvPzwMAwPAMwALMQwPzwPQwPAMwALMvwzQQAQzALMvMzvAMvwPAMwzvQMQvMzMzQMzzLPQzzMPzPAMMQMLzAwQAPPQPzvLPQzLzPQzLLQMzvMMPQzzPQPvLPzPPQPvzAwAPPQAzPQQLAQQAQPwvLPQPAPwvvzwvvLQMAQLLQQQQLLQQQQQLQQQQQAMMQMQAQialaoamapaqatavawazaPaBaRaCaFaTaHaVa3aIa6aLaXaNaZa7aOa+aebgbSanbWaqbrb0aubybAb2anb5aFbrb9aHbMbObabcbTbfbVbybYbObibkb4bmb6b9bpbGbtbIbecgcwbUbzbWbmcgcCb5bEb7btcycAcXbKbNbEcycZb8bQbSbLc+bPcScPcVc1b-b3bZcac4c7c4c+ccdlcccDcfcfdAcncscicKckclducScpdpcvc1crctdwc7cxdBdzcFcgdCcMcmdVcLdHcNcJcOdOc3c+cTdWdRcWcqdUc0cudKd2cYcRdcd-dbe6c-cyd9cddCdSdedbdYdaedepdLdidndkdteodwdxdTdzeKdvdsdweBd-dIeSdDdAdBeaeKeFdIdQdHdSeJdveVeNdPdTeWd4ebeVdXdWe5ede3d0d7d2dcf4dEeff6d8d0edfkf+dcegfjfiefemehetfNejewfle9eneufBfpemfqexfAfseueUezeJfIeyeAeXeKfKeDeFeFfefTfHeJehfSfMeMfOevf2fQeVfReyf1fVe4eJf5eKfZeifRf1eGfag3e6ebglf8e0fzfNf+eigafdgbfjgCfffkfTfjfSfagbgofxgWfpf4fDfrfhgsfygmgEfwfBf2fAf1figjgxgygNgIfLfOgUfVgPfQgQfWg3fNgOg4gYfUgZf5gZg5fVgWg4g5g7f8fcgPg+fch-fkgXgPgfgkhdhggfhlglhXgkhlhogpgtg0grgthsgzg6g0gvgwhAguhwgnh6gnhCgDgHg8gFgGgEhLgah8gJgMgHhKgFhshahshSgQhehTgghYgRhQhRh2gxh7gvh3gThTh+gbhIh-gGhYhYh9h+h9h+hihyhjhzhmh-h-hphqhJhrhKhbibilimilimininiBhChLhDhMhpipiviwiviwixixiziziOhZhPh0hShdiaiaiVhWh5hXh6hiicicirioioi2h3h7h4h8htiqiqiBiyiyiDiAiAirifigijihikisisiuiBiCiCiEiDiEiGiHiJiIiKiLiLiMiNiNiOiOiQiRiTiSiUiWiViVihjYiXiXiijYi0i1i3i2i4i6i5i5ijj8i7i7ikjnj8ioj+ibj-icjajejdjdjljgjfjfjmjpjgjqjrjsjijkjtjmjujvjojtjqjujwjsjvjwjxjxjxjgovcfbcfboivlbgmvpifdgtoulcepdbifdlcepdbavpaoupdfvlgtalacoigmivnospdvkgwlaojgripdsfgtarncgmwleauckoisidaplsfbgtgrncbgmwouckfoisvplgwqgrxceckoisvfdloshojxhncqbdpvnhvkqhsfxqxccckoisvfflgncqbcpgsfxoxckfoistlojxbdovkqqcncbgmwupgrexdvnhhsfbgtprugdwqeoeshhojwbdovkrqcgresdvnjhgdwneoeskhbcmoigklwxpvnhngijqruoeshsffqgmxigtirmrgmwqiwccxgtqlhppvnhnuoeshsxitgmwqiwqlhpvnjpoeskuagtirmrqahpvkrlgdwntagijqrlaaojwigresmagklwxiaagtcrorqhpggjfrlagkgwciatqhpgvwgntagrosgmauhqluaojgwoiaphxipalagvwgnovggrosgvoggvoojgwovgogovogvcojgwocgfffgcbbojgwocgffgcbojgwovgologvibgrosgvogpgovmdfigvwgnovgugvotecldpbficlpvpoudgtldla");
 
     ans->orient();
-    return ans;
+    Triangulation<3> ret(std::move(*ans));
+    delete ans;
+    return ret;
 }
 
-Triangulation<3>* Example<3>::lst(size_t a, size_t b) {
+Triangulation<3> Example<3>::lst(size_t a, size_t b) {
     if (a > b)
         std::swap(a, b);
 
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertLayeredSolidTorus(a, b);
+    Triangulation<3> ans;
+    ans.insertLayeredSolidTorus(a, b);
     return ans;
 }
 
-Triangulation<3>* Example<3>::figureEight() {
-    Triangulation<3>* ans = new Triangulation<3>();
+Triangulation<3> Example<3>::figureEight() {
+    Triangulation<3> ans;
 
     // The two-tetrahedron figure eight knot complement is described at
     // the beginning of chapter 8 of Richard Rannard's PhD thesis.
-    Tetrahedron<3>* r = ans->newTetrahedron();
-    Tetrahedron<3>* s = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans.newTetrahedron();
+    Tetrahedron<3>* s = ans.newTetrahedron();
     r->join(0, s, Perm<4>(1, 3, 0, 2));
     r->join(1, s, Perm<4>(2, 0, 3, 1));
     r->join(2, s, Perm<4>(0, 3, 2, 1));
@@ -273,11 +272,11 @@ Triangulation<3>* Example<3>::figureEight() {
     return ans;
 }
 
-Triangulation<3>* Example<3>::trefoil() {
-    Triangulation<3>* ans = new Triangulation<3>();
+Triangulation<3> Example<3>::trefoil() {
+    Triangulation<3> ans;
 
-    Tetrahedron<3>* r = ans->newTetrahedron();
-    Tetrahedron<3>* s = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans.newTetrahedron();
+    Tetrahedron<3>* s = ans.newTetrahedron();
     r->join(0, s, Perm<4>(2, 3));
     r->join(1, s, Perm<4>(2, 3));
     r->join(2, s, Perm<4>(1, 3));
@@ -286,39 +285,39 @@ Triangulation<3>* Example<3>::trefoil() {
     return ans;
 }
 
-Triangulation<3>* Example<3>::whiteheadLink() {
-    Triangulation<3>* ans = new Triangulation<3>();
+Triangulation<3> Example<3>::whiteheadLink() {
+    Triangulation<3> ans;
 
-    ans->insertConstruction(4, whiteheadAdj, whiteheadGluings);
+    ans.insertConstruction(4, whiteheadAdj, whiteheadGluings);
 
     return ans;
 }
 
-Triangulation<3>* Example<3>::gieseking() {
-    Triangulation<3>* ans = new Triangulation<3>();
+Triangulation<3> Example<3>::gieseking() {
+    Triangulation<3> ans;
 
-    Tetrahedron<3>* r = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans.newTetrahedron();
     r->join(0, r, Perm<4>(1, 2, 0, 3));
     r->join(2, r, Perm<4>(0, 2, 3, 1));
 
     return ans;
 }
 
-Triangulation<3>* Example<3>::cuspedGenusTwoTorus() {
-    Triangulation<3>* ans = new Triangulation<3>();
+Triangulation<3> Example<3>::cuspedGenusTwoTorus() {
+    Triangulation<3> ans;
 
     // We create this by first constructing an ordinary solid genus two
     // torus and then converting the real boundary to an ideal vertex.
-    Tetrahedron<3>* r = ans->newTetrahedron();
-    Tetrahedron<3>* s = ans->newTetrahedron();
-    Tetrahedron<3>* t = ans->newTetrahedron();
-    Tetrahedron<3>* u = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans.newTetrahedron();
+    Tetrahedron<3>* s = ans.newTetrahedron();
+    Tetrahedron<3>* t = ans.newTetrahedron();
+    Tetrahedron<3>* u = ans.newTetrahedron();
     r->join(0, s, Perm<4>());
     r->join(1, t, Perm<4>(1, 2, 3, 0));
     r->join(2, u, Perm<4>(1, 0, 3, 2));
     s->join(3, t, Perm<4>());
     t->join(1, u, Perm<4>());
-    ans->finiteToIdeal();
+    ans.finiteToIdeal();
 
     return ans;
 }

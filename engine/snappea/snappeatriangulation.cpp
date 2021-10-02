@@ -273,13 +273,8 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
-SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) {
-    Triangulation<3>* c = link.complement();
-    SnapPeaTriangulation ans(*c);
-    swap(ans);
-    delete c;
-
-    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+inline SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
+        SnapPeaTriangulation(link.complement()) {
 }
 
 SnapPeaTriangulation::~SnapPeaTriangulation() {

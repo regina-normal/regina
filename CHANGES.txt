@@ -213,7 +213,7 @@ Version 7.0  [ TODO ]
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
               for triangulation faces).
-        Class ExampleLink:
+        Class Example<dim>, ExampleLink, ExampleSnapPea:
             - All examples now return by value, not by newly allocated pointer.
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
@@ -500,6 +500,7 @@ Version 7.0  [ TODO ]
               value, not by const reference.
             - Routine writePACE() no longer begins its output with a "c ..."
               line, since links no longer have labels.
+            - Routine complement() now returns by value, not pointer.
         Class ListOnCall:
             - Removed, since this class was not thread-safe and did not add
               anything non-trivial.
@@ -1139,6 +1140,8 @@ Version 7.0  [ TODO ]
               knowsSphere().  The old names are kept as deprecated aliases.
             - New routines inAnyPacket() and isSnapPea().
             - Functions snapPea() and saveSnapPea() are no longer virtual.
+            - The Link constructor is now deprecated, since Link::complement()
+              is more efficient and now returns by value.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and

@@ -60,10 +60,7 @@ Triangulation<3>::Triangulation(const std::string& description) :
 }
 
 Triangulation<3>::Triangulation(const Link& link) :
-        strictAngleStructure_(false), generalAngleStructure_(false) {
-    Triangulation<3>* ans = link.complement();
-    swap(*ans);
-    delete ans;
+        Triangulation(link.complement()) {
 }
 
 void Triangulation<3>::clearAllProperties() {
