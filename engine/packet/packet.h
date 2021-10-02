@@ -2275,6 +2275,10 @@ PacketOf<Held>* makePacket(Held* src, const std::string& label) {
  * The packet that is returned will be newly allocated, and will have no
  * packet label.
  *
+ * \note This function is trivial (it just calls a single move constructor).
+ * It is provided for consistency with the pointer variant of this function,
+ * to help users migrate code from using pointer semantics to value semantics.
+ *
  * \ifacespython This is not made available to Python, since Python will
  * still maintain a reference to \a src (which will become unusable).
  * Instead you can make a deep copy using the PacketOf<Held> constructor.
@@ -2301,6 +2305,11 @@ PacketOf<Held>* makePacket(Held&& src) {
  *
  * The packet that is returned will be newly allocated, and will have
  * the given packet label.
+ *
+ * \note This function is trivial (it just calls a single move constructor
+ * and then Packet::setLabel()).  It is provided for consistency with the
+ * pointer variant of this function, to help users migrate code from using
+ * pointer semantics to value semantics.
  *
  * \ifacespython This is not made available to Python, since Python will
  * still maintain a reference to \a src (which will become unusable).
