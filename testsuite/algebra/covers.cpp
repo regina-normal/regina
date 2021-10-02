@@ -140,9 +140,8 @@ class CoversTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if constexpr (maxDegree > 2) {
-                compareResults<maxDegree - 1>(tri, false, name);
-            }
+            if constexpr (maxDegree > 2)
+                compareResults<maxDegree - 1>(tri, name);
         }
 
         template <int degree>
@@ -188,10 +187,10 @@ class CoversTest : public CppUnit::TestFixture {
 
             // Many, many covers for degree 5 (and a bit too slow to put
             // degree 6 in the test suite: takes half a second on my machine):
-            Triangulation<3>* ws = regina::Example<3>::weberSeifert();
-            verifyResults<2>(ws, { }, false, "Weber-Seifert");
-            verifyResults<3>(ws, { }, false, "Weber-Seifert");
-            verifyResults<4>(ws, { }, false, "Weber-Seifert");
+            Triangulation<3> ws = regina::Example<3>::weberSeifert();
+            verifyResults<2>(ws, { }, "Weber-Seifert");
+            verifyResults<3>(ws, { }, "Weber-Seifert");
+            verifyResults<4>(ws, { }, "Weber-Seifert");
             verifyResults<5>(ws, {
                 "2 Z_5 + 2 Z_25", "2 Z_5 + 2 Z_25", "2 Z_5 + 2 Z_25",
                 "2 Z_5 + 2 Z_25", "2 Z_5 + 2 Z_25", "2 Z_5 + 2 Z_25",
@@ -209,8 +208,7 @@ class CoversTest : public CppUnit::TestFixture {
                 "Z_5 + 2 Z_25 + Z_75", "Z_5 + 2 Z_25 + Z_75",
                 "Z_5 + 2 Z_25 + Z_75", "Z_5 + 2 Z_25 + Z_75",
                 "Z_5 + 2 Z_25 + Z_75", "Z_5 + 2 Z_25 + Z_75" },
-                false, "Weber-Seifert");
-            delete ws;
+                "Weber-Seifert");
         }
 
         void knots() {

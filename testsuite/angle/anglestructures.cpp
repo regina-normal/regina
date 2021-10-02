@@ -73,15 +73,10 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             /**< An untwisted layered loop of length 2. */
 
     public:
-        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
-            dest.insertTriangulation(*source);
-            delete source;
-        }
-
         void setUp() {
             // Use pre-coded triangulations where we can.
-            copyAndDelete(triFigure8, Example<3>::figureEight());
-            copyAndDelete(triGieseking, Example<3>::gieseking());
+            triFigure8 = Example<3>::figureEight();
+            triGieseking = Example<3>::gieseking();
 
             // Layered loops can be constructed automatically.
             triLoopC2.insertLayeredLoop(2, false);

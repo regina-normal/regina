@@ -273,7 +273,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
-inline SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
+SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
         SnapPeaTriangulation(link.complement()) {
 }
 
