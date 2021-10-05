@@ -61,7 +61,7 @@ std::shared_ptr<regina::Packet> PythonHandler::importData(
             QObject::tr("The import failed."), 
             QObject::tr("<qt>I could not read from the file <tt>%1</tt>.</qt>").
                 arg(fileName.toHtmlEscaped()));
-        return {};
+        return nullptr;
     }
     QTextStream in(&f);
 

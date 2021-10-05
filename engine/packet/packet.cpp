@@ -515,7 +515,7 @@ std::shared_ptr<Packet> Packet::nextTreePacket() {
             return p->nextTreeSibling_;
         tmp = p->treeParent_;
     }
-    return {};
+    return nullptr;
 }
 
 std::shared_ptr<const Packet> Packet::nextTreePacket() const {
@@ -529,7 +529,7 @@ std::shared_ptr<const Packet> Packet::nextTreePacket() const {
             return p->nextTreeSibling_;
         tmp = p->treeParent_;
     }
-    return {};
+    return nullptr;
 }
 
 std::shared_ptr<Packet> Packet::findPacketLabel(const std::string& label) {
@@ -541,7 +541,7 @@ std::shared_ptr<Packet> Packet::findPacketLabel(const std::string& label) {
             return ans;
         tmp = tmp->nextTreeSibling_;
     }
-    return {};
+    return nullptr;
 }
 
 std::shared_ptr<const Packet> Packet::findPacketLabel(const std::string& label)
@@ -554,7 +554,7 @@ std::shared_ptr<const Packet> Packet::findPacketLabel(const std::string& label)
             return ans;
         tmp = tmp->nextTreeSibling_;
     }
-    return {};
+    return nullptr;
 }
 
 unsigned Packet::levelsDownTo(std::shared_ptr<const Packet> descendant) const {

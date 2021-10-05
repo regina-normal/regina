@@ -3628,7 +3628,7 @@ inline std::shared_ptr<Packet> Packet::nextTreePacket(PacketType t) {
     for (auto ans = nextTreePacket(); ans; ans = ans->nextTreePacket())
         if (ans->type() == t)
             return ans;
-    return {};
+    return nullptr;
 }
 
 inline std::shared_ptr<const Packet> Packet::nextTreePacket(PacketType t)
@@ -3636,7 +3636,7 @@ inline std::shared_ptr<const Packet> Packet::nextTreePacket(PacketType t)
     for (auto ans = nextTreePacket(); ans; ans = ans->nextTreePacket())
         if (ans->type() == t)
             return ans;
-    return {};
+    return nullptr;
 }
 
 inline bool Packet::dependsOnParent() const {

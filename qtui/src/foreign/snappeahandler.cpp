@@ -52,7 +52,7 @@ std::shared_ptr<regina::Packet> SnapPeaHandler::importData(
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
                 "is readable and in SnapPea format.</qt>").
                 arg(fileName.toHtmlEscaped()));
-        return {};
+        return nullptr;
     }
     return ans;
 }

@@ -1639,7 +1639,7 @@ inline std::shared_ptr<PacketOf<NormalSurfaces>>
             parent->insertChildLast(ans);
         return ans;
     } catch (const FailedPrecondition&) {
-        return {};
+        return nullptr;
     }
 }
 
@@ -1655,7 +1655,7 @@ inline std::shared_ptr<PacketOf<NormalSurfaces>>
             parent->insertChildLast(ans);
         return ans;
     } catch (const FailedPrecondition&) {
-        return {};
+        return nullptr;
     }
 }
 
@@ -1671,7 +1671,7 @@ inline std::shared_ptr<PacketOf<NormalSurfaces>>
             parent->insertChildLast(ans);
         return ans;
     } catch (const FailedPrecondition&) {
-        return {};
+        return nullptr;
     }
 }
 
@@ -1687,7 +1687,7 @@ inline std::shared_ptr<PacketOf<NormalSurfaces>>
             parent->insertChildLast(ans);
         return ans;
     } catch (const FailedPrecondition&) {
-        return {};
+        return nullptr;
     }
 }
 
@@ -1703,7 +1703,7 @@ inline std::shared_ptr<PacketOf<NormalSurfaces>>
             parent->insertChildLast(ans);
         return ans;
     } catch (const FailedPrecondition&) {
-        return {};
+        return nullptr;
     }
 }
 
@@ -1719,7 +1719,7 @@ inline std::shared_ptr<PacketOf<NormalSurfaces>>
             parent->insertChildLast(ans);
         return ans;
     } catch (const FailedPrecondition&) {
-        return {};
+        return nullptr;
     }
 }
 
@@ -1735,7 +1735,7 @@ inline std::shared_ptr<PacketOf<NormalSurfaces>>
             parent->insertChildLast(ans);
         return ans;
     } catch (const FailedPrecondition&) {
-        return {};
+        return nullptr;
     }
 }
 

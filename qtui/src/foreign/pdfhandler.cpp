@@ -51,7 +51,7 @@ std::shared_ptr<regina::Packet> PDFHandler::importData(
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in PDF format.</qt>").arg(fileName.toHtmlEscaped()));
-        return {};
+        return nullptr;
     } else
         ans->setLabel(QObject::tr("PDF document").toUtf8().constData());
     return ans;

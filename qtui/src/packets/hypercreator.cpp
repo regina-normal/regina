@@ -134,7 +134,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
             ui->tr("Normal hypersurfaces must live within a 4-manifold "
             "triangulation.  Please select the corresponding triangulation "
             "as the location in the tree for your new normal hypersurface list."));
-        return {};
+        return nullptr;
     }
 
     regina::HyperCoords coordSystem = coords->getCurrentSystem();
@@ -157,7 +157,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
                 "Are you sure you wish to continue?</qt>"));
             msg.setDefaultButton(QMessageBox::Yes);
             if (msg.exec() != QMessageBox::Yes)
-                return {};
+                return nullptr;
         }
     }
 
@@ -187,7 +187,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
                 ui->tr("<qt>I could not enumerate vertex normal "
                 "hypersurfaces.<p>"
                 "Please report this to the Regina developers.</qt>"));
-            return {};
+            return nullptr;
         }
 
         if (dlg.run()) {
@@ -197,7 +197,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
         } else {
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal hypersurface enumeration was cancelled."));
-            return {};
+            return nullptr;
         }
     } else {
         regina::ProgressTracker tracker;
@@ -218,7 +218,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
                 ui->tr("<qt>I could not enumerate fundamental normal "
                 "hypersurfaces.<p>"
                 "Please report this to the Regina developers.</qt>"));
-            return {};
+            return nullptr;
         }
 
         if (dlg.run()) {
@@ -228,7 +228,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
         } else {
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal hypersurface enumeration was cancelled."));
-            return {};
+            return nullptr;
         }
     }
 }

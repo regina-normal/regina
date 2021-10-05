@@ -244,7 +244,7 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
         if (use.empty()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("Please type a text code into the box provided."));
-            return {};
+            return nullptr;
         }
         auto ans = makePacket<Link>(std::in_place, use);
         if (! ans->isEmpty()) {
@@ -264,7 +264,7 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
                 "<li><tt>bca</tt></li></ul><p>"
                 "For more information on what each type of code means, "
                 "see the Regina Handbook.</qt>"));
-        return {};
+        return nullptr;
     } else if (typeId == LINK_TORUS) {
         if (! reTorusParams.exactMatch(torusParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -273,7 +273,7 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
                 "must be non-negative integers."),
                 QObject::tr("<qt>Example parameters are "
                 "<i>7,5</i>.</qt>"));
-            return {};
+            return nullptr;
         }
 
         unsigned long p = reTorusParams.cap(1).toULong();
@@ -317,11 +317,11 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
 
         ReginaSupport::info(parentWidget,
             QObject::tr("Please select an example knot or link."));
-        return {};
+        return nullptr;
     }
 
     ReginaSupport::info(parentWidget,
         QObject::tr("Please select a knot/link type."));
-    return {};
+    return nullptr;
 }
 

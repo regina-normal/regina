@@ -107,7 +107,7 @@ std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
     } else {
         ReginaSupport::info(parentWidget,
             ui->tr("The angle structure enumeration was cancelled."));
-        return {};
+        return nullptr;
     }
 }
 

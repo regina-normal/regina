@@ -71,7 +71,7 @@ namespace {
                 if (isReginaData)
                     return container;
                 else
-                    return {};
+                    return nullptr;
             }
 
             const std::string& version() const {
@@ -120,7 +120,7 @@ std::shared_ptr<Packet> open(std::istream& s) {
     // successfully opened.  If anyone removes this test, then they
     // should add a corresponding test to open(const char*) instead.
     if (! s)
-        return {};
+        return nullptr;
 
     // We declare buf outside the try-catch block because it is dynamically
     // allocated, and so we need to deallocate it if an exception is caught.
@@ -158,7 +158,7 @@ std::shared_ptr<Packet> open(std::istream& s) {
                     std::cerr << "ERROR: Could not read stream: "
                         << e.what() << std::endl;
                     delete[] buf;
-                    return {};
+                    return nullptr;
                 }
                 if (chunkRead == 0)
                     break;
@@ -264,11 +264,11 @@ std::shared_ptr<Packet> open(std::istream& s) {
             // child packet that we return and delete the old parent container.
             return p->firstChild();
         } else
-            return {};
+            return nullptr;
     } catch (const zstr::Exception& e) {
         std::cerr << "ERROR: Could not open: " << e.what() << std::endl;
         delete[] buf;
-        return {};
+        return nullptr;
     }
 }
 

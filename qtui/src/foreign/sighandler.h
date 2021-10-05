@@ -122,7 +122,7 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
                 .arg(fileName.toHtmlEscaped()));
-        return {};
+        return nullptr;
     }
 
     std::shared_ptr<regina::Packet> last = ans->lastChild();
@@ -132,7 +132,7 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
             QObject::tr("<qt>The selected file does "
             "not contain any %1.").arg(signatures) + explnSuffix);
         delete ans;
-        return {};
+        return nullptr;
     } else if (last->type() == regina::PACKET_TEXT) {
         if (last == ans->firstChild()) {
             ReginaSupport::sorry(parentWidget, 
@@ -141,7 +141,7 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
                 "could be interpreted as %1.").arg(signatures)
                 + explnSuffix);
             delete ans;
-            return {};
+            return nullptr;
         } else {
             ReginaSupport::warn(parentWidget, 
                 QObject::tr("There were problems with the import."),
