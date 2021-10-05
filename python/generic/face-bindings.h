@@ -210,8 +210,7 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("boundaryComponent", &Face<dim, subdim>::boundaryComponent,
             pybind11::return_value_policy::reference)
         .def("isBoundary", &Face<dim, subdim>::isBoundary)
-        .def("face", &regina::python::face<Face<dim, subdim>, subdim, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>)
         .def("faceMapping",
             &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>)
         .def_static("ordering", &Face<dim, subdim>::ordering)

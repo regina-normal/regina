@@ -42,6 +42,8 @@ void addException(pybind11::module_& m) {
     // Derived from std::runtime_error:
     pybind11::register_exception<regina::FailedPrecondition>(m,
         "FailedPrecondition", PyExc_RuntimeError);
+    pybind11::register_exception<regina::InvalidArgument>(m,
+        "InvalidArgument", PyExc_RuntimeError);
     pybind11::register_exception<regina::InvalidInput>(m,
         "InvalidInput", PyExc_RuntimeError);
     pybind11::register_exception<regina::UnsolvedCase>(m,

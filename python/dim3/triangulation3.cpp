@@ -145,7 +145,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("countComponents", &Triangulation<3>::countComponents)
         .def("countBoundaryComponents",
             &Triangulation<3>::countBoundaryComponents)
-        .def("countFaces", &regina::python::countFaces<Triangulation<3>, 3, 3>)
+        .def("countFaces", (regina::python::countFacesFunc<Triangulation<3>>)(
+            &Triangulation<3>::countFaces))
         .def("countVertices", &Triangulation<3>::countVertices)
         .def("countEdges", &Triangulation<3>::countEdges)
         .def("countTriangles", &Triangulation<3>::countTriangles)
@@ -154,8 +155,9 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponents", &Triangulation<3>::boundaryComponents,
             pybind11::return_value_policy::reference_internal)
-        .def("faces", &regina::python::faces<Triangulation<3>, 3,
-            pybind11::return_value_policy::reference_internal>)
+        .def("faces", (regina::python::facesFunc<Triangulation<3>>)(
+            &Triangulation<3>::faces),
+            pybind11::return_value_policy::reference_internal)
         .def("vertices", &Triangulation<3>::vertices,
             pybind11::return_value_policy::reference_internal)
         .def("edges", &Triangulation<3>::edges,
@@ -166,8 +168,9 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<3>::boundaryComponent,
             pybind11::return_value_policy::reference_internal)
-        .def("face", &regina::python::face<Triangulation<3>, 3, size_t,
-            pybind11::return_value_policy::reference_internal>)
+        .def("face", (regina::python::faceFunc<Triangulation<3>>)(
+            &Triangulation<3>::face),
+            pybind11::return_value_policy::reference_internal)
         .def("vertex", &Triangulation<3>::vertex,
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<3>::edge,

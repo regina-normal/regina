@@ -45,6 +45,7 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <variant>
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
@@ -58,6 +59,7 @@
 #include "triangulation/generic/simplex.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/simplex.h"
+#include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/sigutils.h"
 #include "utilities/snapshot.h"
@@ -559,16 +561,17 @@ class TriangulationBase :
         /**
          * Returns the number of <i>subdim</i>-faces in this triangulation.
          *
+         * This is the fastest way to count faces if you know \a subdim
+         * at compile time.
+         *
          * For convenience, this routine explicitly supports the case
          * \a subdim = \a dim.  This is \e not the case for the routines
          * face() and faces(), which give access to individual faces (the
          * reason relates to the fact that top-dimensional simplices are built
          * manually, whereas lower-dimensional faces are deduced properties).
          *
-         * \ifacespython Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * <tt>countFaces(subdim)</tt>; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * \ifacespython Not present, since Python does not support templates.
+         * Python users can instead use the variant <tt>countFaces(subdim)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * \a dim inclusive.
@@ -577,6 +580,31 @@ class TriangulationBase :
          */
         template <int subdim>
         size_t countFaces() const;
+
+        /**
+         * Returns the number of <i>subdim</i>-faces in this triangulation,
+         * where the face dimension does not need to be known until runtime.
+         *
+         * This routine takes linear time in the dimension \a dim.  For C++
+         * programmers who know \a subdim at compile time, you are better off
+         * using the template function countFaces<subdim>() instead, which
+         * is fast constant time.
+         *
+         * For convenience, this routine explicitly supports the case
+         * \a subdim = \a dim.  This is \e not the case for the routines
+         * face() and faces(), which give access to individual faces (the
+         * reason relates to the fact that top-dimensional simplices are built
+         * manually, whereas lower-dimensional faces are deduced properties).
+         *
+         * If \a subdim is outside the supported range (i.e., negative or
+         * greater than \a dim), then this routine will throw an exception
+         * of type InvalidArgument.
+         *
+         * @param subdim the face dimension; this must be between 0 and \a dim
+         * inclusive.
+         * @return the number of <i>subdim</i>-faces.
+         */
+        size_t countFaces(int subdim) const;
 
         /**
          * Returns the f-vector of this triangulation, which counts the
@@ -669,7 +697,8 @@ class TriangulationBase :
 
         /**
          * Returns an object that allows iteration through and random access
-         * to all <i>subdim</i>-faces of this triangulation.
+         * to all <i>subdim</i>-faces of this triangulation, in a way
+         * that is optimised for C++ programmers.
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
@@ -691,12 +720,8 @@ class TriangulationBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python users should call this function in the
-         * form <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the triangulation.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the faces when this function is called, and will
-         * \e not be kept up-to-date as the triangulation changes.
+         * \ifacespython Not present, since Python does not support templates.
+         * Python users can instead use the variant <tt>faces(subdim)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
@@ -705,6 +730,40 @@ class TriangulationBase :
          */
         template <int subdim>
         auto faces() const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all <i>subdim</i>-faces of this triangulation, in a way
+         * that is optimised for Python programmers.
+         *
+         * C++ users should not use this routine.  The return type must be
+         * fixed at compile time, and so it is a std::variant that can hold
+         * any of the lightweight return types from the templated
+         * faces<subdim>() function.  This means that the return value will
+         * still need compile-time knowledge of \a subdim to extract and
+         * use the appropriate face objects.  However, once you know \a subdim
+         * at compile time, you are much better off using the (simpler and
+         * faster) routine faces<subdim>() instead.
+         *
+         * For Python users, this routine is much more useful: the return type
+         * can be chosen at runtime, and so this routine returns a Python list
+         * of Face<dim, subdim> objects (holding all the <i>subdim</i>-faces
+         * of the triangulation), which you can use immediately.
+         *
+         * If \a subdim is outside the supported range (i.e., negative or
+         * greater than or equal to \a dim), then this routine will throw
+         * an exception of type InvalidArgument.
+         *
+         * \ifacespython Be warned that, unlike in C++, the Python list
+         * that is returned will be a snapshot of the faces when this
+         * function is called, and will \e not be kept up-to-date as the
+         * triangulation changes.
+         *
+         * @param subdim the face dimension; this must be between 0 and
+         * <i>dim</i>-1 inclusive.
+         * @return access to the list of all <i>subdim</i>-faces.
+         */
+        auto faces(int subdim) const;
 
         /**
          * Returns the requested connected component of this triangulation.
@@ -733,12 +792,12 @@ class TriangulationBase :
         BoundaryComponent<dim>* boundaryComponent(size_t index) const;
 
         /**
-         * Returns the requested <i>subdim</i>-face of this triangulation.
+         * Returns the requested <i>subdim</i>-face of this triangulation,
+         * in a way that is optimised for C++ programmers.
          *
-         * \ifacespython Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * <tt>face(subdim, index)</tt>; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * \ifacespython Not present, since Python does not support templates.
+         * Python users can instead use the variant
+         * <tt>face(subdim, index)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
@@ -749,6 +808,39 @@ class TriangulationBase :
          */
         template <int subdim>
         Face<dim, subdim>* face(size_t index) const;
+
+        /**
+         * Returns the requested <i>subdim</i>-face of this triangulation,
+         * in a way that is optimised for Python programmers.
+         *
+         * For C++ users, this routine is not very useful: since precise types
+         * must be know at compile time, this routine returns a std::variant
+         * \a v that could store a pointer to any class Face<dim, ...>.
+         * This means you cannot access the face directly: you will still need
+         * some kind of compile-time knowledge of \a subdim before you can
+         * extract and use an appropriate Face<dim, subdim> object from \a v.
+         * However, once you know \a subdim at compile time, you are better off
+         * using the (simpler and faster) routine face<subdim>() instead.
+         *
+         * For Python users, this routine is much more useful: the return type
+         * can be chosen at runtime, and so this routine simply returns a
+         * Face<dim, subdim> object of the appropriate face dimension that
+         * you can use immediately.
+         *
+         * The specific return type for C++ programmers will be
+         * std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
+         *
+         * If \a subdim is outside the supported range (i.e., negative or
+         * greater than or equal to \a dim), then this routine will throw
+         * an exception of type InvalidArgument.
+         *
+         * @param subdim the face dimension; this must be between 0 and
+         * <i>dim</i>-1 inclusive.
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
+         */
+        auto face(int subdim, size_t index) const;
 
         /*@}*/
         /**
@@ -1981,6 +2073,38 @@ class TriangulationBase :
 
     private:
         /**
+         * Implements the non-templated countFaces(subdim) function.
+         *
+         * The purpose of the std::integer_sequence argument is to give
+         * us the list of all face dimensions as individual template
+         * parameters, which means we can use C++17 fold expressions.
+         */
+        template <int... k>
+        size_t countFacesImpl(int subdim,
+                std::integer_sequence<int, k...>) const;
+
+        /**
+         * Implements the non-templated face(subdim, index) function.
+         *
+         * The purpose of the std::integer_sequence argument is to give
+         * us the list of all face dimensions as individual template
+         * parameters, which means we can use C++17 fold expressions.
+         */
+        template <int... k>
+        auto faceImpl(int subdim, size_t index,
+                std::integer_sequence<int, k...>) const;
+
+        /**
+         * Implements the non-templated faces(subdim) function.
+         *
+         * The purpose of the std::integer_sequence argument is to give
+         * us the list of all face dimensions as individual template
+         * parameters, which means we can use C++17 fold expressions.
+         */
+        template <int... k>
+        auto facesImpl(int subdim, std::integer_sequence<int, 0, k...>) const;
+
+        /**
          * Internal to calculateSkeleton().
          *
          * This routine calculates all <i>subdim</i>-faces for the given
@@ -2569,6 +2693,30 @@ inline size_t TriangulationBase<dim>::countFaces() const {
 }
 
 template <int dim>
+template <int... k>
+size_t TriangulationBase<dim>::countFacesImpl(int subdim,
+        std::integer_sequence<int, k...>) const {
+    ensureSkeleton();
+
+    // We give the result a name (tmp) to avoid compiler warnings.
+    size_t ans;
+    auto tmp = (
+        (subdim == k && (void(ans = countFaces<k>()), 1))
+        || ...);
+    return ans;
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::countFaces(int subdim) const {
+    if (subdim == dim)
+        return size();
+    if (subdim < 0 || subdim > dim)
+        throw InvalidArgument("countFaces(): unsupported face dimension");
+
+    return countFacesImpl(subdim, std::make_integer_sequence<int, dim>());
+}
+
+template <int dim>
 inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
     ensureSkeleton();
     return std::apply([this](auto&&... kFaces) {
@@ -2593,6 +2741,37 @@ template <int subdim>
 inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
     return ListView(std::get<subdim>(faces_));
+}
+
+template <int dim>
+template <int... k>
+auto TriangulationBase<dim>::facesImpl(int subdim,
+        std::integer_sequence<int, 0, k...>) const {
+    ensureSkeleton();
+
+    // Since none of our ListView types have default constructors,
+    // our std::variant return type does not have one either.
+    // We therefore set it to faces<0>(), which is cheap since
+    // ListView is lightweight, and we adjust it afterwards if subdim
+    // is something different.
+
+    std::variant<decltype(faces<0>()), decltype(faces<k>())...>
+        ans = faces<0>();
+    if (subdim > 0) {
+        // We give the result a name (tmp) to avoid compiler warnings.
+        auto tmp = (
+            (subdim == k && (void(ans = faces<k>()), 1))
+            || ...);
+    }
+    return ans;
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::faces(int subdim) const {
+    if (subdim < 0 || subdim >= dim)
+        throw InvalidArgument("faces(): unsupported face dimension");
+
+    return facesImpl(subdim, std::make_integer_sequence<int, dim>());
 }
 
 template <int dim>
@@ -2628,6 +2807,28 @@ template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
     ensureSkeleton();
     return std::get<subdim>(faces_)[index];
+}
+
+template <int dim>
+template <int... k>
+auto TriangulationBase<dim>::faceImpl(int subdim, size_t index,
+        std::integer_sequence<int, k...>) const {
+    ensureSkeleton();
+
+    // We give the result a name (tmp) to avoid compiler warnings.
+    std::variant<Face<dim, k>*...> ans;
+    auto tmp = (
+        (subdim == k && (void(ans = face<k>(index)), 1))
+        || ...);
+    return ans;
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::face(int subdim, size_t index) const {
+    if (subdim < 0 || subdim >= dim)
+        throw InvalidArgument("face(): unsupported face dimension");
+
+    return faceImpl(subdim, index, std::make_integer_sequence<int, dim>());
 }
 
 template <int dim>

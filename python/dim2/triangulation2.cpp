@@ -87,7 +87,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("countComponents", &Triangulation<2>::countComponents)
         .def("countBoundaryComponents",
             &Triangulation<2>::countBoundaryComponents)
-        .def("countFaces", &regina::python::countFaces<Triangulation<2>, 2, 2>)
+        .def("countFaces", (regina::python::countFacesFunc<Triangulation<2>>)(
+            &Triangulation<2>::countFaces))
         .def("countVertices", &Triangulation<2>::countVertices)
         .def("countEdges", &Triangulation<2>::countEdges)
         .def("fVector", &Triangulation<2>::fVector)
@@ -95,8 +96,9 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponents", &Triangulation<2>::boundaryComponents,
             pybind11::return_value_policy::reference_internal)
-        .def("faces", &regina::python::faces<Triangulation<2>, 2,
-            pybind11::return_value_policy::reference_internal>)
+        .def("faces", (regina::python::facesFunc<Triangulation<2>>)(
+            &Triangulation<2>::faces),
+            pybind11::return_value_policy::reference_internal)
         .def("vertices", &Triangulation<2>::vertices,
             pybind11::return_value_policy::reference_internal)
         .def("edges", &Triangulation<2>::edges,
@@ -105,8 +107,9 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<2>::boundaryComponent,
             pybind11::return_value_policy::reference_internal)
-        .def("face", &regina::python::face<Triangulation<2>, 2, size_t,
-            pybind11::return_value_policy::reference_internal>)
+        .def("face", (regina::python::faceFunc<Triangulation<2>>)(
+            &Triangulation<2>::face),
+            pybind11::return_value_policy::reference_internal)
         .def("vertex", &Triangulation<2>::vertex,
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<2>::edge,

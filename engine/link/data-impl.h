@@ -55,7 +55,7 @@ Link Link::fromData(std::initializer_list<int> crossingSigns,
         if (sign == 1 || sign == -1)
             ans.crossings_.push_back(new Crossing(sign));
         else
-            throw InvalidInput("fromData(): crossing sign not +/-1");
+            throw InvalidArgument("fromData(): crossing sign not +/-1");
     }
     ans.addComponents(2 * crossingSigns.size(), components...);
     return ans;
@@ -63,7 +63,7 @@ Link Link::fromData(std::initializer_list<int> crossingSigns,
 
 inline void Link::addComponents(size_t strandsRemaining) {
     if (strandsRemaining != 0)
-        throw InvalidInput("fromData(): too few strands");
+        throw InvalidArgument("fromData(): too few strands");
 }
 
 template <typename... Args>
@@ -88,7 +88,7 @@ void Link::addComponents(size_t strandsRemaining,
 
         auto it = component.begin();
         if (*it == 0 || *it > n || *it < -n)
-            throw InvalidInput("fromData(): crossing out of range");
+            throw InvalidArgument("fromData(): crossing out of range");
         if (*it > 0) {
             tmpCross = *it;
             tmpStrand = 1;
@@ -106,7 +106,7 @@ void Link::addComponents(size_t strandsRemaining,
             prev = curr;
 
             if (*it == 0 || *it > n || *it < -n)
-                throw InvalidInput("fromData(): crossing out of range");
+                throw InvalidArgument("fromData(): crossing out of range");
             if (*it > 0) {
                 tmpCross = *it;
                 tmpStrand = 1;
@@ -119,12 +119,12 @@ void Link::addComponents(size_t strandsRemaining,
             curr = cr->strand(tmpStrand);
 
             if (prev.crossing()->next_[prev.strand()])
-                throw InvalidInput("fromData(): multiple passes "
+                throw InvalidArgument("fromData(): multiple passes "
                     "out of same strand of crossing");
             prev.crossing()->next_[prev.strand()] = curr;
 
             if (curr.crossing()->prev_[curr.strand()])
-                throw InvalidInput("fromData(): multiple passes "
+                throw InvalidArgument("fromData(): multiple passes "
                     "into same strand of crossing");
             curr.crossing()->prev_[curr.strand()] = prev;
         }
@@ -133,12 +133,12 @@ void Link::addComponents(size_t strandsRemaining,
         curr = components_.back();
 
         if (prev.crossing()->next_[prev.strand()])
-            throw InvalidInput("fromData(): multiple passes "
+            throw InvalidArgument("fromData(): multiple passes "
                 "out of same strand of crossing");
         prev.crossing()->next_[prev.strand()] = curr;
 
         if (curr.crossing()->prev_[curr.strand()])
-            throw InvalidInput("fromData(): multiple passes "
+            throw InvalidArgument("fromData(): multiple passes "
                 "into same strand of crossing");
         curr.crossing()->prev_[curr.strand()] = prev;
     }

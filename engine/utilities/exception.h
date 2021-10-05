@@ -94,6 +94,52 @@ class FailedPrecondition : public std::runtime_error {
 };
 
 /**
+ * An exception thrown when invalid or unsupported arguments are passed
+ * into a function.
+ *
+ * Details of the error can be accessed through the inherited member
+ * function what().
+ *
+ * \ifacespython Not present.
+ *
+ * \ingroup utilities
+ */
+class InvalidArgument : public std::runtime_error {
+    public:
+        /**
+         * Creates a new exception with the given error message.
+         *
+         * This constructor may throw std::bad_alloc.
+         *
+         * @param msg a human-readable description of the error.
+         */
+        InvalidArgument(const std::string& msg) : std::runtime_error(msg) {
+        }
+
+        /**
+         * Creates a new exception with the given error message.
+         *
+         * This constructor may throw std::bad_alloc.
+         *
+         * @param msg a human-readable description of the error.
+         */
+        InvalidArgument(const char* msg) : std::runtime_error(msg) {
+        }
+
+        /**
+         * Creates a new copy of the given exception.
+         */
+        InvalidArgument(const InvalidArgument&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        InvalidArgument& operator = (const InvalidArgument&) noexcept = default;
+};
+
+/**
  * An exception thrown when a function reads unexpected or incomplete
  * data from an input stream.
  *

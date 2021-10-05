@@ -3299,9 +3299,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * \endcode
          *
          * Unlike the other link reconstruction routines, this routine will
-         * throw an InvalidInput exception if a link could not be reconstructed
-         * from the given data.  (This is because this routine takes hard-coded
-         * data, and so there is no need to detect user errors at runtime.)
+         * throw an InvalidArgument exception if a link could not be
+         * reconstructed from the given data.
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
@@ -4055,7 +4054,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * This routine processes one link component, and then recursively
          * calls itself to process the remaining components.
          *
-         * Like fromData(), it throws an InvalidInput exception if an
+         * Like fromData(), it throws an InvalidArgument exception if an
          * error or inconsistency is found in the given data.
          *
          * @param strandsRemaining the expected sum of the lengths of
@@ -4082,7 +4081,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * It is called when there are no more components remaining to
          * be processed.
          *
-         * Like fromData(), it throws an InvalidInput exception if an
+         * Like fromData(), it throws an InvalidArgument exception if an
          * error or inconsistency is found in the given data, which
          * for this terminating call simply means \a strandsRemaining != 0.
          *

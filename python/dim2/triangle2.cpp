@@ -58,8 +58,7 @@ void addTriangle2(pybind11::module_& m) {
         .def("triangulation", &Triangle<2>::triangulation)
         .def("component", &Triangle<2>::component,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Triangle<2>, 2, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Triangle<2>, 2, int>)
         .def("vertex", &Triangle<2>::vertex,
             pybind11::return_value_policy::reference)
         .def("edge",

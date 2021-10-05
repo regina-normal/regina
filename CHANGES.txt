@@ -405,8 +405,8 @@ Version 7.0  [ TODO ]
               hashing.
             - The string constructors and assignment operators recognise
               "inf" as infinity.
-        Class InvalidInput:
-            - New exception class.
+        Class InvalidArgument, InvalidInput:
+            - New exception classes.
         Class Isomorphism<dim>, IsomorphismBase<dim>:
             - Added member and global swap() functions to Isomorphism<dim>.
             - Removed the IsomorphismBase<dim> base class; all functionality
@@ -1141,6 +1141,9 @@ Version 7.0  [ TODO ]
             - FaceListSuite is gone, now merged into TriangulationBase.
             - The inner TopologyLock class now takes its argument by reference.
             - Routine countFaces() now supports the case subdim == dim.
+            - Add variants of countFaces(), faces() and face() that take
+              the face dimension at runtime (this was already available
+              in Python, but is now also available in C++).
         Class Triangulation<3>:
             - All of the changes listed for Triangulation<dim> above.
             - New routine generalAngleStructure().

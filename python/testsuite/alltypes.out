@@ -1312,6 +1312,9 @@ Equality type : EqualityType.BY_VALUE
 Integer : class
 Equality type : EqualityType.BY_VALUE
 
+InvalidArgument : class
+Exception type
+
 InvalidInput : class
 Exception type
 

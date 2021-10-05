@@ -57,8 +57,7 @@ void addPentachoron4(pybind11::module_& m) {
         .def("triangulation", &Pentachoron<4>::triangulation)
         .def("component", &Pentachoron<4>::component,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Pentachoron<4>, 4, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Pentachoron<4>, 4, int>)
         .def("vertex", &Pentachoron<4>::vertex,
             pybind11::return_value_policy::reference)
         .def("edge",

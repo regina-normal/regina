@@ -96,20 +96,23 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("countBoundaryComponents",
             &Triangulation<dim>::countBoundaryComponents)
         .def("countFaces",
-            &regina::python::countFaces<Triangulation<dim>, dim, dim>)
+        (regina::python::countFacesFunc<Triangulation<dim>>)(
+            &Triangulation<dim>::countFaces))
         .def("fVector", &Triangulation<dim>::fVector)
         .def("components", &Triangulation<dim>::components,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponents", &Triangulation<dim>::boundaryComponents,
             pybind11::return_value_policy::reference_internal)
-        .def("faces", &regina::python::faces<Triangulation<dim>, dim,
-            pybind11::return_value_policy::reference_internal>)
+        .def("faces", (regina::python::facesFunc<Triangulation<dim>>)(
+            &Triangulation<dim>::faces),
+            pybind11::return_value_policy::reference_internal)
         .def("component", &Triangulation<dim>::component,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<dim>::boundaryComponent,
             pybind11::return_value_policy::reference_internal)
-        .def("face", &regina::python::face<Triangulation<dim>, dim, size_t,
-            pybind11::return_value_policy::reference_internal>)
+        .def("face", (regina::python::faceFunc<Triangulation<dim>>)(
+            &Triangulation<dim>::face),
+            pybind11::return_value_policy::reference_internal)
         .def("countVertices", &Triangulation<dim>::countVertices)
         .def("countEdges", &Triangulation<dim>::countEdges)
         .def("countTriangles", &Triangulation<dim>::countTriangles)
