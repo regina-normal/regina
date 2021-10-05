@@ -114,7 +114,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     layout->addWidget(session, 1);
 
     QHBoxLayout *inputAreaLayout = new QHBoxLayout;
-    
+
     QString inputMsg = tr("Type your Python commands into this box.");
     prompt = new QLabel();
     prompt->setWhatsThis(inputMsg);
@@ -253,7 +253,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setIcon(ReginaSupport::themeIcon("help-contextual"));
     connect(act, SIGNAL(triggered()), this, SLOT(contextHelpActivated()));
     menuHelp->addAction(act);
-    
+
     menuConsole->setTitle(tr("&Console"));
     menuEdit->setTitle(tr("&Edit"));
     menuHelp->setTitle(tr("&Help"));
@@ -375,7 +375,7 @@ bool PythonConsole::importRegina() {
     }
 }
 
-void PythonConsole::setRootPacket(regina::Packet* packet) {
+void PythonConsole::setRootPacket(std::shared_ptr<regina::Packet> packet) {
     if (interpreter->setVar("root", packet)) {
         if (packet)
             addInfo(tr("The (invisible) root of the packet tree is in the "
@@ -389,7 +389,7 @@ void PythonConsole::setRootPacket(regina::Packet* packet) {
     }
 }
 
-void PythonConsole::setSelectedPacket(regina::Packet* packet) {
+void PythonConsole::setSelectedPacket(std::shared_ptr<regina::Packet> packet) {
     // Set the variable.
     if (interpreter->setVar("item", packet)) {
         if (packet)
@@ -407,7 +407,8 @@ void PythonConsole::setSelectedPacket(regina::Packet* packet) {
     }
 }
 
-void PythonConsole::setVar(const QString& name, regina::Packet* value) {
+void PythonConsole::setVar(const QString& name,
+        std::shared_ptr<regina::Packet> value) {
     if (! interpreter->setVar(name.toUtf8(), value)) {
         QString pktName;
         if (value)
@@ -434,7 +435,7 @@ void PythonConsole::executeLine(const char* line) {
 
 void PythonConsole::runScript(regina::Script* script) {
     interpreter->runScript(script);
-    
+
     if (interpreter->exitAttempted())
         close();
 }
@@ -533,7 +534,7 @@ void PythonConsole::processCommand() {
 
     // Finish the output.
     interpreter->flush();
-    
+
     // Prepare for a new command.
     if (interpreter->exitAttempted()) {
         close();

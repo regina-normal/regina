@@ -452,7 +452,8 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
     }
 }
 
-bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
+bool PythonInterpreter::setVar(const char* name,
+        std::shared_ptr<Packet> value) {
     PyEval_RestoreThread(state);
 
     bool ok = false;

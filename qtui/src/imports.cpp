@@ -107,16 +107,14 @@ void ReginaMain::importFile(const PacketImporter& importer,
         dialogTitle, QString(), fileFilter);
     if (file.isEmpty())
         return;
-    regina::Packet* newTree = importer.importData(file, this);
+    std::shared_ptr<regina::Packet> newTree = importer.importData(file, this);
 
     if (newTree) {
-        ImportDialog dlg(this, newTree, packetTree.get(),
+        ImportDialog dlg(this, newTree, packetTree,
             treeView->selectedPacket(), parentFilter,
             importer.useImportEncoding(), dialogTitle);
         if (dlg.validate() && dlg.exec() == QDialog::Accepted)
             packetView(newTree, true);
-        else
-            delete newTree;
     }
 }
 

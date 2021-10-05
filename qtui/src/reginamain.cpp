@@ -143,7 +143,7 @@ void ReginaMain::registerWindow(QAction* windowAction) {
     docMenu->addAction(windowAction);
 }
 
-regina::Packet* ReginaMain::selectedPacket() {
+std::shared_ptr<regina::Packet> ReginaMain::selectedPacket() {
     return treeView->selectedPacket();
 }
 
@@ -158,13 +158,13 @@ void ReginaMain::setModified(bool modified) {
     }
 }
 
-void ReginaMain::packetView(regina::Packet* packet, bool makeVisibleInTree,
-        bool selectInTree) {
-    PacketExternalViewer ext = PacketManager::externalViewer(packet);
+void ReginaMain::packetView(std::shared_ptr<regina::Packet> packet,
+        bool makeVisibleInTree, bool selectInTree) {
+    PacketExternalViewer ext = PacketManager::externalViewer(packet.get());
     if (ext) {
-        (*ext)(packet, this);
+        (*ext)(packet.get(), this);
     } else
-        view(new PacketPane(this, packet));
+        view(new PacketPane(this, packet.get()));
 
     if (makeVisibleInTree || selectInTree) {
         PacketTreeItem* item = treeView->find(packet);
@@ -174,7 +174,7 @@ void ReginaMain::packetView(regina::Packet* packet, bool makeVisibleInTree,
             // the tree has not been refreshed yet?
             // Force a refresh now and try again.
 
-            regina::Packet* treeParent = packet->parent();
+            std::shared_ptr<regina::Packet> treeParent = packet->parent();
             // We refresh from treeParent.
             if (treeParent && treeParent->parent()) {
                 // treeParent is not the root, which means the parent
@@ -203,7 +203,7 @@ void ReginaMain::packetView(regina::Packet* packet, bool makeVisibleInTree,
     }
 }
 
-void ReginaMain::ensureVisibleInTree(regina::Packet* packet) {
+void ReginaMain::ensureVisibleInTree(std::shared_ptr<regina::Packet> packet) {
     PacketTreeItem* item = treeView->find(packet);
     if (item)
         treeView->scrollToItem(item);
@@ -310,7 +310,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         return;
     }
 
-    regina::Packet* data = regina::open(
+    std::shared_ptr<regina::Packet> data = regina::open(
         static_cast<const char*>(QFile::encodeName(f)));
 
     if (! data) {
@@ -327,7 +327,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
     // As of Regina 4.95, the root packet is hidden.
     // If the root packet is not a container, create a new fake root above it.
     if (data->type() != regina::PACKET_CONTAINER) {
-        regina::Container* newRoot = new regina::Container();
+        auto newRoot = std::make_shared<regina::Container>();
         newRoot->insertChildLast(data);
         data = newRoot;
 
@@ -355,7 +355,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         return;
     }
 
-    regina::Packet* data = regina::open(
+    std::shared_ptr<regina::Packet> data = regina::open(
         static_cast<const char*>(QFile::encodeName(f)));
 
     if (! data) {
@@ -429,13 +429,12 @@ void ReginaMain::raiseWindow() {
 }
 
 void ReginaMain::packetView() {
-    regina::Packet* packet = checkPacketSelected();
-    if (packet)
+    if (auto packet = checkPacketSelected())
         packetView(packet, false);
 }
 
 void ReginaMain::packetRename() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -453,7 +452,7 @@ void ReginaMain::packetRename() {
 }
 
 void ReginaMain::packetDelete() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -481,9 +480,13 @@ void ReginaMain::packetDelete() {
     if (msgBox.clickedButton() != delBtn)
         return;
 
-    // Call safeDelete() instead of delete, since there might be a
-    // python window still holding a reference to the packet.
-    regina::Packet::safeDelete(packet);
+    // Awkwardly, if a python window still holds a reference to the
+    // packet then the packet will not actually be deleted until the
+    // python window closes.  *Probably* this is what we want.
+    //
+    // Otherwise, the packet will simply be deleted as its last
+    // shared_ptr drops away.
+    packet->makeOrphan();
 }
 
 void ReginaMain::treeRefresh() {
@@ -496,33 +499,33 @@ void ReginaMain::treeRefresh() {
 }
 
 void ReginaMain::clonePacket() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! (packet && packet->parent())) {
         // Note that the root packet is not visible, and cannot be cloned.
         return;
     }
 
-    regina::Packet* ans = packet->clone(false, false);
+    auto ans = packet->cloneAsSibling(false, false);
 
-    treeView->selectPacket(ans, true);
+    treeView->selectPacket(ans.get(), true);
     packetView(ans, false);
 }
 
 void ReginaMain::cloneSubtree() {
-    regina::Packet* packet = checkSubtreeSelected();
+    auto packet = checkSubtreeSelected();
     if (! (packet && packet->parent())) {
         // Note that the root packet is not visible, and cannot be cloned.
         return;
     }
 
-    regina::Packet* ans = packet->clone(true, false);
+    auto ans = packet->cloneAsSibling(true, false);
 
-    treeView->selectPacket(ans, true);
+    treeView->selectPacket(ans.get(), true);
     packetView(ans, false);
 }
 
 void ReginaMain::pythonConsole() {
-    consoles.launchPythonConsole(this, packetTree.get(),
+    consoles.launchPythonConsole(this, packetTree,
         treeView->selectedPacket());
 }
 
@@ -657,7 +660,7 @@ void ReginaMain::initPacketTree() {
     // packetTree->setLabel(tr("Data").toUtf8().constData());
 
     // Update the visual representation.
-    treeView->fill(packetTree.get());
+    treeView->fill(packetTree);
 
     renameWindow(tr("Untitled"));
 }
@@ -670,26 +673,26 @@ void ReginaMain::view(PacketPane* newPane) {
     allPanes.push_back(newPane);
 }
 
-regina::Packet* ReginaMain::checkPacketSelected() {
+std::shared_ptr<regina::Packet> ReginaMain::checkPacketSelected() {
     // We guarantee not to return the root packet.
-    regina::Packet* p = treeView->selectedPacket();
+    std::shared_ptr<regina::Packet> p = treeView->selectedPacket();
     if (p && p->parent())
         return p;
     ReginaSupport::info(this, tr("Please select a packet to work with."));
-    return 0;
+    return nullptr;
 }
 
-regina::Packet* ReginaMain::checkSubtreeSelected() {
+std::shared_ptr<regina::Packet> ReginaMain::checkSubtreeSelected() {
     // We guarantee not to return the root packet.
-    regina::Packet* p = treeView->selectedPacket();
+    std::shared_ptr<regina::Packet> p = treeView->selectedPacket();
     if (p && p->parent())
         return p;
     ReginaSupport::info(this, tr("Please select a packet to work with."));
         // Remove all the information about subtrees; it's clear anyway.
-    return 0;
+    return nullptr;
 }
 
-bool ReginaMain::initData(regina::Packet* usePacketTree,
+bool ReginaMain::initData(std::shared_ptr<regina::Packet> usePacketTree,
         const QString& useLocalFilename,
         const QString& useDisplayName) {
     if (packetTree)
@@ -697,10 +700,10 @@ bool ReginaMain::initData(regina::Packet* usePacketTree,
 
     localFile = useLocalFilename;
     displayName = useDisplayName;
-    packetTree.reset(usePacketTree);
+    packetTree = usePacketTree;
 
     if (packetTree) {
-        treeView->fill(packetTree.get());
+        treeView->fill(packetTree);
         // Expand the first level.
         for (int i = 0; i < treeView->topLevelItemCount(); ++i)
             treeView->expandItem(treeView->topLevelItem(i));
@@ -723,10 +726,10 @@ bool ReginaMain::initData(regina::Packet* usePacketTree,
 bool ReginaMain::saveFile() {
     endEdit();
 
-    regina::Packet* writeTree = packetTree.get();
+    std::shared_ptr<regina::Packet> writeTree = packetTree;
     if (fakeRoot_) {
         // Save the (visible) child, but only if there is exactly one child.
-        regina::Packet* child = packetTree.get()->firstChild();
+        auto child = packetTree->firstChild();
         if (child && ! child->nextSibling())
             writeTree = child;
     }

@@ -642,7 +642,7 @@ void SurfacesCoordinateUI::cutAlong() {
         "Cut #" + std::to_string(whichSurface));
     ans->intelligentSimplify();
     surfaces->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void SurfacesCoordinateUI::crush() {
@@ -668,7 +668,7 @@ void SurfacesCoordinateUI::crush() {
     auto ans = regina::makePacket(toCrush.crush(),
         "Crushed #" + std::to_string(whichSurface));
     surfaces->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void SurfacesCoordinateUI::updateActionStates() {

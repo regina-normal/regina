@@ -675,7 +675,7 @@ void LinkCrossingsUI::parallel() {
 }
 
 void LinkCrossingsUI::composeWith() {
-    auto other = static_cast<regina::PacketOf<regina::Link>*>(
+    auto other = std::static_pointer_cast<regina::PacketOf<regina::Link>>(
         PacketDialog::choose(ui,
             link->root(),
             new SingleTypeFilter<regina::PacketOf<regina::Link>>(),
@@ -696,7 +696,7 @@ void LinkCrossingsUI::moves() {
 void LinkCrossingsUI::complement() {
     auto ans = makePacket(link->complement(), link->adornedLabel("Complement"));
     link->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void LinkCrossingsUI::typeChanged(int) {

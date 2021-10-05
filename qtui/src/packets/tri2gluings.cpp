@@ -598,8 +598,7 @@ void Tri2GluingsUI::splitIntoComponents() {
         }
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(
-            base->firstChild().get());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,

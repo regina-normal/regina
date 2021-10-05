@@ -45,16 +45,16 @@
 
 using regina::Packet;
 
-PacketChooser::PacketChooser(regina::Packet* newSubtree,
+PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         RootRole useRootRole, QWidget* parent) :
-        QComboBox(parent), subtree(newSubtree), filter(0),
+        QComboBox(parent), subtree(newSubtree), filter(nullptr),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     fill(false, 0);
 }
 
-PacketChooser::PacketChooser(regina::Packet* newSubtree,
+PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         PacketFilter* newFilter, RootRole useRootRole, QWidget* parent) :
         QComboBox(parent), subtree(newSubtree), filter(newFilter),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
@@ -63,9 +63,9 @@ PacketChooser::PacketChooser(regina::Packet* newSubtree,
     fill(false, 0);
 }
 
-PacketChooser::PacketChooser(regina::Packet* newSubtree,
+PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         PacketFilter* newFilter, RootRole useRootRole, bool allowNone,
-        regina::Packet* initialSelection, QWidget* parent) :
+        std::shared_ptr<Packet> initialSelection, QWidget* parent) :
         QComboBox(parent), subtree(newSubtree), filter(newFilter),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
@@ -78,18 +78,18 @@ PacketChooser::~PacketChooser() {
         delete filter;
 }
 
-Packet* PacketChooser::selectedPacket() {
+std::shared_ptr<Packet> PacketChooser::selectedPacket() {
     if (count() == 0)
-        return 0;
+        return nullptr;
     int curr = currentIndex();
-    return (curr < 0 ? 0 : packets[curr]);
+    return (curr < 0 ? 0 : packets[curr]->shared_from_this());
 }
 
-void PacketChooser::selectPacket(regina::Packet* packet) {
+void PacketChooser::selectPacket(std::shared_ptr<Packet> packet) {
     int index = 0;
     std::vector<regina::Packet*>::const_iterator it = packets.begin();
     while (it != packets.end()) {
-        if ((*it) == packet) {
+        if ((*it) == packet.get()) {
             setCurrentIndex(index);
             return;
         }
@@ -175,7 +175,7 @@ void PacketChooser::refreshContents() {
     isUpdating = true;
 
     // Remember how it used to look.
-    Packet* remember = selectedPacket();
+    auto remember = selectedPacket();
     bool allowNone = ((! packets.empty()) && (! packets[0]));
 
     // Empty the combo box.
@@ -192,7 +192,7 @@ void PacketChooser::refreshContents() {
     isUpdating = false;
 }
 
-void PacketChooser::fill(bool allowNone, Packet* select) {
+void PacketChooser::fill(bool allowNone, std::shared_ptr<Packet> select) {
     // Insert the None entry if appropriate.
     if (allowNone) {
         addItem(tr("<None>"));
@@ -203,11 +203,11 @@ void PacketChooser::fill(bool allowNone, Packet* select) {
     }
 
     // Insert the regular packets.
-    regina::Packet* p = subtree;
-    while (p && subtree->isGrandparentOf(p)) {
-        if ((! filter) || (filter->accept(p))) {
+    std::shared_ptr<Packet> p = subtree;
+    while (p && subtree->isAncestorOf(p)) {
+        if ((! filter) || (filter->accept(*p))) {
             if (p->parent())
-                addItem(PacketManager::icon(p), p->humanLabel().c_str());
+                addItem(PacketManager::icon(p.get()), p->humanLabel().c_str());
             else switch (rootRole) {
                 case ROOT_AS_INSERTION_POINT:
                     // No icon for this role.
@@ -218,10 +218,10 @@ void PacketChooser::fill(bool allowNone, Packet* select) {
                     addItem(tr("<Entire tree>"));
                     break;
                 case ROOT_AS_PACKET:
-                    addItem(PacketManager::icon(p), tr("<Root packet>"));
+                    addItem(PacketManager::icon(p.get()), tr("<Root packet>"));
                     break;
             }
-            packets.push_back(p);
+            packets.push_back(p.get());
             if (onAutoUpdate)
                 p->listen(this);
             if (p == select)
@@ -232,7 +232,7 @@ void PacketChooser::fill(bool allowNone, Packet* select) {
 }
 
 bool PacketChooser::verify() {
-    regina::Packet* p = subtree;
+    std::shared_ptr<Packet> p = subtree;
     std::vector<regina::Packet*>::const_iterator it = packets.begin();
 
     // Ignore the None entry if it exists.
@@ -242,7 +242,7 @@ bool PacketChooser::verify() {
     // Now match the packets up one by one.
     while (it != packets.end() || p != 0) {
         // Are we ignoring this packet?
-        if (p && filter && ! filter->accept(p)) {
+        if (p && filter && ! filter->accept(*p)) {
             p = p->nextTreePacket();
             continue;
         }
@@ -254,7 +254,7 @@ bool PacketChooser::verify() {
         if (! p)
             return false;
         // Mismatched entries?
-        if (p != *it)
+        if (p.get() != *it)
             return false;
 
         // All good.
@@ -266,14 +266,14 @@ bool PacketChooser::verify() {
 }
 
 PacketDialog::PacketDialog(QWidget* parent,
-        regina::Packet* subtree,
+        std::shared_ptr<Packet> subtree,
         PacketFilter* filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis,
         PacketChooser::RootRole rootRole,
         bool allowNone,
-        regina::Packet* initialSelection) {
+        std::shared_ptr<Packet> initialSelection) {
     setWindowTitle(title);
     setWhatsThis(whatsThis);
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -293,15 +293,15 @@ PacketDialog::PacketDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-regina::Packet* PacketDialog::choose(QWidget* parent,
-        regina::Packet* subtree,
+std::shared_ptr<Packet> PacketDialog::choose(QWidget* parent,
+        std::shared_ptr<Packet> subtree,
         PacketFilter* filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis,
         PacketChooser::RootRole rootRole,
         bool allowNone,
-        regina::Packet* initialSelection) {
+        std::shared_ptr<Packet> initialSelection) {
     PacketDialog dlg(parent, subtree, filter, title, message, whatsThis,
         rootRole, allowNone, initialSelection);
     if (dlg.exec())

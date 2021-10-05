@@ -192,10 +192,10 @@ void SurfacesHeaderUI::viewTriangulation() {
         copy->setLabel(surfaces->adornedLabel("Triangulation"));
         surfaces->insertChildLast(copy);
 
-        enclosingPane->getMainWindow()->packetView(copy.get(), true, true);
+        enclosingPane->getMainWindow()->packetView(copy, true, true);
     } else {
         enclosingPane->getMainWindow()->packetView(
-            const_cast<Packet*>(triPkt.get()),
+            std::const_pointer_cast<Packet>(triPkt),
             false /* visible in tree */, false /* select in tree */);
     }
 }

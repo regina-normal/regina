@@ -123,8 +123,9 @@ class BasicPacketCreator : public PacketCreator {
         /**
          * PacketCreator overrides.
          */
-        regina::Packet* createPacket(regina::Packet*, QWidget*) {
-            regina::Packet* ans = new T();
+        std::shared_ptr<regina::Packet> createPacket(
+                std::shared_ptr<regina::Packet>, QWidget*) override {
+            auto ans = std::make_shared<T>();
             ans->setLabel(ans->typeName());
             return ans;
         }

@@ -224,7 +224,7 @@ void Tri3SnapPeaUI::toSnapPea() {
 
     ans->setLabel(reginaTri->label());
     reginaTri->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 QString Tri3SnapPeaUI::solutionTypeString(int solnType) {

@@ -69,8 +69,8 @@ class NewPacketDialog : public QDialog {
         /**
          * Packet tree structure:
          */
-        regina::Packet* tree;
-        regina::Packet* newPacket;
+        std::shared_ptr<regina::Packet> tree;
+        std::shared_ptr<regina::Packet> newPacket;
 
     public:
         /**
@@ -84,7 +84,8 @@ class NewPacketDialog : public QDialog {
          * given PacketCreator and PacketFilter.
          */
         NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
-            regina::Packet* packetTree, regina::Packet* defaultParent,
+            std::shared_ptr<regina::Packet> packetTree,
+            std::shared_ptr<regina::Packet> defaultParent,
             PacketFilter* useFilter, const QString& dialogTitle);
         virtual ~NewPacketDialog();
 
@@ -100,7 +101,7 @@ class NewPacketDialog : public QDialog {
         /**
          * Returns the packet that was created by this dialog, if any.
          */
-        regina::Packet* createdPacket();
+        std::shared_ptr<regina::Packet> createdPacket();
 
     protected slots:
         /**
@@ -109,7 +110,7 @@ class NewPacketDialog : public QDialog {
         virtual void slotOk();
 };
 
-inline regina::Packet* NewPacketDialog::createdPacket() {
+inline std::shared_ptr<regina::Packet> NewPacketDialog::createdPacket() {
     return newPacket;
 }
 

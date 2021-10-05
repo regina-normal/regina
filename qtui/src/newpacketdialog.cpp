@@ -46,10 +46,11 @@
 #include <QWhatsThis>
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
-        regina::Packet* packetTree, regina::Packet* defaultParent,
+        std::shared_ptr<regina::Packet> packetTree,
+        std::shared_ptr<regina::Packet> defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle) :
         QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
-        creator(newCreator), tree(packetTree), newPacket(0) {
+        creator(newCreator), tree(packetTree) {
     setWindowTitle(dialogTitle);
     QVBoxLayout* layout = new QVBoxLayout(this);
 
@@ -103,14 +104,14 @@ bool NewPacketDialog::validate() {
 
 void NewPacketDialog::slotOk() {
     // Get the parent packet.
-    regina::Packet* parentPacket = chooser->selectedPacket();
+    auto parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
         ReginaSupport::info(this,
             tr("Please select a parent packet."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
-    if (filter && ! filter->accept(parentPacket)) {
+    if (filter && ! filter->accept(*parentPacket)) {
         ReginaSupport::info(this,
             tr("Please select a different location in the tree for "
             "the new packet."),

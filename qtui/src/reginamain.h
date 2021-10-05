@@ -205,13 +205,13 @@ class ReginaMain : public QMainWindow {
         /**
          * View the given packet.
          */
-        void packetView(regina::Packet*, bool makeVisibleInTree = true,
-            bool selectInTree = false);
+        void packetView(std::shared_ptr<regina::Packet> packet,
+            bool makeVisibleInTree = true, bool selectInTree = false);
 
         /**
          * Ensure that the given packet is visible in the packet tree.
          */
-        void ensureVisibleInTree(regina::Packet* packet);
+        void ensureVisibleInTree(std::shared_ptr<regina::Packet> packet);
 
         /**
          * Handles the deregistration of a packet pane from the list of
@@ -399,8 +399,8 @@ class ReginaMain : public QMainWindow {
          * visible to the user.  These routines guarantee that the root
          * packet will not be returned.
          */
-        regina::Packet* checkPacketSelected();
-        regina::Packet* checkSubtreeSelected();
+        std::shared_ptr<regina::Packet> checkPacketSelected();
+        std::shared_ptr<regina::Packet> checkSubtreeSelected();
 
         /**
          * Generic packet operations.
@@ -416,7 +416,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Open, save and rename files.
          */
-        bool initData(regina::Packet* usePacketTree,
+        bool initData(std::shared_ptr<regina::Packet> usePacketTree,
             const QString& useLocalFilename,
             const QString& useDisplayName);
         bool saveFile();

@@ -140,9 +140,9 @@ class PythonConsole : public QMainWindow {
          * Configure the python interpreter.
          */
         bool importRegina();
-        void setRootPacket(regina::Packet* packet);
-        void setSelectedPacket(regina::Packet* packet);
-        void setVar(const QString& name, regina::Packet* value);
+        void setRootPacket(std::shared_ptr<regina::Packet> packet);
+        void setSelectedPacket(std::shared_ptr<regina::Packet> packet);
+        void setVar(const QString& name, std::shared_ptr<regina::Packet> value);
         void executeLine(const QString& line);
         void executeLine(const std::string& line);
         void executeLine(const char* line);

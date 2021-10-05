@@ -195,7 +195,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * Fills the chooser with the set of allowable packets.
          * A packet to be preselected can be optionally specified.
          */
-        void fill(bool allowNone, regina::Packet* select);
+        void fill(bool allowNone, std::shared_ptr<regina::Packet> select);
 
         /**
          * Verifies whether the current list of packets shown in the
@@ -230,7 +230,7 @@ class PacketDialog : public QDialog {
             bool allowNone = false,
             std::shared_ptr<regina::Packet> initialSelection = nullptr);
 
-        static regina::Packet* choose(QWidget* parent,
+        static std::shared_ptr<regina::Packet> choose(QWidget* parent,
             std::shared_ptr<regina::Packet> subtree,
             PacketFilter* filter,
             const QString& title,

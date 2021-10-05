@@ -87,7 +87,7 @@ void ReginaMain::moveDeep() {
 }
 
 void ReginaMain::moveUp() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -108,7 +108,7 @@ void ReginaMain::moveUp() {
 }
 
 void ReginaMain::moveDown() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -129,7 +129,7 @@ void ReginaMain::moveDown() {
 }
 
 void ReginaMain::movePageUp() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -150,7 +150,7 @@ void ReginaMain::movePageUp() {
 }
 
 void ReginaMain::movePageDown() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -171,7 +171,7 @@ void ReginaMain::movePageDown() {
 }
 
 void ReginaMain::moveTop() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -192,7 +192,7 @@ void ReginaMain::moveTop() {
 }
 
 void ReginaMain::moveBottom() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 

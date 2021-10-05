@@ -176,9 +176,9 @@ void PacketTreeView::fill(Packet* topPacket) {
         createAndSelect(p)->fill();
 }
 
-PacketTreeItem* PacketTreeView::find(regina::Packet* packet) {
+PacketTreeItem* PacketTreeView::find(std::shared_ptr<Packet> packet) {
     if (! packet)
-        return 0;
+        return nullptr;
 
     // Start at the root of the tree and work down.
     // Note that the root packet itself will not be found by this routine.
@@ -195,13 +195,13 @@ PacketTreeItem* PacketTreeView::find(regina::Packet* packet) {
 
         if (current == packet)
             return item;
-        if (current && current->isGrandparentOf(packet)) {
+        if (current && current->isAncestorOf(packet)) {
             rootItem = item;
             itemCount = 0;
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 void PacketTreeView::selectPacket(regina::Packet* p, bool allowDefer) {
@@ -227,7 +227,7 @@ void PacketTreeView::packetView(QTreeWidgetItem* packet) {
             dynamic_cast<PacketTreeItem*>(packet)->getPacket());
 }
 
-void PacketTreeView::refreshSubtree(regina::Packet* fromPacket,
+void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
         QTreeWidgetItem* fromItem) {
     // Is this a stale node in the tree?
     if (! fromPacket) {
@@ -241,15 +241,15 @@ void PacketTreeView::refreshSubtree(regina::Packet* fromPacket,
 
     // Before we do anything else: this routine can mess up the current
     // selection.  Remember it so we can restore it later.
-    regina::Packet* selected = selectedPacket();
+    std::shared_ptr<Packet> selected = selectedPacket();
 
     // Run through the child packets and child nodes and ensure they
     // match up.
-    Packet* p = fromPacket->firstChild();
+    std::shared_ptr<Packet> p = fromPacket->firstChild();
     int itemCounter = 0;
     PacketTreeItem* item = static_cast<PacketTreeItem*>(
         fromItem->child(itemCounter));
-    PacketTreeItem* prev = 0;
+    PacketTreeItem* prev = nullptr;
     PacketTreeItem* other;
     for ( ; p; ++itemCounter, p = p->nextSibling()) {
         // INV: itemCounter is the current index of p and item.
@@ -267,7 +267,7 @@ void PacketTreeView::refreshSubtree(regina::Packet* fromPacket,
             expandItem(prev); // show prev's children.
 
             // Variables prev and item are already correct.
-        } else if (item->getPacket() == p) {
+        } else if (item->getPacket() == p.get()) {
             // They match up.
             item->refreshSubtree();
 
@@ -284,7 +284,7 @@ void PacketTreeView::refreshSubtree(regina::Packet* fromPacket,
                     ++otherCounter) {
                 other = static_cast<PacketTreeItem*>(
                     fromItem->child(otherCounter));
-                if (other->getPacket() == p) {
+                if (other->getPacket() == p.get()) {
                     // We've found a node for this packet.
                     // Move it to the correct place.
                     fromItem->insertChild(itemCounter,
@@ -325,34 +325,35 @@ void PacketTreeView::refreshSubtree(regina::Packet* fromPacket,
 
     // Restore any selection we might have had before.
     if (selected)
-        selectPacket(selected);
+        selectPacket(selected.get());
 }
 
-PacketTreeItem* PacketTreeView::createAndSelect(regina::Packet* packet) {
-    PacketTreeItem* item = new PacketTreeItem(this, packet);
-    if (packet == toSelect) {
+PacketTreeItem* PacketTreeView::createAndSelect(
+        std::shared_ptr<Packet> packet) {
+    PacketTreeItem* item = new PacketTreeItem(this, packet.get());
+    if (packet.get() == toSelect) {
         setCurrentItem(item);
-        toSelect = 0;
+        toSelect = nullptr;
     }
     return item;
 }
 
 PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
-        regina::Packet* packet) {
-    PacketTreeItem* item = new PacketTreeItem(parent, packet);
-    if (packet == toSelect) {
+        std::shared_ptr<Packet> packet) {
+    PacketTreeItem* item = new PacketTreeItem(parent, packet.get());
+    if (packet.get() == toSelect) {
         setCurrentItem(item);
-        toSelect = 0;
+        toSelect = nullptr;
     }
     return item;
 }
 
 PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
-        QTreeWidgetItem* after, regina::Packet* packet) {
-    PacketTreeItem* item = new PacketTreeItem(parent, after, packet);
-    if (packet == toSelect) {
+        QTreeWidgetItem* after, std::shared_ptr<Packet> packet) {
+    PacketTreeItem* item = new PacketTreeItem(parent, after, packet.get());
+    if (packet.get() == toSelect) {
         setCurrentItem(item);
-        toSelect = 0;
+        toSelect = nullptr;
     }
     return item;
 }

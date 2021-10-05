@@ -968,8 +968,7 @@ void Tri3GluingsUI::drillEdge() {
             if (ans) {
                 ans->setLabel(tri->adornedLabel("Drilled"));
                 tri->insertChildLast(ans);
-                enclosingPane->getMainWindow()->packetView(ans.get(),
-                    true, true);
+                enclosingPane->getMainWindow()->packetView(ans, true, true);
             }
         }
     }
@@ -978,7 +977,7 @@ void Tri3GluingsUI::drillEdge() {
 void Tri3GluingsUI::connectedSumWith() {
     endEdit();
 
-    regina::Packet* other = PacketDialog::choose(ui,
+    auto other = PacketDialog::choose(ui,
             tri->root(),
             new SubclassFilter<regina::Triangulation<3>>(),
             tr("Connected Sum"),
@@ -988,7 +987,8 @@ void Tri3GluingsUI::connectedSumWith() {
                 "The current triangulation will be modified directly."));
 
     if (other)
-        tri->connectedSumWith(*dynamic_cast<regina::Triangulation<3>*>(other));
+        tri->connectedSumWith(*
+            std::dynamic_pointer_cast<regina::Triangulation<3>>(other));
 }
 
 void Tri3GluingsUI::boundaryComponents() {
@@ -1014,7 +1014,7 @@ void Tri3GluingsUI::boundaryComponents() {
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }
@@ -1044,7 +1044,7 @@ void Tri3GluingsUI::vertexLinks() {
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }
@@ -1081,8 +1081,7 @@ void Tri3GluingsUI::splitIntoComponents() {
         }
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(
-            base->firstChild().get());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,
@@ -1153,7 +1152,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
 
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
-                base->lastChild().get());
+                base->lastChild());
 
             if (ans.size() == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
@@ -1258,7 +1257,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
 
         tri->insertChildLast(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
-            decomp->lastChild().get());
+            decomp->lastChild());
 
         ReginaSupport::info(ui,
             tr("This triangulation represents a composite 3-manifold."),
@@ -1387,7 +1386,7 @@ void Tri3GluingsUI::toSnapPea() {
 
     ans->setLabel(tri->label());
     tri->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void Tri3GluingsUI::updateRemoveState() {

@@ -131,7 +131,6 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
             QObject::tr("The import failed."),
             QObject::tr("<qt>The selected file does "
             "not contain any %1.").arg(signatures) + explnSuffix);
-        delete ans;
         return nullptr;
     } else if (last->type() == regina::PACKET_TEXT) {
         if (last == ans->firstChild()) {
@@ -140,7 +139,6 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
                 QObject::tr("<qt>None of the lines in the selected file "
                 "could be interpreted as %1.").arg(signatures)
                 + explnSuffix);
-            delete ans;
             return nullptr;
         } else {
             ReginaSupport::warn(parentWidget, 
