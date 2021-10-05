@@ -45,14 +45,14 @@ class Watcher(PacketListener):
 
 t = PacketOfTriangulation3(Example3.whiteheadLink())
 w1 = Watcher(t, 'original')
-print(t.data().isoSig(), t.data().isReadOnlySnapshot())
+print(t.isoSig(), t.isReadOnlySnapshot())
 
-a = AngleStructures(t.data())
+a = AngleStructures(t)
 print(a)
 print(a.triangulation().isoSig())
 
-a.triangulation().pachner(t.data().tetrahedron(0))
-print(t.data().isoSig(), t.data().isReadOnlySnapshot())
+a.triangulation().pachner(t.tetrahedron(0))
+print(t.isoSig(), t.isReadOnlySnapshot())
 print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
 
 print('Step 1')

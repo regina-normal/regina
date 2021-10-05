@@ -407,9 +407,9 @@ class NormalSurfaces :
          * This static routine is identical to calling the class "enumeration
          * constructor" with the given arguments, but with two differences:
          *
-         * - Unlike the class constructor, this routine will also insert
-         *   the normal surface list beneath \a owner in the packet tree
-         *   (but only if \a owner actually has a packet that contains it).
+         * - Unlike the class constructor, this routine will also wrap
+         *   the new normal surface list in a packet and insert it
+         *   beneath \a owner in the packet tree.
          *   If a progress tracker is passed (which means the enumeration runs
          *   in a background thread), the tree insertion will not happen until
          *   the enumeration has finished (and if the user cancels the
@@ -417,6 +417,11 @@ class NormalSurfaces :
          *
          * - If there is an error, then the class constructor will throw
          *   an exception, whereas this routine will simply return \c null.
+         *
+         * This function is safe to use even if \a owner is a "pure"
+         * Triangulation<3> or SnapPeaTriangulation, not a packet type.
+         * In such a scenario, this routine will still build the normal
+         * surface list, but the resulting packet will be orphaned.
          *
          * See the class "enumeration constructor" for details on how this
          * routine works and what the arguments mean.
@@ -439,12 +444,13 @@ class NormalSurfaces :
          * @return the newly created normal surface list, or \c null if
          * an error occurred.
          */
-        [[deprecated]] static NormalSurfaces* enumerate(
-            Triangulation<3>& owner,
-            NormalCoords coords,
-            NormalList which = NS_LIST_DEFAULT,
-            NormalAlg algHints = NS_ALG_DEFAULT,
-            ProgressTracker* tracker = nullptr);
+        [[deprecated]] static std::shared_ptr<PacketOf<NormalSurfaces>>
+            enumerate(
+                Triangulation<3>& owner,
+                NormalCoords coords,
+                NormalList which = NS_LIST_DEFAULT,
+                NormalAlg algHints = NS_ALG_DEFAULT,
+                ProgressTracker* tracker = nullptr);
 
         /**
          * Returns the coordinate system that was originally used to enumerate
@@ -654,9 +660,10 @@ class NormalSurfaces :
          * <tt>NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD)</tt>, but
          * with two key differences:
          *
-         * - Unlike the transform constructor, this routine will also insert
-         *   the output list into the packet tree, beneath the same parent
-         *   packet as this (i.e., the same parent as the input list).
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
          * - If a precondition is not satisfied, then the class constructor
          *   will throw an exception, whereas this routine will simply return
@@ -672,11 +679,10 @@ class NormalSurfaces :
          *
          * @return a full list of vertex normal surfaces in standard normal
          * coordinates, or \c null if any of the preconditions were not
-         * satisfied.  This will be of type PacketOf<NormalSurfaces> if
-         * the list was successfully inserted into the packet tree, or
-         * of type NormalSurfaces if this list has no parent packet.
+         * satisfied.
          */
-        [[deprecated]] NormalSurfaces* quadToStandard() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            quadToStandard() const;
 
         /**
          * Deprecated function that converts the set of all embedded vertex
@@ -689,9 +695,10 @@ class NormalSurfaces :
          * <tt>NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD)</tt>, but
          * with two key differences:
          *
-         * - Unlike the transform constructor, this routine will also insert
-         *   the output list into the packet tree, beneath the same parent
-         *   packet as this (i.e., the same parent as the input list).
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
          * - If a precondition is not satisfied, then the class constructor
          *   will throw an exception, whereas this routine will simply return
@@ -707,11 +714,10 @@ class NormalSurfaces :
          *
          * @return a full list of vertex surfaces in standard almost normal
          * coordinates, or \c null if any of the preconditions were not
-         * satisfied.  This will be of type PacketOf<NormalSurfaces> if
-         * the list was successfully inserted into the packet tree, or
-         * of type NormalSurfaces if this list has no parent packet.
+         * satisfied.
          */
-        [[deprecated]] NormalSurfaces* quadOctToStandardAN() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            quadOctToStandardAN() const;
 
         /**
          * Deprecated function that converts the set of all embedded
@@ -724,9 +730,10 @@ class NormalSurfaces :
          * <tt>NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED)</tt>, but
          * with two key differences:
          *
-         * - Unlike the transform constructor, this routine will also insert
-         *   the output list into the packet tree, beneath the same parent
-         *   packet as this (i.e., the same parent as the input list).
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
          * - If a precondition is not satisfied, then the class constructor
          *   will throw an exception, whereas this routine will simply return
@@ -742,11 +749,10 @@ class NormalSurfaces :
          *
          * @return a full list of vertex normal surfaces in quadrilateral
          * coordinates, or \c null if any of the preconditions were not
-         * satisfied.  This will be of type PacketOf<NormalSurfaces> if
-         * the list was successfully inserted into the packet tree, or
-         * of type NormalSurfaces if this list has no parent packet.
+         * satisfied.
          */
-        [[deprecated]] NormalSurfaces* standardToQuad() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            standardToQuad() const;
 
         /**
          * Deprecated function that converts the set of all embedded vertex
@@ -759,9 +765,10 @@ class NormalSurfaces :
          * <tt>NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED)</tt>, but
          * with two key differences:
          *
-         * - Unlike the transform constructor, this routine will also insert
-         *   the output list into the packet tree, beneath the same parent
-         *   packet as this (i.e., the same parent as the input list).
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
          * - If a precondition is not satisfied, then the class constructor
          *   will throw an exception, whereas this routine will simply return
@@ -777,11 +784,10 @@ class NormalSurfaces :
          *
          * @return a full list of vertex surfaces in quadrilateral-octagon
          * coordinates, or \c null if any of the preconditions were not
-         * satisfied.  This will be of type PacketOf<NormalSurfaces> if
-         * the list was successfully inserted into the packet tree, or
-         * of type NormalSurfaces if this list has no parent packet.
+         * satisfied.
          */
-        [[deprecated]] NormalSurfaces* standardANToQuadOct() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            standardANToQuadOct() const;
 
         /**
          * Sorts the surfaces in this list according to the given criterion.
@@ -807,20 +813,18 @@ class NormalSurfaces :
          *
          * This routine is identical to calling the "filter constructor"
          * <tt>NormalSurfaces(*this, filter)</tt>, except that it also
-         * inserts the output list into the packet tree beneath the same
-         * parent packet as this (i.e., the same parent as the input list).
+         * wraps the output list in a packet and insert it beneath the same
+         * parent packet as this input list.  (If this list has no parent,
+         * then then new list will be orphaned.)
          *
          * See the "filter constructor" for details on how this routine works.
          *
          * \deprecated Just call the NormalSurfaces "filter constructor".
          *
-         * @return the new filtered list of surfaces.  This will be of type
-         * PacketOf<NormalSurfaces> if the list was successfully inserted
-         * into the packet tree, or of type NormalSurfaces if this list has
-         * no parent packet.
+         * @return the new filtered list of surfaces.
          */
-        [[deprecated]] NormalSurfaces* filter(const SurfaceFilter& filter)
-            const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>> filter(
+            const SurfaceFilter& filter) const;
 
         /**
          * Deprecated function to create a new list filled with those surfaces
@@ -830,9 +834,10 @@ class NormalSurfaces :
          * <tt>NormalSurfaces(*this, NS_FILTER_COMPATIBLE)</tt>, but
          * with two key differences:
          *
-         * - Unlike the transform constructor, this routine will also insert
-         *   the output list into the packet tree, beneath the same parent
-         *   packet as this (i.e., the same parent as the input list).
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
          * - If a precondition is not satisfied, then the class constructor
          *   will throw an exception, whereas this routine will simply return
@@ -845,12 +850,10 @@ class NormalSurfaces :
          *
          * \deprecated Just call the NormalSurfaces "transform constructor".
          *
-         * @return the new filtered list of surfaces.  This will be of type
-         * PacketOf<NormalSurfaces> if the list was successfully inserted
-         * into the packet tree, or of type NormalSurfaces if this list has
-         * no parent packet.
+         * @return the new filtered list of surfaces.
          */
-        [[deprecated]] NormalSurfaces* filterForLocallyCompatiblePairs() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            filterForLocallyCompatiblePairs() const;
 
         /**
          * Deprecated function to create a new list filled with those surfaces
@@ -860,9 +863,10 @@ class NormalSurfaces :
          * <tt>NormalSurfaces(*this, NS_FILTER_COMPATIBLE)</tt>, but
          * with two key differences:
          *
-         * - Unlike the transform constructor, this routine will also insert
-         *   the output list into the packet tree, beneath the same parent
-         *   packet as this (i.e., the same parent as the input list).
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
          * - If a precondition is not satisfied, then the class constructor
          *   will throw an exception, whereas this routine will simply return
@@ -877,12 +881,10 @@ class NormalSurfaces :
          *
          * \todo Deal properly with surfaces that are too large to handle.
          *
-         * @return the new filtered list of surfaces.  This will be of type
-         * PacketOf<NormalSurfaces> if the list was successfully inserted
-         * into the packet tree, or of type NormalSurfaces if this list has
-         * no parent packet.
+         * @return the new filtered list of surfaces.
          */
-        [[deprecated]] NormalSurfaces* filterForDisjointPairs() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            filterForDisjointPairs() const;
 
         /**
          * Deprecated function to create a new list filled with those surfaces
@@ -893,9 +895,10 @@ class NormalSurfaces :
          * <tt>NormalSurfaces(*this, NS_FILTER_INCOMPRESSIBLE)</tt>, but
          * with two key differences:
          *
-         * - Unlike the transform constructor, this routine will also insert
-         *   the output list into the packet tree, beneath the same parent
-         *   packet as this (i.e., the same parent as the input list).
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
          * - If a precondition is not satisfied, then the class constructor
          *   will throw an exception, whereas this routine will simply return
@@ -909,13 +912,10 @@ class NormalSurfaces :
          *
          * \deprecated Just call the NormalSurfaces "transform constructor".
          *
-         * @return the new filtered list of surfaces.  This will be of type
-         * PacketOf<NormalSurfaces> if the list was successfully inserted
-         * into the packet tree, or of type NormalSurfaces if this list has
-         * no parent packet.
+         * @return the new filtered list of surfaces.
          */
-        [[deprecated]] NormalSurfaces* filterForPotentiallyIncompressible()
-            const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            filterForPotentiallyIncompressible() const;
 
         /**
          * Returns the matching equations that were used to create this
@@ -1267,7 +1267,7 @@ class NormalSurfaces :
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
                          or \c null if no progress tracker is in use. */
-                Packet* treeParent_;
+                std::shared_ptr<Packet> treeParent_;
                     /**< The parent packet in the tree, if we should insert the
                          finished list into the packet tree once enumeration
                          has finished, or \c null if we should not. */
@@ -1280,7 +1280,8 @@ class NormalSurfaces :
                  * the inherited interface of a PacketOf<NormalSurfaces>.
                  */
                 Enumerator(NormalSurfaces* list, const MatrixInt& eqns,
-                    ProgressTracker* tracker, Packet* treeParent);
+                    ProgressTracker* tracker,
+                    std::shared_ptr<Packet> treeParent);
 
                 /**
                  * Default move constructor.
@@ -1626,138 +1627,127 @@ inline void NormalSurfaces::sort(Comparison&& comp) {
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 
-inline NormalSurfaces* NormalSurfaces::quadToStandard() const {
-    const Packet* p = packet();
-    Packet* parent = (p ? p->parent() : nullptr);
+inline std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::quadToStandard() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
 
     try {
-        if (parent) {
-            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
-                NS_CONV_REDUCED_TO_STD);
+        auto ans = makePacket<NormalSurfaces>(
+            std::in_place, *this, NS_CONV_REDUCED_TO_STD);
+        if (parent)
             parent->insertChildLast(ans);
-            return ans;
-        } else
-            return new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
-    } catch (const FailedPrecondition&) {
-        return nullptr;
-    }
-}
-
-inline NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
-    const Packet* p = packet();
-    Packet* parent = (p ? p->parent() : nullptr);
-
-    try {
-        if (parent) {
-            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
-                NS_CONV_REDUCED_TO_STD);
-            parent->insertChildLast(ans);
-            return ans;
-        } else
-            return new NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD);
-    } catch (const FailedPrecondition&) {
-        return nullptr;
-    }
-}
-
-inline NormalSurfaces* NormalSurfaces::standardToQuad() const {
-    const Packet* p = packet();
-    Packet* parent = (p ? p->parent() : nullptr);
-
-    try {
-        if (parent) {
-            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
-                NS_CONV_STD_TO_REDUCED);
-            parent->insertChildLast(ans);
-            return ans;
-        } else
-            return new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
-    } catch (const FailedPrecondition&) {
-        return nullptr;
-    }
-}
-
-inline NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
-    const Packet* p = packet();
-    Packet* parent = (p ? p->parent() : nullptr);
-
-    try {
-        if (parent) {
-            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
-                NS_CONV_STD_TO_REDUCED);
-            parent->insertChildLast(ans);
-            return ans;
-        } else
-            return new NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED);
-    } catch (const FailedPrecondition&) {
-        return nullptr;
-    }
-}
-
-inline NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs() const {
-    const Packet* p = packet();
-    Packet* parent = (p ? p->parent() : nullptr);
-
-    try {
-        if (parent) {
-            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
-                NS_FILTER_COMPATIBLE);
-            parent->insertChildLast(ans);
-            return ans;
-        } else
-            return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
-    } catch (const FailedPrecondition&) {
-        return nullptr;
-    }
-}
-
-inline NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
-    const Packet* p = packet();
-    Packet* parent = (p ? p->parent() : nullptr);
-
-    try {
-        if (parent) {
-            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
-                NS_FILTER_DISJOINT);
-            parent->insertChildLast(ans);
-            return ans;
-        } else
-            return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
-    } catch (const FailedPrecondition&) {
-        return nullptr;
-    }
-}
-
-inline NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
-        const {
-    const Packet* p = packet();
-    Packet* parent = (p ? p->parent() : nullptr);
-
-    try {
-        if (parent) {
-            auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this,
-                NS_FILTER_INCOMPRESSIBLE);
-            parent->insertChildLast(ans);
-            return ans;
-        } else
-            return new NormalSurfaces(*this, NS_FILTER_COMPATIBLE);
-    } catch (const FailedPrecondition&) {
-        return nullptr;
-    }
-}
-
-inline NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter& filter)
-        const {
-    const Packet* p = packet();
-    Packet* parent = (p ? p->parent() : nullptr);
-
-    if (parent) {
-        auto ans = new PacketOf<NormalSurfaces>(std::in_place, *this, filter);
-        parent->insertChildLast(ans);
         return ans;
-    } else {
-        return new NormalSurfaces(*this, filter);
+    } catch (const FailedPrecondition&) {
+        return {};
     }
+}
+
+inline std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::quadOctToStandardAN() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(
+            std::in_place, *this, NS_CONV_REDUCED_TO_STD);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return {};
+    }
+}
+
+inline std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::standardToQuad() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(
+            std::in_place, *this, NS_CONV_STD_TO_REDUCED);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return {};
+    }
+}
+
+inline std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::standardANToQuadOct() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(
+            std::in_place, *this, NS_CONV_STD_TO_REDUCED);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return {};
+    }
+}
+
+inline std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::filterForLocallyCompatiblePairs() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+            NS_FILTER_COMPATIBLE);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return {};
+    }
+}
+
+inline std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::filterForDisjointPairs() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+            NS_FILTER_DISJOINT);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return {};
+    }
+}
+
+inline std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::filterForPotentiallyIncompressible() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+            NS_FILTER_INCOMPRESSIBLE);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return {};
+    }
+}
+
+inline std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::filter(
+        const SurfaceFilter& filter) const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    auto ans = makePacket<NormalSurfaces>(std::in_place, *this, filter);
+    if (parent)
+        parent->insertChildLast(ans);
+    return ans;
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator() {
@@ -1830,7 +1820,8 @@ inline void swap(NormalSurfaces& lhs, NormalSurfaces& rhs) {
 }
 
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
-        const MatrixInt& eqns, ProgressTracker* tracker, Packet* treeParent) :
+        const MatrixInt& eqns, ProgressTracker* tracker,
+        std::shared_ptr<Packet> treeParent) :
         list_(list), eqns_(eqns), tracker_(tracker), treeParent_(treeParent) {
 }
 

@@ -36,7 +36,6 @@
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using namespace regina::python;
@@ -51,7 +50,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
     SafeIterator<NormalHypersurfaces>::addBindings(m,
         "NormalHypersurfaceIterator");
 
-    auto l = pybind11::class_<NormalHypersurfaces>(m, "NormalHypersurfaces")
+    auto l = pybind11::class_<NormalHypersurfaces,
+            std::shared_ptr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
         .def(pybind11::init<const Triangulation<4>&, HyperCoords,
                 regina::HyperList, regina::HyperAlg, ProgressTracker*>(),
             pybind11::arg(), pybind11::arg(),
@@ -62,21 +62,18 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         .def("swap", &NormalHypersurfaces::swap)
         .def_static("enumerate", [](Triangulation<4>& owner,
                 HyperCoords coords, regina::HyperList which,
-                regina::HyperAlg algHints) -> NormalHypersurfaces* {
+                regina::HyperAlg algHints) {
             // This is deprecated, so we reimplement it here ourselves.
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to NormalHypersurfaces.
             try {
-                if (regina::Packet* p = owner.packet()) {
-                    auto ans = new regina::PacketOf<NormalHypersurfaces>(
-                        std::in_place, owner, coords, which, algHints);
+                auto ans = regina::makePacket<NormalHypersurfaces>(
+                    std::in_place, owner, coords, which, algHints);
+                if (auto p = owner.packet())
                     p->insertChildLast(ans);
-                    return ans;
-                } else
-                    return new NormalHypersurfaces(owner, coords, which,
-                        algHints);
+                return ans;
             } catch (const regina::NoMatchingEquations&) {
-                return nullptr;
+                return std::shared_ptr<regina::PacketOf<NormalHypersurfaces>>();
             }
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,

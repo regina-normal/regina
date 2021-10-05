@@ -105,7 +105,7 @@ XMLElementReader* XMLNormalHypersurfaceReader::startSubElement(
 }
 
 XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id,
         const regina::xml::XMLPropertyDict& props) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
@@ -121,7 +121,7 @@ XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
             valueOf(props.lookup("type"), listType) &&
             valueOf(props.lookup("algorithm"), algorithm)) {
         // Parameters look sane; create the empty list.
-        list_ = new PacketOf<NormalHypersurfaces>(std::in_place,
+        list_ = makePacket<NormalHypersurfaces>(std::in_place,
             static_cast<HyperCoords>(coords),
             HyperList::fromInt(listType),
             HyperAlg::fromInt(algorithm),
@@ -166,19 +166,19 @@ XMLElementReader* XMLLegacyNormalHypersurfacesReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list_ = new PacketOf<NormalHypersurfaces>(std::in_place,
+                    list_ = makePacket<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
                         HyperList::fromInt(listType),
                         HyperAlg::fromInt(algorithm),
-                        *tri_);
+                        tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old prerelease format.
-                    list_ = new PacketOf<NormalHypersurfaces>(std::in_place,
+                    list_ = makePacket<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
                         HS_LEGACY | (embedded ?
                             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
                         HS_ALG_LEGACY,
-                        *tri_);
+                        tri_);
                 }
             }
         }

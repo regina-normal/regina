@@ -102,7 +102,8 @@ class Text : public Packet {
         virtual void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket(
+            std::shared_ptr<Packet> parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
@@ -146,8 +147,9 @@ inline void Text::writeTextLong(std::ostream& o) const {
     o << text_ << '\n';
 }
 
-inline Packet* Text::internalClonePacket(Packet*) const {
-    return new Text(text_);
+inline std::shared_ptr<Packet> Text::internalClonePacket(
+        std::shared_ptr<Packet>) const {
+    return std::make_shared<Text>(text_);
 }
 
 } // namespace regina

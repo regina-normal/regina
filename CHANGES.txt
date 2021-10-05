@@ -25,6 +25,11 @@ Version 7.0  [ TODO ]
           packet tree, and indeed their triangulations may change or
           even be deleted.  Lists will maintain a "snapshot" of the original
           triangulation if necessary.
+        - All packet types are now managed exclusively by std::shared_ptr
+          (a promise from the engine, but also a new requirement for the user).
+          All non-packet types (including all mathematical objects, which are
+          now standalone types) have full value semantics, supporting copy,
+          move, swap and assignment operations wherever this makes sense.
         - Now requires C++17 (not C++14).
         - Updated the bundled copy of Normaliz to version 3.8.9 (26 Sep 2020).
         - Updated the SnapPea kernel to the one shipped with SnapPy 2.8.
@@ -81,7 +86,8 @@ Version 7.0  [ TODO ]
               returning null).  The new class constructor allows you to choose
               your preferred enumeration algorithm via an AngleAlg argument.
               The old enumerate() and enumerateTautDD() functions are kept as
-              deprecated aliases.
+              deprecated aliases, and now explicitly return packets
+              (not "pure" AngleStructures objects).
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added begin() and end() for iteration through angle strutures.
@@ -623,7 +629,9 @@ Version 7.0  [ TODO ]
               throw an exception on error (instead of returning null),
               and will not insert the new list into the packet tree.
               The old enumerate() function is kept as a deprecated alias,
-              but Python users can no longer use it with a progress tracker.
+              but (a) it now explicitly returns a packet (not a "pure"
+              NormalHypersurfaces object), and (b) Python users can no longer
+              use it with a progress tracker.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added begin() and end() for iteration through hypersurfaces.
@@ -688,7 +696,9 @@ Version 7.0  [ TODO ]
               throw an exception on error (instead of returning null),
               and will not insert the new list into the packet tree.
               The old enumerate() function is kept as a deprecated alias,
-              but Python users can no longer use it with a progress tracker.
+              but (a) it now explicitly returns a packet (not a "pure"
+              NormalSurfaces object), and (b) Python users can no longer
+              use it with a progress tracker.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Replaced quadToStandard(), quadOctToStandardAN(),
@@ -730,6 +740,11 @@ Version 7.0  [ TODO ]
               not by pointer.  Also removed the static versions of makeMirror();
               only the virtual (non-static) function is used.
         Class Packet:
+            - Packets are now managed exclusively by std::shared_ptr.
+              Creating a new packet *without* wrapping it in a std::shared_ptr
+              is no longer allowed.  To convert an existing raw packet pointer
+              into a std::shared_ptr, use shared_from_this().  The old
+              safeDelete() is now removed.
             - Inner class ChangeEventSpan's constructor now takes its
               argument by reference.
             - Routines dependsOnParent() and isPacketEditable() are
@@ -737,15 +752,25 @@ Version 7.0  [ TODO ]
             - Routines save() and writeXMLFile() now take an optional
               XML file format argument.
             - Iteration routines begin(), end(), children(), descendants()
-              now come in const and non-const versions, and the corresponding
+              now come in const and non-const versions.  The corresponding
               iterator / iteration classes ChildIterator, SubtreeIterator,
-              PacketChildren, PacketDescendants are now templated
-              according to constness.
+              PacketChildren, PacketDescendants are now templated according
+              to constness, all dereference iterators now return packets by
+              reference instead of by pointer, and all iterators can now
+              be tested for dereferencability by casting to bool.
             - Functions firstTreePacket(type) and nextTreePacket(type) now
               take type as a PacketType, not a string.  The old functions
               are removed completely, because the typeName() string is
               not guaranteed to stay constant between releases.
             - Removed the "tree insertion constructor", which was never used.
+            - New function hasParent().
+            - Renamed isGrandparentOf() to isAncestorOf().  The old name
+              is kept as a deprecated alias.
+            - Renamed clone() to cloneAsSibling(), since this is not
+              just a plain copy operation and it will not always succeed.
+              The old clone() name is removed completely.
+            - All member functions that used to take or return a raw Packet
+              pointer now take or return a shared_ptr instead.
         Class PacketData<Held>, PacketOf<Held>:
             - New template classes to support the new "wrapped" packet types.
         Class PacketInfo:
@@ -863,6 +888,8 @@ Version 7.0  [ TODO ]
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
         Class Returns, ReturnsTraits:
+            - Removed completely.
+        Class SafePtr, SafePointeeBase:
             - Removed completely.
         Class SatAnnulus:
             - Routines transform() and image() now takes their arguments by
@@ -1250,14 +1277,18 @@ Version 7.0  [ TODO ]
         Function preImageOfLattice():
             - Now returns a MatrixInt by value.
         Function readOrb():
-            - Like the other import function in foreign, this routine returns
+            - Like the other import functions in foreign, this routine returns
               a packet; this means that the return type has changed from
               Triangulation<3> to PacketOfTriangulation<3>.
+            - Now returns a shared_ptr instead of a raw pointer.
+        Function readDehydrationList():
+            - Now returns a shared_ptr instead of a raw pointer.
         Function readSigList(), readIsoSigList():
             - The old readIsoSigList() is now deprecated, in favour of a new
               template function readSigList() that can work with knots and
               also triangulations of any dimension.  The old readIsoSigList()
               has been kept as a deprecated alias.
+            - Now returns a shared_ptr instead of a raw pointer.
         Function smithNormalForm(), metricalSmithNormalForm():
             - The change of basis matrices no longer need to have the correct
               size (and may even be uninitialised) before they are passed in.

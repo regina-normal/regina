@@ -32,14 +32,13 @@
 
 #include "../pybind11/pybind11.h"
 #include "packet/text.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Text;
 
 void addText(pybind11::module_& m) {
-    pybind11::class_<Text, regina::Packet, regina::SafePtr<Text>>(m, "Text")
+    pybind11::class_<Text, regina::Packet, std::shared_ptr<Text>>(m, "Text")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const char*>())

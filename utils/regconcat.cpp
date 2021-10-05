@@ -83,14 +83,13 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "No data files have been supplied.");
 
     // Read the input files one by one.
-    regina::Packet* ans = new regina::Container();
+    std::shared_ptr<regina::Packet> ans = std::make_shared<regina::Container>();
     ans->setLabel("Combined Data");
 
     bool error = false;
-    regina::Packet* data;
     for(std::list<std::string>::const_iterator it = files.begin();
             it != files.end(); it++) {
-        data = regina::open(it->c_str());
+        std::shared_ptr<regina::Packet> data = regina::open(it->c_str());
         if (!data) {
             std::cerr << "File " << *it << " could not be read.\n";
             error = true;
@@ -108,7 +107,6 @@ int main(int argc, char* argv[]) {
         error = true;
     }
 
-    delete ans;
     return (error ? 1 : 0);
 }
 

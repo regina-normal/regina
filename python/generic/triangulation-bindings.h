@@ -35,7 +35,6 @@
 #include "../pybind11/stl.h"
 #include "../helpers.h"
 #include "triangulation/generic.h"
-#include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -70,7 +69,8 @@ namespace {
 
 template <int dim>
 void addTriangulation(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<Triangulation<dim>>(m, name)
+    auto c = pybind11::class_<Triangulation<dim>,
+            std::shared_ptr<Triangulation<dim>>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<dim>&>())
         .def(pybind11::init<const Triangulation<dim>&, bool>())

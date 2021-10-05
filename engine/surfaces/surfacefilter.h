@@ -170,7 +170,8 @@ class SurfaceFilter : public Packet {
         virtual void writeTextShort(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket(
+            std::shared_ptr<Packet> parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
@@ -230,7 +231,8 @@ class SurfaceFilterCombination : public SurfaceFilter {
         virtual void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket(
+            std::shared_ptr<Packet> parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
@@ -398,7 +400,8 @@ class SurfaceFilterProperties : public SurfaceFilter {
         virtual void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket(
+            std::shared_ptr<Packet> parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
@@ -428,8 +431,9 @@ inline void SurfaceFilter::writeTextShort(std::ostream& o) const {
     o << filterTypeName();
 }
 
-inline Packet* SurfaceFilter::internalClonePacket(Packet*) const {
-    return new SurfaceFilter();
+inline std::shared_ptr<Packet> SurfaceFilter::internalClonePacket(
+        std::shared_ptr<Packet>) const {
+    return std::make_shared<SurfaceFilter>();
 }
 
 // Inline functions for SurfaceFilterCombination
@@ -455,8 +459,9 @@ inline void SurfaceFilterCombination::writeTextLong(std::ostream& o) const {
     o << (usesAnd_ ? "AND" : "OR") << " combination normal surface filter\n";
 }
 
-inline Packet* SurfaceFilterCombination::internalClonePacket(Packet*) const {
-    return new SurfaceFilterCombination(*this);
+inline std::shared_ptr<Packet> SurfaceFilterCombination::internalClonePacket(
+        std::shared_ptr<Packet>) const {
+    return std::make_shared<SurfaceFilterCombination>(*this);
 }
 
 // Inline functions for SurfaceFilterProperties
@@ -530,8 +535,9 @@ inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
     }
 }
 
-inline Packet* SurfaceFilterProperties::internalClonePacket(Packet*) const {
-    return new SurfaceFilterProperties(*this);
+inline std::shared_ptr<Packet> SurfaceFilterProperties::internalClonePacket(
+        std::shared_ptr<Packet>) const {
+    return std::make_shared<SurfaceFilterProperties>(*this);
 }
 
 } // namespace regina

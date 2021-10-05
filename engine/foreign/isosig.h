@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include <memory>
 
 namespace regina {
 
@@ -105,7 +106,7 @@ class Container;
  * \ingroup foreign
  */
 template <class PacketType>
-Container* readSigList(const char *filename,
+std::shared_ptr<Container> readSigList(const char *filename,
     unsigned colSigs = 0, int colLabels = -1, unsigned long ignoreLines = 0);
 
 /**
@@ -140,7 +141,7 @@ Container* readSigList(const char *filename,
  *
  * \ingroup foreign
  */
-[[deprecated]] Container* readIsoSigList(const char *filename,
+[[deprecated]] std::shared_ptr<Container> readIsoSigList(const char *filename,
     unsigned dimension = 3, unsigned colSigs = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
 

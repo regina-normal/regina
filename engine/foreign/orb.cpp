@@ -101,10 +101,10 @@ const int vertex_at_faces[4][4] =
  * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure.
  */
-PacketOf<Triangulation<3>>* cassonToTriangulation( CassonFormat *cf )
- {
+std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
+        CassonFormat *cf ) {
  int i;
- PacketOf<Triangulation<3>>* triang = new PacketOf<Triangulation<3>>();
+ auto triang = makePacket<Triangulation<3>>(std::in_place);
  // since CassonFormat does not allow naming of triangulations,
  //  triang is given a name in the readOrb() function.
  //  I try to mimic Triangulation<3>::readSnapPea and
@@ -353,14 +353,14 @@ void freeCassonFormat( CassonFormat *cf )
  * data structure, and to use standard C++ string and I/O streams
  * instead of Qt strings and I/O streams.
  */
-PacketOf<Triangulation<3>>* readTriangulation( std::istream &ts) {
+std::shared_ptr<PacketOf<Triangulation<3>>> readTriangulation(std::istream &ts) {
     std::string line, file_id;
 
     getline(ts, line);
     if (line != "% orb") {
         std::cerr << "Orb / Casson file is not in the correct format."
             << std::endl;
-        return nullptr;
+        return {};
     }
 
     getline(ts, file_id);
@@ -369,10 +369,10 @@ PacketOf<Triangulation<3>>* readTriangulation( std::istream &ts) {
     if (! verifyCassonFormat( cf )) {
         std::cerr << "Error verifying Orb / Casson file." << std::endl;
         freeCassonFormat( cf );
-        return nullptr;
+        return {};
     }
 
-    PacketOf<Triangulation<3>>* manifold = cassonToTriangulation( cf );
+    auto manifold = cassonToTriangulation( cf );
     freeCassonFormat( cf );
 
     manifold->setLabel(file_id);
@@ -381,12 +381,12 @@ PacketOf<Triangulation<3>>* readTriangulation( std::istream &ts) {
 
 } // End anonymous namespace
 
-PacketOf<Triangulation<3>>* readOrb(const char *filename) {
+std::shared_ptr<PacketOf<Triangulation<3>>> readOrb(const char *filename) {
     std::ifstream file(filename);
 
     if (! file) {
         std::cerr << "Error opening Orb / Casson file." << std::endl;
-        return nullptr;
+        return {};
     }
 
     return readTriangulation(file);

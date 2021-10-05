@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
             "Only uncompressed XML can be written to standard output.");
 
     // Read the old file.
-    regina::Packet* tree = regina::open(oldFile.c_str());
+    std::shared_ptr<regina::Packet> tree = regina::open(oldFile.c_str());
     if (! tree) {
         std::cerr << "File " << oldFile << " could not be read.\n";
         return 1;
@@ -134,11 +134,9 @@ int main(int argc, char* argv[]) {
 
     if (! result) {
         std::cerr << "File " << newFile << " could not be written.\n";
-        delete tree;
         return 1;
     }
 
-    delete tree;
     return 0;
 }
 

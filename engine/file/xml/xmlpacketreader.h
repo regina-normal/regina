@@ -68,8 +68,7 @@ class XMLTreeResolver;
  * be overridden for processing of non-packet XML subelements.
  *
  * If routine abort() is overridden, it \e must at some point call
- * XMLPacketReader::abort() which will destroy whatever new packets
- * have already been created.
+ * XMLPacketReader::abort().
  *
  * The XML packet reader should read everything that
  * Packet::writeXMLPacketData() writes, excluding the contents of
@@ -92,7 +91,7 @@ class XMLTreeResolver;
  */
 class XMLPacketReader : public XMLElementReader {
     private:
-        Packet* packet_ { nullptr };
+        std::shared_ptr<Packet> packet_;
             /**< The packet that has been read and constructed.  This is
                  \c null until commit() is called, at which point it is
                  non-null unless an error occurred during reading or
@@ -110,7 +109,7 @@ class XMLPacketReader : public XMLElementReader {
             /**< The master resolver that will be used to fix dangling packet
                  references after the entire XML file has been read. */
 
-        Packet* parent_;
+        std::shared_ptr<Packet> parent_;
             /**< The location in the packet tree beneath which this packet
                  should be inserted.  This may only be \c null if (i) \a anon
                  is \c true, or (ii) this packet reader represents the root
@@ -143,8 +142,9 @@ class XMLPacketReader : public XMLElementReader {
          * tree, as used for cross-referencing between packets in the XML
          * data file, or the empty string if this packet has no ID.
          */
-        XMLPacketReader(XMLTreeResolver& resolver, Packet* parent, bool anon,
-            std::string label, std::string id);
+        XMLPacketReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
         /**
          * Returns the newly allocated packet that has been read and
@@ -180,7 +180,7 @@ class XMLPacketReader : public XMLElementReader {
          * @return the packet that has been constructed, or \c null if
          * this is not possible given the data that has been read.
          */
-        virtual Packet* packetToCommit();
+        virtual std::shared_ptr<Packet> packetToCommit();
 
         /**
          * Used instead of startSubElement() for XML subelements that
@@ -259,12 +259,13 @@ class XMLPacketReader : public XMLElementReader {
 // Inline functions for XMLPacketReader
 
 inline XMLPacketReader::XMLPacketReader(XMLTreeResolver& resolver,
-        Packet* parent, bool anon, std::string label, std::string id) :
+        std::shared_ptr<Packet> parent, bool anon, std::string label,
+        std::string id) :
         resolver_(resolver), parent_(parent), anon_(anon),
         label_(std::move(label)), id_(std::move(id)) {
 }
 
-inline Packet* XMLPacketReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLPacketReader::packetToCommit() {
     return nullptr;
 }
 

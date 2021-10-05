@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides basic tests of the SafePtr
+# Provides basic tests of the shared_ptr holder types
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -31,9 +31,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# NOTE: Since the move to pybind11 and Packet::safeDelete(), python references
-# to packets never expire.  Therefore we should never raise any exceptions.
-# in this test.
+# NOTE: Since Regina 5.96, python references to packets never expire.
+# Therefore we should never raise any exceptions in this test.
 
 print("Constructor:")
 

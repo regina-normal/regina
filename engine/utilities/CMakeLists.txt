@@ -37,8 +37,6 @@ if (${REGINA_INSTALL_DEV})
     osutils.h
     qitmask.h
     randutils.h
-    safepointeebase.h
-    safeptr.h
     sequence.h
     shortarray.h
     sigutils.h

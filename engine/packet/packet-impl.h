@@ -60,7 +60,7 @@ void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
         // the second-generation format required the triangulation to be
         // the parent packet, and for the third-generation format requires
         // the triangulation to have been written to file earlier than the list.
-        const Packet* triPacket;
+        std::shared_ptr<const Packet> triPacket;
         if constexpr (XMLWriter<Held>::dimension == 3)
             triPacket = this->triangulation().inAnyPacket();
         else
@@ -77,10 +77,10 @@ void PacketOf<Held>::writeXMLPacketData(std::ostream& out, FileFormat format,
         if (triPacket) {
             // We know from addPacketRefs() that refs contains the
             // triangulation.
-            if (! refs.find(triPacket)->second) {
+            if (! refs.find(triPacket.get())->second) {
                 // The triangulation has not yet been written to file.
                 // Do it now.
-                writeXMLAnon(out, format, refs, triPacket);
+                writeXMLAnon(out, format, refs, *triPacket);
             }
 
             writer.wroteTriangulationID(triPacket->internalID());
@@ -133,11 +133,11 @@ template <typename Held>
 void PacketOf<Held>::addPacketRefs(PacketRefs& refs) const {
     if constexpr (XMLWriter<Held>::requiresTriangulation) {
         if constexpr (XMLWriter<Held>::dimension == 3) {
-            if (const Packet* p = Held::triangulation().inAnyPacket())
-                refs.insert({ p, false });
+            if (auto p = Held::triangulation().inAnyPacket())
+                refs.insert({ p.get(), false });
         } else {
-            if (const Packet* p = Held::triangulation().packet())
-                refs.insert({ p, false });
+            if (auto p = Held::triangulation().packet())
+                refs.insert({ p.get(), false });
         }
     }
 }

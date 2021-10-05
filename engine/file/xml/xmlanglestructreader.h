@@ -91,7 +91,7 @@ class XMLAngleStructureReader : public XMLElementReader {
  */
 class XMLAngleStructuresReader : public XMLPacketReader {
     private:
-        PacketOf<AngleStructures>* list_;
+        std::shared_ptr<PacketOf<AngleStructures>> list_;
             /**< The angle structure list currently being read. */
         const Triangulation<3>* tri_;
             /**< The triangulation on which these angle structures
@@ -106,11 +106,11 @@ class XMLAngleStructuresReader : public XMLPacketReader {
          *
          * @param props the attributes of the \c angles XML element.
          */
-        XMLAngleStructuresReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id,
-            const regina::xml::XMLPropertyDict& props);
+        XMLAngleStructuresReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -126,9 +126,9 @@ class XMLAngleStructuresReader : public XMLPacketReader {
  */
 class XMLLegacyAngleStructuresReader : public XMLPacketReader {
     private:
-        PacketOf<AngleStructures>* list_;
+        std::shared_ptr<PacketOf<AngleStructures>> list_;
             /**< The angle structure list currently being read. */
-        const Triangulation<3>* tri_;
+        const Triangulation<3>& tri_;
             /**< The triangulation on which these angle structures
                  are placed. */
 
@@ -140,13 +140,13 @@ class XMLLegacyAngleStructuresReader : public XMLPacketReader {
          * parent class XMLPacketReader.
          *
          * @param tri the triangulation on which these angle
-         * structures are placed.  This must be non-null.
+         * structures are placed.
          */
         XMLLegacyAngleStructuresReader(XMLTreeResolver& resolver,
-            Packet* parent, bool anon, std::string label, std::string id,
-            const Triangulation<3>* tri);
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const Triangulation<3>& tri);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -167,20 +167,20 @@ inline std::optional<AngleStructure>& XMLAngleStructureReader::structure() {
 
 // Inline functions for XMLAngleStructuresReader
 
-inline Packet* XMLAngleStructuresReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLAngleStructuresReader::packetToCommit() {
     return list_;
 }
 
 // Inline functions for XMLLegacyAngleStructuresReader
 
 inline XMLLegacyAngleStructuresReader::XMLLegacyAngleStructuresReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
-        std::string label, std::string id, const Triangulation<3>* tri) :
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id, const Triangulation<3>& tri) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         list_(nullptr), tri_(tri) {
 }
 
-inline Packet* XMLLegacyAngleStructuresReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLLegacyAngleStructuresReader::packetToCommit() {
     return list_;
 }
 

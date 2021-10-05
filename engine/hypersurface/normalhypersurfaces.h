@@ -283,9 +283,9 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * This static routine is identical to calling the class
          * constructor with the given arguments, but with two differences:
          *
-         * - Unlike the class constructor, this routine will also insert
-         *   the normal hypersurface list beneath \a owner in the packet tree
-         *   (but only if \a owner actually has a packet that contains it).
+         * - Unlike the class constructor, this routine will also wrap
+         *   the new normal hypersurface list in a packet and insert it
+         *   beneath \a owner in the packet tree.
          *   If a progress tracker is passed (which means the enumeration runs
          *   in a background thread), the tree insertion will not happen until
          *   the enumeration has finished (and if the user cancels the
@@ -293,6 +293,11 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *
          * - If there is an error, then the class constructor will throw
          *   an exception, whereas this routine will simply return \c null.
+         *
+         * This function is safe to use even if \a owner is a "pure"
+         * Triangulation<4>, not a packet type.  In such a scenario, this
+         * routine will still build the normal hypersurface list, but the
+         * resulting packet will be orphaned.
          *
          * See the class constructor for details on how this routine works
          * and what the arguments mean.
@@ -316,12 +321,13 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * @return the newly created normal hypersurface list, or \c null
          * if an error occured.
          */
-        [[deprecated]] static NormalHypersurfaces* enumerate(
-            Triangulation<4>& owner,
-            HyperCoords coords,
-            HyperList which = HS_LIST_DEFAULT,
-            HyperAlg algHints = HS_ALG_DEFAULT,
-            ProgressTracker* tracker = nullptr);
+        [[deprecated]] static std::shared_ptr<PacketOf<NormalHypersurfaces>>
+            enumerate(
+                Triangulation<4>& owner,
+                HyperCoords coords,
+                HyperList which = HS_LIST_DEFAULT,
+                HyperAlg algHints = HS_ALG_DEFAULT,
+                ProgressTracker* tracker = nullptr);
 
         /**
          * Returns the coordinate system that was originally used to enumerate
@@ -701,7 +707,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
                          or \c null if no progress tracker is in use. */
-                Packet* treeParent_;
+                std::shared_ptr<Packet> treeParent_;
                     /**< The parent packet in the tree, if we should insert the
                          finished list into the packet tree once enumeration
                          has finished, or \c null if we should not. */
@@ -714,7 +720,8 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                  * the inherited interface of a PacketOf<NormalHypersurfaces>.
                  */
                 Enumerator(NormalHypersurfaces* list, const MatrixInt& eqns,
-                    ProgressTracker* tracker, Packet* treeParent);
+                    ProgressTracker* tracker,
+                    std::shared_ptr<Packet> treeParent);
 
                 /**
                  * Default move constructor.
@@ -1064,7 +1071,8 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
 }
 
 inline NormalHypersurfaces::Enumerator::Enumerator(NormalHypersurfaces* list,
-        const MatrixInt& eqns, ProgressTracker* tracker, Packet* treeParent) :
+        const MatrixInt& eqns, ProgressTracker* tracker,
+        std::shared_ptr<Packet> treeParent) :
         list_(list), eqns_(eqns), tracker_(tracker), treeParent_(treeParent) {
 }
 

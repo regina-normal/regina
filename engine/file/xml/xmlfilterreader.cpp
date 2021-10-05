@@ -73,17 +73,17 @@ void XMLLegacyFilterReader::endContentSubElement(const std::string& subTagName,
 }
 
 XMLCombinationFilterReader::XMLCombinationFilterReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id,
         const regina::xml::XMLPropertyDict& props) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         filter_(nullptr) {
     std::string type = props.lookup("op");
     if (type == "and") {
-        filter_ = new SurfaceFilterCombination();
+        filter_ = std::make_shared<SurfaceFilterCombination>();
         filter_->setUsesAnd(true);
     } else if (type == "or") {
-        filter_ = new SurfaceFilterCombination();
+        filter_ = std::make_shared<SurfaceFilterCombination>();
         filter_->setUsesAnd(false);
     }
 }
@@ -95,10 +95,10 @@ XMLElementReader* XMLLegacyCombinationFilterReader::startContentSubElement(
         if (subTagName == "op") {
             std::string type = props.lookup("type");
             if (type == "and") {
-                filter_ = new SurfaceFilterCombination();
+                filter_ = std::make_shared<SurfaceFilterCombination>();
                 filter_->setUsesAnd(true);
             } else if (type == "or") {
-                filter_ = new SurfaceFilterCombination();
+                filter_ = std::make_shared<SurfaceFilterCombination>();
                 filter_->setUsesAnd(false);
             }
         }
@@ -106,7 +106,7 @@ XMLElementReader* XMLLegacyCombinationFilterReader::startContentSubElement(
 }
 
 XMLPropertiesFilterReader::XMLPropertiesFilterReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id,
         const regina::xml::XMLPropertyDict& props) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
@@ -135,7 +135,7 @@ XMLPropertiesFilterReader::XMLPropertiesFilterReader(
         realbdry.fill();
 
     // We have successfully parsed the BoolSet attributes.
-    filter_ = new SurfaceFilterProperties();
+    filter_ = std::make_shared<SurfaceFilterProperties>();
     filter_->setOrientability(orbl);
     filter_->setCompactness(compact);
     filter_->setRealBoundary(realbdry);
@@ -151,8 +151,7 @@ XMLPropertiesFilterReader::XMLPropertiesFilterReader(
                 filter_->addEulerChar(i);
             else {
                 // We cannot parse the list of Euler characteristics.  Abort.
-                delete filter_;
-                filter_ = nullptr;
+                filter_.reset();
                 return;
             }
         }

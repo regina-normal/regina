@@ -32,8 +32,6 @@
 
 #include "triangulation-bindings.h"
 
-CONVERT_FROM_UNIQUE_PTR(regina::Triangulation<6>)
-
 void addTriangulations6(pybind11::module_& m) {
     addTriangulation<6>(m, "Triangulation6");
 }

@@ -62,16 +62,18 @@ void SurfaceFilter::writeXMLPacketData(std::ostream& out,
 bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
     if (usesAnd_) {
         // Combine all child filters using AND.
-        for (Packet* child = firstChild(); child; child = child->nextSibling())
+        for (auto child = firstChild(); child; child = child->nextSibling())
             if (child->type() == PACKET_SURFACEFILTER)
-                if (! (dynamic_cast<SurfaceFilter*>(child)->accept(surface)))
+                if (! (std::dynamic_pointer_cast<SurfaceFilter>(child)->accept(
+                        surface)))
                     return false;
         return true;
     } else {
         // Combine all child filters using OR.
-        for (Packet* child = firstChild(); child; child = child->nextSibling())
+        for (auto child = firstChild(); child; child = child->nextSibling())
             if (child->type() == PACKET_SURFACEFILTER)
-                if (dynamic_cast<SurfaceFilter*>(child)->accept(surface))
+                if (std::dynamic_pointer_cast<SurfaceFilter>(child)->accept(
+                        surface))
                     return true;
         return false;
     }

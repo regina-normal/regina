@@ -37,12 +37,13 @@ namespace regina {
 
 const Triangulation<3>* XMLTreeResolver::resolveTri3(const std::string& id)
         const {
-    Packet* packet = resolve(id);
-    if (packet) {
-        if (auto ans = dynamic_cast<PacketOf<Triangulation<3>>*>(packet))
-            return ans;
-        if (auto ans = dynamic_cast<PacketOf<SnapPeaTriangulation>*>(packet))
-            return ans;
+    if (auto packet = resolve(id)) {
+        if (auto ans = std::dynamic_pointer_cast<
+                PacketOf<Triangulation<3>>>(packet))
+            return ans.get();
+        if (auto ans = std::dynamic_pointer_cast<
+                PacketOf<SnapPeaTriangulation>>(packet))
+            return ans.get();
     }
     return nullptr;
 }

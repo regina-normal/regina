@@ -76,7 +76,8 @@ class Container : public Packet {
         virtual void writeTextShort(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket(
+            std::shared_ptr<Packet> parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
@@ -94,8 +95,9 @@ inline void Container::writeTextShort(std::ostream& o) const {
     o << "Container";
 }
 
-inline Packet* Container::internalClonePacket(Packet*) const {
-    return new Container();
+inline std::shared_ptr<Packet> Container::internalClonePacket(
+        std::shared_ptr<Packet>) const {
+    return std::make_shared<Container>();
 }
 
 inline void Container::writeXMLPacketData(std::ostream& out, FileFormat format,

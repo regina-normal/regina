@@ -55,8 +55,8 @@ class Link;
 template <int dim> class Triangulation;
 
 template <class PacketType>
-Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
-        unsigned long ignoreLines) {
+std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
+        int colLabels, unsigned long ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
     if (! in)
@@ -69,11 +69,11 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
     for (i = 0; i < ignoreLines; i++) {
         std::getline(in, line);
         if (in.eof())
-            return new Container();
+            return std::make_shared<Container>();
     }
 
     // Read in and process the remaining lines.
-    Container* ans = new Container();
+    auto ans = std::make_shared<Container>();
     std::string errStrings;
 
     int col;
@@ -126,7 +126,7 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
             msg << PacketType::dimension << "-manifold triangulations:\n";
         msg << errStrings;
 
-        Text* errPkt = new Text(msg.str());
+        auto errPkt = std::make_shared<Text>(msg.str());
         errPkt->setLabel("Errors");
         ans->insertChildLast(errPkt);
     }

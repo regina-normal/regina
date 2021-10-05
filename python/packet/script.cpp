@@ -32,14 +32,13 @@
 
 #include "../pybind11/pybind11.h"
 #include "packet/script.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Script;
 
 void addScript(pybind11::module_& m) {
-    pybind11::class_<Script, regina::Packet, regina::SafePtr<Script>>(
+    pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
             m, "Script")
         .def(pybind11::init<>())
         .def("text", &Script::text)

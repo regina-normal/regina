@@ -32,14 +32,13 @@
 
 #include "../pybind11/pybind11.h"
 #include "packet/pdf.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::PDF;
 
 void addPDF(pybind11::module_& m) {
-    pybind11::class_<PDF, regina::Packet, regina::SafePtr<PDF>>(m, "PDF")
+    pybind11::class_<PDF, regina::Packet, std::shared_ptr<PDF>>(m, "PDF")
         .def(pybind11::init<>())
         .def(pybind11::init<const char*>())
         .def("isNull", &PDF::isNull)

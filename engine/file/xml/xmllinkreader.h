@@ -52,7 +52,7 @@ class Link;
  */
 class XMLLinkReader : public XMLPacketReader {
     private:
-        PacketOf<Link>* link_;
+        std::shared_ptr<PacketOf<Link>> link_;
             /**< The link currently being read. */
 
     public:
@@ -61,10 +61,10 @@ class XMLLinkReader : public XMLPacketReader {
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLinkReader(XMLTreeResolver& resolver, Packet* parent,
+        XMLLinkReader(XMLTreeResolver& resolver, std::shared_ptr<Packet> parent,
             bool anon, std::string label, std::string id);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -184,7 +184,7 @@ inline XMLLinkCrossingsReader::XMLLinkCrossingsReader(Link* link) :
 inline void XMLLinkCrossingsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     if (! valueOf(props.lookup("size"), size_))
-        link_ = 0;
+        link_ = nullptr;
 }
 
 inline bool XMLLinkCrossingsReader::broken() const {

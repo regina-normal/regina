@@ -370,7 +370,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * or \c null if this data is not held by either a 3-dimensional
          * triangulation packet or a SnapPea triangulation packet.
          */
-        Packet* inAnyPacket();
+        std::shared_ptr<Packet> inAnyPacket();
         /**
          * Returns the packet that holds this data, even if it is held
          * indirectly via a SnapPea triangulation.
@@ -392,7 +392,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * or \c null if this data is not held by either a 3-dimensional
          * triangulation packet or a SnapPea triangulation packet.
          */
-        const Packet* inAnyPacket() const;
+        std::shared_ptr<const Packet> inAnyPacket() const;
 
         /**
          * Returns the SnapPea triangulation that holds this data, if

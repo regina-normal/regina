@@ -43,11 +43,10 @@ void XMLSnapPeaReader::initialChars(const std::string& chars) {
         if (data) {
             regina::snappea::find_complete_hyperbolic_structure(data);
             regina::snappea::do_Dehn_filling(data);
-            snappea_ = new PacketOf<SnapPeaTriangulation>(std::in_place, data);
+            snappea_ = makePacket<SnapPeaTriangulation>(std::in_place, data);
         }
     } catch (regina::SnapPeaFatalError& err) {
-        delete snappea_;
-        snappea_ = nullptr;
+        snappea_.reset();
     }
 }
 
@@ -66,12 +65,11 @@ void XMLLegacySnapPeaReader::endContentSubElement(
             if (data) {
                 regina::snappea::find_complete_hyperbolic_structure(data);
                 regina::snappea::do_Dehn_filling(data);
-                snappea_ = new PacketOf<SnapPeaTriangulation>(
-                    std::in_place, data);
+                snappea_ = makePacket<SnapPeaTriangulation>(std::in_place,
+                    data);
             }
         } catch (regina::SnapPeaFatalError& err) {
-            delete snappea_;
-            snappea_ = nullptr;
+            snappea_.reset();
         }
     }
 }

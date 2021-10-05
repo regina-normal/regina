@@ -208,7 +208,7 @@ class XMLLegacySimplicesReader : public XMLElementReader {
 template <int dim>
 class XMLTriangulationReader : public XMLPacketReader {
     protected:
-        PacketOf<Triangulation<dim>>* tri_;
+        std::shared_ptr<PacketOf<Triangulation<dim>>> tri_;
             /**< The triangulation currently being read. */
         bool permIndex_;
             /**< \c true if permutations are stored as indices into Sn, or
@@ -231,9 +231,9 @@ class XMLTriangulationReader : public XMLPacketReader {
          * Sn, or \c false if they are stored as image packs.
          * This will be ignored when reading the second-generation file format.
          */
-        XMLTriangulationReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id,
-            size_t size, bool permIndex);
+        XMLTriangulationReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, size_t size, bool permIndex);
 
         /**
          * Returns an XML element reader for the given optional property of a
@@ -258,7 +258,7 @@ class XMLTriangulationReader : public XMLPacketReader {
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -431,7 +431,7 @@ XMLElementReader* XMLLegacySimplicesReader<dim>::startSubElement(
 
 template <int dim>
 inline XMLTriangulationReader<dim>::XMLTriangulationReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id, size_t size, bool permIndex) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         tri_(new PacketOf<Triangulation<dim>>()),
@@ -441,7 +441,7 @@ inline XMLTriangulationReader<dim>::XMLTriangulationReader(
 }
 
 template <int dim>
-inline Packet* XMLTriangulationReader<dim>::packetToCommit() {
+inline std::shared_ptr<Packet> XMLTriangulationReader<dim>::packetToCommit() {
     return tri_;
 }
 
@@ -451,12 +451,12 @@ XMLElementReader* XMLTriangulationReader<dim>::startContentSubElement(
         const regina::xml::XMLPropertyDict& subTagProps) {
     if (subTagName == "simplex") {
         if (readSimplices_ < tri_->size())
-            return new XMLSimplexReader<dim>(tri_, readSimplices_++,
+            return new XMLSimplexReader<dim>(tri_.get(), readSimplices_++,
                 permIndex_);
         else
             return new XMLElementReader();
     } else if (subTagName == XMLLegacyTriangulationTags<dim>::simplices)
-        return new XMLLegacySimplicesReader<dim>(tri_, readSimplices_);
+        return new XMLLegacySimplicesReader<dim>(tri_.get(), readSimplices_);
     else
         return static_cast<XMLTriangulationReader<dim>*>(this)->
             startPropertySubElement(subTagName, subTagProps);

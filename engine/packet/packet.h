@@ -50,7 +50,6 @@
 #include "core/output.h"
 #include "file/fileformat.h"
 #include "packet/packettype.h"
-#include "utilities/safepointeebase.h"
 
 namespace regina {
 
@@ -116,6 +115,41 @@ template <typename Held> class XMLWriter;
  *   is the underlying mathematical type (e.g., Triangulation<3>, Link,
  *   or NormalSurfaces).
  *
+ * Since Regina 7.0, packets are \e always managed by std::shared_ptr.
+ * There are \e no exceptions to this rule.  The implication of this are:
+ *
+ * - Every new packet \e must be wrapped in a std::shared_ptr immediately
+ *   after construction.  It is recommended that you create new packets using
+ *   std::make_shared, not \c new, so you do not forget this.  Many of
+ *   Regina's operations on packets will assume that such a std::shared_ptr
+ *   exists, and will throw std::bad_weak_ptr exceptions if it does not.
+ *
+ * - When given an existing raw packet pointer (e.g., as a function argument),
+ *   you must \e not wrap it in a new std::shared_ptr.  This would lead to two
+ *   shared pointers "independently" claiming ownership of the packet (which
+ *   means the packet would be destroyed earlier than expected).  If you need
+ *   to convert a raw Packet* into a std::shared_ptr, you can use the member
+ *   function shared_from_this() (inherited from std::enable_shared_from_this).
+ *
+ * Parent packets own their children, but children do not own their parents.
+ * This has the following impliciations for destruction:
+ *
+ * - If you have a shared pointer to the root of the packet tree, then this
+ *   will keep the entire packet tree alive.
+ *
+ * - To destroy a child packet but not its parent, just call makeOrphan() on
+ *   the child.  This will remove the child from the tree, and then destroy
+ *   the child once your last shared pointer to it goes out of scope.
+ *
+ * - If you destroy a parent but you are also holding another shared pointer to
+ *   one of its children, then that child will \e not be destroyed.  It will
+ *   instead become orphaned, and will become the root of its own (smaller)
+ *   packet tree.
+ *
+ * The old Packet::safeDelete() function has been removed, since you should
+ * not be manually destroying packets at all now (instead just wait for
+ * the last std::shared_ptr to be destroyed).
+ *
  * There are different requirements when creating a new packet type.
  *
  * To create a new innate packet type:
@@ -166,46 +200,26 @@ template <typename Held> class XMLWriter;
  * might be happening within the engine and/or via users' python scripts.
  * See the PacketListener class notes for details.
  *
- * Packets are able to work with SafePtr smart pointers under fluid ownership
- * rules: they may be owned either by this C++ engine or by external
- * safe pointers at different times during the packet's lifespan.
- * The general things to remember are:
- *
- * - The C++ engine itself does not use SafePtr at all, and it incurs
- *   essentially no overhead from the safe pointer machinery.
- *
- * - If you are passing packets to an external interface that \e does use
- *   SafePtr to store them, then you must be careful when deleting packets
- *   from within C++ code.  If you are at risk of destroying a packet
- *   that the external interface holds a safe pointer to, you should call
- *   Packet::safeDelete() instead of just \c delete.  This will test for the
- *   existence of safe pointers, and if there are any then it will preserve
- *   the packet (but remove it from the packet tree), thereby leaving the
- *   safe pointers in the external interface to manage its lifespan.
- *   Examples of such situations are when the user manually deletes a packet
- *   within a GUI, or where a child packet is deleted as a result of its parent
- *   packet being destroyed.  (The Packet destructor calls safeDelete() instead
- *   of \c delete on its child packets for exactly this reason.)
- *
- * \todo \feature Provide automatic name selection/specification upon
- * child packet insertion.
- *
  * \ingroup packet
  */
-class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
+class Packet : public std::enable_shared_from_this<Packet>,
+        public Output<Packet> {
     private:
         std::string label_;
             /**< The label for this individual packet of information. */
 
-        Packet* treeParent_;
-            /**< Parent packet in the tree (\c null if none). */
-        Packet* firstTreeChild_;
+        std::weak_ptr<Packet> treeParent_;
+            /**< Parent packet in the tree (\c null if none).
+                 This is a weak_ptr to avoid parent/child ownership cycles. */
+        std::shared_ptr<Packet> firstTreeChild_;
             /**< First child packet in the tree (\c null if none). */
-        Packet* lastTreeChild_;
+        std::shared_ptr<Packet> lastTreeChild_;
             /**< Last child packet in the tree (\c null if none). */
-        Packet* prevTreeSibling_;
-            /**< Previous sibling packet in the tree (\c null if none). */
-        Packet* nextTreeSibling_;
+        std::weak_ptr<Packet> prevTreeSibling_;
+            /**< Previous sibling packet in the tree (\c null if none).
+                 This is a weak_ptr to avoid previous/next sibling
+                 ownership cycles. */
+        std::shared_ptr<Packet> nextTreeSibling_;
             /**< Next sibling packet in the tree (\c null if none). */
 
         std::unique_ptr<std::set<std::string>> tags_;
@@ -213,12 +227,9 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
 
         std::unique_ptr<std::set<PacketListener*>> listeners_;
             /**< All objects listening for events on this packet. */
-        unsigned changeEventSpans_;
+        unsigned changeEventSpans_ { 0 };
             /**< The number of change event spans currently registered.
                  Change events will only be fired when this count is zero. */
-
-        bool inDestructor_;
-            /**< Have we entered the packet destructor? */
 
     public:
         /**
@@ -235,46 +246,16 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * \ifacespython Not present.
          */
-        Packet();
+        Packet() = default;
 
         /**
-         * Destructor that also orphans this packet and destroys
-         * all of its descendants.
+         * Destructor that also orphans this packet.
          *
-         * This destructor calls safeDelete() on its descendants.
-         * Therefore, if any descendants have safe pointers that reference
-         * them, those descendants will remain orphaned but alive
-         * (and their lifespans will now be managed by SafePtr instead).
-         * See safeDelete() for details.
+         * Any children of this packet that are still managed by other
+         * shared pointers will become orphaned.  Any children that are
+         * not managed by other shared pointers will be destroyed.
          */
         virtual ~Packet();
-
-        /**
-         * Either destroys or orphans the given packet, according to
-         * whether it has safe pointers that currently reference it.
-         *
-         * In this context, a "safe pointer" is either SafePtr<Packet> or a
-         * subclass; such pointers are (for instance) used to hold packets
-         * in regina's python bindings.
-         *
-         * If there are no safe pointers currently pointing to \a p,
-         * then this routine simply deletes \a p.  If there are one or
-         * more safe pointers currently pointing to \a p, then this routine
-         * orphans \a p in the packet tree and does nothing more; the safe
-         * pointers are left to manage the lifespan of \a p from here onwards.
-         *
-         * C++ code should call safeDelete() instead of \c delete when it
-         * wishes to delete a packet, but there is a possibility that some
-         * external body (such as a python interpreter) still holds a
-         * reference to \a p and might still try to access it.
-         *
-         * \ifacespython Not present, since when called from python there will
-         * always be a safe pointer, and so this is equivalent to makeOrphan().
-         *
-         * @param p the packet to delete or orphan.  It is safe to pass \c null
-         * (in which case this routine does nothing).
-         */
-        static void safeDelete(Packet* p);
 
         /*@}*/
         /**
@@ -520,13 +501,23 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         /*@{*/
 
         /**
+         * Determines if this packet has a parent in the tree structure.
+         *
+         * This is equivalent to, but slightly faster than, testing
+         * whether parent() returns a null pointer.
+         *
+         * @return \c if and only if this packet has a parent.
+         */
+        bool hasParent() const;
+
+        /**
          * Determines the parent packet in the tree structure.
          *
          * This routine takes small constant time.
          *
          * @return the parent packet, or \c null if there is none.
          */
-        Packet* parent() const;
+        std::shared_ptr<Packet> parent() const;
 
         /**
          * Determines the first child of this packet in the tree
@@ -536,7 +527,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @return the first child packet, or \c null if there is none.
          */
-        Packet* firstChild() const;
+        std::shared_ptr<Packet> firstChild() const;
 
         /**
          * Determines the last child of this packet in the tree
@@ -546,7 +537,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @return the last child packet, or \c null if there is none.
          */
-        Packet* lastChild() const;
+        std::shared_ptr<Packet> lastChild() const;
 
         /**
          * Determines the next sibling of this packet in the tree
@@ -558,7 +549,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the next sibling of this packet, or \c null if there is
          * none.
          */
-        Packet* nextSibling() const;
+        std::shared_ptr<Packet> nextSibling() const;
 
         /**
          * Determines the previous sibling of this packet in the tree
@@ -570,14 +561,14 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the previous sibling of this packet, or \c null if there is
          * none.
          */
-        Packet* prevSibling() const;
+        std::shared_ptr<Packet> prevSibling() const;
 
         /**
          * Determines the root of the tree to which this packet belongs.
          *
          * @return the matriarch of the packet tree.
          */
-        Packet* root() const;
+        std::shared_ptr<Packet> root() const;
 
         /**
          * Counts the number of levels between this packet and its given
@@ -592,7 +583,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * packet we are examining.
          * @return the number of levels difference.
          */
-        unsigned levelsDownTo(const Packet* descendant) const;
+        unsigned levelsDownTo(std::shared_ptr<const Packet> descendant) const;
 
         /**
          * Counts the number of levels between this packet and its given
@@ -607,7 +598,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * packet we are examining.
          * @return the number of levels difference.
          */
-        unsigned levelsUpTo(const Packet* ancestor) const;
+        unsigned levelsUpTo(std::shared_ptr<const Packet> ancestor) const;
 
         /**
          * Determines if this packet is equal to or an ancestor of
@@ -618,7 +609,21 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return \c true if and only if this packet is equal to or an
          * ancestor of \c descendant.
          */
-        bool isGrandparentOf(const Packet* descendant) const;
+        bool isAncestorOf(std::shared_ptr<const Packet> descendant) const;
+        /**
+         * Deprecated function that determines if this packet is equal to or
+         * an ancestor of the given packet in the tree structure.
+         *
+         * \deprecated This function has been renamed to isAncestorOf(),
+         * since "grandparent" is far too specific a word.
+         *
+         * @param descendant the other packet whose relationships we are
+         * examining.
+         * @return \c true if and only if this packet is equal to or an
+         * ancestor of \c descendant.
+         */
+        [[deprecated]] bool isGrandparentOf(
+            std::shared_ptr<const Packet> descendant) const;
 
         /**
          * Returns the number of immediate children of this packet.
@@ -653,6 +658,10 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
         /**
          * Inserts the given packet as the first child of this packet.
          *
+         * This packet will take ownership of \a child, in the sense that
+         * every parent packet stores (either directly or indirectly) a
+         * shared_ptr to every one of its descendants in the packet tree.
+         *
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
@@ -660,11 +669,15 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param child the child to insert.
          */
-        void insertChildFirst(Packet* child);
+        void insertChildFirst(std::shared_ptr<Packet> child);
 
         /**
          * Inserts the given packet as the last child of this packet.
          *
+         * This packet will take ownership of \a child, in the sense that
+         * every parent packet stores (either directly or indirectly) a
+         * shared_ptr to every one of its descendants in the packet tree.
+         *
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
@@ -672,16 +685,20 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * @param child the child to insert.
          */
-        void insertChildLast(Packet* child);
+        void insertChildLast(std::shared_ptr<Packet> child);
 
         /**
          * Inserts the given packet as a child of this packet at the
          * given location in this packet's child list.
          *
+         * This packet will take ownership of \a child, in the sense that
+         * every parent packet stores (either directly or indirectly) a
+         * shared_ptr to every one of its descendants in the packet tree.
+         *
          * This routine takes small constant time.
          *
          * \pre Parameter \a newChild has no parent packet.
-         * \pre Parameter \a prevChild is already a child of this packet.
+         * \pre This packet is already the parent of \a prevChild.
          * \pre This packet is not a descendant of \a newChild.
          *
          * @param newChild the child to insert.
@@ -689,23 +706,31 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * which \a newChild will be inserted, or \c null if \a newChild
          * is to be the first child of this packet.
          */
-        void insertChildAfter(Packet* newChild, Packet* prevChild);
+        void insertChildAfter(std::shared_ptr<Packet> newChild,
+            std::shared_ptr<Packet> prevChild);
 
         /**
          * Cuts this packet away from its parent in the tree structure
-         * and instead makes it matriarch of its own tree.  The tree
-         * information for both this packet and its parent will be
-         * updated.
+         * and instead makes it the root of its own tree.  The tree
+         * information for both this packet and its parent will be updated.
          *
-         * This routine takes small constant time.
+         * The old parent will relinquish ownership of this packet.  This
+         * means that, even if the old parent remains alive, once the last
+         * shared_ptr to this packet is destroyed then this packet itself
+         * will be destroyed also.
          *
-         * \pre This packet has a parent.
+         * This makeOrphan() function is the preferred way to "delete" a
+         * packet \a p from a larger packet tree: simply orphan \a p and
+         * then dispose of any outstanding shared pointers to it (if you
+         * have any).
          *
-         * \ifacespython After makeOrphan() is called, this packet will
-         * become the root of a new packet tree that is owned by Python.
-         * In particular, if you call makeOrphan() and then delete all Python
-         * references to this packet, the entire packet subtree will be
-         * automatically destroyed.
+         * Even if you are not holding a shared_ptr to this packet yourself,
+         * this routine is still safe to use: it will keep an internal
+         * shared_ptr as a "guard" until makeOrphan() has completed its work,
+         * at which point the packet will be safely destroyed.
+         *
+         * This routine takes small constant time.  It is safe to use
+         * regardless of whether this packet currently has a parent or not.
          */
         void makeOrphan();
 
@@ -716,8 +741,17 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * This routine is essentially a combination of makeOrphan()
          * followed by either insertChildFirst() or insertChildLast().
          *
+         * Even if you are not holding a shared_ptr to this packet yourself,
+         * this routine is still safe to use: it will maintain a shared_ptr
+         * as a "guard" so that this packet is not inadvertently destroyed
+         * during the transfer.
+         *
+         * You may pass \a newParent as \c null, in which case this routine
+         * behaves in the same way as makeOrphan() (and is similarly safe to
+         * use even if there are no other shared pointers to this packet).
+         *
          * This routine takes small constant time.  It is safe to use
-         * regardless of whether this packet has a parent or not.
+         * regardless of whether this packet currently has a parent or not.
          *
          * If you wish to reparent \e all of the children of a given
          * packet, see transferChildren() instead.
@@ -730,7 +764,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * first child of the given parent, or \c false (the default) if
          * it should be inserted as the last child.
          */
-        void reparent(Packet* newParent, bool first = false);
+        void reparent(std::shared_ptr<Packet> newParent, bool first = false);
 
         /**
          * Cuts all of this packet's children out of the packet tree,
@@ -743,12 +777,22 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * This is equivalent to calling reparent() on each child, but
          * should be somewhat faster if there are many children to move.
          *
+         * Even if you are not holding a shared_ptr to any of this packet's
+         * children, this routine is still safe to use: it will ensure there
+         * is always some shared_ptr to guard against any children being
+         * inadvertently destroyed during the transfer.
+         *
+         * You may pass \a newParent as \c null, in which case this routine
+         * is equivalent to calling makeOrphan() on each child (and is
+         * similarly safe to use even if there are no other shared pointers
+         * to this packet).
+         *
          * \pre The given parent is not a descendant of this packet.
          *
          * @param newParent the new parent beneath which the children
          * will be inserted.
          */
-        void transferChildren(Packet* newParent);
+        void transferChildren(std::shared_ptr<Packet> newParent);
 
         /**
          * Swaps this packet with its next sibling in the sequence of
@@ -757,7 +801,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          *
          * This routine takes small constant time.
          *
-         * If this packet has no next sibling then this routine does
+         * If this packet has no next sibling then this routine safely does
          * nothing.
          */
         void swapWithNextSibling();
@@ -829,8 +873,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * an entire packet subtree using C++11 range-based \c for loops:
          *
          * \code{.cpp}
-         * Packet* subtree = ...;
-         * for (Packet* p : *subtree) { ... }
+         * std::shared_ptr<Packet> subtree = ...;
+         * for (Packet& p : *subtree) { ... }
          * \endcode
          *
          * In Python, each packet can be treated as an iterable object, again
@@ -891,8 +935,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * an entire packet subtree using C++11 range-based \c for loops:
          *
          * \code{.cpp}
-         * const Packet* subtree = ...;
-         * for (const Packet* p : *subtree) { ... }
+         * std::shared_ptr<const Packet> subtree = ...;
+         * for (const Packet& p : *subtree) { ... }
          * \endcode
          *
          * Since Regina 7.0, the return type is templated in order to support
@@ -941,8 +985,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * of a given packet using C++11 range-based \c for loops:
          *
          * \code{.cpp}
-         * Packet* parent = ...;
-         * for (Packet* desc : parent->descendants()) { ... }
+         * std::shared_ptr<Packet> parent = ...;
+         * for (Packet& desc : parent->descendants()) { ... }
          * \endcode
          *
          * In Python, this routine returns an iterable object:
@@ -987,8 +1031,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * of a given packet using C++11 range-based \c for loops:
          *
          * \code{.cpp}
-         * const Packet* parent = ...;
-         * for (const Packet* desc : parent->descendants()) { ... }
+         * std::shared_ptr<const Packet> parent = ...;
+         * for (const Packet& desc : parent->descendants()) { ... }
          * \endcode
          *
          * This function returns a lightweight object in the sense that it does
@@ -1020,8 +1064,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * of a given packet using C++11 range-based \c for loops:
          *
          * \code{.cpp}
-         * Packet* parent = ...;
-         * for (Packet* child : parent->children()) { ... }
+         * std::shared_ptr<Packet> parent = ...;
+         * for (Packet& child : parent->children()) { ... }
          * \endcode
          *
          * In Python, this routine returns an iterable object:
@@ -1058,8 +1102,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * of a given packet using C++11 range-based \c for loops:
          *
          * \code{.cpp}
-         * const Packet* parent = ...;
-         * for (const Packet* child : parent->children()) { ... }
+         * std::shared_ptr<const Packet> parent = ...;
+         * for (const Packet& child : parent->children()) { ... }
          * \endcode
          *
          * This function returns a lightweight object in the sense that it
@@ -1095,7 +1139,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the next packet, or \c null if this is the last packet in
          * such an iteration.
          */
-        Packet* nextTreePacket();
+        std::shared_ptr<Packet> nextTreePacket();
 
         /**
          * Finds the next packet after this in a complete depth-first
@@ -1110,7 +1154,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the next packet, or \c null if this is the last packet in
          * such an iteration.
          */
-        const Packet* nextTreePacket() const;
+        std::shared_ptr<const Packet> nextTreePacket() const;
 
         /**
          * Finds the first packet of the requested type in a complete
@@ -1126,7 +1170,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
-        Packet* firstTreePacket(PacketType type);
+        std::shared_ptr<Packet> firstTreePacket(PacketType type);
 
         /**
          * Finds the first packet of the requested type in a complete
@@ -1142,7 +1186,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
-        const Packet* firstTreePacket(PacketType type) const;
+        std::shared_ptr<const Packet> firstTreePacket(PacketType type) const;
 
         /**
          * Finds the next packet after this of the requested type in a
@@ -1155,7 +1199,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
-        Packet* nextTreePacket(PacketType type);
+        std::shared_ptr<Packet> nextTreePacket(PacketType type);
 
         /**
          * Finds the next packet after this of the requested type in a
@@ -1168,7 +1212,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
-        const Packet* nextTreePacket(PacketType type) const;
+        std::shared_ptr<const Packet> nextTreePacket(PacketType type) const;
 
         /**
          * Finds the packet with the requested label in the tree or
@@ -1179,7 +1223,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the packet with the requested label, or \c null if there is
          * no such packet.
          */
-        Packet* findPacketLabel(const std::string& label);
+        std::shared_ptr<Packet> findPacketLabel(const std::string& label);
 
         /**
          * Finds the packet with the requested label in the tree or
@@ -1190,7 +1234,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the packet with the requested label, or \c null if there is
          * no such packet.
          */
-        const Packet* findPacketLabel(const std::string& label) const;
+        std::shared_ptr<const Packet> findPacketLabel(const std::string& label)
+            const;
 
         /*@}*/
         /**
@@ -1256,14 +1301,18 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
 
         /**
          * Clones this packet (and possibly its descendants), assigns to it
-         * a suitable unused label and
-         * inserts the clone into the tree as a sibling of this packet.
+         * a suitable unused label and inserts the clone into the tree as a
+         * sibling of this packet.
          *
          * Note that any string tags associated with this packet will
          * \e not be cloned.
          *
          * If this packet has no parent in the tree structure, no clone
          * will be created and \c null will be returned.
+         *
+         * In Regina 6.0.1 and earlier, this function was called clone().
+         * It was renamed in Regina 7.0 to emphasise that this is not just a
+         * deep copy, and is not guaranteed to succeed.
          *
          * \note Since Regina 7.0, if a normal surface/hypersurface or
          * angle structure list is cloned, then the new clone will refer
@@ -1283,7 +1332,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @return the newly inserted packet, or \c null if this packet has no
          * parent.
          */
-        Packet* clone(bool cloneDescendants = false, bool end = true) const;
+        std::shared_ptr<Packet> cloneAsSibling(bool cloneDescendants = false,
+            bool end = true) const;
 
         /*@}*/
         /**
@@ -1479,21 +1529,21 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
                  \c true once \a P has been written to the XML file. */
 
         /**
-         * Makes a newly allocated copy of this packet.
-         * This routine should <b>not</b> insert the new packet into the
-         * tree structure, clone the packet's associated tags or give the
-         * packet a label.  It should also not clone any descendants of
-         * this packet.
-         * 
+         * Makes a new copy of this packet.  This routine should \e not
+         * insert the new packet into the tree structure, clone the packet's
+         * associated tags or give the packet a label.  It should also not
+         * clone any descendants of this packet.
+         *
          * You may assume that the new packet will eventually be
          * inserted into the tree beneath either the same parent as this
          * packet or a clone of that parent.
          *
          * @param parent the parent beneath which the new packet will
          * eventually be inserted.
-         * @return the newly allocated packet.
+         * @return the newly created packet.
          */
-        virtual Packet* internalClonePacket(Packet* parent) const = 0;
+        virtual std::shared_ptr<Packet> internalClonePacket(
+            std::shared_ptr<Packet> parent) const = 0;
 
         /**
          * Writes the opening XML tag for this packet.
@@ -1585,7 +1635,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * done yet.
          *
          * This function simply creates an \c anon XML block, and within
-         * it calls <tt>p->writeXMLPacketData()</tt> with the \a anon
+         * it calls <tt>p.writeXMLPacketData()</tt> with the \a anon
          * argument set to \c true.
          *
          * @param out the output stream to which the anonymous block
@@ -1596,7 +1646,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param p the packet to write inside the anonymous block.
          */
         void writeXMLAnon(std::ostream& out, FileFormat format,
-            PacketRefs& refs, const Packet* p) const;
+            PacketRefs& refs, const Packet& p) const;
 
         /**
          * Writes a chunk of XML containing the full subtree with this packet
@@ -1693,7 +1743,7 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param parent the parent beneath which the descendant clones
          * will be inserted.
          */
-        void internalCloneDescendants(Packet* parent) const;
+        void internalCloneDescendants(std::shared_ptr<Packet> parent) const;
 
         /**
          * Calls the given PacketListener event for all registered
@@ -1727,8 +1777,8 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
 
         /**
          * Calls the given PacketListener event for all registered
-         * packet listeners.  The first argument to the event function
-         * will be this packet, unless \a makeMeNull is \c true.
+         * packet listeners, passing \c null as the first argument to the
+         * event function.
          *
          * Calling this routine is better than iterating through listeners
          * manually, since it behaves correctly even if listeners unregister
@@ -1737,11 +1787,9 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param event the member function of PacketListener to be called
          * for each listener.
          * @param arg2 the second argument to pass to the event function.
-         * @param makeMeNull if \c true, then the first argument to the
-         * event function will be \c null instead of \c this.
          */
-        void fireEvent(void (PacketListener::*event)(Packet*, Packet*),
-            Packet* arg2, bool makeMeNull);
+        void fireEventAsNull(void (PacketListener::*event)(Packet*, Packet*),
+            Packet* arg2);
 
         /**
          * Calls PacketListener::packetToBeDestroyed() for all registered
@@ -1806,17 +1854,6 @@ class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
          * @param out the output stream to which to write.
          */
          virtual void writeTextLong(std::ostream& out) const;
-
-        /**
-         * Indicates whether some other object in the calculation engine
-         * is responsible for ultimately destroying this object.
-         *
-         * For packets, this returns \c true if and only if this packet
-         * has a parent in the packet tree (i.e., is not the root).
-         *
-         * @return \c true if and only if some other object owns this object.
-         */
-        bool hasOwner() const;
 
     template <typename> friend class PacketData;
 };
@@ -1985,9 +2022,8 @@ class PacketOf : public Packet, public Held {
         PacketOf& operator = (const PacketOf&) = delete;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override {
-            return new PacketOf(static_cast<const Held&>(*this));
-        }
+        virtual std::shared_ptr<Packet> internalClonePacket(
+                std::shared_ptr<Packet>) const override;
         virtual void writeXMLPacketData(std::ostream& out, FileFormat format,
                 bool anon, PacketRefs& refs) const override;
         virtual void addPacketRefs(PacketRefs& refs) const override;
@@ -2075,9 +2111,11 @@ class PacketData {
          * @return the packet that holds this data, or \c null if this
          * data is not (directly) held by a packet.
          */
-        PacketOf<Held>* packet() {
+        std::shared_ptr<PacketOf<Held>> packet() {
             return heldBy_ == HELD_BY_PACKET ?
-                static_cast<PacketOf<Held>*>(this) : nullptr;
+                std::static_pointer_cast<PacketOf<Held>>(
+                    static_cast<PacketOf<Held>*>(this)->shared_from_this()) :
+                nullptr;
         }
         /**
          * Returns the packet that holds this data, if there is one.
@@ -2089,9 +2127,11 @@ class PacketData {
          * @return the packet that holds this data, or \c null if this
          * data is not (directly) held by a packet.
          */
-        const PacketOf<Held>* packet() const {
+        std::shared_ptr<const PacketOf<Held>> packet() const {
             return heldBy_ == HELD_BY_PACKET ?
-                static_cast<const PacketOf<Held>*>(this) : nullptr;
+                std::static_pointer_cast<const PacketOf<Held>>(
+                    static_cast<const PacketOf<Held>*>(this)->shared_from_this()) :
+                nullptr;
         }
 
         /**
@@ -2204,7 +2244,7 @@ class PacketData {
  * The pointer \a src may be \c null, in which case the return value
  * will be \c null also.
  *
- * The packet that is returned will be newly allocated, and will have no
+ * The packet that is returned will be newly created, and will have no
  * packet label.
  *
  * \ifacespython This is not made available to Python, since Python will
@@ -2216,11 +2256,11 @@ class PacketData {
  * @return the new wrapped packet, or \c null if \a src was \c null.
  */
 template <typename Held>
-PacketOf<Held>* makePacket(Held* src) {
+std::shared_ptr<PacketOf<Held>> makePacket(Held* src) {
     static_assert(std::is_class<Held>::value,
         "The template argument to makePacket() must be a plain class type.");
     if (src) {
-        PacketOf<Held>* ans = new PacketOf<Held>(std::move(*src));
+        auto ans = std::make_shared<PacketOf<Held>>(std::move(*src));
         delete src;
         return ans;
     } else
@@ -2238,7 +2278,7 @@ PacketOf<Held>* makePacket(Held* src) {
  * The pointer \a src may be \c null, in which case the return value
  * will be \c null also.
  *
- * The packet that is returned will be newly allocated, and will have
+ * The packet that is returned will be newly created, and will have
  * the given packet label.
  *
  * \ifacespython This is not made available to Python, since Python will
@@ -2251,7 +2291,8 @@ PacketOf<Held>* makePacket(Held* src) {
  * @return the new wrapped packet, or \c null if \a src was \c null.
  */
 template <typename Held>
-PacketOf<Held>* makePacket(Held* src, const std::string& label) {
+std::shared_ptr<PacketOf<Held>> makePacket(Held* src,
+        const std::string& label) {
     auto ans = makePacket(src);
     if (ans)
         ans->setLabel(label);
@@ -2267,7 +2308,7 @@ PacketOf<Held>* makePacket(Held* src, const std::string& label) {
  * version of this function (which does the same thing as this routine, but
  * also deletes \a src after it is finished).
  *
- * The packet that is returned will be newly allocated, and will have no
+ * The packet that is returned will be newly created, and will have no
  * packet label.
  *
  * \note This function is trivial (it just calls a single move constructor).
@@ -2283,10 +2324,10 @@ PacketOf<Held>* makePacket(Held* src, const std::string& label) {
  * @return the new wrapped packet.
  */
 template <typename Held>
-PacketOf<Held>* makePacket(Held&& src) {
+std::shared_ptr<PacketOf<Held>> makePacket(Held&& src) {
     static_assert(std::is_class<Held>::value,
         "The template argument to makePacket() must be a plain class type.");
-    return new PacketOf<Held>(std::move(src));
+    return std::make_shared<PacketOf<Held>>(std::move(src));
 }
 
 /**
@@ -2298,7 +2339,7 @@ PacketOf<Held>* makePacket(Held&& src) {
  * version of this function (which does the same thing as this routine, but
  * also deletes \a src after it is finished).
  *
- * The packet that is returned will be newly allocated, and will have
+ * The packet that is returned will be newly created, and will have
  * the given packet label.
  *
  * \note This function is trivial (it just calls a single move constructor
@@ -2316,12 +2357,42 @@ PacketOf<Held>* makePacket(Held&& src) {
  * @return the new wrapped packet.
  */
 template <typename Held>
-PacketOf<Held>* makePacket(Held&& src, const std::string& label) {
+std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
+        const std::string& label) {
     static_assert(std::is_class<Held>::value,
         "The template argument to makePacket() must be a plain class type.");
-    PacketOf<Held>* ans = new PacketOf<Held>(std::move(src));
+    auto ans = std::make_shared<PacketOf<Held>>(std::move(src));
     ans->setLabel(label);
     return ans;
+}
+
+/**
+ * Creates a new packet that wraps a \a Held object, passing the given
+ * arguments to the \a Held constructor.
+ *
+ * The given arguments \a args will be forwarded directly to
+ * the appropriate \a Held constructor (using C++ perfect forwarding).
+ *
+ * The initial argument should just be \c std::in_place; this is so the
+ * compiler can disambiguate between this function and other variants of
+ * makePacket().
+ *
+ * The packet that is returned will be newly created, and will have no
+ * packet label.
+ *
+ * \note This function is trivial (it just makes a single call to
+ * std::make_shared).  However, it also allows for slightly simpler code.
+ *
+ * \ifacespython Not present.
+ *
+ * @param args the arguments to be forwarded to the appropriate
+ * \a Held constructor.
+ * @return the new wrapped packet.
+ */
+template <typename Held, typename... Args>
+std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
+    return std::make_shared<PacketOf<Held>>(
+        std::in_place, std::forward<Args>(args)...);
 }
 
 /**
@@ -2330,7 +2401,7 @@ PacketOf<Held>* makePacket(Held&& src, const std::string& label) {
  * the XML file is compressed or uncompressed.
  *
  * If the file could not be opened or the top-level packet in the tree
- * could not be read, this routine will return 0.  If some packet deeper
+ * could not be read, this routine will return \c null.  If some packet deeper
  * within the tree could not be read then that particular packet (and
  * its descendants, if any) will simply be ignored.
  *
@@ -2346,11 +2417,11 @@ PacketOf<Held>* makePacket(Held&& src, const std::string& label) {
  * function by calling <tt>regina.open()</tt>.
  *
  * @param filename the pathname of the file to read from.
- * @return the packet tree read from file, or 0 on error (as explained above).
+ * @return the packet tree read from file, or \c null on error.
  *
  * \ingroup packet
  */
-Packet* open(const char* filename);
+std::shared_ptr<Packet> open(const char* filename);
 
 /**
  * Reads a Regina data file from the given input stream, and returns the
@@ -2359,8 +2430,8 @@ Packet* open(const char* filename);
  * the XML file is compressed or uncompressed.
  *
  * If the stream could not be read or if the top-level packet in the tree
- * could not be read, then this routine will return 0.  If some packet deeper
- * within the tree could not be read then that particular packet (and
+ * could not be read, then this routine will return \c null.  If some packet
+ * deeper within the tree could not be read then that particular packet (and
  * its descendants, if any) will simply be ignored.
  *
  * \pre The given stream is open for reading.
@@ -2368,11 +2439,11 @@ Packet* open(const char* filename);
  * \ifacespython Not present.
  *
  * @param in the input stream to read from.
- * @return the packet tree read from file, or 0 on error (as explained above).
+ * @return the packet tree read from file, or \c null on error.
  *
  * \ingroup packet
  */
-Packet* open(std::istream& in);
+std::shared_ptr<Packet> open(std::istream& in);
 
 /**
  * A forward iterator for iterating through all immediate children of a
@@ -2396,20 +2467,22 @@ Packet* open(std::istream& in);
 template <bool const_>
 class ChildIterator {
     public:
-        typedef typename std::conditional<const_, const Packet*, Packet*>::type
+        typedef typename std::conditional<const_, const Packet, Packet>::type
                 value_type;
-            /**< Indicates what the iterator points to. */
+            /**< Indicates what the iterator points to.
+                 This is either <tt>Packet</tt> or <tt>const Packet</tt>,
+                 according to the template argument \a const_. */
         typedef std::forward_iterator_tag iterator_category;
             /**< Declares this to be a forward iterator type. */
         typedef ptrdiff_t difference_type;
             /**< The type obtained by subtracting iterators. */
-        typedef value_type const* pointer;
+        typedef value_type* pointer;
             /**< A pointer to \a value_type. */
-        typedef value_type const& reference;
+        typedef value_type& reference;
             /**< A reference to \a value_type. */
 
     private:
-        value_type current_;
+        std::shared_ptr<value_type> current_;
             /**< The child packet that this iterator is pointing to, or
                  \c null for a past-the-end iterator. */
 
@@ -2420,7 +2493,7 @@ class ChildIterator {
          * \ifacespython Not present.  The only way to create a ChildIterator
          * is via Packet::children().
          */
-        ChildIterator();
+        ChildIterator() = default;
         /**
          * Default copy constructor.
          *
@@ -2437,7 +2510,7 @@ class ChildIterator {
          * @param current the child packet that the new iterator should
          * point to, or \c null if the new iterator should be past-the-end.
          */
-        ChildIterator(value_type current);
+        ChildIterator(std::shared_ptr<value_type> current);
 
         /**
          * Default copy assignment operator.
@@ -2490,7 +2563,20 @@ class ChildIterator {
          *
          * @return the current packet.
          */
-        value_type const& operator * () const;
+        value_type& operator * () const;
+
+        /**
+         * Identifies whether this iterator is dereferencable.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current child packet and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is not dereferencable.
+         *
+         * @return \c true if and only if this is dereferencable (i.e.,
+         * not past-the-end).
+         */
+        operator bool() const;
 };
 
 /**
@@ -2517,22 +2603,24 @@ class ChildIterator {
 template <bool const_>
 class SubtreeIterator {
     public:
-        typedef typename std::conditional<const_, const Packet*, Packet*>::type
+        typedef typename std::conditional<const_, const Packet, Packet>::type
                 value_type;
-            /**< Indicates what the iterator points to. */
+            /**< Indicates what the iterator points to.
+                 This is either <tt>Packet</tt> or <tt>const Packet</tt>,
+                 according to the template argument \a const_. */
         typedef std::forward_iterator_tag iterator_category;
             /**< Declares this to be a forward iterator type. */
         typedef ptrdiff_t difference_type;
             /**< The type obtained by subtracting iterators. */
-        typedef value_type const* pointer;
+        typedef value_type* pointer;
             /**< A pointer to \a value_type. */
-        typedef value_type const& reference;
+        typedef value_type& reference;
             /**< A reference to \a value_type. */
 
     private:
-        value_type subtree_;
+        std::shared_ptr<value_type> subtree_;
             /**< The root of the packet subtree that we are iterating over. */
-        value_type current_;
+        std::shared_ptr<value_type> current_;
             /**< The packet that this iterator is pointing to, or
                  \c null for a past-the-end iterator. */
 
@@ -2544,7 +2632,7 @@ class SubtreeIterator {
          * is via Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          */
-        SubtreeIterator();
+        SubtreeIterator() = default;
         /**
          * Default copy constructor.
          *
@@ -2566,7 +2654,7 @@ class SubtreeIterator {
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
          */
-        SubtreeIterator(value_type subtree);
+        SubtreeIterator(std::shared_ptr<value_type> subtree);
         /**
          * Creates a new iterator pointing to the given packet within
          * the given subtree.
@@ -2584,7 +2672,8 @@ class SubtreeIterator {
          * If \a current is not null, then it must be equal to or a
          * descendant of \a subtree.
          */
-        SubtreeIterator(value_type subtree, value_type current);
+        SubtreeIterator(std::shared_ptr<value_type> subtree,
+            std::shared_ptr<value_type> current);
 
         /**
          * Default copy assignment operator.
@@ -2645,7 +2734,20 @@ class SubtreeIterator {
          *
          * @return the current packet.
          */
-        value_type const& operator * () const;
+        value_type& operator * () const;
+
+        /**
+         * Identifies whether this iterator is dereferencable.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current child packet and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is not dereferencable.
+         *
+         * @return \c true if and only if this is dereferencable (i.e.,
+         * not past-the-end).
+         */
+        operator bool() const;
 };
 
 /**
@@ -2656,8 +2758,8 @@ class SubtreeIterator {
  * packet \a p using C++11 range-based \c for loops:
  *
  * \code{.cpp}
- * Packet* parent = ...;
- * for (Packet* child : parent->children()) { ... }
+ * std::shared_ptr<Packet> parent = ...;
+ * for (Packet& child : parent->children()) { ... }
  * \endcode
  *
  * In Python, PacketChildren is an iterable object:
@@ -2690,8 +2792,14 @@ class SubtreeIterator {
  */
 template <bool const_>
 class PacketChildren {
+    public:
+        typedef typename std::conditional<const_, const Packet, Packet>::type
+                packet_type;
+            /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
+                 the template argument \a const_. */
+
     private:
-        typename ChildIterator<const_>::value_type parent_;
+        std::shared_ptr<packet_type> parent_;
             /**< The packet whose children we are iterating through. */
 
     public:
@@ -2709,7 +2817,7 @@ class PacketChildren {
          *
          * @param parent the packet whose children we will iterate through.
          */
-        PacketChildren(typename ChildIterator<const_>::value_type parent);
+        PacketChildren(std::shared_ptr<packet_type> parent);
 
         /**
          * Default copy assignment operator.
@@ -2746,8 +2854,8 @@ class PacketChildren {
  * descendants of a packet \a p using C++11 range-based \c for loops:
  *
  * \code{.cpp}
- * Packet* parent = ...;
- * for (Packet* desc : parent->descendants()) { ... }
+ * std::shared_ptr<Packet> parent = ...;
+ * for (Packet& desc : parent->descendants()) { ... }
  * \endcode
  *
  * In Python, PacketDescendants is an iterable object:
@@ -2780,8 +2888,14 @@ class PacketChildren {
  */
 template <bool const_>
 class PacketDescendants {
+    public:
+        typedef typename std::conditional<const_, const Packet, Packet>::type
+                packet_type;
+            /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
+                 the template argument \a const_. */
+
     private:
-        typename SubtreeIterator<const_>::value_type subtree_;
+        std::shared_ptr<packet_type> subtree_;
             /**< The packet whose strict descendants we are iterating over. */
 
     public:
@@ -2800,7 +2914,7 @@ class PacketDescendants {
          * @param subtree the packet whose strict descendants we will iterate
          * through.
          */
-        PacketDescendants(typename SubtreeIterator<const_>::value_type subtree);
+        PacketDescendants(std::shared_ptr<packet_type> subtree);
 
         /**
          * Default copy assignment operator.
@@ -2838,6 +2952,11 @@ class PacketDescendants {
  *
  * All functions in this class mirror the corresponding Packet functions,
  * and are safe to call during PacketListener::packetToBeDestroyed().
+ *
+ * This class works with raw Packet pointers, not std::shared_ptr, because
+ * it typically only becomes relevant when a Packet is already in the
+ * process of being destroyed (and so it is improper for a new shared
+ * pointer to suddenly appear and try to claim ownership of the packet again).
  *
  * These are lightweight objects, small enough to pass by value and swap with
  * std::swap(), with no need for any specialised move operations or swap
@@ -3201,29 +3320,26 @@ class PacketListener {
          *
          * Once the child is removed, childWasRemoved() will be called also.
          *
-         * Be warned: we could already be inside either this packet's or
-         * the child packet's destructor:
+         * Be warned: we could already be inside the parent packet's
+         * destructor.  Specifically: if a packet \a p is being destroyed,
+         * then it will orphan all of its children (which as a side-effect
+         * will cause the children be destroyed also, unless they are being
+         * mananged by other shared pointers also).  In such a situation, both
+         * listener functions childToBeRemoved() and childWasRemoved() will be
+         * called as each child \a c is orphaned, and before \a c is potentially
+         * destroyed.  For both these listener functions, the argument
+         * \a packet will be passed as \c null (since the parent \a p is
+         * already well into its destruction process).
          *
-         * - If this packet is being destroyed, then it will orphan all of its
-         *   children, and then (unless they are being mananged by SafePtr
-         *   safe pointers) it will delete these children also.  In such a
-         *   situation, both listener functions childToBeRemoved() and
-         *   childWasRemoved() will be called \e before the child is destroyed.
-         *   For both functions, \a packet will be passed as \c null (since
-         *   the parent packet is already well into its destruction process).
-         *
-         * - If the child packet is being destroyed (but the parent is not),
-         *   then it will be orphaned as part of its destructor.  In such a
-         *   situation, both listener functions childToBeRemoved() and
-         *   childWasRemoved() will be called from within the child destructor,
-         *   and \a child will be passed as \c null to both functions.
+         * Since Regina 7.0 switched to using shared pointers for packets,
+         * it is now impossible for this routine to be called from within
+         * the child packet's destructor.
          *
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to, or \c null if
          * this routine is being called from within this packet's destructor.
-         * @param child the child packet to be removed, or \c null if
-         * this routine is being called from within the child's destructor.
+         * @param child the child packet to be removed.
          */
         virtual void childToBeRemoved(Packet* packet, Packet* child);
         /**
@@ -3232,29 +3348,26 @@ class PacketListener {
          *
          * Before the child is removed, childToBeRemoved() will be called also.
          *
-         * Be warned: we could already be inside either this packet's or
-         * the child packet's destructor:
+         * Be warned: we could already be inside the parent packet's
+         * destructor.  Specifically: if a packet \a p is being destroyed,
+         * then it will orphan all of its children (which as a side-effect
+         * will cause the children be destroyed also, unless they are being
+         * mananged by other shared pointers also).  In such a situation, both
+         * listener functions childToBeRemoved() and childWasRemoved() will be
+         * called as each child \a c is orphaned, and before \a c is potentially
+         * destroyed.  For both these listener functions, the argument
+         * \a packet will be passed as \c null (since the parent \a p is
+         * already well into its destruction process).
          *
-         * - If this packet is being destroyed, then it will orphan all of its
-         *   children, and then (unless they are being mananged by SafePtr
-         *   safe pointers) it will delete these children also.  In such a
-         *   situation, both listener functions childToBeRemoved() and
-         *   childWasRemoved() will be called \e before the child is destroyed.
-         *   For both functions, \a packet will be passed as \c null (since
-         *   the parent packet is already well into its destruction process).
-         *
-         * - If the child packet is being destroyed (but the parent is not),
-         *   then it will be orphaned as part of its destructor.  In such a
-         *   situation, both listener functions childToBeRemoved() and
-         *   childWasRemoved() will be called from within the child destructor,
-         *   and \a child will be passed as \c null to both functions.
+         * Since Regina 7.0 switched to using shared pointers for packets,
+         * it is now impossible for this routine to be called from within
+         * the child packet's destructor.
          *
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to, or \c null if
          * this routine is being called from within this packet's destructor.
-         * @param child the child packet that was removed, or \c null if
-         * this routine is being called from within the child's destructor.
+         * @param child the child packet that was removed.
          */
         virtual void childWasRemoved(Packet* packet, Packet* child);
         /**
@@ -3328,30 +3441,26 @@ class PacketListener {
 // that use them (this fixes DLL-related warnings in the windows port)
 
 template <bool const_>
-inline SubtreeIterator<const_>::SubtreeIterator() :
-        subtree_(nullptr), current_(nullptr) {
-}
-
-template <bool const_>
-inline SubtreeIterator<const_>::SubtreeIterator(value_type subtree) :
+inline SubtreeIterator<const_>::SubtreeIterator(
+        std::shared_ptr<value_type> subtree) :
         subtree_(subtree), current_(subtree) {
 }
 
 template <bool const_>
-inline SubtreeIterator<const_>::SubtreeIterator(value_type subtree,
-        value_type current) : subtree_(subtree), current_(current) {
+inline SubtreeIterator<const_>::SubtreeIterator(
+        std::shared_ptr<value_type> subtree,
+        std::shared_ptr<value_type> current) :
+        subtree_(subtree), current_(current) {
 }
 
 template <bool const_>
 inline PacketChildren<const_>::PacketChildren(
-        typename ChildIterator<const_>::value_type parent) :
-        parent_(parent) {
+        std::shared_ptr<packet_type> parent) : parent_(parent) {
 }
 
 template <bool const_>
 inline PacketDescendants<const_>::PacketDescendants(
-        typename SubtreeIterator<const_>::value_type subtree) :
-        subtree_(subtree) {
+        std::shared_ptr<packet_type> subtree) : subtree_(subtree) {
 }
 
 inline void PacketListener::packetToBeChanged(Packet*) {
@@ -3361,12 +3470,6 @@ inline void PacketListener::packetWasChanged(Packet*) {
 }
 
 // Inline functions for Packet
-
-inline Packet::Packet() :
-        treeParent_(nullptr), firstTreeChild_(nullptr), lastTreeChild_(nullptr),
-        prevTreeSibling_(nullptr), nextTreeSibling_(nullptr),
-        changeEventSpans_(0), inDestructor_(false) {
-}
 
 inline void Packet::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
@@ -3407,36 +3510,50 @@ inline bool Packet::isListening(PacketListener* listener) {
     return listeners_->count(listener);
 }
 
-inline Packet* Packet::parent() const {
-    return treeParent_;
+inline bool Packet::hasParent() const {
+    // AFAICT, despite its name, expired() returns true for a null weak_ptr
+    // that was never assigned to point to a real object.
+    return ! treeParent_.expired();
 }
 
-inline Packet* Packet::firstChild() const {
+inline std::shared_ptr<Packet> Packet::parent() const {
+    return treeParent_.lock();
+}
+
+inline std::shared_ptr<Packet> Packet::firstChild() const {
     return firstTreeChild_;
 }
 
-inline Packet* Packet::lastChild() const {
+inline std::shared_ptr<Packet> Packet::lastChild() const {
     return lastTreeChild_;
 }
 
-inline Packet* Packet::prevSibling() const {
-    return prevTreeSibling_;
+inline std::shared_ptr<Packet> Packet::prevSibling() const {
+    return prevTreeSibling_.lock();
 }
 
-inline Packet* Packet::nextSibling() const {
+inline std::shared_ptr<Packet> Packet::nextSibling() const {
     return nextTreeSibling_;
 }
 
-inline unsigned Packet::levelsUpTo(const Packet* ancestor) const {
-    return ancestor->levelsDownTo(this);
+inline unsigned Packet::levelsUpTo(std::shared_ptr<const Packet> ancestor)
+        const {
+    return ancestor->levelsDownTo(shared_from_this());
+}
+
+inline bool Packet::isGrandparentOf(std::shared_ptr<const Packet> descendant)
+        const {
+    return isAncestorOf(descendant);
 }
 
 inline size_t Packet::countDescendants() const {
     return totalTreeSize() - 1;
 }
 
-inline bool Packet::hasOwner() const {
-    return treeParent_;
+template <typename Held>
+inline std::shared_ptr<Packet> PacketOf<Held>::internalClonePacket(
+        std::shared_ptr<Packet>) const {
+    return std::make_shared<PacketOf<Held>>(static_cast<const Held&>(*this));
 }
 
 template <typename Held>
@@ -3467,57 +3584,59 @@ inline PacketData<Held>::ChangeEventSpan::~ChangeEventSpan() {
 }
 
 inline SubtreeIterator<false> Packet::begin() {
-    return SubtreeIterator<false>(this);
+    return SubtreeIterator<false>(shared_from_this());
 }
 
 inline SubtreeIterator<false> Packet::end() {
-    return SubtreeIterator<false>(this, nullptr);
+    return {};
 }
 
 inline SubtreeIterator<true> Packet::begin() const {
-    return SubtreeIterator<true>(this);
+    return SubtreeIterator<true>(shared_from_this());
 }
 
 inline SubtreeIterator<true> Packet::end() const {
-    return SubtreeIterator<true>(this, nullptr);
+    return {};
 }
 
 inline PacketDescendants<false> Packet::descendants() {
-    return PacketDescendants<false>(this);
+    return PacketDescendants<false>(shared_from_this());
 }
 
 inline PacketDescendants<true> Packet::descendants() const {
-    return PacketDescendants<true>(this);
+    return PacketDescendants<true>(shared_from_this());
 }
 
 inline PacketChildren<false> Packet::children() {
-    return PacketChildren<false>(this);
+    return PacketChildren<false>(shared_from_this());
 }
 
 inline PacketChildren<true> Packet::children() const {
-    return PacketChildren<true>(this);
+    return PacketChildren<true>(shared_from_this());
 }
 
-inline Packet* Packet::firstTreePacket(PacketType t) {
-    return (type() == t ? this : nextTreePacket(t));
+inline std::shared_ptr<Packet> Packet::firstTreePacket(PacketType t) {
+    return (type() == t ? shared_from_this() : nextTreePacket(t));
 }
 
-inline const Packet* Packet::firstTreePacket(PacketType t) const {
-    return (type() == t ? this : nextTreePacket(t));
+inline std::shared_ptr<const Packet> Packet::firstTreePacket(PacketType t)
+        const {
+    return (type() == t ? shared_from_this() : nextTreePacket(t));
 }
 
-inline Packet* Packet::nextTreePacket(PacketType t) {
-    for (Packet* ans = nextTreePacket(); ans; ans = ans->nextTreePacket())
+inline std::shared_ptr<Packet> Packet::nextTreePacket(PacketType t) {
+    for (auto ans = nextTreePacket(); ans; ans = ans->nextTreePacket())
         if (ans->type() == t)
             return ans;
-    return nullptr;
+    return {};
 }
 
-inline const Packet* Packet::nextTreePacket(PacketType t) const {
-    for (const Packet* ans = nextTreePacket(); ans; ans = ans->nextTreePacket())
+inline std::shared_ptr<const Packet> Packet::nextTreePacket(PacketType t)
+        const {
+    for (auto ans = nextTreePacket(); ans; ans = ans->nextTreePacket())
         if (ans->type() == t)
             return ans;
-    return nullptr;
+    return {};
 }
 
 inline bool Packet::dependsOnParent() const {
@@ -3555,13 +3674,11 @@ inline Packet::ChangeEventSpan::ChangeEventSpan(Packet& packet) :
         packet_(packet) {
     if (! packet_.changeEventSpans_)
         packet_.fireEvent(&PacketListener::packetToBeChanged);
-
-    packet_.changeEventSpans_++;
+    ++packet_.changeEventSpans_;
 }
 
 inline Packet::ChangeEventSpan::~ChangeEventSpan() {
-    packet_.changeEventSpans_--;
-
+    --packet_.changeEventSpans_;
     if (! packet_.changeEventSpans_)
         packet_.fireEvent(&PacketListener::packetWasChanged);
 }
@@ -3569,12 +3686,8 @@ inline Packet::ChangeEventSpan::~ChangeEventSpan() {
 // Inline functions for child/subtree iterators and related classes
 
 template <bool const_>
-inline ChildIterator<const_>::ChildIterator() : current_(nullptr) {
-}
-
-template <bool const_>
-inline ChildIterator<const_>::ChildIterator(value_type current) :
-        current_(current) {
+inline ChildIterator<const_>::ChildIterator(
+        std::shared_ptr<value_type> current) : current_(current) {
 }
 
 template <bool const_>
@@ -3597,15 +3710,20 @@ inline ChildIterator<const_>& ChildIterator<const_>::operator ++ () {
 
 template <bool const_>
 inline ChildIterator<const_> ChildIterator<const_>::operator ++ (int) {
-    value_type ret = current_;
+    auto ret = current_;
     current_ = current_->nextSibling();
     return ChildIterator(ret);
 }
 
 template <bool const_>
-inline typename ChildIterator<const_>::value_type const&
+inline typename ChildIterator<const_>::value_type&
         ChildIterator<const_>::operator * () const {
-    return current_;
+    return *current_;
+}
+
+template <bool const_>
+inline ChildIterator<const_>::operator bool() const {
+    return (bool)current_;
 }
 
 template <bool const_>
@@ -3628,7 +3746,7 @@ inline SubtreeIterator<const_>& SubtreeIterator<const_>::operator ++ () {
         while (current_ != subtree_ && ! current_->nextSibling())
             current_ = current_->parent();
         if (current_ == subtree_)
-            current_ = 0;
+            current_.reset();
         else
             current_ = current_->nextSibling();
     }
@@ -3637,15 +3755,20 @@ inline SubtreeIterator<const_>& SubtreeIterator<const_>::operator ++ () {
 
 template <bool const_>
 inline SubtreeIterator<const_> SubtreeIterator<const_>::operator ++ (int) {
-    value_type ret = current_;
+    auto ret = current_;
     ++(*this);
     return SubtreeIterator(subtree_, ret);
 }
 
 template <bool const_>
-inline typename SubtreeIterator<const_>::reference
+inline typename SubtreeIterator<const_>::value_type&
         SubtreeIterator<const_>::operator * () const {
-    return current_;
+    return *current_;
+}
+
+template <bool const_>
+inline SubtreeIterator<const_>::operator bool() const {
+    return (bool)current_;
 }
 
 template <bool const_>
@@ -3655,7 +3778,7 @@ inline ChildIterator<const_> PacketChildren<const_>::begin() const {
 
 template <bool const_>
 inline ChildIterator<const_> PacketChildren<const_>::end() const {
-    return ChildIterator<const_>(nullptr);
+    return {};
 }
 
 template <bool const_>
@@ -3665,7 +3788,7 @@ inline SubtreeIterator<const_> PacketDescendants<const_>::begin() const {
 
 template <bool const_>
 inline SubtreeIterator<const_> PacketDescendants<const_>::end() const {
-    return SubtreeIterator<const_>(subtree_, nullptr);
+    return {};
 }
 
 // Inline functions for PacketShell

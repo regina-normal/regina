@@ -120,7 +120,7 @@ ReginaMain::~ReginaMain() {
     delete treeView;
 
     // Finish cleaning up.
-    // The SafePtr should delete the packet tree automatically.
+    // The shared pointer should delete the packet tree automatically.
 }
 
 void ReginaMain::plugPacketMenu() {

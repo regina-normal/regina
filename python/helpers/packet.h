@@ -38,7 +38,6 @@ namespace regina {
 
 class Packet;
 template <class> class PacketOf;
-template <class> class SafePtr;
 
 namespace python {
 
@@ -46,21 +45,28 @@ namespace python {
  * Adds Python bindings for the class PacketOf<Held>.
  *
  * The new packet class will be given a deep copy constructor, which takes a
- * single argument of type const Held&.
+ * single argument of type const Held&, and also acts as a copy constructor
+ * for PacketOf<Held>.
  *
  * For all other Held constructors (except for the copy constructor), you will
  * need to add a corresponding "forwarding constructor" to this class by
  * calling add_packet_constructor() with the pybind11::class_ object that
  * this function returns.
+ *
+ * Aside from the constructors, the new packet class will (as a subclass
+ * of Held) inherit the full interface from Held.
+ *
+ * Since all packet types are held by std::shared_ptr in their Python
+ * bindings, you \e must ensure that the base class Held is likewise held by
+ * std::shared_ptr (not the default std::unique_ptr that pybind11 uses
+ * unless instructed otherwise).  If you do not do this, then Python
+ * will raise an ImportError when loading Regina's module.
  */
 template <class Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
-    return pybind11::class_<regina::PacketOf<Held>, regina::Packet,
-            regina::SafePtr<regina::PacketOf<Held>>>(m, className)
+    return pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
+            std::shared_ptr<regina::PacketOf<Held>>>(m, className)
         .def(pybind11::init<const Held&>()) // also takes PacketOf<Held>
-        .def("data", [](regina::PacketOf<Held>* p) {
-            return static_cast<Held*>(p);
-        }, pybind11::return_value_policy::reference_internal)
         .def_property_readonly_static("typeID", [](pybind11::object) {
             // We cannot take the address of typeID, so use a getter function.
             return regina::PacketOf<Held>::typeID;

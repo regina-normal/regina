@@ -147,7 +147,7 @@ class Script : public Packet, public PacketListener {
          * be between 0 and countVariables()-1 inclusive.
          * @return the value of the requested variable.
          */
-        Packet* variableValue(size_t index) const;
+        std::shared_ptr<Packet> variableValue(size_t index) const;
         /**
          * Returns the value of the variable stored with the given
          * name.  Variables may take the value \c null.
@@ -159,7 +159,7 @@ class Script : public Packet, public PacketListener {
          * names are case sensitive.
          * @return the value of the requested variable.
          */
-        Packet* variableValue(const std::string& name) const;
+        std::shared_ptr<Packet> variableValue(const std::string& name) const;
 
         /**
          * Changes the name of an existing variable associated with
@@ -182,7 +182,7 @@ class Script : public Packet, public PacketListener {
          * this must be between 0 and countVariables()-1 inclusive.
          * @param value the new value to assign to the variable.
          */
-        void setVariableValue(size_t index, Packet* value);
+        void setVariableValue(size_t index, std::shared_ptr<Packet> value);
 
         /**
          * Attempts to add a new variable to be associated with this script.
@@ -204,7 +204,8 @@ class Script : public Packet, public PacketListener {
          * @return \c true if the variable was successfully added, or
          * \c false if a variable with the given name was already stored.
          */
-        bool addVariable(const std::string& name, Packet* value);
+        bool addVariable(const std::string& name,
+            std::shared_ptr<Packet> value);
         /**
          * Adds a new variable to be associated with this script, changing
          * its name if necessary.  If the given variable name does not already
@@ -225,7 +226,7 @@ class Script : public Packet, public PacketListener {
          * or might not be equal to \a name.
          */
         const std::string& addVariableName(const std::string& name,
-            Packet* value);
+            std::shared_ptr<Packet> value);
         /**
          * Removes the variable stored with the given name.
          * If no variable is stored with the given name, this routine
@@ -260,7 +261,8 @@ class Script : public Packet, public PacketListener {
         virtual void packetToBeDestroyed(PacketShell packet) override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket(
+            std::shared_ptr<Packet> parent) const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
         virtual void addPacketRefs(PacketRefs& refs) const override;
@@ -294,9 +296,10 @@ inline size_t Script::countVariables() const {
     return variables.size();
 }
 
-inline bool Script::addVariable(const std::string& name, Packet* value) {
+inline bool Script::addVariable(const std::string& name,
+        std::shared_ptr<Packet> value) {
     ChangeEventSpan span(*this);
-    bool ans = variables.insert(std::make_pair(name, value)).second;
+    bool ans = variables.insert(std::make_pair(name, value.get())).second;
     if (value)
         value->listen(this);
     return ans;

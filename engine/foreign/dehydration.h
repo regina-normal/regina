@@ -95,7 +95,7 @@ class Container;
  *
  * \ingroup foreign
  */
-Container* readDehydrationList(const char *filename,
+std::shared_ptr<Container> readDehydrationList(const char *filename,
     unsigned colDehydrations = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
 

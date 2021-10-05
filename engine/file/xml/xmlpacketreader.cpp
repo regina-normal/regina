@@ -238,23 +238,26 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 return new XMLAngleStructuresReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);
             case PACKET_NORMALSURFACES:
-                if (auto tri = dynamic_cast<Triangulation<3>*>(packet_))
+                if (auto tri = std::dynamic_pointer_cast<Triangulation<3>>(
+                        packet_))
                     return new XMLLegacyNormalSurfacesReader(resolver_, packet_,
-                        anon_, std::move(childLabel), std::move(childID), tri);
+                        anon_, std::move(childLabel), std::move(childID), *tri);
                 else
                     return new XMLElementReader();
             case PACKET_NORMALHYPERSURFACES:
-                if (auto tri = dynamic_cast<Triangulation<4>*>(packet_))
+                if (auto tri = std::dynamic_pointer_cast<Triangulation<4>>(
+                        packet_))
                     return new XMLLegacyNormalHypersurfacesReader(resolver_,
                         packet_, anon_, std::move(childLabel),
-                        std::move(childID), tri);
+                        std::move(childID), *tri);
                 else
                     return new XMLElementReader();
             case PACKET_ANGLESTRUCTURES:
-                if (auto tri = dynamic_cast<Triangulation<3>*>(packet_))
+                if (auto tri = std::dynamic_pointer_cast<Triangulation<3>>(
+                        packet_))
                     return new XMLLegacyAngleStructuresReader(resolver_,
                         packet_, anon_, std::move(childLabel),
-                        std::move(childID), tri);
+                        std::move(childID), *tri);
                 else
                     return new XMLElementReader();
 #ifndef REGINA_LOWDIMONLY
@@ -313,12 +316,13 @@ void XMLPacketReader::endElement() {
 
 void XMLPacketReader::abort(XMLElementReader* /* subReader */) {
     // Fetch the packet under construction if we don't have it already,
-    // so that we can destroy it.
+    // since we promised to do this.
     if (! packet_)
         packet_ = packetToCommit();
-    // The following code will also orphan packet_ from its parent.
-    delete packet_;
-    packet_ = nullptr;
+
+    // Since we are using shared_ptr to store our packets, someone at
+    // some point should take care of destroying packet_.  We won't
+    // worry about this here.
 }
 
 void XMLPacketReader::commit() {
@@ -328,9 +332,7 @@ void XMLPacketReader::commit() {
                 packet_->setLabel(label_);
             if (! id_.empty())
                 resolver_.storeID(id_, packet_);
-            if (anon_) {
-                resolver_.storeAnon(packet_);
-            } else if (parent_ && ! packet_->parent())
+            if ((! anon_) && parent_ && ! packet_->parent())
                 parent_->insertChildLast(packet_);
         }
     }

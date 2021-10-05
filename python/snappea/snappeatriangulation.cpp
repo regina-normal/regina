@@ -37,7 +37,6 @@
 #include "link/link.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -56,7 +55,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     regina::python::add_output(c1);
     regina::python::add_eq_operators(c1);
 
-    auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>>(
+    auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
+            std::shared_ptr<SnapPeaTriangulation>>(
             m, "SnapPeaTriangulation")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())

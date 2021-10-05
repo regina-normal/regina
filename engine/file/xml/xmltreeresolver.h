@@ -90,9 +90,9 @@ class XMLTreeResolutionTask {
 
 /**
  * Provides a mechanism to resolve cross-references between packets in
- * an XML data file, and to manage the anonymous packet pool.
+ * an XML data file.
  *
- * This class has three main tasks:
+ * This class has two main tasks:
  *
  * - To allow immediate lookups by ID for packets that should have already
  *   been read from the XML data file (e.g., a normal surface list
@@ -103,9 +103,6 @@ class XMLTreeResolutionTask {
  *   where an ID is referenced before the corresonding packet appears
  *   (e.g. a script packet referencing its variables);
  *
- * - To manage an "anonymous pool" of packets that appear with an
- *   \<anon\> block within the XML data file.
- *
  * The complete process of reading an XML data file works as follows:
  *
  * - The top-level routine managing the file I/O should construct a new
@@ -113,11 +110,8 @@ class XMLTreeResolutionTask {
  *   in turn as each individual packet is read.
  *
  * - If a packet appears with an ID in the data file, this should be
- *   registered via storeID().
- *
- * - If a packet appears within an anonymousl block, this should be
- *   registered via storeAnon() (note that such packets are typically
- *   useless unless storeID() was called also).
+ *   registered via storeID().  Anonymous packets (i.e., those that appear
+ *   within an \<anon\>...\</anon\> block) can be registered in the same way.
  *
  * - If an XMLPacketReader needs to perform an immediate lookup, it should
  *   call resolve(), or one of its variants (e.g., resolveAs() or
@@ -136,16 +130,16 @@ class XMLTreeResolutionTask {
  *   XMLTreeResolutionTask::resolve() for each task in turn, whereby any
  *   missing data for individual packets can be resolved.
  *
- * - At any time, a packet can be "extracted" from the anonymous pool
- *   by calling Packet::makeOrphan().  It will still remain registered by
- *   its ID.  After the file reading is complete, any packets that were stored
- *   in the anonymous pool and not subsequently extracted will be destroyed.
+ * - To preserve an anonymous packet for later use, simply keep a shared_ptr
+ *   to it (typically this would mean storing the shared_ptr that was returned
+ *   from resolve()).  After the file reading is complete, any anonymous
+ *   packets that were not preserved in this way will be destroyed.
  */
 class XMLTreeResolver {
     public:
-        typedef std::map<std::string, Packet*> IDMap;
+        typedef std::map<std::string, std::shared_ptr<Packet>> IDMap;
             /**< A type that maps internal IDs from the data file to the
-                 corresponding packets.  See ids() for details. */
+                 corresponding packets. */
 
     private:
         IDMap ids_;
@@ -153,9 +147,6 @@ class XMLTreeResolver {
                  corresponding packets. */
         std::list<XMLTreeResolutionTask*> tasks_;
             /**< The list of tasks that have been queued for processing. */
-        Container anonPool;
-            /**< Stores all packets that were registered via storeAnon()
-                 as appearing within anonymous blocks. */
 
     public:
         /**
@@ -194,19 +185,7 @@ class XMLTreeResolver {
          * the data file.
          * @param packet the corresponding packet.
          */
-        void storeID(const std::string& id, Packet* packet);
-        /**
-         * Stores the given packet in the "anonymous pool".
-         *
-         * This will be called automatically by XMLPacketReader as it
-         * processes packets that appear within an \<anon\> block.
-         * Users and/or subclasses of XMLPacketReader do not need to
-         * call this function themselves.
-         *
-         * @param packet the packet to insert into the anonymous pool.
-         */
-        void storeAnon(Packet* packet);
-
+        void storeID(const std::string& id, std::shared_ptr<Packet> packet);
         /**
          * Identifies if some packet has been registered as having the given ID
          * within the the XML data file.
@@ -233,7 +212,7 @@ class XMLTreeResolver {
          * @return the packet with the given ID, or \c null is no such
          * packet has been registered so far.
          */
-        Packet* resolve(const std::string& id) const;
+        std::shared_ptr<Packet> resolve(const std::string& id) const;
 
         /**
          * Identifies if some packet of the given type has been registered as
@@ -257,7 +236,7 @@ class XMLTreeResolver {
          * its type is not equal to or derived from \a packetType.
          */
         template <typename PacketType>
-        PacketType* resolveAs(const std::string& id) const;
+        std::shared_ptr<PacketType> resolveAs(const std::string& id) const;
 
         /**
          * Identifies if some packet holding the given data type has been
@@ -329,31 +308,30 @@ inline XMLTreeResolver::~XMLTreeResolver() {
     for (XMLTreeResolutionTask* task : tasks_)
         delete task;
 
-    // All packets in the anonymous pool will be deleted at this point also.
+    // All unclaimed anonymous packets will be deleted at this point also.
 }
 
 inline void XMLTreeResolver::queueTask(XMLTreeResolutionTask* task) {
     tasks_.push_back(task);
 }
 
-inline void XMLTreeResolver::storeID(const std::string& id, Packet* packet) {
+inline void XMLTreeResolver::storeID(const std::string& id,
+        std::shared_ptr<Packet> packet) {
     ids_.insert(std::make_pair(id, packet));
 }
 
-inline void XMLTreeResolver::storeAnon(Packet* packet) {
-    anonPool.insertChildLast(packet);
-}
-
-inline Packet* XMLTreeResolver::resolve(const std::string& id) const {
+inline std::shared_ptr<Packet> XMLTreeResolver::resolve(const std::string& id)
+        const {
     auto pos = ids_.find(id);
-    return (pos == ids_.end() ? nullptr : pos->second);
+    return (pos == ids_.end() ? std::shared_ptr<Packet>() : pos->second);
 }
 
 template <typename PacketType>
-inline PacketType* XMLTreeResolver::resolveAs(const std::string& id) const {
+inline std::shared_ptr<PacketType> XMLTreeResolver::resolveAs(
+        const std::string& id) const {
     static_assert(std::is_base_of<Packet, PacketType>::value,
         "XMLTreeResolver::resolveAs<T> requires T to be derived from Packet.");
-    return dynamic_cast<PacketType*>(resolve(id));
+    return std::dynamic_pointer_cast<PacketType>(resolve(id));
 }
 
 template <typename Held>
@@ -361,7 +339,8 @@ inline Held* XMLTreeResolver::resolvePacketData(const std::string& id) const {
     static_assert(std::is_base_of<PacketData<Held>, Held>::value,
         "XMLTreeResolver::resolvePacketData<T> requires T to be a type "
         "that is held by PacketOf<T>.");
-    return dynamic_cast<PacketOf<Held>*>(resolve(id));
+    auto ans = std::dynamic_pointer_cast<PacketOf<Held>>(resolve(id));
+    return (ans ? ans.get() : nullptr);
 }
 
 inline void XMLTreeResolver::resolveDelayed() {

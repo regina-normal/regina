@@ -40,7 +40,7 @@
 
 namespace regina {
 
-Container* readDehydrationList(const char *filename,
+std::shared_ptr<Container> readDehydrationList(const char *filename,
         unsigned colDehydrations, int colLabels, unsigned long ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
@@ -54,11 +54,11 @@ Container* readDehydrationList(const char *filename,
     for (i = 0; i < ignoreLines; i++) {
         std::getline(in, line);
         if (in.eof())
-            return new Container();
+            return std::make_shared<Container>();
     }
 
     // Read in and process the remaining lines.
-    Container* ans = new Container();
+    std::shared_ptr<Container> ans = std::make_shared<Container>();
     std::string errStrings;
 
     int col;
@@ -94,20 +94,18 @@ Container* readDehydrationList(const char *filename,
 
         if (! dehydration.empty()) {
             // Process this dehydration string.
-            PacketOf<Triangulation<3>>* tri = new PacketOf<Triangulation<3>>();
+            auto tri = makePacket<Triangulation<3>>(std::in_place);
             if (tri->insertRehydration(dehydration)) {
                 tri->setLabel(label.empty() ? dehydration : label);
                 ans->insertChildLast(tri);
-            } else {
+            } else
                 errStrings = errStrings + '\n' + dehydration;
-                delete tri;
-            }
         }
     }
 
     // Finish off.
     if (! errStrings.empty()) {
-        Text* errPkt = new Text(std::string(
+        auto errPkt = std::make_shared<Text>(std::string(
             "The following dehydration string(s) could not be rehydrated:\n") +
             errStrings);
         errPkt->setLabel("Errors");

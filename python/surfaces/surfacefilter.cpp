@@ -35,7 +35,6 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/surfacefilter.h"
 #include "triangulation/dim3.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using regina::SurfaceFilter;
@@ -44,7 +43,7 @@ using regina::SurfaceFilterProperties;
 
 void addSurfaceFilter(pybind11::module_& m) {
     pybind11::class_<SurfaceFilter, regina::Packet,
-            regina::SafePtr<SurfaceFilter>>(m, "SurfaceFilter")
+            std::shared_ptr<SurfaceFilter>>(m, "SurfaceFilter")
         .def(pybind11::init<>())
         .def(pybind11::init<const SurfaceFilter&>())
         .def("accept", &SurfaceFilter::accept)
@@ -61,7 +60,7 @@ void addSurfaceFilter(pybind11::module_& m) {
     ;
 
     pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
-            regina::SafePtr<SurfaceFilterCombination>>
+            std::shared_ptr<SurfaceFilterCombination>>
             (m, "SurfaceFilterCombination")
         .def(pybind11::init<>())
         .def(pybind11::init<const SurfaceFilterCombination&>())
@@ -73,7 +72,7 @@ void addSurfaceFilter(pybind11::module_& m) {
     ;
 
     pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
-            regina::SafePtr<SurfaceFilterProperties>>
+            std::shared_ptr<SurfaceFilterProperties>>
             (m, "SurfaceFilterProperties")
         .def(pybind11::init<>())
         .def(pybind11::init<const SurfaceFilterProperties&>())

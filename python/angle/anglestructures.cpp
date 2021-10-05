@@ -34,7 +34,6 @@
 #include "angle/anglestructures.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using namespace regina::python;
@@ -47,7 +46,8 @@ void addAngleStructures(pybind11::module_& m) {
 
     SafeIterator<AngleStructures>::addBindings(m, "AngleStructureIterator");
 
-    auto l = pybind11::class_<AngleStructures>(m, "AngleStructures")
+    auto l = pybind11::class_<AngleStructures,
+            std::shared_ptr<AngleStructures>>(m, "AngleStructures")
         .def(pybind11::init<const Triangulation<3>&, bool, regina::AngleAlg,
                 ProgressTracker*>(),
             pybind11::arg(),
@@ -68,30 +68,24 @@ void addAngleStructures(pybind11::module_& m) {
         })
         .def("spansStrict", &AngleStructures::spansStrict)
         .def("spansTaut", &AngleStructures::spansTaut)
-        .def_static("enumerate", [](Triangulation<3>& owner, bool tautOnly)
-                -> AngleStructures* {
+        .def_static("enumerate", [](Triangulation<3>& owner, bool tautOnly) {
             // This is deprecated, so we reimplement it here ourselves.
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to the AngleStructures class.
-            if (regina::Packet* p = owner.packet()) {
-                auto ans = new regina::PacketOf<AngleStructures>(std::in_place,
-                    owner, tautOnly);
+            auto ans = regina::makePacket<AngleStructures>(std::in_place,
+                owner, tautOnly);
+            if (auto p = owner.packet())
                 p->insertChildLast(ans);
-                return ans;
-            } else
-                return new AngleStructures(owner, tautOnly);
+            return ans;
         }, pybind11::arg(),
             pybind11::arg("tautOnly") = false)
-        .def_static("enumerateTautDD", [](Triangulation<3>& owner)
-                -> AngleStructures* {
+        .def_static("enumerateTautDD", [](Triangulation<3>& owner) {
             // This is deprecated, so we reimplement it here ourselves.
-            if (regina::Packet* p = owner.packet()) {
-                auto ans = new regina::PacketOf<AngleStructures>(std::in_place,
-                    owner, true, regina::AS_ALG_DD);
+            auto ans = regina::makePacket<AngleStructures>(std::in_place,
+                owner, true, regina::AS_ALG_DD);
+            if (auto p = owner.packet())
                 p->insertChildLast(ans);
-                return ans;
-            } else
-                return new AngleStructures(owner, true, regina::AS_ALG_DD);
+            return ans;
         })
     ;
     regina::python::add_output(l);

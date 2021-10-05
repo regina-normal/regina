@@ -132,9 +132,9 @@ NormalSurfaces::NormalSurfaces(const Triangulation<3>& triangulation,
         Enumerator(this, *eqns, tracker, nullptr).enumerate();
 }
 
-NormalSurfaces* NormalSurfaces::enumerate(Triangulation<3>& owner,
-        NormalCoords coords, NormalList which, NormalAlg algHints,
-        ProgressTracker* tracker) {
+std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
+        Triangulation<3>& owner, NormalCoords coords, NormalList which,
+        NormalAlg algHints, ProgressTracker* tracker) {
     // Like the constructor, but (1) we have tree insertion; and (2) we
     // need to convert exceptions to null returns.
     std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
@@ -144,24 +144,20 @@ NormalSurfaces* NormalSurfaces::enumerate(Triangulation<3>& owner,
         return nullptr;
     }
 
-    Packet* treeParent = owner.packet();
-    NormalSurfaces* ans;
-
-    if (treeParent)
-        ans = new PacketOf<NormalSurfaces>(std::in_place, coords, which,
-            algHints, owner);
-    else
-        ans = new NormalSurfaces(coords, which, algHints, owner);
+    auto ans = makePacket<NormalSurfaces>(std::in_place, coords, which,
+        algHints, owner);
 
     if (tracker) {
         // We pass the matching equations as an argument to the thread
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
-        std::thread([=, &owner](MatrixInt e) {
-            Enumerator(ans, e, tracker, treeParent).enumerate();
-        }, std::move(*eqns)).detach();
+        // Likewise for the shared pointer ans.
+        std::thread([=, &owner](MatrixInt e,
+                std::shared_ptr<NormalSurfaces> s) {
+            Enumerator(s.get(), e, tracker, owner.inAnyPacket()).enumerate();
+        }, std::move(*eqns), ans).detach();
     } else
-        Enumerator(ans, *eqns, tracker, treeParent).enumerate();
+        Enumerator(ans.get(), *eqns, tracker, owner.inAnyPacket()).enumerate();
     return ans;
 }
 
@@ -182,7 +178,8 @@ void NormalSurfaces::Enumerator::enumerate() {
     // Insert the results into the packet tree, but only once they are ready.
     if (treeParent_ && ! (tracker_ && tracker_->isCancelled()))
         treeParent_->insertChildLast(
-            static_cast<PacketOf<NormalSurfaces>*>(list_));
+            static_cast<PacketOf<NormalSurfaces>*>(list_)->
+            shared_from_this());
 
     if (tracker_)
         tracker_->setFinished();

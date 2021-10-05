@@ -72,7 +72,7 @@ template <typename> class PacketOf;
  *
  * \ingroup foreign
  */
-PacketOf<Triangulation<3>>* readOrb(const char *filename);
+std::shared_ptr<PacketOf<Triangulation<3>>> readOrb(const char *filename);
 
 } // namespace regina
 

@@ -41,15 +41,12 @@
 #include "progress/progresstracker.h"
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/normalsurface.h"
-#include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
-
-CONVERT_FROM_UNIQUE_PTR(regina::Triangulation<3>)
 
 /**
  * An internal C++ representation of a snappy.Manifold or snappy.Triangulation.
@@ -97,7 +94,8 @@ namespace pybind11::detail {
 } // namespace pybind11::detail
 
 void addTriangulation3(pybind11::module_& m) {
-    auto c = pybind11::class_<Triangulation<3>>(m, "Triangulation3")
+    auto c = pybind11::class_<Triangulation<3>,
+            std::shared_ptr<Triangulation<3>>>(m, "Triangulation3")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const Triangulation<3>&, bool>())

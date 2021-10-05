@@ -36,13 +36,14 @@
 
 namespace regina {
 
-XMLLinkReader::XMLLinkReader(XMLTreeResolver& res, Packet* parent, bool anon,
-        std::string label, std::string id) :
+XMLLinkReader::XMLLinkReader(XMLTreeResolver& res,
+        std::shared_ptr<Packet> parent, bool anon, std::string label,
+        std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         link_(new PacketOf<Link>()) {
 }
 
-Packet* XMLLinkReader::packetToCommit() {
+std::shared_ptr<Packet> XMLLinkReader::packetToCommit() {
     return link_;
 }
 
@@ -52,11 +53,11 @@ XMLElementReader* XMLLinkReader::startContentSubElement(
         return new XMLElementReader();
 
     if (subTagName == "crossings")
-        return new XMLLinkCrossingsReader(link_);
+        return new XMLLinkCrossingsReader(link_.get());
     else if (subTagName == "connections")
-        return new XMLLinkConnectionsReader(link_);
+        return new XMLLinkConnectionsReader(link_.get());
     else if (subTagName == "components")
-        return new XMLLinkComponentsReader(link_);
+        return new XMLLinkComponentsReader(link_.get());
 
     return new XMLElementReader();
 }
@@ -67,20 +68,14 @@ void XMLLinkReader::endContentSubElement(const std::string& subTagName,
         return;
 
     if (subTagName == "crossings") {
-        if (static_cast<XMLLinkCrossingsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = nullptr;
-        }
+        if (static_cast<XMLLinkCrossingsReader*>(reader)->broken())
+            link_.reset();
     } else if (subTagName == "connections") {
-        if (static_cast<XMLLinkConnectionsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = nullptr;
-        }
+        if (static_cast<XMLLinkConnectionsReader*>(reader)->broken())
+            link_.reset();
     } else if (subTagName == "components") {
-        if (static_cast<XMLLinkComponentsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = nullptr;
-        }
+        if (static_cast<XMLLinkComponentsReader*>(reader)->broken())
+            link_.reset();
     }
 }
 

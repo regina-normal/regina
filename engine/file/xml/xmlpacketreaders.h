@@ -61,8 +61,8 @@ namespace regina {
  */
 class XMLAnonRefReader : public XMLPacketReader {
     private:
-        Packet* packet;
-            /**< The container currently being read. */
+        std::shared_ptr<Packet> packet;
+            /**< The packet currently being read. */
 
     public:
         /**
@@ -81,10 +81,11 @@ class XMLAnonRefReader : public XMLPacketReader {
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLAnonRefReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+        XMLAnonRefReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
 };
 
 /**
@@ -94,7 +95,7 @@ class XMLAnonRefReader : public XMLPacketReader {
  */
 class XMLContainerReader : public XMLPacketReader {
     private:
-        Container* container;
+        std::shared_ptr<Container> container;
             /**< The container currently being read. */
 
     public:
@@ -103,10 +104,11 @@ class XMLContainerReader : public XMLPacketReader {
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLContainerReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+        XMLContainerReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
 };
 
 /**
@@ -116,7 +118,7 @@ class XMLContainerReader : public XMLPacketReader {
  */
 class XMLPDFReader : public XMLPacketReader {
     private:
-        PDF* pdf;
+        std::shared_ptr<PDF> pdf;
             /**< The PDF packet currently being read. */
 
     public:
@@ -125,10 +127,11 @@ class XMLPDFReader : public XMLPacketReader {
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLPDFReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+        XMLPDFReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual void initialChars(const std::string& chars) override;
 };
 
@@ -140,7 +143,7 @@ class XMLPDFReader : public XMLPacketReader {
  */
 class XMLLegacyPDFReader : public XMLPacketReader {
     private:
-        PDF* pdf;
+        std::shared_ptr<PDF> pdf;
             /**< The PDF packet currently being read. */
 
     public:
@@ -149,10 +152,11 @@ class XMLLegacyPDFReader : public XMLPacketReader {
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLegacyPDFReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+        XMLLegacyPDFReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -167,7 +171,7 @@ class XMLLegacyPDFReader : public XMLPacketReader {
  */
 class XMLScriptReader : public XMLPacketReader {
     private:
-        Script* script;
+        std::shared_ptr<Script> script;
             /**< The script currently being read. */
 
     public:
@@ -176,10 +180,11 @@ class XMLScriptReader : public XMLPacketReader {
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLScriptReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+        XMLScriptReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -194,7 +199,7 @@ class XMLScriptReader : public XMLPacketReader {
  */
 class XMLTextReader : public XMLPacketReader {
     private:
-        Text* text;
+        std::shared_ptr<Text> text;
             /**< The text packet currently being read. */
 
     public:
@@ -203,10 +208,11 @@ class XMLTextReader : public XMLPacketReader {
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLTextReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+        XMLTextReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual void initialChars(const std::string& chars) override;
 };
 
@@ -218,7 +224,7 @@ class XMLTextReader : public XMLPacketReader {
  */
 class XMLLegacyTextReader : public XMLPacketReader {
     private:
-        Text* text;
+        std::shared_ptr<Text> text;
             /**< The text packet currently being read. */
 
     public:
@@ -227,10 +233,11 @@ class XMLLegacyTextReader : public XMLPacketReader {
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLegacyTextReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id);
+        XMLLegacyTextReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -240,46 +247,46 @@ class XMLLegacyTextReader : public XMLPacketReader {
 
 // Inline functions for XMLAnonRefReader
 
-inline Packet* XMLAnonRefReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLAnonRefReader::packetToCommit() {
     return packet;
 }
 
 // Inline functions for XMLContainerReader
 
 inline XMLContainerReader::XMLContainerReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         container(new Container()) {
 }
 
-inline Packet* XMLContainerReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLContainerReader::packetToCommit() {
     return container;
 }
 
 // Inline functions for XMLPDFReader
 
 inline XMLPDFReader::XMLPDFReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         pdf(new PDF()) {
 }
 
-inline Packet* XMLPDFReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLPDFReader::packetToCommit() {
     return pdf;
 }
 
 // Inline functions for XMLLegacyPDFReader
 
 inline XMLLegacyPDFReader::XMLLegacyPDFReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         pdf(new PDF()) {
 }
 
-inline Packet* XMLLegacyPDFReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLLegacyPDFReader::packetToCommit() {
     return pdf;
 }
 
@@ -294,26 +301,26 @@ inline XMLElementReader* XMLLegacyPDFReader::startContentSubElement(
 // Inline functions for XMLScriptReader
 
 inline XMLScriptReader::XMLScriptReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         script(new Script()) {
 }
 
-inline Packet* XMLScriptReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLScriptReader::packetToCommit() {
     return script;
 }
 
 // Inline functions for XMLTextReader
 
 inline XMLTextReader::XMLTextReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         text(new Text()) {
 }
 
-inline Packet* XMLTextReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLTextReader::packetToCommit() {
     return text;
 }
 
@@ -324,13 +331,13 @@ inline void XMLTextReader::initialChars(const std::string& chars) {
 // Inline functions for XMLLegacyTextReader
 
 inline XMLLegacyTextReader::XMLLegacyTextReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         text(new Text()) {
 }
 
-inline Packet* XMLLegacyTextReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLLegacyTextReader::packetToCommit() {
     return text;
 }
 

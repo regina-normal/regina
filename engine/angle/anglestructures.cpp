@@ -96,7 +96,7 @@ void AngleStructures::swap(AngleStructures& other) {
 }
 
 void AngleStructures::enumerateInternal(ProgressTracker* tracker,
-        Packet* treeParent) {
+        std::shared_ptr<Packet> treeParent) {
     // Form the matching equations.
     MatrixInt eqns = regina::makeAngleEquations(*triangulation_);
 
@@ -147,7 +147,8 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
 
         if (treeParent && ! (tracker && tracker->isCancelled()))
             treeParent->insertChildLast(
-                static_cast<PacketOf<AngleStructures>*>(this));
+                static_cast<PacketOf<AngleStructures>*>(this)->
+                shared_from_this());
 
         if (tracker)
             tracker->setFinished();
@@ -174,7 +175,8 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         // All done!
         if (treeParent && ! (tracker && tracker->isCancelled()))
             treeParent->insertChildLast(
-                static_cast<PacketOf<AngleStructures>*>(this));
+                static_cast<PacketOf<AngleStructures>*>(this)->
+                shared_from_this());
 
         if (tracker)
             tracker->setFinished();
@@ -192,37 +194,26 @@ AngleStructures::AngleStructures(const Triangulation<3>& triangulation,
         enumerateInternal(nullptr, nullptr);
 }
 
-AngleStructures* AngleStructures::enumerate(Triangulation<3>& triangulation,
-        bool tautOnly, ProgressTracker* tracker) {
-    Packet* treeParent = triangulation.packet();
-    AngleStructures* ans;
-
-    if (treeParent)
-        ans = new PacketOf<AngleStructures>(std::in_place, tautOnly,
-            AS_ALG_DEFAULT, triangulation);
-    else
-        ans = new AngleStructures(tautOnly, AS_ALG_DEFAULT, triangulation);
+std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerate(
+        Triangulation<3>& triangulation, bool tautOnly,
+        ProgressTracker* tracker) {
+    auto ans = makePacket<AngleStructures>(std::in_place, tautOnly,
+        AS_ALG_DEFAULT, triangulation);
 
     if (tracker)
         std::thread(&AngleStructures::enumerateInternal,
-            ans, tracker, treeParent).detach();
+            ans, tracker, triangulation.packet()).detach();
     else
-        ans->enumerateInternal(nullptr, treeParent);
+        ans->enumerateInternal(nullptr, triangulation.packet());
     return ans;
 }
 
-AngleStructures* AngleStructures::enumerateTautDD(
+std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerateTautDD(
         Triangulation<3>& triangulation) {
-    Packet* treeParent = triangulation.packet();
-    AngleStructures* ans;
+    auto ans = makePacket<AngleStructures>(std::in_place, true, AS_ALG_DD,
+        triangulation);
 
-    if (treeParent)
-        ans = new PacketOf<AngleStructures>(std::in_place, true, AS_ALG_DD,
-            triangulation);
-    else
-        ans = new AngleStructures(true, AS_ALG_DD, triangulation);
-
-    ans->enumerateInternal(nullptr /* tracker */, treeParent);
+    ans->enumerateInternal(nullptr /* tracker */, triangulation.packet());
     return ans;
 }
 

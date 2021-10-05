@@ -49,7 +49,7 @@ namespace {
      */
     class ReginaDataReader : public regina::XMLPacketReader {
         private:
-            Container container;
+            std::shared_ptr<Container> container;
                 /**< Sits above the entire packet tree read from file. */
             bool isReginaData;
                 /**< Are we actually reading a \<regina ...\> or
@@ -64,14 +64,14 @@ namespace {
              */
             ReginaDataReader(XMLTreeResolver& resolver) :
                     XMLPacketReader(resolver, nullptr, false, {}, {}),
-                    isReginaData(false) {
+                    container(new Container()), isReginaData(false) {
             }
 
-            virtual Packet* packetToCommit() override {
+            virtual std::shared_ptr<Packet> packetToCommit() override {
                 if (isReginaData)
-                    return &container;
+                    return container;
                 else
-                    return nullptr;
+                    return {};
             }
 
             const std::string& version() const {
@@ -88,14 +88,6 @@ namespace {
                         props.find("engine");
                     if (it != props.end())
                         version_ = stripWhitespace(it->second);
-                }
-            }
-
-            virtual void abort(XMLElementReader*) override {
-                // Delete all children of the top-level container.
-                while (Packet* child = container.firstChild()) {
-                    child->makeOrphan();
-                    delete child;
                 }
             }
     };
@@ -116,19 +108,19 @@ namespace {
     const int regChunkSize = 1024;
 }
 
-Packet* open(const char* filename) {
+std::shared_ptr<Packet> open(const char* filename) {
     std::ifstream file(filename, std::ios_base::in | std::ios_base::binary);
     // We don't test whether the file was opened, since open(std::istream&)
     // tests this for us as the first thing it does.
     return regina::open(file);
 }
 
-Packet* open(std::istream& s) {
+std::shared_ptr<Packet> open(std::istream& s) {
     // Note: open(const char*) relies on us testing here whether s was
     // successfully opened.  If anyone removes this test, then they
     // should add a corresponding test to open(const char*) instead.
     if (! s)
-        return nullptr;
+        return {};
 
     // We declare buf outside the try-catch block because it is dynamically
     // allocated, and so we need to deallocate it if an exception is caught.
@@ -166,7 +158,7 @@ Packet* open(std::istream& s) {
                     std::cerr << "ERROR: Could not read stream: "
                         << e.what() << std::endl;
                     delete[] buf;
-                    return nullptr;
+                    return {};
                 }
                 if (chunkRead == 0)
                     break;
@@ -264,22 +256,19 @@ Packet* open(std::istream& s) {
 
         // See if we read anything.
         // If so, break it away from the top-level container and return it.
-        Packet* p = reader.packetToCommit();
-        if (p) {
-            p = p->firstChild();
-            if (p)
-                p->makeOrphan();
-
+        if (auto p = reader.packetToCommit()) {
             // Resolve any dangling packet references.
             resolver.resolveDelayed();
 
-            return p;
+            // As reader is destroyed, it will automatically orphan the
+            // child packet that we return and delete the old parent container.
+            return p->firstChild();
         } else
-            return nullptr;
+            return {};
     } catch (const zstr::Exception& e) {
         std::cerr << "ERROR: Could not open: " << e.what() << std::endl;
         delete[] buf;
-        return nullptr;
+        return {};
     }
 }
 

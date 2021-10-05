@@ -101,7 +101,7 @@ class XMLNormalSurfaceReader : public XMLElementReader {
  */
 class XMLNormalSurfacesReader : public XMLPacketReader {
     private:
-        PacketOf<NormalSurfaces>* list_;
+        std::shared_ptr<PacketOf<NormalSurfaces>> list_;
             /**< The normal surface list currently being read. */
         const Triangulation<3>* tri_;
             /**< The triangulation in which these normal surfaces live. */
@@ -115,11 +115,11 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
          *
          * @param props the attributes of the \c surfaces XML element.
          */
-        XMLNormalSurfacesReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id,
-            const regina::xml::XMLPropertyDict& props);
+        XMLNormalSurfacesReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -135,9 +135,9 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
  */
 class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
     private:
-        PacketOf<NormalSurfaces>* list_;
+        std::shared_ptr<PacketOf<NormalSurfaces>> list_;
             /**< The normal surface list currently being read. */
-        const Triangulation<3>* tri_;
+        const Triangulation<3>& tri_;
             /**< The triangulation in which these normal surfaces live. */
 
     public:
@@ -148,13 +148,12 @@ class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
          * parent class XMLPacketReader.
          *
          * @param tri the triangulation in which these normal surfaces live.
-         * This must be non-null.
          */
-        XMLLegacyNormalSurfacesReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id,
-            const Triangulation<3>* tri);
+        XMLLegacyNormalSurfacesReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const Triangulation<3>& tri);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -175,20 +174,20 @@ inline std::optional<NormalSurface>& XMLNormalSurfaceReader::surface() {
 
 // Inline functions for XMLNormalSurfacesReader
 
-inline Packet* XMLNormalSurfacesReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLNormalSurfacesReader::packetToCommit() {
     return list_;
 }
 
 // Inline functions for XMLLegacyNormalSurfacesReader
 
 inline XMLLegacyNormalSurfacesReader::XMLLegacyNormalSurfacesReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
-        std::string label, std::string id, const Triangulation<3>* tri) :
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id, const Triangulation<3>& tri) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         list_(nullptr), tri_(tri) {
 }
 
-inline Packet* XMLLegacyNormalSurfacesReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLLegacyNormalSurfacesReader::packetToCommit() {
     return list_;
 }
 

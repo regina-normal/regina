@@ -77,16 +77,16 @@ void dumpNoPacket(std::ostream& out, const std::string& packetLabel,
     }
 }
 
-void dumpPacketHeader(std::ostream& out, const Packet* p) {
+void dumpPacketHeader(std::ostream& out, const Packet& p) {
     out << separator << '\n';
     out << "*\n";
-    out << "* Label: " << p->humanLabel() << '\n';
-    out << "* Type: " << p->typeName() << '\n';
-    out << "* Parent: " << (p->parent() ?
-        p->parent()->humanLabel() : "(none)") << '\n';
-    if (p->hasTags()) {
+    out << "* Label: " << p.humanLabel() << '\n';
+    out << "* Type: " << p.typeName() << '\n';
+    out << "* Parent: " << (p.parent() ?
+        p.parent()->humanLabel() : "(none)") << '\n';
+    if (p.hasTags()) {
         out << "* Tags: ";
-        const std::set<std::string>& tags = p->tags();
+        const std::set<std::string>& tags = p.tags();
         for (auto it = tags.begin(); it != tags.end(); it++) {
             if (it != tags.begin())
                 out << ", ";
@@ -98,13 +98,13 @@ void dumpPacketHeader(std::ostream& out, const Packet* p) {
     out << separator << '\n';
 }
 
-void dumpPacket(std::ostream& out, const Packet* p, char dumpOpt) {
+void dumpPacket(std::ostream& out, const Packet& p, char dumpOpt) {
     if (dumpOpt == 'l')
-        out << p->fullName() << '\n';
+        out << p.fullName() << '\n';
     else if (dumpOpt == 'f') {
         dumpPacketHeader(out, p);
         out << '\n';
-        out << p->detail() << '\n';
+        out << p.detail() << '\n';
         out << '\n';
     }
 }
@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
         "UTF-8", regina::i18n::Locale::codeset());
 
     // Do the actual work.
-    Packet* tree = regina::open(file.c_str());
+    std::shared_ptr<Packet> tree = regina::open(file.c_str());
     if (! tree) {
         std::cerr << "File " << file << " could not be read.\n";
         return 1;
@@ -174,14 +174,13 @@ int main(int argc, char* argv[]) {
 
     if (dumpOpt != 'n') {
         if (packets.empty())
-            for (const Packet* p : *tree)
+            for (const Packet& p : *tree)
                 dumpPacket(out, p, dumpOpt);
         else
             for (StringList::const_iterator it = packets.begin();
                     it != packets.end(); it++) {
-                Packet* p = tree->findPacketLabel(*it);
-                if (p)
-                    dumpPacket(out, p, dumpOpt);
+                if (auto p = tree->findPacketLabel(*it))
+                    dumpPacket(out, *p, dumpOpt);
                 else
                     dumpNoPacket(out, *it, dumpOpt);
             }
@@ -193,7 +192,6 @@ int main(int argc, char* argv[]) {
         out << tree->totalTreeSize() << " total packets in file.\n";
     }
 
-    delete tree;
     return 0;
 }
 

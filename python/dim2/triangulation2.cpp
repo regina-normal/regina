@@ -36,7 +36,6 @@
 #include "../helpers.h"
 #include "algebra/grouppresentation.h"
 #include "triangulation/dim2.h"
-#include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -44,10 +43,9 @@ using regina::Isomorphism;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
-CONVERT_FROM_UNIQUE_PTR(regina::Triangulation<2>)
-
 void addTriangulation2(pybind11::module_& m) {
-    auto c = pybind11::class_<Triangulation<2>>(m, "Triangulation2")
+    auto c = pybind11::class_<Triangulation<2>,
+            std::shared_ptr<Triangulation<2>>>(m, "Triangulation2")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<2>&>())
         .def(pybind11::init<const Triangulation<2>&, bool>())

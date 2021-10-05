@@ -40,9 +40,9 @@ namespace regina::python {
  * Wraps an iterator over a C++ container.
  *
  * The iterator will store its own local Python reference to the container.
- * If the container is held using SafePtr (as, for example, a normal surface
- * list is), then this will ensure that the container survives for the entire
- * iteration, even if the list was a temporary object.
+ * If the container is held using a shared pointer (as, for example, a normal
+ * surface list is), then this will ensure that the container survives for the
+ * entire iteration, even if the list was a temporary object.
  */
 template <class Container>
 class SafeIterator {

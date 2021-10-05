@@ -77,7 +77,7 @@ namespace {
      */
     class VariableResolutionTask : public XMLTreeResolutionTask {
         private:
-            Script* script_;
+            std::shared_ptr<Script> script_;
             std::string name_;
             std::string valueID_;
                 /**< An internal packet ID.  Used by Regina >= 4.95. */
@@ -85,7 +85,7 @@ namespace {
                 /**< A packet label.  Used by Regina <= 4.94. */
 
         public:
-            inline VariableResolutionTask(Script* script,
+            inline VariableResolutionTask(std::shared_ptr<Script> script,
                     const std::string& name,
                     const std::string& valueID,
                     const std::string& valueLabel) :
@@ -94,7 +94,7 @@ namespace {
             }
 
             inline void resolve(const XMLTreeResolver& resolver) {
-                Packet* resolution = nullptr;
+                std::shared_ptr<Packet> resolution;
                 if (! valueID_.empty())
                     resolution = resolver.resolve(valueID_);
                 if ((! resolution) && (! valueLabel_.empty()))
@@ -180,12 +180,10 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
 }
 
 XMLAnonRefReader::XMLAnonRefReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)) {
     packet = res.resolve(id_);
-    if (packet)
-        packet->makeOrphan();
 }
 
 } // namespace regina

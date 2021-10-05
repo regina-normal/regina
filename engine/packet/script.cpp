@@ -45,17 +45,17 @@ const std::string& Script::variableName(size_t index) const {
     return (*it).first;
 }
 
-Packet* Script::variableValue(size_t index) const {
+std::shared_ptr<Packet> Script::variableValue(size_t index) const {
     std::map<std::string, Packet*>::const_iterator it = variables.begin();
     advance(it, index);
-    return (*it).second;
+    return (*it).second->shared_from_this();
 }
 
-Packet* Script::variableValue(const std::string& name) const {
+std::shared_ptr<Packet> Script::variableValue(const std::string& name) const {
     std::map<std::string, Packet*>::const_iterator it = variables.find(name);
     if (it == variables.end())
         return 0;
-    return (*it).second;
+    return (*it).second->shared_from_this();
 }
 
 long Script::variableIndex(const std::string& name) const {
@@ -79,32 +79,32 @@ void Script::setVariableName(size_t index, const std::string& name) {
     variables.insert(std::make_pair(name, value));
 }
 
-void Script::setVariableValue(size_t index, Packet* value) {
+void Script::setVariableValue(size_t index, std::shared_ptr<Packet> value) {
     std::map<std::string, Packet*>::iterator it = variables.begin();
     advance(it, index);
 
-    if (it->second == value)
+    if (it->second == value.get())
         return;
 
     ChangeEventSpan span(*this);
 
     if (it->second)
         it->second->unlisten(this);
-    it->second = value;
+    it->second = value.get();
     if (it->second)
         it->second->listen(this);
 }
 
 const std::string& Script::addVariableName(const std::string& name,
-        Packet* value) {
+        std::shared_ptr<Packet> value) {
     ChangeEventSpan span(*this);
 
-    auto result = variables.insert(std::make_pair(name, value));
+    auto result = variables.insert(std::make_pair(name, value.get()));
     int which = 2;
     while (! result.second) {
         std::ostringstream s;
         s << name << ' ' << which;
-        result = variables.insert(std::make_pair(s.str(), value));
+        result = variables.insert(std::make_pair(s.str(), value.get()));
 
         ++which;
     }
@@ -153,8 +153,9 @@ void Script::writeTextLong(std::ostream& o) const {
     o << '\n' << text_;
 }
 
-Packet* Script::internalClonePacket(Packet*) const {
-    Script* ans = new Script();
+std::shared_ptr<Packet> Script::internalClonePacket(std::shared_ptr<Packet>)
+        const {
+    auto ans = std::make_shared<Script>();
     ans->text_ = text_;
     ans->variables = variables;
     return ans;

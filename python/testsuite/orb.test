@@ -41,7 +41,7 @@ else:
 
 def testOrb(filename):
     print('Orb file:', filename)
-    print(readOrb(testpath + '/' + filename).data().detail())
+    print(readOrb(testpath + '/' + filename).detail())
     print()
 
 testOrb('cube.orb')

@@ -102,7 +102,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
  */
 class XMLNormalHypersurfacesReader : public XMLPacketReader {
     private:
-        PacketOf<NormalHypersurfaces>* list_;
+        std::shared_ptr<PacketOf<NormalHypersurfaces>> list_;
             /**< The normal hypersurface list currently being read. */
         const Triangulation<4>* tri_;
             /**< The triangulation in which these normal hypersurfaces live. */
@@ -116,11 +116,11 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
          *
          * @param props the attributes of the \c hypersurfaces XML element.
          */
-        XMLNormalHypersurfacesReader(XMLTreeResolver& resolver, Packet* parent,
-            bool anon, std::string label, std::string id,
-            const regina::xml::XMLPropertyDict& props);
+        XMLNormalHypersurfacesReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -136,9 +136,9 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
  */
 class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
     private:
-        PacketOf<NormalHypersurfaces>* list_;
+        std::shared_ptr<PacketOf<NormalHypersurfaces>> list_;
             /**< The normal hypersurface list currently being read. */
-        const Triangulation<4>* tri_;
+        const Triangulation<4>& tri_;
             /**< The triangulation in which these normal hypersurfaces live. */
 
     public:
@@ -149,13 +149,13 @@ class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
          * parent class XMLPacketReader.
          *
          * @param tri the triangulation in which these normal hypersurfaces
-         * live.  This must be non-null.
+         * live.
          */
         XMLLegacyNormalHypersurfacesReader(XMLTreeResolver& resolver,
-            Packet* parent, bool anon, std::string label, std::string id,
-            const Triangulation<4>* tri);
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const Triangulation<4>& tri);
 
-        virtual Packet* packetToCommit() override;
+        virtual std::shared_ptr<Packet> packetToCommit() override;
         virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -177,20 +177,21 @@ inline std::optional<NormalHypersurface>&
 
 // Inline functions for XMLNormalHypersurfacesReader
 
-inline Packet* XMLNormalHypersurfacesReader::packetToCommit() {
+inline std::shared_ptr<Packet> XMLNormalHypersurfacesReader::packetToCommit() {
     return list_;
 }
 
 // Inline functions for XMLLegacyNormalHypersurfacesReader
 
 inline XMLLegacyNormalHypersurfacesReader::XMLLegacyNormalHypersurfacesReader(
-        XMLTreeResolver& res, Packet* parent, bool anon,
-        std::string label, std::string id, const Triangulation<4>* tri) :
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id, const Triangulation<4>& tri) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
         list_(nullptr), tri_(tri) {
 }
 
-inline Packet* XMLLegacyNormalHypersurfacesReader::packetToCommit() {
+inline std::shared_ptr<Packet>
+        XMLLegacyNormalHypersurfacesReader::packetToCommit() {
     return list_;
 }
 

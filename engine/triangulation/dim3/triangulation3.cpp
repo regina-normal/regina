@@ -439,23 +439,27 @@ const SnapPeaTriangulation* Triangulation<3>::isSnapPea() const {
         static_cast<const SnapPeaTriangulation*>(this) : nullptr);
 }
 
-Packet* Triangulation<3>::inAnyPacket() {
+std::shared_ptr<Packet> Triangulation<3>::inAnyPacket() {
     switch (heldBy_) {
         case HELD_BY_PACKET:
-            return static_cast<PacketOf<Triangulation<3>>*>(this);
+            return static_cast<PacketOf<Triangulation<3>>*>(this)->
+                shared_from_this();
         case HELD_BY_SNAPPEA:
-            return static_cast<PacketOf<SnapPeaTriangulation>*>(this);
+            return static_cast<SnapPeaTriangulation*>(this)->
+                PacketData<SnapPeaTriangulation>::packet();
         default:
             return nullptr;
     }
 }
 
-const Packet* Triangulation<3>::inAnyPacket() const {
+std::shared_ptr<const Packet> Triangulation<3>::inAnyPacket() const {
     switch (heldBy_) {
         case HELD_BY_PACKET:
-            return static_cast<const PacketOf<Triangulation<3>>*>(this);
+            return static_cast<const PacketOf<Triangulation<3>>*>(this)->
+                shared_from_this();
         case HELD_BY_SNAPPEA:
-            return static_cast<const PacketOf<SnapPeaTriangulation>*>(this);
+            return static_cast<const SnapPeaTriangulation*>(this)->
+                PacketData<SnapPeaTriangulation>::packet();
         default:
             return nullptr;
     }

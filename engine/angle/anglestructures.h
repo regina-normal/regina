@@ -392,13 +392,18 @@ class AngleStructures :
          *
          * This static routine is almost identical to calling the class
          * constructor with the given arguments.  The only difference is
-         * that, unlike the class constructor, this routine will also insert
-         * the angle structure list beneath \a owner in the packet tree
-         * (but only if \a owner actually has a packet that contains it).
+         * that, unlike the class constructor, this routine will also wrap
+         * the new angle structure list in a packet and insert it beneath
+         * \a owner in the packet tree.
          * If a progress tracker is passed (which means the enumeration runs
          * in a background thread), the tree insertion will not happen until
          * the enumeration has finished (and if the user cancels the operation,
          * the insertion will not happen at all).
+         *
+         * This function is safe to use even if \a owner is a "pure"
+         * Triangulation<3> or SnapPeaTriangulation, not a packet type.
+         * In such a scenario, this routine will still build the angle
+         * structure list, but the resulting packet will be orphaned.
          *
          * See the class constructor for details on how this routine
          * works and what the various arguments mean.
@@ -419,9 +424,9 @@ class AngleStructures :
          * be reported, or \c null if no progress reporting is required.
          * @return the newly created angle structure list.
          */
-        [[deprecated]] static AngleStructures* enumerate(
-            Triangulation<3>& owner, bool tautOnly = false,
-            ProgressTracker* tracker = nullptr);
+        [[deprecated]] static std::shared_ptr<PacketOf<AngleStructures>>
+            enumerate(Triangulation<3>& owner, bool tautOnly = false,
+                ProgressTracker* tracker = nullptr);
 
         /**
          * Deprecated routine to enumerate all taut angle structures
@@ -430,9 +435,14 @@ class AngleStructures :
          * This static routine is almost identical to calling the class
          * constructor with the \c tautOnly argument set to \c true and
          * the \a algHints argument set to AS_ALG_DD.  The only difference is
-         * that, unlike the class constructor, this routine will also insert
-         * the angle structure list beneath \a owner in the packet tree
-         * (but only if \a owner actually has a packet that contains it).
+         * that, unlike the class constructor, this routine will also wrap
+         * the new angle structure list in a packet and insert it beneath
+         * \a owner in the packet tree.
+         *
+         * This function is safe to use even if \a owner is a "pure"
+         * Triangulation<3> or SnapPeaTriangulation, not a packet type.
+         * In such a scenario, this routine will still build the angle
+         * structure list, but the resulting packet will be orphaned.
          *
          * Note that default algorithm used by the class constructor for
          * taut angle structures is the tree traversal method, which is
@@ -448,8 +458,8 @@ class AngleStructures :
          * will be enumerated.
          * @return the newly created angle structure list.
          */
-        [[deprecated]] static AngleStructures* enumerateTautDD(
-            Triangulation<3>& owner);
+        [[deprecated]] static std::shared_ptr<PacketOf<AngleStructures>>
+            enumerateTautDD(Triangulation<3>& owner);
 
         /**
          * Writes a short text representation of this object to the
@@ -515,7 +525,7 @@ class AngleStructures :
          * enumeration has finished, or \c null if we should not.
          */
         void enumerateInternal(ProgressTracker* tracker,
-            Packet* treeParent);
+            std::shared_ptr<Packet> treeParent);
 
     friend class regina::XMLAngleStructuresReader;
     friend class regina::XMLLegacyAngleStructuresReader;
