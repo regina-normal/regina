@@ -56,10 +56,10 @@ class SourceHandler : public PacketExporter {
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::Packet* data, const QString& fileName,
-            QWidget* parentWidget) const;
-        virtual bool useExportEncoding() const;
+        virtual PacketFilter* canExport() const override;
+        virtual bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const override;
+        virtual bool useExportEncoding() const override;
 
     private:
         /**

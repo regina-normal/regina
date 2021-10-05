@@ -55,7 +55,7 @@ class PacketFilter {
          * Should the given packet be accepted according to this
          * particular acceptance algorithm?
          */
-        virtual bool accept(regina::Packet* packet) = 0;
+        virtual bool accept(const regina::Packet& packet) = 0;
 };
 
 /**
@@ -66,7 +66,7 @@ class AllPacketsFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::Packet* packet);
+        virtual bool accept(const regina::Packet& packet) override;
 };
 
 /**
@@ -82,8 +82,8 @@ class SingleTypeFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::Packet* packet) {
-            return (packet->type() == T::typeID);
+        virtual bool accept(const regina::Packet& packet) override {
+            return (packet.type() == T::typeID);
         }
 };
 
@@ -100,8 +100,8 @@ class TwoTypeFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::Packet* packet) {
-            int type = packet->type();
+        virtual bool accept(const regina::Packet& packet) override {
+            int type = packet.type();
             return (type == S::typeID || type == T::typeID);
         }
 };
@@ -119,15 +119,15 @@ class SubclassFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::Packet* packet) {
-            return dynamic_cast<T*>(packet);
+        virtual bool accept(const regina::Packet& packet) override {
+            return dynamic_cast<const T*>(std::addressof(packet));
         }
 };
 
 inline PacketFilter::~PacketFilter() {
 }
 
-inline bool AllPacketsFilter::accept(regina::Packet*) {
+inline bool AllPacketsFilter::accept(const regina::Packet&) {
     return true;
 }
 

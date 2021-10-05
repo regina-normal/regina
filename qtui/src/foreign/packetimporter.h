@@ -38,6 +38,8 @@
 #ifndef __PACKETIMPORTER_H
 #define __PACKETIMPORTER_H
 
+#include <memory>
+
 class QString;
 class QTextCodec;
 class ReginaMain;
@@ -71,8 +73,8 @@ class PacketImporter {
          * Sensible packet labels must be assigned to all packets in the
          * imported tree.
          */
-        virtual regina::Packet* importData(const QString& fileName,
-            ReginaMain* parentWidget) const = 0;
+        virtual std::shared_ptr<regina::Packet> importData(
+            const QString& fileName, ReginaMain* parentWidget) const = 0;
 
         /**
          * Should the GUI inform the user that their preferred codec

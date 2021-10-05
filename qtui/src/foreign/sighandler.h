@@ -77,8 +77,8 @@ class SigHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::Packet* importData(const QString& fileName,
-            ReginaMain* parentWidget) const;
+        virtual std::shared_ptr<regina::Packet> importData(
+            const QString& fileName, ReginaMain* parentWidget) const override;
 
     private:
         /**
@@ -95,8 +95,8 @@ inline SigHandler<PacketType>::SigHandler() {
 }
 
 template <class PacketType>
-regina::Packet* SigHandler<PacketType>::importData(const QString& fileName,
-        ReginaMain* parentWidget) const {
+std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
+        const QString& fileName, ReginaMain* parentWidget) const {
     QString explnSuffix;
     QString signatures;
     if constexpr (std::is_same_v<PacketType, regina::Link>) {
@@ -114,7 +114,7 @@ regina::Packet* SigHandler<PacketType>::importData(const QString& fileName,
         signatures = QObject::tr("isomorphism signatures");
     }
 
-    regina::Packet* ans = regina::readSigList<PacketType>(
+    std::shared_ptr<regina::Packet> ans = regina::readSigList<PacketType>(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans) {
         ReginaSupport::sorry(parentWidget,
@@ -122,17 +122,17 @@ regina::Packet* SigHandler<PacketType>::importData(const QString& fileName,
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
                 .arg(fileName.toHtmlEscaped()));
-        return nullptr;
+        return {};
     }
 
-    regina::Packet* last = ans->lastChild();
+    std::shared_ptr<regina::Packet> last = ans->lastChild();
     if (! last) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>The selected file does "
             "not contain any %1.").arg(signatures) + explnSuffix);
         delete ans;
-        return nullptr;
+        return {};
     } else if (last->type() == regina::PACKET_TEXT) {
         if (last == ans->firstChild()) {
             ReginaSupport::sorry(parentWidget, 
@@ -141,7 +141,7 @@ regina::Packet* SigHandler<PacketType>::importData(const QString& fileName,
                 "could be interpreted as %1.").arg(signatures)
                 + explnSuffix);
             delete ans;
-            return nullptr;
+            return {};
         } else {
             ReginaSupport::warn(parentWidget, 
                 QObject::tr("There were problems with the import."),

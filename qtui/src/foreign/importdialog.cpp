@@ -48,8 +48,10 @@
 #include <QTextDocument>
 #include <QWhatsThis>
 
-ImportDialog::ImportDialog(QWidget* parent, regina::Packet* importedData,
-        regina::Packet* packetTree, regina::Packet* defaultParent,
+ImportDialog::ImportDialog(QWidget* parent,
+        std::shared_ptr<regina::Packet> importedData,
+        std::shared_ptr<regina::Packet> packetTree,
+        std::shared_ptr<regina::Packet> defaultParent,
         PacketFilter* useFilter, bool useCodec, const QString& dialogTitle) :
         QDialog(parent), tree(packetTree), newTree(importedData) {
     setWindowTitle(dialogTitle);
@@ -119,14 +121,14 @@ bool ImportDialog::validate() {
 
 void ImportDialog::slotOk() {
     // Get the parent packet.
-    regina::Packet* parentPacket = chooser->selectedPacket();
+    std::shared_ptr<regina::Packet> parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
         ReginaSupport::info(this,
             tr("Please select a parent packet."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
-    if (filter && ! filter->accept(parentPacket)) {
+    if (filter && ! filter->accept(*parentPacket)) {
         ReginaSupport::info(this,
             tr("Please select a different location in the tree "
             "for the import."),

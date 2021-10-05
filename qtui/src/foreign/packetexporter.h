@@ -79,8 +79,8 @@ class PacketExporter {
          * argument \a parentWidget as the parent widget of the message
          * box).
          */
-        virtual bool exportData(regina::Packet* data, const QString& fileName,
-            QWidget* parentWidget) const = 0;
+        virtual bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const = 0;
 
         /**
          * Should the GUI inform the user that their preferred codec

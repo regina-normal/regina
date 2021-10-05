@@ -58,17 +58,17 @@ class PythonHandler : public PacketImporter, public PacketExporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::Packet* importData(const QString& fileName,
-            ReginaMain* parentWidget) const;
-        virtual bool useImportEncoding() const;
+        virtual std::shared_ptr<regina::Packet> importData(
+            const QString& fileName, ReginaMain* parentWidget) const override;
+        virtual bool useImportEncoding() const override;
 
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::Packet* data, const QString& fileName,
-            QWidget* parentWidget) const;
-        virtual bool useExportEncoding() const;
+        virtual PacketFilter* canExport() const override;
+        virtual bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const override;
+        virtual bool useExportEncoding() const override;
 
     private:
         /**

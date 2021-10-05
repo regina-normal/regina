@@ -67,12 +67,13 @@ class HyperCreator : public PacketCreator {
         /**
          * PacketCreator overrides.
          */
-        QWidget* getInterface();
-        QString parentPrompt();
-        QString parentWhatsThis();
-        regina::Packet* createPacket(regina::Packet* parentPacket,
-            QWidget* parentWidget);
-        void explainNoParents();
+        QWidget* getInterface() override;
+        QString parentPrompt() override;
+        QString parentWhatsThis() override;
+        std::shared_ptr<regina::Packet> createPacket(
+            std::shared_ptr<regina::Packet> parentPacket,
+            QWidget* parentWidget) override;
+        void explainNoParents() override;
 };
 
 #endif

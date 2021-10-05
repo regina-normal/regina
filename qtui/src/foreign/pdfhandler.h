@@ -60,15 +60,15 @@ class PDFHandler : public PacketImporter, public PacketExporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::Packet* importData(const QString& fileName,
-            ReginaMain* parentWidget) const;
+        virtual std::shared_ptr<regina::Packet> importData(
+            const QString& fileName, ReginaMain* parentWidget) const override;
 
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::Packet* data, const QString& fileName,
-            QWidget* parentWidget) const;
+        virtual PacketFilter* canExport() const override;
+        virtual bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const override;
 
     private:
         /**

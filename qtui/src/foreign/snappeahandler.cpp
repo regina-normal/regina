@@ -42,9 +42,9 @@
 
 const SnapPeaHandler SnapPeaHandler::instance;
 
-regina::Packet* SnapPeaHandler::importData(const QString& fileName,
-        ReginaMain* parentWidget) const {
-    auto ans = new regina::PacketOf<regina::SnapPeaTriangulation>(
+std::shared_ptr<regina::Packet> SnapPeaHandler::importData(
+        const QString& fileName, ReginaMain* parentWidget) const {
+    auto ans = regina::makePacket<regina::SnapPeaTriangulation>(
         std::in_place, static_cast<const char*>(QFile::encodeName(fileName)));
     if (ans->isNull()) {
         ReginaSupport::sorry(parentWidget,
@@ -52,8 +52,7 @@ regina::Packet* SnapPeaHandler::importData(const QString& fileName,
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
                 "is readable and in SnapPea format.</qt>").
                 arg(fileName.toHtmlEscaped()));
-        delete ans;
-        return nullptr;
+        return {};
     }
     return ans;
 }
@@ -62,9 +61,11 @@ PacketFilter* SnapPeaHandler::canExport() const {
     return new SubclassFilter<regina::Triangulation<3>>();
 }
 
-bool SnapPeaHandler::exportData(regina::Packet* data,
+bool SnapPeaHandler::exportData(std::shared_ptr<regina::Packet> data,
         const QString& fileName, QWidget* parentWidget) const {
-    regina::Triangulation<3>* tri = dynamic_cast<regina::Triangulation<3>*>(data);
+    // Cast all the way up to Triangulation<3>, so that we catch both
+    // Triangulation<3> and SnapPeaTriangulation packets.
+    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(data);
     if (! tri->isValid()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This triangulation is not valid."),

@@ -47,11 +47,11 @@
 #include <QTextDocument>
 #include <QWhatsThis>
 
-ExportDialog::ExportDialog(QWidget* parent, regina::Packet* packetTree,
-        regina::Packet* defaultSelection, PacketFilter* useFilter,
-        bool useCodec, const QString& dialogTitle) :
-        QDialog(parent),
-        tree(packetTree), chosenPacket(0) {
+ExportDialog::ExportDialog(QWidget* parent,
+        std::shared_ptr<regina::Packet> packetTree,
+        std::shared_ptr<regina::Packet> defaultSelection,
+        PacketFilter* useFilter, bool useCodec, const QString& dialogTitle) :
+        QDialog(parent), tree(packetTree) {
     setWindowTitle(dialogTitle);
     QVBoxLayout* layout = new QVBoxLayout(this);
 
@@ -107,7 +107,7 @@ void ExportDialog::slotOk() {
         return;
     }
     PacketFilter* filter = chooser->getFilter();
-    if (filter && ! filter->accept(chosenPacket)) {
+    if (filter && ! filter->accept(*chosenPacket)) {
         ReginaSupport::sorry(this,
             tr("Please select a different packet."),
             tr("<qt>The packet <i>%1</i> cannot "

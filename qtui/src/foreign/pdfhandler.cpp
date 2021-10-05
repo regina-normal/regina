@@ -42,17 +42,16 @@
 
 const PDFHandler PDFHandler::instance;
 
-regina::Packet* PDFHandler::importData(const QString& fileName,
-        ReginaMain* parentWidget) const {
-    regina::PDF* ans = new regina::PDF(
+std::shared_ptr<regina::Packet> PDFHandler::importData(
+        const QString& fileName, ReginaMain* parentWidget) const {
+    std::shared_ptr<regina::PDF> ans = std::make_shared<regina::PDF>(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (ans->isNull()) {
-        delete ans;
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in PDF format.</qt>").arg(fileName.toHtmlEscaped()));
-        return 0;
+        return {};
     } else
         ans->setLabel(QObject::tr("PDF document").toUtf8().constData());
     return ans;
@@ -62,9 +61,9 @@ PacketFilter* PDFHandler::canExport() const {
     return new SingleTypeFilter<regina::PDF>();
 }
 
-bool PDFHandler::exportData(regina::Packet* data, const QString& fileName,
-        QWidget* parentWidget) const {
-    regina::PDF* pdf = dynamic_cast<regina::PDF*>(data);
+bool PDFHandler::exportData(std::shared_ptr<regina::Packet> data,
+        const QString& fileName, QWidget* parentWidget) const {
+    auto pdf = std::dynamic_pointer_cast<regina::PDF>(data);
     if (! pdf->data()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This PDF packet is empty."),
