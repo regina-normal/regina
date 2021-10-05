@@ -49,3 +49,14 @@ Destroying: g
 Step 8
 Empty 3-dimensional triangulation
 b
+Deep reference case
+Step 1
+Step 2
+Step 3
+Destroying: z2
+Destroying: x
+Step 4
+Destroying: z1
+Step 5
+Destroying: y
+Step 6

@@ -131,3 +131,24 @@ print(b.label())
 # entire python system is shutting down
 bw = None
 
+# An example where we drop the root of a tree but hang on to references
+# deeper within the tree.
+print('Deep reference case')
+x = Container(); x.setLabel('x'); xw = Watcher(x);
+y = Container(); y.setLabel('y'); yw = Watcher(y);
+z1 = Container(); z1.setLabel('z1'); z1w = Watcher(z1);
+z2 = Container(); z2.setLabel('z2'); z2w = Watcher(z2);
+print('Step 1')
+x.insertChildLast(z1)
+x.insertChildLast(z2)
+z1.insertChildLast(y)
+print('Step 2')
+z2 = None
+print('Step 3')
+x = None # Should delete x and z2, with the child z2 going first
+print('Step 4')
+z1 = None # Should delete z1
+print('Step 5')
+y = None # Should delete y
+print('Step 6')
+

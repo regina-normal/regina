@@ -108,5 +108,6 @@ print('Dropping children...')
 y = None; z1 = None; z2 = None
 print('Dropping root...')
 x = None
+
 print('Finished.')
 
