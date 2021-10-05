@@ -94,5 +94,19 @@ print('Destroying parent...')
 c = None # t lives, since it is managed by python
 print('Destroying child t...')
 t = None
+
+# Now test the order in which destruction events are fired.
+print('Preparing order test...')
+x = Container(); x.setLabel('x'); xw = Watcher(); x.listen(xw)
+y = Container(); y.setLabel('y'); yw = Watcher(); y.listen(yw)
+z1 = Container(); z1.setLabel('z1'); z1w = Watcher(); z1.listen(z1w)
+z2 = Container(); z2.setLabel('z2'); z2w = Watcher(); z2.listen(z2w)
+x.insertChildLast(z1)
+x.insertChildLast(z2)
+z1.insertChildLast(y)
+print('Dropping children...')
+y = None; z1 = None; z2 = None
+print('Dropping root...')
+x = None
 print('Finished.')
 
