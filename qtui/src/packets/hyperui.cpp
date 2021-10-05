@@ -51,6 +51,7 @@
 
 using regina::Packet;
 using regina::NormalHypersurface;
+using regina::Triangulation;
 
 HyperUI::HyperUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketPane* newEnclosingPane) :
@@ -99,8 +100,8 @@ HyperHeaderUI::HyperHeaderUI(
 
     // Listen for events on the underlying triangulation, since we
     // display its label in the header.
-    if (const Packet* p = packet->triangulation().packet())
-        const_cast<Packet*>(p)->listen(this);
+    if (auto p = packet->triangulation().packet())
+        std::const_pointer_cast<regina::PacketOf<Triangulation<4>>>(p)->listen(this);
 }
 
 regina::Packet* HyperHeaderUI::getPacket() {
@@ -149,7 +150,7 @@ void HyperHeaderUI::refresh() {
     const regina::Triangulation<4>& tri = surfaces->triangulation();
     if (tri.isReadOnlySnapshot())
         triName = tr("(private copy)");
-    else if (const Packet* p = tri.packet())
+    else if (auto p = tri.packet())
         triName = p->humanLabel().c_str();
     else
         triName = tr("(anonymous)");
@@ -164,7 +165,7 @@ void HyperHeaderUI::refresh() {
 
 void HyperHeaderUI::viewTriangulation() {
     const regina::Triangulation<4>& tri = surfaces->triangulation();
-    const Packet* triPkt = tri.packet();
+    auto triPkt = tri.packet();
     if (! triPkt) {
         QMessageBox msg(QMessageBox::Information,
             tr("Create New Copy"),
@@ -187,13 +188,15 @@ void HyperHeaderUI::viewTriangulation() {
         if (msg.exec() != QMessageBox::Yes)
             return;
 
-        auto copy = new regina::PacketOf<regina::Triangulation<4>>(tri);
+        auto copy = regina::makePacket<regina::Triangulation<4>>(
+            std::in_place, tri);
         copy->setLabel(surfaces->adornedLabel("Triangulation"));
         surfaces->insertChildLast(copy);
 
-        enclosingPane->getMainWindow()->packetView(copy, true, true);
+        enclosingPane->getMainWindow()->packetView(copy.get(), true, true);
     } else {
-        enclosingPane->getMainWindow()->packetView(const_cast<Packet*>(triPkt),
+        enclosingPane->getMainWindow()->packetView(
+            const_cast<regina::PacketOf<Triangulation<4>>*>(triPkt.get()),
             false /* visible in tree */, false /* select in tree */);
     }
 }

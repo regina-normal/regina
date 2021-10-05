@@ -235,8 +235,8 @@ QWidget* LinkCreator::getInterface() {
     return ui;
 }
 
-regina::Packet* LinkCreator::createPacket(regina::Packet*,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> LinkCreator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == LINK_CODE) {
         std::string use = regina::stripWhitespace(
@@ -244,15 +244,13 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
         if (use.empty()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("Please type a text code into the box provided."));
-            return nullptr;
+            return {};
         }
-        regina::PacketOf<Link>* ans = new regina::PacketOf<Link>(
-            std::in_place, use);
+        auto ans = makePacket<Link>(std::in_place, use);
         if (! ans->isEmpty()) {
             ans->setLabel(use);
             return ans;
         }
-        delete ans;
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given text code."),
             QObject::tr("<qt>Here you can enter a knot signature, "
@@ -266,7 +264,7 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 "<li><tt>bca</tt></li></ul><p>"
                 "For more information on what each type of code means, "
                 "see the Regina Handbook.</qt>"));
-        return nullptr;
+        return {};
     } else if (typeId == LINK_TORUS) {
         if (! reTorusParams.exactMatch(torusParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -275,7 +273,7 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 "must be non-negative integers."),
                 QObject::tr("<qt>Example parameters are "
                 "<i>7,5</i>.</qt>"));
-            return nullptr;
+            return {};
         }
 
         unsigned long p = reTorusParams.cap(1).toULong();
@@ -319,11 +317,11 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
 
         ReginaSupport::info(parentWidget,
             QObject::tr("Please select an example knot or link."));
-        return nullptr;
+        return {};
     }
 
     ReginaSupport::info(parentWidget,
         QObject::tr("Please select a knot/link type."));
-    return nullptr;
+    return {};
 }
 

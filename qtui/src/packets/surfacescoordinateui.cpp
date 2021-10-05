@@ -584,12 +584,12 @@ void SurfacesCoordinateUI::refresh() {
     filter->refreshContents();
 
     bool filterChanged = false;
-    if (filter->selectedPacket() != appliedFilter) {
+    if (filter->selectedPacket().get() != appliedFilter) {
         filterChanged = true;
         if (appliedFilter)
             appliedFilter->unlisten(this);
         appliedFilter = dynamic_cast<regina::SurfaceFilter*>(
-            filter->selectedPacket());
+            filter->selectedPacket().get());
         if (appliedFilter)
             appliedFilter->listen(this);
     }
@@ -642,7 +642,7 @@ void SurfacesCoordinateUI::cutAlong() {
         "Cut #" + std::to_string(whichSurface));
     ans->intelligentSimplify();
     surfaces->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
 }
 
 void SurfacesCoordinateUI::crush() {
@@ -668,7 +668,7 @@ void SurfacesCoordinateUI::crush() {
     auto ans = regina::makePacket(toCrush.crush(),
         "Crushed #" + std::to_string(whichSurface));
     surfaces->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
 }
 
 void SurfacesCoordinateUI::updateActionStates() {

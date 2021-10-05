@@ -120,11 +120,10 @@ QString SurfacesCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your normal surfaces.");
 }
 
-regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
+        std::shared_ptr<regina::Packet> parent, QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    regina::Triangulation<3>* tri =
-        dynamic_cast<regina::Triangulation<3>*>(parent);
+    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(parent);
     if (! tri) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
@@ -202,9 +201,9 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating vertex normal surfaces"),
             parentWidget);
 
-        regina::PacketOf<NormalSurfaces>* ans;
+        std::shared_ptr<regina::PacketOf<NormalSurfaces>> ans;
         try {
-            ans = new regina::PacketOf<NormalSurfaces>(std::in_place,
+            ans = regina::makePacket<NormalSurfaces>(std::in_place,
                 *tri,
                 coordSystem,
                 regina::NS_VERTEX | (embedded->isChecked() ?
@@ -236,7 +235,6 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parent->insertChildLast(ans);
             return ans;
         } else {
-            delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal surface enumeration was cancelled."));
             return nullptr;
@@ -247,9 +245,9 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating fundamental normal surfaces"),
             parentWidget);
 
-        regina::PacketOf<NormalSurfaces>* ans;
+        std::shared_ptr<regina::PacketOf<NormalSurfaces>> ans;
         try {
-            ans = new regina::PacketOf<NormalSurfaces>(std::in_place,
+            ans = regina::makePacket<NormalSurfaces>(std::in_place,
                 *tri,
                 coordSystem,
                 regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
@@ -280,7 +278,6 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parent->insertChildLast(ans);
             return ans;
         } else {
-            delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal surface enumeration was cancelled."));
             return nullptr;

@@ -73,11 +73,11 @@ QString AngleStructureCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your angle structures.");
 }
 
-regina::Packet* AngleStructureCreator::createPacket(
-        regina::Packet* parentPacket, QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
+        std::shared_ptr<regina::Packet> parentPacket, QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    regina::Triangulation<3>* tri =
-        dynamic_cast<regina::Triangulation<3>*>(parentPacket);
+    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(
+        parentPacket);
     if (! tri) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
@@ -94,7 +94,7 @@ regina::Packet* AngleStructureCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
-    auto ans = new regina::PacketOf<regina::AngleStructures>(std::in_place,
+    auto ans = regina::makePacket<regina::AngleStructures>(std::in_place,
         *tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
 
     if (dlg.run()) {
@@ -105,10 +105,9 @@ regina::Packet* AngleStructureCreator::createPacket(
         parentPacket->insertChildLast(ans);
         return ans;
     } else {
-        delete ans;
         ReginaSupport::info(parentWidget,
             ui->tr("The angle structure enumeration was cancelled."));
-        return nullptr;
+        return {};
     }
 }
 

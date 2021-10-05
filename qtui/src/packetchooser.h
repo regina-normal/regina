@@ -160,13 +160,13 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * Changes the selection to the given packet.
          *
          * If the given packet is not one of the options in this packet
-         * chooser, or if the given pointer is 0, then the first entry
+         * chooser, or if the given pointer is null, then the first entry
          * in the packet chooser will be selected (which is the "None"
          * entry if "None" was enabled).
          *
          * The activated() signal will \e not be emitted.
          */
-        void selectPacket(regina::Packet* packet);
+        void selectPacket(std::shared_ptr<regina::Packet> packet);
 
         /**
          * Set whether this packet chooser should update itself
@@ -221,24 +221,24 @@ class PacketDialog : public QDialog {
          * Constructor and destructor.
          */
         PacketDialog(QWidget* parent,
-            regina::Packet* subtree,
+            std::shared_ptr<regina::Packet> subtree,
             PacketFilter* filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis,
             PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
             bool allowNone = false,
-            regina::Packet* initialSelection = 0);
+            std::shared_ptr<regina::Packet> initialSelection = nullptr);
 
         static regina::Packet* choose(QWidget* parent,
-            regina::Packet* subtree,
+            std::shared_ptr<regina::Packet> subtree,
             PacketFilter* filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis,
             PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
             bool allowNone = false,
-            regina::Packet* initialSelection = 0);
+            std::shared_ptr<regina::Packet> initialSelection = nullptr);
 };
 
 inline PacketFilter* PacketChooser::getFilter() {

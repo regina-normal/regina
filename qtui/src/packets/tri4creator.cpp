@@ -216,8 +216,8 @@ QWidget* Tri4Creator::getInterface() {
     return ui;
 }
 
-regina::Packet* Tri4Creator::createPacket(regina::Packet*,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
         auto ans = new regina::PacketOf<Triangulation<4>>();

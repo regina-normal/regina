@@ -189,13 +189,13 @@ class ReginaMain : public QMainWindow {
         /**
          * Allow access to the packet tree that this window manages.
          */
-        regina::Packet* getPacketTree();
+        std::shared_ptr<regina::Packet> getPacketTree();
 
         /**
          * Return the currently selected packet in the packet tree,
-         * or 0 if nothing is selected.
+         * or null if nothing is selected.
          */
-        regina::Packet* selectedPacket();
+        std::shared_ptr<regina::Packet> selectedPacket();
 
         /**
          * Indicate that the file is dirty.
@@ -433,8 +433,8 @@ inline PythonManager& ReginaMain::getPythonManager() {
     return consoles;
 }
 
-inline regina::Packet* ReginaMain::getPacketTree() {
-    return packetTree.get();
+inline std::shared_ptr<regina::Packet> ReginaMain::getPacketTree() {
+    return packetTree;
 }
 
 inline QMenu* ReginaMain::getWindowMenu() {

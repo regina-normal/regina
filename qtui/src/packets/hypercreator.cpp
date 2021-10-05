@@ -125,17 +125,16 @@ QString HyperCreator::parentWhatsThis() {
         "normal hypersurfaces.");
 }
 
-regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
-        QWidget* parentWidget) {
-    regina::Triangulation<4>* tri =
-        dynamic_cast<regina::Triangulation<4>*>(parent);
+std::shared_ptr<regina::Packet> HyperCreator::createPacket(
+        std::shared_ptr<regina::Packet> parent, QWidget* parentWidget) {
+    auto tri = std::dynamic_pointer_cast<regina::Triangulation<4>>(parent);
     if (! tri) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 4-manifold triangulation."),
             ui->tr("Normal hypersurfaces must live within a 4-manifold "
             "triangulation.  Please select the corresponding triangulation "
             "as the location in the tree for your new normal hypersurface list."));
-        return nullptr;
+        return {};
     }
 
     regina::HyperCoords coordSystem = coords->getCurrentSystem();
@@ -158,7 +157,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
                 "Are you sure you wish to continue?</qt>"));
             msg.setDefaultButton(QMessageBox::Yes);
             if (msg.exec() != QMessageBox::Yes)
-                return nullptr;
+                return {};
         }
     }
 
@@ -175,9 +174,9 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating vertex normal hypersurfaces"),
             parentWidget);
 
-        regina::PacketOf<NormalHypersurfaces>* ans;
+        std::shared_ptr<regina::PacketOf<NormalHypersurfaces>> ans;
         try {
-            ans = new regina::PacketOf<NormalHypersurfaces>(std::in_place,
+            ans = regina::makePacket<NormalHypersurfaces>(std::in_place,
                 *tri,
                 coordSystem,
                 regina::HS_VERTEX | (embedded->isChecked() ?
@@ -188,7 +187,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
                 ui->tr("<qt>I could not enumerate vertex normal "
                 "hypersurfaces.<p>"
                 "Please report this to the Regina developers.</qt>"));
-            return nullptr;
+            return {};
         }
 
         if (dlg.run()) {
@@ -196,10 +195,9 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             parent->insertChildLast(ans);
             return ans;
         } else {
-            delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal hypersurface enumeration was cancelled."));
-            return nullptr;
+            return {};
         }
     } else {
         regina::ProgressTracker tracker;
@@ -207,9 +205,9 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating fundamental normal hypersurfaces"),
             parentWidget);
 
-        regina::PacketOf<NormalHypersurfaces>* ans;
+        std::shared_ptr<regina::PacketOf<NormalHypersurfaces>> ans;
         try {
-            ans = new regina::PacketOf<NormalHypersurfaces>(std::in_place,
+            ans = regina::makePacket<NormalHypersurfaces>(std::in_place,
                 *tri,
                 coordSystem,
                 regina::HS_FUNDAMENTAL | (embedded->isChecked() ?
@@ -220,7 +218,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
                 ui->tr("<qt>I could not enumerate fundamental normal "
                 "hypersurfaces.<p>"
                 "Please report this to the Regina developers.</qt>"));
-            return nullptr;
+            return {};
         }
 
         if (dlg.run()) {
@@ -228,10 +226,9 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             parent->insertChildLast(ans);
             return ans;
         } else {
-            delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal hypersurface enumeration was cancelled."));
-            return nullptr;
+            return {};
         }
     }
 }

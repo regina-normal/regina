@@ -187,13 +187,13 @@ QWidget* SnapPeaTriangulationCreator::getInterface() {
     return ui;
 }
 
-regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> SnapPeaTriangulationCreator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_CONVERT) {
-        regina::Packet* src = convertFrom->selectedPacket();
-        if (auto fromSnapPea =
-                dynamic_cast<regina::PacketOf<SnapPeaTriangulation>*>(src)) {
+        std::shared_ptr<regina::Packet> src = convertFrom->selectedPacket();
+        if (auto fromSnapPea = std::dynamic_pointer_cast<
+                regina::PacketOf<SnapPeaTriangulation>>(src)) {
             if (fromSnapPea->isNull()) {
                 ReginaSupport::info(parentWidget,
                     QObject::tr("The source triangulation you have "
@@ -204,12 +204,14 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
                         "instead."));
                 return nullptr;
             }
-            auto ans = new regina::PacketOf<SnapPeaTriangulation>(*fromSnapPea);
+            auto ans = regina::makePacket<SnapPeaTriangulation>(
+                std::in_place, *fromSnapPea);
             ans->setLabel(fromSnapPea->label());
             return ans;
         }
 
-        auto from = dynamic_cast<regina::PacketOf<Triangulation<3>>*>(src);
+        auto from = std::dynamic_pointer_cast<
+            regina::PacketOf<Triangulation<3>>>(src);
         if (! from) {
             // We didn't get either a SnapPeaTriangulation *or* a
             // Triangulation<3>.
@@ -238,7 +240,7 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
             return nullptr;
         }
 
-        auto ans = new regina::PacketOf<SnapPeaTriangulation>(std::in_place,
+        auto ans = regina::makePacket<SnapPeaTriangulation>(std::in_place,
             *from, true /* allow closed, since we checked this above. */);
         if (ans->isNull()) {
             ReginaSupport::info(parentWidget,
@@ -258,7 +260,7 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
         ans->setLabel(from->label());
         return ans;
     } else if (typeId == TRI_FILE) {
-        auto ans = new regina::PacketOf<SnapPeaTriangulation>(std::in_place,
+        auto ans = regina::makePacket<SnapPeaTriangulation>(std::in_place,
             fileContents->toPlainText().toUtf8().constData());
         if (ans->isNull()) {
             ReginaSupport::info(parentWidget,

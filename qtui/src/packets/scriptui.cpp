@@ -78,8 +78,8 @@ namespace {
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         const QStyleOptionViewItem&, const QModelIndex&) const {
     PacketChooser* e = new PacketChooser(script_->root(),
-        0 /* filter */, PacketChooser::ROOT_AS_SUBTREE,
-        true /* allow "none" */, 0 /* initial selection */, parent);
+        nullptr /* filter */, PacketChooser::ROOT_AS_SUBTREE,
+        true /* allow "none" */, nullptr /* initial selection */, parent);
     e->setAutoUpdate(true);
     return e;
 }
@@ -127,7 +127,7 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
         if (index.column() == 0)
             return script_->variableName(index.row()).c_str();
         else if (index.column() == 1) {
-            Packet* p = script_->variableValue(index.row());
+            auto p = script_->variableValue(index.row());
             if (! p)
                 return tr("<None>");
             else if (p->label().empty())
@@ -138,11 +138,11 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
             return QVariant();
     } else if (role == Qt::DecorationRole) {
         if (index.column() == 1) {
-            Packet* p = script_->variableValue(index.row());
+            auto p = script_->variableValue(index.row());
             if (! p)
                 return QIcon();
             else
-                return PacketManager::icon(p);
+                return PacketManager::icon(p.get());
         } else
             return QVariant();
     } else if (role == Qt::EditRole) {

@@ -105,13 +105,13 @@ QWidget* FilterCreator::getInterface() {
     return ui;
 }
 
-regina::Packet* FilterCreator::createPacket(regina::Packet*,
-        QWidget*) {
-    regina::Packet* ans;
+std::shared_ptr<regina::Packet> FilterCreator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget*) {
+    std::shared_ptr<regina::Packet> ans;
     if (group->checkedId() == ID_COMB)
-        ans = new regina::SurfaceFilterCombination();
+        ans = std::make_shared<regina::SurfaceFilterCombination>();
     else
-        ans = new regina::SurfaceFilterProperties();
+        ans = std::make_shared<regina::SurfaceFilterProperties>();
 
     ans->setLabel("Surface filter");
     return ans;

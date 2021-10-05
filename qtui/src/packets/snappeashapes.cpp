@@ -433,12 +433,12 @@ void SnapPeaShapesUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            auto ans = new regina::PacketOf<regina::Triangulation<2>>(
-                *chosen->buildLink());
+            auto ans = regina::makePacket<regina::Triangulation<2>>(
+                std::in_place, *chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
         }
     }
 }
@@ -451,10 +451,11 @@ void SnapPeaShapesUI::toRegina() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to convert."));
     else {
-        auto ans = new regina::PacketOf<regina::Triangulation<3>>(*tri);
+        auto ans = regina::makePacket<regina::Triangulation<3>>(
+            std::in_place, *tri);
         ans->setLabel(tri->label());
         tri->insertChildLast(ans);
-        enclosingPane->getMainWindow()->packetView(ans, true, true);
+        enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
     }
 }
 
@@ -471,7 +472,7 @@ void SnapPeaShapesUI::fill() {
             tr("You can enter filling coefficients on the "
                 "<i>Shapes & Cusps</i> tab."));
     } else {
-        regina::Packet* ans;
+        std::shared_ptr<regina::Packet> ans;
         if (tri->countFilledCusps() == 1) {
             if (tri->countCompleteCusps() == 0)
                 ans = regina::makePacket(tri->filledAll());
@@ -502,7 +503,7 @@ void SnapPeaShapesUI::fill() {
         } else {
             ans->setLabel(tri->adornedLabel("Filled"));
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
         }
     }
 }
@@ -529,7 +530,7 @@ void SnapPeaShapesUI::canonise() {
                 "canonical cell decomposition."));
         } else {
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
         }
     }
 }

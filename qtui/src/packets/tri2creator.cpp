@@ -229,8 +229,8 @@ QWidget* Tri2Creator::getInterface() {
     return ui;
 }
 
-regina::Packet* Tri2Creator::createPacket(regina::Packet*,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
         auto ans = new regina::PacketOf<Triangulation<2>>();

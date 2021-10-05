@@ -168,7 +168,7 @@ void FilterCombUI::refresh() {
 }
 
 void FilterCombUI::packetWasRenamed(Packet* p) {
-    if (p->parent() == filter)
+    if (p->parent().get() == filter)
         refreshChildList();
 }
 
@@ -196,9 +196,9 @@ void FilterCombUI::refreshChildList() {
 
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
-    for (regina::Packet* p = filter->firstChild(); p; p = p->nextSibling())
+    for (auto p = filter->firstChild(); p; p = p->nextSibling())
         if (p->type() == regina::PACKET_SURFACEFILTER) {
-            new QListWidgetItem(PacketManager::icon(p),
+            new QListWidgetItem(PacketManager::icon(p.get()),
                 p->humanLabel().c_str(), children);
 
             // Listen for renaming events.  We won't ever call

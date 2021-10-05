@@ -99,8 +99,8 @@ SurfacesHeaderUI::SurfacesHeaderUI(
 
     // Listen for events on the underlying triangulation, since we
     // display its label in the header.
-    if (const Packet* p = packet->triangulation().inAnyPacket())
-        const_cast<Packet*>(p)->listen(this);
+    if (auto p = packet->triangulation().inAnyPacket())
+        std::const_pointer_cast<Packet>(p)->listen(this);
 }
 
 regina::Packet* SurfacesHeaderUI::getPacket() {
@@ -149,7 +149,7 @@ void SurfacesHeaderUI::refresh() {
     const regina::Triangulation<3>& tri = surfaces->triangulation();
     if (tri.isReadOnlySnapshot())
         triName = tr("(private copy)");
-    else if (const Packet* p = tri.inAnyPacket())
+    else if (auto p = tri.inAnyPacket())
         triName = p->humanLabel().c_str();
     else
         triName = tr("(anonymous)");
@@ -164,7 +164,7 @@ void SurfacesHeaderUI::refresh() {
 
 void SurfacesHeaderUI::viewTriangulation() {
     const regina::Triangulation<3>& tri = surfaces->triangulation();
-    const Packet* triPkt = tri.inAnyPacket();
+    auto triPkt = tri.inAnyPacket();
     if (! triPkt) {
         QMessageBox msg(QMessageBox::Information,
             tr("Create New Copy"),
@@ -187,13 +187,15 @@ void SurfacesHeaderUI::viewTriangulation() {
         if (msg.exec() != QMessageBox::Yes)
             return;
 
-        auto copy = new regina::PacketOf<regina::Triangulation<3>>(tri);
+        auto copy = regina::makePacket<regina::Triangulation<3>>(
+            std::in_place, tri);
         copy->setLabel(surfaces->adornedLabel("Triangulation"));
         surfaces->insertChildLast(copy);
 
-        enclosingPane->getMainWindow()->packetView(copy, true, true);
+        enclosingPane->getMainWindow()->packetView(copy.get(), true, true);
     } else {
-        enclosingPane->getMainWindow()->packetView(const_cast<Packet*>(triPkt),
+        enclosingPane->getMainWindow()->packetView(
+            const_cast<Packet*>(triPkt.get()),
             false /* visible in tree */, false /* select in tree */);
     }
 }
