@@ -318,8 +318,8 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the newly created normal hypersurface list, or \c null
-         * if an error occured.
+         * @return the new normal hypersurface list, or \c null if an error
+         * occured.
          */
         [[deprecated]] static std::shared_ptr<PacketOf<NormalHypersurfaces>>
             enumerate(

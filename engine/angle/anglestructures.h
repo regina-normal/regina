@@ -422,7 +422,7 @@ class AngleStructures :
          * of the angle structure solution space; this defaults to \c false.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the newly created angle structure list.
+         * @return the new angle structure list.
          */
         [[deprecated]] static std::shared_ptr<PacketOf<AngleStructures>>
             enumerate(Triangulation<3>& owner, bool tautOnly = false,
@@ -456,7 +456,7 @@ class AngleStructures :
          *
          * @param owner the triangulation for which the taut angle structures
          * will be enumerated.
-         * @return the newly created angle structure list.
+         * @return the new angle structure list.
          */
         [[deprecated]] static std::shared_ptr<PacketOf<AngleStructures>>
             enumerateTautDD(Triangulation<3>& owner);

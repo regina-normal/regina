@@ -77,8 +77,7 @@ class HilbertPrimal {
          * points in the intersection of the <i>n</i>-dimensional
          * non-negative orthant with some linear subspace.
          * The resulting basis elements will be of the class \a RayClass,
-         * will be newly allocated, and will be passed into the given action
-         * function one at a time.
+         * and will be passed into the given action function one at a time.
          *
          * The intersection of the non-negative orthant with this linear
          * subspace is a pointed polyhedral cone with apex at the origin,

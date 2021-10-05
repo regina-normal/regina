@@ -75,8 +75,7 @@ class HilbertCD {
          * points in the intersection of the <i>n</i>-dimensional
          * non-negative orthant with some linear subspace.
          * The resulting basis elements will be of the class \a RayClass,
-         * will be newly allocated, and will be passed into the given action
-         * function one at a time.
+         * and will be passed into the given action function one at a time.
          *
          * The non-negative orthant is an <i>n</i>-dimensional cone with
          * its vertex at the origin.  The extremal rays of this cone are

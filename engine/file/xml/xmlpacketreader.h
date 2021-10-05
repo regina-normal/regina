@@ -147,8 +147,8 @@ class XMLPacketReader : public XMLElementReader {
             std::string id);
 
         /**
-         * Returns the newly allocated packet that has been read and
-         * constructed by this element reader.
+         * Returns the packet that has been read and constructed by this
+         * element reader.
          *
          * This routine will be called at least once for every packet reader.
          * The first time it is called will be after all packet-specific
@@ -163,17 +163,14 @@ class XMLPacketReader : public XMLElementReader {
          * packet being read (and all its descendants) may be dropped from
          * the packet tree.
          *
-         * Deallocation of this new packet is not the responsibility of
-         * this class; again see commit() for details on this.
-         *
          * Once this routine gives a non-null return value, this function must
          * continue to give the same return value from this point onwards
          * (however, typically this function would not be called again).
          *
-         * The newly allocated packet should not be given a packet label,
-         * and should not be inserted into the packet tree.  These tasks
-         * will be managed by commit().  Likewise, the newly allocated
-         * packet should not be given any packet tags or child packets.
+         * The new packet should not be given a packet label, and should not
+         * be inserted into the packet tree.  These tasks will be managed by
+         * commit().  Likewise, the new packet should not be given any packet
+         * tags or child packets.
          *
          * The default implementation returns \c null.
          *

@@ -441,8 +441,8 @@ class NormalSurfaces :
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the newly created normal surface list, or \c null if
-         * an error occurred.
+         * @return the new normal surface list, or \c null if an error
+         * occurred.
          */
         [[deprecated]] static std::shared_ptr<PacketOf<NormalSurfaces>>
             enumerate(

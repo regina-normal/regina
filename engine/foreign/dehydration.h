@@ -57,11 +57,10 @@ class Container;
  * strings will be rehydrated as described in
  * Triangulation<3>::insertRehydration().
  *
- * A newly allocated container will be returned; the imported
- * triangulations will be inserted as children of this container.
- * The container will not be assigned a label.  The individual
- * triangulations will be assigned labels according to the parameter
- * \a colLabels.
+ * A new container will be returned; the imported triangulations will be
+ * inserted as children of this container.  The container will not be
+ * assigned a label.  The individual triangulations will be assigned labels
+ * according to the parameter \a colLabels.
  *
  * If any dehydrations strings are invalid, these will be recorded in an
  * additional text packet that will be the last child of the returned
