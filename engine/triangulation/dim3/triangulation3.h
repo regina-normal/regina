@@ -2012,8 +2012,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Computes the connected sum decomposition of this triangulation.
          *
-         * This triangulation will not be modified.  The prime summands
-         * will be returned as a vector of newly created triangulations.
+         * The prime summands will be returned as a vector of triangulations;
+         * this triangulation will not be modified.
          *
          * As far as possible, the summands will be represented using
          * 0-efficient triangulations (i.e., triangulations that contain
@@ -2053,18 +2053,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * - This function does not assign labels to the new summands.
          *
-         * This function wraps each summand in a std::unique_ptr, so you
-         * do not need to worry about looping through and destroying them
-         * individually.  However, note that (since you cannot copy a
-         * std::unique_ptr) this means you will need to iterate by reference:
-         *
-         * \code{.cpp}
-         * for (const auto& s : t.summands()) {
-         *     std::cout << comp->homology().str() << std::endl;
-         *     ...
-         * }
-         * \endcode
-         *
          * The underlying algorithm appears in "A new approach to crushing
          * 3-manifold triangulations", Discrete and Computational
          * Geometry 52:1 (2014), pp. 116-139.  This algorithm is based on the
@@ -2084,9 +2072,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed and connected.
          *
-         * @return a list of newly created triangulations of prime summands.
+         * @return a list of triangulations of prime summands.
          */
-        std::vector<std::unique_ptr<Triangulation<3>>> summands() const;
+        std::vector<Triangulation<3>> summands() const;
 
         /**
          * Determines whether this is a triangulation of a 3-sphere.

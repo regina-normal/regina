@@ -955,8 +955,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                for (const auto& c : components) {
-                    if (! tri.isIsomorphicTo(*c)) {
+                for (const Triangulation<dim>& c : components) {
+                    if (! tri.isIsomorphicTo(c)) {
                         std::ostringstream msg;
                         msg << name << ": Orientable double cover "
                             "contains a component not isomorphic to the "

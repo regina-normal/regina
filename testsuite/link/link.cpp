@@ -1023,10 +1023,10 @@ class LinkTest : public CppUnit::TestFixture {
                 auto comp = cut->triangulateComponents();
                 delete cut;
 
-                if ((sigMatches(comp[0]->isoSig(), TREFOIL_SIGS) &&
-                         comp[1]->isSolidTorus()) ||
-                        (sigMatches(comp[1]->isoSig(), TREFOIL_SIGS) &&
-                         comp[0]->isSolidTorus())) {
+                if ((sigMatches(comp[0].isoSig(), TREFOIL_SIGS) &&
+                         comp[1].isSolidTorus()) ||
+                        (sigMatches(comp[1].isoSig(), TREFOIL_SIGS) &&
+                         comp[0].isSolidTorus())) {
                     // We have the correct manifold!
                     return;
                 }

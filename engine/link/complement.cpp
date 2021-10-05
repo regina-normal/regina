@@ -203,9 +203,9 @@ Triangulation<3> Link::complement(bool simplify) const {
         auto comp = ans.triangulateComponents();
 
         auto it = comp.begin();
-        ans = std::move(**it);
+        ans = std::move(*it);
         for (++it; it != comp.end(); ++it)
-            ans.connectedSumWith(**it);
+            ans.connectedSumWith(*it);
     }
 
     size_t idealVertices = 0;

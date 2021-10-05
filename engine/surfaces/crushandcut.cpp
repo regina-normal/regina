@@ -1484,11 +1484,11 @@ namespace {
                     // Find the piece in the crushed triangulation with the
                     // right Euler characteristic on the boundary, if it exists.
                     t_[side] = nullptr;
-                    for (auto& comp : crush->triangulateComponents()) {
-                        if (comp->countBoundaryComponents() == 1 &&
-                                comp->boundaryComponent(0)->eulerChar() == ec) {
+                    for (Triangulation<3>& comp : crush->triangulateComponents()) {
+                        if (comp.countBoundaryComponents() == 1 &&
+                                comp.boundaryComponent(0)->eulerChar() == ec) {
                             // Found it.
-                            t_[side] = comp.release();
+                            t_[side] = new Triangulation<3>(std::move(comp));
                             break;
                         }
                     }
@@ -1537,7 +1537,7 @@ bool NormalSurface::isIncompressible() const {
 
     int which = 0;
     for (auto& comp : cut->triangulateComponents()) {
-        if (comp->hasBoundaryTriangles()) {
+        if (comp.hasBoundaryTriangles()) {
             if (which == 2) {
                 // We have more than two components with boundary.
                 // This should never happen.
@@ -1546,7 +1546,7 @@ bool NormalSurface::isIncompressible() const {
                 delete cut;
                 return false;
             }
-            side[which++] = comp.release();
+            side[which++] = new Triangulation<3>(std::move(comp));
         }
     }
     delete cut;

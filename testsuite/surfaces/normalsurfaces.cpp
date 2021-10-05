@@ -2243,15 +2243,15 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                for (const auto& c : comp)
-                    if (! c->hasBoundaryTriangles()) {
+                for (const Triangulation<3>& c : comp)
+                    if (! c.hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along surface for " << name
                             << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                for (const auto& c : compDouble)
-                    if (! c->hasBoundaryTriangles()) {
+                for (const Triangulation<3>& c : compDouble)
+                    if (! c.hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along double surface for " << name
                             << " gives a component with no boundary triangles.";
@@ -2286,8 +2286,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
-                for (const auto& c : comp)
-                    checkBoundaryType(s, *c,
+                for (const Triangulation<3>& c : comp)
+                    checkBoundaryType(s, c,
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
@@ -2319,8 +2319,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
-                for (const auto& c : compDouble)
-                    checkBoundaryType(s, *c,
+                for (const Triangulation<3>& c : compDouble)
+                    checkBoundaryType(s, c,
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
@@ -2333,14 +2333,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 // Look for the product piece when cutting along the
                 // double surface.
                 bool found = false;
-                for (const auto& c : compDouble) {
+                for (const Triangulation<3>& c : compDouble) {
                     if (s.isTwoSided()) {
-                        if (mightBeUntwistedProduct(*c)) {
+                        if (mightBeUntwistedProduct(c)) {
                             found = true;
                             break;
                         }
                     } else {
-                        if (mightBeTwistedProduct(*c)) {
+                        if (mightBeTwistedProduct(c)) {
                             found = true;
                             break;
                         }

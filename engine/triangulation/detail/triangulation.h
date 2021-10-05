@@ -1312,9 +1312,7 @@ class TriangulationBase :
 
         /**
          * Returns the individual connected components of this triangulation.
-         *
-         * This triangulation will not be modified.  The components will
-         * be returned as a vector of newly created triangulations.
+         * This triangulation will not be modified.
          *
          * This function is new to Regina 7.0, and it has two important
          * changes of behaviour from the old splitIntoComponents() from
@@ -1325,22 +1323,9 @@ class TriangulationBase :
          *
          * - This function does not assign labels to the new components.
          *
-         * This function wraps each component in a std::unique_ptr, so you
-         * do not need to worry about looping through and destroying them
-         * individually.  However, note that (since you cannot copy a
-         * std::unique_ptr) this means you will need to iterate by reference:
-         *
-         * \code{.cpp}
-         * for (const auto& comp : t.triangulateComponents()) {
-         *     std::cout << comp->size() << std::endl;
-         *     ...
-         * }
-         * \endcode
-         *
-         * @return a list of newly created individual component triangulations.
+         * @return a list of individual component triangulations.
          */
-        std::vector<std::unique_ptr<Triangulation<dim>>> triangulateComponents()
-            const;
+        std::vector<Triangulation<dim>> triangulateComponents() const;
 
         /*@}*/
         /**
@@ -3681,7 +3666,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 }
 
 template <int dim>
-std::vector<std::unique_ptr<Triangulation<dim>>>
+std::vector<Triangulation<dim>>
         TriangulationBase<dim>::triangulateComponents() const {
     // Knock off the empty triangulation first.
     if (simplices_.empty())
@@ -3692,10 +3677,7 @@ std::vector<std::unique_ptr<Triangulation<dim>>>
     size_t nComp = countComponents();
 
     // Initialise the component triangulations.
-    std::vector<std::unique_ptr<Triangulation<dim>>> ans;
-    ans.reserve(nComp);
-    for (size_t i = 0; i < nComp; ++i)
-        ans.push_back(std::make_unique<Triangulation<dim>>());
+    std::vector<Triangulation<dim>> ans(nComp);
 
     // Clone the simplices, sorting them into the new components.
     Simplex<dim>** newSimp = new Simplex<dim>*[size()];
@@ -3705,7 +3687,7 @@ std::vector<std::unique_ptr<Triangulation<dim>>>
     int facet;
 
     for (simpPos = 0; simpPos < size(); ++simpPos)
-        newSimp[simpPos] = ans[simplices_[simpPos]->component()->index()]->
+        newSimp[simpPos] = ans[simplices_[simpPos]->component()->index()].
             newSimplex(simplices_[simpPos]->description());
 
     // Clone the simplex gluings also.

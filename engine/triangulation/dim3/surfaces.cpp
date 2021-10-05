@@ -231,8 +231,8 @@ bool Triangulation<3>::hasSplittingSurface() const {
     // has a splitting surface.
 
     if (!isConnected()) {
-        for (const auto& comp : triangulateComponents())
-            if (! comp->hasSplittingSurface())
+        for (const Triangulation<3>& comp : triangulateComponents())
+            if (! comp.hasSplittingSurface())
                 return *(splittingSurface_ = false);
         return *(splittingSurface_ = true);
     }

@@ -42,8 +42,7 @@
 
 namespace regina {
 
-std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands()
-        const {
+std::vector<Triangulation<3>> Triangulation<3>::summands() const {
     // Precondition checks.
     if (! (isValid() && isClosed() && isConnected()))
         return { };
@@ -54,36 +53,37 @@ std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands()
 
     bool initOrientable = isOrientable();
 
-    // Make a working copy, simplify and record the initial homology.
-    auto working = std::make_unique<Triangulation<3>>(*this, false);
-    working->intelligentSimplify();
+    std::stack<Triangulation<3>> toProcess;
+
+    // Make a working copy, simplify, and record the initial homology.
+    Triangulation<3>& start = toProcess.emplace(*this, false);
+    start.intelligentSimplify();
 
     unsigned long initZ, initZ2, initZ3;
     {
-        const AbelianGroup& homology = working->homology();
+        const AbelianGroup& homology = start.homology();
         initZ = homology.rank();
         initZ2 = homology.torsionRank(2);
         initZ3 = homology.torsionRank(3);
     }
 
     // Start crushing normal spheres.
-    std::stack<std::unique_ptr<Triangulation<3>>> toProcess;
-    toProcess.push(std::move(working));
-
-    std::vector<std::unique_ptr<Triangulation<3>>> primeComponents;
+    std::vector<Triangulation<3>> primeComponents;
 
     while (! toProcess.empty()) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the elements of primeComponents
         // and possibly some copies of S2xS1, S2x~S1, RP3, and/or L(3,1).
 
-        auto processing = std::move(toProcess.top());
-        toProcess.pop();
+        // Note: top cannot be const, because we might std::move() it.
+        Triangulation<3>& top = toProcess.top();
 
         // Find a normal 2-sphere to crush.
-        auto sphere = processing->nonTrivialSphereOrDisc();
+        std::optional<NormalSurface> sphere = top.nonTrivialSphereOrDisc();
         if (sphere) {
             std::unique_ptr<Triangulation<3>> crushed(sphere->crush());
+            sphere.reset(); // to avoid a deep copy of top when we pop
+            toProcess.pop();
 
             if (! crushed->isValid()) {
                 // We must have had an embedded two-sided projective plane.
@@ -101,7 +101,7 @@ std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands()
             // into the list to process.
             if (! crushed->isEmpty()) {
                 if (crushed->isConnected())
-                    toProcess.push(std::move(crushed));
+                    toProcess.push(std::move(*crushed));
                 else {
                     for (auto& comp : crushed->triangulateComponents())
                         toProcess.push(std::move(comp));
@@ -111,12 +111,12 @@ std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands()
             // We have no non-trivial normal 2-spheres!
             // The triangulation is 0-efficient (and prime).
             // Is it a 3-sphere?
-            if (! processing->isOrientable()) {
+            if (! top.isOrientable()) {
                 // Definitely not a sphere.
-                primeComponents.push_back(std::move(processing));
+                primeComponents.push_back(std::move(top));
             } else {
                 // Orientable, and so possibly a sphere.  Test this precisely.
-                if (processing->countVertices() > 1) {
+                if (top.countVertices() > 1) {
                     // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
                     // paper:  If a closed orientable triangulation T is
                     // 0-efficient then either T has one vertex or T is a
@@ -136,55 +136,53 @@ std::vector<std::unique_ptr<Triangulation<3>>> Triangulation<3>::summands()
                     // coordinates paper, we can restrict this search further
                     // to vertex octagonal almost normal surfaces in
                     // quadrilateral-octagonal space.
-                    if (processing->octagonalAlmostNormalSphere()) {
+                    if (top.octagonalAlmostNormalSphere()) {
                         // It's a 3-sphere.  Toss this component away.
                     } else {
                         // It's a non-trivial prime component!
-                        primeComponents.push_back(std::move(processing));
+                        primeComponents.push_back(std::move(top));
                     }
                 }
             }
+            toProcess.pop();
         }
     }
 
     // Run a final homology check and put back our missing S2xS1, S2x~S1,
     // RP3 and L(3,1) terms.
     unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
-    for (const auto& c : primeComponents) {
-        const AbelianGroup& homology = c->homology();
+    for (const Triangulation<3>& c : primeComponents) {
+        const AbelianGroup& homology = c.homology();
         finalZ += homology.rank();
         finalZ2 += homology.torsionRank(2);
         finalZ3 += homology.torsionRank(3);
     }
 
     while (finalZ++ < initZ) {
-        working = std::make_unique<Triangulation<3>>();
+        Triangulation<3>& t = primeComponents.emplace_back();
         if (initOrientable) {
             // Build S2 x S1.
-            working->insertLayeredLensSpace(0, 1);
+            t.insertLayeredLensSpace(0, 1);
         } else {
             // Build S2 x~ S1.
-            Tetrahedron<3>* t0 = working->newTetrahedron();
-            Tetrahedron<3>* t1 = working->newTetrahedron();
+            Tetrahedron<3>* t0 = t.newTetrahedron();
+            Tetrahedron<3>* t1 = t.newTetrahedron();
             t0->join(0, t1, Perm<4>(0, 1, 3, 2));
             t0->join(1, t1, Perm<4>(0, 1, 3, 2));
             t0->join(2, t1, Perm<4>(1, 3, 2, 0));
             t0->join(3, t1, Perm<4>(2, 0, 1, 3));
         }
-        primeComponents.push_back(std::move(working));
         irreducible_ = false; // Implied by the S2xS1 or S2x~S1 summand.
         zeroEfficient_ = false; // Implied by the S2xS1 or S2x~S1 summand.
     }
     while (finalZ2++ < initZ2) {
-        working = std::make_unique<Triangulation<3>>();
-        working->insertLayeredLensSpace(2, 1);
-        primeComponents.push_back(std::move(working));
+        Triangulation<3>& t = primeComponents.emplace_back();
+        t.insertLayeredLensSpace(2, 1);
         zeroEfficient_ = false; // Implied by the RP3 summand.
     }
     while (finalZ3++ < initZ3) {
-        working = std::make_unique<Triangulation<3>>();
-        working->insertLayeredLensSpace(3, 1);
-        primeComponents.push_back(std::move(working));
+        Triangulation<3>& t = primeComponents.emplace_back();
+        t.insertLayeredLensSpace(3, 1);
     }
 
     // All done!
@@ -222,13 +220,15 @@ bool Triangulation<3>::isSphere() const {
         return *(threeSphere_ = false);
     }
 
+    std::stack<Triangulation<3>> toProcess;;
+
     // Check homology and fundamental group.
     // Better simplify first, which means we need a clone.
-    auto working = std::make_unique<Triangulation<3>>(*this, false);
-    working->intelligentSimplify();
+    Triangulation<3>& start = toProcess.emplace(*this, false);
+    start.intelligentSimplify();
 
     // The Poincare conjecture!
-    if (working->fundamentalGroup().countGenerators() == 0) {
+    if (start.fundamentalGroup().countGenerators() == 0) {
         threeSphere_ = true;
 
         // Some other things that come for free:
@@ -240,27 +240,25 @@ bool Triangulation<3>::isSphere() const {
 
     // We could still have a trivial group but not know it.
     // At least we can at least check homology precisely.
-    if (! working->homology().isTrivial()) {
+    if (! start.homology().isTrivial()) {
         return *(threeSphere_ = false);
     }
 
     // Time for some more heavy machinery.  On to normal surfaces.
-    std::stack<std::unique_ptr<Triangulation<3>>> toProcess;;
-    toProcess.push(std::move(working));
-
     while (! toProcess.empty()) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess.  Each of these children has trivial
         // homology (and therefore we have no S2xS1 / RP3 / L(3,1)
         // summands to worry about).
 
-        auto processing = std::move(toProcess.top());
-        toProcess.pop();
+        const Triangulation<3>& top = toProcess.top();
 
         // Find a normal 2-sphere to crush.
-        auto sphere = processing->nonTrivialSphereOrDisc();
+        std::optional<NormalSurface> sphere = top.nonTrivialSphereOrDisc();
         if (sphere) {
             std::unique_ptr<Triangulation<3>> crushed(sphere->crush());
+            sphere.reset(); // to avoid a deep copy of top when we pop
+            toProcess.pop();
 
             crushed->intelligentSimplify();
 
@@ -268,7 +266,7 @@ bool Triangulation<3>::isSphere() const {
             // list to process.
             if (! crushed->isEmpty()) {
                 if (crushed->isConnected())
-                    toProcess.push(std::move(crushed));
+                    toProcess.push(std::move(*crushed));
                 else {
                     for (auto& comp : crushed->triangulateComponents())
                         toProcess.push(std::move(comp));
@@ -278,7 +276,7 @@ bool Triangulation<3>::isSphere() const {
             // We have no non-trivial normal 2-spheres!
             // The triangulation is 0-efficient.
             // We can now test directly whether we have a 3-sphere.
-            if (processing->countVertices() > 1) {
+            if (top.countVertices() > 1) {
                 // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
                 // paper:  If a closed orientable triangulation T is
                 // 0-efficient then either T has one vertex or T is a
@@ -298,13 +296,14 @@ bool Triangulation<3>::isSphere() const {
                 // coordinates paper, we can restrict this search further
                 // to vertex octagonal almost normal surfaces in
                 // quadrilateral-octagonal space.
-                if (processing->octagonalAlmostNormalSphere()) {
+                if (top.octagonalAlmostNormalSphere()) {
                     // It's a 3-sphere.  Toss this component away.
                 } else {
                     // It's not a 3-sphere.  We're done!
                     return *(threeSphere_ = false);
                 }
             }
+            toProcess.pop();
         }
     }
 
@@ -390,15 +389,15 @@ bool Triangulation<3>::isSolidTorus() const {
 
     // If it's ideal, make it a triangulation with real boundary.
     // If it's not ideal, clone it anyway so we can modify it.
-    auto working = std::make_unique<Triangulation<3>>(*this, false);
-    working->intelligentSimplify();
-    if (working->isIdeal()) {
-        working->idealToFinite();
-        working->intelligentSimplify();
+    Triangulation<3> working(*this, false);
+    working.intelligentSimplify();
+    if (working.isIdeal()) {
+        working.idealToFinite();
+        working.intelligentSimplify();
     }
 
     // Check homology.
-    if (! (working->homology().isZ()))
+    if (! (working.homology().isZ()))
         return *(solidTorus_ = false);
 
     // So:
@@ -413,20 +412,20 @@ bool Triangulation<3>::isSolidTorus() const {
     // Pull out the big guns: normal surface time.
     while (true) {
         // INVARIANT: working is homeomorphic to our original manifold.
-        if (working->countVertices() > 1) {
+        if (working.countVertices() > 1) {
             // Try *really* hard to get to a 1-vertex triangulation,
             // since this will make nonTrivialSphereOrDisc() much
             // faster (it will be able to use linear programming).
-            working->intelligentSimplify();
-            if (working->countVertices() > 1) {
-                working->barycentricSubdivision();
-                working->intelligentSimplify();
-                working->intelligentSimplify();
+            working.intelligentSimplify();
+            if (working.countVertices() > 1) {
+                working.barycentricSubdivision();
+                working.intelligentSimplify();
+                working.intelligentSimplify();
             }
         }
 
         // Find a non-trivial normal disc or sphere.
-        auto s = working->nonTrivialSphereOrDisc();
+        std::optional<NormalSurface> s = working.nonTrivialSphereOrDisc();
         if (! s) {
             // No non-trivial normal disc.  This cannot be a solid torus.
             return *(solidTorus_ = false);
@@ -439,19 +438,21 @@ bool Triangulation<3>::isSolidTorus() const {
         // - cut along properly embedded discs;
         // - gain and/or lose 3-balls and/or 3-spheres.
         std::unique_ptr<Triangulation<3>> crushed(s->crush());
-        working.reset();
+        s.reset(); // to avoid any automatic deep copy of the triangulation
+
 
         crushed->intelligentSimplify();
 
-        for (auto& comp : crushed->triangulateComponents()) {
+        bool found = false;
+        for (Triangulation<3>& comp : crushed->triangulateComponents()) {
             // Examine each connected component after crushing.
-            if (comp->isClosed()) {
+            if (comp.isClosed()) {
                 // A closed piece.
                 // Must be a 3-sphere, or else we didn't have a solid torus.
-                if (! comp->isSphere()) {
+                if (! comp.isSphere()) {
                     return *(solidTorus_ = false);
                 }
-            } else if (comp->countBoundaryComponents() > 1) {
+            } else if (comp.countBoundaryComponents() > 1) {
                 // Multiple boundaries on the same component.
                 // This should never happen, since it implies there was
                 // an S2xS1 summand.
@@ -460,10 +461,10 @@ bool Triangulation<3>::isSolidTorus() const {
 
                 // At any rate, it means we did not have a solid torus.
                 return *(solidTorus_ = false);
-            } else if (comp->boundaryComponent(0)->eulerChar() == 2) {
+            } else if (comp.boundaryComponent(0)->eulerChar() == 2) {
                 // A component with sphere boundary.
                 // Must be a 3-ball, or else we didn't have a solid torus.
-                if (! comp->isBall()) {
+                if (! comp.isBall()) {
                     return *(solidTorus_ = false);
                 }
             } else {
@@ -474,16 +475,17 @@ bool Triangulation<3>::isSolidTorus() const {
                 // (i.e., a non-ball and/or non-sphere that will be
                 // detected separately in the tests above), this
                 // component must be identical to our original manifold.
-                if (working) {
+                if (found) {
                     std::cerr << "ERROR: Multiple torus boundary "
                         "components detected in isSolidTorus(), which "
                         "should not be possible." << std::endl;
                 }
                 working = std::move(comp);
+                found = true;
             }
         }
 
-        if (! working) {
+        if (! found) {
             // We have reduced everything down to balls and spheres.
             // The only way this can happen is if we had a solid torus
             // (and we crushed and/or cut along a compressing disc
@@ -616,35 +618,35 @@ bool Triangulation<3>::isIrreducible() const {
     // throw them away.
     unsigned long summands = 0;
 
+    std::stack<Triangulation<3>> toProcess;
+
     // Make a working copy, simplify and record the initial homology.
-    auto working = std::make_unique<Triangulation<3>>(*this, false);
-    working->intelligentSimplify();
+    Triangulation<3>& start = toProcess.emplace(*this, false);
+    start.intelligentSimplify();
 
     unsigned long Z, Z2, Z3;
     {
-        const AbelianGroup& homology = working->homology();
+        const AbelianGroup& homology = start.homology();
         Z = homology.rank();
         Z2 = homology.torsionRank(2);
         Z3 = homology.torsionRank(3);
     }
 
     // Start crushing normal spheres.
-    std::stack<std::unique_ptr<Triangulation<3>>> toProcess;
-    toProcess.push(std::move(working));
-
     while (! toProcess.empty()) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the prime components that we threw away,
         // and possibly some copies of S2xS1, RP3 and/or L(3,1).
 
         // Work with the last child.
-        auto processing = std::move(toProcess.top());
-        toProcess.pop();
+        const Triangulation<3>& top = toProcess.top();
 
         // Find a normal 2-sphere to crush.
-        auto sphere = processing->nonTrivialSphereOrDisc();
+        std::optional<NormalSurface> sphere = top.nonTrivialSphereOrDisc();
         if (sphere) {
             std::unique_ptr<Triangulation<3>> crushed(sphere->crush());
+            sphere.reset(); // to avoid a deep copy of top when we pop
+            toProcess.pop();
 
             crushed->intelligentSimplify();
 
@@ -652,7 +654,7 @@ bool Triangulation<3>::isIrreducible() const {
             // into the list to process.
             if (! crushed->isEmpty()) {
                 if (crushed->isConnected())
-                    toProcess.push(std::move(crushed));
+                    toProcess.push(std::move(*crushed));
                 else {
                     for (auto& comp : crushed->triangulateComponents())
                         toProcess.push(std::move(comp));
@@ -662,7 +664,7 @@ bool Triangulation<3>::isIrreducible() const {
             // We have no non-trivial normal 2-spheres!
             // The triangulation is 0-efficient (and prime).
             // Is it a 3-sphere?
-            if (processing->countVertices() > 1) {
+            if (top.countVertices() > 1) {
                 // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
                 // paper:  If a closed orientable triangulation T is
                 // 0-efficient then either T has one vertex or T is a
@@ -682,7 +684,7 @@ bool Triangulation<3>::isIrreducible() const {
                 // coordinates paper, we can restrict this search further
                 // to vertex octagonal almost normal surfaces in
                 // quadrilateral-octagonal space.
-                if (processing->octagonalAlmostNormalSphere()) {
+                if (top.octagonalAlmostNormalSphere()) {
                     // It's a 3-sphere.  Toss this component away.
                 } else {
                     // It's a non-trivial prime component!
@@ -699,7 +701,7 @@ bool Triangulation<3>::isIrreducible() const {
 
                     // Note which parts of our initial homology we have
                     // now accounted for.
-                    const AbelianGroup& h1 = processing->homology();
+                    const AbelianGroup& h1 = top.homology();
                     Z -= h1.rank();
                     Z2 -= h1.torsionRank(2);
                     Z3 -= h1.torsionRank(3);
@@ -707,6 +709,7 @@ bool Triangulation<3>::isIrreducible() const {
                     // Toss away our prime summand and keep going.
                 }
             }
+            toProcess.pop();
         }
     }
 
@@ -757,31 +760,30 @@ bool Triangulation<3>::hasCompressingDisc() const {
     // Work with a simplified triangulation.
     // We keep this as a pointer because we will be switching and changing
     // triangulations.
-    std::unique_ptr<Triangulation<3>> use(new Triangulation<3>(*this, false));
-    use->intelligentSimplify();
+    Triangulation<3> use(*this, false);
+    use.intelligentSimplify();
 
     // Try for a fast answer first.
-    if (use->hasSimpleCompressingDisc())
+    if (use.hasSimpleCompressingDisc())
         return *(compressingDisc_ = true);
 
     // Nope.  Decide whether we can use the fast linear programming
     // machinery or whether we need to do a full vertex surface enumeration.
-    if (use->isOrientable() && use->countBoundaryComponents() == 1) {
+    if (use.isOrientable() && use.countBoundaryComponents() == 1) {
         Triangulation<3>* crush;
-        Triangulation<3>* comp;
 
         while (true) {
-            use->intelligentSimplify();
+            use.intelligentSimplify();
 
-            if (use->countVertices() > 1) {
+            if (use.countVertices() > 1) {
                 // Try harder.
-                use->barycentricSubdivision();
-                use->intelligentSimplify();
-                if (use->countVertices() > 1) {
+                use.barycentricSubdivision();
+                use.intelligentSimplify();
+                if (use.countVertices() > 1) {
                     // Fall back to a full vertex enumeration.
                     // This mirrors the code for non-orientable
                     // triangulations; see that later block for details.
-                    NormalSurfaces q(*use, NS_STANDARD);
+                    NormalSurfaces q(use, NS_STANDARD);
 
                     for (const NormalSurface& s : q) {
                         if (s.isCompressingDisc(true))
@@ -793,27 +795,35 @@ bool Triangulation<3>::hasCompressingDisc() const {
                 }
             }
 
-            TreeSingleSoln<LPConstraintEulerPositive> search(*use, NS_STANDARD);
-            if (! search.find()) {
-                // No compressing discs!
-                return *(compressingDisc_ = false);
+            {
+                // Isolate the scope of the normal surface machinery,
+                // so that there are no outstanding snapshots of the
+                // original triangulation that might want to take a deep
+                // copy when we modify the triangulation later on.
+                TreeSingleSoln<LPConstraintEulerPositive> search(use,
+                    NS_STANDARD);
+                if (! search.find()) {
+                    // No compressing discs!
+                    return *(compressingDisc_ = false);
+                }
+                crush = search.buildSurface().crush();
             }
 
-            crush = search.buildSurface().crush();
-            use.reset();
-
+            bool found = false;
             for (auto& comp : crush->triangulateComponents()) {
-                if (comp->countBoundaryComponents() == 1 &&
-                        comp->boundaryComponent(0)->eulerChar()
+                if (comp.countBoundaryComponents() == 1 &&
+                        comp.boundaryComponent(0)->eulerChar()
                         == minBdryEuler) {
                     // This must be our original manifold.
+                    // Start again, but this time with a smaller triangulation.
                     use = std::move(comp);
+                    found = true;
                     break;
                 }
             }
             delete crush;
 
-            if (! use) {
+            if (! found) {
                 // We must have compressed.
                 return *(compressingDisc_ = true);
             }
@@ -827,7 +837,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
         // use standard coordinates.  Jaco, Letscher and Rubinstein mention
         // quad space, but don't give details (which I'd prefer to see).
         // Leave it in standard coordinates for now.
-        NormalSurfaces q(*use, NS_STANDARD);
+        NormalSurfaces q(use, NS_STANDARD);
 
         // Run through all vertex surfaces looking for a compressing disc.
         for (const NormalSurface& s : q) {

@@ -3840,7 +3840,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri.size() > 10)
                 return;
 
-            std::vector<std::unique_ptr<Triangulation<3>>> sOld, sNew;
+            std::vector<Triangulation<3>> sOld, sNew;
             try {
                 sOld = tri.summands();
                 sNew = t.summands();
@@ -3868,8 +3868,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (sOld.size() == 1) {
                 // There should be two summands, each homeomorphic
                 // to the original.
-                if (sNew[0]->homology() != tri.homology() ||
-                        sNew[1]->homology() != tri.homology()) {
+                if (sNew[0].homology() != tri.homology() ||
+                        sNew[1].homology() != tri.homology()) {
                     std::ostringstream msg;
                     msg << name << ": tri # tri has "
                         "summands with the wrong homology.";
