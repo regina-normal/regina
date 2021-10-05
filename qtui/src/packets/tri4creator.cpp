@@ -220,13 +220,13 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        auto ans = new regina::PacketOf<Triangulation<4>>();
+        auto ans = regina::makePacket<Triangulation<4>>(std::in_place);
         ans->setLabel("4-D triangulation");
         return ans;
     } else if (typeId == TRI_IBUNDLE) {
-        regina::Packet* fromPacket = iBundleFrom->selectedPacket();
-        regina::Triangulation<3>* from =
-            dynamic_cast<regina::Triangulation<3>*>(fromPacket);
+        auto fromPacket = iBundleFrom->selectedPacket();
+        auto from = std::dynamic_pointer_cast<
+            regina::Triangulation<3>>(fromPacket);
         if (! from) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
@@ -241,9 +241,9 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
             ans->setLabel(fromPacket->label() + " × I");
         return ans;
     } else if (typeId == TRI_S1BUNDLE) {
-        regina::Packet* fromPacket = s1BundleFrom->selectedPacket();
-        regina::Triangulation<3>* from =
-            dynamic_cast<regina::Triangulation<3>*>(fromPacket);
+        auto fromPacket = s1BundleFrom->selectedPacket();
+        auto from = std::dynamic_pointer_cast<
+            regina::Triangulation<3>>(fromPacket);
         if (! from) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "

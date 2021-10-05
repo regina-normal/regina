@@ -891,7 +891,7 @@ void Tri3GluingsUI::drillEdge() {
             tr("Regina will drill out a regular neighbourhood around whichever "
                 "edge you choose."));
         if (e) {
-            regina::PacketOf<Triangulation<3>>* ans = nullptr;
+            std::shared_ptr<regina::PacketOf<Triangulation<3>>> ans;
 
             // Avoid drillEdge() where possible, since that creates too
             // many tetrahedra.
@@ -939,7 +939,8 @@ void Tri3GluingsUI::drillEdge() {
                     // Topologically, this is just a puncture.
                     // Make sure that we puncture a tetrahedron that
                     // belongs to the correct connected component.
-                    ans = new regina::PacketOf<Triangulation<3>>(*tri);
+                    ans = regina::makePacket<Triangulation<3>>(
+                        std::in_place, *tri);
                     ans->puncture(ans->tetrahedron(
                         e->front().tetrahedron()->index()));
                 } else if (e->vertex(0) != e->vertex(1) &&
@@ -959,14 +960,16 @@ void Tri3GluingsUI::drillEdge() {
                     // ideal vertex, or we are drilling an edge between
                     // two distinct ideal vertices.
                     // In both cases, pinchEdge() does what we want.
-                    ans = new regina::PacketOf<regina::Triangulation<3>>(*tri);
+                    ans = regina::makePacket<regina::Triangulation<3>>(
+                        std::in_place, *tri);
                     ans->pinchEdge(ans->edge(e->index()));
                 }
             }
             if (ans) {
                 ans->setLabel(tri->adornedLabel("Drilled"));
                 tri->insertChildLast(ans);
-                enclosingPane->getMainWindow()->packetView(ans, true, true);
+                enclosingPane->getMainWindow()->packetView(ans.get(),
+                    true, true);
             }
         }
     }
@@ -1006,12 +1009,12 @@ void Tri3GluingsUI::boundaryComponents() {
                 "construct a 2-manifold triangulation from the "
                 "corresponding vertex link.</qt>"));
         if (chosen) {
-            auto ans = new regina::PacketOf<Triangulation<2>>(
+            auto ans = regina::makePacket<Triangulation<2>>(std::in_place,
                 *chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
         }
     }
 }
@@ -1036,12 +1039,12 @@ void Tri3GluingsUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            auto ans = new regina::PacketOf<Triangulation<2>>(
+            auto ans = regina::makePacket<Triangulation<2>>(std::in_place,
                 *chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
         }
     }
 }
@@ -1060,24 +1063,26 @@ void Tri3GluingsUI::splitIntoComponents() {
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        Packet* base;
+        std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
-            base = new regina::Container();
+            base = std::make_shared<regina::Container>();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
-            base = tri;
+            base = tri->shared_from_this();
 
         // Make the split.
         size_t which = 0;
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::makePacket(c.release(), label.str()));
+            base->insertChildLast(regina::makePacket(std::move(c),
+                label.str()));
         }
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
+            base->firstChild().get());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,
@@ -1104,7 +1109,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             "Please be patient."), ui));
 
         // Form the decomposition.
-        std::vector<std::unique_ptr<Triangulation<3>>> ans;
+        std::vector<Triangulation<3>> ans;
         try {
             ans = tri->summands();
         } catch (regina::UnsolvedCase&) {
@@ -1130,32 +1135,31 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             // Insert them all into the packet tree.
             // If there are already children of this triangulation, insert
             // the new triangulations at a deeper level.
-            Packet* base;
+            std::shared_ptr<Packet> base;
             if (tri->firstChild()) {
-                base = new regina::Container();
+                base = std::make_shared<regina::Container>();
                 tri->insertChildLast(base);
                 base->setLabel(tri->adornedLabel("Summands"));
             } else
-                base = tri;
+                base = tri->shared_from_this();
 
             size_t which = 0;
             for (auto& s : ans) {
                 std::ostringstream label;
                 label << "Summand #" << ++which;
-                base->insertChildLast(regina::makePacket(s.release(),
+                base->insertChildLast(regina::makePacket(std::move(s),
                     label.str()));
             }
 
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
-                base->lastChild());
+                base->lastChild().get());
 
             if (ans.size() == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
                 // 0-efficient triangulations.
-                Triangulation<3>* small =
-                    static_cast<regina::PacketOf<Triangulation<3>>*>(
-                    base->firstChild());
+                auto small = std::static_pointer_cast<
+                    regina::PacketOf<Triangulation<3>>>(base->firstChild());
                 if (small->size() <= 2 && small->homology().isZ()) {
                     // The only closed prime manifolds with
                     // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
@@ -1241,20 +1245,20 @@ void Tri3GluingsUI::makeZeroEfficient() {
         }
     } else if (summands.size() > 1) {
         // Composite 3-manifold.
-        Packet* decomp = new regina::Container();
+        auto decomp = std::make_shared<regina::Container>();
         decomp->setLabel(tri->adornedLabel("Decomposition"));
 
         size_t which = 0;
         for (auto& s : summands) {
             std::ostringstream label;
             label << "Summand #" << ++which;
-            decomp->insertChildLast(regina::makePacket(s.release(),
+            decomp->insertChildLast(regina::makePacket(std::move(s),
                 label.str()));
         }
 
         tri->insertChildLast(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
-            decomp->lastChild());
+            decomp->lastChild().get());
 
         ReginaSupport::info(ui,
             tr("This triangulation represents a composite 3-manifold."),
@@ -1264,10 +1268,10 @@ void Tri3GluingsUI::makeZeroEfficient() {
     } else {
         // Prime 3-manifold.
 
-        if (summands.front()->size() < tri->size()) {
+        if (summands.front().size() < tri->size()) {
             // The summand shrank.  Either it became 0-efficient or it
             // became one of our 2-tetrahedron special cases.
-            tri->swap(*summands.front());
+            tri->swap(summands.front());
 
             if (tri->size() <= 2 && ! tri->isZeroEfficient()) {
                 // We improved the triangulation but it's still not
@@ -1305,7 +1309,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                         // This is our 2-to-1-vertex RP3 case.
                         // Use the new triangulation; however, it is
                         // still not 0-efficient, so also explain why.
-                        tri->swap(*summands.front());
+                        tri->swap(summands.front());
                         ReginaSupport::info(ui,
                             tr("<qt>This is the 3-manifold "
                             "RP<sup>3</sup>, which does not have a 0-efficient "
@@ -1324,7 +1328,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                     // We could still have improved this L(3,1) by
                     // making it 0-efficient.
                     if (! tri->isZeroEfficient()) {
-                        tri->swap(*summands.front());
+                        tri->swap(summands.front());
                     } else {
                         ReginaSupport::info(ui,
                             tr("This triangulation is already 0-efficient."),
@@ -1363,7 +1367,7 @@ void Tri3GluingsUI::toSnapPea() {
         return;
     }
 
-    auto ans = new regina::PacketOf<regina::SnapPeaTriangulation>(std::in_place,
+    auto ans = regina::makePacket<regina::SnapPeaTriangulation>(std::in_place,
         *tri, true /* allow closed, since we have already check this */);
     if (ans->isNull()) {
         ReginaSupport::sorry(ui,
@@ -1371,7 +1375,6 @@ void Tri3GluingsUI::toSnapPea() {
             tr("The SnapPea kernel would not accept the "
                 "triangulation, and I'm not sure why.  "
                 "Please report this to the Regina developers."));
-        delete ans;
         return;
     }
 
@@ -1384,7 +1387,7 @@ void Tri3GluingsUI::toSnapPea() {
 
     ans->setLabel(tri->label());
     tri->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
 }
 
 void Tri3GluingsUI::updateRemoveState() {

@@ -61,7 +61,8 @@ class ExampleCreator {
             return name_;
         }
 
-        regina::PacketOf<regina::Triangulation<dim>>* create() const {
+        std::shared_ptr<regina::PacketOf<regina::Triangulation<dim>>> create()
+                const {
             return regina::makePacket((*creator_)(),
                 name_.toUtf8().constData());
         }

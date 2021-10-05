@@ -233,7 +233,7 @@ std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        auto ans = new regina::PacketOf<Triangulation<2>>();
+        auto ans = regina::makePacket<Triangulation<2>>(std::in_place);
         ans->setLabel("2-D triangulation");
         return ans;
     } else if (typeId == TRI_OR) {

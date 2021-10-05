@@ -206,12 +206,12 @@ void Tri3SnapPeaUI::toSnapPea() {
         return;
     }
 
-    auto ans = new regina::PacketOf<SnapPeaTriangulation>(*snappeaTri);
+    auto ans = regina::makePacket<SnapPeaTriangulation>(std::in_place,
+        *snappeaTri);
     if (ans->isNull()) {
         // This should never happen either...
         ui->setCurrentWidget(dataNull);
         unavailable->refresh();
-        delete ans;
         return;
     }
 
@@ -224,7 +224,7 @@ void Tri3SnapPeaUI::toSnapPea() {
 
     ans->setLabel(reginaTri->label());
     reginaTri->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
 }
 
 QString Tri3SnapPeaUI::solutionTypeString(int solnType) {

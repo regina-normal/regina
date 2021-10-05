@@ -580,24 +580,26 @@ void Tri2GluingsUI::splitIntoComponents() {
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        Packet* base;
+        std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
-            base = new regina::Container();
+            base = std::make_shared<regina::Container>();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
-            base = tri;
+            base = tri->shared_from_this();
 
         // Make the split.
         size_t which = 0;
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::makePacket(c.release(), label.str()));
+            base->insertChildLast(regina::makePacket(std::move(c),
+                label.str()));
         }
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
+            base->firstChild().get());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,

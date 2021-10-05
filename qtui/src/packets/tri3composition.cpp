@@ -293,10 +293,10 @@ void Tri3CompositionUI::updateIsoPanel() {
     // Update the packet chooser in case things have changed.
     isoTest->refreshContents();
 
-    if (isoTest->selectedPacket() != compare_) {
+    if (isoTest->selectedPacket().get() != compare_) {
         if (compare_)
             compare_->unlisten(this);
-        compare_ = isoTest->selectedPacket();
+        compare_ = isoTest->selectedPacket().get();
         if (compare_)
             compare_->listen(this);
     }

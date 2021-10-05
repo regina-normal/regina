@@ -778,12 +778,12 @@ void Tri4GluingsUI::boundaryComponents() {
                 "construct a 3-manifold triangulation from the corresponding "
                 "vertex link.</qt>"));
         if (chosen) {
-            auto ans = new regina::PacketOf<regina::Triangulation<3>>(
-                *chosen->build());
+            auto ans = regina::makePacket<regina::Triangulation<3>>(
+                std::in_place, *chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
         }
     }
 }
@@ -808,12 +808,12 @@ void Tri4GluingsUI::vertexLinks() {
                 "the pentachoron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            auto ans = new regina::PacketOf<Triangulation<3>>(
+            auto ans = regina::makePacket<Triangulation<3>>(std::in_place,
                 *chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(ans.get(), true, true);
         }
     }
 }
@@ -832,24 +832,26 @@ void Tri4GluingsUI::splitIntoComponents() {
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        Packet* base;
+        std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
-            base = new regina::Container();
+            base = std::make_shared<regina::Container>();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
-            base = tri;
+            base = tri->shared_from_this();
 
         // Make the split.
         size_t which = 0;
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::makePacket(c.release(), label.str()));
+            base->insertChildLast(regina::makePacket(std::move(c),
+                label.str()));
         }
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
+            base->firstChild().get());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,

@@ -67,7 +67,7 @@ GenericTriangulationBase::GenericTriangulationBase(regina::Packet* p,
 void GenericTriangulationBase::pythonConsole() {
     enclosingPane->getMainWindow()->getPythonManager().
         launchPythonConsole(enclosingPane->getMainWindow(),
-        packet->root(), packet);
+        packet->root(), packet->shared_from_this());
 }
 
 regina::Packet* GenericTriangulationBase::getPacket() {
