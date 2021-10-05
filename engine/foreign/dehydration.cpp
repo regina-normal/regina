@@ -94,7 +94,7 @@ std::shared_ptr<Container> readDehydrationList(const char *filename,
 
         if (! dehydration.empty()) {
             // Process this dehydration string.
-            auto tri = makePacket<Triangulation<3>>(std::in_place);
+            auto tri = makePacket<Triangulation<3>>();
             if (tri->insertRehydration(dehydration)) {
                 tri->setLabel(label.empty() ? dehydration : label);
                 ans->insertChildLast(tri);

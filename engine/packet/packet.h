@@ -2396,6 +2396,28 @@ std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
 }
 
 /**
+ * Creates a new packet that wraps a default-constructed \a Held object.
+ *
+ * This is equivalent to calling makePacket<Held>(std::in_place).
+ *
+ * The packet that is returned will be newly created, and will have no
+ * packet label.
+ *
+ * \note This function is trivial (it just makes a single call to
+ * std::make_shared).  However, it also allows for slightly simpler code.
+ *
+ * \ifacespython Not present.
+ *
+ * @param args the arguments to be forwarded to the appropriate
+ * \a Held constructor.
+ * @return the new wrapped packet.
+ */
+template <typename Held>
+std::shared_ptr<PacketOf<Held>> makePacket() {
+    return std::make_shared<PacketOf<Held>>();
+}
+
+/**
  * Reads a Regina data file, and returns the corresponding packet tree.
  * This uses Regina's native XML file format; it does not matter whether
  * the XML file is compressed or uncompressed.

@@ -220,7 +220,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        auto ans = regina::makePacket<Triangulation<4>>(std::in_place);
+        auto ans = regina::makePacket<Triangulation<4>>();
         ans->setLabel("4-D triangulation");
         return ans;
     } else if (typeId == TRI_IBUNDLE) {

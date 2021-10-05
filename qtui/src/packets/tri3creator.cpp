@@ -316,7 +316,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        auto ans = regina::makePacket<Triangulation<3>>(std::in_place);
+        auto ans = regina::makePacket<Triangulation<3>>();
         ans->setLabel("3-D triangulation");
         return ans;
     } else if (typeId == TRI_LAYERED_LENS_SPACE) {
@@ -513,7 +513,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             return nullptr;
         }
 
-        auto ans = regina::makePacket<Triangulation<3>>(std::in_place);
+        auto ans = regina::makePacket<Triangulation<3>>();
         std::string dehydString = reDehydration.cap(1).toUtf8().constData();
         if (! ans->insertRehydration(dehydString)) {
             ReginaSupport::sorry(parentWidget, 
