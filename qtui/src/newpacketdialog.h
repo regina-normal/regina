@@ -39,6 +39,7 @@
 #define __NEWPACKETDIALOG_H
 
 #include <QDialog>
+#include <memory>
 
 class PacketChooser;
 class PacketCreator;
