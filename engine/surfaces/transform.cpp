@@ -152,10 +152,8 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
                 // surface has a compressing disc, then the complement of the
                 // double cover has the same compressing disc, and this surface
                 // can happily be tossed away.
-                Triangulation<3>* t = s.cutAlong();
-                if (! t->hasSimpleCompressingDisc())
+                if (! s.cutAlong().hasSimpleCompressingDisc())
                     surfaces_.push_back(s);
-                delete t;
             }
             break;
         default:

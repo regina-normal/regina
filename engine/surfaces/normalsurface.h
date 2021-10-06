@@ -1221,9 +1221,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         bool isIncompressible() const;
 
         /**
-         * Cuts the associated triangulation along this surface and
-         * returns a newly created resulting triangulation.
-         * The original triangulation is not changed.
+         * Cuts the underlying triangulation along this surface and
+         * returns the result as a new triangulation.  The original
+         * triangulation is not changed.
          *
          * Note that, unlike crushing a surface to a point, this
          * operation will not change the topology of the underlying
@@ -1235,14 +1235,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
          *
-         * @return a pointer to the newly allocated resulting triangulation.
+         * @return the resulting cut-open triangulation.
          */
-        Triangulation<3>* cutAlong() const;
+        Triangulation<3> cutAlong() const;
 
         /**
-         * Crushes this surface to a point in the associated
-         * triangulation and returns a newly created resulting
-         * triangulation.  The original triangulation is not changed.
+         * Crushes this surface to a point in the underlying triangulation
+         * and returns the result as a new triangulation.  The original
+         * triangulation is not changed.
          *
          * Crushing the surface will produce a number of tetrahedra,
          * triangular pillows and/or footballs.  The pillows and
@@ -1273,9 +1273,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
          *
-         * @return a pointer to the newly allocated resulting triangulation.
+         * @return the resulting crushed triangulation.
          */
-        Triangulation<3>* crush() const;
+        Triangulation<3> crush() const;
 
         /**
          * Determines whether this and the given surface in fact

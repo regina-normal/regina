@@ -2148,23 +2148,21 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         static void testCutAlong(const Triangulation<3>& tri,
                 const char* name) {
             NormalSurfaces list(tri, NS_STANDARD);
-            std::unique_ptr<Triangulation<3>> t;
-            std::unique_ptr<Triangulation<3>> tDouble;
 
             bool separating;
             unsigned long expected;
 
             // We use the fact that each normal surface is connected.
             for (const NormalSurface& s : list) {
-                t.reset(s.cutAlong());
-                t->intelligentSimplify();
+                Triangulation<3> t = s.cutAlong();
+                t.intelligentSimplify();
 
                 NormalSurface sDouble = s.doubleSurface();
-                tDouble.reset(sDouble.cutAlong());
-                tDouble->intelligentSimplify();
+                Triangulation<3> tDouble = sDouble.cutAlong();
+                tDouble.intelligentSimplify();
 
-                auto comp = t->triangulateComponents();
-                auto compDouble = tDouble->triangulateComponents();
+                auto comp = t.triangulateComponents();
+                auto compDouble = tDouble.triangulateComponents();
 
                 separating = (s.isTwoSided() && comp.size() > 1);
 
@@ -2186,41 +2184,41 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (! t->isValid()) {
+                if (! t.isValid()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for " << name
                         << " gives an invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (! tDouble->isValid()) {
+                if (! tDouble.isValid()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for " << name
                         << " gives an invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri.isIdeal() && ! t->isIdeal()) {
+                if (tri.isIdeal() && ! t.isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for "
                         << name << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (tri.isIdeal() && ! tDouble->isIdeal()) {
+                if (tri.isIdeal() && ! tDouble.isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for "
                         << name << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if ((! tri.isIdeal()) && t->isIdeal()) {
+                if ((! tri.isIdeal()) && t.isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for "
                         << name << " (which is not ideal)"
                         << " gives an ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if ((! tri.isIdeal()) && tDouble->isIdeal()) {
+                if ((! tri.isIdeal()) && tDouble.isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for "
                         << name << " (which is not ideal)"
@@ -2228,14 +2226,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri.isOrientable() && ! t->isOrientable()) {
+                if (tri.isOrientable() && ! t.isOrientable()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for "
                         << name << " (which is orientable)"
                         << " gives a non-orientable triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (tri.isOrientable() && ! tDouble->isOrientable()) {
+                if (tri.isOrientable() && ! tDouble.isOrientable()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for "
                         << name << " (which is orientable)"
@@ -2278,7 +2276,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     expectTwoCopies = 0;
                     expectDoubleCover = 1;
                 }
-                if (t->countBoundaryComponents() !=
+                if (t.countBoundaryComponents() !=
                         expectS + 2 * expectTwoCopies + expectDoubleCover) {
                     std::ostringstream msg;
                     msg << "Cutting along surface for " << name
@@ -2311,7 +2309,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     expectTwoCopies = 0;
                     expectDoubleCover = 2;
                 }
-                if (tDouble->countBoundaryComponents() !=
+                if (tDouble.countBoundaryComponents() !=
                         expectS + 2 * expectTwoCopies + expectDoubleCover) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface for " << name

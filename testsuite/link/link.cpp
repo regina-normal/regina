@@ -1008,20 +1008,18 @@ class LinkTest : public CppUnit::TestFixture {
                     continue;
                 // s must be a 2-sphere.
 
-                Triangulation<3>* cut = s.cutAlong();
-                cut->finiteToIdeal(); // Fills the sphere boundaries with balls.
-                if (cut->isConnected()) {
+                Triangulation<3> cut = s.cutAlong();
+                cut.finiteToIdeal(); // Fills the sphere boundaries with balls.
+                if (cut.isConnected()) {
                     // Should never happen...
-                    delete cut;
                     std::ostringstream msg;
                     msg << name << " complement contains a "
                         "non-separating 2-sphere.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                cut->intelligentSimplify();
-                auto comp = cut->triangulateComponents();
-                delete cut;
+                cut.intelligentSimplify();
+                auto comp = cut.triangulateComponents();
 
                 if ((sigMatches(comp[0].isoSig(), TREFOIL_SIGS) &&
                          comp[1].isSolidTorus()) ||

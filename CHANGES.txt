@@ -687,6 +687,7 @@ Version 7.0  [ TODO ]
             - New operator +.  At last!  Crucially, this operator can combine
               surfaces that use different coordinate systems.
             - New routine components().
+            - Routines crush() and cutAlong() now return by value, not pointer.
             - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalSurfaces:
             - Normal surface lists now hold a snapshot of the underlying

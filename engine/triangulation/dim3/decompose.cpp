@@ -81,11 +81,11 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
         // Find a normal 2-sphere to crush.
         std::optional<NormalSurface> sphere = top.nonTrivialSphereOrDisc();
         if (sphere) {
-            std::unique_ptr<Triangulation<3>> crushed(sphere->crush());
+            Triangulation<3> crushed = sphere->crush();
             sphere.reset(); // to avoid a deep copy of top when we pop
             toProcess.pop();
 
-            if (! crushed->isValid()) {
+            if (! crushed.isValid()) {
                 // We must have had an embedded two-sided projective plane.
                 // Abort.
                 //
@@ -95,15 +95,15 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
                     "projective plane");
             }
 
-            crushed->intelligentSimplify();
+            crushed.intelligentSimplify();
 
             // Insert each component of the crushed triangulation back
             // into the list to process.
-            if (! crushed->isEmpty()) {
-                if (crushed->isConnected())
-                    toProcess.push(std::move(*crushed));
+            if (! crushed.isEmpty()) {
+                if (crushed.isConnected())
+                    toProcess.push(std::move(crushed));
                 else {
-                    for (auto& comp : crushed->triangulateComponents())
+                    for (auto& comp : crushed.triangulateComponents())
                         toProcess.push(std::move(comp));
                 }
             }
@@ -256,19 +256,19 @@ bool Triangulation<3>::isSphere() const {
         // Find a normal 2-sphere to crush.
         std::optional<NormalSurface> sphere = top.nonTrivialSphereOrDisc();
         if (sphere) {
-            std::unique_ptr<Triangulation<3>> crushed(sphere->crush());
+            Triangulation<3> crushed = sphere->crush();
             sphere.reset(); // to avoid a deep copy of top when we pop
             toProcess.pop();
 
-            crushed->intelligentSimplify();
+            crushed.intelligentSimplify();
 
             // Insert each component of the crushed triangulation in the
             // list to process.
-            if (! crushed->isEmpty()) {
-                if (crushed->isConnected())
-                    toProcess.push(std::move(*crushed));
+            if (! crushed.isEmpty()) {
+                if (crushed.isConnected())
+                    toProcess.push(std::move(crushed));
                 else {
-                    for (auto& comp : crushed->triangulateComponents())
+                    for (auto& comp : crushed.triangulateComponents())
                         toProcess.push(std::move(comp));
                 }
             }
@@ -437,14 +437,14 @@ bool Triangulation<3>::isSolidTorus() const {
         // - undo connected sum decompositions;
         // - cut along properly embedded discs;
         // - gain and/or lose 3-balls and/or 3-spheres.
-        std::unique_ptr<Triangulation<3>> crushed(s->crush());
+        Triangulation<3> crushed = s->crush();
         s.reset(); // to avoid any automatic deep copy of the triangulation
 
 
-        crushed->intelligentSimplify();
+        crushed.intelligentSimplify();
 
         bool found = false;
-        for (Triangulation<3>& comp : crushed->triangulateComponents()) {
+        for (Triangulation<3>& comp : crushed.triangulateComponents()) {
             // Examine each connected component after crushing.
             if (comp.isClosed()) {
                 // A closed piece.
@@ -644,19 +644,19 @@ bool Triangulation<3>::isIrreducible() const {
         // Find a normal 2-sphere to crush.
         std::optional<NormalSurface> sphere = top.nonTrivialSphereOrDisc();
         if (sphere) {
-            std::unique_ptr<Triangulation<3>> crushed(sphere->crush());
+            Triangulation<3> crushed = sphere->crush();
             sphere.reset(); // to avoid a deep copy of top when we pop
             toProcess.pop();
 
-            crushed->intelligentSimplify();
+            crushed.intelligentSimplify();
 
             // Insert each component of the crushed triangulation back
             // into the list to process.
-            if (! crushed->isEmpty()) {
-                if (crushed->isConnected())
-                    toProcess.push(std::move(*crushed));
+            if (! crushed.isEmpty()) {
+                if (crushed.isConnected())
+                    toProcess.push(std::move(crushed));
                 else {
-                    for (auto& comp : crushed->triangulateComponents())
+                    for (auto& comp : crushed.triangulateComponents())
                         toProcess.push(std::move(comp));
                 }
             }
@@ -770,8 +770,6 @@ bool Triangulation<3>::hasCompressingDisc() const {
     // Nope.  Decide whether we can use the fast linear programming
     // machinery or whether we need to do a full vertex surface enumeration.
     if (use.isOrientable() && use.countBoundaryComponents() == 1) {
-        Triangulation<3>* crush;
-
         while (true) {
             use.intelligentSimplify();
 
@@ -795,6 +793,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
                 }
             }
 
+            std::vector<Triangulation<3>> pieces;
             {
                 // Isolate the scope of the normal surface machinery,
                 // so that there are no outstanding snapshots of the
@@ -806,11 +805,11 @@ bool Triangulation<3>::hasCompressingDisc() const {
                     // No compressing discs!
                     return *(compressingDisc_ = false);
                 }
-                crush = search.buildSurface().crush();
+                pieces = search.buildSurface().crush().triangulateComponents();
             }
 
             bool found = false;
-            for (auto& comp : crush->triangulateComponents()) {
+            for (auto& comp : pieces) {
                 if (comp.countBoundaryComponents() == 1 &&
                         comp.boundaryComponent(0)->eulerChar()
                         == minBdryEuler) {
@@ -821,7 +820,6 @@ bool Triangulation<3>::hasCompressingDisc() const {
                     break;
                 }
             }
-            delete crush;
 
             if (! found) {
                 // We must have compressed.

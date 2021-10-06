@@ -222,7 +222,7 @@ namespace {
              * triangulation.
              */
             Block(const Tetrahedron<3>* outerTet, unsigned initialNumTet,
-                unsigned maxLayerings, Triangulation<3>* insertInto);
+                unsigned maxLayerings, Triangulation<3>& insertInto);
     };
 
     /**
@@ -253,7 +253,7 @@ namespace {
              * inserted into the given triangulation.
              */
             TriPrism(const Tetrahedron<3> *outerTet, int type,
-                Triangulation<3>* insertInto);
+                Triangulation<3>& insertInto);
     };
 
     /**
@@ -281,7 +281,7 @@ namespace {
              * inserted into the given triangulation.
              */
             QuadPrism(const Tetrahedron<3> *outerTet, int type,
-                Triangulation<3>* insertInto);
+                Triangulation<3>& insertInto);
     };
 
     /**
@@ -309,7 +309,7 @@ namespace {
              * inserted into the given triangulation.
              */
             TruncHalfTet(const Tetrahedron<3> *outerTet, int type,
-                Triangulation<3>* insertInto);
+                Triangulation<3>& insertInto);
     };
 
     /**
@@ -330,7 +330,7 @@ namespace {
              * All new inner tetrahedra will be automatically
              * inserted into the given triangulation.
              */
-            TruncTet(const Tetrahedron<3> *outerTet, Triangulation<3>* insertInto);
+            TruncTet(const Tetrahedron<3> *outerTet, Triangulation<3>& insertInto);
     };
 
     /**
@@ -572,7 +572,7 @@ namespace {
              * inserted into the given triangulation.
              */
             TetBlockSet(const NormalSurface* s, unsigned long tetIndex,
-                Triangulation<3>* insertInto);
+                Triangulation<3>& insertInto);
 
             /**
              * Destroys all block and boundary structures within this outer
@@ -655,18 +655,18 @@ namespace {
     }
 
     inline Block::Block(const Tetrahedron<3> *outerTet, unsigned initialNumTet,
-            unsigned maxLayerings, Triangulation<3>* insertInto) :
+            unsigned maxLayerings, Triangulation<3>& insertInto) :
             outerTet_(outerTet),
             innerTet_(new Tetrahedron<3>*[initialNumTet + maxLayerings]),
             nInnerTet_(initialNumTet) {
         unsigned i;
         for (i = 0; i < nInnerTet_; ++i)
-            innerTet_[i] = insertInto->newTetrahedron();
+            innerTet_[i] = insertInto.newTetrahedron();
         std::fill(link_, link_ + 4, static_cast<Tetrahedron<3>*>(0));
     }
 
     TriPrism::TriPrism(const Tetrahedron<3> *outerTet, int type,
-            Triangulation<3>* insertInto) :
+            Triangulation<3>& insertInto) :
             Block(outerTet, 3, 3, insertInto) {
         innerTet_[1]->join(1, innerTet_[0], Perm<4>());
         innerTet_[1]->join(3, innerTet_[2], Perm<4>());
@@ -703,7 +703,7 @@ namespace {
     }
 
     QuadPrism::QuadPrism(const Tetrahedron<3> *outerTet, int type,
-            Triangulation<3>* insertInto) :
+            Triangulation<3>& insertInto) :
             Block(outerTet, 5, 4, insertInto) {
         innerTet_[4]->join(2, innerTet_[0], Perm<4>());
         innerTet_[4]->join(3, innerTet_[1], Perm<4>());
@@ -748,7 +748,7 @@ namespace {
     }
 
     TruncHalfTet::TruncHalfTet(const Tetrahedron<3> *outerTet, int type,
-            Triangulation<3>* insertInto):
+            Triangulation<3>& insertInto):
             Block(outerTet, 8, 10, insertInto) {
         innerTet_[1]->join(2, innerTet_[0], Perm<4>());
         innerTet_[1]->join(1, innerTet_[2], Perm<4>());
@@ -811,7 +811,7 @@ namespace {
         linkVertices_[vertices[3]] = vertices * Perm<4>(3, 1, 2, 0);
     }
 
-    TruncTet::TruncTet(const Tetrahedron<3> *outerTet, Triangulation<3>* insertInto) :
+    TruncTet::TruncTet(const Tetrahedron<3> *outerTet, Triangulation<3>& insertInto) :
             Block(outerTet, 11, 16, insertInto) {
         innerTet_[0]->join(2, innerTet_[4], Perm<4>());
         innerTet_[1]->join(3, innerTet_[7], Perm<4>());
@@ -1007,7 +1007,7 @@ namespace {
     }
 
     TetBlockSet::TetBlockSet(const NormalSurface* s, unsigned long tetIndex,
-            Triangulation<3>* insertInto) {
+            Triangulation<3>& insertInto) {
         unsigned long i, j;
         for (i = 0; i < 4; ++i)
             triCount_[i] = s->triangles(tetIndex, i).longValue();
@@ -1062,7 +1062,7 @@ namespace {
         }
 
         for (i = 0; i < 4; ++i) {
-            vertexNbd_[i] = insertInto->newTetrahedron();
+            vertexNbd_[i] = insertInto.newTetrahedron();
 
             if (triCount_[i] > 0)
                 triPrism_[i][0]->attachVertexNbd(vertexNbd_[i], i);
@@ -1152,10 +1152,10 @@ namespace {
 // Implementation of cutAlong()
 // ------------------------------------------------------------------------
 
-Triangulation<3>* NormalSurface::cutAlong() const {
-    Triangulation<3>* ans = new Triangulation<3>();
+Triangulation<3> NormalSurface::cutAlong() const {
+    Triangulation<3> ans;
     // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(*ans);
+    Triangulation<3>::ChangeEventSpan span(ans);
 
     unsigned long nTet = triangulation().size();
     if (nTet == 0)
@@ -1210,9 +1210,9 @@ Triangulation<3>* NormalSurface::cutAlong() const {
 // Implementation of crush()
 // ------------------------------------------------------------------------
 
-Triangulation<3>* NormalSurface::crush() const {
-    Triangulation<3>* ans = new Triangulation<3>(*triangulation_, false);
-    unsigned long nTet = ans->size();
+Triangulation<3> NormalSurface::crush() const {
+    Triangulation<3> ans(*triangulation_, false);
+    unsigned long nTet = ans.size();
     if (nTet == 0)
         return ans;
 
@@ -1241,7 +1241,7 @@ Triangulation<3>* NormalSurface::crush() const {
         if (quadTypes[whichTet] == -1) {
             // We want to keep this tetrahedron, so make sure it's glued
             // up correctly.
-            tet = ans->tetrahedron(whichTet);
+            tet = ans.tetrahedron(whichTet);
             for (face = 0; face < 4; face++) {
                 adj = tet->adjacentTetrahedron(face);
                 if (! adj)
@@ -1282,7 +1282,7 @@ Triangulation<3>* NormalSurface::crush() const {
     // Delete unwanted tetrahedra.
     for (whichTet = nTet - 1; whichTet >= 0; whichTet--)
         if (quadTypes[whichTet] >= 0)
-            ans->removeTetrahedronAt(whichTet);
+            ans.removeTetrahedronAt(whichTet);
 
     delete[] quadTypes;
     return ans;
@@ -1312,9 +1312,9 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     // Now cut along the disc, and see if we get an extra sphere as a
     // result.  If not, the disc boundary is non-trivial and so the disc
     // is compressing.
-    std::unique_ptr<Triangulation<3>> cut(cutAlong());
+    Triangulation<3> cut = cutAlong();
 
-    if (cut->countBoundaryComponents() ==
+    if (cut.countBoundaryComponents() ==
             triangulation().countBoundaryComponents()) {
         // The boundary of the disc is not a separating curve in the
         // boundary of the triangulation.  Therefore we might end up
@@ -1324,7 +1324,7 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     }
 
     unsigned long newSphereCount = 0;
-    for (BoundaryComponent<3>* bc : cut->boundaryComponents())
+    for (BoundaryComponent<3>* bc : cut.boundaryComponents())
         if (bc->eulerChar() == 2)
             ++newSphereCount;
 
@@ -1478,13 +1478,13 @@ namespace {
                     // TreeSingleSoln guarantees that our solution is
                     // connected, and so it (or its double) is a sphere or
                     // a disc.
-                    Triangulation<3>* crush = search.buildSurface().crush();
+                    Triangulation<3> crush = search.buildSurface().crush();
                     delete t_[side];
 
                     // Find the piece in the crushed triangulation with the
                     // right Euler characteristic on the boundary, if it exists.
                     t_[side] = nullptr;
-                    for (Triangulation<3>& comp : crush->triangulateComponents()) {
+                    for (Triangulation<3>& comp : crush.triangulateComponents()) {
                         if (comp.countBoundaryComponents() == 1 &&
                                 comp.boundaryComponent(0)->eulerChar() == ec) {
                             // Found it.
@@ -1492,7 +1492,6 @@ namespace {
                             break;
                         }
                     }
-                    delete crush;
 
                     if (! t_[side]) {
                         // No boundary component with the right Euler
@@ -1530,26 +1529,24 @@ bool NormalSurface::isIncompressible() const {
     }
 
     // Time for the heavy machinery.
-    Triangulation<3>* cut = cutAlong();
-    cut->intelligentSimplify();
+    Triangulation<3> cut = cutAlong();
+    cut.intelligentSimplify();
 
     Triangulation<3>* side[2] { nullptr, nullptr };
 
     int which = 0;
-    for (auto& comp : cut->triangulateComponents()) {
+    for (auto& comp : cut.triangulateComponents()) {
         if (comp.hasBoundaryTriangles()) {
             if (which == 2) {
                 // We have more than two components with boundary.
                 // This should never happen.
                 std::cerr << "ERROR: isIncompressible() sliced to give "
                     "more than two components with boundary." << std::endl;
-                delete cut;
                 return false;
             }
             side[which++] = new Triangulation<3>(std::move(comp));
         }
     }
-    delete cut;
 
     SharedSearch ss(side[0], side[1]);
 
