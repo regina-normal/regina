@@ -1,22 +1,22 @@
-Poincaré homology sphere -> display, height = 1, threads = 1
+Poincare homology sphere -> display, height = 1, threads = 1
     fvPQcdecedekrsnrs 5
     gvLQQcdfeeffnjqsspp 6
-Poincaré homology sphere -> display, height = 1, threads = 2
+Poincare homology sphere -> display, height = 1, threads = 2
     fvPQcdecedekrsnrs 5
     gvLQQcdfeeffnjqsspp 6
-Poincaré homology sphere -> stop after 10, height = 1, threads = 1
+Poincare homology sphere -> stop after 10, height = 1, threads = 1
     search ran to completion, count: 2
-Poincaré homology sphere -> stop after 10, height = 1, threads = 2
+Poincare homology sphere -> stop after 10, height = 1, threads = 2
     search ran to completion, count: 2
-Poincaré homology sphere -> collect, height = 1, threads = 1
+Poincare homology sphere -> collect, height = 1, threads = 1
     fvPQcdecedekrsnrs
     gvLQQcdfeeffnjqsspp
-Poincaré homology sphere -> collect, height = 1, threads = 2
+Poincare homology sphere -> collect, height = 1, threads = 2
     fvPQcdecedekrsnrs
     gvLQQcdfeeffnjqsspp
-Poincaré homology sphere vs Poincaré homology sphere -> isomorphisms, stop after 5
+Poincare homology sphere vs Poincare homology sphere -> isomorphisms, stop after 5
     search terminated early, count: 5
-Poincaré homology sphere vs Poincaré homology sphere -> subcomplexes, stop after 5
+Poincare homology sphere vs Poincare homology sphere -> subcomplexes, stop after 5
     search terminated early, count: 5
 
 Weeks manifold -> display, height = 0, threads = 1

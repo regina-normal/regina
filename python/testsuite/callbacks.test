@@ -156,13 +156,13 @@ def testIso(inner, innerName, outer, outerName, countOnly = False):
 ########################################################################
 
 tri = Example3.poincareHomologySphere()
-testDisplay(tri, 'Poincaré homology sphere', 1, 1)
-testDisplay(tri, 'Poincaré homology sphere', 1, 2)
-testStopAfter10(tri, 'Poincaré homology sphere', 1, 1)
-testStopAfter10(tri, 'Poincaré homology sphere', 1, 2)
-testCollect(tri, 'Poincaré homology sphere', 1, 1)
-testCollect(tri, 'Poincaré homology sphere', 1, 2)
-testIso(tri, 'Poincaré homology sphere', tri, 'Poincaré homology sphere', True)
+testDisplay(tri, 'Poincare homology sphere', 1, 1)
+testDisplay(tri, 'Poincare homology sphere', 1, 2)
+testStopAfter10(tri, 'Poincare homology sphere', 1, 1)
+testStopAfter10(tri, 'Poincare homology sphere', 1, 2)
+testCollect(tri, 'Poincare homology sphere', 1, 1)
+testCollect(tri, 'Poincare homology sphere', 1, 2)
+testIso(tri, 'Poincare homology sphere', tri, 'Poincare homology sphere', True)
 print()
 
 tri = Example3.weeks()
