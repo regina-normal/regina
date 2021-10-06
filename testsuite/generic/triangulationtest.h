@@ -733,13 +733,12 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             for (int i = 0; i < trials; ++i) {
-                Triangulation<dim>* t =
+                Triangulation<dim> t =
                     Isomorphism<dim>::random(tri.size()).apply(tri);
 
-                t->orient();
-                clearProperties(*t);
-                verifyOrient(tri, *t, name);
-                delete t;
+                t.orient();
+                clearProperties(t);
+                verifyOrient(tri, t, name);
             }
         }
 
@@ -757,26 +756,24 @@ class TriangulationTest : public CppUnit::TestFixture {
             clearProperties(canonical);
 
             for (int i = 0; i < trials; ++i) {
-                Triangulation<dim>* t =
+                Triangulation<dim> t =
                     Isomorphism<dim>::random(tri.size()).apply(tri);
 
-                t->makeCanonical();
-                clearProperties(*t);
+                t.makeCanonical();
+                clearProperties(t);
 
-                if (! t->isIsomorphicTo(tri)) {
+                if (! t.isIsomorphicTo(tri)) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
                         << name << " is non-isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (t->detail() != canonical.detail()) {
+                if (t.detail() != canonical.detail()) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
                         << name << " is inconsistent.";
                     CPPUNIT_FAIL(msg.str());
                 }
-
-                delete t;
             }
         }
 
@@ -848,18 +845,16 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
-                Triangulation<dim>* other =
+                Triangulation<dim> other =
                     Isomorphism<dim>::random(tri.size()).apply(tri);
 
-                otherSig = other->isoSig();
+                otherSig = other.isoSig();
                 if (otherSig != sig) {
                     std::ostringstream msg;
                     msg << name << ": Random isomorphism gives different "
                         "signature: " << otherSig << " != " << sig << std::endl;
                     CPPUNIT_FAIL(msg.str());
                 }
-
-                delete other;
             }
             for (unsigned i = 0; i < 10; ++i) {
                 Triangulation<dim> other(tri);
@@ -880,9 +875,9 @@ class TriangulationTest : public CppUnit::TestFixture {
                 tri.isoSig(&relabelling);
 
                 rebuild = Triangulation<dim>::fromIsoSig(sig);
-                Triangulation<dim>* relabel = relabelling->apply(tri);
+                Triangulation<dim> relabel = relabelling->apply(tri);
 
-                if (relabel->detail() != rebuild->detail()) {
+                if (relabel.detail() != rebuild->detail()) {
                     std::ostringstream msg;
                     msg << name << ": relabelling returned from "
                         "isoSig() does not recover fromIsoSig(\""
@@ -892,7 +887,6 @@ class TriangulationTest : public CppUnit::TestFixture {
 
                 delete relabelling;
                 delete rebuild;
-                delete relabel;
             }
         }
 

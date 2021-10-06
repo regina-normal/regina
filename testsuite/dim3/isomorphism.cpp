@@ -191,30 +191,29 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             if (which % 11 != 0)
                 return;
 
-            Triangulation<3>* image = iso.apply(rp2xs1);
+            Triangulation<3> image = iso.apply(rp2xs1);
 
             // Clear all computed topological properties of image.
-            image->newSimplex();
-            image->removeSimplexAt(image->size() - 1);
+            image.newSimplex();
+            image.removeSimplexAt(image.size() - 1);
 
             std::ostringstream msg;
             msg << "Isomorphism #" << which << " created a copy of RP2xS1 ";
 
-            if (image->isOrientable())
+            if (image.isOrientable())
                 CPPUNIT_FAIL(msg.str() + "that was orientable.");
-            if (! image->isValid())
+            if (! image.isValid())
                 CPPUNIT_FAIL(msg.str() + "that was invalid.");
-            if (! image->isStandard())
+            if (! image.isStandard())
                 CPPUNIT_FAIL(msg.str() + "that was non-standard.");
-            if (! image->isClosed())
+            if (! image.isClosed())
                 CPPUNIT_FAIL(msg.str() + "that was not closed.");
 
-            const AbelianGroup& h1 = image->homology();
+            const AbelianGroup& h1 = image.homology();
             if (h1.rank() != 1 || h1.countInvariantFactors() != 1 ||
                     h1.invariantFactor(0) != 2)
                 CPPUNIT_FAIL(msg.str() + "that had homology different from "
                     "Z + Z_2.");
-            delete image;
         }
 
         void application() {
@@ -226,14 +225,13 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             if (which % 11 != 0)
                 return;
 
-            Triangulation<3>* image = iso.apply(rp2xs1);
-            if (! rp2xs1.isIsomorphicTo(*image)) {
+            Triangulation<3> image = iso.apply(rp2xs1);
+            if (! rp2xs1.isIsomorphicTo(image)) {
                 std::ostringstream msg;
                 msg << "Isomorphism #" << which << " created a triangulation "
                     "that was not isomorphic to the original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            delete image;
         }
 
         void isomorphic() {

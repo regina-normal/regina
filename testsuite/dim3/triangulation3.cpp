@@ -4159,14 +4159,14 @@ class Triangulation3Test : public TriangulationTest<3> {
             b.reorderTetrahedraBFS(true);
             clearProperties(b);
 
-            Triangulation<3>* c = Isomorphism<3>::random(t.size()).apply(t);
-            clearProperties(*c);
+            Triangulation<3> c = Isomorphism<3>::random(t.size()).apply(t);
+            clearProperties(c);
 
-            Triangulation<3> d(*c);
+            Triangulation<3> d(c);
             d.reorderTetrahedraBFS();
             clearProperties(d);
 
-            Triangulation<3> e(*c);
+            Triangulation<3> e(c);
             e.reorderTetrahedraBFS(true);
             clearProperties(e);
 
@@ -4184,7 +4184,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     "are reordered in the reverse direction.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t.isIsomorphicTo(*c)) {
+            if (! t.isIsomorphicTo(c)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
                     << " changes its isomorphism class when a random "
@@ -4207,8 +4207,6 @@ class Triangulation3Test : public TriangulationTest<3> {
                     "reordered in the reverse direction.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete c;
         }
 
         void reordering() {

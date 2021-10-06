@@ -49,6 +49,7 @@
 #include "triangulation/alias/isomorphism.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
+#include "utilities/exception.h"
 #include "utilities/randutils.h"
 #include <algorithm>
 
@@ -302,9 +303,6 @@ class Isomorphism :
          * describes the mapping from the simplices of \a T and their facets
          * to the simplices of \a U and their facets.
          *
-         * The resulting triangulation \a U is newly created, and must be
-         * destroyed by the caller of this routine.
-         *
          * There are several preconditions to this routine.  This
          * routine does a small amount of sanity checking (and returns 0
          * if an error is detected), but it certainly does not check the
@@ -313,6 +311,8 @@ class Isomorphism :
          *
          * \pre The number of simplices in the given triangulation is
          * precisely the number returned by size() for this isomorphism.
+         * This will be checked, and an InvalidArgument exception will
+         * be thrown if this is not true.
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
@@ -322,10 +322,9 @@ class Isomorphism :
          *
          * @param original the triangulation to which this isomorphism
          * should be applied.
-         * @return the new isomorphic triangulation, or 0 if a problem
-         * was encountered (i.e., an unmet precondition was noticed).
+         * @return the new isomorphic triangulation.
          */
-        Triangulation<dim>* apply(const Triangulation<dim>& original) const;
+        Triangulation<dim> apply(const Triangulation<dim>& original) const;
 
         /**
          * Applies this isomorphism to the given triangulation,
@@ -338,14 +337,16 @@ class Isomorphism :
          * See apply() for further details on how this operation is performed.
          *
          * As with apply(), there are several preconditions to this routine.
-         * This routine does a small amount of sanity checking (and returns
-         * without changes if an error is detected), but it certainly does
+         * This routine does a small amount of sanity checking, and throws
+         * an exception if an error is detected, but it certainly does
          * not check the full set of preconditions.  It is up to the
          * caller of this routine to verify that all of the following
          * preconditions are met.
          *
          * \pre The number of simplices in the given triangulation is
          * precisely the number returned by size() for this isomorphism.
+         * This will be checked, and an InvalidArgument exception will
+         * be thrown if this is not true.
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
@@ -536,23 +537,24 @@ bool Isomorphism<dim>::isIdentity() const {
 }
 
 template <int dim>
-Triangulation<dim>* Isomorphism<dim>::apply(
+Triangulation<dim> Isomorphism<dim>::apply(
         const Triangulation<dim>& original) const {
     if (original.size() != nSimplices_)
-        return 0;
+        throw InvalidArgument("Isomorphism::apply() was given "
+            "an input triangulation of the wrong size");
 
     if (nSimplices_ == 0)
-        return new Triangulation<dim>();
+        return Triangulation<dim>();
 
-    Triangulation<dim>* ans = new Triangulation<dim>();
+    Triangulation<dim> ans;
     Simplex<dim>** tet = new Simplex<dim>*[nSimplices_];
     unsigned long t;
     int f;
 
     // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
     for (t = 0; t < nSimplices_; t++)
-        tet[t] = ans->newSimplex();
+        tet[t] = ans.newSimplex();
 
     for (t = 0; t < nSimplices_; t++)
         tet[simpImage_[t]]->setDescription(
@@ -585,15 +587,8 @@ Triangulation<dim>* Isomorphism<dim>::apply(
 
 template <int dim>
 void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
-    if (tri.size() != nSimplices_)
-        return;
-
-    if (nSimplices_ == 0)
-        return;
-
-    Triangulation<dim>* staging = apply(tri);
-    tri.swap(*staging);
-    delete staging;
+    Triangulation<dim> staging = apply(tri);
+    tri.swap(staging);
 }
 
 template <int dim>
