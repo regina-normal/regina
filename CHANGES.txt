@@ -1078,6 +1078,8 @@ Version 7.0  [ TODO ]
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a deprecated
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
+            - Routines numClosure and denClosure() now return by value,
+              not pointer.
         Class TorusBundle:
             - Added member and global swap() functions.
         Class TreeDecomposition:

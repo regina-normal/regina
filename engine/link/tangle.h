@@ -557,10 +557,9 @@ class Tangle : public Output<Tangle> {
          * This is the link created by joining the two top endpoints of
          * this tangle, and also joining the two bottom endpoints.
          *
-         * @return a newly created link that is the numerator closure of
-         * this tangle.
+         * @return the numerator closure of this tangle.
          */
-        Link* numClosure() const;
+        Link numClosure() const;
 
         /**
          * Forms the denominator closure of this tangle.
@@ -568,10 +567,9 @@ class Tangle : public Output<Tangle> {
          * This is the link created by joining the two left endpoints of
          * this tangle, and also joining the two right endpoints.
          *
-         * @return a newly created link that is the denominator closure of
-         * this tangle.
+         * @return the denominator closure of this tangle.
          */
-        Link* denClosure() const;
+        Link denClosure() const;
 
         /*@}*/
         /**
