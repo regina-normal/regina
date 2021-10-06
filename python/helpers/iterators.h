@@ -45,7 +45,7 @@ namespace regina::python {
  * entire iteration, even if the list was a temporary object.
  */
 template <class Container>
-class SafeIterator {
+class MATCH_PYBIND11_VISIBILITY SafeIterator {
     private:
         const Container& list_;
         pybind11::object localRef_;

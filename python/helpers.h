@@ -39,6 +39,18 @@
 #define __HELPERS_H
 #endif
 
+/**
+ * On some systems we get warnings about Regina's helper classes having
+ * greater visibility than the pybind11 code that they use.  The macro
+ * MATCH_PYBIND11_VISIBILITY allows us to fix this by setting the same
+ * visibility attributes on our classes also.
+ */
+#ifdef __GNUG__
+  #define MATCH_PYBIND11_VISIBILITY __attribute__((visibility("hidden")))
+#else
+  #define MATCH_PYBIND11_VISIBILITY
+#endif
+
 #include "pybind11/pybind11.h"
 #include "helpers/equality.h"
 #include "helpers/output.h"
