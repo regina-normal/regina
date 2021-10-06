@@ -194,7 +194,7 @@ class IConvStreamBuffer : public std::streambuf {
          *
          * @return this stream buffer on success, or 0 on error.
          */
-        IConvStreamBuffer* close() throw();
+        IConvStreamBuffer* close() noexcept;
 
         /**
          * Sends buffered data to the destination output stream,

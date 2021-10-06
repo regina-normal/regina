@@ -963,6 +963,7 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
             - Routine isLensSpace() now returns a std::optional by value,
               not a newly created pointer that could be null.
+            - Routine insertFibre() now throws an exception if alpha is zero.
         Class ShortArray:
             - New class that is essentially a variable-but-bounded sized
               std::array.
@@ -1013,6 +1014,8 @@ Version 7.0  [ TODO ]
               other classes inherit from standard C++ exception types,
               and return meaningful error messages via what().
             - Most member functions are now explicitly marked as noexcept.
+        Class SnapPeaOverflow:
+            - New exception class that catches SnapPea kernel overflow errors.
         Class SnapPeaTriangulation:
             - New constructor that takes a link and builds its complement.
             - Now supports move construction and copy/move assignment.

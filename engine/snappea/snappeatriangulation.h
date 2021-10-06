@@ -364,9 +364,10 @@ class Cusp : public ShortOutput<Cusp> {
  * a SnapPea file with filling coefficients outside these requirements will
  * result in a null triangulation (as discussed above).
  *
- * There are many places in the SnapPea kernel where SnapPea throws a
- * fatal error.  These fatal errors are converted into exceptions (subclassed
- * from SnapPeaException), which can be caught and handled politely.
+ * There are many places in the SnapPea kernel where SnapPea throws a fatal
+ * error.  These fatal errors are converted into exceptions (in particular,
+ * SnapPeaFatalError and SnapPeaMemoryFull), which can be caught and handled
+ * politely.
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
  * SnapPy (standard precision), as well as some additional code
@@ -1245,9 +1246,11 @@ class SnapPeaTriangulation :
          * routine explicitly does not fill all cusps, it is able to guarantee
          * an explicit return type of SnapPeaTriangulation at compile time.
          *
-         * \pre This is not a null triangulation.
-         * \pre The given cusp is non-complete (i.e., has filling coefficients
-         * assigned), and the manifold has at least one other cusp.
+         * \pre This is not a null triangulation, the given cusp is
+         * non-complete (i.e., has filling coefficients assigned), and the
+         * manifold has at least one other cusp.  These preconditions
+         * will all be checked, and a FailedPrecondition exception will
+         * be thrown if they are not met.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
@@ -1291,9 +1294,10 @@ class SnapPeaTriangulation :
          * routine explicitly does not fill all cusps, it is able to guarantee
          * an explicit return type of SnapPeaTriangulation at compile time.
          *
-         * \pre This is not a null triangulation.
-         * \pre At least one cusp is complete (i.e., has no filling
-         * coefficients assigned).
+         * \pre This is not a null triangulation, and at least one cusp is
+         * complete (i.e., has no filling coefficients assigned).  These
+         * preconditions will be checked, and a FailedPrecondition exception
+         * will be thrown if they are not met.
          *
          * @return the filled triangulation.
          */
@@ -1315,9 +1319,10 @@ class SnapPeaTriangulation :
          * routine explicitly fills all cusps, it is able to guarantee
          * an explicit return type of Triangulation<3> at compile time.
          *
-         * \pre This is not a null triangulation.
-         * \pre All cusps are non-complete (i.e., have filling coefficients
-         * assigned).
+         * \pre This is not a null triangulation, and all cusps are
+         * non-complete (i.e., have filling coefficients assigned).
+         * These preconditions will be checked, and a FailedPrecondition
+         * exception will be thrown if they are not met.
          *
          * @return the filled triangulation.
          */

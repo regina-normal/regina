@@ -129,7 +129,7 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
     return this;
 }
 
-IConvStreamBuffer* IConvStreamBuffer::close() throw() {
+IConvStreamBuffer* IConvStreamBuffer::close() noexcept {
     sync();
 
     if (cd == cdNone) {

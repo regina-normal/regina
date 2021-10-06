@@ -40,6 +40,7 @@
 #include "maths/numbertheory.h"
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -231,12 +232,8 @@ void SFSpace::insertFibre(long alpha, long beta) {
     // that alpha is strictly positive.
 
     // Sanity check.
-    if (alpha == 0) {
-        // TODO: We should probably throw an exception here or something.
-        std::cerr << "ERROR: Inserting illegal fibre (0," << beta <<
-            ")." << std::endl;
-        return;
-    }
+    if (alpha == 0)
+        throw InvalidArgument("SFSpace::insertFibre() require alpha != 0");
 
     // Is it a regular fibre?
     if (alpha == 1) {
