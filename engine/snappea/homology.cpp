@@ -36,21 +36,20 @@
 
 namespace regina {
 
-const AbelianGroup* SnapPeaTriangulation::homologyFilled() const {
-    if (! data_)
-        return nullptr; // don't even try
-    if (std::holds_alternative<AbelianGroup>(h1Filled_))
-        return &std::get<AbelianGroup>(h1Filled_);
-    if (std::get<bool>(h1Filled_))
-        return nullptr; // computation was previously attempted but failed
+const AbelianGroup& SnapPeaTriangulation::homologyFilled() const {
+    if (h1Filled_.has_value())
+        return *h1Filled_;
+    if (! data_) {
+        // The user has violated the precondition.
+        // We need to return a reference to *something*.
+        return *(h1Filled_ = AbelianGroup());
+    }
 
     // Fetch the relation matrix from SnapPea.
     regina::snappea::RelationMatrix sRelns;
     regina::snappea::homology_presentation(data_, &sRelns);
-    if (! sRelns.relations) {
-        h1Filled_ = true; // computation attempted but failed
-        return nullptr;
-    }
+    if (! sRelns.relations)
+        throw SnapPeaOverflow();
 
     // Pass the relations to Regina.
     MatrixInt rRelns(sRelns.num_rows, sRelns.num_columns);
@@ -64,8 +63,7 @@ const AbelianGroup* SnapPeaTriangulation::homologyFilled() const {
     // Let Regina run Smith normal form.
     AbelianGroup ans;
     ans.addGroup(rRelns);
-    h1Filled_ = std::move(ans);
-    return &std::get<AbelianGroup>(h1Filled_);
+    return *(h1Filled_ = std::move(ans));
 }
 
 } // namespace regina

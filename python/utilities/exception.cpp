@@ -58,5 +58,7 @@ void addException(pybind11::module_& m) {
         "SnapshotWriteError", PyExc_RuntimeError);
     pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
         "SnapPeaMemoryFull", PyExc_RuntimeError);
+    pybind11::register_exception<regina::SnapPeaOverflow>(m,
+        "SnapPeaOverflow", PyExc_RuntimeError);
 }
 

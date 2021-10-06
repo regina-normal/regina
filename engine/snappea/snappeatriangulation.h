@@ -70,8 +70,6 @@ typedef Matrix<Integer, true> MatrixInt;
  * Details of the error can be accessed through the inherited member
  * function what().
  *
- * \ifacespython Not present.
- *
  * \ingroup snappea
  */
 class SnapPeaFatalError : public std::runtime_error {
@@ -107,8 +105,6 @@ class SnapPeaFatalError : public std::runtime_error {
  *
  * Details of the error can be accessed through the member function what().
  *
- * \ifacespython Not present.
- *
  * \ingroup snappea
  */
 class SnapPeaMemoryFull : public std::exception {
@@ -138,6 +134,42 @@ class SnapPeaMemoryFull : public std::exception {
          */
         virtual const char* what() const noexcept override {
             return "SnapPea reports that memory is full";
+        }
+};
+
+/**
+ * An exception that is thrown when the SnapPea kernel detects an overflow.
+ *
+ * Details of the error can be accessed through the member function what().
+ *
+ * \ingroup snappea
+ */
+class SnapPeaOverflow : public std::exception {
+    public:
+        /**
+         * Creates a new exception.
+         */
+        SnapPeaOverflow() noexcept = default;
+
+        /**
+         * Creates a new copy of the given exception.
+         */
+        SnapPeaOverflow(const SnapPeaOverflow&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        SnapPeaOverflow& operator = (const SnapPeaOverflow&) noexcept = default;
+
+        /**
+         * Returns a human-readable description of the error that occurred.
+         *
+         * @return a description of the error.
+         */
+        virtual const char* what() const noexcept override {
+            return "An overflow occurred within the SnapPea kernel";
         }
 };
 
@@ -499,11 +531,10 @@ class SnapPeaTriangulation :
         mutable std::optional<GroupPresentation> fundGroupFilled_;
             /**< The fundamental group of the filled triangulation.
                  This is std::nullopt if it has not yet been computed. */
-        mutable std::variant<bool, AbelianGroup> h1Filled_;
-            /**< The first homology group of the filled triangulation,
-                 or a boolean if this unknown.  The boolean will be
-                 \c false if if the computation has not yet been attempted,
-                 or \c true if the computation failed (which means SnapPea
+        mutable std::optional<AbelianGroup> h1Filled_;
+            /**< The first homology group of the filled triangulation.
+                 This is std::nullopt if the computation has not yet been
+                 attempted, or if the computation failed (i.e., SnapPea
                  overflowed when building the matrix of relations). */
 
         static bool kernelMessages_;
@@ -1365,7 +1396,7 @@ class SnapPeaTriangulation :
          *   a combination of both SnapPea's and Regina's code to compute
          *   homology groups.  There may be situations in which the SnapPea
          *   kernel cannot perform its part of the computation (see below),
-         *   in which case this routine will return \c null.
+         *   in which case this routine will throw a SnapPeaOverflow exception.
          *
          * - The inherited homology() routine uses only Regina's code, and
          *   works purely within Regina's parent Triangulation<3> class.
@@ -1381,23 +1412,22 @@ class SnapPeaTriangulation :
          *
          * - SnapPea constructs a filled relation matrix using machine integer
          *   arithmetic, but detects overflow (in which case this routine
-         *   will return \c null);
+         *   will throw a SnapPeaOverflow exception);
          *
          * - Regina then uses exact integer arithmetic to solve for the
          *   abelian group invariants (i.e., Smith normal form).
          *
          * Note that each time the triangulation changes, the homology
-         * group will be deleted.  Thus the pointer that is returned
+         * group will be deleted.  Thus the reference that is returned
          * from this routine should not be kept for later use.  Instead,
          * homologyFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
          * \pre This is not a null triangulation.
          *
-         * @return the first homology group of the filled manifold, or
-         * \c null if an overflow occurred inside the SnapPea kernel.
+         * @return the first homology group of the filled manifold.
          */
-        const AbelianGroup* homologyFilled() const;
+        const AbelianGroup& homologyFilled() const;
 
         /**
          * Returns the fundamental group of the manifold with respect to
@@ -2023,8 +2053,7 @@ inline int Cusp::l() const {
 // Inline functions for SnapPeaTriangulation
 
 inline SnapPeaTriangulation::SnapPeaTriangulation() :
-        data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 

@@ -80,11 +80,7 @@ class CoversTest : public CppUnit::TestFixture {
             s.enumerateCovers(degree, SnapPeaTriangulation::all_covers,
                     [&](const SnapPeaTriangulation& cover,
                     SnapPeaTriangulation::CoverType type) {
-                const AbelianGroup* ab = cover.homologyFilled();
-                if (ab)
-                    covers.push_back(ab->str());
-                else
-                    covers.push_back("Null_AbelianGroup");
+                covers.push_back(cover.homologyFilled().str());
             });
             std::sort(covers.begin(), covers.end());
             return covers;

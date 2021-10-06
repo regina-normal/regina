@@ -78,8 +78,7 @@ void Cusp::writeTextShort(std::ostream& out) const {
 
 SnapPeaTriangulation::SnapPeaTriangulation(
         const std::string& fileNameOrContents) :
-        data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
     try {
         if (startsWith(fileNameOrContents, "% Triangulation"))
             data_ = regina::snappea::read_triangulation_from_string(
@@ -97,8 +96,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
-        data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
     if (tri.data_) {
         regina::snappea::copy_triangulation(tri.data_, &data_);
         sync();
@@ -157,8 +155,7 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
-        data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
     if (const SnapPeaTriangulation* clone = tri.isSnapPea()) {
         // We have a full SnapPea triangulation to clone.
         if (clone->data_) {
@@ -815,8 +812,7 @@ bool SnapPeaTriangulation::saveSnapPea(const char* filename) const {
 
 SnapPeaTriangulation::SnapPeaTriangulation(
         regina::snappea::Triangulation* data) :
-        data_(data), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false) {
+        data_(data), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
     sync();
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
@@ -895,7 +891,7 @@ void SnapPeaTriangulation::sync() {
 void SnapPeaTriangulation::fillingsHaveChanged() {
     // Clear properties that depend on the fillings.
     fundGroupFilled_.reset();
-    h1Filled_ = false;
+    h1Filled_.reset();
 
     delete[] shape_;
 

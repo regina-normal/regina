@@ -53,7 +53,10 @@ namespace regina {
  * Details of the error can be accessed through the inherited member
  * function what().
  *
- * \ifacespython Not present.
+ * The line between failed preconditions and invalid input arguments is not
+ * always clear, and so the roles of FailedPrecondition versus InvalidArgument
+ * are not clear-cut.  Where relevant, each routine will document clearly
+ * which exception type it uses.
  *
  * \ingroup utilities
  */
@@ -100,7 +103,10 @@ class FailedPrecondition : public std::runtime_error {
  * Details of the error can be accessed through the inherited member
  * function what().
  *
- * \ifacespython Not present.
+ * The line between failed preconditions and invalid input arguments is not
+ * always clear, and so the roles of FailedPrecondition versus InvalidArgument
+ * are not clear-cut.  Where relevant, each routine will document clearly
+ * which exception type it uses.
  *
  * \ingroup utilities
  */
@@ -146,8 +152,6 @@ class InvalidArgument : public std::runtime_error {
  * Details of the error can be accessed through the inherited member
  * function what().
  *
- * \ifacespython Not present.
- *
  * \ingroup utilities
  */
 class InvalidInput : public std::runtime_error {
@@ -192,8 +196,6 @@ class InvalidInput : public std::runtime_error {
  * Details of the error can be accessed through the inherited member
  * function what().
  *
- * \ifacespython Not present.
- *
  * \ingroup utilities
  */
 class UnsolvedCase : public std::runtime_error {
@@ -235,8 +237,6 @@ class UnsolvedCase : public std::runtime_error {
 /**
  * An exception thrown when a set of normal surface/hypersurface matching
  * equations could not be created for a given triangulation.
- *
- * \ifacespython Not present.
  *
  * \ingroup utilities
  */

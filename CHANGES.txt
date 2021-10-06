@@ -1024,8 +1024,10 @@ Version 7.0  [ TODO ]
               not a pointer that could be null.
             - Changed gluingEquations() and gluingEquationsRect() to return a
               MatrixInt by value, not by pointer.
-            - Changed fundGroupFilled() to return a GroupPresentation by
-              reference, not by pointer.
+            - Changed homologyFilled() and fundGroupFilled() to return by
+              const reference, not by pointer.  Also, homologyFilled() now
+              throws an exception if SnapPea overflows (instead of returning
+              null).
             - Routines gluingEquations(), gluingEquationsRect(),
               fundGroupFilled() and homologyFilled() now have a precondition
               that this must not be a null SnapPea triangulation (instead of

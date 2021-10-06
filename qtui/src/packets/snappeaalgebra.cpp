@@ -148,10 +148,14 @@ void SnapPeaAlgebraUI::refresh() {
         filledFundGroupTitle->hide();
         filledFundGroup->hide();
     } else {
-        if (unicode)
-            filledH1->setText(tri->homologyFilled()->utf8().c_str());
-        else
-            filledH1->setText(tri->homologyFilled()->str().c_str());
+        try {
+            if (unicode)
+                filledH1->setText(tri->homologyFilled().utf8().c_str());
+            else
+                filledH1->setText(tri->homologyFilled().str().c_str());
+        } catch (const regina::SnapPeaOverflow&) {
+            filledH1->setText(tr("SnapPea overflow"));
+        }
         filledFundGroup->refresh(tri->fundamentalGroupFilled());
 
         filledH1Title->show();
