@@ -40,6 +40,7 @@
 #define __PYTHONMANAGER_H
 
 #include <qstring.h>
+#include <memory>
 #include <set>
 
 class PythonConsole;

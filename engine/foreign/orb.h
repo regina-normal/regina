@@ -39,6 +39,7 @@
 #define __REGINA_ORB_H
 #endif
 
+#include <memory>
 #include <string>
 #include "regina-core.h"
 #include "triangulation/forward.h"

@@ -41,6 +41,7 @@
 
 #include "regina-core.h"
 #include "file/xml/xmlelementreader.h"
+#include <memory>
 
 namespace regina {
 
