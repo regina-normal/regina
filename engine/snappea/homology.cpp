@@ -39,11 +39,10 @@ namespace regina {
 const AbelianGroup& SnapPeaTriangulation::homologyFilled() const {
     if (h1Filled_.has_value())
         return *h1Filled_;
-    if (! data_) {
-        // The user has violated the precondition.
-        // We need to return a reference to *something*.
-        return *(h1Filled_ = AbelianGroup());
-    }
+    if (! data_)
+        throw FailedPrecondition(
+            "SnapPeaTriangulation::homologyFilled() "
+            "requires a non-null triangulation");
 
     // Fetch the relation matrix from SnapPea.
     regina::snappea::RelationMatrix sRelns;
