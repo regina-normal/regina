@@ -507,7 +507,7 @@ void ReginaMain::clonePacket() {
 
     auto ans = packet->cloneAsSibling(false, false);
 
-    treeView->selectPacket(ans.get(), true);
+    treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
@@ -520,7 +520,7 @@ void ReginaMain::cloneSubtree() {
 
     auto ans = packet->cloneAsSibling(true, false);
 
-    treeView->selectPacket(ans.get(), true);
+    treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 

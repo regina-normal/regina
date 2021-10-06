@@ -216,7 +216,8 @@ void PacketWindow::renameWindow(const QString& newName) {
 
 void PacketWindow::pythonConsole() {
     mainWindow->getPythonManager().launchPythonConsole(
-        this, mainWindow->getPacketTree(), heldPane->getPacket());
+        this, mainWindow->getPacketTree(),
+        heldPane->getPacket()->shared_from_this());
 }
 
 void PacketWindow::raiseWindow() {

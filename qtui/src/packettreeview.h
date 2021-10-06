@@ -184,7 +184,7 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
 
         /**
          * Selects the given packet in the tree, or clears the selection
-         * if 0 is passed.  If the given packet cannot be found in the
+         * if null is passed.  If the given packet cannot be found in the
          * tree, the selection will be cleared (and nothing will break).
          *
          * If \a allowDefer is \c true and the given packet cannot be
@@ -192,7 +192,8 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * added shortly, and once the corresponding tree item does appear
          * it will be selected immediately.
          */
-        void selectPacket(regina::Packet* p, bool allowDefer = false);
+        void selectPacket(std::shared_ptr<regina::Packet> p,
+            bool allowDefer = false);
 
         /**
          * Fills this tree with items corresponding to the given

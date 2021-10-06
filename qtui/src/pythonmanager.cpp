@@ -77,7 +77,8 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
 #include "python/pythonconsole.h"
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        regina::Packet* tree, regina::Packet* selectedPacket) {
+        std::shared_ptr<regina::Packet> tree,
+        std::shared_ptr<regina::Packet> selectedPacket) {
     PythonConsole* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));

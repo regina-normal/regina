@@ -39,12 +39,12 @@
 #include "reginasupport.h"
 
 void ReginaMain::moveShallow() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
-    regina::Packet* parent = packet->parent();
-    regina::Packet* grandparent = parent->parent();
+    auto parent = packet->parent();
+    auto grandparent = parent->parent();
     if (! grandparent) {
         ReginaSupport::info(this,
             tr("This is already a top-level packet."),
@@ -59,12 +59,12 @@ void ReginaMain::moveShallow() {
 }
 
 void ReginaMain::moveDeep() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
     bool down = true;
-    regina::Packet* newParent = packet->nextSibling();
+    auto newParent = packet->nextSibling();
     if (! newParent) {
         newParent = packet->prevSibling();
         down = false;

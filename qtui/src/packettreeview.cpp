@@ -74,7 +74,7 @@ void PacketTreeItem::init() {
 
 void PacketTreeItem::fill() {
     PacketTreeItem* childTree = 0;
-    for (Packet* p = packet->firstChild(); p; p = p->nextSibling()) {
+    for (auto p = packet->firstChild(); p; p = p->nextSibling()) {
         if (childTree)
             childTree = static_cast<PacketTreeView*>(treeWidget())->
                 createAndSelect(this, childTree, p);
@@ -165,14 +165,14 @@ PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent)
         SLOT(packetView(QTreeWidgetItem*)));
 }
 
-void PacketTreeView::fill(Packet* topPacket) {
+void PacketTreeView::fill(std::shared_ptr<Packet> topPacket) {
     clear();
 
     root = topPacket;
     root->listen(this);
 
     // The root packet itself does not appear in the tree.
-    for (Packet* p = root->firstChild(); p; p = p->nextSibling())
+    for (auto p = root->firstChild(); p; p = p->nextSibling())
         createAndSelect(p)->fill();
 }
 
@@ -193,7 +193,7 @@ PacketTreeItem* PacketTreeView::find(std::shared_ptr<Packet> packet) {
         item = dynamic_cast<PacketTreeItem*>(rootItem->child(itemCount++));
         current = item->getPacket();
 
-        if (current == packet)
+        if (current == packet.get())
             return item;
         if (current && current->isAncestorOf(packet)) {
             rootItem = item;
@@ -204,7 +204,8 @@ PacketTreeItem* PacketTreeView::find(std::shared_ptr<Packet> packet) {
     return nullptr;
 }
 
-void PacketTreeView::selectPacket(regina::Packet* p, bool allowDefer) {
+void PacketTreeView::selectPacket(std::shared_ptr<regina::Packet> p,
+        bool allowDefer) {
     if (p == 0) {
         if (! selectedItems().isEmpty())
             clearSelection();
@@ -217,14 +218,14 @@ void PacketTreeView::selectPacket(regina::Packet* p, bool allowDefer) {
     } else {
         clearSelection();
         if (allowDefer)
-            toSelect = p;
+            toSelect = p.get();
     }
 }
 
 void PacketTreeView::packetView(QTreeWidgetItem* packet) {
     if (packet)
-        mainWindow->packetView(
-            dynamic_cast<PacketTreeItem*>(packet)->getPacket());
+        mainWindow->packetView(dynamic_cast<PacketTreeItem*>(packet)->
+            getPacket()->shared_from_this());
 }
 
 void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
@@ -325,7 +326,7 @@ void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
 
     // Restore any selection we might have had before.
     if (selected)
-        selectPacket(selected.get());
+        selectPacket(selected);
 }
 
 PacketTreeItem* PacketTreeView::createAndSelect(
