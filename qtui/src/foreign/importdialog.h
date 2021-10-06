@@ -39,6 +39,7 @@
 #define __IMPORTDIALOG_H
 
 #include <QDialog>
+#include <memory>
 
 class PacketChooser;
 class PacketFilter;
