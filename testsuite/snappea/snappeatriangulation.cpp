@@ -715,30 +715,25 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             bool found[4] = {}; // initialises to false
             for (const regina::NormalSurface& f : s) {
-                std::optional<regina::MatrixInt> m = f.boundaryIntersections();
-                if (! m) {
-                    CPPUNIT_FAIL(
-                        "Figure 8 knot complement: boundaryIntersections() "
-                        "returned no value.");
-                }
-                if (m->rows() != 1 || m->columns() != 2) {
+                regina::MatrixInt m = f.boundaryIntersections();
+                if (m.rows() != 1 || m.columns() != 2) {
                     CPPUNIT_FAIL(
                         "Figure 8 knot complement: boundaryIntersections() "
                         "should give 1x2 matrices.");
                 }
-                if (m->entry(0, 0) == 1 && m->entry(0, 1) == 4)
+                if (m.entry(0, 0) == 1 && m.entry(0, 1) == 4)
                     found[0] = true;
-                else if (m->entry(0, 0) == 1 && m->entry(0, 1) == -4)
+                else if (m.entry(0, 0) == 1 && m.entry(0, 1) == -4)
                     found[1] = true;
-                else if (m->entry(0, 0) == -1 && m->entry(0, 1) == 4)
+                else if (m.entry(0, 0) == -1 && m.entry(0, 1) == 4)
                     found[2] = true;
-                else if (m->entry(0, 0) == -1 && m->entry(0, 1) == -4)
+                else if (m.entry(0, 0) == -1 && m.entry(0, 1) == -4)
                     found[3] = true;
                 else {
                     std::ostringstream msg;
                     msg << "Figure 8 knot complement: boundaryIntersections() "
                         "gives unexpected result ("
-                        << m->entry(0, 0) << ", " << m->entry(0, 1) << ").";
+                        << m.entry(0, 0) << ", " << m.entry(0, 1) << ").";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

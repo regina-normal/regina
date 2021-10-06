@@ -149,18 +149,18 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s.isCompact()) {
-                std::optional<regina::MatrixInt> slopes =
-                    s.boundaryIntersections();
-                if (slopes) {
+                try {
+                    regina::MatrixInt slopes = s.boundaryIntersections();
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).
-                    for (unsigned i = 0; i < slopes->rows(); ++i)
+                    for (unsigned i = 0; i < slopes.rows(); ++i)
                         ans += QString(" (%1, %2)")
-                            .arg(slopes->entry(i,1).stringValue().c_str())
-                            .arg((-slopes->entry(i,0)).stringValue().c_str());
+                            .arg(slopes.entry(i,1).stringValue().c_str())
+                            .arg((-slopes.entry(i,0)).stringValue().c_str());
                     return ans;
-                } else
+                } catch (const regina::FailedPrecondition&) {
                     return tr("Spun");
+                }
             } else if (s.hasRealBoundary()) {
                 if (surfaces_->isEmbeddedOnly())
                     return QString::number(s.countBoundaries());

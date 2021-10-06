@@ -1778,6 +1778,9 @@ Exception type
 SnapPeaMemoryFull : class
 Exception type
 
+SnapPeaOverflow : class
+Exception type
+
 SnapPeaTriangulation : class
 Equality type : EqualityType.BY_REFERENCE
 

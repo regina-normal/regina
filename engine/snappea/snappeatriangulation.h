@@ -1363,7 +1363,11 @@ class SnapPeaTriangulation :
          *
          * \snappy This has no corresponding routine in SnapPy.
          *
+         * \pre This is not a null triangulation.  This will be checked,
+         * and if this is a null triangulation then a FailedPrecondition
+         * exception will be thrown.
          * \pre All vertex links in this triangulation must be tori.
+         * This will not be checked.
          *
          * \warning If this triangulation was constructed from a Regina
          * triangulation (of class Triangulation<3>), then Regina will have
@@ -1377,10 +1381,9 @@ class SnapPeaTriangulation :
          * @author William Pettersson and Stephan Tillmann
          *
          * @return a matrix with (2 * \a number_of_cusps) rows
-         * and (3 * \a number_of_tetrahedra) columns as described above,
-         * or no value if this is a null triangulation.
+         * and (3 * \a number_of_tetrahedra) columns as described above.
          */
-        std::optional<MatrixInt> slopeEquations() const;
+        MatrixInt slopeEquations() const;
 
         /*@}*/
         /**
@@ -1428,7 +1431,9 @@ class SnapPeaTriangulation :
          * homologyFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * \pre This is not a null triangulation.
+         * \pre This is not a null triangulation.  This will be checked,
+         * and if this is a null triangulation then a FailedPrecondition
+         * exception will be thrown.
          *
          * @return the first homology group of the filled manifold.
          */
@@ -1457,7 +1462,9 @@ class SnapPeaTriangulation :
          * fundamentalGroupFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * \pre This is not a null triangulation.
+         * \pre This is not a null triangulation.  This will be checked,
+         * and if this is a null triangulation then a FailedPrecondition
+         * exception will be thrown.
          *
          * @param simplifyPresentation \c true if SnapPea should attempt
          * to simplify the group presentation, or \c false if it should

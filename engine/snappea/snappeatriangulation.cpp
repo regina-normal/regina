@@ -690,9 +690,10 @@ MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
 /**
  * Written by William Pettersson, 2011.
  */
-std::optional<MatrixInt> SnapPeaTriangulation::slopeEquations() const {
+MatrixInt SnapPeaTriangulation::slopeEquations() const {
     if (! data_)
-        return std::nullopt;
+        throw FailedPrecondition("SnapPeaTriangulation::slopeEquations() "
+            "requires a non-null triangulation");
 
     MatrixInt matrix(2*data_->num_cusps, 3*data_->num_tetrahedra);
     int i,j;

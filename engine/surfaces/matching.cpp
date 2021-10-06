@@ -177,9 +177,15 @@ std::optional<MatrixInt> makeMatchingEquations(
             // enforce closed surfaces.  Before doing anything else, see whether
             // SnapPea is going to play along.
             SnapPeaTriangulation snapPea(triangulation, false);
-            std::optional<MatrixInt> coeffs = snapPea.slopeEquations();
-            if (! (coeffs && snapPea.isIdenticalTo(triangulation))) {
-                // Either SnapPea couldn't handle it, or it retriangulated.
+            MatrixInt coeffs;
+            try {
+                coeffs = snapPea.slopeEquations();
+            } catch (const regina::FailedPrecondition&) {
+                // SnapPea couldn't handle it.
+                return std::nullopt;
+            }
+            if (! snapPea.isIdenticalTo(triangulation)) {
+                // SnapPea retriangulated.
                 return std::nullopt;
             }
 
@@ -228,23 +234,23 @@ std::optional<MatrixInt> makeMatchingEquations(
                 // quad coordinates.
                 if (coords == NS_QUAD_CLOSED) {
                     for (int j = 0; j < 3 * triangulation.size(); ++j) {
-                        ans.entry(row, j) = coeffs->entry(2 * i, j);
-                        ans.entry(row + 1, j) = coeffs->entry(2 * i + 1, j);
+                        ans.entry(row, j) = coeffs.entry(2 * i, j);
+                        ans.entry(row + 1, j) = coeffs.entry(2 * i + 1, j);
                     }
                 } else {
                     for (int j = 0; j < triangulation.size(); ++j) {
                         for (int k = 0; k < 3; ++k){
                             // Quad contributions
                             ans.entry(row, 6*j + k) =
-                                coeffs->entry(2 * i, 3*j + k);
+                                coeffs.entry(2 * i, 3*j + k);
                             ans.entry(row + 1, 6*j + k) =
-                                coeffs->entry(2 * i + 1, 3*j + k);
+                                coeffs.entry(2 * i + 1, 3*j + k);
                             // Oct contributions; signs are opposite of those
                             // for the quads as with the edge equations.
                             ans.entry(row, 6*j + 3 + k) =
-                                -coeffs->entry(2 * i, 3*j + k);
+                                -coeffs.entry(2 * i, 3*j + k);
                             ans.entry(row + 1, 6*j + 3 + k) =
-                                -coeffs->entry(2 * i + 1, 3*j + k);
+                                -coeffs.entry(2 * i + 1, 3*j + k);
                         }
                     }
                 }

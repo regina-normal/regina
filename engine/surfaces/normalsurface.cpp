@@ -354,31 +354,31 @@ void NormalSurface::calculateRealBoundary() const {
     realBoundary_ = false;
 }
 
-std::optional<MatrixInt> NormalSurface::boundaryIntersections() const {
+MatrixInt NormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const SnapPeaTriangulation* snapPea = triangulation().isSnapPea();
     if (! snapPea)
-        return std::nullopt;
+        throw FailedPrecondition("NormalSurface::boundaryIntersections() "
+            "requires the triangulation to be a SnapPeaTriangulation");
 
     // Check the preconditions.
     if (! snapPea->isOriented())
-        return std::nullopt;
+        throw FailedPrecondition("NormalSurface::boundaryIntersections() "
+            "requires the triangulation to be oriented");
     if (enc_.storesOctagons())
-        return std::nullopt;
-    for (Vertex<3>* v : snapPea->vertices()) {
-        if (! v->isIdeal())
-            return std::nullopt;
-        if (! v->isLinkOrientable())
-            return std::nullopt;
-        if (v->linkEulerChar() != 0)
-            return std::nullopt;
-    }
+        throw FailedPrecondition("NormalSurface::boundaryIntersections() "
+            "cannot work with almost normal surface encodings");
+    for (Vertex<3>* v : snapPea->vertices())
+        if (! (v->isIdeal() && v->isLinkOrientable() &&
+                v->linkEulerChar() == 0))
+            throw FailedPrecondition("NormalSurface::boundaryIntersections() "
+                "requires all vertex links to be tori");
 
-    std::optional<MatrixInt> equations = snapPea->slopeEquations();
-    if (! equations)
-        return std::nullopt;
+    // Note: slopeEquations() throws a FailedPrecondition if we have a
+    // null SnapPea triangulation.
+    MatrixInt equations = snapPea->slopeEquations();
 
-    size_t cusps = equations->rows() / 2;
+    size_t cusps = equations.rows() / 2;
     size_t numTet = snapPea->size();
     MatrixInt slopes(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
@@ -387,18 +387,18 @@ std::optional<MatrixInt> NormalSurface::boundaryIntersections() const {
         // Note: we are converting from LargeInteger to Integer below.
         for(unsigned int j=0; j < numTet; j++) {
             meridian +=
-                equations->entry(2*i, 3*j) *
+                equations.entry(2*i, 3*j) *
                     Integer(quads(j, quadSeparating[0][1])) +
-                equations->entry(2*i, 3*j+1) *
+                equations.entry(2*i, 3*j+1) *
                     Integer(quads(j, quadSeparating[0][2])) +
-                equations->entry(2*i, 3*j+2) *
+                equations.entry(2*i, 3*j+2) *
                     Integer(quads(j, quadSeparating[0][3]));
             longitude +=
-                equations->entry(2*i+1, 3*j) *
+                equations.entry(2*i+1, 3*j) *
                     Integer(quads(j, quadSeparating[0][1])) +
-                equations->entry(2*i+1, 3*j+1) *
+                equations.entry(2*i+1, 3*j+1) *
                     Integer(quads(j, quadSeparating[0][2])) +
-                equations->entry(2*i+1, 3*j+2) *
+                equations.entry(2*i+1, 3*j+2) *
                     Integer(quads(j, quadSeparating[0][3]));
         }
         slopes.entry(i,0) = meridian;

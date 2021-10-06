@@ -107,16 +107,17 @@ namespace {
         }
         if (fields & surfaceExportBdry) {
             if (! s.isCompact()) {
-                std::optional<MatrixInt> slopes = s.boundaryIntersections();
-                if (slopes) {
+                try {
+                    MatrixInt slopes = s.boundaryIntersections();
                     out << "\"spun:";
-                    for (unsigned i = 0; i < slopes->rows(); ++i)
-                        out << " (" << slopes->entry(i, 1)
-                            << ", " << - slopes->entry(i, 0)
+                    for (unsigned i = 0; i < slopes.rows(); ++i)
+                        out << " (" << slopes.entry(i, 1)
+                            << ", " << - slopes.entry(i, 0)
                             << ')';
                     out << '\"';
-                } else
+                } catch (const FailedPrecondition&) {
                     out << "spun";
+                }
             } else if (s.hasRealBoundary())
                 out << "real";
             else

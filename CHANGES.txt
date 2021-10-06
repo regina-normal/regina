@@ -658,8 +658,8 @@ Version 7.0  [ TODO ]
               operators, and member and global swap() functions.  The old
               clone() now is deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
-            - Changed boundaryIntersections() to return a
-              std::optional<MatrixInt>, not a pointer that could be null.
+            - Changed boundaryIntersections() to return by value (not by
+              pointer), and to throw an exception on error.
             - Changed doubleSurface() to return by value, not by pointer.
             - Constructors now take their arguments by reference (and,
               for the vector constructors, optionally an rvalue reference).
@@ -1023,14 +1023,13 @@ Version 7.0  [ TODO ]
             - New routine nullify().
             - Added new routine enumerateCovers(), which combines SnapPea's
               find_representations() and construct_cover().
-            - Changed slopeEquations() to return a std::optional<MatrixInt>,
-              not a pointer that could be null.
             - Changed gluingEquations() and gluingEquationsRect() to return a
               MatrixInt by value, not by pointer.
             - Changed homologyFilled() and fundGroupFilled() to return by
-              const reference, not by pointer.  Also, homologyFilled() now
-              throws an exception if SnapPea overflows (instead of returning
-              null).
+              const reference (not by pointer), and to throw exceptions
+              when preconditions are not met (instead of returning null).
+            - Changed slopeEquations() to return by value (not by pointer),
+              and to throw an exception if the triangulation is null.
             - Routines gluingEquations(), gluingEquationsRect(),
               fundGroupFilled() and homologyFilled() now have a precondition
               that this must not be a null SnapPea triangulation (instead of

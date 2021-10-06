@@ -1398,8 +1398,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * kernel, since Regina does not use or store peripheral curves for
          * its own Triangulation<3> class.  Therefore, if the underlying
          * triangulation (as returned by triangulation()) is not of the
-         * subclass SnapPeaTriangulation, this routine will simply return
-         * no value.
+         * subclass SnapPeaTriangulation, this routine will throw a
+         * FailedPrecondition exception.
          *
          * All cusps are treated as complete.  That is, any Dehn fillings
          * stored in the SnapPea triangulation will be ignored.
@@ -1427,21 +1427,24 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * SnapPea).  You can call SnapPeaTriangulation::cuspVertex() to
          * map these to Regina's vertex indices if needed.
          *
-         * At present, Regina can only compute boundary slopes if the
+         * \pre As noted above, the underlying triangulation must be a
+         * SnapPeaTriangulation; moreover, it must not be a null SnapPea
+         * triangulation.  These conditions will be checked, and this routine
+         * will throw a FailedPrecondition exception if they are not met.
+         *
+         * \pre At present, Regina can only compute boundary slopes if the
          * triangulation is oriented, if every vertex link in the
          * triangulation is a torus, and if the underlying coordinate system
-         * is for normal surfaces only (not almost normal surfaces).  If these
-         * conditions are not met, this routine will return no value.
+         * is for normal surfaces only (not almost normal surfaces).
+         * These conditions will likewise be checked, and if they are
+         * not met then this routine will throw a FailedPrecondition exception.
          *
          * @author William Pettersson and Stephan Tillmann
          *
          * @return a matrix with \a number_of_vertices rows and two columns
-         * as described above, or no value if the boundary slopes cannot be
-         * computed (e.g., if the underlying triangulation is not of type
-         * SnapPeaTriangulation, or if it fails to meet the preconditions
-         * outlined above).
+         * as described above.
          */
-        std::optional<MatrixInt> boundaryIntersections() const;
+        MatrixInt boundaryIntersections() const;
 
         /**
          * Gives read-only access to the integer vector that Regina uses
