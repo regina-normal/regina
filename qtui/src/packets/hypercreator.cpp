@@ -182,7 +182,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
                 regina::HS_VERTEX | (embedded->isChecked() ?
                     regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
                 regina::HS_ALG_DEFAULT, &tracker);
-        } catch (const regina::NoMatchingEquations&) {
+        } catch (const regina::ReginaException&) {
             ReginaSupport::failure(parentWidget,
                 ui->tr("<qt>I could not enumerate vertex normal "
                 "hypersurfaces.<p>"
@@ -213,7 +213,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
                 regina::HS_FUNDAMENTAL | (embedded->isChecked() ?
                     regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
                 regina::HS_ALG_DEFAULT, &tracker);
-        } catch (const regina::NoMatchingEquations&) {
+        } catch (const regina::ReginaException&) {
             ReginaSupport::failure(parentWidget,
                 ui->tr("<qt>I could not enumerate fundamental normal "
                 "hypersurfaces.<p>"

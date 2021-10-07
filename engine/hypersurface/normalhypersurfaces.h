@@ -193,8 +193,10 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *
          * - Regina could not create the matching equations for the given
          *   triangulation in the given coordinate system (throws
-         *   regina::NoMatchingEquations).  This is only possible in certain
-         *   coordinate systems, and all such coordinate systems are marked as
+         *   FailedPrecondition for errors that should have been preventable
+         *   with the right checks in advance, or UnsolvedCase for errors that
+         *   were not expected).  This can only happen in certain coordinate
+         *   systems, and all such coordinate systems are marked as
          *   such in the HyperCoords enum documentation.
          *
          * @param triangulation the triangulation upon which this list of
@@ -525,11 +527,11 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * makeMatchingEquations().
          *
          * Note that there are situations in which makeMatchingEquations()
-         * returns no value (because the triangulation is not supported
+         * throws an exception (because the triangulation is not supported
          * by the chosen coordinate system).  However, this routine will
-         * always return a value, because if makeMatchingEquations() had
-         * returned no value then this normal hypersurface list would not have
-         * been created in the first place.
+         * always succeed, because if makeMatchingEquations() had failed
+         * then this normal hypersurface list would not have been created
+         * in the first place.
          *
          * @return the matching equations used to create this normal
          * hypersurface list.
@@ -872,24 +874,23 @@ void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
  * coordinate system.
  *
  * For some coordinate systems, Regina may not be able to create matching
- * equations for all triangulations (any such coordinate systems will be
- * explicitly mentioned as such in the HyperCoords enum documentation).  If
- * Regina cannot create the matching equations as requested, this routine will
- * return no value instead.
+ * equations for all triangulations (these coordinate systems are explicitly
+ * mentioned as such in the HyperCoords enum documentation).  If Regina
+ * cannot create the matching equations as requested then this routine will
+ * throw an exception, either of type FailedPrecondition (for errors
+ * that should have been preventable in advance with the right checks),
+ * or of type UnsolvedCase.  The HyperCoords enum documentation describes
+ * in detail which types of exceptions will be throw in which scenarios.
  *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
- * @param coords the coordinate system to be used;
- * this must be one of the predefined coordinate system
- * constants in NormalHypersurfaces.
- * @return the resulting set of matching equations, or no value if
- * Regina is not able to construct them for the given combination of
- * triangulation and coordinate system.
+ * @param coords the coordinate system to be used.
+ * @return the resulting set of matching equations.
  *
  * \ingroup hypersurface
  */
-std::optional<MatrixInt> makeMatchingEquations(
-    const Triangulation<4>& triangulation, HyperCoords coords);
+MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
+    HyperCoords coords);
 
 /**
  * Generates the validity constraints representing the condition that
@@ -997,9 +998,9 @@ inline void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs) {
 }
 
 inline MatrixInt NormalHypersurfaces::recreateMatchingEquations() const {
-    // Although makeMatchingEquations() returns a std::optional, we are
-    // guaranteed in our scenario here that this will always contain a value.
-    return *makeMatchingEquations(triangulation(), coords_);
+    // Although makeMatchingEquations() could throw an exception, we are
+    // guaranteed in our scenario here that this will always succeed.
+    return makeMatchingEquations(triangulation(), coords_);
 }
 
 inline NormalHypersurfaces::VectorIterator::VectorIterator() {

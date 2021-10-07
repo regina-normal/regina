@@ -130,9 +130,9 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         // In both cases below we know that makeMatchingEquations() will
         // always succeed.
         if (system_.standard())
-            eqns_ = *regina::makeMatchingEquations(tri, NS_STANDARD);
+            eqns_ = regina::makeMatchingEquations(tri, NS_STANDARD);
         else
-            eqns_ = *regina::makeMatchingEquations(tri, NS_QUAD);
+            eqns_ = regina::makeMatchingEquations(tri, NS_QUAD);
         scaling_ = 0;
     } else {
         eqns_ = regina::makeAngleEquations(tri);

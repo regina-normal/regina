@@ -47,20 +47,20 @@
 namespace regina {
 
 /**
- * An exception thrown when a function detects that its preconditions
- * have been violated.
+ * A base class for all of the exceptions that are thrown by Regina's
+ * native mathematical code.
+ *
+ * This does \e not include exceptions thrown due to errors in the
+ * SnapPea kernel (see regina::SnapPeaException for that), and does not
+ * include SnapshotWriteError, which is part of the generic (non-mathematical)
+ * snapshotting machinery.
  *
  * Details of the error can be accessed through the inherited member
  * function what().
  *
- * The line between failed preconditions and invalid input arguments is not
- * always clear, and so the roles of FailedPrecondition versus InvalidArgument
- * are not clear-cut.  Where relevant, each routine will document clearly
- * which exception type it uses.
- *
  * \ingroup utilities
  */
-class FailedPrecondition : public std::runtime_error {
+class ReginaException : public std::runtime_error {
     public:
         /**
          * Creates a new exception with the given error message.
@@ -69,7 +69,7 @@ class FailedPrecondition : public std::runtime_error {
          *
          * @param msg a human-readable description of the error.
          */
-        FailedPrecondition(const std::string& msg) : std::runtime_error(msg) {
+        ReginaException(const std::string& msg) : std::runtime_error(msg) {
         }
 
         /**
@@ -79,19 +79,41 @@ class FailedPrecondition : public std::runtime_error {
          *
          * @param msg a human-readable description of the error.
          */
-        FailedPrecondition(const char* msg) : std::runtime_error(msg) {
+        ReginaException(const char* msg) : std::runtime_error(msg) {
         }
 
         /**
          * Creates a new copy of the given exception.
          */
-        FailedPrecondition(const FailedPrecondition&) noexcept = default;
+        ReginaException(const ReginaException&) noexcept = default;
 
         /**
          * Sets this to be a copy of the given exception.
          *
          * @return a reference to this exception.
          */
+        ReginaException& operator = (const ReginaException&) noexcept = default;
+};
+
+/**
+ * An exception thrown when a function detects that its preconditions
+ * have been violated.
+ *
+ * The line between failed preconditions and invalid input arguments is not
+ * always clear, and so the roles of FailedPrecondition versus InvalidArgument
+ * are not clear-cut.  Where relevant, each routine will document clearly
+ * which exception type it uses.
+ *
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
+ *
+ * \ingroup utilities
+ */
+class FailedPrecondition : public ReginaException {
+    public:
+        FailedPrecondition(const std::string& msg) : ReginaException(msg) {}
+        FailedPrecondition(const char* msg) : ReginaException(msg) {}
+        FailedPrecondition(const FailedPrecondition&) noexcept = default;
         FailedPrecondition& operator = (const FailedPrecondition&) noexcept =
             default;
 };
@@ -100,48 +122,21 @@ class FailedPrecondition : public std::runtime_error {
  * An exception thrown when invalid or unsupported arguments are passed
  * into a function.
  *
- * Details of the error can be accessed through the inherited member
- * function what().
- *
  * The line between failed preconditions and invalid input arguments is not
  * always clear, and so the roles of FailedPrecondition versus InvalidArgument
  * are not clear-cut.  Where relevant, each routine will document clearly
  * which exception type it uses.
  *
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
+ *
  * \ingroup utilities
  */
-class InvalidArgument : public std::runtime_error {
+class InvalidArgument : public ReginaException {
     public:
-        /**
-         * Creates a new exception with the given error message.
-         *
-         * This constructor may throw std::bad_alloc.
-         *
-         * @param msg a human-readable description of the error.
-         */
-        InvalidArgument(const std::string& msg) : std::runtime_error(msg) {
-        }
-
-        /**
-         * Creates a new exception with the given error message.
-         *
-         * This constructor may throw std::bad_alloc.
-         *
-         * @param msg a human-readable description of the error.
-         */
-        InvalidArgument(const char* msg) : std::runtime_error(msg) {
-        }
-
-        /**
-         * Creates a new copy of the given exception.
-         */
+        InvalidArgument(const std::string& msg) : ReginaException(msg) {}
+        InvalidArgument(const char* msg) : ReginaException(msg) {}
         InvalidArgument(const InvalidArgument&) noexcept = default;
-
-        /**
-         * Sets this to be a copy of the given exception.
-         *
-         * @return a reference to this exception.
-         */
         InvalidArgument& operator = (const InvalidArgument&) noexcept = default;
 };
 
@@ -149,43 +144,16 @@ class InvalidArgument : public std::runtime_error {
  * An exception thrown when a function reads unexpected or incomplete
  * data from an input stream.
  *
- * Details of the error can be accessed through the inherited member
- * function what().
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
  *
  * \ingroup utilities
  */
-class InvalidInput : public std::runtime_error {
+class InvalidInput : public ReginaException {
     public:
-        /**
-         * Creates a new exception with the given error message.
-         *
-         * This constructor may throw std::bad_alloc.
-         *
-         * @param msg a human-readable description of the error.
-         */
-        InvalidInput(const std::string& msg) : std::runtime_error(msg) {
-        }
-
-        /**
-         * Creates a new exception with the given error message.
-         *
-         * This constructor may throw std::bad_alloc.
-         *
-         * @param msg a human-readable description of the error.
-         */
-        InvalidInput(const char* msg) : std::runtime_error(msg) {
-        }
-
-        /**
-         * Creates a new copy of the given exception.
-         */
+        InvalidInput(const std::string& msg) : ReginaException(msg) {}
+        InvalidInput(const char* msg) : ReginaException(msg) {}
         InvalidInput(const InvalidInput&) noexcept = default;
-
-        /**
-         * Sets this to be a copy of the given exception.
-         *
-         * @return a reference to this exception.
-         */
         InvalidInput& operator = (const InvalidInput&) noexcept = default;
 };
 
@@ -193,77 +161,17 @@ class InvalidInput : public std::runtime_error {
  * An exception thrown when a mathematical function is not able to solve
  * a particular instance of a problem.
  *
- * Details of the error can be accessed through the inherited member
- * function what().
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
  *
  * \ingroup utilities
  */
-class UnsolvedCase : public std::runtime_error {
+class UnsolvedCase : public ReginaException {
     public:
-        /**
-         * Creates a new exception with the given error message.
-         *
-         * This constructor may throw std::bad_alloc.
-         *
-         * @param msg a human-readable description of the error.
-         */
-        UnsolvedCase(const std::string& msg) : std::runtime_error(msg) {
-        }
-
-        /**
-         * Creates a new exception with the given error message.
-         *
-         * This constructor may throw std::bad_alloc.
-         *
-         * @param msg a human-readable description of the error.
-         */
-        UnsolvedCase(const char* msg) : std::runtime_error(msg) {
-        }
-
-        /**
-         * Creates a new copy of the given exception.
-         */
+        UnsolvedCase(const std::string& msg) : ReginaException(msg) {}
+        UnsolvedCase(const char* msg) : ReginaException(msg) {}
         UnsolvedCase(const UnsolvedCase&) noexcept = default;
-
-        /**
-         * Sets this to be a copy of the given exception.
-         *
-         * @return a reference to this exception.
-         */
-        UnsolvedCase& operator = (const UnsolvedCase&) noexcept =
-            default;
-};
-
-/**
- * An exception thrown when a set of normal surface/hypersurface matching
- * equations could not be created for a given triangulation.
- *
- * \ingroup utilities
- */
-class NoMatchingEquations : public std::exception {
-    public:
-        /**
-         * Creates a new exception.
-         */
-        NoMatchingEquations() noexcept = default;
-
-        /**
-         * Creates a new copy of the given exception.
-         */
-        NoMatchingEquations(const NoMatchingEquations&) noexcept = default;
-
-        /**
-         * Sets this to be a copy of the given exception.
-         */
-        NoMatchingEquations& operator = (const NoMatchingEquations&) noexcept =
-            default;
-
-        /**
-         * Returns a human-readable description of the error that occurred.
-         */
-        virtual const char* what() const noexcept override {
-            return "Could not create a set of matching equations";
-        }
+        UnsolvedCase& operator = (const UnsolvedCase&) noexcept = default;
 };
 
 } // namespace regina

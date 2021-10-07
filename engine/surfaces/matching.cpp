@@ -78,8 +78,8 @@ EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
     }
 }
 
-std::optional<MatrixInt> makeMatchingEquations(
-        const Triangulation<3>& triangulation, NormalCoords coords) {
+MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
+        NormalCoords coords) {
     switch (coords) {
         case NS_STANDARD:
         case NS_AN_STANDARD:
@@ -171,23 +171,23 @@ std::optional<MatrixInt> makeMatchingEquations(
                     triangulation.countBoundaryComponents() == 1 &&
                     triangulation.countVertices() == 1 &&
                     triangulation.vertex(0)->linkType() == Vertex<3>::TORUS))
-                return std::nullopt;
+                throw FailedPrecondition(
+                    "NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED "
+                    "require an oriented ideal triangulation with "
+                    "precisely one torus cusp and no other vertices");
 
             // We will use SnapPea to build the additional constraint that
-            // enforce closed surfaces.  Before doing anything else, see whether
-            // SnapPea is going to play along.
+            // enforces closed surfaces.
             SnapPeaTriangulation snapPea(triangulation, false);
-            MatrixInt coeffs;
-            try {
-                coeffs = snapPea.slopeEquations();
-            } catch (const regina::FailedPrecondition&) {
-                // SnapPea couldn't handle it.
-                return std::nullopt;
-            }
-            if (! snapPea.isIdenticalTo(triangulation)) {
-                // SnapPea retriangulated.
-                return std::nullopt;
-            }
+            if (snapPea.isNull())
+                throw UnsolvedCase("SnapPea produced a null triangulation "
+                    "when attempting to build the matching equations");
+
+            MatrixInt coeffs = snapPea.slopeEquations();
+
+            if (! snapPea.isIdenticalTo(triangulation))
+                throw UnsolvedCase("SnapPea retriangulated "
+                    "when attempting to build the matching equations");
 
             const size_t block = (coords == NS_QUAD_CLOSED ? 3 : 6);
             const size_t nCoords = block * triangulation.size();
@@ -259,7 +259,8 @@ std::optional<MatrixInt> makeMatchingEquations(
             return ans;
         }
         default:
-            return std::nullopt;
+            throw InvalidArgument("makeMatchingEquations() was given "
+                "an invalid coordinate system");
     }
 }
 

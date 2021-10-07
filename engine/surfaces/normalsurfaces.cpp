@@ -42,9 +42,9 @@ namespace regina {
 // specialisation is not enough to stop it.  I wish I understood how to
 // avoid this, but in the meantime, here we are.
 MatrixInt NormalSurfaces::recreateMatchingEquations() const {
-    // Although makeMatchingEquations() returns a std::optional, we are
-    // guaranteed in our scenario here that this will always contain a value.
-    return *makeMatchingEquations(triangulation(), coords_);
+    // Although makeMatchingEquations() could throw an exception, we are
+    // guaranteed in our scenario here that this will always succeed.
+    return makeMatchingEquations(triangulation(), coords_);
 }
 
 void NormalSurfaces::swap(NormalSurfaces& other) {

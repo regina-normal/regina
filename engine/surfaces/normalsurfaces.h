@@ -271,8 +271,10 @@ class NormalSurfaces :
          *
          * - Regina could not create the matching equations for the given
          *   triangulation in the given coordinate system (throws
-         *   regina::NoMatchingEquations).  This is only possible in certain
-         *   coordinate systems, and all such coordinate systems are marked as
+         *   FailedPrecondition for errors that should have been preventable
+         *   with the right checks in advance, or UnsolvedCase for errors that
+         *   were not expected).  This can only happen in certain coordinate
+         *   systems, and all such coordinate systems are marked as
          *   such in the NormalCoords enum documentation.
          *
          * @param triangulation the triangulation upon which this list of
@@ -928,11 +930,11 @@ class NormalSurfaces :
          * makeMatchingEquations().
          *
          * Note that there are situations in which makeMatchingEquations()
-         * returns no value (because the triangulation is not supported
+         * throws an exception (because the triangulation is not supported
          * by the chosen coordinate system).  However, this routine will
-         * always returns a value, because if makeMatchingEquations() had
-         * returned no value then this normal surface list would not have
-         * been created in the first place.
+         * always succeed, because if makeMatchingEquations() had failed
+         * then this normal surface list would not have been created
+         * in the first place.
          *
          * @return the matching equations used to create this normal
          * surface list.
@@ -1502,20 +1504,21 @@ void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
  * For some coordinate systems, Regina may not be able to create matching
  * equations for all triangulations (these coordinate systems are explicitly
  * mentioned as such in the NormalCoords enum documentation).  If Regina
- * cannot create the matching equations as requested, this routine will
- * return no value instead.
+ * cannot create the matching equations as requested then this routine will
+ * throw an exception, either of type FailedPrecondition (for errors
+ * that should have been preventable in advance with the right checks),
+ * or of type UnsolvedCase.  The NormalCoords enum documentation describes
+ * in detail which types of exceptions will be throw in which scenarios.
  *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
  * @param coords the coordinate system to be used.
- * @return the resulting set of matching equations, or no value if
- * Regina is not able to construct them for the given combination of
- * triangulation and coordinate system.
+ * @return the resulting set of matching equations.
  *
  * \ingroup surfaces
  */
-std::optional<MatrixInt> makeMatchingEquations(
-    const Triangulation<3>& triangulation, NormalCoords coords);
+MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
+    NormalCoords coords);
 
 /**
  * Generates the validity constraints representing the condition that

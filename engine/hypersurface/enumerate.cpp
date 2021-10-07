@@ -94,12 +94,13 @@ NormalHypersurfaces::NormalHypersurfaces(const Triangulation<4>& triangulation,
         ProgressTracker* tracker) :
         triangulation_(triangulation), coords_(coords), which_(which),
         algorithm_(algHints) {
-    std::optional<MatrixInt> eqns = makeMatchingEquations(
-        triangulation, coords);
-    if (! eqns) {
+    MatrixInt eqns;
+    try {
+        eqns = makeMatchingEquations(triangulation, coords);
+    } catch (const ReginaException&) {
         if (tracker)
             tracker->setFinished();
-        throw NoMatchingEquations();
+        throw;
     }
 
     if (tracker) {
@@ -108,9 +109,9 @@ NormalHypersurfaces::NormalHypersurfaces(const Triangulation<4>& triangulation,
         // the thread before they are destroyed.
         std::thread([=](MatrixInt e) {
             Enumerator(this, e, tracker, nullptr).enumerate();
-        }, std::move(*eqns)).detach();
+        }, std::move(eqns)).detach();
     } else
-        Enumerator(this, *eqns, tracker, nullptr).enumerate();
+        Enumerator(this, eqns, tracker, nullptr).enumerate();
 }
 
 std::shared_ptr<PacketOf<NormalHypersurfaces>> NormalHypersurfaces::enumerate(
@@ -118,8 +119,10 @@ std::shared_ptr<PacketOf<NormalHypersurfaces>> NormalHypersurfaces::enumerate(
         HyperAlg algHints, ProgressTracker* tracker) {
     // Like the constructor, but (1) we have tree insertion; and (2) we
     // need to convert exceptions to null returns.
-    std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
-    if (! eqns) {
+    MatrixInt eqns;
+    try {
+        eqns = makeMatchingEquations(owner, coords);
+    } catch (const ReginaException&) {
         if (tracker)
             tracker->setFinished();
         return nullptr;
@@ -136,9 +139,9 @@ std::shared_ptr<PacketOf<NormalHypersurfaces>> NormalHypersurfaces::enumerate(
         std::thread([=, &owner](MatrixInt e,
                 std::shared_ptr<NormalHypersurfaces> h) {
             Enumerator(h.get(), e, tracker, owner.packet()).enumerate();
-        }, std::move(*eqns), ans).detach();
+        }, std::move(eqns), ans).detach();
     } else
-        Enumerator(ans.get(), *eqns, tracker, owner.packet()).enumerate();
+        Enumerator(ans.get(), eqns, tracker, owner.packet()).enumerate();
     return ans;
 }
 

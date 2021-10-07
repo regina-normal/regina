@@ -105,7 +105,7 @@ void addNormalSurfaces(pybind11::module_& m) {
                 if (auto p = owner.inAnyPacket())
                     p->insertChildLast(ans);
                 return ans;
-            } catch (const regina::NoMatchingEquations&) {
+            } catch (const regina::ReginaException&) {
                 return std::shared_ptr<regina::PacketOf<NormalSurfaces>>();
             }
         }, pybind11::arg(), pybind11::arg(),

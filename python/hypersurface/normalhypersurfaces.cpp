@@ -72,7 +72,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
                 if (auto p = owner.packet())
                     p->insertChildLast(ans);
                 return ans;
-            } catch (const regina::NoMatchingEquations&) {
+            } catch (const regina::ReginaException&) {
                 return std::shared_ptr<regina::PacketOf<NormalHypersurfaces>>();
             }
         }, pybind11::arg(), pybind11::arg(),

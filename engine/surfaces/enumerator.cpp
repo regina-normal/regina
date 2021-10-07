@@ -113,12 +113,13 @@ NormalSurfaces::NormalSurfaces(const Triangulation<3>& triangulation,
         ProgressTracker* tracker) :
         triangulation_(triangulation), coords_(coords), which_(which),
         algorithm_(algHints) {
-    std::optional<MatrixInt> eqns = makeMatchingEquations(
-        triangulation, coords);
-    if (! eqns) {
+    MatrixInt eqns;
+    try {
+        eqns = makeMatchingEquations(triangulation, coords);
+    } catch (const ReginaException&) {
         if (tracker)
             tracker->setFinished();
-        throw NoMatchingEquations();
+        throw;
     }
 
     if (tracker) {
@@ -127,9 +128,9 @@ NormalSurfaces::NormalSurfaces(const Triangulation<3>& triangulation,
         // the thread before they are destroyed.
         std::thread([=](MatrixInt e) {
             Enumerator(this, e, tracker, nullptr).enumerate();
-        }, std::move(*eqns)).detach();
+        }, std::move(eqns)).detach();
     } else
-        Enumerator(this, *eqns, tracker, nullptr).enumerate();
+        Enumerator(this, eqns, tracker, nullptr).enumerate();
 }
 
 std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
@@ -137,8 +138,10 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
         NormalAlg algHints, ProgressTracker* tracker) {
     // Like the constructor, but (1) we have tree insertion; and (2) we
     // need to convert exceptions to null returns.
-    std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
-    if (! eqns) {
+    MatrixInt eqns;
+    try {
+        eqns = makeMatchingEquations(owner, coords);
+    } catch (const ReginaException&) {
         if (tracker)
             tracker->setFinished();
         return nullptr;
@@ -155,9 +158,9 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
         std::thread([=, &owner](MatrixInt e,
                 std::shared_ptr<NormalSurfaces> s) {
             Enumerator(s.get(), e, tracker, owner.inAnyPacket()).enumerate();
-        }, std::move(*eqns), ans).detach();
+        }, std::move(eqns), ans).detach();
     } else
-        Enumerator(ans.get(), *eqns, tracker, owner.inAnyPacket()).enumerate();
+        Enumerator(ans.get(), eqns, tracker, owner.inAnyPacket()).enumerate();
     return ans;
 }
 
@@ -284,7 +287,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
             new NormalSurfaces(small, list_->which_,
                 list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED,
                 list_->triangulation_),
-            *makeMatchingEquations(triang, small),
+            makeMatchingEquations(triang, small) /* always succeeds */,
             tracker_,
             nullptr);
         if (list_->algorithm_.has(NS_VERTEX_TREE)) {
@@ -365,22 +368,23 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     switch (list_->coords_) {
         case NS_STANDARD:
-            eqns = *makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
+            eqns = makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
             maxColsRHS = list_->triangulation_->size() * 5;
             break;
         case NS_QUAD:
-            eqns = *makeMatchingEquations(*list_->triangulation_, NS_QUAD);
+            eqns = makeMatchingEquations(*list_->triangulation_, NS_QUAD);
             maxColsRHS = list_->triangulation_->size();
             break;
         case NS_AN_STANDARD:
-            eqns = *makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
+            eqns = makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
             maxColsRHS = list_->triangulation_->size() * 5 + 1;
             break;
         case NS_AN_QUAD_OCT:
-            eqns = *makeMatchingEquations(*list_->triangulation_, NS_QUAD);
+            eqns = makeMatchingEquations(*list_->triangulation_, NS_QUAD);
             maxColsRHS = list_->triangulation_->size() + 1;
             break;
         // TODO: Support NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED here.
+        // When doing this, be careful about exceptions.
         default:
             // NS_QUAD_CLOSED / NS_AN_QUAD_OCT_CLOSED fall through to here.
             // Just use arbitrary precision arithmetic.

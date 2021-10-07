@@ -209,7 +209,7 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
                 regina::NS_VERTEX | (embedded->isChecked() ?
                     regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
                 regina::NS_ALG_DEFAULT, &tracker);
-        } catch (const regina::NoMatchingEquations&) {
+        } catch (const regina::ReginaException&) {
             if (coordSystem == regina::NS_QUAD_CLOSED ||
                     coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
                 ReginaSupport::info(parentWidget,
@@ -253,7 +253,7 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
                 regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
                     regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
                 regina::NS_ALG_DEFAULT, &tracker);
-        } catch (const regina::NoMatchingEquations&) {
+        } catch (const regina::ReginaException&) {
             if (coordSystem == regina::NS_QUAD_CLOSED ||
                     coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
                 ReginaSupport::info(parentWidget,

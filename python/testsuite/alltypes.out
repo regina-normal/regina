@@ -1435,9 +1435,6 @@ Equality type : EqualityType.BY_REFERENCE
 ModelLinkGraphNode : class
 Equality type : EqualityType.BY_REFERENCE
 
-NoMatchingEquations : class
-Exception type
-
 NormalAlg : class
 Equality type : EqualityType.BY_VALUE
 
@@ -1666,6 +1663,9 @@ Equality type : EqualityType.NEVER_INSTANTIATED
 
 Rational : class
 Equality type : EqualityType.BY_VALUE
+
+ReginaException : class
+Exception type
 
 SFSAlt : class
 Equality type : EqualityType.BY_REFERENCE

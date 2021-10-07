@@ -74,8 +74,8 @@ EnumConstraints makeEmbeddedConstraints(
     return ans;
 }
 
-std::optional<MatrixInt> makeMatchingEquations(
-        const Triangulation<4>& triangulation, HyperCoords coords) {
+MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
+        HyperCoords coords) {
     switch (coords) {
         case HS_STANDARD:
         {
@@ -197,7 +197,8 @@ std::optional<MatrixInt> makeMatchingEquations(
             return ans;
         }
         default:
-            return std::nullopt;
+            throw InvalidArgument("makeMatchingEquations() was given "
+                "an invalid coordinate system");
     }
 }
 

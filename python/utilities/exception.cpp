@@ -39,7 +39,9 @@
 // Bring in all our exception classes from all our headers.
 
 void addException(pybind11::module_& m) {
-    // Derived from std::runtime_error:
+    // Derived from ReginaException:
+    pybind11::register_exception<regina::ReginaException>(m,
+        "ReginaException", PyExc_RuntimeError);
     pybind11::register_exception<regina::FailedPrecondition>(m,
         "FailedPrecondition", PyExc_RuntimeError);
     pybind11::register_exception<regina::InvalidArgument>(m,
@@ -48,12 +50,12 @@ void addException(pybind11::module_& m) {
         "InvalidInput", PyExc_RuntimeError);
     pybind11::register_exception<regina::UnsolvedCase>(m,
         "UnsolvedCase", PyExc_RuntimeError);
+
+    // Derived from std::runtime_error:
     pybind11::register_exception<regina::SnapPeaFatalError>(m,
         "SnapPeaFatalError", PyExc_RuntimeError);
 
     // Derived from std::exception:
-    pybind11::register_exception<regina::NoMatchingEquations>(m,
-        "NoMatchingEquations", PyExc_RuntimeError);
     pybind11::register_exception<regina::SnapshotWriteError>(m,
         "SnapshotWriteError", PyExc_RuntimeError);
     pybind11::register_exception<regina::SnapPeaMemoryFull>(m,

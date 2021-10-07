@@ -582,8 +582,6 @@ Version 7.0  [ TODO ]
             - Removed completely.
         Class NNativeLong:
             - Renamed to NativeLong.  The old name is a deprecated typedef.
-        Class NoMatchingEquations:
-            - New exception class.
         Class NormalEncoding:
             - New class to describe how the internal integer vector is encoded.
         Class NormalInfo:
@@ -890,6 +888,8 @@ Version 7.0  [ TODO ]
         Class Rational:
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
+        Class ReginaException:
+            - New exception base class.
         Class Returns, ReturnsTraits:
             - Removed completely.
         Class SafePtr, SafePointeeBase:
@@ -1279,8 +1279,9 @@ Version 7.0  [ TODO ]
             - Now takes a const reference (not a const pointer), and returns an
               EnumConstraints by value (not by newly allocated pointer).
         Function makeMatchingEquations():
-            - Now takes a const reference (not a const pointer), and returns a
-              std::optional<MatrixInt> instead of a pointer that could be null.
+            - Now takes a const reference (not a const pointer), returns
+              by value instead of pointer, and throws an exception on
+              error instead of returning null.
         Function makePacket():
             - A new suite of overload functions for converting mathematical
               objects of type Held into wrapped packets of type PacketOf<Held>.
@@ -1291,7 +1292,7 @@ Version 7.0  [ TODO ]
         Function readOrb():
             - Like the other import functions in foreign, this routine returns
               a packet; this means that the return type has changed from
-              Triangulation<3> to PacketOfTriangulation<3>.
+              Triangulation<3> to PacketOf<Triangulation<3>>.
             - Now returns a shared_ptr instead of a raw pointer.
         Function readDehydrationList():
             - Now returns a shared_ptr instead of a raw pointer.

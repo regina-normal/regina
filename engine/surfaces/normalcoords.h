@@ -93,9 +93,15 @@ enum NormalCoords {
      * \pre Regina can only create matching equations in this coordinate system
      * for a limited class of triangulations.  Currently, such triangulations
      * \e must be oriented and ideal, with precisely one torus cusp and no
-     * other boundary components or internal vertices.  Moreover, SnapPea must
-     * be able to work with them without retriangulating (though this should
-     * follow from the other constraints).
+     * other boundary components or internal vertices.  These conditions
+     * will be checked when building the matching equations, and Regina
+     * will throw a FailedPrecondition exception if they are not met.
+     *
+     * \pre SnapPea must be able to work with the underlying triangulation,
+     * without retriangulating.  This should follow from the previous
+     * constraints; however, it will also be checked when building the
+     * matching equations, and Regina will throw an UnsolvedCase exception
+     * if this requirement is not met.
      */
     NS_QUAD_CLOSED = 10,
     /**
@@ -149,9 +155,15 @@ enum NormalCoords {
      * \pre Regina can only create matching equations in this coordinate system
      * for a limited class of triangulations.  Currently, such triangulations
      * \e must be oriented and ideal, with precisely one torus cusp and no
-     * other boundary components or internal vertices.  Moreover, SnapPea must
-     * be able to work with them without retriangulating (though this should
-     * follow from the other constraints).
+     * other boundary components or internal vertices.  These conditions
+     * will be checked when building the matching equations, and Regina
+     * will throw a FailedPrecondition exception if they are not met.
+     *
+     * \pre SnapPea must be able to work with the underlying triangulation,
+     * without retriangulating.  This should follow from the previous
+     * constraints; however, it will also be checked when building the
+     * matching equations, and Regina will throw an UnsolvedCase exception
+     * if this requirement is not met.
      */
     NS_AN_QUAD_OCT_CLOSED = 110,
     /**
