@@ -183,13 +183,12 @@ class GluingPerms {
          * stream.  This routine reads data in the format written by
          * dumpData().
          *
-         * If the data found in the input stream is invalid, incomplete or
-         * incorrectly formatted, this constructor will throw an InvalidInput
-         * exception.
-         *
          * \warning The data format is liable to change between
          * Regina releases.  Data in this format should be used on a
          * short-term temporary basis only.
+         *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
          *
          * @param in the input stream from which to read.
          */

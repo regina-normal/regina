@@ -660,9 +660,7 @@ class SFSpace : public Manifold {
          * range and the excess will be pushed into the obstruction
          * constant \a b.
          *
-         * Since this routine performs arithmetic modulo \a alpha, it
-         * will verify that \a alpha is non-zero, and will throw an
-         * InvalidArgument exception if this requirement is not met.
+         * \exception InvalidArgument \a alpha is zero.
          *
          * @param fibre the fibre to insert.  The first parameter of
          * this fibre (i.e., its index) must be strictly positive, and
@@ -684,9 +682,7 @@ class SFSpace : public Manifold {
          * range and the excess will be pushed into the obstruction
          * constant \a b.
          *
-         * Since this routine performs arithmetic modulo \a alpha, it
-         * will verify that \a alpha is non-zero, and will throw an
-         * InvalidArgument exception if this requirement is not met.
+         * \exception InvalidArgument \a alpha is zero.
          *
          * @param alpha the first parameter (i.e., the index) of the
          * fibre to insert; this must be strictly positive.

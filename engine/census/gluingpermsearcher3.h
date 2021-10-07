@@ -322,10 +322,6 @@ class GluingPermSearcher<3> {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid, incomplete or
-         * incorrectly formatted, this constructor will throw an InvalidInput
-         * exception.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
@@ -334,6 +330,9 @@ class GluingPermSearcher<3> {
          * when they are passed to \a action.  If you need to pass some
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
+         *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
@@ -1183,10 +1182,6 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid, incomplete or
-         * incorrectly formatted, this constructor will throw an InvalidInput
-         * exception.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
@@ -1195,6 +1190,9 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * when they are passed to \a action.  If you need to pass some
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
+         *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
@@ -2021,10 +2019,6 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid, incomplete or
-         * incorrectly formatted, this constructor will throw an InvalidInput
-         * exception.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
@@ -2033,6 +2027,9 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * when they are passed to \a action.  If you need to pass some
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
+         *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
@@ -2583,10 +2580,6 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid, incomplete or
-         * incorrectly formatted, this constructor will throw an InvalidInput
-         * exception.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
@@ -2595,6 +2588,9 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * when they are passed to \a action.  If you need to pass some
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
+         *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
@@ -2771,10 +2767,6 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid, incomplete or
-         * incorrectly formatted, this constructor will throw an InvalidInput
-         * exception.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
@@ -2783,6 +2775,9 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * when they are passed to \a action.  If you need to pass some
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
+         *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call

@@ -130,9 +130,8 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * it will read the \e entire line from the input stream and expect
          * that line to containin the text representation of a facet pairing.
          *
-         * If the data found in the input stream is invalid, incomplete or
-         * incorrectly formatted, this constructor will throw an InvalidInput
-         * exception.
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present.
          *

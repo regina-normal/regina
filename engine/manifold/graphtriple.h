@@ -162,15 +162,13 @@ class GraphTriple : public Manifold {
          * The three Seifert fibred spaces and both 2-by-2 matching
          * matrices are passed separately.
          *
-         * \pre Spaces \a end0 and \a end1 each have a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold,
-         * and space \a centre has two disjoint torus boundaries,
-         * corresponding to two untwisted punctures in its base orbifold.
-         * This precondition will be checked, and an InvalidArgument
-         * exception will be thrown if it is not met.
-         *
          * \pre Each of the given matrices has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument one of the spaces \a end0 and \a end1
+         * does not have precisely one torus boundary corresponding to a
+         * single untwisted puncture in its base orbifold, and/or the space
+         * \a centre does not have precisely two disjoint torus boundaries
+         * corresponding to two untwisted punctures in its base orbifold.
          *
          * @param end0 the first end space, as described in the class notes.
          * @param centre the central space, as described in the class notes.
@@ -191,15 +189,13 @@ class GraphTriple : public Manifold {
          * to the other constructor that takes the Seifert fibred spaces
          * by const reference.
          *
-         * \pre Spaces \a end0 and \a end1 each have a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold,
-         * and space \a centre has two disjoint torus boundaries,
-         * corresponding to two untwisted punctures in its base orbifold.
-         * This precondition will be checked, and an InvalidArgument
-         * exception will be thrown if it is not met.
-         *
          * \pre Each of the given matrices has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument one of the spaces \a end0 and \a end1
+         * does not have precisely one torus boundary corresponding to a
+         * single untwisted puncture in its base orbifold, and/or the space
+         * \a centre does not have precisely two disjoint torus boundaries
+         * corresponding to two untwisted punctures in its base orbifold.
          *
          * @param end0 the first end space, as described in the class notes.
          * @param centre the central space, as described in the class notes.
@@ -314,10 +310,11 @@ class GraphTriple : public Manifold {
     private:
         /**
          * Ensures that the preconditions on the internal Seifert fibred
-         * spaces are satisfied.  If not, this throws a InvalidArgument
-         * exception.
+         * spaces are satisfied.
          *
          * This should be called from every class constructor.
+         *
+         * \exception InvalidArgument the preconditions were not met.
          */
         void verifySFS();
 

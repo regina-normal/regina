@@ -1398,8 +1398,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * kernel, since Regina does not use or store peripheral curves for
          * its own Triangulation<3> class.  Therefore, if the underlying
          * triangulation (as returned by triangulation()) is not of the
-         * subclass SnapPeaTriangulation, this routine will throw a
-         * FailedPrecondition exception.
+         * subclass SnapPeaTriangulation, this routine will throw an exception
+         * (see below).
          *
          * All cusps are treated as complete.  That is, any Dehn fillings
          * stored in the SnapPea triangulation will be ignored.
@@ -1430,14 +1430,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre As noted above, the underlying triangulation must be a
          * SnapPeaTriangulation; moreover, it must not be a null SnapPea
          * triangulation.  These conditions will be checked, and this routine
-         * will throw a FailedPrecondition exception if they are not met.
+         * will throw an exception if they are not met.
          *
          * \pre At present, Regina can only compute boundary slopes if the
          * triangulation is oriented, if every vertex link in the
          * triangulation is a torus, and if the underlying coordinate system
          * is for normal surfaces only (not almost normal surfaces).
-         * These conditions will likewise be checked, and if they are
-         * not met then this routine will throw a FailedPrecondition exception.
+         * These conditions will likewise be checked, and this routine
+         * will throw an exception if they are not met.
+         *
+         * \exception FailedPrecondition one or more of the preconditions
+         * listed above was not met.
          *
          * @author William Pettersson and Stephan Tillmann
          *

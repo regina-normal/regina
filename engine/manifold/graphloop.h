@@ -113,13 +113,11 @@ class GraphLoop : public Manifold {
          *           [ mat10  mat11 ]
          * </pre>
          *
-         * \pre The given Seifert fibred space has precisely two torus
-         * boundaries, corresponding to two untwisted punctures in the
-         * base orbifold.  This precondition will be checked, and an
-         * InvalidArgument exception will be thrown if it is not met.
-         *
          * \pre The given matching matrix has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument the given Seifert fibred space
+         * does not have precisely two torus boundaries, corresponding to
+         * two untwisted punctures in its base orbifold.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param mat00 the (0,0) element of the matching matrix.
@@ -137,13 +135,11 @@ class GraphLoop : public Manifold {
          * to the other constructor that takes the Seifert fibred space
          * by const reference.  See that constructor for further details.
          *
-         * \pre The given Seifert fibred space has precisely two torus
-         * boundaries, corresponding to two untwisted punctures in the
-         * base orbifold.  This precondition will be checked, and an
-         * InvalidArgument exception will be thrown if it is not met.
-         *
          * \pre The given matching matrix has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument the given Seifert fibred space
+         * does not have precisely two torus boundaries, corresponding to
+         * two untwisted punctures in its base orbifold.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param mat00 the (0,0) element of the matching matrix.
@@ -158,13 +154,11 @@ class GraphLoop : public Manifold {
          * space.  The bounded Seifert fibred space and the entire 2-by-2
          * matching matrix are each passed separately.
          *
-         * \pre The given Seifert fibred space has precisely two torus
-         * boundaries, corresponding to two untwisted punctures in the
-         * base orbifold.  This precondition will be checked, and an
-         * InvalidArgument exception will be thrown if it is not met.
-         *
          * \pre The given matching matrix has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument the given Seifert fibred space
+         * does not have precisely two torus boundaries, corresponding to
+         * two untwisted punctures in its base orbifold.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
@@ -178,13 +172,11 @@ class GraphLoop : public Manifold {
          * to the other constructor that takes the Seifert fibred space
          * by const reference.  See that constructor for further details.
          *
-         * \pre The given Seifert fibred space has precisely two torus
-         * boundaries, corresponding to two untwisted punctures in the
-         * base orbifold.  This precondition will be checked, and an
-         * InvalidArgument exception will be thrown if it is not met.
-         *
          * \pre The given matching matrix has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument the given Seifert fibred space
+         * does not have precisely two torus boundaries, corresponding to
+         * two untwisted punctures in its base orbifold.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
@@ -271,10 +263,11 @@ class GraphLoop : public Manifold {
     private:
         /**
          * Ensures that the preconditions on the internal Seifert fibred
-         * space are satisfied.  If not, this throws a InvalidArgument
-         * exception.
+         * space are satisfied.
          *
          * This should be called from every class constructor.
+         *
+         * \exception InvalidArgument the preconditions were not met.
          */
         void verifySFS();
 

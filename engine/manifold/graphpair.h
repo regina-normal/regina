@@ -114,13 +114,11 @@ class GraphPair : public Manifold {
          *           [ mat10  mat11 ]
          * </pre>
          *
-         * \pre Each Seifert fibred space has a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold.
-         * This precondition will be checked, and an InvalidArgument
-         * exception will be thrown if it is not met.
-         *
          * \pre The given matching matrix has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * does not have precisely one torus boundary, corresponding to a
+         * single untwisted puncture in its base orbifold.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -139,13 +137,11 @@ class GraphPair : public Manifold {
          * to the other constructor that takes the Seifert fibred spaces
          * by const reference.  See that constructor for further details.
          *
-         * \pre Each Seifert fibred space has a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold.
-         * This precondition will be checked, and an InvalidArgument
-         * exception will be thrown if it is not met.
-         *
          * \pre The given matching matrix has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * does not have precisely one torus boundary, corresponding to a
+         * single untwisted puncture in its base orbifold.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -161,13 +157,11 @@ class GraphPair : public Manifold {
          * spaces.  The two bounded Seifert fibred spaces and the entire
          * 2-by-2 matching matrix are each passed separately.
          *
-         * \pre Each Seifert fibred space has a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold.
-         * This precondition will be checked, and an InvalidArgument
-         * exception will be thrown if it is not met.
-         *
          * \pre The given matching matrix has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * does not have precisely one torus boundary, corresponding to a
+         * single untwisted puncture in its base orbifold.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -183,13 +177,11 @@ class GraphPair : public Manifold {
          * to the other constructor that takes the Seifert fibred spaces
          * by const reference.  See that constructor for further details.
          *
-         * \pre Each Seifert fibred space has a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold.
-         * This precondition will be checked, and an InvalidArgument
-         * exception will be thrown if it is not met.
-         *
          * \pre The given matching matrix has determinant +1 or -1.
-         * This precondition will not be checked.
+         *
+         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * does not have precisely one torus boundary, corresponding to a
+         * single untwisted puncture in its base orbifold.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -278,10 +270,11 @@ class GraphPair : public Manifold {
     private:
         /**
          * Ensures that the preconditions on the internal Seifert fibred
-         * spaces are satisfied.  If not, this throws a InvalidArgument
-         * exception.
+         * spaces are satisfied.
          *
          * This should be called from every class constructor.
+         *
+         * \exception InvalidArgument the preconditions were not met.
          */
         void verifySFS();
 

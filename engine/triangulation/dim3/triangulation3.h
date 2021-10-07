@@ -2033,8 +2033,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * projective planes.  If the manifold \e does contain embedded
          * two-sided projective planes, then this routine might still succeed
          * but it might fail; however, such a failure will always be detected,
-         * and in such a case this routine will throw an exception of type
-         * regina::UnsolvedCase.
+         * and in such a case this routine will throw an exception (as
+         * detailed below).
          *
          * Note that this routine is currently only available for closed
          * triangulations; see the list of preconditions for full details.
@@ -2071,6 +2071,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * uses faster methods where possible.
          *
          * \pre This triangulation is valid, closed and connected.
+         *
+         * \exception UnsolvedCase the original manifold is non-orientable
+         * and contains one or more embedded two-sided projective planes,
+         * and this routine was not able to recover from this situation.
          *
          * @return a list of triangulations of prime summands.
          */

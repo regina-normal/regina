@@ -518,7 +518,7 @@ class Snapshottable {
  * - The user of a SnapshotRef \a R must only access the snapshotted image
  *   through the dereference operators <tt>*R</tt> and <tt>R-&gt;</tt>.
  *   This access must remain read-only, and any attempt to circumvent it
- *   could lead to an exception being thrown.
+ *   could lead to a regina::SnapshotWriteError exception being thrown.
  *
  * - The user of a SnapshotRef should not keep a pointer or reference to the
  *   underlying type \a T object, since the snapshot may switch to a different

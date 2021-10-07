@@ -596,9 +596,8 @@ class TriangulationBase :
          * reason relates to the fact that top-dimensional simplices are built
          * manually, whereas lower-dimensional faces are deduced properties).
          *
-         * If \a subdim is outside the supported range (i.e., negative or
-         * greater than \a dim), then this routine will throw an exception
-         * of type InvalidArgument.
+         * \exception InvalidArgument the face dimension \a subdim is outside
+         * the supported range (i.e., negative or greater than \a dim).
          *
          * @param subdim the face dimension; this must be between 0 and \a dim
          * inclusive.
@@ -750,9 +749,9 @@ class TriangulationBase :
          * of Face<dim, subdim> objects (holding all the <i>subdim</i>-faces
          * of the triangulation), which you can use immediately.
          *
-         * If \a subdim is outside the supported range (i.e., negative or
-         * greater than or equal to \a dim), then this routine will throw
-         * an exception of type InvalidArgument.
+         * \exception InvalidArgument the face dimension \a subdim is outside
+         * the supported range (i.e., negative, or greater than or equal to
+         * \a dim).
          *
          * \ifacespython Be warned that, unlike in C++, the Python list
          * that is returned will be a snapshot of the faces when this
@@ -830,9 +829,9 @@ class TriangulationBase :
          * The specific return type for C++ programmers will be
          * std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
          *
-         * If \a subdim is outside the supported range (i.e., negative or
-         * greater than or equal to \a dim), then this routine will throw
-         * an exception of type InvalidArgument.
+         * \exception InvalidArgument the face dimension \a subdim is outside
+         * the supported range (i.e., negative, or greater than or equal to
+         * \a dim).
          *
          * @param subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.

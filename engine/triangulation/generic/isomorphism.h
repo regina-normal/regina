@@ -303,22 +303,15 @@ class Isomorphism :
          * describes the mapping from the simplices of \a T and their facets
          * to the simplices of \a U and their facets.
          *
-         * There are several preconditions to this routine.  This
-         * routine does a small amount of sanity checking (and returns 0
-         * if an error is detected), but it certainly does not check the
-         * full set of preconditions.  It is up to the caller of this
-         * routine to verify that all of the following preconditions are met.
-         *
-         * \pre The number of simplices in the given triangulation is
-         * precisely the number returned by size() for this isomorphism.
-         * This will be checked, and an InvalidArgument exception will
-         * be thrown if this is not true.
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the isomorphism is applied.
+         *
+         * \exception InvalidArgument the number of simplices in the given
+         * triangulation is not equal to size() for this isomorphism.
          *
          * @param original the triangulation to which this isomorphism
          * should be applied.
@@ -336,23 +329,15 @@ class Isomorphism :
          *
          * See apply() for further details on how this operation is performed.
          *
-         * As with apply(), there are several preconditions to this routine.
-         * This routine does a small amount of sanity checking, and throws
-         * an exception if an error is detected, but it certainly does
-         * not check the full set of preconditions.  It is up to the
-         * caller of this routine to verify that all of the following
-         * preconditions are met.
-         *
-         * \pre The number of simplices in the given triangulation is
-         * precisely the number returned by size() for this isomorphism.
-         * This will be checked, and an InvalidArgument exception will
-         * be thrown if this is not true.
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the isomorphism is applied.
+         *
+         * \exception InvalidArgument the number of simplices in the given
+         * triangulation is not equal to size() for this isomorphism.
          *
          * @param tri the triangulation to which this isomorphism
          * should be applied.

@@ -581,10 +581,6 @@ class GluingPermSearcher<4> {
          * If you wish to read data whose precise class is unknown,
          * consider using dumpTaggedData() and readTaggedData() instead.
          *
-         * If the data found in the input stream is invalid, incomplete or
-         * incorrectly formatted, this constructor will throw an InvalidInput
-         * exception.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
@@ -593,6 +589,9 @@ class GluingPermSearcher<4> {
          * when they are passed to \a action.  If you need to pass some
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
+         *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call

@@ -3298,10 +3298,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          * hopf = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
          * \endcode
          *
-         * Unlike the other link reconstruction routines, this routine will
-         * throw an InvalidArgument exception if a link could not be
-         * reconstructed from the given data.
-         *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
@@ -3312,6 +3308,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * \note If you have an existing link that you would like to
          * hard-code, the routine dumpConstruction() will output C++ code
          * that can reconstruct the link by calling this constructor.
+         *
+         * \exception InvalidArgument a link could not be reconstructed from
+         * the given data.
          *
          * \ifacespython Not available.
          *
@@ -4054,8 +4053,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * This routine processes one link component, and then recursively
          * calls itself to process the remaining components.
          *
-         * Like fromData(), it throws an InvalidArgument exception if an
-         * error or inconsistency is found in the given data.
+         * \exception InvalidArgument an error or inconsistency is found in
+         * the given data.
          *
          * @param strandsRemaining the expected sum of the lengths of
          * all components that still need to be processed.  This expected
@@ -4081,9 +4080,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * It is called when there are no more components remaining to
          * be processed.
          *
-         * Like fromData(), it throws an InvalidArgument exception if an
-         * error or inconsistency is found in the given data, which
-         * for this terminating call simply means \a strandsRemaining != 0.
+         * \exception InvalidArgument an error or inconsistency was found in
+         * the given data (which for this terminating call simply means
+         * \a strandsRemaining != 0).
          *
          * @param strandsRemaining the expected sum of the lengths of
          * all components that still need to be processed.  This expected

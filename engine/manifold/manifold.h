@@ -135,24 +135,20 @@ class Manifold : public Output<Manifold> {
          * 3-manifolds have implemented this routine, see the class notes
          * for each corresponding subclasses of Manifold.
          *
-         * Two types of error can occur in this routine, and both will
-         * throw an exception:
-         *
-         * - If homology calculation has not yet been implemented for this
-         *   particular 3-manifold, a NotImplemented exception will be thrown.
-         *
-         * - If the homology needs to be read from file (as opposed to
-         *   computed), and if the file is inaccessible or its contents
-         *   cannot be read and parsed correctly, then a FileError will
-         *   be thrown.  Currently this can only happen for the subclass
-         *   SnapPeaCensusManifold, which reads its results from the
-         *   SnapPea census databases that are installed with Regina.
-         *
          * The default implemention of this routine just throws a
          * NotImplemented exception.
          *
          * This routine can also be accessed via the alias homologyH1()
          * (a name that is more specific, but a little longer to type).
+         *
+         * \exception NotImplemented homology calculation has not yet been
+         * implemented for this particular 3-manifold.
+         *
+         * \exception FileError the homology needs to be read from file (as
+         * opposed to computed), but the file is inaccessible or its contents
+         * cannot be read and parsed correctly.  Currently this can only happen
+         * for the subclass SnapPeaCensusManifold, which reads its results from
+         * the SnapPea census databases that are installed with Regina.
          *
          * @return the first homology group of this 3-manifold, if this
          * functionality has been implemented.
@@ -160,6 +156,15 @@ class Manifold : public Output<Manifold> {
         virtual AbelianGroup homology() const;
         /**
          * An alias for homology().  See homology() for further details.
+         *
+         * \exception NotImplemented homology calculation has not yet been
+         * implemented for this particular 3-manifold.
+         *
+         * \exception the homology needs to be read from file (as opposed to
+         * computed), but the file is inaccessible or its contents cannot be
+         * read and parsed correctly.  Currently this can only happen for the
+         * subclass SnapPeaCensusManifold, which reads its results from the
+         * SnapPea census databases that are installed with Regina.
          *
          * @return the first homology group of this 3-manifold, if this
          * functionality has been implemented.
