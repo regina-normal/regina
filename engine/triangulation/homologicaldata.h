@@ -222,11 +222,10 @@ private:
     };
 
     /**
-     * Stored copy of a valid triangulation. All routines use this
-     * triangulation as reference.
-     * This is a deep copy of the triangulation that it is initialized by.
+     * The triangulation that this object was initialised with.
+     * All routines use this triangulation as reference.
      */
-    Triangulation<3> tri_;
+    SnapshotRef<Triangulation<3>> tri_;
 
     /**
      * The 0-th homology group in standard cellular coordinates,
@@ -487,11 +486,11 @@ public:
     /**
      * Takes as input a triangulation.
      *
-     * This class takes its own copy of the input triangulation.  This
-     * means that the input triangulation can change or even be
-     * destroyed, and this homological data will happily continue to work
-     * with the original triangulation as it was first passed to the
-     * constructor.
+     * This class will maintain a fixed snapshot of the given triangulation as
+     * it is at this point in time.  You are free to edit or even destroy
+     * the input triangulation later on; if you do then this HomologicalData
+     * object will automatically take its own deep copy of the original and
+     * continue to use that for its own internal reference.
      *
      * @param input the triangulation to use.
      */
