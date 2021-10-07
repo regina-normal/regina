@@ -67,6 +67,12 @@ typedef Matrix<Integer, true> MatrixInt;
  * An exception that is thrown when the SnapPea kernel encounters a
  * fatal error.
  *
+ * This is one of two types of exception that can be thrown from deep
+ * within the SnapPea kernel.  SnapPeaFatalError is used for informative
+ * messages (the description includes a function and filename), whereas
+ * SnapPeaMemoryFull is used for out-of-memory errors (which use a stock
+ * description so they can be created without allocating further resources).
+ *
  * Details of the error can be accessed through the inherited member
  * function what().
  *
@@ -103,6 +109,12 @@ class SnapPeaFatalError : public std::runtime_error {
  * An exception that is thrown when the SnapPea kernel finds that all
  * available memory has been exhausted.
  *
+ * This is one of two types of exception that can be thrown from deep
+ * within the SnapPea kernel.  SnapPeaFatalError is used for informative
+ * messages (the description includes a function and filename), whereas
+ * SnapPeaMemoryFull is used for out-of-memory errors (which use a stock
+ * description so they can be created without allocating further resources).
+ *
  * Details of the error can be accessed through the member function what().
  *
  * \ingroup snappea
@@ -134,42 +146,6 @@ class SnapPeaMemoryFull : public std::exception {
          */
         virtual const char* what() const noexcept override {
             return "SnapPea reports that memory is full";
-        }
-};
-
-/**
- * An exception that is thrown when the SnapPea kernel detects an overflow.
- *
- * Details of the error can be accessed through the member function what().
- *
- * \ingroup snappea
- */
-class SnapPeaOverflow : public std::exception {
-    public:
-        /**
-         * Creates a new exception.
-         */
-        SnapPeaOverflow() noexcept = default;
-
-        /**
-         * Creates a new copy of the given exception.
-         */
-        SnapPeaOverflow(const SnapPeaOverflow&) noexcept = default;
-
-        /**
-         * Sets this to be a copy of the given exception.
-         *
-         * @return a reference to this exception.
-         */
-        SnapPeaOverflow& operator = (const SnapPeaOverflow&) noexcept = default;
-
-        /**
-         * Returns a human-readable description of the error that occurred.
-         *
-         * @return a description of the error.
-         */
-        virtual const char* what() const noexcept override {
-            return "An overflow occurred within the SnapPea kernel";
         }
 };
 
@@ -1404,7 +1380,8 @@ class SnapPeaTriangulation :
          *   a combination of both SnapPea's and Regina's code to compute
          *   homology groups.  There may be situations in which the SnapPea
          *   kernel cannot perform its part of the computation (see below),
-         *   in which case this routine will throw a SnapPeaOverflow exception.
+         *   in which case this routine will throw a SnapPeaUnsolvedCase
+         *   exception.
          *
          * - The inherited homology() routine uses only Regina's code, and
          *   works purely within Regina's parent Triangulation<3> class.
@@ -1420,7 +1397,7 @@ class SnapPeaTriangulation :
          *
          * - SnapPea constructs a filled relation matrix using machine integer
          *   arithmetic, but detects overflow (in which case this routine
-         *   will throw a SnapPeaOverflow exception);
+         *   will throw a SnapPeaUnsolvedCase exception);
          *
          * - Regina then uses exact integer arithmetic to solve for the
          *   abelian group invariants (i.e., Smith normal form).

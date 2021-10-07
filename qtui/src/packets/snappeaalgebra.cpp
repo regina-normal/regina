@@ -153,7 +153,7 @@ void SnapPeaAlgebraUI::refresh() {
                 filledH1->setText(tri->homologyFilled().utf8().c_str());
             else
                 filledH1->setText(tri->homologyFilled().str().c_str());
-        } catch (const regina::SnapPeaOverflow&) {
+        } catch (const regina::SnapPeaUnsolvedCase&) {
             filledH1->setText(tr("SnapPea overflow"));
         }
         filledFundGroup->refresh(tri->fundamentalGroupFilled());

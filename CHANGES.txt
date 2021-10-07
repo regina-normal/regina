@@ -1014,8 +1014,9 @@ Version 7.0  [ TODO ]
               other classes inherit from standard C++ exception types,
               and return meaningful error messages via what().
             - Most member functions are now explicitly marked as noexcept.
-        Class SnapPeaOverflow:
-            - New exception class that catches SnapPea kernel overflow errors.
+        Class SnapPeaUnsolvedCase:
+            - New exception class used when Regina needs to convert a clean
+              SnapPea returned-with-error into an exception.
         Class SnapPeaTriangulation:
             - New constructor that takes a link and builds its complement.
             - Now supports move construction and copy/move assignment.

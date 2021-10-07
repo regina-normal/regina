@@ -1778,11 +1778,11 @@ Exception type
 SnapPeaMemoryFull : class
 Exception type
 
-SnapPeaOverflow : class
-Exception type
-
 SnapPeaTriangulation : class
 Equality type : EqualityType.BY_REFERENCE
+
+SnapPeaUnsolvedCase : class
+Exception type
 
 SnappedBall : class
 Equality type : EqualityType.BY_REFERENCE

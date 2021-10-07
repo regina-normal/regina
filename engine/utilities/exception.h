@@ -33,7 +33,7 @@
 /*! \file utilities/exception.h
  *  \brief Defines some general exception types thrown by Regina.
  *  Note that some exceptions that are specific to a particular piece of
- *  machinery (e.g., snapshotting and SnapPea-related exceptions) are
+ *  machinery (e.g., snapshotting, or errors within the SnapPea kernel) are
  *  defined in other headers alongside that machinery.
  */
 
@@ -50,9 +50,10 @@ namespace regina {
  * A base class for all of the exceptions that are thrown by Regina's
  * native mathematical code.
  *
- * This does \e not include exceptions thrown due to errors in the
- * SnapPea kernel, and it does not include SnapshotWriteError, which is part
- * of the generic (non-mathematical) snapshotting machinery.
+ * This does \e not include SnapPeaFatalError and SnapPeaMemoryFull,
+ * which represent critical errors thrown from within the SnapPea kernel;
+ * it also does not include SnapshotWriteError, which is part of the generic
+ * (non-mathematical) snapshotting machinery.
  *
  * Details of the error can be accessed through the inherited member
  * function what().
@@ -171,6 +172,31 @@ class UnsolvedCase : public ReginaException {
         UnsolvedCase(const char* msg) : ReginaException(msg) {}
         UnsolvedCase(const UnsolvedCase&) noexcept = default;
         UnsolvedCase& operator = (const UnsolvedCase&) noexcept = default;
+};
+
+/**
+ * An exception thrown when the SnapPea kernel is not able to perform some
+ * computation.
+ *
+ * This is a "regular" exception type derived from ReginaException, and
+ * is typically thrown in scenarios where some SnapPea function returns
+ * cleanly with an error condition.  This is contrast to SnapPeaFatalError
+ * and SnapPeaMemoryFull, which are more severe errors that occur when the
+ * SnapPea kernel aborts processing unexpectedly, and which are not part
+ * of the regular ReginaException class hierarchy.
+ *
+ * All member functions follow the same pattern as the (grand)parent class
+ * ReginaException, and are not documented again here.
+ *
+ * \ingroup snappea
+ */
+class SnapPeaUnsolvedCase : public UnsolvedCase {
+    public:
+        SnapPeaUnsolvedCase(const std::string& msg) : UnsolvedCase(msg) {}
+        SnapPeaUnsolvedCase(const char* msg) : UnsolvedCase(msg) {}
+        SnapPeaUnsolvedCase(const SnapPeaUnsolvedCase&) noexcept = default;
+        SnapPeaUnsolvedCase& operator = (const SnapPeaUnsolvedCase&) noexcept =
+            default;
 };
 
 } // namespace regina

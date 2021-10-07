@@ -50,17 +50,17 @@ void addException(pybind11::module_& m) {
         "InvalidInput", PyExc_RuntimeError);
     pybind11::register_exception<regina::UnsolvedCase>(m,
         "UnsolvedCase", PyExc_RuntimeError);
+    pybind11::register_exception<regina::SnapPeaUnsolvedCase>(m,
+        "SnapPeaUnsolvedCase", PyExc_RuntimeError);
 
-    // Derived from std::runtime_error:
+    // Critical errors within the SnapPea kernel:
     pybind11::register_exception<regina::SnapPeaFatalError>(m,
         "SnapPeaFatalError", PyExc_RuntimeError);
-
-    // Derived from std::exception:
-    pybind11::register_exception<regina::SnapshotWriteError>(m,
-        "SnapshotWriteError", PyExc_RuntimeError);
     pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
         "SnapPeaMemoryFull", PyExc_RuntimeError);
-    pybind11::register_exception<regina::SnapPeaOverflow>(m,
-        "SnapPeaOverflow", PyExc_RuntimeError);
+
+    // Snapshotting machinery:
+    pybind11::register_exception<regina::SnapshotWriteError>(m,
+        "SnapshotWriteError", PyExc_RuntimeError);
 }
 

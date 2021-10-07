@@ -48,7 +48,8 @@ const AbelianGroup& SnapPeaTriangulation::homologyFilled() const {
     regina::snappea::RelationMatrix sRelns;
     regina::snappea::homology_presentation(data_, &sRelns);
     if (! sRelns.relations)
-        throw SnapPeaOverflow();
+        throw SnapPeaUnsolvedCase("An overflow occurred "
+            "within the SnapPea kernel");
 
     // Pass the relations to Regina.
     MatrixInt rRelns(sRelns.num_rows, sRelns.num_columns);
