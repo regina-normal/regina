@@ -527,6 +527,9 @@ Version 7.0  [ TODO ]
         Class LPConstraintEulerZero:
             - New constraint to use with normal surface enumeration that
               fixes Euler characteristic to be zero.
+        Class LPInitialTableaux:
+            - The constraintsBroken() routines are gone; instead the class
+              constructor throws an exception on error.
         Class LPSystem:
             - New class to translate coordinate systems into a layout
               for LPInitialTableaux.
@@ -1108,6 +1111,8 @@ Version 7.0  [ TODO ]
               of returning null) if the coordinate preconditions are not met.
             - Constructors now take a NormalEncoding, not a NormalCoords, and
               will now happily accept any valid encoding.
+            - The constraintsBroken() routines are gone; instead the class
+              constructor throws an exception on error.
             - TreeEnumeration::run() and TautEnumeration::run() now use a
               type-safe template-based mechanism for callbacks instead of
               function pointers with void* arguments.  Moreover, the

@@ -111,10 +111,8 @@ int main(int argc, char* argv[]) {
                     mode == 'q' ? NS_QUAD :
                     mode == 'a' ? NS_AN_STANDARD :
                     NS_AN_QUAD_OCT);
-                TreeEnumeration<> search(*t, coords);
-                if (search.constraintsBroken())
-                    std::cerr << "ERROR: Constraints broken." << std::endl;
-                else {
+                try {
+                    TreeEnumeration<> search(*t, coords);
                     search.run([](const auto& tree) {
                         /*
                         std::cout << "SOLN #" << tree.nSolns() << ": ";
@@ -128,23 +126,28 @@ int main(int argc, char* argv[]) {
                         << std::endl;
                     std::cout << "# nodes visited = " << search.nVisited() 
                         << std::endl;
+                } catch (const ReginaException&) {
+                    std::cerr << "ERROR: Constraints broken." << std::endl;
                 }
             } else {
-                TreeSingleSoln<LPConstraintEulerPositive>
-                    search(*t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
-                if (search.constraintsBroken())
+                try {
+                    TreeSingleSoln<LPConstraintEulerPositive>
+                        search(*t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
+                    if (search.find()) {
+                        std::cout << "Found non-trivial Euler > 0:"
+                            << std::endl;
+                        search.dumpTypes(std::cout);
+                        std::cout << std::endl;
+                        std::cout << "# nodes visited = " << search.nVisited()
+                            << std::endl;
+                    } else {
+                        std::cout << "No non-trivial solution with Euler > 0"
+                            << std::endl;
+                        std::cout << "# nodes visited = " << search.nVisited()
+                            << std::endl;
+                    }
+                } catch (const ReginaException&) {
                     std::cerr << "ERROR: Constraints broken." << std::endl;
-                else if (search.find()) {
-                    std::cout << "Found non-trivial Euler > 0:" << std::endl;
-                    search.dumpTypes(std::cout);
-                    std::cout << std::endl;
-                    std::cout << "# nodes visited = " << search.nVisited()
-                        << std::endl;
-                } else {
-                    std::cout << "No non-trivial solution with Euler > 0"
-                        << std::endl;
-                    std::cout << "# nodes visited = " << search.nVisited()
-                        << std::endl;
                 }
             }
         } else

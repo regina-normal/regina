@@ -265,11 +265,11 @@ class LPConstraintBase {
          * As described in the LPInitialTableaux class notes, it might
          * not be possible to construct the linear functions (since the
          * triangulation might not satisfy the necessary requirements).
-         * In this case, this routine should ensure that the linear
-         * functions are in fact the zero functions, and should return
-         * \c false (but it must still set -1 coefficients for the new
-         * variables as described above).  Otherwise (if the linear function
-         * were successfully constructed) this routine should return \c true.
+         * In this case, this routine should throw either an InvalidArgument
+         * exception (for errors that should have been preventable in
+         * advance with the right checks), or an UnsolvedCase exception.
+         * Any constrant class that could throw exceptions in this way \e must
+         * describe this behaviour in its class documentation.
          *
          * If you are implementing this routine in a subclass that
          * works with angle structure coordinates, remember that your
@@ -290,11 +290,8 @@ class LPConstraintBase {
          * angle structure coordinates in the underlying triangulation
          * (i.e., the data member LPInitialTableaux::columnPerm_).
          * @param tri the underlying triangulation.
-         * @return \c true if the linear functions were successfully
-         * constructed, or \c false if not (in which case they will be
-         * replaced with the zero functions instead).
          */
-        static bool addRows(LPCol<LPConstraintBase>* col,
+        static void addRows(LPCol<LPConstraintBase>* col,
             const int* columnPerm, const Triangulation<3>& tri);
 
         /**
@@ -445,7 +442,7 @@ class LPConstraintNone : public LPConstraintSubspace {
             IntType innerProductOct(const LPMatrix<IntType>&, unsigned) const;
         };
 
-        static bool addRows(LPCol<regina::LPConstraintNone>*,
+        static void addRows(LPCol<regina::LPConstraintNone>*,
             const int*, const Triangulation<3>&);
         template<typename IntType>
         static void constrain(
@@ -512,7 +509,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
                     unsigned mRow) const;
         };
 
-        static bool addRows(
+        static void addRows(
             LPCol<regina::LPConstraintEulerPositive>* col,
             const int* columnPerm, const Triangulation<3>& tri);
         template<typename IntType>
@@ -587,7 +584,7 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
                     unsigned mRow) const;
         };
 
-        static bool addRows(
+        static void addRows(
             LPCol<regina::LPConstraintEulerZero>* col,
             const int* columnPerm, const Triangulation<3>& tri);
         template<typename IntType>
@@ -606,13 +603,11 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  *
  * At present this class can only work with oriented triangulations that have
  * precisely one vertex, which is ideal with torus link.  These
- * constraints are explicitly checked by addRows(), which returns \c false
- * if they are not satisfied.  Moreover, this constraint calls on
- * SnapPea for some calculations: in the unexpected situation where
- * SnapPea retriangulates, the linear function cannot be constructed and
- * addRows() will again return \c false.  You should always test
- * LPInitialTableaux::constraintsBroken() to verify that the linear
- * functions have been constructed correctly.
+ * constraints are explicitly checked by addRows(), which throws an
+ * InvalidArgument exception if they are not satisfied.  Moreover, this
+ * constraint calls on SnapPea for some calculations: in the unexpected
+ * situation where SnapPea retriangulates or produces a null triangulation,
+ * this routine will throw an UnsolvedCase exception.
  *
  * Also, at present this class can only work with quadrilateral normal
  * coordinates (and cannot handle almost normal coordinates at all).
@@ -663,7 +658,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
                     unsigned mRow) const;
         };
 
-        static bool addRows(
+        static void addRows(
             LPCol<regina::LPConstraintNonSpun>* col,
             const int* columnPerm, const Triangulation<3>& tri);
         template <typename IntType>
@@ -1035,10 +1030,9 @@ inline IntType LPConstraintNone::Coefficients::innerProductOct(
     return 0;
 }
 
-inline bool LPConstraintNone::addRows(
+inline void LPConstraintNone::addRows(
         LPCol<regina::LPConstraintNone>*,
         const int*, const Triangulation<3>&) {
-    return true;
 }
 
 template <typename IntType>

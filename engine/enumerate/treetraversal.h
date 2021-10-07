@@ -113,10 +113,12 @@ class ProgressTracker;
  * In the type vector, octagons are indicated by setting a quadrilateral
  * type to 4, 5 or 6.
  *
- * There is optional support for adding extra linear constraints
- * (such as a constraint on Euler characteristic), supplied by the
- * template parameter \a LPConstraint.  If there are no additional
- * constraints, simply use the template parameter LPConstraintNone.
+ * There is optional support for adding extra linear constraints (such as a
+ * constraint on Euler characteristic), supplied by the template parameter
+ * \a LPConstraint.  If there are no additional constraints, simply use the
+ * template parameter LPConstraintNone.  Note that some constraint classes
+ * may cause the TreeTraveral class constructor to throw an exception; see
+ * the constructor documentation for details.
  *
  * Also, there is optional support for banning coordinates (i.e., insisting
  * that certain coordinates must be set to zero), and/or marking coordinates
@@ -126,12 +128,6 @@ class ProgressTracker;
  * options are supplied by the template parameter \a BanConstraint.
  * If there are no coordinates to ban or mark, simply use the template
  * parameter \a BanNone.
- *
- * In some cases, it is impossible to add the extra linear constraints
- * that we would like (for instance, if they require additional
- * preconditions on the underlying triangulation).  If this is a possibility
- * in your setting, you should call constraintsBroken() to test for this
- * once the TreeTraversal object has been constructed.
  *
  * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
@@ -282,28 +278,6 @@ class TreeTraversal : public BanConstraint {
         static bool supported(NormalEncoding enc);
 
         /**
-         * Indicates whether or not the extra constraints from the template
-         * parameter \a LPConstraints were added successfully to the
-         * infrastructure for the search tree.
-         *
-         * This query function is important because some constraints require
-         * additional preconditions on the underlying triangulation, and
-         * so these constraints cannot be added in some circumstances.
-         * If it is possible that the constraints
-         * might not be added successfully, this function should be
-         * tested as soon as the TreeTraversal object has been created.
-         *
-         * If the extra constraints were not added successfully, the search
-         * tree will be left in a consistent state but will give incorrect
-         * results (specifically, the extra constraints will be treated as
-         * zero functions).
-         *
-         * @return \c true if the constraints were \e not added
-         * successfully, or \c false if the constraints were added successfully.
-         */
-        bool constraintsBroken() const;
-
-        /**
          * Returns the total number of nodes in the search tree that we
          * have visited thus far in the tree traversal.
          * This figure might grow much faster than the number of solutions,
@@ -405,6 +379,16 @@ class TreeTraversal : public BanConstraint {
          * for more information on how to create and run a tree
          * traversal, see subclasses such as TreeEnumeration, TautEnumeration
          * or TreeSingleSoln instead.
+         *
+         * It may be discovered that the extra constraints corresponding to
+         * the LPConstraint template argument cannot be set up (e.g., the
+         * constraints might require some preconditions on the given
+         * triangulation and/or encoding that are not met).  If this happens,
+         * then an exception will be thrown, either of type InvalidArgument
+         * (for errors that should have been preventable in advance with the
+         * right checks), or of type UnsolvedCase.  If this is a possibility,
+         * then the class documentation for the LPConstraint class should
+         * describe which exceptions may be thrown and when.
          *
          * \pre The given triangulation is non-empty.
          *
@@ -559,7 +543,10 @@ class TreeTraversal : public BanConstraint {
  * "vertex surface" is modified to mean a normal surface whose coordinates
  * lie on an extreme ray of the restricted solution cone under these additional
  * constraints (and whose coordinates are integers with no common divisor).
- * See the LPConstraintBase and BanConstraintBase class notes for
+ * See the LPConstraintBase and BanConstraintBase class notes for details.
+ *
+ * Note that some constraint classes may cause the TreeEnumeration class
+ * constructor to throw an exception; see the constructor documentation for
  * details.
  *
  * The template argument \a IntType indicates the integer type that
@@ -657,6 +644,16 @@ class TreeEnumeration :
          *
          * - repeatedly call next(), which will step to the next vertex
          *   surface each time you call it.
+         *
+         * It may be discovered that the extra constraints corresponding to
+         * the LPConstraint template argument cannot be set up (e.g., the
+         * constraints might require some preconditions on the given
+         * triangulation and/or encoding that are not met).  If this happens,
+         * then an exception will be thrown, either of type InvalidArgument
+         * (for errors that should have been preventable in advance with the
+         * right checks), or of type UnsolvedCase.  If this is a possibility,
+         * then the class documentation for the LPConstraint class should
+         * describe which exceptions may be thrown and when.
          *
          * \warning Although it is supported, it is highly recommended that you
          * do \e not run a full vertex enumeration in standard normal
@@ -867,6 +864,10 @@ class TreeEnumeration :
  * angles to be zero.  See the LPConstraintBase and BanConstraintBase
  * class notes for details.
  *
+ * Note that some constraint classes may cause the TautEnumeration class
+ * constructor to throw an exception; see the constructor documentation for
+ * details.
+ *
  * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
@@ -942,6 +943,16 @@ class TautEnumeration :
          *
          * - repeatedly call next(), which will step to the next taut
          *   angle struture surface each time you call it.
+         *
+         * It may be discovered that the extra constraints corresponding to
+         * the LPConstraint template argument cannot be set up (e.g., the
+         * constraints might require some preconditions on the given
+         * triangulation that are not met).  If this happens, then an
+         * exception will be thrown, either of type InvalidArgument
+         * (for errors that should have been preventable in advance with the
+         * right checks), or of type UnsolvedCase.  If this is a possibility,
+         * then the class documentation for the LPConstraint class should
+         * describe which exceptions may be thrown and when.
          *
          * \pre The given triangulation is non-empty.
          *
@@ -1123,6 +1134,9 @@ class TautEnumeration :
  * a single non-trivial normal surface satisfying given constraints within
  * a 3-manifold triangulation.  The constraints are passed using a
  * combination of the template arguments LPConstraint and BanConstraint.
+ * Note that some constraint classes may cause the TreeSingleSoln class
+ * constructor to throw an exception; see the constructor documentation for
+ * details.
  *
  * A common application of this algorithm is to find a surface of positive
  * Euler characteristic, using the template argument LPConstraintEulerPositive.
@@ -1275,6 +1289,16 @@ class TreeSingleSoln :
          * algorithm you should call find(), which returns \c true or \c false
          * according to whether or not such a surface was found.
          *
+         * It may be discovered that the extra constraints corresponding to
+         * the LPConstraint template argument cannot be set up (e.g., the
+         * constraints might require some preconditions on the given
+         * triangulation and/or encoding that are not met).  If this happens,
+         * then an exception will be thrown, either of type InvalidArgument
+         * (for errors that should have been preventable in advance with the
+         * right checks), or of type UnsolvedCase.  If this is a possibility,
+         * then the class documentation for the LPConstraint class should
+         * describe which exceptions may be thrown and when.
+         *
          * \pre The given triangulation is non-empty.
          *
          * \pre Both the trianglation and the given vector encoding
@@ -1347,12 +1371,6 @@ inline bool TreeTraversal<LPConstraint, BanConstraint, IntType>::supported(
     return enc.valid() &&
         LPConstraint::supported(enc) &&
         BanConstraint::supported(enc);
-}
-
-template <class LPConstraint, typename BanConstraint, typename IntType>
-inline bool TreeTraversal<LPConstraint, BanConstraint, IntType>::
-        constraintsBroken() const {
-    return origTableaux_.constraintsBroken();
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>

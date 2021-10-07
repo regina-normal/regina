@@ -696,14 +696,15 @@ class LPSystem {
  * functions).  If there are no additional constraints, simply use the
  * template parameter LPConstraintNone.
  *
- * In some cases, you may discover at runtime that it is impossible to add the
- * extra linear constraints that you would like (for instance, the constraints
- * might require some preconditions on the underlying triangulation that are
- * not met).  If this is a possibility in your setting, you should call
- * constraintsBroken() to test this as soon as the LPInitialTableaux has been
- * constructed.  Even if the constraints could not be added correctly, the
- * tableaux will be left in a consistent state (the constraints will just be
- * treated as zero functions instead).
+ * In some cases, Regina may discover at runtime that it is impossible to add
+ * the extra linear constraints from the LPConstraint template argument
+ * (e.g., the constraints might require some preconditions on the underlying
+ * triangulation that are not met).  In this case, the LPInitialTableaux
+ * class constructor will throw an exception, either of type InvalidArgument
+ * (for errors that should have been preventable in advance with the right
+ * checks), or of type UnsolvedCase.  If this is a possibility for the
+ * given constraint type, then the class documentation for the LPConstraint
+ * class should describe which exceptions may be thrown and when.
  *
  * This class is optimised for working with \e columns of the matrix
  * (in particular, multiplying columns of this matrix by rows of some
@@ -793,11 +794,6 @@ class LPInitialTableaux {
                  more details on what this permutation means and what
                  constraints it must adhere to. */
 
-        bool constraintsBroken_;
-            /**< Indicates whether or not the extra constraints from the
-                 template parameter \a LPConstraints were added successfully.
-                 See the LPInitialTableaux class notes for details. */
-
     public:
         /**
          * Construts this adjusted sparse matrix of matching equations.
@@ -805,6 +801,16 @@ class LPInitialTableaux {
          * Note that LPInitialTableaux does not copy the given triangulation;
          * it merely keeps a reference to it.  The triangulation should
          * not change during the lifespan of this object.
+         *
+         * It may be discovered that the extra constraints corresponding to
+         * the LPConstraint template argument cannot be added (e.g., the
+         * constraints might require some preconditions on the given
+         * triangulation and/or encoding that are not met).  If this happens,
+         * then an exception will be thrown, either of type InvalidArgument
+         * (for errors that should have been preventable in advance with the
+         * right checks), or of type UnsolvedCase.  If this is a possibility,
+         * then the class documentation for the LPConstraint class should
+         * describe which exceptions may be thrown and when.
          *
          * \pre The given triangulation is non-empty.
          *
@@ -934,23 +940,6 @@ class LPInitialTableaux {
          * @return the number of normal or angle structure coordinate columns.
          */
         inline unsigned coordinateColumns() const;
-
-        /**
-         * Indicates whether or not the extra constraints from the template
-         * parameter \a LPConstraints were added successfully.
-         * This query function is important because some constraints require
-         * additional preconditions on the underlying triangulation, and
-         * cannot be added if these preconditions are not satisfied.
-         *
-         * Even if the extra constraints were not added successfully, this
-         * tableaux will be left in a consistent state (the extra constraints
-         * will be treated as zero functions).  See the LPInitialTableaux class
-         * notes for further details.
-         *
-         * @return \c true if the constraints were \e not added
-         * successfully, or \c false if the constraints were added successfully.
-         */
-        inline bool constraintsBroken() const;
 
         /**
          * Returns the permutation that describes how the columns of
@@ -1972,8 +1961,7 @@ inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         cols_(src.cols_),
         scaling_(src.scaling_),
         col_(new LPCol<LPConstraint>[cols_]),
-        columnPerm_(new int[cols_]),
-        constraintsBroken_(src.constraintsBroken_) {
+        columnPerm_(new int[cols_]) {
     std::copy(src.col_, src.col_ + cols_, col_);
     std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
 }
@@ -1988,8 +1976,7 @@ inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         cols_(src.cols_),
         scaling_(src.scaling_),
         col_(src.col_),
-        columnPerm_(src.columnPerm_),
-        constraintsBroken_(src.constraintsBroken_) {
+        columnPerm_(src.columnPerm_) {
     src.col_ = nullptr;
     src.columnPerm_ = nullptr;
 }
@@ -2010,7 +1997,6 @@ inline LPInitialTableaux<LPConstraint>&
     rank_ = src.rank_;
     cols_ = src.cols_;
     scaling_ = src.scaling_;
-    constraintsBroken_ = src.constraintsBroken_;
 
     col_ = new LPCol<LPConstraint>[cols_];
     std::copy(src.col_, src.col_ + cols_, col_);
@@ -2031,7 +2017,6 @@ inline LPInitialTableaux<LPConstraint>&
     rank_ = src.rank_;
     cols_ = src.cols_;
     scaling_ = src.scaling_;
-    constraintsBroken_ = src.constraintsBroken_;
 
     std::swap(col_, src.col_);
     std::swap(columnPerm_, src.columnPerm_);
@@ -2051,7 +2036,6 @@ inline void LPInitialTableaux<LPConstraint>::swap(LPInitialTableaux& other)
     std::swap(scaling_, other.scaling_);
     std::swap(col_, other.col_);
     std::swap(columnPerm_, other.columnPerm_);
-    std::swap(constraintsBroken_, other.constraintsBroken_);
 }
 
 template <class LPConstraint>
@@ -2077,11 +2061,6 @@ inline unsigned LPInitialTableaux<LPConstraint>::columns() const {
 template <class LPConstraint>
 inline unsigned LPInitialTableaux<LPConstraint>::coordinateColumns() const {
     return eqns_.columns();
-}
-
-template <class LPConstraint>
-inline bool LPInitialTableaux<LPConstraint>::constraintsBroken() const {
-    return constraintsBroken_;
 }
 
 template <class LPConstraint>

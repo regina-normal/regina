@@ -37,7 +37,7 @@
 
 namespace regina {
 
-bool LPConstraintEulerPositive::addRows(
+void LPConstraintEulerPositive::addRows(
         LPCol<regina::LPConstraintEulerPositive>* col,
         const int* columnPerm, const Triangulation<3>& tri) {
     int* obj = new int[7 * tri.size()];
@@ -70,10 +70,9 @@ bool LPConstraintEulerPositive::addRows(
     col[7 * tri.size()].euler = -1;
 
     delete[] obj;
-    return true;
 }
 
-bool LPConstraintEulerZero::addRows(
+void LPConstraintEulerZero::addRows(
         LPCol<regina::LPConstraintEulerZero>* col,
         const int* columnPerm, const Triangulation<3>& tri) {
     int* obj = new int[7 * tri.size()];
@@ -106,15 +105,12 @@ bool LPConstraintEulerZero::addRows(
     col[7 * tri.size()].euler = -1;
 
     delete[] obj;
-    return true;
 }
 
-bool LPConstraintNonSpun::addRows(
+void LPConstraintNonSpun::addRows(
         LPCol<regina::LPConstraintNonSpun>* col,
         const int* columnPerm, const Triangulation<3>& tri) {
-    // Regardless of whether the constraints are broken,
-    // we need to ensure that the matrix has full rank.
-    // Therefore add the coefficients for the two new variables now.
+    // Add the coefficients for the two new variables now.
     col[3 * tri.size()].meridian = -1;
     col[3 * tri.size() + 1].longitude = -1;
 
@@ -124,21 +120,21 @@ bool LPConstraintNonSpun::addRows(
             (! tri.vertex(0)->isIdeal()) ||
             (! tri.vertex(0)->isLinkOrientable()) ||
             tri.vertex(0)->linkEulerChar() != 0)
-        return false;
+        throw InvalidArgument(
+            "LPConstraintNonSpun requires an oriented ideal triangulation "
+            "with precisely one torus cusp and no other vertices");
 
     // Compute the two slope equations for the torus cusp, if we can.
     SnapPeaTriangulation snapPea(tri, false);
-    MatrixInt coeffs;
-    try {
-        coeffs = snapPea.slopeEquations();
-    } catch (const regina::FailedPrecondition&) {
-        // SnapPea couldn't handle it.
-        return false;
-    }
-    if (! snapPea.isIdenticalTo(tri)) {
-        // SnapPea changed the triangulation on us.
-        return false;
-    }
+    if (snapPea.isNull())
+        throw UnsolvedCase("SnapPea produced a null triangulation "
+            "when attempting to use LPConstraintNonSpun");
+
+    MatrixInt coeffs = snapPea.slopeEquations();
+
+    if (! snapPea.isIdenticalTo(tri))
+        throw UnsolvedCase("SnapPea retriangulated "
+            "when attempting to use LPConstraintNonSpun");
 
     // All good!  Add the two slope equations as extra rows to
     // our constraint matrix.
@@ -151,8 +147,6 @@ bool LPConstraintNonSpun::addRows(
         col[i].meridian = coeffs.entry(0, columnPerm[i]).longValue();
         col[i].longitude = coeffs.entry(1, columnPerm[i]).longValue();
     }
-
-    return true;
 }
 
 BanConstraintBase::BanConstraintBase(const Triangulation<3>& tri,

@@ -168,7 +168,7 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
                 col_[c].push(r, eqns_.entry(r, c).longValue());
 
     // Add in the final row(s) for any additional constraints.
-    constraintsBroken_ = ! LPConstraint::addRows(col_, columnPerm_, tri);
+    LPConstraint::addRows(col_, columnPerm_, tri);
     rank_ += LPConstraint::nConstraints;
 }
 
@@ -253,6 +253,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         //
         // We remove our extra constraints here, since some constraints might
         // not be offered in quad coordinates.
+        // Note: NS_QUAD is always safe; the constructor call below will
+        // never throw.
         LPInitialTableaux<LPConstraintNone> quad(*tri_, NS_QUAD,
             true /* enumeration */);
         for (i = 0; i < n; ++i) {
