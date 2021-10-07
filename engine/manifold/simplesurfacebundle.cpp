@@ -67,7 +67,7 @@ Triangulation<3>* SimpleSurfaceBundle::construct() const {
     return ans;
 }
 
-std::optional<AbelianGroup> SimpleSurfaceBundle::homology() const {
+AbelianGroup SimpleSurfaceBundle::homology() const {
     AbelianGroup ans;
     ans.addRank();
     if (type_ == RP2xS1)

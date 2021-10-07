@@ -115,8 +115,11 @@ class GraphLoop : public Manifold {
          *
          * \pre The given Seifert fibred space has precisely two torus
          * boundaries, corresponding to two untwisted punctures in the
-         * base orbifold.
+         * base orbifold.  This precondition will be checked, and an
+         * InvalidArgument exception will be thrown if it is not met.
+         *
          * \pre The given matching matrix has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param mat00 the (0,0) element of the matching matrix.
@@ -136,8 +139,11 @@ class GraphLoop : public Manifold {
          *
          * \pre The given Seifert fibred space has precisely two torus
          * boundaries, corresponding to two untwisted punctures in the
-         * base orbifold.
+         * base orbifold.  This precondition will be checked, and an
+         * InvalidArgument exception will be thrown if it is not met.
+         *
          * \pre The given matching matrix has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param mat00 the (0,0) element of the matching matrix.
@@ -153,8 +159,12 @@ class GraphLoop : public Manifold {
          * matching matrix are each passed separately.
          *
          * \pre The given Seifert fibred space has precisely two torus
-         * boundaries, corresponding to two punctures in the base orbifold.
+         * boundaries, corresponding to two untwisted punctures in the
+         * base orbifold.  This precondition will be checked, and an
+         * InvalidArgument exception will be thrown if it is not met.
+         *
          * \pre The given matching matrix has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
@@ -169,8 +179,12 @@ class GraphLoop : public Manifold {
          * by const reference.  See that constructor for further details.
          *
          * \pre The given Seifert fibred space has precisely two torus
-         * boundaries, corresponding to two punctures in the base orbifold.
+         * boundaries, corresponding to two untwisted punctures in the
+         * base orbifold.  This precondition will be checked, and an
+         * InvalidArgument exception will be thrown if it is not met.
+         *
          * \pre The given matching matrix has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
@@ -249,12 +263,21 @@ class GraphLoop : public Manifold {
          */
         void swap(GraphLoop& other) noexcept;
 
-        std::optional<AbelianGroup> homology() const override;
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 
     private:
+        /**
+         * Ensures that the preconditions on the internal Seifert fibred
+         * space are satisfied.  If not, this throws a InvalidArgument
+         * exception.
+         *
+         * This should be called from every class constructor.
+         */
+        void verifySFS();
+
         /**
          * Uses (1,1) twists, inversion and/or reflection to make the
          * presentation of this space more aesthetically pleasing.
@@ -300,22 +323,26 @@ void swap(GraphLoop& a, GraphLoop& b) noexcept;
 inline GraphLoop::GraphLoop(const SFSpace& sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
+    verifySFS();
     reduce();
 }
 
 inline GraphLoop::GraphLoop(const SFSpace& sfs, const Matrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
+    verifySFS();
     reduce();
 }
 
 inline GraphLoop::GraphLoop(SFSpace&& sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(std::move(sfs)), matchingReln_(mat00, mat01, mat10, mat11) {
+    verifySFS();
     reduce();
 }
 
 inline GraphLoop::GraphLoop(SFSpace&& sfs, const Matrix2& matchingReln) :
         sfs_(std::move(sfs)), matchingReln_(matchingReln) {
+    verifySFS();
     reduce();
 }
 
@@ -338,6 +365,13 @@ inline bool GraphLoop::isHyperbolic() const {
 
 inline void swap(GraphLoop& a, GraphLoop& b) noexcept {
     a.swap(b);
+}
+
+inline void GraphLoop::verifySFS() {
+    if (sfs_.punctures(false) != 2 || sfs_.punctures(true) != 0)
+        throw InvalidArgument("GraphLoop requires its internal Seifert "
+            "fibred space to have a base orbifold with precisely "
+            "two punctures, both untwisted");
 }
 
 } // namespace regina

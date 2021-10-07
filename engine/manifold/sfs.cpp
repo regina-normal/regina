@@ -782,10 +782,11 @@ Triangulation<3>* SFSpace::construct() const {
     return ans;
 }
 
-std::optional<AbelianGroup> SFSpace::homology() const {
+AbelianGroup SFSpace::homology() const {
     if (punctures_ || puncturesTwisted_) {
         // Not just now.
-        return std::nullopt;
+        throw NotImplemented("SFSpace::homology() is currently not "
+            "implemented for spaces whose base orbifolds have punctures");
     }
 
     // Construct the presentation of the fundamental group and

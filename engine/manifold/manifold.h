@@ -39,10 +39,10 @@
 #define __REGINA_MANIFOLD_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "algebra/abeliangroup.h"
 #include "triangulation/forward.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -131,28 +131,40 @@ class Manifold : public Output<Manifold> {
         virtual Triangulation<3>* construct() const;
         /**
          * Returns the first homology group of this 3-manifold, if such
-         * a routine has been implemented.  If the calculation of
-         * homology has not yet been implemented for this 3-manifold
-         * then this routine will return no value.
+         * a routine has been implemented.  For details of which types of
+         * 3-manifolds have implemented this routine, see the class notes
+         * for each corresponding subclasses of Manifold.
          *
-         * The details of which 3-manifolds have homology calculation routines
-         * can be found in the notes for the corresponding subclasses of
-         * Manifold.  The default implemention of this routine returns no value.
+         * Two types of error can occur in this routine, and both will
+         * throw an exception:
+         *
+         * - If homology calculation has not yet been implemented for this
+         *   particular 3-manifold, a NotImplemented exception will be thrown.
+         *
+         * - If the homology needs to be read from file (as opposed to
+         *   computed), and if the file is inaccessible or its contents
+         *   cannot be read and parsed correctly, then a FileError will
+         *   be thrown.  Currently this can only happen for the subclass
+         *   SnapPeaCensusManifold, which reads its results from the
+         *   SnapPea census databases that are installed with Regina.
+         *
+         * The default implemention of this routine just throws a
+         * NotImplemented exception.
          *
          * This routine can also be accessed via the alias homologyH1()
          * (a name that is more specific, but a little longer to type).
          *
-         * @return the first homology group of this 3-manifold, or no value if
-         * the appropriate calculation routine has not yet been implemented.
+         * @return the first homology group of this 3-manifold, if this
+         * functionality has been implemented.
          */
-        virtual std::optional<AbelianGroup> homology() const;
+        virtual AbelianGroup homology() const;
         /**
          * An alias for homology().  See homology() for further details.
          *
-         * @return the first homology group of this 3-manifold, or no value if
-         * the appropriate calculation routine has not yet been implemented.
+         * @return the first homology group of this 3-manifold, if this
+         * functionality has been implemented.
          */
-        std::optional<AbelianGroup> homologyH1() const;
+        AbelianGroup homologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
@@ -299,11 +311,12 @@ inline Triangulation<3>* Manifold::construct() const {
     return nullptr;
 }
 
-inline std::optional<AbelianGroup> Manifold::homology() const {
-    return std::nullopt;
+inline AbelianGroup Manifold::homology() const {
+    throw NotImplemented("The homology() routine is currently not "
+        "implemented for this class of manifold");
 }
 
-inline std::optional<AbelianGroup> Manifold::homologyH1() const {
+inline AbelianGroup Manifold::homologyH1() const {
     return homology();
 }
 

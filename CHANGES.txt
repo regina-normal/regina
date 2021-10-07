@@ -255,6 +255,8 @@ Version 7.0  [ TODO ]
         Class FaithfulAssignment:
             - New type trait to identify which of Regina's integer types
               can be losslessly assigned to which others.
+        Class FileError:
+            - New exception class.
         Enum FileFormat:
             - New enumeration to indicate broad classes of interoperable
               XML file formats.
@@ -314,6 +316,8 @@ Version 7.0  [ TODO ]
               not by pointer (which used to transfer ownership).
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
+            - Constructors now check some preconditions and throw exceptions if
+              they fail (these checks were previously done during homology()).
         Class GroupExpression:
             - Added move constructors and move assignment operators.
             - Added a constructor that takes a single term, or a single
@@ -527,8 +531,8 @@ Version 7.0  [ TODO ]
             - New class to translate coordinate systems into a layout
               for LPInitialTableaux.
         Class Manifold:
-            - Routine homology() now returns a std::optional<AbelianGroup>,
-              not a newly allocated pointer that could be null.
+            - Routine homology() now returns by value, not by pointer,
+              and throws an exception on error instead of returning null.
         Class MarkedAbelianGroup:
             - New move constructor.
             - New copy assignment and move assignment operators.
@@ -736,6 +740,8 @@ Version 7.0  [ TODO ]
               their coordinates using a plain Vector<LargeInteger>.
         Enum NormalTransform:
             - New enumeration to support conversions and filters.
+        Class NotImplemented:
+            - New exception class.
         Class NSVectorMirrored:
             - Changed makeMirror() to take its triangulation by reference,
               not by pointer.  Also removed the static versions of makeMirror();

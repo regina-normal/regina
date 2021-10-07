@@ -163,10 +163,14 @@ class GraphTriple : public Manifold {
          * matrices are passed separately.
          *
          * \pre Spaces \a end0 and \a end1 each have a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold.
-         * \pre Space \a centre has two disjoint torus boundaries,
-         * corresponding to two untwisted punctures in the base orbifold.
+         * corresponding to a single untwisted puncture in the base orbifold,
+         * and space \a centre has two disjoint torus boundaries,
+         * corresponding to two untwisted punctures in its base orbifold.
+         * This precondition will be checked, and an InvalidArgument
+         * exception will be thrown if it is not met.
+         *
          * \pre Each of the given matrices has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param end0 the first end space, as described in the class notes.
          * @param centre the central space, as described in the class notes.
@@ -188,10 +192,14 @@ class GraphTriple : public Manifold {
          * by const reference.
          *
          * \pre Spaces \a end0 and \a end1 each have a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold.
-         * \pre Space \a centre has two disjoint torus boundaries,
-         * corresponding to two untwisted punctures in the base orbifold.
+         * corresponding to a single untwisted puncture in the base orbifold,
+         * and space \a centre has two disjoint torus boundaries,
+         * corresponding to two untwisted punctures in its base orbifold.
+         * This precondition will be checked, and an InvalidArgument
+         * exception will be thrown if it is not met.
+         *
          * \pre Each of the given matrices has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param end0 the first end space, as described in the class notes.
          * @param centre the central space, as described in the class notes.
@@ -298,12 +306,21 @@ class GraphTriple : public Manifold {
          */
         void swap(GraphTriple& other) noexcept;
 
-        std::optional<AbelianGroup> homology() const override;
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 
     private:
+        /**
+         * Ensures that the preconditions on the internal Seifert fibred
+         * spaces are satisfied.  If not, this throws a InvalidArgument
+         * exception.
+         *
+         * This should be called from every class constructor.
+         */
+        void verifySFS();
+
         /**
          * Uses (1,1) twists and other techniques to make the presentation
          * of this manifold more aesthetically pleasing.
@@ -352,6 +369,7 @@ inline GraphTriple::GraphTriple(const SFSpace& end0, const SFSpace& centre,
         const Matrix2& matchingReln1) :
         end_ { end0, end1 }, centre_(centre),
         matchingReln_ { matchingReln0, matchingReln1 } {
+    verifySFS();
     reduce();
 }
 
@@ -360,6 +378,7 @@ inline GraphTriple::GraphTriple(SFSpace&& end0, SFSpace&& centre,
         const Matrix2& matchingReln1) :
         end_ { std::move(end0), std::move(end1) }, centre_(std::move(centre)),
         matchingReln_ { matchingReln0, matchingReln1 } {
+    verifySFS();
     reduce();
 }
 
@@ -389,6 +408,18 @@ inline bool GraphTriple::isHyperbolic() const {
 
 inline void swap(GraphTriple& a, GraphTriple& b) noexcept {
     a.swap(b);
+}
+
+inline void GraphTriple::verifySFS() {
+    if (end_[0].punctures(false) != 1 || end_[0].punctures(true) != 0 ||
+            end_[1].punctures(false) != 1 || end_[1].punctures(true) != 0)
+        throw InvalidArgument("GraphTriple requires its end spaces "
+            "to each have a base orbifold with precisely one puncture, "
+            "which must be untwisted");
+    if (centre_.punctures(false) != 2 || centre_.punctures(true) != 0)
+        throw InvalidArgument("GraphTriple requires its central space "
+            "to have a base orbifold with precisely two punctures, "
+            "both untwisted");
 }
 
 } // namespace regina

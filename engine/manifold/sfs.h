@@ -802,7 +802,7 @@ class SFSpace : public Manifold {
         bool operator < (const SFSpace& compare) const;
 
         Triangulation<3>* construct() const override;
-        std::optional<AbelianGroup> homology() const override;
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

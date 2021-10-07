@@ -116,7 +116,11 @@ class GraphPair : public Manifold {
          *
          * \pre Each Seifert fibred space has a single torus boundary,
          * corresponding to a single untwisted puncture in the base orbifold.
+         * This precondition will be checked, and an InvalidArgument
+         * exception will be thrown if it is not met.
+         *
          * \pre The given matching matrix has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -137,7 +141,11 @@ class GraphPair : public Manifold {
          *
          * \pre Each Seifert fibred space has a single torus boundary,
          * corresponding to a single untwisted puncture in the base orbifold.
+         * This precondition will be checked, and an InvalidArgument
+         * exception will be thrown if it is not met.
+         *
          * \pre The given matching matrix has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -155,7 +163,11 @@ class GraphPair : public Manifold {
          *
          * \pre Each Seifert fibred space has a single torus boundary,
          * corresponding to a single untwisted puncture in the base orbifold.
+         * This precondition will be checked, and an InvalidArgument
+         * exception will be thrown if it is not met.
+         *
          * \pre The given matching matrix has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -173,7 +185,11 @@ class GraphPair : public Manifold {
          *
          * \pre Each Seifert fibred space has a single torus boundary,
          * corresponding to a single untwisted puncture in the base orbifold.
+         * This precondition will be checked, and an InvalidArgument
+         * exception will be thrown if it is not met.
+         *
          * \pre The given matching matrix has determinant +1 or -1.
+         * This precondition will not be checked.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
@@ -254,12 +270,21 @@ class GraphPair : public Manifold {
          */
         void swap(GraphPair& other) noexcept;
 
-        std::optional<AbelianGroup> homology() const override;
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 
     private:
+        /**
+         * Ensures that the preconditions on the internal Seifert fibred
+         * spaces are satisfied.  If not, this throws a InvalidArgument
+         * exception.
+         *
+         * This should be called from every class constructor.
+         */
+        void verifySFS();
+
         /**
          * Uses (1,1) twists, reflections and other techniques to make
          * the presentation of this space more aesthetically pleasing.
@@ -295,6 +320,7 @@ void swap(GraphPair& a, GraphPair& b) noexcept;
 inline GraphPair::GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_ { sfs0, sfs1 }, matchingReln_(mat00, mat01, mat10, mat11) {
+    verifySFS();
     reduce();
 }
 
@@ -302,12 +328,14 @@ inline GraphPair::GraphPair(SFSpace&& sfs0, SFSpace&& sfs1,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_ { std::move(sfs0), std::move(sfs1) },
         matchingReln_(mat00, mat01, mat10, mat11) {
+    verifySFS();
     reduce();
 }
 
 inline GraphPair::GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
         const Matrix2& matchingReln) :
         sfs_ { sfs0, sfs1 }, matchingReln_(matchingReln) {
+    verifySFS();
     reduce();
 }
 
@@ -315,6 +343,7 @@ inline GraphPair::GraphPair(SFSpace&& sfs0, SFSpace&& sfs1,
         const Matrix2& matchingReln) :
         sfs_ { std::move(sfs0), std::move(sfs1) },
         matchingReln_(matchingReln) {
+    verifySFS();
     reduce();
 }
 
@@ -338,6 +367,14 @@ inline bool GraphPair::isHyperbolic() const {
 
 inline void swap(GraphPair& a, GraphPair& b) noexcept {
     a.swap(b);
+}
+
+inline void GraphPair::verifySFS() {
+    if (sfs_[0].punctures(false) != 1 || sfs_[0].punctures(true) != 0 ||
+            sfs_[1].punctures(false) != 1 || sfs_[1].punctures(true) != 0)
+        throw InvalidArgument("GraphPair requires its internal Seifert "
+            "fibred spaces to each have a base orbifold with precisely "
+            "one puncture, which must be untwisted");
 }
 
 } // namespace regina

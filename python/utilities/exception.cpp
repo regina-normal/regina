@@ -48,6 +48,10 @@ void addException(pybind11::module_& m) {
         "InvalidArgument", PyExc_RuntimeError);
     pybind11::register_exception<regina::InvalidInput>(m,
         "InvalidInput", PyExc_RuntimeError);
+    pybind11::register_exception<regina::NotImplemented>(m,
+        "NotImplemented", PyExc_RuntimeError);
+    pybind11::register_exception<regina::FileError>(m,
+        "FileError", PyExc_RuntimeError);
     pybind11::register_exception<regina::UnsolvedCase>(m,
         "UnsolvedCase", PyExc_RuntimeError);
     pybind11::register_exception<regina::SnapPeaUnsolvedCase>(m,

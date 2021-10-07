@@ -47,11 +47,7 @@ bool GraphLoop::operator < (const GraphLoop& compare) const {
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-std::optional<AbelianGroup> GraphLoop::homology() const {
-    // Just for safety (this should always be true anyway):
-    if (sfs_.punctures(false) != 2 || sfs_.punctures(true) != 0)
-        return std::nullopt;
-
+AbelianGroup GraphLoop::homology() const {
     // Construct a matrix.
     // Generators: fibre, base curves, two base boundaries, exceptional
     //             fibre boundaries, obstruction boundary,

@@ -158,6 +158,41 @@ class InvalidInput : public ReginaException {
 };
 
 /**
+ * An exception thrown when some functionality is not yet implemented.
+ *
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
+ *
+ * \ingroup utilities
+ */
+class NotImplemented : public ReginaException {
+    public:
+        NotImplemented(const std::string& msg) : ReginaException(msg) {}
+        NotImplemented(const char* msg) : ReginaException(msg) {}
+        NotImplemented(const NotImplemented&) noexcept = default;
+        NotImplemented& operator = (const NotImplemented&) noexcept = default;
+};
+
+/**
+ * An exception thrown when trying to access data from an installed file.
+ *
+ * This could occur, for instance, when trying to read data from the
+ * Regina or SnapPea census databases.
+ *
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
+ *
+ * \ingroup utilities
+ */
+class FileError : public ReginaException {
+    public:
+        FileError(const std::string& msg) : ReginaException(msg) {}
+        FileError(const char* msg) : ReginaException(msg) {}
+        FileError(const FileError&) noexcept = default;
+        FileError& operator = (const FileError&) noexcept = default;
+};
+
+/**
  * An exception thrown when a mathematical function is not able to solve
  * a particular instance of a problem.
  *
