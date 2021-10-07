@@ -387,6 +387,7 @@ Version 7.0  [ TODO ]
             - The composition operator (*) now has an overload whose argument
               is an rvalue reference.
         Class HomologicalData:
+            - Now supports copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
         Class HyperEncoding:
             - New class to describe how the internal integer vector is encoded.

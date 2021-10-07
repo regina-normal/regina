@@ -106,6 +106,13 @@ namespace regina {
  * - \b 3-cells: the non-boundary, non-ideal vertices.begin() through
  *               vertices.end().
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Be aware, however, that
+ * it contains an enormous amount of internal data, and even moves will
+ * still be relatively expensive - you should try to use just the one
+ * HomologicalData object and not copy or move it at all, if possible.
+ *
  * This class will eventually be removed in a future release of Regina.
  * A new and more flexible class called CellularData will take its place.
  *
@@ -490,9 +497,42 @@ public:
      */
     HomologicalData(const Triangulation<3>& input);
     /**
-     * Copy constructor.
+     * Creates a new copy of the given object.
+     *
+     * This constructor induces a deep copy of the given object; moreover,
+     * this is expensive since HomologicalData objects are \e very large.
      */
     HomologicalData(const HomologicalData&) = default;
+    /**
+     * Moves the contents of the given object into this new object.
+     *
+     * This operation is constant time, but it is still expensive
+     * constant time because HomologicalData objects are \e very large.
+     *
+     * The object that was passed will no longer be usable.
+     */
+    HomologicalData(HomologicalData&&) noexcept = default;
+
+    /**
+     * Sets this to be a copy of the given object.
+     *
+     * This operator induces a deep copy of the given object; moreover,
+     * this is expensive since HomologicalData objects are \e very large.
+     *
+     * @return a reference to this normal surface.
+     */
+    HomologicalData& operator = (const HomologicalData&) = default;
+    /**
+     * Moves the contents of the given object into this object.
+     *
+     * This operation is constant time, but it is still expensive
+     * constant time because HomologicalData objects are \e very large.
+     *
+     * The object that was passed will no longer be usable.
+     *
+     * @return a reference to this object.
+     */
+    HomologicalData& operator = (HomologicalData&&) noexcept = default;
 
     /**
      * Swaps the contents of this and the given object.
@@ -785,9 +825,6 @@ public:
      * on the manifold's homological data.
      */
     const std::string& embeddabilityComment();
-
-    // Make this class non-assignable.
-    HomologicalData& operator = (const HomologicalData&) = delete;
 };
 
 /**
