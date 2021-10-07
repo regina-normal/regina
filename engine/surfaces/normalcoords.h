@@ -95,7 +95,7 @@ enum NormalCoords {
      * \e must be oriented and ideal, with precisely one torus cusp and no
      * other boundary components or internal vertices.  These conditions
      * will be checked when building the matching equations, and Regina
-     * will throw a FailedPrecondition exception if they are not met.
+     * will throw an InvalidArgument exception if they are not met.
      *
      * \pre SnapPea must be able to work with the underlying triangulation,
      * without retriangulating.  This should follow from the previous
@@ -157,7 +157,7 @@ enum NormalCoords {
      * \e must be oriented and ideal, with precisely one torus cusp and no
      * other boundary components or internal vertices.  These conditions
      * will be checked when building the matching equations, and Regina
-     * will throw a FailedPrecondition exception if they are not met.
+     * will throw an InvalidArgument exception if they are not met.
      *
      * \pre SnapPea must be able to work with the underlying triangulation,
      * without retriangulating.  This should follow from the previous

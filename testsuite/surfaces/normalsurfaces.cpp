@@ -1682,13 +1682,13 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             try {
                 dd.reset(new NormalSurfaces(tri, coords, NS_VERTEX,
                     NS_VERTEX_DD | NS_VERTEX_STD_DIRECT));
-            } catch (const regina::FailedPrecondition&) {
+            } catch (const regina::InvalidArgument&) {
             } catch (const regina::UnsolvedCase&) {
             }
             try {
                 tree.reset(new NormalSurfaces(tri, coords, NS_VERTEX,
                     NS_VERTEX_TREE | NS_VERTEX_STD_DIRECT));
-            } catch (const regina::FailedPrecondition&) {
+            } catch (const regina::InvalidArgument&) {
             } catch (const regina::UnsolvedCase&) {
             }
 
@@ -1837,13 +1837,13 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             try {
                 primal.reset(new NormalSurfaces(tri, coords, NS_FUNDAMENTAL,
                     NS_HILBERT_PRIMAL));
-            } catch (const regina::FailedPrecondition&) {
+            } catch (const regina::InvalidArgument&) {
             } catch (const regina::UnsolvedCase&) {
             }
             try {
                 dual.reset(new NormalSurfaces(tri, coords, NS_FUNDAMENTAL,
                     NS_HILBERT_DUAL));
-            } catch (const regina::FailedPrecondition&) {
+            } catch (const regina::InvalidArgument&) {
             } catch (const regina::UnsolvedCase&) {
             }
 

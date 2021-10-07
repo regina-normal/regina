@@ -171,7 +171,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                     triangulation.countBoundaryComponents() == 1 &&
                     triangulation.countVertices() == 1 &&
                     triangulation.vertex(0)->linkType() == Vertex<3>::TORUS))
-                throw FailedPrecondition(
+                throw InvalidArgument(
                     "NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED "
                     "require an oriented ideal triangulation with "
                     "precisely one torus cusp and no other vertices");

@@ -271,7 +271,7 @@ class NormalSurfaces :
          *
          * - Regina could not create the matching equations for the given
          *   triangulation in the given coordinate system (throws
-         *   FailedPrecondition for errors that should have been preventable
+         *   InvalidArgument for errors that should have been preventable
          *   with the right checks in advance, or UnsolvedCase for errors that
          *   were not expected).  This can only happen in certain coordinate
          *   systems, and all such coordinate systems are marked as
@@ -1505,7 +1505,7 @@ void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
  * equations for all triangulations (these coordinate systems are explicitly
  * mentioned as such in the NormalCoords enum documentation).  If Regina
  * cannot create the matching equations as requested then this routine will
- * throw an exception, either of type FailedPrecondition (for errors
+ * throw an exception, either of type InvalidArgument (for errors
  * that should have been preventable in advance with the right checks),
  * or of type UnsolvedCase.  The NormalCoords enum documentation describes
  * in detail which types of exceptions will be throw in which scenarios.
