@@ -51,9 +51,8 @@ namespace regina {
  * native mathematical code.
  *
  * This does \e not include exceptions thrown due to errors in the
- * SnapPea kernel (see regina::SnapPeaException for that), and does not
- * include SnapshotWriteError, which is part of the generic (non-mathematical)
- * snapshotting machinery.
+ * SnapPea kernel, and it does not include SnapshotWriteError, which is part
+ * of the generic (non-mathematical) snapshotting machinery.
  *
  * Details of the error can be accessed through the inherited member
  * function what().
