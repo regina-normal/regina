@@ -95,7 +95,7 @@ Signature& Signature::operator = (const Signature& sig) {
     return *this;
 }
 
-std::optional<Signature> Signature::parse(const std::string& str) {
+Signature Signature::parse(const std::string& str) {
     // See if the string looks correctly formed.
     // Note that we're not yet counting the individual frequency of each
     // letter, just the overall number of letters.
@@ -120,9 +120,10 @@ std::optional<Signature> Signature::parse(const std::string& str) {
         }
 
     if (static_cast<int>(nAlpha) != 2 * (largestLetter + 1))
-        return std::nullopt;
+        throw InvalidArgument("parse(): range of letters does not match "
+            "number of letters");
     if (nAlpha == 0)
-        return std::nullopt;
+        throw InvalidArgument("parse(): signature contains no letters");
 
     // Looks fine so far.
     // Build the signature and cycle structure (but not cycle groups yet).
@@ -162,7 +163,8 @@ std::optional<Signature> Signature::parse(const std::string& str) {
                 delete[] labelInv;
                 delete[] cycleStart;
                 delete[] freq;
-                return std::nullopt;
+                throw InvalidArgument(
+                    "parse(): letter appears more than twice");
             }
             label[whichPos] = letterIndex;
             labelInv[whichPos] = (str[pos] >= 'A' && str[pos] <= 'Z');
@@ -199,9 +201,9 @@ std::optional<Signature> Signature::parse(const std::string& str) {
     return sig;
 }
 
-Triangulation<3>* Signature::triangulate() const {
+Triangulation<3> Signature::triangulate() const {
     unsigned sigLen = 2 * order_;
-    Triangulation<3>* tri = new Triangulation<3>();
+    Triangulation<3> tri;
 
     // Create a new set of tetrahedra.
     // Tetrahedron vertices will be:
@@ -210,7 +212,7 @@ Triangulation<3>* Signature::triangulate() const {
     Tetrahedron<3>** tet = new Tetrahedron<3>*[order_];
     unsigned pos;
     for (pos = 0; pos < order_; pos++)
-        tet[pos] = tri->newTetrahedron();
+        tet[pos] = tri.newTetrahedron();
 
     // Store the first occurrence of each symbol.
     unsigned* first = new unsigned[order_];

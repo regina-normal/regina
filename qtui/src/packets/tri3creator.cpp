@@ -545,8 +545,10 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         }
 
         std::string sigString = reSignature.cap(1).toUtf8().constData();
-        auto sig = regina::Signature::parse(sigString);
-        if (! sig) {
+        try {
+            return regina::makePacket(
+                regina::Signature::parse(sigString).triangulate(), sigString);
+        } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
                 "splitting surface signature."),
@@ -556,7 +558,6 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
                 "Burton, PhD thesis, available from the Regina website.</qt>"));
             return nullptr;
         }
-        return regina::makePacket(sig->triangulate(), sigString);
     } else if (typeId == TRI_EXAMPLE) {
         return examples[exampleWhich->currentIndex()].create();
     }

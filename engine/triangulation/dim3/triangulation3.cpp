@@ -133,9 +133,9 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     turaevViroCache_.swap(other.turaevViroCache_);
 }
 
-Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
+Triangulation<3> Triangulation<3>::enterTextTriangulation(std::istream& in,
         std::ostream& out) {
-    Triangulation<3>* triang = new Triangulation<3>();
+    Triangulation<3> triang;
     Tetrahedron<3>* tet;
     long nTet;
 
@@ -150,7 +150,7 @@ Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
     out << '\n';
 
     for (long i=0; i<nTet; i++)
-        triang->newTetrahedron();
+        triang.newTetrahedron();
 
     // Read in the joins.
     long tetPos, altPos;
@@ -174,8 +174,8 @@ Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
                 << nTet-1 << " inclusive.\n";
             continue;
         }
-        tet = triang->simplices_[tetPos];
-        altTet = triang->simplices_[altPos];
+        tet = triang.simplices_[tetPos];
+        altTet = triang.simplices_[altPos];
         out << "Enter the three vertices of the first tetrahedron ("
             << tetPos << "), separated by spaces,\n";
         out << "    that will form one face of the gluing: ";

@@ -3209,11 +3209,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * to be standard input and standard output respectively.
          *
          * @param in the input stream from which text will be read.
-         * @param out the output stream to which prompts will be
-         * written.
+         * @param out the output stream to which prompts will be written.
          * @return the triangulation entered in by the user.
          */
-        static Triangulation<3>* enterTextTriangulation(std::istream& in,
+        static Triangulation<3> enterTextTriangulation(std::istream& in,
                 std::ostream& out);
         /**
          * Rehydrates the given alphabetical string into a new triangulation.

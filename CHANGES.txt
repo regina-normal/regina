@@ -993,8 +993,9 @@ Version 7.0  [ TODO ]
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
-            - Function parse() now returns a std::optional<Signature>,
-              not a pointer which may be null.
+            - Function parse() now returns by value (not pointer), and throws
+              an exception on error (instead of returning null).
+            - Function triangulate() now returns by value.
         Class SigPartialIsomorphism:
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
@@ -1197,6 +1198,7 @@ Version 7.0  [ TODO ]
             - Functions snapPea() and saveSnapPea() are no longer virtual.
             - The Link constructor is now deprecated, since Link::complement()
               is more efficient and now returns by value.
+            - Function enterTextTriangulation() returns by value, not pointer.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and

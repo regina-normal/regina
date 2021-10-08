@@ -171,19 +171,6 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
 
     public:
-        void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
-            auto sig = Signature::parse(sigStr);
-            if (! sig)
-                return;
-
-            Triangulation<3>* triNew = sig->triangulate();
-            if (! triNew)
-                return;
-
-            tri.insertTriangulation(*triNew);
-            delete triNew;
-        }
-
         void setUp() {
             Tetrahedron<3>* r;
             Tetrahedron<3>* s;
@@ -207,9 +194,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Some non-minimal triangulations can be generated from
             // splitting surfaces.
-            generateFromSig(largeS3, "abcd.abe.c.d.e");
+            largeS3 = Signature::parse("abcd.abe.c.d.e").triangulate();
 
-            generateFromSig(largeRP3, "aabcd.be.c.d.e");
+            largeRP3 = Signature::parse("aabcd.be.c.d.e").triangulate();
 
             // A 3-tetrahedron non-orientable twisted I-bundle over the
             // Klein bottle is described in Chapter 3 of Burton's PhD thesis.

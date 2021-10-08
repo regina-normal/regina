@@ -225,27 +225,6 @@ class Triangulation3Test : public TriangulationTest<3> {
             /**< A disjoint union of three triangulations. */
 
     public:
-        void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
-            auto sig = Signature::parse(sigStr);
-            if (! sig)
-                return;
-
-            Triangulation<3>* triNew = sig->triangulate();
-            if (! triNew)
-                return;
-
-            tri.insertTriangulation(*triNew);
-            delete triNew;
-        }
-
-        Triangulation<3>* generateFromSig(const std::string& sigStr) {
-            auto sig = Signature::parse(sigStr);
-            if (! sig)
-                return nullptr;
-
-            return sig->triangulate();
-        }
-
         void setUp() {
             TriangulationTest<3>::setUp();
 
@@ -268,17 +247,17 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
-            generateFromSig(rp3rp3, "aabccd.b.d");
+            rp3rp3 = Signature::parse("aabccd.b.d").triangulate();
 
-            generateFromSig(q32xz3, "aabcdb.cedfef");
+            q32xz3 = Signature::parse("aabcdb.cedfef").triangulate();
 
-            generateFromSig(s3_large, "abc.abd.cef.de.fg.g");
+            s3_large = Signature::parse("abc.abd.cef.de.fg.g").triangulate();
 
-            generateFromSig(lens8_3_large, "aabcb.cd.d");
+            lens8_3_large = Signature::parse("aabcb.cd.d").triangulate();
 
-            generateFromSig(rp3_large, "aabcdedcfb.fg.e.g");
+            rp3_large = Signature::parse("aabcdedcfb.fg.e.g").triangulate();
 
-            generateFromSig(q20_large, "abcdeabcdef.fg.g");
+            q20_large = Signature::parse("abcdeabcdef.fg.g").triangulate();
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
@@ -2326,15 +2305,13 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifySigThreeSphere(const std::string& sigStr) {
-            Triangulation<3>* t = generateFromSig(sigStr);
-            verifyThreeSphere(*t, sigStr.c_str());
-            delete t;
+            verifyThreeSphere(Signature::parse(sigStr).triangulate(),
+                sigStr.c_str());
         }
 
         void verifySigNotThreeSphere(const std::string& sigStr) {
-            Triangulation<3>* t = generateFromSig(sigStr);
-            verifyNotThreeSphere(*t, sigStr.c_str());
-            delete t;
+            verifyNotThreeSphere(Signature::parse(sigStr).triangulate(),
+                sigStr.c_str());
         }
 
         void verifyIsoSigThreeSphere(const std::string& sigStr) {

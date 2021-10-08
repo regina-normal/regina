@@ -65,39 +65,28 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        Triangulation<3>* generateFromSig(const std::string& sigStr) {
-            auto sig = Signature::parse(sigStr);
-            if (sig)
-                return sig->triangulate();
-            else
-                return nullptr;
-        }
-
         void setUp() {
         }
 
         void tearDown() {
         }
 
-        Triangulation<3>* verifyThreeSphere(Triangulation<3>* tri,
+        void verifyThreeSphere(const Triangulation<3>& tri,
                 const std::string& triName) {
-            auto ans = tri->summands();
-
             CPPUNIT_ASSERT_MESSAGE("The 3-sphere " + triName +
-                " is reported to have prime summands.", ans.empty());
-
-            return tri;
+                " is reported to have prime summands.",
+                tri.summands().empty());
         }
 
         void verifySigThreeSphere(const std::string& sigStr) {
-            delete verifyThreeSphere(generateFromSig(sigStr), sigStr);
+            verifyThreeSphere(Signature::parse(sigStr).triangulate(), sigStr);
         }
 
-        Triangulation<3>* verifyPrime(Triangulation<3>* tri,
+        void verifyPrime(const Triangulation<3>& tri,
                 const std::string& triName, const std::string& manifold) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            auto ans = tri->summands();
+            auto ans = tri.summands();
 
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
                 " is reported to be a 3-sphere.", ans.size() > 0);
@@ -125,25 +114,24 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " has an inconsistent first homology group.",
-                ans.front().homology() == tri->homology());
-
-            return tri;
+                ans.front().homology() == tri.homology());
         }
 
         void verifySigPrime(const std::string& sigStr,
                 const std::string& manifold) {
-            delete verifyPrime(generateFromSig(sigStr), sigStr, manifold);
+            verifyPrime(Signature::parse(sigStr).triangulate(),
+                sigStr, manifold);
         }
 
         /**
          * NOTE: The two manifold names must be given in lexicographical order.
          */
-        Triangulation<3>* verifyPair(Triangulation<3>* tri,
+        void verifyPair(const Triangulation<3>& tri,
                 const std::string& triName, const std::string& manifold1,
                 const std::string& manifold2) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            auto ans = tri->summands();
+            auto ans = tri.summands();
 
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be a 3-sphere.", ans.size() > 0);
@@ -188,7 +176,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             combined.addGroup(ans[1].homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
-                tri->homology() == combined);
+                tri.homology() == combined);
 
 
             // Finish with a 0-efficiency test.
@@ -202,22 +190,19 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 CPPUNIT_ASSERT_MESSAGE("The second prime summand of " +
                     triName + " is not 0-efficient.",
                     ans[1].isZeroEfficient());
-
-            // All above board.
-            return tri;
         }
 
         void verifySigPair(const std::string& sigStr,
                 const std::string& manifold1, const std::string& manifold2) {
-            delete verifyPair(generateFromSig(sigStr), sigStr, manifold1,
-                manifold2);
+            verifyPair(Signature::parse(sigStr).triangulate(), sigStr,
+                manifold1, manifold2);
         }
 
-        Triangulation<3>* verifyRP3x3(Triangulation<3>* tri,
+        void verifyRP3x3(const Triangulation<3>& tri,
                 const std::string& triName) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            auto ans = tri->summands();
+            auto ans = tri.summands();
 
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be a 3-sphere.", ans.size() > 0);
@@ -269,14 +254,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             combined.addGroup(ans[2].homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
-                tri->homology() == combined);
-
-            // All above board.
-            return tri;
+                tri.homology() == combined);
         }
 
         void verifySigRP3x3(const std::string& sigStr) {
-            delete verifyRP3x3(generateFromSig(sigStr), sigStr);
+            verifyRP3x3(Signature::parse(sigStr).triangulate(), sigStr);
         }
 
         void threeSpheres() {
@@ -295,11 +277,9 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             verifySigThreeSphere("(abcd)(aefg)(b)(c)(d)(e)(f)(g)");
 
             // 3-spheres obtained as Lens spaces:
-            Triangulation<3>* tri;
-
-            tri = new Triangulation<3>();
-            tri->insertLayeredLensSpace(1,0);
-            delete verifyThreeSphere(tri, "L(1,0)");
+            Triangulation<3> tri;
+            tri.insertLayeredLensSpace(1,0);
+            verifyThreeSphere(tri, "L(1,0)");
         }
 
         void specialCases() {
@@ -360,11 +340,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             // We'll build this a few different ways.
 
             // Poincare homology sphere as a plugged triangular solid torus:
-            tri = new Triangulation<3>;
+            Triangulation<3> p1;
             Tetrahedron<3>* tet[5];
             int i;
             for (i = 0; i < 5; i++)
-                tet[i] = tri->newTetrahedron();
+                tet[i] = p1.newTetrahedron();
             tet[0]->join(0, tet[4], Perm<4>(1,0,2,3));
             tet[0]->join(1, tet[3], Perm<4>(0,2,3,1));
             tet[0]->join(2, tet[1], Perm<4>(0,1,3,2));
@@ -375,22 +355,20 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             tet[2]->join(1, tet[4], Perm<4>(0,2,3,1));
             tet[2]->join(3, tet[3], Perm<4>(3,1,2,0));
             tet[3]->join(3, tet[4], Perm<4>(0,1,2,3));
-            delete verifyPrime(tri, "the Poincare homology sphere (plugged)",
+            verifyPrime(p1, "the Poincare homology sphere (plugged)",
                 "S3/P120");
 
             // Poincare homology sphere as an augmented triangular solid
             // torus:
-            tri = new Triangulation<3>();
-            tri->insertAugTriSolidTorus(2, -1, 3, 1, 5, -4);
-            delete verifyPrime(tri, "the Poincare homology sphere (aug I)",
-                "S3/P120");
+            Triangulation<3> p2;
+            p2.insertAugTriSolidTorus(2, -1, 3, 1, 5, -4);
+            verifyPrime(p2, "the Poincare homology sphere (aug I)", "S3/P120");
 
             // Poincare homology sphere as another augmented triangular solid
             // torus:
-            tri = new Triangulation<3>();
-            tri->insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
-            delete verifyPrime(tri, "the Poincare homology sphere (aug II)",
-                "S3/P120");
+            Triangulation<3> p3;
+            p3.insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
+            verifyPrime(p3, "the Poincare homology sphere (aug II)", "S3/P120");
         }
 
         void nonTrivialSums() {

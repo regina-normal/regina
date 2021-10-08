@@ -208,18 +208,20 @@ class Signature : public ShortOutput<Signature> {
          *
          * \pre The given string contains at least one letter.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * signature.
+         *
          * @param sig a string representation of a splitting surface signature.
-         * @return the corresponding signature, or no value if the given string
-         * was invalid.
+         * @return the corresponding signature.
          */
-        static std::optional<Signature> parse(const std::string& sig);
+        static Signature parse(const std::string& sig);
         /**
-         * Returns a newly created 3-manifold triangulation corresponding to
+         * Returns the 3-manifold triangulation corresponding to
          * this splitting surface signature.
          *
          * @return the corresponding triangulation.
          */
-        Triangulation<3>* triangulate() const;
+        Triangulation<3> triangulate() const;
 
         /**
          * Lexicographically compares the results of transformations upon
