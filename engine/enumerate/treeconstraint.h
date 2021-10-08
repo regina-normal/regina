@@ -265,11 +265,9 @@ class LPConstraintBase {
          * As described in the LPInitialTableaux class notes, it might
          * not be possible to construct the linear functions (since the
          * triangulation might not satisfy the necessary requirements).
-         * In this case, this routine should throw either an InvalidArgument
-         * exception (for errors that should have been preventable in
-         * advance with the right checks), or an UnsolvedCase exception.
-         * Any constrant class that could throw exceptions in this way \e must
-         * describe this behaviour in its class documentation.
+         * In such cases this routine should throw an exception, as
+         * described below, and the corresponding constraint class
+         * \e must mention this possibility in its class documentation.
          *
          * If you are implementing this routine in a subclass that
          * works with angle structure coordinates, remember that your
@@ -282,6 +280,18 @@ class LPConstraintBase {
          * \pre For all coefficients in the array \a col, the
          * Coefficients substructures have all been initialised with the
          * default constructor and not modified since.
+         *
+         * \exception InvalidArgument it was not possible to create the
+         * linear functions for these constraints, due to an error which
+         * should have been preventable with the right checks in advance.
+         * Any constraint class that could throw exceptions in this way
+         * \e must describe this behaviour in its own class documentation.
+         *
+         * \exception UnsolvedCase it was not possible to create the linear
+         * functions for these constraints, due to an error that was
+         * "genuinely" unforseeable.  Again, any constraint class that could
+         * throw exceptions in this way \e must describe this behaviour in its
+         * own class documentation.
          *
          * @param col the array of columns as stored in the initial
          * tableaux (i.e., the data member LPInitialTableaux::col_).
@@ -602,12 +612,10 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * (thereby avoiding spun normal surfaces with infinitely many triangles).
  *
  * At present this class can only work with oriented triangulations that have
- * precisely one vertex, which is ideal with torus link.  These
- * constraints are explicitly checked by addRows(), which throws an
- * InvalidArgument exception if they are not satisfied.  Moreover, this
- * constraint calls on SnapPea for some calculations: in the unexpected
- * situation where SnapPea retriangulates or produces a null triangulation,
- * this routine will throw an UnsolvedCase exception.
+ * precisely one vertex, which is ideal with torus link.  Moreover, it uses
+ * the SnapPea kernel for some of its computations, and so SnapPea must be
+ * able to work directly with the given triangulation.  See below for details
+ * on the exceptions that addRows() can throw if these requirements are not met.
  *
  * Also, at present this class can only work with quadrilateral normal
  * coordinates (and cannot handle almost normal coordinates at all).
@@ -622,6 +630,12 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * quad-oct normal coordinates).
  *
  * \apinotfinal
+ *
+ * \exception InvalidArgument thrown by addRows() if the given triangulation
+ * is not oriented with precisely one vertex, which must have a torus link.
+ *
+ * \exception UnsolvedCase thrown by addRows() if SnapPea retriangulates the
+ * given triangulation, or produces a null triangulation.
  *
  * \ifacespython Not present.
  *
