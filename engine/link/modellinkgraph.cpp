@@ -245,7 +245,7 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
     return best;
 }
 
-ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
+ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
     bool tight = plantri.size() == 3 ||
         (plantri.size() > 4 && plantri[4] != ',');
 
@@ -253,64 +253,66 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
     size_t n;
     if (tight) {
         if (plantri.size() % 3 != 0)
-            return 0;
+            throw InvalidArgument("fromPlantri(): "
+                "invalid string length for a tight encoding");
         n = plantri.size() / 3;
     } else {
         if (plantri.size() % 5 != 4)
-            return 0;
+            throw InvalidArgument("fromPlantri(): "
+                "invalid string length for a standard encoding");
         n = (plantri.size() + 1) / 5;
     }
     if (n > 26)
-        return 0;
+        throw InvalidArgument("fromPlantri(): more than 26 nodes");
 
     size_t i, j;
     for (i = 0; i < plantri.size(); ++i)
         if ((! tight) && i % 5 == 4) {
             if (plantri[i] != ',')
-                return 0;
+                throw InvalidArgument("fromPlantri(): missing comma");
         } else {
             if (plantri[i] < 'a' || plantri[i] >= ('a' + n))
-                return 0;
+                throw InvalidArgument("fromPlantri(): invalid node letter");
         }
 
-    ModelLinkGraph* g = new ModelLinkGraph();
+    ModelLinkGraph g;
     for (i = 0; i < n; ++i)
-        g->nodes_.push_back(new ModelLinkGraphNode());
+        g.nodes_.push_back(new ModelLinkGraphNode());
 
     // First set up adj_[..].node_.
     if (tight) {
         // Node 0, arc 0 is a special case.
         if (n == 1) {
             // (0, 0) links to node 0 - there is no other option.
-            g->nodes_[0]->adj_[0].node_ = g->nodes_[0];
+            g.nodes_[0]->adj_[0].node_ = g.nodes_[0];
         } else {
             // The dual quadrangulation is simple, and this means we
             // cannot have loops for n > 1.  Therefore (0, 0) links to node 1.
             // Since node 1 is new, make the link in both directions.
-            g->nodes_[0]->adj_[0].node_ = g->nodes_[1];
-            g->nodes_[1]->adj_[0].node_ = g->nodes_[0];
-            g->nodes_[1]->adj_[0].arc_ = -1;
+            g.nodes_[0]->adj_[0].node_ = g.nodes_[1];
+            g.nodes_[1]->adj_[0].node_ = g.nodes_[0];
+            g.nodes_[1]->adj_[0].arc_ = -1;
         }
-        g->nodes_[0]->adj_[0].arc_ = -1;
+        g.nodes_[0]->adj_[0].arc_ = -1;
 
         for (i = 0; i < n; ++i)
             for (j = 1; j < 4; ++j) {
-                g->nodes_[i]->adj_[j].node_ =
-                    g->nodes_[plantri[3 * i + j - 1] - 'a'];
-                if (! g->nodes_[i]->adj_[j].node_->adj_[0].node_) {
+                g.nodes_[i]->adj_[j].node_ =
+                    g.nodes_[plantri[3 * i + j - 1] - 'a'];
+                if (! g.nodes_[i]->adj_[j].node_->adj_[0].node_) {
                     // This is the first time we've seen this adjacent node.
                     // Make the link in the reverse direction also.
-                    g->nodes_[i]->adj_[j].node_->adj_[0].node_ = g->nodes_[i];
-                    g->nodes_[i]->adj_[j].node_->adj_[0].arc_ = -1;
+                    g.nodes_[i]->adj_[j].node_->adj_[0].node_ = g.nodes_[i];
+                    g.nodes_[i]->adj_[j].node_->adj_[0].arc_ = -1;
                 }
-                g->nodes_[i]->adj_[j].arc_ = -1;
+                g.nodes_[i]->adj_[j].arc_ = -1;
             }
     } else {
         for (i = 0; i < n; ++i)
             for (j = 0; j < 4; ++j) {
-                g->nodes_[i]->adj_[j].node_ =
-                    g->nodes_[plantri[5 * i + j] - 'a'];
-                g->nodes_[i]->adj_[j].arc_ = -1;
+                g.nodes_[i]->adj_[j].node_ =
+                    g.nodes_[plantri[5 * i + j] - 'a'];
+                g.nodes_[i]->adj_[j].arc_ = -1;
             }
     }
 
@@ -321,7 +323,7 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
     int k;
     ModelLinkGraphNode *src, *dest;
     for (i = 0; i < n; ++i) {
-        src = g->nodes_[i];
+        src = g.nodes_[i];
         for (j = 0; j < 4; ++j) {
             if (src->adj_[j].arc_ >= 0)
                 continue;
@@ -336,10 +338,8 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                     ++count;
 
             // Be careful about when we can have loops.
-            if (src == dest && count % 2 != 0) {
-                delete g;
-                return 0;
-            }
+            if (src == dest && count % 2 != 0)
+                throw InvalidArgument("fromPlantri(): invalid loop");
 
             // In the code below, we use the fact that plantri only produces
             // 4-valent graphs whose dual quadrangulations are simple.
@@ -348,18 +348,16 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                 // from dest.
                 for (k = 0; k < 4; ++k)
                     if (dest->adj_[k].node_ == src) {
-                        if (dest->adj_[k].arc_ >= 0) {
-                            delete g;
-                            return 0;
-                        }
+                        if (dest->adj_[k].arc_ >= 0)
+                            throw InvalidArgument("fromPlantri(): "
+                                "single edge has multiple endpoints");
                         src->adj_[j].arc_ = k;
                         dest->adj_[k].arc_ = j;
                         break;
                     }
-                if (k == 4) {
-                    delete g;
-                    return 0;
-                }
+                if (k == 4)
+                    throw InvalidArgument("fromPlantri(): single edge "
+                        "has no endpoint");
             } else if (count == 2) {
                 if (src->adj_[j ^ 2].node_ == dest) {
                     // We have two parallel edges that are not adjacent
@@ -368,8 +366,8 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                     // Because the dual quadrangulation must be simple,
                     // it follows that any double edge of this type must
                     // actually be part of a quadruple edge.
-                    delete g;
-                    return 0;
+                    throw InvalidArgument("fromPlantri(): invalid "
+                        "non-adjacent double edge");
                 } else {
                     // We have two parallel edges that are adjacent around src.
                     //
@@ -385,16 +383,14 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                         if (dest->adj_[k].node_ == src &&
                                 dest->adj_[(k + 1) % 4].node_ == src) {
                             if (dest->adj_[k].arc_ >= 0 ||
-                                    dest->adj_[(k + 1) % 4].arc_ >= 0) {
-                                delete g;
-                                return 0;
-                            }
+                                    dest->adj_[(k + 1) % 4].arc_ >= 0)
+                                throw InvalidArgument("fromPlantri(): "
+                                    "double edge has too many endpoints");
                             break;
                         }
-                    if (k == 4) {
-                        delete g;
-                        return 0;
-                    }
+                    if (k == 4)
+                        throw InvalidArgument("fromPlantri(): double edge "
+                            "missing its endpoints");
 
                     if (j < 3 && src->adj_[j + 1].node_ == dest) {
                         src->adj_[j].arc_ = (k + 1) % 4;
@@ -413,8 +409,7 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                 // Because the dual quadrangulation must be simple, it
                 // follows that any triple edge must actually be part
                 // of a quadruple edge.
-                delete g;
-                return 0;
+                throw InvalidArgument("fromPlantri(): invalid triple edge");
             } else {
                 // A quadruple edge.
                 // As we walk clockwise around one node, we must walk
@@ -423,14 +418,12 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                 // We will match up (0,1,2,3) <-> (3,2,1,0).
                 // Note that this scheme also works if src == dest.
                 for (k = 0; k < 4; ++k) {
-                    if (dest->adj_[3 - k].node_ != src) {
-                        delete g;
-                        return 0;
-                    }
-                    if (dest != src && dest->adj_[3 - k].arc_ >= 0) {
-                        delete g;
-                        return 0;
-                    }
+                    if (dest->adj_[3 - k].node_ != src)
+                        throw InvalidArgument("fromPlantri(): "
+                            "quadruple edge has a missing endpoint");
+                    if (dest != src && dest->adj_[3 - k].arc_ >= 0)
+                        throw InvalidArgument("fromPlantri(): "
+                            "quadruple edge has too many endpoints");
                     src->adj_[k].arc_ = 3 - k;
                     dest->adj_[3 - k].arc_ = k;
                 }

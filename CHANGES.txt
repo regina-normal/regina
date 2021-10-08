@@ -582,6 +582,8 @@ Version 7.0  [ TODO ]
               mechanism for its callback function, instead of a function
               pointer with void* arguments.  Moreover, it no longer receives
               an extra null call once the enumeration has finished.
+            - Routine fromPlantri() now returns by value (not pointer),
+              and throws an exception on error instead of (returning null)
         Class NativeInteger<...>:
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
@@ -1102,8 +1104,8 @@ Version 7.0  [ TODO ]
         Class TreeDecomposition:
             - Added a move constructor and move/copy assignment operators.
             - Added member and global swap() functions.
-            - The fromPACE() routines now return a std::optional by value,
-              instead of a newly allocated pointer that could be null.
+            - The fromPACE() routines now return by value (not pointer),
+              and throw an exception on error instead of (returning null)
         Class TreeTraversal, TreeEnumeration, TreeSingleSoln, TautEnumeration:
             - Removed the verify() routines, since this is basically just a
               single matrix multiplication.

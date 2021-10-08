@@ -40,7 +40,6 @@
 #define __REGINA_TREEDECOMPOSITION_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
@@ -1296,29 +1295,32 @@ class TreeDecomposition : public Output<TreeDecomposition> {
            2 4
            \endverbatim
          *
-         * This routine does some basic error checking as it reads the input,
-         * but this checking is not exhaustive; in particular, it does
-         * not verify that the connections between bags actually form a tree.
-         *
          * There are two variants of this routine.  This variant
          * contains a single string containing the entire text representation.
          * The other variant takes an input stream, from which the text
          * representation will be read.
          *
+         * \warning While this routine does some basic error checking on
+         * the input, this checking is not exhaustive; in particular, it does
+         * not verify that the connections between bags actually form a tree.
+         *
+         * \exception InvalidArgument the input was not a valid representation
+         * of a tree decomposition using the PACE text format.
+         * As noted above, the checks performed here are not exhaustive.
+         *
          * @param str a text representation of the tree
          * decomposition using the PACE text format.
-         * @return the corresponding tree decomposition, or no value if
-         * the input was found to be invalid.
+         * @return the corresponding tree decomposition.
          *
          * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
-        static std::optional<TreeDecomposition> fromPACE(const std::string& str);
+        static TreeDecomposition fromPACE(const std::string& str);
         /**
          * Builds a tree decomposition from an input stream using the PACE
          * text format.  The text format is described in detail at
          * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
          *
-         * See the constructor TreeDecomposition(const std::string&) for
+         * See the routine fromPACE(const std::string&) for
          * a description of this text format.
          *
          * There are two variants of this routine.  The other variant
@@ -1330,16 +1332,20 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * (i.e., it should contain no additional text after this text
          * representation).
          *
+         * \exception InvalidArgument the input was not a valid representation
+         * of a tree decomposition using the PACE text format.
+         * As documented more thoroughly in the string variant of this
+         * routine, the checks performed here are not exhaustive.
+         *
          * \ifacespython Not present.
          *
          * @param in an input stream that provides a text
          * representation of the tree decomposition using the PACE text format.
-         * @return the corresponding tree decomposition, or no value if
-         * the input was found to be invalid.
+         * @return the corresponding tree decomposition.
          *
          * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
-        static std::optional<TreeDecomposition> fromPACE(std::istream& in);
+        static TreeDecomposition fromPACE(std::istream& in);
 
     private:
         /**

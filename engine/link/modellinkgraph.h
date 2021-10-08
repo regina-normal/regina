@@ -871,11 +871,12 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * by the member function canonicalPlantri() (even though such output
          * would certainly \e not be produced by the program \e plantri).
          *
-         * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the graph.
-         * Of course \e plantri does not output non-planar graphs, but
-         * if a user constructs one by hand and passes it to this
-         * routine then the resulting behaviour is undefined.
+         * \warning While this routine does some basic error checking on the
+         * input, these checks are not exhaustive.  In particular, it does
+         * \e not test for planarity of the graph.  (Of course \e plantri
+         * does not output non-planar graphs, but a user could still construct
+         * one by hand and passes it to this routine, in which case the
+         * resulting behaviour is undefined.)
          *
          * \pre The graph being described is connected.
          * \pre The graph being described has between 1 and 26 nodes inclusive.
@@ -884,13 +885,16 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * edges.  Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
          *
+         * \exception InvalidArgument the input was not a valid
+         * representation of a graph using the \e plantri output format.
+         * As noted above, the checks performed here are not exhaustive.
+         *
          * @param plantri a string containing the comma-separated
          * sequence of alphabetical strings output by \e plantri, as
          * described above.
-         * @return a newly constructed graph, or \c null if the input
-         * was found to be invalid.
+         * @return the resulting graph.
          */
-        static ModelLinkGraph* fromPlantri(const std::string& plantri);
+        static ModelLinkGraph fromPlantri(const std::string& plantri);
 
     private:
         /**
