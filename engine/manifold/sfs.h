@@ -40,6 +40,7 @@
 #endif
 
 #include <list>
+#include <optional>
 #include "regina-core.h"
 #include "manifold.h"
 
