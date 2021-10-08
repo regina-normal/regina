@@ -40,9 +40,7 @@ const AbelianGroup& SnapPeaTriangulation::homologyFilled() const {
     if (h1Filled_.has_value())
         return *h1Filled_;
     if (! data_)
-        throw FailedPrecondition(
-            "SnapPeaTriangulation::homologyFilled() "
-            "requires a non-null triangulation");
+        throw SnapPeaIsNull("SnapPeaTriangulation::homologyFilled");
 
     // Fetch the relation matrix from SnapPea.
     regina::snappea::RelationMatrix sRelns;

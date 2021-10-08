@@ -439,8 +439,7 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
 SnapPeaTriangulation SnapPeaTriangulation::filledPartial(unsigned whichCusp)
         const {
     if (! data_)
-        throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
-            "requires a non-null triangulation");
+        throw SnapPeaIsNull("SnapPeaTriangulation::filledPartial");
     if (cusp_[whichCusp].complete())
         throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
             "requires the given cusp to have filling coefficients");
@@ -465,8 +464,7 @@ SnapPeaTriangulation SnapPeaTriangulation::filledPartial(unsigned whichCusp)
 
 SnapPeaTriangulation SnapPeaTriangulation::filledPartial() const {
     if (! data_)
-        throw FailedPrecondition("SnapPeaTriangulation::filledPartial() "
-            "requires a non-null triangulation");
+        throw SnapPeaIsNull("SnapPeaTriangulation::filledPartial");
 
     size_t nCusps = countBoundaryComponents();
 
@@ -490,8 +488,7 @@ SnapPeaTriangulation SnapPeaTriangulation::filledPartial() const {
 
 Triangulation<3> SnapPeaTriangulation::filledAll() const {
     if (! data_)
-        throw FailedPrecondition("SnapPeaTriangulation::filledAll() "
-            "requires a non-null triangulation");
+        throw SnapPeaIsNull("SnapPeaTriangulation::filledAll");
 
     size_t nCusps = countBoundaryComponents();
 
@@ -692,8 +689,7 @@ MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
  */
 MatrixInt SnapPeaTriangulation::slopeEquations() const {
     if (! data_)
-        throw FailedPrecondition("SnapPeaTriangulation::slopeEquations() "
-            "requires a non-null triangulation");
+        throw SnapPeaIsNull("SnapPeaTriangulation::slopeEquations");
 
     MatrixInt matrix(2*data_->num_cusps, 3*data_->num_tetrahedra);
     int i,j;

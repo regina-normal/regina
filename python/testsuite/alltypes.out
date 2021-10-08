@@ -1781,6 +1781,9 @@ Equality type : EqualityType.BY_VALUE
 SnapPeaFatalError : class
 Exception type
 
+SnapPeaIsNull : class
+Exception type
+
 SnapPeaMemoryFull : class
 Exception type
 

@@ -374,7 +374,7 @@ MatrixInt NormalSurface::boundaryIntersections() const {
             throw FailedPrecondition("NormalSurface::boundaryIntersections() "
                 "requires all vertex links to be tori");
 
-    // Note: slopeEquations() throws a FailedPrecondition if we have a
+    // Note: slopeEquations() throws SnapPeaIsNull if we have a
     // null SnapPea triangulation.
     MatrixInt equations = snapPea->slopeEquations();
 

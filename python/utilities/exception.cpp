@@ -56,6 +56,8 @@ void addException(pybind11::module_& m) {
         "UnsolvedCase", PyExc_RuntimeError);
     pybind11::register_exception<regina::SnapPeaUnsolvedCase>(m,
         "SnapPeaUnsolvedCase", PyExc_RuntimeError);
+    pybind11::register_exception<regina::SnapPeaIsNull>(m,
+        "SnapPeaIsNull", PyExc_RuntimeError);
 
     // Critical errors within the SnapPea kernel:
     pybind11::register_exception<regina::SnapPeaFatalError>(m,

@@ -158,7 +158,8 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                             .arg(slopes.entry(i,1).stringValue().c_str())
                             .arg((-slopes.entry(i,0)).stringValue().c_str());
                     return ans;
-                } catch (const regina::FailedPrecondition&) {
+                } catch (const regina::ReginaException&) {
+                    // This could be a FailedPrecondition or a SnapPeaisNull.
                     return tr("Spun");
                 }
             } else if (s.hasRealBoundary()) {

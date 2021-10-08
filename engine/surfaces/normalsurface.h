@@ -1394,12 +1394,19 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * This routine is only available for use with SnapPea triangulations,
          * since it needs to know the specific meridian and longitude on each
-         * cusp.  This information is \e only available through the SnapPea
-         * kernel, since Regina does not use or store peripheral curves for
-         * its own Triangulation<3> class.  Therefore, if the underlying
-         * triangulation (as returned by triangulation()) is not of the
-         * subclass SnapPeaTriangulation, this routine will throw an exception
-         * (see below).
+         * cusp.  These meridians and longitudes are \e only available through
+         * the SnapPea kernel, since Regina does not use or store peripheral
+         * curves for its own Triangulation<3> class.  Therefore:
+         *
+         * - If the underlying triangulation (as returned by triangulation())
+         *   is not of the subclass SnapPeaTriangulation, this routine will
+         *   throw an exception (see below).
+         *
+         * - In particular, this \e will happen if you have edited or deleted
+         *   the original triangulation that was used to construct this normal
+         *   surface.  This is because such a modification will trigger an
+         *   internal deep copy of the original, and this will only copy
+         *   Regina's native Triangulation<3> data.
          *
          * All cusps are treated as complete.  That is, any Dehn fillings
          * stored in the SnapPea triangulation will be ignored.
@@ -1428,9 +1435,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * map these to Regina's vertex indices if needed.
          *
          * \pre As noted above, the underlying triangulation must be a
-         * SnapPeaTriangulation; moreover, it must not be a null SnapPea
-         * triangulation.  These conditions will be checked, and this routine
-         * will throw an exception if they are not met.
+         * SnapPeaTriangulation; this will be checked, and this routine
+         * will throw an exception if this requirement is not met.
          *
          * \pre At present, Regina can only compute boundary slopes if the
          * triangulation is oriented, if every vertex link in the
@@ -1438,6 +1444,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * is for normal surfaces only (not almost normal surfaces).
          * These conditions will likewise be checked, and this routine
          * will throw an exception if they are not met.
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * \exception FailedPrecondition one or more of the preconditions
          * listed above was not met.

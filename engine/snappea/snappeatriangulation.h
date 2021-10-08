@@ -1231,18 +1231,20 @@ class SnapPeaTriangulation :
          * routine explicitly does not fill all cusps, it is able to guarantee
          * an explicit return type of SnapPeaTriangulation at compile time.
          *
-         * \pre This is not a null triangulation, the given cusp is
-         * non-complete (i.e., has filling coefficients assigned), and the
-         * manifold has at least one other cusp.  These preconditions will all
-         * be checked, and an exception will be thrown if they are not met.
+         * \pre The given cusp is non-complete (i.e., has filling coefficients
+         * assigned), and the manifold has at least one other cusp.  These
+         * preconditions will be checked, and an exception will be thrown if
+         * they are not met.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * \exception FailedPrecondition one or more of the preconditions
-         * listed above was not met.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception FailedPrecondition the given cusp is complete,
+         * and/or it is the only cusp.
          *
          * @param whichCusp the index of the cusp to permanently fill according
          * to SnapPea; this must be between 0 and countCusps()-1 inclusive.
@@ -1281,13 +1283,14 @@ class SnapPeaTriangulation :
          * routine explicitly does not fill all cusps, it is able to guarantee
          * an explicit return type of SnapPeaTriangulation at compile time.
          *
-         * \pre This is not a null triangulation, and at least one cusp is
-         * complete (i.e., has no filling coefficients assigned).  These
-         * preconditions will be checked, and an exception will be thrown if
-         * they are not met.
+         * \pre At least one cusp of this manifold is complete (i.e., has no
+         * filling coefficients assigned).  This will be checked, and an
+         * exception will be thrown if this requirement is not met.
          *
-         * \exception FailedPrecondition one or more of the preconditions
-         * listed above was not met.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception FailedPrecondition all cusps of this manifold are
+         * non-complete.
          *
          * @return the filled triangulation.
          */
@@ -1309,13 +1312,14 @@ class SnapPeaTriangulation :
          * routine explicitly fills all cusps, it is able to guarantee
          * an explicit return type of Triangulation<3> at compile time.
          *
-         * \pre This is not a null triangulation, and all cusps are
-         * non-complete (i.e., have filling coefficients assigned).
-         * These preconditions will be checked, and an exception will be
-         * thrown if they are not met.
+         * \pre All cusps of this manifold are non-complete (i.e., have
+         * filling coefficients assigned).  This will be checked, and an
+         * exception will be thrown if this requirement is not met.
          *
-         * \exception FailedPrecondition one or more of the preconditions
-         * listed above was not met.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception FailedPrecondition some cusp of this manifold
+         * is complete.
          *
          * @return the filled triangulation.
          */
@@ -1356,10 +1360,7 @@ class SnapPeaTriangulation :
          *
          * \snappy This has no corresponding routine in SnapPy.
          *
-         * \pre This is not a null triangulation.  This will be checked, and
-         * if this is a null triangulation then an exception will be thrown.
          * \pre All vertex links in this triangulation must be tori.
-         * This will not be checked.
          *
          * \warning If this triangulation was constructed from a Regina
          * triangulation (of class Triangulation<3>), then Regina will have
@@ -1370,7 +1371,7 @@ class SnapPeaTriangulation :
          * constructor SnapPeaTriangulation(const Triangulation<3>&, bool).
          * This might not be what the user expects.
          *
-         * \exception FailedPrecondition this is a null triangulation.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * @author William Pettersson and Stephan Tillmann
          *
@@ -1426,10 +1427,7 @@ class SnapPeaTriangulation :
          * homologyFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * \pre This is not a null triangulation.  This will be checked,
-         * and an exception will be thrown if this requirement is not met.
-         *
-         * \exception FailedPrecondition this is a null triangulation.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * \exception SnapPeaUnsolvedCase SnapPea detected an overflow
          * when attempting to create the filled relation matrix.
@@ -1461,10 +1459,7 @@ class SnapPeaTriangulation :
          * fundamentalGroupFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * \pre This is not a null triangulation.  This will be checked,
-         * and an exception will be thrown if this requirement is not met.
-         *
-         * \exception FailedPrecondition this is a null triangulation.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * @param simplifyPresentation \c true if SnapPea should attempt
          * to simplify the group presentation, or \c false if it should

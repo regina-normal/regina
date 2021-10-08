@@ -43,9 +43,7 @@ const GroupPresentation& SnapPeaTriangulation::fundamentalGroupFilled(
     if (fundGroupFilled_.has_value())
         return *fundGroupFilled_;
     if (! data_)
-        throw FailedPrecondition(
-            "SnapPeaTriangulation::fundamentalGroupFilled() "
-            "requires a non-null triangulation");
+        throw SnapPeaIsNull("SnapPeaTriangulation::fundamentalGroupFilled");
 
     // Note: TRUE and FALSE are #defines in SnapPea, and so don't live in any
     // namespace.  We avoid them here, and directly use 0 and 1 instead.

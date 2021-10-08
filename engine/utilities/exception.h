@@ -43,6 +43,7 @@
 #endif
 
 #include <exception>
+#include <string>
 
 namespace regina {
 
@@ -232,6 +233,49 @@ class SnapPeaUnsolvedCase : public UnsolvedCase {
         SnapPeaUnsolvedCase(const SnapPeaUnsolvedCase&) noexcept = default;
         SnapPeaUnsolvedCase& operator = (const SnapPeaUnsolvedCase&) noexcept =
             default;
+};
+
+/**
+ * An exception thrown when the SnapPea kernel is asked to work with a
+ * null SnapPea triangulation.
+ *
+ * This is a "regular" exception type derived from ReginaException, and is
+ * typically thrown in scenarios where the user asks Regina to call some
+ * SnapPea kernel function but Regina has no native SnapPea triangulation
+ * to call it with.  This is contrast to SnapPeaFatalError and
+ * SnapPeaMemoryFull, which are more severe errors that occur within the
+ * SnapPea kernel when it aborts processing unexpectedly, and which are not
+ * part of the regular ReginaException class hierarchy.
+ *
+ * Note that the constructor for this exception class follows a different
+ * pattern from most of Regina's exception classes.
+ *
+ * \ingroup snappea
+ */
+class SnapPeaIsNull : public ReginaException {
+    public:
+        /**
+         * Creates a new exception, and marks it as having occurred
+         * within the given Regina function.
+         *
+         * @param fromFunction the name of the Regina function that the user
+         * called (in particular, this is not the name of the SnapPea kernel
+         * function that would have been called as a result).  An example
+         * might be "SnapPeaTriangulation::homologyFilled".
+         */
+        SnapPeaIsNull(const char* fromFunction) :
+            ReginaException(std::string(fromFunction) +
+                "() cannot work with a null SnapPea triangulation") {}
+        /**
+         * Creates a new copy of the given exception.
+         */
+        SnapPeaIsNull(const SnapPeaIsNull&) noexcept = default;
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        SnapPeaIsNull& operator = (const SnapPeaIsNull&) noexcept = default;
 };
 
 } // namespace regina

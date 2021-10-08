@@ -115,7 +115,8 @@ namespace {
                             << ", " << - slopes.entry(i, 0)
                             << ')';
                     out << '\"';
-                } catch (const FailedPrecondition&) {
+                } catch (const ReginaException&) {
+                    // This could be a FailedPrecondition or a SnapPeaisNull.
                     out << "spun";
                 }
             } else if (s.hasRealBoundary())
