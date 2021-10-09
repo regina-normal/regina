@@ -38,7 +38,7 @@
 
 namespace regina {
 
-Link* Link::fromPD(const std::string& s) {
+Link Link::fromPD(const std::string& s) {
     std::vector<std::array<long, 4>> tuples;
 
     std::array<long, 4> tuple;
@@ -55,7 +55,7 @@ Link* Link::fromPD(const std::string& s) {
 
         long next = ::strtol(begin, &end, 10);
         if (next <= 0 || next == LONG_MAX /* overflow */)
-            return nullptr;
+            throw InvalidArgument("fromPD(): invalid integer in sequence");
 
         tuple[index++] = next;
         if (index == 4) {
@@ -67,7 +67,7 @@ Link* Link::fromPD(const std::string& s) {
     }
 
     if (index != 0)
-        return nullptr;
+        throw InvalidArgument("fromPD(): sequence length not a multiple of 4");
 
     return fromPD(tuples.begin(), tuples.end());
 }

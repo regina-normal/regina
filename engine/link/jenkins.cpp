@@ -36,12 +36,12 @@
 
 namespace regina {
 
-Link* Link::fromJenkins(std::istream& in) {
+Link Link::fromJenkins(std::istream& in) {
     return fromJenkins(std::istream_iterator<int>(in),
         std::istream_iterator<int>());
 }
 
-Link* Link::fromJenkins(const std::string& str) {
+Link Link::fromJenkins(const std::string& str) {
     std::istringstream in(str);
     return fromJenkins(std::istream_iterator<int>(in),
         std::istream_iterator<int>());

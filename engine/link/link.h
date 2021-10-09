@@ -3329,22 +3329,20 @@ class Link : public PacketData<Link>, public Output<Link> {
          * Recovers a knot diagram from its signature.
          * See knotSig() for more information on knot signatures.
          *
-         * The knot that is returned will be newly created, and it is
-         * the responsibility of the caller of this routine to destroy it.
-         *
          * Calling knotSig() followed by fromKnotSig() is not guaranteed to
          * produce an \e identical knot diagram to the original, but it
          * is guaranteed to produce one that is related by relabelling,
          * rotation, and optionally (according to the arguments that
          * were passed to knotSig()) reflection and/or reversal.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * knot signature.
+         *
          * @param sig the signature of the knot diagram to construct.
          * Note that signatures are case-sensitive.
-         * @return a newly allocated knot if the reconstruction was
-         * successful, or \c null if the given string was not a valid
-         * knot signature.
+         * @return the reconstructed knot.
          */
-        static Link* fromKnotSig(const std::string& sig);
+        static Link fromKnotSig(const std::string& sig);
 
         /**
          * Alias for fromKnotSig(), to recover a knot diagram from its
@@ -3355,13 +3353,14 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * See fromKnotSig() for further details.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * knot signature.
+         *
          * @param sig the signature of the knot diagram to construct.
          * Note that signatures are case-sensitive.
-         * @return a newly allocated knot if the reconstruction was
-         * successful, or \c null if the given string was not a valid
-         * knot signature.
+         * @return the reconstructed knot.
          */
-        static Link* fromSig(const std::string& sig);
+        static Link fromSig(const std::string& sig);
 
         /**
          * Creates a new knot from a classical Gauss code, presented as
@@ -3416,19 +3415,23 @@ class Link : public PacketData<Link>, public Output<Link> {
          * using the \e oriented Gauss code instead.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * classical Gauss code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
+         *
          * @author Adam Gowty
          *
          * @param str a classical Gauss code for a knot, as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
-        static Link* fromGauss(const std::string& str);
+        static Link fromGauss(const std::string& str);
 
         /**
          * Creates a new knot from a classical Gauss code, presented as
@@ -3456,11 +3459,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * using the \e oriented Gauss code instead.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * classical Gauss code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -3471,11 +3479,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * sequence of integers for a classical Gauss code.
          * @param end an iterator that points past the end of the
          * sequence of integers for a classical Gauss code.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
         template <typename Iterator>
-        static Link* fromGauss(Iterator begin, Iterator end);
+        static Link fromGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new knot from an "oriented" variant of the Gauss code,
@@ -3521,17 +3528,21 @@ class Link : public PacketData<Link>, public Output<Link> {
          * beginning or end of the string is allowed.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * oriented Gauss code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
+         *
          * @param str an "oriented" Gauss code for a knot, as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
-        static Link* fromOrientedGauss(const std::string& str);
+        static Link fromOrientedGauss(const std::string& str);
 
         /**
          * Creates a new knot from an "oriented" variant of the Gauss code,
@@ -3569,11 +3580,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * C++-style string (which can be cast to <tt>const std::string&</tt>).
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * oriented Gauss code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
@@ -3582,11 +3598,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * sequence of tokens for an "oriented" Gauss code.
          * @param end an iterator that points past the end of the
          * sequence of tokens for an "oriented" Gauss code.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
         template <typename Iterator>
-        static Link* fromOrientedGauss(Iterator begin, Iterator end);
+        static Link fromOrientedGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new link from Bob Jenkins' format, presented as a string.
@@ -3619,18 +3634,22 @@ class Link : public PacketData<Link>, public Output<Link> {
          * beginning or end of the string is allowed.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * encoding of a link in Jenkins' format.  As noted above, the
+         * checks performed here are not exhaustive.
+         *
          * @param str a string describing a link in Jenkins' format,
          * as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
-        static Link* fromJenkins(const std::string& str);
+        static Link fromJenkins(const std::string& str);
 
         /**
          * Creates a new link from Bob Jenkins' format, read directly
@@ -3652,11 +3671,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * which can be read by the user after this routine has finished.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given input was not a valid
+         * encoding of a link in Jenkins' format.  As noted above, the
+         * checks performed here are not exhaustive.
          *
          * \ifacespython This routine is not available in Python.  Instead,
          * Python users can use the variant fromJenkins(const std::string&),
@@ -3664,10 +3688,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * @param in an input stream that begins with a sequence of integers
          * separated by whitespace that describes a link.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
-        static Link* fromJenkins(std::istream& in);
+        static Link fromJenkins(std::istream& in);
 
         /**
          * Creates a new link from Bob Jenkins' format, presented as an
@@ -3687,11 +3710,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * dereferencing such an iterator produces an integer.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * encoding of a link in Jenkins' format.  As noted above, the
+         * checks performed here are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -3700,11 +3728,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * sequence of integers that describes a link.
          * @param end an iterator that points past the end of the
          * sequence of integers that describes a link.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
         template <typename Iterator>
-        static Link* fromJenkins(Iterator begin, Iterator end);
+        static Link fromJenkins(Iterator begin, Iterator end);
 
         /**
          * Creates a new knot from either alphabetical or numerical
@@ -3753,21 +3780,25 @@ class Link : public PacketData<Link>, public Output<Link> {
          * using the oriented Gauss code instead.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given string was not a valid
+         * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
          *
          * @author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
          * @param str either the alphabetical or numerical
          * Dowker-Thistlethwaite notation for a knot, as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
-        static Link* fromDT(const std::string& str);
+        static Link fromDT(const std::string& str);
 
         /**
          * Creates a new knot from numerical Dowker-Thistlethwaite notation,
@@ -3800,11 +3831,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * using the oriented Gauss code instead.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -3818,11 +3854,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @param end an iterator that points past the end of the
          * sequence of integers for the Dowker-Thistlethwaite notation
          * for a knot.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
         template <typename Iterator>
-        static Link* fromDT(Iterator begin, Iterator end);
+        static Link fromDT(Iterator begin, Iterator end);
 
         /**
          * Creates a new link from a planar diagram code, presented as a string.
@@ -3902,17 +3937,21 @@ class Link : public PacketData<Link>, public Output<Link> {
          * contain this information.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * planar diagram code.  As noted above, the checks performed here
+         * are not exhaustive.
+         *
          * @param str a planar diagram code for a link, as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
-        static Link* fromPD(const std::string& str);
+        static Link fromPD(const std::string& str);
 
         /**
          * Creates a new link from a planar diagram code, presented as a
@@ -3943,11 +3982,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * contain this information.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * planar diagram code.  As noted above, the checks performed here
+         * are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list.  Each element
@@ -3959,11 +4003,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * sequence of 4-tuples for a planar diagram code.
          * @param end an iterator that points past the end of the
          * sequence of 4-tuples for a planar diagram code.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
         template <typename Iterator>
-        static Link* fromPD(Iterator begin, Iterator end);
+        static Link fromPD(Iterator begin, Iterator end);
 
         /*@}*/
 
@@ -4788,7 +4831,7 @@ inline void Link::join(const StrandRef& s, const StrandRef& t) {
     t.crossing_->prev_[t.strand_] = s;
 }
 
-inline Link* Link::fromSig(const std::string& sig) {
+inline Link Link::fromSig(const std::string& sig) {
     return Link::fromKnotSig(sig);
 }
 

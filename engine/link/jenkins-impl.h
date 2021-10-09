@@ -46,18 +46,16 @@
 namespace regina {
 
 template <typename Iterator>
-Link* Link::fromJenkins(Iterator begin, Iterator end) {
-    if (begin == end) {
-        std::cerr << "fromJenkins(): could not read #components" << std::endl;
-        return nullptr;
-    }
+Link Link::fromJenkins(Iterator begin, Iterator end) {
+    if (begin == end)
+        throw InvalidArgument("fromJenkins(): missing number of components");
     int nComp = *begin++;
 
     if (nComp == 0)
-        return new Link;
+        return Link();
 
-    Link* ans = new Link;
-    ans->components_.resize(nComp);
+    Link ans;
+    ans.components_.resize(nComp);
 
     // We need to allocate the crossings first.
     // Alas, these appear last in the input.
@@ -121,8 +119,7 @@ Link* Link::fromJenkins(Iterator begin, Iterator end) {
             delete[] compInput[i];
         delete[] compInput;
         delete[] compLen;
-        delete ans;
-        return nullptr;
+        throw InvalidArgument("fromJenkins(): invalid component data");
     }
 
     // *Now* we have the number of crossings.
@@ -132,9 +129,7 @@ Link* Link::fromJenkins(Iterator begin, Iterator end) {
             delete[] compInput[i];
         delete[] compInput;
         delete[] compLen;
-        delete ans;
-        std::cerr << "fromJenkins(): odd number of total steps" << std::endl;
-        return nullptr;
+        throw InvalidArgument("fromJenkins(): odd number of total steps");
     }
     unsigned nCross = foundCrossings / 2;
 
@@ -176,12 +171,11 @@ Link* Link::fromJenkins(Iterator begin, Iterator end) {
             delete[] compInput[i];
         delete[] compInput;
         delete[] compLen;
-        delete ans;
-        return nullptr;
+        throw InvalidArgument("fromJenkins(): invalid crossing data");
     }
 
     for (i = 0; i < nCross; ++i)
-        ans->crossings_.push_back(tmpCross[i]);
+        ans.crossings_.push_back(tmpCross[i]);
     delete[] tmpCross;
 
     // Finally, we can connect the crossings together by following the
@@ -201,18 +195,18 @@ Link* Link::fromJenkins(Iterator begin, Iterator end) {
             endStrand = (compInput[c][i == compLen[c] - 1 ? 1 : 2 * i + 3] > 0 ?
                 1 : 0);
 
-            if (ans->crossings_[startCross]->next_[startStrand]) {
+            if (ans.crossings_[startCross]->next_[startStrand]) {
                 broken = true;
                 std::cerr << "fromJenkins(): multiple visits to "
                     << (startStrand == 1 ? "upper" : "lower")
                     << " strand of crossing " << startCross << std::endl;
                 break;
             }
-            ans->crossings_[startCross]->next_[startStrand] =
-                ans->crossings_[endCross]->strand(endStrand);
+            ans.crossings_[startCross]->next_[startStrand] =
+                ans.crossings_[endCross]->strand(endStrand);
         }
 
-        ans->components_[c] = ans->crossings_[compInput[c][0]]->strand(
+        ans.components_[c] = ans.crossings_[compInput[c][0]]->strand(
             compInput[c][1] > 0 ? 1 : 0);
     }
 
@@ -222,15 +216,13 @@ Link* Link::fromJenkins(Iterator begin, Iterator end) {
     delete[] compInput;
     delete[] compLen;
 
-    if (broken) {
-        // Invalid input.
-        delete ans;
-        return nullptr;
-    }
+    if (broken)
+        throw InvalidArgument(
+            "fromJenkins(): invalid connections between crossings");
 
     // Set up prev links to match next links.
     StrandRef next;
-    for (Crossing* cross : ans->crossings_) {
+    for (Crossing* cross : ans.crossings_) {
         next = cross->next_[0];
         next.crossing()->prev_[next.strand()] = cross->lower();
 

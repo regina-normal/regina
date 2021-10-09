@@ -236,34 +236,33 @@ class CoversTest : public CppUnit::TestFixture {
                   "Z + Z_139", "Z + Z_1838", "Z + Z_2782" },
                 "Conway knot");
 
-            Link* link19 = regina::Link::fromKnotSig(
+            Link link19 = regina::Link::fromKnotSig(
                 "tabcadefghdijklmnoipkjplmefqrghbcsonqrsvvvvvvb-VzgZBa");
-            compareResults<3>(*link19, "19-crossing knot");
-            verifyResults<4>(*link19,
+            compareResults<3>(link19, "19-crossing knot");
+            verifyResults<4>(link19,
                 { "2 Z + Z_2" , "Z + Z_9 + Z_39411" },
                 "19-crossing knot");
-            verifyResults<5>(*link19,
+            verifyResults<5>(link19,
                 { "2 Z", "3 Z", "Z + 2 Z_6691" },
                 "19-crossing knot");
-            verifyResults<6>(*link19,
+            verifyResults<6>(link19,
                 { "2 Z + Z_157 + Z_628", "2 Z + Z_2 + Z_12", "2 Z + Z_4379",
                   "2 Z + Z_8758", "Z + 2 Z_2 + Z_314 + Z_1375006",
                   "Z + 2 Z_4 + Z_1819388", "Z + Z_628 + Z_324048" },
                 "19-crossing knot");
-            delete link19;
 
-            Link* link20 = regina::Link::fromKnotSig(
+            Link link20 = regina::Link::fromKnotSig(
                 "uabcdbefgecdhifgjklmnhijopqlkqrsaoprtnmtsRktvvvfFyWJTFl");
-            compareResults<3>(*link20, "20-crossing knot");
-            verifyResults<4>(*link20,
+            compareResults<3>(link20, "20-crossing knot");
+            verifyResults<4>(link20,
                 { "2 Z + Z_140", "Z + Z_25 + Z_91675" },
                 "20-crossing knot");
-            verifyResults<5>(*link20,
+            verifyResults<5>(link20,
                 { "2 Z", "2 Z + Z_2", "3 Z + 2 Z_2", "3 Z + 2 Z_2",
                   "3 Z + Z_2 + Z_6", "3 Z + Z_2 + Z_6", "3 Z + Z_3",
                   "4 Z + Z_4", "Z + 2 Z_15061", "Z + Z_6 + Z_8638440" },
                 "20-crossing knot");
-            verifyResults<6>(*link20,
+            verifyResults<6>(link20,
                 { "2 Z + 2 Z_12", "2 Z + 2 Z_3", "2 Z + 2 Z_3", "2 Z + 2 Z_3",
                   "2 Z + 3 Z_2 + Z_36", "2 Z + 3 Z_2 + Z_36",
                   "2 Z + Z_2 + Z_114", "2 Z + Z_2 + Z_12", "2 Z + Z_2 + Z_12",
@@ -276,7 +275,6 @@ class CoversTest : public CppUnit::TestFixture {
                   "Z + 2 Z_2 + Z_248 + Z_40176",
                   "Z + 2 Z_2 + Z_496 + Z_1818832", "Z + Z_56161980" },
                 "20-crossing knot");
-            delete link20;
         }
 
         template <int index>

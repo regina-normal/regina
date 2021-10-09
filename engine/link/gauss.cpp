@@ -63,7 +63,7 @@
 
 namespace regina {
 
-Link* Link::fromGauss(const std::string& s) {
+Link Link::fromGauss(const std::string& s) {
     std::istringstream in(s);
     std::vector<int> terms;
 
@@ -73,14 +73,14 @@ Link* Link::fromGauss(const std::string& s) {
         if (! in) {
             if (in.eof())
                 break;
-            return nullptr;
+            throw InvalidArgument("fromGauss(): invalid character");
         }
         terms.push_back(i);
     }
     return fromGauss(terms.begin(), terms.end());
 }
 
-Link* Link::fromOrientedGauss(const std::string& s) {
+Link Link::fromOrientedGauss(const std::string& s) {
     std::vector<std::string> terms;
     basicTokenise(std::back_inserter(terms), s);
     return fromOrientedGauss(terms.begin(), terms.end());

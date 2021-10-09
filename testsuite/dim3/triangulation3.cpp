@@ -269,12 +269,9 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             rp2xs1 = Example<3>::rp2xs1();
 
-            {
-                Link* k = Link::fromKnotSig(
-                    "sabcdeafghidejklmnopqgcbfqhinmjrpolkrlLvnvvNdM9aE");
-                knot18 = k->complement();
-                delete k;
-            }
+            knot18 = Link::fromKnotSig(
+                "sabcdeafghidejklmnopqgcbfqhinmjrpolkrlLvnvvNdM9aE").
+                complement();
 
             gieseking = Example<3>::gieseking();
 

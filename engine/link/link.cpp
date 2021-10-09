@@ -135,20 +135,35 @@ Link& Link::operator = (Link&& src) {
 }
 
 Link::Link(const std::string& description) {
-    Link* attempt;
+    try {
+        *this = fromKnotSig(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
 
-    if ((attempt = fromKnotSig(description)))
-        swap(*attempt);
-    else if ((attempt = fromOrientedGauss(description)))
-        swap(*attempt);
-    else if ((attempt = fromGauss(description)))
-        swap(*attempt);
-    else if ((attempt = fromDT(description)))
-        swap(*attempt);
-    else if ((attempt = fromPD(description)))
-        swap(*attempt);
+    try {
+        *this = fromOrientedGauss(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
 
-    delete attempt;
+    try {
+        *this = fromGauss(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+
+    try {
+        *this = fromDT(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+
+    try {
+        *this = fromPD(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
 }
 
 bool Link::connected(const Crossing* a, const Crossing* b) const {

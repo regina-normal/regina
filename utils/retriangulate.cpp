@@ -84,21 +84,21 @@ void process(const regina::Triangulation<dim>& tri) {
         std::cerr << "Found " << nSolns << " triangulation(s)." << std::endl;
 }
 
-void process(regina::Link* knot) {
+void process(const regina::Link& knot) {
     unsigned long nSolns = 0;
     bool nonMinimal = false;
     std::string simpler;
 
-    knot->rewrite(argHeight, argThreads, nullptr /* tracker */,
+    knot.rewrite(argHeight, argThreads, nullptr /* tracker */,
         [&nSolns, &nonMinimal, &simpler, knot](
                 const std::string& sig, const regina::Link& k) {
-            if (k.size() > knot->size())
+            if (k.size() > knot.size())
                 return false;
 
             std::lock_guard<std::mutex> lock(mutex);
             std::cout << sig << std::endl;
 
-            if (k.size() < knot->size()) {
+            if (k.size() < knot.size()) {
                 nonMinimal = true;
                 simpler = sig;
                 return true;
@@ -107,8 +107,6 @@ void process(regina::Link* knot) {
             ++nSolns;
             return false;
         });
-
-    delete knot;
 
     if (nonMinimal) {
         std::cerr << "Knot is non-minimal!" << std::endl;
@@ -214,10 +212,9 @@ int main(int argc, const char* argv[]) {
                 break;
             }
             case FLAVOUR_KNOT: {
-                auto knot = regina::Link::fromKnotSig(sig);
-                if (knot) {
-                    process(knot);
-                } else {
+                try {
+                    process(regina::Link::fromKnotSig(sig));
+                } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "knot signature.\n";
                     broken = true;

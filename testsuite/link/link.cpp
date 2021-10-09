@@ -2286,39 +2286,40 @@ class LinkTest : public CppUnit::TestFixture {
                 }
             }
 
-            Link* recon = Link::fromKnotSig(sig);
-            if (! recon) {
+            try {
+                Link recon = Link::fromKnotSig(sig);
+
+                if (recon.size() != l.size()) {
+                    std::ostringstream msg;
+                    msg << name << ": knotSig reconstruction has "
+                        "different size.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.countComponents() != l.countComponents()) {
+                    std::ostringstream msg;
+                    msg << name << ": knotSig reconstruction has "
+                        "different number of components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.knotSig(reflect, reverse) != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": knotSig reconstruction has "
+                        "different knotSig.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (l.size() <= 20 && ! reflect) {
+                    if (recon.jones() != l.jones()) {
+                        std::ostringstream msg;
+                        msg << name << ": knotSig reconstruction has "
+                            "different Jones polynomial.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": cannot reconstruct from knotSig.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (recon->size() != l.size()) {
-                std::ostringstream msg;
-                msg << name << ": knotSig reconstruction has "
-                    "different size.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (recon->countComponents() != l.countComponents()) {
-                std::ostringstream msg;
-                msg << name << ": knotSig reconstruction has "
-                    "different number of components.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (recon->knotSig(reflect, reverse) != sig) {
-                std::ostringstream msg;
-                msg << name << ": knotSig reconstruction has "
-                    "different knotSig.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (l.size() <= 20 && ! reflect) {
-                if (recon->jones() != l.jones()) {
-                    std::ostringstream msg;
-                    msg << name << ": knotSig reconstruction has "
-                        "different Jones polynomial.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-            delete recon;
         }
 
         void verifyKnotSig(const Link& l, const char* name) {
@@ -2365,59 +2366,60 @@ class LinkTest : public CppUnit::TestFixture {
             verifyKnotSig(trefoilLeft, false, true, "dabcabcva", "LH Trefoil");
 
             // A link where all four boolean options give different sigs.
-            Link* l = Link::fromOrientedGauss(
+            Link l = Link::fromOrientedGauss(
                 "-<6 +>3 -<5 +>2 -<4 -<1 +>1 +>5 -<3 +>6 -<2 +>4");
-            verifyKnotSig(*l, true,  true,  "gaabcdefbcfedPQ--",
+            verifyKnotSig(l, true,  true,  "gaabcdefbcfedPQ--",
                 "Antisymmetric knot");
-            verifyKnotSig(*l, true,  false, "gaabcdefdcbefPQ--",
+            verifyKnotSig(l, true,  false, "gaabcdefdcbefPQ--",
                 "Antisymmetric knot");
-            verifyKnotSig(*l, false, true,  "gaabcdefbcfedPQaa",
+            verifyKnotSig(l, false, true,  "gaabcdefbcfedPQaa",
                 "Antisymmetric knot");
-            verifyKnotSig(*l, false, false, "gaabcdefdcbefPQaa",
+            verifyKnotSig(l, false, false, "gaabcdefdcbefPQaa",
                 "Antisymmetric knot");
-            delete l;
         }
 
         void verifyDT(const Link& l, bool alpha, const char* name) {
             std::string code = l.dt(alpha);
 
-            Link* recon = Link::fromDT(code);
-            if (! recon) {
+            try {
+                Link recon = Link::fromDT(code);
+
+                if (recon.size() != l.size()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has "
+                        "different size.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.countComponents() != l.countComponents()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has "
+                        "different number of components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // For prime knots, the only possible ambiguity is reflection.
+                if (recon.knotSig(false) != l.knotSig(false))
+                    recon.reflect();
+
+                if (recon.knotSig(false) != l.knotSig(false)) {
+                    std::ostringstream msg;
+                    msg << name <<
+                        ": reconstruction has different knot signature.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (l.size() <= 20) {
+                    if (recon.homfly() != l.homfly()) {
+                        std::ostringstream msg;
+                        msg << name << ": reconstruction has "
+                            "different HOMFLY-PT polynomial.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (recon->size() != l.size()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has "
-                    "different size.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (recon->countComponents() != l.countComponents()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has "
-                    "different number of components.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            // For prime knots, the only possible ambiguity is reflection.
-            if (recon->knotSig(false) != l.knotSig(false))
-                recon->reflect();
-
-            if (recon->knotSig(false) != l.knotSig(false)) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has different knot signature.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (l.size() <= 20) {
-                if (recon->homfly() != l.homfly()) {
-                    std::ostringstream msg;
-                    msg << name << ": reconstruction has "
-                        "different HOMFLY-PT polynomial.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-            delete recon;
         }
 
         void verifyDT(const Link& l, const char* name) {
@@ -2450,42 +2452,44 @@ class LinkTest : public CppUnit::TestFixture {
         void verifyGauss(const Link& l, const char* name) {
             std::string code = l.gauss();
 
-            Link* recon = Link::fromGauss(code);
-            if (! recon) {
+            try {
+                Link recon = Link::fromGauss(code);
+
+                if (recon.size() != l.size()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has different size.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.countComponents() != l.countComponents()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has "
+                        "different number of components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // For prime knots, the only possible ambiguity is reflection.
+                if (recon.knotSig(false) != l.knotSig(false))
+                    recon.reflect();
+
+                if (recon.knotSig(false) != l.knotSig(false)) {
+                    std::ostringstream msg;
+                    msg << name <<
+                        ": reconstruction has different knot signature.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (l.size() <= 20) {
+                    if (recon.homfly() != l.homfly()) {
+                        std::ostringstream msg;
+                        msg << name << ": reconstruction has "
+                            "different HOMFLY-PT polynomial.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (recon->size() != l.size()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has different size.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (recon->countComponents() != l.countComponents()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has "
-                    "different number of components.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            // For prime knots, the only possible ambiguity is reflection.
-            if (recon->knotSig(false) != l.knotSig(false))
-                recon->reflect();
-
-            if (recon->knotSig(false) != l.knotSig(false)) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has different knot signature.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (l.size() <= 20) {
-                if (recon->homfly() != l.homfly()) {
-                    std::ostringstream msg;
-                    msg << name << ": reconstruction has "
-                        "different HOMFLY-PT polynomial.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-            delete recon;
         }
 
         void gauss() {
@@ -2512,37 +2516,38 @@ class LinkTest : public CppUnit::TestFixture {
         void verifyOrientedGauss(const Link& l, const char* name) {
             std::string code = l.orientedGauss();
 
-            Link* recon = Link::fromOrientedGauss(code);
-            if (! recon) {
+            try {
+                Link recon = Link::fromOrientedGauss(code);
+
+                if (recon.size() != l.size()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has different size.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.countComponents() != l.countComponents()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has "
+                        "different number of components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.orientedGauss() != code) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has different code.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (l.size() <= 20) {
+                    if (recon.homfly() != l.homfly()) {
+                        std::ostringstream msg;
+                        msg << name << ": reconstruction has "
+                            "different HOMFLY-PT polynomial.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (recon->size() != l.size()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has different size.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (recon->countComponents() != l.countComponents()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has "
-                    "different number of components.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (recon->orientedGauss() != code) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has different code.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (l.size() <= 20) {
-                if (recon->homfly() != l.homfly()) {
-                    std::ostringstream msg;
-                    msg << name << ": reconstruction has "
-                        "different HOMFLY-PT polynomial.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-            delete recon;
         }
 
         void orientedGauss() {
@@ -2570,51 +2575,53 @@ class LinkTest : public CppUnit::TestFixture {
             // the "expect" argument should be the resulting diagram.
             std::string code = link.pd();
 
-            Link* recon = Link::fromPD(code);
-            if (! recon) {
+            try {
+                Link recon = Link::fromPD(code);
+
+                if (recon.size() != expect.size()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has incorrect size.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.countComponents() != expect.countComponents()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has "
+                        "different number of components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                for (size_t i = 0; i < recon.countComponents(); ++i) {
+                    if (recon.writheOfComponent(i) !=
+                            expect.writheOfComponent(i)) {
+                        std::ostringstream msg;
+                        msg << name << ": reconstruction has "
+                            "different writhe for component " << i << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                if (recon.writhe() != expect.writhe()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has different writhe.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.linking() != expect.linking()) {
+                    std::ostringstream msg;
+                    msg << name <<
+                        ": reconstruction has different linking number.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (expect.size() <= 20) {
+                    if (recon.homfly() != expect.homfly()) {
+                        std::ostringstream msg;
+                        msg << name << ": reconstruction has "
+                            "different HOMFLY-PT polynomial.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": cannot reconstruct from code.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (recon->size() != expect.size()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has incorrect size.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (recon->countComponents() != expect.countComponents()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has "
-                    "different number of components.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            for (size_t i = 0; i < recon->countComponents(); ++i) {
-                if (recon->writheOfComponent(i) !=
-                        expect.writheOfComponent(i)) {
-                    std::ostringstream msg;
-                    msg << name << ": reconstruction has "
-                        "different writhe for component " << i << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-            if (recon->writhe() != expect.writhe()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has different writhe.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (recon->linking() != expect.linking()) {
-                std::ostringstream msg;
-                msg << name << ": reconstruction has different linking number.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (expect.size() <= 20) {
-                if (recon->homfly() != expect.homfly()) {
-                    std::ostringstream msg;
-                    msg << name << ": reconstruction has "
-                        "different HOMFLY-PT polynomial.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-            delete recon;
         }
 
         void verifyPDCode(const Link& link, const char* name) {

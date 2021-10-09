@@ -51,14 +51,13 @@ namespace detail {
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
-            Link* t = Link::fromKnotSig(sig);
-            if (t->size() == 0) {
+            Link t = Link::fromKnotSig(sig);
+            if (t.size() == 0) {
                 // We have a zero-crossing unknot.
                 // There is only one move we can perform on this.
-                Link alt(*t, false);
+                Link alt(t, false);
                 alt.r1(regina::StrandRef(), 0, 1 /* sign */, false, true);
                 retriang->candidate(alt, sig);
-                delete t;
                 return;
             }
 
@@ -66,66 +65,58 @@ namespace detail {
             size_t i;
             int strand, side, sign;
 
-            for (i = 0; i < t->size(); ++i)
-                if (t->r1(t->crossing(i), true, false)) {
-                    Link alt(*t, false);
+            for (i = 0; i < t.size(); ++i)
+                if (t.r1(t.crossing(i), true, false)) {
+                    Link alt(t, false);
                     alt.r1(alt.crossing(i), false, true);
-                    if (retriang->candidate(alt, sig)) {
-                        delete t;
+                    if (retriang->candidate(alt, sig))
                         return;
-                    }
                     // We cannot use alt from here, since candidate() might
                     // have changed it.
                 }
 
-            for (i = 0; i < t->size(); ++i)
-                if (t->r2(t->crossing(i), true, false)) {
-                    Link alt(*t, false);
+            for (i = 0; i < t.size(); ++i)
+                if (t.r2(t.crossing(i), true, false)) {
+                    Link alt(t, false);
                     alt.r2(alt.crossing(i), false, true);
-                    if (retriang->candidate(alt, sig)) {
-                        delete t;
+                    if (retriang->candidate(alt, sig))
                         return;
-                    }
                     // We cannot use alt from here, since candidate() might
                     // have changed it.
                 }
 
-            for (i = 0; i < t->size(); ++i)
+            for (i = 0; i < t.size(); ++i)
                 for (side = 0; side < 2; ++side)
-                    if (t->r3(t->crossing(i), side, true, false)) {
-                        Link alt(*t, false);
+                    if (t.r3(t.crossing(i), side, true, false)) {
+                        Link alt(t, false);
                         alt.r3(alt.crossing(i), side, false, true);
-                        if (retriang->candidate(alt, sig)) {
-                            delete t;
+                        if (retriang->candidate(alt, sig))
                             return;
-                        }
                         // We cannot use alt from here, since candidate() might
                         // have changed it.
                     }
 
             // R1 twist moves on arcs are always valid.
-            if (t->size() < maxSize)
-                for (i = 0; i < t->size(); ++i)
+            if (t.size() < maxSize)
+                for (i = 0; i < t.size(); ++i)
                     for (strand = 0; strand < 2; ++strand)
                         for (side = 0; side < 2; ++side)
                             for (sign = -1; sign <= 1; sign += 2) {
-                                Link alt(*t, false);
+                                Link alt(t, false);
                                 alt.r1(alt.crossing(i)->strand(strand),
                                     side, sign, false, true);
-                                if (retriang->candidate(alt, sig)) {
-                                    delete t;
+                                if (retriang->candidate(alt, sig))
                                     return;
-                                }
                                 // We cannot use alt from here, since
                                 // candidate() might have changed it.
                             }
 
-            if (t->size() + 1 < maxSize) {
+            if (t.size() + 1 < maxSize) {
                 StrandRef upperArc, lowerArc;
                 int upperSide, lowerSide;
-                for (i = 0; i < t->size(); ++i)
+                for (i = 0; i < t.size(); ++i)
                     for (strand = 0; strand < 2; ++strand) {
-                        upperArc = t->crossing(i)->strand(strand);
+                        upperArc = t.crossing(i)->strand(strand);
                         for (upperSide = 0; upperSide < 2; ++upperSide) {
                             // Walk around the 2-cell containing upperArc.
                             // This code follows the (better documented)
@@ -199,22 +190,18 @@ namespace detail {
                                 // Make sure we're on the correct side.
                                 lowerSide = (forward ? 0 : 1);
 
-                                Link alt(*t, false);
+                                Link alt(t, false);
                                 alt.r2(alt.translate(upperArc), upperSide,
                                     alt.translate(lowerArc), lowerSide,
                                     false, true);
-                                if (retriang->candidate(alt, sig)) {
-                                    delete t;
+                                if (retriang->candidate(alt, sig))
                                     return;
-                                }
                                 // We cannot use alt from here, since
                                 // candidate() might have changed it.
                             }
                         }
                     }
             }
-
-            delete t;
         }
     };
 } // namespace detail
