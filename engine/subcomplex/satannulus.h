@@ -124,7 +124,7 @@ class Matrix2;
  * \ingroup subcomplex
  */
 struct SatAnnulus {
-    Tetrahedron<3>* tet[2];
+    const Tetrahedron<3>* tet[2];
         /**< Describes which tetrahedra provide the first and second
              triangles.  See the class notes for details. */
     Perm<4> roles[2];
@@ -150,7 +150,8 @@ struct SatAnnulus {
      * @param t1 the tetrahedron to assign to \a tet[1].
      * @param r1 the permutation to assign to \a roles[1].
      */
-    SatAnnulus(Tetrahedron<3>* t0, Perm<4> r0, Tetrahedron<3>* t1, Perm<4> r1);
+    SatAnnulus(const Tetrahedron<3>* t0, Perm<4> r0,
+        const Tetrahedron<3>* t1, Perm<4> r1);
     /**
      * Sets this to be a copy of the given structure.
      *
@@ -383,7 +384,7 @@ struct SatAnnulus {
      * representation.
      */
     void transform(const Triangulation<3>& originalTri,
-            const Isomorphism<3>& iso, Triangulation<3>& newTri);
+            const Isomorphism<3>& iso, const Triangulation<3>& newTri);
     /**
      * Returns the image of this annulus representation under the given
      * isomorphism between triangulations.  This annulus representation
@@ -396,10 +397,13 @@ struct SatAnnulus {
      * representation.
      */
     SatAnnulus image(const Triangulation<3>& originalTri,
-            const Isomorphism<3>& iso, Triangulation<3>& newTri) const;
+            const Isomorphism<3>& iso, const Triangulation<3>& newTri) const;
 
     /**
-     * Attaches a layered solid torus to the this saturated annulus.
+     * Attaches a layered solid torus to the given saturated annulus.
+     * Instead of passing a SatAnnulus (which only offers const access
+     * to the underlying triangluation), you must pass the individual
+     * tetrahedra and permutations that describe it.
      *
      * The layered solid torus will be attached so that the
      * given values \a alpha and \a beta describe how the
@@ -420,14 +424,17 @@ struct SatAnnulus {
      * \pre The given value \a alpha is not zero.
      * \pre The given values \a alpha and \a beta are coprime.
      *
-     * @param tri the triangulation into which the new tetrahedra should
-     * be inserted.
+     * @param t0 the tetrahedron corresponding to SatAnnulus::tet[0].
+     * @param r0 the permutation corresponding to SatAnnulus::roles[0].
+     * @param t1 the tetrahedron corresponding to SatAnnulus::tet[1].
+     * @param r1 the permutation corresponding to SatAnnulus::roles[1].
      * @param alpha describes how the meridinal disc of the torus should
      * cut the vertical edges.  This may be positive or negative.
      * @param beta describes how the meridinal disc of the torus should
      * cut the horizontal edges.  Again this may be positive or negative.
      */
-    void attachLST(Triangulation<3>* tri, long alpha, long beta) const;
+    static void attachLST(Tetrahedron<3>* t0, Perm<4> r0,
+        Tetrahedron<3>* t1, Perm<4> r1, long alpha, long beta);
 };
 
 // Inline functions for SatAnnulus
@@ -435,8 +442,8 @@ struct SatAnnulus {
 inline SatAnnulus::SatAnnulus() : tet { nullptr, nullptr } {
 }
 
-inline SatAnnulus::SatAnnulus(Tetrahedron<3>* t0, Perm<4> r0,
-        Tetrahedron<3>* t1, Perm<4> r1) {
+inline SatAnnulus::SatAnnulus(const Tetrahedron<3>* t0, Perm<4> r0,
+        const Tetrahedron<3>* t1, Perm<4> r1) {
     tet[0] = t0; tet[1] = t1;
     roles[0] = r0; roles[1] = r1;
 }
@@ -468,9 +475,7 @@ inline SatAnnulus SatAnnulus::verticalReflection() const {
 }
 
 inline void SatAnnulus::reflectHorizontal() {
-    Tetrahedron<3>* t = tet[0];
-    tet[0] = tet[1];
-    tet[1] = t;
+    std::swap(tet[0], tet[1]);
 
     Perm<4> r = roles[0];
     roles[0] = roles[1] * Perm<4>(0, 1);
@@ -483,9 +488,7 @@ inline SatAnnulus SatAnnulus::horizontalReflection() const {
 }
 
 inline void SatAnnulus::rotateHalfTurn() {
-    Tetrahedron<3>* t = tet[0];
-    tet[0] = tet[1];
-    tet[1] = t;
+    std::swap(tet[0], tet[1]);
 
     Perm<4> r = roles[0];
     roles[0] = roles[1];
@@ -497,7 +500,7 @@ inline SatAnnulus SatAnnulus::halfTurnRotation() const {
 }
 
 inline SatAnnulus SatAnnulus::image(const Triangulation<3>& originalTri,
-        const Isomorphism<3>& iso, Triangulation<3>& newTri) const {
+        const Isomorphism<3>& iso, const Triangulation<3>& newTri) const {
     SatAnnulus a(*this);
     a.transform(originalTri, iso, newTri);
     return a;

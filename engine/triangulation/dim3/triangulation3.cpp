@@ -47,16 +47,19 @@ namespace regina {
 
 Triangulation<3>::Triangulation(const std::string& description) :
         strictAngleStructure_(false), generalAngleStructure_(false) {
-    Triangulation<3>* attempt;
-
-    if ((attempt = fromIsoSig(description)))
+    if (auto attempt = fromIsoSig(description)) {
         swap(*attempt);
-    else if ((attempt = rehydrate(description)))
+        return;
+    }
+    try {
+        *this = rehydrate(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+    if (auto attempt = fromSnapPea(description)) {
         swap(*attempt);
-    else if ((attempt = fromSnapPea(description)))
-        swap(*attempt);
-
-    delete attempt;
+        return;
+    }
 }
 
 Triangulation<3>::Triangulation(const Link& link) :

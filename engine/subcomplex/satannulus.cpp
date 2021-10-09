@@ -199,7 +199,7 @@ bool SatAnnulus::isTwoSidedTorus() const {
 }
 
 void SatAnnulus::transform(const Triangulation<3>& originalTri,
-        const Isomorphism<3>& iso, Triangulation<3>& newTri) {
+        const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
     unsigned which;
     unsigned long tetID;
     for (which = 0; which < 2; which++) {
@@ -209,7 +209,8 @@ void SatAnnulus::transform(const Triangulation<3>& originalTri,
     }
 }
 
-void SatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
+void SatAnnulus::attachLST(Tetrahedron<3>* t0, Perm<4> r0,
+        Tetrahedron<3>* t1, Perm<4> r1, long alpha, long beta) {
     // Save ourselves headaches later.  Though this should never happen;
     // see the preconditions.
     if (alpha == 0)
@@ -223,8 +224,7 @@ void SatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
 
     // Pull out the degenerate case.
     if (alpha == 2 && beta == 1) {
-        tet[0]->join(roles[0][3], tet[1],
-            roles[1] * Perm<4>(0, 1) * roles[0].inverse());
+        t0->join(r0[3], t1, r1 * Perm<4>(0, 1) * r0.inverse());
         return;
     }
 
@@ -294,17 +294,18 @@ void SatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
         }
     }
 
-    Tetrahedron<3>* lst = tri->insertLayeredSolidTorus(cuts0, cuts1);
+    Tetrahedron<3>* lst = t0->triangulation().insertLayeredSolidTorus(
+        cuts0, cuts1);
 
     // The boundary of the new LST sits differently for the special
     // cases (0,1,1) and (1,1,2); see the insertLayeredSolidTorus()
     // documentation for details.
     if (cuts1 == 1) {
-        lst->join(3, tet[0], roles[0] * cutsToRoles * Perm<4>(1, 2, 0, 3));
-        lst->join(2, tet[1], roles[1] * cutsToRoles * Perm<4>(2, 1, 3, 0));
+        lst->join(3, t0, r0 * cutsToRoles * Perm<4>(1, 2, 0, 3));
+        lst->join(2, t1, r1 * cutsToRoles * Perm<4>(2, 1, 3, 0));
     } else {
-        lst->join(3, tet[0], roles[0] * cutsToRoles * Perm<4>(0, 1, 2, 3));
-        lst->join(2, tet[1], roles[1] * cutsToRoles * Perm<4>(1, 0, 3, 2));
+        lst->join(3, t0, r0 * cutsToRoles * Perm<4>(0, 1, 2, 3));
+        lst->join(2, t1, r1 * cutsToRoles * Perm<4>(1, 0, 3, 2));
     }
 }
 

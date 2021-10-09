@@ -642,7 +642,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
             }
 
-            auto std = StandardTriangulation::recognise(&t);
+            auto std = StandardTriangulation::recognise(t);
             if (! std)
                 ans = "<unrecognised triangulation>";
             else {
@@ -914,7 +914,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
 
                 std::string link;
-                auto std = StandardTriangulation::recognise(&t);
+                auto std = StandardTriangulation::recognise(t);
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
@@ -944,7 +944,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
 
                 std::string link;
-                auto std = StandardTriangulation::recognise(&t);
+                auto std = StandardTriangulation::recognise(t);
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
@@ -972,7 +972,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             Triangulation<3> t(*(tri.vertex(whichVertex)->buildLink()));
             t.intelligentSimplify();
 
-            auto std = StandardTriangulation::recognise(&t);
+            auto std = StandardTriangulation::recognise(t);
             if (! std)
                 link = "<unrecognised triangulation>";
             else {

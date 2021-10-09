@@ -53,7 +53,7 @@ std::optional<LayeredLensSpace> LayeredLensSpace::recognise(
         if (torus) {
             // We have found a layered solid torus; either this makes the
             // layered lens space or nothing makes the layered lens space.
-            Tetrahedron<3>* tet = torus->topLevel();
+            const Tetrahedron<3>* tet = torus->topLevel();
             int tf0 = torus->topFace(0);
             int tf1 = torus->topFace(1);
             if (tet->adjacentTetrahedron(tf0) != tet)

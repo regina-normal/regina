@@ -525,7 +525,7 @@ class SatBlock : public Output<SatBlock> {
          * @param list the list in which to search.
          * @return \c true if and only if the given tetrahedron was found.
          */
-        static bool isBad(Tetrahedron<3>* t, const TetList& list);
+        static bool isBad(const Tetrahedron<3>* t, const TetList& list);
         /**
          * Determines whether the given tetrahedron is contained within
          * the given list.
@@ -543,7 +543,7 @@ class SatBlock : public Output<SatBlock> {
          * @return \c true if and only if the given tetrahedron was found.
          */
         template <class List>
-        static bool isBad(Tetrahedron<3>* t, const List& list) {
+        static bool isBad(const Tetrahedron<3>* t, const List& list) {
             for (typename List::const_iterator it = list.begin();
                     it != list.end(); ++it)
                 if (*it == t)
@@ -567,7 +567,7 @@ class SatBlock : public Output<SatBlock> {
          * @param test the tetrahedron pointer to test.
          * @return \c true if \a test is null, or \c false otherwise.
          */
-        static bool notUnique(Tetrahedron<3>* test);
+        static bool notUnique(const Tetrahedron<3>* test);
         /**
          * Determines whether the given tetrahedron pointer is null
          * or equal to another from the given list.
@@ -582,7 +582,8 @@ class SatBlock : public Output<SatBlock> {
          * @return \c true if \a test is null or equal to \a other1,
          * or \c false otherwise.
          */
-        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1);
+        static bool notUnique(const Tetrahedron<3>* test,
+            const Tetrahedron<3>* other1);
         /**
          * Determines whether the given tetrahedron pointer is null
          * or equal to another from the given list.
@@ -598,8 +599,8 @@ class SatBlock : public Output<SatBlock> {
          * @return \c true if \a test is null or equal to \a other1 or
          * \a other2, or \c false otherwise.
          */
-        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-            Tetrahedron<3>* other2);
+        static bool notUnique(const Tetrahedron<3>* test,
+            const Tetrahedron<3>* other1, const Tetrahedron<3>* other2);
         /**
          * Determines whether the given tetrahedron pointer is null
          * or equal to another from the given list.
@@ -616,8 +617,9 @@ class SatBlock : public Output<SatBlock> {
          * @return \c true if \a test is null or equal to \a other1,
          * \a other2 or \a other3, or \c false otherwise.
          */
-        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-            Tetrahedron<3>* other2, Tetrahedron<3>* other3);
+        static bool notUnique(const Tetrahedron<3>* test,
+            const Tetrahedron<3>* other1, const Tetrahedron<3>* other2,
+            const Tetrahedron<3>* other3);
         /**
          * Determines whether the given tetrahedron pointer is null
          * or equal to another from the given list.
@@ -635,8 +637,9 @@ class SatBlock : public Output<SatBlock> {
          * @return \c true if \a test is null or equal to \a other1,
          * \a other2, \a other3 or \a other4, or \c false otherwise.
          */
-        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-            Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4);
+        static bool notUnique(const Tetrahedron<3>* test,
+            const Tetrahedron<3>* other1, const Tetrahedron<3>* other2,
+            const Tetrahedron<3>* other3, const Tetrahedron<3>* other4);
 
         /**
          * Returns a new model that combines this block structure with
@@ -685,7 +688,7 @@ class SatBlock : public Output<SatBlock> {
          * block structure.
          */
         virtual void transform(const Triangulation<3>& originalTri,
-                const Isomorphism<3>& iso, Triangulation<3>& newTri);
+                const Isomorphism<3>& iso, const Triangulation<3>& newTri);
 
     private:
         /**
@@ -906,27 +909,30 @@ inline void SatBlock::setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test) {
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test) {
     return (test == nullptr);
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1) {
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
+        const Tetrahedron<3>* other1) {
     return (test == nullptr || test == other1);
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-        Tetrahedron<3>* other2) {
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
+        const Tetrahedron<3>* other1, const Tetrahedron<3>* other2) {
     return (test == nullptr || test == other1 || test == other2);
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-        Tetrahedron<3>* other2, Tetrahedron<3>* other3) {
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
+        const Tetrahedron<3>* other1, const Tetrahedron<3>* other2,
+        const Tetrahedron<3>* other3) {
     return (test == nullptr || test == other1 || test == other2 ||
         test == other3);
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-        Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4) {
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
+        const Tetrahedron<3>* other1, const Tetrahedron<3>* other2,
+        const Tetrahedron<3>* other3, const Tetrahedron<3>* other4) {
     return (test == nullptr || test == other1 || test == other2 ||
         test == other3 || test == other4);
 }

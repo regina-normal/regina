@@ -213,7 +213,7 @@ class SatLST : public SatBlock {
     protected:
         virtual SatBlock* clone() const override;
         virtual void transform(const Triangulation<3>& originalTri,
-            const Isomorphism<3>& iso, Triangulation<3>& newTri) override;
+            const Isomorphism<3>& iso, const Triangulation<3>& newTri) override;
 
     private:
         /**

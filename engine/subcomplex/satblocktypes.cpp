@@ -248,7 +248,7 @@ void SatLST::writeAbbr(std::ostream& out, bool tex) const {
 }
 
 void SatLST::transform(const Triangulation<3>& originalTri,
-        const Isomorphism<3>& iso, Triangulation<3>& newTri) {
+        const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
     // Start with the parent implementation.
     SatBlock::transform(originalTri, iso, newTri);
 
@@ -299,7 +299,7 @@ SatLST* SatLST::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
     // Make two runs through the full set of tetrahedra.
     // The first run verifies that each tetrahedron is usable.
     // The second run inserts the tetrahedra into avoidTets.
-    Tetrahedron<3>* current = annulus.tet[0];
+    const Tetrahedron<3>* current = annulus.tet[0];
     FacePair currPair = centralEdge;
     FacePair nextPair;
     while (current != lst->base()) {
@@ -689,7 +689,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
     // Make a list storing the tetrahedra from left to right around the
     // boundary ring.  We must use a list and not a set, since we will
     // rely on the tetrahedra being stored in a particular order.
-    std::list<Tetrahedron<3>*> foundSoFar;
+    std::list<const Tetrahedron<3>*> foundSoFar;
     foundSoFar.push_back(annulus.tet[0]);
     foundSoFar.push_back(middle);
     foundSoFar.push_back(annulus.tet[1]);
@@ -730,8 +730,8 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
             std::copy(foundSoFar.begin(), foundSoFar.end(),
                 std::inserter(avoidTets, avoidTets.begin()));
 
-            std::list<Tetrahedron<3>*>::const_iterator tit = foundSoFar.begin();
-            std::list<Perm<4>>::const_iterator pit = rolesSoFar.begin();
+            auto tit = foundSoFar.begin();
+            auto pit = rolesSoFar.begin();
             for (unsigned i = 0; i < length; i++) {
                 ans->annulus_[i].tet[0] = *tit++;
                 tit++; // Skip the middle tetrahedron from each block.

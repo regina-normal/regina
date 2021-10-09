@@ -698,7 +698,7 @@ class SatRegion : public Output<SatRegion> {
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
-        static bool find(Triangulation<3>& tri, bool mustBeComplete,
+        static bool find(const Triangulation<3>& tri, bool mustBeComplete,
             Action&& action, Args&&... args);
 
         /**

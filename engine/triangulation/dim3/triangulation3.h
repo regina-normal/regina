@@ -2937,16 +2937,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
          *
+         * \exception InvalidArgument the given string could not be rehydrated.
+         *
          * @param dehydration a dehydrated representation of the
          * triangulation to insert.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
-         * @return \c true if the insertion was successful, or
-         * \c false if the given string could not be rehydrated.
          *
          * @see dehydrate
          * @see rehydrate
          */
-        bool insertRehydration(const std::string& dehydration);
+        void insertRehydration(const std::string& dehydration);
 
         /*@}*/
         /**
@@ -3215,11 +3215,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         static Triangulation<3> enterTextTriangulation(std::istream& in,
                 std::ostream& out);
         /**
-         * Rehydrates the given alphabetical string into a new triangulation.
-         * See dehydrate() for more information on dehydration strings.
-         *
-         * This routine will rehydrate the given string into a new
-         * triangulation, and return this new triangulation.
+         * Rehydrates the given alphabetical string into a 3-dimensional
+         * triangulation.  See dehydrate() for more information on
+         * dehydration strings.
          *
          * The converse routine dehydrate() can be used to extract a
          * dehydration string from an existing triangulation.  Dehydration
@@ -3232,16 +3230,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
          *
+         * \exception InvalidArgument the given string could not be rehydrated.
+         *
          * @param dehydration a dehydrated representation of the
          * triangulation to construct.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
-         * @return a newly allocated triangulation if the rehydration was
-         * successful, or null if the given string could not be rehydrated.
+         * @return the rehydrated triangulation.
          *
          * @see dehydrate
          * @see insertRehydration
          */
-        static Triangulation<3>* rehydrate(const std::string& dehydration);
+        static Triangulation<3> rehydrate(const std::string& dehydration);
 
         /**
          * Extracts the tetrahedron gluings from a string that contains the

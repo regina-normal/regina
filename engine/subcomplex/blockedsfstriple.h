@@ -255,7 +255,8 @@ class BlockedSFSTriple : public StandardTriangulation {
          * @return a structure containing details of the blocked triple, or
          * no value if the given triangulation is not of this form.
          */
-        static std::optional<BlockedSFSTriple> recognise(Triangulation<3>* tri);
+        static std::optional<BlockedSFSTriple> recognise(
+            const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
          * saturated region joined to a think I-bundle via optional layerings.
@@ -263,8 +264,8 @@ class BlockedSFSTriple : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<BlockedSFSTriple> isBlockedSFSTriple(
-            Triangulation<3>* tri);
+        [[deprecated]] static std::optional<BlockedSFSTriple>
+            isBlockedSFSTriple(const Triangulation<3>& tri);
 
     private:
         /**
@@ -332,7 +333,7 @@ inline const Matrix2& BlockedSFSTriple::matchingReln(int which) const {
 }
 
 inline std::optional<BlockedSFSTriple> BlockedSFSTriple::isBlockedSFSTriple(
-        Triangulation<3>* tri) {
+        const Triangulation<3>& tri) {
     return recognise(tri);
 }
 

@@ -92,12 +92,12 @@ FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
             break;
     }
 
-    auto ans = fromTextRep(line);
-    if (ans)
-        *this = *ans;
-    else
+    try {
+        *this = fromTextRep(line);
+    } catch (const InvalidArgument& exc) {
         throw InvalidInput(
             "Incorrect formatted FacetPairing text representation");
+    }
 }
 
 template <int dim>
@@ -206,13 +206,12 @@ std::string FacetPairingBase<dim>::toTextRep() const {
 }
 
 template <int dim>
-std::optional<FacetPairing<dim>> FacetPairingBase<dim>::fromTextRep(
-        const std::string& rep) {
+FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     std::vector<std::string> tokens;
     unsigned nTokens = basicTokenise(back_inserter(tokens), rep);
 
     if (nTokens == 0 || nTokens % (2 * (dim + 1)) != 0)
-        return std::nullopt;
+        throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
     long nSimp = nTokens / (2 * (dim + 1));
     FacetPairing<dim> ans(nSimp);
@@ -222,16 +221,16 @@ std::optional<FacetPairing<dim>> FacetPairingBase<dim>::fromTextRep(
     long val;
     for (long i = 0; i < nSimp * (dim + 1); ++i) {
         if (! valueOf(tokens[2 * i], val))
-            return std::nullopt;
+            throw InvalidArgument(
+                "fromTextRep(): contains non-integer simplex");
         if (val < 0 || val > nSimp)
-            return std::nullopt;
+            throw InvalidArgument("fromTextRep(): simplex out of range");
         ans.pairs_[i].simp = val;
 
-        if (! valueOf(tokens[2 * i + 1], val)) {
-            return std::nullopt;
-        }
+        if (! valueOf(tokens[2 * i + 1], val))
+            throw InvalidArgument("fromTextRep(): contains non-integer facet");
         if (val < 0 || val >= (dim + 1))
-            return std::nullopt;
+            throw InvalidArgument("fromTextRep(): facet out of range");
         ans.pairs_[i].facet = val;
     }
 
@@ -250,7 +249,7 @@ std::optional<FacetPairing<dim>> FacetPairingBase<dim>::fromTextRep(
     }
 
     if (broken)
-        return std::nullopt;
+        throw InvalidArgument("fromTextRep(): mismatched facet pairings");
 
     // All is well.
     return ans;

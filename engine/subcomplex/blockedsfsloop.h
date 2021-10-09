@@ -196,7 +196,8 @@ class BlockedSFSLoop : public StandardTriangulation {
          * self-identified Seifert fibred space, or no value if the given
          * triangulation is not of this form.
          */
-        static std::optional<BlockedSFSLoop> recognise(Triangulation<3>* tri);
+        static std::optional<BlockedSFSLoop> recognise(
+            const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
          * saturated region joined to a think I-bundle via optional layerings.
@@ -205,7 +206,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * See recognise() for details on the parameters and return value.
          */
         [[deprecated]] static std::optional<BlockedSFSLoop> isBlockedSFSLoop(
-            Triangulation<3>* tri);
+            const Triangulation<3>& tri);
 
     private:
         /**
@@ -256,7 +257,7 @@ inline const Matrix2& BlockedSFSLoop::matchingReln() const {
 }
 
 inline std::optional<BlockedSFSLoop> BlockedSFSLoop::isBlockedSFSLoop(
-        Triangulation<3>* tri) {
+        const Triangulation<3>& tri) {
     return recognise(tri);
 }
 

@@ -227,7 +227,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * or no value if the given triangulation is not a layered torus bundle.
          */
         static std::optional<LayeredTorusBundle> recognise(
-            Triangulation<3>* tri);
+            const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation is a
          * layered torus bundle.
@@ -236,7 +236,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * See recognise() for details on the parameters and return value.
          */
         [[deprecated]] static std::optional<LayeredTorusBundle>
-            isLayeredTorusBundle(Triangulation<3>* tri);
+            isLayeredTorusBundle(const Triangulation<3>& tri);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::optional<AbelianGroup> homology() const override;
@@ -288,8 +288,8 @@ class LayeredTorusBundle : public StandardTriangulation {
          * or no value if the given triangulation is
          * not a layered torus bundle with the given <tt>T x I</tt> core.
          */
-        static std::optional<LayeredTorusBundle> hunt(Triangulation<3>* tri,
-            const TxICore& core);
+        static std::optional<LayeredTorusBundle> hunt(
+            const Triangulation<3>& tri, const TxICore& core);
 };
 
 /**
@@ -344,7 +344,7 @@ inline std::ostream& LayeredTorusBundle::writeTeXName(std::ostream& out)
 }
 
 inline std::optional<LayeredTorusBundle>
-        LayeredTorusBundle::isLayeredTorusBundle(Triangulation<3>* tri) {
+        LayeredTorusBundle::isLayeredTorusBundle(const Triangulation<3>& tri) {
     return recognise(tri);
 }
 

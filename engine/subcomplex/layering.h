@@ -113,10 +113,10 @@ class Layering {
         unsigned long size_;
             /**< The number of tetrahedra that have been layered. */
 
-        Tetrahedron<3>* oldBdryTet_[2];
+        const Tetrahedron<3>* oldBdryTet_[2];
             /**< The two tetrahedra of the old boundary (these may be
                  the same).  See the class notes for details. */
-        Tetrahedron<3>* newBdryTet_[2];
+        const Tetrahedron<3>* newBdryTet_[2];
             /**< The two tetrahedra of the new boundary (these may be
                  the same).  See the class notes for details. */
         Perm<4> oldBdryRoles_[2];
@@ -158,8 +158,8 @@ class Layering {
          * @param roles1 the permutation describing how this second triangle is
          * formed from three vertices of tetrahedron \a bdry1.
          */
-        Layering(Tetrahedron<3>* bdry0, Perm<4> roles0,
-            Tetrahedron<3>* bdry1, Perm<4> roles1);
+        Layering(const Tetrahedron<3>* bdry0, Perm<4> roles0,
+            const Tetrahedron<3>* bdry1, Perm<4> roles1);
 
         /**
          * Creates a new copy of this layering structure.
@@ -204,7 +204,7 @@ class Layering {
          * be either 0 or 1.
          * @return the requested tetrahedron of the old boundary.
          */
-        Tetrahedron<3>* oldBoundaryTet(unsigned which) const;
+        const Tetrahedron<3>* oldBoundaryTet(unsigned which) const;
         /**
          * Returns the permutations that describe the old boundary triangles.
          * These refer to the original boundary before any layerings
@@ -230,7 +230,7 @@ class Layering {
          * be either 0 or 1.
          * @return the requested tetrahedron of the new boundary.
          */
-        Tetrahedron<3>* newBoundaryTet(unsigned which) const;
+        const Tetrahedron<3>* newBoundaryTet(unsigned which) const;
         /**
          * Returns the permutations that describe the new boundary triangles.
          * These refer to the final boundary after layerings have been
@@ -416,15 +416,15 @@ class Layering {
          * @return \c true if the given boundary is found to matche the
          * new boundary of this structure, or \c false otherwise.
          */
-        bool matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
-            Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
+        bool matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
+            const Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
             Matrix2& upperReln) const;
 };
 
 // Inline functions for Layering
 
-inline Layering::Layering(Tetrahedron<3>* bdry0, Perm<4> roles0,
-        Tetrahedron<3>* bdry1, Perm<4> roles1) :
+inline Layering::Layering(const Tetrahedron<3>* bdry0, Perm<4> roles0,
+        const Tetrahedron<3>* bdry1, Perm<4> roles1) :
         size_(0),
         oldBdryTet_ { bdry0, bdry1 },
         newBdryTet_ { bdry0, bdry1 },
@@ -437,7 +437,7 @@ inline unsigned long Layering::size() const {
     return size_;
 }
 
-inline Tetrahedron<3>* Layering::oldBoundaryTet(unsigned which) const {
+inline const Tetrahedron<3>* Layering::oldBoundaryTet(unsigned which) const {
     return oldBdryTet_[which];
 }
 
@@ -445,7 +445,7 @@ inline Perm<4> Layering::oldBoundaryRoles(unsigned which) const {
     return oldBdryRoles_[which];
 }
 
-inline Tetrahedron<3>* Layering::newBoundaryTet(unsigned which) const {
+inline const Tetrahedron<3>* Layering::newBoundaryTet(unsigned which) const {
     return newBdryTet_[which];
 }
 

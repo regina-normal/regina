@@ -299,7 +299,7 @@ void Tangle::orientedGauss(std::ostream& out) const {
     }
 }
 
-Tangle* Tangle::fromOrientedGauss(const std::string& s) {
+Tangle Tangle::fromOrientedGauss(const std::string& s) {
     std::vector<std::string> terms;
     basicTokenise(std::back_inserter(terms), s);
     return fromOrientedGauss(terms.begin(), terms.end());

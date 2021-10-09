@@ -58,15 +58,8 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
 
         void testRecognition(const char* dehydration,
                 const char* triName, const char* mfdName) {
-            Triangulation<3> t;
-            if (! t.insertRehydration(dehydration)) {
-                std::ostringstream msg;
-                msg << "The standard triangulation " << triName
-                    << " could not be constructed from its dehydration.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            auto std = StandardTriangulation::recognise(&t);
+            auto std = StandardTriangulation::recognise(
+                Triangulation<3>::rehydrate(dehydration));
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -107,7 +100,7 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            auto std = StandardTriangulation::recognise(t);
+            auto std = StandardTriangulation::recognise(*t);
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName

@@ -716,18 +716,21 @@ class Tangle : public Output<Tangle> {
          * In this variant (the string variant), the given string may
          * contain additional leading or trailing whitespace.
          *
-         * \warning While this routine does some error checking on the
-         * input, it does \e not test for the viability of the diagram
-         * (i.e., whether the given crossings with the given signs actually
-         * produce a tangle of the given type with the correct endpoints).
-         * Of course non-viable inputs are not allowed, and it is currently
-         * up to the user to enforce this.
+         * \warning While this routine does some error checking on the input,
+         * these checks are not exhaustive.  In particular, it does \e not test
+         * for the viability of the diagram (i.e., whether the given crossings
+         * with the given signs actually produce a tangle of the given type
+         * with the correct endpoints).  Of course non-viable inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the input was not a valid oriented
+         * Gauss code.  As noted above, the checks performed here are
+         * not exhaustive.
          *
          * @param str an oriented Gauss code for a tangle, as described above.
-         * @return a newly constructed tangle, or \c null if the input was
-         * found to be invalid.
+         * @return the resulting tangle.
          */
-        static Tangle* fromOrientedGauss(const std::string& str);
+        static Tangle fromOrientedGauss(const std::string& str);
 
         /**
          * Creates a new tangle from an oriented Gauss code.
@@ -755,12 +758,16 @@ class Tangle : public Output<Tangle> {
          *
          * \pre The tokens in the input sequence do not contain any whitespace.
          *
-         * \warning While this routine does some error checking on the
-         * input, it does \e not test for the viability of the diagram
-         * (i.e., whether the given crossings with the given signs actually
-         * produce a tangle of the given type with the correct endpoints).
-         * Of course non-viable inputs are not allowed, and it is currently
-         * up to the user to enforce this.
+         * \warning While this routine does some error checking on the input,
+         * these checks are not exhaustive.  In particular, it does \e not test
+         * for the viability of the diagram (i.e., whether the given crossings
+         * with the given signs actually produce a tangle of the given type
+         * with the correct endpoints).  Of course non-viable inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the input did not describe a valid
+         * oriented Gauss code.  As noted above, the checks performed here
+         * are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
@@ -769,11 +776,10 @@ class Tangle : public Output<Tangle> {
          * sequence of tokens for an oriented Gauss code.
          * @param end an iterator that points past the end of the
          * sequence of tokens for an oriented Gauss code.
-         * @return a newly constructed tangle, or \c null if the input was
-         * found to be invalid.
+         * @return the resulting tangle.
          */
         template <typename Iterator>
-        static Tangle* fromOrientedGauss(Iterator begin, Iterator end);
+        static Tangle fromOrientedGauss(Iterator begin, Iterator end);
 
         /*@}*/
 

@@ -100,11 +100,11 @@ void BlockedSFSTriple::writeTextLong(std::ostream& out) const {
 }
 
 std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
-        Triangulation<3>* tri) {
+        const Triangulation<3>& tri) {
     // Basic property checks.
-    if (! tri->isClosed())
+    if (! tri.isClosed())
         return std::nullopt;
-    if (tri->countComponents() > 1)
+    if (tri.countComponents() > 1)
         return std::nullopt;
 
     // Watch out for twisted block boundaries that are incompatible with
@@ -113,14 +113,14 @@ std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
     // two incompatible Klein bottles for that matter).
     //
     // These will result in edges joined to themselves in reverse.
-    if (! tri->isValid())
+    if (! tri.isValid())
         return std::nullopt;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> end[2];
     std::unique_ptr<SatRegion> centre;
     Matrix2 matchingReln[2];
-    bool found = SatRegion::find(*tri, false,
+    bool found = SatRegion::find(tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         if (r->countBoundaryAnnuli() != 2)
             return false;

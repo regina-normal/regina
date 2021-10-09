@@ -160,20 +160,24 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             // The dehydration strings were obtained by running
             // Triangulation<3>::dehydrate() over triangulations from
             // the relevant census data files.
-            twistedKBxS1.insertRehydration("gepaacdfefefknakanx");
-            closedHypA.insertRehydration("jgpadaaeffghfiihirmxitdagbj");
-            closedHypB.insertRehydration("mnnjjcabehfgjijkijllaaqabhoehrtab");
-            closedHypC.insertRehydration("jlncbaabdghfggiiiafxhbccqei");
-            norA.insertRehydration("jofbdaabccfhgihiiffhofoxohx");
-            norB.insertRehydration("gepaacdfefefaaknnkx");
-            norTorusBundle.insertRehydration("hipabcedfggfggbgforro");
-            m003.insertRehydration("cabbbbmlq");
-            m041.insertRehydration("eahcdbddbokpv");
-            m045.insertRehydration("eahccdcddbfof");
-            s028.insertRehydration("gkfacaccdeffffohhhf");
-            s887.insertRehydration("gknaaacefffennqbnjf");
-            s955.insertRehydration("gbpaabcfdffefohfxhf");
-            genusTwoBdry.insertRehydration("eanadccdnxfno");
+            twistedKBxS1 = Triangulation<3>::rehydrate("gepaacdfefefknakanx");
+            closedHypA = Triangulation<3>::rehydrate(
+                "jgpadaaeffghfiihirmxitdagbj");
+            closedHypB = Triangulation<3>::rehydrate(
+                "mnnjjcabehfgjijkijllaaqabhoehrtab");
+            closedHypC = Triangulation<3>::rehydrate(
+                "jlncbaabdghfggiiiafxhbccqei");
+            norA = Triangulation<3>::rehydrate("jofbdaabccfhgihiiffhofoxohx");
+            norB = Triangulation<3>::rehydrate("gepaacdfefefaaknnkx");
+            norTorusBundle = Triangulation<3>::rehydrate(
+                "hipabcedfggfggbgforro");
+            m003 = Triangulation<3>::rehydrate("cabbbbmlq");
+            m041 = Triangulation<3>::rehydrate("eahcdbddbokpv");
+            m045 = Triangulation<3>::rehydrate("eahccdcddbfof");
+            s028 = Triangulation<3>::rehydrate("gkfacaccdeffffohhhf");
+            s887 = Triangulation<3>::rehydrate("gknaaacefffennqbnjf");
+            s955 = Triangulation<3>::rehydrate("gbpaabcfdffefohfxhf");
+            genusTwoBdry = Triangulation<3>::rehydrate("eanadccdnxfno");
         }
 
         void tearDown() {

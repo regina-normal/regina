@@ -605,34 +605,36 @@ int runCensus() {
         pairingList += " pairings:\n\n";
 
         std::string pairingRep;
-        while (true) {
+        while (! std::cin.eof()) {
             std::getline(std::cin, pairingRep);
 
             if (pairingRep.length() > 0) {
-                std::optional<regina::FacetPairing<dim>> pairing =
-                    regina::FacetPairing<dim>::fromTextRep(pairingRep);
-                if (! pairing) {
+                // We use a std::optional here because FacetPairing has
+                // no default constructor.
+                std::optional<regina::FacetPairing<dim>> p;
+                try {
+                    p = regina::FacetPairing<dim>::fromTextRep(pairingRep);
+                } catch (const regina::InvalidArgument&) {
                     std::cerr << "Invalid " << WORD_face << " pairing: "
                         << pairingRep << std::endl;
                     pairingList += "INVALID: ";
                     pairingList += pairingRep;
                     pairingList += '\n';
-                } else if (! pairing->isCanonical()) {
+                    continue;
+                }
+
+                if (! p->isCanonical()) {
                     std::cerr << "Non-canonical " << WORD_face
                         << " pairing: " << pairingRep << std::endl;
                     pairingList += "NON-CANONICAL: ";
                     pairingList += pairingRep;
                     pairingList += '\n';
                 } else {
-                    foundFacePairing<dim>(*pairing,
-                        pairing->findAutomorphisms(), census);
-                    pairingList += pairing->str();
+                    foundFacePairing<dim>(*p, p->findAutomorphisms(), census);
+                    pairingList += p->str();
                     pairingList += '\n';
                 }
             }
-
-            if (std::cin.eof())
-                break;
         }
 
         // Store the face pairings used with the census.

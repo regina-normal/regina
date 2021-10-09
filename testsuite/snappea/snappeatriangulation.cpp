@@ -135,19 +135,19 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             Tetrahedron<3>* t;
             Tetrahedron<3>* s;
 
-            m2_1.insertRehydration("cabbbbaei");
-            m2_2.insertRehydration("cabbbbapt");
-            m3_9.insertRehydration("dagacccfwkn");
-            m4_52.insertRehydration("ebdbcdddaqhie");
-            m4_1_2.insertRehydration("eahbcdddhsssj");
-            m4_4_2.insertRehydration("ebdbcdddddddx");
+            m2_1 = Triangulation<3>::rehydrate("cabbbbaei");
+            m2_2 = Triangulation<3>::rehydrate("cabbbbapt");
+            m3_9 = Triangulation<3>::rehydrate("dagacccfwkn");
+            m4_52 = Triangulation<3>::rehydrate("ebdbcdddaqhie");
+            m4_1_2 = Triangulation<3>::rehydrate("eahbcdddhsssj");
+            m4_4_2 = Triangulation<3>::rehydrate("ebdbcdddddddx");
 
-            n1_1.insertRehydration("baaaade");
-            n2_1.insertRehydration("cabbbbabw");
-            n2_1_2.insertRehydration("cabbbbcdw");
-            n4_14.insertRehydration("eahdccddakfhq");
-            n4_9_2.insertRehydration("ebdbcdddcemre");
-            n4_1_2_1.insertRehydration("eahbcdddjxxxj");
+            n1_1 = Triangulation<3>::rehydrate("baaaade");
+            n2_1 = Triangulation<3>::rehydrate("cabbbbabw");
+            n2_1_2 = Triangulation<3>::rehydrate("cabbbbcdw");
+            n4_14 = Triangulation<3>::rehydrate("eahdccddakfhq");
+            n4_9_2 = Triangulation<3>::rehydrate("ebdbcdddcemre");
+            n4_1_2_1 = Triangulation<3>::rehydrate("eahbcdddjxxxj");
 
             // Note: the non-orientable manifold below is the same as
             // Example<3>::smallClosedNonOrblHyperbolic()),
@@ -194,8 +194,9 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             s->join(2, s, Perm<4>(0,2,3,1));
 
             lst123.insertLayeredSolidTorus(1, 2);
-            m2_1_m2_1.insertRehydration("cabbbbaei");
-            m2_1_m2_1.insertRehydration("cabbbbaei");
+
+            m2_1_m2_1 = Triangulation<3>::rehydrate("cabbbbaei");
+            m2_1_m2_1.insertTriangulation(m2_1_m2_1);
 
             t = genusTwoTorusCusp.newTetrahedron();
             s = genusTwoTorusCusp.newTetrahedron();

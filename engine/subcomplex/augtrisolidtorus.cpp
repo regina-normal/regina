@@ -444,7 +444,7 @@ std::optional<AugTriSolidTorus> AugTriSolidTorus::recognise(
         return std::nullopt;
 
     // Examine each layered solid torus.
-    Tetrahedron<3>* top[3];
+    const Tetrahedron<3>* top[3];
     for (i = 0; i < nLayered; i++) {
         top[i] = layered[i]->topLevel();
         if (top[i]->adjacentTetrahedron(layered[i]->topFace(0)) ==

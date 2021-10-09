@@ -291,9 +291,9 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             verifyTaut("JLLLAAwzLLAwQwvvwMAQAAQMcbedgfhfilnnnpoqrstvCxEBDzFAFEGEFHHIIxxnxhxjxxxaxgvcxxafenatpkatbwqrrqfqr", 0);
         }
 
-        void verifyTautVsAll(Triangulation<3>* t, const char* name) {
-            AngleStructures all(*t, false);
-            AngleStructures taut(*t, true);
+        void verifyTautVsAll(const Triangulation<3>& t, const char* name) {
+            AngleStructures all(t, false);
+            AngleStructures taut(t, true);
 
             if (all.isTautOnly()) {
                 std::ostringstream msg;
@@ -334,16 +334,14 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void verifyTautVsAll(const char* dehydration) {
-            Triangulation<3>* t = Triangulation<3>::rehydrate(dehydration);
-            if (t->isEmpty()) {
+            Triangulation<3> t = Triangulation<3>::rehydrate(dehydration);
+            if (t.isEmpty()) {
                 std::ostringstream msg;
                 msg << "Failed to rehydrate " << dehydration << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             verifyTautVsAll(t, dehydration);
-
-            delete t;
         }
 
         void tautVsAll() {
@@ -352,8 +350,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             verifyTautVsAll("hbnajbcdeefgghvfeevho"); // v1000
             verifyTautVsAll("hepacdefegfggcurmsktu"); // y500
 
-            verifyTautVsAll(&triEmpty, "the empty triangulation");
-            verifyTautVsAll(&triOneTet, "a standalone tetrahedron");
+            verifyTautVsAll(triEmpty, "the empty triangulation");
+            verifyTautVsAll(triOneTet, "a standalone tetrahedron");
         }
 
         static bool lexLess(const regina::VectorInt* a, const regina::VectorInt* b) {

@@ -86,13 +86,13 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
 }
 
 std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
-        Triangulation<3>* tri) {
-    if (tri->countComponents() != 1)
+        const Triangulation<3>& tri) {
+    if (tri.countComponents() != 1)
         return nullptr;
 
     // Do what we can through components.
     StandardTriangulation* ans;
-    if (auto ans = recognise(tri->component(0)))
+    if (auto ans = recognise(tri.component(0)))
         return ans;
 
     // Run tests that require entire triangulations.

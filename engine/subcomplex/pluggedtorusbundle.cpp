@@ -94,16 +94,16 @@ void PluggedTorusBundle::writeTextLong(std::ostream& out) const {
 }
 
 std::optional<PluggedTorusBundle> PluggedTorusBundle::recognise(
-        Triangulation<3>* tri) {
+        const Triangulation<3>& tri) {
     // Basic property checks.
-    if (! tri->isClosed())
+    if (! tri.isClosed())
         return std::nullopt;
-    if (tri->countComponents() > 1)
+    if (tri.countComponents() > 1)
         return std::nullopt;
 
     // The smallest non-trivial examples of these have nine tetrahedra
     // (six for the TxI core and another three for a non-trivial region).
-    if (tri->size() < 9)
+    if (tri.size() < 9)
         return std::nullopt;
 
     // We have a closed and connected triangulation with at least
@@ -135,10 +135,10 @@ std::optional<PluggedTorusBundle> PluggedTorusBundle::recognise(
 }
 
 std::optional<PluggedTorusBundle> PluggedTorusBundle::hunt(
-        Triangulation<3>* tri, const TxICore& bundle) {
+        const Triangulation<3>& tri, const TxICore& bundle) {
     std::optional<PluggedTorusBundle> ans;
-    bundle.core().findAllSubcomplexesIn(*tri,
-            [&ans, &bundle, tri](const Isomorphism<3>& iso) {
+    bundle.core().findAllSubcomplexesIn(tri,
+            [&ans, &bundle, &tri](const Isomorphism<3>& iso) {
         int regionPos;
         Perm<4> annulusToUpperLayer;
         SatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
@@ -150,16 +150,16 @@ std::optional<PluggedTorusBundle> PluggedTorusBundle::hunt(
 
         // Apply layerings to the upper and lower boundaries.
         Layering layerUpper(
-            tri->tetrahedron(iso.tetImage(bundle.bdryTet(0,0))),
+            tri.tetrahedron(iso.tetImage(bundle.bdryTet(0,0))),
             iso.facePerm(bundle.bdryTet(0,0)) * bundle.bdryRoles(0,0),
-            tri->tetrahedron(iso.tetImage(bundle.bdryTet(0,1))),
+            tri.tetrahedron(iso.tetImage(bundle.bdryTet(0,1))),
             iso.facePerm(bundle.bdryTet(0,1)) * bundle.bdryRoles(0,1));
         layerUpper.extend();
 
         Layering layerLower(
-            tri->tetrahedron(iso.tetImage(bundle.bdryTet(1,0))),
+            tri.tetrahedron(iso.tetImage(bundle.bdryTet(1,0))),
             iso.facePerm(bundle.bdryTet(1,0)) * bundle.bdryRoles(1,0),
-            tri->tetrahedron(iso.tetImage(bundle.bdryTet(1,1))),
+            tri.tetrahedron(iso.tetImage(bundle.bdryTet(1,1))),
             iso.facePerm(bundle.bdryTet(1,1)) * bundle.bdryRoles(1,1));
         layerLower.extend();
 
@@ -167,7 +167,7 @@ std::optional<PluggedTorusBundle> PluggedTorusBundle::hunt(
         // In fact, we should have at least three spare tetrahedra for
         // housing a non-trivial saturated region.
         if (layerLower.size() + layerUpper.size() +
-                bundle.core().size() + 3 > tri->size()) {
+                bundle.core().size() + 3 > tri.size()) {
             // No good.  Move on.
             return false;
         }

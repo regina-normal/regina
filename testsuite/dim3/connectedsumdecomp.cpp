@@ -93,7 +93,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
                 " is reported to be composite.", ans.size() == 1);
 
-            auto stdTri = StandardTriangulation::recognise(&ans.front());
+            auto stdTri = StandardTriangulation::recognise(ans.front());
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri.get() != 0);
 
@@ -140,11 +140,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have more than two summands.", ans.size() ==2);
 
-            auto stdTri1 = StandardTriangulation::recognise(&ans[0]);
+            auto stdTri1 = StandardTriangulation::recognise(ans[0]);
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri1.get() != 0);
 
-            auto stdTri2 = StandardTriangulation::recognise(&ans[1]);
+            auto stdTri2 = StandardTriangulation::recognise(ans[1]);
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri2.get() != 0);
 
@@ -215,15 +215,15 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 " is reported to have more than three summands.",
                 ans.size() == 3);
 
-            auto stdTri1 = StandardTriangulation::recognise(&ans[0]);
+            auto stdTri1 = StandardTriangulation::recognise(ans[0]);
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri1.get() != 0);
 
-            auto stdTri2 = StandardTriangulation::recognise(&ans[1]);
+            auto stdTri2 = StandardTriangulation::recognise(ans[1]);
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri2.get() != 0);
 
-            auto stdTri3 = StandardTriangulation::recognise(&ans[2]);
+            auto stdTri3 = StandardTriangulation::recognise(ans[2]);
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri3.get() != 0);
 

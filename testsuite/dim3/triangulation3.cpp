@@ -3868,7 +3868,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             Triangulation<3> rehydrate;
-            if (! rehydrate.insertRehydration(dehydrate)) {
+            try {
+                rehydrate.insertRehydration(dehydrate);
+            } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": Cannot rehydrate \"" << dehydrate << "\".";
                 CPPUNIT_FAIL(msg.str());
@@ -3968,7 +3970,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            auto std = StandardTriangulation::recognise(&t);
+            auto std = StandardTriangulation::recognise(t);
             if (! std) {
                 std::ostringstream msg;
                 msg << "Large triangulation should simplify to " << simpleName
@@ -4001,7 +4003,15 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyNoSimplification(const Triangulation<3>& tri,
-                const char* name) {
+                size_t size, const char* name) {
+            if (tri.size() != size) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " has " << tri.size() << " tetrahedra, not "
+                    << size << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             Triangulation<3> t(tri);
             if (t.intelligentSimplify()) {
                 std::ostringstream msg;
@@ -4028,13 +4038,8 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // A triangulation with two degree two projective plane cusps
             // (that should not be simplified away):
-            tri = new Triangulation<3>();
-            tri->insertRehydration("cabbbbxww");
-            if (tri->size() != 2)
-                CPPUNIT_FAIL("Custom two-cusped triangulation failed "
-                    "to rehydrate.");
-            verifyNoSimplification(*tri, "Custom two-cusped triangluation");
-            delete tri;
+            verifyNoSimplification(Triangulation<3>::rehydrate("cabbbbxww"), 2,
+                "Custom two-cusped triangluation");
 
             // A triangulation with an invalid edge that simplifies
             // (where the invalid edge must not be simplified away):

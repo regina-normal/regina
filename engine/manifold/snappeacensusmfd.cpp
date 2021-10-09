@@ -128,8 +128,7 @@ Triangulation<3>* SnapPeaCensusManifold::construct() const {
     }
     fclose(dat);
 
-    ans = Triangulation<3>::rehydrate(tri);
-    return ans;
+    return new Triangulation<3>(Triangulation<3>::rehydrate(tri));
 }
 
 AbelianGroup SnapPeaCensusManifold::homology() const {

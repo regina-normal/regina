@@ -361,7 +361,7 @@ void Tri3SurfacesUI::refresh() {
     name.clear();
 
     // Begin with the combinatorial recognition.
-    auto std = regina::StandardTriangulation::recognise(tri_);
+    auto std = regina::StandardTriangulation::recognise(*tri_);
     if (std) {
         auto mfd = std->manifold();
         if (mfd) {

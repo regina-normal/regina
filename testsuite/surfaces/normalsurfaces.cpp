@@ -211,7 +211,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Build the 9-tetrahedron SFS from its dehydration string;
             // obscure but painless at least.
-            norSFS.insertRehydration("jnnafaabcfighhihimgbpqpepbr");
+            norSFS = Triangulation<3>::rehydrate("jnnafaabcfighhihimgbpqpepbr");
         }
 
         void tearDown() {

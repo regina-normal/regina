@@ -207,18 +207,15 @@ Triangulation<3> Example<3>::weeks() {
 }
 
 Triangulation<3> Example<3>::weberSeifert() {
-    Triangulation<3> ans;
-
     // Bah.  Dehydration strings are somewhat impenetrable,
     // but the alternative is 23 lines of hard-coded tetrahedron gluings.
     //
     // This triangulation was constructed by building a 60-tetrahedron
     // dodecahedron and identifying opposite pentagonal faces with a 3/10 twist,
     // and then simplifying down to one vertex and 23 tetrahedra.
-    ans.insertRehydration(
+    Triangulation<3> ans = Triangulation<3>::rehydrate(
         "xppphocgaeaaahimmnkontspmuuqrsvuwtvwwxwjjsvvcxxjjqattdwworrko");
     ans.orient();
-
     return ans;
 }
 

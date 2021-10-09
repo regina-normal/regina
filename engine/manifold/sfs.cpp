@@ -742,11 +742,11 @@ Triangulation<3>* SFSpace::construct() const {
     c->join(3, a, Perm<4>(1, 2, 3, 0));
 
     std::list<SFSFibre>::const_iterator fit = fibres_.begin();
-    SatAnnulus(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3)).
-        attachLST(ans, fit->alpha, fit->beta);
+    SatAnnulus::attachLST(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3),
+        fit->alpha, fit->beta);
     fit++;
-    SatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
-        attachLST(ans, fit->alpha, fit->beta);
+    SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
+        fit->alpha, fit->beta);
     fit++;
 
     // Run through the rest of the fibres, one at a time.  Each extra
@@ -766,8 +766,8 @@ Triangulation<3>* SFSpace::construct() const {
         b->join(2, c, Perm<4>());
         c->join(3, a, Perm<4>(1, 2, 3, 0));
 
-        SatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
-            attachLST(ans, nextFibre.alpha, nextFibre.beta);
+        SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
+            nextFibre.alpha, nextFibre.beta);
 
         prevA = a;
         prevC = c;
@@ -776,7 +776,7 @@ Triangulation<3>* SFSpace::construct() const {
 
     // We have one remaining fibre.  Fill in the final annulus of the
     // last triangular solid torus.
-    SatAnnulus(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1)).attachLST(ans,
+    SatAnnulus::attachLST(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1),
         nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
 
     return ans;

@@ -66,7 +66,6 @@ std::shared_ptr<Container> readDehydrationList(const char *filename,
 
     std::string dehydration;
     std::string label;
-    Triangulation<3>* tri;
 
     while(! in.eof()) {
         // Read in the next line.
@@ -94,12 +93,13 @@ std::shared_ptr<Container> readDehydrationList(const char *filename,
 
         if (! dehydration.empty()) {
             // Process this dehydration string.
-            auto tri = makePacket<Triangulation<3>>();
-            if (tri->insertRehydration(dehydration)) {
-                tri->setLabel(label.empty() ? dehydration : label);
-                ans->insertChildLast(tri);
-            } else
+            try {
+                ans->insertChildLast(makePacket(
+                    Triangulation<3>::rehydrate(dehydration),
+                    (label.empty() ? dehydration : label)));
+            } catch (const InvalidArgument&) {
                 errStrings = errStrings + '\n' + dehydration;
+            }
         }
     }
 

@@ -238,7 +238,7 @@ void Tri3CompositionUI::refresh() {
     */
 
     // Try to identify the triangulation.
-    standard = regina::StandardTriangulation::recognise(tri_);
+    standard = regina::StandardTriangulation::recognise(*tri_);
     if (standard) {
         standardTri->setText(standard->name().c_str());
         standardTri->setStyleSheet(
@@ -536,13 +536,13 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     QTreeWidgetItem* id;
     QTreeWidgetItem* detailsItem;
 
-    auto sfs = regina::BlockedSFS::recognise(tri_);
+    auto sfs = regina::BlockedSFS::recognise(*tri_);
     if (sfs) {
         id = addComponentSection(tr("Blocked Seifert Fibred Space"));
         describeSatRegion(sfs->region(), id);
     }
 
-    auto loop = regina::BlockedSFSLoop::recognise(tri_);
+    auto loop = regina::BlockedSFSLoop::recognise(*tri_);
     if (loop) {
         id = addComponentSection(tr("Blocked SFS Loop"));
 
@@ -554,7 +554,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(matrixString(loop->matchingReln())));
     }
 
-    auto pair = regina::BlockedSFSPair::recognise(tri_);
+    auto pair = regina::BlockedSFSPair::recognise(*tri_);
     if (pair) {
         id = addComponentSection(tr("Blocked SFS Pair"));
 
@@ -570,7 +570,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(matrixString(pair->matchingReln())));
     }
 
-    auto triple = regina::BlockedSFSTriple::recognise(tri_);
+    auto triple = regina::BlockedSFSTriple::recognise(*tri_);
     if (triple) {
         id = addComponentSection(tr("Blocked SFS Triple"));
 
@@ -595,7 +595,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(matrixString(triple->matchingReln(0))));
     }
 
-    auto bundle = regina::LayeredTorusBundle::recognise(tri_);
+    auto bundle = regina::LayeredTorusBundle::recognise(*tri_);
     if (bundle) {
         id = addComponentSection(tr("Layered Torus Bundle"));
 
@@ -612,7 +612,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(bundle->core().name().c_str()));
     }
 
-    auto pBundle = regina::PluggedTorusBundle::recognise(tri_);
+    auto pBundle = regina::PluggedTorusBundle::recognise(*tri_);
     if (pBundle) {
         id = addComponentSection(tr("Plugged Torus Bundle"));
 

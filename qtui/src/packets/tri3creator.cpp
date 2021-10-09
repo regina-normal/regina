@@ -513,9 +513,11 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             return nullptr;
         }
 
-        auto ans = regina::makePacket<Triangulation<3>>();
         std::string dehydString = reDehydration.cap(1).toUtf8().constData();
-        if (! ans->insertRehydration(dehydString)) {
+        try {
+            return regina::makePacket(Triangulation<3>::rehydrate(dehydString),
+                dehydString);
+        } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
                 "dehydration string."),
@@ -526,8 +528,6 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
                 "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
             return nullptr;
         }
-        ans->setLabel(dehydString);
-        return ans;
     } else if (typeId == TRI_SPLITTING_SURFACE) {
         if (! reSignature.exactMatch(splittingSignature->text())) {
             ReginaSupport::sorry(parentWidget, 

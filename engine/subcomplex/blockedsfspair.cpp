@@ -83,11 +83,12 @@ void BlockedSFSPair::writeTextLong(std::ostream& out) const {
     region_[1].writeDetail(out, "Second region");
 }
 
-std::optional<BlockedSFSPair> BlockedSFSPair::recognise(Triangulation<3>* tri) {
+std::optional<BlockedSFSPair> BlockedSFSPair::recognise(
+        const Triangulation<3>& tri) {
     // Basic property checks.
-    if (! tri->isClosed())
+    if (! tri.isClosed())
         return std::nullopt;
-    if (tri->countComponents() > 1)
+    if (tri.countComponents() > 1)
         return std::nullopt;
 
     // Watch out for twisted block boundaries that are incompatible with
@@ -96,14 +97,14 @@ std::optional<BlockedSFSPair> BlockedSFSPair::recognise(Triangulation<3>* tri) {
     // two incompatible Klein bottles for that matter).
     //
     // These will result in edges joined to themselves in reverse.
-    if (! tri->isValid())
+    if (! tri.isValid())
         return std::nullopt;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> r0;
     std::unique_ptr<SatRegion> r1;
     Matrix2 matchingReln;
-    bool found = SatRegion::find(*tri, false,
+    bool found = SatRegion::find(tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         if (r->countBoundaryAnnuli() != 1)
             return false;

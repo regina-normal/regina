@@ -122,7 +122,8 @@ Version 7.0  [ TODO ]
         Class BitmaskLen8, BitmaskLen16, BitmaskLen32, BitmaskLen64:
             - Deprecated.  Just use Bitmask1<uint8_t>, etc.
         Class BlockedSFS, BlockedSFSLoop, BlockedSFSPair, BlockedSFSTriple:
-            - Routines isBlockedSFS...() are now called recognise(), and
+            - Routines isBlockedSFS...() are now called recognise(), take their
+              triangulation arguments by const reference (not pointer), and
               return a std::optional instead of a pointer that could be null.
               The old names are kept as deprecated aliases.
             - Added copy/move construction and copy/move assignment.
@@ -239,8 +240,8 @@ Version 7.0  [ TODO ]
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
             - Added member swap(), and for FacetPairing<dim> a global swap().
-            - Routine fromTextRep() now returns a std::optional by value,
-              not a newly allocated pointer that could be null.
+            - Function fromTextRep() now returns by value (not pointer), and
+              throws an exception on error (instead of returning null).
             - Type IsoList now stores isomorphisms by value, not by pointer.
             - Routine findAutomorphisms() now returns a list by value, instead
               of filling a given list.
@@ -472,15 +473,18 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
             - Routine transform() now takes its arguments by reference.
+            - All access to the underlying triangulation is now const only.
         Class LayeredTorusBundle:
             - Routine coreIso() returns by const reference, not by pointer.
-            - Routine isLayeredTorusBundle() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+            - Routine isLayeredTorusBundle() is now called recognise(), takes
+              its triangulation argument by const reference (not pointer), and
+              returns a std::optional instead of a pointer that could be null.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
         Class Layering:
             - Added copy construction and copy assignment.
+            - All access to the underlying triangulation is now const only.
         Class LensSpace:
             - Added member and global swap() functions.
         Class LessDeref:
@@ -868,8 +872,9 @@ Version 7.0  [ TODO ]
             - Added copy construction and copy assignment.
             - Deprecated clone().  Just use the copy constructor instead.
         Class PluggedTorusBundle:
-            - Routine isPluggedTorusBundle() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+            - Routine isPluggedTorusBundle() is now called recognise(), takes
+              its triangulation argument by const reference (not pointer), and
+              returns a std::optional instead of a pointer that could be null.
               The old name is kept as a deprecated alias.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
@@ -911,6 +916,11 @@ Version 7.0  [ TODO ]
               reference.
             - Routine isAdjacent() now returns a tuple, instead of using
               a mix of return values and pointer arguments for output.
+            - All access to the underlying triangulation is now const only.
+            - Removed the member attachLST(), since SatAnnulus now allows
+              only const access to the underlying triangulation.  Instead
+              this is now a static member function, which takes (non-const)
+              tetrahedra and permutations individually.
         Class SatBlock and subclasses:
             - The nextBlock output argument for nextBoundaryAnnulus()
               now sends back a const pointer.
@@ -928,6 +938,7 @@ Version 7.0  [ TODO ]
               of using several reference arguments for output.
             - Renamed nAnnuli() to countAnnuli().  The old name is kept
               as a deprecated alias.
+            - All access to the underlying triangulation is now const only.
         Class SatBlockModel:
             - New class to replace SatBlockStarter.
         Class SatBlockSpec:
@@ -967,6 +978,7 @@ Version 7.0  [ TODO ]
               SatBlock::isBlock().
             - Routine expand() is now private, since all publicly accessible
               functions that construct regions will expand them automatically.
+            - All access to the underlying triangulation is now const only.
         Class SFSAlt, SFSAltSet:
             - Removed the old SFSAltSet class; replaced this with a new SFSAlt
               class with a static altSet() function that returns a std::vector.
@@ -1083,7 +1095,8 @@ Version 7.0  [ TODO ]
             - Deprecated clone().  Just use the copy constructor instead.
         Class StandardTriangulation:
             - Routine isStandardTriangulation() is now called recognise(),
-              and now returns a std::unique_ptr.
+              and now returns a std::unique_ptr.  Also, the triangulation
+              variant now takes its argument by const reference, not pointer.
               The old name is kept as a deprecated alias.
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.
@@ -1100,6 +1113,8 @@ Version 7.0  [ TODO ]
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
             - Routines numClosure and denClosure() now return by value,
               not pointer.
+            - Routine fromOrientedGauss() now returns by value (not pointer),
+              and throws an exception on error (instead of returning null).
         Class TorusBundle:
             - Added member and global swap() functions.
         Class TreeDecomposition:
@@ -1199,6 +1214,9 @@ Version 7.0  [ TODO ]
             - The Link constructor is now deprecated, since Link::complement()
               is more efficient and now returns by value.
             - Function enterTextTriangulation() returns by value, not pointer.
+            - Routine rehydrate() now returns by value, not pointer; also,
+              both rehydrate() and insertRehydration() now throw exceptions on
+              error instead of indicating this through return values.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and

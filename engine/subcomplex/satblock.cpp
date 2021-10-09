@@ -53,7 +53,7 @@ SatBlock::SatBlock(const SatBlock& cloneMe) :
 }
 
 void SatBlock::transform(const Triangulation<3>& originalTri,
-        const Isomorphism<3>& iso, Triangulation<3>& newTri) {
+        const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
     for (unsigned i = 0; i < nAnnuli_; i++)
         annulus_[i].transform(originalTri, iso, newTri);
 }
@@ -104,7 +104,7 @@ std::string SatBlock::abbr(bool tex) const {
     return s.str();
 }
 
-bool SatBlock::isBad(Tetrahedron<3>* t, const TetList& list) {
+bool SatBlock::isBad(const Tetrahedron<3>* t, const TetList& list) {
     if (list.find(t) != list.end())
         return true;
     return false;

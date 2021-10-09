@@ -303,22 +303,22 @@ void BlockedSFS::writeTextLong(std::ostream& out) const {
     region_.writeDetail(out, "Blocked SFS");
 }
 
-std::optional<BlockedSFS> BlockedSFS::recognise(Triangulation<3>* tri) {
+std::optional<BlockedSFS> BlockedSFS::recognise(const Triangulation<3>& tri) {
     // Basic property checks.
-    if (tri->countComponents() > 1)
+    if (tri.countComponents() > 1)
         return std::nullopt;
-    if (tri->isIdeal())
+    if (tri.isIdeal())
         return std::nullopt;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  These will result in edges joined to
     // themselves in reverse.
-    if (! tri->isValid())
+    if (! tri.isValid())
         return std::nullopt;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
-    bool found = SatRegion::find(*tri, true,
+    bool found = SatRegion::find(tri, true,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         // Got one!  Nothing more to do; just stop the search.
         region = std::move(r);

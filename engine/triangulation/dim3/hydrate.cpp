@@ -48,19 +48,16 @@
 
 namespace regina {
 
-Triangulation<3>* Triangulation<3>::rehydrate(const std::string& dehydration) {
-    Triangulation<3>* ans = new Triangulation<3>;
-    if (ans->insertRehydration(dehydration))
-        return ans;
-
-    delete ans;
-    return nullptr;
+Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
+    Triangulation<3> ans;
+    ans.insertRehydration(dehydration);
+    return ans;
 }
 
-bool Triangulation<3>::insertRehydration(const std::string& dehydration) {
+void Triangulation<3>::insertRehydration(const std::string& dehydration) {
     // Ensure the string is non-empty.
     if (dehydration.empty())
-        return false;
+        throw InvalidArgument("insertRehydration(): empty dehydration string");
 
     // Rewrite the string in lower case and verify that it contains only
     // letters.
@@ -69,7 +66,8 @@ bool Triangulation<3>::insertRehydration(const std::string& dehydration) {
         if (*it >= 'A' && *it <= 'Z')
             *it = *it + ('a' - 'A');
         else if (*it < 'a' || *it > 'z')
-            return false;
+            throw InvalidArgument("insertRehydration(): non-letter in "
+                "dehydration string");
     }
 
     // Determine the number of tetrahedra.
@@ -81,7 +79,8 @@ bool Triangulation<3>::insertRehydration(const std::string& dehydration) {
 
     // Ensure the string has the expected length.
     if (dehydration.length() != 1 + lenNewTet + lenGluings + lenGluings)
-        return false;
+        throw InvalidArgument("insertRehydration(): dehydration string "
+            "has incorrect length");
 
     // Determine which face gluings should involve new tetrahedra.
     bool* newTetGluings = new bool[2 * nTet];
@@ -92,7 +91,8 @@ bool Triangulation<3>::insertRehydration(const std::string& dehydration) {
         val = VAL(proper[i + 1]);
         if (val > 15) {
             delete[] newTetGluings;
-            return false;
+            throw InvalidArgument("insertRehydration(): invalid letter "
+                "in dehydration string");
         }
 
         if (i % 2 == 0) {
@@ -196,6 +196,8 @@ bool Triangulation<3>::insertRehydration(const std::string& dehydration) {
         // Delete tetrahedra in the reverse order so tetrahedra are
         // always removed from the end of the internal array, and the
         // combined operation is therefore O(nTet) not O(nTet^2).
+        // TODO: Probably we should just use tetrahedron indices here instead;
+        // we know what they will be.
         for (i = nTet - 1; i >= 0; --i)
             removeTetrahedron(tet[i]);
     }
@@ -203,7 +205,8 @@ bool Triangulation<3>::insertRehydration(const std::string& dehydration) {
     delete[] newTetGluings;
     delete[] tet;
 
-    return (! broken);
+    if (broken)
+        throw InvalidArgument("insertRehydration(): invalid dehydration data");
 }
 
 std::string Triangulation<3>::dehydrate() const {

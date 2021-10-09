@@ -164,7 +164,8 @@ class BlockedSFS : public StandardTriangulation {
          * fibred space, or no value if the given triangulation is not a
          * blocked Seifert fibred space.
          */
-        static std::optional<BlockedSFS> recognise(Triangulation<3>* tri);
+        static std::optional<BlockedSFS> recognise(
+            const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
          * saturated region joined to a think I-bundle via optional layerings.
@@ -173,7 +174,7 @@ class BlockedSFS : public StandardTriangulation {
          * See recognise() for details on the parameters and return value.
          */
         [[deprecated]] static std::optional<BlockedSFS> isBlockedSFS(
-            Triangulation<3>* tri);
+            const Triangulation<3>& tri);
 
     private:
         /**
@@ -271,7 +272,7 @@ inline const SatRegion& BlockedSFS::region() const {
 }
 
 inline std::optional<BlockedSFS> BlockedSFS::isBlockedSFS(
-        Triangulation<3>* tri) {
+        const Triangulation<3>& tri) {
     return recognise(tri);
 }
 

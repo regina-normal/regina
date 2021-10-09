@@ -39,7 +39,7 @@
 namespace regina {
 
 void LayeredSolidTorus::transform(const Triangulation<3>& originalTri,
-        const Isomorphism<3>& iso, Triangulation<3>& newTri) {
+        const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
     size_t baseTetID = base_->index();
     size_t topTetID = top_->index();
 
@@ -78,7 +78,7 @@ void LayeredSolidTorus::transform(const Triangulation<3>& originalTri,
 }
 
 std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
-        Tetrahedron<3>* tet) {
+        const Tetrahedron<3>* tet) {
     int baseFace1;
     int baseFace2 = -1;
     Perm<4> basePerm;
@@ -253,9 +253,9 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
 }
 
 std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromTop(
-        Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
-    Tetrahedron<3>* top = tet;
-    Tetrahedron<3>* next;
+        const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
+    const Tetrahedron<3>* top = tet;
+    const Tetrahedron<3>* next;
     Perm<4> cross1, cross2;
     Perm<4> canon1, canon2;
     FacePair pair = FacePair(topFace1, topFace2).complement();

@@ -116,8 +116,8 @@ unsigned long Layering::extend() {
     return added;
 }
 
-bool Layering::matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
-        Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
+bool Layering::matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
+        const Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
         Matrix2& upperReln) const {
     // We can cut half our cases by assuming that upperBdry0 meets with
     // newBdryTet[0] and that upperBdry1 meets with newBdryTet[1].
@@ -127,14 +127,8 @@ bool Layering::matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
         // If it does match, it's the opposite matching (upperBdry0 with
         // newBdryTet[1] and vice versa).  Switch them and remember what
         // we did.
-        Tetrahedron<3>* tmpTet = upperBdry0;
-        upperBdry0 = upperBdry1;
-        upperBdry1 = tmpTet;
-
-        Perm<4> tmpPerm = upperRoles0;
-        upperRoles0 = upperRoles1;
-        upperRoles1 = tmpPerm;
-
+        std::swap(upperBdry0, upperBdry1);
+        std::swap(upperRoles0, upperRoles1);
         rot180 = true;
     } else {
         // If it does match, it's what we'd like.

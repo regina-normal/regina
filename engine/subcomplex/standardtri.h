@@ -70,7 +70,7 @@ class Manifold;
  *
  * In general StandardTriangulation objects cannot be constructed directly,
  * but are instead created through static identification routines such as
- * StandardTriangulation::recognise(Triangulation<3>*).
+ * StandardTriangulation::recognise(const Triangulation<3>&).
  *
  * Each subclass of StandardTriangulation:
  *
@@ -237,7 +237,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * identifications of these boundary triangles with each other.
          *
          * Note that the triangulation-based routine
-         * recognise(Triangulation<3>*) may recognise more
+         * recognise(const Triangulation<3>&) may recognise more
          * triangulations than this routine, since passing an entire
          * triangulation allows access to more information.
          *
@@ -276,7 +276,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * given triangulation is recognised, or \c null otherwise.
          */
         static std::unique_ptr<StandardTriangulation> recognise(
-            Triangulation<3>* tri);
+            const Triangulation<3>& tri);
         /**
          * A deprecated alias to determine whether a triangulation represents
          * one of the standard triangulations understood by Regina.
@@ -285,7 +285,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * See recognise() for details on the parameters and return value.
          */
         [[deprecated]] static std::unique_ptr<StandardTriangulation>
-            isStandardTriangulation(Triangulation<3>* tri);
+            isStandardTriangulation(const Triangulation<3>& tri);
 
     protected:
         /**
@@ -339,7 +339,8 @@ inline std::unique_ptr<StandardTriangulation>
 }
 
 inline std::unique_ptr<StandardTriangulation>
-        StandardTriangulation::isStandardTriangulation(Triangulation<3>* tri) {
+        StandardTriangulation::isStandardTriangulation(
+        const Triangulation<3>& tri) {
     return recognise(tri);
 }
 

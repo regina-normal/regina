@@ -46,7 +46,7 @@
 namespace regina {
 
 template <typename Action, typename... Args>
-bool SatRegion::find(Triangulation<3>& tri, bool mustBeComplete,
+bool SatRegion::find(const Triangulation<3>& tri, bool mustBeComplete,
         Action&& action, Args&&... args) {
     initStarters();
 

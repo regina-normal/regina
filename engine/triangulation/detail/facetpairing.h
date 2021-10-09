@@ -448,16 +448,15 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * This text-based representation must be in the format produced
          * by routine toTextRep().
          *
-         * \pre The facet pairing to be reconstructed involves at least
-         * one simplex.
+         * \exception InvalidArgument the given string was not a valid
+         * text-based representation of a facet pairing on a positive
+         * number of simplices.
          *
          * @param rep a text-based representation of a facet pairing, as
          * produced by routine toTextRep().
-         * @return the corresponding facet pairing, or no value if the given
-         * text-based representation was invalid.
+         * @return the corresponding facet pairing.
          */
-        static std::optional<FacetPairing<dim>> fromTextRep(
-            const std::string& rep);
+        static FacetPairing<dim> fromTextRep(const std::string& rep);
 
         /**
          * Writes header information for a Graphviz DOT file that will

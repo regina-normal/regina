@@ -247,8 +247,8 @@ class PluggedTorusBundle : public StandardTriangulation {
          * found, or no value if the given triangulation is not of the form
          * described by this class.
          */
-        static std::optional<PluggedTorusBundle> recognise
-            (Triangulation<3>* tri);
+        static std::optional<PluggedTorusBundle> recognise(
+            const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
          * saturated region joined to a think I-bundle via optional layerings.
@@ -257,7 +257,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * See recognise() for details on the parameters and return value.
          */
         [[deprecated]] static std::optional<PluggedTorusBundle>
-            isPluggedTorusBundle(Triangulation<3>* tri);
+            isPluggedTorusBundle(const Triangulation<3>& tri);
 
     private:
         /**
@@ -309,8 +309,8 @@ class PluggedTorusBundle : public StandardTriangulation {
          * described by this class using an isomorphic copy of the given
          * thin I-bundle.
          */
-        static std::optional<PluggedTorusBundle> hunt(Triangulation<3>* tri,
-            const TxICore& bundle);
+        static std::optional<PluggedTorusBundle> hunt(
+            const Triangulation<3>& tri, const TxICore& bundle);
 };
 
 /**
@@ -359,7 +359,7 @@ inline const Matrix2& PluggedTorusBundle::matchingReln() const {
 }
 
 inline std::optional<PluggedTorusBundle>
-        PluggedTorusBundle::isPluggedTorusBundle(Triangulation<3>* tri) {
+        PluggedTorusBundle::isPluggedTorusBundle(const Triangulation<3>& tri) {
     return recognise(tri);
 }
 

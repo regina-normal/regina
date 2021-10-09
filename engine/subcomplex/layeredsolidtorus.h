@@ -73,10 +73,10 @@ class LayeredSolidTorus : public StandardTriangulation {
         size_t size_;
             /**< The number of tetrahedra in this torus. */
 
-        Tetrahedron<3>* base_;
+        const Tetrahedron<3>* base_;
             /**< The tetrahedron that is glued to itself at the base of
                  this torus. */
-        Tetrahedron<3>* top_;
+        const Tetrahedron<3>* top_;
             /**< The tetrahedron on the boundary of this torus. */
 
         Perm<6> baseEdge_;
@@ -145,7 +145,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          *
          * @return the base tetrahedron.
          */
-        Tetrahedron<3>* base() const;
+        const Tetrahedron<3>* base() const;
         /**
          * Returns the requested edge of the base tetrahedron belonging
          * to the given group.  The layering identifies the six edges
@@ -203,7 +203,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          *
          * @return the top level tetrahedron.
          */
-        Tetrahedron<3>* topLevel() const;
+        const Tetrahedron<3>* topLevel() const;
         /**
          * Returns the number of times the meridinal disc of the torus
          * cuts the top level tetrahedron edges in the given group.
@@ -318,7 +318,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layered solid torus.
          */
         void transform(const Triangulation<3>& originalTri,
-                const Isomorphism<3>& iso, Triangulation<3>& newTri);
+                const Isomorphism<3>& iso, const Triangulation<3>& newTri);
 
         /**
          * Determines if the given tetrahedron forms the base of a
@@ -336,7 +336,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layered solid torus.
          */
         static std::optional<LayeredSolidTorus> recogniseFromBase(
-            Tetrahedron<3>* tet);
+            const Tetrahedron<3>* tet);
         /**
          * A deprecated alias to recognise if a tetrahedron forms the
          * base of a layered solid torus.
@@ -345,7 +345,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * See recognise() for details on the parameters and return value.
          */
         [[deprecated]] static std::optional<LayeredSolidTorus>
-            formsLayeredSolidTorusBase(Tetrahedron<3>* tet);
+            formsLayeredSolidTorusBase(const Tetrahedron<3>* tet);
 
         /**
          * Determines if the given tetrahedron forms the top level
@@ -375,7 +375,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * the top level of a layered solid torus.
          */
         static std::optional<LayeredSolidTorus> recogniseFromTop(
-            Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
+            const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
         /**
          * A deprecated alias to recognise if a tetrahedron forms the
          * top level of a layered solid torus.
@@ -384,8 +384,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * See recognise() for details on the parameters and return value.
          */
         [[deprecated]] static std::optional<LayeredSolidTorus>
-            formsLayeredSolidTorusTop(Tetrahedron<3>* tet, unsigned topFace1,
-            unsigned topFace2);
+            formsLayeredSolidTorusTop(const Tetrahedron<3>* tet,
+            unsigned topFace1, unsigned topFace2);
 
         /**
          * Determines if the given triangulation component forms a
@@ -460,7 +460,7 @@ inline size_t LayeredSolidTorus::size() const {
     return size_;
 }
 
-inline Tetrahedron<3>* LayeredSolidTorus::base() const {
+inline const Tetrahedron<3>* LayeredSolidTorus::base() const {
     return base_;
 }
 inline int LayeredSolidTorus::baseEdge(int group, int index) const {
@@ -475,7 +475,7 @@ inline int LayeredSolidTorus::baseFace(int index) const {
     return (index == 0 ? baseFace_.lower() : baseFace_.upper());
 }
 
-inline Tetrahedron<3>* LayeredSolidTorus::topLevel() const {
+inline const Tetrahedron<3>* LayeredSolidTorus::topLevel() const {
     return top_;
 }
 inline unsigned long LayeredSolidTorus::meridinalCuts(int group) const {
@@ -506,13 +506,14 @@ inline void LayeredSolidTorus::writeTextLong(std::ostream& out) const {
 }
 
 inline std::optional<LayeredSolidTorus>
-        LayeredSolidTorus::formsLayeredSolidTorusBase(Tetrahedron<3>* tet) {
+        LayeredSolidTorus::formsLayeredSolidTorusBase(
+        const Tetrahedron<3>* tet) {
     return recogniseFromBase(tet);
 }
 
 inline std::optional<LayeredSolidTorus>
         LayeredSolidTorus::formsLayeredSolidTorusTop(
-        Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
+        const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
     return recogniseFromTop(tet, topFace1, topFace2);
 }
 

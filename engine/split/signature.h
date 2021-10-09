@@ -206,10 +206,8 @@ class Signature : public ShortOutput<Signature> {
          * <tt>"AAb-bc-C"</tt>.  See the class notes for further details
          * on what constitutes a valid signature.
          *
-         * \pre The given string contains at least one letter.
-         *
          * \exception InvalidArgument the given string was not a valid
-         * signature.
+         * signature with a positive number of letters.
          *
          * @param sig a string representation of a splitting surface signature.
          * @return the corresponding signature.

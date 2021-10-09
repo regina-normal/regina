@@ -70,24 +70,25 @@ void BlockedSFSLoop::writeTextLong(std::ostream& out) const {
     region_.writeDetail(out, "Internal region");
 }
 
-std::optional<BlockedSFSLoop> BlockedSFSLoop::recognise(Triangulation<3>* tri) {
+std::optional<BlockedSFSLoop> BlockedSFSLoop::recognise(
+        const Triangulation<3>& tri) {
     // Basic property checks.
-    if (! tri->isClosed())
+    if (! tri.isClosed())
         return std::nullopt;
-    if (tri->countComponents() > 1)
+    if (tri.countComponents() > 1)
         return std::nullopt;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for saturated tori being joined
     // to saturated Klein bottles.  Any of these issues will result in
     // edges joined to themselves in reverse.
-    if (! tri->isValid())
+    if (! tri.isValid())
         return std::nullopt;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
     Matrix2 matchingReln;
-    bool found = SatRegion::find(*tri, false,
+    bool found = SatRegion::find(tri, false,
             [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
         if (r->countBoundaryAnnuli() != 2)
             return false;

@@ -59,15 +59,15 @@ namespace {
 }
 
 std::optional<LayeredTorusBundle> LayeredTorusBundle::recognise(
-        Triangulation<3>* tri) {
+        const Triangulation<3>& tri) {
     // Basic property checks.
-    if (! tri->isClosed())
+    if (! tri.isClosed())
         return std::nullopt;
-    if (tri->countVertices() > 1)
+    if (tri.countVertices() > 1)
         return std::nullopt;
-    if (tri->countComponents() > 1)
+    if (tri.countComponents() > 1)
         return std::nullopt;
-    if (tri->size() < 6)
+    if (tri.size() < 6)
         return std::nullopt;
 
     // We have a 1-vertex 1-component closed triangulation with at least
@@ -113,26 +113,26 @@ std::optional<LayeredTorusBundle> LayeredTorusBundle::recognise(
 }
 
 std::optional<LayeredTorusBundle> LayeredTorusBundle::hunt(
-        Triangulation<3>* tri, const TxICore& core) {
+        const Triangulation<3>& tri, const TxICore& core) {
     std::optional<LayeredTorusBundle> ans;
-    core.core().findAllSubcomplexesIn(*tri,
-            [&ans, &core, tri](const Isomorphism<3>& iso) {
+    core.core().findAllSubcomplexesIn(tri,
+            [&ans, &core, &tri](const Isomorphism<3>& iso) {
         // Look for the corresponding layering.
         Matrix2 matchReln;
 
         // Apply the layering to the lower boundary and see if it
         // matches nicely with the upper.
         Layering layering(
-            tri->tetrahedron(iso.tetImage(core.bdryTet(1,0))),
+            tri.tetrahedron(iso.tetImage(core.bdryTet(1,0))),
             iso.facePerm(core.bdryTet(1,0)) * core.bdryRoles(1,0),
-            tri->tetrahedron(iso.tetImage(core.bdryTet(1,1))),
+            tri.tetrahedron(iso.tetImage(core.bdryTet(1,1))),
             iso.facePerm(core.bdryTet(1,1)) * core.bdryRoles(1,1));
         layering.extend();
 
         if (layering.matchesTop(
-                tri->tetrahedron(iso.tetImage(core.bdryTet(0,0))),
+                tri.tetrahedron(iso.tetImage(core.bdryTet(0,0))),
                 iso.facePerm(core.bdryTet(0,0)) * core.bdryRoles(0,0),
-                tri->tetrahedron(iso.tetImage(core.bdryTet(0,1))),
+                tri.tetrahedron(iso.tetImage(core.bdryTet(0,1))),
                 iso.facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
             // It's a match!
