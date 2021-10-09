@@ -47,9 +47,10 @@ namespace regina {
 
 Triangulation<3>::Triangulation(const std::string& description) :
         strictAngleStructure_(false), generalAngleStructure_(false) {
-    if (auto attempt = fromIsoSig(description)) {
-        swap(*attempt);
+    try {
+        *this = fromIsoSig(description);
         return;
+    } catch (const InvalidArgument&) {
     }
 
     try {

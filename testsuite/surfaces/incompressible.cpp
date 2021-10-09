@@ -78,17 +78,16 @@ class IncompressibleTest : public CppUnit::TestFixture {
                 verifyNotIncompressible(f, triName);
         }
 
-        Triangulation<3>* verifyHasIncompressible(Triangulation<3>* tri,
+        void verifyHasIncompressible(const Triangulation<3>& tri,
                 const std::string& triName) {
-            NormalSurfaces s(*tri, regina::NS_STANDARD,
+            NormalSurfaces s(tri, regina::NS_STANDARD,
                 regina::NS_EMBEDDED_ONLY);
             for (const NormalSurface& f : s)
                 if (f.isIncompressible())
-                    return tri;
+                    return;
 
             CPPUNIT_FAIL(("The incompressible surface was not found in "
                 + triName + ".").c_str());
-            return tri;
         }
 
         void isIncompressible() {
@@ -116,24 +115,25 @@ class IncompressibleTest : public CppUnit::TestFixture {
                 "Poincare homology sphere");
 
             // Try some SFSs that should be Haken.
-            tri = Triangulation<3>::fromIsoSig("gLALQbccefffemkbemi");
-            delete verifyHasIncompressible(tri,
+            verifyHasIncompressible(
+                Triangulation<3>::fromIsoSig("gLALQbccefffemkbemi"),
                 "SFS [S2: (2,1) (2,1) (2,1) (2,-1)]");
 
-            tri = Triangulation<3>::fromIsoSig("gvLQQedfedffrwawrhh");
-            delete verifyHasIncompressible(tri, "T x S1");
+            verifyHasIncompressible(
+                Triangulation<3>::fromIsoSig("gvLQQedfedffrwawrhh"),
+                "T x S1");
 
-            tri = Triangulation<3>::fromIsoSig("gvLQQcdefeffnwnpkhe");
-            delete verifyHasIncompressible(tri, "SFS [T: (1,1)]");
+            verifyHasIncompressible(
+                Triangulation<3>::fromIsoSig("gvLQQcdefeffnwnpkhe"),
+                "SFS [T: (1,1)]");
         }
 
-        Triangulation<3>* verifyHasCompressingDisc(Triangulation<3>* t,
+        void verifyHasCompressingDisc(const Triangulation<3>& t,
                 const std::string& triName) {
-            if (! t->hasCompressingDisc()) {
+            if (! t.hasCompressingDisc()) {
                 CPPUNIT_FAIL(("The compressing disc was not found in "
                     + triName + ".").c_str());
             }
-            return t;
         }
 
         void verifyNoCompressingDisc(const Triangulation<3>& t,
@@ -148,13 +148,17 @@ class IncompressibleTest : public CppUnit::TestFixture {
             Triangulation<3>* tri;
             Tetrahedron<3>* tet[4];
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(1, 2);
-            delete verifyHasCompressingDisc(tri, "LST(1,2,3)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(1, 2);
+                verifyHasCompressingDisc(tri, "LST(1,2,3)");
+            }
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(3, 4);
-            delete verifyHasCompressingDisc(tri, "LST(3,4,7)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(3, 4);
+                verifyHasCompressingDisc(tri, "LST(3,4,7)");
+            }
 
             {
                 Triangulation<3> tri;
@@ -206,12 +210,11 @@ class IncompressibleTest : public CppUnit::TestFixture {
                 verifyNoCompressingDisc(f8, "Figure 8 Knot Complement");
             }
 
-            tri = Triangulation<3>::fromIsoSig("eHucabdhs");
-            delete verifyHasCompressingDisc(tri, "Solid genus two torus");
+            verifyHasCompressingDisc(Triangulation<3>::fromIsoSig(
+                "eHucabdhs"), "Solid genus two torus");
 
-            tri = Triangulation<3>::fromIsoSig(
-                "tbLGburuGuqHbKgqGacdjmpqsrqbkltl");
-            delete verifyHasCompressingDisc(tri, "Solid genus seven torus");
+            verifyHasCompressingDisc(Triangulation<3>::fromIsoSig(
+                "tbLGburuGuqHbKgqGacdjmpqsrqbkltl"), "Solid genus seven torus");
         }
 };
 

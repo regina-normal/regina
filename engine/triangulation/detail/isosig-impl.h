@@ -303,12 +303,11 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig(
 }
 
 template <int dim>
-Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
-        const std::string& sig) {
-    std::unique_ptr<Triangulation<dim>> ans(new Triangulation<dim>());
+Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
+    Triangulation<dim> ans;
 
     // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(*ans);
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     const char* c = sig.c_str();
 
@@ -325,10 +324,11 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
     const char* d;
     for (d = c; d != end; ++d)
         if (! Base64SigEncoding::isValid(*d))
-            return 0;
+            throw InvalidArgument("fromIsoSig(): invalid base64 character");
     for (d = end; *d; ++d)
         if (! ::isspace(*d))
-            return 0;
+            throw InvalidArgument(
+                "fromIsoSig(): unexpected internal whitespace");
 
     unsigned j;
     size_t pos, nSimp, nChars;
@@ -339,10 +339,12 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
             nChars = 1;
         else {
             if (c == end)
-                return 0;
+                throw InvalidArgument(
+                    "fromIsoSig(): incomplete signature");
             nChars = Base64SigEncoding::decodeSingle(*c++);
             if (c + nChars > end)
-                return 0;
+                throw InvalidArgument(
+                    "fromIsoSig(): incomplete signature");
             nSimp = Base64SigEncoding::decodeInt<unsigned>(c, nChars);
             c += nChars;
         }
@@ -361,7 +363,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
             if (c == end) {
                 delete[] facetAction;
-                return 0;
+                throw InvalidArgument("fromIsoSig(): incomplete signature");
             }
             Base64SigEncoding::decodeTrits(*c++, facetAction + facetPos);
             for (j = 0; j < 3; ++j) {
@@ -370,7 +372,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                 if (nFacets == (dim+1) * nSimp) {
                     if (facetAction[facetPos + j] != 0) {
                         delete[] facetAction;
-                        return 0;
+                        throw InvalidArgument(
+                            "fromIsoSig(): extraneous facet actions");
                     }
                     continue;
                 }
@@ -384,11 +387,13 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                     ++nJoins;
                 } else {
                     delete[] facetAction;
-                    return 0;
+                    throw InvalidArgument(
+                        "fromIsoSig(): invalid facet action");
                 }
                 if (nFacets > (dim+1) * nSimp) {
                     delete[] facetAction;
-                    return 0;
+                    throw InvalidArgument("fromIsoSig(): facet actions "
+                        "do not match triangulation size");
                 }
             }
         }
@@ -398,7 +403,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
             if (c + nChars > end) {
                 delete[] facetAction;
                 delete[] joinDest;
-                return 0;
+                throw InvalidArgument("fromIsoSig(): incomplete signature");
             }
 
             joinDest[pos] = Base64SigEncoding::decodeInt<unsigned>(c, nChars);
@@ -412,7 +417,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
-                return 0;
+                throw InvalidArgument("fromIsoSig(): incomplete signature");
             }
 
             joinGluing[pos] =
@@ -425,14 +430,15 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
-                return 0;
+                throw InvalidArgument(
+                    "fromIsoSig(): invalid gluing permutation");
             }
         }
 
         // End of component!
         Simplex<dim>** simp = new Simplex<dim>*[nSimp];
         for (pos = 0; pos < nSimp; ++pos)
-            simp[pos] = ans->newSimplex();
+            simp[pos] = ans.newSimplex();
 
         facetPos = 0;
         size_t nextUnused = 1;
@@ -453,7 +459,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                         delete[] joinDest;
                         delete[] joinGluing;
                         delete[] simp;
-                        return 0;
+                        throw InvalidArgument(
+                            "fromIsoSig(): gluing to non-existent simplex");
                     }
                     simp[pos]->join(j, simp[nextUnused++], Perm<dim+1>());
                 } else {
@@ -466,7 +473,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                         delete[] joinDest;
                         delete[] joinGluing;
                         delete[] simp;
-                        return 0;
+                        throw InvalidArgument(
+                            "fromIsoSig(): invalid gluing destination");
                     }
                     simp[pos]->join(j, simp[joinDest[joinPos]], gluing);
                     ++joinPos;
@@ -481,7 +489,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         delete[] simp;
     }
 
-    return ans.release();
+    return ans;
 }
 
 template <int dim>

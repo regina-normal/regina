@@ -2315,15 +2315,13 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyIsoSigThreeSphere(const std::string& sigStr) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            verifyThreeSphere(*t, sigStr.c_str());
-            delete t;
+            verifyThreeSphere(Triangulation<3>::fromIsoSig(sigStr),
+                sigStr.c_str());
         }
 
         void verifyIsoSigNotThreeSphere(const std::string& sigStr) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            verifyNotThreeSphere(*t, sigStr.c_str());
-            delete t;
+            verifyNotThreeSphere(Triangulation<3>::fromIsoSig(sigStr),
+                sigStr.c_str());
         }
 
         static void testThreeSphere6(const Triangulation<3>& tri,
@@ -2591,24 +2589,22 @@ class Triangulation3Test : public TriangulationTest<3> {
             //verifyIsoSigThreeSphere("kLLvQPPkbeghfifjhjjxxaaxxjxrvc");
         }
 
-        Triangulation<3>* verifyThreeBall(Triangulation<3>* tri,
+        void verifyThreeBall(const Triangulation<3>& tri,
                 const std::string& triName) {
-            clearProperties(*tri);
-            if (! tri->isBall()) {
+            clearProperties(tri);
+            if (! tri.isBall()) {
                 CPPUNIT_FAIL(("The 3-ball " + triName +
                     " is not recognised as such.").c_str());
             }
 
             // Try again with a barycentric subdivision.
-            Triangulation<3> big(*tri);
+            Triangulation<3> big(tri);
             big.barycentricSubdivision();
             clearProperties(big);
             if (! big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-ball "
                     + triName + " is not recognised as such.").c_str());
             }
-
-            return tri;
         }
 
         void verifyNotThreeBall(const Triangulation<3>& tri,
@@ -2634,37 +2630,45 @@ class Triangulation3Test : public TriangulationTest<3> {
             Tetrahedron<3>* tet[4];
 
             // Balls:
-            tri = new Triangulation<3>();
-            tri->newTetrahedron();
-            delete verifyThreeBall(tri, "Standalone tetrahedron");
+            {
+                Triangulation<3> tri;
+                tri.newTetrahedron();
+                verifyThreeBall(tri, "Standalone tetrahedron");
+            }
 
-            tri = new Triangulation<3>();
-            tet[0] = tri->newTetrahedron();
-            tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
-            delete verifyThreeBall(tri, "Snapped tetrahedron");
+            {
+                Triangulation<3> tri;
+                tet[0] = tri.newTetrahedron();
+                tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
+                verifyThreeBall(tri, "Snapped tetrahedron");
+            }
 
-            tri = new Triangulation<3>();
-            tet[0] = tri->newTetrahedron();
-            tet[1] = tri->newTetrahedron();
-            tet[0]->join(0, tet[1], Perm<4>());
-            tet[0]->join(1, tet[1], Perm<4>());
-            tet[0]->join(2, tet[1], Perm<4>());
-            delete verifyThreeBall(tri, "Triangular pillow");
+            {
+                Triangulation<3> tri;
+                tet[0] = tri.newTetrahedron();
+                tet[1] = tri.newTetrahedron();
+                tet[0]->join(0, tet[1], Perm<4>());
+                tet[0]->join(1, tet[1], Perm<4>());
+                tet[0]->join(2, tet[1], Perm<4>());
+                verifyThreeBall(tri, "Triangular pillow");
+            }
 
-            // This ball used to crash the simplification routines once
-            // upon a time.  Throw it into the test suite for good measure.
-            tri = new Triangulation<3>();
-            tet[0] = tri->newTetrahedron();
-            tet[1] = tri->newTetrahedron();
-            tet[2] = tri->newTetrahedron();
-            tet[3] = tri->newTetrahedron();
-            tet[0]->join(2, tet[0], Perm<4>(0,2));
-            tet[0]->join(1, tet[1], Perm<4>(2,0,1,3));
-            tet[1]->join(2, tet[2], Perm<4>());
-            tet[1]->join(1, tet[2], Perm<4>(2,0,1,3));
-            tet[2]->join(1, tet[3], Perm<4>(2,0,1,3));
-            tet[3]->join(2, tet[3], Perm<4>(1,2));
-            delete verifyThreeBall(tri, "4-tetrahedron ball");
+            {
+                // This ball used to crash the simplification routines once
+                // upon a time.  Throw it into the test suite for good measure.
+                Triangulation<3> tri;
+                tet[0] = tri.newTetrahedron();
+                tet[1] = tri.newTetrahedron();
+                tet[2] = tri.newTetrahedron();
+                tet[3] = tri.newTetrahedron();
+                tet[0]->join(2, tet[0], Perm<4>(0,2));
+                tet[0]->join(1, tet[1], Perm<4>(2,0,1,3));
+                tet[1]->join(2, tet[2], Perm<4>());
+                tet[1]->join(1, tet[2], Perm<4>(2,0,1,3));
+                tet[2]->join(1, tet[3], Perm<4>(2,0,1,3));
+                tet[3]->join(2, tet[3], Perm<4>(1,2));
+                verifyThreeBall(tri, "4-tetrahedron ball");
+            }
 
             // Non-balls:
             {
@@ -2757,14 +2761,14 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        Triangulation<3>* verifySolidTorus(Triangulation<3>* tri,
+        void verifySolidTorus(const Triangulation<3>& tri,
                 const char* triName) {
-            Triangulation<3> bounded(*tri);
+            Triangulation<3> bounded(tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
             clearProperties(bounded);
 
-            Triangulation<3> ideal(*tri);
+            Triangulation<3> ideal(tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
             clearProperties(ideal);
@@ -2801,8 +2805,6 @@ class Triangulation3Test : public TriangulationTest<3> {
                     << " was not recognised as such.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            return tri;
         }
 
         void verifyNotSolidTorus(const Triangulation<3>& tri,
@@ -2852,14 +2854,13 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyIsoSigSolidTorus(const std::string& sigStr) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            delete verifySolidTorus(t, sigStr.c_str());
+            verifySolidTorus(Triangulation<3>::fromIsoSig(sigStr),
+                sigStr.c_str());
         }
 
         void verifyIsoSigNotSolidTorus(const std::string& sigStr) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            verifyNotSolidTorus(*t, sigStr.c_str());
-            delete t;
+            verifyNotSolidTorus(Triangulation<3>::fromIsoSig(sigStr),
+                sigStr.c_str());
         }
 
         void solidTorusRecognition() {
@@ -2880,24 +2881,32 @@ class Triangulation3Test : public TriangulationTest<3> {
                 verifyNotSolidTorus(tri, "Snapped tetrahedron");
             }
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(1, 2);
-            delete verifySolidTorus(tri, "LST(1,2,3)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(1, 2);
+                verifySolidTorus(tri, "LST(1,2,3)");
+            }
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(1, 20);
-            delete verifySolidTorus(tri, "LST(1,20,21)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(1, 20);
+                verifySolidTorus(tri, "LST(1,20,21)");
+            }
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(1, 1);
-            delete verifySolidTorus(tri, "LST(1,1,2)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(1, 1);
+                verifySolidTorus(tri, "LST(1,1,2)");
+            }
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredSolidTorus(0, 1);
-            delete verifySolidTorus(tri, "LST(0,1,1)");
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(0, 1);
+                verifySolidTorus(tri, "LST(0,1,1)");
+            }
 
-            tri = Triangulation<3>::fromIsoSig("cMcabbgds");
-            delete verifySolidTorus(tri, "Ideal solid torus");
+            verifySolidTorus(Triangulation<3>::fromIsoSig("cMcabbgds"),
+                "Ideal solid torus");
 
             verifyNotSolidTorus(Example<3>::figureEight(),
                 "Figure 8 Knot Complement");
@@ -2956,14 +2965,13 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(&testSolidTorus4);
         }
 
-        Triangulation<3>* verifyTxI(Triangulation<3>* tri,
-                const char* triName) {
-            Triangulation<3> bounded(*tri);
+        void verifyTxI(const Triangulation<3>& tri, const char* triName) {
+            Triangulation<3> bounded(tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
             clearProperties(bounded);
 
-            Triangulation<3> ideal(*tri);
+            Triangulation<3> ideal(tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
             clearProperties(ideal);
@@ -3000,18 +3008,15 @@ class Triangulation3Test : public TriangulationTest<3> {
                     << " was not recognised as such.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            return tri;
         }
 
-        Triangulation<3>* verifyNotTxI(Triangulation<3>* tri,
-                const char* triName) {
-            Triangulation<3> bounded(*tri);
+        void verifyNotTxI(const Triangulation<3>& tri, const char* triName) {
+            Triangulation<3> bounded(tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
             clearProperties(bounded);
 
-            Triangulation<3> ideal(*tri);
+            Triangulation<3> ideal(tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
             clearProperties(ideal);
@@ -3048,37 +3053,34 @@ class Triangulation3Test : public TriangulationTest<3> {
                     << " was recognised as a T^2xI.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            return tri;
         }
 
         void verifyIsoSigTxI(const std::string& sigStr) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            delete verifyTxI(t, sigStr.c_str());
+            verifyTxI(Triangulation<3>::fromIsoSig(sigStr), sigStr.c_str());
         }
 
         void verifyIsoSigNotTxI(const std::string& sigStr) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
-            delete verifyNotTxI(t, sigStr.c_str());
+            verifyNotTxI(Triangulation<3>::fromIsoSig(sigStr), sigStr.c_str());
         }
 
         void torusXIntervalRecognition() {
-            Triangulation<3>* tri;
+            verifyTxI( Triangulation<3>::fromIsoSig("eLAkbbcddadbdb"),
+                "Ideal T2xI");
 
-            tri = Triangulation<3>::fromIsoSig("eLAkbbcddadbdb");
-            delete verifyTxI(tri, "Ideal T2xI eLAkbbcddadbdb");
+            verifyNotTxI(Triangulation<3>(), "Empty triangulation");
 
-            tri = new Triangulation<3>();
-            delete verifyNotTxI(tri, "Empty triangulation");
+            {
+                Triangulation<3> tri;
+                tri.newTetrahedron();
+                verifyNotTxI(tri, "Single tetrahedron");
+            }
 
-            tri = new Triangulation<3>();
-            tri->newTetrahedron();
-            delete verifyNotTxI(tri, "Single tetrahedron");
-
-            tri = new Triangulation<3>();
-            Tetrahedron<3>* tet = tri->newTetrahedron();
-            tet->join(0, tet, Perm<4>(3, 1, 2, 0));
-            delete verifyNotTxI(tri, "Snapped tetrahedron");
+            {
+                Triangulation<3> tri;
+                Tetrahedron<3>* tet = tri.newTetrahedron();
+                tet->join(0, tet, Perm<4>(3, 1, 2, 0));
+                verifyNotTxI(tri, "Snapped tetrahedron");
+            }
 
             // Now we check some homology-T2xI manifolds.
 
@@ -4354,9 +4356,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // close-book moves at the beginning (so a layering is required).
             {
                 const char* sig = "gffjQafeefaaaa";
-                Triangulation<3>* tri = Triangulation<3>::fromIsoSig(sig);
-                verifyMinimiseBoundary(*tri, sig);
-                delete tri;
+                verifyMinimiseBoundary(Triangulation<3>::fromIsoSig(sig), sig);
             }
         }
 

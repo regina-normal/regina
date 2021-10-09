@@ -275,20 +275,21 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        if (auto ans = regina::makePacket(
-                Triangulation<4>::fromIsoSig(sig), sig))
-            return ans;
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("I could not interpret the given "
-            "isomorphism signature."),
-            QObject::tr("<qt>3-dimensional isomorphism signatures are "
-            "described in detail in "
-            "<i>Simplification paths in the Pachner graphs "
-            "of closed orientable 3-manifold triangulations</i>, "
-            "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
-            "4-dimensional isomorphism signatures (as used here) follow an "
-            "analogous scheme.</qt>"));
-        return nullptr;
+        try {
+            return regina::makePacket(Triangulation<4>::fromIsoSig(sig), sig);
+        } catch (const regina::InvalidArgument&) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("I could not interpret the given "
+                "isomorphism signature."),
+                QObject::tr("<qt>3-dimensional isomorphism signatures are "
+                "described in detail in "
+                "<i>Simplification paths in the Pachner graphs "
+                "of closed orientable 3-manifold triangulations</i>, "
+                "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+                "4-dimensional isomorphism signatures (as used here) follow an "
+                "analogous scheme.</qt>"));
+            return nullptr;
+        }
     } else if (typeId == TRI_EXAMPLE) {
         return examples[exampleWhich->currentIndex()].create();
     }

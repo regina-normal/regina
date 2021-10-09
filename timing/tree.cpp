@@ -98,62 +98,65 @@ int main(int argc, char* argv[]) {
             usage(argv[0]);
 
         // Process the next triangulation on the command line:
-        Triangulation<3>* t = Triangulation<3>::fromIsoSig(argv[i]);
-        if (t) {
-            found = true;
-
-            if (t->isOrientable())
-                t->orient();
-
-            std::cout << "PROCESSING: " << argv[i] << std::endl;
-            if (mode == 's' || mode == 'q' || mode == 'a' || mode == 'o') {
-                NormalCoords coords = (mode == 's' ? NS_STANDARD :
-                    mode == 'q' ? NS_QUAD :
-                    mode == 'a' ? NS_AN_STANDARD :
-                    NS_AN_QUAD_OCT);
-                try {
-                    TreeEnumeration<> search(*t, coords);
-                    search.run([](const auto& tree) {
-                        /*
-                        std::cout << "SOLN #" << tree.nSolns() << ": ";
-                        tree.dumpTypes(std::cout);
-                        std::cout << std::endl;
-                        */
-                        return false;
-                    });
-
-                    std::cout << "# solutions = " << search.nSolns()
-                        << std::endl;
-                    std::cout << "# nodes visited = " << search.nVisited() 
-                        << std::endl;
-                } catch (const ReginaException&) {
-                    std::cerr << "ERROR: Constraints broken." << std::endl;
-                }
-            } else {
-                try {
-                    TreeSingleSoln<LPConstraintEulerPositive>
-                        search(*t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
-                    if (search.find()) {
-                        std::cout << "Found non-trivial Euler > 0:"
-                            << std::endl;
-                        search.dumpTypes(std::cout);
-                        std::cout << std::endl;
-                        std::cout << "# nodes visited = " << search.nVisited()
-                            << std::endl;
-                    } else {
-                        std::cout << "No non-trivial solution with Euler > 0"
-                            << std::endl;
-                        std::cout << "# nodes visited = " << search.nVisited()
-                            << std::endl;
-                    }
-                } catch (const ReginaException&) {
-                    std::cerr << "ERROR: Constraints broken." << std::endl;
-                }
-            }
-        } else
+        Triangulation<3> t;
+        try {
+            t = Triangulation<3>::fromIsoSig(argv[i]);
+        } catch (const regina::InvalidArgument&) {
             std::cerr << "ERROR: Could not reconstruct " << argv[i]
                 << std::endl;
-        delete t;
+            continue;
+        }
+
+        found = true;
+
+        if (t.isOrientable())
+            t.orient();
+
+        std::cout << "PROCESSING: " << argv[i] << std::endl;
+        if (mode == 's' || mode == 'q' || mode == 'a' || mode == 'o') {
+            NormalCoords coords = (mode == 's' ? NS_STANDARD :
+                mode == 'q' ? NS_QUAD :
+                mode == 'a' ? NS_AN_STANDARD :
+                NS_AN_QUAD_OCT);
+            try {
+                TreeEnumeration<> search(t, coords);
+                search.run([](const auto& tree) {
+                    /*
+                    std::cout << "SOLN #" << tree.nSolns() << ": ";
+                    tree.dumpTypes(std::cout);
+                    std::cout << std::endl;
+                    */
+                    return false;
+                });
+
+                std::cout << "# solutions = " << search.nSolns()
+                    << std::endl;
+                std::cout << "# nodes visited = " << search.nVisited() 
+                    << std::endl;
+            } catch (const ReginaException&) {
+                std::cerr << "ERROR: Constraints broken." << std::endl;
+            }
+        } else {
+            try {
+                TreeSingleSoln<LPConstraintEulerPositive>
+                    search(t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
+                if (search.find()) {
+                    std::cout << "Found non-trivial Euler > 0:"
+                        << std::endl;
+                    search.dumpTypes(std::cout);
+                    std::cout << std::endl;
+                    std::cout << "# nodes visited = " << search.nVisited()
+                        << std::endl;
+                } else {
+                    std::cout << "No non-trivial solution with Euler > 0"
+                        << std::endl;
+                    std::cout << "# nodes visited = " << search.nVisited()
+                        << std::endl;
+                }
+            } catch (const ReginaException&) {
+                std::cerr << "ERROR: Constraints broken." << std::endl;
+            }
+        }
     }
 
     if (! found)

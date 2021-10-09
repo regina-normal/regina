@@ -40,12 +40,11 @@
 namespace regina {
 
 Triangulation<2>::Triangulation(const std::string& description) {
-    Triangulation<2>* attempt;
-
-    if ((attempt = fromIsoSig(description)))
-        swap(*attempt);
-
-    delete attempt;
+    try {
+        *this = fromIsoSig(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
 }
 
 void Triangulation<2>::swap(Triangulation<2>& other) {

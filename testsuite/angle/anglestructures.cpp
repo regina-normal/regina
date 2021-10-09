@@ -185,15 +185,9 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void verifyTaut(const char* isoSig, unsigned long nTaut) {
-            std::unique_ptr<Triangulation<3>> tri(
-                Triangulation<3>::fromIsoSig(isoSig));
-            if (! tri) {
-                std::ostringstream msg;
-                msg << "Could not reconstruct from isoSig: " << isoSig << ".";
-                CPPUNIT_FAIL(msg.str());
-            }
+            Triangulation<3> tri = Triangulation<3>::fromIsoSig(isoSig);
 
-            AngleStructures a(*tri, true);
+            AngleStructures a(tri, true);
             if (a.size() != nTaut) {
                 std::ostringstream msg;
                 msg << "Taut angle structures for " << isoSig << ": "
@@ -206,7 +200,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             regina::Rational tmp, tot;
             regina::Edge<3>* e;
             for (const AngleStructure& s : a) {
-                for (j = 0; j < tri->size(); ++j) {
+                for (j = 0; j < tri.size(); ++j) {
                     tot = 0;
                     for (k = 0; k < 3; ++k) {
                         tmp = s.angle(j, k);
@@ -227,8 +221,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     }
                 }
 
-                for (j = 0; j < tri->countEdges(); ++j) {
-                    e = tri->edge(j);
+                for (j = 0; j < tri.countEdges(); ++j) {
+                    e = tri.edge(j);
                     if (e->isBoundary())
                         continue;
 

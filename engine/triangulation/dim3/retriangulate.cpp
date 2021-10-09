@@ -51,34 +51,28 @@ namespace detail {
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sig);
+            Triangulation<3> t = Triangulation<3>::fromIsoSig(sig);
             size_t i;
-            for (i = 0; i < t->countEdges(); ++i)
-                if (t->pachner(t->edge(i), true, false)) {
-                    Triangulation<3> alt(*t, false);
+            for (i = 0; i < t.countEdges(); ++i)
+                if (t.pachner(t.edge(i), true, false)) {
+                    Triangulation<3> alt(t, false);
                     alt.pachner(alt.edge(i), false, true);
-                    if (retriang->candidate(alt, sig)) {
-                        delete t;
+                    if (retriang->candidate(alt, sig))
                         return;
-                    }
                     // We cannot use alt from here, since candidate() might
                     // have changed it.
                 }
 
-            if (t->size() < maxSize)
-                for (i = 0; i < t->countTriangles(); ++i)
-                    if (t->pachner(t->triangle(i), true, false)) {
-                        Triangulation<3> alt(*t, false);
+            if (t.size() < maxSize)
+                for (i = 0; i < t.countTriangles(); ++i)
+                    if (t.pachner(t.triangle(i), true, false)) {
+                        Triangulation<3> alt(t, false);
                         alt.pachner(alt.triangle(i), false, true);
-                        if (retriang->candidate(alt, sig)) {
-                            delete t;
+                        if (retriang->candidate(alt, sig))
                             return;
-                        }
                         // We cannot use alt from here, since candidate() might
                         // have changed it.
                     }
-
-            delete t;
         }
     };
 } // namespace detail

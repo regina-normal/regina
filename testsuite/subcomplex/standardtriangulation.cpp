@@ -92,15 +92,8 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
 
         void testRecognitionSig(const char* isoSig,
                 const char* triName, const char* mfdName) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(isoSig);
-            if (! t) {
-                std::ostringstream msg;
-                msg << "The standard triangulation " << triName
-                    << " could not be constructed from its dehydration.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            auto std = StandardTriangulation::recognise(*t);
+            auto std = StandardTriangulation::recognise(
+                Triangulation<3>::fromIsoSig(isoSig));
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -129,8 +122,6 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                     << ", not the expected " << mfdName << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete t;
         }
 
         void recognition() {

@@ -157,12 +157,8 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             // which seems to prod SnapPea into finding a better
             // (non_geometric) solution instead.
             closedHypOr = Example<3>::smallClosedOrblHyperbolic();
-            {
-                Triangulation<3>* tmp = Triangulation<3>::fromIsoSig(
-                    "lLLLALAQccegffiijkikkkknawmhvwcls");
-                closedHypNor = std::move(*tmp);
-                delete tmp;
-            }
+            closedHypNor = Triangulation<3>::fromIsoSig(
+                "lLLLALAQccegffiijkikkkknawmhvwcls");
             weberSeifert = Example<3>::weberSeifert();
 
             t = flatOr.newTetrahedron();

@@ -53,21 +53,21 @@ int argThreads = 1;
 int flavour = FLAVOUR_DIM3;
 
 template <int dim>
-void process(regina::Triangulation<dim>* tri) {
+void process(const regina::Triangulation<dim>& tri) {
     unsigned long nSolns = 0;
     bool nonMinimal = false;
     std::string simpler;
 
-    tri->retriangulate(argHeight, argThreads, nullptr /* tracker */,
+    tri.retriangulate(argHeight, argThreads, nullptr /* tracker */,
         [&nSolns, &nonMinimal, &simpler, tri](
                 const std::string& sig, const regina::Triangulation<dim>& t) {
-            if (t.size() > tri->size())
+            if (t.size() > tri.size())
                 return false;
 
             std::lock_guard<std::mutex> lock(mutex);
             std::cout << sig << std::endl;
 
-            if (t.size() < tri->size()) {
+            if (t.size() < tri.size()) {
                 nonMinimal = true;
                 simpler = sig;
                 return true;
@@ -76,8 +76,6 @@ void process(regina::Triangulation<dim>* tri) {
             ++nSolns;
             return false;
         });
-
-    delete tri;
 
     if (nonMinimal) {
         std::cerr << "Triangulation is non-minimal!" << std::endl;
@@ -196,10 +194,9 @@ int main(int argc, const char* argv[]) {
     if (! broken) {
         switch (flavour) {
             case FLAVOUR_DIM3: {
-                auto tri3 = regina::Triangulation<3>::fromIsoSig(sig);
-                if (tri3) {
-                    process(tri3);
-                } else {
+                try {
+                    process(regina::Triangulation<3>::fromIsoSig(sig));
+                } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "3-manifold isomorphism signature.\n";
                     broken = true;
@@ -207,10 +204,9 @@ int main(int argc, const char* argv[]) {
                 break;
             }
             case FLAVOUR_DIM4: {
-                auto tri4 = regina::Triangulation<4>::fromIsoSig(sig);
-                if (tri4) {
-                    process(tri4);
-                } else {
+                try {
+                    process(regina::Triangulation<4>::fromIsoSig(sig));
+                } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "4-manifold isomorphism signature.\n";
                     broken = true;

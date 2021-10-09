@@ -42,12 +42,11 @@ namespace regina {
 
 Triangulation<4>::Triangulation(const std::string& description) :
         knownSimpleLinks_(false) {
-    Triangulation<4>* attempt;
-
-    if ((attempt = fromIsoSig(description)))
-        swap(*attempt);
-
-    delete attempt;
+    try {
+        *this = fromIsoSig(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
 }
 
 long Triangulation<4>::eulerCharManifold() const {

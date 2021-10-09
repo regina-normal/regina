@@ -808,37 +808,37 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             }
 
-            Triangulation<dim>* rebuild = Triangulation<dim>::fromIsoSig(sig);
-            if (! rebuild) {
+            try {
+                if (! Triangulation<dim>::fromIsoSig(sig).isIsomorphicTo(tri)) {
+                    std::ostringstream msg;
+                    msg << name << ": Reconstruction from \"" << sig
+                        << "\" is not isomorphic to the original.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": Cannot reconstruct from isomorphism "
                     "signature \"" << sig << "\".";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! rebuild->isIsomorphicTo(tri)) {
-                std::ostringstream msg;
-                msg << name << ": Reconstruction from \"" << sig
-                    << "\" is not isomorphic to the original.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            delete rebuild;
 
             // Does rebuilding still work if the signature has whitespace?
-            rebuild = Triangulation<dim>::fromIsoSig(
-                std::string("\t " + sig + "\t \n"));
-            if (! rebuild) {
+            try {
+                std::string modSig = std::string("\t " + sig + "\t \n");
+                if (! Triangulation<dim>::fromIsoSig(modSig).
+                        isIsomorphicTo(tri)) {
+                    std::ostringstream msg;
+                    msg << name << ": Reconstruction from \"" << sig
+                        << "\" with whitespace is not isomorphic to "
+                        "the original.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": Cannot reconstruct from isomorphism "
                     "signature \"" << sig << "\" with whitespace.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! rebuild->isIsomorphicTo(tri)) {
-                std::ostringstream msg;
-                msg << name << ": Reconstruction from \"" << sig
-                    << "\" with whitespace is not isomorphic to the original.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            delete rebuild;
 
             if (tri.isEmpty())
                 return;
@@ -874,10 +874,11 @@ class TriangulationTest : public CppUnit::TestFixture {
                 Isomorphism<dim>* relabelling;
                 tri.isoSig(&relabelling);
 
-                rebuild = Triangulation<dim>::fromIsoSig(sig);
+                Triangulation<dim> rebuild =
+                    Triangulation<dim>::fromIsoSig(sig);
                 Triangulation<dim> relabel = relabelling->apply(tri);
 
-                if (relabel.detail() != rebuild->detail()) {
+                if (relabel.detail() != rebuild.detail()) {
                     std::ostringstream msg;
                     msg << name << ": relabelling returned from "
                         "isoSig() does not recover fromIsoSig(\""
@@ -886,7 +887,6 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
 
                 delete relabelling;
-                delete rebuild;
             }
         }
 

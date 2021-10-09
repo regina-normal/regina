@@ -48,6 +48,7 @@
 #include <type_traits>
 #include "packet/container.h"
 #include "packet/text.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -108,11 +109,12 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
 
         if (! sig.empty()) {
             // Process this isomorphism signature.
-            if (auto packet = makePacket(PacketType::fromSig(sig))) {
-                packet->setLabel(label.empty() ? sig : label);
-                ans->insertChildLast(packet);
-            } else
+            try {
+                ans->insertChildLast(makePacket(PacketType::fromSig(sig),
+                    (label.empty() ? sig : label)));
+            } catch (const InvalidArgument&) {
                 errStrings = errStrings + '\n' + sig;
+            }
         }
     }
 

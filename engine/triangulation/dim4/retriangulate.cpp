@@ -51,72 +51,60 @@ namespace detail {
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
-            Triangulation<4>* t = Triangulation<4>::fromIsoSig(sig);
+            Triangulation<4> t = Triangulation<4>::fromIsoSig(sig);
             size_t i;
 
-            for (i = 0; i < t->countVertices(); ++i)
-                if (t->pachner(t->vertex(i), true, false)) {
-                    Triangulation<4> alt(*t, false);
+            for (i = 0; i < t.countVertices(); ++i)
+                if (t.pachner(t.vertex(i), true, false)) {
+                    Triangulation<4> alt(t, false);
                     alt.pachner(alt.vertex(i), false, true);
-                    if (retriang->candidate(alt, sig)) {
-                        delete t;
+                    if (retriang->candidate(alt, sig))
                         return;
-                    }
                     // We cannot use alt from here, since candidate() might
                     // have changed it.
                 }
 
-            for (i = 0; i < t->countEdges(); ++i)
-                if (t->pachner(t->edge(i), true, false)) {
-                    Triangulation<4> alt(*t, false);
+            for (i = 0; i < t.countEdges(); ++i)
+                if (t.pachner(t.edge(i), true, false)) {
+                    Triangulation<4> alt(t, false);
                     alt.pachner(alt.edge(i), false, true);
-                    if (retriang->candidate(alt, sig)) {
-                        delete t;
+                    if (retriang->candidate(alt, sig))
                         return;
-                    }
                     // We cannot use alt from here, since candidate() might
                     // have changed it.
                 }
 
-            for (i = 0; i < t->countTriangles(); ++i)
-                if (t->pachner(t->triangle(i), true, false)) {
-                    Triangulation<4> alt(*t, false);
+            for (i = 0; i < t.countTriangles(); ++i)
+                if (t.pachner(t.triangle(i), true, false)) {
+                    Triangulation<4> alt(t, false);
                     alt.pachner(alt.triangle(i), false, true);
-                    if (retriang->candidate(alt, sig)) {
-                        delete t;
+                    if (retriang->candidate(alt, sig))
                         return;
-                    }
                     // We cannot use alt from here, since candidate() might
                     // have changed it.
                 }
 
-            if (t->size() + 2 <= maxSize)
-                for (i = 0; i < t->countTetrahedra(); ++i)
-                    if (t->pachner(t->tetrahedron(i), true, false)) {
-                        Triangulation<4> alt(*t, false);
+            if (t.size() + 2 <= maxSize)
+                for (i = 0; i < t.countTetrahedra(); ++i)
+                    if (t.pachner(t.tetrahedron(i), true, false)) {
+                        Triangulation<4> alt(t, false);
                         alt.pachner(alt.tetrahedron(i), false, true);
-                        if (retriang->candidate(alt, sig)) {
-                            delete t;
+                        if (retriang->candidate(alt, sig))
                             return;
-                        }
                         // We cannot use alt from here, since candidate() might
                         // have changed it.
                     }
 
-            if (t->size() + 4 <= maxSize)
-                for (i = 0; i < t->size(); ++i) {
+            if (t.size() + 4 <= maxSize)
+                for (i = 0; i < t.size(); ++i) {
                     // 1-5 moves are always legal.
-                    Triangulation<4> alt(*t, false);
+                    Triangulation<4> alt(t, false);
                     alt.pachner(alt.pentachoron(i), true, true);
-                    if (retriang->candidate(alt, sig)) {
-                        delete t;
+                    if (retriang->candidate(alt, sig))
                         return;
-                    }
                     // We cannot use alt from here, since candidate() might
                     // have changed it.
                 }
-
-            delete t;
         }
     };
 } // namespace detail

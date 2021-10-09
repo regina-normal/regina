@@ -1148,6 +1148,8 @@ Version 7.0  [ TODO ]
         Class Triangulation<dim>:
             - New constructor that takes a link and builds its complement.
             - Now supports move construction and copy/move assignment.
+            - Routine fromIsoSig() now returns by value (not pointer), and
+              throws an exception on error (instead of returning null).
             - New alias fromSig(), which is is identical to fromIsoSig().
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a

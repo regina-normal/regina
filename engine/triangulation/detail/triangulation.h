@@ -1825,10 +1825,6 @@ class TriangulationBase :
          * that were created with the default encoding (i.e., there was
          * no \a Encoding template parameter passed to isoSig()).
          *
-         * The triangulation that is returned will be newly created, and
-         * it is the responsibility of the caller of this routine to
-         * destroy it.
-         *
          * Calling isoSig() followed by fromIsoSig() is not guaranteed to
          * produce an \e identical triangulation to the original, but it
          * is guaranteed to produce a combinatorially \e isomorphic
@@ -1849,15 +1845,16 @@ class TriangulationBase :
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * <i>dim</i>-dimensional isomorphism signature created using
+         * the default encoding.
+         *
          * @param sig the isomorphism signature of the triangulation to
          * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
-         * @return a newly allocated triangulation if the reconstruction was
-         * successful, or \c null if the given string was not a valid
-         * <i>dim</i>-dimensional isomorphism signature created using
-         * the default encoding.
+         * @return the reconstructed triangulation.
          */
-        static Triangulation<dim>* fromIsoSig(const std::string& sig);
+        static Triangulation<dim> fromIsoSig(const std::string& sig);
 
         /**
          * Alias for fromIsoSig(), to recover a full triangulation from an
@@ -1868,15 +1865,16 @@ class TriangulationBase :
          *
          * See fromIsoSig() for further details.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * <i>dim</i>-dimensional isomorphism signature created using
+         * the default encoding.
+         *
          * @param sig the isomorphism signature of the triangulation to
          * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
-         * @return a newly allocated triangulation if the reconstruction was
-         * successful, or \c null if the given string was not a valid
-         * <i>dim</i>-dimensional isomorphism signature created using
-         * the default encoding.
+         * @return the reconstructed triangulation.
          */
-        static Triangulation<dim>* fromSig(const std::string& sig);
+        static Triangulation<dim> fromSig(const std::string& sig);
 
         /**
          * Deduces the number of top-dimensional simplices in a
@@ -3873,7 +3871,7 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
 }
 
 template <int dim>
-Triangulation<dim>* TriangulationBase<dim>::fromSig(const std::string& sig) {
+Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
     return TriangulationBase<dim>::fromIsoSig(sig);
 }
 

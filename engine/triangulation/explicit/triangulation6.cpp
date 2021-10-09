@@ -41,8 +41,7 @@ template std::string TriangulationBase<6>::isoSigFrom
     <IsoSigPrintable<6>>(size_t, const Perm<7>&, Isomorphism<6>*) const;
 template std::string TriangulationBase<6>::isoSig
     <IsoSigPrintable<6>>(Isomorphism<6>**) const;
-template Triangulation<6>* TriangulationBase<6>::fromIsoSig(
-    const std::string&);
+template Triangulation<6> TriangulationBase<6>::fromIsoSig(const std::string&);
 template size_t TriangulationBase<6>::isoSigComponentSize(const std::string&);
 
 template void TriangulationBase<6>::calculateSkeleton();
