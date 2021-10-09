@@ -456,10 +456,10 @@ void addTriangulation3(pybind11::module_& m) {
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap);
     regina::python::add_packet_constructor<const std::string&>(wrap);
     wrap.def(pybind11::init([](const regina::Link& link) { // deprecated
-        return new regina::PacketOf<Triangulation<3>>(link.complement());
+        return regina::makePacket<Triangulation<3>>(link.complement());
     }));
     wrap.def(pybind11::init([](const regina::python::SnapPyObject& obj) {
-        return new regina::PacketOf<Triangulation<3>>(std::in_place,
+        return regina::makePacket<Triangulation<3>>(std::in_place,
             obj.string_);
     }));
 
