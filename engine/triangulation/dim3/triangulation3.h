@@ -3243,10 +3243,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * information (as described above), and also avoids constructing an
          * enormous intermediate string.
          *
-         * The triangulation that is returned will be newly created.
-         * If the SnapPea data is not in the correct format, this
-         * routine will return \c nullptr instead.
-         *
          * \warning This routine is "lossy", in that drops SnapPea-specific
          * information (as described above).  Unless you specifically need an
          * Triangulation<3> (not an SnapPeaTriangulation) or you need to avoid
@@ -3255,12 +3251,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *
+         * \exception InvalidArgument the given SnapPea data was not in
+         * the correct format.
+         *
          * @param snapPeaData a string containing the full contents of a
          * SnapPea data file.
-         * @return a new triangulation extracted from the given data,
-         * or \c nullptr on error.
+         * @return a native Regina triangulation extracted from the given
+         * SnapPea data.
          */
-        static Triangulation<3>* fromSnapPea(const std::string& snapPeaData);
+        static Triangulation<3> fromSnapPea(const std::string& snapPeaData);
 
         /*@}*/
 
@@ -3329,26 +3328,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool stretchForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
                 std::set<Vertex<3>*>&, std::set<Vertex<3>*>&) const;
             /**< Internal to maximalForestInSkeleton(). */
-
-        /**
-         * Reads the contents of a SnapPea data file from the given input
-         * stream, and converts the result to a new Triangulation<3>.  Since
-         * this returns a Triangulation<3>, it will lose some SnapPea-specific
-         * information in the process (such as peripheral curves, and the
-         * manifold name).
-         *
-         * If the input stream could not be read or if the data was not in the
-         * correct format, \c nullptr will be returned.  Otherwise a newly
-         * allocated triangulation will be returned, and it is the user's
-         * responsibility to deallocate this when it is finished with.
-         *
-         * Unlike the SnapPeaTriangulation constructor, this routine uses
-         * Regina's own SnapPea input code - it does not call any functions
-         * from the SnapPea kernel.
-         *
-         * \ifacespython Not present.
-         */
-        static Triangulation<3>* readSnapPea(std::istream& in);
 
         /**
          * Nullifies this SnapPea triangulation.

@@ -1218,6 +1218,8 @@ Version 7.0  [ TODO ]
             - The Link constructor is now deprecated, since Link::complement()
               is more efficient and now returns by value.
             - Function enterTextTriangulation() returns by value, not pointer.
+            - Routine fromSnapPea() now returns by value (not pointer), and
+              throws an exception on error (instead of returning null).
             - Routine rehydrate() now returns by value, not pointer; also,
               both rehydrate() and insertRehydration() now throw exceptions on
               error instead of indicating this through return values.

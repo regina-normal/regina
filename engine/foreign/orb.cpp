@@ -107,7 +107,7 @@ std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
  auto triang = makePacket<Triangulation<3>>();
  // since CassonFormat does not allow naming of triangulations,
  //  triang is given a name in the readOrb() function.
- //  I try to mimic Triangulation<3>::readSnapPea and
+ //  I try to mimic Triangulation<3>::fromSnapPea and
  //  Orb::cassonToTriangulation as much as possible.
 
  // If the triangulation is empty, leave now before we start allocating

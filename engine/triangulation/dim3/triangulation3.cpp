@@ -51,14 +51,17 @@ Triangulation<3>::Triangulation(const std::string& description) :
         swap(*attempt);
         return;
     }
+
     try {
         *this = rehydrate(description);
         return;
     } catch (const InvalidArgument&) {
     }
-    if (auto attempt = fromSnapPea(description)) {
-        swap(*attempt);
+
+    try {
+        *this = fromSnapPea(description);
         return;
+    } catch (const InvalidArgument&) {
     }
 }
 
