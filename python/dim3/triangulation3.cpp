@@ -408,7 +408,10 @@ void addTriangulation3(pybind11::module_& m) {
         .def("insertSFSOverSphere", &Triangulation<3>::insertSFSOverSphere)
         .def("connectedSumWith", &Triangulation<3>::connectedSumWith)
         .def("insertTriangulation", &Triangulation<3>::insertTriangulation)
-        .def("insertRehydration", &Triangulation<3>::insertRehydration)
+        .def("insertRehydration", [](Triangulation<3>& tri,
+                const std::string& str) { // deprecated
+            tri.insertTriangulation(Triangulation<3>::rehydrate(str));
+        })
         .def("dehydrate", &Triangulation<3>::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate)
         .def("isoSig", [](const Triangulation<3>& t) {

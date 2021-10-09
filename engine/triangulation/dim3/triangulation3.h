@@ -2915,10 +2915,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         void connectedSumWith(const Triangulation& other);
         /**
-         * Inserts the rehydration of the given string into this triangulation.
-         * If you simply wish to convert a dehydration string into a
-         * new triangulation, use the static routine rehydrate() instead.
-         * See dehydrate() for more information on dehydration strings.
+         * Deprecated routine that inserts the rehydration of the given string
+         * into this triangulation.  See dehydrate() and rehydrate() for
+         * more information on dehydration strings.
          *
          * This routine will first rehydrate the given string into a proper
          * triangulation.  The tetrahedra from the rehydrated triangulation
@@ -2926,27 +2925,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * which they appear in the rehydrated triangulation, and the
          * numbering of their vertices (0-3) will not change.
          *
-         * The routine dehydrate() can be used to extract a dehydration
-         * string from an existing triangulation.  Dehydration followed
-         * by rehydration might not produce a triangulation identical to
-         * the original, but it is guaranteed to produce an isomorphic
-         * copy.  See dehydrate() for the reasons behind this.
-         *
-         * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
-         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
-         * 1999.
+         * \deprecated If you just wish to rehydrate a dehydration string,
+         * simply call the static routine rehydrate().  If you wish to insert
+         * the rehydration into an existing triangulation, call rehydrate()
+         * followed by insertTriangulation().
          *
          * \exception InvalidArgument the given string could not be rehydrated.
          *
          * @param dehydration a dehydrated representation of the
          * triangulation to insert.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
-         *
-         * @see dehydrate
-         * @see rehydrate
          */
-        void insertRehydration(const std::string& dehydration);
+        [[deprecated]] void insertRehydration(const std::string& dehydration);
 
         /*@}*/
         /**
@@ -2990,9 +2980,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * empty string if dehydration is not possible because the
          * triangulation is disconnected, has boundary triangles or contains
          * too many tetrahedra.
-         *
-         * @see rehydrate
-         * @see insertRehydration
          */
         std::string dehydrate() const;
 
@@ -3216,8 +3203,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                 std::ostream& out);
         /**
          * Rehydrates the given alphabetical string into a 3-dimensional
-         * triangulation.  See dehydrate() for more information on
-         * dehydration strings.
+         * triangulation.
+         *
+         * For a full description of the dehydrated triangulation
+         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
+         * 1999.
          *
          * The converse routine dehydrate() can be used to extract a
          * dehydration string from an existing triangulation.  Dehydration
@@ -3225,20 +3216,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * to the original, but it is guaranteed to produce an isomorphic
          * copy.  See dehydrate() for the reasons behind this.
          *
-         * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
-         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
-         * 1999.
-         *
          * \exception InvalidArgument the given string could not be rehydrated.
          *
          * @param dehydration a dehydrated representation of the
          * triangulation to construct.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
          * @return the rehydrated triangulation.
-         *
-         * @see dehydrate
-         * @see insertRehydration
          */
         static Triangulation<3> rehydrate(const std::string& dehydration);
 
@@ -3589,6 +3572,11 @@ inline void Triangulation<3>::recognizer(std::ostream& out) const {
 
 inline bool Triangulation<3>::saveRecognizer(const char* filename) const {
     return saveRecogniser(filename);
+}
+
+inline void Triangulation<3>::insertRehydration(
+        const std::string& dehydration) {
+    insertTriangulation(rehydrate(dehydration));
 }
 
 } // namespace regina

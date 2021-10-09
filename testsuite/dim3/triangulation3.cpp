@@ -3860,26 +3860,23 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyDehydration(const Triangulation<3>& tri, const char* name) {
-            std::string dehydrate = tri.dehydrate();
-            if (dehydrate.empty()) {
+            std::string str = tri.dehydrate();
+            if (str.empty()) {
                 std::ostringstream msg;
                 msg << name << ": Cannot dehydrate.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            Triangulation<3> rehydrate;
             try {
-                rehydrate.insertRehydration(dehydrate);
+                if (! Triangulation<3>::rehydrate(str).isIsomorphicTo(tri)) {
+                    std::ostringstream msg;
+                    msg << name << ": Rehydration of \"" << str
+                        << "\" is not isomorphic to the original.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
-                msg << name << ": Cannot rehydrate \"" << dehydrate << "\".";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            if (! rehydrate.isIsomorphicTo(tri)) {
-                std::ostringstream msg;
-                msg << name << ": Rehydration of \"" << dehydrate
-                    << "\" is not isomorphic to the original.";
+                msg << name << ": Cannot rehydrate \"" << str << "\".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
