@@ -997,20 +997,22 @@ int main(int argc, char* argv[]) {
      END USER INPUT (PD CODE)
      */
     
-    regina::Link* tmpLinkObj = regina::Link::fromPD(pdcTmp.begin(), pdcTmp.end());
-    if (! tmpLinkObj) {
+    regina::Link tmpLinkObj;
+    try {
+        tmpLinkObj = regina::Link::fromPD(pdcTmp.begin(), pdcTmp.end());
+    } catch (const regina::InvalidArgument&) {
         // TODO: Barf
         // --- Benjamin Andrew Burton, 2021
     }
     
-    size_t numComps = tmpLinkObj -> countComponents();
+    size_t numComps = tmpLinkObj.countComponents();
     
     /*
      COMPUTE NUMBER OF CROSSINGS IN INDIVIDUAL COMPONENT
      */
     std::vector<regina::StrandRef> comps;
     for (int i=0; i<numComps; i++) {
-        comps.push_back(tmpLinkObj->component(i));
+        comps.push_back(tmpLinkObj.component(i));
     }
     
     /*
@@ -1069,7 +1071,7 @@ int main(int argc, char* argv[]) {
     
     std::vector<long> compWrithes;
     for (int i=0; i<numComps; i++) {
-        compWrithes.push_back(tmpLinkObj -> writheOfComponent(i));
+        compWrithes.push_back(tmpLinkObj.writheOfComponent(i));
     }
     std::cout << "Writhe of\n";
     for (int i=0; i<compWrithes.size(); i++) {
@@ -1092,35 +1094,34 @@ int main(int argc, char* argv[]) {
         long w = compWrithes[i];
         if (w > inputFramingVect[i]) {
             do {
-                tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, -1, false, true);
+                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
                 --w;
             } while (w != inputFramingVect[i]);
         } else if (w < inputFramingVect[i]) {
             do {
-                tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, 1, false, true);
+                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
                 ++w;
             } while (w != inputFramingVect[i]);
         }
         // Check number of crossings in i-th component: if < |framing|+2, suggest adding pair of cancelling twists (in order to guarantee existence of a quadricolour).
         if (compCrossingNums[i] < abs(inputFramingVect[i])+2) {
             std::cout << "Adding additional pair of cancelling twists to this component to guarantee existence of a quadricolour...\n";
-            tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, 1, false, true);
-            tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, -1, false, true);
+            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
+            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
         }
         
     }
     
     std::cout << "Link should now be self-framed: writhe(component) = framing(component)...\nWrithe of \n";
     for (int i=0; i<compWrithes.size(); i++) {
-        std::cout << "Component " << i << ": " << tmpLinkObj->writheOfComponent(i) << "\n";
+        std::cout << "Component " << i << ": " << tmpLinkObj.writheOfComponent(i) << "\n";
     }
     
     std::cout << std::endl;
     
     // Note: The reflection below is just a quick hack to fix orientations (that is, make consistent with SnapPy+Regina).
-    tmpLinkObj->reflect();
-    pdcode pdc = tmpLinkObj->pdData();
-    delete tmpLinkObj;
+    tmpLinkObj.reflect();
+    pdcode pdc = tmpLinkObj.pdData();
         
     graph<4> pdc_g;
 
