@@ -244,22 +244,20 @@ class SpiralSolidTorus : public StandardTriangulation {
          * under permutation <tt>vertexRoles(0)</tt> the image of 0
          * will be less than the image of 3.
          *
-         * @param tri the triangulation in which this solid torus lives.
          * @return \c true if and only if the representation of this
          * spiralled solid torus was actually changed.
          */
-        bool makeCanonical(const Triangulation<3>* tri);
+        bool makeCanonical();
 
         /**
          * Determines whether this spiralled solid torus is in canonical
          * form.  Canonical form is described in detail in the
          * description for makeCanonical().
          *
-         * @param tri the triangulation in which this solid torus lives.
          * @return \c true if and only if this spiralled solid torus is
          * in canonical form.
          */
-        bool isCanonical(const Triangulation<3>* tri) const;
+        bool isCanonical() const;
 
         /**
          * Determines if the given tetrahedron forms part of a

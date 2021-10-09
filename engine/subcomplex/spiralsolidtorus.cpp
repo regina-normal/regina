@@ -83,7 +83,7 @@ void SpiralSolidTorus::cycle(size_t k) {
     vertexRoles_ = newRoles;
 }
 
-bool SpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
+bool SpiralSolidTorus::makeCanonical() {
     size_t i, index;
 
     size_t baseTet = 0;
@@ -128,7 +128,7 @@ bool SpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     return true;
 }
 
-bool SpiralSolidTorus::isCanonical(const Triangulation<3>* tri) const {
+bool SpiralSolidTorus::isCanonical() const {
     if (vertexRoles_[0][0] > vertexRoles_[0][3])
         return false;
 

@@ -544,7 +544,7 @@
             auto spiral = regina::SpiralSolidTorus::recognise(tet, regina::Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
-            if (! spiral->isCanonical(self.packet))
+            if (! spiral->isCanonical())
                 continue;
             
             // We've got one!

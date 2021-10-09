@@ -473,6 +473,8 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
             - Routine transform() now takes its arguments by reference.
+            - Routine flatten() no longer takes a triangulation argument
+              (since this was redundant), and now returns by value.
             - All access to the underlying triangulation is now const only.
         Class LayeredTorusBundle:
             - Routine coreIso() returns by const reference, not by pointer.
@@ -1092,6 +1094,8 @@ Version 7.0  [ TODO ]
               The old name is kept as a deprecated alias.
             - Added copy and move construction, and copy and move assignment.
             - Added member and global swap() functions.
+            - Routines makeCanonical() and isCanonical() now take no
+              arguments (the old triangulation argument was redundant).
             - Deprecated clone().  Just use the copy constructor instead.
         Class StandardTriangulation:
             - Routine isStandardTriangulation() is now called recognise(),

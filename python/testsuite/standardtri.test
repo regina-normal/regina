@@ -246,7 +246,7 @@ def describe(t, name):
 				continue
 			sub = SpiralSolidTorus.recognise(tet, p)
 			if sub:
-				if not sub.isCanonical(t):
+				if not sub.isCanonical():
 					continue
 				msg = 'Spiral:'
 				for i in range(sub.size()):

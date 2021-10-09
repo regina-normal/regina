@@ -275,26 +275,23 @@ class LayeredSolidTorus : public StandardTriangulation {
 
         /**
          * Flattens this layered solid torus to a Mobius band.
-         * A newly created modified triangulation is returned; the
-         * original triangulation is unchanged.
+         * A new modified triangulation is returned; the original triangulation
+         * that contains this layered solid torus will be left unchanged.
          *
          * Note that there are three different ways in which this layered
          * solid torus can be flattened, corresponding to the three
          * different edges of the boundary torus that could become the
          * boundary edge of the new Mobius band.
          *
-         * @param original the triangulation containing this layered
-         * solid torus; this triangulation will not be changed.
          * @param mobiusBandBdry the edge group on the boundary of this
          * layered solid torus that will become the boundary of the new
          * Mobius band (the remaining edge groups will become internal
          * edges of the new Mobius band).  This must be 0, 1 or 2.
          * See topEdge() for further details about edge groups.
-         * @return a newly created triangulation in which this layered
-         * solid torus has been flattened to a Mobius band.
+         * @return a new triangulation in which this layered solid torus has
+         * been flattened to a Mobius band.
          */
-        Triangulation<3>* flatten(const Triangulation<3>* original,
-                int mobiusBandBdry) const;
+        Triangulation<3> flatten(int mobiusBandBdry) const;
 
         /**
          * Adjusts the details of this layered solid torus according to

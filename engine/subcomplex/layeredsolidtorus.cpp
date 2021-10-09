@@ -616,17 +616,16 @@ std::optional<AbelianGroup> LayeredSolidTorus::homology() const {
     return ans;
 }
 
-Triangulation<3>* LayeredSolidTorus::flatten(const Triangulation<3>* original,
-        int mobiusBandBdry) const {
+Triangulation<3> LayeredSolidTorus::flatten(int mobiusBandBdry) const {
     // Create a new triangulation and identify the top-level and
     // base tetrahedra.
-    Triangulation<3>* ans = new Triangulation<3>(*original, false);
+    Triangulation<3> ans(top_->triangulation(), false);
 
-    Tetrahedron<3>* newTop = ans->tetrahedron(top_->index());
-    Tetrahedron<3>* newBase = ans->tetrahedron(base_->index());
+    Tetrahedron<3>* newTop = ans.tetrahedron(top_->index());
+    Tetrahedron<3>* newBase = ans.tetrahedron(base_->index());
 
     // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(*ans);
+    Triangulation<3>::ChangeEventSpan span(ans);
 
     // Reglue the top faces before deleting the layered solid torus.
     Tetrahedron<3>* adj0 = newTop->adjacentTetrahedron(topFace_.lower());
@@ -678,7 +677,7 @@ Triangulation<3>* LayeredSolidTorus::flatten(const Triangulation<3>* original,
 
         currBdryFaces = FacePair(curr->adjacentFace(currBdryFaces.lower()),
             curr->adjacentFace(currBdryFaces.upper())).complement();
-        ans->removeTetrahedron(curr);
+        ans.removeTetrahedron(curr);
         curr = next;
     }
 

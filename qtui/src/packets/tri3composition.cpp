@@ -933,7 +933,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
                 Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
-            if (! spiral->isCanonical(tri_))
+            if (! spiral->isCanonical())
                 continue;
 
             // We've got one!
