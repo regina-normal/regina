@@ -1044,7 +1044,6 @@ size_t GroupPresentation::enumerateCoversInternal(
                         for (int start = 0; start < index; ++start) {
                             GroupExpression e;
                             int sheet = start;
-                            Perm<index> p;
                             unsigned long gen;
                             for (const auto& t : r.terms()) {
                                 if (t.exponent > 0) {
