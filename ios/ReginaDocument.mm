@@ -222,6 +222,7 @@ enum DocError {
     if (strncmp(prefix, "% Tri", 5) == 0) {
         // Looks like it belongs to SnapPea/SnapPy.
         std::string str(static_cast<const char*>(data.bytes), data.length);
+        // TODO: When migrating this to makePacket(), remember to try-catch instead of testing for isNull().
         regina::SnapPeaTriangulation* tri = new regina::SnapPeaTriangulation(str);
         if ((! tri) || tri->isNull()) {
             delete tri;

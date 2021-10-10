@@ -260,9 +260,12 @@ std::shared_ptr<regina::Packet> SnapPeaTriangulationCreator::createPacket(
         ans->setLabel(from->label());
         return ans;
     } else if (typeId == TRI_FILE) {
-        auto ans = regina::makePacket<SnapPeaTriangulation>(std::in_place,
-            fileContents->toPlainText().toUtf8().constData());
-        if (ans->isNull()) {
+        try {
+            auto ans = regina::makePacket<SnapPeaTriangulation>(std::in_place,
+                fileContents->toPlainText().toUtf8().constData());
+            ans->setLabel(ans->name());
+            return ans;
+        } catch (const regina::FileError&) {
             ReginaSupport::info(parentWidget,
                 QObject::tr("This does not appear to be a valid "
                     "SnapPea file."),
@@ -272,8 +275,6 @@ std::shared_ptr<regina::Packet> SnapPeaTriangulationCreator::createPacket(
                     "<tt>% Triangulation</tt></qt>"));
             return nullptr;
         }
-        ans->setLabel(ans->name());
-        return ans;
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_GIESEKING:

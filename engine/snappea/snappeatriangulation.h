@@ -554,12 +554,14 @@ class SnapPeaTriangulation :
          * (including information that Regina itself does not store,
          * such as peripheral curves).
          *
-         * If this operation is successful, this constructor will immediately
-         * ask SnapPea to try to find a hyperbolic structure.
-         *
          * If this operation fails (e.g., if the given string does not
-         * represent a valid SnapPea data file), then this will be a
-         * null triangulation.  You can test for this by calling isNull().
+         * represent a valid SnapPea data file), then this routine will
+         * thrown an exception; see below for details.
+         *
+         * If this routine returns (as opposed to throwing an exception),
+         * then it is guaranteed that this is not a null SnapPea triangulation.
+         * In this successful scenario, this constructor will ask SnapPea to
+         * try to find a hyperbolic structure before it returns.
          *
          * \note This constructor can be used in a Python session to
          * pass data from SnapPy through to Regina's copy of the SnapPea
@@ -575,6 +577,10 @@ class SnapPeaTriangulation :
          * filename, and simply passes it through unchanged to low-level C/C++
          * file I/O routines.  This routine assumes that the file \e contents,
          * however, are in UTF-8 (the standard encoding used throughout Regina).
+         *
+         * \exception FileError the SnapPea kernel could not read the
+         * given file, or could not parse the file contents (which could
+         * have been passed explicitly or could have been read from file).
          *
          * @param fileNameOrContents either the name of a SnapPea data
          * file, or the contents of a SnapPea data file (which need not

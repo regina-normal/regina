@@ -44,9 +44,10 @@ const SnapPeaHandler SnapPeaHandler::instance;
 
 std::shared_ptr<regina::Packet> SnapPeaHandler::importData(
         const QString& fileName, ReginaMain* parentWidget) const {
-    auto ans = regina::makePacket<regina::SnapPeaTriangulation>(
-        std::in_place, static_cast<const char*>(QFile::encodeName(fileName)));
-    if (ans->isNull()) {
+    try {
+        return regina::makePacket<regina::SnapPeaTriangulation>(std::in_place,
+            static_cast<const char*>(QFile::encodeName(fileName)));
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
@@ -54,7 +55,6 @@ std::shared_ptr<regina::Packet> SnapPeaHandler::importData(
                 arg(fileName.toHtmlEscaped()));
         return nullptr;
     }
-    return ans;
 }
 
 PacketFilter* SnapPeaHandler::canExport() const {

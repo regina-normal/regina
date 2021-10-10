@@ -79,19 +79,28 @@ void Cusp::writeTextShort(std::ostream& out) const {
 SnapPeaTriangulation::SnapPeaTriangulation(
         const std::string& fileNameOrContents) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
+    bool isContents = startsWith(fileNameOrContents, "% Triangulation");
     try {
-        if (startsWith(fileNameOrContents, "% Triangulation"))
+        if (isContents)
             data_ = regina::snappea::read_triangulation_from_string(
                 fileNameOrContents.c_str());
         else
             data_ = regina::snappea::read_triangulation(
                 fileNameOrContents.c_str());
-
-        if (data_)
-            sync();
     } catch (regina::SnapPeaFatalError& err) {
-        data_ = nullptr;
+        // data_ will be left as null.
     }
+
+    if (! data_) {
+        if (isContents)
+            throw regina::FileError("The SnapPea kernel could not "
+                "parse the given file contents");
+        else
+            throw regina::FileError("The SnapPea kernel could not open the "
+                "given file, and/or could not parse its contents");
+    }
+
+    sync();
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 

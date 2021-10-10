@@ -1049,6 +1049,8 @@ Version 7.0  [ TODO ]
               SnapPea returned-with-error into an exception.
         Class SnapPeaTriangulation:
             - New constructor that takes a link and builds its complement.
+            - The filename-or-contents constructor now throws an exception on
+              error, instead of creating a null SnapPea triangulation.
             - Now supports move construction and copy/move assignment.
             - Added member and global swap() functions.
             - New routine nullify().
