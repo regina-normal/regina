@@ -234,7 +234,7 @@ struct ValidityHelper<dim, 0, false> {
 template <int dim, int subdim, bool storesFaces = regina::standardDim(dim)>
 struct BoundaryHelper {
     static void verifyFaces(const regina::BoundaryComponent<dim>* bc,
-            const Triangulation<dim-1>* built, const char* name) {
+            const Triangulation<dim-1>& built, const char* name) {
         BoundaryHelper<dim, subdim-1>::verifyFaces(bc, built, name);
 
         // The labelling and ordering of subdim-faces is only guaranteed if no
@@ -262,7 +262,7 @@ struct BoundaryHelper {
             // The triangulated boundary component should have strictly
             // more subdim-faces.
             if (bc->template countFaces<subdim>() >=
-                    built->template countFaces<subdim>()) {
+                    built.template countFaces<subdim>()) {
                 std::ostringstream msg;
                 msg << "Boundary component " << bc->index()
                     << " of triangulation " << name
@@ -281,7 +281,7 @@ struct BoundaryHelper {
         // labelling / ordering.
 
         if (bc->template countFaces<subdim>() !=
-                built->template countFaces<subdim>()) {
+                built.template countFaces<subdim>()) {
             std::ostringstream msg;
             msg << "Boundary component " << bc->index()
                 << " of triangulation " << name
@@ -293,7 +293,7 @@ struct BoundaryHelper {
 
         size_t i, j;
         for (i = 0; i < bc->size(); ++i) {
-            const regina::Simplex<dim-1>* innerSimp = built->simplex(i);
+            const regina::Simplex<dim-1>* innerSimp = built.simplex(i);
             regina::Face<dim, dim-1>* outerSimp = bc->template face<dim-1>(i);
 
             for (j = 0; j < regina::binomSmall(dim, subdim+1); ++j) {
@@ -334,14 +334,14 @@ struct BoundaryHelper {
 template <int dim, bool storesFaces>
 struct BoundaryHelper<dim, -1, storesFaces> {
     static void verifyFaces(const regina::BoundaryComponent<dim>*,
-            const Triangulation<dim-1>*, const char*) {
+            const Triangulation<dim-1>&, const char*) {
     }
 };
 
 template <int dim, int subdim>
 struct BoundaryHelper<dim, subdim, false> {
     static void verifyFaces(const regina::BoundaryComponent<dim>*,
-            const Triangulation<dim-1>*, const char*) {
+            const Triangulation<dim-1>&, const char*) {
     }
 };
 
@@ -1100,9 +1100,9 @@ class TriangulationTest : public CppUnit::TestFixture {
             for (auto bc : tri.boundaryComponents())
                 if (BoundaryTypeHelper<dim>::isReal(bc)) {
                     // We have a real boundary component.
-                    const Triangulation<dim-1>* built = bc->build();
+                    const Triangulation<dim-1>& built = bc->build();
 
-                    if (bc->size() != built->size()) {
+                    if (bc->size() != built.size()) {
                         std::ostringstream msg;
                         msg << "Boundary component " << bc->index()
                             << " of triangulation " << name
@@ -1133,8 +1133,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             //
             // So: for the time being, we perform this subdivision for
             // the cases dim = 4,5 only.
-            Triangulation<dim-1> t(
-                *(tri.boundaryComponent(whichBdry)->build()));
+            Triangulation<dim-1> t = tri.boundaryComponent(whichBdry)->build();
             BarycentricHelper<dim-1>::subdivideAndSimplify(t);
 
             std::string ans = t.homology().str();

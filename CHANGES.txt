@@ -143,8 +143,9 @@ Version 7.0  [ TODO ]
               instead return a lightweight ListView object by value.
               C++ users should just use auto, and Python users are unaffected.
               See the analagous Triangulation<dim> changes for further details.
-            - Routine build() now behaves correctly in the presence of
-              pinched faces (which only appear in invalid triangulations).
+            - Routine build() now returns by const reference (not const
+              pointer), and behaves correctly in the presence of pinched faces
+              (which only appear in invalid triangulations).
             - Simplified the class hierarchy; BoundaryComponentFaceInterface,
               BoundaryComponentStorage, BoundaryComponentFaceStorage,
               WeakFaceList and WeakFaceListSuite are all gone.

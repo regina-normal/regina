@@ -175,7 +175,10 @@ class BoundaryComponentBase :
                  is constructed, or it may be \c null in which case it
                  will be built on demand.
                  For ideal or invalid vertices, this is always \c null since
-                 the triangulation is cached by the vertex class instead.*/
+                 the triangulation is cached by the vertex class instead.
+                 We keep this as pointer to avoid issues with cascading
+                 template instantiations (this allows us to work with
+                 forward declarations of lower-dimensional types instead). */
 
     public:
         /**
@@ -644,23 +647,23 @@ class BoundaryComponentBase :
          *
          * @return the triangulation of this boundary component.
          */
-        const Triangulation<dim-1>* build() const {
+        const Triangulation<dim-1>& build() const {
             // Make sure we do not try to instantiate Triangulation<1>.
             static_assert(canBuild,
                 "BoundaryComponent<dim>::build() can only "
                 "be used with dimensions dim > 2.");
 
             if (boundary_.value)
-                return boundary_.value; // Already cached or pre-computed.
+                return *boundary_.value; // Already cached or pre-computed.
             if constexpr (allowVertex) {
                 if (facets().empty()) {
                     // We have an ideal or invalid vertex.
-                    return std::get<tupleIndex(0)>(faces_).front()->buildLink();
+                    return *std::get<tupleIndex(0)>(faces_).front()->buildLink();
                 }
             }
 
-            return const_cast<BoundaryComponentBase<dim>*>(this)->
-                boundary_.value = buildRealBoundary();
+            return *(const_cast<BoundaryComponentBase<dim>*>(this)->
+                boundary_.value = buildRealBoundary());
         }
 
         /**

@@ -634,7 +634,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 bool makeBdryFinite, const char* name) {
             std::string ans;
 
-            Triangulation<3> t(*(tri.boundaryComponent(whichBdry)->build()));
+            Triangulation<3> t = tri.boundaryComponent(whichBdry)->build();
             t.intelligentSimplify();
 
             if (makeBdryFinite) {
@@ -708,7 +708,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 }
 
                 long foundEuler = bc->eulerChar();
-                long triEuler = bc->build()->eulerCharTri();
+                long triEuler = bc->build().eulerCharTri();
 
                 if (foundEuler != *eit - vPinch + ePinch) {
                     std::ostringstream msg;
@@ -864,7 +864,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 count = bc->countTetrahedra();
                 for (j = 0; j < count; ++j) {
                     tet4 = bc->tetrahedron(j);
-                    tet3 = bc->build()->tetrahedron(j);
+                    tet3 = bc->build().tetrahedron(j);
                     for (triangle = 0; triangle < 4; ++triangle) {
                         adj3 = tet3->adjacentTetrahedron(triangle);
                         if (adj3) {

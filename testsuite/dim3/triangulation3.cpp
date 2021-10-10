@@ -721,7 +721,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                         }
 
                 long foundEuler = bc->eulerChar();
-                long triEuler = bc->build()->eulerCharTri();
+                long triEuler = bc->build().eulerCharTri();
 
                 if (foundEuler != *eit - vPinch) {
                     std::ostringstream msg;

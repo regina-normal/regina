@@ -779,7 +779,7 @@ void Tri4GluingsUI::boundaryComponents() {
                 "vertex link.</qt>"));
         if (chosen) {
             auto ans = regina::makePacket<regina::Triangulation<3>>(
-                std::in_place, *chosen->build());
+                std::in_place, chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);

@@ -1010,7 +1010,7 @@ void Tri3GluingsUI::boundaryComponents() {
                 "corresponding vertex link.</qt>"));
         if (chosen) {
             auto ans = regina::makePacket<Triangulation<2>>(std::in_place,
-                *chosen->build());
+                chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
