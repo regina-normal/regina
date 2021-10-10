@@ -2234,86 +2234,17 @@ class PacketData {
 };
 
 /**
- * Converts a raw \a Held pointer into a new wrapped packet, without
- * making a deep copy.
- *
- * The data will be moved out of \a src (using the \a Held move constructor),
- * and then \a src will be destroyed.  If \a src is a temporary stack variable,
- * you should use the rvalue reference version of this function instead.
- *
- * The pointer \a src may be \c null, in which case the return value
- * will be \c null also.
- *
- * The packet that is returned will be newly created, and will have no
- * packet label.
- *
- * \ifacespython This is not made available to Python, since Python will
- * still maintain a reference to \a src (which will become unusable).
- * Instead you can make a deep copy using the PacketOf<Held> constructor.
- *
- * @param src the \a Held object that will be moved into the new packet and
- * then destroyed.
- * @return the new wrapped packet, or \c null if \a src was \c null.
- */
-template <typename Held>
-std::shared_ptr<PacketOf<Held>> makePacket(Held* src) {
-    static_assert(std::is_class<Held>::value,
-        "The template argument to makePacket() must be a plain class type.");
-    if (src) {
-        auto ans = std::make_shared<PacketOf<Held>>(std::move(*src));
-        delete src;
-        return ans;
-    } else
-        return nullptr;
-}
-
-/**
- * Converts a raw \a Held pointer into a new wrapped packet, without
- * making a deep copy.
- *
- * The data will be moved out of \a src (using the \a Held move constructor),
- * and then \a src will be destroyed.  If \a src is a temporary stack variable,
- * you should use the rvalue reference version of this function instead.
- *
- * The pointer \a src may be \c null, in which case the return value
- * will be \c null also.
- *
- * The packet that is returned will be newly created, and will have
- * the given packet label.
- *
- * \ifacespython This is not made available to Python, since Python will
- * still maintain a reference to \a src (which will become unusable).
- * Instead you can make a deep copy using the PacketOf<Held> constructor.
- *
- * @param src the \a Held object that will be moved into the new packet and
- * then destroyed.
- * @param label the label to assign to the new packet.
- * @return the new wrapped packet, or \c null if \a src was \c null.
- */
-template <typename Held>
-std::shared_ptr<PacketOf<Held>> makePacket(Held* src,
-        const std::string& label) {
-    auto ans = makePacket(src);
-    if (ans)
-        ans->setLabel(label);
-    return ans;
-}
-
-/**
  * Converts a temporary \a Held object into a new wrapped packet, without
- * making a deep copy.
- *
- * The data will be moved out of \a src (using the \a Held move constructor).
- * If \a src was dynamically allocated, you may prefer to use the pointer
- * version of this function (which does the same thing as this routine, but
- * also deletes \a src after it is finished).
+ * making a deep copy.  The data will be moved out of \a src (using the
+ * \a Held move constructor).
  *
  * The packet that is returned will be newly created, and will have no
  * packet label.
  *
  * \note This function is trivial (it just calls a single move constructor).
- * It is provided for consistency with the pointer variant of this function,
- * to help users migrate code from using pointer semantics to value semantics.
+ * Nevertheless, using this function is recommended since it makes it clear
+ * (and searchable) that you are correctly wrapping the new packet in a
+ * std::shared_ptr, as is required for all packets in Regina.
  *
  * \ifacespython This is not made available to Python, since Python will
  * still maintain a reference to \a src (which will become unusable).
@@ -2332,20 +2263,17 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src) {
 
 /**
  * Converts a temporary \a Held object into a new wrapped packet, without
- * making a deep copy.
- *
- * The data will be moved out of \a src (using the \a Held move constructor).
- * If \a src was dynamically allocated, you may prefer to use the pointer
- * version of this function (which does the same thing as this routine, but
- * also deletes \a src after it is finished).
+ * making a deep copy.  The data will be moved out of \a src (using the
+ * \a Held move constructor).
  *
  * The packet that is returned will be newly created, and will have
  * the given packet label.
  *
  * \note This function is trivial (it just calls a single move constructor
- * and then Packet::setLabel()).  It is provided for consistency with the
- * pointer variant of this function, to help users migrate code from using
- * pointer semantics to value semantics.
+ * and then Packet::setLabel()).  Nevertheless, using this function is
+ * recommended since it makes it clear (and searchable) that you are correctly
+ * wrapping the new packet in a std::shared_ptr, as is required for all
+ * packets in Regina.
  *
  * \ifacespython This is not made available to Python, since Python will
  * still maintain a reference to \a src (which will become unusable).
@@ -2380,8 +2308,10 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
  * The packet that is returned will be newly created, and will have no
  * packet label.
  *
- * \note This function is trivial (it just makes a single call to
- * std::make_shared).  However, it also allows for slightly simpler code.
+ * \note This function is trivial (it simply calls std::make_shared).
+ * Nevertheless, using this function is recommended since it makes it clear
+ * (and searchable) that you are correctly wrapping the new packet in a
+ * std::shared_ptr, as is required for all packets in Regina.
  *
  * \ifacespython Not present.
  *
@@ -2403,8 +2333,10 @@ std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
  * The packet that is returned will be newly created, and will have no
  * packet label.
  *
- * \note This function is trivial (it just makes a single call to
- * std::make_shared).  However, it also allows for slightly simpler code.
+ * \note This function is trivial (it simply calls std::make_shared).
+ * Nevertheless, using this function is recommended since it makes it clear
+ * (and searchable) that you are correctly wrapping the new packet in a
+ * std::shared_ptr, as is required for all packets in Regina.
  *
  * \ifacespython Not present.
  *
