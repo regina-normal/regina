@@ -73,12 +73,6 @@ namespace regina {
  * between a vector \a v and the same vector with additional zeroes
  * appended to its end.
  *
- * Internally, each node of the trie is represented by a separate
- * TypeTrie object, each of which is responsible for managing the
- * lifespan of its descendant nodes.  Externally, a user only needs
- * to create and manage a single TypeTrie object (which becomes
- * the root of the trie).
- *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.  However, be aware

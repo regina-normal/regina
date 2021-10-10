@@ -49,9 +49,8 @@ namespace regina {
 template <typename> class PacketOf;
 
 /**
- * Reads a triangulation from the given Orb / Casson file.  A newly
- * allocated triangulation packet will be returned; it is the user's
- * responsibility to deallocate this when it is finished with.
+ * Reads a triangulation from the given Orb / Casson file.  A new
+ * triangulation packet will be returned.
  *
  * The packet label of the new triangulation will be the manifold name
  * read from the second line of the Orb / Casson file.  The first line
@@ -66,8 +65,8 @@ template <typename> class PacketOf;
  * It assumes however that the \e contents of the file are in UTF-8.
  *
  * @param filename the name of the Orb / Casson file from which to read.
- * @return a new triangulation containing the data read from the Orb / Casson
- * file, or \c null on error.
+ * @return a new triangulation packet containing the data read from the
+ * Orb / Casson file, or \c null on error.
  *
  * @author Ryan Budney, also with code from Damien Heard
  *
