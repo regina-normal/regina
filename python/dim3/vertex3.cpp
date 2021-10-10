@@ -83,20 +83,13 @@ void addVertex3(pybind11::module_& m) {
                 "You should change your code now, because the name link() "
                 "will be used for a different function in the future.");
         })
-        .def("buildLink", [](const Vertex<3>* v) {
-            // Return a clone of the link.  This is because triangulations
-            // have a custom holder type, and so pybind11 ignores any attempt
-            // to pass return_value_policy::reference_internal.
-            return new regina::Triangulation<2>(*(v->buildLink()));
+        .def("buildLink", [](const Vertex<3>& v) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<2>(v.buildLink());
         })
-        .def("buildLinkDetail", [](const Vertex<3>* v, bool labels) {
-            // Return a clone of the link (as above); also, we always
-            // build the isomorphism.
-            regina::Isomorphism<3>* iso;
-            regina::Triangulation<2>* link = new regina::Triangulation<2>(
-                *(v->buildLinkDetail(labels, &iso)));
-            return pybind11::make_tuple(link, iso);
-        }, pybind11::arg("labels") = true)
+        .def("buildLinkInclusion", &Vertex<3>::buildLinkInclusion)
         .def("isLinkClosed", &Vertex<3>::isLinkClosed)
         .def("isIdeal", &Vertex<3>::isIdeal)
         .def("isBoundary", &Vertex<3>::isBoundary)

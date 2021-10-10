@@ -237,9 +237,9 @@ void Triangulation<4>::calculateEdgeLinks() {
         if (e->hasBadIdentification() && ! e->hasBadLink()) {
             // Calling buildLink() causes the edge link to be cached by
             // Edge<4>.
-            const Triangulation<2>* link = e->buildLink();
-            if ((link->isClosed() && link->eulerChar() != 2) ||
-                    ((! link->isClosed()) && link->eulerChar() != 1))
+            const Triangulation<2>& link = e->buildLink();
+            if ((link.isClosed() && link.eulerChar() != 2) ||
+                    ((! link.isClosed()) && link.eulerChar() != 1))
                 e->whyInvalid_.value |= Edge<4>::INVALID_LINK;
         }
 }

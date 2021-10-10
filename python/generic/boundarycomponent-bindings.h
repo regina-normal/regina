@@ -86,8 +86,12 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
         .def("component", &BoundaryComponent<dim>::component,
             pybind11::return_value_policy::reference)
         .def("triangulation", &BoundaryComponent<dim>::triangulation)
-        .def("build", &BoundaryComponent<dim>::build,
-            pybind11::return_value_policy::reference_internal)
+        .def("build", [](const BoundaryComponent<dim>& b) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<dim-1>(b.build());
+        })
         .def("isReal", &BoundaryComponent<dim>::isReal)
         .def("isIdeal", &BoundaryComponent<dim>::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<dim>::isInvalidVertex)

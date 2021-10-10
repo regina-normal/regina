@@ -229,6 +229,12 @@ Version 7.0  [ TODO ]
             - Simplified the class hierarchy; FaceOrientability, FaceValidity,
               FaceListHolder and FaceStorage are all now gone.
             - New compile-time constants dimension and subdimension.
+            - For those faces that have a buildLink() function, this now
+              returns by const reference instead of const pointer.
+              Also, buildLinkDetail() has been renamed buildLinkInclusion();
+              the old name is removed entirely.  This now returns just an
+              isomorphism by value: the triangulation should be fetched via
+              buildLink(), and the labelling option is gone.
         Class FaceNumbering<dim, subdim>:
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.

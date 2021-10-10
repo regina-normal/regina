@@ -493,7 +493,7 @@ class BoundaryComponentBase :
                     } else if constexpr (dim == 4) {
                         // In dimension 4, the link triangulation is
                         // already precomputed.
-                        return vtx->buildLink()->eulerCharTri();
+                        return vtx->buildLink().eulerCharTri();
                     } else {
                         // We should never reach this branch, since
                         // higher-dimensional triangulations do not
@@ -658,7 +658,7 @@ class BoundaryComponentBase :
             if constexpr (allowVertex) {
                 if (facets().empty()) {
                     // We have an ideal or invalid vertex.
-                    return *std::get<tupleIndex(0)>(faces_).front()->buildLink();
+                    return std::get<tupleIndex(0)>(faces_).front()->buildLink();
                 }
             }
 

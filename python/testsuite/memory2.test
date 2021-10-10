@@ -114,28 +114,6 @@ print('Step 4')
 v = None # destroys v2
 print('Step 5')
 
-print('Vertex link detailed #1')
-print('Step 1')
-t = PacketOfTriangulation3(Example3.lens(7,1)); tw = Watcher(t, 't3')
-print('Step 2')
-v = t.vertex(0).buildLinkDetail()
-print('Step 3')
-t = None # destroys t3
-print('Step 4')
-# v3 is orphaned but alive
-print(v[0].isoSig())
-
-print('Vertex link detailed #2')
-print('Step 1')
-t = PacketOfTriangulation3(Example3.lens(7,1)); tw = Watcher(t, 't4')
-print('Step 2')
-v = t.vertex(0).buildLinkDetail() # destroys v3
-print('Step 3')
-t = None # destroys t4
-print('Step 4')
-v = None # destroys v4
-print('Step 5')
-
 # b2 and c2 are still alive at this point
 print(b); print(b.label()); print(b.parent())
 print(c); print(c.label()); print(c.parent())

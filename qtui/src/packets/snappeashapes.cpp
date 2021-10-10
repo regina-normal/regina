@@ -434,7 +434,7 @@ void SnapPeaShapesUI::vertexLinks() {
                 "<i>V</i>.</qt>"));
         if (chosen) {
             auto ans = regina::makePacket<regina::Triangulation<2>>(
-                std::in_place, *chosen->buildLink());
+                std::in_place, chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);

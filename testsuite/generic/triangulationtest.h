@@ -246,9 +246,9 @@ struct BoundaryHelper {
         bool hasPinched = false;
         if constexpr (subdim <= dim - 3) {
             for (auto f : bc->template faces<subdim>()) {
-                const Triangulation<dim-1-subdim>* link = f->buildLink();
+                const Triangulation<dim-1-subdim>& link = f->buildLink();
                 size_t realBdry = 0;
-                for (auto sub : link->boundaryComponents())
+                for (auto sub : link.boundaryComponents())
                     if (sub->isReal())
                         ++realBdry;
                 if (realBdry > 1) {

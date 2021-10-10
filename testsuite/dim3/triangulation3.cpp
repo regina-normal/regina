@@ -714,7 +714,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (bc->isReal())
                     for (auto v : bc->vertices())
                         if (! v->isValid()) {
-                            long punctures = v->buildLink()->
+                            long punctures = v->buildLink().
                                 countBoundaryComponents();
                             if (punctures > 1)
                                 vPinch += (punctures - 1);
@@ -1479,26 +1479,18 @@ class Triangulation3Test : public TriangulationTest<3> {
                 const char* name) {
             for (unsigned long i = 0; i < tri.countVertices(); ++i) {
                 Vertex<3>* v = tri.vertex(i);
-                Isomorphism<3>* iso;
 
-                const Triangulation<2>* link = v->buildLink();
-                Triangulation<2>* link2 = v->buildLinkDetail(true, &iso);
+                const Triangulation<2>& link = v->buildLink();
+                Isomorphism<3> iso = v->buildLinkInclusion();
 
-                if (link->size() != v->degree()) {
+                if (link.size() != v->degree()) {
                     std::ostringstream msg;
                     msg << name << ", vertex " << i << ": "
                         << "link has incorrect number of triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (! link2->isIdenticalTo(*link)) {
-                    std::ostringstream msg;
-                    msg << name << ", vertex " << i << ": "
-                        << "variants of buildLink() give different results.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (! link->isConnected()) {
+                if (! link.isConnected()) {
                     std::ostringstream msg;
                     msg << name << ", vertex " << i << ": "
                         << "link of vertex is not connected.";
@@ -1507,12 +1499,12 @@ class Triangulation3Test : public TriangulationTest<3> {
 
                 if (v->isIdeal()) {
                     // Vertex link should be closed but not a sphere.
-                    if (! link->isClosed()) {
+                    if (! link.isClosed()) {
                         std::ostringstream msg;
                         msg << name << ", vertex " << i << ": "
                             << "link of ideal vertex is not a closed surface.";
                         CPPUNIT_FAIL(msg.str());
-                    } else if (link->eulerChar() == 2) {
+                    } else if (link.eulerChar() == 2) {
                         std::ostringstream msg;
                         msg << name << ", vertex " << i << ": "
                             << "link of ideal vertex is a sphere.";
@@ -1520,12 +1512,12 @@ class Triangulation3Test : public TriangulationTest<3> {
                     }
                 } else if (! v->isStandard()) {
                     // Vertex link should have boundary and not be a disc.
-                    if (link->isClosed()) {
+                    if (link.isClosed()) {
                         std::ostringstream msg;
                         msg << name << ", vertex " << i << ": "
                             << "link of invalid vertex is closed.";
                         CPPUNIT_FAIL(msg.str());
-                    } else if (link->eulerChar() == 1) {
+                    } else if (link.eulerChar() == 1) {
                         std::ostringstream msg;
                         msg << name << ", vertex " << i << ": "
                             << "link of invalid vertex is a disc.";
@@ -1533,12 +1525,12 @@ class Triangulation3Test : public TriangulationTest<3> {
                     }
                 } else if (! v->isBoundary()) {
                     // Vertex link should be a sphere.
-                    if (! link->isClosed()) {
+                    if (! link.isClosed()) {
                         std::ostringstream msg;
                         msg << name << ", vertex " << i << ": "
                             << "link of internal vertex is not closed.";
                         CPPUNIT_FAIL(msg.str());
-                    } else if (link->eulerChar() != 2) {
+                    } else if (link.eulerChar() != 2) {
                         std::ostringstream msg;
                         msg << name << ", vertex " << i << ": "
                             << "link of internal vertex is not a sphere.";
@@ -1546,7 +1538,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     }
                 } else {
                     // Vertex link should be a disc.
-                    if (link->isClosed() || link->eulerChar() != 1) {
+                    if (link.isClosed() || link.eulerChar() != 1) {
                         std::ostringstream msg;
                         msg << name << ", vertex " << i << ": "
                             << "link of real boundary vertex is not a disc.";
@@ -1560,8 +1552,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                 const regina::Triangle<2> *t, *adj;
                 unsigned vNum;
                 for (j = 0; j < v->degree(); ++j) {
-                    tet = tri.tetrahedron(iso->tetImage(j));
-                    perm = iso->facePerm(j);
+                    tet = tri.tetrahedron(iso.tetImage(j));
+                    perm = iso.facePerm(j);
                     vNum = perm[3];
                     if (tet->vertex(vNum) != v) {
                         std::ostringstream msg;
@@ -1579,7 +1571,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
                     for (k = 0; k < 3; ++k) {
-                        t = link->triangle(j);
+                        t = link.triangle(j);
                         adj = t->adjacentTriangle(k);
                         if (adj) {
                             if (! tet->adjacentTetrahedron(perm[k])) {
@@ -1589,7 +1581,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                                     << "link has extra adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
                             } else if (tet->adjacentTetrahedron(perm[k]) !=
-                                    tri.tetrahedron(iso->tetImage(
+                                    tri.tetrahedron(iso.tetImage(
                                     adj->index()))) {
                                 std::ostringstream msg;
                                 msg << name
@@ -1597,7 +1589,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                                     << "link has wrong adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
                             } else if (tet->adjacentGluing(perm[k]) !=
-                                    iso->facetPerm(adj->index()) *
+                                    iso.facetPerm(adj->index()) *
                                     Perm<4>::extend(t->adjacentGluing(k)) *
                                     perm.inverse()) {
                                 std::ostringstream msg;
@@ -1617,9 +1609,6 @@ class Triangulation3Test : public TriangulationTest<3> {
                         }
                     }
                 }
-
-                delete link2;
-                delete iso;
             }
         }
 

@@ -94,20 +94,13 @@ void addEdge4(pybind11::module_& m) {
         .def("isValid", &Edge<4>::isValid)
         .def("hasBadIdentification", &Edge<4>::hasBadIdentification)
         .def("hasBadLink", &Edge<4>::hasBadLink)
-        .def("buildLink", [](const Edge<4>* e) {
-            // Return a clone of the link.  This is because triangulations
-            // have a custom holder type, and so pybind11 ignores any attempt
-            // to pass return_value_policy::reference_internal.
-            return new regina::Triangulation<2>(*(e->buildLink()));
+        .def("buildLink", [](const Edge<4>& e) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<2>(e.buildLink());
         })
-        .def("buildLinkDetail", [](const Edge<4>* e, bool labels) {
-            // Return a clone of the link (as above); also, we always
-            // build the isomorphism.
-            regina::Isomorphism<4>* iso;
-            regina::Triangulation<2>* link = new regina::Triangulation<2>(
-                *(e->buildLinkDetail(labels, &iso)));
-            return pybind11::make_tuple(link, iso);
-        }, pybind11::arg("labels") = true)
+        .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion)
         .def_static("ordering", &Edge<4>::ordering)
         .def_static("faceNumber", &Edge<4>::faceNumber)
         .def_static("containsVertex", &Edge<4>::containsVertex)

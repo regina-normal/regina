@@ -1040,7 +1040,7 @@ void Tri3GluingsUI::vertexLinks() {
                 "<i>V</i>.</qt>"));
         if (chosen) {
             auto ans = regina::makePacket<Triangulation<2>>(std::in_place,
-                *chosen->buildLink());
+                chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);

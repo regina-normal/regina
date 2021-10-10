@@ -76,8 +76,12 @@ void addBoundaryComponent4(pybind11::module_& m) {
         .def("component", &BoundaryComponent<4>::component,
             pybind11::return_value_policy::reference)
         .def("triangulation", &BoundaryComponent<4>::triangulation)
-        .def("build", &BoundaryComponent<4>::build,
-            pybind11::return_value_policy::reference_internal)
+        .def("build", [](const BoundaryComponent<4>& b) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<3>(b.build());
+        })
         .def("eulerChar", &BoundaryComponent<4>::eulerChar)
         .def("isReal", &BoundaryComponent<4>::isReal)
         .def("isIdeal", &BoundaryComponent<4>::isIdeal)
