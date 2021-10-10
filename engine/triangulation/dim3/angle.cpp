@@ -38,6 +38,12 @@
 namespace regina {
 
 bool Triangulation<3>::knowsStrictAngleStructure() const {
+    if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
+        return true; // already known: a solution exists
+
+    if (std::get<bool>(strictAngleStructure_))
+        return true; // already known: no solution exists
+
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
@@ -54,19 +60,16 @@ bool Triangulation<3>::knowsStrictAngleStructure() const {
         }
     }
 
-    return std::holds_alternative<AngleStructure>(strictAngleStructure_) ||
-        std::get<bool>(strictAngleStructure_);
+    // Don't know.  This requres a real computation.
+    return false;
 }
 
-const AngleStructure* Triangulation<3>::strictAngleStructure() const {
+bool Triangulation<3>::hasStrictAngleStructure() const {
     // The following test also catches any easy cases.
-    if (knowsStrictAngleStructure()) {
-        if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
-            return &std::get<AngleStructure>(strictAngleStructure_);
-        else
-            return nullptr; // known to have no solution
-    }
+    if (knowsStrictAngleStructure())
+        return std::holds_alternative<AngleStructure>(strictAngleStructure_);
 
+    // Run the full computation and cache the resulting structure, if any.
     LPInitialTableaux<LPConstraintNone> eqns(*this, NS_ANGLE, false);
 
     LPData<LPConstraintNone, Integer> lp;
@@ -86,7 +89,7 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     // Test for a solution!
     if (! lp.isFeasible()) {
         strictAngleStructure_ = true; // confirmed: no solution
-        return nullptr;
+        return false;
     }
 
     // We have a strict angle structure: reconstruct it.
@@ -94,7 +97,7 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     VectorInt v(len);
     lp.extractSolution(v, nullptr /* type vector */);
     strictAngleStructure_ = AngleStructure(*this, std::move(v));
-    return &std::get<AngleStructure>(strictAngleStructure_);
+    return true;
 }
 
 const AngleStructure* Triangulation<3>::generalAngleStructure() const {

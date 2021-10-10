@@ -1438,6 +1438,9 @@ Equality type : EqualityType.BY_REFERENCE
 ModelLinkGraphNode : class
 Equality type : EqualityType.BY_REFERENCE
 
+NoSolution : class
+Exception type
+
 NormalAlg : class
 Equality type : EqualityType.BY_VALUE
 

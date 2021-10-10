@@ -194,6 +194,33 @@ class FileError : public ReginaException {
 };
 
 /**
+ * An exception thrown when Regina has certified that a mathematical
+ * problem has no solution.
+ *
+ * Note that the constructor for this exception class follows a different
+ * pattern from most of Regina's exception classes.
+ *
+ * \ingroup utilities
+ */
+class NoSolution : public ReginaException {
+    public:
+        /**
+         * Creates a new exception with a stock error message.
+         */
+        NoSolution() : ReginaException("No solution") {}
+        /**
+         * Creates a new copy of the given exception.
+         */
+        NoSolution(const NoSolution&) noexcept = default;
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        NoSolution& operator = (const NoSolution&) noexcept = default;
+};
+
+/**
  * An exception thrown when a mathematical function is not able to solve
  * a particular instance of a problem.
  *

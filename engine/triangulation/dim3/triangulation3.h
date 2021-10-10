@@ -1100,52 +1100,70 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         [[deprecated]] std::optional<NormalSurface>
             hasOctagonalAlmostNormalSphere() const;
         /**
-         * Searches for a strict angle structure on this triangulation.
-         * Recall that a \e strict angle structure is one in which every
-         * angle is strictly between 0 and &pi;.  If a strict angle structure
-         * does exist, then this routine is guaranteed to find one.
+         * Returns a strict angle structure on this triangulation, if one
+         * exists.  Recall that a \e strict angle structure is one in which
+         * every angle is strictly between 0 and &pi;.  If a strict angle
+         * structure does exist, then this routine is guaranteed to return one.
+         *
+         * This routine is designed for scenarios where you already know
+         * that a strict angle structure exists.  This means:
+         *
+         * - If no strict angle structure exists, this routine will throw an
+         *   exception, which will incur a significant overhead.
+         *
+         * - If you do \e not know in advance whether a strict angle structure
+         *   exists, you should call hasStrictAngleStructure() first.  If the
+         *   answer is no, this will avoid the overhead of throwing and catching
+         *   exceptions.  If the answer is yes, this will have the side-effect
+         *   of caching the strict angle structure, which means your subsequent
+         *   call to strictAngleStructure() will be essentially instantaneous.
          *
          * The underlying algorithm runs a single linear program (it does
          * \e not enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
-         * If you are only interested in \e whether a strict angle structure
-         * exists (i.e., you are not interested in the specific angles
-         * themselves), then you may call hasStrictAngleStructure() instead.
+         * The result of this routine is cached internally: as long as
+         * the triangulation does not change, multiple calls to
+         * strictAngleStructure() will return identical angle structures,
+         * and every call after the first be essentially instantaneous.
          *
-         * The angle structure returned (if any) is cached internally
-         * alongside this triangulation.  This means that, as long as
-         * the triangulation does not change, subsequent calls to
-         * strictAngleStructure() will return identical pointers
-         * and will be essentially instantaneous.
+         * \exception NoSolution no strict angle structure exists on
+         * this triangulation.
          *
-         * If the triangulation changes however, then the cached angle
-         * structure will be deleted.  This means that you should not
-         * store the returned pointer for later use; instead you should
-         * just call strictAngleStructure() again.
-         *
-         * @return a strict angle structure on this triangulation, or
-         * \c nullptr if none exists.
+         * @return a strict angle structure on this triangulation, if
+         * one exists.
          */
-        const AngleStructure* strictAngleStructure() const;
+        const AngleStructure& strictAngleStructure() const;
         /**
-         * A deprecated alias for strictAngleStructure(), which searches
-         * for a strict angle structure on this triangulation.
+         * A deprecated alias for strictAngleStructure(), which returns
+         * a strict angle structure on this triangulation if one exists.
          *
          * \deprecated This routine has been renamed to strictAngleStructure().
          * See that routine for further details.
          *
-         * @return a strict angle structure on this triangulation, or
-         * \c nullptr if none exists.
+         * \exception NoSolution no strict angle structure exists on
+         * this triangulation.
+         *
+         * @return a strict angle structure on this triangulation, if
+         * one exists.
          */
-        [[deprecated]] const AngleStructure* findStrictAngleStructure() const;
+        [[deprecated]] const AngleStructure& findStrictAngleStructure() const;
         /**
          * Determines whether this triangulation supports a strict angle
          * structure.  Recall that a \e strict angle structure is one
          * in which every angle is strictly between 0 and &pi;.
          *
-         * This routine is equivalent to calling strictAngleStructure()
-         * and testing whether the return value is non-null.
+         * This routine returns \c true if and only if strictAngleStructure()
+         * throws an exception.  However, if you do not \e know whether a
+         * strict angle structure exists, then this routine is faster:
+         *
+         * - If there is \e no strict angle structure, this routine will
+         *   avoid the overhead of throwing and catching exceptions.
+         *
+         * - If there \e is a strict angle structure, this routine will find
+         *   and cache this angle structure, which means that any subsequent
+         *   call to strictAngleStructure() to retrieve its details will
+         *   be essentially instantaneous.
          *
          * The underlying algorithm runs a single linear program (it does
          * \e not enumerate all vertex angle structures).  This means
@@ -3489,20 +3507,16 @@ inline std::optional<NormalSurface>
     return octagonalAlmostNormalSphere();
 }
 
-inline const AngleStructure* Triangulation<3>::findStrictAngleStructure()
-        const {
-    return strictAngleStructure();
+inline const AngleStructure& Triangulation<3>::strictAngleStructure() const {
+    if (hasStrictAngleStructure())
+        return std::get<AngleStructure>(strictAngleStructure_);
+    else
+        throw NoSolution();
 }
 
-inline bool Triangulation<3>::hasStrictAngleStructure() const {
-    if (std::holds_alternative<AngleStructure>(strictAngleStructure_)) {
-        return true; // already known to have a solution
-    } else if (std::get<bool>(strictAngleStructure_)) {
-        return false; // already known to have no solution
-    } else {
-        // Not yet computed.
-        return (strictAngleStructure() != nullptr);
-    }
+inline const AngleStructure& Triangulation<3>::findStrictAngleStructure()
+        const {
+    return strictAngleStructure();
 }
 
 inline unsigned long Triangulation<3>::homologyH2Z2() const {

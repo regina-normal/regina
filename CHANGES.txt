@@ -762,6 +762,8 @@ Version 7.0  [ TODO ]
               their coordinates using a plain Vector<LargeInteger>.
         Enum NormalTransform:
             - New enumeration to support conversions and filters.
+        Class NoSolution:
+            - New exception class.
         Class NotImplemented:
             - New exception class.
         Class NSVectorMirrored:
@@ -1226,7 +1228,9 @@ Version 7.0  [ TODO ]
               octagonalAlmostNormalSphere().  These routines now also return a
               std::optional<NormalSurface>, not a newly allocated pointer
               that may be null.
-            - Renamed findStrictAngleStructure() to strictAngleStructure(),
+            - Renamed findStrictAngleStructure() to strictAngleStructure();
+              moreover, this now returns by const reference if a solution
+              exists and throws an exception otherwise.
             - Renamed isThreeSphere() and knowsThreeSphere() to isSphere() and
               knowsSphere().  The old names are kept as deprecated aliases.
             - New routines inAnyPacket() and isSnapPea().

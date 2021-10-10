@@ -52,6 +52,8 @@ void addException(pybind11::module_& m) {
         "NotImplemented", PyExc_RuntimeError);
     pybind11::register_exception<regina::FileError>(m,
         "FileError", PyExc_RuntimeError);
+    pybind11::register_exception<regina::NoSolution>(m,
+        "NoSolution", PyExc_RuntimeError);
     pybind11::register_exception<regina::UnsolvedCase>(m,
         "UnsolvedCase", PyExc_RuntimeError);
     pybind11::register_exception<regina::SnapPeaUnsolvedCase>(m,
