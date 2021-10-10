@@ -115,20 +115,27 @@ class Manifold : public Output<Manifold> {
         std::string structure() const;
         /**
          * Returns a triangulation of this 3-manifold, if such a
-         * construction has been implemented.  If no construction routine
-         * has yet been implemented for this 3-manifold (for instance,
-         * if this 3-manifold is a Seifert fibred space with
-         * sufficiently many exceptional fibres) then this routine will
-         * return \c null.
+         * construction has been implemented.  For details of which types of
+         * 3-manifolds have implemented this routine, see the class notes
+         * for each corresponding subclasses of Manifold.
          *
-         * The details of which 3-manifolds have construction routines
-         * can be found in the notes for the corresponding subclasses of
-         * Manifold.  The default implemention of this routine returns \c null.
+         * The default implemention of this routine just throws a
+         * NotImplemented exception.
          *
-         * @return a triangulation of this 3-manifold, or \c null if the
-         * appropriate construction routine has not yet been implemented.
+         * \exception NotImplemented explicit construction has not yet been
+         * implemented for this particular 3-manifold.
+         *
+         * \exception FileError the construction needs to be read from file (as
+         * opposed to computed on the fly), but the file is inaccessible or its
+         * contents cannot be read and parsed correctly.  Currently this can
+         * only happen for the subclass SnapPeaCensusManifold, which reads its
+         * triangulations from the SnapPea census databases that are installed
+         * with Regina.
+         *
+         * @return a triangulation of this 3-manifold, if this
+         * construction has been implemented.
          */
-        virtual Triangulation<3>* construct() const;
+        virtual Triangulation<3> construct() const;
         /**
          * Returns the first homology group of this 3-manifold, if such
          * a routine has been implemented.  For details of which types of
@@ -310,15 +317,6 @@ class Manifold : public Output<Manifold> {
 // Inline functions for Manifold
 
 inline Manifold::~Manifold() {
-}
-
-inline Triangulation<3>* Manifold::construct() const {
-    return nullptr;
-}
-
-inline AbelianGroup Manifold::homology() const {
-    throw NotImplemented("The homology() routine is currently not "
-        "implemented for this class of manifold");
 }
 
 inline AbelianGroup Manifold::homologyH1() const {

@@ -106,12 +106,11 @@ class Census2Test : public CppUnit::TestFixture {
         };
 
         static void foundPerms(const GluingPerms<2>& perms, CensusSpec* spec) {
-            Triangulation<2>* tri = perms.triangulate();
-            if ((! (spec->minimal_ && ! tri->isMinimal())) &&
-                    (! (spec->orbl_ == true && ! tri->isOrientable())) &&
-                    (! (spec->orbl_ == false && tri->isOrientable())))
+            Triangulation<2> tri = perms.triangulate();
+            if ((! (spec->minimal_ && ! tri.isMinimal())) &&
+                    (! (spec->orbl_ == true && ! tri.isOrientable())) &&
+                    (! (spec->orbl_ == false && tri.isOrientable())))
                 ++spec->count_;
-            delete tri;
         }
 
         static void foundPairing(const FacetPairing<2>& pairing,

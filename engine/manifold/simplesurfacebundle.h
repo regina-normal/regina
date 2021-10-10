@@ -134,7 +134,7 @@ class SimpleSurfaceBundle : public Manifold {
          */
         void swap(SimpleSurfaceBundle& other) noexcept;
 
-        Triangulation<3>* construct() const override;
+        Triangulation<3> construct() const override;
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;

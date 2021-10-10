@@ -118,7 +118,7 @@ namespace {
      * into the position that really belongs to vertex y.
      */
     void adjustQuadMaps(TriangleMap& map0, TriangleMap& map1,
-            Perm<4> err, Triangulation<3>* tri) {
+            Perm<4> err, Triangulation<3>& tri) {
         if (err.isIdentity()) {
             // The mappings are already correct.
             return;
@@ -141,7 +141,7 @@ namespace {
         if (err == Perm<4>(1,0)) {
             // Reflect A,B.
             // This requires a layering.
-            Tetrahedron<3>* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri.newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -154,7 +154,7 @@ namespace {
         if (err == Perm<4>(2,3)) {
             // Reflect C,D.
             // This again requires a layering.
-            Tetrahedron<3>* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri.newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -185,7 +185,7 @@ namespace {
         if (err == Perm<4>(2,3,1,0)) {
             // Rotate the quadrilateral.
             // This requires a layering.
-            Tetrahedron<3>* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri.newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -198,7 +198,7 @@ namespace {
         if (err == Perm<4>(3,2,0,1)) {
             // Rotate the quadrilateral in the other direction.
             // This also requires a layering.
-            Tetrahedron<3>* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri.newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -217,9 +217,9 @@ namespace {
 // Implementation of triangulate()
 // ------------------------------------------------------------------------
 
-Triangulation<3>* NormalHypersurface::triangulate() const {
+Triangulation<3> NormalHypersurface::triangulate() const {
     const Triangulation<4>& outer = triangulation();
-    Triangulation<3>* inner = new Triangulation<3>();
+    Triangulation<3> inner;
 
     // Get rid of an empty *outer* triangulation now.
     if (outer.isEmpty())
@@ -302,7 +302,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                     ++pieceNumber) {
                 // Create a new tetrahedron for the final 3-manifold
                 // triangulation.
-                innerTet[0] = inner->newTetrahedron();
+                innerTet[0] = inner.newTetrahedron();
 
                 for (facet = 0; facet < 5; ++facet) {
                     if (facet == type)
@@ -349,9 +349,9 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
             for (pieceNumber = 0; pieceNumber < prisms(pent, type).longValue();
                     ++pieceNumber) {
                 // Triangulate the normal prism with three tetrahedra.
-                innerTet[0] = inner->newTetrahedron();
-                innerTet[1] = inner->newTetrahedron();
-                innerTet[2] = inner->newTetrahedron();
+                innerTet[0] = inner.newTetrahedron();
+                innerTet[1] = inner.newTetrahedron();
+                innerTet[2] = inner.newTetrahedron();
                 innerTet[0]->join(0, innerTet[1], Perm<4>());
                 innerTet[2]->join(1, innerTet[1], Perm<4>());
 
@@ -590,7 +590,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
         delete tetData[tet];
     delete[] tetData;
 
-    inner->intelligentSimplify();
+    inner.intelligentSimplify();
     return inner;
 }
 

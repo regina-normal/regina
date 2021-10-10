@@ -65,10 +65,10 @@ namespace regina {
  *
  * The main purpose of this class is to provide a way of quickly describing
  * and manipulating the combinatorial structure of a triangulation without the
- * overhead of a full-blown Triangulation<3> object.  In particular, this class
- * was designed for use in census enumeration, which involves rapid
+ * overhead of a full-blown Triangulation<dim> object.  In particular, this
+ * class was designed for use in census enumeration, which involves rapid
  * construction and editing of these permutations.  To convert this into a
- * full Triangulation<3> object, you can call triangulate().
+ * full Triangulation<dim> object, you can call triangulate().
  *
  * Internally, this class stores each permutation as an index into
  * Perm<dim+1>::Sn_1 (that is, an index into the permutation group \a S_dim).
@@ -401,9 +401,8 @@ class GluingPerms {
         int& permIndex(unsigned simp, unsigned facet);
 
         /**
-         * Returns a newly created triangulation as modelled by this set
-         * of gluing permutations and the associated simplex facet
-         * pairing.
+         * Returns the triangulation modelled by this set of gluing
+         * permutations and the associated simplex facet pairing.
          *
          * Each matched pair of facets and their associated permutations
          * will be realised as two simplex facets in the triangulation glued
@@ -411,17 +410,14 @@ class GluingPerms {
          * unmatched facet will be realised as a boundary facet in the
          * triangulation.
          *
-         * It is the responsibility of the caller of this routine to
-         * delete this triangulation once it is no longer required.
-         *
          * \pre For every simplex facet in the underlying facet pairing
          * that is glued to a partner, the corresponding gluing
          * permutation in this set is not the special "not yet chosen"
          * value (i.e., does not have internal index -1).
          *
-         * @return a newly created triangulation modelled by this structure.
+         * @return the triangulation modelled by this structure.
          */
-        Triangulation<dim>* triangulate() const;
+        Triangulation<dim> triangulate() const;
 
         /**
          * Dumps all internal data in a plain text format to the given

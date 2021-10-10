@@ -104,14 +104,13 @@ class Census4Test : public CppUnit::TestFixture {
         };
 
         static void foundPerms(const GluingPerms<4>& perms, CensusSpec* spec) {
-            Triangulation<4>* tri = perms.triangulate();
-            if (tri->isValid() &&
-                    (! (spec->orbl_ == true && ! tri->isOrientable())) &&
-                    (! (spec->orbl_ == false && tri->isOrientable())) &&
-                    (! (spec->finite_ == true && tri->isIdeal())) &&
-                    (! (spec->finite_ == false && ! tri->isIdeal())))
+            Triangulation<4> tri = perms.triangulate();
+            if (tri.isValid() &&
+                    (! (spec->orbl_ == true && ! tri.isOrientable())) &&
+                    (! (spec->orbl_ == false && tri.isOrientable())) &&
+                    (! (spec->finite_ == true && tri.isIdeal())) &&
+                    (! (spec->finite_ == false && ! tri.isIdeal())))
                 ++spec->count_;
-            delete tri;
         }
 
         static void foundPairing(const FacetPairing<4>& pairing,

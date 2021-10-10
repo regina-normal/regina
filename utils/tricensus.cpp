@@ -93,7 +93,7 @@ void findAllPerms(const regina::FacetPairing<dim>&,
     bool, bool, int, std::shared_ptr<regina::Packet>);
 
 template <int dim>
-bool mightBeMinimal(regina::Triangulation<dim>*);
+bool mightBeMinimal(regina::Triangulation<dim>&);
 
 template <int dim>
 int runCensus();
@@ -109,8 +109,8 @@ inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
 }
 
 template <>
-inline bool mightBeMinimal<2>(regina::Triangulation<2>* tri) {
-    return tri->isMinimal();
+inline bool mightBeMinimal<2>(regina::Triangulation<2>& tri) {
+    return tri.isMinimal();
 }
 
 template <>
@@ -123,8 +123,8 @@ inline void findAllPerms<3>(const regina::FacetPairing<3>& p,
 }
 
 template <>
-inline bool mightBeMinimal<3>(regina::Triangulation<3>* tri) {
-    return ! tri->simplifyToLocalMinimum(false);
+inline bool mightBeMinimal<3>(regina::Triangulation<3>& tri) {
+    return ! tri.simplifyToLocalMinimum(false);
 }
 
 template <>
@@ -137,7 +137,7 @@ inline void findAllPerms<4>(const regina::FacetPairing<4>& p,
 }
 
 template <>
-inline bool mightBeMinimal<4>(regina::Triangulation<4>*) {
+inline bool mightBeMinimal<4>(regina::Triangulation<4>&) {
     return true;
 }
 
@@ -147,7 +147,7 @@ inline bool mightBeMinimal<4>(regina::Triangulation<4>*) {
 template <int dim>
 void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         std::shared_ptr<regina::Packet> container) {
-    regina::Triangulation<dim>* tri = perms.triangulate();
+    regina::Triangulation<dim> tri = perms.triangulate();
 
     // For minimalHyp, we don't run mightBeMinimal<dim>().
     // This is because mightBeMinimal() only tests for immediate
@@ -156,37 +156,29 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
     // no such moves are possible (since it ensures no internal vertices
     // and no low-degree edges).
 
-    bool ok = true;
-    if (! tri->isValid())
-        ok = false;
-    else if ((! finiteness.hasFalse()) && tri->isIdeal())
-        ok = false;
-    else if ((! finiteness.hasTrue()) && (! tri->isIdeal()))
-        ok = false;
-    else if ((! orientability.hasTrue()) && tri->isOrientable())
-        ok = false;
-    else if ((minimal || minimalPrime || minimalPrimeP2) &&
+    if (! tri.isValid())
+        return;
+    if ((! finiteness.hasFalse()) && tri.isIdeal())
+        return;
+    if ((! finiteness.hasTrue()) && (! tri.isIdeal()))
+        return;
+    if ((! orientability.hasTrue()) && tri.isOrientable())
+        return;
+    if ((minimal || minimalPrime || minimalPrimeP2) &&
             ! mightBeMinimal<dim>(tri))
-        ok = false;
+        return;
 
-    if (ok) {
-        // Put it in the census!
-        if (sigs) {
-            sigStream << tri->isoSig() << std::endl;
-            delete tri;
-        } else {
-            std::ostringstream out;
-            out << "Item " << (nSolns + 1);
-
-            auto p = regina::makePacket(tri);
-            p->setLabel(out.str());
-            container->insertChildLast(p);
-        }
-        nSolns++;
+    // Put it in the census!
+    if (sigs) {
+        sigStream << tri.isoSig() << std::endl;
     } else {
-        // The fish that John West reject.
-        delete tri;
+        std::ostringstream out;
+        out << "Item " << (nSolns + 1);
+
+        container->insertChildLast(
+            regina::makePacket(std::move(tri), out.str()));
     }
+    ++nSolns;
 }
 
 /**

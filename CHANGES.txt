@@ -291,6 +291,7 @@ Version 7.0  [ TODO ]
               includes permIndex(), gluingToIndex(), indexToGluing(), and the
               FacetPairing constructor.
             - The destuctor and dumpData() are no longer virtual.
+            - Routine triangulate() now returns by value, not pointer.
         Class GluingPermSearcher<dim> and subclasses:
             - No longer derived from GluingPerms<dim>, which means that
               none of the previously-inherited functions are available.
@@ -542,8 +543,8 @@ Version 7.0  [ TODO ]
             - New class to translate coordinate systems into a layout
               for LPInitialTableaux.
         Class Manifold:
-            - Routine homology() now returns by value, not by pointer,
-              and throws an exception on error instead of returning null.
+            - Routines construct() and homology() now return by value, not by
+              pointer, and throw exceptions on error instead of returning null.
         Class MarkedAbelianGroup:
             - New move constructor.
             - New copy assignment and move assignment operators.
@@ -636,6 +637,7 @@ Version 7.0  [ TODO ]
               Just use vector().size() instead.
             - New operator +.  At last!  Crucially, this operator can combine
               hypersurfaces that use different coordinate systems.
+            - Routine triangulate() now returns by value, not pointer.
             - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalHypersurfaces:
             - Normal hypersurface lists now hold a snapshot of the underlying

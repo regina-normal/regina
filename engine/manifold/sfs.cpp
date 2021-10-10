@@ -715,10 +715,12 @@ bool SFSpace::operator < (const SFSpace& compare) const {
     return false;
 }
 
-Triangulation<3>* SFSpace::construct() const {
+Triangulation<3> SFSpace::construct() const {
     // Things that we don't deal with just yet.
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
-        return 0;
+        throw NotImplemented("SFSpace::construct() is currently not "
+            "implemented for spaces whose base orbifolds have punctures "
+            "or reflector boundaries");
 
     // We already know how to construct lens spaces.
     if (auto lens = isLensSpace())
@@ -726,17 +728,18 @@ Triangulation<3>* SFSpace::construct() const {
 
     // Currently we work over the 2-sphere only.
     if (genus_ != 0 || class_ != o1)
-        return nullptr;
+        throw NotImplemented("SFSpace::construct() is currently not "
+            "implemented for spaces whose base orbifold is not the 2-sphere");
 
     // Since we've already dealt with lens spaces, we must have at least
     // three exceptional fibres.  Build a blocked structure.
-    Triangulation<3>* ans = new Triangulation<3>();
+    Triangulation<3> ans;
     Tetrahedron<3> *a, *b, *c;
 
     // Begin with the first triangular solid torus.
-    a = ans->newTetrahedron();
-    b = ans->newTetrahedron();
-    c = ans->newTetrahedron();
+    a = ans.newTetrahedron();
+    b = ans.newTetrahedron();
+    c = ans.newTetrahedron();
     a->join(1, b, Perm<4>());
     b->join(2, c, Perm<4>());
     c->join(3, a, Perm<4>(1, 2, 3, 0));
@@ -757,9 +760,9 @@ Triangulation<3>* SFSpace::construct() const {
 
     SFSFibre nextFibre = *fit++;
     while (fit != fibres_.end()) {
-        a = ans->newTetrahedron();
-        b = ans->newTetrahedron();
-        c = ans->newTetrahedron();
+        a = ans.newTetrahedron();
+        b = ans.newTetrahedron();
+        c = ans.newTetrahedron();
         a->join(3, prevA, Perm<4>(2, 3));
         b->join(3, prevC, Perm<4>(0, 2, 3, 1));
         a->join(1, b, Perm<4>());

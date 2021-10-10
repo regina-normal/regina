@@ -89,18 +89,20 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 caseName + " case", tri->isIsomorphicTo(*result));
         }
 
-        void verify20EdgeInvalid(Triangulation<3>* tri,
+        void verify20EdgeInvalid(const Triangulation<3>& tri,
                 const std::string& caseName) {
             bool found = false;
             Edge<3>* edge;
-            for (unsigned long e = 0; e < tri->countEdges(); e++) {
-                edge = tri->edge(e);
+            for (unsigned long e = 0; e < tri.countEdges(); e++) {
+                edge = tri.edge(e);
                 if (edge->degree() == 2 && ! edge->isBoundary())
                     found = true;
                 CPPUNIT_ASSERT_MESSAGE(
                     "An illegal 2-0 edge move was allowed for the " +
                     caseName + " case",
-                    ! tri->twoZeroMove(tri->edge(e)));
+                    // meh, const_cast for now: the move should be illegal.
+                    ! const_cast<Triangulation<3>&>(tri).twoZeroMove(
+                        tri.edge(e)));
             }
             CPPUNIT_ASSERT_MESSAGE(
                 "No degree two edge was found for the " + caseName + " case.",
@@ -303,23 +305,16 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         }
 
         void twoZeroEdgeInvalid() {
-            {
-                // All four faces joined together in a simple loop.
-                Triangulation<3>* s2xs1 =
-                    SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1)
-                    .construct();
-                verify20EdgeInvalid(s2xs1, "round-loop");
-                delete s2xs1;
-            }
+            // All four faces joined together in a simple loop.
+            verify20EdgeInvalid(
+                SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1).construct(),
+                "round-loop");
 
-            {
-                // All four faces joined together in a crossed loop.
-                Triangulation<3>* s2xs1Twisted =
-                    SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED)
-                    .construct();
-                verify20EdgeInvalid(s2xs1Twisted, "crossed-loop");
-                delete s2xs1Twisted;
-            }
+            // All four faces joined together in a crossed loop.
+            verify20EdgeInvalid(
+                SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED)
+                    .construct(),
+                "crossed-loop");
 
             {
                 // All four faces internal, but the two equatorial edges
@@ -335,7 +330,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 t.tetrahedron(1)->join(2, r, Perm<4>());
                 t.tetrahedron(1)->join(3, s, Perm<4>());
 
-                verify20EdgeInvalid(&t, "boundary-edges");
+                verify20EdgeInvalid(t, "boundary-edges");
             }
 
             {
@@ -361,7 +356,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     (! e->isBoundary()) && e->degree() == 6 &&
                         t.isOrientable());
 
-                verify20EdgeInvalid(&t, "identified-edges-S2");
+                verify20EdgeInvalid(t, "identified-edges-S2");
             }
 
             {
@@ -387,7 +382,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     (! e->isBoundary()) && e->degree() == 6 &&
                         ! t.isOrientable());
 
-                verify20EdgeInvalid(&t, "identified-edges-RP2");
+                verify20EdgeInvalid(t, "identified-edges-RP2");
             }
 
             {
@@ -403,7 +398,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     (! e->isBoundary()) && e->degree() == 1 &&
                         t.isOrientable());
 
-                verify20EdgeInvalid(&t, "boundary-loop-boundary");
+                verify20EdgeInvalid(t, "boundary-loop-boundary");
             }
 
             {
@@ -418,7 +413,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     e->isBoundary() && e->degree() == 3 &&
                         ! t.isOrientable());
 
-                verify20EdgeInvalid(&t, "boundary-cross-boundary");
+                verify20EdgeInvalid(t, "boundary-cross-boundary");
             }
 
             {
@@ -442,7 +437,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
                 Triangulation<3> orig;
                 orig.insertConstruction(5, adj, glu);
-                verify20EdgeInvalid(&orig, "boundary-opposite-wedge");
+                verify20EdgeInvalid(orig, "boundary-opposite-wedge");
             }
 
             {
@@ -456,7 +451,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 orig.tetrahedron(3)->join(3, top, Perm<4>(1,2,0,3));
                 orig.tetrahedron(4)->join(2, top, Perm<4>(0,3,2,1));
 
-                verify20EdgeInvalid(&orig, "boundary-diag");
+                verify20EdgeInvalid(orig, "boundary-diag");
             }
         }
 };

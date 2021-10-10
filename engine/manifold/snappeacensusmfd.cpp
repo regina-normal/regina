@@ -51,46 +51,45 @@ namespace {
     }
 }
 
-Triangulation<3>* SnapPeaCensusManifold::construct() const {
-    Triangulation<3>* ans = nullptr;
-
+Triangulation<3> SnapPeaCensusManifold::construct() const {
     // Hard-code a few special cases so that the numbering of tetrahedra
     // and vertices is compatible with earlier versions of Regina.
     if (section_ == SEC_5) {
         if (index_ == 0) {
-            ans = new Triangulation<3>(Example<3>::gieseking());
+            return Example<3>::gieseking();
         } else if (index_ == 1) {
-            ans = new Triangulation<3>();
-            Tetrahedron<3>* r = ans->newTetrahedron();
-            Tetrahedron<3>* s = ans->newTetrahedron();
+            Triangulation<3> ans;
+            Tetrahedron<3>* r = ans.newTetrahedron();
+            Tetrahedron<3>* s = ans.newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(2, 3, 1, 0));
             r->join(2, s, Perm<4>(3, 2, 1, 0));
             r->join(3, s, Perm<4>(1, 0, 3, 2));
+            return ans;
         } else if (index_ == 2) {
-            ans = new Triangulation<3>();
-            Tetrahedron<3>* r = ans->newTetrahedron();
-            Tetrahedron<3>* s = ans->newTetrahedron();
+            Triangulation<3> ans;
+            Tetrahedron<3>* r = ans.newTetrahedron();
+            Tetrahedron<3>* s = ans.newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(3, 1, 2, 0));
             r->join(2, s, Perm<4>(2, 1, 3, 0));
             r->join(3, s, Perm<4>(3, 1, 0, 2));
+            return ans;
         } else if (index_ == 3) {
-            ans = new Triangulation<3>();
-            Tetrahedron<3>* r = ans->newTetrahedron();
-            Tetrahedron<3>* s = ans->newTetrahedron();
+            Triangulation<3> ans;
+            Tetrahedron<3>* r = ans.newTetrahedron();
+            Tetrahedron<3>* s = ans.newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(2, 1, 0, 3));
             r->join(2, s, Perm<4>(0, 3, 2, 1));
             r->join(3, s, Perm<4>(1, 0, 2, 3));
+            return ans;
         } else if (index_ == 4) {
-            ans = new Triangulation<3>(Example<3>::figureEight());
+            return Example<3>::figureEight();
         } else if (index_ == 129) {
-            ans = new Triangulation<3>(Example<3>::whiteheadLink());
+            return Example<3>::whiteheadLink();
         }
     }
-    if (ans)
-        return ans;
 
     // Fetch the relevant data from the census dehydration files.
     std::string file = GlobalDirs::data() + "/snappea";
@@ -106,29 +105,34 @@ Triangulation<3>* SnapPeaCensusManifold::construct() const {
         case SEC_7_NOR:
             file += "/snappea-census-sec7n.dat"; break;
         default:
-            return nullptr;
+            throw regina::FileError("The requested section of the "
+                "SnapPea census database does not correspond to "
+                "any installed database file");
     }
 
     FILE* dat = fopen(file.c_str(), "r");
-    if (! dat) {
-        std::cerr << "Cannot open data file: " << file << std::endl;
-        return 0;
-    }
+    if (! dat)
+        throw regina::FileError("Cannot open SnapPea census database");
     char tri[30], hom[30]; /* Long enough to deal with the snappea census
                               files for <= 7 tetrahedra. */
     for (unsigned i = 0; i <= index_; ++i) {
         if (fscanf(dat, "%s%s", tri, hom) != 2) {
             if (feof(dat))
-                std::cerr << "Read beyond end of data file: "
-                    << file << std::endl;
+                throw regina::FileError("Attempted to read beyond the "
+                    "end of the SnapPea census database");
             else
-                std::cerr << "Error reading data file: " << file << std::endl;
-            return nullptr;
+                throw regina::FileError("Could not read the contents of the "
+                    "SnapPea census database");
         }
     }
     fclose(dat);
 
-    return new Triangulation<3>(Triangulation<3>::rehydrate(tri));
+    try {
+        return Triangulation<3>::rehydrate(tri);
+    } catch (const InvalidArgument&) {
+        throw regina::FileError("The dehydration string read from the "
+            "SnapPea census database was invalid");
+    }
 }
 
 AbelianGroup SnapPeaCensusManifold::homology() const {

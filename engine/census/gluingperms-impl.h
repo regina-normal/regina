@@ -54,15 +54,15 @@
 namespace regina {
 
 template <int dim>
-Triangulation<dim>* GluingPerms<dim>::triangulate() const {
+Triangulation<dim> GluingPerms<dim>::triangulate() const {
     unsigned nSimp = size();
 
-    Triangulation<dim>* ans = new Triangulation<dim>;
+    Triangulation<dim> ans;
     Simplex<dim>** simp = new Simplex<dim>*[nSimp];
 
     unsigned t, facet;
     for (t = 0; t < nSimp; ++t)
-        simp[t] = ans->newSimplex();
+        simp[t] = ans.newSimplex();
 
     for (t = 0; t < nSimp; ++t)
         for (facet = 0; facet <= dim; ++facet)

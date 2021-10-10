@@ -525,9 +525,7 @@ void Triangulation<3>::insertSFSOverSphere(long a1, long b1, long a2, long b2,
     sfs.reduce();
 
     // Use the SFS construction routine, which can handle this type of SFS.
-    Triangulation<3>* ans = sfs.construct();
-    insertTriangulation(*ans);
-    delete ans;
+    insertTriangulation(sfs.construct());
 }
 
 } // namespace regina

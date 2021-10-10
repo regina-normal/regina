@@ -471,6 +471,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             whichPair++;
         }
 
+        // Note: Our SFS is over the sphere, and SFSpace::construct()
+        // is implemented for all such manifolds.
         return regina::makePacket(sfs.construct(), sfs.structure());
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {

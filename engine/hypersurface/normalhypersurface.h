@@ -835,9 +835,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * correspond to any particular tetrahedron/prism pieces of
          * this normal hypersurface.
          *
-         * The 3-manifold triangulation will be newly allocated, and
-         * destroying it is the responsibility of the caller of this routine.
-         *
          * \todo \prob Check for absurdly large numbers of pieces and
          * return \c null accordingly.
          *
@@ -845,7 +842,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * @return a triangulation of this normal hypersurface.
          */
-        Triangulation<3>* triangulate() const;
+        Triangulation<3> triangulate() const;
 
         /**
          * Determines whether this and the given hypersurface in fact

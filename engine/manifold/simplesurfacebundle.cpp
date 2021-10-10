@@ -36,15 +36,15 @@
 
 namespace regina {
 
-Triangulation<3>* SimpleSurfaceBundle::construct() const {
-    Triangulation<3>* ans = new Triangulation<3>();
+Triangulation<3> SimpleSurfaceBundle::construct() const {
+    Triangulation<3> ans;
 
     if (type_ == S2xS1) {
-        ans->insertLayeredLensSpace(0, 1);
+        ans.insertLayeredLensSpace(0, 1);
     } else if (type_ == S2xS1_TWISTED) {
         // Taken from section 3.5.1 of Ben Burton's PhD thesis.
-        Tetrahedron<3>* r = ans->newTetrahedron();
-        Tetrahedron<3>* s = ans->newTetrahedron();
+        Tetrahedron<3>* r = ans.newTetrahedron();
+        Tetrahedron<3>* s = ans.newTetrahedron();
 
         r->join(1, s, Perm<4>());
         r->join(3, s, Perm<4>());
@@ -52,9 +52,9 @@ Triangulation<3>* SimpleSurfaceBundle::construct() const {
         s->join(2, r, Perm<4>(3, 2, 0, 1));
     } else if (type_ == RP2xS1) {
         // Taken from section 3.5.1 of Ben Burton's PhD thesis.
-        Tetrahedron<3>* r = ans->newTetrahedron();
-        Tetrahedron<3>* s = ans->newTetrahedron();
-        Tetrahedron<3>* t = ans->newTetrahedron();
+        Tetrahedron<3>* r = ans.newTetrahedron();
+        Tetrahedron<3>* s = ans.newTetrahedron();
+        Tetrahedron<3>* t = ans.newTetrahedron();
 
         s->join(0, r, Perm<4>(0, 1, 2, 3));
         s->join(3, r, Perm<4>(3, 0, 1, 2));

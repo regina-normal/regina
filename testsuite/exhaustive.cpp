@@ -77,13 +77,12 @@ using regina::Triangulation;
 namespace {
     void foundGluingPerms3(const GluingPerms<3>& perms,
             Triangulation3TestFunction f, BoolSet finite, bool minimal) {
-        Triangulation<3>* tri = perms.triangulate();
-        if (tri->isValid() &&
-                (! (finite == true && tri->isIdeal())) &&
-                (! (finite == false && ! tri->isIdeal()))) {
-            f(*tri, tri->isoSig().c_str());
+        Triangulation<3> tri = perms.triangulate();
+        if (tri.isValid() &&
+                (! (finite == true && tri.isIdeal())) &&
+                (! (finite == false && ! tri.isIdeal()))) {
+            f(tri, tri.isoSig().c_str());
         }
-        delete tri;
     }
 
     void foundFacetPairing3(const FacetPairing<3>& pairing,
@@ -100,13 +99,12 @@ namespace {
 
     void foundGluingPerms4(const GluingPerms<4>& perms,
             Triangulation4TestFunction f, BoolSet finite) {
-        Triangulation<4>* tri = perms.triangulate();
-        if (tri->isValid() &&
-                (! (finite == true && tri->isIdeal())) &&
-                (! (finite == false && ! tri->isIdeal()))) {
-            f(*tri, tri->isoSig().c_str());
+        Triangulation<4> tri = perms.triangulate();
+        if (tri.isValid() &&
+                (! (finite == true && tri.isIdeal())) &&
+                (! (finite == false && ! tri.isIdeal()))) {
+            f(tri, tri.isoSig().c_str());
         }
-        delete tri;
     }
 
     void foundFacetPairing4(const FacetPairing<4>& pairing,

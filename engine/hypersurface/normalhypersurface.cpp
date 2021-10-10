@@ -270,18 +270,14 @@ void NormalHypersurface::calculateRealBoundary() const {
 }
 
 void NormalHypersurface::calculateFromTriangulation() const {
-    Triangulation<3>* me = triangulate();
+    Triangulation<3> me = triangulate();
 
-    orientable_ = me->isOrientable();
-    connected_ = me->isConnected();
-    H1_ = me->homology();
-    size_t nComp = me->countComponents();
-    delete me;
+    orientable_ = me.isOrientable();
+    connected_ = me.isConnected();
+    H1_ = me.homology();
 
-    NormalHypersurface twice = doubleHypersurface();
-    Triangulation<3>* cover = twice.triangulate();
-    twoSided_ = (cover->countComponents() == 2 * nComp);
-    delete cover;
+    twoSided_ = (doubleHypersurface().triangulate().countComponents() ==
+        2 * me.countComponents());
 }
 
 } // namespace regina
