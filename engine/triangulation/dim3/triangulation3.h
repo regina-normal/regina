@@ -1127,6 +1127,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * strictAngleStructure() will return identical angle structures,
          * and every call after the first be essentially instantaneous.
          *
+         * If the triangulation does change, however, then the cached angle
+         * structure will be deleted, and any reference that was returned
+         * before will become invalid.
+         *
          * \exception NoSolution no strict angle structure exists on
          * this triangulation.
          *
@@ -1153,7 +1157,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * structure.  Recall that a \e strict angle structure is one
          * in which every angle is strictly between 0 and &pi;.
          *
-         * This routine returns \c true if and only if strictAngleStructure()
+         * This routine returns \c false if and only if strictAngleStructure()
          * throws an exception.  However, if you do not \e know whether a
          * strict angle structure exists, then this routine is faster:
          *
@@ -1169,8 +1173,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \e not enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
-         * @return \c true if a strict angle structure exists on this
-         * triangulation, or \c false if not.
+         * @return \c true if and only if a strict angle structure exists on
+         * this triangulation.
          */
         bool hasStrictAngleStructure() const;
         /**
@@ -1192,27 +1196,39 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool knowsStrictAngleStructure() const;
         /**
-         * Searches for a generalised angle structure on this triangulation.
-         * A \e generalised angle structure must satisfy the same matching
-         * equations as all angle structures do, but there is no constraint on
-         * the signs of the angles; in particular, negative angles are allowed.
+         * Returns a generalised angle structure on this triangulation,
+         * if one exists.  A \e generalised angle structure must satisfy the
+         * same matching equations as all angle structures do, but there is no
+         * constraint on the signs of the angles; in particular, negative
+         * angles are allowed.  If a generalised angle structure does exist,
+         * then this routine is guaranteed to return one.
          *
-         * If a generalised angle structure does exist, then this routine is
-         * guaranteed to find one.
+         * This routine is designed for scenarios where you already know
+         * that a generalised angle structure exists.  This means:
+         *
+         * - If no generalised angle structure exists, this routine will
+         *   throw an exception, which will incur a significant overhead.
+         *
+         * - It should be rare that you do not know in advance whether a
+         *   generalised angle structure exists (see the simple conditions in
+         *   the note below).  However, if you don't yet know, you should call
+         *   hasGeneralAngleStructure() first.  If the answer is no, this will
+         *   avoid the overhead of throwing and catching exceptions.  If the
+         *   answer is yes, this will have the side-effect of caching the
+         *   angle structure, which means your subsequent call to
+         *   generalAngleStructure() will be essentially instantaneous.
          *
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
          *
-         * The angle structure returned (if any) is cached internally
-         * alongside this triangulation.  This means that, as long as
-         * the triangulation does not change, subsequent calls to
-         * generalAngleStructure() will return identical pointers
-         * and will be essentially instantaneous.
+         * The result of this routine is cached internally: as long as
+         * the triangulation does not change, multiple calls to
+         * generalAngleStructure() will return identical angle structures,
+         * and every call after the first be essentially instantaneous.
          *
-         * If the triangulation changes however, then the cached angle
-         * structure will be deleted.  This means that you should not
-         * store the returned pointer for later use; instead you should
-         * just call generalAngleStructure() again.
+         * If the triangulation does change, however, then the cached angle
+         * structure will be deleted, and any reference that was returned
+         * before will become invalid.
          *
          * \note For a valid triangulation with no boundary faces, a
          * generalised angle structure exists if and only if every vertex link
@@ -1221,10 +1237,51 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * "Angle structures and normal surfaces", Feng Luo and Stephan
          * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
          *
-         * @return a generalised angle structure on this triangulation, or
-         * \c nullptr if none exists.
+         * \exception NoSolution no generalised angle structure exists on
+         * this triangulation.
+         *
+         * @return a generalised angle structure on this triangulation, if
+         * one exists.
          */
-        const AngleStructure* generalAngleStructure() const;
+        const AngleStructure& generalAngleStructure() const;
+        /**
+         * Determines whether this triangulation supports a generalised angle
+         * structure.  A \e generalised angle structure must satisfy the
+         * same matching equations as all angle structures do, but there is no
+         * constraint on the signs of the angles; in particular, negative
+         * angles are allowed.
+         *
+         * This routine returns \c false if and only if generalAngleStructure()
+         * throws an exception.  However, if you do not \e know whether a
+         * generalised angle structure exists, then this routine is faster:
+         *
+         * - If there is \e no generalised angle structure, this routine will
+         *   avoid the overhead of throwing and catching exceptions.
+         *
+         * - If there \e is a generalised angle structure, this routine will
+         *   find and cache this angle structure, which means that any
+         *   subsequent call to generalAngleStructure() to retrieve its
+         *   details will be essentially instantaneous.
+         *
+         * The underlying algorithm simply solves a system of linear equations,
+         * and so should be fast even for large triangulations.
+         *
+         * \note For a valid triangulation with no boundary faces, a
+         * generalised angle structure exists if and only if every vertex link
+         * is a torus or Klein bottle.  The "only if" direction is a simple
+         * Euler characteristic calculation; for the "if" direction see
+         * "Angle structures and normal surfaces", Feng Luo and Stephan
+         * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
+         *
+         * \note Even if the condition above is true and it is clear that a
+         * generalised angle structure should exist, this routine will still do
+         * the extra work to compute an explicit solution (in order to fulfil
+         * the promise made in the generalAngleStructure() documentation).
+         *
+         * @return \c true if and only if a generalised angle structure exists
+         * on this triangulation.
+         */
+        bool hasGeneralAngleStructure() const;
 
         /*@}*/
         /**
@@ -3517,6 +3574,19 @@ inline const AngleStructure& Triangulation<3>::strictAngleStructure() const {
 inline const AngleStructure& Triangulation<3>::findStrictAngleStructure()
         const {
     return strictAngleStructure();
+}
+
+inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
+    // Optimise for the common case where a solution is known to exist,
+    // so we can inline it.
+    if (std::holds_alternative<AngleStructure>(generalAngleStructure_))
+        return std::get<AngleStructure>(generalAngleStructure_);
+
+    // Either there is no solution or we don't know yet.
+    if (hasGeneralAngleStructure())
+        return std::get<AngleStructure>(generalAngleStructure_);
+    else
+        throw NoSolution();
 }
 
 inline unsigned long Triangulation<3>::homologyH2Z2() const {

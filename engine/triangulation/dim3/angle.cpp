@@ -100,18 +100,20 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
     return true;
 }
 
-const AngleStructure* Triangulation<3>::generalAngleStructure() const {
+bool Triangulation<3>::hasGeneralAngleStructure() const {
     if (std::holds_alternative<AngleStructure>(generalAngleStructure_)) {
-        return &std::get<AngleStructure>(generalAngleStructure_);
+        return true; // known to have a solution
     } else if (std::get<bool>(generalAngleStructure_)) {
-        return nullptr; // known to have no solution
+        return false; // known to have no solution
     }
+
+    // Run the full computation and cache the resulting structure, if any.
 
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
         generalAngleStructure_ = true; // confirmed: no solution
-        return nullptr;
+        return false;
     }
 
     if (! hasBoundaryTriangles()) {
@@ -119,7 +121,7 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
         // then we must have #edges = #tetrahedra.
         if (countEdges() != simplices_.size()) {
             generalAngleStructure_ = true; // confirmed: no solution
-            return nullptr;
+            return false;
         }
 
         // If the triangulation is valid, we also need every vertex link
@@ -162,7 +164,7 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
         // The final column appears as a leading coefficient.
         delete[] leading;
         generalAngleStructure_ = true; // confirmed: no solution
-        return nullptr;
+        return false;
     }
 
     // Build up the final vector from back to front.
@@ -209,7 +211,7 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
 
     delete[] leading;
     generalAngleStructure_ = AngleStructure(*this, std::move(v));
-    return &std::get<AngleStructure>(generalAngleStructure_);
+    return true;
 }
 
 } // namespace regina

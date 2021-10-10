@@ -520,7 +520,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
         static void verifyGeneralAngleStructure(const Triangulation<3>& tri,
                 const char* name) {
-            const AngleStructure* ans = tri.generalAngleStructure();
+            bool exists = tri.hasGeneralAngleStructure();
 
             if (tri.isValid() && ! tri.hasBoundaryTriangles()) {
                 // A generalised angle structure exists iff every vertex
@@ -528,7 +528,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 for (const auto v : tri.vertices())
                     if (v->linkEulerChar() != 0) {
                         // There should be no generalised angle structure.
-                        if (ans) {
+                        if (exists) {
                             std::ostringstream msg;
                             msg << "Unexpected generalised angle structure "
                                 "found for " << name << ".";
@@ -541,7 +541,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     }
 
                 // We *should* have a generalised angle structure.
-                if (! ans) {
+                if (! exists) {
                     std::ostringstream msg;
                     msg << "No generalised angle structure where one "
                         "should exist for " << name << ".";
@@ -549,10 +549,11 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 }
             }
 
-            if (ans) {
+            if (exists) {
                 regina::MatrixInt m = regina::makeAngleEquations(tri);
 
-                const regina::VectorInt& vec = ans->vector();
+                const regina::VectorInt& vec =
+                    tri.generalAngleStructure().vector();
                 if (vec.size() != m.columns()) {
                     std::ostringstream msg;
                     msg << "Generalised angle structure vector has "
