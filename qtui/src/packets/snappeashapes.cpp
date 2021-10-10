@@ -522,15 +522,15 @@ void SnapPeaShapesUI::canonise() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to canonise."));
     else {
-        auto ans = makePacket(tri->canonise(), "Canonical retriangulation");
-        if (! ans) {
+        try {
+            auto ans = makePacket(tri->canonise(), "Canonical retriangulation");
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        } catch (const regina::UnsolvedCase&) {
             ReginaSupport::sorry(ui,
                 tr("The SnapPea kernel was not able to build the "
                 "canonical retriangulation of the "
                 "canonical cell decomposition."));
-        } else {
-            tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }

@@ -510,35 +510,37 @@ Triangulation<3> SnapPeaTriangulation::filledAll() const {
     return ans;
 }
 
-SnapPeaTriangulation* SnapPeaTriangulation::protoCanonise() const {
+SnapPeaTriangulation SnapPeaTriangulation::protoCanonise() const {
     if (! data_)
-        return nullptr;
+        throw SnapPeaIsNull("SnapPeaTriangulation::protoCanonise");
 
     regina::snappea::Triangulation* tmp;
     regina::snappea::copy_triangulation(data_, &tmp);
 
     if (regina::snappea::proto_canonize(tmp) != regina::snappea::func_OK) {
         regina::snappea::free_triangulation(tmp);
-        return nullptr;
+        throw UnsolvedCase("SnapPea was not able to triangulate the "
+            "canonical cell decomposition");
     }
 
-    return new SnapPeaTriangulation(tmp);
+    return SnapPeaTriangulation(tmp);
 }
 
-Triangulation<3>* SnapPeaTriangulation::canonise() const {
+Triangulation<3> SnapPeaTriangulation::canonise() const {
     if (! data_)
-        return nullptr;
+        throw SnapPeaIsNull("SnapPeaTriangulation::canonise");
 
     regina::snappea::Triangulation* tmp;
     regina::snappea::copy_triangulation(data_, &tmp);
 
     if (regina::snappea::canonize(tmp) != regina::snappea::func_OK) {
         regina::snappea::free_triangulation(tmp);
-        return nullptr;
+        throw UnsolvedCase("SnapPea was not able to compute the "
+            "canonical cell decomposition");
     }
 
-    Triangulation<3>* ans = new Triangulation<3>();
-    fillRegina(tmp, *ans);
+    Triangulation<3> ans;
+    fillRegina(tmp, ans);
     regina::snappea::free_triangulation(tmp);
     return ans;
 }

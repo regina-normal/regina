@@ -2037,15 +2037,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * This link will not be modified.
          *
-         * The result will returned as a new link, and it is the
-         * responsibility of the caller of this routine to destroy it.
-         *
          * @param k the number of parallel copies to create.
          * This must be non-negative.
          * @param framing the framing under which these copies will be parallel.
-         * @return \a k parallel copies of this link, as a newly-created object.
+         * @return \a k parallel copies of this link.
          */
-        Link* parallel(int k, Framing framing = FRAMING_SEIFERT) const;
+        Link parallel(int k, Framing framing = FRAMING_SEIFERT) const;
 
         /**
          * Returns the Kauffman bracket polynomial of this link diagram.

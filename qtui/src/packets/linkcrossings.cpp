@@ -838,9 +838,7 @@ void ParallelDialog::slotOk() {
             break;
     }
 
-    regina::Link* ans = link_.parallel(n, f);
-    link_.swap(*ans);
-    delete ans;
+    link_ = link_.parallel(n, f);
 
     accept();
 }

@@ -801,16 +801,16 @@ void Link::composeWith(const Link& other) {
     clearAllProperties();
 }
 
-Link* Link::parallel(int k, Framing framing) const {
+Link Link::parallel(int k, Framing framing) const {
     // Get the special cases out of the way.
     if (k == 0 || components_.empty())
-        return new Link;
+        return Link();
     if (k == 1)
-        return new Link(*this);
+        return Link(*this);
     if (crossings_.empty())
-        return new Link(components_.size() * k);
+        return Link(components_.size() * k);
 
-    Link* ans = new Link;
+    Link ans;
     Crossing** tmp = new Crossing*[k*k]; // Used to build grids of crossings
 
     // Crossing i of knot:
@@ -832,7 +832,7 @@ Link* Link::parallel(int k, Framing framing) const {
     int i, j;
     for (Crossing* c : crossings_) {
         for (i = 0; i < k * k; ++i)
-            ans->crossings_.push_back(tmp[i] = new Crossing(c->sign()));
+            ans.crossings_.push_back(tmp[i] = new Crossing(c->sign()));
 
         for (i = 0; i < k; ++i)
             for (j = 0; j < k - 1; ++j)
@@ -863,7 +863,7 @@ Link* Link::parallel(int k, Framing framing) const {
         if (! start) {
             // This component is a 0-crossing unknot.
             for (i = 0; i < k; ++i)
-                ans->components_.push_back(StrandRef());
+                ans.components_.push_back(StrandRef());
             continue;
         }
 
@@ -895,9 +895,9 @@ Link* Link::parallel(int k, Framing framing) const {
             if (exitL >= 0) {
                 for (i = 0; i < k; ++i)
                     Link::join(
-                        ans->crossings_[exitL + i * exitDelta]->
+                        ans.crossings_[exitL + i * exitDelta]->
                             strand(exitStrand),
-                        ans->crossings_[enterL + i * enterDelta]->
+                        ans.crossings_[enterL + i * enterDelta]->
                             strand(enterStrand));
             } else {
                 startL = enterL;
@@ -927,9 +927,9 @@ Link* Link::parallel(int k, Framing framing) const {
             // Close up the k new parallel link components.
             for (i = 0; i < k; ++i)
                 Link::join(
-                    ans->crossings_[exitL + i * exitDelta]->
+                    ans.crossings_[exitL + i * exitDelta]->
                         strand(exitStrand),
-                    ans->crossings_[startL + i * startDelta]->
+                    ans.crossings_[startL + i * startDelta]->
                         strand(startStrand));
         } else if (writhe > 0) {
             // We want the Seifert framing, and the writhe is positive.
@@ -937,29 +937,29 @@ Link* Link::parallel(int k, Framing framing) const {
             // before closing off the k parallel link components.
             for (i = 0; i < writhe * k; ++i) {
                 for (j = 0; j < k - 1; ++j)
-                    ans->crossings_.push_back(tmp[j] = new Crossing(-1));
+                    ans.crossings_.push_back(tmp[j] = new Crossing(-1));
 
                 for (j = 0; j < k - 2; ++j)
                     Link::join(tmp[j]->lower(), tmp[j + 1]->lower());
 
                 if (i == 0) {
                     Link::join(
-                        ans->crossings_[exitL]->strand(exitStrand),
+                        ans.crossings_[exitL]->strand(exitStrand),
                         tmp[0]->lower());
                     for (j = 1; j < k; ++j)
                         Link::join(
-                            ans->crossings_[exitL + j * exitDelta]->
+                            ans.crossings_[exitL + j * exitDelta]->
                                 strand(exitStrand),
                             tmp[j - 1]->upper());
                 } else {
                     Link::join(
-                        ans->crossings_[exitL]->upper(), tmp[0]->lower());
+                        ans.crossings_[exitL]->upper(), tmp[0]->lower());
                     for (j = 1; j < k - 1; ++j)
                         Link::join(
-                            ans->crossings_[exitL + j]->upper(),
+                            ans.crossings_[exitL + j]->upper(),
                             tmp[j - 1]->upper());
                     Link::join(
-                        ans->crossings_[exitL + (k - 2)]->lower(),
+                        ans.crossings_[exitL + (k - 2)]->lower(),
                         tmp[k - 2]->upper());
                 }
 
@@ -968,12 +968,12 @@ Link* Link::parallel(int k, Framing framing) const {
 
             for (j = 0; j < k - 1; ++j)
                 Link::join(
-                    ans->crossings_[exitL + j]->upper(),
-                    ans->crossings_[startL + j * startDelta]->
+                    ans.crossings_[exitL + j]->upper(),
+                    ans.crossings_[startL + j * startDelta]->
                         strand(startStrand));
             Link::join(
-                ans->crossings_[exitL + (k - 2)]->lower(),
-                ans->crossings_[startL + (k - 1) * startDelta]->
+                ans.crossings_[exitL + (k - 2)]->lower(),
+                ans.crossings_[startL + (k - 1) * startDelta]->
                     strand(startStrand));
         } else {
             // We want the Seifert framing, and the writhe is negative.
@@ -981,29 +981,29 @@ Link* Link::parallel(int k, Framing framing) const {
             // before closing off the k parallel link components.
             for (i = 0; i < (-writhe) * k; ++i) {
                 for (j = 0; j < k - 1; ++j)
-                    ans->crossings_.push_back(tmp[j] = new Crossing(1));
+                    ans.crossings_.push_back(tmp[j] = new Crossing(1));
 
                 for (j = 0; j < k - 2; ++j)
                     Link::join(tmp[j]->upper(), tmp[j + 1]->upper());
 
                 if (i == 0) {
                     Link::join(
-                        ans->crossings_[exitL]->strand(exitStrand),
+                        ans.crossings_[exitL]->strand(exitStrand),
                         tmp[0]->upper());
                     for (j = 1; j < k; ++j)
                         Link::join(
-                            ans->crossings_[exitL + j * exitDelta]->
+                            ans.crossings_[exitL + j * exitDelta]->
                                 strand(exitStrand),
                             tmp[j - 1]->lower());
                 } else {
                     Link::join(
-                        ans->crossings_[exitL]->lower(), tmp[0]->upper());
+                        ans.crossings_[exitL]->lower(), tmp[0]->upper());
                     for (j = 1; j < k - 1; ++j)
                         Link::join(
-                            ans->crossings_[exitL + j]->lower(),
+                            ans.crossings_[exitL + j]->lower(),
                             tmp[j - 1]->lower());
                     Link::join(
-                        ans->crossings_[exitL + (k - 2)]->upper(),
+                        ans.crossings_[exitL + (k - 2)]->upper(),
                         tmp[k - 2]->lower());
                 }
 
@@ -1012,19 +1012,19 @@ Link* Link::parallel(int k, Framing framing) const {
 
             for (j = 0; j < k - 1; ++j)
                 Link::join(
-                    ans->crossings_[exitL + j]->lower(),
-                    ans->crossings_[startL + j * startDelta]->
+                    ans.crossings_[exitL + j]->lower(),
+                    ans.crossings_[startL + j * startDelta]->
                         strand(startStrand));
             Link::join(
-                ans->crossings_[exitL + (k - 2)]->upper(),
-                ans->crossings_[startL + (k - 1) * startDelta]->
+                ans.crossings_[exitL + (k - 2)]->upper(),
+                ans.crossings_[startL + (k - 1) * startDelta]->
                     strand(startStrand));
         }
 
         // Take note of the k new link components.
         for (i = 0; i < k; ++i)
-            ans->components_.push_back(
-                ans->crossings_[startL + i * startDelta]->
+            ans.components_.push_back(
+                ans.crossings_[startL + i * startDelta]->
                     strand(startStrand));
     }
 

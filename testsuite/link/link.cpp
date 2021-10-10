@@ -513,61 +513,59 @@ class LinkTest : public CppUnit::TestFixture {
             }
 
             for (int k = 0; k <= 3; ++k) {
-                Link* p = l.parallel(k, regina::FRAMING_BLACKBOARD);
-                if (p->countComponents() != k * l.countComponents()) {
+                Link p = l.parallel(k, regina::FRAMING_BLACKBOARD);
+                if (p.countComponents() != k * l.countComponents()) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", blackboard) "
                         "has the wrong number of components.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (p->size() != k * k * l.size()) {
+                if (p.size() != k * k * l.size()) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", blackboard) "
                         "has the wrong number of crossings.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (p->writhe() != k * k * writhe) {
+                if (p.writhe() != k * k * writhe) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", blackboard) "
                         "has the wrong writhe.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (p->linking() != k * k * linking +
+                if (p.linking() != k * k * linking +
                         (k * (k-1) * writheSame) / 2) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", blackboard) "
                         "has the wrong linking number.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                delete p;
 
                 p = l.parallel(k, regina::FRAMING_SEIFERT);
-                if (p->countComponents() != k * l.countComponents()) {
+                if (p.countComponents() != k * l.countComponents()) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", seifert) "
                         "has the wrong number of components.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (p->size() != k * k * l.size() +
+                if (p.size() != k * k * l.size() +
                         k * (k-1) * absWritheSame) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", seifert) "
                         "has the wrong number of crossings.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (p->writhe() != k * k * writhe - k * (k-1) * writheSame) {
+                if (p.writhe() != k * k * writhe - k * (k-1) * writheSame) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", seifert) "
                         "has the wrong writhe.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (p->linking() != k * k * linking) {
+                if (p.linking() != k * k * linking) {
                     std::ostringstream msg;
                     msg << name << ": parallel(" << k << ", seifert) "
                         "has the wrong linking number.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                delete p;
             }
         }
 

@@ -1623,12 +1623,9 @@ class SnapPeaTriangulation :
          * If you need a canonical triangulation (as opposed to an arbitrary
          * retriangulation), then you should call canonise() instead.
          *
-         * The resulting triangulation will be newly allocated, and it
-         * is the responsibility of the caller of this routine to destroy it.
-         *
-         * If for any reason either Regina or SnapPea are unable to
-         * construct a triangulation of the canonical cell decomposition,
-         * then this routine will return \c nullptr.
+         * SnapPea is not always able to triangulate the canonical cell
+         * decomposition: if it fails then then this routine will throw an
+         * exception (see below for details).
          *
          * \snappy The function <tt>canonise()</tt> means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
@@ -1641,13 +1638,20 @@ class SnapPeaTriangulation :
          * and is not available through SnapPy at all.
          *
          * \warning The SnapPea kernel does not always compute the canonical
-         * cell decomposition correctly.  However, it guarantees that
-         * the manifold that it does compute is homeomorphic to the original.
+         * cell decomposition correctly.  Sometimes it gives the wrong answer,
+         * although in such a case it still guarantees that the manifold it
+         * \e does return is homeomorphic to the original.  Sometimes it
+         * gives no answer at all, in which case this routine will throw
+         * an exception (see below).
          *
-         * @return the canonical triangulation of the canonical cell
-         * decomposition, or \c nullptr if this could not be constructed.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * triangulate the canonical cell decomposition.
+         *
+         * @return a triangulation of the canonical cell decomposition.
          */
-        SnapPeaTriangulation* protoCanonise() const;
+        SnapPeaTriangulation protoCanonise() const;
 
         /**
          * An alias for protoCanonise(), which constructs the canonical
@@ -1657,8 +1661,15 @@ class SnapPeaTriangulation :
          * This alias is provided as "glue" between the British spelling
          * used throughout Regina and the American spelling used
          * throughout the SnapPea kernel.
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * triangulate the canonical cell decomposition.
+         *
+         * @return a triangulation of the canonical cell decomposition.
          */
-        SnapPeaTriangulation* protoCanonize() const;
+        SnapPeaTriangulation protoCanonize() const;
 
         /**
          * Constructs the canonical retriangulation of the canonical
@@ -1694,12 +1705,9 @@ class SnapPeaTriangulation :
          * If you need to preserve SnapPea-specific information then you
          * should call protoCanonise() instead.
          *
-         * The resulting triangulation will be newly allocated, and it
-         * is the responsibility of the caller of this routine to destroy it.
-         *
-         * If for any reason either Regina or SnapPea are unable to
-         * construct the canonical retriangulation of the canonical cell
-         * decomposition, this routine will return \c nullptr.
+         * SnapPea is not always able to compute the canonical cell
+         * decomposition: if it fails then then this routine will throw an
+         * exception (see below for details).
          *
          * \snappy The function <tt>canonise()</tt> means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
@@ -1712,13 +1720,21 @@ class SnapPeaTriangulation :
          * and is not available through SnapPy at all.
          *
          * \warning The SnapPea kernel does not always compute the canonical
-         * cell decomposition correctly.  However, it guarantees that
-         * the manifold that it does compute is homeomorphic to the original.
+         * cell decomposition correctly.  Sometimes it gives the wrong answer,
+         * although in such a case it still guarantees that the manifold it
+         * \e does return is homeomorphic to the original.  Sometimes it
+         * gives no answer at all, in which case this routine will throw
+         * an exception (see below).
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * compute the canonical cell decomposition.
          *
          * @return the canonical triangulation of the canonical cell
-         * decomposition, or \c nullptr if this could not be constructed.
+         * decomposition.
          */
-        Triangulation<3>* canonise() const;
+        Triangulation<3> canonise() const;
 
         /**
          * An alias for canonise(), which constructs the canonical
@@ -1728,8 +1744,16 @@ class SnapPeaTriangulation :
          * This alias is provided as "glue" between the British spelling
          * used throughout Regina and the American spelling used
          * throughout the SnapPea kernel.
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * compute the canonical cell decomposition.
+         *
+         * @return the canonical triangulation of the canonical cell
+         * decomposition.
          */
-        Triangulation<3>* canonize() const;
+        Triangulation<3> canonize() const;
 
         /**
          * Asks SnapPea to randomly retriangulate this manifold, using
@@ -2089,11 +2113,11 @@ inline const Cusp* SnapPeaTriangulation::cusp(unsigned whichCusp) const {
     return (cusp_ ? cusp_ + whichCusp : nullptr);
 }
 
-inline SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {
+inline SnapPeaTriangulation SnapPeaTriangulation::protoCanonize() const {
     return protoCanonise();
 }
 
-inline Triangulation<3>* SnapPeaTriangulation::canonize() const {
+inline Triangulation<3> SnapPeaTriangulation::canonize() const {
     return canonise();
 }
 

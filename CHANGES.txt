@@ -519,7 +519,8 @@ Version 7.0  [ TODO ]
               value, not by const reference.
             - Routine writePACE() no longer begins its output with a "c ..."
               line, since links no longer have labels.
-            - Routine complement() now returns by value, not pointer.
+            - Routines complement() and parallel() now return by value,
+              not pointer.
         Class ListOnCall:
             - Removed, since this class was not thread-safe and did not add
               anything non-trivial.
@@ -1062,6 +1063,8 @@ Version 7.0  [ TODO ]
               fundGroupFilled() and homologyFilled() now have a precondition
               that this must not be a null SnapPea triangulation (instead of
               the old behaviour of returning a null pointer).
+            - Changed canonise() and protoCanonise() to return by value
+              (not pointer), and to throw exceptions on error.
             - Replaced the old filledTriangulation() (which used a polymorphic
               return type) with filledPartial() and filledAll() (whose return
               types are known at compile time).
