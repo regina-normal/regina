@@ -41,6 +41,7 @@
 
 #include <vector>
 #include "core/output.h"
+#include "utilities/exception.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
@@ -644,15 +645,24 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * - The upper and lower bounding cells are distinct,
          * - The cell between left and right is not the inside cell
          * where the flype begins from from.node().
+         *
+         * Even if the arguments are a (non-null) result of findFlype(),
+         * this routine could still throw an exception, but only for graphs
+         * that model non-minimal and/or composite link diagrams.
+         *
+         * \exception InvalidArgument TODO.
          */
-        ModelLinkGraph* flype(const ModelLinkGraphArc& from,
+        ModelLinkGraph flype(const ModelLinkGraphArc& from,
             const ModelLinkGraphArc& left, const ModelLinkGraphArc& right)
             const;
 
         /**
          * TODO: Document.
+         *
+         * \exception InvalidArgument there is no flype available from
+         * the given starting arc.
          */
-        ModelLinkGraph* flype(const ModelLinkGraphArc& from) const;
+        ModelLinkGraph flype(const ModelLinkGraphArc& from) const;
 
         /**
          * TODO: Document.  Only aims for minimal, ignores reflections.
@@ -942,6 +952,12 @@ void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept;
  * \ingroup link
  */
 class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
+    public:
+        /**
+         * An iterator type used when traversing the boundary of a 2-cell.
+         */
+        typedef const ModelLinkGraphArc* ArcIterator;
+
     private:
         ModelLinkGraphArc* arcs_;
             /**< Stores the boundary of each cell.  Specifically, for cell
@@ -1088,7 +1104,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * @return the beginning of an iterator range for the boundary
          * of the given cell.
          */
-        const ModelLinkGraphArc* begin(size_t cell) const;
+        ArcIterator begin(size_t cell) const;
         /**
          * Returns the end of an iterator range for walking around the
          * boundary of the given 2-cell.  As is usual for iterator
@@ -1115,7 +1131,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * @return the end of an iterator range for the boundary
          * of the given cell.
          */
-        const ModelLinkGraphArc* end(size_t cell) const;
+        ArcIterator end(size_t cell) const;
 
         /**
          * Returns the 2-cell that lies to the left of the given arc.
@@ -1403,10 +1419,13 @@ inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
     return *cells_;
 }
 
-inline ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from)
+inline ModelLinkGraph ModelLinkGraph::flype(const ModelLinkGraphArc& from)
         const {
     auto use = findFlype(from);
-    return (use.first ? flype(from, use.first, use.second) : nullptr);
+    if (use.first)
+        return flype(from, use.first, use.second);
+    else
+        throw InvalidArgument("No flype is available from this arc");
 }
 
 inline void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept {
@@ -1432,11 +1451,13 @@ inline const ModelLinkGraphArc& ModelLinkGraphCells::arc(size_t cell,
     return arcs_[start_[cell] + which];
 }
 
-inline const ModelLinkGraphArc* ModelLinkGraphCells::begin(size_t cell) const {
+inline ModelLinkGraphCells::ArcIterator ModelLinkGraphCells::begin(size_t cell)
+        const {
     return arcs_ + start_[cell];
 }
 
-inline const ModelLinkGraphArc* ModelLinkGraphCells::end(size_t cell) const {
+inline ModelLinkGraphCells::ArcIterator ModelLinkGraphCells::end(size_t cell)
+        const {
     return arcs_ + start_[cell + 1];
 }
 

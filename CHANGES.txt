@@ -597,8 +597,10 @@ Version 7.0  [ TODO ]
               mechanism for its callback function, instead of a function
               pointer with void* arguments.  Moreover, it no longer receives
               an extra null call once the enumeration has finished.
-            - Routine fromPlantri() now returns by value (not pointer),
-              and throws an exception on error instead of (returning null)
+            - Routines fromPlantri() and flype() now return by value (not
+              pointer), and throw exceptions on error instead of returning null.
+        Class ModelLinkGraphCells:
+            - New typedef ArcIterator, which is returned by begin() and end().
         Class NativeInteger<...>:
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
