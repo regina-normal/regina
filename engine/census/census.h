@@ -134,8 +134,9 @@ class CensusDB {
          * For each match that is found (if any), this routine will call
          * \a action (which must be a function or some other callable object).
          * This action should return \c void, and must take exactly one
-         * CensusHit argument (which will be passed by value via move
-         * semantics).
+         * CensusHit argument.  The argument will be passed as a prvalue,
+         * which means the argument type for \a action could be any of
+         * (CensusHit), (const CensusHit&), or (CensusHit&&).
          *
          * Note that the database will be opened and closed every time
          * this routine is called.
