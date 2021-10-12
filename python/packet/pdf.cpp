@@ -41,6 +41,8 @@ void addPDF(pybind11::module_& m) {
     pybind11::class_<PDF, regina::Packet, std::shared_ptr<PDF>>(m, "PDF")
         .def(pybind11::init<>())
         .def(pybind11::init<const char*>())
+        .def(pybind11::init<const PDF&>())
+        .def("swap", &PDF::swap)
         .def("isNull", &PDF::isNull)
         .def("size", &PDF::size)
         .def("reset", overload_cast<>(&PDF::reset))
@@ -50,5 +52,7 @@ void addPDF(pybind11::module_& m) {
             return PDF::typeID;
         })
     ;
+
+    m.def("swap", (void(*)(PDF&, PDF&))(regina::swap));
 }
 

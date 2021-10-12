@@ -55,6 +55,13 @@ class PDF;
  * This can be tested by calling isNull(), and can be changed by calling
  * reset().
  *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the mathematical content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
  * \ingroup packet
  */
 class PDF : public Packet {
@@ -150,9 +157,51 @@ class PDF : public Packet {
         PDF(char* data, size_t size, OwnershipPolicy alloc);
 
         /**
+         * Creates a new copy of the given PDF packet.
+         *
+         * Like all packet types, this only copies the PDF content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
+         *
+         * This is safe to call even if \a src does not contain a PDF document.
+         *
+         * @param src the PDF packet whose contents should be copied.
+         */
+        PDF(const PDF& src);
+
+        /**
          * Destroys this PDF packet and deallocates data if required.
          */
         ~PDF();
+
+        /**
+         * Sets this to be a copy of the given PDF packet.
+         *
+         * Like all packet types, this only copies the PDF content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * This is safe to call even if \a src does not contain a PDF document.
+         *
+         * @param src the PDF packet whose contents should be copied.
+         * @return a reference to this packet.
+         */
+        PDF& operator = (const PDF& src);
+
+        /**
+         * Swaps the contents of this and the given PDF packet.
+         *
+         * Like all packet types, this only swaps the PDF content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * This is safe to call even if this packet and/or \a other does not
+         * contain a PDF document.
+         *
+         * @other the PDF packet whose contents should be swapped with this.
+         */
+        void swap(PDF& other);
 
         /**
          * Determines whether this packet is currently holding a PDF
@@ -244,6 +293,19 @@ class PDF : public Packet {
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
 
+/**
+ * Swaps the contents of the given PDF packets.
+ *
+ * This global routine simply calls PDF::swap(); it is provided so that
+ * PDF meets the C++ Swappable requirements.
+ *
+ * @param a the first PDF packet whose contents should be swapped.
+ * @param b the second PDF packet whose contents should be swapped.
+ *
+ * \ingroup packet
+ */
+void swap(PDF& a, PDF& b);
+
 // Inline functions for PDF
 
 inline PDF::PDF() : data_(nullptr), size_(0), alloc_(OWN_NEW) {
@@ -261,6 +323,9 @@ inline PDF::PDF(char* data, size_t size, OwnershipPolicy alloc) :
         size_ = 0;
 }
 
+inline PDF::PDF(const PDF& src) : PDF(src.data_, src.size_, DEEP_COPY) {
+}
+
 inline PDF::~PDF() {
     if (data_) {
         if (alloc_ == OWN_MALLOC)
@@ -268,6 +333,20 @@ inline PDF::~PDF() {
         else
             delete[] data_;
     }
+}
+
+inline PDF& PDF::operator = (const PDF& src) {
+    reset(src.data_, src.size_, DEEP_COPY);
+    return *this;
+}
+
+inline void PDF::swap(PDF& other) {
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    std::swap(data_, other.data_);
+    std::swap(size_, other.size_);
+    std::swap(alloc_, other.alloc_);
 }
 
 inline const char* PDF::data() const {
@@ -289,6 +368,10 @@ inline void PDF::writeTextShort(std::ostream& o) const {
 inline std::shared_ptr<Packet> PDF::internalClonePacket(
         std::shared_ptr<Packet>) const {
     return std::make_shared<PDF>(data_, size_, DEEP_COPY);
+}
+
+inline void swap(PDF& a, PDF& b) {
+    a.swap(b);
 }
 
 } // namespace regina

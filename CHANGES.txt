@@ -182,6 +182,9 @@ Version 7.0  [ TODO ]
             - New compile-time constant dimension.
             - Routine countFaces() (for those dimensions where it exists)
               now supports the case subdim == dim.
+        Class Container:
+            - Added a trivial copy constructor and copy assignment operator.
+            - Added trivial member and global swap() functions.
         Class Cyclotomic:
             - Added member and global swap() functions.
             - Changed polynomial() to return by value, not by pointer.
@@ -813,6 +816,9 @@ Version 7.0  [ TODO ]
               at compile time if needed, but you can now use it at runtime also.
         Enum PacketType:
             - New constant PACKET_NONE.
+        Class PDF:
+            - Added a copy constructor and a copy assignment operator.
+            - Added member and global swap() functions.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
@@ -995,6 +1001,9 @@ Version 7.0  [ TODO ]
             - Routine expand() is now private, since all publicly accessible
               functions that construct regions will expand them automatically.
             - All access to the underlying triangulation is now const only.
+        Class Script:
+            - Added a copy constructor and a copy assignment operator.
+            - Added member and global swap() functions.
         Class SFSAlt, SFSAltSet:
             - Removed the old SFSAltSet class; replaced this with a new SFSAlt
               class with a static altSet() function that returns a std::vector.
@@ -1123,9 +1132,14 @@ Version 7.0  [ TODO ]
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.
             - Routine manifold() now returns a std::unique_ptr.
+        Class SurfaceFilterCombination:
+            - Added a copy assignment operator.
+            - Added member and global swap() functions.
         Class SurfaceFilterInfo<...>:
             - Removed completely.
         Class SurfaceFilterProperties:
+            - Added a copy assignment operator.
+            - Added member and global swap() functions.
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.
         Class Tangle:
@@ -1137,6 +1151,9 @@ Version 7.0  [ TODO ]
               not pointer.
             - Routine fromOrientedGauss() now returns by value (not pointer),
               and throws an exception on error (instead of returning null).
+        Class Text:
+            - Added a copy constructor and a copy assignment operator.
+            - Added member and global swap() functions.
         Class TorusBundle:
             - Added member and global swap() functions.
         Class TreeDecomposition:

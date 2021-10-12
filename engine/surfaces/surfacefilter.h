@@ -187,6 +187,13 @@ class SurfaceFilter : public Packet {
  * accepted if this is an \a and filter and rejected if this is an \a or
  * filter.
  *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the mathematical content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
  * \ingroup surfaces
  */
 class SurfaceFilterCombination : public SurfaceFilter {
@@ -204,13 +211,40 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * This will be an \a and filter.
          */
         SurfaceFilterCombination();
+
         /**
-         * Creates a new surface filter that is a clone of the given
-         * surface filter.
+         * Creates a new copy of the given filter.
          *
-         * @param cloneMe the surface filter to clone.
+         * Like all packet types, this only copies the filter content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
          */
-        SurfaceFilterCombination(const SurfaceFilterCombination& cloneMe);
+        SurfaceFilterCombination(const SurfaceFilterCombination&) = default;
+
+        /**
+         * Sets this to be a copy of the given filter.
+         *
+         * Like all packet types, this only copies the filter content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the filter whose contents should be copied.
+         * @return a reference to this filter.
+         */
+        SurfaceFilterCombination& operator = (
+            const SurfaceFilterCombination& src);
+
+        /**
+         * Swaps the contents of this and the given filter.
+         *
+         * Like all packet types, this only swaps the filter content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * @other the filter whose contents should be swapped with this.
+         */
+        void swap(SurfaceFilterCombination& other);
 
         /**
          * Determines whether this is an \a and or an \a or combination.
@@ -238,6 +272,20 @@ class SurfaceFilterCombination : public SurfaceFilter {
 };
 
 /**
+ * Swaps the contents of the given combination filters.
+ *
+ * This global routine simply calls SurfaceFilterCombination::swap(); it is
+ * provided so that SurfaceFilterCombination meets the C++ Swappable
+ * requirements.
+ *
+ * @param a the first filter whose contents should be swapped.
+ * @param b the second filter whose contents should be swapped.
+ *
+ * \ingroup surfaces
+ */
+void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b);
+
+/**
  * A normal surface filter that filters by basic properties of the normal
  * surface.
  *
@@ -247,6 +295,13 @@ class SurfaceFilterCombination : public SurfaceFilter {
  * required to be both orientable and compact, and say that orientability
  * cannot be determined.  Then the surface will be accepted solely on the
  * basis of whether or not it is compact.
+ *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the mathematical content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
  *
  * \ingroup surfaces
  */
@@ -270,13 +325,40 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Creates a new surface filter that accepts all normal surfaces.
          */
         SurfaceFilterProperties();
+
         /**
-         * Creates a new surface filter that is a clone of the given
-         * surface filter.
+         * Creates a new copy of the given filter.
          *
-         * @param cloneMe the surface filter to clone.
+         * Like all packet types, this only copies the filter content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
          */
-        SurfaceFilterProperties(const SurfaceFilterProperties& cloneMe);
+        SurfaceFilterProperties(const SurfaceFilterProperties&) = default;
+
+        /**
+         * Sets this to be a copy of the given filter.
+         *
+         * Like all packet types, this only copies the filter content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the filter whose contents should be copied.
+         * @return a reference to this filter.
+         */
+        SurfaceFilterProperties& operator = (
+            const SurfaceFilterProperties& src);
+
+        /**
+         * Swaps the contents of this and the given filter.
+         *
+         * Like all packet types, this only swaps the filter content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * @other the filter whose contents should be swapped with this.
+         */
+        void swap(SurfaceFilterProperties& other);
 
         /**
          * Returns the set of allowable Euler characteristics.  Any
@@ -406,6 +488,20 @@ class SurfaceFilterProperties : public SurfaceFilter {
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
 
+/**
+ * Swaps the contents of the given property-based filters.
+ *
+ * This global routine simply calls SurfaceFilterProperties::swap(); it is
+ * provided so that SurfaceFilterProperties meets the C++ Swappable
+ * requirements.
+ *
+ * @param a the first filter whose contents should be swapped.
+ * @param b the second filter whose contents should be swapped.
+ *
+ * \ingroup surfaces
+ */
+void swap(SurfaceFilterProperties& a, SurfaceFilterProperties& b);
+
 // Inline functions for SurfaceFilter
 
 inline SurfaceFilter::SurfaceFilter() {
@@ -440,9 +536,18 @@ inline std::shared_ptr<Packet> SurfaceFilter::internalClonePacket(
 
 inline SurfaceFilterCombination::SurfaceFilterCombination() : usesAnd_(true) {
 }
-inline SurfaceFilterCombination::SurfaceFilterCombination(
-        const SurfaceFilterCombination& cloneMe) : SurfaceFilter(),
-        usesAnd_(cloneMe.usesAnd_) {
+
+inline SurfaceFilterCombination& SurfaceFilterCombination::operator = (
+        const SurfaceFilterCombination& src) {
+    ChangeEventSpan span(*this);
+    usesAnd_ = src.usesAnd_;
+    return *this;
+}
+
+inline void SurfaceFilterCombination::swap(SurfaceFilterCombination& other) {
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+    std::swap(usesAnd_, other.usesAnd_);
 }
 
 inline bool SurfaceFilterCombination::usesAnd() const {
@@ -464,6 +569,10 @@ inline std::shared_ptr<Packet> SurfaceFilterCombination::internalClonePacket(
     return std::make_shared<SurfaceFilterCombination>(*this);
 }
 
+inline void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b) {
+    a.swap(b);
+}
+
 // Inline functions for SurfaceFilterProperties
 
 inline SurfaceFilterProperties::SurfaceFilterProperties() :
@@ -471,13 +580,27 @@ inline SurfaceFilterProperties::SurfaceFilterProperties() :
         compactness_(true, true),
         realBoundary_(true, true) {
 }
-inline SurfaceFilterProperties::SurfaceFilterProperties(
-        const SurfaceFilterProperties& cloneMe) :
-        SurfaceFilter(),
-        eulerChar_(cloneMe.eulerChar_),
-        orientability_(cloneMe.orientability_),
-        compactness_(cloneMe.compactness_),
-        realBoundary_(cloneMe.realBoundary_) {
+
+inline SurfaceFilterProperties& SurfaceFilterProperties::operator = (
+        const SurfaceFilterProperties& src) {
+    ChangeEventSpan span(*this);
+
+    eulerChar_ = src.eulerChar_;
+    orientability_ = src.orientability_;
+    compactness_ = src.compactness_;
+    realBoundary_ = src.realBoundary_;
+
+    return *this;
+}
+
+inline void SurfaceFilterProperties::swap(SurfaceFilterProperties& other) {
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    eulerChar_.swap(other.eulerChar_);
+    std::swap(orientability_, other.orientability_);
+    std::swap(compactness_, other.compactness_);
+    std::swap(realBoundary_, other.realBoundary_);
 }
 
 inline const std::set<LargeInteger>& SurfaceFilterProperties::eulerChars()
@@ -538,6 +661,10 @@ inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
 inline std::shared_ptr<Packet> SurfaceFilterProperties::internalClonePacket(
         std::shared_ptr<Packet>) const {
     return std::make_shared<SurfaceFilterProperties>(*this);
+}
+
+inline void swap(SurfaceFilterProperties& a, SurfaceFilterProperties& b) {
+    a.swap(b);
 }
 
 } // namespace regina

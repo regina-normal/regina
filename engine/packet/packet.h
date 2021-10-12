@@ -162,6 +162,10 @@ template <typename Held> class XMLWriter;
  *   macro and implements all pure virtual functions (except for those
  *   already provided by REGINA_PACKET);
  *
+ * - Declare and implement a copy constructor, copy assignment operator,
+ *   and member/global swap functions, whose arguments use the derived
+ *   class \a C (not the base class Packet);
+ *
  * - Add an appropriate case to XMLPacketReader::startSubElement(), to
  *   support reading from file;
  *
@@ -199,6 +203,14 @@ template <typename Held> class XMLWriter;
  * when keeping a graphical user interface in sync with any changes that
  * might be happening within the engine and/or via users' python scripts.
  * See the PacketListener class notes for details.
+ *
+ * Regina's packet types do not support C++ move semantics, since this would
+ * interfere with the structure of the packet tree.  They do support copy
+ * construction, copy assignment and swaps, but only in the derived packet
+ * classes (e.g., you cannot assign from the polymorphic base class Packet).
+ * Moreover, these operations only copy/swap the mathematical content, not the
+ * packet infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
  *
  * \ingroup packet
  */
@@ -238,22 +250,11 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /*@{*/
 
         /**
-         * Constructor that initialises the packet to have no parent and
-         * no children.
-         *
-         * Note that Packet is an abstract class and cannot be
-         * instantiated directly.
-         *
-         * \ifacespython Not present.
-         */
-        Packet() = default;
-
-        /**
-         * Destructor that also orphans this packet.
+         * Destroys this packet.
          *
          * Any children of this packet that are still managed by other
          * shared pointers will become orphaned.  Any children that are
-         * not managed by other shared pointers will be destroyed.
+         * not managed by other shared pointers will be destroyed also.
          */
         virtual ~Packet();
 
@@ -1448,10 +1449,6 @@ class Packet : public std::enable_shared_from_this<Packet>,
 
         /*@}*/
 
-        // Make this class non-copyable.
-        Packet(const Packet&) = delete;
-        Packet& operator = (const Packet&) = delete;
-
         /**
          * An object that facilitates firing packetToBeChanged() and
          * packetWasChanged() events.
@@ -1527,6 +1524,32 @@ class Packet : public std::enable_shared_from_this<Packet>,
                  \a P will appear as a key this map; the corresponding
                  value will be \c false initially, and will change to
                  \c true once \a P has been written to the XML file. */
+
+        /**
+         * Constructor that initialises the packet to have no parent and
+         * no children.
+         */
+        Packet() = default;
+
+        /**
+         * Copy constructor that does not actually copy any of the
+         * packet infrastructure.
+         *
+         * This is provided so that derived classes can use it implicitly
+         * in their own copy constructors.
+         */
+        Packet(const Packet&) : Packet() {}
+
+        /**
+         * Assignment operator that does not actually copy any of the
+         * packet infrastructure.
+         *
+         * This is provided so that derived classes can use it implicitly
+         * in their own assignment operators.
+         *
+         * @return a reference to this packet.
+         */
+        Packet& operator = (const Packet&) { return *this; }
 
         /**
          * Makes a new copy of this packet.  This routine should \e not
@@ -1924,6 +1947,13 @@ enum PacketHeldBy {
  *   PacketOf<Held> aquires polymorphism through its inherited Packet
  *   interface.
  *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the mathematical content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
  * \ifacespython Since Python does not support templates, this class
  * will have a name of the form PacketOfHeld.  For example, the C++ class
  * Link is wrapped by the Python class \c PacketOfLink, and the C++ class
@@ -1955,20 +1985,6 @@ class PacketOf : public Packet, public Held {
          * @param data the object to copy.
          */
         PacketOf(const Held& data) : Held(data) {
-            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
-        }
-        /**
-         * Creates a new packet containing a deep copy of the given
-         * \a Held data, but without the surrounding packet infrastructure.
-         *
-         * Only the \a Held contents of \a data will be copied, not the packet
-         * infrastructure.  In particular, this new packet will not be inserted
-         * into the same packet tree as \a data, and will not be given the
-         * same packet label.
-         *
-         * @param data the object to copy.
-         */
-        PacketOf(const PacketOf<Held>& data) : Held(data) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
         /**
@@ -2010,6 +2026,37 @@ class PacketOf : public Packet, public Held {
                 Held(std::forward<Args>(args)...) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
+        /**
+         * Creates a new copy of the given packet.
+         *
+         * Like all packet types, this only copies the mathematical content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
+         *
+         * @param src the packet whose contents should be copied.
+         */
+        PacketOf(const PacketOf<Held>& src) : Held(src) {
+            PacketData<Held>::heldBy_ = HELD_BY_PACKET;
+        }
+        /**
+         * Sets this to be a copy of the given packet.
+         *
+         * Like all packet types, this only copies the mathematical content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the packet whose contents should be copied.
+         * @return a reference to this packet.
+         */
+        PacketOf<Held>& operator = (const PacketOf<Held>& src) {
+            // We assume that Held takes care of the necessary change events.
+            Held::operator = (src);
+            return *this;
+        }
+
+        // We do not implement member or global swaps, since these can be
+        // happily inherited via the Held base class.
 
         virtual void writeTextShort(std::ostream& out) const override {
             Held::writeTextShort(out);
@@ -2017,9 +2064,6 @@ class PacketOf : public Packet, public Held {
         virtual void writeTextLong(std::ostream& out) const override {
             Held::writeTextLong(out);
         }
-
-        // Disable assignment, which would interfere with the packet tree.
-        PacketOf& operator = (const PacketOf&) = delete;
 
     protected:
         virtual std::shared_ptr<Packet> internalClonePacket(

@@ -67,6 +67,13 @@ class Script;
  * - if \a P is deleted then \a V will take the value \c None, and the script
  *   will likewise notify listeners of the change.
  *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the mathematical content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
  * \ingroup packet
  */
 class Script : public Packet, public PacketListener {
@@ -75,7 +82,7 @@ class Script : public Packet, public PacketListener {
     private:
         std::string text_;
             /**< The complete text of this script, including newlines. */
-        std::map<std::string, Packet*> variables;
+        std::map<std::string, Packet*> variables_;
             /**< A map storing the variables with which this script
                  is to be run.  Variable names are mapped to their
                  corresponding values. */
@@ -84,7 +91,42 @@ class Script : public Packet, public PacketListener {
         /**
          * Initialises to a script with no text and no variables.
          */
-        Script();
+        Script() = default;
+
+        /**
+         * Creates a new copy of the given script packet.
+         *
+         * Like all packet types, this only copies the script content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
+         *
+         * @param src the script packet whose contents should be copied.
+         */
+        Script(const Script& src);
+
+        /**
+         * Sets this to be a copy of the given script packet.
+         *
+         * Like all packet types, this only copies the script content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the script packet whose contents should be copied.
+         * @return a reference to this packet.
+         */
+        Script& operator = (const Script& src);
+
+        /**
+         * Swaps the contents of this and the given script packet.
+         *
+         * Like all packet types, this only swaps the script content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * @other the script packet whose contents should be swapped with this.
+         */
+        void swap(Script& other);
 
         /**
          * Returns the complete text of this script.
@@ -268,10 +310,20 @@ class Script : public Packet, public PacketListener {
         virtual void addPacketRefs(PacketRefs& refs) const override;
 };
 
-// Inline functions for Script
+/**
+ * Swaps the contents of the given script packets.
+ *
+ * This global routine simply calls Script::swap(); it is provided so that
+ * Script meets the C++ Swappable requirements.
+ *
+ * @param a the first script packet whose contents should be swapped.
+ * @param b the second script packet whose contents should be swapped.
+ *
+ * \ingroup packet
+ */
+void swap(Script& a, Script& b);
 
-inline Script::Script() {
-}
+// Inline functions for Script
 
 inline const std::string& Script::text() const {
     return text_;
@@ -293,13 +345,13 @@ inline void Script::append(const std::string& extraText) {
 }
 
 inline size_t Script::countVariables() const {
-    return variables.size();
+    return variables_.size();
 }
 
 inline bool Script::addVariable(const std::string& name,
         std::shared_ptr<Packet> value) {
     ChangeEventSpan span(*this);
-    bool ans = variables.insert(std::make_pair(name, value.get())).second;
+    bool ans = variables_.insert(std::make_pair(name, value.get())).second;
     if (value)
         value->listen(this);
     return ans;
@@ -308,7 +360,7 @@ inline void Script::removeAllVariables() {
     unregisterFromAllPackets();
 
     ChangeEventSpan span(*this);
-    variables.clear();
+    variables_.clear();
 }
 
 inline void Script::writeTextShort(std::ostream& o) const {
@@ -316,9 +368,13 @@ inline void Script::writeTextShort(std::ostream& o) const {
 }
 
 inline void Script::addPacketRefs(PacketRefs& refs) const {
-    for (const auto& v : variables)
+    for (const auto& v : variables_)
         if (v.second)
             refs.insert({ v.second, false });
+}
+
+inline void swap(Script& a, Script& b) {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -51,6 +51,14 @@ class Container;
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
  *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps, but only
+ * for consistency with the other packet types.  Such copy/swap operations
+ * are pointless for container packets since they do not copy/swap the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet tree,
+ * or event listeners), and containers have no "real" content of their own.
+ *
  * \ingroup packet
  */
 class Container : public Packet {
@@ -60,7 +68,7 @@ class Container : public Packet {
         /**
          * Default constructor.
          */
-        Container();
+        Container() = default;
 
         /**
          * Constructs a new container with the given packet label.
@@ -73,6 +81,39 @@ class Container : public Packet {
          */
         Container(const std::string& label);
 
+        /**
+         * Copy constructor that does nothing.
+         *
+         * This is only here for consistency with the other packet types.
+         * Like all packet types, this copy constructor does not copy any of
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
+         */
+        Container(const Container&) = default;
+
+        /**
+         * Copy assignment operator that does nothing.
+         *
+         * This is only here for consistency with the other packet types.
+         * Like all packet types, this assignment operator does not copy any of
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @return a reference to this packet.
+         */
+        Container& operator = (const Container&) = default;
+
+        /**
+         * Swaps function that does nothing.
+         *
+         * This is only here for consistency with the other packet types.
+         * Like all packet types, this operation does not swap any of
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         */
+        void swap(Container&) {}
+
         virtual void writeTextShort(std::ostream& out) const override;
 
     protected:
@@ -82,10 +123,19 @@ class Container : public Packet {
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
 
-// Inline functions for Container
+/**
+ * Swap function for container packets that does nothing.
+ *
+ * This is only here for consistency with the other packet types.
+ * For container packets, the swap operation does nothing since containers
+ * have no "real" content of their own.  See the member function
+ * Container::swap() for further explanation.
+ *
+ * \ingroup packet
+ */
+inline void swap(Container&, Container&) {}
 
-inline Container::Container() {
-}
+// Inline functions for Container
 
 inline Container::Container(const std::string& label) {
     setLabel(label);

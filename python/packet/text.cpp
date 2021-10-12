@@ -42,6 +42,8 @@ void addText(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const char*>())
+        .def(pybind11::init<const Text&>())
+        .def("swap", &Text::swap)
         .def("text", &Text::text)
         .def("setText", overload_cast<const std::string&>(&Text::setText))
         .def("setText", overload_cast<const char*>(&Text::setText))
@@ -50,5 +52,7 @@ void addText(pybind11::module_& m) {
             return Text::typeID;
         })
     ;
+
+    m.def("swap", (void(*)(Text&, Text&))(regina::swap));
 }
 

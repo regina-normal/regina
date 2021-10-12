@@ -64,6 +64,7 @@ void addSurfaceFilter(pybind11::module_& m) {
             (m, "SurfaceFilterCombination")
         .def(pybind11::init<>())
         .def(pybind11::init<const SurfaceFilterCombination&>())
+        .def("swap", &SurfaceFilterCombination::swap)
         .def("usesAnd", &SurfaceFilterCombination::usesAnd)
         .def("setUsesAnd", &SurfaceFilterCombination::setUsesAnd)
         .def_property_readonly_static("filterTypeID", [](pybind11::object) {
@@ -71,11 +72,15 @@ void addSurfaceFilter(pybind11::module_& m) {
         })
     ;
 
+    m.def("swap", (void(*)(SurfaceFilterCombination&,
+        SurfaceFilterCombination&))(regina::swap));
+
     pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterProperties>>
             (m, "SurfaceFilterProperties")
         .def(pybind11::init<>())
         .def(pybind11::init<const SurfaceFilterProperties&>())
+        .def("swap", &SurfaceFilterProperties::swap)
         .def("eulerChars", &SurfaceFilterProperties::eulerChars)
         .def("countEulerChars", &SurfaceFilterProperties::countEulerChars)
         .def("eulerChar", &SurfaceFilterProperties::eulerChar)
@@ -93,5 +98,8 @@ void addSurfaceFilter(pybind11::module_& m) {
             return SurfaceFilterProperties::filterTypeID;
         })
     ;
+
+    m.def("swap", (void(*)(SurfaceFilterProperties&,
+        SurfaceFilterProperties&))(regina::swap));
 }
 

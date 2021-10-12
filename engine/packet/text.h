@@ -49,6 +49,13 @@ class Text;
 /**
  * A packet representing a text string.
  *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the text content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
  * \ingroup packet
  */
 class Text : public Packet {
@@ -76,6 +83,39 @@ class Text : public Packet {
          * @param newText the new value for the packet.
          */
         Text(const char* newText);
+
+        /**
+         * Creates a new copy of the given text packet.
+         *
+         * Like all packet types, this only copies the text content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
+         */
+        Text(const Text&) = default;
+
+        /**
+         * Sets this to be a copy of the given text packet.
+         *
+         * Like all packet types, this only copies the text content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the text packet whose contents should be copied.
+         * @return a reference to this packet.
+         */
+        Text& operator = (const Text& src);
+
+        /**
+         * Swaps the contents of this and the given text packet.
+         *
+         * Like all packet types, this only swaps the text content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * @other the text packet whose contents should be swapped with this.
+         */
+        void swap(Text& other);
 
         /**
          * Returns the string stored in the packet.
@@ -108,6 +148,19 @@ class Text : public Packet {
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
 
+/**
+ * Swaps the contents of the given text packets.
+ *
+ * This global routine simply calls Text::swap(); it is provided so that
+ * Text meets the C++ Swappable requirements.
+ *
+ * @param a the first text packet whose contents should be swapped.
+ * @param b the second text packet whose contents should be swapped.
+ *
+ * \ingroup packet
+ */
+void swap(Text& a, Text& b);
+
 // Inline functions for Text
 
 inline Text::Text() {
@@ -117,6 +170,18 @@ inline Text::Text(const std::string& newText) : text_(newText) {
 }
 
 inline Text::Text(const char* newText) : text_(newText) {
+}
+
+inline Text& Text::operator = (const Text& src) {
+    ChangeEventSpan span(*this);
+    text_ = src.text_;
+    return *this;
+}
+
+inline void Text::swap(Text& other) {
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+    text_.swap(other.text_);
 }
 
 inline const std::string& Text::text() const {
@@ -150,6 +215,10 @@ inline void Text::writeTextLong(std::ostream& o) const {
 inline std::shared_ptr<Packet> Text::internalClonePacket(
         std::shared_ptr<Packet>) const {
     return std::make_shared<Text>(text_);
+}
+
+inline void swap(Text& a, Text& b) {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -41,6 +41,8 @@ void addScript(pybind11::module_& m) {
     pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
             m, "Script")
         .def(pybind11::init<>())
+        .def(pybind11::init<const Script&>())
+        .def("swap", &Script::swap)
         .def("text", &Script::text)
         .def("setText", &Script::setText)
         .def("append", &Script::append)
@@ -65,5 +67,7 @@ void addScript(pybind11::module_& m) {
             return Script::typeID;
         })
     ;
+
+    m.def("swap", (void(*)(Script&, Script&))(regina::swap));
 }
 
