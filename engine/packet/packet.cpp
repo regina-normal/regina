@@ -839,22 +839,81 @@ PacketListener::~PacketListener() {
 }
 
 void PacketListener::unregisterFromAllPackets() {
-    auto it = packets.begin();
-    auto next = it;
-    while (it != packets.end()) {
-        // INV: next == it.
+    // This code relies on the fact that Packet::unlisten() behaves
+    // correctly even if we preemptively removed the packet from the
+    // listener's internal set (essentially, there is a harmless no-op
+    // call to std::set::erase()).
 
-        // Step forwards before we actually deregister (*it), since
-        // the deregistration will remove (*it) from the set and
-        // invalidate the iterator.
-        ++next;
+    std::set<Packet*> tmp;
+    tmp.swap(packets);
 
-        // This deregistration removes (*it) from the set, but other
-        // iterators (i.e., next) are not invalidated.
-        (*it)->unlisten(this);
+    // Now our set of packets is empty, and we can run through tmp to
+    // call unlisten() on each packet without either the cost of a set
+    // erasure *or* having to juggle around invalidated iterators.
 
-        it = next;
+    for (Packet* p : tmp)
+        p->unlisten(this); // here is our no-op std::set::erase()
+
+    // Note: the old implementation of this function did not create a
+    // temporary set, which avoided some overhead; however, it instead
+    // unlistened from each packet one at time, and each such operation
+    // involved a logarithmic time call to packets.erase().
+    //
+    // Probably each listener only had a small number of packets it was
+    // listening to, and so probably the temporary set is more costly,
+    // but I haven't actually measured this, and probably it doesn't
+    // actually matter in practice.
+}
+
+PacketListener::PacketListener(const PacketListener& src) {
+    // Note: listen() will fill the set of packets.
+    for (Packet* p : src.packets)
+        p->listen(this);
+}
+
+PacketListener& PacketListener::operator = (const PacketListener& src) {
+    // The unregister-then-listen process below breaks with self-assignment.
+    if (this != std::addressof(src)) {
+        // Note: listen() and unlisten() will update the set of packets.
+        unregisterFromAllPackets();
+
+        for (Packet* p : src.packets)
+            p->listen(this);
     }
+    return *this;
+}
+
+void PacketListener::swapListeners(PacketListener& other) {
+    // The listen/unlisten operations will get messy if we are swapping
+    // this with itself.
+    if (this == std::addressof(other))
+        return;
+
+    // This gets messy, because listen() and unlisten() will change each
+    // listener's packets member.
+    //
+    // The code below relies on the fact that Packet::unlisten() behaves
+    // correctly even if we preemptively removed the packet from the
+    // listener's internal set (essentially, there is a harmless no-op
+    // call to std::set::erase()).
+
+    std::set<Packet*> tmp;
+    tmp.swap(packets);
+
+    for (Packet* p : tmp)
+        p->unlisten(this); // here is our no-op std::set::erase()
+
+    for (Packet* p : other.packets)
+        p->listen(this);
+
+    // Now tmp contains the original list from this listener,
+    // and both this and other contain the original list from other.
+
+    for (Packet* p : packets)
+        p->unlisten(std::addressof(other));
+
+    for (Packet* p : tmp)
+        p->listen(std::addressof(other));
 }
 
 } // namespace regina

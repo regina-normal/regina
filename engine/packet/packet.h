@@ -2235,6 +2235,11 @@ class PacketData {
          * includes special code that nullifies a SnapPea triangulation
          * when its inherited Triangulation<3> data changes unexpectedly.
          * See the SnapPeaTriangulation class for details.
+         *
+         * ChangeEventSpan objects are not copyable, movable or swappable.
+         * In particular, Regina does not offer any way for a ChangeEventSpan
+         * to transfer its duty (i.e., firing events upon destruction) to
+         * another object.
          */
         class ChangeEventSpan {
             private:
@@ -3165,6 +3170,14 @@ bool operator != (const Packet* packet, PacketShell shell);
  * from any packets to which it is currently listening.  Similarly, when
  * a packet is destroyed all listeners are automatically unregistered.
  *
+ * \warning Subclass authors should be aware of the default copy semantics
+ * that this base class provides.  In particular, this base class provides
+ * a protected copy constructor and copy assignment operator that will change
+ * which packets are being listened to (in the "obvious" way).  As a subclass
+ * author, you should understand this inherited behaviour if your subclass
+ * constructors and/or assignment operators use these base class operations
+ * implicitly.
+ *
  * \warning At the time of writing (admittedly long ago now), Qt has only
  * limited support for multithreading.  When working with an existing packet
  * tree in a new thread (not the main thread), the \e only modification that
@@ -3418,15 +3431,50 @@ class PacketListener {
 
         /*@}*/
 
-        // Make this class non-copyable.
-        PacketListener(const PacketListener&) = delete;
-        PacketListener& operator = (const PacketListener&) = delete;
-
     protected:
         /**
-         * A default constructor that does nothing.
+         * Default constructor.
+         *
+         * The new listener will not be listening to any packets.
          */
         PacketListener() = default;
+
+        /**
+         * Copy constructor.
+         *
+         * The new listener will be registered as listening to the same
+         * packets as \a src.
+         *
+         * @param src the listener to copy.
+         */
+        PacketListener(const PacketListener& src);
+
+        /**
+         * Copy assignment operator.
+         *
+         * This listener will be unregistered from whatever packets it is
+         * currently listening to, and instead will be registered as listening
+         * to the same packets as \a src.
+         *
+         * @param src the listener to copy.
+         * @return a reference to this packet listener.
+         */
+        PacketListener& operator = (const PacketListener& src);
+
+        /**
+         * Swap operation.
+         *
+         * This listener will be unregistered from whatever packets it is
+         * currently listening to and instead will be registered as listening
+         * to the same packets that \a src was originally listening to,
+         * and vice versa.
+         *
+         * This operation is \e not constant time, since it needs to
+         * perform an internal adjustment for each packet that is affected.
+         *
+         * @param other the listener to swap with this.
+         */
+        void swapListeners(PacketListener& other);
 
     /**
      * Allow packets to automatically deregister listeners as they are

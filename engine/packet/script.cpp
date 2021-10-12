@@ -39,52 +39,25 @@
 
 namespace regina {
 
-Script::Script(const Script& src) :
-        text_(src.text_), variables_(src.variables_) {
-    for (const auto& v : variables_)
-        if (v.second)
-            v.second->listen(this);
-}
-
 Script& Script::operator = (const Script& src) {
     ChangeEventSpan span(*this);
-
-    for (const auto& v : variables_)
-        if (v.second)
-            v.second->unlisten(this);
 
     text_ = src.text_;
     variables_ = src.variables_;
 
-    for (const auto& v : variables_)
-        if (v.second)
-            v.second->listen(this);
+    PacketListener::operator = (src);
 
     return *this;
 }
 
 void Script::swap(Script& other) {
-    // The listen/unlisten operations will get messy if we are swapping
-    // this with itself.
-    if (this == std::addressof(other))
-        return;
-
     ChangeEventSpan span1(*this);
     ChangeEventSpan span2(other);
 
     text_.swap(other.text_);
     variables_.swap(other.variables_);
 
-    for (const auto& v : variables_)
-        if (v.second) {
-            v.second->unlisten(std::addressof(other));
-            v.second->listen(this);
-        }
-    for (const auto& v : other.variables_)
-        if (v.second) {
-            v.second->unlisten(this);
-            v.second->listen(std::addressof(other));
-        }
+    swapListeners(other);
 }
 
 const std::string& Script::variableName(size_t index) const {

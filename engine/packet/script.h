@@ -100,10 +100,8 @@ class Script : public Packet, public PacketListener {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * it will not clone the given packet's children, and it will not
          * insert the new packet into any packet tree).
-         *
-         * @param src the script packet whose contents should be copied.
          */
-        Script(const Script& src);
+        Script(const Script&) = default;
 
         /**
          * Sets this to be a copy of the given script packet.
