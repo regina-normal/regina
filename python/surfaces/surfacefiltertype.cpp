@@ -36,7 +36,7 @@
 
 void addSurfaceFilterType(pybind11::module_& m) {
     pybind11::enum_<regina::SurfaceFilterType>(m, "SurfaceFilterType")
-        .value("NS_FILTER_DEFAULT", regina::NS_FILTER_DEFAULT)
+        .value("NS_FILTER_LEGACY_DEFAULT", regina::NS_FILTER_LEGACY_DEFAULT)
         .value("NS_FILTER_PROPERTIES", regina::NS_FILTER_PROPERTIES)
         .value("NS_FILTER_COMBINATION", regina::NS_FILTER_COMBINATION)
         .export_values();

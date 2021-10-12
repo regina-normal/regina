@@ -44,18 +44,12 @@ using regina::SurfaceFilterProperties;
 void addSurfaceFilter(pybind11::module_& m) {
     pybind11::class_<SurfaceFilter, regina::Packet,
             std::shared_ptr<SurfaceFilter>>(m, "SurfaceFilter")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const SurfaceFilter&>())
         .def("accept", &SurfaceFilter::accept)
         .def("filterType", &SurfaceFilter::filterType)
         .def("filterTypeName", &SurfaceFilter::filterTypeName)
         .def_property_readonly_static("typeID", [](pybind11::object) {
             // We cannot take the address of typeID, so use a getter function.
             return SurfaceFilter::typeID;
-        })
-        .def_property_readonly_static("filterTypeID", [](pybind11::object) {
-            // Likewise for filterTypeID.
-            return SurfaceFilter::filterTypeID;
         })
     ;
 

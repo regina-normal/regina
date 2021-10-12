@@ -88,26 +88,27 @@ class SurfaceFilterProperties;
  * Different subclasses of SurfaceFilter represent different filtering
  * methods.
  *
- * <b>When deriving classes from SurfaceFilter:</b>
- * <ul>
- *   <li>A new value must be added to the SurfaceFilterType enum in
- *   surfacefiltertype.h to represent the new filter type.</li>
- *   <li>The macro REGINA_SURFACE_FILTER must be added to the beginning
- *   of the new filter class.  This will declare and define various
- *   constants, typedefs and virtual functions (see the REGINA_SURFACE_FILTER
- *   macro documentation for details).</li>
- *   <li>A copy constructor <tt>class(const class& cloneMe)</tt> must
- *   be declared and implemented.  You may assume that parameter
- *   \a cloneMe is of the same class as that whose constructor you are
- *   writing.</li>
- *   <li>Virtual functions accept(), internalClonePacket(), writeTextLong() and
- *   writeXMLPacketData() must be overridden.</li>
- *   <li>An appropriate case should be added to
- *   <tt>XMLFilterPacketReader::startContentSubElement()</tt> so that the
- *   filter can be read from Regina data files.</li>
- * </ul>
+ * When deriving classes from SurfaceFilter:
  *
- * \todo \feature Implement property \a lastAppliedTo.
+ * - Add a new filter constant to the SurfaceFilterType enum;
+ *
+ * - Create a new subclass \a C of SurfaceFilter, which begins with the
+ *   REGINA_SURFACE_FILTER macro;
+ *
+ * - Perform all tasks required for this new innate packet type \a C, as
+ *   outlined in the Packet class documentation;
+ *
+ * - Override the virtual function writeTextLong(), as well as all pure virtual
+ *   functions from both the Packet and SurfaceFilter base classes (except
+ *   for those already provided by REGINA_PACKET and REGINA_SURFACE_FILTER).
+ *
+ * Like all packet types, Regina's filter types do not support C++ move
+ * semantics, since this would interfere with the structure of the packet tree.
+ * They do support copy construction, copy assignment and swaps, but only in
+ * the derived filter classes (e.g., you cannot assign from the polymorphic
+ * base class SurfaceFilter).  Moreover, these operations only copy/swap the
+ * filter content, not the packet infrastructure (e.g., they do not touch
+ * packet labels, or the packet tree, or event listeners).
  *
  * \ingroup surfaces
  */
@@ -115,31 +116,6 @@ class SurfaceFilter : public Packet {
     REGINA_PACKET(PACKET_SURFACEFILTER, "Surface filter")
 
     public:
-        /**
-         * A compile-time constant that identifies this type of surface filter.
-         */
-        static constexpr const SurfaceFilterType filterTypeID =
-            NS_FILTER_DEFAULT;
-
-    public:
-        /**
-         * Creates a new default surface filter.  This will simply accept
-         * all normal surfaces.
-         */
-        SurfaceFilter();
-        /**
-         * Creates a new default surface filter.  This will simply accept
-         * all normal surfaces.  Note that the given parameter is
-         * ignored.
-         *
-         * @param cloneMe this parameter is ignored.
-         */
-        SurfaceFilter(const SurfaceFilter& cloneMe);
-        /**
-         * Destroys this surface filter.
-         */
-        virtual ~SurfaceFilter();
-
         /**
          * Decides whether or not the given normal surface is accepted by this
          * filter.
@@ -150,7 +126,7 @@ class SurfaceFilter : public Packet {
          * @return \c true if and only if the given surface is accepted
          * by this filter.
          */
-        virtual bool accept(const NormalSurface& surface) const;
+        virtual bool accept(const NormalSurface& surface) const = 0;
 
         /**
          * Returns the unique integer ID corresponding to the filtering
@@ -158,22 +134,29 @@ class SurfaceFilter : public Packet {
          *
          * @return the unique integer filtering method ID.
          */
-        virtual SurfaceFilterType filterType() const;
+        virtual SurfaceFilterType filterType() const = 0;
         /**
          * Returns a string description of the filtering method that is
          * this particular subclass of SurfaceFilter.
          *
          * @return a string description of this filtering method.
          */
-        virtual std::string filterTypeName() const;
+        virtual std::string filterTypeName() const = 0;
 
         virtual void writeTextShort(std::ostream& out) const override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket(
-            std::shared_ptr<Packet> parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
+        /**
+         * Default constructor.
+         */
+        SurfaceFilter() = default;
+        /**
+         * Copy constructor that does not actually copy anything.
+         *
+         * This is provided so that derived classes can use it implicitly
+         * in their own copy constructors.
+         */
+        SurfaceFilter(const SurfaceFilter&) = default;
 };
 
 /**
@@ -504,32 +487,8 @@ void swap(SurfaceFilterProperties& a, SurfaceFilterProperties& b);
 
 // Inline functions for SurfaceFilter
 
-inline SurfaceFilter::SurfaceFilter() {
-}
-inline SurfaceFilter::SurfaceFilter(const SurfaceFilter&) : Packet() {
-}
-inline SurfaceFilter::~SurfaceFilter() {
-}
-
-inline bool SurfaceFilter::accept(const NormalSurface&) const {
-    return true;
-}
-
-inline SurfaceFilterType SurfaceFilter::filterType() const {
-    return NS_FILTER_DEFAULT;
-}
-
-inline std::string SurfaceFilter::filterTypeName() const {
-    return "Default filter";
-}
-
 inline void SurfaceFilter::writeTextShort(std::ostream& o) const {
     o << filterTypeName();
-}
-
-inline std::shared_ptr<Packet> SurfaceFilter::internalClonePacket(
-        std::shared_ptr<Packet>) const {
-    return std::make_shared<SurfaceFilter>();
 }
 
 // Inline functions for SurfaceFilterCombination

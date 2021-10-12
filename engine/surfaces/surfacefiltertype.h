@@ -54,10 +54,15 @@ namespace regina {
  */
 enum SurfaceFilterType {
     /**
-     * Represents the SurfaceFilter class: a do-nothing filter that
+     * A legacy constant representing a do-nothing filter that
      * accepts any normal surface.
+     *
+     * This type of filter could technically appear in a second-generation
+     * Regina data file, though it is unlikely that this feature was ever
+     * used in practice (in particular, filters of this type could not be
+     * created through the GUI).
      */
-    NS_FILTER_DEFAULT = 0,
+    NS_FILTER_LEGACY_DEFAULT = 0,
     /**
      * Represents the SurfaceFilterProperties subclass: a filter that
      * examines simple properties of a normal surface.

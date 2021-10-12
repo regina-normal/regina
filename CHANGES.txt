@@ -1132,6 +1132,10 @@ Version 7.0  [ TODO ]
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.
             - Routine manifold() now returns a std::unique_ptr.
+        Class SurfaceFilter:
+            - This is now an abstract base class.  If you need a filter
+              that accepts everything, use a default-constructed
+              SurfaceFilterProperties filter instead.
         Class SurfaceFilterCombination:
             - Added a copy assignment operator.
             - Added member and global swap() functions.
@@ -1142,6 +1146,10 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.
+        Enum SurfaceFilterType:
+            - Renamed the constant NS_FILTER_DEFAULT to
+              NS_FILTER_LEGACY_DEFAULT, since the corresponding class
+              SurfaceFilter is now an abstract base class.
         Class Tangle:
             - Added a copy assignment operator.
             - Added a move constructor and move assignment operator.

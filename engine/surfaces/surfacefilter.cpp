@@ -46,19 +46,6 @@
 
 namespace regina {
 
-void SurfaceFilter::writeXMLPacketData(std::ostream& out,
-        FileFormat format, bool anon, PacketRefs& refs) const {
-    writeXMLHeader(out, "filterplain", format, anon, refs);
-    if (format == REGINA_XML_GEN_2) {
-        out << "  <filter type=\""
-            << regina::xml::xmlEncodeSpecialChars(filterTypeName())
-            << "\" typeid=\"" << filterType() << "\"/>\n";
-    }
-    if (! anon)
-        writeXMLTreeData(out, format, refs);
-    writeXMLFooter(out, "filterplain", format);
-}
-
 bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
     if (usesAnd_) {
         // Combine all child filters using AND.

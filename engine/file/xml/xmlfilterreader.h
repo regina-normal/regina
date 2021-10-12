@@ -227,7 +227,7 @@ inline XMLPlainFilterReader::XMLPlainFilterReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
         XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
-        filter_(new SurfaceFilter()) {
+        filter_(new SurfaceFilterProperties()) {
 }
 
 inline std::shared_ptr<Packet> XMLPlainFilterReader::packetToCommit() {
