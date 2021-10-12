@@ -528,6 +528,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * - The first argument to \a action must be a const reference to a
          *   FacetPairing<dim>.  This will be the facet pairing that was found.
+         *   If \a action wishes to keep the facet pairing, it should take a
+         *   deep copy (not a reference), since the facet pairing may be
+         *   changed and reused after \a action returns.
          *
          * - The second argument to \a action must be a
          *   FacetPairing<dim>::IsoList (this will be passed by value using

@@ -1460,11 +1460,10 @@ class TriangulationBase :
          * \a action (which must be a function or some other callable object).
          *
          * - The first argument to \a action must be of type
-         *   <tt>(const Isomorphism<dim>&)</tt>; this will be a reference
-         *   to the isomorphism that was found.  If \a action wishes to keep
-         *   the isomorphism, it should take a copy (not a reference), since
-         *   the isomorphism will be changed and then eventually destroyed
-         *   after \a action returns.
+         *   <tt>(const Isomorphism<dim>&)</tt>; this will be a reference to
+         *   the isomorphism that was found.  If \a action wishes to keep the
+         *   isomorphism, it should take a deep copy (not a reference), since
+         *   the isomorphism may be changed and reused after \a action returns.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
@@ -1518,11 +1517,10 @@ class TriangulationBase :
          * \a action (which must be a function or some other callable object).
          *
          * - The first argument to \a action must be of type
-         *   <tt>(const Isomorphism<dim>&)</tt>; this will be a reference
-         *   to the isomorphism that was found.  If \a action wishes to keep
-         *   the isomorphism, it should take a copy (not a reference), since
-         *   the isomorphism will be changed and then eventually destroyed
-         *   after \a action returns.
+         *   <tt>(const Isomorphism<dim>&)</tt>; this will be a reference to
+         *   the isomorphism that was found.  If \a action wishes to keep the
+         *   isomorphism, it should take a deep copy (not a reference), since
+         *   the isomorphism may be changed and reused after \a action returns.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.

@@ -153,6 +153,9 @@ class GluingPermSearcher<2> {
          *
          * - The first argument to \a action must be a const reference to a
          *   GluingPerms<2>.  This will be the permutation set that was found.
+         *   If \a action wishes to keep the permutation set, it should take a
+         *   deep copy (not a reference), since the permutation set may be
+         *   changed and reused after \a action returns.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
