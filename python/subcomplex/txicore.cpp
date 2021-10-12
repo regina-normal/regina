@@ -67,13 +67,19 @@ void addTxICore(pybind11::module_& m) {
     pybind11::class_<TxIDiagonalCore, regina::TxICore>(m, "TxIDiagonalCore")
         .def(pybind11::init<unsigned long, unsigned long>())
         .def(pybind11::init<const TxIDiagonalCore&>())
+        .def("swap", &TxIDiagonalCore::swap)
         .def("size", &TxIDiagonalCore::size)
         .def("k", &TxIDiagonalCore::k)
     ;
 
+    m.def("swap", (void(*)(TxIDiagonalCore&, TxIDiagonalCore&))(regina::swap));
+
     pybind11::class_<TxIParallelCore, regina::TxICore>(m, "TxIParallelCore")
         .def(pybind11::init<>())
         .def(pybind11::init<const TxIParallelCore&>())
+        .def("swap", &TxIParallelCore::swap)
     ;
+
+    m.def("swap", (void(*)(TxIParallelCore&, TxIParallelCore&))(regina::swap));
 }
 

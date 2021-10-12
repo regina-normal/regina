@@ -47,6 +47,23 @@ std::string TxICore::TeXName() const {
     return out.str();
 }
 
+void TxICore::swapBaseData(TxICore& other) noexcept {
+    core_.swap(other.core_);
+
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 2; ++j)
+            std::swap(bdryTet_[i][j], other.bdryTet_[i][j]);
+
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 2; ++j)
+            std::swap(bdryRoles_[i][j], other.bdryRoles_[i][j]);
+
+    for (int i = 0; i < 2; ++i)
+        std::swap(bdryReln_[i], other.bdryReln_[i]);
+
+    parallelReln_.swap(other.parallelReln_);
+}
+
 TxIDiagonalCore::TxIDiagonalCore(unsigned long newSize, unsigned long newK) :
         size_(newSize), k_(newK) {
     // We'll build the actual triangulation last.  Meanwhile, fill in

@@ -73,6 +73,10 @@ namespace regina {
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
  *
+ * This is an abstract base class; however, the concrete subclasses
+ * offer all of the usual copy, move and swap operations.  See each
+ * subclass for details.
+ *
  * \ingroup subcomplex
  */
 class TxICore : public Output<TxICore> {
@@ -304,10 +308,6 @@ class TxICore : public Output<TxICore> {
          */
         void writeTextLong(std::ostream& out) const;
 
-        // Mark this class as non-copyable.
-        // There is a copy constructor, but it is protected.
-        TxICore& operator = (const TxICore&) = delete;
-
     protected:
         /**
          * Default constructor that performs no initialisation.
@@ -319,6 +319,44 @@ class TxICore : public Output<TxICore> {
          * This induces a deep copy of the underlying triangulation.
          */
         TxICore(const TxICore& src) = default;
+        /**
+         * Move constructor.
+         */
+        TxICore(TxICore&& src) = default;
+        /**
+         * Copy assignment operator.
+         *
+         * This is provided here so that subclasses can use it
+         * implicitly in their own assignment operators.
+         */
+        TxICore& operator = (const TxICore&) = default;
+        /**
+         * Move assignment operator.
+         *
+         * This is provided here so that subclasses can use it
+         * implicitly in their own assignment operators.
+         *
+         * \note This operator is marked \c noexcept, even though it calls
+         * the Triangulation<3> assignment operator which is not \c noexcept.
+         * This is because the only potential cause of exceptions comes from
+         * packet event listeners, and the internal triangulation here does
+         * not belong to a packet.
+         */
+        TxICore& operator = (TxICore&&) = default;
+        /**
+         * Swaps all data that is managed by this base class with the
+         * given triangulation.
+         *
+         * \note This function is marked \c noexcept, even though it calls
+         * Triangulation<3>::swap() which is not \c noexcept.  This is because
+         * the only potential cause of exceptions comes from packet event
+         * listeners, and the internal triangulation here does not belong to a
+         * packet.
+         *
+         * @param other the triangulation whose data should be swapped
+         * with this.
+         */
+        void swapBaseData(TxICore& other) noexcept;
 };
 
 /**
@@ -380,6 +418,10 @@ class TxICore : public Output<TxICore> {
  *
  * \image html diag92.png
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \ingroup subcomplex
  */
 class TxIDiagonalCore : public TxICore {
@@ -410,6 +452,32 @@ class TxIDiagonalCore : public TxICore {
         TxIDiagonalCore(const TxIDiagonalCore&) = default;
 
         /**
+         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * into this new triangulation.
+         *
+         * The triangulation that was passed will no longer be usable.
+         */
+        TxIDiagonalCore(TxIDiagonalCore&&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given <tt>T x I</tt> triangulation.
+         * This will induce a deep copy.
+         *
+         * @return a reference to this triangulation.
+         */
+        TxIDiagonalCore& operator = (const TxIDiagonalCore& src) = default;
+
+        /**
+         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * into this triangulation.
+         *
+         * The triangulation that was passed will no longer be usable.
+         *
+         * @return a reference to this triangulation.
+         */
+        TxIDiagonalCore& operator = (TxIDiagonalCore&& src) noexcept = default;
+
+        /**
          * Returns the total number of tetrahedra in this <tt>T x I</tt>
          * triangulation.
          *
@@ -425,9 +493,33 @@ class TxIDiagonalCore : public TxICore {
          */
         unsigned long k() const;
 
+        /**
+         * Swaps the contents of this and the given
+         * <tt>T x I</tt> triangulation.
+         *
+         * @param other the triangulation whose contents should be swapped
+         * with this.
+         */
+        void swap(TxIDiagonalCore& other) noexcept;
+
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
+
+/**
+ * Swaps the contents of the two given <tt>T x I</tt> triangulations.
+ *
+ * This global routine simply calls TxIDiagonalCore::swap(); it is
+ * provided so that TxIDiagonalCore meets the C++ Swappable requirements.
+ *
+ * See TxIDiagonalCore::swap() for more details.
+ *
+ * @param lhs the triangulation whose contents should be swapped with \a rhs.
+ * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup subcomplex
+ */
+void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
 
 /**
  * A specific six-tetrahedron TxICore triangulation that does not fit
@@ -457,6 +549,10 @@ class TxIDiagonalCore : public TxICore {
  *
  * \image html parallel.png
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \ingroup subcomplex
  */
 class TxIParallelCore : public TxICore {
@@ -475,9 +571,59 @@ class TxIParallelCore : public TxICore {
          */
         TxIParallelCore(const TxIParallelCore&) = default;
 
+        /**
+         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * into this new triangulation.
+         *
+         * The triangulation that was passed will no longer be usable.
+         */
+        TxIParallelCore(TxIParallelCore&&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given <tt>T x I</tt> triangulation.
+         * This will induce a deep copy.
+         *
+         * @return a reference to this triangulation.
+         */
+        TxIParallelCore& operator = (const TxIParallelCore& src) = default;
+
+        /**
+         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * into this triangulation.
+         *
+         * The triangulation that was passed will no longer be usable.
+         *
+         * @return a reference to this triangulation.
+         */
+        TxIParallelCore& operator = (TxIParallelCore&& src) noexcept = default;
+
+        /**
+         * Swaps the contents of this and the given
+         * <tt>T x I</tt> triangulation.
+         *
+         * @param other the triangulation whose contents should be swapped
+         * with this.
+         */
+        void swap(TxIParallelCore& other) noexcept;
+
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
+
+/**
+ * Swaps the contents of the two given <tt>T x I</tt> triangulations.
+ *
+ * This global routine simply calls TxIParallelCore::swap(); it is
+ * provided so that TxIParallelCore meets the C++ Swappable requirements.
+ *
+ * See TxIParallelCore::swap() for more details.
+ *
+ * @param lhs the triangulation whose contents should be swapped with \a rhs.
+ * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup subcomplex
+ */
+void swap(TxIParallelCore& lhs, TxIParallelCore& rhs);
 
 // Inline functions for TxICore
 
@@ -521,6 +667,12 @@ inline void TxICore::writeTextLong(std::ostream& out) const {
 
 // Inline functions for TxIDiagonalCore
 
+inline void TxIDiagonalCore::swap(TxIDiagonalCore& other) noexcept {
+    swapBaseData(other);
+    std::swap(size_, other.size_);
+    std::swap(k_, other.k_);
+}
+
 inline unsigned long TxIDiagonalCore::size() const {
     return size_;
 }
@@ -537,12 +689,24 @@ inline std::ostream& TxIDiagonalCore::writeTeXName(std::ostream& out) const {
     return out << "T_{" << size_ << ':' << k_ << '}';
 }
 
+inline void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs) {
+    lhs.swap(rhs);
+}
+
+inline void TxIParallelCore::swap(TxIParallelCore& other) noexcept {
+    swapBaseData(other);
+}
+
 inline std::ostream& TxIParallelCore::writeName(std::ostream& out) const {
     return out << "T6*";
 }
 
 inline std::ostream& TxIParallelCore::writeTeXName(std::ostream& out) const {
     return out << "T_{6\\ast}";
+}
+
+inline void swap(TxIParallelCore& lhs, TxIParallelCore& rhs) {
+    lhs.swap(rhs);
 }
 
 } // namespace regina
