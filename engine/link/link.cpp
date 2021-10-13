@@ -498,7 +498,7 @@ void Link::resolve(Crossing* c) {
                     break;
                 }
             // 0-crossing component #2:
-            components_.push_back(StrandRef());
+            components_.emplace_back();
 
             crossings_.erase(crossings_.begin() + c->index());
             delete c;
@@ -517,7 +517,7 @@ void Link::resolve(Crossing* c) {
                     break;
                 }
 
-            components_.push_back(StrandRef());
+            components_.emplace_back();
             crossings_.erase(crossings_.begin() + c->index());
             delete c;
         }
@@ -536,7 +536,7 @@ void Link::resolve(Crossing* c) {
                 break;
             }
 
-        components_.push_back(StrandRef());
+        components_.emplace_back();
         crossings_.erase(crossings_.begin() + c->index());
         delete c;
     } else {
@@ -863,7 +863,7 @@ Link Link::parallel(int k, Framing framing) const {
         if (! start) {
             // This component is a 0-crossing unknot.
             for (i = 0; i < k; ++i)
-                ans.components_.push_back(StrandRef());
+                ans.components_.emplace_back();
             continue;
         }
 
@@ -1155,11 +1155,11 @@ void Link::insertTorusLink(int p, int q, bool positive) {
         ChangeEventSpan span(*this);
         if (p == 0) {
             // Insert a single unknot.
-            components_.push_back({});
+            components_.emplace_back();
         } else {
             // Insert p disjoint unknots.
             for (int i = 0; i < p; ++i)
-                components_.push_back({});
+                components_.emplace_back();
         }
         clearAllProperties();
         return;
@@ -1167,7 +1167,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     if (q == 1) {
         // Insert a single unknot.
         ChangeEventSpan span(*this);
-        components_.push_back({});
+        components_.emplace_back();
         clearAllProperties();
         return;
     }
@@ -1199,7 +1199,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
         join({c[sliceIdx + q - 2], 1}, {c[nextIdx + q - 2], 0});
 
         if (slice < nComp)
-            components_.push_back({c[sliceIdx], 1});
+            components_.emplace_back(c[sliceIdx], 1);
     }
 
     delete[] c;

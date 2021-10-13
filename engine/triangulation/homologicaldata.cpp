@@ -1637,7 +1637,7 @@ void HomologicalData::computeTorsionLinkingForm() {
             // increment curri
             curri = curri + torRankV[i].second[j]; // crashes here.
         }
-        oddTorLegSymV.push_back( make_pair( torRankV[i].first , tempa) );
+        oddTorLegSymV.emplace_back( torRankV[i].first , tempa );
     }
 
     // step 4: kk test for: split, hyperbolic, and the embeddability

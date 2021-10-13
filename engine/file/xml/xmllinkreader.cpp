@@ -168,9 +168,9 @@ void XMLLinkComponentsReader::initialChars(const std::string& chars) {
             link_ = nullptr;
             return;
         }
-        
+
         if (s == "(null)") {
-            link_->components_.push_back(StrandRef(nullptr, 0));
+            link_->components_.emplace_back(nullptr, 0);
             continue;
         }
 

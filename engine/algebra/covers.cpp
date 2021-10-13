@@ -358,7 +358,7 @@ namespace {
                     if (t.generator < depth) {
                         // Start a new subexpression at a smaller depth.
                         depth = t.generator;
-                        currExp[depth].push_back({ depth, t.exponent });
+                        currExp[depth].emplace_back(depth, t.exponent);
                     } else {
                         // Finish off all subexpressions at depths
                         // below the newly-seen generator.
@@ -394,12 +394,12 @@ namespace {
                             // the next higher depth, where prev is the
                             // index of the formula that we just closed off.
                             ++depth;
-                            currExp[depth].push_back({ prev, 1 });
+                            currExp[depth].emplace_back(prev, 1);
                         }
                         // Finally, actually append the newly-seen term
                         // that we are looking at now.
                         // Note that depth == t.generator at this point.
-                        currExp[depth].push_back({ depth, t.exponent });
+                        currExp[depth].emplace_back(depth, t.exponent);
                     }
                 }
 
@@ -465,8 +465,8 @@ namespace {
                         if (t.generator < nGen)
                             f.terms.push_back(t);
                         else
-                            f.terms.push_back(
-                                { reindex[t.generator], t.exponent });
+                            f.terms.emplace_back(
+                                reindex[t.generator], t.exponent);
                     formulae.push_back(std::move(f));
                 }
             }

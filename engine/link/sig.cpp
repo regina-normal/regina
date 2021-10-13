@@ -253,7 +253,7 @@ Link Link::fromKnotSig(const std::string& sig) {
         if (c != end)
             throw InvalidArgument("fromKnotSig(): signature has "
                 "extra characters");
-        ans.components_.push_back(StrandRef());
+        ans.components_.emplace_back();
         return ans;
     }
 

@@ -137,8 +137,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
             // Find the angle structures.
             DoubleDescription::enumerateExtremalRays<VectorInt>(
                 [this](VectorInt&& v) {
-                    structures_.push_back(
-                        AngleStructure(triangulation_, std::move(v)));
+                    structures_.emplace_back(triangulation_, std::move(v));
                 }, eqns, constraints, tracker);
 
             // All done!
@@ -168,8 +167,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         // Find the angle structures.
         DoubleDescription::enumerateExtremalRays<VectorInt>(
             [this](VectorInt&& v) {
-                structures_.push_back(
-                    AngleStructure(triangulation_, std::move(v)));
+                structures_.emplace_back(triangulation_, std::move(v));
             }, eqns, nullptr /* constraints */, tracker);
 
         // All done!

@@ -147,25 +147,24 @@ std::vector<NormalSurface> NormalSurface::components() const {
         size_t size = 10 * triangulation_->size();
 
         for (i = 0; i < compID; ++i)
-            ans.push_back(Vector<LargeInteger>(size));
+            ans.emplace_back(size);
 
         for (const auto& disc : components)
             ++ans[components.data(disc)][10 * disc.tetIndex + disc.type];
 
         for (i = 0; i < compID; ++i)
-            dest.push_back(NormalSurface(triangulation_, NS_AN_STANDARD,
-                ans[i]));
+            dest.emplace_back(triangulation_, NS_AN_STANDARD, ans[i]);
     } else {
         size_t size = 7 * triangulation_->size();
 
         for (i = 0; i < compID; ++i)
-            ans.push_back(Vector<LargeInteger>(size));
+            ans.emplace_back(size);
 
         for (const auto& disc : components)
             ++ans[components.data(disc)][7 * disc.tetIndex + disc.type];
 
         for (i = 0; i < compID; ++i)
-            dest.push_back(NormalSurface(triangulation_, NS_STANDARD, ans[i]));
+            dest.emplace_back(triangulation_, NS_STANDARD, ans[i]);
     }
 
     connected_ = (compID == 1);

@@ -535,7 +535,7 @@ Link Tangle::numClosure() const {
             Link::join(clone.end_[1][1], clone.end_[1][0]);
             ans.components_.push_back(clone.end_[1][0]);
         } else {
-            ans.components_.push_back(StrandRef());
+            ans.components_.emplace_back();
         }
     }
 
@@ -591,7 +591,7 @@ Link Tangle::denClosure() const {
             Link::join(clone.end_[1][1], clone.end_[1][0]);
             ans.components_.push_back(clone.end_[1][0]);
         } else {
-            ans.components_.push_back(StrandRef());
+            ans.components_.emplace_back();
         }
     }
 

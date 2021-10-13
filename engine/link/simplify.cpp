@@ -73,7 +73,7 @@ bool Link::intelligentSimplify() {
                 for (Crossing* c : use->crossings_)
                     for (side = 0; side < 2; ++side)
                         if (use->r3(c, side, true, false))
-                            type3Available.push_back(std::make_pair(c, side));
+                            type3Available.emplace_back(c, side);
 
                 // Increment type3Cap if needed.
                 if (type3Cap < COEFF_TYPE_3 * type3Available.size())

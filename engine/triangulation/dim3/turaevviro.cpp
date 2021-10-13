@@ -1297,12 +1297,12 @@ namespace {
         unsigned long i;
         for (Edge<3>* edge : tri.edges()) {
             for (auto& emb : *edge) {
-                input.push_back(std::vector<mpz_class>());
+                input.emplace_back();
                 std::vector<mpz_class>& v(input.back());
                 v.reserve(3 * nTri);
 
                 for (i = 0; i < 3 * nTri; ++i)
-                    v.push_back(long(0));
+                    v.emplace_back(long(0));
 
                 tet = emb.tetrahedron();
                 p = emb.vertices();

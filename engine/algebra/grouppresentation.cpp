@@ -384,14 +384,14 @@ void GroupPresentation::dehnAlgorithmSubMetric(
     std::list<GroupExpressionTerm>::const_iterator it;
     for (it = this_word.terms().begin(); it!=this_word.terms().end(); it++) {
         for (unsigned long i=0; i<std::abs((*it).exponent); i++)
-            this_word_vec.push_back( GroupExpressionTerm( (*it).generator,
-                                     ((*it).exponent>0) ? 1 : -1 ) );
+            this_word_vec.emplace_back( (*it).generator,
+                                        ((*it).exponent>0) ? 1 : -1 );
     }
     for (it = that_word.terms().begin();
             it!=that_word.terms().end(); it++) {
         for (unsigned long i=0; i<std::abs((*it).exponent); i++)
-            reducer.push_back( GroupExpressionTerm( (*it).generator,
-                               ((*it).exponent>0) ? 1 : -1 ) );
+            reducer.emplace_back( (*it).generator,
+                                  ((*it).exponent>0) ? 1 : -1 );
     }
     std::vector< GroupExpressionTerm > inv_reducer( that_length );
     for (unsigned long i=0; i<reducer.size(); i++)
@@ -470,14 +470,14 @@ void GroupPresentation::applySubstitution( GroupExpression& this_word,
     // start the splaying of terms
     for (it = this_word.terms().begin(); it!=this_word.terms().end(); it++) {
         for (unsigned long i=0; i<std::abs((*it).exponent); i++)
-            this_word_vec.push_back( GroupExpressionTerm( (*it).generator,
-                                     ((*it).exponent>0) ? 1 : -1 ) );
+            this_word_vec.emplace_back( (*it).generator,
+                                        ((*it).exponent>0) ? 1 : -1 );
     }
     // and that_word
     for (it = that_word.terms().begin(); it!=that_word.terms().end(); it++) {
         for (unsigned long i=0; i<std::abs((*it).exponent); i++)
-            reducer.push_back( GroupExpressionTerm( (*it).generator,
-                               ((*it).exponent>0) ? 1 : -1 ) );
+            reducer.emplace_back( (*it).generator,
+                                  ((*it).exponent>0) ? 1 : -1 );
     }
     // done splaying, produce inv_reducer
     std::vector< GroupExpressionTerm > inv_reducer( that_length );
@@ -760,7 +760,7 @@ GroupPresentation::GroupPresentation(unsigned long nGens,
 
     relations_.reserve(rels.size());
     for (const std::string& r : rels)
-        relations_.push_back( GroupExpression(r) );
+        relations_.emplace_back(r);
 }
 
 bool GroupPresentation::simplifyWord( GroupExpression &input ) const
@@ -1390,7 +1390,7 @@ std::list<GroupPresentation> GroupPresentation::identifyFreeProduct() const
 
     std::list<GroupPresentation> retval;
     if (unRelated.size()>0) {
-        retval.push_back(GroupPresentation(unRelated.size()));
+        retval.emplace_back(unRelated.size());
     }
     for (std::list< std::set< unsigned long > >::iterator I=equivRel.begin();
             I!=equivRel.end(); I++) {
@@ -1471,7 +1471,7 @@ bool GroupPresentation::identifySimplyIsomorphicTo(
     // for each relator of this we have lists of potential substitutions
     // typedef std::list< partialSubType > pSubListType;
     std::list< std::map<unsigned long, GroupExpressionTerm> > allPartialSubs;
-    allPartialSubs.push_back( std::map<unsigned long, GroupExpressionTerm>() );
+    allPartialSubs.emplace_back();
 
     for (auto i=domRelIdx.rbegin(); i!=domRelIdx.rend(); i++) {
         // currently we'll do the most simplistic thing possible -- look for relabellings
@@ -1950,13 +1950,13 @@ namespace { // anonymous namespace
         std::list<GroupExpressionTerm>::const_iterator it;
         for (const auto& t : first.terms()) {
             for (unsigned long I=0; I<std::abs(t.exponent); I++)
-                first_word_vec.push_back( GroupExpressionTerm( t.generator,
-                                          (t.exponent>0) ? 1 : -1 ) );
+                first_word_vec.emplace_back( t.generator,
+                                             (t.exponent>0) ? 1 : -1 );
         }
         for (const auto& t : second.terms()) {
             for (unsigned long I=0; I<std::abs(t.exponent); I++)
-                second_word_vec.push_back( GroupExpressionTerm( t.generator,
-                                           (t.exponent>0) ? 1 : -1 ) );
+                second_word_vec.emplace_back( t.generator,
+                                              (t.exponent>0) ? 1 : -1 );
         }
     // now we compare termwise
         for (unsigned long I=0; I<first_word_vec.size(); I++) {

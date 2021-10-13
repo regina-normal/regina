@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
             outputFile = argv[++i];
         } else if (*argv[i]) {
             // Just an ordinary filename.
-            files.push_back(argv[i]);
+            files.emplace_back(argv[i]);
         } else
             usage(argv[0], "Empty arguments are not allowed.");
     }

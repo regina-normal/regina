@@ -181,8 +181,7 @@ bool Triangulation<3>::intelligentSimplify() {
                 for (Edge<3>* edge : use->edges())
                     for (axis = 0; axis < 2; axis++)
                         if (use->fourFourMove(edge, axis, true, false))
-                            fourFourAvailable.push_back(
-                                std::make_pair(edge, axis));
+                            fourFourAvailable.emplace_back(edge, axis);
 
                 // Increment fourFourCap if needed.
                 if (fourFourCap < COEFF_4_4 * fourFourAvailable.size())

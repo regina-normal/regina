@@ -260,7 +260,7 @@ std::vector<std::string> Link::orientedGaussData() const {
             return std::vector<std::string>();
         }
 #endif
-        ans.push_back(token);
+        ans.emplace_back(token);
 
         ++s;
     } while (s != start);

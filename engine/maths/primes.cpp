@@ -91,7 +91,7 @@ std::vector<Integer> Primes::primeDecomp(const Integer& n) {
     // if the number is negative, put -1 as first factor.
     if (temp < Integer::zero) {
         temp.negate();
-        retval.push_back(Integer(-1));
+        retval.emplace_back(-1);
     }
 
     // repeatedly divide the number by the smallest primes until no
@@ -158,12 +158,12 @@ std::vector<std::pair<Integer, unsigned long> >
                 cc++;
             else {
                 // a new prime is coming up.
-                retlist.push_back(std::make_pair( cp, cc ) );
+                retlist.emplace_back(cp, cc);
                 cp = *it;
                 cc = 1;
             }
         }
-        retlist.push_back(std::make_pair( cp, cc ) );
+        retlist.emplace_back(cp, cc);
     }
 
     return retlist;

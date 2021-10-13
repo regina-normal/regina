@@ -196,14 +196,14 @@ void NormalHypersurfaces::Enumerator::fillVertexDD() {
             *list_->triangulation_, list_->coords_);
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(
-                    list_->triangulation_, list_->coords_, std::move(v)));
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
             }, eqns_, &c, tracker_);
     } else {
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(
-                    list_->triangulation_, list_->coords_, std::move(v)));
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
             }, eqns_, nullptr, tracker_);
     }
 }
@@ -262,8 +262,8 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
     std::vector<HSShadowVector> shadows;
     shadows.reserve(vtx.size());
     for (const NormalHypersurface& s : vtx)
-        shadows.push_back(HSShadowVector(s.vector(), s.encoding(),
-            HyperEncoding(list_->coords_)));
+        shadows.emplace_back(s.vector(), s.encoding(),
+            HyperEncoding(list_->coords_));
 
     // Finalise the algorithm flags for this list: combine HS_HILBERT_PRIMAL
     // with whatever vertex enumeration flags were used.
@@ -278,14 +278,14 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
             list_->coords_);
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(
-                    list_->triangulation_, list_->coords_, std::move(v)));
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
             }, shadows.begin(), shadows.end(), &c, tracker_);
     } else {
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(
-                    list_->triangulation_, list_->coords_, std::move(v)));
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
             }, shadows.begin(), shadows.end(), nullptr, tracker_);
     }
 }
@@ -301,14 +301,14 @@ void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
             list_->coords_);
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(
-                    list_->triangulation_, list_->coords_, std::move(v)));
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
             }, eqns_, &c, tracker_);
     } else {
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
-                list_->surfaces_.push_back(NormalHypersurface(
-                    list_->triangulation_, list_->coords_, std::move(v)));
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
             }, eqns_, nullptr, tracker_);
     }
 }

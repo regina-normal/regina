@@ -721,7 +721,7 @@ std::vector<std::pair<int, int>> pdc_xotype(pdcode code) {
     std::vector<int> pdc_xs = pdc_xtype(code);
     
     for (int i=0; i<code.size(); i++) {
-        ans.push_back(std::make_pair(pdc_xs[i], pdc_os[i]));
+        ans.emplace_back(pdc_xs[i], pdc_os[i]);
     }
     return ans;
 }
@@ -802,7 +802,7 @@ std::vector<std::tuple<int,int,int>> genGluList(graph<4> G) {
     std::vector<edge3> edges = G.edges();
     std::cout << "[";
     for (const auto& elem : edges) {
-        ans.push_back(std::make_tuple(getIndex(verts, std::get<0>(elem)), getIndex(verts, std::get<1>(elem)), std::get<2>(elem)));
+        ans.emplace_back(getIndex(verts, std::get<0>(elem)), getIndex(verts, std::get<1>(elem)), std::get<2>(elem));
     }
     return ans;
 }
@@ -1034,7 +1034,7 @@ int main(int argc, char* argv[]) {
     std::vector<std::vector<long>> tmpIntersectionMatrix;
     std::vector<long> intersectionTotals;
     for (int i=0; i<numComps; i++) {
-        tmpIntersectionMatrix.push_back(std::vector<long>());
+        tmpIntersectionMatrix.emplace_back();
         for (int j=0; j<numComps; j++) {
             if (i!=j) {
                 long s1s = comp_x_indices[i].size();
