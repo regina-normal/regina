@@ -100,13 +100,12 @@ void AbelianGroup::addGroup(const MatrixInt& presentation) {
 
     // Fill in the complete presentation matrix.
     // Fill the bottom half of the matrix with the presentation.
-    unsigned i,j;
-    for (i=0; i<presentation.rows(); i++)
-        for (j=0; j<presentation.columns(); j++)
+    for (unsigned i=0; i<presentation.rows(); i++)
+        for (unsigned j=0; j<presentation.columns(); j++)
             a.entry(len + i, len + j) = presentation.entry(i, j);
 
     // Fill in the invariant factors in the top.
-    i = 0;
+    unsigned i = 0;
     for (const auto& f : invariantFactors_) {
         a.entry(i,i) = f;
         ++i;
