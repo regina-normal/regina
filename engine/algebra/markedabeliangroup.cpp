@@ -55,7 +55,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(unsigned long rk,
     ornC.makeIdentity(); ornCi.makeIdentity(); 
     if ( (p != 0 ) && ( p != 1 ) ) ifNum=rk;
     if (ifNum != 0) InvFacList.resize(ifNum);
-    for (unsigned long i=0; i<InvFacList.size(); i++) InvFacList[i] = p;
+    for (auto& inv : InvFacList)
+        inv = p;
     if ( p != 1 ) snfrank = rk - ifNum;
 }
 
@@ -254,9 +255,9 @@ bool MarkedAbelianGroup::isChainComplex() const
 unsigned long MarkedAbelianGroup::torsionRank(const Integer& degree)
         const {
     unsigned long ans = 0;
-    for (unsigned long i=0;i<InvFacList.size();i++) {
-        if (InvFacList[i] % degree == 0)
-            ans++;
+    for (const auto& inv : InvFacList) {
+        if (inv % degree == 0)
+            ++ans;
     }
     return ans;
 }
@@ -275,7 +276,7 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
         writtenSomething = true;
     }
 
-    std::vector<Integer>::const_iterator it = InvFacList.begin();
+    auto it = InvFacList.begin();
     Integer currDegree;
     unsigned currMult = 0;
     while(true) {
@@ -582,7 +583,9 @@ bool MarkedAbelianGroup::isBoundary(
     if (input.size() != OM.columns()) return false;
     std::vector<Integer> snF(snfRep(input));
     if (snF.size() != countInvariantFactors() + rank()) return false;
-    for (unsigned long i=0; i<snF.size(); i++) if (snF[i]!=0) return false;
+    for (const auto& i : snF)
+        if (i != 0)
+            return false;
     return true;
 }
 
@@ -670,8 +673,9 @@ std::vector<Integer> MarkedAbelianGroup::cycleGen(unsigned long j) const
     for (unsigned long i=0; i<retval.size(); i++) 
      retval[i] = OMR.entry(i, j+TORLoc);
     // if j < TORVec.size() rescale by coeff / gcd(coeff, TORVec[j]
-    if (j < TORVec.size()) for (unsigned long i=0; i<retval.size(); i++)
-        retval[i] *= coeff.divExact(coeff.gcd(TORVec[j]));
+    if (j < TORVec.size())
+        for (auto& r : retval)
+            r *= coeff.divExact(coeff.gcd(TORVec[j]));
     return retval;
 }
 

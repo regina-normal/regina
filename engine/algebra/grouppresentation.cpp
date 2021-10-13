@@ -614,18 +614,18 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
     // a loop that goes through the entries of input.
     WORD_STATUS WS(WSNULL);
     GroupExpressionTerm buildTerm;
-    for (std::string::const_iterator i=input.begin(); i!=input.end(); i++) {
-        // read *i, see what to do next.
+    for (char i : input) {
+        // read i, see what to do next.
         // case 1: it is a letter a..z or A..Z
-        if ( ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) ) ||
-                ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) ) ) {
+        if ( ( (int(i) >= int('a') ) && ( int(i) <= int('z') ) ) ||
+                ( (int(i) >= int('A') ) && ( int(i) <= int('Z') ) ) ) {
             if (WS==WSNULL) { // fresh letter
                 // build buildTerm.
-                if ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) ) {
-                    buildTerm.generator = (unsigned long)(*i) - (unsigned long)('a');
+                if ( (int(i) >= int('a') ) && ( int(i) <= int('z') ) ) {
+                    buildTerm.generator = (unsigned long)(i) - (unsigned long)('a');
                     buildTerm.exponent = 1;
-                } else if ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) ) {
-                    buildTerm.generator = (unsigned long)(*i) - (unsigned long)('A');
+                } else if ( (int(i) >= int('A') ) && ( int(i) <= int('Z') ) ) {
+                    buildTerm.generator = (unsigned long)(i) - (unsigned long)('A');
                     buildTerm.exponent = -1;
                 } else {
                     WS=WSERR;
@@ -636,11 +636,11 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
             } else if ( (WS==WSVARLET) || (WS==WSVARNUM) || (WS==WSEXPNUM) ) {
                 // new letter but previous letter to finish
                 terms_.push_back(buildTerm);
-                if ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) ) {
-                    buildTerm.generator = (unsigned long)(*i) - (unsigned long)('a');
+                if ( (int(i) >= int('a') ) && ( int(i) <= int('z') ) ) {
+                    buildTerm.generator = (unsigned long)(i) - (unsigned long)('a');
                     buildTerm.exponent = 1;
-                } else if ( (int(*i) >= int('A') ) && ( int(*i) <= int('Z') ) ) {
-                    buildTerm.generator = (unsigned long)(*i) - (unsigned long)('A');
+                } else if ( (int(i) >= int('A') ) && ( int(i) <= int('Z') ) ) {
+                    buildTerm.generator = (unsigned long)(i) - (unsigned long)('A');
                     buildTerm.exponent = -1;
                 } else {
                     WS=WSERR;
@@ -656,8 +656,8 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
         }
 
         // case 2: it is a ^, can only occur after a generator
-        if ( (*i) == '^' ) {
-            if (!( (WS==WSVARLET) || (WS=WSVARNUM) ) ) {
+        if ( i == '^' ) {
+            if (!( (WS==WSVARLET) || (WS==WSVARNUM) ) ) {
                 WS=WSERR;
                 break;
             }
@@ -666,7 +666,7 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
         } // end case 2
 
         // case 3: it is a -, only valid after ^
-        if ( (*i) == '-' ) {
+        if ( i == '-' ) {
             if (!(WS==WSEXP)) {
                 WS=WSERR;
                 break;
@@ -677,32 +677,32 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
         } // end case 3
 
         // case 4: it is a number
-        if ( ::isdigit(*i) ) {
+        if ( ::isdigit(i) ) {
             //  subcase (a) this is to build a variable
             // buildTerm.generator == 'g'
             if ( (WS==WSVARLET) && (buildTerm.generator == ('g' - 'a') ) ) {
-                buildTerm.generator=(*i - '0');
+                buildTerm.generator=(i - '0');
                 WS=WSVARNUM;
                 continue;
             } else // we've already started building the variable number
                 if ( WS==WSVARNUM ) {
-                    buildTerm.generator=10*buildTerm.generator + (*i - '0');
+                    buildTerm.generator=10*buildTerm.generator + (i - '0');
                     continue;
                 } else //  subcase (b) this is to build an exponent.
                     if ( (WS==WSEXP) || (WS==WSEXPSIG) ) { // ^num or ^-num
                         if (buildTerm.exponent<0)
-                            buildTerm.exponent = - static_cast<long>(*i - '0');
+                            buildTerm.exponent = - static_cast<long>(i - '0');
                         else
-                            buildTerm.exponent = (*i - '0');
+                            buildTerm.exponent = (i - '0');
                         WS=WSEXPNUM;
                         continue;
                     } else if (WS==WSEXPNUM) { // blah[num] previously dealt with numbers
                         if (buildTerm.exponent<0)
                             buildTerm.exponent = 10*buildTerm.exponent -
-                                                 (*i - '0');
+                                                 (i - '0');
                         else
                             buildTerm.exponent = 10*buildTerm.exponent +
-                                                 (*i - '0');
+                                                 (i - '0');
                         continue;
                     } else {
                         WS=WSERR;
@@ -711,7 +711,7 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
         } // end case 4
         // now we've dealt will all important input.  Let's deal with spaces next,
         //  and any other input will fail.
-        if ( ::isspace(*i) ) continue;
+        if ( ::isspace(i) ) continue;
         else {
             WS=WSERR;
             break;
@@ -1497,10 +1497,8 @@ bool GroupPresentation::identifySimplyIsomorphicTo(
 
                 std::list< std::map< unsigned long, GroupExpressionTerm > >
                 tempList( (*DI)->relabellingsThisToOther( *(*RI), true ) );
-                for (std::list< std::map< unsigned long, GroupExpressionTerm > >::iterator
-                        X=tempList.begin(); X!=tempList.end(); X++)
-                    for (std::list< std::map< unsigned long, GroupExpressionTerm > >::iterator
-                            Y=allPartialSubs.begin(); Y!=allPartialSubs.end(); Y++) {
+                for (auto X=tempList.begin(); X!=tempList.end(); X++)
+                    for (auto Y=allPartialSubs.begin(); Y!=allPartialSubs.end(); Y++) {
                         // newMap will be the potential extension of *X and *Y
                         std::map< unsigned long, GroupExpressionTerm > newMap;
                         auto Xi=X->begin();
@@ -1712,15 +1710,13 @@ std::optional<HomGroupPresentation> GroupPresentation::identifyExtensionOverZ()
         cellWidth[l] = (unsigned long)(maxLift - minLift);
 
         if ( (maxCell!=0) && (!dupMax) ) {
-            std::map< unsigned long, unsigned long>::iterator
-            I=maxKiller.find(maxCell);
+            auto I=maxKiller.find(maxCell);
             if (I!=maxKiller.end()) { // compare the current maxKiller[maxCell] to l.
                 if (cellWidth[l] > cellWidth[ I->second ]) maxKiller[maxCell]=l;
             } else maxKiller[maxCell]=l;
         }
         if ( (minCell!=0) && (!dupMin) ) {
-            std::map< unsigned long, unsigned long>::iterator
-            I=minKiller.find(minCell);
+            auto I=minKiller.find(minCell);
             if (I!=minKiller.end()) { // compare the current maxKiller[minCell] to l.
                 if (cellWidth[l] > cellWidth[ I->second ]) minKiller[minCell]=l;
             }
@@ -1818,9 +1814,9 @@ std::optional<HomGroupPresentation> GroupPresentation::identifyExtensionOverZ()
     GroupPresentation kerPres;
     kerPres.addGenerator( liftCount * nGm1 );
 
-    for (unsigned long i=0; i<lifts.size(); i++) {
+    for (const auto& lift : lifts) {
         GroupExpression temp;
-        for (const auto& I : lifts[i])
+        for (const auto& I : lift)
             temp.addTermFirst( GroupExpressionTerm(
                                    idx( I.first.generator, I.second ), I.first.exponent ) );
         for (const auto& J : genKiller)
@@ -1928,8 +1924,8 @@ namespace { // anonymous namespace
         if (usedTermsF.size() < usedTermsS.size()) return true;
         if (usedTermsF.size() > usedTermsS.size()) return false;
     // have all the same terms, sort lexicographically on which terms used
-        std::set<unsigned long>::iterator i=usedTermsF.begin();
-        std::set<unsigned long>::iterator j=usedTermsS.begin();
+        auto i=usedTermsF.begin();
+        auto j=usedTermsS.begin();
         while (i != usedTermsF.end()) {
             if (*i < *j) return true;
             if (*i > *j) return false;
