@@ -279,7 +279,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
         // (which, amongst other things, means action is able to take it by
         // non-const reference).  Therefore we can't use a RayClass temporary.
         RayClass ray(**bit);
-        action(ray);
+        action(std::move(ray));
         delete *bit;
     }
 }
