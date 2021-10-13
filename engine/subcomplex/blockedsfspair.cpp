@@ -69,11 +69,11 @@ std::ostream& BlockedSFSPair::writeName(std::ostream& out) const {
 }
 
 std::ostream& BlockedSFSPair::writeTeXName(std::ostream& out) const {
-    out << "\\mathrm{BSFS\\_Pair}\\left[";
+    out << R"(\mathrm{BSFS\_Pair}\left[)";
     region_[0].writeBlockAbbrs(out, true);
-    out << "\\,|\\,";
+    out << R"(\,|\,)";
     region_[1].writeBlockAbbrs(out, true);
-    return out << "\\right]";
+    return out << R"(\right])";
 }
 
 void BlockedSFSPair::writeTextLong(std::ostream& out) const {

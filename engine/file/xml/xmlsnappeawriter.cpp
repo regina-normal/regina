@@ -42,8 +42,8 @@ namespace regina {
 template <>
 void XMLWriter<SnapPeaTriangulation>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
-        out_ << "<packet type=\"SnapPea Triangulation\" typeid=\""
-            << PACKET_SNAPPEATRIANGULATION << '\"';
+        out_ << R"(<packet type="SnapPea Triangulation" typeid=")"
+            << PACKET_SNAPPEATRIANGULATION << '"';
     } else {
         out_ << "<snappeadata";
     }

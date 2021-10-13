@@ -43,8 +43,8 @@ namespace regina {
 template <>
 void XMLWriter<NormalSurfaces>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
-        out_ << "<packet type=\"Normal Surface List\" typeid=\""
-            << PACKET_NORMALSURFACES << '\"';
+        out_ << R"(<packet type="Normal Surface List" typeid=")"
+            << PACKET_NORMALSURFACES << '"';
     } else {
         out_ << "<surfaces "
             "tri=\"" << triID_ << "\" "

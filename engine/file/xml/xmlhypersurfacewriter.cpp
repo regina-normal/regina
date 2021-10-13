@@ -43,8 +43,8 @@ namespace regina {
 template <>
 void XMLWriter<NormalHypersurfaces>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
-        out_ << "<packet type=\"Normal Hypersurface List\" typeid=\""
-            << PACKET_NORMALHYPERSURFACES << '\"';
+        out_ << R"(<packet type="Normal Hypersurface List" typeid=")"
+            << PACKET_NORMALHYPERSURFACES << '"';
     } else {
         out_ << "<hypersurfaces "
             "tri=\"" << triID_ << "\" "

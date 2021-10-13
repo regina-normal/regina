@@ -1238,7 +1238,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
             if (b_ == 0) {
                 // [ RP2 ]
                 // Orlik, p113, remark.
-                return out << (tex ? "\\mathbb{R}P^3 \\# \\mathbb{R}P^3" :
+                return out << (tex ? R"(\mathbb{R}P^3 \# \mathbb{R}P^3)" :
                     "RP3 # RP3");
             } else {
                 // TODO: [ RP2 : (1,b) ]

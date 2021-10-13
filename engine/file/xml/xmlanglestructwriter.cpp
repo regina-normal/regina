@@ -43,8 +43,8 @@ namespace regina {
 template <>
 void XMLWriter<AngleStructures>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
-        out_ << "<packet type=\"Angle Structure List\" typeid=\""
-            << PACKET_ANGLESTRUCTURES << '\"';
+        out_ << R"(<packet type="Angle Structure List" typeid=")"
+            << PACKET_ANGLESTRUCTURES << '"';
     } else {
         out_ << "<angles "
             "tri=\"" << triID_ << "\" "

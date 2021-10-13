@@ -86,7 +86,7 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    QRegExp reTorusParams("^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
+    QRegExp reTorusParams(R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
 }
 
 LinkCreator::LinkCreator(ReginaMain* mainWindow) {

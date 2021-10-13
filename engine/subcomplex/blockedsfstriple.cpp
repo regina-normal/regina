@@ -80,13 +80,13 @@ std::ostream& BlockedSFSTriple::writeName(std::ostream& out) const {
 }
 
 std::ostream& BlockedSFSTriple::writeTeXName(std::ostream& out) const {
-    out << "\\mathrm{BSFS\\_Triple}\\left[";
+    out << R"(\mathrm{BSFS\_Triple}\left[)";
     end_[0].writeBlockAbbrs(out, true);
-    out << "\\,|\\,";
+    out << R"(\,|\,)";
     centre_.writeBlockAbbrs(out, true);
-    out << "\\,|\\,";
+    out << R"(\,|\,)";
     end_[1].writeBlockAbbrs(out, true);
-    return out << "\\right]";
+    return out << R"(\right])";
 }
 
 void BlockedSFSTriple::writeTextLong(std::ostream& out) const {

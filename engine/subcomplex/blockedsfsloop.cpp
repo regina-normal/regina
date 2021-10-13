@@ -60,9 +60,9 @@ std::ostream& BlockedSFSLoop::writeName(std::ostream& out) const {
 }
 
 std::ostream& BlockedSFSLoop::writeTeXName(std::ostream& out) const {
-    out << "\\mathrm{BSFS\\_Loop}\\left[";
+    out << R"(\mathrm{BSFS\_Loop}\left[)";
     region_.writeBlockAbbrs(out, true);
-    return out << "\\right]";
+    return out << R"(\right])";
 }
 
 void BlockedSFSLoop::writeTextLong(std::ostream& out) const {

@@ -57,7 +57,7 @@ using regina::Packet;
 using regina::SnapPeaTriangulation;
 
 namespace {
-    QRegExp reIntPair("^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)[^0-9\\-]*$");
+    QRegExp reIntPair(R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+)[^0-9\-]*$)");
 }
 
 void CuspModel::rebuild() {

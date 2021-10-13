@@ -55,16 +55,16 @@ namespace {
     /**
      * For a validator that ensures we're using the right characters.
      */
-    QRegExp reECChars("(\\d|\\s|,|-)*");
+    QRegExp reECChars(R"((\d|\s|,|-)*)");
     /**
      * For tokenising an list of Euler characteristics.
      */
-    QRegExp reECSeps("\\s|,");
+    QRegExp reECSeps(R"(\s|,)");
     /**
      * For strict verification that we in fact have an Euler
      * characteristic list.
      */
-    QRegExp reECList("\\s*(?:(?:(-?\\d+)\\s*[,|\\s]\\s*)*(-?\\d+))?\\s*");
+    QRegExp reECList(R"(\s*(?:(?:(-?\d+)\s*[,|\s]\s*)*(-?\d+))?\s*)");
 }
 
 FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,

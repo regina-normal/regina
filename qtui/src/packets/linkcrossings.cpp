@@ -77,7 +77,7 @@ QString LinkCrossingsUI::explnText;
 QString LinkCrossingsUI::explnPictorial;
 
 namespace {
-    QRegExp reCables("^\\s*(\\d+)\\s*$");
+    QRegExp reCables(R"(^\s*(\d+)\s*$)");
 }
 
 inline CrossingModel::CrossingModel(bool pictorial, regina::Link& link,

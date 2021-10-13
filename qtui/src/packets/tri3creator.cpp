@@ -100,21 +100,21 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    QRegExp reLensParams("^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
+    QRegExp reLensParams(R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
     QRegExp reLSTParams(
-        "^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
+        R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
     QRegExp reSFS3Params(
-        "^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)"
-        "[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+)"
-        "[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+)[^0-9\\-]*$");
+        R"_(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+)"
+           "[^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+)"
+           "[^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+)[^0-9\-]*$)_");
     QRegExp reSFSAllParams(
-        "^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)"
-        "(?:[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+))*"
-        "[^0-9\\-]*$");
-    QRegExp reSFSParamPair("(-?\\d+)[^0-9\\-]+(-?\\d+)");
-    QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
-    QRegExp reDehydration("^([A-Za-z]+)$");
-    QRegExp reSignature("^([\\(\\)\\.,;:\\|\\-A-Za-z]+)$");
+        R"_(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+)"
+           "(?:[^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+))*"
+           "[^0-9\-]*$)_");
+    QRegExp reSFSParamPair(R"((-?\d+)[^0-9\-]+(-?\d+))");
+    QRegExp reIsoSig(R"(^([A-Za-z0-9+-]+)$)");
+    QRegExp reDehydration(R"(^([A-Za-z]+)$)");
+    QRegExp reSignature(R"(^([\(\)\.,;:\|\-A-Za-z]+)$)");
 }
 
 Tri3Creator::Tri3Creator() {
