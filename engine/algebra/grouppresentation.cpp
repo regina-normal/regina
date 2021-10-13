@@ -617,15 +617,14 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
     for (char i : input) {
         // read i, see what to do next.
         // case 1: it is a letter a..z or A..Z
-        if ( ( (int(i) >= int('a') ) && ( int(i) <= int('z') ) ) ||
-                ( (int(i) >= int('A') ) && ( int(i) <= int('Z') ) ) ) {
+        if ( ( i >= 'a' && i <= 'z' ) || ( i >= 'A' && i <= 'Z' ) ) {
             if (WS==WSNULL) { // fresh letter
                 // build buildTerm.
-                if ( (int(i) >= int('a') ) && ( int(i) <= int('z') ) ) {
-                    buildTerm.generator = (unsigned long)(i) - (unsigned long)('a');
+                if ( i >= 'a' && i <= 'z' ) {
+                    buildTerm.generator = i - 'a';
                     buildTerm.exponent = 1;
-                } else if ( (int(i) >= int('A') ) && ( int(i) <= int('Z') ) ) {
-                    buildTerm.generator = (unsigned long)(i) - (unsigned long)('A');
+                } else if ( i >= 'A' && i <= 'Z' ) {
+                    buildTerm.generator = i - 'A';
                     buildTerm.exponent = -1;
                 } else {
                     WS=WSERR;
@@ -636,11 +635,11 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
             } else if ( (WS==WSVARLET) || (WS==WSVARNUM) || (WS==WSEXPNUM) ) {
                 // new letter but previous letter to finish
                 terms_.push_back(buildTerm);
-                if ( (int(i) >= int('a') ) && ( int(i) <= int('z') ) ) {
-                    buildTerm.generator = (unsigned long)(i) - (unsigned long)('a');
+                if ( i >= 'a' && i <= 'z' ) {
+                    buildTerm.generator = i - 'a';
                     buildTerm.exponent = 1;
-                } else if ( (int(i) >= int('A') ) && ( int(i) <= int('Z') ) ) {
-                    buildTerm.generator = (unsigned long)(i) - (unsigned long)('A');
+                } else if ( i >= 'A' && i <= 'Z' ) {
+                    buildTerm.generator = i - 'A';
                     buildTerm.exponent = -1;
                 } else {
                     WS=WSERR;
@@ -696,7 +695,8 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
                             buildTerm.exponent = (i - '0');
                         WS=WSEXPNUM;
                         continue;
-                    } else if (WS==WSEXPNUM) { // blah[num] previously dealt with numbers
+                    } else if (WS==WSEXPNUM) {
+                        // blah[num] previously dealt with numbers
                         if (buildTerm.exponent<0)
                             buildTerm.exponent = 10*buildTerm.exponent -
                                                  (i - '0');
@@ -709,9 +709,10 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
                         break;
                     }
         } // end case 4
-        // now we've dealt will all important input.  Let's deal with spaces next,
-        //  and any other input will fail.
-        if ( ::isspace(i) ) continue;
+        // now we've dealt will all important input.  Let's deal with spaces
+        // next, and any other input will fail.
+        if ( ::isspace(i) )
+            continue;
         else {
             WS=WSERR;
             break;
