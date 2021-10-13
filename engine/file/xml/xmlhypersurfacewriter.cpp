@@ -46,11 +46,10 @@ void XMLWriter<NormalHypersurfaces>::openPre() {
         out_ << R"(<packet type="Normal Hypersurface List" typeid=")"
             << PACKET_NORMALHYPERSURFACES << '"';
     } else {
-        out_ << "<hypersurfaces "
-            "tri=\"" << triID_ << "\" "
-            "type=\"" << data_.which_.intValue() << "\" "
-            "algorithm=\"" << data_.algorithm_.intValue() << "\" "
-            "coords=\"" << data_.coords_ << '\"';
+        out_ << R"(<hypersurfaces tri=")" << triID_
+            << R"(" type=")" << data_.which_.intValue()
+            << R"(" algorithm=")" << data_.algorithm_.intValue()
+            << R"(" coords=")" << data_.coords_ << '"';
     }
 }
 

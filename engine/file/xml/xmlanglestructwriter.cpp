@@ -46,10 +46,9 @@ void XMLWriter<AngleStructures>::openPre() {
         out_ << R"(<packet type="Angle Structure List" typeid=")"
             << PACKET_ANGLESTRUCTURES << '"';
     } else {
-        out_ << "<angles "
-            "tri=\"" << triID_ << "\" "
-            "tautonly=\"" << (data_.tautOnly_ ? 'T' : 'F') << "\" "
-            "algorithm=\"" << data_.algorithm_.intValue() << '\"';
+        out_ << R"(<angles tri=")" << triID_
+            << R"(" tautonly=")" << (data_.tautOnly_ ? 'T' : 'F')
+            << R"(" algorithm=")" << data_.algorithm_.intValue() << '"';
     }
 }
 

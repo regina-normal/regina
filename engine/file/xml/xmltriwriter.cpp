@@ -45,13 +45,12 @@ namespace regina {
 template <int dim>
 void XMLWriter<Triangulation<dim>>::openPre() {
     if (format_ == REGINA_XML_GEN_2) {
-        out_ << "<packet type=\"" << dim
-            << "-Manifold Triangulation\" typeid=\""
-            << PacketOf<Triangulation<dim>>::typeID << '\"';
+        out_ << R"(<packet type=")" << dim
+            << R"(-Manifold Triangulation" typeid=")"
+            << PacketOf<Triangulation<dim>>::typeID << '"';
     } else {
-        out_ << "<tri dim=\"" << dim
-            << "\" size=\"" << data_.size()
-            << "\" perm=\"" << (useSnIndex ? "index" : "imagepack") << '\"';
+        out_ << R"(<tri dim=")" << dim << R"(" size=")" << data_.size()
+            << R"(" perm=")" << (useSnIndex ? "index" : "imagepack") << '"';
     }
 }
 

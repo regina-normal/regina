@@ -46,11 +46,10 @@ void XMLWriter<NormalSurfaces>::openPre() {
         out_ << R"(<packet type="Normal Surface List" typeid=")"
             << PACKET_NORMALSURFACES << '"';
     } else {
-        out_ << "<surfaces "
-            "tri=\"" << triID_ << "\" "
-            "type=\"" << data_.which_.intValue() << "\" "
-            "algorithm=\"" << data_.algorithm_.intValue() << "\" "
-            "coords=\"" << data_.coords_ << '\"';
+        out_ << R"(<surfaces tri=")" << triID_
+            << R"(" type=")" << data_.which_.intValue()
+            << R"(" algorithm=")" << data_.algorithm_.intValue()
+            << R"(" coords=")" << data_.coords_ << '"';
     }
 }
 
