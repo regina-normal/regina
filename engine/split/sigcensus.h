@@ -107,10 +107,14 @@ class SigCensus {
          *
          * - The first argument to \a action must be a const reference to a
          *   Signature.  This will be the signature that was found.
+         *   If \a action wishes to keep the signature, it should take a
+         *   deep copy (not a reference), since the signature may be
+         *   changed and reused after \a action returns.
          *
          * - The second argument to \a action must be a const reference to a
          *   Signature::IsoList.  This will be the list of all automorphisms of
-         *   the signature that was found.
+         *   the signature that was found.  Again, if \a action wishes to keep
+         *   these automorphisms, it should take a deep copy of this list.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
