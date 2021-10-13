@@ -363,7 +363,7 @@ namespace {
             /**
              * A virtual destructor that does nothing.
              */
-            virtual ~Bdry();
+            virtual ~Bdry() = default;
 
             /**
              * Identifies (i.e., glues together) this piece of boundary
@@ -883,10 +883,6 @@ namespace {
 
         link_[3] = innerTet_[3];
         linkVertices_[3] = Perm<4>(1, 2, 3, 0);
-    }
-
-    inline Bdry::~Bdry() {
-        // Empty virtual destructor.
     }
 
     inline Bdry::Bdry(Block* block, Perm<4> outerVertices) :
