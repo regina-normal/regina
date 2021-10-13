@@ -1387,10 +1387,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * - The first argument to \a action must be a reference to a
          *   GroupPresentation.  This will be the index \a k subgroup
-         *   corresponding to the representation.  \a action may, if it
-         *   chooses, modify the subgroup presentation that it receives
-         *   (though it must not delete it).  The subgroup presentation
-         *   will be destroyed immediately after \a action is called.
+         *   corresponding to the representation.  This argument will be
+         *   passed as an xvalue; a typical action could (for example) take it
+         *   by const reference and query it, or take it by value and modify it,
+         *   or take it by rvalue reference and move it into more permanent
+         *   storage.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
@@ -1731,7 +1732,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          */
         template <int index>
         size_t enumerateCoversInternal(
-            std::function<void(GroupPresentation&)>&& action);
+            std::function<void(GroupPresentation&&)>&& action);
 
         /**
          * Relabels the generators and reorders the relations in the
@@ -1999,9 +2000,10 @@ inline size_t GroupPresentation::enumerateCovers(
         Action&& action, Args&&... args) const {
     // Do the real work on a temporary copy of this presentation that we
     // can be free to modify as we see fit.
-    return GroupPresentation(*this).enumerateCoversInternal<index>(std::bind(
-        std::forward<Action>(action), std::placeholders::_1,
-        std::forward<Args>(args)...));
+    return GroupPresentation(*this).enumerateCoversInternal<index>(
+        [&](GroupPresentation&& g) {
+            action(std::move(g), std::forward<Args>(args)...);
+        });
 }
 
 } // namespace regina

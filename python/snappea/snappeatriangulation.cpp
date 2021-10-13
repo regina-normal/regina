@@ -116,14 +116,14 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("randomise", &SnapPeaTriangulation::randomise)
         .def("enumerateCovers", [](const SnapPeaTriangulation& tri,
                 int sheets, SnapPeaTriangulation::CoverEnumerationType type,
-                const std::function<void(SnapPeaTriangulation&,
+                const std::function<void(SnapPeaTriangulation&&,
                     SnapPeaTriangulation::CoverType)>& action) {
             return tri.enumerateCovers(sheets, type, action);
         })
         .def("enumerateCovers", [](const SnapPeaTriangulation& tri,
                 int sheets, SnapPeaTriangulation::CoverEnumerationType type) {
             pybind11::list ans;
-            tri.enumerateCovers(sheets, type, [&](SnapPeaTriangulation& c,
+            tri.enumerateCovers(sheets, type, [&](SnapPeaTriangulation&& c,
                     SnapPeaTriangulation::CoverType t) {
                 pybind11::tuple pair(2);
                 pair[0] = pybind11::cast(new SnapPeaTriangulation(std::move(c)));

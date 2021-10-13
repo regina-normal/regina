@@ -957,7 +957,7 @@ void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
 
 size_t SnapPeaTriangulation::enumerateCoversInternal(int sheets,
         CoverEnumerationType type,
-        std::function<void(SnapPeaTriangulation&, CoverType)>&& action) const {
+        std::function<void(SnapPeaTriangulation&&, CoverType)>&& action) const {
     if (! data_)
         return 0;
 
@@ -967,9 +967,9 @@ size_t SnapPeaTriangulation::enumerateCoversInternal(int sheets,
 
     size_t ans = 0;
     for (auto rep = reps->list; rep; rep = rep->next) {
-        SnapPeaTriangulation cover(regina::snappea::construct_cover(
-            data_, rep, sheets));
-        action(cover, static_cast<CoverType>(rep->covering_type));
+        action(SnapPeaTriangulation(regina::snappea::construct_cover(
+                data_, rep, sheets)),
+            static_cast<CoverType>(rep->covering_type));
         ++ans;
     }
 

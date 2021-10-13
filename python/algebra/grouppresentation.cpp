@@ -166,8 +166,8 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("markedAbelianisation", &GroupPresentation::markedAbelianisation)
         .def("enumerateCovers", [](const GroupPresentation& p, int index) {
             std::vector<GroupPresentation> ans;
-            auto push = [&](GroupPresentation& result) {
-                ans.push_back(result);
+            auto push = [&](GroupPresentation&& result) {
+                ans.push_back(std::move(result));
             };
             switch (index) {
                 case 2: p.enumerateCovers<2>(push); break;
@@ -184,7 +184,7 @@ void addGroupPresentation(pybind11::module_& m) {
             return ans;
         })
         .def("enumerateCovers", [](const GroupPresentation& p, int index,
-                const std::function<void(GroupPresentation&)>& action)
+                const std::function<void(GroupPresentation&&)>& action)
                 -> size_t {
             switch (index) {
                 case 2: return p.enumerateCovers<2>(action);

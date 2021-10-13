@@ -848,7 +848,7 @@ void GroupPresentation::minimaxGenerators() {
 
 template <int index>
 size_t GroupPresentation::enumerateCoversInternal(
-        std::function<void(GroupPresentation&)>&& action) {
+        std::function<void(GroupPresentation&&)>&& action) {
     static_assert(2 <= index && index <= 7,
         "Currently enumerateCovers() is only available for 2 <= index <= 7.");
 
@@ -1073,7 +1073,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                     delete[] rewrite;
 
                     ++nReps;
-                    action(sub);
+                    action(std::move(sub));
                 }
 
                 --pos;
@@ -1119,17 +1119,17 @@ finished:
 
 // Instantiate templates for all valid indices.
 template size_t GroupPresentation::enumerateCoversInternal<2>(
-        std::function<void(GroupPresentation&)>&& action);
+        std::function<void(GroupPresentation&&)>&& action);
 template size_t GroupPresentation::enumerateCoversInternal<3>(
-        std::function<void(GroupPresentation&)>&& action);
+        std::function<void(GroupPresentation&&)>&& action);
 template size_t GroupPresentation::enumerateCoversInternal<4>(
-        std::function<void(GroupPresentation&)>&& action);
+        std::function<void(GroupPresentation&&)>&& action);
 template size_t GroupPresentation::enumerateCoversInternal<5>(
-        std::function<void(GroupPresentation&)>&& action);
+        std::function<void(GroupPresentation&&)>&& action);
 template size_t GroupPresentation::enumerateCoversInternal<6>(
-        std::function<void(GroupPresentation&)>&& action);
+        std::function<void(GroupPresentation&&)>&& action);
 template size_t GroupPresentation::enumerateCoversInternal<7>(
-        std::function<void(GroupPresentation&)>&& action);
+        std::function<void(GroupPresentation&&)>&& action);
 
 } // namespace regina
 

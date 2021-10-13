@@ -1528,9 +1528,10 @@ class SnapPeaTriangulation :
          *
          * - The first argument to \a action must be a reference to a
          *   SnapPeaTriangulation.  This will be the newly produced cover.
-         *   \a action may, if it chooses, modify the triangulation that
-         *   it receives (though it must not delete it).  The triangulation
-         *   will be destroyed immediately after \a action is called.
+         *   This argument will be passed as an xvalue; a typical action could
+         *   (for example) take it by const reference and query it, or take it
+         *   by value and modify it, or take it by rvalue reference and move it
+         *   into more permanent storage.
          *
          * - The second argument to \a action must be of type
          *   \a SnapPeaTriangulation::CoverType.
@@ -1992,7 +1993,7 @@ class SnapPeaTriangulation :
          * that the implementation can be kept out of the main headers.
          */
         size_t enumerateCoversInternal(int sheets, CoverEnumerationType type,
-            std::function<void(SnapPeaTriangulation&, CoverType)>&& action)
+            std::function<void(SnapPeaTriangulation&&, CoverType)>&& action)
             const;
 
         /**
@@ -2135,9 +2136,9 @@ template <typename Action, typename... Args>
 inline size_t SnapPeaTriangulation::enumerateCovers(int sheets,
         CoverEnumerationType type, Action&& action, Args&&... args) const {
     return enumerateCoversInternal(sheets, type,
-        std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::placeholders::_2,
-            std::forward<Args>(args)...));
+        [&](SnapPeaTriangulation&& s, CoverType c) {
+            action(std::move(s), c, std::forward<Args>(args)...);
+        });
 }
 
 inline void swap(SnapPeaTriangulation& lhs, SnapPeaTriangulation& rhs) {
