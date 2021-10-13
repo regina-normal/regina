@@ -62,10 +62,10 @@ class RationalTest : public CppUnit::TestFixture {
                 using == with floating point numbers. */
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         template <typename T>

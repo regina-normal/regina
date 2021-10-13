@@ -79,7 +79,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             /**< A standalone tetrahedron. */
 
     public:
-        void setUp() {
+        void setUp() override {
             rp2xs1 = Example<3>::rp2xs1();
             lens8_1.insertLayeredLensSpace(8, 1);
             lens13_3.insertLayeredLensSpace(13, 3);
@@ -89,7 +89,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             ball.newTetrahedron();
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         unsigned long nIsomorphisms(unsigned long n) {

@@ -171,7 +171,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
 
     public:
-        void setUp() {
+        void setUp() override {
             Tetrahedron<3>* r;
             Tetrahedron<3>* s;
             Tetrahedron<3>* t;
@@ -214,7 +214,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             norSFS = Triangulation<3>::rehydrate("jnnafaabcfighhihimgbpqpepbr");
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void defaultArgs() {

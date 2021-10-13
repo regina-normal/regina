@@ -88,7 +88,7 @@ class MatrixOpsTest : public CppUnit::TestFixture {
                 red43(4, 3), dup34(3, 4), dup43(4, 3) {
         }
 
-        void setUp() {
+        void setUp() override {
             zero34.initialise(0L);
             zero43.initialise(0L);
             identity3.makeIdentity();
@@ -118,7 +118,7 @@ class MatrixOpsTest : public CppUnit::TestFixture {
                 dup43.entry(i / 3, i % 3) = dup34.entry(i % 3, i / 3);
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         static void checkSNF3(const MatrixInt& m, const char* name,

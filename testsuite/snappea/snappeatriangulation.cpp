@@ -127,7 +127,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                  vertices all have 2-sphere links. */
 
     public:
-        void setUp() {
+        void setUp() override {
             // Keep the kernel quiet.  It interferes with the test
             // suite's running progress messages.
             SnapPeaTriangulation::disableKernelMessages();
@@ -223,7 +223,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             t->join(2, t, Perm<4>(1,0,3,2));
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         static bool looksIdentical(const SnapPeaTriangulation& a,

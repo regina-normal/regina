@@ -64,7 +64,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         Triangulation<3> baseKB;
 
     public:
-        void setUp() {
+        void setUp() override {
             Tetrahedron<3>* r = base.newTetrahedron();
             Tetrahedron<3>* s = base.newTetrahedron();
             r->join(0, s, Perm<4>());
@@ -75,7 +75,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 baseKB.tetrahedron(1), Perm<4>(1, 2, 3, 0));
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void verify20Edge(Triangulation<3>* tri, long whichEdge,

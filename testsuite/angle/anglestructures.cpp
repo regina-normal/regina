@@ -73,7 +73,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             /**< An untwisted layered loop of length 2. */
 
     public:
-        void setUp() {
+        void setUp() override {
             // Use pre-coded triangulations where we can.
             triFigure8 = Example<3>::figureEight();
             triGieseking = Example<3>::gieseking();
@@ -85,7 +85,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             triOneTet.newTetrahedron();
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void testSize(AngleStructures& list, const char* triName,

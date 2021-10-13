@@ -70,7 +70,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
         Index nIdx;
 
     public:
-        void setUp() {
+        void setUp() override {
             idx = new Index[(Perm<dim + 1>::nPerms / increment[n]) + 2];
             nIdx = 0;
             for (Index i = 0; i < Perm<dim + 1>::nPerms; i += increment[n])
@@ -79,7 +79,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
                 idx[nIdx++] = Perm<dim + 1>::nPerms - 1;
         }
 
-        void tearDown() {
+        void tearDown() override {
             delete[] idx;
         }
 

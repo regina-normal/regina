@@ -58,10 +58,10 @@ class Laurent2Test : public CppUnit::TestFixture {
         Laurent2<Integer> b = { {1, 0, 2}, {1, 2, -4}, {0, -1, -2} };
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         template <typename T>

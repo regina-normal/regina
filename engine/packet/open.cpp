@@ -67,7 +67,7 @@ namespace {
                     container(new Container()), isReginaData(false) {
             }
 
-            virtual std::shared_ptr<Packet> packetToCommit() override {
+            std::shared_ptr<Packet> packetToCommit() override {
                 if (isReginaData)
                     return container;
                 else
@@ -78,7 +78,7 @@ namespace {
                 return version_;
             }
 
-            virtual void startElement(const std::string& n,
+            void startElement(const std::string& n,
                     const regina::xml::XMLPropertyDict& props,
                     XMLElementReader*) override {
                 if (n == "regina" || n == "reginadata") {

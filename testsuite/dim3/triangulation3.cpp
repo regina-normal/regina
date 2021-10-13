@@ -225,7 +225,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             /**< A disjoint union of three triangulations. */
 
     public:
-        void setUp() {
+        void setUp() override {
             TriangulationTest<3>::setUp();
 
             // Some of our triangulations can be constructed automatically.
@@ -369,7 +369,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             disjoint3.insertTriangulation(figure8);
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         /**
@@ -3448,14 +3448,12 @@ class Triangulation3Test : public TriangulationTest<3> {
 
                 std::vector<BCSpec> bcOld;
                 for (BoundaryComponent<3>* bc : tri.boundaryComponents())
-                    bcOld.push_back(BCSpec(bc->eulerChar(),
-                        bc->isOrientable()));
+                    bcOld.emplace_back(bc->eulerChar(), bc->isOrientable());
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
                 for (BoundaryComponent<3>* bc : finite.boundaryComponents())
-                    bcNew.push_back(BCSpec(bc->eulerChar(),
-                        bc->isOrientable()));
+                    bcNew.emplace_back(bc->eulerChar(), bc->isOrientable());
                 std::sort(bcNew.begin(), bcNew.end());
 
                 if (bcOld != bcNew) {
@@ -3507,14 +3505,12 @@ class Triangulation3Test : public TriangulationTest<3> {
                 std::vector<BCSpec> bcOld;
                 for (BoundaryComponent<3>* bc : tri.boundaryComponents())
                     if (bc->eulerChar() != 2)
-                        bcOld.push_back(BCSpec(bc->eulerChar(),
-                            bc->isOrientable()));
+                        bcOld.emplace_back(bc->eulerChar(), bc->isOrientable());
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
                 for (BoundaryComponent<3>* bc : ideal.boundaryComponents())
-                    bcNew.push_back(BCSpec(bc->eulerChar(),
-                        bc->isOrientable()));
+                    bcNew.emplace_back(bc->eulerChar(), bc->isOrientable());
                 std::sort(bcNew.begin(), bcNew.end());
 
                 if (bcOld != bcNew) {

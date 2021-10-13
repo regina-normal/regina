@@ -52,7 +52,7 @@ namespace {
         public:
             inline void startElement(const std::string& /* tagName */,
                     const regina::xml::XMLPropertyDict& props,
-                    XMLElementReader*) {
+                    XMLElementReader*) override {
                 name = props.lookup("name");
                 valueID = props.lookup("valueid");
                 valueLabel = props.lookup("value");
@@ -93,7 +93,7 @@ namespace {
                     valueLabel_(valueLabel) {
             }
 
-            inline void resolve(const XMLTreeResolver& resolver) {
+            inline void resolve(const XMLTreeResolver& resolver) override {
                 std::shared_ptr<Packet> resolution;
                 if (! valueID_.empty())
                     resolution = resolver.resolve(valueID_);

@@ -49,10 +49,10 @@ class PrimesTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void testSize(long size, const char* list) {

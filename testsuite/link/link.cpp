@@ -114,7 +114,7 @@ class LinkTest : public CppUnit::TestFixture {
         Link rht_rht, rht_lht;
 
     public:
-        void setUp() {
+        void setUp() override {
             empty = Link();
 
             unknot0 = Link(1);
@@ -201,7 +201,7 @@ class LinkTest : public CppUnit::TestFixture {
             rht_lht.composeWith(trefoilLeft);
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void sanity(const Link& l, const std::string& name) {

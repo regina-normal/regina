@@ -56,10 +56,10 @@ class IncompressibleTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void verifyNotIncompressible(const NormalSurface& s,

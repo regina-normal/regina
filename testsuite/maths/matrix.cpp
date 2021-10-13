@@ -48,13 +48,10 @@ class MatrixTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        MatrixTest() {
+        void setUp() override {
         }
 
-        void setUp() {
-        }
-
-        void tearDown() {
+        void tearDown() override {
         }
 
         void verifyEchelonForm(const char* name,

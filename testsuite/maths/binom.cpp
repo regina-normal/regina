@@ -51,10 +51,10 @@ class BinomialTest : public CppUnit::TestFixture {
         static constexpr int maxMedium = 29;
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void consistency() {

@@ -67,7 +67,7 @@ class PermTest : public CppUnit::TestFixture {
         char idStr[n + 1];
 
     public:
-        void setUp() {
+        void setUp() override {
             idx = new Index[(Perm::nPerms / increment[n]) + 2];
             nIdx = 0;
             for (Index i = 0; i < Perm::nPerms; i += increment[n])
@@ -80,7 +80,7 @@ class PermTest : public CppUnit::TestFixture {
             idStr[n] = 0;
         }
 
-        void tearDown() {
+        void tearDown() override {
             delete[] idx;
         }
 

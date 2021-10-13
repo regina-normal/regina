@@ -61,10 +61,10 @@ class CoversTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         template <int degree>
@@ -73,7 +73,7 @@ class CoversTest : public CppUnit::TestFixture {
 
             SnapPeaTriangulation s(tri);
             if (s.isNull()) {
-                covers.push_back("Null_SnapPea");
+                covers.emplace_back("Null_SnapPea");
                 return covers;
             }
 

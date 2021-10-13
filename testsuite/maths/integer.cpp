@@ -214,7 +214,7 @@ class IntegerTest : public CppUnit::TestFixture {
             return ans;
         }
 
-        void setUp() {
+        void setUp() override {
             dataL.setUp();
             dataI.setUp();
 
@@ -227,7 +227,7 @@ class IntegerTest : public CppUnit::TestFixture {
             sULongMax = str(ULONG_MAX);
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         template <typename IntType>

@@ -84,13 +84,13 @@ class SmallPermTest : public CppUnit::TestFixture {
         static constexpr Index nPerms = Perm<n>::nPerms;
 
     public:
-        void setUp() {
+        void setUp() override {
             if constexpr (requiresPrecompute) {
                 Perm<n>::precompute();
             }
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void permCode() {

@@ -164,7 +164,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             /**< A disjoint union of three triangulations. */
 
     public:
-        void setUp() {
+        void setUp() override {
             TriangulationTest<4>::setUp();
 
             // We can pull some of our triangulations straight out of the can
@@ -239,7 +239,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             disjoint3.insertTriangulation(idealPoincareProduct);
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         /**

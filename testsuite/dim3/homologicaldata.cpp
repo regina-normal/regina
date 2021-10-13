@@ -138,7 +138,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             /**< The layered solid torus LST(3,4,7). */
 
     public:
-        void setUp() {
+        void setUp() override {
             // First deal with ready-made example triangulations.
             s3 = Example<3>::threeSphere();
             s2xs1 = Example<3>::s2xs1();
@@ -180,7 +180,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             genusTwoBdry = Triangulation<3>::rehydrate("eanadccdnxfno");
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void verifyHomologyConsistency(const Triangulation<3>& tri,

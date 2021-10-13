@@ -84,7 +84,7 @@ class Triangulation2Test : public TriangulationTest<2> {
             /**< A disjoint union of three triangulations. */
 
     public:
-        void setUp() {
+        void setUp() override {
             TriangulationTest<2>::setUp();
 
             s2Oct = Example<2>::sphereOctahedron();
@@ -101,7 +101,7 @@ class Triangulation2Test : public TriangulationTest<2> {
             disjoint3.insertTriangulation(sphere);
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         /**

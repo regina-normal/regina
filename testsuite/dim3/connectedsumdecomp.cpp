@@ -65,10 +65,10 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void verifyThreeSphere(const Triangulation<3>& tri,

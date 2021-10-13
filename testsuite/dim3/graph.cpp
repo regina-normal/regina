@@ -90,7 +90,7 @@ class DualGraph3Test : public CppUnit::TestFixture {
             delete source;
         }
 
-        void setUp() {
+        void setUp() override {
             empty.setLabel("Empty");
 
             lens13_3.insertLayeredLensSpace(13, 3);
@@ -110,7 +110,7 @@ class DualGraph3Test : public CppUnit::TestFixture {
             disconnected.setLabel("Loop(6) U Chain(4)");
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void testBandwidth(const Triangulation<3>& t, long expected) {

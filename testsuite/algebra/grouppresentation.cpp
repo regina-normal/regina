@@ -73,7 +73,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
 
     public:
 
-    void setUp() {
+    void setUp() override {
         // the integers
         Z_pres.addGenerator(1);
 
@@ -130,7 +130,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         presList.push_back( &KPDS_pres ); presList.push_back( &Z2Z3Z8_pres );
     } // end setUp
 
-    void tearDown() {
+    void tearDown() override {
         // so far nothing.
     }
 

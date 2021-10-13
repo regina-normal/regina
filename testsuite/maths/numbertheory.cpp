@@ -80,7 +80,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
             /**< Tiny odd number; this to the fourth fits in a signed long. */
 
     public:
-        void setUp() {
+        void setUp() override {
             ulEvenLarge = lEvenLarge = 1000000000;
             ulOddLarge = lOddLarge = 1000000001;
             ulEvenMed = lEvenMed = 40000;
@@ -91,7 +91,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
             ulOddTiny = lOddTiny = 201;
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         static void reducedModSpec(long k, long modBase) {

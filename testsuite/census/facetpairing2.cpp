@@ -51,10 +51,10 @@ class FacetPairing2Test : public CppUnit::TestFixture {
             /**< Used to hold arbitrary totals. */
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void rawCounts() {
