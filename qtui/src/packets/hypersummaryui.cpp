@@ -151,9 +151,6 @@ HyperSummaryUI::HyperSummaryUI(
         this, SLOT(updatePreferences()));
 }
 
-HyperSummaryUI::~HyperSummaryUI() {
-}
-
 regina::Packet* HyperSummaryUI::getPacket() {
     return surfaces;
 }

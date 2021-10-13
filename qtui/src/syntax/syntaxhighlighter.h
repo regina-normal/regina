@@ -66,7 +66,6 @@ class SyntaxHighlighter : public QSyntaxHighlighter
 public:
     explicit SyntaxHighlighter(QObject *parent = nullptr);
     explicit SyntaxHighlighter(QTextDocument *document);
-    ~SyntaxHighlighter();
 
     /**
      * Returns the syntax definition used for highlighting.

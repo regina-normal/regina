@@ -101,9 +101,6 @@ RecentFilesAction::RecentFilesAction(QWidget *parent) : QMenu(parent) {
     fillUrls();
 }
 
-RecentFilesAction::~RecentFilesAction() {
-}
-
 void RecentFilesAction::fileActivated() {
     // Open the URL.
     QAction* action = qobject_cast<QAction*>(sender());

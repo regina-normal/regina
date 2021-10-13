@@ -62,9 +62,6 @@ ExamplesAction::ExamplesAction(QWidget* parent) :
         "3-manifold triangulations are also provided."));
 }
 
-ExamplesAction::~ExamplesAction() {
-}
-
 void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
 
     QAction* action = new QAction(this);

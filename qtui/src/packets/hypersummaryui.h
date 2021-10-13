@@ -76,7 +76,6 @@ class HyperSummaryUI : public QObject, public PacketViewerTab {
          */
         HyperSummaryUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
             PacketTabbedUI* useParentUI);
-        ~HyperSummaryUI();
 
         /**
          * PacketViewerTab overrides.

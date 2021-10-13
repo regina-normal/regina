@@ -68,7 +68,7 @@ class RecentFilesAction : public QMenu {
          * Constructor and destructor.
          */
         RecentFilesAction(QWidget* parent);
-        virtual ~RecentFilesAction();
+        virtual ~RecentFilesAction() = default;
 
     signals:
         /**

@@ -250,9 +250,6 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     update();
 }
 
-CompatCanvas::~CompatCanvas() {
-}
-
 void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
     if (filled)
         return;

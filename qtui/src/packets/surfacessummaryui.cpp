@@ -146,9 +146,6 @@ SurfacesSummaryUI::SurfacesSummaryUI(
     paneLayout->addStretch(1);
 }
 
-SurfacesSummaryUI::~SurfacesSummaryUI() {
-}
-
 regina::Packet* SurfacesSummaryUI::getPacket() {
     return surfaces;
 }

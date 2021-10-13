@@ -70,7 +70,7 @@ class ExamplesAction : public QMenu {
          * Constructor and destructor.
          */
         ExamplesAction(QWidget* parent);
-        virtual ~ExamplesAction();
+        virtual ~ExamplesAction() = default;
 
         /**
          * Add a sample data file to the list of offerings.

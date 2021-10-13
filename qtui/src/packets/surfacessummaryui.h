@@ -76,7 +76,6 @@ class SurfacesSummaryUI : public QObject, public PacketViewerTab {
          */
         SurfacesSummaryUI(regina::PacketOf<regina::NormalSurfaces>* packet,
             PacketTabbedUI* useParentUI);
-        ~SurfacesSummaryUI();
 
         /**
          * PacketViewerTab overrides.
