@@ -237,7 +237,7 @@ Isomorphism<3>* ordering_iso(const Triangulation<3> &trig, bool force_oriented)
 
     while(true) {
         if(i < 0)
-            return NULL;
+            return nullptr;
 
         if(i >= static_cast<int>(trig.countEdges()))
             return iso_from_edges(trig, edge_orientations, force_oriented);
@@ -260,7 +260,7 @@ Isomorphism<3>* ordering_iso(const Triangulation<3> &trig, bool force_oriented)
                 --i;
             }
     }
-    return NULL;
+    return nullptr;
 }
 
 } // End anonymous namespace

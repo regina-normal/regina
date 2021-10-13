@@ -203,7 +203,7 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3>&& pairing,
     //
     // For the remaining faces we try all possible permutations.
 
-    chainPermIndices = (nChainEdges == 0 ? 0 : new int[nChainEdges * 2]);
+    chainPermIndices = (nChainEdges == 0 ? nullptr : new int[nChainEdges * 2]);
 
     FacePair facesAdj, comp, compAdj;
     Perm<4> trial1, trial2;
@@ -681,7 +681,7 @@ void ClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
 ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in,
         ActionWrapper&& action) :
         CompactSearcher(in, std::move(action)),
-        orderType(0), nChainEdges(0), chainPermIndices(0) {
+        orderType(nullptr), nChainEdges(0), chainPermIndices(nullptr) {
     unsigned nTets = perms_.size();
     int i;
 

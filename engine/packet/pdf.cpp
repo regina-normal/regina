@@ -40,7 +40,7 @@
 
 namespace regina {
 
-PDF::PDF(const char* filename) : data_(0), size_(0), alloc_(OWN_NEW) {
+PDF::PDF(const char* filename) : data_(nullptr), size_(0), alloc_(OWN_NEW) {
     // Use FILE* so we can call fstat().
 
     // Open the file.
@@ -94,7 +94,7 @@ void PDF::reset() {
             delete[] data_;
     }
 
-    data_ = 0;
+    data_ = nullptr;
     size_ = 0;
     alloc_ = OWN_NEW;
 }
@@ -122,7 +122,7 @@ void PDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
         } else
             alloc_ = alloc;
     } else {
-        data_ = 0;
+        data_ = nullptr;
         size_ = 0;
         alloc_ = OWN_NEW;
     }

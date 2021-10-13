@@ -470,7 +470,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     hdrLayout->addWidget(label);
     filter = new PacketChooser(surfaces->root(),
         new SingleTypeFilter<regina::SurfaceFilter>(),
-        PacketChooser::ROOT_AS_PACKET, true, 0, ui);
+        PacketChooser::ROOT_AS_PACKET, true, nullptr, ui);
     filter->setAutoUpdate(true);
     connect(filter, SIGNAL(activated(int)), this, SLOT(refresh()));
     hdrLayout->addWidget(filter);

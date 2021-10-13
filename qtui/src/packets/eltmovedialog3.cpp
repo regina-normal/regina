@@ -244,7 +244,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent,
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box23, 2, 1);
-    box14 = new SimplexChooser<3>(tri, 0, this, false);
+    box14 = new SimplexChooser<3>(tri, nullptr, this, false);
     box14->setWhatsThis( tr("<qt>Select the tetrahedron upon which "
         "the 1-4 move will be performed.<p>"
         "All tetrahedra are offered here, since "

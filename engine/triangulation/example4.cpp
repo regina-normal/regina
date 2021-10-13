@@ -126,7 +126,7 @@ namespace {
                         if (j != k)
                             wallBase2[i][j][k] = tri.newPentachoron();
                         else
-                            wallBase2[i][j][k] = 0;
+                            wallBase2[i][j][k] = nullptr;
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 4; ++j)
                     for (k = 0; k < 4; ++k)
@@ -134,7 +134,7 @@ namespace {
                             if (j != k && k != l && j != l)
                                 wallSide[i][j][k][l] = tri.newPentachoron();
                             else
-                                wallSide[i][j][k][l] = 0;
+                                wallSide[i][j][k][l] = nullptr;
         }
 
         /**

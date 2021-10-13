@@ -88,7 +88,7 @@ namespace pybind11::detail {
                     return_value_policy policy, handle parent) {
                 // We never convert from C++ back to Python, since the user
                 // should never directly hold a SnapPyObject type.
-                return NULL;
+                return nullptr;
             }
     };
 } // namespace pybind11::detail

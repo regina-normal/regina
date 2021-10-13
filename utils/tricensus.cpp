@@ -285,52 +285,52 @@ int main(int argc, const char* argv[]) {
         { "tetrahedra", 't', POPT_ARG_LONG, &nTet, 0,
             "Number of tetrahedra.", "<tetrahedra>" },
         { "boundary", 'b', POPT_ARG_NONE, &argBdry, 0,
-            "Must have at least one boundary face.", 0 },
+            "Must have at least one boundary face.", nullptr },
         { "internal", 'i', POPT_ARG_NONE, &argNoBdry, 0,
-            "Must have all faces internal (no boundary faces).", 0 },
+            "Must have all faces internal (no boundary faces).", nullptr },
         { "bdryfaces", 'B', POPT_ARG_LONG, &nBdryFaces, 0,
             "Must have fixed number (>= 1) of boundary faces.", "<faces>" },
         { "orientable", 'o', POPT_ARG_NONE, &argOr, 0,
-            "Must be orientable.", 0 },
+            "Must be orientable.", nullptr },
         { "nonorientable", 'n', POPT_ARG_NONE, &argNor, 0,
-            "Must be non-orientable.", 0 },
+            "Must be non-orientable.", nullptr },
         { "finite", 'f', POPT_ARG_NONE, &argFinite, 0,
-            "Must be finite (no ideal vertices).", 0 },
+            "Must be finite (no ideal vertices).", nullptr },
         { "ideal", 'd', POPT_ARG_NONE, &argIdeal, 0,
-            "Must have at least one ideal vertex.", 0 },
+            "Must have at least one ideal vertex.", nullptr },
         { "minimal", 'm', POPT_ARG_NONE, &minimal, 0,
-            "Ignore obviously non-minimal triangulations.", 0 },
+            "Ignore obviously non-minimal triangulations.", nullptr },
         { "minprime", 'M', POPT_ARG_NONE, &minimalPrime, 0,
-            "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
+            "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", nullptr },
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
-            "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", 0 },
+            "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", nullptr },
         { "minhyp", 'h', POPT_ARG_NONE, &minimalHyp, 0,
             "Ignore triangulations that are obviously not minimal ideal "
             "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
-            "Implies --internal and --ideal.", 0 },
+            "Implies --internal and --ideal.", nullptr },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
-            "triangles, and --bdryfaces counts boundary edges.", 0 },
+            "triangles, and --bdryfaces counts boundary edges.", nullptr },
         { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
             "Run a census of 4-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
-            "pentachora, and --bdryfaces counts boundary facets.", 0 },
+            "pentachora, and --bdryfaces counts boundary facets.", nullptr },
         { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
             "Write isomorphism signatures only, not full Regina data files.",
-            0 },
+            nullptr },
         { "subcontainers", 'c', POPT_ARG_NONE, &subContainers, 0,
             "For each face pairing, place resulting triangulations into different subcontainers",
-            0 },
+            nullptr },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
-            "Only generate face pairings, not triangulations.", 0 },
+            "Only generate face pairings, not triangulations.", nullptr },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
-            "Only use face pairings read from standard input.", 0 },
+            "Only use face pairings read from standard input.", nullptr },
         POPT_AUTOHELP
-        { 0, 0, 0, 0, 0, 0, 0 }
+        { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };
 
-    poptContext optCon = poptGetContext(0, argc, argv, opts, 0);
+    poptContext optCon = poptGetContext(nullptr, argc, argv, opts, 0);
     poptSetOtherOptionHelp(optCon, "<output-file>");
 
     // Parse the command-line arguments.

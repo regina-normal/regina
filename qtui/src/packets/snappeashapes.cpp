@@ -152,7 +152,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
             return true;
         }
         if (! reIntPair.exactMatch(data)) {
-            ReginaSupport::info(0,
+            ReginaSupport::info(nullptr,
                 tr("Please enter a pair of filling coefficients."),
                 tr("<qt>This should be a pair of integers, such as "
                     "<i>3, 2</i>."));
@@ -163,7 +163,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         int m = reIntPair.cap(1).toInt(&mOk);
         int l = reIntPair.cap(2).toInt(&lOk);
         if (! (mOk && lOk)) {
-            ReginaSupport::sorry(0,
+            ReginaSupport::sorry(nullptr,
                 tr("The filling coefficients are too large."),
                 tr("The coefficients you provided are too large for "
                     "this machine to store using its native integer type."));
@@ -176,7 +176,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         }
 
         if (regina::gcd(m, l) != 1) {
-            ReginaSupport::sorry(0,
+            ReginaSupport::sorry(nullptr,
                 tr("The filling coefficients must be coprime."),
                 tr("Although SnapPea can handle more general filling "
                     "coefficients, Regina insists that the filling "
@@ -185,7 +185,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         }
         if ((! tri_->cusp(index.row())->vertex()->isLinkOrientable()) &&
                 l != 0) {
-            ReginaSupport::sorry(0,
+            ReginaSupport::sorry(nullptr,
                 tr("For non-orientable cusps, the filling coefficients "
                     "must be (±1, 0)."),
                 tr("Although SnapPea can handle more general filling "
@@ -195,7 +195,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         }
         if (tri_->fill(m, l, index.row()))
             return true;
-        ReginaSupport::info(0,
+        ReginaSupport::info(nullptr,
             tr("I could not use these filling coefficients."),
             tr("<qt>SnapPea rejected them, and I'm not sure why.  "
                 "This could happen (for instance) if the coefficients "
@@ -421,7 +421,7 @@ void SnapPeaShapesUI::vertexLinks() {
             tr("This triangulation does not have any vertices."));
     else {
         regina::Vertex<3>* chosen =
-            FaceDialog<3, 0>::choose(ui, tri, 0 /* filter */,
+            FaceDialog<3, 0>::choose(ui, tri, nullptr /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "

@@ -41,7 +41,7 @@ using regina::Packet;
 
 PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane,
         unsigned& indexPref) : PacketUI(enclosingPane),
-        editorTab(0), header(0), visibleViewer(0),
+        editorTab(nullptr), header(nullptr), visibleViewer(nullptr),
         indexPref_(indexPref), rememberTabSelection_(true) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
@@ -113,7 +113,7 @@ void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
     }
 
     editorTab = editor;
-    viewerTabs.push_back(0);
+    viewerTabs.push_back(nullptr);
 
     tabs->addTab(editor->getInterface(), label);
 
@@ -153,7 +153,7 @@ regina::Packet* PacketTabbedUI::getPacket() {
 
     // We have no pages.  This should not happen.
     std::cerr << "ERROR: PacketTabbedUI has no pages!  Expect a crash soon.\n";
-    return 0;
+    return nullptr;
 }
 
 QWidget* PacketTabbedUI::getInterface() {
@@ -213,7 +213,7 @@ void PacketTabbedUI::notifyTabSelected(int newTab) {
 
 PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI,
         unsigned& indexPref) : PacketViewerTab(useParentUI),
-        header(0), visibleViewer(0),
+        header(nullptr), visibleViewer(nullptr),
         indexPref_(indexPref), rememberTabSelection_(true) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);

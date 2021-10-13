@@ -76,7 +76,7 @@ lt_symlist_t lt_preloaded_symbols[] = {
     { "gvplugin_neato_layout_LTX_library", &gvplugin_neato_layout_LTX_library },
     { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
     { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
-    { 0, 0 }
+    { nullptr, nullptr }
 };
 #endif
 #endif
@@ -333,7 +333,7 @@ void FacetGraphTab::showError(const QString& msg) {
 
 std::string Dim2EdgeGraphData::dual(bool withLabels) {
     regina::FacetPairing<2> pairing(*tri_);
-    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
+    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
 std::string Dim2EdgeGraphData::treeDecomp(bool nice, int& bags, int& width) {
@@ -371,7 +371,7 @@ regina::Packet* Dim2EdgeGraphData::getPacket() {
 
 std::string Dim3FaceGraphData::dual(bool withLabels) {
     regina::FacetPairing<3> pairing(*tri_);
-    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
+    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
 std::string Dim3FaceGraphData::treeDecomp(bool nice, int& bags, int& width) {
@@ -409,7 +409,7 @@ regina::Packet* Dim3FaceGraphData::getPacket() {
 
 std::string Dim4FacetGraphData::dual(bool withLabels) {
     regina::FacetPairing<4> pairing(*tri_);
-    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
+    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
 std::string Dim4FacetGraphData::treeDecomp(bool nice, int& bags, int& width) {

@@ -73,7 +73,7 @@ void PacketTreeItem::init() {
 }
 
 void PacketTreeItem::fill() {
-    PacketTreeItem* childTree = 0;
+    PacketTreeItem* childTree = nullptr;
     for (auto p = packet->firstChild(); p; p = p->nextSibling()) {
         if (childTree)
             childTree = static_cast<PacketTreeView*>(treeWidget())->
@@ -115,7 +115,7 @@ void PacketTreeItem::packetWasRenamed(regina::Packet*) {
 }
 
 void PacketTreeItem::packetToBeDestroyed(regina::PacketShell) {
-    packet = 0;
+    packet = nullptr;
     refreshLabel();
     getMainWindow()->setModified(true);
 
@@ -146,7 +146,7 @@ void PacketTreeItem::childrenWereReordered(regina::Packet*) {
 
 PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent) 
           : QTreeWidget(parent), mainWindow(newMainWindow),
-          root(0), toSelect(0) {
+          root(nullptr), toSelect(nullptr) {
     setRootIsDecorated(true);
     header()->hide();
     setAlternatingRowColors(false);
@@ -206,7 +206,7 @@ PacketTreeItem* PacketTreeView::find(std::shared_ptr<Packet> packet) {
 
 void PacketTreeView::selectPacket(std::shared_ptr<regina::Packet> p,
         bool allowDefer) {
-    if (p == 0) {
+    if (! p) {
         if (! selectedItems().isEmpty())
             clearSelection();
         return;
@@ -259,7 +259,7 @@ void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
             if (prev)
                 prev = createAndSelect(fromItem, prev, p);
             else
-                prev = createAndSelect(fromItem, 0, p);
+                prev = createAndSelect(fromItem, nullptr, p);
             prev->fill();
 
             // Assume this has come from moving prev to a different
@@ -306,7 +306,7 @@ void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
                 if (prev)
                     prev = createAndSelect(fromItem, prev, p);
                 else
-                    prev = createAndSelect(fromItem, 0, p);
+                    prev = createAndSelect(fromItem, nullptr, p);
                 prev->fill();
 
                 // Assume this has come from moving prev to a different
@@ -389,7 +389,7 @@ void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
 void PacketTreeView::childWasAdded(regina::Packet*, regina::Packet*) {
     // Be careful.  We might not be in the GUI thread.
     QApplication::postEvent(this, new PacketTreeItemEvent(
-        static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), 0 /* root packet */));
+        static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), nullptr /* root */));
 }
 
 void PacketTreeView::childWasRemoved(regina::Packet*, regina::Packet*) {

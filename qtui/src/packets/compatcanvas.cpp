@@ -137,7 +137,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     last->setPos(pos - last->boundingRect().width() / 2, TOP_MARGIN);
     if (last->collidesWithItem(prev)) {
         delete last;
-        last = 0;
+        last = nullptr;
     } else {
         last->show();
 
@@ -190,7 +190,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         pos - last->boundingRect().height() / 2);
     if (last->collidesWithItem(prev)) {
         delete last;
-        last = 0;
+        last = nullptr;
     } else {
         last->show();
 

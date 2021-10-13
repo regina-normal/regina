@@ -75,16 +75,16 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
-QMenu* ReginaMain::windowMenu = 0;
+QMenu* ReginaMain::windowMenu = nullptr;
 
 ReginaMain::ReginaMain(ReginaManager* useManager, bool starterWindow) :
         QMainWindow(),
         manager(useManager),
-        packetTree(0),
+        packetTree(nullptr),
         starterWindow_(starterWindow),
         fakeRoot_(false),
-        packetMenu(0),
-        aboutApp(0),
+        packetMenu(nullptr),
+        aboutApp(nullptr),
         dirty(false) {
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -127,7 +127,7 @@ void ReginaMain::plugPacketMenu() {
     if (packetMenu) {
         menuBar()->removeAction(packetMenu->menuAction());
         delete packetMenu;
-        packetMenu = 0;
+        packetMenu = nullptr;
     }
 }
 
@@ -135,7 +135,7 @@ void ReginaMain::unplugPacketMenu() {
     if (packetMenu) {
         menuBar()->removeAction(packetMenu->menuAction());
         delete packetMenu;
-        packetMenu = 0;
+        packetMenu = nullptr;
     }
 }
 
@@ -154,7 +154,7 @@ void ReginaMain::setModified(bool modified) {
     if (starterWindow_ && modified) {
         starterWindow_ = false;
         delete advice;
-        advice = 0;
+        advice = nullptr;
     }
 }
 
@@ -541,7 +541,7 @@ void ReginaMain::helpAboutApp() {
 }
 
 void ReginaMain::helpHandbook() {
-    ReginaPrefSet::openHandbook("index", 0, this);
+    ReginaPrefSet::openHandbook("index", nullptr, this);
 }
 
 void ReginaMain::helpXMLRef() {
@@ -562,7 +562,7 @@ void ReginaMain::helpTipOfDay() {
 }
 
 void ReginaMain::helpTrouble() {
-    ReginaPrefSet::openHandbook("troubleshooting", 0, this);
+    ReginaPrefSet::openHandbook("troubleshooting", nullptr, this);
 }
 
 void ReginaMain::helpIntro() {
@@ -648,7 +648,7 @@ void ReginaMain::setupWidgets() {
 
         layout->addWidget(advice);
     } else
-        advice = 0;
+        advice = nullptr;
 
     // Put it all inside the main window.
     setCentralWidget(main);
@@ -756,7 +756,7 @@ void ReginaMain::renameWindow(const QString& newName) {
 void ReginaMain::updatePreferences() {
     if (advice && ! ReginaPrefSet::global().helpIntroOnStartup) {
         delete advice;
-        advice = 0;
+        advice = nullptr;
     }
 }
 

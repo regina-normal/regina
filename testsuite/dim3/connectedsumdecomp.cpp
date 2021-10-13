@@ -95,11 +95,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             auto stdTri = StandardTriangulation::recognise(ans.front());
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
-                " forms an unrecognised triangulation.", stdTri.get() != 0);
+                " forms an unrecognised triangulation.", stdTri);
 
             auto stdManifold = stdTri->manifold();
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
-                " forms an unrecognised 3-manifold.", stdManifold.get() != 0);
+                " forms an unrecognised 3-manifold.", stdManifold);
 
             std::string stdName = stdManifold->name();
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
@@ -142,19 +142,19 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             auto stdTri1 = StandardTriangulation::recognise(ans[0]);
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
-                " forms an unrecognised triangulation.", stdTri1.get() != 0);
+                " forms an unrecognised triangulation.", stdTri1);
 
             auto stdTri2 = StandardTriangulation::recognise(ans[1]);
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
-                " forms an unrecognised triangulation.", stdTri2.get() != 0);
+                " forms an unrecognised triangulation.", stdTri2);
 
             auto stdManifold1 = stdTri1->manifold();
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
-                " forms an unrecognised 3-manifold.", stdManifold1.get() != 0);
+                " forms an unrecognised 3-manifold.", stdManifold1);
 
             auto stdManifold2 = stdTri2->manifold();
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
-                " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
+                " forms an unrecognised 3-manifold.", stdManifold2);
 
             // Arrange the manifolds with their names in lexicographical order.
             std::string stdName1 = stdManifold1->name();
@@ -217,27 +217,27 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             auto stdTri1 = StandardTriangulation::recognise(ans[0]);
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
-                " forms an unrecognised triangulation.", stdTri1.get() != 0);
+                " forms an unrecognised triangulation.", stdTri1);
 
             auto stdTri2 = StandardTriangulation::recognise(ans[1]);
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
-                " forms an unrecognised triangulation.", stdTri2.get() != 0);
+                " forms an unrecognised triangulation.", stdTri2);
 
             auto stdTri3 = StandardTriangulation::recognise(ans[2]);
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
-                " forms an unrecognised triangulation.", stdTri3.get() != 0);
+                " forms an unrecognised triangulation.", stdTri3);
 
             auto stdManifold1 = stdTri1->manifold();
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
-                " forms an unrecognised 3-manifold.", stdManifold1.get() != 0);
+                " forms an unrecognised 3-manifold.", stdManifold1);
 
             auto stdManifold2 = stdTri2->manifold();
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
-                " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
+                " forms an unrecognised 3-manifold.", stdManifold2);
 
             auto stdManifold3 = stdTri3->manifold();
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
-                " forms an unrecognised 3-manifold.", stdManifold3.get() != 0);
+                " forms an unrecognised 3-manifold.", stdManifold3);
 
             // Obtain the manifold names in lexicographical order.
             std::string stdName1 = stdManifold1->name();

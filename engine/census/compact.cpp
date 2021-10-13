@@ -516,8 +516,8 @@ void CompactSearcher::dumpData(std::ostream& out) const {
 
 CompactSearcher::CompactSearcher(std::istream& in, ActionWrapper&& action) :
         GluingPermSearcher<3>(in, std::move(action)),
-        nVertexClasses(0), vertexState(0), vertexStateChanged(0),
-        nEdgeClasses(0), edgeState(0), edgeStateChanged(0) {
+        nVertexClasses(0), vertexState(nullptr), vertexStateChanged(nullptr),
+        nEdgeClasses(0), edgeState(nullptr), edgeStateChanged(nullptr) {
     unsigned nTets = perms_.size();
     unsigned i;
 

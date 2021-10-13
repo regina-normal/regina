@@ -75,7 +75,7 @@ DefaultPacketUI::DefaultPacketUI(regina::Packet* newPacket,
         "through Regina's Python interface instead.</qt>")
         .arg(newPacket->typeName().c_str());
 
-    label = new QLabel(msg, 0);
+    label = new QLabel(msg, nullptr);
     label->setAlignment(Qt::AlignCenter);
     label->setContentsMargins(20, 20, 20, 20);
 }
@@ -97,8 +97,8 @@ void DefaultPacketUI::refresh() {
 
 PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
         QWidget* parent) : QWidget(parent),
-        mainWindow(newMainWindow), frame(0),
-        editCut(0), editCopy(0), editPaste(0) {
+        mainWindow(newMainWindow), frame(nullptr),
+        editCut(nullptr), editCopy(nullptr), editPaste(nullptr) {
     // Initialise a vertical layout with no padding or spacing.
     QBoxLayout* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -217,15 +217,15 @@ void PacketPane::deregisterEditOperations() {
 
     if (editCut) {
         editCut->setEnabled(false);
-        editCut = 0;
+        editCut = nullptr;
     }
     if (editCopy) {
         editCopy->setEnabled(false);
-        editCopy = 0;
+        editCopy = nullptr;
     }
     if (editPaste) {
         editPaste->setEnabled(false);
-        editPaste = 0;
+        editPaste = nullptr;
     }
 }
 

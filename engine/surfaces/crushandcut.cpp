@@ -662,7 +662,7 @@ namespace {
         unsigned i;
         for (i = 0; i < nInnerTet_; ++i)
             innerTet_[i] = insertInto.newTetrahedron();
-        std::fill(link_, link_ + 4, static_cast<Tetrahedron<3>*>(0));
+        std::fill(link_, link_ + 4, nullptr);
     }
 
     TriPrism::TriPrism(const Tetrahedron<3> *outerTet, int type,
@@ -675,7 +675,7 @@ namespace {
 
         BdryQuad* q;
 
-        bdry_[vertices[0]] = 0;
+        bdry_[vertices[0]] = nullptr;
 
         q = new BdryQuad(this, vertices * Perm<4>(0, 2, 3, 1));
         q->innerTet_[0] = innerTet_[1];
@@ -1035,7 +1035,7 @@ namespace {
         // links).
         for (i = 0; i < 4; ++i) {
             if (triCount_[i] == 0)
-                triPrism_[i] = 0;
+                triPrism_[i] = nullptr;
             else {
                 triPrism_[i] = new Block*[triCount_[i]];
                 for (j = 0; j < triCount_[i]; ++j)
@@ -1044,8 +1044,8 @@ namespace {
         }
 
         if (quadCount_ == 0) {
-            quadPrism_ = 0;
-            truncHalfTet_[0] = truncHalfTet_[1] = 0;
+            quadPrism_ = nullptr;
+            truncHalfTet_[0] = truncHalfTet_[1] = nullptr;
             truncTet_ = new TruncTet(tet, insertInto);
         } else {
             if (quadCount_ > 1) {
@@ -1053,12 +1053,12 @@ namespace {
                 for (j = 0; j < quadCount_ - 1; ++j)
                     quadPrism_[j] = new QuadPrism(tet, quadType_, insertInto);
             } else
-                quadPrism_ = 0;
+                quadPrism_ = nullptr;
 
             truncHalfTet_[0] = new TruncHalfTet(tet, 5 - quadType_, insertInto);
             truncHalfTet_[1] = new TruncHalfTet(tet, quadType_, insertInto);
 
-            truncTet_ = 0;
+            truncTet_ = nullptr;
         }
 
         for (i = 0; i < 4; ++i) {

@@ -132,12 +132,12 @@ std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
  // this routine goes through the edges of cf, picking off the adjacent
  // tetrahedra and assembled the information into tet. this code is
  // adapted from Orb::cassonToTriangulation in Orb's organizer.cpp
- while (ei!=NULL) // if we have a non-trivial edge, proceed
+ while (ei) // if we have a non-trivial edge, proceed
         {
         tei1 = ei->head;
-        while (tei1!=NULL) // now we spin about the tetrahedra adj to ei.
+        while (tei1) // now we spin about the tetrahedra adj to ei.
                 {
-                if (tei1->next==NULL)
+                if (! tei1->next)
                         tei2 = ei->head;
                 else    tei2 = tei1->next;
 
@@ -192,7 +192,7 @@ CassonFormat *readCassonFormat( std::istream &ts )
         bool        vertices_known = false;
 
         cf = new CassonFormat;
-        cf->head = NULL;
+        cf->head = nullptr;
         cf->num_tet = 0;
 
         // Skip any initial non-empty lines (looking whether there is
@@ -222,12 +222,12 @@ CassonFormat *readCassonFormat( std::istream &ts )
 
                 nei = new EdgeInfo;
 
-                if (cf->head==NULL)
+                if (! cf->head)
                         cf->head = nei;
                 else    ei->next = nei;
 
-                nei->next = NULL;
-                nei->head = NULL;
+                nei->next = nullptr;
+                nei->head = nullptr;
 
                 ei = nei;
 
@@ -245,12 +245,12 @@ CassonFormat *readCassonFormat( std::istream &ts )
                 {
                         ntei = new TetEdgeInfo;
 
-                        if (ei->head==NULL)
+                        if (! ei->head)
                                 ei->head        = ntei;
                         else
                                 tei->next       = ntei;
 
-                        ntei->next = NULL;
+                        ntei->next = nullptr;
                         tei = ntei;
 
                         tei->f1 = LN(section[section.length()-2]);
@@ -291,15 +291,15 @@ bool verifyCassonFormat( CassonFormat *cf )
 
                 ei = cf->head;
 
-                if (ei == NULL)
+                if (! ei)
                         return false;
 
-                while(ei!=NULL)
+                while(ei)
                 {
                         tei = ei->head;
-                        if (tei == NULL)
+                        if (! tei)
                                 return false;
-                        while(tei!=NULL)
+                        while(tei)
                         {
                                 if (tei->tet_index == i )
                                 {
@@ -330,11 +330,11 @@ void freeCassonFormat( CassonFormat *cf )
         TetEdgeInfo *t1, *t2;
         e1 = cf->head;
 
-        while (e1!=NULL)
+        while (e1)
         {
                 e2 = e1->next;
                 t1 = e1->head;
-                while (t1!=NULL)
+                while (t1)
                 {
                         t2 = t1->next;
                         delete t1;

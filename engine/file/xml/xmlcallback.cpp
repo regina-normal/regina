@@ -61,7 +61,7 @@ void XMLCallback::start_element(const std::string& n,
             << std::endl;
         abort();
     } else if (state_ == WAITING) {
-        currentReader()->startElement(n, p, 0);
+        currentReader()->startElement(n, p, nullptr);
         currChars = "";
         charsAreInitial = true;
         state_ = WORKING;
@@ -127,7 +127,7 @@ void XMLCallback::abort() {
 
     // Make sure we don't delete a child reader until we've called
     // abortElement() on its parent.
-    XMLElementReader* child = 0;
+    XMLElementReader* child = nullptr;
     while (! readers.empty()) {
         readers.top()->abort(child);
         if (child)

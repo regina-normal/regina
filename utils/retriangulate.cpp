@@ -125,16 +125,16 @@ int main(int argc, const char* argv[]) {
         { "threads", 't', POPT_ARG_INT, &argThreads, 0,
             "Number of parallel threads (default = 1)", "<threads>" },
         { "dim3", '3', POPT_ARG_VAL, &flavour, FLAVOUR_DIM3,
-            "Input is a 3-manifold signature (default)", 0 },
+            "Input is a 3-manifold signature (default)", nullptr },
         { "dim4", '4', POPT_ARG_VAL, &flavour, FLAVOUR_DIM4,
-            "Input is a 4-manifold signature", 0 },
+            "Input is a 4-manifold signature", nullptr },
         { "knot", 'k', POPT_ARG_VAL, &flavour, FLAVOUR_KNOT,
-            "Input is a knot signature", 0 },
+            "Input is a knot signature", nullptr },
         POPT_AUTOHELP
-        { 0, 0, 0, 0, 0, 0, 0 }
+        { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };
 
-    poptContext optCon = poptGetContext(0, argc, argv, opts, 0);
+    poptContext optCon = poptGetContext(nullptr, argc, argv, opts, 0);
     poptSetOtherOptionHelp(optCon, "<isosig>");
 
     // Parse the command-line arguments.

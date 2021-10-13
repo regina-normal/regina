@@ -56,9 +56,9 @@ BoundaryComponent3Chooser::BoundaryComponent3Chooser(
 
 BoundaryComponent<3>* BoundaryComponent3Chooser::selected() {
     if (count() == 0)
-        return 0;
+        return nullptr;
     int curr = currentIndex();
-    return (curr < 0 ? 0 : options_[curr]);
+    return (curr < 0 ? nullptr : options_[curr]);
 }
 
 void BoundaryComponent3Chooser::select(regina::BoundaryComponent<3>* option) {
@@ -153,6 +153,6 @@ regina::BoundaryComponent<3>* BoundaryComponent3Dialog::choose(QWidget* parent,
     if (dlg.exec())
         return dlg.chooser->selected();
     else
-        return 0;
+        return nullptr;
 }
 

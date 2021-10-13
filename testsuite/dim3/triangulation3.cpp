@@ -3699,7 +3699,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 unsigned long nPunc = punc.size();
                 BoundaryComponent<3>* bc = punc.tetrahedron(nPunc - 1)->
                     triangle(0)->boundaryComponent();
-                if (bc == 0 || bc != punc.tetrahedron(nPunc - 2)->
+                if ((! bc) || bc != punc.tetrahedron(nPunc - 2)->
                         triangle(0)->boundaryComponent()) {
                     std::ostringstream msg;
                     msg << name << ", tet " << i << ": "

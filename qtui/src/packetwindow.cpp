@@ -44,7 +44,7 @@
 #include <QMenuBar>
 
 PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
-        QMainWindow(0, Qt::Window | Qt::WindowContextHelpButtonHint),
+        QMainWindow(nullptr, Qt::Window | Qt::WindowContextHelpButtonHint),
         heldPane(newPane), mainWindow(parent) {
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);

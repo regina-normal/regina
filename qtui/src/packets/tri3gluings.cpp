@@ -282,7 +282,7 @@ QString GluingsModel3::isFaceStringValid(unsigned long srcTet, int srcFace,
 void GluingsModel3::showError(const QString& message) {
     // We should actually pass the view to the message box, not 0, but we
     // don't have access to any widget from here...
-    ReginaSupport::info(0 /* should be the view? */,
+    ReginaSupport::info(nullptr /* should be the view? */,
         tr("This is not a valid gluing."), message);
 }
 
@@ -999,7 +999,7 @@ void Tri3GluingsUI::boundaryComponents() {
             tr("This triangulation does not have any boundary components."));
     else {
         regina::BoundaryComponent<3>* chosen =
-            BoundaryComponent3Dialog::choose(ui, tri, 0 /* filter */,
+            BoundaryComponent3Dialog::choose(ui, tri, nullptr /* filter */,
             tr("Boundary Components"),
             tr("Triangulate which boundary component?"),
             tr("<qt>If you select a real boundary component, this will "
@@ -1027,7 +1027,7 @@ void Tri3GluingsUI::vertexLinks() {
             tr("This triangulation does not have any vertices."));
     else {
         regina::Vertex<3>* chosen =
-            FaceDialog<3, 0>::choose(ui, tri, 0 /* filter */,
+            FaceDialog<3, 0>::choose(ui, tri, nullptr /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "

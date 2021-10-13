@@ -720,11 +720,13 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
     // did we reach the end of input without any errors? if so, append buildTerm
     if (WS!=WSERR) {
         terms_.push_back(buildTerm);
-        if (valid != NULL) (*valid) = true;
+        if (valid)
+            *valid = true;
     }
     // if not, delete everything in this word
     else {
-        if (valid != NULL) (*valid) = false;
+        if (valid)
+            *valid = false;
         terms_.clear();
     }
 }

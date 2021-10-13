@@ -90,7 +90,7 @@ const char* GAP_PROMPT = "gap> ";
 GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         const regina::GroupPresentation& useOrigGroup) :
         QDialog(parent),
-        proc(0), currOutput(""), partialLine(""), stage(GAP_init),
+        proc(nullptr), currOutput(""), partialLine(""), stage(GAP_init),
         cancelled(false), origGroup(useOrigGroup) {
     setWindowTitle(tr("Running GAP"));
 
@@ -154,7 +154,7 @@ void GAPRunner::slotCancel() {
         // to Close.
         if (proc->state() == QProcess::Running)
             proc->kill();
-        disconnect(proc, 0, this, 0);
+        disconnect(proc, nullptr, this, nullptr);
 
         status->setText(tr("Simplification cancelled."));
         killBtn->setText(tr("Close"));
@@ -405,7 +405,7 @@ void GAPRunner::error(const QString& msg) {
     cancelled = true;
     if (proc->state() == QProcess::Running)
         proc->kill();
-    disconnect(proc, 0, this, 0);
+    disconnect(proc, nullptr, this, nullptr);
 
     killBtn->setText(tr("Close"));
 

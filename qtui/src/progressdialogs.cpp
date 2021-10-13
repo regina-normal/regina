@@ -187,7 +187,7 @@ bool ProgressDialogOpen::run() {
 
     bool success = ! tracker_->isCancelled();
     buttons->button(QDialogButtonBox::Cancel)->setEnabled(false);
-    tracker_ = 0;
+    tracker_ = nullptr;
     return success;
 }
 

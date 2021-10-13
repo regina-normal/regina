@@ -974,7 +974,7 @@ namespace {
 
                 child = bag->children();
                 partial[index] = partial[child->index()];
-                partial[child->index()] = 0;
+                partial[child->index()] = nullptr;
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
                 if (tracker) {
@@ -1112,7 +1112,7 @@ namespace {
                 for (auto& soln : *(partial[child->index()]))
                     delete soln.first;
                 delete partial[child->index()];
-                partial[child->index()] = 0;
+                partial[child->index()] = nullptr;
             } else {
                 // Join bag.
                 if (tracker) {
@@ -1227,12 +1227,12 @@ namespace {
                 for (auto& soln : *(partial[child->index()]))
                     delete soln.first;
                 delete partial[child->index()];
-                partial[child->index()] = 0;
+                partial[child->index()] = nullptr;
 
                 for (auto& soln : *(partial[sibling->index()]))
                     delete soln.first;
                 delete partial[sibling->index()];
-                partial[sibling->index()] = 0;
+                partial[sibling->index()] = nullptr;
             }
 
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
@@ -1370,13 +1370,13 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
     InitialData<false>::TVType ans;
     switch (alg) {
         case ALG_TREEWIDTH:
-            ans = turaevViroTreewidth(*this, init, 0);
+            ans = turaevViroTreewidth(*this, init, nullptr);
             break;
         case ALG_NAIVE:
-            ans = turaevViroNaive(*this, init, 0);
+            ans = turaevViroNaive(*this, init, nullptr);
             break;
         default:
-            ans = turaevViroBacktrack(*this, init, 0);
+            ans = turaevViroBacktrack(*this, init, nullptr);
             break;
     }
     /*

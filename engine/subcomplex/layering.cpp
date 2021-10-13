@@ -42,7 +42,7 @@ bool Layering::extendOne() {
     Tetrahedron<3>* next = newBdryTet_[0]->adjacentTetrahedron(
         newBdryRoles_[0][3]);
 
-    if (next == 0 || next == newBdryTet_[0] || next == newBdryTet_[1] ||
+    if ((! next) || next == newBdryTet_[0] || next == newBdryTet_[1] ||
             next == oldBdryTet_[0] || next == oldBdryTet_[1])
         return false;
     if (next != newBdryTet_[1]->adjacentTetrahedron(newBdryRoles_[1][3]))

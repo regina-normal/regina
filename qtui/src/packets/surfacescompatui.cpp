@@ -60,7 +60,8 @@ SurfacesCompatibilityUI::SurfacesCompatibilityUI(
         regina::PacketOf<regina::NormalSurfaces>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
-        matrixLocal(0), matrixGlobal(0), layerLocal(0), layerGlobal(0),
+        matrixLocal(nullptr), matrixGlobal(nullptr),
+        layerLocal(nullptr), layerGlobal(nullptr),
         requestedCalculation(false) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
@@ -151,8 +152,8 @@ void SurfacesCompatibilityUI::refresh() {
         delete matrixGlobal;
     }
 
-    matrixLocal = matrixGlobal = 0;
-    layerLocal = layerGlobal = 0;
+    matrixLocal = matrixGlobal = nullptr;
+    layerLocal = layerGlobal = nullptr;
 
     // Are we able to compute the new matrices if we want to?
     if (surfaces->size() == 0) {

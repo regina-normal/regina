@@ -262,7 +262,7 @@ QString GluingsModel2::isEdgeStringValid(unsigned long srcTri, int srcEdge,
 void GluingsModel2::showError(const QString& message) {
     // We should actually pass the view to the message box, not 0, but we
     // don't have access to any widget from here...
-    ReginaSupport::info(0 /* should be the view? */,
+    ReginaSupport::info(nullptr /* should be the view? */,
         tr("This is not a valid gluing."), message);
 }
 

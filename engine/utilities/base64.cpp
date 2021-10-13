@@ -299,7 +299,7 @@ size_t base64Encode(const char* in, size_t inlen, char** out) {
 
     // Check for overflow.
     if (inlen > outlen) {
-        *out = 0;
+        *out = nullptr;
         return 0;
     }
 
@@ -365,7 +365,7 @@ bool base64Decode(const char* in, size_t inlen, char** out, size_t* outlen) {
 
     if (!base64Decode(in, inlen, *out, &needlen)) {
         delete[] *out;
-        *out = 0;
+        *out = nullptr;
         return false;
     }
 

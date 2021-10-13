@@ -236,7 +236,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
     layout->addWidget(box24, 3, 1);
-    box15 = new SimplexChooser<4>(tri, 0, this, false);
+    box15 = new SimplexChooser<4>(tri, nullptr, this, false);
     box15->setWhatsThis( tr("<qt>Select the pentachoron upon which "
         "the 1-5 move will be performed.<p>"
         "All pentachora are offered here, since "

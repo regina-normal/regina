@@ -165,7 +165,7 @@ std::optional<SpiralSolidTorus> SpiralSolidTorus::recognise(Tetrahedron<3>* tet,
             useVertexRoles * invRoleMap;
 
         // Check that we haven't hit the boundary.
-        if (adjTet == 0)
+        if (! adjTet)
             return std::nullopt;
 
         if (adjTet == base) {

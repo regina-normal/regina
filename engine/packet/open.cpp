@@ -200,7 +200,7 @@ std::shared_ptr<Packet> open(std::istream& s) {
                 start += 20; /* Length of "<reginadata engine=\"" */
 
                 char* finish = ::strchr(start, '"');
-                if (finish == 0 || finish == start) {
+                if ((! finish) || finish == start) {
                     // Never found a closing quote, or else the engine version
                     // string is empty.
                     buf[regDataOpenBy] = tmp;

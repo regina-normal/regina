@@ -181,7 +181,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
         QString data = value.toString().trimmed();
 
         if (data.isEmpty()) {
-            ReginaSupport::info(0,
+            ReginaSupport::info(nullptr,
                 tr("Variable names cannot be empty."));
             return false;
         }
@@ -191,7 +191,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
             // Construct a better variable name.
             data.replace(QRegExp("[^A-Za-z0-9_]"), "");
             if (data.isEmpty()) {
-                ReginaSupport::info(0,
+                ReginaSupport::info(nullptr,
                     tr("<qt><tt>%1</tt> is not a valid Python "
                         "variable name.</qt>").arg(oldData.toHtmlEscaped()));
                 return false;
@@ -199,7 +199,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
             if (! rePythonIdentifier.exactMatch(data))
                 data.prepend('_');
 
-            ReginaSupport::info(0,
+            ReginaSupport::info(nullptr,
                 tr("<qt><tt>%1</tt> is not a valid Python variable name.</qt>").
                     arg(oldData.toHtmlEscaped()),
                 tr("<qt>I have changed it to <tt>%1</tt> instead.</qt>").
@@ -215,7 +215,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
                 ;
             data.append(QString::number(which));
 
-            ReginaSupport::info(0,
+            ReginaSupport::info(nullptr,
                 tr("<qt>Another variable is already using the "
                     "name <tt>%1</tt>.</qt>").arg(oldData.toHtmlEscaped()),
                 tr("<qt>I will use <tt>%1</tt> instead.</qt>").
@@ -442,7 +442,7 @@ void ScriptUI::addVariable() {
     // Add the new variable.
     // TODO: Alter addVariable() to return the index immediately, so we
     // don't need to fetch it again.
-    script->addVariable(varName.toUtf8().constData(), 0);
+    script->addVariable(varName.toUtf8().constData(), nullptr);
     varTable->scrollTo(model->index(
         script->variableIndex(varName.toUtf8().constData()), 0, QModelIndex()));
 }

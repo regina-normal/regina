@@ -112,7 +112,7 @@ std::optional<LayeredChainPair> LayeredChainPair::recognise(
         // At this point we must have run into the second chain.
         secondBottom = firstTop->adjacentTetrahedron(firstTopRoles[3]);
         if (secondBottom == firstTop || secondBottom == firstBottom ||
-                secondBottom == 0) {
+                ! secondBottom) {
             continue;
         }
 

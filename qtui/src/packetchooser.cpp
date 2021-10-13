@@ -51,7 +51,7 @@ PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-    fill(false, 0);
+    fill(false, nullptr);
 }
 
 PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
@@ -60,7 +60,7 @@ PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-    fill(false, 0);
+    fill(false, nullptr);
 }
 
 PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
@@ -82,7 +82,7 @@ std::shared_ptr<Packet> PacketChooser::selectedPacket() {
     if (count() == 0)
         return nullptr;
     int curr = currentIndex();
-    return (curr < 0 ? 0 : packets[curr]->shared_from_this());
+    return (curr < 0 ? nullptr : packets[curr]->shared_from_this());
 }
 
 void PacketChooser::selectPacket(std::shared_ptr<Packet> packet) {
@@ -196,9 +196,9 @@ void PacketChooser::fill(bool allowNone, std::shared_ptr<Packet> select) {
     // Insert the None entry if appropriate.
     if (allowNone) {
         addItem(tr("<None>"));
-        packets.push_back(0);
+        packets.push_back(nullptr);
 
-        if (select == 0)
+        if (! select)
             setCurrentIndex(0);
     }
 
@@ -240,7 +240,7 @@ bool PacketChooser::verify() {
         it++;
 
     // Now match the packets up one by one.
-    while (it != packets.end() || p != 0) {
+    while (it != packets.end() || p) {
         // Are we ignoring this packet?
         if (p && filter && ! filter->accept(*p)) {
             p = p->nextTreePacket();
@@ -307,6 +307,6 @@ std::shared_ptr<Packet> PacketDialog::choose(QWidget* parent,
     if (dlg.exec())
         return dlg.chooser->selectedPacket();
     else
-        return 0;
+        return nullptr;
 }
 

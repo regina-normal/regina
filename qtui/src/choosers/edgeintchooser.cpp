@@ -57,9 +57,10 @@ EdgeIntChooser::EdgeIntChooser(regina::PacketOf<regina::Triangulation<3>>* tri,
 
 std::pair<Edge<3>*, int> EdgeIntChooser::selected() {
     if (count() == 0)
-        return std::make_pair((Edge<3>*)(0), (int)(0));
+        return std::make_pair((Edge<3>*)(nullptr), (int)(0));
     int curr = currentIndex();
-    return (curr < 0 ? std::make_pair((Edge<3>*)(0), (int)(0)) : options_[curr]);
+    return (curr < 0 ? std::make_pair((Edge<3>*)(nullptr), (int)(0)) :
+        options_[curr]);
 }
 
 void EdgeIntChooser::select(regina::Edge<3>* option, int arg) {
@@ -157,6 +158,6 @@ std::pair<regina::Edge<3>*, int> EdgeIntDialog::choose(QWidget* parent,
     if (dlg.exec())
         return dlg.chooser->selected();
     else
-        return std::make_pair((Edge<3>*)(0), (int)(0));
+        return std::make_pair((Edge<3>*)(nullptr), (int)(0));
 }
 

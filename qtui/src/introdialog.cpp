@@ -115,7 +115,7 @@ IntroDialog::IntroDialog(QWidget* parent) : QDialog(parent) {
 }
 
 void IntroDialog::openHandbook() {
-    ReginaPrefSet::openHandbook("index", 0, this);
+    ReginaPrefSet::openHandbook("index", nullptr, this);
 }
 
 void IntroDialog::helpChanged(int newState) {

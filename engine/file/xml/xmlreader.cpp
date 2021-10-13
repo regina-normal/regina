@@ -43,37 +43,37 @@ const std::string XMLPropertyDict::empty_;
 
 XMLParser::XMLParser(XMLParserCallback& callback) : _parser_callback(callback) {
     xmlSAXHandler sax_handler = {
-        0,                  // internalSubset
-        0,                  // isStandalone
-        0,                  // hasInternalSubset
-        0,                  // hasExternalSubset
-        0,                  // resolveEntity
+        nullptr,            // internalSubset
+        nullptr,            // isStandalone
+        nullptr,            // hasInternalSubset
+        nullptr,            // hasExternalSubset
+        nullptr,            // resolveEntity
         _get_entity,        // getEntity
-        0,                  // entityDecl
-        0,                  // notationDecl
-        0,                  // attributeDecl
-        0,                  // elementDecl
-        0,                  // unparsedEntityDecl
-        0,                  // setDocumentLocator
+        nullptr,            // entityDecl
+        nullptr,            // notationDecl
+        nullptr,            // attributeDecl
+        nullptr,            // elementDecl
+        nullptr,            // unparsedEntityDecl
+        nullptr,            // setDocumentLocator
         _start_document,    // startDocument
         _end_document,      // endDocument
         _start_element,     // startElement
         _end_element,       // endElement
-        0,                  // reference
+        nullptr,            // reference
         _characters,        // characters
-        0,                  // ignorableWhitespace
-        0,                  // processingInstruction
+        nullptr,            // ignorableWhitespace
+        nullptr,            // processingInstruction
         _comment,           // comment
         _warning,           // warning
         _error,             // error
         _fatal_error,       // fatalError
-        0,                  // getParameterEntity
-        0,                  // cdataBlock
-        0,                  // externalSubset
+        nullptr,            // getParameterEntity
+        nullptr,            // cdataBlock
+        nullptr,            // externalSubset
         1                   // initialized
     };
 
-    _context = xmlCreatePushParserCtxt(&sax_handler, this, 0, 0, 0);
+    _context = xmlCreatePushParserCtxt(&sax_handler, this, nullptr, 0, nullptr);
 
     // Ensure that entities in attributes are replaced.
     _context->replaceEntities = 1;

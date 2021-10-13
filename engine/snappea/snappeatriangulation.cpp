@@ -205,7 +205,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     tData.CS_value = 0;
     tData.num_or_cusps = 0;
     tData.num_nonor_cusps = 0;
-    tData.cusp_data = 0;
+    tData.cusp_data = nullptr;
 
     tData.tetrahedron_data = new regina::snappea::TetrahedronData[
         tData.num_tetrahedra];
@@ -331,7 +331,7 @@ SnapPeaTriangulation::SolutionType SnapPeaTriangulation::solutionType()
 double SnapPeaTriangulation::volume() const {
     if (! data_)
         return 0;
-    return regina::snappea::volume(data_, 0);
+    return regina::snappea::volume(data_, nullptr);
 }
 
 double SnapPeaTriangulation::volume(int& precision) const {
@@ -511,7 +511,7 @@ Triangulation<3> SnapPeaTriangulation::filledAll() const {
 
     // Note: fill_cusps never returns null.
     regina::snappea::Triangulation* t = regina::snappea::fill_cusps(
-        data_, 0, data_->name, 1 /* fill_all_cusps = TRUE */);
+        data_, nullptr, data_->name, 1 /* fill_all_cusps = TRUE */);
 
     Triangulation<3> ans;
     fillRegina(t, ans);

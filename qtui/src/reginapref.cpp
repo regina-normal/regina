@@ -148,7 +148,7 @@ void ReginaPreferences::clicked(QAbstractButton *button) {
         slotApply();
         accept();
     } else if (buttonBox->buttonRole(button) == QDialogButtonBox::HelpRole) {
-        ReginaPrefSet::openHandbook("options", 0, this);
+        ReginaPrefSet::openHandbook("options", nullptr, this);
         return;
     }
     reject();

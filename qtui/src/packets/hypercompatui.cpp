@@ -60,7 +60,7 @@ HyperCompatibilityUI::HyperCompatibilityUI(
         regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
-        matrixLocal(0), layerLocal(0), requestedCalculation(false) {
+        matrixLocal(nullptr), layerLocal(nullptr), requestedCalculation(false) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
 
@@ -142,8 +142,8 @@ void HyperCompatibilityUI::refresh() {
         delete matrixLocal;
     }
 
-    matrixLocal = 0;
-    layerLocal = 0;
+    matrixLocal = nullptr;
+    layerLocal = nullptr;
 
     // Are we able to compute the new matrices if we want to?
     if (surfaces->size() == 0) {

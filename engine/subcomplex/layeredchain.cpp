@@ -39,7 +39,7 @@ namespace regina {
 
 bool LayeredChain::extendAbove() {
     Tetrahedron<3>* adj = top_->adjacentTetrahedron(topVertexRoles_[0]);
-    if (adj == bottom_ || adj == top_ || adj == 0)
+    if (adj == bottom_ || adj == top_ || ! adj)
         return false;
     if (adj != top_->adjacentTetrahedron(topVertexRoles_[3]))
         return false;
@@ -60,7 +60,7 @@ bool LayeredChain::extendAbove() {
 
 bool LayeredChain::extendBelow() {
     Tetrahedron<3>* adj = bottom_->adjacentTetrahedron(bottomVertexRoles_[1]);
-    if (adj == bottom_ || adj == top_ || adj == 0)
+    if (adj == bottom_ || adj == top_ || ! adj)
         return false;
     if (adj != bottom_->adjacentTetrahedron(bottomVertexRoles_[2]))
         return false;

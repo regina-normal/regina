@@ -75,7 +75,7 @@ std::shared_ptr<Packet> Script::variableValue(size_t index) const {
 std::shared_ptr<Packet> Script::variableValue(const std::string& name) const {
     std::map<std::string, Packet*>::const_iterator it = variables_.find(name);
     if (it == variables_.end())
-        return 0;
+        return nullptr;
     return (*it).second->shared_from_this();
 }
 

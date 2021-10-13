@@ -56,9 +56,9 @@ BoundaryComponent4Chooser::BoundaryComponent4Chooser(
 
 BoundaryComponent<4>* BoundaryComponent4Chooser::selected() {
     if (count() == 0)
-        return 0;
+        return nullptr;
     int curr = currentIndex();
-    return (curr < 0 ? 0 : options_[curr]);
+    return (curr < 0 ? nullptr : options_[curr]);
 }
 
 void BoundaryComponent4Chooser::select(regina::BoundaryComponent<4>* option) {
@@ -162,6 +162,6 @@ regina::BoundaryComponent<4>* BoundaryComponent4Dialog::choose(
     if (dlg.exec())
         return dlg.chooser->selected();
     else
-        return 0;
+        return nullptr;
 }
 

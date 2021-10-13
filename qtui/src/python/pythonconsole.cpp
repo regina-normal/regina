@@ -466,7 +466,7 @@ void PythonConsole::saveLog() {
 }
 
 void PythonConsole::scriptingOverview() {
-    ReginaPrefSet::openHandbook("python", 0, this);
+    ReginaPrefSet::openHandbook("python", nullptr, this);
 }
 
 void PythonConsole::pythonReference() {

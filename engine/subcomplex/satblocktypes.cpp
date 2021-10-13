@@ -189,14 +189,14 @@ SatMobius* SatMobius::beginsRegion(const SatAnnulus& annulus, TetList&) {
 
     if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][3]) !=
             annulus.tet[1])
-        return 0;
+        return nullptr;
 
     Perm<4> annulusGluing = annulus.roles[1].inverse() *
         annulus.tet[0]->adjacentGluing(annulus.roles[0][3]) *
         annulus.roles[0];
 
     if (annulusGluing[3] != 3)
-        return 0;
+        return nullptr;
 
     // The triangles are glued together.  Is it one of the allowable
     // (orientable) permutations?
@@ -211,7 +211,7 @@ SatMobius* SatMobius::beginsRegion(const SatAnnulus& annulus, TetList&) {
 
     if (position < 0) {
         // Nope.  It must be a non-orientable permutation.
-        return 0;
+        return nullptr;
     }
 
     // Got it!
@@ -260,9 +260,9 @@ SatLST* SatLST::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
     // Do we move to a common usable tetrahedron?
 
     if (annulus.tet[0] != annulus.tet[1])
-        return 0;
+        return nullptr;
     if (isBad(annulus.tet[0], avoidTets))
-        return 0;
+        return nullptr;
 
     // Is it a layering?
 
@@ -275,7 +275,7 @@ SatLST* SatLST::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
             Perm<4>(annulus.roles[0][3], annulus.roles[1][3]) *
             Perm<4>(centralEdge.upper(), centralEdge.lower()) *
             annulus.roles[0])
-        return 0;
+        return nullptr;
 
     // Find the layered solid torus.
     auto lst = LayeredSolidTorus::recogniseFromTop(
@@ -373,41 +373,41 @@ SatTriPrism* SatTriPrism::beginsRegion(const SatAnnulus& annulus,
     }
 
     // Neither variant was found.
-    return 0;
+    return nullptr;
 }
 
 SatTriPrism* SatTriPrism::beginsRegionMajor(const SatAnnulus& annulus,
         TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
-        return 0;
+        return nullptr;
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
-        return 0;
+        return nullptr;
     if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][0]) !=
             annulus.tet[1])
-        return 0;
+        return nullptr;
     if (annulus.tet[0]->adjacentGluing(annulus.roles[0][0]) *
             annulus.roles[0] * Perm<4>(1, 2) != annulus.roles[1])
-        return 0;
+        return nullptr;
 
     // The two tetrahedra forming the annulus are joined together as
     // expected.  Look for the third tetrahedron.
 
     Tetrahedron<3>* adj = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][1]);
-    if (adj == 0 || adj == annulus.tet[0] || adj == annulus.tet[1])
-        return 0;
+    if ((! adj) || adj == annulus.tet[0] || adj == annulus.tet[1])
+        return nullptr;
     if (isBad(adj, avoidTets))
-        return 0;
+        return nullptr;
 
     Perm<4> adjRoles =
         annulus.tet[0]->adjacentGluing(annulus.roles[0][1]) *
         annulus.roles[0] * Perm<4>(0, 3);
 
     if (annulus.tet[1]->adjacentTetrahedron(annulus.roles[1][1]) != adj)
-        return 0;
+        return nullptr;
     if (annulus.tet[1]->adjacentGluing(annulus.roles[1][1]) *
             annulus.roles[1] * Perm<4>(1, 3, 0, 2) != adjRoles)
-        return 0;
+        return nullptr;
 
     // All three tetrahedra are joined together as expected!
 
@@ -472,22 +472,22 @@ void SatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
 
 SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
-        return 0;
+        return nullptr;
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
-        return 0;
+        return nullptr;
 
     Tetrahedron<3>* central0 = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][0]);
     Tetrahedron<3>* central1 = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][1]);
 
-    if (central0 == 0 || central0 == annulus.tet[0] ||
+    if ((! central0) || central0 == annulus.tet[0] ||
             central0 == annulus.tet[1] || isBad(central0, avoidTets))
-        return 0;
-    if (central1 == 0 || central1 == annulus.tet[0] ||
+        return nullptr;
+    if ((! central1) || central1 == annulus.tet[0] ||
             central1 == annulus.tet[1] || central1 == central0 ||
             isBad(central0, avoidTets))
-        return 0;
+        return nullptr;
 
     Perm<4> roles0 = annulus.tet[0]->adjacentGluing(
         annulus.roles[0][0]) * annulus.roles[0];
@@ -499,16 +499,16 @@ SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
 
     if (annulus.tet[1]->adjacentTetrahedron(annulus.roles[1][0]) !=
             central0)
-        return 0;
+        return nullptr;
     if (annulus.tet[1]->adjacentTetrahedron(annulus.roles[1][1]) !=
             central1)
-        return 0;
+        return nullptr;
     if (annulus.tet[1]->adjacentGluing(annulus.roles[1][0]) *
             annulus.roles[1] * Perm<4>(3, 2, 1, 0) != roles0)
-        return 0;
+        return nullptr;
     if (annulus.tet[1]->adjacentGluing(annulus.roles[1][1]) *
             annulus.roles[1] * Perm<4>(2, 3, 0, 1) != roles1)
-        return 0;
+        return nullptr;
 
     // We've got the two tetrahedra from the annulus boundary completely
     // sorted out.  Just the two new boundary tetrahedra to go.
@@ -519,23 +519,23 @@ SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
     Tetrahedron<3>* bdry3 = central0->adjacentTetrahedron(roles0[2]);
     Perm<4> roles3 = central0->adjacentGluing(roles0[2]) * roles0;
 
-    if (bdry2 == 0 || bdry2 == annulus.tet[0] || bdry2 == annulus.tet[1] ||
+    if ((! bdry2) || bdry2 == annulus.tet[0] || bdry2 == annulus.tet[1] ||
             bdry2 == central0 || bdry2 == central1 ||
             isBad(bdry2, avoidTets))
-        return 0;
-    if (bdry3 == 0 || bdry3 == annulus.tet[0] || bdry3 == annulus.tet[1] ||
+        return nullptr;
+    if ((! bdry3) || bdry3 == annulus.tet[0] || bdry3 == annulus.tet[1] ||
             bdry3 == central0 || bdry3 == central1 || bdry3 == bdry2 ||
             isBad(bdry3, avoidTets))
-        return 0;
+        return nullptr;
     if (central1->adjacentTetrahedron(roles1[0]) != bdry2)
-        return 0;
+        return nullptr;
     if (central1->adjacentTetrahedron(roles1[2]) != bdry3)
-        return 0;
+        return nullptr;
     if (central1->adjacentGluing(roles1[0]) * roles1 != roles2)
-        return 0;
+        return nullptr;
     if (central1->adjacentGluing(roles1[2]) * roles1 *
             Perm<4>(1, 0, 3, 2) != roles3)
-        return 0;
+        return nullptr;
 
     // All looking good!
 
@@ -618,9 +618,9 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
     // behind the given annulus.
 
     if (annulus.tet[0] == annulus.tet[1])
-        return 0;
+        return nullptr;
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
-        return 0;
+        return nullptr;
 
     Tetrahedron<3>* middle = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][0]);
@@ -632,22 +632,22 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
 
     if (middle != annulus.tet[0]->adjacentTetrahedron(
             annulus.roles[0][1]))
-        return 0;
+        return nullptr;
     if (middle != annulus.tet[1]->adjacentTetrahedron(
             annulus.roles[1][0]))
-        return 0;
+        return nullptr;
     if (middle != annulus.tet[1]->adjacentTetrahedron(
             annulus.roles[1][1]))
-        return 0;
+        return nullptr;
     if (middleRoles != annulus.tet[0]->adjacentGluing(
             annulus.roles[0][1]) * annulus.roles[0] * Perm<4>(1, 3))
-        return 0;
+        return nullptr;
     if (middleRoles != annulus.tet[1]->adjacentGluing(
             annulus.roles[1][0]) * annulus.roles[1] * Perm<4>(0, 2, 3, 1))
-        return 0;
+        return nullptr;
     if (middleRoles != annulus.tet[1]->adjacentGluing(
             annulus.roles[1][1]) * annulus.roles[1] * Perm<4>(0, 2))
-        return 0;
+        return nullptr;
 
     // We've found the initial segment.
     // Do we just have a segment of length one?
@@ -680,7 +680,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
             return ans;
         }
         // Nup.  Nothing.
-        return 0;
+        return nullptr;
     }
 
     // If anything, we have a segment of length >= 2.  Start following
@@ -722,7 +722,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
                 twisted = true;
             } else {
                 // Nothing.
-                return 0;
+                return nullptr;
             }
 
             SatReflectorStrip* ans = new SatReflectorStrip(length, twisted);
@@ -747,7 +747,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
         // Look for a new adjacent block.
         if (notUnique(nextLeft) ||
                 isBad(nextLeft, avoidTets) || isBad(nextLeft, foundSoFar))
-            return 0;
+            return nullptr;
 
         nextMiddle = nextLeft->adjacentTetrahedron(nextLeftRoles[0]);
         nextMiddleRoles = nextLeft->adjacentGluing(
@@ -755,13 +755,13 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
 
         if (notUnique(nextMiddle, nextLeft) ||
                 isBad(nextMiddle, avoidTets) || isBad(nextMiddle, foundSoFar))
-            return 0;
+            return nullptr;
 
         if (nextMiddle != nextLeft->adjacentTetrahedron(nextLeftRoles[1]))
-            return 0;
+            return nullptr;
         if (nextMiddleRoles != nextLeft->adjacentGluing(
                 nextLeftRoles[1]) * nextLeftRoles * Perm<4>(1, 3))
-            return 0;
+            return nullptr;
 
         nextRight = nextMiddle->adjacentTetrahedron(nextMiddleRoles[0]);
         nextRightRoles = nextMiddle->adjacentGluing(
@@ -769,13 +769,13 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
 
         if (notUnique(nextRight, nextLeft, nextMiddle) ||
                 isBad(nextRight, avoidTets) || isBad(nextRight, foundSoFar))
-            return 0;
+            return nullptr;
 
         if (nextRight != nextMiddle->adjacentTetrahedron(nextMiddleRoles[1]))
-            return 0;
+            return nullptr;
         if (nextRightRoles != nextMiddle->adjacentGluing(
                 nextMiddleRoles[1]) * nextMiddleRoles * Perm<4>(0, 2))
-            return 0;
+            return nullptr;
 
         // Yup, we have a new block.
         foundSoFar.push_back(nextLeft);
@@ -789,7 +789,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
     }
 
     // We should never get out of the loop this way.
-    return 0;
+    return nullptr;
 }
 
 SatBlockModel SatReflectorStrip::model(unsigned length, bool twisted) {
@@ -798,7 +798,7 @@ SatBlockModel SatReflectorStrip::model(unsigned length, bool twisted) {
 
     const Perm<4> id;
     Tetrahedron<3> *upper, *lower, *middle;
-    Tetrahedron<3> *prevRight = 0, *firstLeft = 0;
+    Tetrahedron<3> *prevRight = nullptr, *firstLeft = nullptr;
     for (unsigned i = 0; i < length; i++) {
         // Create the three tetrahedra behind boundary annulus #i.
         upper = tri->newTetrahedron();
@@ -842,9 +842,9 @@ SatLayering* SatLayering::beginsRegion(const SatAnnulus& annulus,
         TetList& avoidTets) {
     // Must be a common usable tetrahedron.
     if (annulus.tet[0] != annulus.tet[1])
-        return 0;
+        return nullptr;
     if (isBad(annulus.tet[0], avoidTets))
-        return 0;
+        return nullptr;
 
     // Is it a layering over the horizontal edge?
     if (annulus.roles[0][0] == annulus.roles[1][2] &&
@@ -875,7 +875,7 @@ SatLayering* SatLayering::beginsRegion(const SatAnnulus& annulus,
     }
 
     // No layering.
-    return 0;
+    return nullptr;
 }
 
 } // namespace regina

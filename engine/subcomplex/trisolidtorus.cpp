@@ -64,7 +64,7 @@ unsigned long TriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
         vertexRoles_[right][1]);
     if (adj != tet_[left]->adjacentTetrahedron(vertexRoles_[left][2]))
         return 0;
-    if (adj == tet_[0] || adj == tet_[1] || adj == tet_[2] || adj == 0)
+    if (adj == tet_[0] || adj == tet_[1] || adj == tet_[2] || ! adj)
         return 0;
     Perm<4> roles = tet_[right]->adjacentGluing(
         vertexRoles_[right][1]) * vertexRoles_[right] * Perm<4>(2, 3, 1, 0);
@@ -94,7 +94,7 @@ unsigned long TriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     if (adj != tet_[otherAnnulus]->adjacentTetrahedron(
             vertexRoles_[otherAnnulus][2]))
         return 0;
-    if (adj == tet_[0] || adj == tet_[1] || adj == tet_[2] || adj == 0)
+    if (adj == tet_[0] || adj == tet_[1] || adj == tet_[2] || ! adj)
         return 0;
     Perm<4> roles = tet_[right]->adjacentGluing(
         vertexRoles_[right][1]) * vertexRoles_[right] * Perm<4>(2, 1, 0, 3);

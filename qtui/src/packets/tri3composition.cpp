@@ -189,7 +189,7 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
     isoSelectArea->addWidget(label);
     isoTest = new PacketChooser(triAsPacket->root(),
         new SubclassFilter<Triangulation<3>>(),
-        PacketChooser::ROOT_AS_PACKET, true, 0, ui);
+        PacketChooser::ROOT_AS_PACKET, true, nullptr, ui);
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
     connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
@@ -225,7 +225,7 @@ void Tri3CompositionUI::refresh() {
     updateIsoPanel();
 
     details->clear();
-    lastComponent = 0;
+    lastComponent = nullptr;
 
     // Show the isomorphism signature.
     isoSig->setText(tri_->isoSig().c_str());
@@ -959,7 +959,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
             QTreeWidgetItem* edge;
             detailsItem = new QTreeWidgetItem(id, detailsItem);
             detailsItem->setText(0, tr("Major edges:"));
-            edge = 0;
+            edge = nullptr;
             for (j = 0; j < spiralTets; j++) {
                 data =
                     edgeString(tetIndex[(j + spiralTets - 1) % spiralTets],
@@ -980,7 +980,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
 
             detailsItem = new QTreeWidgetItem(id, detailsItem);
             detailsItem->setText(0, tr("Minor edges:"));
-            edge = 0;
+            edge = nullptr;
             for (j = 0; j < spiralTets; j++) {
                 data =
                     edgeString(tetIndex[j], spiral->vertexRoles(j), 1, 3) +
@@ -997,7 +997,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
 
             detailsItem = new QTreeWidgetItem(id, detailsItem);
             detailsItem->setText(0, tr("Axis edges:"));
-            edge = 0;
+            edge = nullptr;
             for (j = 0; j < spiralTets; j++) {
                 data = edgeString(tetIndex[j], spiral->vertexRoles(j),
                     0, 3);

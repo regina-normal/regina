@@ -45,7 +45,7 @@ std::shared_ptr<Container> readDehydrationList(const char *filename,
     // Open the file.
     std::ifstream in(filename);
     if (! in)
-        return 0;
+        return nullptr;
 
     // Ignore the specified number of lines.
     std::string line;

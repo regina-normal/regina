@@ -58,12 +58,12 @@ void ReginaMain::newAngleStructures() {
 }
 
 void ReginaMain::newContainer() {
-    newPacket(new BasicPacketCreator<regina::Container>(), 0,
+    newPacket(new BasicPacketCreator<regina::Container>(), nullptr,
         tr("New Container"));
 }
 
 void ReginaMain::newFilter() {
-    newPacket(new FilterCreator(), 0,
+    newPacket(new FilterCreator(), nullptr,
         tr("New Normal Surface Filter"));
 }
 
@@ -85,36 +85,36 @@ void ReginaMain::newPDF() {
 }
 
 void ReginaMain::newScript() {
-    newPacket(new BasicPacketCreator<regina::Script>(), 0,
+    newPacket(new BasicPacketCreator<regina::Script>(), nullptr,
         tr("New Script"));
 }
 
 void ReginaMain::newSnapPeaTriangulation() {
-    newPacket(new SnapPeaTriangulationCreator(this), 0,
+    newPacket(new SnapPeaTriangulationCreator(this), nullptr,
         tr("New SnapPea Triangulation"));
 }
 
 void ReginaMain::newLink() {
-    newPacket(new LinkCreator(this), 0, tr("New Knot or Link"));
+    newPacket(new LinkCreator(this), nullptr, tr("New Knot or Link"));
 }
 
 void ReginaMain::newText() {
-    newPacket(new BasicPacketCreator<regina::Text>(), 0,
+    newPacket(new BasicPacketCreator<regina::Text>(), nullptr,
         tr("New Text Packet"));
 }
 
 void ReginaMain::newTriangulation2() {
-    newPacket(new Tri2Creator(), 0,
+    newPacket(new Tri2Creator(), nullptr,
         tr("New 2-Manifold Triangulation"));
 }
 
 void ReginaMain::newTriangulation3() {
-    newPacket(new Tri3Creator(), 0,
+    newPacket(new Tri3Creator(), nullptr,
         tr("New 3-Manifold Triangulation"));
 }
 
 void ReginaMain::newTriangulation4() {
-    newPacket(new Tri4Creator(this), 0,
+    newPacket(new Tri4Creator(this), nullptr,
         tr("New 4-Manifold Triangulation"));
 }
 

@@ -265,6 +265,6 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
 PacketExternalViewer PacketManager::externalViewer(regina::Packet* packet) {
     if (packet->type() == PACKET_PDF)
         return &PDFExternalViewer::view;
-    return 0;
+    return nullptr;
 }
 

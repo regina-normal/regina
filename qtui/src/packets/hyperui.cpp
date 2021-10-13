@@ -85,7 +85,7 @@ HyperHeaderUI::HyperHeaderUI(
         regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet) {
-    header = new QLabel(0);
+    header = new QLabel(nullptr);
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
     header->setWhatsThis(header->tr("Displays the parameters of the "

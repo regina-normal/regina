@@ -526,8 +526,8 @@ void EulerSearcher::dumpData(std::ostream& out) const {
 
 EulerSearcher::EulerSearcher(std::istream& in, ActionWrapper&& action) :
         GluingPermSearcher<3>(in, std::move(action)),
-        nVertexClasses(0), vertexState(0), vertexStateChanged(0),
-        nEdgeClasses(0), edgeState(0), edgeStateChanged(0) {
+        nVertexClasses(0), vertexState(nullptr), vertexStateChanged(nullptr),
+        nEdgeClasses(0), edgeState(nullptr), edgeStateChanged(nullptr) {
     in >> euler_;
     if (euler_ > 2)
         throw InvalidInput("Euler characteristic out of range "

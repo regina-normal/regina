@@ -54,7 +54,7 @@ using regina::Triangulation;
 
 Tri3SnapPeaUI::Tri3SnapPeaUI(regina::PacketOf<Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0) {
+        PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(nullptr) {
     ui = new QStackedWidget();
 
     // Data for a null SnapPea triangulation:

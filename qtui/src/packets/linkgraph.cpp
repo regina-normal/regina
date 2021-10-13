@@ -70,7 +70,7 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
 lt_symlist_t link_lt_preloaded_symbols[] = {
     { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
     { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
-    { 0, 0 }
+    { nullptr, nullptr }
 };
 #endif
 #endif
