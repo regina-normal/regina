@@ -130,7 +130,11 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
     Simplex<dim-1>** bdrySimplex = new Simplex<dim-1>*[
         mainTri.template countFaces<dim-1>()];
 
+    // NOTE: If we ever change this to return by value (and so ans is
+    // not a pointer), then we need to change the lambda at the end of
+    // this function to capture by reference, not by value.
     Triangulation<dim-1>* ans = new Triangulation<dim-1>();
+
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim-1>::ChangeEventSpan span(*ans);
 

@@ -137,7 +137,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // Faces of all dimensions 0, ..., dim-1
     // -----------------------------------------------------------------
 
-    std::apply([=](auto&&... kFaces) {
+    std::apply([this](auto&&... kFaces) {
         (calculateFaces<subdimOf<decltype(kFaces)>()>(this), ...);
     }, faces_);
 
@@ -447,7 +447,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
 
             // Run through all faces of dimensions 0,...,(dim-3) within facet,
             // and include them in this boundary component.
-            std::apply([=](auto&&... kFaces) {
+            std::apply([label, facet](auto&&... kFaces) {
                 (calculateBoundaryFaces<subdimOf<decltype(kFaces)>()>(
                     label, facet), ...);
             }, faces_);

@@ -126,7 +126,7 @@ NormalSurfaces::NormalSurfaces(const Triangulation<3>& triangulation,
         // We pass the matching equations as an argument to the thread
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
-        std::thread([=](MatrixInt e) {
+        std::thread([this, tracker](MatrixInt e) {
             Enumerator(this, e, tracker, nullptr).enumerate();
         }, std::move(eqns)).detach();
     } else
@@ -155,7 +155,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
         // Likewise for the shared pointer ans.
-        std::thread([=, &owner](MatrixInt e,
+        std::thread([tracker, &owner](MatrixInt e,
                 std::shared_ptr<NormalSurfaces> s) {
             Enumerator(s.get(), e, tracker, owner.inAnyPacket()).enumerate();
         }, std::move(eqns), ans).detach();
