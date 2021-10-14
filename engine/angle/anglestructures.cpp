@@ -124,14 +124,13 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         } else {
             // Use the double description method.
             MatrixInt eqns = regina::makeAngleEquations(*triangulation_);
-            EnumConstraints* constraints = new EnumConstraints(
-                triangulation_->size());
+            auto* constraints = new EnumConstraints(triangulation_->size());
 
             unsigned base = 0;
-            for (unsigned c = 0; c < constraints->size(); ++c) {
-                (*constraints)[c].insert((*constraints)[c].end(), base++);
-                (*constraints)[c].insert((*constraints)[c].end(), base++);
-                (*constraints)[c].insert((*constraints)[c].end(), base++);
+            for (auto c : *constraints) {
+                c.insert(c.end(), base++);
+                c.insert(c.end(), base++);
+                c.insert(c.end(), base++);
             }
 
             // Find the angle structures.
@@ -245,7 +244,7 @@ void AngleStructures::calculateSpanStrict() const {
     }
 
     // We run into trouble if there's a 0 or pi angle that never changes.
-    Rational* fixedAngles = new Rational[nTets * 3];
+    auto* fixedAngles = new Rational[nTets * 3];
     unsigned long nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.

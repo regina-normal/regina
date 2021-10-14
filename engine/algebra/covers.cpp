@@ -340,14 +340,12 @@ namespace {
             // maximum length sub-expression ending at the current
             // position, using only generators of index <= i, and
             // *excluding* all trailing terms with generators of index < i.
-            std::vector<GroupExpressionTerm>* currExp =
-                new std::vector<GroupExpressionTerm>[nGen];
+            auto* currExp = new std::vector<GroupExpressionTerm>[nGen];
 
             // The formulae that we will compute at depth d are stored
             // as keys in the map foundExp[d].  The corresponding values
             // (as noted earlier) are the temporary indices for each formulae.
-            typedef std::map<Formula, long, Formula::Compare> ExpressionMap;
-            ExpressionMap* foundExp = new ExpressionMap[nGen];
+            auto* foundExp = new std::map<Formula, long, Formula::Compare>[nGen];
 
             unsigned long depth;
             for (const auto& r : g.relations()) {
@@ -451,7 +449,7 @@ namespace {
             // the original indices map to the final indices; and then
             // (2) fix all the terms in all the formulae that *use* these
             // indices.
-            unsigned long* reindex = new unsigned long[nSeen];
+            auto* reindex = new unsigned long[nSeen];
             long newIndex = nGen;
             for (depth = 0; depth < nGen; ++depth) {
                 for (const auto& exp : foundExp[depth])
@@ -769,8 +767,8 @@ void GroupPresentation::minimaxGenerators() {
     Matrix<bool> inc = incidence();
 
     // Note how we plan to relabel the generators.
-    unsigned long* relabel = new unsigned long[nGenerators_];
-    unsigned long* relabelInv = new unsigned long[nGenerators_];
+    auto* relabel = new unsigned long[nGenerators_];
+    auto* relabelInv = new unsigned long[nGenerators_];
     for (unsigned long i = 0; i < nGenerators_; ++i)
         relabel[i] = relabelInv[i] = i;
 
@@ -891,9 +889,8 @@ size_t GroupPresentation::enumerateCoversInternal(
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
 
-    size_t* nAut = new size_t[nGenerators_];
-    Perm<index> (*aut)[maxMinimalAutGroup[index] + 1] =
-        new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1];
+    auto* nAut = new size_t[nGenerators_];
+    auto* aut = new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1];
 
     size_t pos = 0; // The generator whose current rep we are about to try.
     // Note: if we are constraining the sign of rep[0], then it must be
@@ -1024,8 +1021,7 @@ size_t GroupPresentation::enumerateCoversInternal(
 
                     std::sort(spanningTree, spanningTree + index - 1);
 
-                    unsigned long* rewrite =
-                        new unsigned long[sub.nGenerators_];
+                    auto* rewrite = new unsigned long[sub.nGenerators_];
 
                     // Work out how the subgroup generators will be relabelled
                     // once the spanning tree is removed.

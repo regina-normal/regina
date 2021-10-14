@@ -69,7 +69,7 @@ bool Link::hasReducingPass() const {
     size_t infinity = nSides + 1;
 
     // dist[nSides*i + j] denotes the distance from (side of arc) i to j.
-    size_t* dist = new size_t[nSides * nSides];
+    auto* dist = new size_t[nSides * nSides];
     std::fill(dist, dist + nSides * nSides, infinity);
 
     size_t upperOutgoing, lowerOutgoing, upperIncoming, lowerIncoming;

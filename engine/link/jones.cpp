@@ -163,7 +163,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     // In count[i-1], the coefficient of A^k reflects the number of
     // resolutions with i loops and multiplier A^k.
     // We will always have 1 <= i <= #components + #crossings.
-    Laurent<Integer>* count = new Laurent<Integer>[n + components_.size()];
+    auto* count = new Laurent<Integer>[n + components_.size()];
 
     size_t maxLoops = 0;
 
@@ -286,12 +286,11 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     size_t nStrands = 2 * size();
     size_t loops;
 
-    typedef LightweightSequence<int> Key;
-    typedef Laurent<Integer> Value;
+    using Key = LightweightSequence<int>;
+    using Value = Laurent<Integer>;
+    using SolnSet = std::map<Key*, Value*, Key::Less>;
 
-    typedef std::map<Key*, Value*, Key::Less> SolnSet;
-
-    SolnSet** partial = new SolnSet*[nBags];
+    auto* partial = new SolnSet*[nBags];
     std::fill(partial, partial + nBags, nullptr);
 
     for (bag = d.first(); bag; bag = bag->next()) {

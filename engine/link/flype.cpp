@@ -69,7 +69,7 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraph::findFlype(
     // For each cell adjacent to C, we identify the first arc of C in a
     // clockwise direction from the vertex (X) that borders it.  A null arc
     // means the cell is not adjacent to C at all.
-    ModelLinkGraphArc* adjC = new ModelLinkGraphArc[cells_->nCells_];
+    auto* adjC = new ModelLinkGraphArc[cells_->nCells_];
     ModelLinkGraphArc a = back;
     do {
         a = a.traverse();
@@ -151,7 +151,7 @@ ModelLinkGraph ModelLinkGraph::flype(const ModelLinkGraphArc& from,
     std::fill(visited, visited + cells_->nCells_, false);
     visited[upper] = visited[lower] = visited[centre] = true;
 
-    size_t* process = new size_t[cells_->nCells_]; // DFS stack
+    auto* process = new size_t[cells_->nCells_]; // DFS stack
     visited[inner] = true;
     process[0] = inner;
     size_t nProcess = 1;

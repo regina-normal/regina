@@ -120,10 +120,10 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
 // implement the HomMarkedAbelianGroup maps for UCT later when we're interested
 //  in that kind of stuff. 
 MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
-        const Integer &pcoeff):
+        Integer pcoeff):
         OM(std::move(tmpM)), ON(std::move(tmpN)),
         rankOM(0), InvFacList(0), snfrank(0), snffreeindex(0),
-        ifNum(0), ifLoc(0), coeff(pcoeff),
+        ifNum(0), ifLoc(0), coeff(std::move(pcoeff)),
         TORLoc(0), TORVec(0), tensorIfLoc(0), tensorInvFacList(0) {
     // find SNF(M).
     MatrixInt tM(OM);

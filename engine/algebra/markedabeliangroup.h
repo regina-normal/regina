@@ -182,7 +182,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \a pcoeff >= 0.  If you know beforehand that \a pcoeff=0, it's
          * more efficient to use the previous constructor.
          */
-        MarkedAbelianGroup(MatrixInt M, MatrixInt N, const Integer &pcoeff);
+        MarkedAbelianGroup(MatrixInt M, MatrixInt N, Integer pcoeff);
 
         /**
          * Creates a free Z_p-module of a given rank using the direct sum

@@ -53,8 +53,8 @@ SpiralSolidTorus& SpiralSolidTorus::operator = (const SpiralSolidTorus& src) {
 }
 
 void SpiralSolidTorus::reverse() {
-    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet_];
-    Perm<4>* newRoles = new Perm<4>[nTet_];
+    auto* newTet = new Tetrahedron<3>*[nTet_];
+    auto* newRoles = new Perm<4>[nTet_];
 
     Perm<4> switchPerm(3, 2, 1, 0);
     for (size_t i = 0; i < nTet_; i++) {
@@ -69,8 +69,8 @@ void SpiralSolidTorus::reverse() {
 }
 
 void SpiralSolidTorus::cycle(size_t k) {
-    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet_];
-    Perm<4>* newRoles = new Perm<4>[nTet_];
+    auto* newTet = new Tetrahedron<3>*[nTet_];
+    auto* newRoles = new Perm<4>[nTet_];
 
     for (size_t i = 0; i < nTet_; i++) {
         newTet[i] = tet_[(i + k) % nTet_];
@@ -101,8 +101,8 @@ bool SpiralSolidTorus::makeCanonical() {
     if (baseTet == 0 && (! reverseAlso))
         return false;
 
-    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet_];
-    Perm<4>* newRoles = new Perm<4>[nTet_];
+    auto* newTet = new Tetrahedron<3>*[nTet_];
+    auto* newRoles = new Perm<4>[nTet_];
 
     if (reverseAlso) {
         // Make baseTet into tetrahedron 0 and reverse.
@@ -158,7 +158,7 @@ std::optional<SpiralSolidTorus> SpiralSolidTorus::recognise(Tetrahedron<3>* tet,
     Tetrahedron<3>* adjTet;
     Perm<4> adjRoles;
 
-    while (1) {
+    while (true) {
         // Examine the tetrahedron beyond tet.
         adjTet = tet->adjacentTetrahedron(useVertexRoles[0]);
         adjRoles = tet->adjacentGluing(useVertexRoles[0]) *

@@ -128,13 +128,13 @@ Signature Signature::parse(const std::string& str) {
     // Looks fine so far.
     // Build the signature and cycle structure (but not cycle groups yet).
     unsigned order = largestLetter + 1;
-    unsigned* label = new unsigned[nAlpha];
+    auto* label = new unsigned[nAlpha];
     bool* labelInv = new bool[nAlpha];
     unsigned nCycles = 0;
-    unsigned* cycleStart = new unsigned[nAlpha + 1];
+    auto* cycleStart = new unsigned[nAlpha + 1];
     cycleStart[0] = 0;
 
-    unsigned* freq = new unsigned[order];
+    auto* freq = new unsigned[order];
     std::fill(freq, freq + order, 0);
 
     unsigned whichPos = 0;
@@ -209,13 +209,13 @@ Triangulation<3> Signature::triangulate() const {
     // Tetrahedron vertices will be:
     //   bottom left -> top right: 0 -> 1
     //   bottom right -> top left: 2 -> 3
-    Tetrahedron<3>** tet = new Tetrahedron<3>*[order_];
+    auto* tet = new Tetrahedron<3>*[order_];
     unsigned pos;
     for (pos = 0; pos < order_; pos++)
         tet[pos] = tri.newTetrahedron();
 
     // Store the first occurrence of each symbol.
-    unsigned* first = new unsigned[order_];
+    auto* first = new unsigned[order_];
     std::fill(first, first + order_, sigLen);
 
     for (pos = 0; pos < sigLen; pos++)

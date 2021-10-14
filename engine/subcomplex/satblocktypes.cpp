@@ -43,8 +43,8 @@
 namespace regina {
 
 bool SatBlock::operator < (const SatBlock& compare) const {
-    const SatTriPrism* tri1 = dynamic_cast<const SatTriPrism*>(this);
-    const SatTriPrism* tri2 = dynamic_cast<const SatTriPrism*>(&compare);
+    const auto* tri1 = dynamic_cast<const SatTriPrism*>(this);
+    const auto* tri2 = dynamic_cast<const SatTriPrism*>(&compare);
     if (tri1 && ! tri2)
         return true;
     if (tri2 && ! tri1)
@@ -54,8 +54,8 @@ bool SatBlock::operator < (const SatBlock& compare) const {
         return (tri1->isMajor() && ! tri2->isMajor());
     }
 
-    const SatCube* cube1 = dynamic_cast<const SatCube*>(this);
-    const SatCube* cube2 = dynamic_cast<const SatCube*>(&compare);
+    const auto* cube1 = dynamic_cast<const SatCube*>(this);
+    const auto* cube2 = dynamic_cast<const SatCube*>(&compare);
     if (cube1 && ! cube2)
         return true;
     if (cube2 && ! cube1)
@@ -65,10 +65,8 @@ bool SatBlock::operator < (const SatBlock& compare) const {
         return false;
     }
 
-    const SatReflectorStrip* ref1 =
-        dynamic_cast<const SatReflectorStrip*>(this);
-    const SatReflectorStrip* ref2 =
-        dynamic_cast<const SatReflectorStrip*>(&compare);
+    const auto* ref1 = dynamic_cast<const SatReflectorStrip*>(this);
+    const auto* ref2 = dynamic_cast<const SatReflectorStrip*>(&compare);
     if (ref1 && ! ref2)
         return true;
     if (ref2 && ! ref1)
@@ -82,8 +80,8 @@ bool SatBlock::operator < (const SatBlock& compare) const {
         return (ref1->countAnnuli() < ref2->countAnnuli());
     }
 
-    const SatLST* lst1 = dynamic_cast<const SatLST*>(this);
-    const SatLST* lst2 = dynamic_cast<const SatLST*>(&compare);
+    const auto* lst1 = dynamic_cast<const SatLST*>(this);
+    const auto* lst2 = dynamic_cast<const SatLST*>(&compare);
     if (lst1 && ! lst2)
         return true;
     if (lst2 && ! lst1)
@@ -120,8 +118,8 @@ bool SatBlock::operator < (const SatBlock& compare) const {
         return false;
     }
 
-    const SatMobius* mob1 = dynamic_cast<const SatMobius*>(this);
-    const SatMobius* mob2 = dynamic_cast<const SatMobius*>(&compare);
+    const auto* mob1 = dynamic_cast<const SatMobius*>(this);
+    const auto* mob2 = dynamic_cast<const SatMobius*>(&compare);
     if (mob1 && ! mob2)
         return true;
     if (mob2 && ! mob1)
@@ -132,8 +130,8 @@ bool SatBlock::operator < (const SatBlock& compare) const {
         return (mob1->position() > mob2->position());
     }
 
-    const SatLayering* layer1 = dynamic_cast<const SatLayering*>(this);
-    const SatLayering* layer2 = dynamic_cast<const SatLayering*>(&compare);
+    const auto* layer1 = dynamic_cast<const SatLayering*>(this);
+    const auto* layer2 = dynamic_cast<const SatLayering*>(&compare);
     if (layer1 && ! layer2)
         return true;
     if (layer2 && ! layer1)

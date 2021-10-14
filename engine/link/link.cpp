@@ -174,7 +174,7 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     size_t n = crossings_.size();
 
     bool* visited = new bool[n];
-    Crossing const** stack = new Crossing const*[n];
+    auto* stack = new Crossing const*[n];
 
     std::fill(visited, visited + n, false);
 
@@ -551,7 +551,7 @@ void Link::resolve(Crossing* c) {
                 ++s;
 
         // See whether c belongs to one or two components.
-        std::vector<StrandRef>::iterator comp = components_.end();
+        auto comp = components_.end();
         StrandRef s = c->next_[1];
         while (s.crossing_ != c) {
             if (comp == components_.end())
@@ -811,7 +811,7 @@ Link Link::parallel(int k, Framing framing) const {
         return Link(components_.size() * k);
 
     Link ans;
-    Crossing** tmp = new Crossing*[k*k]; // Used to build grids of crossings
+    auto* tmp = new Crossing*[k*k]; // Used to build grids of crossings
 
     // Crossing i of knot:
     //
@@ -1180,7 +1180,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
 
     ChangeEventSpan span(*this);
 
-    Crossing** c = new Crossing*[n];
+    auto* c = new Crossing*[n];
     int i;
     for (i = 0; i < n; ++i) {
         c[i] = new Crossing(positive ? 1 : -1);

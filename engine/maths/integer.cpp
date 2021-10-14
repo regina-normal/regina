@@ -295,7 +295,7 @@ IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator *=(
         // a native integer type that is twice the size of a long.
         // Currently this is enforced through a static_assert at the
         // top of this file.
-        typedef typename IntOfSize<2 * sizeof(long)>::type Wide;
+        using Wide = typename IntOfSize<2 * sizeof(long)>::type;
         Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other.small_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
@@ -315,7 +315,7 @@ IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator *=(long oth
     if (large_)
         mpz_mul_si(large_, large_, other);
     else {
-        typedef IntOfSize<2 * sizeof(long)>::type Wide;
+        using Wide = IntOfSize<2 * sizeof(long)>::type;
         Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.

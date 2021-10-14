@@ -61,33 +61,33 @@ void Script::swap(Script& other) {
 }
 
 const std::string& Script::variableName(size_t index) const {
-    std::map<std::string, Packet*>::const_iterator it = variables_.begin();
+    auto it = variables_.begin();
     advance(it, index);
     return (*it).first;
 }
 
 std::shared_ptr<Packet> Script::variableValue(size_t index) const {
-    std::map<std::string, Packet*>::const_iterator it = variables_.begin();
+    auto it = variables_.begin();
     advance(it, index);
     return (*it).second->shared_from_this();
 }
 
 std::shared_ptr<Packet> Script::variableValue(const std::string& name) const {
-    std::map<std::string, Packet*>::const_iterator it = variables_.find(name);
+    auto it = variables_.find(name);
     if (it == variables_.end())
         return nullptr;
     return (*it).second->shared_from_this();
 }
 
 long Script::variableIndex(const std::string& name) const {
-    std::map<std::string, Packet*>::const_iterator it = variables_.find(name);
+    auto it = variables_.find(name);
     if (it == variables_.end())
         return -1;
     return distance(variables_.begin(), it);
 }
 
 void Script::setVariableName(size_t index, const std::string& name) {
-    std::map<std::string, Packet*>::iterator it = variables_.begin();
+    auto it = variables_.begin();
     advance(it, index);
 
     if (name == it->first)
@@ -101,7 +101,7 @@ void Script::setVariableName(size_t index, const std::string& name) {
 }
 
 void Script::setVariableValue(size_t index, std::shared_ptr<Packet> value) {
-    std::map<std::string, Packet*>::iterator it = variables_.begin();
+    auto it = variables_.begin();
     advance(it, index);
 
     if (it->second == value.get())
@@ -136,7 +136,7 @@ const std::string& Script::addVariableName(const std::string& name,
 }
 
 void Script::removeVariable(const std::string& name) {
-    std::map<std::string, Packet*>::iterator it = variables_.find(name);
+    auto it = variables_.find(name);
     if (it == variables_.end())
         return;
 
@@ -148,7 +148,7 @@ void Script::removeVariable(const std::string& name) {
 }
 
 void Script::removeVariable(size_t index) {
-    std::map<std::string, Packet*>::iterator it = variables_.begin();
+    auto it = variables_.begin();
     advance(it, index);
 
     if (it->second)

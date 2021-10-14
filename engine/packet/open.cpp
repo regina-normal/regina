@@ -84,8 +84,7 @@ namespace {
                 if (n == "regina" || n == "reginadata") {
                     isReginaData = true;
 
-                    regina::xml::XMLPropertyDict::const_iterator it =
-                        props.find("engine");
+                    auto it = props.find("engine");
                     if (it != props.end())
                         version_ = stripWhitespace(it->second);
                 }

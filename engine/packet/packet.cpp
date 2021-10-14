@@ -106,7 +106,7 @@ void Packet::setLabel(const std::string& label) {
 
 bool Packet::listen(PacketListener* listener) {
     if (! listeners_.get())
-        listeners_.reset(new std::set<PacketListener*>());
+        listeners_ = std::make_unique<std::set<PacketListener*>>();
 
     listener->packets.insert(this);
     return listeners_->insert(listener).second;
@@ -654,7 +654,7 @@ bool Packet::addTag(const std::string& tag) {
         parent->fireEvent(&PacketListener::childToBeRenamed, this);
 
     if (! tags_.get())
-        tags_.reset(new std::set<std::string>());
+        tags_ = std::make_unique<std::set<std::string>>();
     bool ans = tags_->insert(tag).second;
 
     fireEvent(&PacketListener::packetWasRenamed);

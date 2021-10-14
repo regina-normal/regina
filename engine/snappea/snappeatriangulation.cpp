@@ -210,7 +210,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     tData.tetrahedron_data = new regina::snappea::TetrahedronData[
         tData.num_tetrahedra];
     int tet, face, i, j, k, l;
-    Triangulation<3>::TetrahedronIterator it = tri.tetrahedra().begin();
+    auto it = tri.tetrahedra().begin();
     for (tet = 0; tet < tData.num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
             tData.tetrahedron_data[tet].neighbor_index[face] = static_cast<int>(
@@ -264,7 +264,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     if (tri.isClosed())
         regina::snappea::do_Dehn_filling(data_);
 
-    SolutionType soln = static_cast<SolutionType>(
+    auto soln = static_cast<SolutionType>(
         regina::snappea::get_filled_solution_type(data_));
     if (soln == geometric_solution || soln == nongeometric_solution) {
         try {
@@ -461,7 +461,7 @@ SnapPeaTriangulation SnapPeaTriangulation::filledPartial(unsigned whichCusp)
             "requires the manifold to have at least two cusps");
 
     // Note: fill_cusps never returns null.
-    regina::snappea::Boolean* fill_cusp = new regina::snappea::Boolean[nCusps];
+    auto* fill_cusp = new regina::snappea::Boolean[nCusps];
     std::fill(fill_cusp, fill_cusp + nCusps, 0);
     fill_cusp[whichCusp] = 1; /* TRUE in SnapPea */
     regina::snappea::Triangulation* t = regina::snappea::fill_cusps(
@@ -485,7 +485,7 @@ SnapPeaTriangulation SnapPeaTriangulation::filledPartial() const {
         return *this;
 
     // Note: fill_cusps never returns null.
-    regina::snappea::Boolean* fill_cusp = new regina::snappea::Boolean[nCusps];
+    auto* fill_cusp = new regina::snappea::Boolean[nCusps];
     for (size_t i = 0; i < nCusps; ++i)
         fill_cusp[i] = (cusp_[i].complete() ? 0 : 1 /* TRUE in SnapPea */);
     regina::snappea::Triangulation* t = regina::snappea::fill_cusps(
@@ -906,7 +906,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
     if (data_) {
         // Refresh the array of tetrahedron shapes.
         regina::snappea::Tetrahedron* stet;
-        SolutionType soln = static_cast<SolutionType>(
+        auto soln = static_cast<SolutionType>(
             regina::snappea::get_filled_solution_type(data_));
         if (soln == not_attempted || soln == no_solution) {
             shape_ = nullptr;
@@ -938,7 +938,7 @@ void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
     regina::snappea::TriangulationData* tData;
     regina::snappea::triangulation_to_data(src, &tData);
 
-    Tetrahedron<3>** tet = new Tetrahedron<3>*[tData->num_tetrahedra];
+    auto* tet = new Tetrahedron<3>*[tData->num_tetrahedra];
 
     int i, j;
     for (i = 0; i < tData->num_tetrahedra; ++i)

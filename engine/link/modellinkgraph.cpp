@@ -89,9 +89,9 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
 void ModelLinkGraph::reflect() {
     for (ModelLinkGraphNode* n : nodes_) {
         std::swap(n->adj_[1], n->adj_[3]);
-        for (int i = 0; i < 4; ++i)
-            if (n->adj_[i].arc_ % 2)
-                n->adj_[i].arc_ ^= 2;
+        for (auto& a : n->adj_)
+            if (a.arc_ % 2)
+                a.arc_ ^= 2;
     }
 
     if (cells_) {
@@ -142,8 +142,8 @@ std::string ModelLinkGraph::plantri() const {
     for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
         if (it != nodes_.begin())
             ans += ',';
-        for (int arc = 0; arc < 4; ++arc)
-            ans += ('a' + (*it)->adj_[arc].node()->index());
+        for (const auto& arc : (*it)->adj_)
+            ans += ('a' + arc.node()->index());
     }
     return ans;
 }
@@ -154,8 +154,8 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
 
     // The image and preimage for each node, and the image of arc 0
     // for each node:
-    ptrdiff_t* image = new ptrdiff_t[size()];
-    ptrdiff_t* preimage = new ptrdiff_t[size()];
+    auto* image = new ptrdiff_t[size()];
+    auto* preimage = new ptrdiff_t[size()];
     int* arcOffset = new int[size()];
 
     size_t nextUnusedNode, nodeImg, nodeSrc, adjSrcNode;

@@ -86,11 +86,13 @@ namespace {
 
         public:
             inline VariableResolutionTask(std::shared_ptr<Script> script,
-                    const std::string& name,
-                    const std::string& valueID,
-                    const std::string& valueLabel) :
-                    script_(script), name_(name), valueID_(valueID),
-                    valueLabel_(valueLabel) {
+                    std::string name,
+                    std::string valueID,
+                    std::string valueLabel) :
+                    script_(std::move(script)),
+                    name_(std::move(name)),
+                    valueID_(std::move(valueID)),
+                    valueLabel_(std::move(valueLabel)) {
             }
 
             inline void resolve(const XMLTreeResolver& resolver) override {
@@ -171,7 +173,7 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
         script->append(dynamic_cast<XMLCharsReader*>(subReader)->chars());
         script->append("\n");
     } else if (subTagName == "var") {
-        ScriptVarReader* var = dynamic_cast<ScriptVarReader*>(subReader);
+        auto* var = dynamic_cast<ScriptVarReader*>(subReader);
         if (! var->getName().empty())
             resolver_.queueTask(new VariableResolutionTask(
                 script, var->getName(),

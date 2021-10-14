@@ -115,7 +115,7 @@ std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
  if (cf->num_tet == 0)
      return triang;
 
- Tetrahedron<3> **tet = new Tetrahedron<3>*[cf->num_tet]; // tet corresponds to tet_array in Orb
+ auto* tet = new Tetrahedron<3>*[cf->num_tet]; // tet corresponds to tet_array in Orb
  for (i=0; i<cf->num_tet; i++)
         tet[i]=triang->newTetrahedron();
  // now tet is a pointer to an array of Tetrahedron<3>s,

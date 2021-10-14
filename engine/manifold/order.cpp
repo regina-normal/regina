@@ -41,8 +41,8 @@ namespace regina {
 
 bool Manifold::operator < (const Manifold& compare) const {
     // Lens spaces go first.
-    const LensSpace* lens1 = dynamic_cast<const LensSpace*>(this);
-    const LensSpace* lens2 = dynamic_cast<const LensSpace*>(&compare);
+    const auto* lens1 = dynamic_cast<const LensSpace*>(this);
+    const auto* lens2 = dynamic_cast<const LensSpace*>(&compare);
 
     if (lens1 && ! lens2)
         return true;
@@ -54,8 +54,8 @@ bool Manifold::operator < (const Manifold& compare) const {
     }
 
     // Next go through Seifert fibred spaces.
-    const SFSpace* sfs1 = dynamic_cast<const SFSpace*>(this);
-    const SFSpace* sfs2 = dynamic_cast<const SFSpace*>(&compare);
+    const auto* sfs1 = dynamic_cast<const SFSpace*>(this);
+    const auto* sfs2 = dynamic_cast<const SFSpace*>(&compare);
 
     if (sfs1 && ! sfs2)
         return true;
@@ -65,8 +65,8 @@ bool Manifold::operator < (const Manifold& compare) const {
         return (*sfs1 < *sfs2);
 
     // Now for torus bundles.
-    const TorusBundle* bundle1 = dynamic_cast<const TorusBundle*>(this);
-    const TorusBundle* bundle2 = dynamic_cast<const TorusBundle*>(&compare);
+    const auto* bundle1 = dynamic_cast<const TorusBundle*>(this);
+    const auto* bundle2 = dynamic_cast<const TorusBundle*>(&compare);
 
     if (bundle1 && ! bundle2)
         return true;
@@ -79,8 +79,8 @@ bool Manifold::operator < (const Manifold& compare) const {
     }
 
     // Finally graph manifolds (SFS pairs, triples and loops).
-    const GraphPair* pair1 = dynamic_cast<const GraphPair*>(this);
-    const GraphPair* pair2 = dynamic_cast<const GraphPair*>(&compare);
+    const auto* pair1 = dynamic_cast<const GraphPair*>(this);
+    const auto* pair2 = dynamic_cast<const GraphPair*>(&compare);
     if (pair1 && ! pair2)
         return true;
     if (pair2 && ! pair1)
@@ -88,8 +88,8 @@ bool Manifold::operator < (const Manifold& compare) const {
     if (pair1 && pair2)
         return (*pair1 < *pair2);
 
-    const GraphTriple* triple1 = dynamic_cast<const GraphTriple*>(this);
-    const GraphTriple* triple2 = dynamic_cast<const GraphTriple*>(&compare);
+    const auto* triple1 = dynamic_cast<const GraphTriple*>(this);
+    const auto* triple2 = dynamic_cast<const GraphTriple*>(&compare);
     if (triple1 && ! triple2)
         return true;
     if (triple2 && ! triple1)
@@ -97,8 +97,8 @@ bool Manifold::operator < (const Manifold& compare) const {
     if (triple1 && triple2)
         return (*triple1 < *triple2);
 
-    const GraphLoop* loop1 = dynamic_cast<const GraphLoop*>(this);
-    const GraphLoop* loop2 = dynamic_cast<const GraphLoop*>(&compare);
+    const auto* loop1 = dynamic_cast<const GraphLoop*>(this);
+    const auto* loop2 = dynamic_cast<const GraphLoop*>(&compare);
     if (loop1 && ! loop2)
         return true;
     if (loop2 && ! loop1)

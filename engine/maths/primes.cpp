@@ -152,7 +152,7 @@ std::vector<std::pair<Integer, unsigned long> >
     if (! list1.empty()) {
         Integer cp(list1.front()); // current prime
         unsigned long cc(1); // current count
-        std::vector<Integer>::const_iterator it = list1.begin();
+        auto it = list1.begin();
         for (++it; it != list1.end(); ++it) {
             if (*it == cp)
                 cc++;

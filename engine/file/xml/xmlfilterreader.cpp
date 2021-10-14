@@ -187,9 +187,8 @@ void XMLLegacyPropertiesFilterReader::endContentSubElement(
             dynamic_cast<XMLCharsReader*>(subReader)->chars());
 
         LargeInteger val;
-        for (std::list<std::string>::const_iterator it =
-                tokens.begin(); it != tokens.end(); it++)
-            if (valueOf(*it, val))
+        for (const auto& t : tokens)
+            if (valueOf(t, val))
                 filter_->addEulerChar(val);
     }
 }

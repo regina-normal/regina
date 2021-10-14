@@ -308,7 +308,7 @@ unsigned rowBasis(MatrixInt& matrix) {
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
 
-    unsigned* lead = new unsigned[n];
+    auto* lead = new unsigned[n];
     unsigned r, c, tmp;
     for (c = 0; c < n; ++c)
         lead[c] = c;
@@ -369,7 +369,7 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
 
-    unsigned* lead = new unsigned[n];
+    auto* lead = new unsigned[n];
     unsigned r, c, tmp;
     for (c = 0; c < n; ++c)
         lead[c] = c;

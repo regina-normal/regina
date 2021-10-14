@@ -317,9 +317,7 @@ namespace {
             // the other is not.
             int strandID;
             StrandRef from, to;
-            for (int i = 0; i < childKey->size(); ++i) {
-                strandID = (*childKey)[i];
-
+            for (int strandID : *childKey) {
                 // In the child bag, this strand ran between the bag and the
                 // forgotten zone.
 
@@ -905,8 +903,7 @@ namespace {
 
     inline Laurent2<Integer>* spliceValue(const Laurent2<Integer>* from,
             Crossing* c) {
-        Laurent2<Integer>* ans = new Laurent2<Integer>(*from,
-            (c->sign() > 0 ? -1 : 1), 1);
+        auto* ans = new Laurent2<Integer>(*from, (c->sign() > 0 ? -1 : 1), 1);
         if (c->sign() < 0)
             ans->negate();
         return ans;
@@ -986,14 +983,13 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
     // Since we are assured at least one crossing at this point,
     // we have 0 <= i <= #components + #crossings - 1.
     size_t maxComp = 0;
-    Laurent2<Integer>* coeff = new Laurent2<Integer>[
-        n + components_.size()];
+    auto* coeff = new Laurent2<Integer>[n + components_.size()];
 
     // Iterate through a tree of states:
-    CrossingState* state = new CrossingState[n];
+    auto* state = new CrossingState[n];
     std::fill(state, state + n, CROSSING_UNSEEN);
 
-    StrandRef* first = new StrandRef[n + components_.size()];
+    auto* first = new StrandRef[n + components_.size()];
     std::fill(first, first + n + components_.size(), StrandRef());
 
     bool* seen = new bool[2 * n]; // index = strand ID
@@ -1309,12 +1305,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     // An important fact: each bag is guaranteed to have at least one solution,
     // since there is always some way to traverse the link.
 
-    typedef LightweightSequence<int> Key;
-    typedef Laurent2<Integer> Value;
+    using Key = LightweightSequence<int>;
+    using Value = Laurent2<Integer>;
+    using SolnSet = std::map<Key*, Value*, Key::Less>;
 
-    typedef std::map<Key*, Value*, Key::Less> SolnSet;
-
-    SolnSet** partial = new SolnSet*[nBags];
+    auto* partial = new SolnSet*[nBags];
     std::fill(partial, partial + nBags, nullptr);
 
     ViabilityData vData(this, d);

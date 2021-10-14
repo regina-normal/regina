@@ -125,7 +125,7 @@ Triangulation<3> Link::complement(bool simplify) const {
     };
 
     size_t n = size();
-    CrossingTet* ctet = new CrossingTet[n];
+    auto* ctet = new CrossingTet[n];
 
     size_t i, j;
 

@@ -228,9 +228,8 @@ Triangulation<3> NormalHypersurface::triangulate() const {
     // Set up one DiscSetTetData for each tetrahedron, storing the
     // relevant DiscData maps.  We don't actually need this for the
     // boundary tetrahedra, but for now we'll just do everything.
-    typedef DiscSetTetData<DiscData> TetData;
     size_t nTets = outer.countTetrahedra();
-    TetData** tetData = new TetData*[nTets];
+    auto* tetData = new DiscSetTetData<DiscData>*[nTets];
 
     const Pentachoron<4>* outerPent;
     Tetrahedron<4>* outerTet;
@@ -244,7 +243,7 @@ Triangulation<3> NormalHypersurface::triangulate() const {
         outerTetEmb = outerTet->front().vertices();
         pent = outerPent->index();
 
-        tetData[tet] = new TetData(
+        tetData[tet] = new DiscSetTetData<DiscData>(
             tetrahedra(pent, outerTetEmb[0]).longValue() +
                 prisms(pent,
                     Edge<4>::edgeNumber[outerTetEmb[0]][outerTetEmb[4]]).

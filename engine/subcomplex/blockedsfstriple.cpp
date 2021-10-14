@@ -156,8 +156,8 @@ std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
 
         int e;
         for (e = 0; e < 2; e++) {
-            layering[e].reset(new Layering(bdry[e].tet[0], bdry[e].roles[0],
-                bdry[e].tet[1], bdry[e].roles[1]));
+            layering[e] = std::make_unique<Layering>(bdry[e].tet[0],
+                bdry[e].roles[0], bdry[e].tet[1], bdry[e].roles[1]);
 
             while (layering[e]->extendOne()) {
                 if (usedTets.find(layering[e]->newBoundaryTet(0)) !=

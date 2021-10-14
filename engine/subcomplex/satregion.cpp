@@ -540,8 +540,8 @@ void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
 
     // Count annuli in each block, and work out how to index all annuli
     // from all blocks into a single monolithic array.
-    unsigned* nAnnuli = new unsigned[blocks_.size()];
-    unsigned* indexAnnuliFrom = new unsigned[blocks_.size()];
+    auto* nAnnuli = new unsigned[blocks_.size()];
+    auto* indexAnnuliFrom = new unsigned[blocks_.size()];
     for (i = 0; i < blocks_.size(); ++i) {
         nAnnuli[i] = blocks_[i].block()->countAnnuli();
         indexAnnuliFrom[i] = (i == 0 ? 0 : indexAnnuliFrom[i-1] + nAnnuli[i-1]);

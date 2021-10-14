@@ -61,12 +61,12 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
     // Ordering: crossing by ID; strand upper first; sign positive first
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
     size_t n = crossings_.size();
-    SigData* best = new SigData[2 * n];
-    SigData* curr = new SigData[2 * n];
+    auto* best = new SigData[2 * n];
+    auto* curr = new SigData[2 * n];
 
     // The image and preimage for each crossing.
-    ptrdiff_t* image = new ptrdiff_t[n];
-    ptrdiff_t* preimage = new ptrdiff_t[n];
+    auto* image = new ptrdiff_t[n];
+    auto* preimage = new ptrdiff_t[n];
 
     bool currBetter;
     StrandRef currStrand;
@@ -261,7 +261,7 @@ Link Link::fromKnotSig(const std::string& sig) {
         throw InvalidArgument("fromKnotSig(): length of signature "
             "does not match number of crossings");
 
-    size_t* crossing = new size_t[2 * n];
+    auto* crossing = new size_t[2 * n];
     int* sign = new int[2 * n];
     int* strand = new int[2 * n];
 

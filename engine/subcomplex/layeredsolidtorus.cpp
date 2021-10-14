@@ -576,7 +576,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recognise(
     FacePair underFaces = FacePair(f0.triangle(), f1.triangle()).complement();
     Tetrahedron<3>* currTet = top;
     Tetrahedron<3>* nextTet;
-    while (1) {
+    while (true) {
         // INV: Thus far we have seen a chain of tetrahedra, with each
         // tetrahedron glued to the next along two faces.
 

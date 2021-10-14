@@ -54,15 +54,12 @@ namespace {
     const SFSFibre four(4, 1);
 }
 
-typedef std::list<SFSFibre>::iterator FibreIterator;
-typedef std::list<SFSFibre>::const_iterator FibreIteratorConst;
-
 std::ostream& operator << (std::ostream& out, const SFSFibre& f) {
     return (out << '(' << f.alpha << ',' << f.beta << ')');
 }
 
 SFSFibre SFSpace::fibre(unsigned long which) const {
-    FibreIteratorConst pos = fibres_.begin();
+    auto pos = fibres_.begin();
     advance(pos, which);
     return *pos;
 }
@@ -258,7 +255,7 @@ void SFSpace::insertFibre(long alpha, long beta) {
 }
 
 void SFSpace::reduce(bool mayReflect) {
-    FibreIterator it, it2;
+    std::list<SFSFibre>::iterator it, it2;
 
     // If the SFS is non-orientable, we can get rid of b completely and
     // convert most (if not all) exceptional fibres to beta <= alpha / 2.
@@ -388,7 +385,6 @@ void SFSpace::reduce(bool mayReflect) {
                 complementAllFibres();
             else if (nLarge == nSmall && it2 != fibres_.end()) {
                 // We need to look in a little more detail.
-                FibreIterator next;
                 bool shouldReflect = false;
 
                 // Restore our starting position, and let it2 become a
@@ -404,7 +400,7 @@ void SFSpace::reduce(bool mayReflect) {
 
                     // Now it2 points to the first element of the
                     // following block.
-                    next = it2;
+                    auto next = it2;
                     it2--;
 
                     // Now it2 points to the last element of this block.
@@ -446,7 +442,6 @@ void SFSpace::reduce(bool mayReflect) {
             } else if (b_ == (-b_ - static_cast<long>(nFibres_))) {
                 // Reflecting won't change b, but it will complement all
                 // fibres.  See whether this is worthwhile.
-                FibreIterator next;
                 bool shouldReflect = false;
 
                 it = fibres_.begin();
@@ -460,7 +455,7 @@ void SFSpace::reduce(bool mayReflect) {
 
                     // Now it2 points to the first element of the
                     // following block.
-                    next = it2;
+                    auto next = it2;
                     it2--;
 
                     // Now it2 points to the last element of this block.
@@ -500,7 +495,7 @@ std::list<SFSFibre>::iterator SFSpace::negateFibreDown(
 
     // The return value.  This is also a strict upper bound for the
     // location of the replacement fibre.
-    std::list<SFSFibre>::iterator next = it;
+    auto next = it;
     next++;
 
     // Delete the old iterator.
@@ -526,22 +521,21 @@ std::list<SFSFibre>::iterator SFSpace::negateFibreDown(
 }
 
 void SFSpace::complementAllFibres() {
-    FibreIterator it, it2, next;
-    for (it = fibres_.begin(); it != fibres_.end(); it++)
-        it->beta = it->alpha - it->beta;
+    for (auto& f : fibres_)
+        f.beta = f.alpha - f.beta;
 
     // Ensure that the array remains in sorted order.
     // Each portion of the array with fixed index must be reversed.
     SFSFibre tmpFibre;
-    it = fibres_.begin();
+    auto it = fibres_.begin();
     while (it != fibres_.end()) {
         // INV: it points to the next block to be reversed.
-        it2 = it;
+        auto it2 = it;
         for (it2++; it2 != fibres_.end() && (*it2).alpha == (*it).alpha; it2++)
             ;
 
         // Now it2 points to the first element of the following block.
-        next = it2;
+        auto next = it2;
         it2--;
 
         // Now it2 points to the last element of this block.
@@ -744,7 +738,7 @@ Triangulation<3> SFSpace::construct() const {
     b->join(2, c, Perm<4>());
     c->join(3, a, Perm<4>(1, 2, 3, 0));
 
-    std::list<SFSFibre>::const_iterator fit = fibres_.begin();
+    auto fit = fibres_.begin();
     SatAnnulus::attachLST(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3),
         fit->alpha, fit->beta);
     fit++;
@@ -817,14 +811,13 @@ AbelianGroup SFSpace::homology() const {
             nFibres_ + 1 + 2 * nRef);
 
         unsigned long which = 0;
-        for (FibreIteratorConst it = fibres_.begin(); it != fibres_.end();
-                it++) {
+        for (const auto& f : fibres_) {
             pres.entry(nFibres_ + nRef, which) = 1;
 
-            pres.entry(which, nFibres_) = it->beta;
-            pres.entry(which, which) = it->alpha;
+            pres.entry(which, nFibres_) = f.beta;
+            pres.entry(which, which) = f.alpha;
 
-            which++;
+            ++which;
         }
 
         unsigned long ref;
@@ -859,14 +852,13 @@ AbelianGroup SFSpace::homology() const {
             nFibres_ + genus_ + 1 + 2 * nRef);
 
         unsigned long which = 0;
-        for (FibreIteratorConst it = fibres_.begin(); it != fibres_.end();
-                it++) {
+        for (const auto& f : fibres_) {
             pres.entry(nFibres_ + nRef, which) = 1;
 
-            pres.entry(which, nFibres_ + genus_) = it->beta;
-            pres.entry(which, which) = it->alpha;
+            pres.entry(which, nFibres_ + genus_) = f.beta;
+            pres.entry(which, which) = f.alpha;
 
-            which++;
+            ++which;
         }
 
         unsigned long ref;

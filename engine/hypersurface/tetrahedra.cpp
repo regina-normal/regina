@@ -78,7 +78,7 @@ HyperEncoding NormalHypersurface::reconstructTetrahedra(
     std::fill(used, used + 3 * tri.countTriangles(), false);
 
     // Prepare a stack of triangle corners that we are ready to examine.
-    TriangleCorner* examine = new TriangleCorner[3 * tri.countTriangles()];
+    auto* examine = new TriangleCorner[3 * tri.countTriangles()];
     size_t nExamine = 0;
 
     // Run through the vertices and fix the tetrahedron coordinates
