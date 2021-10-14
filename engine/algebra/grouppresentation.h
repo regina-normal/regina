@@ -1385,13 +1385,12 @@ class GroupPresentation : public Output<GroupPresentation> {
          * For each representation that is produced, this routine will call
          * \a action (which must be a function or some other callable object).
          *
-         * - The first argument to \a action must be a reference to a
-         *   GroupPresentation.  This will be the index \a k subgroup
-         *   corresponding to the representation.  This argument will be
-         *   passed as an xvalue; a typical action could (for example) take it
-         *   by const reference and query it, or take it by value and modify it,
-         *   or take it by rvalue reference and move it into more permanent
-         *   storage.
+         * - The first argument to \a action must be a group presentation.
+         *   This will be the index \a k subgroup corresponding to the
+         *   representation.  This argument will be passed as an rvalue;
+         *   a typical action could (for example) take it by const reference
+         *   and query it, or take it by value and modify it, or take it by
+         *   rvalue reference and move it into more permanent storage.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.

@@ -110,7 +110,7 @@ class HilbertPrimal {
          * \a action (which must be a function or some other callable object).
          * This action should return \c void, and must take exactly one
          * argument, which will be the basis element stored using \a RayClass.
-         * The argument will be passed as an xvalue; a typical \a action
+         * The argument will be passed as an rvalue; a typical \a action
          * would take it as an rvalue reference (RayClass&&) and move its
          * contents into some other more permanent storage.
          *
@@ -136,7 +136,7 @@ class HilbertPrimal {
          *
          * @param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
-         * argument, which will be passed as an xvalue of type RayClass.
+         * argument, which will be passed as an rvalue of type RayClass.
          * @param raysBegin an iterator pointing to the beginning of the
          * list of extremal rays.
          * @param raysEnd an iterator pointing past the end of the

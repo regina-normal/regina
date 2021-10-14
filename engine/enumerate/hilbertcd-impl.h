@@ -275,11 +275,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
 
     // Output basis elements.
     for (bit = basis.begin(); bit != basis.end(); ++bit) {
-        // We promise in the docs that we will send the ray as an xvalue
-        // (which, amongst other things, means action is able to take it by
-        // non-const reference).  Therefore we can't use a RayClass temporary.
-        RayClass ray(**bit);
-        action(std::move(ray));
+        action(RayClass(**bit));
         delete *bit;
     }
 }

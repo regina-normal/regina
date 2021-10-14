@@ -598,7 +598,8 @@ Version 7.0  [ TODO ]
               regina::swap(ModelLinkGraph&, ModelLinkGraph&).
             - Routine generateMinimalLinks() now uses a type-safe template-based
               mechanism for its callback function, instead of a function
-              pointer with void* arguments.  Moreover, it no longer receives
+              pointer with void* arguments, and the callback now takes its
+              link by rvalue (not pointer).  Moreover, it no longer receives
               an extra null call once the enumeration has finished.
             - Routines fromPlantri() and flype() now return by value (not
               pointer), and throw exceptions on error instead of returning null.

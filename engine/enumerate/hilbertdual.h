@@ -139,7 +139,7 @@ class HilbertDual {
          * \a action (which must be a function or some other callable object).
          * This action should return \c void, and must take exactly one
          * argument, which will be the basis element stored using \a RayClass.
-         * The argument will be passed as an xvalue; a typical \a action
+         * The argument will be passed as an rvalue; a typical \a action
          * would take it as an rvalue reference (RayClass&&) and move its
          * contents into some other more permanent storage.
          *
@@ -149,7 +149,7 @@ class HilbertDual {
          *
          * @param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
-         * argument, which will be passed as an xvalue of type RayClass.
+         * argument, which will be passed as an rvalue of type RayClass.
          * @param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear

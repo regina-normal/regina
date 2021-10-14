@@ -1526,12 +1526,12 @@ class SnapPeaTriangulation :
          * For each cover that is produced, this routine will call \a action
          * (which must be a function or some other callable object).
          *
-         * - The first argument to \a action must be a reference to a
-         *   SnapPeaTriangulation.  This will be the newly produced cover.
-         *   This argument will be passed as an xvalue; a typical action could
-         *   (for example) take it by const reference and query it, or take it
-         *   by value and modify it, or take it by rvalue reference and move it
-         *   into more permanent storage.
+         * - The first argument to \a action must be a SnapPea triangulation;
+         *   this will be the newly produced cover.  This argument will be
+         *   passed as an rvalue; a typical action could (for example) take it
+         *   by const reference and query it, or take it by value and modify it,
+         *   or take it by rvalue reference and move it into more permanent
+         *   storage.
          *
          * - The second argument to \a action must be of type
          *   \a SnapPeaTriangulation::CoverType.

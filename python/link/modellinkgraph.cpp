@@ -92,7 +92,7 @@ void addModelLinkGraph(pybind11::module_& m) {
             pybind11::arg("tight") = false)
         .def_static("fromPlantri", &ModelLinkGraph::fromPlantri)
         .def("generateMinimalLinks", [](const ModelLinkGraph& g,
-                const std::function<void(regina::Link*)>& action) {
+                const std::function<void(regina::Link&&)>& action) {
             g.generateMinimalLinks(action);
         });
     ;

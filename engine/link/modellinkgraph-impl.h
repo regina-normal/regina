@@ -52,7 +52,7 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
         const {
     if (size() == 0) {
         // Generate a single empty link.
-        action(new Link(), std::forward<Args>(args)...);
+        action(Link(), std::forward<Args>(args)...);
         return;
     }
 
@@ -179,37 +179,35 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
         // need to move to the next available sign at crossing curr.
         if (curr == size()) {
             // We have a complete selection of crossings.
-            Link* l = new Link;
+            Link l;
             for (i = 0; i < size(); ++i)
-                l->crossings_.push_back(new Crossing(sign[i]));
+                l.crossings_.push_back(new Crossing(sign[i]));
             for (i = 0; i < size(); ++i) {
                 // Upper outgoing arc:
                 a = nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 1 : 0][dir[i]]];
                 adj = a.node_->index();
                 adjStrand = (a.arc_ ==
                     (upperOutArc[sign[adj] > 0 ? 1 : 0][dir[adj]] ^ 2) ? 1 : 0);
-                l->crossings_[i]->next_[1].crossing_ = l->crossings_[adj];
-                l->crossings_[i]->next_[1].strand_ = adjStrand;
+                l.crossings_[i]->next_[1].crossing_ = l.crossings_[adj];
+                l.crossings_[i]->next_[1].strand_ = adjStrand;
 
-                l->crossings_[adj]->prev_[adjStrand].crossing_ =
-                    l->crossings_[i];
-                l->crossings_[adj]->prev_[adjStrand].strand_ = 1;
+                l.crossings_[adj]->prev_[adjStrand].crossing_ = l.crossings_[i];
+                l.crossings_[adj]->prev_[adjStrand].strand_ = 1;
 
                 // Lower outgoing arc:
                 a = nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 0 : 1][dir[i]]];
                 adj = a.node_->index();
                 adjStrand = (a.arc_ ==
                     (upperOutArc[sign[adj] > 0 ? 1 : 0][dir[adj]] ^ 2) ? 1 : 0);
-                l->crossings_[i]->next_[0].crossing_ = l->crossings_[adj];
-                l->crossings_[i]->next_[0].strand_ = adjStrand;
+                l.crossings_[i]->next_[0].crossing_ = l.crossings_[adj];
+                l.crossings_[i]->next_[0].strand_ = adjStrand;
 
-                l->crossings_[adj]->prev_[adjStrand].crossing_ =
-                    l->crossings_[i];
-                l->crossings_[adj]->prev_[adjStrand].strand_ = 0;
+                l.crossings_[adj]->prev_[adjStrand].crossing_ = l.crossings_[i];
+                l.crossings_[adj]->prev_[adjStrand].strand_ = 0;
             }
-            l->components_.push_back(StrandRef(*l->crossings_.begin(), 1));
+            l.components_.push_back(StrandRef(*l.crossings_.begin(), 1));
 
-            action(l, std::forward<Args>(args)...);
+            action(std::move(l), std::forward<Args>(args)...);
 
             // Backtrack!
             --curr;

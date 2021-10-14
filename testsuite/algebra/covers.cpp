@@ -90,7 +90,7 @@ class CoversTest : public CppUnit::TestFixture {
         std::vector<std::string> viaRegina(const Triangulation<3>& tri) {
             std::vector<std::string> covers;
             tri.fundamentalGroup().enumerateCovers<degree>([&](
-                    GroupPresentation& g) {
+                    GroupPresentation&& g) {
                 AbelianGroup ab = g.abelianisation();
                 covers.push_back(ab.str());
 
@@ -348,7 +348,7 @@ class CoversTest : public CppUnit::TestFixture {
             bool badCover = false;
             size_t nFound = 0;
             size_t ans = freeAbelian.enumerateCovers<index>([&](
-                    GroupPresentation& g) {
+                    GroupPresentation&& g) {
                 g.intelligentSimplify();
 
                 // Of course the group itself should be free abelian, but we
@@ -468,7 +468,7 @@ class CoversTest : public CppUnit::TestFixture {
             bool badCover = false;
             size_t nFound = 0;
             size_t ans = GroupPresentation(rank).enumerateCovers<index>([&](
-                    GroupPresentation& g) {
+                    GroupPresentation&& g) {
                 g.intelligentSimplify();
 
                 if (g.countRelations() != 0 ||
@@ -530,7 +530,7 @@ class CoversTest : public CppUnit::TestFixture {
 
             GroupPresentation src(1);
             src.addRelation(regina::GroupExpression(0, order));
-            size_t ans = src.enumerateCovers<index>([&](GroupPresentation& g) {
+            size_t ans = src.enumerateCovers<index>([&](GroupPresentation&& g) {
                 g.intelligentSimplify();
 
                 if (expectedOrder == 1) {

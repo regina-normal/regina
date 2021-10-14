@@ -573,7 +573,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *   If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - The triangulation argument will be passed as an xvalue; a typical
+         * - The triangulation argument will be passed as an rvalue; a typical
          *   action could (for example) take it by const reference and query it,
          *   or take it by value and modify it, or take it by rvalue reference
          *   and move it into more permanent storage.

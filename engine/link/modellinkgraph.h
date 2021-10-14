@@ -675,9 +675,11 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * For each link that is generated, this routine will call \a action
          * (which must be a function or some other callable object).
          *
-         * - The first argument to \action must be a pointer to a Link.
-         *   This will be the link that was generated, and \a action is
-         *   responsible for (eventually) deallocating it.
+         * - The first argument passed to \action will be the link that was
+         *   generated.  This will be passed as an rvalue; a typical action
+         *   could (for example) take it by const reference and query it,
+         *   or take it by value and modify it, or take it by rvalue reference
+         *   and move it into more permanent storage.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
