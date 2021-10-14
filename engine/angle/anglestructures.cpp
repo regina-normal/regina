@@ -127,7 +127,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
             auto* constraints = new EnumConstraints(triangulation_->size());
 
             unsigned base = 0;
-            for (auto c : *constraints) {
+            for (auto& c : *constraints) {
                 c.insert(c.end(), base++);
                 c.insert(c.end(), base++);
                 c.insert(c.end(), base++);
