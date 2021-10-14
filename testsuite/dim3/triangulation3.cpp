@@ -4660,7 +4660,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 tracker = new regina::ProgressTrackerOpen();
 
             bool result = tri.retriangulate(height, threads, tracker,
-                    [&tot, &broken, tri](const Triangulation<3>& alt) {
+                    [&tot, &broken, &tri](const Triangulation<3>& alt) {
                         ++tot;
                         if (alt.isValid() != tri.isValid()) {
                             broken = true; return true;

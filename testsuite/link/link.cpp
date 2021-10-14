@@ -2679,7 +2679,7 @@ class LinkTest : public CppUnit::TestFixture {
                 tracker = new regina::ProgressTrackerOpen();
 
             bool result = link.rewrite(height, threads, tracker,
-                    [&tot, &broken, link](const Link& alt) {
+                    [&tot, &broken, &link](const Link& alt) {
                         ++tot;
                         if (alt.jones() != link.jones()) {
                             broken = true; return true;
