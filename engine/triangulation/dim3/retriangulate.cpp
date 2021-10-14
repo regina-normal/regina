@@ -57,10 +57,8 @@ namespace detail {
                 if (t.pachner(t.edge(i), true, false)) {
                     Triangulation<3> alt(t, false);
                     alt.pachner(alt.edge(i), false, true);
-                    if (retriang->candidate(alt, sig))
+                    if (retriang->candidate(std::move(alt), sig))
                         return;
-                    // We cannot use alt from here, since candidate() might
-                    // have changed it.
                 }
 
             if (t.size() < maxSize)
@@ -68,10 +66,8 @@ namespace detail {
                     if (t.pachner(t.triangle(i), true, false)) {
                         Triangulation<3> alt(t, false);
                         alt.pachner(alt.triangle(i), false, true);
-                        if (retriang->candidate(alt, sig))
+                        if (retriang->candidate(std::move(alt), sig))
                             return;
-                        // We cannot use alt from here, since candidate() might
-                        // have changed it.
                     }
         }
     };
@@ -109,7 +105,7 @@ template bool Triangulation<3>::retriangulateInternal<false>(
 bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker) {
     return retriangulate(height, nThreads, tracker,
-        [](Triangulation<3>& alt, Triangulation<3>& original, size_t minSimp) {
+        [](Triangulation<3>&& alt, Triangulation<3>& original, size_t minSimp) {
             if (alt.size() < minSimp) {
                 // Since we are allowed to change alt, we use swap(),
                 // which avoids yet another round of remaking the tetrahedron

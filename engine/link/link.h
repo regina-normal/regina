@@ -1776,14 +1776,20 @@ class Link : public PacketData<Link>, public Output<Link> {
          * be a function or some other callable object).
          *
          * - \a action must take the following initial argument(s).
-         *   Either (a) the first argument must be of type Link&,
-         *   representing the knot diagram that has been found; or else
-         *   (b) the first two arguments must be of types const std::string&
-         *   and Link&, representing both the knot diagram and its
-         *   knot signature.  The second form is offered in order to
-         *   avoid unnecessarily recomputation within the \a action function.
+         *   Either (a) the first argument must be a link (the precise type
+         *   is discussed below), representing the knot diagram that has been
+         *   found; or else (b) the first two arguments must be of types
+         *   const std::string& followed by a link, representing both the
+         *   knot diagram and its knot signature.
+         *   The second form is offered in order to avoid unnecessarily
+         *   recomputation within the \a action function.
          *   If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - The link argument will be passed as an xvalue; a typical action
+         *   could (for example) take it by const reference and query it,
+         *   or take it by value and modify it, or take it by rvalue reference
+         *   and move it into more permanent storage.
          *
          * - \a action must return a boolean.  If \a action ever returns
          *   \c true, then this indicates that processing should stop
@@ -1795,12 +1801,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          *   that this routine visits will be obtained via Reidemeister moves
          *   from the original knot diagram, before any subsequent changes
          *   (if any) were made.
-         *
-         * - \a action may, if it chooses, make changes to the knot that is
-         *   passed in its initial argument(s) (though it must not delete it).
-         *   This will likewise not affect the search, since the knot diagram
-         *   that is passed to \a action will be destroyed immediately after
-         *   \a action is called.
          *
          * - \a action will only be called once for each knot diagram
          *   (including this starting diagram).  In other words, no
@@ -1852,8 +1852,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you simply call it as rewrite(height, threads, action).
          * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Link&) representing the knot signature and the
-         * knot diagram, as described in option (b) above.
+         * (const std::string&, Link&&) representing the knot signature and
+         * the knot diagram, as described in option (b) above.
          *
          * @param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
@@ -4818,9 +4818,17 @@ inline bool Link::rewrite(int height, unsigned nThreads,
     typedef regina::detail::RetriangulateActionTraits<Link, Action> Traits;
     static_assert(Traits::valid,
         "The action that is passed to rewrite() does not take the correct initial argument type(s).");
-    return rewriteInternal<Traits::withSig>(height, nThreads, tracker,
-        Traits::convert(std::forward<Action>(action),
-            std::forward<Args>(args)...));
+    if constexpr (Traits::withSig) {
+        return rewriteInternal<true>(height, nThreads, tracker,
+            [&](const std::string& sig, Link&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        return rewriteInternal<false>(height, nThreads, tracker,
+            [&](Link&& obj) {
+                return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    }
 }
 
 inline void Link::join(const StrandRef& s, const StrandRef& t) {

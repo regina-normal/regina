@@ -151,12 +151,12 @@ struct RetriangulateActionFuncDetail;
 
 template <class Object>
 struct RetriangulateActionFuncDetail<Object, true> {
-    typedef std::function<bool(const std::string&, Object&)> type;
+    typedef std::function<bool(const std::string&, Object&&)> type;
 };
 
 template <class Object>
 struct RetriangulateActionFuncDetail<Object, false> {
-    typedef std::function<bool(Object&)> type;
+    typedef std::function<bool(Object&&)> type;
 };
 
 #endif // __DOXYGEN
@@ -178,29 +178,22 @@ using RetriangulateActionFunc =
  *
  * Recall that the initial arguments for such a callable object must be either
  * (a) a single triangulation/link, or (b) a text signature (e.g., an
- * isomorphism signature) followed by a triangulation/link.
+ * isomorphism signature) followed by a triangulation/link.  The callable
+ * object may take its triangulation/link by value, const reference or
+ * rvalue reference; however, if it takes a signature also then this must be
+ * by (const std::string&).
  *
  * This struct provides a boolean compile-time constant \a valid, which is
  * \c true if and only if the initial arguemnt(s) to \a Action are acceptable
- * as outlined above (i.e., a reference to the underlying \a Object class
+ * as outlined above (i.e., an argument of the underlying \a Object class
  * for actions that take a triangulation/link, or a const string reference and
- * an \a Object reference for actions that take a text signature also).
+ * an \a Object for actions that take a text signature also).
  *
  * If \a valid is \c true, then this struct also provides a boolean
  * compile-time constant \a withSig, which is \c true if and only if the action
  * takes both a text signature and a triangulation/link.
  * If \a valid is \c false then the boolean constant \a withSig will still
  * be present, but its value is not defined.
- *
- * Finally, if \a valid is \c true, then this struct provides a static
- * function convert() that takes a callable object and all of its later
- * optional arguments (i.e., excluding the initial triangulation/link
- * and possibly the text signature before it), and returns a callable object
- * of type RetriangulateActionFunc<withSig> where these later optional
- * arguments are bound.  All arguments to convert() will be moved/copied
- * using std::forward().
- * If \a valid is \c false then the function \a convert will still be
- * declared but not defined, and it will have a \c void return type.
  *
  * \tparam Object the class providing the retriangulation or link rewriting
  * function, such as regina::Triangulation<dim> or regina::Link.
@@ -221,52 +214,34 @@ template <class Object, typename Action, typename FirstArg>
 struct RetriangulateActionTraits {
     static constexpr bool valid = false;
     static constexpr bool withSig = false;
-
-    template <typename... Args>
-    static void convert(Action&&, Args&&...);
 };
 
 template <class Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, Object&> {
+struct RetriangulateActionTraits<Object, Action, Object> {
     static constexpr bool valid = true;
     static constexpr bool withSig = false;
+};
 
-    template <typename... Args>
-    static RetriangulateActionFunc<Object, withSig> convert(
-            Action&& action, Args&&... args) {
-        return std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::forward<Args>(args)...);
-    }
+template <class Object, typename Action>
+struct RetriangulateActionTraits<Object, Action, Object&&> {
+    static constexpr bool valid = true;
+    static constexpr bool withSig = false;
 };
 
 template <class Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const Object&> {
     static constexpr bool valid = true;
     static constexpr bool withSig = false;
-
-    template <typename... Args>
-    static RetriangulateActionFunc<Object, withSig> convert(
-            Action&& action, Args&&... args) {
-        return std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::forward<Args>(args)...);
-    }
 };
 
 template <class Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const std::string&> {
     typedef typename CallableArg<Action, 1>::type SecondArg;
     static constexpr bool valid =
-        std::is_same<SecondArg, Object&>::value ||
+        std::is_same<SecondArg, Object>::value ||
+        std::is_same<SecondArg, Object&&>::value ||
         std::is_same<SecondArg, const Object&>::value;
     static constexpr bool withSig = true;
-
-    template <typename... Args>
-    static RetriangulateActionFunc<Object, withSig> convert(
-            Action&& action, Args&&... args) {
-        return std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::placeholders::_2,
-            std::forward<Args>(args)...);
-    }
 };
 
 #endif // __DOXYGEN

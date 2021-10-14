@@ -57,7 +57,7 @@ namespace detail {
                 // There is only one move we can perform on this.
                 Link alt(t, false);
                 alt.r1(regina::StrandRef(), 0, 1 /* sign */, false, true);
-                retriang->candidate(alt, sig);
+                retriang->candidate(std::move(alt), sig);
                 return;
             }
 
@@ -69,20 +69,16 @@ namespace detail {
                 if (t.r1(t.crossing(i), true, false)) {
                     Link alt(t, false);
                     alt.r1(alt.crossing(i), false, true);
-                    if (retriang->candidate(alt, sig))
+                    if (retriang->candidate(std::move(alt), sig))
                         return;
-                    // We cannot use alt from here, since candidate() might
-                    // have changed it.
                 }
 
             for (i = 0; i < t.size(); ++i)
                 if (t.r2(t.crossing(i), true, false)) {
                     Link alt(t, false);
                     alt.r2(alt.crossing(i), false, true);
-                    if (retriang->candidate(alt, sig))
+                    if (retriang->candidate(std::move(alt), sig))
                         return;
-                    // We cannot use alt from here, since candidate() might
-                    // have changed it.
                 }
 
             for (i = 0; i < t.size(); ++i)
@@ -90,10 +86,8 @@ namespace detail {
                     if (t.r3(t.crossing(i), side, true, false)) {
                         Link alt(t, false);
                         alt.r3(alt.crossing(i), side, false, true);
-                        if (retriang->candidate(alt, sig))
+                        if (retriang->candidate(std::move(alt), sig))
                             return;
-                        // We cannot use alt from here, since candidate() might
-                        // have changed it.
                     }
 
             // R1 twist moves on arcs are always valid.
@@ -105,10 +99,8 @@ namespace detail {
                                 Link alt(t, false);
                                 alt.r1(alt.crossing(i)->strand(strand),
                                     side, sign, false, true);
-                                if (retriang->candidate(alt, sig))
+                                if (retriang->candidate(std::move(alt), sig))
                                     return;
-                                // We cannot use alt from here, since
-                                // candidate() might have changed it.
                             }
 
             if (t.size() + 1 < maxSize) {
@@ -194,10 +186,8 @@ namespace detail {
                                 alt.r2(alt.translate(upperArc), upperSide,
                                     alt.translate(lowerArc), lowerSide,
                                     false, true);
-                                if (retriang->candidate(alt, sig))
+                                if (retriang->candidate(std::move(alt), sig))
                                     return;
-                                // We cannot use alt from here, since
-                                // candidate() might have changed it.
                             }
                         }
                     }
@@ -237,7 +227,7 @@ template bool Link::rewriteInternal<false>(
 bool Link::simplifyExhaustive(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker) {
     return rewrite(height, nThreads, tracker,
-        [](Link& alt, Link& original, size_t minCrossings) {
+        [](Link&& alt, Link& original, size_t minCrossings) {
             if (alt.size() < minCrossings) {
                 // Since we are allowed to change alt, we use swap(),
                 // which avoids yet another round of rewiring the crossings.

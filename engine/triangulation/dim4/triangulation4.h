@@ -563,14 +563,20 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * be a function or some other callable object).
          *
          * - \a action must take the following initial argument(s).
-         *   Either (a) the first argument must be of type Triangulation<4>&,
-         *   representing the triangulation that has been found; or else
-         *   (b) the first two arguments must be of types const std::string&
-         *   and Triangulation<4>&, representing both the triangulation and its
-         *   isomorphism signature.  The second form is offered in order to
-         *   avoid unnecessarily recomputation within the \a action function.
+         *   Either (a) the first argument must be a triangulation (the precise
+         *   type is discussed below), representing the triangluation that has
+         *   been found; or else (b) the first two arguments must be of types
+         *   const std::string& followed by a triangulation, representing both
+         *   the triangulation and its isomorphism signature.
+         *   The second form is offered in order to avoid unnecessarily
+         *   recomputation within the \a action function.
          *   If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - The triangulation argument will be passed as an xvalue; a typical
+         *   action could (for example) take it by const reference and query it,
+         *   or take it by value and modify it, or take it by rvalue reference
+         *   and move it into more permanent storage.
          *
          * - \a action must return a boolean.  If \a action ever returns
          *   \c true, then this indicates that processing should stop
@@ -582,12 +588,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *   that this routine visits will be obtained via Pachner moves
          *   from the original form of this triangulation, before any
          *   subsequent changes (if any) were made.
-         *
-         * - \a action may, if it chooses, make changes to the triangulation
-         *   that is passed in its initial arguemt(s) (though it must not
-         *   delete it).  This will likewise not affect the search, since
-         *   the triangulation that is passed to \a action will be destroyed
-         *   immediately after \a action is called.
          *
          * - \a action will only be called once for each triangulation
          *   (including this starting triangulation).  In other words, no
@@ -640,7 +640,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you call it as retriangulate(height, threads, action).
          * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Triangulation<4>&) representing the signature
+         * (const std::string&, Triangulation<4>&&) representing the signature
          * and the triangulation, as described in option (b) above.
          *
          * @param height the maximum number of \e additional pentachora to
@@ -1055,9 +1055,17 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         Triangulation<4>, Action> Traits;
     static_assert(Traits::valid,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
-    return retriangulateInternal<Traits::withSig>(height, nThreads, tracker,
-        Traits::convert(std::forward<Action>(action),
-            std::forward<Args>(args)...));
+    if constexpr (Traits::withSig) {
+        return retriangulateInternal<true>(height, nThreads, tracker,
+            [&](const std::string& sig, Triangulation<4>&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        return retriangulateInternal<false>(height, nThreads, tracker,
+            [&](Triangulation<4>&& obj) {
+                return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    }
 }
 
 inline void Triangulation<4>::swapContents(Triangulation<4>& other) {
