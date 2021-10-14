@@ -59,7 +59,7 @@ void process(const regina::Triangulation<dim>& tri) {
     std::string simpler;
 
     tri.retriangulate(argHeight, argThreads, nullptr /* tracker */,
-        [&nSolns, &nonMinimal, &simpler, tri](
+        [&nSolns, &nonMinimal, &simpler, &tri](
                 const std::string& sig, const regina::Triangulation<dim>& t) {
             if (t.size() > tri.size())
                 return false;
@@ -90,7 +90,7 @@ void process(const regina::Link& knot) {
     std::string simpler;
 
     knot.rewrite(argHeight, argThreads, nullptr /* tracker */,
-        [&nSolns, &nonMinimal, &simpler, knot](
+        [&nSolns, &nonMinimal, &simpler, &knot](
                 const std::string& sig, const regina::Link& k) {
             if (k.size() > knot.size())
                 return false;
