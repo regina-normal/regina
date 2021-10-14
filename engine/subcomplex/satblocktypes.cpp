@@ -214,7 +214,7 @@ SatMobius* SatMobius::beginsRegion(const SatAnnulus& annulus, TetList&) {
 
     // Got it!
 
-    SatMobius* ans = new SatMobius(position);
+    auto* ans = new SatMobius(position);
     ans->annulus_[0] = annulus;
     return ans;
 }
@@ -337,7 +337,7 @@ SatLST* SatLST::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
         avoidTets.insert(current);
     }
 
-    SatLST* ans = new SatLST(*lst, lstRoles);
+    auto* ans = new SatLST(*lst, lstRoles);
     ans->annulus_[0] = annulus;
     return ans;
 }
@@ -409,7 +409,7 @@ SatTriPrism* SatTriPrism::beginsRegionMajor(const SatAnnulus& annulus,
 
     // All three tetrahedra are joined together as expected!
 
-    SatTriPrism* ans = new SatTriPrism(true);
+    auto* ans = new SatTriPrism(true);
 
     const Perm<4> pairSwap(1, 0, 3, 2);
     ans->annulus_[0] = annulus;
@@ -430,7 +430,7 @@ SatTriPrism* SatTriPrism::beginsRegionMajor(const SatAnnulus& annulus,
 }
 
 SatBlockModel SatTriPrism::model(bool major) {
-    Triangulation<3>* tri = new Triangulation<3>;
+    auto* tri = new Triangulation<3>;
     Tetrahedron<3>* a = tri->newTetrahedron();
     Tetrahedron<3>* b = tri->newTetrahedron();
     Tetrahedron<3>* c = tri->newTetrahedron();
@@ -438,7 +438,7 @@ SatBlockModel SatTriPrism::model(bool major) {
     b->join(1, a, Perm<4>(2, 0, 3, 1));
     c->join(1, b, Perm<4>(2, 0, 3, 1));
 
-    SatTriPrism* ans = new SatTriPrism(major);
+    auto* ans = new SatTriPrism(major);
 
     const Perm<4> id;
     const Perm<4> pairSwap(1, 0, 3, 2);
@@ -537,7 +537,7 @@ SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
 
     // All looking good!
 
-    SatCube* ans = new SatCube();
+    auto* ans = new SatCube();
 
     ans->annulus_[0] = annulus;
     ans->annulus_[1].tet[0] = annulus.tet[1];
@@ -564,7 +564,7 @@ SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
 }
 
 SatBlockModel SatCube::model() {
-    Triangulation<3>* tri = new Triangulation<3>;
+    auto* tri = new Triangulation<3>;
     Tetrahedron<3>* bdry0 = tri->newTetrahedron();
     Tetrahedron<3>* bdry1 = tri->newTetrahedron();
     Tetrahedron<3>* bdry2 = tri->newTetrahedron();
@@ -582,7 +582,7 @@ SatBlockModel SatCube::model() {
     bdry3->join(3, central0, Perm<4>(0, 3, 1, 2));
     bdry3->join(1, central1, Perm<4>(1, 2));
 
-    SatCube* ans = new SatCube();
+    auto* ans = new SatCube();
 
     ans->annulus_[0].tet[0] = bdry0;
     ans->annulus_[0].tet[1] = bdry1;
@@ -655,7 +655,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
         if (annulus.roles[1] == annulus.tet[0]->adjacentGluing(
                 annulus.roles[0][2]) * annulus.roles[0] * Perm<4>(0, 1)) {
             // Got one that's untwisted.
-            SatReflectorStrip* ans = new SatReflectorStrip(1, false);
+            auto* ans = new SatReflectorStrip(1, false);
             ans->annulus_[0] = annulus;
 
             avoidTets.insert(annulus.tet[0]);
@@ -668,7 +668,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
         if (annulus.roles[1] == annulus.tet[0]->adjacentGluing(
                 annulus.roles[0][2]) * annulus.roles[0]) {
             // Got one that's twisted.
-            SatReflectorStrip* ans = new SatReflectorStrip(1, true);
+            auto* ans = new SatReflectorStrip(1, true);
             ans->annulus_[0] = annulus;
 
             avoidTets.insert(annulus.tet[0]);
@@ -704,7 +704,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
     Tetrahedron<3> *nextLeft, *nextMiddle, *nextRight;
     Perm<4> nextLeftRoles, nextMiddleRoles, nextRightRoles;
 
-    while (1) {
+    while (true) {
         // Run off the right hand side looking for the next tetrahedron.
         nextLeft = foundSoFar.back()->adjacentTetrahedron(
             rolesSoFar.back()[2]);
@@ -723,7 +723,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
                 return nullptr;
             }
 
-            SatReflectorStrip* ans = new SatReflectorStrip(length, twisted);
+            auto* ans = new SatReflectorStrip(length, twisted);
 
             std::copy(foundSoFar.begin(), foundSoFar.end(),
                 std::inserter(avoidTets, avoidTets.begin()));
@@ -791,8 +791,8 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
 }
 
 SatBlockModel SatReflectorStrip::model(unsigned length, bool twisted) {
-    Triangulation<3>* tri = new Triangulation<3>;
-    SatReflectorStrip* ans = new SatReflectorStrip(length, twisted);
+    auto* tri = new Triangulation<3>;
+    auto* ans = new SatReflectorStrip(length, twisted);
 
     const Perm<4> id;
     Tetrahedron<3> *upper, *lower, *middle;
@@ -849,7 +849,7 @@ SatLayering* SatLayering::beginsRegion(const SatAnnulus& annulus,
             annulus.roles[0][2] == annulus.roles[1][0]) {
         avoidTets.insert(annulus.tet[0]);
 
-        SatLayering* ans = new SatLayering(true);
+        auto* ans = new SatLayering(true);
         ans->annulus_[0] = annulus;
         ans->annulus_[1].tet[0] = ans->annulus_[1].tet[1] = annulus.tet[0];
         ans->annulus_[1].roles[0] = annulus.roles[1] * Perm<4>(1, 0, 3, 2);
@@ -863,7 +863,7 @@ SatLayering* SatLayering::beginsRegion(const SatAnnulus& annulus,
             annulus.roles[0][2] == annulus.roles[1][1]) {
         avoidTets.insert(annulus.tet[0]);
 
-        SatLayering* ans = new SatLayering(false);
+        auto* ans = new SatLayering(false);
         ans->annulus_[0] = annulus;
         ans->annulus_[1].tet[0] = ans->annulus_[1].tet[1] = annulus.tet[0];
         ans->annulus_[1].roles[0] = annulus.roles[1] * Perm<4>(1, 0, 3, 2);

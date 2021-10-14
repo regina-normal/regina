@@ -891,7 +891,7 @@ namespace {
 
     void BdryQuad::join(Bdry* other) {
         // Assume other is a BdryQuad.
-        BdryQuad* dest = static_cast<BdryQuad*>(other);
+        auto* dest = static_cast<BdryQuad*>(other);
 
         // Get the map from *this* 012 to *dest* tetrahedron vertices.
         Perm<4> destMap = block_->outerTet()->
@@ -935,7 +935,7 @@ namespace {
 
     void BdryHex::join(Bdry* other) {
         // Assume other is a BdryQuad.
-        BdryHex* dest = static_cast<BdryHex*>(other);
+        auto* dest = static_cast<BdryHex*>(other);
 
         // Get the map from *this* 012 to *dest* tetrahedron vertices.
         Perm<4> destMap = block_->outerTet()->
@@ -1158,7 +1158,7 @@ Triangulation<3> NormalSurface::cutAlong() const {
         return ans;
 
     unsigned long i;
-    TetBlockSet** sets = new TetBlockSet*[nTet];
+    auto* sets = new TetBlockSet*[nTet];
     for (i = 0; i < nTet; ++i)
         sets[i] = new TetBlockSet(this, i, ans);
 

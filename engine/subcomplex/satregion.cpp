@@ -232,9 +232,9 @@ std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
         untwisted /* untwisted punctures */, twisted /* twisted punctures */,
         0 /* untwisted reflectors */, twistedBlocks_ /* twisted reflectors */);
 
-    for (auto it = blocks_.begin(); it != blocks_.end(); it++)
-        it->block()->adjustSFS(sfs, ! regXor(reflect,
-            regXor(it->refVert(), it->refHoriz())));
+    for (const auto& b : blocks_)
+        b.block()->adjustSFS(sfs, ! regXor(reflect,
+            regXor(b.refVert(), b.refHoriz())));
 
     if (shiftedAnnuli_)
         sfs.insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
