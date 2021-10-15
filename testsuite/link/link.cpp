@@ -1116,13 +1116,13 @@ class LinkTest : public CppUnit::TestFixture {
             int cr, strand, side, sign;
             for (side = 0; side < 2; ++side)
                 for (sign = -1; sign <= 1; sign += 2) {
-                    if (link.r1(StrandRef(), side, sign, 1, 0))
+                    if (link.r1(StrandRef(), side, sign, true, false))
                         ++total;
 
                     for (cr = 0; cr < link.size(); ++cr)
                         for (strand = 0; strand < 2; ++strand)
                             if (link.r1(link.crossing(cr)->strand(strand),
-                                    side, sign, 1, 0))
+                                    side, sign, true, false))
                                 ++total;
                 }
 
@@ -1137,12 +1137,12 @@ class LinkTest : public CppUnit::TestFixture {
         void verifyCountR1Down(Link& link, size_t expected, const char* name) {
             size_t total = 0;
 
-            if (link.r1(nullptr, 1, 0))
+            if (link.r1(nullptr, true, false))
                 ++total;
 
             int cr;
             for (cr = 0; cr < link.size(); ++cr)
-                if (link.r1(link.crossing(cr), 1, 0))
+                if (link.r1(link.crossing(cr), true, false))
                     ++total;
 
             if (total != expected) {
@@ -1159,18 +1159,19 @@ class LinkTest : public CppUnit::TestFixture {
             int cr1, cr2, str1, str2, side1, side2;
             for (side1 = 0; side1 < 2; ++side1)
                 for (side2 = 0; side2 < 2; ++side2) {
-                    if (link.r2(StrandRef(), side1, StrandRef(), side2, 1, 0))
+                    if (link.r2(StrandRef(), side1, StrandRef(), side2,
+                            true, false))
                         ++total;
 
                     for (cr1 = 0; cr1 < link.size(); ++cr1)
                         for (str1 = 0; str1 < 2; ++str1) {
                             if (link.r2(StrandRef(), side1,
                                     link.crossing(cr1)->strand(str1), side2,
-                                    1, 0))
+                                    true, false))
                                 ++total;
                             if (link.r2(link.crossing(cr1)->strand(str1),
                                     side1, StrandRef(), side2,
-                                    1, 0))
+                                    true, false))
                                 ++total;
 
                             for (cr2 = 0; cr2 < link.size(); ++cr2)
@@ -1179,7 +1180,7 @@ class LinkTest : public CppUnit::TestFixture {
                                             link.crossing(cr1)->strand(str1),
                                             side1,
                                             link.crossing(cr2)->strand(str2),
-                                            side2, 1, 0))
+                                            side2, true, false))
                                         ++total;
                         }
                 }
@@ -1209,11 +1210,11 @@ class LinkTest : public CppUnit::TestFixture {
 
             size_t total = 0;
 
-            if (link.r2(nullptr, 1, 0))
+            if (link.r2(nullptr, true, false))
                 ++total;
 
             for (cr = 0; cr < link.size(); ++cr)
-                if (link.r2(link.crossing(cr), 1, 0))
+                if (link.r2(link.crossing(cr), true, false))
                     ++total;
 
             if (total != expectedCr) {
@@ -1225,12 +1226,13 @@ class LinkTest : public CppUnit::TestFixture {
 
             total = 0;
 
-            if (link.r2(StrandRef(), 1, 0))
+            if (link.r2(StrandRef(), true, false))
                 ++total;
 
             for (cr = 0; cr < link.size(); ++cr)
                 for (strand = 0; strand < 2; ++strand)
-                    if (link.r2(link.crossing(cr)->strand(strand), 1, 0))
+                    if (link.r2(link.crossing(cr)->strand(strand),
+                            true, false))
                         ++total;
 
             if (total != expectedStr) {
@@ -1246,11 +1248,11 @@ class LinkTest : public CppUnit::TestFixture {
 
             size_t total = 0;
             for (side = 0; side < 2; ++side) {
-                if (link.r3(nullptr, side, 1, 0))
+                if (link.r3(nullptr, side, true, false))
                     ++total;
 
                 for (cr = 0; cr < link.size(); ++cr)
-                    if (link.r3(link.crossing(cr), side, 1, 0))
+                    if (link.r3(link.crossing(cr), side, true, false))
                         ++total;
             }
 
@@ -1263,13 +1265,13 @@ class LinkTest : public CppUnit::TestFixture {
 
             total = 0;
             for (side = 0; side < 2; ++side) {
-                if (link.r3(StrandRef(), side, 1, 0))
+                if (link.r3(StrandRef(), side, true, false))
                     ++total;
 
                 for (cr = 0; cr < link.size(); ++cr)
                     for (strand = 0; strand < 2; ++strand)
                         if (link.r3(link.crossing(cr)->strand(strand),
-                                side, 1, 0))
+                                side, true, false))
                             ++total;
             }
 

@@ -53,7 +53,7 @@ void addVectorLarge(pybind11::module_& m) {
         .def(pybind11::init([](pybind11::list l) {
             regina::Integer* coeffs =
                 regina::python::seqFromList<regina::Integer>(l);
-            VectorLarge* ans = new VectorLarge(coeffs, coeffs + l.size());
+            auto* ans = new VectorLarge(coeffs, coeffs + l.size());
             delete[] coeffs;
             return ans;
         }))

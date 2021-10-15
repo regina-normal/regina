@@ -135,24 +135,23 @@ class GroupPresentationTest : public CppUnit::TestFixture {
     }
 
     void RS_test() {
-        for (std::list<GroupPresentation*>::iterator i=presList.begin();
-                i!=presList.end(); i++) {
-            (*i)->intelligentSimplify();
+        for (GroupPresentation* g : presList) {
+            g->intelligentSimplify();
             // Currently identifyExtensionOverZ() is private, so we
             // cannot call it.  Examine the name from recogniseGroup()
             // instead to see if R-S worked.
-            std::string name = (*i)->recogniseGroup();
+            std::string name = g->recogniseGroup();
             if (! regina::startsWith(name, "Z~")) {
                 // We know which cases this should fail for.
                 // Note that Reidemeister-Schreir should work for Z and KPDS,
                 // but their recognised names are Z and (unknown)
                 // respectively and so we exclude them here.
-                if ( (*i != &Z_pres) &&
-                        (*i != &Z6_pres) &&
-                        (*i != &D8_pres) &&
-                        (*i != &FOX_pres) &&
-                        (*i != &KPDS_pres) &&
-                        (*i != &Z2Z3Z8_pres) )
+                if ( (g != &Z_pres) &&
+                        (g != &Z6_pres) &&
+                        (g != &D8_pres) &&
+                        (g != &FOX_pres) &&
+                        (g != &KPDS_pres) &&
+                        (g != &Z2Z3Z8_pres) )
                     CPPUNIT_FAIL("Reidemeister-Schreir failure.");
             }
         }
@@ -196,9 +195,8 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL("GroupExpression::number of terms (7). "+word3.str());
     }
     void presValid_test() {
-        for (std::list<GroupPresentation*>::iterator i=presList.begin();
-                i!=presList.end(); i++)
-            if (!(*i)->isValid())
+        for (GroupPresentation* g : presList)
+            if (! g->isValid())
                 CPPUNIT_FAIL("Invalid presentation.");
         GroupPresentation DPRES;
         DPRES.addGenerator(1);
@@ -220,9 +218,8 @@ class GroupPresentationTest : public CppUnit::TestFixture {
     */
     void homalign_test() {
         // ensure homological alignment does what we claim
-        for (std::list<GroupPresentation*>::iterator i=presList.begin();
-                i!=presList.end(); i++) {
-            GroupPresentation tPres( *(*i) );
+        for (GroupPresentation* g : presList) {
+            GroupPresentation tPres( *g );
             tPres.homologicalAlignment();
             MarkedAbelianGroup mab = tPres.markedAbelianisation();
             unsigned long N(mab.countInvariantFactors());
@@ -281,7 +278,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 8.");
                 } // end k loop
             } // end j loop
-        } // end i loop
+        } // end presList loop
     } // end homalign_test()
 };
 

@@ -24,12 +24,12 @@
 #include <triangulation/dim4.h>
 #include <link/link.h>
 
-typedef std::tuple<int, int, int> vertex3; // (c_id, v_id, s_id)
-typedef std::tuple<int, int> vertex; // (v_id, s_id)
-typedef std::tuple<vertex3, vertex3, int> edge3; // (v1, v2, col)
-typedef std::tuple<vertex, vertex, int> edge;
+using vertex3 = std::tuple<int, int, int>; // (c_id, v_id, s_id)
+using vertex = std::tuple<int, int>; // (v_id, s_id)
+using edge3 = std::tuple<vertex3, vertex3, int>; // (v1, v2, col)
+using edge = std::tuple<vertex, vertex, int>;
 
-typedef std::vector<std::array<int, 4>> pdcode;
+using pdcode = std::vector<std::array<int, 4>>;
 
 template <typename T, typename D>
 std::ostream& operator<<(std::ostream& os, const std::pair<T, D> &p)
@@ -1199,8 +1199,8 @@ int main(int argc, char* argv[]) {
             for (int i=0; i<size; i++) {
                 tmp_t.newPentachoron();
             }
-            for (int i=0; i<gl.size(); i++) {
-                tmp_t.pentachoron(std::get<0>(gl[i]))->join(std::get<2>(gl[i]), tmp_t.pentachoron(std::get<1>(gl[i])), perm);
+            for (const auto& g : gl) {
+                tmp_t.pentachoron(std::get<0>(g))->join(std::get<2>(g), tmp_t.pentachoron(std::get<1>(g)), perm);
             }
             std::cout << "\rHere is the isomorphism signature:\n" << std::flush;
             std::cout << tmp_t.isoSig() << "\n";
@@ -1221,8 +1221,8 @@ int main(int argc, char* argv[]) {
             for (int i=0; i<size; i++) {
                 tmp_t.newTetrahedron();
             }
-            for (int i=0; i<gl.size(); i++) {
-                tmp_t.tetrahedron(std::get<0>(gl[i]))->join(std::get<2>(gl[i]), tmp_t.tetrahedron(std::get<1>(gl[i])), perm);
+            for (const auto& g : gl) {
+                tmp_t.tetrahedron(std::get<0>(g))->join(std::get<2>(g), tmp_t.tetrahedron(std::get<1>(g)), perm);
             }
             std::cout << "\r " << std::endl;
             std::cout << "\rHere is the isomorphism signature:\n" << std::flush;

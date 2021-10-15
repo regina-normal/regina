@@ -925,8 +925,8 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
     unsigned nEmbs = e->degree();
-    Pentachoron<4>** embPent = new Pentachoron<4>*[nEmbs];
-    Perm<5>* embVert = new Perm<5>[nEmbs];
+    auto* embPent = new Pentachoron<4>*[nEmbs];
+    auto* embVert = new Perm<5>[nEmbs];
 
     unsigned i = 0;
     for (auto& emb : *e) {

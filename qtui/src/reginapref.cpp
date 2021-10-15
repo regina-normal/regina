@@ -264,9 +264,8 @@ void ReginaPreferences::slotApply() {
         // being vague about it.  Maybe they don't have GAP installed.
         
         bool found = false;
-        for( QStringList::iterator it = pathList.begin(); it != pathList.end();
-            ++it) {
-            QDir dir(*it);
+        for (const auto& p : pathList) {
+            QDir dir(p);
             if ( dir.exists(strVal) ) {
                 found = true;
                 break;

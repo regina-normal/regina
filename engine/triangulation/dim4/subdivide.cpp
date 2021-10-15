@@ -137,7 +137,7 @@ bool Triangulation<4>::idealToFinite() {
         }
     if (!idVrts) return false;
 // * * * Create new triangulation * * *
-    Triangulation<4>* newTri( new Triangulation<4> );
+    Triangulation<4> newTri;
 #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing idealToFinite()\n";
 #endif
@@ -152,14 +152,14 @@ bool Triangulation<4>::idealToFinite() {
                 pIv = true;
         if (!pIv) {
             newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
-                            ( subDivNot( _OP, i ), newTri->newPentachoron() ) );
+                            ( subDivNot( _OP, i ), newTri.newPentachoron() ) );
             continue;
         }
         for (unsigned long j=0; j<5; j++) { // tet / pen vtx loop
             // _CiT check
             if (shouldTruncate(aPen->vertex(j)))
                 newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
-                        ( subDivNot( _CiT, i, j ), newTri->newPentachoron() ) );
+                        ( subDivNot( _CiT, i, j ), newTri.newPentachoron() ) );
             // _CT check
             bool TIv(false); // tet across from j has ideal vertex?
             for (unsigned long k=1; k<5; k++)
@@ -167,7 +167,7 @@ bool Triangulation<4>::idealToFinite() {
                     TIv = true;
             if (!TIv) {
                 newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
-                         ( subDivNot( _CT, i, j ), newTri->newPentachoron() ) );
+                         ( subDivNot( _CT, i, j ), newTri.newPentachoron() ) );
                 continue;
             }
             // we're in situation 4, 5, or 6.
@@ -176,10 +176,10 @@ bool Triangulation<4>::idealToFinite() {
                 if (shouldTruncate(aTet->vertex(k)))
                     newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
                      ( subDivNot( _CCit, i, j, k ), 
-                       newTri->newPentachoron() ) ); // CCit
+                       newTri.newPentachoron() ) ); // CCit
                 newPens.insert( std::pair< subDivNot, Pentachoron<4>* > // CCt
                      ( subDivNot( _CCt, i, j, k ), 
-                       newTri->newPentachoron() ) );
+                       newTri.newPentachoron() ) );
                 bool tIv(false); // check if remaining triangle has 
                 for (unsigned long l=1; l<4; l++) // ideal vertex or not.
                     if (shouldTruncate(aTet->vertex( (k+l) % 4))) tIv = true;
@@ -191,7 +191,7 @@ bool Triangulation<4>::idealToFinite() {
                     if (shouldTruncate(aTri->vertex(l)) )
                         newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
                          ( subDivNot( _CCdt, i, j, k, l ), 
-                           newTri->newPentachoron() ) );
+                           newTri.newPentachoron() ) );
             } // end k loop
         } // end j loop
     } // end i loop
@@ -668,8 +668,7 @@ bool Triangulation<4>::idealToFinite() {
                 }
         } // j loop -- edges
     }
-    swap(*newTri);
-    delete newTri;
+    swap(newTri);
     return true;
 }
 

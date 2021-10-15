@@ -579,7 +579,7 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
 bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     // Find the tetrahedra to remove.
     std::deque<EdgeEmbedding<3>>::const_iterator it;
-    Tetrahedron<3>* tet = 0;
+    Tetrahedron<3>* tet = nullptr;
     Perm<4> p;
 
     if (check) {
@@ -806,8 +806,8 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
     size_t degree = e->degree();
-    Tetrahedron<3>** embTet = new Tetrahedron<3>*[degree];
-    Perm<4>* embVertices = new Perm<4>[degree];
+    auto* embTet = new Tetrahedron<3>*[degree];
+    auto* embVertices = new Perm<4>[degree];
 
     unsigned i;
     for (i = 0, it = e->begin(); it != e->end(); ++i, ++it) {
@@ -898,7 +898,7 @@ void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     ChangeEventSpan span(*this);
 
     // Run a breadth-first search over all tetrahedra.
-    Tetrahedron<3>** ordered = new Tetrahedron<3>*[n];
+    auto* ordered = new Tetrahedron<3>*[n];
     bool* used = new bool[n];
 
     std::fill(used, used + n, false);

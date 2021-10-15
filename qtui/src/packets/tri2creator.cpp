@@ -210,8 +210,8 @@ Tri2Creator::Tri2Creator() {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     exampleWhich = new QComboBox(hArea);
-    for (size_t i = 0; i < examples.size(); ++i)
-        exampleWhich->addItem(examples[i].name());
+    for (const auto& e : examples)
+        exampleWhich->addItem(e.name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);

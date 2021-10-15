@@ -291,9 +291,8 @@ QString GroupWidget::verifyGAPExec() {
         QStringList pathList = paths.split(pathSeparator);
 
         bool found = false;
-        for( QStringList::iterator it = pathList.begin(); it != pathList.end();
-            ++it) {
-            QDir dir(*it);
+        for (const auto& p : pathList) {
+            QDir dir(p);
             if ( dir.exists(useExec) ) {
                 found = true;
                 break;

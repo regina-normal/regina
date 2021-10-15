@@ -55,7 +55,7 @@ void Vertex<3>::writeTextShort(std::ostream& out) const {
 const Triangulation<2>& Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // Build the triangulation.
-        Triangulation<2>* ans = new Triangulation<2>();
+        auto* ans = new Triangulation<2>();
         // Ensure only one event pair is fired in this sequence of changes.
         Triangulation<2>::ChangeEventSpan span(*ans);
 

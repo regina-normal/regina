@@ -1937,22 +1937,20 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         static void verifyFundGroupVsH1(const Triangulation<3>& tri,
                 const char* name) {
-            GroupPresentation* pi1 =
-                new GroupPresentation(tri.fundamentalGroup());
+            GroupPresentation pi1(tri.fundamentalGroup());
 
-            pi1->intelligentSimplify();
+            pi1.intelligentSimplify();
 
             // Abelianise, and make sure we get H1.
-            size_t gen = pi1->countGenerators();
-            size_t rel = pi1->countRelations();
+            size_t gen = pi1.countGenerators();
+            size_t rel = pi1.countRelations();
 
             regina::MatrixInt m(rel, gen);
             for (size_t i = 0; i < rel; ++i) {
-                const regina::GroupExpression& r = pi1->relation(i);
+                const regina::GroupExpression& r = pi1.relation(i);
                 for (const auto& t : r.terms())
                     m.entry(i, t.generator) += t.exponent;
             }
-            delete pi1;
 
             AbelianGroup abelian;
             abelian.addGroup(m);
@@ -3444,7 +3442,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // In the case of a valid triangulation, ensure that the
             // boundary components are topologically unchanged.
             if (tri.isValid()) {
-                typedef std::pair<long, bool> BCSpec;
+                using BCSpec = std::pair<long, bool>;
 
                 std::vector<BCSpec> bcOld;
                 for (BoundaryComponent<3>* bc : tri.boundaryComponents())
@@ -3500,7 +3498,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // boundary components are topologically unchanged, except
             // for sphere which must vanish.
             if (tri.isValid()) {
-                typedef std::pair<long, bool> BCSpec;
+                using BCSpec = std::pair<long, bool>;
 
                 std::vector<BCSpec> bcOld;
                 for (BoundaryComponent<3>* bc : tri.boundaryComponents())

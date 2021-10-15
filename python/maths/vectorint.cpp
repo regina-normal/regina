@@ -53,7 +53,7 @@ void addVectorInt(pybind11::module_& m) {
         .def(pybind11::init([](pybind11::list l) {
             regina::Integer* coeffs =
                 regina::python::seqFromList<regina::Integer>(l);
-            VectorInt* ans = new VectorInt(coeffs, coeffs + l.size());
+            auto* ans = new VectorInt(coeffs, coeffs + l.size());
             delete[] coeffs;
             return ans;
         }))

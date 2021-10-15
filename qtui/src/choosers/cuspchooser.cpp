@@ -62,13 +62,11 @@ int CuspChooser::selected() {
 
 void CuspChooser::select(int option) {
     int index = 0;
-    std::vector<int>::const_iterator it = options_.begin();
-    while (it != options_.end()) {
-        if ((*it) == option) {
+    for (int c : options_) {
+        if (c == option) {
             setCurrentIndex(index);
             return;
         }
-        ++it;
         ++index;
     }
 

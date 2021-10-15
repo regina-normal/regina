@@ -48,7 +48,7 @@ void NormalSurfaces::buildReducedFromStandard(
     // We need to get rid of vertex links entirely before we start.
     // Build a new list of pointers to the (non-vertex-linking) surfaces
     // that we are interested in.
-    const NormalSurface** use = new const NormalSurface*[stdList.size()];
+    auto* use = new const NormalSurface*[stdList.size()];
     size_t nUse = 0;
 
     for (const NormalSurface& s : stdList)

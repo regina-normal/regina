@@ -387,19 +387,7 @@ unsigned basicTokenise(OutputIterator results, const std::string& str);
  *
  * \ingroup utilities
  */
-std::string stringToToken(const char* str);
-
-/**
- * Returns a token derived from the given string.
- * All whitespace characters in the given string will be replaced with
- * an underscore.
- *
- * @param str the string on which to base the token.
- * @return the corresponding token.
- *
- * \ingroup utilities
- */
-std::string stringToToken(const std::string& str);
+std::string stringToToken(std::string str);
 
 /**
  * Converts the given C++ integer into a unicode superscript string.

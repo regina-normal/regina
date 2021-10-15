@@ -47,8 +47,7 @@ void addPolynomial(pybind11::module_& m) {
         .def(pybind11::init<const Polynomial<Rational>&>())
         .def(pybind11::init([](pybind11::list l) {
             Rational* coeffs = regina::python::seqFromList<Rational>(l);
-            Polynomial<Rational>* ans = new Polynomial<Rational>(
-                coeffs, coeffs + l.size());
+            auto* ans = new Polynomial<Rational>(coeffs, coeffs + l.size());
             delete[] coeffs;
             return ans;
         }))

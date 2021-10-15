@@ -250,9 +250,8 @@ bool FilterPropUI::notifyOptionsChanged() {
         filter->removeAllEulerChars();
 
         QStringList list = ecText.split(reECSeps);
-        for (QStringList::Iterator it = list.begin(); it != list.end();
-                it++)
-            filter->addEulerChar((*it).toUtf8().constData());
+        for (const auto& ec : list)
+            filter->addEulerChar(ec.toUtf8().constData());
 
         // Refill the text box so that it looks nice.
         eulerList->setText(filterECList());
@@ -304,7 +303,7 @@ QString FilterPropUI::filterECList() {
     if (ecs.empty())
         return QString();
 
-    std::set<regina::LargeInteger>::reverse_iterator it = ecs.rbegin();
+    auto it = ecs.rbegin();
     QString ans = (*it).stringValue().c_str();
     for (++it; it != ecs.rend(); ++it) {
         ans.append(", ");

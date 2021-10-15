@@ -168,20 +168,11 @@ bool valueOf(const std::string& str, BoolSet& dest) {
     return true;
 }
 
-std::string stringToToken(const char* str) {
-    std::string ans(str);
-    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
-        if (isspace(*it))
-            *it = '_';
-    return ans;
-}
-
-std::string stringToToken(const std::string& str) {
-    std::string ans(str);
-    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
-        if (isspace(*it))
-            *it = '_';
-    return ans;
+std::string stringToToken(std::string str) {
+    for (auto& c : str)
+        if (isspace(c))
+            c = '_';
+    return str; // I *believe* this is a move, not a copy (C++ Core Issue 1148).
 }
 
 } // namespace regina

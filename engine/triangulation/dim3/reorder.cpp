@@ -157,8 +157,8 @@ bool check_consistency_on_tet(const Triangulation<3> &trig,
 
     // orientation can't be determined until all edge_orientations are assigned
 
-    for(int i = 0; i < 6; i++)
-        if(edge_orientations_tet[i] == 0)
+    for (int e : edge_orientations_tet)
+        if (e == 0)
             return true;
 
     // check for valid orientation
@@ -193,7 +193,7 @@ Isomorphism<3>* iso_from_edges(const Triangulation<3> &trig,
                              const std::vector<int> & edge_orientations,
                              bool force_oriented) {
 
-    Isomorphism<3>* iso = new Isomorphism<3>(trig.size());
+    auto* iso = new Isomorphism<3>(trig.size());
 
     // iterate through all tetrahedra
 

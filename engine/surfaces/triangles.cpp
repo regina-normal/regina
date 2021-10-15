@@ -78,7 +78,7 @@ NormalEncoding NormalSurface::reconstructTriangles(
     std::fill(used, used + 2 * tri.countEdges(), false);
 
     // Prepare a stack of edge ends that we are ready to examine.
-    EdgeEnd* examine = new EdgeEnd[2 * tri.countEdges()];
+    auto* examine = new EdgeEnd[2 * tri.countEdges()];
     size_t nExamine = 0;
 
     // Run through the vertices and fix the triangular coordinates

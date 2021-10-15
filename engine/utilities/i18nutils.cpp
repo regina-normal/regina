@@ -33,7 +33,7 @@
 #include <cerrno>
 #include <cstddef>
 #include <cstring>
-#include <locale.h>
+#include <clocale>
 #include "regina-config.h"
 #include "utilities/i18nutils.h"
 

@@ -61,7 +61,7 @@ namespace {
     static bool useDetailedTests = false;
 }
 
-typedef void (*TestSet)(CppUnit::TextUi::TestRunner& runner);
+using TestSet = void (*)(CppUnit::TextUi::TestRunner& runner);
 
 void checkTestParams() {
     if (checkedParams)

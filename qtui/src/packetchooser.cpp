@@ -47,7 +47,7 @@ using regina::Packet;
 
 PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         RootRole useRootRole, QWidget* parent) :
-        QComboBox(parent), subtree(newSubtree), filter(nullptr),
+        QComboBox(parent), subtree(std::move(newSubtree)), filter(nullptr),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -56,7 +56,7 @@ PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
 
 PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         PacketFilter* newFilter, RootRole useRootRole, QWidget* parent) :
-        QComboBox(parent), subtree(newSubtree), filter(newFilter),
+        QComboBox(parent), subtree(std::move(newSubtree)), filter(newFilter),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -66,7 +66,7 @@ PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
 PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         PacketFilter* newFilter, RootRole useRootRole, bool allowNone,
         std::shared_ptr<Packet> initialSelection, QWidget* parent) :
-        QComboBox(parent), subtree(newSubtree), filter(newFilter),
+        QComboBox(parent), subtree(std::move(newSubtree)), filter(newFilter),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -87,13 +87,11 @@ std::shared_ptr<Packet> PacketChooser::selectedPacket() {
 
 void PacketChooser::selectPacket(std::shared_ptr<Packet> packet) {
     int index = 0;
-    std::vector<regina::Packet*>::const_iterator it = packets.begin();
-    while (it != packets.end()) {
-        if ((*it) == packet.get()) {
+    for (regina::Packet* p : packets) {
+        if (p == packet.get()) {
             setCurrentIndex(index);
             return;
         }
-        ++it;
         ++index;
     }
 
@@ -109,10 +107,9 @@ void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
 
     onAutoUpdate = shouldAutoUpdate;
     if (onAutoUpdate) {
-        for (std::vector<regina::Packet*>::iterator it = packets.begin();
-                it != packets.end(); it++)
-            if (*it)
-                (*it)->listen(this);
+        for (regina::Packet* p : packets)
+            if (p)
+                p->listen(this);
     } else
         unregisterFromAllPackets();
 }

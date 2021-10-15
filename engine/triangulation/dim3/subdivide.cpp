@@ -51,7 +51,7 @@ bool Triangulation<3>::idealToFinite() {
     // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span1(staging);
 
-    Tetrahedron<3> **newTet = new Tetrahedron<3>*[32*numOldTet];
+    auto* newTet = new Tetrahedron<3>*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)
         newTet[i] = staging.newTetrahedron();
 

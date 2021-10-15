@@ -52,22 +52,15 @@ void countFacePairings(const FacetPairing<3>& pair,
  */
 namespace {
     struct BadGraphs {
-        unsigned tripleEdge;
-        unsigned brokenDoubleEndedChain;
-        unsigned oneEndedChainWithDoubleHandle;
-        unsigned wedgedDoubleEndedChain;
-        unsigned oneEndedChainWithStrayBigon;
-        unsigned tripleOneEndedChain;
-        unsigned singleStar;
-        unsigned doubleStar;
-        unsigned doubleSquare;
-
-        BadGraphs() : tripleEdge(0), brokenDoubleEndedChain(0),
-                      oneEndedChainWithDoubleHandle(0),
-                      wedgedDoubleEndedChain(0),
-                      oneEndedChainWithStrayBigon(0), tripleOneEndedChain(0),
-                      singleStar(0), doubleStar(0), doubleSquare(0) {
-        }
+        unsigned tripleEdge { 0 };
+        unsigned brokenDoubleEndedChain { 0 };
+        unsigned oneEndedChainWithDoubleHandle { 0 };
+        unsigned wedgedDoubleEndedChain { 0 };
+        unsigned oneEndedChainWithStrayBigon { 0 };
+        unsigned tripleOneEndedChain { 0 };
+        unsigned singleStar { 0 };
+        unsigned doubleStar { 0 };
+        unsigned doubleSquare { 0 };
     };
 }
 

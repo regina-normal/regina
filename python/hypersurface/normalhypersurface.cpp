@@ -86,7 +86,7 @@ void addNormalHypersurface(pybind11::module_& m) {
             // Here we use the copy constructor, which has the side-effect of
             // cloning the surface name also (which the C++ clone() does not).
             // To ensure no change in behaviour, we revert the name change here.
-            NormalHypersurface* ans = new NormalHypersurface(s);
+            auto* ans = new NormalHypersurface(s);
             ans->setName(std::string());
             return ans;
         })

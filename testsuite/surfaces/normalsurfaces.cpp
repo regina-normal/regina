@@ -442,9 +442,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             if (n == 0)
                 return true;
 
-            typedef const Vector<LargeInteger>* VecPtr;
-            VecPtr* lhsRaw = new VecPtr[n];
-            VecPtr* rhsRaw = new VecPtr[n];
+            auto* lhsRaw = new const Vector<LargeInteger>*[n];
+            auto* rhsRaw = new const Vector<LargeInteger>*[n];
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
@@ -597,8 +596,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             testSize(list, "quad normal surfaces", 4, "Figure eight");
             for (const NormalSurface& s : list)
                 testSurface(s, "Figure eight", "spun surface",
-                    0 /* euler, N/A */, 0 /* connected, N/A */,
-                    0 /* orient, N/A */, 0 /* two-sided, N/A */,
+                    0 /* euler, N/A */, false /* connected, N/A */,
+                    false /* orient, N/A */, false /* two-sided, N/A */,
                     false /* compact */, false /* realBdry */,
                     false /* vertex link */, 0 /* edge link */,
                     0 /* central */, false /* splitting */);
@@ -1667,14 +1666,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             std::unique_ptr<NormalSurfaces> tree;
 
             try {
-                dd.reset(new NormalSurfaces(tri, coords, NS_VERTEX,
-                    NS_VERTEX_DD | NS_VERTEX_STD_DIRECT));
+                dd = std::make_unique<NormalSurfaces>(tri, coords, NS_VERTEX,
+                    NS_VERTEX_DD | NS_VERTEX_STD_DIRECT);
             } catch (const regina::InvalidArgument&) {
             } catch (const regina::UnsolvedCase&) {
             }
             try {
-                tree.reset(new NormalSurfaces(tri, coords, NS_VERTEX,
-                    NS_VERTEX_TREE | NS_VERTEX_STD_DIRECT));
+                tree = std::make_unique<NormalSurfaces>(tri, coords, NS_VERTEX,
+                    NS_VERTEX_TREE | NS_VERTEX_STD_DIRECT);
             } catch (const regina::InvalidArgument&) {
             } catch (const regina::UnsolvedCase&) {
             }
@@ -1822,14 +1821,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             std::unique_ptr<NormalSurfaces> dual;
 
             try {
-                primal.reset(new NormalSurfaces(tri, coords, NS_FUNDAMENTAL,
-                    NS_HILBERT_PRIMAL));
+                primal = std::make_unique<NormalSurfaces>(tri, coords,
+                    NS_FUNDAMENTAL, NS_HILBERT_PRIMAL);
             } catch (const regina::InvalidArgument&) {
             } catch (const regina::UnsolvedCase&) {
             }
             try {
-                dual.reset(new NormalSurfaces(tri, coords, NS_FUNDAMENTAL,
-                    NS_HILBERT_DUAL));
+                dual = std::make_unique<NormalSurfaces>(tri, coords,
+                    NS_FUNDAMENTAL, NS_HILBERT_DUAL);
             } catch (const regina::InvalidArgument&) {
             } catch (const regina::UnsolvedCase&) {
             }

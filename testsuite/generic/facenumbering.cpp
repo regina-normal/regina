@@ -64,7 +64,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
     private:
         static constexpr int n = dim + 1;
 
-        typedef typename Perm<dim + 1>::Index Index;
+        using Index = typename Perm<dim + 1>::Index;
 
         Index* idx;
         Index nIdx;

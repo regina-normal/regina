@@ -63,14 +63,11 @@ BoundaryComponent<3>* BoundaryComponent3Chooser::selected() {
 
 void BoundaryComponent3Chooser::select(regina::BoundaryComponent<3>* option) {
     int index = 0;
-    std::vector<regina::BoundaryComponent<3>*>::const_iterator it =
-        options_.begin();
-    while (it != options_.end()) {
-        if ((*it) == option) {
+    for (regina::BoundaryComponent<3>* bc : options_) {
+        if (bc == option) {
             setCurrentIndex(index);
             return;
         }
-        ++it;
         ++index;
     }
 

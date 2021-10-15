@@ -56,10 +56,10 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
     // Rewrite the string in lower case and verify that it contains only
     // letters.
     std::string proper(dehydration);
-    for (std::string::iterator it = proper.begin(); it != proper.end(); it++) {
-        if (*it >= 'A' && *it <= 'Z')
-            *it = *it + ('a' - 'A');
-        else if (*it < 'a' || *it > 'z')
+    for (char& c : proper) {
+        if (c >= 'A' && c <= 'Z')
+            c = c + ('a' - 'A');
+        else if (c < 'a' || c > 'z')
             throw InvalidArgument("rehydrate(): non-letter in "
                 "dehydration string");
     }
@@ -105,7 +105,7 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
     Triangulation<3> ans;
     ChangeEventSpan span(ans);
 
-    Tetrahedron<3>** tet = new Tetrahedron<3>*[nTet];
+    auto* tet = new Tetrahedron<3>*[nTet];
     for (i = 0; i < nTet; i++)
         tet[i] = ans.newTetrahedron();
 
@@ -228,9 +228,9 @@ std::string Triangulation<3>::dehydrate() const {
     unsigned nTets = simplices_.size();
     int* image = new int[nTets];
     int* preImage = new int[nTets];
-    Perm<4>* vertexMap = new Perm<4>[nTets];
+    auto* vertexMap = new Perm<4>[nTets];
 
-    unsigned char* newTet = new unsigned char[(nTets / 4) + 2];
+    auto* newTet = new unsigned char[(nTets / 4) + 2];
     unsigned newTetPos = 0;
     unsigned newTetBit = 0;
 

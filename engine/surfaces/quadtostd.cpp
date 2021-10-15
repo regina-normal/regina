@@ -338,18 +338,17 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     // constraints is non-empty.
     EnumConstraints constraints = makeEmbeddedConstraints(tri, coords_);
 
-    BitmaskType* constraintsBegin = new BitmaskType[constraints.size()];
-    BitmaskType* constraintsEnd = constraintsBegin;
+    auto* constraintsBegin = new BitmaskType[constraints.size()];
+    auto* constraintsEnd = constraintsBegin;
 
-    for (EnumConstraints::const_iterator cit = constraints.begin();
-            cit != constraints.end(); ++cit, ++constraintsEnd) {
+    for (const auto& c : constraints) {
         constraintsEnd->reset(stdLen);
-        constraintsEnd->set(cit->begin(), cit->end(), true);
+        constraintsEnd->set(c.begin(), c.end(), true);
     }
 
     // Create all vertex links.
     // TODO: Do this by value.
-    Vector<LargeInteger>** link = new Vector<LargeInteger>*[nLinks];
+    auto* link = new Vector<LargeInteger>*[nLinks];
 
     for (size_t i = 0; i < nLinks; ++i) {
         link[i] = new Vector<LargeInteger>(stdLen);
@@ -361,7 +360,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(
 
     // Create the initial set of rays:
     // TODO: Keep these by value.
-    typedef std::vector<RaySpec<BitmaskType>*> RaySpecList;
+    using RaySpecList = std::vector<RaySpec<BitmaskType>*>;
     RaySpecList list[2];
 
     // TODO: Check that s uses the right encoding.
@@ -384,7 +383,6 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     RaySpec<BitmaskType>* linkSpec;
 
     RaySpecList pos, neg;
-    typename RaySpecList::iterator it, posit, negit;
 
     int sign;
     BitmaskType* constraintMask;
@@ -416,22 +414,21 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                 emb.vertex();
 
             // Add the inequality v[tcoord] >= 0.
-            for (it = list[workingList].begin(); it != list[workingList].end();
-                    ++it) {
-                sign = (*it)->sign(tcoord);
+            for (RaySpec<BitmaskType>* r : list[workingList]) {
+                sign = r->sign(tcoord);
 
                 if (sign == 0)
-                    list[1 - workingList].push_back(*it);
+                    list[1 - workingList].push_back(r);
                 else if (sign > 0) {
-                    list[1 - workingList].push_back(*it);
-                    pos.push_back(*it);
+                    list[1 - workingList].push_back(r);
+                    pos.push_back(r);
                 } else
-                    neg.push_back(*it);
+                    neg.push_back(r);
             }
 
             iterations = 0;
-            for (posit = pos.begin(); posit != pos.end(); ++posit)
-                for (negit = neg.begin(); negit != neg.end(); ++negit) {
+            for (RaySpec<BitmaskType>* posRay : pos)
+                for (RaySpec<BitmaskType>* negRay : neg) {
                     // Test for cancellation, but not every time (since
                     // this involves expensive mutex locking).
                     if (tracker && ++iterations == 100) {
@@ -451,8 +448,8 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                     }
 
                     // Find the facets that both rays have in common.
-                    BitmaskType join((*posit)->facets());
-                    join &= ((*negit)->facets());
+                    BitmaskType join(posRay->facets());
+                    join &= (negRay->facets());
 
                     // Fukuda and Prodon's dimensional filtering.
                     // Initial experimentation suggests that this
@@ -488,10 +485,9 @@ void NormalSurfaces::buildStandardFromReducedUsing(
 
                     // Are these vectors adjacent?
                     broken = false;
-                    for (it = list[workingList].begin();
-                            it != list[workingList].end(); ++it) {
-                        if (*it != *posit && *it != *negit &&
-                                (*it)->onAllCommonFacets(**posit, **negit,
+                    for (RaySpec<BitmaskType>* r : list[workingList]) {
+                        if (r != posRay && r != negRay &&
+                                r->onAllCommonFacets(*posRay, *negRay,
                                 ignoreFacets)) {
                             broken = true;
                             break;
@@ -503,7 +499,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                     // All good!  Join them and put the intersection in the
                     // new solution set.
                     list[1 - workingList].push_back(new RaySpec<BitmaskType>(
-                        **posit, **negit, tcoord));
+                        *posRay, *negRay, tcoord));
                 }
 
             // Clean up and prepare for the next iteration.

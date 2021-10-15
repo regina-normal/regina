@@ -113,20 +113,16 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
                     }
 
                     // Quads:
-                    for (int i=0; i<3; i++) {
+                    for (const int* q : quadDefn) {
                         // Prisms that meet this quad:
                         ++ans.entry(row, pos0 + 5 +
-                            Edge<4>::edgeNumber[perm0[quadDefn[i][0]]]
-                                                [perm0[quadDefn[i][1]]]);
+                            Edge<4>::edgeNumber[perm0[q[0]]][perm0[q[1]]]);
                         ++ans.entry(row, pos0 + 5 +
-                            Edge<4>::edgeNumber[perm0[quadDefn[i][2]]]
-                                                [perm0[quadDefn[i][3]]]);
+                            Edge<4>::edgeNumber[perm0[q[2]]][perm0[q[3]]]);
                         --ans.entry(row, pos1 + 5 +
-                            Edge<4>::edgeNumber[perm1[quadDefn[i][0]]]
-                                                [perm1[quadDefn[i][1]]]);
+                            Edge<4>::edgeNumber[perm1[q[0]]][perm1[q[1]]]);
                         --ans.entry(row, pos1 + 5 +
-                            Edge<4>::edgeNumber[perm1[quadDefn[i][2]]]
-                                                [perm1[quadDefn[i][3]]]);
+                            Edge<4>::edgeNumber[perm1[q[2]]][perm1[q[3]]]);
                         ++row;
                     }
                 }
@@ -176,20 +172,16 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
                     Perm<5> perm1 = tet->embedding(1).vertices();
 
                     // Quads:
-                    for (int i=0; i<3; i++) {
+                    for (const int* q : quadDefn) {
                         // Prisms that meet this quad:
                         ++ans.entry(row, pos0 +
-                            Edge<4>::edgeNumber[perm0[quadDefn[i][0]]]
-                                               [perm0[quadDefn[i][1]]]);
+                            Edge<4>::edgeNumber[perm0[q[0]]][perm0[q[1]]]);
                         ++ans.entry(row, pos0 +
-                            Edge<4>::edgeNumber[perm0[quadDefn[i][2]]]
-                                               [perm0[quadDefn[i][3]]]);
+                            Edge<4>::edgeNumber[perm0[q[2]]][perm0[q[3]]]);
                         --ans.entry(row, pos1 +
-                            Edge<4>::edgeNumber[perm1[quadDefn[i][0]]]
-                                               [perm1[quadDefn[i][1]]]);
+                            Edge<4>::edgeNumber[perm1[q[0]]][perm1[q[1]]]);
                         --ans.entry(row, pos1 +
-                            Edge<4>::edgeNumber[perm1[quadDefn[i][2]]]
-                                               [perm1[quadDefn[i][3]]]);
+                            Edge<4>::edgeNumber[perm1[q[2]]][perm1[q[3]]]);
                         ++row;
                     }
                 }

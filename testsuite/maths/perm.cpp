@@ -58,8 +58,8 @@ class PermTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        typedef regina::Perm<n> Perm;
-        typedef typename Perm::Index Index;
+        using Perm = regina::Perm<n>;
+        using Index = typename Perm::Index;
 
         Index* idx;
         Index nIdx;

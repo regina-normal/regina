@@ -36,10 +36,7 @@
 using pybind11::overload_cast;
 
 void addStringUtils(pybind11::module_& m) {
-    m.def("stringToToken", overload_cast<const char*>(
-        &regina::stringToToken));
-    m.def("stringToToken", overload_cast<const std::string&>(
-        &regina::stringToToken));
+    m.def("stringToToken", &regina::stringToToken);
 
     m.def("subscript",
         &regina::subscript<long>);

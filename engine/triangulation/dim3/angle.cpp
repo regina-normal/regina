@@ -148,7 +148,7 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
 
     // Go down through the matrix from top-left to bottom-right and work
     // out where the leading coefficients of each row appear.
-    unsigned long* leading = new unsigned long[rank];
+    auto* leading = new unsigned long[rank];
     unsigned long row = 0;
     unsigned long col = 0;
 

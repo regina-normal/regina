@@ -429,7 +429,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     // The square of the Hadamard bound for the original tableaux:
     Integer hadamardSquare = 1;
-    Integer* colNorm = new Integer[eqns.columns()];
+    auto* colNorm = new Integer[eqns.columns()];
     for (i = 0; i < eqns.columns(); ++i) {
         colNorm[i] = 0;
         for (j = 0; j < rank; ++j)

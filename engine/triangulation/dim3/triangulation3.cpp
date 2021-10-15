@@ -169,7 +169,7 @@ Triangulation<3> Triangulation<3>::enterTextTriangulation(std::istream& in,
     out << "Vertices are numbered from 0 to 3.\n";
     out << "Enter in the face gluings one at a time.\n";
     out << '\n';
-    while(1) {
+    while (true) {
         out << "Enter two tetrahedra to glue, separated by a space, or ";
         out << "-1 if finished: ";
         in >> tetPos;

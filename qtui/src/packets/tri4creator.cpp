@@ -197,8 +197,8 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    for (size_t i = 0; i < examples.size(); ++i)
-        exampleWhich->addItem(examples[i].name());
+    for (const auto& e : examples)
+        exampleWhich->addItem(e.name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);

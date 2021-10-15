@@ -50,7 +50,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         std::shared_ptr<regina::Packet> defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle) :
         QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
-        creator(newCreator), tree(packetTree) {
+        creator(newCreator), tree(std::move(packetTree)) {
     setWindowTitle(dialogTitle);
     QVBoxLayout* layout = new QVBoxLayout(this);
 

@@ -149,7 +149,7 @@ void addTreeDecomposition(pybind11::module_& m) {
                         "Matrix element not convertible to a boolean");
                 }
             }
-            TreeDecomposition* ans = new TreeDecomposition(
+            auto* ans = new TreeDecomposition(
                 len, const_cast<bool const**>(g), alg);
 
             // Clean up and return.

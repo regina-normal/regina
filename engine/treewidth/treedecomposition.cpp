@@ -384,7 +384,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
     bool* used = new bool[graph.order_];
     int* elimOrder = new int[graph.order_]; // Elimination stage -> vertex
     int* elimStage = new int[graph.order_]; // Vertex -> elimination stage
-    TreeBag** bags = new TreeBag*[graph.order_];
+    auto* bags = new TreeBag*[graph.order_];
 
     std::fill(used, used + graph.order_, false);
 

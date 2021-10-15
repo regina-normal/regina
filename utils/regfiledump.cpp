@@ -37,8 +37,6 @@
 
 using regina::Packet;
 
-typedef std::list<std::string> StringList;
-
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
         std::cerr << error << "\n\n";
@@ -111,7 +109,7 @@ void dumpPacket(std::ostream& out, const Packet& p, char dumpOpt) {
 
 int main(int argc, char* argv[]) {
     std::string file;
-    StringList packets;
+    std::list<std::string> packets;
     char dumpOpt = 0;
     bool count = false;
 
@@ -142,7 +140,7 @@ int main(int argc, char* argv[]) {
             if (file.empty())
                 file = argv[i];
             else
-                packets.push_back(argv[i]);
+                packets.emplace_back(argv[i]);
         } else
             usage(argv[0], "Empty arguments are not allowed.");
     }
@@ -177,12 +175,11 @@ int main(int argc, char* argv[]) {
             for (const Packet& p : *tree)
                 dumpPacket(out, p, dumpOpt);
         else
-            for (StringList::const_iterator it = packets.begin();
-                    it != packets.end(); it++) {
-                if (auto p = tree->findPacketLabel(*it))
+            for (const auto& label : packets) {
+                if (auto p = tree->findPacketLabel(label))
                     dumpPacket(out, *p, dumpOpt);
                 else
-                    dumpNoPacket(out, *it, dumpOpt);
+                    dumpNoPacket(out, label, dumpOpt);
             }
     }
 

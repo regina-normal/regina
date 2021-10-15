@@ -51,7 +51,7 @@ ExportDialog::ExportDialog(QWidget* parent,
         std::shared_ptr<regina::Packet> packetTree,
         std::shared_ptr<regina::Packet> defaultSelection,
         PacketFilter* useFilter, bool useCodec, const QString& dialogTitle) :
-        QDialog(parent), tree(packetTree) {
+        QDialog(parent), tree(std::move(packetTree)) {
     setWindowTitle(dialogTitle);
     QVBoxLayout* layout = new QVBoxLayout(this);
 

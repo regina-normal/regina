@@ -528,7 +528,7 @@ int runCensus() {
     // Are we only dumping face pairings?
     if (genPairs) {
         if (! outFile.empty()) {
-            dumpStream.reset(new std::ofstream(outFile.c_str()));
+            dumpStream = std::make_unique<std::ofstream>(outFile.c_str());
             if ((! dumpStream.get()) || (! *dumpStream)) {
                 std::cerr << "Could not write to file " << outFile << ".\n";
                 return 1;

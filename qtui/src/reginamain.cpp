@@ -226,9 +226,8 @@ void ReginaMain::dropEvent(QDropEvent *event) {
         // We have a URI, so process it.
         // Load in each file.
         const QList<QUrl>& urls(event->mimeData()->urls());
-        for (QList<QUrl>::const_iterator it = urls.begin();
-                it != urls.end(); ++it)
-            fileOpenUrl(*it);
+        for (const auto& url : urls)
+            fileOpenUrl(url);
     }
 }
 

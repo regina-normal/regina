@@ -88,7 +88,7 @@ void Triangulation<4>::calculateVertexLinks() {
     // Construct the vertex linking tetrahedra, and insert them into each
     // vertex link in the correct order as described by the
     // Vertex<4>::buildLink() docs.
-    Tetrahedron<3>** tet = new Tetrahedron<3>*[5 * n];
+    auto* tet = new Tetrahedron<3>*[5 * n];
 
     for (Vertex<4>* vertex : vertices()) {
         vertex->link_ = new Triangulation<3>();

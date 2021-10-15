@@ -1214,28 +1214,22 @@ void HomologicalData::computeTorsionLinkingForm() {
     // the indexing will be as a list of pairs
     // < prime, vector< pair< power, index> > >
     // Use a list because we are continually inserting items in the middle.
-    typedef std::vector<std::pair<unsigned long, unsigned long> >
-        IndexingPowerVector;
-    typedef std::pair<Integer, IndexingPowerVector> IndexingPrimePair;
-    typedef std::list<IndexingPrimePair> IndexingList;
-    IndexingList indexing;
+    std::list< std::pair< Integer,
+        std::vector<std::pair<unsigned long, unsigned long> > > > indexing;
     // indexing[i] is the i-th prime in increasing order, the first bit is
     // the prime, the 2nd bit is the vector list of powers, the power is an
     // unsigned long, and its respective index in ppList and pvList is the
     // 2nd bit...
-    IndexingList::iterator it1, il1;
-    IndexingPowerVector::iterator it2, il2;
-    IndexingPrimePair dummyv;
 
     for (i=0; i<pPrList.size(); i++) { 
         // for each entry in pPrList, find its appropriate position in indexing.
         // so this means comparing pPrList[i].first with all elts
         // indexing[j].first and stopping at first >= comparison.
 
-        it1 = indexing.begin(); 
+        auto it1 = indexing.begin(); 
         // now run up p until we either get to the end, or
         // pPrList[i].first >= it1->first
-        il1 = indexing.end(); 
+        auto il1 = indexing.end(); 
         // the idea is that this while loop will terminate with il1 pointing
         // to the right insertion location.
         while ( it1 != indexing.end() ) {
@@ -1250,21 +1244,17 @@ void HomologicalData::computeTorsionLinkingForm() {
         // indexing or not... we grow the indexing iff il1 == indexing.end() or
         //         (pPrList[i].first > il1->first)
         if (il1 == indexing.end()) {
-            dummyv.first = pPrList[i].first;
-            dummyv.second.resize(1);
-            dummyv.second[0] = std::make_pair( pPrList[i].second, i );
-            indexing.insert( il1, dummyv );
+            indexing.insert( il1,
+                { pPrList[i].first, { { pPrList[i].second, i } } });
         } else
             if (pPrList[i].first < il1->first) {
-                dummyv.first = pPrList[i].first;
-                dummyv.second.resize(1);
-                dummyv.second[0] = std::make_pair( pPrList[i].second, i );
-                indexing.insert( il1, dummyv );
+                indexing.insert( il1,
+                    { pPrList[i].first, { { pPrList[i].second, i } } });
             } else {
                 // NOW we know this prime is already in the list, so we do
                 // the same search for the power...
-                it2 = il1->second.begin();
-                il2 = il1->second.end();
+                auto it2 = il1->second.begin();
+                auto il2 = il1->second.end();
                 while ( it2 != il1->second.end() ) {
                     // it2->first is the power, it2->second is the index.
                     if (pPrList[i].second <= it2->first) {
@@ -1387,6 +1377,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     // Compute indexing.size() just once, since for std::list this might be
     // a slow operation.
     unsigned long indexingSize = indexing.size();
+    decltype(indexing.begin()) it1;
 
     h1PrimePowerDecomp.resize(indexingSize);
     linkingFormPD.resize(indexingSize);

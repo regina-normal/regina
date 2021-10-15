@@ -66,7 +66,7 @@ const AbelianGroup& Triangulation<4>::homologyH2() const {
 
     // Build a translation table from edge numbers -> "internal edge" indices.
     unsigned long nEdgesInternal = 0;
-    unsigned long* edgeInternalIndex = new unsigned long[nEdges];
+    auto* edgeInternalIndex = new unsigned long[nEdges];
     for (i = 0; i < nEdges; ++i)
         if (! edge(i)->isBoundary())
             edgeInternalIndex[i] = nEdgesInternal++;
@@ -74,7 +74,7 @@ const AbelianGroup& Triangulation<4>::homologyH2() const {
     // Build a translation table from triangle numbers -> "internal triangle"
     // indices.
     unsigned long nTrianglesInternal = 0;
-    unsigned long* triangleInternalIndex = new unsigned long[nTriangles];
+    auto* triangleInternalIndex = new unsigned long[nTriangles];
     for (i = 0; i < nTriangles; ++i)
         if (! triangle(i)->isBoundary())
             triangleInternalIndex[i] = nTrianglesInternal++;

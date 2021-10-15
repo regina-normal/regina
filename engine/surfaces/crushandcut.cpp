@@ -631,8 +631,8 @@ namespace {
     };
 
     inline Block::~Block() {
-        for (unsigned i = 0; i < 4; ++i)
-            delete bdry_[i];
+        for (auto& b : bdry_)
+            delete b;
         delete[] innerTet_;
     }
 

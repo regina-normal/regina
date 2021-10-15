@@ -56,7 +56,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        typedef void (Isomorphism3Test::*IsoTest)(const Isomorphism<3>&,
+        using IsoTest = void (Isomorphism3Test::*)(const Isomorphism<3>&,
             unsigned long);
 
         Triangulation<3> rp2xs1;
@@ -110,11 +110,11 @@ class Isomorphism3Test : public CppUnit::TestFixture {
 
             unsigned i, pos;
 
-            unsigned* tetPerm = new unsigned[n];
+            auto* tetPerm = new unsigned[n];
             for (i = 0; i < n; i++)
                 tetPerm[i] = i;
 
-            unsigned* facePermIndex = new unsigned[n];
+            auto* facePermIndex = new unsigned[n];
 
             Isomorphism<3> iso(n);
             unsigned long which = 0;
@@ -128,7 +128,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                     iso.facePerm(i) = Perm<4>::S4[facePermIndex[i] = 0];
                 }
 
-                while (1) {
+                while (true) {
                     if (test)
                         (this->*test)(iso, which);
                     which++;

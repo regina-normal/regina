@@ -95,8 +95,7 @@ void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
 }
 
 void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
-    std::vector<regina::NormalCoords>::const_iterator it =
-        std::find(systems.begin(), systems.end(), newSystem);
+    auto it = std::find(systems.begin(), systems.end(), newSystem);
 
     if (it == systems.end()) {
         // Try to find a reasonable fallback.
@@ -137,8 +136,7 @@ void HyperCoordinateChooser::insertAllViewers(
 }
 
 void HyperCoordinateChooser::setCurrentSystem(regina::HyperCoords newSystem) {
-    std::vector<regina::HyperCoords>::const_iterator it =
-        std::find(systems.begin(), systems.end(), newSystem);
+    auto it = std::find(systems.begin(), systems.end(), newSystem);
 
     if (it != systems.end())
         setCurrentIndex(it - systems.begin());

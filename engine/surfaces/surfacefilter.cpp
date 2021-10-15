@@ -83,7 +83,7 @@ void SurfaceFilterCombination::writeXMLPacketData(std::ostream& out,
 }
 
 LargeInteger SurfaceFilterProperties::eulerChar(size_t index) const {
-    std::set<LargeInteger>::const_iterator it = eulerChar_.begin();
+    auto it = eulerChar_.begin();
     advance(it, index);
     return *it;
 }

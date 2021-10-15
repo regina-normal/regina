@@ -87,11 +87,10 @@ int main(int argc, char* argv[]) {
     ans->setLabel("Combined Data");
 
     bool error = false;
-    for(std::list<std::string>::const_iterator it = files.begin();
-            it != files.end(); it++) {
-        std::shared_ptr<regina::Packet> data = regina::open(it->c_str());
+    for (const auto& f : files) {
+        std::shared_ptr<regina::Packet> data = regina::open(f.c_str());
         if (!data) {
-            std::cerr << "File " << *it << " could not be read.\n";
+            std::cerr << "File " << f << " could not be read.\n";
             error = true;
             continue;
         }

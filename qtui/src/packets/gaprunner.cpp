@@ -48,7 +48,7 @@
 #include <QSize>
 #include <QStringList>
 #include <QWhatsThis>
-#include <signal.h>
+#include <csignal>
 
 #define MAX_GAP_READ_LINE 512
 
@@ -369,8 +369,8 @@ std::optional<regina::GroupExpression> GAPRunner::parseRelation(
     std::map<QString, unsigned long>::iterator genPos;
     unsigned long gen;
     long exp;
-    for (QStringList::iterator it = terms.begin(); it != terms.end(); it++) {
-        if (! reGAPTerm.exactMatch(*it)) {
+    for (const auto& t : terms) {
+        if (! reGAPTerm.exactMatch(t)) {
             error(tr("GAP produced the following group relator, which could "
                 "not be understood:<p><tt>%1</tt>").arg(escape(reln)));
             return std::nullopt;

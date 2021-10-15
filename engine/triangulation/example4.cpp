@@ -227,7 +227,7 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
         return ans;
 
     // We have at least one tetrahedron.  Off we go.
-    Prism* prism = new Prism[n];
+    auto* prism = new Prism[n];
 
     // Build the boundaries first so we get the relevant pentachora
     // numbered correctly within the final triangulation.

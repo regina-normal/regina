@@ -367,9 +367,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             if (n == 0)
                 return true;
 
-            typedef const regina::VectorInt* VecPtr;
-            VecPtr* lhsRaw = new VecPtr[n];
-            VecPtr* rhsRaw = new VecPtr[n];
+            auto* lhsRaw = new const regina::VectorInt*[n];
+            auto* rhsRaw = new const regina::VectorInt*[n];
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
@@ -400,9 +399,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             unsigned long nAll = all.size();
             unsigned long nTaut = taut.size();
 
-            typedef const regina::VectorInt* VecPtr;
-            VecPtr* allRaw = new VecPtr[nAll + 1];
-            VecPtr* tautRaw = new VecPtr[nTaut + 1];
+            auto* allRaw = new const regina::VectorInt*[nAll + 1];
+            auto* tautRaw = new const regina::VectorInt*[nTaut + 1];
 
             unsigned long foundAll = 0;
             for (const AngleStructure& a : all)

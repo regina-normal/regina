@@ -246,7 +246,7 @@ bool Triangulation<3>::hasSplittingSurface() const {
         EDGE_DISJOINT = 1,
         EDGE_INTERSECTING = 2
     };
-    EdgeState* state = new EdgeState[countEdges()];
+    auto* state = new EdgeState[countEdges()];
 
     // We also keep track of each edge e that is not yet assumed disjoint but
     // that is a candidate for this assumption.

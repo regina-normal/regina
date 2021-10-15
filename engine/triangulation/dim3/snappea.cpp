@@ -90,7 +90,7 @@ Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
 
     unsigned numTet;
     in >> numTet;
-    Tetrahedron<3> **tet = new Tetrahedron<3>*[numTet];
+    auto* tet = new Tetrahedron<3>*[numTet];
     for (i=0; i<numTet; i++)
         tet[i] = triang.newTetrahedron();
 

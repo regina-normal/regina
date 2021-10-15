@@ -53,7 +53,9 @@ ImportDialog::ImportDialog(QWidget* parent,
         std::shared_ptr<regina::Packet> packetTree,
         std::shared_ptr<regina::Packet> defaultParent,
         PacketFilter* useFilter, bool useCodec, const QString& dialogTitle) :
-        QDialog(parent), tree(packetTree), newTree(importedData) {
+        QDialog(parent),
+        tree(std::move(packetTree)),
+        newTree(std::move(importedData)) {
     setWindowTitle(dialogTitle);
     QVBoxLayout* layout = new QVBoxLayout(this);
 

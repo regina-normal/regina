@@ -47,7 +47,7 @@ void addLaurent(pybind11::module_& m) {
         .def(pybind11::init([](long minExp, pybind11::list l) {
             regina::Integer* coeffs =
                 regina::python::seqFromList<regina::Integer>(l);
-            Laurent<regina::Integer>* ans = new Laurent<regina::Integer>(
+            auto* ans = new Laurent<regina::Integer>(
                 minExp, coeffs, coeffs + l.size());
             delete[] coeffs;
             return ans;

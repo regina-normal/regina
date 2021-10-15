@@ -462,9 +462,8 @@ void ScriptUI::removeSelectedVariables() {
     // Gather together all the rows to be deleted.
     std::set<int> rows;
     QModelIndexList indices = varTable->selectionModel()->selectedIndexes();
-    for (QModelIndexList::Iterator it = indices.begin(); it != indices.end();
-            ++it)
-        rows.insert(it->row());
+    for (const auto& i : indices)
+        rows.insert(i.row());
 
     // Notify the user that variables will be removed.
     QMessageBox msgBox(ui);
@@ -488,8 +487,7 @@ void ScriptUI::removeSelectedVariables() {
     // Remove the variables!
     // Since std::set uses sorted order, we can delete from the bottom
     // up without affecting the indices of the rows yet to be removed.
-    for (std::set<int>::reverse_iterator rit = rows.rbegin();
-            rit != rows.rend(); ++rit)
+    for (auto rit = rows.rbegin(); rit != rows.rend(); ++rit)
         script->removeVariable(*rit);
 }
 

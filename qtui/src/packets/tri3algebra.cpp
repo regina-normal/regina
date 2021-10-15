@@ -406,16 +406,15 @@ void Tri3TuraevViroUI::refresh() {
     // Since TuraevViroSet is a sorted data type,
     // these items will automatically be inserted in the right order.
     const Triangulation<3>::TuraevViroSet& invs(tri->allCalculatedTuraevViro());
-    for (Triangulation<3>::TuraevViroSet::const_iterator it = invs.begin();
-            it != invs.end(); it++)
+    for (const auto& tv : invs)
         if (unicode)
             invariants->addTopLevelItem(new TuraevViroItem(
-                (*it).first.first, (*it).first.second,
-                (*it).second.utf8("\u03B6" /* small zeta */).c_str()));
+                tv.first.first, tv.first.second,
+                tv.second.utf8("\u03B6" /* small zeta */).c_str()));
         else
             invariants->addTopLevelItem(new TuraevViroItem(
-                (*it).first.first, (*it).first.second,
-                (*it).second.str("z").c_str()));
+                tv.first.first, tv.first.second,
+                tv.second.str("z").c_str()));
 }
 
 void Tri3TuraevViroUI::calculateInvariant() {

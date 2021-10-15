@@ -527,10 +527,10 @@ bool PythonInterpreter::runScript(const regina::Script* script) {
 }
 
 bool PythonInterpreter::isEmptyCommand(const std::string& command) {
-    for (auto it = command.begin(); it != command.end(); it++) {
-        if (isspace(*it))
+    for (char c : command) {
+        if (isspace(c))
             continue;
-        else if (*it == '#')
+        else if (c == '#')
             return true;
         else
             return false;

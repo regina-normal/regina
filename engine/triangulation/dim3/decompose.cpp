@@ -1048,7 +1048,7 @@ bool Triangulation<3>::isHaken() const {
     // Run through each surface, one at a time.
     // Sort them first however, so we process the (easier) smaller genus
     // surfaces first.
-    SurfaceID* id = new SurfaceID[list.size()];
+    auto* id = new SurfaceID[list.size()];
     unsigned i;
     for (i = 0; i < list.size(); ++i) {
         id[i].index = i;

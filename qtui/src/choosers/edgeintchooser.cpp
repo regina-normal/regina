@@ -65,14 +65,11 @@ std::pair<Edge<3>*, int> EdgeIntChooser::selected() {
 
 void EdgeIntChooser::select(regina::Edge<3>* option, int arg) {
     int index = 0;
-    std::vector<std::pair<regina::Edge<3>*, int> >::const_iterator it =
-        options_.begin();
-    while (it != options_.end()) {
-        if (it->first == option && it->second == arg) {
+    for (const auto& e : options_) {
+        if (e.first == option && e.second == arg) {
             setCurrentIndex(index);
             return;
         }
-        ++it;
         ++index;
     }
 
@@ -116,7 +113,7 @@ void EdgeIntChooser::fill() {
         for (i = argMin_; i <= argMax_; ++i)
             if ((! filter_) || (*filter_)(e, i)) {
                 addItem(description(e, i));
-                options_.push_back(std::make_pair(e, i));
+                options_.emplace_back(e, i);
             }
 }
 

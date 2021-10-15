@@ -67,10 +67,10 @@ EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
         EnumConstraints ans(triangulation.size());
 
         unsigned base = (enc.storesTriangles() ? 4 : 0);
-        for (unsigned c = 0; c < ans.size(); ++c) {
-            ans[c].insert(ans[c].end(), base);
-            ans[c].insert(ans[c].end(), base + 1);
-            ans[c].insert(ans[c].end(), base + 2);
+        for (auto& c : ans) {
+            c.insert(c.end(), base);
+            c.insert(c.end(), base + 1);
+            c.insert(c.end(), base + 2);
 
             base += enc.block();
         }
