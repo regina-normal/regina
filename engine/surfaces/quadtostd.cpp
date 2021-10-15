@@ -344,6 +344,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     for (const auto& c : constraints) {
         constraintsEnd->reset(stdLen);
         constraintsEnd->set(c.begin(), c.end(), true);
+        ++constraintsEnd;
     }
 
     // Create all vertex links.
