@@ -52,6 +52,7 @@
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
+#include "utilities/exception.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
@@ -1679,7 +1680,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * This routine is only available for knots at the present time.
          * If this link has multiple (or zero) components, then this
-         * routine will return immediately (as described below).
+         * routine will throw an exception (as described below).
          *
          * This routine will iterate through all knot diagrams that can be
          * reached from this via Reidemeister moves, without ever exceeding
@@ -1714,27 +1715,26 @@ class Link : public PacketData<Link>, public Output<Link> {
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
-         * If a progress tracker is passed, then the exhaustive simplification
-         * will take place in a new thread and this routine will return
-         * immediately.  In this case, you will need to use some other
-         * means to determine whether the knot diagram was eventually
-         * simplified (e.g., by examining size() after the tracker
-         * indicates that the operation has finished).
+         * Since Regina 7.0, this routine will not return until either the
+         * knot diagram is simplified or the exhaustive search is complete,
+         * regardless of whether a progress tracker was passed.  If you
+         * need the old behaviour (where passing a progress tracker caused
+         * the exhaustive search to start in the background), simply call
+         * this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either the diagram was
-         * simplified or the search was exhausted).
+         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * routine will not return until processing has finished (i.e., either
+         * the diagram was simplified or the search was exhausted).
          *
          * If this routine is unable to simplify the knot diagram, then
          * this knot diagram will not be changed.
          *
-         * If this link does not have precisely one component, then this
-         * routine will do nothing.  If no progress tracker was passed then
-         * it will immediately return \c false; otherwise the progress tracker
-         * will immediately be marked as finished.
+         * \pre This link has at most one component (i.e., it is empty
+         * or it is a knot).
+         *
+         * \exception FailedPrecondition this link has more than one component.
          *
          * @param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
@@ -1743,12 +1743,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if and only if this diagram was successfully simplified to
-         * fewer crossings.
+         * @return \c true if and only if this diagram was successfully
+         * simplified to fewer crossings.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
             ProgressTrackerOpen* tracker = nullptr);
@@ -1760,7 +1756,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * This routine is only available for knots at the present time.
          * If this link has multiple (or zero) components, then this
-         * routine will return immediately (as described below).
+         * routine will throw an exception (as described below).
          *
          * This routine iterates through all knot diagrams that can be reached
          * from this via Reidemeister moves, without ever exceeding
@@ -1820,30 +1816,31 @@ class Link : public PacketData<Link>, public Output<Link> {
          * routine will <i>never terminate</i>, unless \a action returns
          * \c true for some knot diagram that is passed to it.
          *
-         * If a progress tracker is passed, then the exploration of
-         * knot diagrams will take place in a new thread and this
-         * routine will return immediately.
+         * Since Regina 7.0, this routine will not return until the exploration
+         * of knot diagrams is complete, regardless of whether a progress
+         * tracker was passed.  If you need the old behaviour (where passing a
+         * progress tracker caused the enumeration to start in the background),
+         * simply call this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
-         * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either \a action returned \c true,
-         * or the search was exhausted).  All calls to \a action will be
-         * protected by a mutex (i.e., different threads will never be
-         * calling \a action at the same time); as a corollary, the action
-         * should avoid expensive operations where possible (otherwise
+         * (multithreaded) mode; simply pass the number of parallel threads in
+         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * will not return until processing has finished (i.e., either \a action
+         * returned \c true, or the search was exhausted).  All calls to
+         * \a action will be protected by a mutex (i.e., different threads will
+         * never be calling \a action at the same time); as a corollary, the
+         * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
-         *
-         * If this link does not have precisely one component, then this
-         * routine will do nothing.  If no progress tracker was passed then
-         * it will immediately return \c false; otherwise the progress tracker
-         * will immediately be marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
          * argument(s) by reference, you must wrap them in std::ref or
          * std::cref.
+         *
+         * \pre This link has at most one component (i.e., it is empty
+         * or it is a knot).
+         *
+         * \exception FailedPrecondition this link has more than one component.
          *
          * \apinotfinal
          *
@@ -1866,12 +1863,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * for each knot diagram that is found.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial knot argument(s).
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if some call to \a action returned \c true (thereby terminating
-         * the search early), or \c false if the search ran to completion.
+         * @return \c true if some call to \a action returned \c true (thereby
+         * terminating the search early), or \c false if the search ran to
+         * completion.
          */
         template <typename Action, typename... Args>
         bool rewrite(int height, unsigned nThreads,
@@ -4256,22 +4250,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          */
         void setPropertiesFromBracket(Laurent<Integer>&& bracket) const;
 
-        /**
-         * A much less templated version of rewrite().
-         *
-         * This is identical to rewrite(), except that the type of the
-         * action function is now known precisely.  This means that the
-         * implementation can be kept out of the main headers.
-         *
-         * \tparam withSig \c true if the action function includes a
-         * knot signature before the link in its initial argument(s).
-         */
-        template <bool withSig>
-        bool rewriteInternal(int height, unsigned nThreads,
-            ProgressTrackerOpen* tracker,
-            regina::detail::RetriangulateActionFunc<Link, withSig>&& action)
-                const;
-
     friend class ModelLinkGraph;
     friend class Tangle;
     friend class XMLLinkCrossingsReader;
@@ -4813,22 +4791,43 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 template <typename Action, typename... Args>
 inline bool Link::rewrite(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    if (countComponents() != 1)
+        throw FailedPrecondition(
+            "rewrite() requires a link with at most one component");
+
     // Use RetriangulateActionTraits to deduce whether the given action takes
     // a link or both a knot signature and link as its initial argument(s).
     typedef regina::detail::RetriangulateActionTraits<Link, Action> Traits;
     static_assert(Traits::valid,
         "The action that is passed to rewrite() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {
-        return rewriteInternal<true>(height, nThreads, tracker,
+        return regina::detail::retriangulateInternal<Link, true>(
+            *this, height, nThreads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
-        return rewriteInternal<false>(height, nThreads, tracker,
+        return regina::detail::retriangulateInternal<Link, false>(
+            *this, height, nThreads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
     }
+}
+
+inline bool Link::simplifyExhaustive(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker) {
+    return rewrite(height, nThreads, tracker,
+        [](Link&& alt, Link& original, size_t minCrossings) {
+            if (alt.size() < minCrossings) {
+                ChangeEventSpan span(original);
+                original = std::move(alt);
+                original.intelligentSimplify();
+                return true;
+            } else
+                return false;
+        },
+        std::ref(*this), size());
 }
 
 inline void Link::join(const StrandRef& s, const StrandRef& t) {

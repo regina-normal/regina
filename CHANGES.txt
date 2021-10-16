@@ -526,6 +526,12 @@ Version 7.0  [ TODO ]
               actions that take a knot signature as well as a full knot
               diagram.  This function is now also available through Python,
               and can take a pure Python function as its action argument.
+              It no longer runs in the background (even if a progress tracker
+              is passed), and it now requires as a precondition that the link
+              has at most one component (throwing an exception otherwise).
+            - Routine simplifyExhaustive() no longer runs in the background
+              (even if a progress tracker is passed), and it now throws an
+              exception if the link has multiple components.
             - Routine useTreeDecomposition() now takes its argument by
               value, not by const reference.
             - Routine writePACE() no longer begins its output with a "c ..."
@@ -1250,7 +1256,12 @@ Version 7.0  [ TODO ]
               support actions that take an isomorphism signature as well as
               a full triangluation.  This function is now also available
               through Python, and can take a pure Python function as its
-              action argument.
+              action argument.  It no longer runs in the background (even if a
+              progress tracker is passed), and it now throws an exception
+              if the triangulation has multiple components.
+            - Routine simplifyExhaustive() no longer runs in the background
+              (even if a progress tracker is passed), and it now throws an
+              exception if the triangulation has multiple components.
             - Renamed hasNonTrivialSphereOrDisc() and
               hasOctagonalAlmostNormalSphere() to nonTrivialSphereOrDisc() and
               octagonalAlmostNormalSphere().  These routines now also return a
@@ -1277,7 +1288,12 @@ Version 7.0  [ TODO ]
               support actions that take an isomorphism signature as well as
               a full triangluation.  This function is now also available
               through Python, and can take a pure Python function as its
-              action argument.
+              action argument.  It no longer runs in the background (even if a
+              progress tracker is passed), and it now throws an exception
+              if the triangulation has multiple components.
+            - Routine simplifyExhaustive() no longer runs in the background
+              (even if a progress tracker is passed), and it now throws an
+              exception if the triangulation has multiple components.
         Class TrieSet:
             - This is no longer a template class (though its member
               functions are still templated on the bitmask type).

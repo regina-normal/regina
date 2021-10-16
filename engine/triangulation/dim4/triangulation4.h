@@ -506,28 +506,26 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
-         * If a progress tracker is passed, then the exhaustive simplification
-         * will take place in a new thread and this routine will return
-         * immediately.  In this case, you will need to use some other
-         * means to determine whether the triangulation was eventually
-         * simplified (e.g., by examining size() after the tracker
-         * indicates that the operation has finished).
+         * Since Regina 7.0, this routine will not return until either the
+         * triangulation is simplified or the exhaustive search is complete,
+         * regardless of whether a progress tracker was passed.  If you
+         * need the old behaviour (where passing a progress tracker caused
+         * the exhaustive search to start in the background), simply call
+         * this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either the triangulation was
-         * simplified or the search was exhausted).
+         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * routine will not return until processing has finished (i.e., either
+         * the triangulation was simplified or the search was exhausted).
          *
          * If this routine is unable to simplify the triangulation, then
          * the triangulation will not be changed.
          *
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
-         *
          * \pre This triangulation is connected.
+         *
+         * \exception FailedPrecondition this triangulation has more
+         * than one connected component.
          *
          * @param height the maximum number of \e additional pentachora to
          * allow beyond the number of pentachora originally present in the
@@ -536,12 +534,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
          * be reported, or 0 if no progress reporting is required.
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if and only if the triangulation was successfully simplified to
-         * fewer pentachora.
+         * @return \c true if and only if the triangulation was successfully
+         * simplified to fewer pentachora.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
             ProgressTrackerOpen* tracker = nullptr);
@@ -607,24 +601,25 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * routine will <i>never terminate</i>, unless \a action returns
          * \c true for some triangulation that is passed to it.
          *
-         * If a progress tracker is passed, then the exploration of
-         * triangulations will take place in a new thread and this
-         * routine will return immediately.
+         * Since Regina 7.0, this routine will not return until the exploration
+         * of triangulations is complete, regardless of whether a progress
+         * tracker was passed.  If you need the old behaviour (where passing a
+         * progress tracker caused the enumeration to start in the background),
+         * simply call this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
-         * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either \a action returned \c true,
-         * or the search was exhausted).  All calls to \a action will be
-         * protected by a mutex (i.e., different threads will never be
-         * calling \a action at the same time); as a corollary, the action
-         * should avoid expensive operations where possible (otherwise
+         * (multithreaded) mode; simply pass the number of parallel threads in
+         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * will not return until processing has finished (i.e., either \a action
+         * returned \c true, or the search was exhausted).  All calls to
+         * \a action will be protected by a mutex (i.e., different threads will
+         * never be calling \a action at the same time); as a corollary, the
+         * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
+         * If this triangulation is not connected, then this routine will do
+         * nothing: it will immediately return \c false, and if a progress
+         * tracker was passed then it will be immediately marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
@@ -632,6 +627,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * std::cref.
          *
          * \pre This triangulation is connected.
+         *
+         * \exception FailedPrecondition this triangulation has more
+         * than one connected component.
          *
          * \apinotfinal
          *
@@ -654,12 +652,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * for each triangulation that is found.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if some call to \a action returned \c true (thereby terminating
-         * the search early), or \c false if the search ran to completion.
+         * @return \c true if some call to \a action returned \c true (thereby
+         * terminating the search early), or \c false if the search ran to
+         * completion.
          */
         template <typename Action, typename... Args>
         bool retriangulate(int height, unsigned nThreads,
@@ -972,23 +967,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         void calculateEdgeLinks();
 
-        /**
-         * A much less templated version of retriangulate().
-         *
-         * This is identical to retriangulate(), except that the type
-         * of the action function is now known precisely.  This means that
-         * the implementation can be kept out of the main headers.
-         *
-         * \tparam withSig \c true if the action function includes an
-         * isomorphism signature before the triangulation in its
-         * initial argument(s).
-         */
-        template <bool withSig>
-        bool retriangulateInternal(int height, unsigned nThreads,
-            ProgressTrackerOpen* tracker,
-            regina::detail::RetriangulateActionFunc<
-                Triangulation<4>, withSig>&& action) const;
-
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
@@ -1048,6 +1026,10 @@ inline bool Triangulation<4>::isClosed() const {
 template <typename Action, typename... Args>
 inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    if (countComponents() != 1)
+        throw FailedPrecondition(
+            "retriangulate() requires a connected triangulation");
+
     // Use RetriangulateActionTraits to deduce whether the given action
     // takes a triangulation or both an isomorphism signature and triangulation
     // as its initial argument(s).
@@ -1056,16 +1038,33 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
     static_assert(Traits::valid,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {
-        return retriangulateInternal<true>(height, nThreads, tracker,
+        return regina::detail::retriangulateInternal<Triangulation<4>, true>(
+            *this, height, nThreads, tracker,
             [&](const std::string& sig, Triangulation<4>&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
-        return retriangulateInternal<false>(height, nThreads, tracker,
+        return regina::detail::retriangulateInternal<Triangulation<4>, false>(
+            *this, height, nThreads, tracker,
             [&](Triangulation<4>&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
     }
+}
+
+inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker) {
+    return retriangulate(height, nThreads, tracker,
+        [](Triangulation<4>&& alt, Triangulation<4>& original, size_t minSimp) {
+            if (alt.size() < minSimp) {
+                ChangeEventSpan span(original);
+                original = std::move(alt);
+                original.intelligentSimplify();
+                return true;
+            } else
+                return false;
+        },
+        std::ref(*this), size());
 }
 
 inline void Triangulation<4>::swapContents(Triangulation<4>& other) {

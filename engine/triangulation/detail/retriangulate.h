@@ -44,7 +44,11 @@
 #include <string>
 #include "regina-core.h"
 
-namespace regina::detail {
+namespace regina {
+
+class ProgressTrackerOpen;
+
+namespace detail {
 
 /**
  * A traits class that deduces the type of the argument in a given position
@@ -172,6 +176,50 @@ template <class Object, bool withSig>
 using RetriangulateActionFunc =
     typename RetriangulateActionFuncDetail<Object, withSig>::type;
 
+
+/**
+ * The common implementation of all retriangulation and link rewriting
+ * functions.
+ *
+ * This routine performs exactly the task described by Link::rewrite() or
+ * Triangluation<dim>::retriangulate() (for those dimensions where it is
+ * defined), with the following differences:
+ *
+ * - This routine assumes any preconditions have already been checked, and
+ *   exceptions thrown if they failed;
+ *
+ * - The action passed to this routine uses a much less templated type, which
+ *   means the implementation can be kept out of the public API headers.
+ *
+ * See Triangulation<dim>::retriangulate() or Link::rewrite() for full
+ * details on what this routine actually does.
+ *
+ * \tparam Object the class providing the retriangulation/rewriting function,
+ * such as regina::Triangulation<dim> or regina::Link.
+ * \tparam withSig \c true if we are storing an action that includes both a
+ * text signature and a triangulation in its initial argument(s),
+ * or \c false if we are storing an action whose argument list begins with
+ * just a triangulation/link.
+ *
+ * @param obj the object being retriangulated or rewritten.
+ * @param height the maximum number of top-dimensional simplices or crossings
+ * to allow beyond the initial number in \a obj, or a negative number if
+ * this should not be bounded.
+ * @param nThreads the number of threads to use.  If this is 1 or smaller then
+ * the routine will run single-threaded.
+ * @param tracker a progress tracker through which progress will be reported,
+ * or \c null if no progress reporting is required.
+ * @param action a function to call for each triangulation that is found.
+ * @return \c true if some call to \a action returned \c true (thereby
+ * terminating the search early), or \c false if the search ran to completion.
+ *
+ * \ingroup detail
+ */
+template <class Object, bool withSig>
+bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker,
+        RetriangulateActionFunc<Object, withSig>&& action);
+
 /**
  * A traits class that analyses callable objects that are passed to
  * retriangulation or link rewriting functions.
@@ -246,7 +294,7 @@ struct RetriangulateActionTraits<Object, Action, const std::string&> {
 
 #endif // __DOXYGEN
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #endif
 

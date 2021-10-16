@@ -44,10 +44,6 @@ namespace detail {
 
         static constexpr const char* progressStage = "Exploring diagrams";
 
-        static bool satisfiesPreconditions(const Link& link) {
-            return link.countComponents() == 1;
-        }
-
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
@@ -196,50 +192,16 @@ namespace detail {
     };
 } // namespace detail
 
-template <bool withSig>
-bool Link::rewriteInternal(int height, unsigned nThreads,
-        ProgressTrackerOpen* tracker,
-        regina::detail::RetriangulateActionFunc<Link, withSig>&& action) const {
-    if (tracker) {
-        try {
-            std::thread(&regina::detail::enumerate<Link, withSig>,
-                *this, height, nThreads, tracker, std::move(action)).detach();
-            return true;
-        } catch (const std::system_error& e) {
-            return false;
-        }
-    } else
-        return regina::detail::enumerate<Link, withSig>(
-            *this, height, nThreads, tracker, std::move(action));
-}
-
-// Instantiate all rewriteInternal() template functions
+// Instantiate all necessary rewriting/retriangulation template functions
 // so the full implementation can stay out of the headers.
 
-template bool Link::rewriteInternal<true>(
-    int, unsigned, ProgressTrackerOpen*,
-    regina::detail::RetriangulateActionFunc<Link, true>&&) const;
+template bool regina::detail::retriangulateInternal<Link, true>(
+    const Link&, int, unsigned, ProgressTrackerOpen*,
+    regina::detail::RetriangulateActionFunc<Link, true>&&);
 
-template bool Link::rewriteInternal<false>(
-    int, unsigned, ProgressTrackerOpen*,
-    regina::detail::RetriangulateActionFunc<Link, false>&&) const;
-
-bool Link::simplifyExhaustive(int height, unsigned nThreads,
-        ProgressTrackerOpen* tracker) {
-    return rewrite(height, nThreads, tracker,
-        [](Link&& alt, Link& original, size_t minCrossings) {
-            if (alt.size() < minCrossings) {
-                // Since we are allowed to change alt, we use swap(),
-                // which avoids yet another round of rewiring the crossings.
-                ChangeEventSpan span(original);
-                original.swap(alt);
-                original.intelligentSimplify();
-                return true;
-            } else
-                return false;
-        },
-        std::ref(*this), size());
-}
+template bool regina::detail::retriangulateInternal<Link, false>(
+    const Link&, int, unsigned, ProgressTrackerOpen*,
+    regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 } // namespace regina
 

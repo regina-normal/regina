@@ -2109,27 +2109,12 @@ class Triangulation4Test : public TriangulationTest<4> {
                         return false;
                     });
 
-            if (track) {
-                // Wait for it to finish...
-                while (! tracker->isFinished()) {
-                    usleep(100000 /* microseconds */);
-                }
-                delete tracker;
-
-                if (! result) {
-                    std::ostringstream msg;
-                    msg << name <<
-                        ": retriangulate() could not start in the background.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            } else {
-                if (result != broken) {
-                    std::ostringstream msg;
-                    msg << name <<
-                        ": retriangulate() return value differs from "
-                        "action return values.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+            if (result != broken) {
+                std::ostringstream msg;
+                msg << name <<
+                    ": retriangulate() return value differs from "
+                    "action return values.";
+                CPPUNIT_FAIL(msg.str());
             }
             if (broken) {
                 std::ostringstream msg;

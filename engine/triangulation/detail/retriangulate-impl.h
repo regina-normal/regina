@@ -83,15 +83,7 @@ namespace regina::detail {
  *
  * - a function <tt>static std::string sig(const Object&)</tt>, which
  *   returns the text signature that is used to identify a triangulation
- *   or link up to the appropriate notion of combinatorial equivalence;
- *
- * - a function <tt>bool satisfiesPreconditions(const Object&)</tt>, which
- *   tests any preconditions on the retriangulation/rewriting routine
- *   and returns \c false if they fail.  For any object that fails the
- *   preconditions, the retriangulation/rewriting code will do nothing;
- *   moreover, if a progress tracker was passed then it will be immediately
- *   marked as finished, and otherwise the retriangulation/rewriting routine
- *   will return \c false.
+ *   or link up to the appropriate notion of combinatorial equivalence.
  *
  * The function <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>
  * takes the following arguments:
@@ -544,13 +536,14 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
     if (tracker)
         tracker->newStage(RetriangulateParams<Object>::progressStage);
 
-    if (! RetriangulateParams<Object>::satisfiesPreconditions(obj)) {
+    if (obj.isEmpty()) {
+        // There are no moves possible on empty links or empty triangulations.
         if (tracker)
             tracker->setFinished();
         return false;
     }
 
-    typedef Retriangulator<Object, threading, withSig> T;
+    using T = Retriangulator<Object, threading, withSig>;
 
     T bfs((height >= 0 ? obj.size() + height :
         std::numeric_limits<std::size_t>::max()), std::move(action));
@@ -567,7 +560,7 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
 }
 
 template <class Object, bool withSig>
-bool enumerate(const Object& obj, int height, unsigned nThreads,
+bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (nThreads <= 1) {

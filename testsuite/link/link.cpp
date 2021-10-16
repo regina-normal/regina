@@ -2689,26 +2689,11 @@ class LinkTest : public CppUnit::TestFixture {
                         return false;
                     });
 
-            if (track) {
-                // Wait for it to finish...
-                while (! tracker->isFinished()) {
-                    usleep(100000 /* microseconds */);
-                }
-                delete tracker;
-
-                if (! result) {
-                    std::ostringstream msg;
-                    msg << name <<
-                        ": rewrite() could not start in the background.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            } else {
-                if (result != broken) {
-                    std::ostringstream msg;
-                    msg << name << ": rewrite() return value differs from "
-                        "action return values.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+            if (result != broken) {
+                std::ostringstream msg;
+                msg << name << ": rewrite() return value differs from "
+                    "action return values.";
+                CPPUNIT_FAIL(msg.str());
             }
             if (broken) {
                 std::ostringstream msg;
