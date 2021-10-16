@@ -83,7 +83,7 @@ class HilbertPrimal {
          * subspace is a pointed polyhedral cone with apex at the origin,
          * and this routine requires the extremal rays of this cone to
          * be provided as input.  The extremal rays can be computed
-         * using DoubleDescription::enumerate() in general cases,
+         * using DoubleDescription::enumerateExtremalRays() in general cases,
          * though sometimes (such as with normal surface theory) more
          * efficient methods are available.
          *
