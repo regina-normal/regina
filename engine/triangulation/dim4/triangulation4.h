@@ -525,7 +525,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \pre This triangulation is connected.
          *
          * \exception FailedPrecondition this triangulation has more
-         * than one connected component.
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
          *
          * @param height the maximum number of \e additional pentachora to
          * allow beyond the number of pentachora originally present in the
@@ -629,7 +630,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \pre This triangulation is connected.
          *
          * \exception FailedPrecondition this triangulation has more
-         * than one connected component.
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -1026,9 +1028,12 @@ inline bool Triangulation<4>::isClosed() const {
 template <typename Action, typename... Args>
 inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
-    if (countComponents() != 1)
+    if (countComponents() != 1) {
+        if (tracker)
+            tracker->setFinished();
         throw FailedPrecondition(
             "retriangulate() requires a connected triangulation");
+    }
 
     // Use RetriangulateActionTraits to deduce whether the given action
     // takes a triangulation or both an isomorphism signature and triangulation

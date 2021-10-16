@@ -1735,6 +1735,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * or it is a knot).
          *
          * \exception FailedPrecondition this link has more than one component.
+         * If a progress tracker was passed, it will be marked as finished
+         * before the exception is thrown.
          *
          * @param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
@@ -1841,6 +1843,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * or it is a knot).
          *
          * \exception FailedPrecondition this link has more than one component.
+         * If a progress tracker was passed, it will be marked as finished
+         * before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -4791,9 +4795,12 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 template <typename Action, typename... Args>
 inline bool Link::rewrite(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
-    if (countComponents() != 1)
+    if (countComponents() != 1) {
+        if (tracker)
+            tracker->setFinished();
         throw FailedPrecondition(
             "rewrite() requires a link with at most one component");
+    }
 
     // Use RetriangulateActionTraits to deduce whether the given action takes
     // a link or both a knot signature and link as its initial argument(s).

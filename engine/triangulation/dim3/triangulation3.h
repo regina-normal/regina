@@ -1456,8 +1456,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has
-         * more than one connected component.
+         * \exception FailedPrecondition this triangulation has more
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
          *
          * @param height the maximum number of \e additional tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
@@ -1554,8 +1555,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has
-         * more than one connected component.
+         * \exception FailedPrecondition this triangulation has more
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -3575,9 +3577,12 @@ inline const Triangulation<3>::TuraevViroSet&
 template <typename Action, typename... Args>
 inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
-    if (countComponents() != 1)
+    if (countComponents() != 1) {
+        if (tracker)
+            tracker->setFinished();
         throw FailedPrecondition(
             "retriangulate() requires a connected triangulation");
+    }
 
     // Use RetriangulateActionTraits to deduce whether the given action
     // takes a triangulation or both an isomorphism signature and triangulation
