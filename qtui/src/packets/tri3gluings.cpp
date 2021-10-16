@@ -54,6 +54,7 @@
 #include "choosers/facechooser.h"
 
 #include <memory>
+#include <thread>
 #include <QAction>
 #include <QCoreApplication>
 #include <QFileInfo>
@@ -728,7 +729,25 @@ void Tri3GluingsUI::removeSelectedTets() {
 void Tri3GluingsUI::simplify() {
     endEdit();
 
+    if (tri->isEmpty()) {
+        ReginaSupport::info(ui, tr("This triangulation is empty."));
+        return;
+    }
+
     if (! tri->intelligentSimplify()) {
+        if (tri->countComponents() > 1) {
+            ReginaSupport::info(ui,
+                tr("I could not simplify the triangulation."),
+                tr("<qt>I have only tried fast heuristics so far.<p>"
+                    "For connected triangulations I can try a more exaustive "
+                    "approach, but for multiple-component triangulations "
+                    "this is not yet available.<p>"
+                    "To use this more exhaustive approach, you could "
+                    "split the triangulation into components and try to "
+                    "simplify each component independently.</qt>"));
+            return;
+        }
+
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
         msgBox.setIcon(QMessageBox::Information);
@@ -752,7 +771,8 @@ void Tri3GluingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
         tr("Tried %1 triangulations"), ui);
 
-    tri->simplifyExhaustive(height, regina::politeThreads(), &tracker);
+    std::thread(&Triangulation<3>::simplifyExhaustive, tri, height,
+        regina::politeThreads(), &tracker).detach();
 
     if (dlg.run() && tri->size() == initSize) {
         dlg.hide();

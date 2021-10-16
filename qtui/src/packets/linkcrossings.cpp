@@ -45,6 +45,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 
+#include <thread>
 #include <QAction>
 #include <QComboBox>
 #include <QDialogButtonBox>
@@ -608,10 +609,7 @@ void LinkCrossingsUI::simplify() {
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
         msgBox.setIcon(QMessageBox::Information);
-        if (link->countComponents() > 1)
-            msgBox.setText(tr("I could not simplify the link."));
-        else
-            msgBox.setText(tr("I could not simplify the knot."));
+        msgBox.setText(tr("I could not simplify the knot."));
         msgBox.setInformativeText(tr("I have only tried fast heuristics "
             "so far."));
         msgBox.setStandardButtons(QMessageBox::Close);
@@ -633,7 +631,8 @@ void LinkCrossingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Reidemeister graph..."),
         (knot ? tr("Tried %1 knots") : tr("Tried %1 links")), ui);
 
-    link->simplifyExhaustive(height, regina::politeThreads(), &tracker);
+    std::thread(&Link::simplifyExhaustive, link, height,
+        regina::politeThreads(), std::addressof(tracker)).detach();
 
     if (dlg.run() && link->size() == initSize) {
         dlg.hide();
