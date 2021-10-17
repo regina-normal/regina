@@ -126,6 +126,7 @@ void HyperCoordinateChooser::insertSystem(regina::HyperCoords coordSystem) {
 
 void HyperCoordinateChooser::insertAllCreators() {
     insertSystem(regina::HS_STANDARD);
+    insertSystem(regina::HS_PRISM);
 }
 
 void HyperCoordinateChooser::insertAllViewers(
