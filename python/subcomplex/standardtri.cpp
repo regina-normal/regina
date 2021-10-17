@@ -47,7 +47,7 @@ void addStandardTriangulation(pybind11::module_& m) {
         .def("TeXName", &StandardTriangulation::TeXName)
         .def("manifold", &StandardTriangulation::manifold)
         .def("homology", &StandardTriangulation::homology)
-        .def("homologyH1", &StandardTriangulation::homologyH1)
+        .def("homologyH1", &StandardTriangulation::homology) // deprecated
         .def("writeName", [](const StandardTriangulation& t) {
             t.writeName(std::cout);
         })

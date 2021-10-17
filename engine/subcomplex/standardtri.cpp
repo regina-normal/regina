@@ -49,6 +49,11 @@
 
 namespace regina {
 
+AbelianGroup StandardTriangulation::homology() const {
+    throw NotImplemented("The homology() routine is currently not "
+        "implemented for this particular standard triangulation");
+}
+
 std::string StandardTriangulation::name() const {
     std::ostringstream ans;
     writeName(ans);

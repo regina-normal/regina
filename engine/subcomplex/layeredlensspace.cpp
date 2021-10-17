@@ -127,7 +127,7 @@ std::unique_ptr<Manifold> LayeredLensSpace::manifold() const {
     return std::make_unique<LensSpace>(p_, q_);
 }
 
-std::optional<AbelianGroup> LayeredLensSpace::homology() const {
+AbelianGroup LayeredLensSpace::homology() const {
     AbelianGroup ans;
     if (p_ == 0)
         ans.addRank();

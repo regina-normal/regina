@@ -214,7 +214,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
             isSmallSnapPeaCensusTri(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 

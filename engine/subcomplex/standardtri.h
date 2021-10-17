@@ -135,39 +135,58 @@ class StandardTriangulation : public Output<StandardTriangulation> {
         virtual std::unique_ptr<Manifold> manifold() const;
         /**
          * Returns the expected first homology group of this triangulation,
-         * if such a routine has been implemented.  If the calculation of
-         * homology has not yet been implemented for this triangulation
-         * then this routine will return no value.
+         * if such a routine has been implemented.
          *
          * This routine does not work by calling Triangulation<3>::homology()
          * on the associated real triangulation.  Instead the homology is
          * calculated directly from the known properties of this
          * standard triangulation.
          *
-         * The details of which standard triangulations have homology
-         * calculation routines can be found in the notes for the
-         * corresponding subclasses of StandardTriangulation.  The
-         * default implementation of this routine returns no value.
+         * This means that homology() needs to be implemented separately
+         * for each class of standard triangulation.  See the class
+         * notes for each subclass of StandardTriangulation for details
+         * on whether homology has been implemented for that particular
+         * subclass.  The default implementation of this routine just throws a
+         * NotImplemented exception.
+         *
+         * Most users will not need this routine, since presumably you
+         * already have an explicit Triangulation<3> available and so
+         * you can just call Triangulation<3>::homology() instead
+         * (which, unlike this routine, \e is always implemented).
+         * This StandardTriangulation::homology() routine should be seen
+         * as more of a verification/validation tool for the Regina developers.
          *
          * If this StandardTriangulation describes an entire Triangulation<3>
          * (and not just a part thereof) then the results of this routine
          * should be identical to the homology group obtained by calling
          * Triangulation<3>::homology() upon the associated real triangulation.
          *
-         * This routine can also be accessed via the alias homologyH1()
-         * (a name that is more specific, but a little longer to type).
+         * \exception NotImplemented homology calculation has not yet
+         * been implemented for this particular type of standard triangulation.
          *
-         * @return the first homology group of this triangulation, or no value
-         * if the appropriate calculation routine has not yet been implemented.
+         * \exception FileError the homology needs to be read from file (as
+         * opposed to computed), but the file is inaccessible or its contents
+         * cannot be read and parsed correctly.  Currently this can only happen
+         * for the subclass SnapPeaCensusTri, which reads its results from
+         * the SnapPea census databases that are installed with Regina.
+         *
+         * @return the first homology group of this triangulation, if this
+         * functionality has been implemented.
          */
-        virtual std::optional<AbelianGroup> homology() const;
+        virtual AbelianGroup homology() const;
         /**
-         * An alias for homology().  See homology() for further details.
+         * A deprecated alias for homology().
          *
-         * @return the first homology group of this triangulation, or no value
-         * if the appropriate calculation routine has not yet been implemented.
+         * \deprecated This routine can be accessed by the simpler name
+         * homology().
+         *
+         * \exception NotImplemented homology calculation has not yet
+         * been implemented for this particular type of standard triangulation.
+         *
+         * @return the first homology group of this triangulation, if this
+         * functionality has been implemented.
          */
-        std::optional<AbelianGroup> homologyH1() const;
+        [[deprecated]] AbelianGroup homologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable
@@ -316,11 +335,7 @@ inline std::unique_ptr<Manifold> StandardTriangulation::manifold() const {
     return nullptr;
 }
 
-inline std::optional<AbelianGroup> StandardTriangulation::homology() const {
-    return std::nullopt;
-}
-
-inline std::optional<AbelianGroup> StandardTriangulation::homologyH1() const {
+inline AbelianGroup StandardTriangulation::homologyH1() const {
     return homology();
 }
 

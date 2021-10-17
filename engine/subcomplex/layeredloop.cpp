@@ -189,7 +189,7 @@ std::optional<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
     return std::nullopt;
 }
 
-std::optional<AbelianGroup> LayeredLoop::homology() const {
+AbelianGroup LayeredLoop::homology() const {
     AbelianGroup ans;
     if (hinge_[1]) {
         // Untwisted.

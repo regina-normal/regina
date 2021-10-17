@@ -153,7 +153,7 @@ std::unique_ptr<Manifold> LayeredTorusBundle::manifold() const {
     return std::make_unique<TorusBundle>(core_->parallelReln() * reln_);
 }
 
-std::optional<AbelianGroup> LayeredTorusBundle::homology() const {
+AbelianGroup LayeredTorusBundle::homology() const {
     // It's implemented in TorusBundle, so ride on that for now.
     // We'll implement it directly here in good time.
     return TorusBundle(core_->parallelReln() * reln_).homology();

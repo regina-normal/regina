@@ -57,7 +57,7 @@ std::unique_ptr<Manifold> SnappedBall::manifold() const {
     return std::make_unique<Handlebody>(0, true);
 }
 
-std::optional<AbelianGroup> SnappedBall::homology() const {
+AbelianGroup SnappedBall::homology() const {
     return AbelianGroup();
 }
 

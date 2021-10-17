@@ -143,7 +143,7 @@ std::unique_ptr<Manifold> TrivialTri::manifold() const {
     return nullptr;
 }
 
-std::optional<AbelianGroup> TrivialTri::homology() const {
+AbelianGroup TrivialTri::homology() const {
     AbelianGroup ans;
 
     if (type_ == N2)

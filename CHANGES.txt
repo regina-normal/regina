@@ -1140,8 +1140,9 @@ Version 7.0  [ TODO ]
               and now returns a std::unique_ptr.  Also, the triangulation
               variant now takes its argument by const reference, not pointer.
               The old name is kept as a deprecated alias.
-            - Routine homology() now returns a std::optional<AbelianGroup>,
-              not a newly allocated pointer that could be null.
+            - Routines homology() and homologyH1() now return by value, and
+              throw an exception on error instead of returning null.
+              Also, the alias homologyH1() is now deprecated.
             - Routine manifold() now returns a std::unique_ptr.
         Class SurfaceFilter:
             - This is now an abstract base class.  If you need a filter

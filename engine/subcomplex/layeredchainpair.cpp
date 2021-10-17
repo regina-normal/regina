@@ -168,7 +168,7 @@ std::unique_ptr<Manifold> LayeredChainPair::manifold() const {
     return ans;
 }
 
-std::optional<AbelianGroup> LayeredChainPair::homology() const {
+AbelianGroup LayeredChainPair::homology() const {
     // The first homology group can be obtained from the matrix:
     //
     //   [  1  -1   1 ]

@@ -166,7 +166,7 @@ std::unique_ptr<Manifold> SnapPeaCensusTri::manifold() const {
     return std::make_unique<SnapPeaCensusManifold>(section_, index_);
 }
 
-std::optional<AbelianGroup> SnapPeaCensusTri::homology() const {
+AbelianGroup SnapPeaCensusTri::homology() const {
     return SnapPeaCensusManifold(section_, index_).homology();
 }
 

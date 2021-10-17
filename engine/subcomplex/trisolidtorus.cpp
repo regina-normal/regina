@@ -162,7 +162,7 @@ std::optional<TriSolidTorus> TriSolidTorus::recognise(Tetrahedron<3>* tet,
     return ans;
 }
 
-std::optional<AbelianGroup> TriSolidTorus::homology() const {
+AbelianGroup TriSolidTorus::homology() const {
     AbelianGroup ans;
     ans.addRank();
     return ans;

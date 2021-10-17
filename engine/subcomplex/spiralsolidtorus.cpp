@@ -201,7 +201,7 @@ std::unique_ptr<Manifold> SpiralSolidTorus::manifold() const {
     return std::make_unique<Handlebody>(1, true);
 }
 
-std::optional<AbelianGroup> SpiralSolidTorus::homology() const {
+AbelianGroup SpiralSolidTorus::homology() const {
     AbelianGroup ans;
     ans.addRank();
     return ans;

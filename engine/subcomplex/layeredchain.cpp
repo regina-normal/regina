@@ -107,7 +107,7 @@ std::unique_ptr<Manifold> LayeredChain::manifold() const {
     return std::make_unique<Handlebody>(index_ <= 1 ? 0 : 1, true);
 }
 
-std::optional<AbelianGroup> LayeredChain::homology() const {
+AbelianGroup LayeredChain::homology() const {
     AbelianGroup ans;
     if (index_ > 1)
         ans.addRank();
