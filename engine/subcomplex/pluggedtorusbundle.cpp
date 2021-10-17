@@ -54,18 +54,20 @@ namespace {
 }
 
 std::unique_ptr<Manifold> PluggedTorusBundle::manifold() const {
-    std::optional<SFSpace> sfs = region_.createSFS(false);
-    if (! sfs)
+    try {
+        SFSpace sfs = region_.createSFS(false);
+        if (sfs.punctures() == 1) {
+            // The region has one larger boundary, but we pinch it to create
+            // two smaller boundaries.
+            sfs.addPuncture();
+        }
+
+        sfs.reduce(false);
+
+        return std::make_unique<GraphLoop>(std::move(sfs), matchingReln_);
+    } catch (const regina::NotImplemented&) {
         return nullptr;
-    if (sfs->punctures() == 1) {
-        // The region has one larger boundary, but we pinch it to create
-        // two smaller boundaries.
-        sfs->addPuncture();
     }
-
-    sfs->reduce(false);
-
-    return std::make_unique<GraphLoop>(std::move(*sfs), matchingReln_);
 }
 
 std::ostream& PluggedTorusBundle::writeName(std::ostream& out) const {

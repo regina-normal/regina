@@ -39,25 +39,23 @@
 namespace regina {
 
 std::unique_ptr<Manifold> BlockedSFSPair::manifold() const {
-    std::optional<SFSpace> sfs0 = region_[0].createSFS(false);
-    if (! sfs0)
-        return nullptr;
+    try {
+        SFSpace sfs0 = region_[0].createSFS(false);
+        SFSpace sfs1 = region_[1].createSFS(false);
 
-    std::optional<SFSpace> sfs1 = region_[1].createSFS(false);
-    if (! sfs1) {
+        // Reduce the Seifert fibred space representations and finish up.
+        sfs0.reduce(false);
+        sfs1.reduce(false);
+
+        if (sfs1 < sfs0)
+            return std::make_unique<GraphPair>(std::move(sfs1), std::move(sfs0),
+                matchingReln_.inverse());
+        else
+            return std::make_unique<GraphPair>(std::move(sfs0), std::move(sfs1),
+                matchingReln_);
+    } catch (const regina::NotImplemented&) {
         return nullptr;
     }
-
-    // Reduce the Seifert fibred space representations and finish up.
-    sfs0->reduce(false);
-    sfs1->reduce(false);
-
-    if (*sfs1 < *sfs0)
-        return std::make_unique<GraphPair>(std::move(*sfs1), std::move(*sfs0),
-            matchingReln_.inverse());
-    else
-        return std::make_unique<GraphPair>(std::move(*sfs0), std::move(*sfs1),
-            matchingReln_);
 }
 
 std::ostream& BlockedSFSPair::writeName(std::ostream& out) const {

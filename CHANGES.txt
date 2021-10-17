@@ -1000,8 +1000,8 @@ Version 7.0  [ TODO ]
         Class SatLST:
             - Routine lst() now returns by reference, not pointer.
         Class SatRegion:
-            - Routine createSFS() returns a std::optional instead of a pointer
-              that could be null.
+            - Routine createSFS() now return by value, and throws an exception
+              in the (rare) cases where it cannot determine the answer.
             - The block output argument for boundaryAnnulus() now sends back a
               const pointer.
             - Added move construction, and move assignment.

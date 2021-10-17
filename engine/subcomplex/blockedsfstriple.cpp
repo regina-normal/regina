@@ -40,33 +40,29 @@
 namespace regina {
 
 std::unique_ptr<Manifold> BlockedSFSTriple::manifold() const {
-    // Go ahead and create the Seifert fibred spaces.
-    std::optional<SFSpace> end0 = end_[0].createSFS(false);
-    if (! end0)
-        return nullptr;
+    try {
+        // Go ahead and create the Seifert fibred spaces.
+        SFSpace end0 = end_[0].createSFS(false);
+        SFSpace end1 = end_[1].createSFS(false);
+        SFSpace hub = centre_.createSFS(false);
 
-    std::optional<SFSpace> end1 = end_[1].createSFS(false);
-    if (! end1)
-        return nullptr;
+        if (hub.punctures() == 1) {
+            // The region has one larger boundary, but we pinch it to create
+            // two smaller boundaries.
+            hub.addPuncture();
+        }
 
-    std::optional<SFSpace> hub = centre_.createSFS(false);
-    if (! hub)
-        return nullptr;
+        // Reduce the Seifert fibred space representations and finish up.
+        end0.reduce(false);
+        end1.reduce(false);
+        hub.reduce(false);
 
-    if (hub->punctures() == 1) {
-        // The region has one larger boundary, but we pinch it to create
-        // two smaller boundaries.
-        hub->addPuncture();
+        return std::make_unique<GraphTriple>(
+            std::move(end0), std::move(hub), std::move(end1),
+            matchingReln_[0], matchingReln_[1]);
+    } catch (const regina::NotImplemented&) {
+        return nullptr;
     }
-
-    // Reduce the Seifert fibred space representations and finish up.
-    end0->reduce(false);
-    end1->reduce(false);
-    hub->reduce(false);
-
-    return std::make_unique<GraphTriple>(
-        std::move(*end0), std::move(*hub), std::move(*end1),
-        matchingReln_[0], matchingReln_[1]);
 }
 
 std::ostream& BlockedSFSTriple::writeName(std::ostream& out) const {

@@ -248,43 +248,45 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
 }
 
 std::unique_ptr<Manifold> BlockedSFS::manifold() const {
-    std::optional<SFSpace> ans = region_.createSFS(false);
-    if (! ans)
+    try {
+        SFSpace ans = region_.createSFS(false);
+
+        ans.reduce();
+
+        // If we have SFS(RP2/n2) with one exceptional fibre, rewrite it as
+        // SFS(S2) with three exceptional fibres.
+
+        if (ans.baseClass() == SFSpace::n2 &&
+                ans.baseGenus() == 1 &&
+                (! ans.baseOrientable()) &&
+                ans.punctures() == 0 &&
+                ans.reflectors() == 0 &&
+                ans.fibreCount() <= 1) {
+            auto altAns = std::make_unique<SFSpace>(/* S2 x S1 */);
+            altAns->insertFibre(2, 1);
+            altAns->insertFibre(2, -1);
+
+            SFSFibre rp2Fibre;
+            if (ans.fibreCount() == 0) {
+                rp2Fibre.alpha = 1;
+                rp2Fibre.beta = ans.obstruction();
+            } else {
+                rp2Fibre = ans.fibre(0);
+                rp2Fibre.beta += rp2Fibre.alpha * ans.obstruction();
+            }
+
+            // Make sure we're not going to try inserting (0,k).
+            if (rp2Fibre.beta != 0) {
+                altAns->insertFibre(rp2Fibre.beta, rp2Fibre.alpha);
+                altAns->reduce();
+                return altAns;
+            }
+        }
+
+        return std::make_unique<SFSpace>(std::move(ans));
+    } catch (const regina::NotImplemented&) {
         return nullptr;
-
-    ans->reduce();
-
-    // If we have SFS(RP2/n2) with one exceptional fibre, rewrite it as
-    // SFS(S2) with three exceptional fibres.
-
-    if (ans->baseClass() == SFSpace::n2 &&
-            ans->baseGenus() == 1 &&
-            (! ans->baseOrientable()) &&
-            ans->punctures() == 0 &&
-            ans->reflectors() == 0 &&
-            ans->fibreCount() <= 1) {
-        std::unique_ptr<SFSpace> altAns(new SFSpace(/* S2 x S1 */));
-        altAns->insertFibre(2, 1);
-        altAns->insertFibre(2, -1);
-
-        SFSFibre rp2Fibre;
-        if (ans->fibreCount() == 0) {
-            rp2Fibre.alpha = 1;
-            rp2Fibre.beta = ans->obstruction();
-        } else {
-            rp2Fibre = ans->fibre(0);
-            rp2Fibre.beta += rp2Fibre.alpha * ans->obstruction();
-        }
-
-        // Make sure we're not going to try inserting (0,k).
-        if (rp2Fibre.beta != 0) {
-            altAns->insertFibre(rp2Fibre.beta, rp2Fibre.alpha);
-            altAns->reduce();
-            return altAns;
-        }
     }
-
-    return std::make_unique<SFSpace>(std::move(*ans));
 }
 
 std::ostream& BlockedSFS::writeName(std::ostream& out) const {

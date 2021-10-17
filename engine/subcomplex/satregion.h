@@ -570,16 +570,18 @@ class SatRegion : public Output<SatRegion> {
          * determining the Seifert fibred space precisely.  This can only
          * happen if the Seifert fibred space is closed, non-orientable,
          * belongs to the class \c n3 or \c n4, and has sufficiently large
-         * base orbifold genus.  In such situations this routine will return
-         * no value.
+         * base orbifold genus.  In such situations this routine will
+         * throw an exception.
+         *
+         * \exception NotImplemented This is one of the closed
+         * non-orientable cases where Regina cannot distinguish between
+         * classes \c n3 and \c n4, as described above.
          *
          * @param reflect \c true if this region is to be reflected
          * as the Seifert fibred space is created, or \c false if not.
-         * @return the structure of the underlying Seifert fibred space, or
-         * no value if this could not be determined precisely (see above for
-         * details on the restricted settings in which this can happen).
+         * @return the structure of the underlying Seifert fibred space.
          */
-        std::optional<SFSpace> createSFS(bool reflect) const;
+        SFSpace createSFS(bool reflect) const;
 
         /**
          * Writes an abbreviated list of blocks within this region to

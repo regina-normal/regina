@@ -195,7 +195,7 @@ void SatRegion::boundaryAnnulus(size_t which,
     // Given the precondition, we should never reach this point.
 }
 
-std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
+SFSpace SatRegion::createSFS(bool reflect) const {
     // Count boundary components.
     unsigned untwisted, twisted;
     countBoundaries(untwisted, twisted);
@@ -216,7 +216,8 @@ std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
     else {
         // In the no-boundary case, we might not be able to distinguish
         // between n3 and n4.  Just call it n3 for now, and if we discover
-        // it might have been n4 instead then we call it off and return 0.
+        // it might have been n4 instead then we call it off and throw
+        // an exception.
         baseClass = (bdry ? SFSpace::bn3 : SFSpace::n3);
     }
 
@@ -244,7 +245,9 @@ std::optional<SFSpace> SatRegion::createSFS(bool reflect) const {
              sfs.baseClass() == SFSpace::n4)) {
         // Could still be either n3 or n4.
         // Shrug, give up.
-        return std::nullopt;
+        throw NotImplemented("SatRegion::createSFS() cannot yet "
+            "distinguish between the closed non-orientable classes n3 and n4 "
+            "for large base orbifold genus");
     }
 
     return sfs;
