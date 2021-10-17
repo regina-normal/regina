@@ -204,6 +204,7 @@ void addLink(pybind11::module_& m) {
         .def("knowsBracket", &Link::knowsBracket)
         .def("knowsJones", &Link::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly)
+        .def_static("homflyAZtoLM", &Link::homflyAZtoLM)
         .def("group", &Link::group,
             pybind11::arg("simplify") = true)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,

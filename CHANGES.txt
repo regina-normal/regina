@@ -82,12 +82,12 @@ Version 7.0  [ TODO ]
               triangulation at the time of creation.  The triangulation
               that was originally used can be safely modified or even deleted.
             - Replaced enumerate() and enumerateTautDD() with a unified class
-              constructor; this will throw an exception on error (instead of
-              returning null).  The new class constructor allows you to choose
-              your preferred enumeration algorithm via an AngleAlg argument.
-              The old enumerate() and enumerateTautDD() functions are kept as
-              deprecated aliases, and now explicitly return packets
-              (not "pure" AngleStructures objects).
+              constructor; this will not insert the new list into the packet
+              tree, and will not start in a background thread.  The new class
+              constructor allows you to choose your preferred enumeration
+              algorithm via an AngleAlg argument.  The old enumerate() and
+              enumerateTautDD() are kept as deprecated aliases, and now
+              explicitly return packets (not "pure" AngleStructures objects).
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added begin() and end() for iteration through angle strutures.
@@ -538,6 +538,10 @@ Version 7.0  [ TODO ]
               line, since links no longer have labels.
             - Routines complement() and parallel() now return by value,
               not pointer.
+            - Routines bracket(), jones(), homfly(), homflyAZ() and homflyLM()
+              now always run in the current thread, even if a progress
+              tracker was passed.
+            - New static routine homflyAZtoLM().
         Class ListOnCall:
             - Removed, since this class was not thread-safe and did not add
               anything non-trivial.
@@ -663,13 +667,13 @@ Version 7.0  [ TODO ]
               triangulation at the time of creation.  The triangulation
               that was originally used can be safely modified or even deleted.
             - Now supports enumeration in prism coordinates (HS_PRISM).
-            - Replaced enumerate() with a class constructor; this will
-              throw an exception on error (instead of returning null),
-              and will not insert the new list into the packet tree.
-              The old enumerate() function is kept as a deprecated alias,
-              but (a) it now explicitly returns a packet (not a "pure"
-              NormalHypersurfaces object), and (b) Python users can no longer
-              use it with a progress tracker.
+            - Replaced enumerate() with a class constructor; this will throw an
+              exception on error (instead of returning null), will not insert
+              the new list into the packet tree, and will never start in a
+              background thread.  The old enumerate() function is kept as a
+              deprecated alias, but (a) it now explicitly returns a packet
+              (not a "pure" NormalHypersurfaces object), and (b) Python users
+              can no longer use it with a progress tracker.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added begin() and end() for iteration through hypersurfaces.
@@ -731,13 +735,13 @@ Version 7.0  [ TODO ]
             - Normal surface lists now hold a snapshot of the underlying
               triangulation at the time of creation.  The triangulation
               that was originally used can be safely modified or even deleted.
-            - Replaced enumerate() with a class constructor; this will
-              throw an exception on error (instead of returning null),
-              and will not insert the new list into the packet tree.
-              The old enumerate() function is kept as a deprecated alias,
-              but (a) it now explicitly returns a packet (not a "pure"
-              NormalSurfaces object), and (b) Python users can no longer
-              use it with a progress tracker.
+            - Replaced enumerate() with a class constructor; this will throw an
+              exception on error (instead of returning null), will not insert
+              the new list into the packet tree, and will never start in a
+              background thread.  The old enumerate() function is kept as a
+              deprecated alias, but (a) it now explicitly returns a packet
+              (not a "pure" NormalSurfaces object), and (b) Python users can
+              no longer use it with a progress tracker.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Replaced quadToStandard(), quadOctToStandardAN(),
@@ -1282,6 +1286,8 @@ Version 7.0  [ TODO ]
             - Routine rehydrate() now returns by value, not pointer; also,
               both rehydrate() and insertRehydration() now throw exceptions on
               error instead of indicating this through return values.
+            - Routine turaevViro() now always runs in the current thread,
+              even if a progress tracker was passed.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and

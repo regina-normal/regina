@@ -41,6 +41,7 @@
 #include "reginasupport.h"
 #include "reginaprefset.h"
 
+#include <thread>
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
@@ -90,12 +91,16 @@ std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
     // Remember our options for next time.
     ReginaPrefSet::global().anglesCreationTaut = tautOnly->isChecked();
 
+    std::shared_ptr<regina::Packet> ans;
     regina::ProgressTracker tracker;
+
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
-    auto ans = regina::makePacket<regina::AngleStructures>(std::in_place,
-        *tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
+    std::thread([&, this]() {
+        ans = regina::makePacket<regina::AngleStructures>(std::in_place,
+            *tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
+    }).detach();
 
     if (dlg.run()) {
         if (tautOnly->isChecked())

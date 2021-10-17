@@ -50,6 +50,7 @@
 #include "regina-core.h"
 #include "angle/anglestructure.h"
 #include "maths/cyclotomic.h"
+#include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
@@ -67,8 +68,6 @@ class AngleStructure;
 class GroupPresentation;
 class Link;
 class NormalSurface;
-class ProgressTracker;
-class ProgressTrackerOpen;
 class SnapPeaTriangulation;
 
 template <int> class XMLTriangulationReader;
@@ -773,23 +772,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * very fast (since it just returns the previously computed result).
          * Otherwise the computation could be quite slow, particularly
          * for larger triangulations and/or larger values of \a r.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the requested invariant has
-         *   not yet been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call turaevViro() again with the same arguments for
-         *   \a r and \a parity to retrieve the value of the invariant.
-         *
-         * - If no progress tracker is passed and the requested invariant has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the requested invariant has already been computed, then this
-         *   routine will return immediately with the pre-computed value.  If
-         *   a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the
+         * Turaev-Viro computation is complete, regardless of whether a progress
+         * tracker was passed.  If you need the old behaviour (where passing a
+         * progress tracker caused the computation to start in the background),
+         * simply call this routine in a new detached thread.
          *
          * \pre This triangulation is valid, closed and non-empty.
          *
@@ -801,10 +789,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * @param tracker a progress tracker through will progress will
          * be reported, or \c nullptr if no progress reporting is required.
-         * @return the requested Turaev-Viro invariant.  As an exception,
-         * if \a tracker is non-null and the value of this invariant has
-         * not been computed before, then (since the calculation will
-         * still be running in a new thread) the return value is undefined.
+         * @return the requested Turaev-Viro invariant, or an uninitialised
+         * field element if the calculation was cancelled via the given
+         * progress tracker.
          *
          * @see allCalculatedTuraevViro
          */

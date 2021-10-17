@@ -46,6 +46,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
+#include "progress/progresstracker.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"

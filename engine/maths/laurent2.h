@@ -554,7 +554,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
     template <typename U>
     friend Laurent2<U> operator * (const Laurent2<U>&, const Laurent2<U>&);
 
-    // For the time being, allow HOMFLY calculations to do low-level
+    // For the time being, allow Link::homflyAZtoLM() to do low-level
     // operations on these polynomials.
     friend class Link;
 };

@@ -161,19 +161,18 @@ class AngleStructures :
          * the given triangulation may change or even be destroyed
          * without causing problems.  See the class notes for details.
          *
-         * If a progress tracker is passed:
+         * If a progress tracker is passed, this routine will declare and
+         * work through a series of stages whose combined weights sum to 1;
+         * typically this means that the given tracker must not have been
+         * used before.
          *
-         * - The angle structure enumeration will take place in a new thread.
-         *   This constructor will return immediately.
-         *
-         * - For progress tracking, this routine will declare and work through
-         *   a series of stages whose combined weights sum to 1; typically this
-         *   means that the given tracker must not have been used before.
-         *
-         * If no progress tracker is passed, the enumeration will run
-         * in the current thread and this constructor will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
+         * This constructor will not return until the enumeration of angle
+         * structures is complete, regardless of whether a progress tracker was
+         * passed.  If you need the behaviour of the old enumerate() (where
+         * passing a progress tracker caused the enumeration to start in the
+         * background), simply call this constructor in a new detached thread.
+         * Note that this enumeration can be extremely slow for larger
+         * triangulations, and so there could be good reasons to do this.
          *
          * @param triangulation the triangulation for which the vertex
          * angle structures will be enumerated.
@@ -390,15 +389,21 @@ class AngleStructures :
          * Deprecated routine to enumerate angle structures on a given
          * triangulation.
          *
-         * This static routine is almost identical to calling the class
-         * constructor with the given arguments.  The only difference is
-         * that, unlike the class constructor, this routine will also wrap
-         * the new angle structure list in a packet and insert it beneath
-         * \a owner in the packet tree.
-         * If a progress tracker is passed (which means the enumeration runs
-         * in a background thread), the tree insertion will not happen until
-         * the enumeration has finished (and if the user cancels the operation,
-         * the insertion will not happen at all).
+         * This static routine is identical to calling the class
+         * constructor with the given arguments, but with two differences:
+         *
+         * - If a progress tracker is passed, this routine will start the
+         *   enumeration in a detached background thread and return immediately
+         *   (unlike the class constructor, which does not return until the
+         *   enumeration is finished).
+         *
+         * - This routine wraps the new angle structure list in a packet and
+         *   inserts it beneath \a owner in the packet tree (unlike the class
+         *   constructor, which creates a plain AngleStructures object).
+         *   If a progress tracker is passed (i.e., the enumeration runs in a
+         *   background thread) then this tree insertion will not happen until
+         *   the enumeration has finished, and if the user cancels the
+         *   operation then the insertion will not happen at all.
          *
          * This function is safe to use even if \a owner is a "pure"
          * Triangulation<3> or SnapPeaTriangulation, not a packet type.
@@ -413,7 +418,8 @@ class AngleStructures :
          * \ifacespython For this deprecated function, the progress tracker
          * argument is omitted.  It is still possible to enumerate in
          * the background with a progress tracker, but for that you will
-         * need to call the class constructor instead.
+         * need to call the class constructor instead and create the new
+         * thread yourself.
          *
          * @param owner the triangulation for which the vertex
          * angle structures will be enumerated.
@@ -570,6 +576,13 @@ void swap(AngleStructures& lhs, AngleStructures& rhs);
 MatrixInt makeAngleEquations(const Triangulation<3>& tri);
 
 // Inline functions for AngleStructures
+
+inline AngleStructures::AngleStructures(const Triangulation<3>& triangulation,
+        bool tautOnly, AngleAlg algHints, ProgressTracker* tracker) :
+        triangulation_(triangulation), tautOnly_(tautOnly),
+        algorithm_(algHints) {
+    enumerateInternal(tracker, nullptr);
+}
 
 inline AngleStructures& AngleStructures::operator = (
         const AngleStructures& src) {

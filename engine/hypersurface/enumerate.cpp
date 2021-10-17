@@ -89,31 +89,6 @@ namespace {
     };
 }
 
-NormalHypersurfaces::NormalHypersurfaces(const Triangulation<4>& triangulation,
-        HyperCoords coords, HyperList which, HyperAlg algHints,
-        ProgressTracker* tracker) :
-        triangulation_(triangulation), coords_(coords), which_(which),
-        algorithm_(algHints) {
-    MatrixInt eqns;
-    try {
-        eqns = makeMatchingEquations(triangulation, coords);
-    } catch (const ReginaException&) {
-        if (tracker)
-            tracker->setFinished();
-        throw;
-    }
-
-    if (tracker) {
-        // We pass the matching equations as an argument to the thread
-        // function so we can be sure that the equations are moved into
-        // the thread before they are destroyed.
-        std::thread([this, tracker](MatrixInt e) {
-            Enumerator(this, e, tracker, nullptr).enumerate();
-        }, std::move(eqns)).detach();
-    } else
-        Enumerator(this, eqns, tracker, nullptr).enumerate();
-}
-
 std::shared_ptr<PacketOf<NormalHypersurfaces>> NormalHypersurfaces::enumerate(
         Triangulation<4>& owner, HyperCoords coords, HyperList which,
         HyperAlg algHints, ProgressTracker* tracker) {

@@ -47,6 +47,7 @@
 #include "reginasupport.h"
 #include "../progressdialogs.h"
 
+#include <thread>
 #include <QDir>
 #include <QFileInfo>
 #include <QHeaderView>
@@ -480,7 +481,8 @@ bool Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
 
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing invariant"), ui);
-    tri->turaevViro(r, parity, regina::ALG_DEFAULT, &tracker);
+    std::thread(&Triangulation<3>::turaevViro, tri, r, parity,
+        regina::ALG_DEFAULT, &tracker).detach();
     if (! dlg.run())
         return false;
     dlg.hide();

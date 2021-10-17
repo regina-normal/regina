@@ -91,8 +91,6 @@ class IncompressibleTest : public CppUnit::TestFixture {
         }
 
         void isIncompressible() {
-            Triangulation<3>* tri;
-
             // Try the 3-sphere (no incompressible surfaces).
             verifyAllNotIncompressible(Example<3>::threeSphere(), "3-sphere");
 

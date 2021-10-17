@@ -1417,50 +1417,33 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
     }
 #endif
 
-    if (tracker) {
-        std::thread([=]{
-            // Set up our initial data.
-            InitialData<true> init(r, (parity ? 1 : 0));
+    // Set up our initial data.
+    InitialData<true> init(r, (parity ? 1 : 0));
 
-            InitialData<true>::TVType ans;
-            switch (alg) {
-                case ALG_TREEWIDTH:
-                    ans = turaevViroTreewidth(*this, init, tracker);
-                    break;
-                case ALG_NAIVE:
-                    ans = turaevViroNaive(*this, init, tracker);
-                    break;
-                default:
-                    ans = turaevViroBacktrack(*this, init, tracker);
-                    break;
-            }
-
-            if (! tracker->isCancelled())
-                turaevViroCache_[tvParams] = ans;
-
-            tracker->setFinished();
-        }).detach();
-
-        return Cyclotomic(1); // Zero element of a trivial field.
-    } else {
-        // Set up our initial data.
-        InitialData<true> init(r, (parity ? 1 : 0));
-
-        InitialData<true>::TVType ans;
-        switch (alg) {
-            case ALG_TREEWIDTH:
-                ans = turaevViroTreewidth(*this, init, tracker);
-                break;
-            case ALG_NAIVE:
-                ans = turaevViroNaive(*this, init, tracker);
-                break;
-            default:
-                ans = turaevViroBacktrack(*this, init, tracker);
-                break;
-        }
-
-        return (turaevViroCache_[tvParams] = ans);
+    InitialData<true>::TVType ans;
+    switch (alg) {
+        case ALG_TREEWIDTH:
+            ans = turaevViroTreewidth(*this, init, tracker);
+            break;
+        case ALG_NAIVE:
+            ans = turaevViroNaive(*this, init, tracker);
+            break;
+        default:
+            ans = turaevViroBacktrack(*this, init, tracker);
+            break;
     }
+
+    if (tracker) {
+        if (tracker->isCancelled()) {
+            tracker->setFinished();
+            return Cyclotomic();
+        } else {
+            turaevViroCache_[tvParams] = ans;
+            tracker->setFinished();
+            return ans;
+        }
+    } else
+        return (turaevViroCache_[tvParams] = std::move(ans));
 }
 
 } // namespace regina

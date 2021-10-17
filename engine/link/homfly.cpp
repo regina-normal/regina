@@ -3234,7 +3234,7 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
 
     if (crossings_.empty()) {
         if (components_.empty()) {
-            homflyAZ_ = Laurent2<Integer>();
+            homflyAZ_ = homflyLM_ = Laurent2<Integer>();
             if (tracker)
                 tracker->setFinished();
             return *homflyAZ_;
@@ -3250,88 +3250,60 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
         for (size_t i = 1; i < components_.size(); ++i)
             ans *= delta;
 
-        homflyAZ_ = std::move(ans);
+        homflyAZ_ = ans;
+        homflyLM_ = homflyAZtoLM(std::move(ans));
+
         if (tracker)
             tracker->setFinished();
         return *homflyAZ_;
     }
 
-    if (tracker) {
-        std::thread([=]{
-            Laurent2<Integer> ans;
-            switch (alg) {
-                case ALG_NAIVE:
-                case ALG_BACKTRACK:
-                    ans = homflyKauffman(tracker);
-                    break;
-                default:
-                    ans = homflyTreewidth(tracker);
-                    break;
-            }
-
-            if (! tracker->isCancelled())
-                homflyAZ_ = std::move(ans);
-
-            tracker->setFinished();
-        }).detach();
-
-        // Return nothing for now.
-        // The user needs to poll the tracker to find out when the
-        // computation is complete.
-        return noResult;
-    } else {
-        switch (alg) {
-            case ALG_NAIVE:
-            case ALG_BACKTRACK:
-                homflyAZ_ = homflyKauffman(nullptr);
-                break;
-            default:
-                homflyAZ_ = homflyTreewidth(nullptr);
-                break;
-        }
-        return *homflyAZ_;
+    Laurent2<Integer> ans;
+    switch (alg) {
+        case ALG_NAIVE:
+        case ALG_BACKTRACK:
+            ans = homflyKauffman(tracker);
+            break;
+        default:
+            ans = homflyTreewidth(tracker);
+            break;
     }
+
+    if (tracker && tracker->isCancelled()) {
+        tracker->setFinished();
+        return noResult;
+    }
+
+    homflyAZ_ = ans;
+    homflyLM_ = homflyAZtoLM(std::move(ans));
+
+    if (tracker)
+        tracker->setFinished();
+    return *homflyAZ_;
 }
 
 const Laurent2<Integer>& Link::homflyLM(Algorithm alg,
         ProgressTracker* tracker) const {
-    if (tracker) {
-        if (homflyLM_.has_value()) {
+    if (homflyLM_.has_value()) {
+        if (tracker)
             tracker->setFinished();
-            return *homflyLM_;
-        }
-
-        if (homflyAZ_.has_value()) {
-            // Although we haven't computed HOMFLY(l,m) explicitly, it's a
-            // trivial conversion from HOMFLY(a,z).  Do it in this thread.
-            Laurent2<Integer> ans(*homflyAZ_);
-
-            // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
-            // Note that i-j should always be 0 or 2 (mod 4), never odd.
-            for (auto& term : ans.coeff_)
-                if ((term.first.first - term.first.second) % 4 != 0)
-                    term.second.negate();
-
-            homflyLM_ = std::move(ans);
-            tracker->setFinished();
-            return *homflyLM_;
-        }
-
-        // Start the full HOMFLY computation in a new thread, and return
-        // nothing for now.
-        homflyAZ(alg, tracker);
-        return noResult;
-    } else {
-        if (homflyLM_.has_value())
-            return *homflyLM_;
-
-        // Compute HOMFLY(a,z) and convert to HOMFLY(l,m) as above.
-        Laurent2<Integer> ans(homflyAZ(alg));
-        for (auto& term : ans.coeff_)
-            if ((term.first.first - term.first.second) % 4 != 0)
-                term.second.negate();
-        return *(homflyLM_ = std::move(ans));
+        return *homflyLM_;
     }
+
+    // Computing homflyAZ_ will also compute homflyLM_.
+    homflyAZ(alg, tracker); // this marks tracker as finished
+    if (tracker && tracker->isCancelled())
+        return noResult;
+    return *homflyLM_;
+}
+
+Laurent2<Integer> Link::homflyAZtoLM(Laurent2<Integer> h) {
+    // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
+    // Note that i-j should always be 0 or 2 (mod 4), never odd.
+    for (auto& term : h.coeff_)
+        if ((term.first.first - term.first.second) % 4 != 0)
+            term.second.negate();
+    return h; // I believe this is a move, not a copy (C++ Core Issue 1148).
 }
 
 } // namespace regina

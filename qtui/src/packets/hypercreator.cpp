@@ -43,6 +43,7 @@
 #include "reginasupport.h"
 #include "../progressdialogs.h"
 
+#include <thread>
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
@@ -84,8 +85,8 @@ HyperCreator::HyperCreator() {
     layout->addLayout(basisArea);
     expln = ui->tr("<qt>Specifies whether to enumerate only "
         "vertex hypersurfaces (at extremal rays of the normal hypersurface "
-        "solution cone), or all fundamental surfaces (which form a Hilbert "
-        "basis for the solution cone).<p>Fundamental surfaces are "
+        "solution cone), or all fundamental hypersurfaces (which form a "
+        "Hilbert basis for the solution cone).<p>Fundamental hypersurfaces are "
         "more numerous, and can be significantly slower to enumerate.</qt>");
     label = new QLabel(ui->tr("Enumerate:"), ui);
     label->setWhatsThis(expln);
@@ -141,7 +142,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
 
     int basisId = basis->currentIndex();
 
-    // Sanity check for immersed and/or singular surfaces.
+    // Sanity check for immersed and/or singular hypersurfaces.
     if (! embedded->isChecked()) {
         if (ReginaPrefSet::global().warnOnNonEmbedded) {
             QMessageBox msg(QMessageBox::Information,
@@ -168,68 +169,47 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
             regina::HS_IMMERSED_SINGULAR) |
         (basisId == BASIS_VERTEX ? regina::HS_VERTEX : regina::HS_FUNDAMENTAL);
 
-    if (basisId == BASIS_VERTEX) {
-        regina::ProgressTracker tracker;
-        ProgressDialogNumeric dlg(&tracker,
-            ui->tr("Enumerating vertex normal hypersurfaces"),
-            parentWidget);
+    std::shared_ptr<regina::Packet> ans;
+    regina::ProgressTracker tracker;
 
-        std::shared_ptr<regina::PacketOf<NormalHypersurfaces>> ans;
+    QString sType = (basisId == BASIS_VERTEX ?
+        ui->tr("vertex") : ui->tr("fundamental"));
+
+    ProgressDialogNumeric dlg(&tracker,
+        ui->tr("Enumerating %1 normal hypersurfaces").arg(sType), parentWidget);
+
+    regina::HyperList which =
+        (basisId == BASIS_VERTEX ?
+            regina::HS_VERTEX : regina::HS_FUNDAMENTAL) |
+        (embedded->isChecked() ?
+            regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR);
+    std::thread([&, coordSystem, which, this]() {
         try {
             ans = regina::makePacket<NormalHypersurfaces>(std::in_place,
-                *tri,
-                coordSystem,
-                regina::HS_VERTEX | (embedded->isChecked() ?
-                    regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
-                regina::HS_ALG_DEFAULT, &tracker);
+                *tri, coordSystem, which, regina::HS_ALG_DEFAULT, &tracker);
         } catch (const regina::ReginaException&) {
-            ReginaSupport::failure(parentWidget,
-                ui->tr("<qt>I could not enumerate vertex normal "
-                "hypersurfaces.<p>"
-                "Please report this to the Regina developers.</qt>"));
-            return nullptr;
+            // Leave ans as null.
         }
+    }).detach();
 
-        if (dlg.run()) {
-            ans->setLabel("Vertex normal hypersurfaces");
+    if (dlg.run()) {
+        if (ans) {
+            ans->setLabel(ui->tr("%1 %2 hypersurfaces")
+                .arg(Coordinates::adjective(coordSystem, true))
+                .arg(sType)
+                .toStdString());
             parent->insertChildLast(ans);
-            return ans;
         } else {
-            ReginaSupport::info(parentWidget,
-                ui->tr("The normal hypersurface enumeration was cancelled."));
-            return nullptr;
+            ReginaSupport::failure(parentWidget,
+                ui->tr("<qt>I could not enumerate %1 normal hypersurfaces.<p>"
+                "Please report this to the Regina developers.</qt>")
+                .arg(sType));
         }
+        return ans;
     } else {
-        regina::ProgressTracker tracker;
-        ProgressDialogMessage dlg(&tracker,
-            ui->tr("Enumerating fundamental normal hypersurfaces"),
-            parentWidget);
-
-        std::shared_ptr<regina::PacketOf<NormalHypersurfaces>> ans;
-        try {
-            ans = regina::makePacket<NormalHypersurfaces>(std::in_place,
-                *tri,
-                coordSystem,
-                regina::HS_FUNDAMENTAL | (embedded->isChecked() ?
-                    regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
-                regina::HS_ALG_DEFAULT, &tracker);
-        } catch (const regina::ReginaException&) {
-            ReginaSupport::failure(parentWidget,
-                ui->tr("<qt>I could not enumerate fundamental normal "
-                "hypersurfaces.<p>"
-                "Please report this to the Regina developers.</qt>"));
-            return nullptr;
-        }
-
-        if (dlg.run()) {
-            ans->setLabel("Fundamental normal hypersurfaces");
-            parent->insertChildLast(ans);
-            return ans;
-        } else {
-            ReginaSupport::info(parentWidget,
-                ui->tr("The normal hypersurface enumeration was cancelled."));
-            return nullptr;
-        }
+        ReginaSupport::info(parentWidget,
+            ui->tr("The normal hypersurface enumeration was cancelled."));
+        return nullptr;
     }
 }
 

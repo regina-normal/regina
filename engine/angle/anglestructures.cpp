@@ -180,17 +180,6 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
     }
 }
 
-AngleStructures::AngleStructures(const Triangulation<3>& triangulation,
-        bool tautOnly, AngleAlg algHints, ProgressTracker* tracker) :
-        triangulation_(triangulation), tautOnly_(tautOnly),
-        algorithm_(algHints) {
-    if (tracker)
-        std::thread(&AngleStructures::enumerateInternal,
-            this, tracker, nullptr).detach();
-    else
-        enumerateInternal(nullptr, nullptr);
-}
-
 std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerate(
         Triangulation<3>& triangulation, bool tautOnly,
         ProgressTracker* tracker) {

@@ -43,6 +43,7 @@
 #include "reginasupport.h"
 #include "../progressdialogs.h"
 
+#include <thread>
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
@@ -195,93 +196,60 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
             regina::NS_IMMERSED_SINGULAR) |
         (basisId == BASIS_VERTEX ? regina::NS_VERTEX : regina::NS_FUNDAMENTAL);
 
-    if (basisId == BASIS_VERTEX) {
-        regina::ProgressTracker tracker;
-        ProgressDialogNumeric dlg(&tracker,
-            ui->tr("Enumerating vertex normal surfaces"),
-            parentWidget);
+    std::shared_ptr<regina::Packet> ans;
+    regina::ProgressTracker tracker;
 
-        std::shared_ptr<regina::PacketOf<NormalSurfaces>> ans;
+    QString sType = (basisId == BASIS_VERTEX ?
+        ui->tr("vertex") : ui->tr("fundamental"));
+
+    ProgressDialogNumeric dlg(&tracker,
+        ui->tr("Enumerating %1 normal surfaces").arg(sType), parentWidget);
+
+    regina::NormalList which =
+        (basisId == BASIS_VERTEX ?
+            regina::NS_VERTEX : regina::NS_FUNDAMENTAL) |
+        (embedded->isChecked() ?
+            regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR);
+    std::thread([&, coordSystem, which, this]() {
         try {
             ans = regina::makePacket<NormalSurfaces>(std::in_place,
-                *tri,
-                coordSystem,
-                regina::NS_VERTEX | (embedded->isChecked() ?
-                    regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
-                regina::NS_ALG_DEFAULT, &tracker);
+                *tri, coordSystem, which, regina::NS_ALG_DEFAULT, &tracker);
         } catch (const regina::ReginaException&) {
+            // Leave ans as null.
+        }
+    }).detach();
+
+    if (dlg.run()) {
+        if (ans) {
+            ans->setLabel(ui->tr("%1 %2 surfaces")
+                .arg(Coordinates::adjective(coordSystem, true))
+                .arg(sType)
+                .toStdString());
+            parent->insertChildLast(ans);
+        } else {
             if (coordSystem == regina::NS_QUAD_CLOSED ||
                     coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
                 ReginaSupport::info(parentWidget,
-                    ui->tr("<qt>I could not enumerate vertex normal "
-                    "surfaces in %1 coordinates.  This could be "
+                    ui->tr("<qt>I could not enumerate %1 normal "
+                    "surfaces in %2 coordinates.  This could be "
                     "because SnapPea was unable to construct the slope "
                     "equations, or because it tried to retriangulate when "
                     "doing so.<p>"
                     "Please report this to the Regina developers.</qt>")
+                    .arg(sType)
                     .arg(Coordinates::adjective(coordSystem, false)));
             } else {
                 ReginaSupport::failure(parentWidget,
-                    ui->tr("<qt>I could not enumerate vertex normal "
-                    "surfaces.<p>"
-                    "Please report this to the Regina developers.</qt>"));
-            }
-            return nullptr;
-        }
-
-        if (dlg.run()) {
-            ans->setLabel(ui->tr("%1 vertex surfaces").arg(
-                Coordinates::adjective(coordSystem, true)).toStdString());
-            parent->insertChildLast(ans);
-            return ans;
-        } else {
-            ReginaSupport::info(parentWidget,
-                ui->tr("The normal surface enumeration was cancelled."));
-            return nullptr;
-        }
-    } else {
-        regina::ProgressTracker tracker;
-        ProgressDialogMessage dlg(&tracker,
-            ui->tr("Enumerating fundamental normal surfaces"),
-            parentWidget);
-
-        std::shared_ptr<regina::PacketOf<NormalSurfaces>> ans;
-        try {
-            ans = regina::makePacket<NormalSurfaces>(std::in_place,
-                *tri,
-                coordSystem,
-                regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
-                    regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
-                regina::NS_ALG_DEFAULT, &tracker);
-        } catch (const regina::ReginaException&) {
-            if (coordSystem == regina::NS_QUAD_CLOSED ||
-                    coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
-                ReginaSupport::info(parentWidget,
-                    ui->tr("<qt>I could not enumerate fundamental normal "
-                    "surfaces in %1 coordinates.  This could be "
-                    "because SnapPea was unable to construct the slope "
-                    "equations, or it tried to retriangulate when doing so.<p>"
+                    ui->tr("<qt>I could not enumerate %1 normal surfaces.<p>"
                     "Please report this to the Regina developers.</qt>")
-                    .arg(Coordinates::adjective(coordSystem, false)));
-            } else {
-                ReginaSupport::failure(parentWidget,
-                    ui->tr("<qt>I could not enumerate fundamental normal "
-                    "surfaces.<p>"
-                    "Please report this to the Regina developers.</qt>"));
+                    .arg(sType));
             }
-            return nullptr;
         }
-
-        if (dlg.run()) {
-            ans->setLabel(ui->tr("%1 fundamental surfaces").arg(
-                Coordinates::adjective(coordSystem, true)).toStdString());
-            parent->insertChildLast(ans);
-            return ans;
-        } else {
-            ReginaSupport::info(parentWidget,
-                ui->tr("The normal surface enumeration was cancelled."));
-            return nullptr;
-        }
+        return ans;
+    } else {
+        ReginaSupport::info(parentWidget,
+            ui->tr("The normal surface enumeration was cancelled."));
+        return nullptr;
     }
 }
 

@@ -641,67 +641,41 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
         return *bracket_;
     }
 
-    if (tracker) {
-        std::thread([=]{
-            Laurent<Integer> ans;
-            switch (alg) {
-                case ALG_NAIVE:
-                    ans = bracketNaive(tracker);
-                    break;
-                default:
-                    ans = bracketTreewidth(tracker);
-                    break;
-            }
-
-            if (! tracker->isCancelled())
-                setPropertiesFromBracket(std::move(ans));
-
-            tracker->setFinished();
-        }).detach();
-
-        // Return nothing (the zero polynomial) for now.
-        // The user needs to poll the tracker to find out when the
-        // computation is complete.
-        return noResult;
-    } else {
-        Laurent<Integer> ans;
-        switch (alg) {
-            case ALG_NAIVE:
-                ans = bracketNaive(nullptr);
-                break;
-            default:
-                ans = bracketTreewidth(nullptr);
-                break;
-        }
-        setPropertiesFromBracket(std::move(ans));
-        return *bracket_;
+    Laurent<Integer> ans;
+    switch (alg) {
+        case ALG_NAIVE:
+            ans = bracketNaive(tracker);
+            break;
+        default:
+            ans = bracketTreewidth(tracker);
+            break;
     }
+
+    if (tracker && tracker->isCancelled()) {
+        tracker->setFinished();
+        return noResult;
+    }
+
+    setPropertiesFromBracket(std::move(ans));
+
+    if (tracker)
+        tracker->setFinished();
+    return *bracket_;
 }
 
 const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
         const {
-    if (tracker) {
-        if (jones_.has_value()) {
+    if (jones_.has_value()) {
+        if (tracker)
             tracker->setFinished();
-            return *jones_;
-        }
-
-        // Start the bracket computation in a new thread.  This computes
-        // Jones as a side-effect, and runs the full life cycle of the tracker.
-        bracket(alg, tracker);
-
-        // Return nothing for now; the user needs to poll the tracker to
-        // find out when the computation is actually complete.
-        return noResult;
-    } else {
-        if (jones_.has_value()) {
-            return *jones_;
-        }
-
-        // Computing bracket_ will also set jones_.
-        bracket(alg);
         return *jones_;
     }
+
+    // Computing bracket_ will also set jones_.
+    bracket(alg, tracker); // this marks tracker as finished
+    if (tracker && tracker->isCancelled())
+        return noResult;
+    return *jones_;
 }
 
 void Link::setPropertiesFromBracket(Laurent<Integer>&& bracket) const {

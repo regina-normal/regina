@@ -42,6 +42,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 
+#include <thread>
 #include <QAction>
 #include <QApplication>
 #include <QClipboard>
@@ -55,6 +56,7 @@
 
 #define MAX_LINK_AUTO_POLYNOMIALS 6
 
+using regina::Link;
 using regina::Packet;
 
 LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
@@ -300,7 +302,7 @@ void LinkPolynomialUI::refresh() {
 void LinkPolynomialUI::calculateJones() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Jones polynomial"), ui);
-    link->jones(regina::ALG_DEFAULT, &tracker);
+    std::thread(&Link::jones, link, regina::ALG_DEFAULT, &tracker).detach();
     if (! dlg.run())
         return;
     dlg.hide();
@@ -313,7 +315,7 @@ void LinkPolynomialUI::calculateHomfly() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing HOMFLY-PT polynomial"),
         ui);
-    link->homfly(regina::ALG_DEFAULT, &tracker);
+    std::thread(&Link::homfly, link, regina::ALG_DEFAULT, &tracker).detach();
     if (! dlg.run())
         return;
     dlg.hide();
@@ -325,7 +327,7 @@ void LinkPolynomialUI::calculateHomfly() {
 void LinkPolynomialUI::calculateBracket() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Kauffman bracket"), ui);
-    link->jones(regina::ALG_DEFAULT, &tracker);
+    std::thread(&Link::jones, link, regina::ALG_DEFAULT, &tracker).detach();
     if (! dlg.run())
         return;
     dlg.hide();

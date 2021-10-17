@@ -2061,22 +2061,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * be cached and so this routine will be very fast (since it just
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the polynomial has not yet
-         *   been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call bracket() again to retrieve the polynomial.
-         *
-         * - If no progress tracker is passed and the polynomial has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the requested invariant has already been computed, then this
-         *   routine will return immediately with the pre-computed value.  If
-         *   a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the polynomial
+         * computation is complete, regardless of whether a progress tracker
+         * was passed.  If you need the old behaviour (where passing a progress
+         * tracker caused the computation to start in the background), simply
+         * call this routine in a new detached thread.
          *
          * \warning The naive algorithm can only handle a limited number
          * of crossings (currently less than the number of bits in a long,
@@ -2095,9 +2085,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the bracket polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * bracket() again once the tracker is marked as finished.
+         * @return the bracket polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2153,22 +2142,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * be cached and so this routine will be very fast (since it just
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the polynomial has not yet
-         *   been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call bracket() again to retrieve the polynomial.
-         *
-         * - If no progress tracker is passed and the polynomial has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the requested invariant has already been computed, then this
-         *   routine will return immediately with the pre-computed value.  If
-         *   a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the polynomial
+         * computation is complete, regardless of whether a progress tracker
+         * was passed.  If you need the old behaviour (where passing a progress
+         * tracker caused the computation to start in the background), simply
+         * call this routine in a new detached thread.
          *
          * \warning The naive algorithm can only handle a limited number
          * of crossings (currently less than the number of bits in a long,
@@ -2187,9 +2166,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the Jones polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * jones() again once the tracker is marked as finished.
+         * @return the Jones polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2241,27 +2219,17 @@ class Link : public PacketData<Link>, public Output<Link> {
          * Instead, homflyAZ() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
-         * If the HOMFLY polynomial has already been computed, then the result
+         * If the HOMFLY polynomial has already been computed (either in terms
+         * of \a alpha and \a z or in terms of \a l and \a m), then the result
          * will be cached and so this routine will be very fast (since it just
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the polynomial has not yet
-         *   been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call homflyAZ() again to retrieve the polynomial.
-         *
-         * - If no progress tracker is passed and the polynomial has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the HOMFLY polynomial has already been computed (either in
-         *   terms of \a alpha and \a z or in terms of \a l and \a m), then
-         *   this routine will return immediately with the pre-computed value.
-         *   If a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the polynomial
+         * computation is complete, regardless of whether a progress tracker
+         * was passed.  If you need the old behaviour (where passing a progress
+         * tracker caused the computation to start in the background), simply
+         * call this routine in a new detached thread.
          *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
@@ -2271,9 +2239,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * fixed-parameter tractable treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * homflyAZ() again once the tracker is marked as finished.
+         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2312,27 +2279,17 @@ class Link : public PacketData<Link>, public Output<Link> {
          * Instead, homflyLM() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
-         * If the HOMFLY polynomial has already been computed, then the result
+         * If the HOMFLY polynomial has already been computed (either in terms
+         * of \a alpha and \a z or in terms of \a l and \a m), then the result
          * will be cached and so this routine will be very fast (since it just
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the polynomial has not yet
-         *   been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call homflyLM() again to retrieve the polynomial.
-         *
-         * - If no progress tracker is passed and the polynomial has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the HOMFLY polynomial has already been computed (either in
-         *   terms of \a alpha and \a z or in terms of \a l and \a m), then
-         *   this routine will return immediately with the pre-computed value.
-         *   If a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the polynomial
+         * computation is complete, regardless of whether a progress tracker
+         * was passed.  If you need the old behaviour (where passing a progress
+         * tracker caused the computation to start in the background), simply
+         * call this routine in a new detached thread.
          *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
@@ -2342,9 +2299,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * fixed-parameter tractable treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * homflyLM() again once the tracker is marked as finished.
+         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2372,9 +2328,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * fixed-parameter tractable treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * homfly() again once the tracker is marked as finished.
+         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2389,6 +2344,25 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @return \c true if and only if this property is already known.
          */
         bool knowsHomfly() const;
+
+        /**
+         * Converts between the (\a alpha, \a z) and (\a l, \a m)
+         * representations of the HOMFLY polynomial.
+         *
+         * The (\a alpha, \a z) and (\a l, \a m) variants are related by a
+         * simple transformation: \a alpha = \a l \a i and \a z = -\a m \a i,
+         * where \a i represents (as usual) a square root of -1.
+         *
+         * See homflyAZ() and homflyLM() for further details.
+         *
+         * @param homflyAZ the HOMFLY polynomial of a link as a polynomial in
+         * \a alpha and \a z, where (\a alpha, \a z) are represented by
+         * (\a x, \a y) in the class Laurent2<Integer>.
+         * @return the HOMFLY polynomial of the same link as a polynomial in
+         * \a l and \a m, where (\a l, \a m) are represented by (\a x, \a y)
+         * in the class Laurent2<Integer>.
+         */
+        static Laurent2<Integer> homflyAZtoLM(Laurent2<Integer> homflyAZ);
 
         /**
          * Returns the group of this link; that is, the fundamental group of

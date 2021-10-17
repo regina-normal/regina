@@ -48,6 +48,7 @@
 #include "enumerate/enumconstraints.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
+#include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
@@ -250,19 +251,18 @@ class NormalSurfaces :
          * the given triangulation may change or even be destroyed
          * without causing problems.  See the class notes for details.
          *
-         * If a progress tracker is passed:
+         * If a progress tracker is passed, this routine will declare and
+         * work through a series of stages whose combined weights sum to 1;
+         * typically this means that the given tracker must not have been
+         * used before.
          *
-         * - The normal surface enumeration will take place in a new thread.
-         *   This constructor will return immediately.
-         *
-         * - For progress tracking, this routine will declare and work through
-         *   a series of stages whose combined weights sum to 1; typically this
-         *   means that the given tracker must not have been used before.
-         *
-         * If no progress tracker is passed, the enumeration will run
-         * in the current thread and this constructor will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
+         * This constructor will not return until the enumeration of surfaces
+         * is complete, regardless of whether a progress tracker was passed.
+         * If you need the behaviour of the old enumerate() (where passing a
+         * progress tracker caused the enumeration to start in the background),
+         * simply call this constructor in a new detached thread.
+         * Note that this enumeration can be extremely slow for larger
+         * triangulations, and so there could be good reasons to do this.
          *
          * If an error occurs, then this routine will thrown an exception.
          * In this case, no normal surface list will be created, and the
@@ -415,18 +415,23 @@ class NormalSurfaces :
          * triangulation.
          *
          * This static routine is identical to calling the class "enumeration
-         * constructor" with the given arguments, but with two differences:
+         * constructor" with the given arguments, but with three differences:
          *
-         * - Unlike the class constructor, this routine will also wrap
-         *   the new normal surface list in a packet and insert it
-         *   beneath \a owner in the packet tree.
-         *   If a progress tracker is passed (which means the enumeration runs
-         *   in a background thread), the tree insertion will not happen until
-         *   the enumeration has finished (and if the user cancels the
-         *   operation, the insertion will not happen at all).
+         * - If a progress tracker is passed, this routine will start the
+         *   enumeration in a detached background thread and return immediately
+         *   (unlike the class constructor, which does not return until the
+         *   enumeration is finished).
          *
-         * - If there is an error, then the class constructor will throw
-         *   an exception, whereas this routine will simply return \c null.
+         * - This routine wraps the new normal surface list in a packet and
+         *   inserts it beneath \a owner in the packet tree (unlike the
+         *   class constructor, which creates a plain NormalSurfaces object).
+         *   If a progress tracker is passed (i.e., the enumeration runs in a
+         *   background thread) then this tree insertion will not happen until
+         *   the enumeration has finished, and if the user cancels the
+         *   operation then the insertion will not happen at all.
+         *
+         * - If there is an error, this routine will return \c null (unlike
+         *   the class constructor, which throws an exception).
          *
          * This function is safe to use even if \a owner is a "pure"
          * Triangulation<3> or SnapPeaTriangulation, not a packet type.
@@ -441,7 +446,8 @@ class NormalSurfaces :
          * \ifacespython For this deprecated function, the progress tracker
          * argument is omitted.  It is still possible to enumerate in
          * the background with a progress tracker, but for that you will
-         * need to call the class constructor instead.
+         * need to call the class constructor instead and create the new
+         * thread yourself.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -1560,6 +1566,21 @@ EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
     NormalCoords coords);
 
 // Inline functions for NormalSurfaces
+
+inline NormalSurfaces::NormalSurfaces(const Triangulation<3>& triangulation,
+        NormalCoords coords, NormalList which, NormalAlg algHints,
+        ProgressTracker* tracker) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algHints) {
+    try {
+        Enumerator(this, makeMatchingEquations(triangulation, coords),
+            tracker, nullptr).enumerate();
+    } catch (const ReginaException&) {
+        if (tracker)
+            tracker->setFinished();
+        throw;
+    }
+}
 
 inline NormalSurfaces& NormalSurfaces::operator = (const NormalSurfaces& src) {
     ChangeEventSpan span(*this);
