@@ -66,8 +66,7 @@ XMLElementReader* XMLLegacyFilterReader::startContentSubElement(
     return new XMLElementReader();
 }
 
-void XMLLegacyFilterReader::endContentSubElement(const std::string& subTagName,
-        XMLElementReader* subReader) {
+void XMLLegacyFilterReader::endContentSubElement(const std::string&, XMLElementReader*) {
     if (dataReader_)
         filter_ = dataReader_->packetToCommit();
 }
@@ -76,7 +75,7 @@ XMLCombinationFilterReader::XMLCombinationFilterReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id,
         const regina::xml::XMLPropertyDict& props) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label), std::move(id)),
         filter_(nullptr) {
     std::string type = props.lookup("op");
     if (type == "and") {
@@ -109,7 +108,7 @@ XMLPropertiesFilterReader::XMLPropertiesFilterReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id,
         const regina::xml::XMLPropertyDict& props) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label), std::move(id)),
         filter_(nullptr) {
     BoolSet orbl, compact, realbdry;
 

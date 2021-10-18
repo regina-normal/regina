@@ -74,15 +74,6 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
     angles_ = AngleStructure(tri_, std::move(vec));
 }
 
-XMLElementReader* XMLAngleStructureReader::startSubElement(
-        const std::string& subTagName,
-        const regina::xml::XMLPropertyDict& props) {
-    if (! angles_)
-        return new XMLElementReader();
-
-    return new XMLElementReader();
-}
-
 XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
         std::shared_ptr<Packet> parent, bool anon, std::string label,
         std::string id, const regina::xml::XMLPropertyDict& props) :

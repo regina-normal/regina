@@ -97,13 +97,16 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
 
     FileInfo ans;
     ans.compressed_ = compressed;
-    ans.pathname_ = idPathname;
+    ans.pathname_ = std::move(idPathname);
     ans.format_ = REGINA_CURRENT_FILE_FORMAT;
+
+    // Note: we cannot use the idPathname argument from here on, since we moved its data out.
+    // We must use ans.pathname_ instead.
 
     // Make it an invalid file until we know otherwise.
     ans.invalid_ = true;
 
-    std::ifstream file(idPathname.c_str(),
+    std::ifstream file(ans.pathname_.c_str(),
         std::ios_base::in | std::ios_base::binary);
     if (! file)
         return ans;

@@ -79,9 +79,6 @@ class XMLAngleStructureReader : public XMLElementReader {
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
         virtual void initialChars(const std::string& chars) override;
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps) override;
 };
 
 /**

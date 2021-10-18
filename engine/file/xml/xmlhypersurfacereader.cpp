@@ -108,7 +108,7 @@ XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id,
         const regina::xml::XMLPropertyDict& props) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label), std::move(id)),
         list_(nullptr),
         tri_(resolver_.resolvePacketData<Triangulation<4>>(
             props.lookup("tri"))) {
@@ -131,7 +131,7 @@ XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
 
 XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
         const std::string& subTagName,
-        const regina::xml::XMLPropertyDict& props) {
+        const regina::xml::XMLPropertyDict&) {
     if (list_ && subTagName == "hypersurface")
         return new XMLNormalHypersurfaceReader(
             list_->triangulation_, list_->coords_);
