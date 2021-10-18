@@ -222,12 +222,16 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * Determines if the given triangulation component is a
          * plugged triangular solid torus.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure containing details of the plugged triangular
-         * solid torus, or no value if the given component is not a plugged
+         * solid torus, or \c null if the given component is not a plugged
          * triangular solid torus.
          */
-        static std::optional<PlugTriSolidTorus> recognise(Component<3>* comp);
+        static std::unique_ptr<PlugTriSolidTorus> recognise(Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component forms a
          * plugged triangular solid torus.
@@ -235,7 +239,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<PlugTriSolidTorus>
+        [[deprecated]] static std::unique_ptr<PlugTriSolidTorus>
             isPlugTriSolidTorus(Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -303,8 +307,8 @@ inline void swap(PlugTriSolidTorus& a, PlugTriSolidTorus& b) noexcept {
     a.swap(b);
 }
 
-inline std::optional<PlugTriSolidTorus> PlugTriSolidTorus::isPlugTriSolidTorus(
-        Component<3>* comp) {
+inline std::unique_ptr<PlugTriSolidTorus>
+        PlugTriSolidTorus::isPlugTriSolidTorus(Component<3>* comp) {
     return recognise(comp);
 }
 

@@ -394,11 +394,15 @@ class LayeredSolidTorus : public StandardTriangulation {
          * triangles of the layered solid torus must in fact be boundary
          * triangles of the component.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure containing details of the layered solid torus,
-         * or no value if the given component is not a layered solid torus.
+         * or \c null if the given component is not a layered solid torus.
          */
-        static std::optional<LayeredSolidTorus> recognise(
+        static std::unique_ptr<LayeredSolidTorus> recognise(
             Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component forms a
@@ -407,7 +411,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<LayeredSolidTorus>
+        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
             isLayeredSolidTorus(Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -514,8 +518,8 @@ inline std::optional<LayeredSolidTorus>
     return recogniseFromTop(tet, topFace1, topFace2);
 }
 
-inline std::optional<LayeredSolidTorus> LayeredSolidTorus::isLayeredSolidTorus(
-        Component<3>* comp) {
+inline std::unique_ptr<LayeredSolidTorus>
+        LayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
     return recognise(comp);
 }
 

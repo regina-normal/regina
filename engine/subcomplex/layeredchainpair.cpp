@@ -38,17 +38,17 @@
 
 namespace regina {
 
-std::optional<LayeredChainPair> LayeredChainPair::recognise(
+std::unique_ptr<LayeredChainPair> LayeredChainPair::recognise(
         const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return std::nullopt;
+        return nullptr;
 
     unsigned long nTet = comp->size();
     if (nTet < 2)
-        return std::nullopt;
+        return nullptr;
     if (comp->countVertices() != 1)
-        return std::nullopt;
+        return nullptr;
 
     // We have at least two tetrahedra and precisely 1 vertex.
     // The component is closed and orientable (and connected, since it's
@@ -96,14 +96,15 @@ std::optional<LayeredChainPair> LayeredChainPair::recognise(
                     // Extend longChain to (n-1) tetrahedra.
                     while (longChain.index() + 1 < nTet)
                         longChain.extendBelow();
-                    return LayeredChainPair(
-                        LayeredChain(
-                            firstBottom->adjacentTetrahedron(
-                                firstBottomRoles[0]),
-                            firstBottom->adjacentGluing(
-                                firstBottomRoles[0]) * firstBottomRoles *
-                                Perm<4>(0, 2, 1, 3)),
-                        longChain);
+                    return std::unique_ptr<LayeredChainPair>(
+                        new LayeredChainPair(
+                            LayeredChain(
+                                firstBottom->adjacentTetrahedron(
+                                    firstBottomRoles[0]),
+                                firstBottom->adjacentGluing(
+                                    firstBottomRoles[0]) * firstBottomRoles *
+                                    Perm<4>(0, 2, 1, 3)),
+                            longChain));
                 }
 
             continue;
@@ -147,14 +148,16 @@ std::optional<LayeredChainPair> LayeredChainPair::recognise(
                     Perm<4>(2, 0, 3, 1)) {
             // We found one!
             if (first.index() > second.index())
-                return LayeredChainPair(second, first);
+                return std::unique_ptr<LayeredChainPair>(
+                    new LayeredChainPair(second, first));
             else
-                return LayeredChainPair(first, second);
+                return std::unique_ptr<LayeredChainPair>(
+                    new LayeredChainPair(first, second));
         }
     }
 
     // Nothing was found.  Sigh.
-    return std::nullopt;
+    return nullptr;
 }
 
 std::unique_ptr<Manifold> LayeredChainPair::manifold() const {

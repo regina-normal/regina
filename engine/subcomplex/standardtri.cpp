@@ -69,23 +69,23 @@ std::string StandardTriangulation::TeXName() const {
 std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         Component<3>* comp) {
     if (auto ans = TrivialTri::recognise(comp))
-        return std::make_unique<TrivialTri>(std::move(*ans));
+        return ans;
     if (auto ans = L31Pillow::recognise(comp))
-        return std::make_unique<L31Pillow>(std::move(*ans));
+        return ans;
     if (auto ans = LayeredLensSpace::recognise(comp))
-        return std::make_unique<LayeredLensSpace>(std::move(*ans));
+        return ans;
     if (auto ans = LayeredLoop::recognise(comp))
-        return std::make_unique<LayeredLoop>(std::move(*ans));
+        return ans;
     if (auto ans = LayeredChainPair::recognise(comp))
-        return std::make_unique<LayeredChainPair>(std::move(*ans));
+        return ans;
     if (auto ans = AugTriSolidTorus::recognise(comp))
-        return std::make_unique<AugTriSolidTorus>(std::move(*ans));
+        return ans;
     if (auto ans = PlugTriSolidTorus::recognise(comp))
-        return std::make_unique<PlugTriSolidTorus>(std::move(*ans));
+        return ans;
     if (auto ans = LayeredSolidTorus::recognise(comp))
-        return std::make_unique<LayeredSolidTorus>(std::move(*ans));
+        return ans;
     if (auto ans = SnapPeaCensusTri::recognise(comp))
-        return std::make_unique<SnapPeaCensusTri>(std::move(*ans));
+        return ans;
 
     return nullptr;
 }
@@ -102,19 +102,19 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
 
     // Run tests that require entire triangulations.
     if (auto ans = BlockedSFS::recognise(tri))
-        return std::make_unique<BlockedSFS>(std::move(*ans));
+        return ans;
     if (auto ans = LayeredTorusBundle::recognise(tri))
-        return std::make_unique<LayeredTorusBundle>(std::move(*ans));
+        return ans;
 
     // Save non-geometric graph manifolds until last.
     if (auto ans = BlockedSFSLoop::recognise(tri))
-        return std::make_unique<BlockedSFSLoop>(std::move(*ans));
+        return ans;
     if (auto ans = BlockedSFSPair::recognise(tri))
-        return std::make_unique<BlockedSFSPair>(std::move(*ans));
+        return ans;
     if (auto ans = BlockedSFSTriple::recognise(tri))
-        return std::make_unique<BlockedSFSTriple>(std::move(*ans));
+        return ans;
     if (auto ans = PluggedTorusBundle::recognise(tri))
-        return std::make_unique<PluggedTorusBundle>(std::move(*ans));
+        return ans;
 
     // Nup.
     return nullptr;

@@ -95,18 +95,18 @@ void PluggedTorusBundle::writeTextLong(std::ostream& out) const {
     region_.writeDetail(out, "Saturated region");
 }
 
-std::optional<PluggedTorusBundle> PluggedTorusBundle::recognise(
+std::unique_ptr<PluggedTorusBundle> PluggedTorusBundle::recognise(
         const Triangulation<3>& tri) {
     // Basic property checks.
     if (! tri.isClosed())
-        return std::nullopt;
+        return nullptr;
     if (tri.countComponents() > 1)
-        return std::nullopt;
+        return nullptr;
 
     // The smallest non-trivial examples of these have nine tetrahedra
     // (six for the TxI core and another three for a non-trivial region).
     if (tri.size() < 9)
-        return std::nullopt;
+        return nullptr;
 
     // We have a closed and connected triangulation with at least
     // nine tetrahedra.
@@ -133,12 +133,12 @@ std::optional<PluggedTorusBundle> PluggedTorusBundle::recognise(
     if (auto ans = hunt(tri, core_T_p))
         return ans;
 
-    return std::nullopt;
+    return nullptr;
 }
 
-std::optional<PluggedTorusBundle> PluggedTorusBundle::hunt(
+std::unique_ptr<PluggedTorusBundle> PluggedTorusBundle::hunt(
         const Triangulation<3>& tri, const TxICore& bundle) {
-    std::optional<PluggedTorusBundle> ans;
+    std::unique_ptr<PluggedTorusBundle> ans;
     bundle.core().findAllSubcomplexesIn(tri,
             [&ans, &bundle, &tri](const Isomorphism<3>& iso) {
         int regionPos;
@@ -284,9 +284,13 @@ std::optional<PluggedTorusBundle> PluggedTorusBundle::hunt(
             // together -- we worked this out earlier as upperRolesToLower.
             // Note that curvesToBdryAnnulus is self-inverse, so we won't
             // bother inverting it even though we should.
-            ans = PluggedTorusBundle(bundle, iso, std::move(*region),
+            //
+            // Note: we cannot use make_unique here, since the class
+            // constructor is private.
+            ans.reset(new PluggedTorusBundle(bundle, iso,
+                std::move(*region),
                 curvesToBdryAnnulus * upperRolesToLower.inverse() *
-                curvesToLowerAnnulus);
+                curvesToLowerAnnulus));
             return true;
         }
 

@@ -134,12 +134,16 @@ class L31Pillow : public StandardTriangulation {
          * Determines if the given triangulation component is a
          * triangular pillow L(3,1).
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure containing details of the triangular pillow
-         * L(3,1), or no value if the given component is not a
+         * L(3,1), or \c null if the given component is not a
          * triangular pillow L(3,1).
          */
-        static std::optional<L31Pillow> recognise(const Component<3>* comp);
+        static std::unique_ptr<L31Pillow> recognise(const Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component forms a
          * triangular pillow L(3,1).
@@ -147,7 +151,7 @@ class L31Pillow : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<L31Pillow> isL31Pillow(
+        [[deprecated]] static std::unique_ptr<L31Pillow> isL31Pillow(
             const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -205,7 +209,7 @@ inline void L31Pillow::writeTextLong(std::ostream& out) const {
     out << "Triangular pillow lens space L(3,1)";
 }
 
-inline std::optional<L31Pillow> L31Pillow::isL31Pillow(
+inline std::unique_ptr<L31Pillow> L31Pillow::isL31Pillow(
         const Component<3>* comp) {
     return recognise(comp);
 }

@@ -191,12 +191,16 @@ class BlockedSFSLoop : public StandardTriangulation {
          * fibred space with identified boundaries, as described by this
          * class.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tri the triangulation to examine.
          * @return a structure containing details of the blocked
-         * self-identified Seifert fibred space, or no value if the given
+         * self-identified Seifert fibred space, or \c null if the given
          * triangulation is not of this form.
          */
-        static std::optional<BlockedSFSLoop> recognise(
+        static std::unique_ptr<BlockedSFSLoop> recognise(
             const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
@@ -205,7 +209,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<BlockedSFSLoop> isBlockedSFSLoop(
+        [[deprecated]] static std::unique_ptr<BlockedSFSLoop> isBlockedSFSLoop(
             const Triangulation<3>& tri);
 
     private:
@@ -256,7 +260,7 @@ inline const Matrix2& BlockedSFSLoop::matchingReln() const {
     return matchingReln_;
 }
 
-inline std::optional<BlockedSFSLoop> BlockedSFSLoop::isBlockedSFSLoop(
+inline std::unique_ptr<BlockedSFSLoop> BlockedSFSLoop::isBlockedSFSLoop(
         const Triangulation<3>& tri) {
     return recognise(tri);
 }

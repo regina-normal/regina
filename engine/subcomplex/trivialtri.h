@@ -146,12 +146,16 @@ class TrivialTri : public StandardTriangulation {
          * Determines if the given triangulation component is one of the
          * trivial triangulations recognised by this class.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure representing the trivial triangulation, or
-         * no value if the given component is not one of the triangulations
+         * \c null if the given component is not one of the triangulations
          * recognised by this class.
          */
-        static std::optional<TrivialTri> recognise(const Component<3>* comp);
+        static std::unique_ptr<TrivialTri> recognise(const Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component forms one of
          * the trivial triangulations recognised by this class.
@@ -159,8 +163,8 @@ class TrivialTri : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<TrivialTri> isTrivialTriangulation(
-            const Component<3>* comp);
+        [[deprecated]] static std::unique_ptr<TrivialTri>
+            isTrivialTriangulation(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -205,7 +209,7 @@ inline int TrivialTri::type() const {
     return type_;
 }
 
-inline std::optional<TrivialTri> TrivialTri::isTrivialTriangulation(
+inline std::unique_ptr<TrivialTri> TrivialTri::isTrivialTriangulation(
         const Component<3>* comp) {
     return recognise(comp);
 }

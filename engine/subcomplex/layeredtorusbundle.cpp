@@ -58,17 +58,17 @@ namespace {
     const TxIParallelCore core_T_p;
 }
 
-std::optional<LayeredTorusBundle> LayeredTorusBundle::recognise(
+std::unique_ptr<LayeredTorusBundle> LayeredTorusBundle::recognise(
         const Triangulation<3>& tri) {
     // Basic property checks.
     if (! tri.isClosed())
-        return std::nullopt;
+        return nullptr;
     if (tri.countVertices() > 1)
-        return std::nullopt;
+        return nullptr;
     if (tri.countComponents() > 1)
-        return std::nullopt;
+        return nullptr;
     if (tri.size() < 6)
-        return std::nullopt;
+        return nullptr;
 
     // We have a 1-vertex 1-component closed triangulation with at least
     // six tetrahedra.
@@ -109,12 +109,12 @@ std::optional<LayeredTorusBundle> LayeredTorusBundle::recognise(
     if (auto ans = hunt(tri, core_T_p))
         return ans;
 
-    return std::nullopt;
+    return nullptr;
 }
 
-std::optional<LayeredTorusBundle> LayeredTorusBundle::hunt(
+std::unique_ptr<LayeredTorusBundle> LayeredTorusBundle::hunt(
         const Triangulation<3>& tri, const TxICore& core) {
-    std::optional<LayeredTorusBundle> ans;
+    std::unique_ptr<LayeredTorusBundle> ans;
     core.core().findAllSubcomplexesIn(tri,
             [&ans, &core, &tri](const Isomorphism<3>& iso) {
         // Look for the corresponding layering.
@@ -136,8 +136,11 @@ std::optional<LayeredTorusBundle> LayeredTorusBundle::hunt(
                 iso.facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
             // It's a match!
-            ans = LayeredTorusBundle(core, iso,
-                core.bdryReln(0) * matchReln * core.bdryReln(1).inverse());
+            //
+            // Note: we cannot use make_unique here, since the class
+            // constructor is private.
+            ans.reset(new LayeredTorusBundle(core, iso,
+                core.bdryReln(0) * matchReln * core.bdryReln(1).inverse()));
             return true;
         }
 

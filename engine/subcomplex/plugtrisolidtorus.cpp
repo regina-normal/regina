@@ -114,7 +114,7 @@ std::unique_ptr<Manifold> PlugTriSolidTorus::manifold() const {
     return ans;
 }
 
-std::optional<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
+std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
         Component<3>* comp) {
     // Each triangular solid torus is tested three times since we
     // can't call Tetrahedron<3>::index() from within a component only.
@@ -123,14 +123,14 @@ std::optional<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
 
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return std::nullopt;
+        return nullptr;
 
     if (comp->countVertices() > 1)
-        return std::nullopt;
+        return nullptr;
 
     unsigned long nTet = comp->size();
     if (nTet < 5)
-        return std::nullopt;
+        return nullptr;
 
     // We have a 1-vertex closed orientable component with at least
     // 5 tetrahedra.
@@ -369,17 +369,18 @@ std::optional<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
             }
 
             // Success!
-            PlugTriSolidTorus plug(*core);
+            std::unique_ptr<PlugTriSolidTorus> plug(
+                new PlugTriSolidTorus(*core));
             for (i = 0; i < 3; i++) {
-                plug.chain_[i] = std::move(chain[i]);
-                plug.chainType_[i] = chainType[i];
+                plug->chain_[i] = std::move(chain[i]);
+                plug->chainType_[i] = chainType[i];
             }
-            plug.equatorType_ = equatorType;
+            plug->equatorType_ = equatorType;
             return plug;
         }
 
     // Nothing was found.
-    return std::nullopt;
+    return nullptr;
 }
 
 } // namespace regina

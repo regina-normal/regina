@@ -256,12 +256,16 @@ class AugTriSolidTorus : public StandardTriangulation {
          * Determines if the given triangulation component is an
          * augmented triangular solid torus.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure containing details of the augmented triangular
-         * solid torus, or no value if the given component is not an augmented
+         * solid torus, or \c null if the given component is not an augmented
          * triangular solid torus.
          */
-        static std::optional<AugTriSolidTorus> recognise(
+        static std::unique_ptr<AugTriSolidTorus> recognise(
             const Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component forms an
@@ -270,7 +274,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<AugTriSolidTorus>
+        [[deprecated]] static std::unique_ptr<AugTriSolidTorus>
             isAugTriSolidTorus(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -359,7 +363,7 @@ inline void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept {
     a.swap(b);
 }
 
-inline std::optional<AugTriSolidTorus> AugTriSolidTorus::isAugTriSolidTorus(
+inline std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::isAugTriSolidTorus(
         const Component<3>* comp) {
     return recognise(comp);
 }

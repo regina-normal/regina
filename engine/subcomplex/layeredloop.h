@@ -149,18 +149,22 @@ class LayeredLoop : public StandardTriangulation {
         /**
          * Determines if the given triangulation component is a layered loop.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure containing details of the layered loop, or
-         * no value if the given component is not a layered loop.
+         * \c null if the given component is not a layered loop.
          */
-        static std::optional<LayeredLoop> recognise(const Component<3>* comp);
+        static std::unique_ptr<LayeredLoop> recognise(const Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component forms a layered loop.
          *
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<LayeredLoop> isLayeredLoop(
+        [[deprecated]] static std::unique_ptr<LayeredLoop> isLayeredLoop(
             const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -225,7 +229,7 @@ inline void LayeredLoop::writeTextLong(std::ostream& out) const {
         ") of length " << length_;
 }
 
-inline std::optional<LayeredLoop> LayeredLoop::isLayeredLoop(
+inline std::unique_ptr<LayeredLoop> LayeredLoop::isLayeredLoop(
         const Component<3>* comp) {
     return recognise(comp);
 }

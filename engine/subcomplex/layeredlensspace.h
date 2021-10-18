@@ -161,11 +161,15 @@ class LayeredLensSpace : public StandardTriangulation {
          * Determines if the given triangulation component is a layered
          * lens space.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure containing details of the layered lens space,
-         * or no value if the given component is not a layered lens space.
+         * or \c null if the given component is not a layered lens space.
          */
-        static std::optional<LayeredLensSpace> recognise(
+        static std::unique_ptr<LayeredLensSpace> recognise(
             const Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component forms a
@@ -174,7 +178,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<LayeredLensSpace>
+        [[deprecated]] static std::unique_ptr<LayeredLensSpace>
             isLayeredLensSpace(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -244,7 +248,7 @@ inline void LayeredLensSpace::writeTextLong(std::ostream& out) const {
     writeName(out);
 }
 
-inline std::optional<LayeredLensSpace> LayeredLensSpace::isLayeredLensSpace(
+inline std::unique_ptr<LayeredLensSpace> LayeredLensSpace::isLayeredLensSpace(
         const Component<3>* comp) {
     return recognise(comp);
 }

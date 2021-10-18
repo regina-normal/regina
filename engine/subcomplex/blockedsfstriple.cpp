@@ -95,13 +95,13 @@ void BlockedSFSTriple::writeTextLong(std::ostream& out) const {
     end_[1].writeDetail(out, "Second end region");
 }
 
-std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
+std::unique_ptr<BlockedSFSTriple> BlockedSFSTriple::recognise(
         const Triangulation<3>& tri) {
     // Basic property checks.
     if (! tri.isClosed())
-        return std::nullopt;
+        return nullptr;
     if (tri.countComponents() > 1)
-        return std::nullopt;
+        return nullptr;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for the boundary between blocks
@@ -110,7 +110,7 @@ std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
     //
     // These will result in edges joined to themselves in reverse.
     if (! tri.isValid())
-        return std::nullopt;
+        return nullptr;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> end[2];
@@ -267,12 +267,16 @@ std::optional<BlockedSFSTriple> BlockedSFSTriple::recognise(
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return BlockedSFSTriple(std::move(*end[0]), std::move(*centre),
-            std::move(*end[1]), matchingReln[0], matchingReln[1]);
+        //
+        // Note: we cannot use make_unique here, since the class constructor
+        // is private.
+        return std::unique_ptr<BlockedSFSTriple>(new BlockedSFSTriple(
+            std::move(*end[0]), std::move(*centre), std::move(*end[1]),
+            matchingReln[0], matchingReln[1]));
     }
 
     // Nope.
-    return std::nullopt;
+    return nullptr;
 }
 
 } // namespace regina

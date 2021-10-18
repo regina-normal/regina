@@ -196,12 +196,16 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * Most triangulations from the census however will not be
          * recognised by this routine.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure representing the small SnapPea census
-         * triangulation, or no value if the given component is not one of
+         * triangulation, or \c null if the given component is not one of
          * the few SnapPea census triangulations recognised by this routine.
          */
-        static std::optional<SnapPeaCensusTri> recognise(
+        static std::unique_ptr<SnapPeaCensusTri> recognise(
             const Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component forms one of
@@ -210,7 +214,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<SnapPeaCensusTri>
+        [[deprecated]] static std::unique_ptr<SnapPeaCensusTri>
             isSmallSnapPeaCensusTri(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -277,7 +281,7 @@ inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
     return (section_ != compare.section_ || index_ != compare.index_);
 }
 
-inline std::optional<SnapPeaCensusTri>
+inline std::unique_ptr<SnapPeaCensusTri>
         SnapPeaCensusTri::isSmallSnapPeaCensusTri(const Component<3>* comp) {
     return recognise(comp);
 }

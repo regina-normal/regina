@@ -305,18 +305,18 @@ void BlockedSFS::writeTextLong(std::ostream& out) const {
     region_.writeDetail(out, "Blocked SFS");
 }
 
-std::optional<BlockedSFS> BlockedSFS::recognise(const Triangulation<3>& tri) {
+std::unique_ptr<BlockedSFS> BlockedSFS::recognise(const Triangulation<3>& tri) {
     // Basic property checks.
     if (tri.countComponents() > 1)
-        return std::nullopt;
+        return nullptr;
     if (tri.isIdeal())
-        return std::nullopt;
+        return nullptr;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  These will result in edges joined to
     // themselves in reverse.
     if (! tri.isValid())
-        return std::nullopt;
+        return nullptr;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
@@ -331,11 +331,14 @@ std::optional<BlockedSFS> BlockedSFS::recognise(const Triangulation<3>& tri) {
         // The region expansion worked, and the triangulation is known
         // to be connected.
         // This means we've got one!
-        return BlockedSFS(std::move(*region));
+        //
+        // Note: we cannot use make_unique here, since the class constructor
+        // is private.
+        return std::unique_ptr<BlockedSFS>(new BlockedSFS(std::move(*region)));
     }
 
     // Nope.
-    return std::nullopt;
+    return nullptr;
 }
 
 bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,

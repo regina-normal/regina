@@ -242,12 +242,16 @@ class PluggedTorusBundle : public StandardTriangulation {
          * joined to a thin I-bundle via optional layerings, as described
          * in the class notes above.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tri the triangulation to examine.
          * @return an object containing details of the structure that was
-         * found, or no value if the given triangulation is not of the form
+         * found, or \c null if the given triangulation is not of the form
          * described by this class.
          */
-        static std::optional<PluggedTorusBundle> recognise(
+        static std::unique_ptr<PluggedTorusBundle> recognise(
             const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
@@ -256,7 +260,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<PluggedTorusBundle>
+        [[deprecated]] static std::unique_ptr<PluggedTorusBundle>
             isPluggedTorusBundle(const Triangulation<3>& tri);
 
     private:
@@ -305,11 +309,11 @@ class PluggedTorusBundle : public StandardTriangulation {
          * @param bundle the thin I-bundle whose isomorphic copy must be
          * used in the given triangulation.
          * @return an object containing details of the structure that was
-         * found, or no value if the given triangulation is not of the form
+         * found, or \c null if the given triangulation is not of the form
          * described by this class using an isomorphic copy of the given
          * thin I-bundle.
          */
-        static std::optional<PluggedTorusBundle> hunt(
+        static std::unique_ptr<PluggedTorusBundle> hunt(
             const Triangulation<3>& tri, const TxICore& bundle);
 };
 
@@ -358,7 +362,7 @@ inline const Matrix2& PluggedTorusBundle::matchingReln() const {
     return matchingReln_;
 }
 
-inline std::optional<PluggedTorusBundle>
+inline std::unique_ptr<PluggedTorusBundle>
         PluggedTorusBundle::isPluggedTorusBundle(const Triangulation<3>& tri) {
     return recognise(tri);
 }

@@ -72,20 +72,20 @@ void BlockedSFSLoop::writeTextLong(std::ostream& out) const {
     region_.writeDetail(out, "Internal region");
 }
 
-std::optional<BlockedSFSLoop> BlockedSFSLoop::recognise(
+std::unique_ptr<BlockedSFSLoop> BlockedSFSLoop::recognise(
         const Triangulation<3>& tri) {
     // Basic property checks.
     if (! tri.isClosed())
-        return std::nullopt;
+        return nullptr;
     if (tri.countComponents() > 1)
-        return std::nullopt;
+        return nullptr;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for saturated tori being joined
     // to saturated Klein bottles.  Any of these issues will result in
     // edges joined to themselves in reverse.
     if (! tri.isValid())
-        return std::nullopt;
+        return nullptr;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
@@ -175,11 +175,15 @@ std::optional<BlockedSFSLoop> BlockedSFSLoop::recognise(
         // The expansion and self-adjacency worked, and the triangulation
         // is known to be closed and connected.
         // This means we've got one!
-        return BlockedSFSLoop(std::move(*region), matchingReln);
+        //
+        // Note: we cannot use make_unique here, since the class constructor
+        // is private.
+        return std::unique_ptr<BlockedSFSLoop>(new BlockedSFSLoop(
+            std::move(*region), matchingReln));
     }
 
     // Nope.
-    return std::nullopt;
+    return nullptr;
 }
 
 } // namespace regina

@@ -40,7 +40,6 @@
 #endif
 
 #include <memory>
-#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "algebra/abeliangroup.h"

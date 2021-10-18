@@ -53,17 +53,17 @@ std::unique_ptr<Manifold> LayeredLoop::manifold() const {
     }
 }
 
-std::optional<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
+std::unique_ptr<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return std::nullopt;
+        return nullptr;
 
     unsigned long nTet = comp->size();
     if (nTet == 0)
-        return std::nullopt;
+        return nullptr;
     unsigned long nVertices = comp->countVertices();
     if (nVertices > 2)
-        return std::nullopt;
+        return nullptr;
     bool twisted = (nVertices == 1);
 
     // We have at least 1 tetrahedron and precisely 1 or 2 vertices.
@@ -179,14 +179,15 @@ std::optional<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
                 }
 
                 // We have a solution!
-                return LayeredLoop(nTet, base->edge(hinge0),
-                    (twisted ? nullptr : base->edge(hinge1)));
+                return std::unique_ptr<LayeredLoop>(new LayeredLoop(
+                    nTet, base->edge(hinge0),
+                    (twisted ? nullptr : base->edge(hinge1))));
             }
         }
     }
 
     // Nothing found.
-    return std::nullopt;
+    return nullptr;
 }
 
 AbelianGroup LayeredLoop::homology() const {

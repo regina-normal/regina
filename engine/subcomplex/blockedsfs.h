@@ -159,12 +159,16 @@ class BlockedSFS : public StandardTriangulation {
          * Determines if the given triangulation is a blocked Seifert
          * fibred space.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tri the triangulation to examine.
          * @return a structure containing details of the blocked Seifert
-         * fibred space, or no value if the given triangulation is not a
+         * fibred space, or \c null if the given triangulation is not a
          * blocked Seifert fibred space.
          */
-        static std::optional<BlockedSFS> recognise(
+        static std::unique_ptr<BlockedSFS> recognise(
             const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
@@ -173,7 +177,7 @@ class BlockedSFS : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<BlockedSFS> isBlockedSFS(
+        [[deprecated]] static std::unique_ptr<BlockedSFS> isBlockedSFS(
             const Triangulation<3>& tri);
 
     private:
@@ -271,7 +275,7 @@ inline const SatRegion& BlockedSFS::region() const {
     return region_;
 }
 
-inline std::optional<BlockedSFS> BlockedSFS::isBlockedSFS(
+inline std::unique_ptr<BlockedSFS> BlockedSFS::isBlockedSFS(
         const Triangulation<3>& tri) {
     return recognise(tri);
 }

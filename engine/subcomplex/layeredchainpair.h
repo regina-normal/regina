@@ -132,11 +132,15 @@ class LayeredChainPair : public StandardTriangulation {
          * Determines if the given triangulation component is a layered
          * chain pair.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
          * @return a structure containing details of the layered chain pair,
-         * or no value if the given component is not a layered chain pair.
+         * or \c null if the given component is not a layered chain pair.
          */
-        static std::optional<LayeredChainPair> recognise(
+        static std::unique_ptr<LayeredChainPair> recognise(
             const Component<3>* comp);
         /**
          * A deprecated alias to recognise if a component is a layered chain
@@ -145,7 +149,7 @@ class LayeredChainPair : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<LayeredChainPair>
+        [[deprecated]] static std::unique_ptr<LayeredChainPair>
             isLayeredChainPair(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -205,7 +209,7 @@ inline void LayeredChainPair::writeTextLong(std::ostream& out) const {
         << chain_[0].index() << ", " << chain_[1].index() << ')';
 }
 
-inline std::optional<LayeredChainPair> LayeredChainPair::isLayeredChainPair(
+inline std::unique_ptr<LayeredChainPair> LayeredChainPair::isLayeredChainPair(
         const Component<3>* comp) {
     return recognise(comp);
 }

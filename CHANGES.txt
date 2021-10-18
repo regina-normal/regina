@@ -103,7 +103,7 @@ Version 7.0  [ TODO ]
             - Routine augTorus() now returns a std::optional by const reference,
               not a pointer that could be null.
             - Routine isAugTriSolidTorus() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -124,7 +124,7 @@ Version 7.0  [ TODO ]
         Class BlockedSFS, BlockedSFSLoop, BlockedSFSPair, BlockedSFSTriple:
             - Routines isBlockedSFS...() are now called recognise(), take their
               triangulation arguments by const reference (not pointer), and
-              return a std::optional instead of a pointer that could be null.
+              return a std::unique_ptr instead of a raw pointer.
               The old names are kept as deprecated aliases.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
@@ -437,7 +437,7 @@ Version 7.0  [ TODO ]
               types.
         Class L31Pillow:
             - Routine isL31Pillow() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -454,7 +454,7 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
         Class LayeredChainPair:
             - Routine isLayeredChainPair() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -462,14 +462,14 @@ Version 7.0  [ TODO ]
             - Routine chain() now returns by reference, not by pointer.
         Class LayeredLensSpace:
             - Routine isLayeredLensSpace() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
         Class LayeredLoop:
             - Routine isLayeredLoop() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -491,7 +491,7 @@ Version 7.0  [ TODO ]
             - Routine coreIso() returns by const reference, not by pointer.
             - Routine isLayeredTorusBundle() is now called recognise(), takes
               its triangulation argument by const reference (not pointer), and
-              returns a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -907,7 +907,7 @@ Version 7.0  [ TODO ]
         Class PluggedTorusBundle:
             - Routine isPluggedTorusBundle() is now called recognise(), takes
               its triangulation argument by const reference (not pointer), and
-              returns a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
@@ -916,7 +916,7 @@ Version 7.0  [ TODO ]
             - Routine chain() now returns a std::optional by const reference,
               not by pointer that could be null.
             - Routine isPlugTriSolidTorus() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -1065,7 +1065,7 @@ Version 7.0  [ TODO ]
         Class SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
             - Routine isSmallSnapPeaCensusTri() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -1319,7 +1319,7 @@ Version 7.0  [ TODO ]
         Class TrivialTri:
             - Class constants are now constexpr.
             - Routine isTrivialTriangulation() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.

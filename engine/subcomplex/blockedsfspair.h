@@ -186,11 +186,15 @@ class BlockedSFSPair : public StandardTriangulation {
          * Determines if the given triangulation is a blocked pair of
          * Seifert fibred spaces, as described by this class.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tri the triangulation to examine.
          * @return a structure containing details of the blocked pair, or
-         * no value if the given triangulation is not of this form.
+         * \c null if the given triangulation is not of this form.
          */
-        static std::optional<BlockedSFSPair> recognise(
+        static std::unique_ptr<BlockedSFSPair> recognise(
             const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
@@ -199,7 +203,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<BlockedSFSPair> isBlockedSFSPair(
+        [[deprecated]] static std::unique_ptr<BlockedSFSPair> isBlockedSFSPair(
             const Triangulation<3>& tri);
 
     private:
@@ -253,7 +257,7 @@ inline const Matrix2& BlockedSFSPair::matchingReln() const {
     return matchingReln_;
 }
 
-inline std::optional<BlockedSFSPair> BlockedSFSPair::isBlockedSFSPair(
+inline std::unique_ptr<BlockedSFSPair> BlockedSFSPair::isBlockedSFSPair(
         const Triangulation<3>& tri) {
     return recognise(tri);
 }

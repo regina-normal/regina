@@ -37,14 +37,14 @@
 
 namespace regina {
 
-std::optional<L31Pillow> L31Pillow::recognise(const Component<3>* comp) {
+std::unique_ptr<L31Pillow> L31Pillow::recognise(const Component<3>* comp) {
     // Basic property check.
     if (comp->size() != 2 ||
             comp->countVertices() != 2 ||
             comp->countEdges() != 4 ||
             (! comp->isClosed()) ||
             (! comp->isOrientable()))
-        return std::nullopt;
+        return nullptr;
 
     // Verify that the vertices have degrees 2 and 6.
     int internalVertex;
@@ -54,7 +54,7 @@ std::optional<L31Pillow> L31Pillow::recognise(const Component<3>* comp) {
     else if (deg0 == 6)
         internalVertex = 1;
     else
-        return std::nullopt;
+        return nullptr;
 
     // Verify that all four faces of one tetrahedron join to the other.
     Tetrahedron<3>* tet[2];
@@ -65,21 +65,21 @@ std::optional<L31Pillow> L31Pillow::recognise(const Component<3>* comp) {
             tet[0]->adjacentTetrahedron(1) != tet[1] ||
             tet[0]->adjacentTetrahedron(2) != tet[1] ||
             tet[0]->adjacentTetrahedron(3) != tet[1])
-        return std::nullopt;
+        return nullptr;
 
     // At this point we can prove through enumeration of all
     // 2-tetrahedron triangulations that we have our triangular pillow
     // L(3,1).
-    L31Pillow ans;
-    ans.tet_[0] = tet[0];
-    ans.tet_[1] = tet[1];
+    std::unique_ptr<L31Pillow> ans(new L31Pillow());
+    ans->tet_[0] = tet[0];
+    ans->tet_[1] = tet[1];
 
     for (int i = 0; i < 2; i++) {
         const auto& emb = comp->vertex(internalVertex)->embedding(i);
         if (emb.tetrahedron() == tet[0])
-            ans.interior_[0] = emb.vertex();
+            ans->interior_[0] = emb.vertex();
         else
-            ans.interior_[1] = emb.vertex();
+            ans->interior_[1] = emb.vertex();
     }
 
     return ans;

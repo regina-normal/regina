@@ -222,11 +222,15 @@ class LayeredTorusBundle : public StandardTriangulation {
         /**
          * Determines if the given triangulation is a layered torus bundle.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tri the triangulation to examine.
          * @return a structure containing details of the layered torus bundle,
-         * or no value if the given triangulation is not a layered torus bundle.
+         * or \c null if the given triangulation is not a layered torus bundle.
          */
-        static std::optional<LayeredTorusBundle> recognise(
+        static std::unique_ptr<LayeredTorusBundle> recognise(
             const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation is a
@@ -235,7 +239,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<LayeredTorusBundle>
+        [[deprecated]] static std::unique_ptr<LayeredTorusBundle>
             isLayeredTorusBundle(const Triangulation<3>& tri);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -285,10 +289,10 @@ class LayeredTorusBundle : public StandardTriangulation {
          * @param tri the triangulation to examine.
          * @param core the core <tt>T x I</tt> to search for.
          * @return a structure containing details of the layered torus bundle,
-         * or no value if the given triangulation is
+         * or \c null if the given triangulation is
          * not a layered torus bundle with the given <tt>T x I</tt> core.
          */
-        static std::optional<LayeredTorusBundle> hunt(
+        static std::unique_ptr<LayeredTorusBundle> hunt(
             const Triangulation<3>& tri, const TxICore& core);
 };
 
@@ -343,7 +347,7 @@ inline std::ostream& LayeredTorusBundle::writeTeXName(std::ostream& out)
     return writeCommonName(out, true);
 }
 
-inline std::optional<LayeredTorusBundle>
+inline std::unique_ptr<LayeredTorusBundle>
         LayeredTorusBundle::isLayeredTorusBundle(const Triangulation<3>& tri) {
     return recognise(tri);
 }

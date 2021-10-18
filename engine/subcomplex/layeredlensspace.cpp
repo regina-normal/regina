@@ -38,13 +38,13 @@
 
 namespace regina {
 
-std::optional<LayeredLensSpace> LayeredLensSpace::recognise(
+std::unique_ptr<LayeredLensSpace> LayeredLensSpace::recognise(
         const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return std::nullopt;
+        return nullptr;
     if (comp->countVertices() > 1)
-        return std::nullopt;
+        return nullptr;
 
     unsigned long nTet = comp->size();
     for (unsigned long i = 0; i < nTet; i++) {
@@ -57,70 +57,70 @@ std::optional<LayeredLensSpace> LayeredLensSpace::recognise(
             int tf0 = torus->topFace(0);
             int tf1 = torus->topFace(1);
             if (tet->adjacentTetrahedron(tf0) != tet)
-                return std::nullopt;
+                return nullptr;
 
             /* We already know the component is orientable; no need
                to check orientation!
             if (perm.sign() == 1) {
                 delete torus;
-                return std::nullopt;
+                return nullptr;
             }*/
 
             // This is the real thing!
-            LayeredLensSpace ans(*torus);
+            std::unique_ptr<LayeredLensSpace> ans(new LayeredLensSpace(*torus));
 
             Perm<4> perm = tet->adjacentGluing(tf0);
             if (perm[tf1] == tf0) {
                 // Snapped shut.
-                ans.mobiusBoundaryGroup_ = torus->topEdgeGroup(
+                ans->mobiusBoundaryGroup_ = torus->topEdgeGroup(
                     5 - Edge<3>::edgeNumber[tf0][tf1]);
             } else {
                 // Twisted shut.
-                ans.mobiusBoundaryGroup_ = torus->topEdgeGroup(
+                ans->mobiusBoundaryGroup_ = torus->topEdgeGroup(
                     Edge<3>::edgeNumber[perm[tf1]][tf0]);
             }
 
             // Work out p and q.
-            switch (ans.mobiusBoundaryGroup_) {
+            switch (ans->mobiusBoundaryGroup_) {
                 // For layered solid torus (x < y < z):
                 case 0:
                     // L( x + 2y, y )
-                    ans.p_ = torus->meridinalCuts(1) + torus->meridinalCuts(2);
-                    ans.q_ = torus->meridinalCuts(1);
+                    ans->p_ = torus->meridinalCuts(1) + torus->meridinalCuts(2);
+                    ans->q_ = torus->meridinalCuts(1);
                     break;
                 case 1:
                     // L( 2x + y, x )
-                    ans.p_ = torus->meridinalCuts(0) + torus->meridinalCuts(2);
-                    ans.q_ = torus->meridinalCuts(0);
+                    ans->p_ = torus->meridinalCuts(0) + torus->meridinalCuts(2);
+                    ans->q_ = torus->meridinalCuts(0);
                     break;
                 case 2:
                     // L( y - x, x )
-                    ans.p_ = torus->meridinalCuts(1) - torus->meridinalCuts(0);
-                    if (ans.p_ == 0)
-                        ans.q_ = 1;
+                    ans->p_ = torus->meridinalCuts(1) - torus->meridinalCuts(0);
+                    if (ans->p_ == 0)
+                        ans->q_ = 1;
                     else
-                        ans.q_ = torus->meridinalCuts(0) % ans.p_;
+                        ans->q_ = torus->meridinalCuts(0) % ans->p_;
                     break;
             }
 
             // Find the nicest possible value for q.
             // Choices are +/- q, +/- 1/q.
-            if (ans.p_ > 0) {
-                if (2 * ans.q_ > ans.p_)
-                    ans.q_ = ans.p_ - ans.q_;
-                if (ans.q_ > 0) {
-                    unsigned long qAlt = modularInverse(ans.p_, ans.q_);
-                    if (2 * qAlt > ans.p_)
-                        qAlt = ans.p_ - qAlt;
-                    if (qAlt < ans.q_)
-                        ans.q_ = qAlt;
+            if (ans->p_ > 0) {
+                if (2 * ans->q_ > ans->p_)
+                    ans->q_ = ans->p_ - ans->q_;
+                if (ans->q_ > 0) {
+                    unsigned long qAlt = modularInverse(ans->p_, ans->q_);
+                    if (2 * qAlt > ans->p_)
+                        qAlt = ans->p_ - qAlt;
+                    if (qAlt < ans->q_)
+                        ans->q_ = qAlt;
                 }
             }
 
             return ans;
         }
     }
-    return std::nullopt;
+    return nullptr;
 }
 
 std::unique_ptr<Manifold> LayeredLensSpace::manifold() const {

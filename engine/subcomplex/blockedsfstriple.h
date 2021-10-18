@@ -251,11 +251,15 @@ class BlockedSFSTriple : public StandardTriangulation {
          * three Seifert fibred spaces, as described in the class notes
          * above.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tri the triangulation to examine.
          * @return a structure containing details of the blocked triple, or
-         * no value if the given triangulation is not of this form.
+         * \c null if the given triangulation is not of this form.
          */
-        static std::optional<BlockedSFSTriple> recognise(
+        static std::unique_ptr<BlockedSFSTriple> recognise(
             const Triangulation<3>& tri);
         /**
          * A deprecated alias to recognise if a triangulation forms a
@@ -264,7 +268,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<BlockedSFSTriple>
+        [[deprecated]] static std::unique_ptr<BlockedSFSTriple>
             isBlockedSFSTriple(const Triangulation<3>& tri);
 
     private:
@@ -332,7 +336,7 @@ inline const Matrix2& BlockedSFSTriple::matchingReln(int which) const {
     return matchingReln_[which];
 }
 
-inline std::optional<BlockedSFSTriple> BlockedSFSTriple::isBlockedSFSTriple(
+inline std::unique_ptr<BlockedSFSTriple> BlockedSFSTriple::isBlockedSFSTriple(
         const Triangulation<3>& tri) {
     return recognise(tri);
 }

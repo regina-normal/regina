@@ -81,13 +81,13 @@ void BlockedSFSPair::writeTextLong(std::ostream& out) const {
     region_[1].writeDetail(out, "Second region");
 }
 
-std::optional<BlockedSFSPair> BlockedSFSPair::recognise(
+std::unique_ptr<BlockedSFSPair> BlockedSFSPair::recognise(
         const Triangulation<3>& tri) {
     // Basic property checks.
     if (! tri.isClosed())
-        return std::nullopt;
+        return nullptr;
     if (tri.countComponents() > 1)
-        return std::nullopt;
+        return nullptr;
 
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for the boundary between blocks
@@ -96,7 +96,7 @@ std::optional<BlockedSFSPair> BlockedSFSPair::recognise(
     //
     // These will result in edges joined to themselves in reverse.
     if (! tri.isValid())
-        return std::nullopt;
+        return nullptr;
 
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> r0;
@@ -211,11 +211,15 @@ std::optional<BlockedSFSPair> BlockedSFSPair::recognise(
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return BlockedSFSPair(std::move(*r0), std::move(*r1), matchingReln);
+        //
+        // Note: we cannot use make_unique here, since the class constructor
+        // is private.
+        return std::unique_ptr<BlockedSFSPair>(new BlockedSFSPair(
+            std::move(*r0), std::move(*r1), matchingReln));
     }
 
     // Nope.
-    return std::nullopt;
+    return nullptr;
 }
 
 } // namespace regina

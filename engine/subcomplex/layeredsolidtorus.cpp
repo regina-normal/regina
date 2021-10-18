@@ -541,15 +541,15 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recogniseFromTop(
     return std::nullopt;
 }
 
-std::optional<LayeredSolidTorus> LayeredSolidTorus::recognise(
+std::unique_ptr<LayeredSolidTorus> LayeredSolidTorus::recognise(
         Component<3>* comp) {
     // Start with some basic property checks.
     if (! comp->isOrientable())
-        return std::nullopt;
+        return nullptr;
     if (comp->countBoundaryComponents() != 1)
-        return std::nullopt;
+        return nullptr;
     if (comp->boundaryComponent(0)->countTriangles() != 2)
-        return std::nullopt;
+        return nullptr;
 
     TriangleEmbedding<3> f0 = comp->boundaryComponent(0)->triangle(0)->
         embedding(0);
@@ -558,7 +558,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recognise(
 
     Tetrahedron<3>* top = f0.tetrahedron();
     if (f1.tetrahedron() != top)
-        return std::nullopt;
+        return nullptr;
 
     // We have precisely one boundary component, which consists of two
     // triangular faces belonging to the same tetrahedron.
@@ -588,7 +588,7 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recognise(
         // boundary faces and these have already been seen.
         nextTet = currTet->adjacentTetrahedron(underFaces.lower());
         if (nextTet != currTet->adjacentTetrahedron(underFaces.upper()))
-            return std::nullopt;
+            return nullptr;
 
         // They both lead to the same adjacent tetrahedron.
         // Have we reached the end?
@@ -603,7 +603,12 @@ std::optional<LayeredSolidTorus> LayeredSolidTorus::recognise(
 
     // Here we are at the bottom.  Now check the individual permutations
     // and fill in the structural details.
-    return recogniseFromBase(currTet);
+    //
+    // Awkwardly, we need to convert from a std::optional to a std::unique_ptr
+    // at this point.
+    auto ans = recogniseFromBase(currTet);
+    return (ans ? std::make_unique<LayeredSolidTorus>(std::move(*ans)) :
+        nullptr);
 }
 
 std::unique_ptr<Manifold> LayeredSolidTorus::manifold() const {
