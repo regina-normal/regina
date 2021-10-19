@@ -38,7 +38,7 @@ namespace regina {
 
 std::optional<SnappedTwoSphere> SnappedTwoSphere::recognise(
         Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
-    std::optional<SnappedBall> ball[2];
+    std::unique_ptr<SnappedBall> ball[2];
     if (! (ball[0] = SnappedBall::recognise(tet1)))
         return std::nullopt;
     if (! (ball[1] = SnappedBall::recognise(tet2)))

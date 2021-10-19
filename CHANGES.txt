@@ -478,7 +478,7 @@ Version 7.0  [ TODO ]
             - Routines isLayeredSolidTorus(), formsLayeredSolidTorusBase()
               and formsLayeredSolidTorusTop() are now called recognise(),
               recogniseFromBase() and recogniseFromTop(), and now return a
-              std::optional instead of a pointer that could be null.
+              std::unique_ptr instead of a raw pointer.
               The old names are kept as deprecated aliases.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -1106,7 +1106,7 @@ Version 7.0  [ TODO ]
             - New constructor that takes raw SnapPea kernel data.
         Class SnappedBall:
             - Routine formsBall() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
@@ -1128,7 +1128,7 @@ Version 7.0  [ TODO ]
               is kept as a deprecated alias.
         Class SpiralSolidTorus:
             - Routine formsSpiralSolidTorus() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy and move construction, and copy and move assignment.
             - Added member and global swap() functions.
@@ -1309,7 +1309,7 @@ Version 7.0  [ TODO ]
             - Added short and detailed output functions.
         Class TriSolidTorus:
             - Routine formsTriSolidTorus() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.

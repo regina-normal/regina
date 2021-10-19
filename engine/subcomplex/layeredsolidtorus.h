@@ -39,7 +39,6 @@
 #define __REGINA_LAYEREDSOLIDTORUS_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "maths/perm.h"
 #include "subcomplex/standardtri.h"
@@ -327,12 +326,16 @@ class LayeredSolidTorus : public StandardTriangulation {
          * tetrahedron furthest from the boundary of the torus, i.e. the
          * tetrahedron glued to itself with a twist.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tet the tetrahedron to examine as a potential base.
          * @return a structure containing details of the layered solid torus,
-         * or no value if the given tetrahedron is not the base of a
+         * or \c null if the given tetrahedron is not the base of a
          * layered solid torus.
          */
-        static std::optional<LayeredSolidTorus> recogniseFromBase(
+        static std::unique_ptr<LayeredSolidTorus> recogniseFromBase(
             const Tetrahedron<3>* tet);
         /**
          * A deprecated alias to recognise if a tetrahedron forms the
@@ -341,7 +344,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * \deprecated This function has been renamed to recogniseFromBase().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<LayeredSolidTorus>
+        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
             formsLayeredSolidTorusBase(const Tetrahedron<3>* tet);
 
         /**
@@ -358,6 +361,10 @@ class LayeredSolidTorus : public StandardTriangulation {
          * In fact, they may even extend this smaller layered solid torus
          * to a larger layered solid torus.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tet the tetrahedron to examine as a potential top
          * level of a layered solid torus.
          * @param topFace1 the face number of the given tetrahedron that
@@ -368,10 +375,10 @@ class LayeredSolidTorus : public StandardTriangulation {
          * torus.  This should be between 0 and 3 inclusive, and should
          * not be equal to \a topFace1.
          * @return a structure containing details of the layered solid torus,
-         * or no value if the given tetrahedron with its two faces do not form
+         * or \c null if the given tetrahedron with its two faces do not form
          * the top level of a layered solid torus.
          */
-        static std::optional<LayeredSolidTorus> recogniseFromTop(
+        static std::unique_ptr<LayeredSolidTorus> recogniseFromTop(
             const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
         /**
          * A deprecated alias to recognise if a tetrahedron forms the
@@ -380,7 +387,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * \deprecated This function has been renamed to recogniseFromTop().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<LayeredSolidTorus>
+        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
             formsLayeredSolidTorusTop(const Tetrahedron<3>* tet,
             unsigned topFace1, unsigned topFace2);
 
@@ -506,13 +513,13 @@ inline void LayeredSolidTorus::writeTextLong(std::ostream& out) const {
         << meridinalCuts_[2] << " ) layered solid torus";
 }
 
-inline std::optional<LayeredSolidTorus>
+inline std::unique_ptr<LayeredSolidTorus>
         LayeredSolidTorus::formsLayeredSolidTorusBase(
         const Tetrahedron<3>* tet) {
     return recogniseFromBase(tet);
 }
 
-inline std::optional<LayeredSolidTorus>
+inline std::unique_ptr<LayeredSolidTorus>
         LayeredSolidTorus::formsLayeredSolidTorusTop(
         const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
     return recogniseFromTop(tet, topFace1, topFace2);

@@ -156,11 +156,15 @@ class SnappedBall : public StandardTriangulation {
          * triangulation, i.e., they may be identified with each other
          * or with triangles of other tetrahedra.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tet the tetrahedron to examine as a potential 3-ball.
          * @return a structure containing details of the snapped 3-ball, or
-         * no value if the given tetrahedron is not a snapped 3-ball.
+         * \c null if the given tetrahedron is not a snapped 3-ball.
          */
-        static std::optional<SnappedBall> recognise(Tetrahedron<3>* tet);
+        static std::unique_ptr<SnappedBall> recognise(Tetrahedron<3>* tet);
 
         /**
          * A deprecated alias to recognise if a tetrahedron forms a
@@ -169,7 +173,7 @@ class SnappedBall : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<SnappedBall> formsSnappedBall(
+        [[deprecated]] static std::unique_ptr<SnappedBall> formsSnappedBall(
             Tetrahedron<3>* tet);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -242,7 +246,7 @@ inline void SnappedBall::writeTextLong(std::ostream& out) const {
     out << "Snapped 3-ball";
 }
 
-inline std::optional<SnappedBall> SnappedBall::formsSnappedBall(
+inline std::unique_ptr<SnappedBall> SnappedBall::formsSnappedBall(
         Tetrahedron<3>* tet) {
     return recognise(tet);
 }

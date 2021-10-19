@@ -948,7 +948,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // The boundary edge on the outside will surround a disc that cuts
     // right through the tetrahedron.
     for (Tetrahedron<3>* t : use.simplices_) {
-        std::optional<SnappedBall> ball = SnappedBall::recognise(t);
+        auto ball = SnappedBall::recognise(t);
         if (! ball)
             continue;
 

@@ -269,17 +269,20 @@ class SpiralSolidTorus : public StandardTriangulation {
          * triangulation, i.e., they may be identified with each other
          * or with triangles of other tetrahedra.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by vertexRoles().
-         *
          * @return a structure containing details of the solid torus with the
-         * given tetrahedron as tetrahedron 0, or no value if the given
+         * given tetrahedron as tetrahedron 0, or \c null if the given
          * tetrahedron is not part of a spiralled solid torus with the given
          * vertex roles.
          */
-        static std::optional<SpiralSolidTorus> recognise(Tetrahedron<3>* tet,
+        static std::unique_ptr<SpiralSolidTorus> recognise(Tetrahedron<3>* tet,
             Perm<4> useVertexRoles);
         /**
          * A deprecated alias to recognise if a tetrahedron forms part
@@ -288,7 +291,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<SpiralSolidTorus>
+        [[deprecated]] static std::unique_ptr<SpiralSolidTorus>
             formsSpiralSolidTorus(Tetrahedron<3>* tet, Perm<4> useVertexRoles);
 
         std::unique_ptr<Manifold> manifold() const override;
@@ -382,7 +385,8 @@ inline void SpiralSolidTorus::writeTextLong(std::ostream& out) const {
     out << nTet_ << "-tetrahedron spiralled solid torus";
 }
 
-inline std::optional<SpiralSolidTorus> SpiralSolidTorus::formsSpiralSolidTorus(
+inline std::unique_ptr<SpiralSolidTorus>
+        SpiralSolidTorus::formsSpiralSolidTorus(
         Tetrahedron<3>* tet, Perm<4> useVertexRoles) {
     return recognise(tet, useVertexRoles);
 }

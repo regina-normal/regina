@@ -167,7 +167,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
     if (nTet == 3) {
         // Note that there cannot be a layered chain.
         Tetrahedron<3>* base = comp->tetrahedron(0);
-        std::optional<TriSolidTorus> core;
+        std::unique_ptr<TriSolidTorus> core;
         Perm<4> annulusMap[3];
         // Check every possible choice of vertex roles in tetrahedron 0.
         // Note that (a,b,c,d) gives an equivalent core to (d,c,b,a).
@@ -192,7 +192,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 if (core) {
                     // We got one!
                     std::unique_ptr<AugTriSolidTorus> ans(
-                        new AugTriSolidTorus(*core));
+                        new AugTriSolidTorus(std::move(*core)));
 
                     // Work out how the mobius strip is glued onto each
                     // annulus.
@@ -228,7 +228,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
     // boundary annuli on the core, since no other tetrahedron is glued
     // to itself.
     int nLayered = 0;
-    std::optional<LayeredSolidTorus> layered[4];
+    std::unique_ptr<LayeredSolidTorus> layered[4];
     unsigned long usedTets = 0;
     for (unsigned long t = 0; t < nTet; t++) {
         layered[nLayered] = LayeredSolidTorus::recogniseFromBase(
@@ -254,7 +254,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
         // Run through all possible cores to which it might belong.
         int i;
         Perm<4> p, annulusPerm;
-        std::optional<TriSolidTorus> core;
+        std::unique_ptr<TriSolidTorus> core;
         int torusAnnulus;
         unsigned long chainLen;
         for (i = 0; i < 24; i++) {
@@ -284,7 +284,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
 
                     // We have the entire structure!
                     std::unique_ptr<AugTriSolidTorus> ans(
-                        new AugTriSolidTorus(*core));
+                        new AugTriSolidTorus(std::move(*core)));
                     switch (annulusPerm[0]) {
                         case 0:
                             ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(2,0,1,3);
@@ -351,7 +351,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
                             std::unique_ptr<AugTriSolidTorus> ans(
-                                new AugTriSolidTorus(*core));
+                                new AugTriSolidTorus(std::move(*core)));
                             switch (annulusPerm[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
@@ -408,7 +408,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
                             std::unique_ptr<AugTriSolidTorus> ans(
-                                new AugTriSolidTorus(*core));
+                                new AugTriSolidTorus(std::move(*core)));
                             switch (annulusPerm[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
@@ -470,7 +470,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
     int topCoreFace = top[0]->adjacentFace(topFace);
     Perm<4> swap3Top(3, topCoreFace);
     Perm<4> swap23(2, 3);
-    std::optional<TriSolidTorus> core;
+    std::unique_ptr<TriSolidTorus> core;
     Tetrahedron<3>* coreTets[3];
     Perm<4> coreVertexRoles[3];
     int whichLayered[3];
@@ -583,10 +583,11 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
 
                 // We've got one!
                 std::unique_ptr<AugTriSolidTorus> ans(
-                    new AugTriSolidTorus(*core));
+                    new AugTriSolidTorus(std::move(*core)));
                 for (j = 0; j < 3; j++) {
                     if (whichLayered[j] >= 0) {
-                        ans->augTorus_[j] = std::move(layered[whichLayered[j]]);
+                        ans->augTorus_[j] =
+                            std::move(*layered[whichLayered[j]]);
                         ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     }
                 }
@@ -598,11 +599,12 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 // We're not looking for a layered chain.
                 // This means we have found the entire structure!
                 std::unique_ptr<AugTriSolidTorus> ans(
-                    new AugTriSolidTorus(*core));
+                    new AugTriSolidTorus(std::move(*core)));
                 for (j = 0; j < 3; j++) {
                     ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     if (whichLayered[j] >= 0)
-                        ans->augTorus_[j] = std::move(layered[whichLayered[j]]);
+                        ans->augTorus_[j] =
+                            std::move(*layered[whichLayered[j]]);
                 }
                 ans->chainIndex_ = 0;
                 ans->chainType_ = CHAIN_NONE;

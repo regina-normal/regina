@@ -139,7 +139,7 @@ std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
     // just once.
     unsigned long tetIndex;
     int coreIndex;
-    std::optional<TriSolidTorus> core;
+    std::unique_ptr<TriSolidTorus> core;
     Tetrahedron<3>* coreTet[3];
     Edge<3>* axis[3];
     Perm<4> coreRoles[3];
@@ -370,7 +370,7 @@ std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
 
             // Success!
             std::unique_ptr<PlugTriSolidTorus> plug(
-                new PlugTriSolidTorus(*core));
+                new PlugTriSolidTorus(std::move(*core)));
             for (i = 0; i < 3; i++) {
                 plug->chain_[i] = std::move(chain[i]);
                 plug->chainType_[i] = chainType[i];

@@ -61,10 +61,9 @@ std::unique_ptr<LayeredLensSpace> LayeredLensSpace::recognise(
 
             /* We already know the component is orientable; no need
                to check orientation!
-            if (perm.sign() == 1) {
-                delete torus;
+            if (perm.sign() == 1)
                 return nullptr;
-            }*/
+            */
 
             // This is the real thing!
             std::unique_ptr<LayeredLensSpace> ans(new LayeredLensSpace(*torus));

@@ -126,37 +126,37 @@ unsigned long TriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     return chain.index();
 }
 
-std::optional<TriSolidTorus> TriSolidTorus::recognise(Tetrahedron<3>* tet,
+std::unique_ptr<TriSolidTorus> TriSolidTorus::recognise(Tetrahedron<3>* tet,
         Perm<4> useVertexRoles) {
-    TriSolidTorus ans;
-    ans.tet_[0] = tet;
-    ans.vertexRoles_[0] = useVertexRoles;
+    std::unique_ptr<TriSolidTorus> ans(new TriSolidTorus());
+    ans->tet_[0] = tet;
+    ans->vertexRoles_[0] = useVertexRoles;
 
     // Find the adjacent tetrahedra.
-    ans.tet_[1] = tet->adjacentTetrahedron(useVertexRoles[0]);
-    ans.tet_[2] = tet->adjacentTetrahedron(useVertexRoles[3]);
+    ans->tet_[1] = tet->adjacentTetrahedron(useVertexRoles[0]);
+    ans->tet_[2] = tet->adjacentTetrahedron(useVertexRoles[3]);
 
     // Check that we have three distinct tetrahedra.
-    if (ans.tet_[1] == nullptr || ans.tet_[2] == nullptr ||
-            ans.tet_[1] == tet || ans.tet_[2] == tet ||
-            ans.tet_[1] == ans.tet_[2])
-        return std::nullopt;
+    if (ans->tet_[1] == nullptr || ans->tet_[2] == nullptr ||
+            ans->tet_[1] == tet || ans->tet_[2] == tet ||
+            ans->tet_[1] == ans->tet_[2])
+        return nullptr;
 
     // Find the vertex roles for tetrahedra 1 and 2.
-    ans.vertexRoles_[1] = tet->adjacentGluing(useVertexRoles[0])
+    ans->vertexRoles_[1] = tet->adjacentGluing(useVertexRoles[0])
         * useVertexRoles * Perm<4>(1, 2, 3, 0);
-    ans.vertexRoles_[2] = tet->adjacentGluing(useVertexRoles[3])
+    ans->vertexRoles_[2] = tet->adjacentGluing(useVertexRoles[3])
         * useVertexRoles * Perm<4>(3, 0, 1, 2);
 
     // Finally, check that tetrahedra 1 and 2 are glued together
     // properly.
-    Perm<4> roles1 = ans.vertexRoles_[1];
-    if (ans.tet_[1]->adjacentTetrahedron(roles1[0]) != ans.tet_[2])
-        return std::nullopt;
+    Perm<4> roles1 = ans->vertexRoles_[1];
+    if (ans->tet_[1]->adjacentTetrahedron(roles1[0]) != ans->tet_[2])
+        return nullptr;
 
-    if (ans.tet_[1]->adjacentGluing(roles1[0]) * roles1 *
-            Perm<4>(1, 2, 3, 0) != ans.vertexRoles_[2])
-        return std::nullopt;
+    if (ans->tet_[1]->adjacentGluing(roles1[0]) * roles1 *
+            Perm<4>(1, 2, 3, 0) != ans->vertexRoles_[2])
+        return nullptr;
 
     // We have the desired structure!
     return ans;

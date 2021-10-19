@@ -140,8 +140,8 @@ bool SpiralSolidTorus::isCanonical() const {
     return true;
 }
 
-std::optional<SpiralSolidTorus> SpiralSolidTorus::recognise(Tetrahedron<3>* tet,
-        Perm<4> useVertexRoles) {
+std::unique_ptr<SpiralSolidTorus> SpiralSolidTorus::recognise(
+        Tetrahedron<3>* tet, Perm<4> useVertexRoles) {
     Perm<4> invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
 
     Tetrahedron<3>* base = tet;
@@ -166,20 +166,20 @@ std::optional<SpiralSolidTorus> SpiralSolidTorus::recognise(Tetrahedron<3>* tet,
 
         // Check that we haven't hit the boundary.
         if (! adjTet)
-            return std::nullopt;
+            return nullptr;
 
         if (adjTet == base) {
             // We're back at the beginning of the loop.
             // Check that everything is glued up correctly.
             if (adjRoles != baseRoles)
-                return std::nullopt;
+                return nullptr;
 
             // Success!
             break;
         }
 
         if (usedTets.count(adjTet))
-            return std::nullopt;
+            return nullptr;
 
         // Move on to the next tetrahedron.
         tet = adjTet;
@@ -191,9 +191,9 @@ std::optional<SpiralSolidTorus> SpiralSolidTorus::recognise(Tetrahedron<3>* tet,
     }
 
     // We've found a spiralled solid torus.
-    SpiralSolidTorus ans(tets.size());
-    std::copy(tets.begin(), tets.end(), ans.tet_);
-    std::copy(roles.begin(), roles.end(), ans.vertexRoles_);
+    std::unique_ptr<SpiralSolidTorus> ans(new SpiralSolidTorus(tets.size()));
+    std::copy(tets.begin(), tets.end(), ans->tet_);
+    std::copy(roles.begin(), roles.end(), ans->vertexRoles_);
     return ans;
 }
 

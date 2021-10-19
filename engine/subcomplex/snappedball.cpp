@@ -37,7 +37,7 @@
 
 namespace regina {
 
-std::optional<SnappedBall> SnappedBall::recognise(Tetrahedron<3>* tet) {
+std::unique_ptr<SnappedBall> SnappedBall::recognise(Tetrahedron<3>* tet) {
     int inFace1, inFace2;
     Perm<4> perm;
     for (inFace1 = 0; inFace1 < 3; inFace1++)
@@ -46,11 +46,12 @@ std::optional<SnappedBall> SnappedBall::recognise(Tetrahedron<3>* tet) {
             inFace2 = perm[inFace1];
             if (perm == Perm<4>(inFace1, inFace2)) {
                 // This is it!
-                return SnappedBall(tet, Edge<3>::edgeNumber[inFace1][inFace2]);
+                return std::unique_ptr<SnappedBall>(new SnappedBall(
+                    tet, Edge<3>::edgeNumber[inFace1][inFace2]));
             }
         }
 
-    return std::nullopt;
+    return nullptr;
 }
 
 std::unique_ptr<Manifold> SnappedBall::manifold() const {
