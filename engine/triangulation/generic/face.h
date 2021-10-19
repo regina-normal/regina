@@ -62,11 +62,14 @@ namespace regina {
  * FaceEmbedding objects correspond to the top-dimensional simplices of the
  * link of \a F (which is a (\a dim - \a subdim - 1)-dimensional triangulation).
  *
- * As of Regina 7.0, a FaceEmbedding can happily outlive its face: even if the
- * underlying Face is destroyed (e.g., because the triangulation changed),
- * if you made a local copy of a FaceEmbedding then its simplex(), face() and
- * vertices() routines will continue to return the same values as they
- * did back when the underlying Face still existed.
+ * As of Regina 7.0, a FaceEmbedding can happily outlive its face - even if the
+ * underlying Face object is destroyed (e.g., because the triangulation
+ * changed), if you made a local copy of a FaceEmbedding beforehand then its
+ * simplex(), face() and vertices() routines will continue to return the same
+ * values as they did before, back when the underlying Face still existed.
+ * A FaceEmbedding cannot, however, outlive its top-dimensional simplex,
+ * because internally a FaceEmbedding references the Simplex object in which
+ * it lives (i.e., it does not just store an integer simplex index).
  *
  * If \a dim is one of Regina's \ref stddim "standard dimensions", then
  * this template is specialised to offer additional dimension-specific aliases.

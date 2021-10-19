@@ -1301,6 +1301,8 @@ Version 7.0  [ TODO ]
               error instead of indicating this through return values.
             - Routine turaevViro() now always runs in the current thread,
               even if a progress tracker was passed.
+            - Routine connectedSumWith() now adds fewer tetrahedra (thanks
+              to Adele Jackson).
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
