@@ -333,7 +333,8 @@ Version 7.0  [ TODO ]
             - Several class constants are now constexpr.
             - The input stream constructor now throws an InvalidInput
               exception upon error.  The inputError() routine has been removed.
-            - Routine bestSearcher() now returns a std::unique_ptr.
+            - Routines bestSearcher() and readTaggedData() now return a
+              std::unique_ptr.
         Class GraphLoop, GraphPair, GraphTriple:
             - Constructors now take Seifert fibred spaces either by
               const reference (which copy) or by rvalue reference (which move),

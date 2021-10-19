@@ -501,7 +501,7 @@ class GluingPermSearcher<3> {
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
          *
-         * @return the newly created search manager.
+         * @return the new search manager.
          */
         template <typename Action, typename... Args>
         static std::unique_ptr<GluingPermSearcher<3>> bestSearcher(
@@ -521,12 +521,6 @@ class GluingPermSearcher<3> {
          * the input stream constructors, where the class of the data being
          * read must be known at compile time.
          *
-         * If the data found in the input stream is invalid or
-         * incorrectly formatted, a null pointer will be returned.
-         * Otherwise a newly constructed search manager will be returned,
-         * and it is the responsibility of the caller of this routine to
-         * destroy it after use.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
@@ -541,10 +535,12 @@ class GluingPermSearcher<3> {
          * for each permutation set that is found when the search is run.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
+         * @return the new search manager, or \c null if the data in the
+         * input stream was invalid or incorrectly formatted.
          */
         template <typename Action, typename... Args>
-        static GluingPermSearcher<3>* readTaggedData(std::istream& in,
-                Action&& action, Args&&... args);
+        static std::unique_ptr<GluingPermSearcher<3>> readTaggedData(
+                std::istream& in, Action&& action, Args&&... args);
 
         // Make this class non-copyable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
@@ -2903,7 +2899,8 @@ inline char GluingPermSearcher<3>::dataTag() const {
 }
 
 template <typename Action, typename... Args>
-inline GluingPermSearcher<3>* GluingPermSearcher<3>::readTaggedData(
+inline std::unique_ptr<GluingPermSearcher<3>>
+        GluingPermSearcher<3>::readTaggedData(
         std::istream& in, Action&& action, Args&&... args) {
     // Read the class marker.
     char c;
@@ -2914,16 +2911,16 @@ inline GluingPermSearcher<3>* GluingPermSearcher<3>::readTaggedData(
     try {
         switch (c) {
             case GluingPermSearcher<3>::dataTag_:
-                return new GluingPermSearcher<3>(in,
+                return std::make_unique<GluingPermSearcher<3>>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
             case CompactSearcher::dataTag_:
-                return new CompactSearcher(in,
+                return std::make_unique<CompactSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
             case ClosedPrimeMinSearcher::dataTag_:
-                return new ClosedPrimeMinSearcher(in,
+                return std::make_unique<ClosedPrimeMinSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
             case HyperbolicMinSearcher::dataTag_:
-                return new HyperbolicMinSearcher(in,
+                return std::make_unique<HyperbolicMinSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
             default:
                 return nullptr;

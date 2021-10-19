@@ -379,7 +379,7 @@ class GluingPermSearcher<2> {
          * argument(s) by reference, you must wrap then in std::ref or
          * std::cref.
          *
-         * @return the newly created search manager.
+         * @return the new search manager.
          */
         template <typename Action, typename... Args>
         static std::unique_ptr<GluingPermSearcher<2>> bestSearcher(
@@ -398,12 +398,6 @@ class GluingPermSearcher<2> {
          * the input stream constructors, where the class of the data being
          * read must be known at compile time.
          *
-         * If the data found in the input stream is invalid or
-         * incorrectly formatted, a null pointer will be returned.
-         * Otherwise a newly constructed search manager will be returned,
-         * and it is the responsibility of the caller of this routine to
-         * destroy it after use.
-         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
@@ -418,10 +412,12 @@ class GluingPermSearcher<2> {
          * for each permutation set that is found when the search is run.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
+         * @return the new search manager, or \c null if the data in the
+         * input stream was invalid or incorrectly formatted.
          */
         template <typename Action, typename... Args>
-        static GluingPermSearcher<2>* readTaggedData(std::istream& in,
-                Action&& action, Args&&... args);
+        static std::unique_ptr<GluingPermSearcher<2>> readTaggedData(
+                std::istream& in, Action&& action, Args&&... args);
 
         // Make this class non-copyable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
@@ -508,7 +504,8 @@ inline char GluingPermSearcher<2>::dataTag() const {
 }
 
 template <typename Action, typename... Args>
-inline GluingPermSearcher<2>* GluingPermSearcher<2>::readTaggedData(
+inline std::unique_ptr<GluingPermSearcher<2>>
+        GluingPermSearcher<2>::readTaggedData(
         std::istream& in, Action&& action, Args&&... args) {
     // Read the class marker.
     char c;
@@ -519,7 +516,7 @@ inline GluingPermSearcher<2>* GluingPermSearcher<2>::readTaggedData(
     try {
         switch (c) {
             case GluingPermSearcher<2>::dataTag_:
-                return new GluingPermSearcher<2>(in,
+                return std::make_unique<GluingPermSearcher<2>>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
             default:
                 return nullptr;
