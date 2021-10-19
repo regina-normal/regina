@@ -179,26 +179,25 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                 // A new face!
                 f = new Face<dim, dim-1>(s->component_);
                 std::get<dim - 1>(tri->faces_).push_back(f);
+                auto map = Face<dim, dim-1>::ordering(facet);
 
                 std::get<dim-1>(s->faces_)[facet] = f;
-                std::get<dim-1>(s->mappings_)[facet] =
-                    Face<dim, dim-1>::ordering(facet);
+                std::get<dim-1>(s->mappings_)[facet] = map;
 
                 adj = s->adjacentSimplex(facet);
                 if (adj) {
                     // We have an adjacent simplex.
                     adjFacet = s->adjacentFacet(facet);
+                    auto adjMap = s->adjacentGluing(facet) * map;
 
                     std::get<dim-1>(adj->faces_)[adjFacet] = f;
-                    std::get<dim-1>(adj->mappings_)[adjFacet] =
-                        s->adjacentGluing(facet) *
-                        std::get<dim-1>(s->mappings_)[facet];
+                    std::get<dim-1>(adj->mappings_)[adjFacet] = adjMap;
 
-                    f->embeddings_.push_back({s, facet});
-                    f->embeddings_.push_back({adj, adjFacet});
+                    f->embeddings_.push_back({s, map});
+                    f->embeddings_.push_back({adj, adjMap});
                 } else {
                     // This is a boundary facet.
-                    f->embeddings_.push_back({s, facet});
+                    f->embeddings_.push_back({s, map});
                 }
             }
         }
@@ -220,6 +219,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
 
                 f = new Face<dim, dim-2>(s->component_);
                 std::get<dim - 2>(tri->faces_).push_back(f);
+                auto map = Face<dim, dim-2>::ordering(start);
 
                 // Since the link of a codimension-2-face is a path or loop, the
                 // depth-first search is really just a straight line in either
@@ -227,9 +227,8 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                 // just keep track of the next simplex to process in the current
                 // direction.
                 std::get<dim-2>(s->faces_)[start] = f;
-                std::get<dim-2>(s->mappings_)[start] =
-                    Face<dim, dim-2>::ordering(start);
-                f->embeddings_.push_back({s, start});
+                std::get<dim-2>(s->mappings_)[start] = map;
+                f->embeddings_.push_back({s, map});
 
                 for (dir = 0; dir < 2; ++dir) {
                     // Start at the start and walk in one particular direction.
@@ -272,9 +271,9 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                         std::get<dim-2>(adj->mappings_)[adjFace] = adjMap;
 
                         if (dir == 0)
-                            f->embeddings_.push_back({adj, adjFace});
+                            f->embeddings_.push_back({adj, adjMap});
                         else
-                            f->embeddings_.push_front({adj, adjFace});
+                            f->embeddings_.push_front({adj, adjMap});
 
                         simp = adj;
                         map = adjMap;
@@ -310,11 +309,11 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
 
                 f = new Face<dim, subdim>(s->component_);
                 std::get<subdim>(tri->faces_).push_back(f);
+                auto map = Face<dim, subdim>::ordering(start);
 
                 std::get<subdim>(s->faces_)[start] = f;
-                std::get<subdim>(s->mappings_)[start] =
-                    Face<dim, subdim>::ordering(start);
-                f->embeddings_.push_back({s, start});
+                std::get<subdim>(s->mappings_)[start] = map;
+                f->embeddings_.push_back({s, map});
 
                 // Run a breadth-first search from this vertex to completely
                 // enumerate all identifications.
@@ -380,7 +379,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                                 std::get<subdim>(adj->faces_)[adjFace] = f;
                                 std::get<subdim>(adj->mappings_)[adjFace] =
                                     adjMap;
-                                f->embeddings_.push_back({adj, adjFace});
+                                f->embeddings_.push_back({adj, adjMap});
 
                                 queue[queueEnd].first = adj;
                                 queue[queueEnd].second = adjFace;

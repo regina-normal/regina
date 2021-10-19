@@ -42,7 +42,7 @@ using regina::FaceEmbedding;
 
 void addVertex4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 0>>(m, "FaceEmbedding4_0")
-        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
         .def(pybind11::init<const VertexEmbedding<4>&>())
         .def("simplex", &VertexEmbedding<4>::simplex,
             pybind11::return_value_policy::reference)

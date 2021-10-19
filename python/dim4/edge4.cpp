@@ -51,7 +51,7 @@ namespace {
 
 void addEdge4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 1>>(m, "FaceEmbedding4_1")
-        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
         .def(pybind11::init<const EdgeEmbedding<4>&>())
         .def("simplex", &EdgeEmbedding<4>::simplex,
             pybind11::return_value_policy::reference)

@@ -50,7 +50,7 @@ namespace {
 
 void addTriangle4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 2>>(m, "FaceEmbedding4_2")
-        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
         .def(pybind11::init<const TriangleEmbedding<4>&>())
         .def("simplex", &TriangleEmbedding<4>::simplex,
             pybind11::return_value_policy::reference)
