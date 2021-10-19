@@ -39,7 +39,6 @@
 #define __REGINA_LAYEREDTORUSBUNDLE_H
 #endif
 
-#include <optional>
 #include <memory>
 #include "regina-core.h"
 #include "maths/matrix2.h"

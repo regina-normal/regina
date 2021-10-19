@@ -39,7 +39,6 @@
 #define __REGINA_LAYEREDLOOP_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "subcomplex/standardtri.h"
 

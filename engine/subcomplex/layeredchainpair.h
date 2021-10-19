@@ -39,7 +39,6 @@
 #define __REGINA_LAYEREDCHAINPAIR_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "subcomplex/layeredchain.h"
 #include "triangulation/forward.h"

@@ -39,7 +39,6 @@
 #define __REGINA_TRISOLIDTORUS_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "maths/perm.h"
 #include "subcomplex/standardtri.h"

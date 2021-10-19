@@ -40,7 +40,6 @@
 #define __REGINA_BLOCKEDSFSLOOP_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "maths/matrix2.h"
 #include "subcomplex/satregion.h"

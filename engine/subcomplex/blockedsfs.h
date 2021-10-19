@@ -40,7 +40,6 @@
 #define __REGINA_BLOCKEDSFS_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "subcomplex/satregion.h"
 #include "subcomplex/standardtri.h"

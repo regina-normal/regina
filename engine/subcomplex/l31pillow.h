@@ -39,7 +39,6 @@
 #define __REGINA_L31PILLOW_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "subcomplex/standardtri.h"
 

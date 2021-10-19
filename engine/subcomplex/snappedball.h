@@ -39,7 +39,6 @@
 #define __REGINA_SNAPPEDBALL_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"

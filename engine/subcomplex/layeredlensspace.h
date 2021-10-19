@@ -39,7 +39,6 @@
 #define __REGINA_LAYEREDLENSSPACE_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/standardtri.h"
