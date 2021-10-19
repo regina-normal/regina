@@ -91,9 +91,11 @@ class FaceEmbeddingBase :
     private:
         Simplex<dim>* simplex_;
             /**< The top-dimensional simplex in which the underlying
-             * <i>subdim</i>-face of the triangulation is contained. */
-        int face_;
-            /**< The corresponding face number of \a simplex_. */
+                 <i>subdim</i>-face of the triangulation is contained. */
+        Perm<dim + 1> vertices_;
+            /**< Maps the vertices of the underlying <i>subdim</i>-face
+                 of the triangulation to the corresponding vertex numbers of
+                 \a simplex_.  See vertices() for details. */
 
     public:
         /**
@@ -108,11 +110,12 @@ class FaceEmbeddingBase :
          *
          * @param simplex the top-dimensional simplex in which the
          * underlying <i>subdim</i>-face of the triangulation is contained.
-         * @param face the corresponding face number of \a simplex.
-         * This must be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
-         * inclusive.
+         * @param vertices a mapping from the vertices of the underlying
+         * <i>subdim</i>-face of the triangulation to the corresponding
+         * vertex numbers of \a simplex.  See vertices() for details of how
+         * this permutation should be structured.
          */
-        FaceEmbeddingBase(Simplex<dim>* simplex, int face);
+        FaceEmbeddingBase(Simplex<dim>* simplex, Perm<dim + 1> vertices);
         /**
          * Creates a new copy of the given object.
          *
@@ -170,8 +173,13 @@ class FaceEmbeddingBase :
 
         /**
          * Tests whether this and the given object are identical.
-         * Here "identical" means that they refer to the same face of
-         * the same top-dimensional simplex.
+         *
+         * Since Regina 7.0, "identical" means that both objects refer to the
+         * same face of the same top-dimensional simplex, \e and have
+         * the same embedding permutations as returned by vertices().
+         * This is a stronger (but more natural) condition than was used in
+         * Regina 6.0.1 and earlier, which merely required both objects to
+         * refer to the same face number of the same top-dimensional simplex.
          *
          * @param rhs the object to compare with this.
          * @return \c true if and only if both object are identical.
@@ -179,9 +187,14 @@ class FaceEmbeddingBase :
         bool operator == (const FaceEmbeddingBase& rhs) const;
 
         /**
-         * Tests whether this and the given object are different.
-         * Here "different" means that they do not refer to the same face of
-         * the same top-dimensional simplex.
+         * Tests whether this and the given object are not identical.
+         *
+         * Since Regina 7.0, "identical" means that both objects refer to the
+         * same face of the same top-dimensional simplex, \e and have
+         * the same embedding permutations as returned by vertices().
+         * This is a stronger (but more natural) condition than was used in
+         * Regina 6.0.1 and earlier, which merely required both objects to
+         * refer to the same face number of the same top-dimensional simplex.
          *
          * @param rhs the object to compare with this.
          * @return \c true if and only if both object are identical.
@@ -197,6 +210,18 @@ class FaceEmbeddingBase :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Explicitly disable the old (\a simplex, \a face) constructor from
+         * Regina 6.0.1 and earlier.
+         *
+         * This is so that, if the user unintentionally calls the old
+         * (\a simplex, \a face) constructor, the face argument will not be
+         * silently converted to a permutation and passed to the new
+         * (\a simplex, \a vertices) constructor instead.
+         */
+        FaceEmbeddingBase(Simplex<dim>*, int);
 };
 
 #ifndef __DOXYGEN
@@ -758,14 +783,13 @@ class FaceBase :
 // Inline functions for FaceEmbeddingBase
 
 template <int dim, int subdim>
-inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase() :
-        simplex_(0), face_(0) {
+inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase() : simplex_(0) {
 }
 
 template <int dim, int subdim>
 inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase(
-        Simplex<dim>* simplex, int face) :
-        simplex_(simplex), face_(face) {
+        Simplex<dim>* simplex, Perm<dim + 1> vertices) :
+        simplex_(simplex), vertices_(vertices) {
 }
 
 template <int dim, int subdim>
@@ -775,34 +799,34 @@ inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::simplex() const {
 
 template <int dim, int subdim>
 inline int FaceEmbeddingBase<dim, subdim>::face() const {
-    return face_;
+    return FaceNumbering<dim, subdim>::faceNumber(vertices_);
 }
 
 template <int dim, int subdim>
 inline Perm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
-    return simplex_->template faceMapping<subdim>(face_);
+    return vertices_;
 }
 
 template <int dim, int subdim>
 inline bool FaceEmbeddingBase<dim, subdim>::operator == (
         const FaceEmbeddingBase& rhs) const {
-    return ((simplex_ == rhs.simplex_) && (face_ == rhs.face_));
+    return ((simplex_ == rhs.simplex_) && (vertices_ == rhs.vertices_));
 }
 
 template <int dim, int subdim>
 inline bool FaceEmbeddingBase<dim, subdim>::operator != (
         const FaceEmbeddingBase& rhs) const {
-    return ((simplex_ != rhs.simplex_) || (face_ != rhs.face_));
+    return ((simplex_ != rhs.simplex_) || (vertices_ != rhs.vertices_));
 }
 
 template <int dim, int subdim>
 inline void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out)
         const {
     if constexpr (subdim == 0)
-        out << simplex_->index() << " (" << face_ << ')';
+        out << simplex_->index() << " (" << vertices_[0] << ')';
     else
         out << simplex_->index() << " ("
-            << vertices().trunc(subdim + 1) << ')';
+            << vertices_.trunc(subdim + 1) << ')';
 }
 
 // Inline functions for FaceBase

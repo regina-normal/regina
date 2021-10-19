@@ -42,7 +42,7 @@ using regina::FaceEmbedding;
 
 void addTetrahedron4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 3>>(m, "FaceEmbedding4_3")
-        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
         .def(pybind11::init<const TetrahedronEmbedding<4>&>())
         .def("simplex", &TetrahedronEmbedding<4>::simplex,
             pybind11::return_value_policy::reference)

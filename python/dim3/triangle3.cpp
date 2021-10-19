@@ -43,7 +43,7 @@ using regina::TriangleEmbedding;
 
 void addTriangle3(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<3, 2>>(m, "FaceEmbedding3_2")
-        .def(pybind11::init<regina::Tetrahedron<3>*, int>())
+        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
         .def(pybind11::init<const TriangleEmbedding<3>&>())
         .def("simplex", &TriangleEmbedding<3>::simplex,
             pybind11::return_value_policy::reference)

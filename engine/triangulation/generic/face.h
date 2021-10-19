@@ -62,6 +62,12 @@ namespace regina {
  * FaceEmbedding objects correspond to the top-dimensional simplices of the
  * link of \a F (which is a (\a dim - \a subdim - 1)-dimensional triangulation).
  *
+ * As of Regina 7.0, a FaceEmbedding can happily outlive its face: even if the
+ * underlying Face is destroyed (e.g., because the triangulation changed),
+ * if you made a local copy of a FaceEmbedding then its simplex(), face() and
+ * vertices() routines will continue to return the same values as they
+ * did back when the underlying Face still existed.
+ *
  * If \a dim is one of Regina's \ref stddim "standard dimensions", then
  * this template is specialised to offer additional dimension-specific aliases.
  * In order to use these specialised classes, you will need to include the
@@ -100,11 +106,12 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
          *
          * @param simplex the top-dimensional simplex in which the
          * underlying <i>subdim</i>-face of the triangulation is contained.
-         * @param face the corresponding face number of \a simplex.
-         * This must be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
-         * inclusive.
+         * @param vertices a mapping from the vertices of the underlying
+         * <i>subdim</i>-face of the triangulation to the corresponding
+         * vertex numbers of \a simplex.  See FaceEmbeddingBase::vertices()
+         * for details of how this permutation should be structured.
          */
-        FaceEmbedding(Simplex<dim>* simplex, int face);
+        FaceEmbedding(Simplex<dim>* simplex, Perm<dim + 1> vertices);
 
         /**
          * Creates a new copy of the given object.
@@ -119,6 +126,18 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
          * @param cloneMe the object to copy.
          */
         FaceEmbedding& operator = (const FaceEmbedding& cloneMe) = default;
+
+    private:
+        /**
+         * Explicitly disable the old (\a simplex, \a face) constructor from
+         * Regina 6.0.1 and earlier.
+         *
+         * This is so that, if the user unintentionally calls the old
+         * (\a simplex, \a face) constructor, the face argument will not be
+         * silently converted to a permutation and passed to the new
+         * (\a simplex, \a vertices) constructor instead.
+         */
+        FaceEmbedding(Simplex<dim>*, int);
 };
 
 /**
@@ -408,8 +427,8 @@ using Pentachoron = Face<dim, 4>;
 
 template <int dim, int subdim>
 inline FaceEmbedding<dim, subdim>::FaceEmbedding(
-        Simplex<dim>* simplex, int face) :
-        detail::FaceEmbeddingBase<dim, subdim>(simplex, face) {
+        Simplex<dim>* simplex, Perm<dim + 1> vertices) :
+        detail::FaceEmbeddingBase<dim, subdim>(simplex, vertices) {
 }
 
 // Inline functions for Face

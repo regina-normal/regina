@@ -238,6 +238,18 @@ Version 7.0  [ TODO ]
               the old name is removed entirely.  This now returns just an
               isomorphism by value: the triangulation should be fetched via
               buildLink(), and the labelling option is gone.
+        Class FaceEmbedding<dim, subdim>:
+            - Local copies of these objects can now happily outlive their
+              underlying faces.  This is because they now carry their entire
+              embedding permutations with them.  This change actually shrinks
+              the object size in Regina's standard dimensions, and it also
+              speeds up calls to vertices(), but it does marginally slow
+              down calls to face().
+            - The equality/inequality tests have changed meaning: not only do
+              the face *numbers* need to be the same, but the entire embedding
+              permutations returned by vertices() need to be the same.
+            - The old (simplex, face number) constructors are removed, with new
+              (simplex, embedding permutation) constructors to replace them.
         Class FaceNumbering<dim, subdim>:
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.

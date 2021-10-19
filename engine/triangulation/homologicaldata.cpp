@@ -468,8 +468,6 @@ void HomologicalData::computeChainComplexes() {
     long int ind2;
     int k;
 
-    EdgeEmbedding<3> tempe;
-
     // start B3: for each dual tetrahedron==nonboundary vertex,
     //           find the corresp edges==non-boundary boundary triangles
 
@@ -554,13 +552,13 @@ void HomologicalData::computeChainComplexes() {
                 if ( ind2<2 ) {
                     // edge k of tetrahedron j, moreover we know that
                     // the vertex of the edge corresponds to ind2
-                    tempe=EdgeEmbedding<3>(
-                        vtet->embedding(j).tetrahedron(), k );
+                    //
                     // the corresp orientation coming from our local
                     // orientation
                     // plus orienting the edge out of vertex k % 2...
 
-                    p1=tempe.vertices();
+                    p1=vtet->embedding(j).tetrahedron()->edgeMapping(k);
+
                     if ( ind2 == 1 ) p1=p1*(Perm<4>(0,1));
                     // now p1 sends 0 to point corresp to v, 1 to point
                     // corresp to end of edge.
