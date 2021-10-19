@@ -107,7 +107,7 @@ Isomorphism<4> Face<4, 1>::buildLinkInclusion() const {
         inclusion.pentImage(i) = it->pentachoron()->index();
 
         Perm<5> perm = it->pentachoron()->triangleMapping(it->edge());
-        if (perm[3] == it->pentachoron()->edgeMapping(it->edge())[0])
+        if (perm[3] == it->vertices()[0])
             inclusion.facetPerm(i) = perm;
         else
             inclusion.facetPerm(i) = perm * Perm<5>(3, 4);

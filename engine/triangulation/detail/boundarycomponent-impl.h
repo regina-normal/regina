@@ -261,12 +261,12 @@ void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
             //
             // The following two permutations should be made equal:
             //
-            // - emb.simplex()->faceMapping<subdim>(emb.face())
-            // - outer->faceMapping<subdim>(emb.face())
+            // 1. emb.simplex()->faceMapping<subdim>(emb.face())
+            // 2. outer->faceMapping<subdim>(emb.face())
             //
-            Perm<dim> adjust =
-                emb.simplex()->template faceMapping<subdim>(
-                    emb.face()).inverse() *
+            // Note that (1) is just emb.vertices().
+            //
+            Perm<dim> adjust = emb.vertices().inverse() *
                 Perm<dim>::contract(
                     outer->template faceMapping<subdim>(emb.face()));
             adjust.clear(subdim + 1);

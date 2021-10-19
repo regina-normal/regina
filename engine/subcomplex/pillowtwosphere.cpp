@@ -62,13 +62,11 @@ std::unique_ptr<PillowTwoSphere> PillowTwoSphere::recognise(
 
     // Now make sure the edges all match up and with the correct
     // permutations.
-    Perm<4> perm = tri2->edgeMapping(joinTo0) *
-        tri1->edgeMapping(0).inverse();
+    Perm<4> perm = tri2->edgeMapping(joinTo0) * tri1->edgeMapping(0).inverse();
     for (i = 1; i < 3; i++) {
         if (edge[0][i] != edge[1][perm[i]])
             return nullptr;
-        if (! (tri2->edgeMapping(perm[i]) ==
-                perm * tri1->edgeMapping(i)))
+        if (! (tri2->edgeMapping(perm[i]) == perm * tri1->edgeMapping(i)))
             return nullptr;
     }
 
