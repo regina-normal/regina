@@ -40,7 +40,6 @@
 #define __REGINA_SNAPPEDTWOSPHERE_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "subcomplex/snappedball.h"
@@ -111,14 +110,20 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * Determines if the two given tetrahedra together form a snapped
          * 2-sphere.
          *
+         * Even though SnappedTwoSphere is a two-dimensional class and so does
+         * not inherit from StandardTriangulation, this routine nevertheless
+         * returns by (smart) pointer for consistency with the
+         * StandardTriangulation recognition routines (which use pointers
+         * because of the polymorphic StandardTriangulation class hierarchy).
+         *
          * \pre The two given tetrahedra are distinct.
          *
          * @param tet1 the first tetrahedron to examine.
          * @param tet2 the second tetrahedron to examine.
          * @return a structure containing details of the snapped 2-sphere, or
-         * no value if the given tetrahedra do not form a snapped 2-sphere.
+         * \c null if the given tetrahedra do not form a snapped 2-sphere.
          */
-        static std::optional<SnappedTwoSphere> recognise(Tetrahedron<3>* tet1,
+        static std::unique_ptr<SnappedTwoSphere> recognise(Tetrahedron<3>* tet1,
             Tetrahedron<3>* tet2);
         /**
          * A deprecated alias to recognise if two tetrahedra together
@@ -127,7 +132,7 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<SnappedTwoSphere>
+        [[deprecated]] static std::unique_ptr<SnappedTwoSphere>
             formsSnappedTwoSphere(Tetrahedron<3>* tet1, Tetrahedron<3>* tet2);
         /**
          * Determines if the two given snapped 3-balls together form a snapped
@@ -137,14 +142,20 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * the structure returned will be clones of the
          * original 3-balls, not the original 3-balls themselves.
          *
+         * Even though SnappedTwoSphere is a two-dimensional class and so does
+         * not inherit from StandardTriangulation, this routine nevertheless
+         * returns by (smart) pointer for consistency with the
+         * StandardTriangulation recognition routines (which use pointers
+         * because of the polymorphic StandardTriangulation class hierarchy).
+         *
          * \pre The two given snapped 3-balls use distinct tetrahedra.
          *
          * @param ball1 the first snapped 3-ball to examine.
          * @param ball2 the second snapped 3-ball to examine.
          * @return a structure containing details of the snapped 2-sphere, or
-         * no value if the given snapped 3-balls do not form a snapped 2-sphere.
+         * \c null if the given snapped 3-balls do not form a snapped 2-sphere.
          */
-        static std::optional<SnappedTwoSphere> recognise(
+        static std::unique_ptr<SnappedTwoSphere> recognise(
             const SnappedBall& ball1, const SnappedBall& ball2);
 
         /**
@@ -154,7 +165,7 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<SnappedTwoSphere>
+        [[deprecated]] static std::unique_ptr<SnappedTwoSphere>
             formsSnappedTwoSphere(const SnappedBall& ball1,
             const SnappedBall& ball2);
 
@@ -191,12 +202,14 @@ inline void SnappedTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Snapped 2-sphere";
 }
 
-inline std::optional<SnappedTwoSphere> SnappedTwoSphere::formsSnappedTwoSphere(
+inline std::unique_ptr<SnappedTwoSphere>
+        SnappedTwoSphere::formsSnappedTwoSphere(
         Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
     return recognise(tet1, tet2);
 }
 
-inline std::optional<SnappedTwoSphere> SnappedTwoSphere::formsSnappedTwoSphere(
+inline std::unique_ptr<SnappedTwoSphere>
+        SnappedTwoSphere::formsSnappedTwoSphere(
         const SnappedBall& ball1, const SnappedBall& ball2) {
     return recognise(ball1, ball2);
 }

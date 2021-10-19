@@ -40,7 +40,6 @@
 #define __REGINA_PILLOWTWOSPHERE_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/perm.h"
@@ -127,14 +126,20 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * Determines if the two given triangles together form a pillow
          * 2-sphere.
          *
+         * Even though PillowTwoSphere is a two-dimensional class and so does
+         * not inherit from StandardTriangulation, this routine nevertheless
+         * returns by (smart) pointer for consistency with the
+         * StandardTriangulation recognition routines (which use pointers
+         * because of the polymorphic StandardTriangulation class hierarchy).
+         *
          * \pre The two given triangles are distinct.
          *
          * @param tri1 the first triangle to examine.
          * @param tri2 the second triangle to examine.
          * @return a structure containing details of the pillow 2-sphere, or
-         * no value if the given triangles do not form a pillow 2-sphere.
+         * \c null if the given triangles do not form a pillow 2-sphere.
          */
-        static std::optional<PillowTwoSphere> recognise(
+        static std::unique_ptr<PillowTwoSphere> recognise(
             Triangle<3>* tri1, Triangle<3>* tri2);
 
         /**
@@ -144,7 +149,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * \deprecated This function has been renamed to recognise().
          * See recognise() for details on the parameters and return value.
          */
-        [[deprecated]] static std::optional<PillowTwoSphere>
+        [[deprecated]] static std::unique_ptr<PillowTwoSphere>
             formsPillowTwoSphere(Triangle<3>* tri1, Triangle<3>* tri2);
 
         /**
@@ -184,7 +189,7 @@ inline void PillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";
 }
 
-inline std::optional<PillowTwoSphere> PillowTwoSphere::formsPillowTwoSphere(
+inline std::unique_ptr<PillowTwoSphere> PillowTwoSphere::formsPillowTwoSphere(
         Triangle<3>* tri1, Triangle<3>* tri2) {
     return recognise(tri1, tri2);
 }

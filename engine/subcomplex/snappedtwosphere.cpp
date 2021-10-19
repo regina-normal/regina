@@ -36,29 +36,37 @@
 
 namespace regina {
 
-std::optional<SnappedTwoSphere> SnappedTwoSphere::recognise(
+std::unique_ptr<SnappedTwoSphere> SnappedTwoSphere::recognise(
         Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
     std::unique_ptr<SnappedBall> ball[2];
     if (! (ball[0] = SnappedBall::recognise(tet1)))
-        return std::nullopt;
+        return nullptr;
     if (! (ball[1] = SnappedBall::recognise(tet2)))
-        return std::nullopt;
+        return nullptr;
     if (tet1->edge(ball[0]->equatorEdge()) !=
             tet2->edge(ball[1]->equatorEdge()))
-        return std::nullopt;
+        return nullptr;
 
     // This is it.
-    return SnappedTwoSphere(*ball[0], *ball[1]);
+    //
+    // Note: we cannot use make_unique here, since the class
+    // constructor is private.
+    return std::unique_ptr<SnappedTwoSphere>(new SnappedTwoSphere(
+        *ball[0], *ball[1]));
 }
 
-std::optional<SnappedTwoSphere> SnappedTwoSphere::recognise(
+std::unique_ptr<SnappedTwoSphere> SnappedTwoSphere::recognise(
         const SnappedBall& ball1, const SnappedBall& ball2) {
     if (ball1.tetrahedron()->edge(ball1.equatorEdge()) !=
             ball2.tetrahedron()->edge(ball2.equatorEdge()))
-        return std::nullopt;
+        return nullptr;
 
     // This is it.
-    return SnappedTwoSphere(ball1, ball2);
+    //
+    // Note: we cannot use make_unique here, since the class
+    // constructor is private.
+    return std::unique_ptr<SnappedTwoSphere>(new SnappedTwoSphere(
+        ball1, ball2));
 }
 
 } // namespace regina

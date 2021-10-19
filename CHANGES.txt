@@ -900,7 +900,7 @@ Version 7.0  [ TODO ]
               and cachedOrder().
         Class PillowTwoSphere:
             - Routine formsPillowTwoSphere() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Deprecated clone().  Just use the copy constructor instead.
@@ -1113,7 +1113,7 @@ Version 7.0  [ TODO ]
             - Deprecated clone().  Just use the copy constructor instead.
         Class SnappedTwoSphere:
             - Routine formsSnappedTwoSphere() is now called recognise(), and
-              return a std::optional instead of a pointer that could be null.
+              returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - The variant of recognise() that took a pair of snapped balls
               now takes these balls by reference, not pointer.  Likewise,

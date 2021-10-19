@@ -35,10 +35,10 @@
 
 namespace regina {
 
-std::optional<PillowTwoSphere> PillowTwoSphere::recognise(
+std::unique_ptr<PillowTwoSphere> PillowTwoSphere::recognise(
         Triangle<3>* tri1, Triangle<3>* tri2) {
     if (tri1 == tri2 || tri1->isBoundary() || tri2->isBoundary())
-        return std::nullopt;
+        return nullptr;
     Edge<3>* edge[2][3];
     int i;
     for (i = 0; i < 3; i++) {
@@ -47,7 +47,7 @@ std::optional<PillowTwoSphere> PillowTwoSphere::recognise(
     }
     if (edge[0][0] == edge[0][1] || edge[0][0] == edge[0][2] ||
             edge[0][1] == edge[0][2])
-        return std::nullopt;
+        return nullptr;
 
     // The first triangle has three distinct edges.  See if it matches to the
     // second triangle.
@@ -58,7 +58,7 @@ std::optional<PillowTwoSphere> PillowTwoSphere::recognise(
             break;
         }
     if (joinTo0 == -1)
-        return std::nullopt;
+        return nullptr;
 
     // Now make sure the edges all match up and with the correct
     // permutations.
@@ -66,14 +66,18 @@ std::optional<PillowTwoSphere> PillowTwoSphere::recognise(
         tri1->edgeMapping(0).inverse();
     for (i = 1; i < 3; i++) {
         if (edge[0][i] != edge[1][perm[i]])
-            return std::nullopt;
+            return nullptr;
         if (! (tri2->edgeMapping(perm[i]) ==
                 perm * tri1->edgeMapping(i)))
-            return std::nullopt;
+            return nullptr;
     }
 
     // We have an answer.
-    return PillowTwoSphere(tri1, tri2, perm);
+    //
+    // Note: we cannot use make_unique here, since the class
+    // constructor is private.
+    return std::unique_ptr<PillowTwoSphere>(new PillowTwoSphere(
+        tri1, tri2, perm));
 }
 
 } // namespace regina
