@@ -112,13 +112,9 @@ class TxICore : public Output<TxICore> {
          * Returns a full copy of the <tt>T x I</tt> triangulation that
          * this object describes.
          *
-         * Successive calls to this routine will returns the same
-         * triangulation (i.e., it is not recreated each time).  The
-         * triangulation that is returned may not be modified or destroyed.
-         *
-         * \ifacespython This routine returns a new clone of the triangulation
-         * each time it is called, since Python will claim ownership of the
-         * triangulation that is returned.
+         * Successive calls to this routine will return a reference to the
+         * same triangulation (i.e., it is not recreated each time this
+         * function is called).
          *
          * @return the full triangulation.
          */
