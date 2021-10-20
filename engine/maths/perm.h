@@ -213,9 +213,9 @@ class Perm {
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          *
-         * This typedef is present for all values of \a n, though its
+         * This type alias is present for all values of \a n, though its
          * precise size depends on how the permutation code is constructed.
-         * For \a n = 4,...,7, it is a deprecated typedef that refers to
+         * For \a n = 4,...,7, it is a deprecated type alias that refers to
          * older (first-generation) permutation codes that are no longer used.
          */
         using Code = ImagePack;

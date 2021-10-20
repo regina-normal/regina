@@ -1717,7 +1717,7 @@ class TriangulationBase :
          * - You can, alternatively, pass your own encoding class.
          *   Currently this is for internal use only, and the
          *   class requirements may change in different versions of Regina;
-         *   at present such a class must offer a \a SigType typedef,
+         *   at present such a class must offer a \a SigType type alias,
          *   and static functions emptySig() and encode().  See the
          *   implementation of IsoSigHelper for details.
          *

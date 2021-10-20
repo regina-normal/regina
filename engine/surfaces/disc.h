@@ -221,11 +221,11 @@ bool discOrientationFollowsEdge(int discType, int vertex,
 class DiscSetTet {
     public:
         /**
-         * A null typedef, for consistency with DiscSetTetData.
+         * A null type alias, for consistency with DiscSetTetData.
          *
-         * This typedef is purely to help avoid compile errors in templated
+         * This type alias is purely to help avoid compile errors in templated
          * code.  Since the DiscSetTet class does not actually hold any data
-         * for each normal disc, this typedef should normally not be used.
+         * for each normal disc, this type alias should normally not be used.
          */
         using Data = std::nullptr_t;
 

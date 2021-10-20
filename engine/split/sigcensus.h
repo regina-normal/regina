@@ -209,7 +209,7 @@ class SigCensus {
 };
 
 /**
- * Deprecated typedef for a list of partial isomorphisms on splitting
+ * Deprecated type alias for a list of partial isomorphisms on splitting
  * surface signatures.
  *
  * \deprecated This has been renamed to SigCensus::IsoList.

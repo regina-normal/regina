@@ -501,7 +501,7 @@ class Qitmask2 {
 };
 
 /**
- * A deprecated typedef that gives a small and extremely fast qitmask
+ * A deprecated type alias that gives a small and extremely fast qitmask
  * class capable of holding at least 8 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -510,7 +510,8 @@ class Qitmask2 {
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Qitmask1<uint8_t> instead.
+ * \deprecated This type alias is deprecated; just use Qitmask1<uint8_t>
+ * instead.
  *
  * \ifacespython Not present.
  *
@@ -519,7 +520,7 @@ class Qitmask2 {
 using QitmaskLen8 [[deprecated]] = Qitmask1<uint8_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast qitmask
+ * A deprecated type alias that gives a small and extremely fast qitmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -528,7 +529,8 @@ using QitmaskLen8 [[deprecated]] = Qitmask1<uint8_t>;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Qitmask1<uint16_t> instead.
+ * \deprecated This type alias is deprecated; just use Qitmask1<uint16_t>
+ * instead.
  *
  * \ifacespython Not present.
  *
@@ -537,7 +539,7 @@ using QitmaskLen8 [[deprecated]] = Qitmask1<uint8_t>;
 using QitmaskLen16 [[deprecated]] = Qitmask1<uint16_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast qitmask
+ * A deprecated type alias that gives a small and extremely fast qitmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -546,7 +548,8 @@ using QitmaskLen16 [[deprecated]] = Qitmask1<uint16_t>;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Qitmask1<uint32_t> instead.
+ * \deprecated This type alias is deprecated; just use Qitmask1<uint32_t>
+ * instead.
  *
  * \ifacespython Not present.
  *
@@ -555,7 +558,7 @@ using QitmaskLen16 [[deprecated]] = Qitmask1<uint16_t>;
 using QitmaskLen32 [[deprecated]] = Qitmask1<uint32_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast qitmask
+ * A deprecated type alias that gives a small and extremely fast qitmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of
@@ -564,7 +567,8 @@ using QitmaskLen32 [[deprecated]] = Qitmask1<uint32_t>;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Qitmask1<uint64_t> instead.
+ * \deprecated This type alias is deprecated; just use Qitmask1<uint64_t>
+ * instead.
  *
  * \ifacespython Not present.
  *

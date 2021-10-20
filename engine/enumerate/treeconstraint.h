@@ -532,7 +532,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
 };
 
 /**
- * A deprecated typedef for LPConstraintEulerPositive.
+ * A deprecated type alias for LPConstraintEulerPositive.
  *
  * The old name LPConstraintEuler should no longer be used, since Regina
  * now provides multiple constraint types relating to Euler characteristic.
