@@ -142,6 +142,7 @@ void smithNormalForm(MatrixInt& matrix,
     unsigned long nonEmptyCols = matrix.columns();
     bool flag;
     unsigned long i, j, k;
+    unsigned long pivotRow, pivotCol;
     Integer d, u, v, a, b;
     Integer tmp;
 
@@ -153,48 +154,38 @@ void smithNormalForm(MatrixInt& matrix,
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
         loopStart:
 
-        // Have we got an empty row?
-        flag = true;
-        for (i=currStage; i<nonEmptyCols; i++)
-            if (matrix.entry(currStage, i) != 0) {
-                flag = false;
-                break;
+        // Find a good pivot.
+        // For now we just take the non-zero entry with smallest absolute value.
+        tmp = 0;
+        // TODO: Adjust nonEmptyRows and nonEmptyCols as we iterate here.
+        for (i = currStage; i < nonEmptyRows; ++i)
+            for (j = currStage; j < nonEmptyCols; ++j) {
+                Integer pivotVal = matrix.entry(i, j).abs();
+                if (pivotVal > 0)
+                    if (tmp == 0 || pivotVal < tmp) {
+                        tmp = pivotVal;
+                        pivotRow = i;
+                        pivotCol = j;
+                    }
             }
-        if (flag) {
-            // Empty row!
-            // Switch it with a row at the bottom.
-            if (currStage != nonEmptyRows-1) {
-                matrix.swapRows(currStage, nonEmptyRows - 1);
-                colSpaceBasis.swapRows(currStage, nonEmptyRows - 1);
-                colSpaceBasisInv.swapCols(currStage, nonEmptyRows - 1);
-            }
-            --nonEmptyRows;
-            continue;
+
+        if (tmp == 0) {
+            // The matrix is zero from here on - which means we are done!
+            break;
         }
 
-        // Have we got an empty column?
-        flag = true;
-        for (i=currStage; i<nonEmptyRows; i++)
-            if (matrix.entry(i, currStage) != 0) {
-                flag = false;
-                break;
-            }
-        if (flag) {
-            // Empty column!
-            // Switch it with a column on the end.
-            if (currStage != nonEmptyCols-1) {
-                for (i=currStage; i<nonEmptyRows; i++) {
-                    matrix.entry(i, currStage).swap(
-                        matrix.entry(i, nonEmptyCols-1));
-                }
-                rowSpaceBasis.swapCols(currStage, nonEmptyCols - 1);
-                rowSpaceBasisInv.swapRows(currStage, nonEmptyCols - 1);
-            }
-            --nonEmptyCols;
-            continue;
+        if (pivotRow != currStage) {
+            matrix.swapRows(currStage, pivotRow);
+            colSpaceBasis.swapRows(currStage, pivotRow);
+            colSpaceBasisInv.swapCols(currStage, pivotRow);
+        }
+        if (pivotCol != currStage) {
+            matrix.swapCols(currStage, pivotCol, currStage);
+            rowSpaceBasis.swapCols(currStage, pivotCol);
+            rowSpaceBasisInv.swapRows(currStage, pivotCol);
         }
 
-        // Get zeros in the current row.
+        // Make zeros for the remainder of the current row.
         for (i=currStage+1; i<nonEmptyCols; i++) {
             if (matrix.entry(currStage, i) == 0)
                 continue;
@@ -205,30 +196,12 @@ void smithNormalForm(MatrixInt& matrix,
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to columns currStage and i.
-            for (j=currStage; j<nonEmptyRows; j++) {
-                tmp = u * matrix.entry(j, currStage) +
-                    v * matrix.entry(j, i);
-                matrix.entry(j, i) = a * matrix.entry(j, i) -
-                    b * matrix.entry(j, currStage);
-                matrix.entry(j, currStage) = tmp;
-            }
-            for (j=0; j<matrix.columns(); j++) {
-                tmp = u * rowSpaceBasis.entry(j, currStage) +
-                    v * rowSpaceBasis.entry(j, i);
-                rowSpaceBasis.entry(j, i) = a * rowSpaceBasis.entry(j, i) -
-                    b * rowSpaceBasis.entry(j, currStage);
-                rowSpaceBasis.entry(j, currStage) = tmp;
-
-                tmp = a * rowSpaceBasisInv.entry(currStage, j) +
-                    b * rowSpaceBasisInv.entry(i, j);
-                rowSpaceBasisInv.entry(i, j) =
-                    u * rowSpaceBasisInv.entry(i, j) -
-                    v * rowSpaceBasisInv.entry(currStage, j);
-                rowSpaceBasisInv.entry(currStage, j) = tmp;
-            }
+            matrix.combCols(currStage, i, u, v, -b, a, currStage);
+            rowSpaceBasis.combCols(currStage, i, u, v, -b, a);
+            rowSpaceBasisInv.combRows(currStage, i, a, b, -v, u);
         }
 
-        // Get zeros in the current column.
+        // Make zeros for the remainder of the current column.
         // Check to see if we change anything and thus muck up the row.
         flag = false;
         for (i=currStage+1; i<nonEmptyRows; i++) {
@@ -242,60 +215,45 @@ void smithNormalForm(MatrixInt& matrix,
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to rows currStage and i.
-            for (j=currStage; j<nonEmptyCols; j++) {
-                tmp = u * matrix.entry(currStage, j) +
-                    v * matrix.entry(i, j);
-                matrix.entry(i, j) = a * matrix.entry(i, j) -
-                    b * matrix.entry(currStage, j);
-                matrix.entry(currStage, j) = tmp;
-            }
-            for (j=0; j<matrix.rows(); j++) {
-                tmp = u * colSpaceBasis.entry(currStage, j) +
-                    v * colSpaceBasis.entry(i, j);
-                colSpaceBasis.entry(i, j) = a * colSpaceBasis.entry(i, j) -
-                    b * colSpaceBasis.entry(currStage, j);
-                colSpaceBasis.entry(currStage, j) = tmp;
-
-                tmp = a * colSpaceBasisInv.entry(j, currStage) +
-                    b * colSpaceBasisInv.entry(j, i);
-                colSpaceBasisInv.entry(j, i) =
-                    u * colSpaceBasisInv.entry(j, i) -
-                    v * colSpaceBasisInv.entry(j, currStage);
-                colSpaceBasisInv.entry(j, currStage) = tmp;
-            }
+            matrix.combRows(currStage, i, u, v, -b, a, currStage);
+            colSpaceBasis.combRows(currStage, i, u, v, -b, a);
+            colSpaceBasisInv.combCols(currStage, i, a, b, -v, u);
         }
         if (flag) {
-            // The clean row was mucked up.
-            continue;
+            flag = false;
+            for (i=currStage+1; i<nonEmptyCols; i++)
+                if (matrix.entry(currStage, i) != 0) {
+                    flag = true;
+                    break;
+                }
+            if (flag) {
+                // The clean row was mucked up.
+                continue;
+            }
         }
 
-        // Check that entry (currStage, currStage) divides everything
-        // else.
+        // Check that entry (currStage, currStage) divides everything else.
+        Integer& diag = matrix.entry(currStage, currStage);
         for (i=currStage+1; i<nonEmptyRows; i++)
             for (j=currStage+1; j<nonEmptyCols; j++)
-                if ((matrix.entry(i, j) % matrix.entry(currStage, currStage))
-                        != 0) {
+                if ((matrix.entry(i, j) % diag) != 0) {
                     // Add row i to the current stage row and start this
                     // stage over.
-                    for (k=currStage+1; k<nonEmptyCols; k++)
-                        matrix.entry(currStage, k) += matrix.entry(i, k);
+                    matrix.addRowFrom(i, currStage, currStage + 1);
                     colSpaceBasis.addRow(i, currStage);
                     colSpaceBasisInv.addCol(currStage, i, -1);
-
                     goto loopStart;
                 }
 
         // This stage is complete!
         // Make sure the diagonal entry is positive before leaving it.
-        if (matrix.entry(currStage, currStage) < 0) {
-            matrix.entry(currStage, currStage).negate();
-            for (j=0; j<matrix.rows(); j++) {
-                // we're thinking of this as a row op
-                colSpaceBasis.entry( currStage, j ).negate();
-                colSpaceBasisInv.entry( j,currStage ).negate();
-            }
+        if (diag < 0) {
+            diag.negate();
+            // we're thinking of this as a row op
+            colSpaceBasis.multRow(currStage, -1);
+            colSpaceBasisInv.multCol(currStage, -1);
         }
-        currStage++;
+        ++currStage;
     }
 }
 
