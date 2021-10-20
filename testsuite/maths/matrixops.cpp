@@ -240,6 +240,12 @@ class MatrixOpsTest : public CppUnit::TestFixture {
 
             regina::smithNormalForm(snfBasis, R, invR, C, invC);
 
+            if (! (snf == snfBasis)) {
+                CPPUNIT_FAIL(std::string("In smithNormalForm(") +
+                    name + "), the basis and plain variants give "
+                    "different results.");
+            }
+
             if (! (R * invR).isIdentity()) {
                 CPPUNIT_FAIL(std::string("In smithNormalForm(") +
                     name + "), rowSpaceBasis and rowSpaceBasisInv are "
@@ -297,6 +303,12 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             MatrixInt invC(C);
 
             regina::metricalSmithNormalForm(snfBasis, &R, &invR, &C, &invC);
+
+            if (! (snf == snfBasis)) {
+                CPPUNIT_FAIL(std::string("In smithNormalForm(") +
+                    name + "), the metrical and plain variants give "
+                    "different results.");
+            }
 
             if (! (R * invR).isIdentity()) {
                 CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
