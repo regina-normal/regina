@@ -35,7 +35,6 @@
 #include "subcomplex/blockedsfstriple.h"
 #include "subcomplex/layering.h"
 #include "subcomplex/satregion-impl.h"
-#include <memory>
 
 namespace regina {
 

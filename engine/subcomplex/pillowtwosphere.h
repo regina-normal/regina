@@ -40,6 +40,7 @@
 #define __REGINA_PILLOWTWOSPHERE_H
 #endif
 
+#include <memory>
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/perm.h"
