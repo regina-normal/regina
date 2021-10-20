@@ -63,7 +63,7 @@ class Flags {
         /**
          * The underlying enumeration type.
          */
-        typedef T Enum;
+        using Enum = T;
 
     private:
         /**

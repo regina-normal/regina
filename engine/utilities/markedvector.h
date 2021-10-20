@@ -177,7 +177,7 @@ class MarkedVector : private std::vector<T*> {
         /**
          * Constructs a new empty vector.
          */
-        inline MarkedVector() {}
+        MarkedVector() = default;
 
         /**
          * Moves the contents of the given vector into this new vector.
@@ -237,7 +237,7 @@ class MarkedVector : private std::vector<T*> {
          */
         inline typename std::vector<T*>::iterator erase(
                 typename std::vector<T*>::iterator pos) {
-            typename std::vector<T*>::iterator it = pos;
+            auto it = pos;
             for (++it; it != end(); ++it)
                 --((*it)->marking_);
             return std::vector<T*>::erase(pos);

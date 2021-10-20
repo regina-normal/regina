@@ -95,7 +95,7 @@ class Bitmask {
         static constexpr bool fixedSize = false;
 
     private:
-        typedef unsigned Piece;
+        using Piece = unsigned;
             /**< The types of the machine-native pieces into which this
                  bitmask is split. */
         size_t pieces;
@@ -1448,7 +1448,7 @@ class Bitmask2 {
  *
  * \ingroup utilities
  */
-typedef Bitmask1<uint8_t> BitmaskLen8 [[deprecated]];
+using BitmaskLen8 [[deprecated]] = Bitmask1<uint8_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast bitmask
@@ -1467,7 +1467,7 @@ typedef Bitmask1<uint8_t> BitmaskLen8 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Bitmask1<uint16_t> BitmaskLen16 [[deprecated]];
+using BitmaskLen16 [[deprecated]] = Bitmask1<uint16_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast bitmask
@@ -1486,7 +1486,7 @@ typedef Bitmask1<uint16_t> BitmaskLen16 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Bitmask1<uint32_t> BitmaskLen32 [[deprecated]];
+using BitmaskLen32 [[deprecated]] = Bitmask1<uint32_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast bitmask
@@ -1505,11 +1505,11 @@ typedef Bitmask1<uint32_t> BitmaskLen32 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Bitmask1<uint64_t> BitmaskLen64 [[deprecated]];
+using BitmaskLen64 [[deprecated]] = Bitmask1<uint64_t>;
 
 // Inline functions for Bitmask
 
-inline Bitmask::Bitmask() : pieces(0), mask(0) {
+inline Bitmask::Bitmask() : pieces(0), mask(nullptr) {
 }
 
 inline Bitmask::Bitmask(size_t length) :

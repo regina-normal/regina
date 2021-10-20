@@ -48,7 +48,7 @@
 namespace regina {
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
  * \defgroup algebra Algebraic Structures

@@ -40,8 +40,8 @@
  */
 
 #include <climits>
-#include <stdint.h> // MPIR (and thus SAGE) needs this *before* gmp.h.
-#include <stddef.h> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
+#include <cstdint> // MPIR (and thus SAGE) needs this *before* gmp.h.
+#include <cstddef> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
 #include <gmp.h>
 #include "regina-core.h"
 #include "utilities/tightencoding.h"
@@ -1577,7 +1577,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
  *
  * \ingroup maths
  */
-typedef IntegerBase<true> LargeInteger;
+using LargeInteger = IntegerBase<true>;
 
 /**
  * Integer is a typedef for IntegerBase<false>, which offers
@@ -1587,7 +1587,7 @@ typedef IntegerBase<true> LargeInteger;
  *
  * \ingroup maths
  */
-typedef IntegerBase<false> Integer;
+using Integer = IntegerBase<false>;
 
 /**
  * Swaps the contents of the given integers.
@@ -1721,7 +1721,7 @@ std::string tightEncoding(IntegerBase<supportInfinity> value);
 template <int bytes>
 class NativeInteger {
     public:
-        typedef typename IntOfSize<bytes>::type Native;
+        using Native = typename IntOfSize<bytes>::type;
             /**< The native data type used to store this integer. */
 
     private:
@@ -2404,7 +2404,7 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  *
  * \ingroup maths
  */
-typedef NativeInteger<sizeof(long)> NativeLong;
+using NativeLong = NativeInteger<sizeof(long)>;
 
 /**
  * A deprecated alias for the NativeLong typedef.
@@ -2415,7 +2415,7 @@ typedef NativeInteger<sizeof(long)> NativeLong;
  *
  * \ingroup maths
  */
-[[deprecated]] typedef NativeLong NNativeLong;
+using NNativeLong [[deprecated]] = NativeLong;
 
 // Inline functions for IntegerBase
 
@@ -2546,8 +2546,8 @@ template <bool supportInfinity>
 template <int bytes>
 typename IntOfSize<bytes>::type
         IntegerBase<supportInfinity>::nativeValue() const {
-    typedef typename IntOfSize<bytes>::type Native;
-    typedef typename IntOfSize<bytes>::utype UNative;
+    using Native = typename IntOfSize<bytes>::type;
+    using UNative = typename IntOfSize<bytes>::utype;
     static_assert(bytes % sizeof(long) == 0,
         "IntegerBase::nativeValue(): native integer must partition exactly into long integers.");
 
@@ -2796,6 +2796,7 @@ inline IntegerBase<supportInfinity>&
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>&
         IntegerBase<supportInfinity>::operator =(const std::string& value) {
+    // NOLINTNEXTLINE(misc-unconventional-assign-operator)
     return (*this) = value.c_str();
 }
 

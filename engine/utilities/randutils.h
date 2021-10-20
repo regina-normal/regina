@@ -201,7 +201,7 @@ Int RandomEngine::rand(Int range) {
     static_assert(sizeof(Int) <= sizeof(long long),
         "RandomEngine::rand() requires a type that can fit inside a long long");
 
-    typedef typename std::conditional<std::is_signed<Int>::value,
+    using Arg = typename std::conditional<std::is_signed<Int>::value,
         typename std::conditional<sizeof(Int) <= sizeof(short), short,
         typename std::conditional<sizeof(Int) <= sizeof(int), int,
         typename std::conditional<sizeof(Int) <= sizeof(long), long,
@@ -209,7 +209,7 @@ Int RandomEngine::rand(Int range) {
         typename std::conditional<sizeof(Int) <= sizeof(short), unsigned short,
         typename std::conditional<sizeof(Int) <= sizeof(int), unsigned int,
         typename std::conditional<sizeof(Int) <= sizeof(long), unsigned long,
-        unsigned long long>::type>::type>::type>::type Arg;
+        unsigned long long>::type>::type>::type>::type;
 
     std::uniform_int_distribution<Arg> d(0, range - 1);
     std::scoped_lock<std::mutex> lock(mutex_);

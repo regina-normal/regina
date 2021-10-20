@@ -188,7 +188,7 @@ class Perm<4> {
          * permutations on four elements.  In other words, this is a
          * native signed integer type large enough to store (4!).
          */
-        typedef int Index;
+        using Index = int;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -214,7 +214,7 @@ class Perm<4> {
          * on image packs, and how they are used to build the old
          * first-generation permutation codes.
          */
-        typedef uint8_t ImagePack;
+        using ImagePack = uint8_t;
 
         /**
          * Indicates the number of bits used in an image pack to store the
@@ -241,7 +241,7 @@ class Perm<4> {
          * provided as separate typedefs to help communicate in your
          * source code which type of code is being used.
          */
-        typedef ImagePack Code1;
+        using Code1 = ImagePack;
 
         /**
          * Indicates the native unsigned integer type used to store a
@@ -251,7 +251,7 @@ class Perm<4> {
          * provided as separate typedefs to help communicate in your
          * source code which type of code is being used.
          */
-        typedef uint8_t Code2;
+        using Code2 = uint8_t;
 
         /**
          * An alias for the first-generation code type Code1.
@@ -259,7 +259,7 @@ class Perm<4> {
          * Instead of Code, you should use either Code1 or Code2 to more
          * clearly express which kind of permutation code you are using.
          */
-        typedef Code1 Code [[deprecated]];
+        using Code [[deprecated]] = Code1;
 
         /**
          * Gives array-like access to all possible permutations of

@@ -83,28 +83,28 @@ class ShortArray {
         /**
          * The type of object stored in the array.
          */
-        typedef T value_type;
+        using value_type = T;
         /**
          * The type used for indexing into this array.
          */
-        typedef size_t size_type;
+        using size_type = size_t;
         /**
          * A non-const reference to an array element.
          */
-        typedef T& reference;
+        using reference = T&;
         /**
          * A const reference to an array element.
          */
-        typedef T const& const_reference;
+        using const_reference = T const&;
         /**
          * An iterator type that provides non-const access to the array
          * elements.
          */
-        typedef T* iterator;
+        using iterator = T*;
         /**
          * An iterator type that provides const access to the array elements.
          */
-        typedef const T* const_iterator;
+        using const_iterator = const T*;
 
     private:
         T data_[maxSize]; /**< The elements of the array. */
@@ -114,7 +114,7 @@ class ShortArray {
         /**
          * Constructs a new empty array.
          */
-        constexpr ShortArray() {}
+        constexpr ShortArray() = default;
 
         /**
          * Constructs a new copy of the given array.

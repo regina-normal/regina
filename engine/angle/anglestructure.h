@@ -52,7 +52,7 @@ namespace regina {
 class XMLAngleStructureReader;
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
  * \defgroup angle Angle Structures
@@ -110,7 +110,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * Creates a new copy of the given angle structure, but
          * relocated to the given triangulation.
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this angle structure will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -155,7 +155,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * Creates a new angle structure on the given triangulation with
          * the given coordinate vector.
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this angle structure will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -178,7 +178,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * Creates a new angle structure on the given triangulation with
          * the given coordinate vector.
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this angle structure will still refer to the
          * frozen snapshot that was taken at the time of construction.

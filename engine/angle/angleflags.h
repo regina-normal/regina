@@ -123,7 +123,7 @@ enum AngleAlgFlags {
  *
  * \ingroup angle
  */
-typedef regina::Flags<AngleAlgFlags> AngleAlg;
+using AngleAlg = regina::Flags<AngleAlgFlags>;
 
 /**
  * Returns the bitwise OR of the two given flags.

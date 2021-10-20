@@ -261,7 +261,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             // We construct a permutation code from the individual images.
 
-            typedef typename Perm<dim + 1>::ImagePack ImagePack;
+            using ImagePack = typename Perm<dim + 1>::ImagePack;
             ImagePack code = 0;
             int shift = 0;
 
@@ -439,7 +439,7 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
             } else {
                 // Construct a permutation code from the individual images.
 
-                typedef typename Perm<dim + 1>::ImagePack ImagePack;
+                using ImagePack = typename Perm<dim + 1>::ImagePack;
                 ImagePack code = face; // 0 -> face
 
                 int shift = Perm<dim + 1>::imageBits;
@@ -482,7 +482,7 @@ class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> 
         static constexpr Perm<dim + 1> ordering(unsigned face) {
             // Construct a permutation code from the individual images.
 
-            typedef typename Perm<dim + 1>::ImagePack ImagePack;
+            using ImagePack = typename Perm<dim + 1>::ImagePack;
             ImagePack code = 0;
 
             int shift = 0;

@@ -79,7 +79,7 @@ class SnapshotWriteError : public std::exception {
         /**
          * Returns a human-readable description of the error that occurred.
          */
-        virtual const char* what() const noexcept override {
+        const char* what() const noexcept override {
             return "Snapshot detected modification of its internal deep copy";
         }
 };

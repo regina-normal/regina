@@ -110,10 +110,9 @@ class BoundaryComponentBase :
         /**
          * The sequence of dimensions of all faces that we store.
          */
-        typedef std::conditional_t<allFaces,
+        using subdimensions = std::conditional_t<allFaces,
             std::make_integer_sequence<int, dim> /* 0,...,(dim-1) */,
-            std::integer_sequence<int, dim - 1> /* (dim-1) only */>
-            subdimensions;
+            std::integer_sequence<int, dim - 1> /* (dim-1) only */>;
 
         /**
          * A non-existent function used to construct the type of the \a faces_

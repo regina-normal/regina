@@ -281,7 +281,8 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
 // Inline functions for Vertex<3>
 
 inline Face<3, 0>::Face(Component<3>* component) :
-        detail::FaceBase<3, 0>(component), linkEulerChar_(0), linkTri_(0) {
+        detail::FaceBase<3, 0>(component),
+        linkEulerChar_(0), linkTri_(nullptr) {
 }
 
 inline Vertex<3>::LinkType Face<3, 0>::linkType() const {

@@ -78,7 +78,7 @@ struct GroupExpressionTerm {
     /**
      * Creates a new uninitialised term.
      */
-    GroupExpressionTerm();
+    GroupExpressionTerm() = default;
     /**
      * Creates a new term initialised to the given value.
      *
@@ -190,7 +190,7 @@ class GroupExpression : public ShortOutput<GroupExpression> {
         /**
          * Creates a new expression with no terms.
          */
-        GroupExpression();
+        GroupExpression() = default;
         /**
          * Creates a new expression containing a single term.
          *
@@ -1777,8 +1777,6 @@ void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept;
 
 // Inline functions for GroupExpressionTerm
 
-inline GroupExpressionTerm::GroupExpressionTerm() {
-}
 inline GroupExpressionTerm::GroupExpressionTerm(unsigned long newGen,
         long newExp) : generator(newGen), exponent(newExp) {
 }
@@ -1815,16 +1813,13 @@ inline bool GroupExpressionTerm::operator < (
 
 // Inline functions for GroupExpression
 
-inline GroupExpression::GroupExpression() {
-}
-
 inline GroupExpression::GroupExpression(const GroupExpressionTerm& term) {
     terms_.push_back(term);
 }
 
 inline GroupExpression::GroupExpression(unsigned long generator,
         long exponent) {
-    terms_.push_back(GroupExpressionTerm(generator, exponent));
+    terms_.emplace_back(generator, exponent);
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {
@@ -1887,7 +1882,7 @@ inline void GroupExpression::addTermLast(const GroupExpressionTerm& term) {
 
 inline void GroupExpression::addTermLast(unsigned long generator,
         long exponent) {
-    terms_.push_back(GroupExpressionTerm(generator, exponent));
+    terms_.emplace_back(generator, exponent);
 }
 
 inline void GroupExpression::addTermsLast(GroupExpression word) {
@@ -1952,8 +1947,8 @@ inline void GroupPresentation::writeTextShort(std::ostream& out) const {
 
 inline size_t GroupPresentation::relatorLength() const {
     size_t retval(0);
-    for (size_t i=0; i<relations_.size(); i++)
-        retval += relations_[i].wordLength();
+    for (const auto& r : relations_)
+        retval += r.wordLength();
     return retval;
 }
 

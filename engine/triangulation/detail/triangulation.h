@@ -81,7 +81,7 @@ class IsoSigPrintable : public Base64SigEncoding {
         /**
          * The data type used to store an isomorphism signature.
          */
-        typedef std::string SigType;
+        using SigType = std::string;
 
         /**
          * The number of characters that we use in our encoding to
@@ -215,7 +215,7 @@ class TriangulationBase :
         /**
          * The sequence of all subface dimensions 0,...,(<i>dim</i>-1).
          */
-        typedef std::make_integer_sequence<int, dim> subdimensions;
+        using subdimensions = std::make_integer_sequence<int, dim>;
 
         /**
          * A non-existent function used to construct the type of the \a faces_
@@ -300,14 +300,13 @@ class TriangulationBase :
                  This is std::nullopt if it has not yet been computed. */
 
     public:
-        typedef typename decltype(simplices_)::const_iterator
-                SimplexIterator;
+        using SimplexIterator = typename decltype(simplices_)::const_iterator;
             /**< Used to iterate through top-dimensional simplices. */
-        typedef typename decltype(components_)::const_iterator
-                ComponentIterator;
+        using ComponentIterator =
+                typename decltype(components_)::const_iterator;
             /**< Used to iterate through connected components. */
-        typedef typename decltype(boundaryComponents_)::const_iterator
-                BoundaryComponentIterator;
+        using BoundaryComponentIterator =
+                typename decltype(boundaryComponents_)::const_iterator;
             /**< Used to iterate through boundary components. */
 
         /**
@@ -2570,7 +2569,7 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex() {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
-    Simplex<dim>* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
+    auto* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
     return s;
@@ -2581,8 +2580,7 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
-    Simplex<dim>* s = new Simplex<dim>(desc,
-        static_cast<Triangulation<dim>*>(this));
+    auto* s = new Simplex<dim>(desc, static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
     return s;
@@ -2941,7 +2939,7 @@ void TriangulationBase<dim>::insertTriangulation(
                 me->adj_[f] = simplices_[nOrig + you->adj_[f]->index()];
                 me->gluing_[f] = you->gluing_[f];
             } else
-                me->adj_[f] = 0;
+                me->adj_[f] = nullptr;
         }
     }
 
@@ -3432,13 +3430,13 @@ void TriangulationBase<dim>::makeDoubleCover() {
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     // Create a second sheet of simplices.
-    Simplex<dim>** upper = new Simplex<dim>*[sheetSize];
+    auto* upper = new Simplex<dim>*[sheetSize];
     size_t i;
     for (i = 0; i < sheetSize; i++)
         upper[i] = newSimplex(simplices_[i]->description());
 
     // Reset each simplex orientation.
-    SimplexIterator sit = simplices_.begin();
+    auto sit = simplices_.begin();
     for (i = 0; i < sheetSize; i++) {
         (*sit++)->orientation_ = 0;
         upper[i]->orientation_ = 0;
@@ -3450,7 +3448,7 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // We use a breadth-first search to propagate orientations.
     // The underlying queue is implemented using a plain C array - since each
     // simplex is processed only once, an array of size sheetSize is enough.
-    size_t* queue = new size_t[sheetSize];
+    auto* queue = new size_t[sheetSize];
     size_t queueStart = 0, queueEnd = 0;
 
     int facet;
@@ -3532,8 +3530,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
     static_assert(standardDim(dim),
         "barycentricSubdivision() may only be used in standard dimensions.");
 
-    Simplex<dim>** newSimp = new Simplex<dim>*[nOld * Perm<dim+1>::nPerms];
-    Simplex<dim>* oldSimp;
+    auto* newSimp = new Simplex<dim>*[nOld * Perm<dim+1>::nPerms];
 
     // A top-dimensional simplex in the subdivision is uniquely defined
     // by a permutation p on (dim+1) elements.
@@ -3567,7 +3564,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
                     Perm<dim+1>(perm[i], perm[i+1]));
 
             // Adjacent gluings to the adjacent simplex:
-            oldSimp = simplex(simp);
+            Simplex<dim>* oldSimp = simplex(simp);
             if (! oldSimp->adjacentSimplex(perm[dim]))
                 continue; // This hits a boundary facet.
             if (newSimp[Perm<dim+1>::nPerms * simp + permIdx]->adjacentSimplex(
@@ -3599,9 +3596,9 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
     size_t nFaces = countFaces<dim - 1>();
 
-    Simplex<dim>** bdry = new Simplex<dim>*[nFaces];
-    Perm<dim + 1>* bdryPerm = new Perm<dim + 1>[nFaces];
-    Simplex<dim>** cone = new Simplex<dim>*[nFaces];
+    auto* bdry = new Simplex<dim>*[nFaces];
+    auto* bdryPerm = new Perm<dim + 1>[nFaces];
+    auto* cone = new Simplex<dim>*[nFaces];
 
     Triangulation<dim> staging;
     // Ensure only one event pair is fired in this sequence of changes.
@@ -3675,7 +3672,7 @@ std::vector<Triangulation<dim>>
     std::vector<Triangulation<dim>> ans(nComp);
 
     // Clone the simplices, sorting them into the new components.
-    Simplex<dim>** newSimp = new Simplex<dim>*[size()];
+    auto* newSimp = new Simplex<dim>*[size()];
     Simplex<dim> *simp, *adj;
     size_t simpPos, adjPos;
     Perm<dim + 1> adjPerm;
@@ -3880,8 +3877,8 @@ bool TriangulationBase<dim>::sameDegreesAt(const TriangulationBase<dim>& other)
     // We may assume that # faces is the same for both triangulations.
     size_t n = std::get<useDim>(faces_).size();
 
-    size_t* deg1 = new size_t[n];
-    size_t* deg2 = new size_t[n];
+    auto* deg1 = new size_t[n];
+    auto* deg2 = new size_t[n];
 
     size_t* p;
     p = deg1;

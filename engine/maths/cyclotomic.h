@@ -81,7 +81,7 @@ namespace regina {
  */
 class Cyclotomic : public ShortOutput<Cyclotomic, true> {
     public:
-        typedef Rational Coefficient;
+        using Coefficient = Rational;
             /**< The type of each coefficient of the polynomial that is
                  used to store a field element. */
 
@@ -1036,7 +1036,7 @@ inline Cyclotomic operator / (Cyclotomic elt, const Rational& scalar) {
 
 inline Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs) {
     // std::cerr << "Cyclotomic: deep copy (const +)" << std::endl;
-    Rational* coeff = new Rational[lhs.degree_];
+    auto* coeff = new Rational[lhs.degree_];
     for (size_t i = 0; i < lhs.degree_; ++i)
         coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
     return Cyclotomic(lhs.field_, lhs.degree_, coeff);
@@ -1061,7 +1061,7 @@ inline Cyclotomic operator - (Cyclotomic arg) {
 
 inline Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs) {
     // std::cerr << "Cyclotomic: deep copy (const -)" << std::endl;
-    Rational* coeff = new Rational[lhs.degree_];
+    auto* coeff = new Rational[lhs.degree_];
     for (size_t i = 0; i < lhs.degree_; ++i)
         coeff[i] = lhs.coeff_[i] - rhs.coeff_[i];
     return Cyclotomic(lhs.field_, lhs.degree_, coeff);

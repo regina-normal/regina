@@ -117,7 +117,7 @@ class Perm<2> {
          * permutations on two elements.  In other words, this is a
          * native signed integer type large enough to store (2!).
          */
-        typedef int Index;
+        using Index = int;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -141,7 +141,7 @@ class Perm<2> {
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          */
-        typedef uint8_t Code;
+        using Code = uint8_t;
 
         /**
          * Gives array-like access to all possible permutations of

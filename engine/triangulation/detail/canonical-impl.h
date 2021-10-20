@@ -242,14 +242,14 @@ bool TriangulationBase<dim>::findIsomorphisms(
     // Deal with the empty triangulation first.
     if (simplices_.empty()) {
         if (complete && ! other.simplices_.empty())
-            return 0;
+            return false;
 
         return action(Isomorphism<dim>(0), std::forward<Args>(args)...);
     }
 
     // Basic property checks.
     if (! compatible(other, complete))
-        return 0;
+        return false;
 
     // Start searching for the isomorphism.
     // From the tests above, we are guaranteed that both triangulations
@@ -269,11 +269,10 @@ bool TriangulationBase<dim>::findIsomorphisms(
 
     // The image of the first source simplex of each component.  The
     // remaining images can be derived by following gluings.
-    size_t* startSimp = new size_t[nComponents];
+    auto* startSimp = new size_t[nComponents];
     std::fill(startSimp, startSimp + nComponents, 0);
 
-    typename Perm<dim+1>::Index* startPerm =
-        new typename Perm<dim+1>::Index[nComponents];
+    auto* startPerm = new typename Perm<dim+1>::Index[nComponents];
     std::fill(startPerm, startPerm + nComponents, 0);
 
     // The simplices whose neighbours must be processed when filling

@@ -247,7 +247,7 @@ struct FaceEmbeddingsList {
     /**
      * For most face types, we store the embeddings in an ordinary vector.
      */
-    typedef std::vector<FaceEmbedding<dim, dim - codim>> type;
+    using type = std::vector<FaceEmbedding<dim, dim - codim>>;
 };
 
 template <int dim>
@@ -258,7 +258,7 @@ struct FaceEmbeddingsList<dim, 2> {
      * will want to push embeddings onto both ends of the list to maintain the
      * correct order as we follow the link around.
      */
-    typedef std::deque<FaceEmbedding<dim, dim - 2>> type;
+    using type = std::deque<FaceEmbedding<dim, dim - 2>>;
 };
 
 template <int dim>
@@ -267,7 +267,7 @@ struct FaceEmbeddingsList<dim, 1> {
      * For codimension 1 faces, there are always either one or two embeddings.
      * We therefore use a cheap stack-based array of maximum size 2.
      */
-    typedef ShortArray<FaceEmbedding<dim, dim - 1>, 2> type;
+    using type = ShortArray<FaceEmbedding<dim, dim - 1>, 2>;
 };
 #endif // __DOXYGEN
 
@@ -784,7 +784,7 @@ class FaceBase :
 // Inline functions for FaceEmbeddingBase
 
 template <int dim, int subdim>
-inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase() : simplex_(0) {
+inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase() : simplex_(nullptr) {
 }
 
 template <int dim, int subdim>
@@ -987,7 +987,7 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
 
 template <int dim, int subdim>
 inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
-        component_(component), boundaryComponent_(0) {
+        component_(component), boundaryComponent_(nullptr) {
 }
 
 template <int dim, int subdim>

@@ -101,7 +101,7 @@ class Rational;
 template <class T>
 class Vector : public ShortOutput<Vector<T>> {
     public:
-        typedef T Element;
+        using Element = T;
             /**< The type of each element in the vector. */
 
         /**
@@ -682,7 +682,7 @@ const T Vector<T>::minusOne(-1);
  *
  * \ingroup maths
  */
-typedef Vector<Integer> VectorInt;
+using VectorInt = Vector<Integer>;
 
 /**
  * A vector of arbitrary-precision integers that allows infinite elements.
@@ -695,7 +695,7 @@ typedef Vector<Integer> VectorInt;
  *
  * \ingroup maths
  */
-typedef Vector<LargeInteger> VectorLarge;
+using VectorLarge = Vector<LargeInteger>;
 
 /**
  * Deprecated alias for a vector of arbitrary-precision integers that
@@ -712,7 +712,7 @@ typedef Vector<LargeInteger> VectorLarge;
  *
  * \ingroup maths
  */
-typedef Vector<LargeInteger> Ray [[deprecated]];
+using Ray [[deprecated]] = Vector<LargeInteger>;
 
 } // namespace regina
 

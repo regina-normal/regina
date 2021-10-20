@@ -140,7 +140,7 @@ void FacetPairingBase<dim>::writeDotHeader(
 
     out << "graph " << graphName << " {" << std::endl;
     out << "edge [color=black];" << std::endl;
-    out << "node [shape=circle,style=filled,height=0.15,fixedsize=true,label=\"\",fontsize=9,fontcolor=\"#751010\"];" << std::endl;
+    out << R"(node [shape=circle,style=filled,height=0.15,fixedsize=true,label="",fontsize=9,fontcolor="#751010"];)" << std::endl;
 }
 
 template <int dim>
@@ -300,9 +300,9 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
 
     // Now we know that facet 0 of simplex 0 is glued to something.
 
-    FacetSpec<dim>* image = new FacetSpec<dim>[size_ * (dim + 1)];
+    auto* image = new FacetSpec<dim>[size_ * (dim + 1)];
         /**< The automorphism currently under construction. */
-    FacetSpec<dim>* preImage = new FacetSpec<dim>[size_ * (dim + 1)];
+    auto* preImage = new FacetSpec<dim>[size_ * (dim + 1)];
         /**< The inverse of this automorphism. */
 
     size_t i, j;

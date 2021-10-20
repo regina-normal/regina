@@ -77,12 +77,12 @@ class ListView {
         /**
          * The type of element that is stored in this list.
          */
-        typedef typename List::value_type value_type;
+        using value_type = typename List::value_type;
 
         /**
          * The type used for indexing into this list.
          */
-        typedef typename List::size_type size_type;
+        using size_type = typename List::size_type;
 
         /**
          * A reference to a list element.
@@ -90,7 +90,7 @@ class ListView {
          * Both \a reference and \a const_reference are the same, since
          * this class only offers read-only access to the underlying list.
          */
-        typedef typename List::const_reference reference;
+        using reference = typename List::const_reference;
 
         /**
          * A reference to a list element.
@@ -98,7 +98,7 @@ class ListView {
          * Both \a reference and \a const_reference are the same, since
          * this class only offers read-only access to the underlying list.
          */
-        typedef typename List::const_reference const_reference;
+        using const_reference = typename List::const_reference;
 
         /**
          * The iterator type for this list view.
@@ -106,7 +106,7 @@ class ListView {
          * Both \a iterator and \a const_iterator are the same, since
          * this class only offers read-only access to the underlying list.
          */
-        typedef typename List::const_iterator iterator;
+        using iterator = typename List::const_iterator;
 
         /**
          * The iterator type for this list view.
@@ -114,7 +114,7 @@ class ListView {
          * Both \a iterator and \a const_iterator are the same, since
          * this class only offers read-only access to the underlying list.
          */
-        typedef typename List::const_iterator const_iterator;
+        using const_iterator = typename List::const_iterator;
 
     public:
         /**

@@ -108,22 +108,22 @@ template <int> class XMLTriangulationReader;
 template <>
 class Triangulation<3> : public detail::TriangulationBase<3> {
     public:
-        typedef std::vector<Tetrahedron<3>*>::const_iterator
-                TetrahedronIterator;
+        using TetrahedronIterator =
+                std::vector<Tetrahedron<3>*>::const_iterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through tetrahedra. */
-        typedef decltype(detail::TriangulationBase<3>().faces<2>().begin())
-                TriangleIterator;
+        using TriangleIterator =
+                decltype(detail::TriangulationBase<3>().faces<2>().begin());
             /**< Used to iterate through triangles. */
-        typedef decltype(detail::TriangulationBase<3>().faces<1>().begin())
-                EdgeIterator;
+        using EdgeIterator =
+                decltype(detail::TriangulationBase<3>().faces<1>().begin());
             /**< Used to iterate through edges. */
-        typedef decltype(detail::TriangulationBase<3>().faces<0>().begin())
-                VertexIterator;
+        using VertexIterator =
+                decltype(detail::TriangulationBase<3>().faces<0>().begin());
             /**< Used to iterate through vertices. */
 
-        typedef std::map<std::pair<unsigned long, bool>, Cyclotomic>
-                TuraevViroSet;
+        using TuraevViroSet =
+                std::map<std::pair<unsigned long, bool>, Cyclotomic>;
             /**< A map from (\a r, \a parity) pairs to Turaev-Viro invariants,
                  as described by turaevViro(). */
 
@@ -3574,8 +3574,8 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
     // Use RetriangulateActionTraits to deduce whether the given action
     // takes a triangulation or both an isomorphism signature and triangulation
     // as its initial argument(s).
-    typedef regina::detail::RetriangulateActionTraits<
-        Triangulation<3>, Action> Traits;
+    using Traits = regina::detail::RetriangulateActionTraits<
+        Triangulation<3>, Action>;
     static_assert(Traits::valid,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {

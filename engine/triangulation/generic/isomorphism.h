@@ -532,7 +532,7 @@ Triangulation<dim> Isomorphism<dim>::apply(
         return Triangulation<dim>();
 
     Triangulation<dim> ans;
-    Simplex<dim>** tet = new Simplex<dim>*[nSimplices_];
+    auto* tet = new Simplex<dim>*[nSimplices_];
     unsigned long t;
     int f;
 

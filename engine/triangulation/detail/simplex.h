@@ -93,7 +93,7 @@ class SimplexBase :
             /**< A compile-time constant that gives the dimension of this
                  simplex. */
 
-        typedef typename IntOfMinSize<(dim / 8) + 1>::utype FacetMask;
+        using FacetMask = typename IntOfMinSize<(dim / 8) + 1>::utype;
             /**< An unsigned integer type with at least <i>dim</i>+1 bits.
                  This can be used as a bitmask for the <i>dim</i>+1 facets
                  (or vertices) of a <i>dim</i>-simplex. */
@@ -102,7 +102,7 @@ class SimplexBase :
         /**
          * The sequence of all subface dimensions 0,...,(<i>dim</i>-1).
          */
-        typedef std::make_integer_sequence<int, dim> subdimensions;
+        using subdimensions = std::make_integer_sequence<int, dim>;
 
         /**
          * A non-existent function used to construct the type of the \a faces_
@@ -568,7 +568,7 @@ class SimplexBase :
          * @param desc the description to give the new simplex.
          * @param tri the triangulation to which the new simplex belongs.
          */
-        SimplexBase(const std::string& desc, Triangulation<dim>* tri);
+        SimplexBase(std::string desc, Triangulation<dim>* tri);
 
         /**
          * Tests whether the <i>useDim</i>-face degrees of this and the
@@ -610,15 +610,15 @@ class SimplexBase :
 template <int dim>
 inline SimplexBase<dim>::SimplexBase(Triangulation<dim>* tri) : tri_(tri) {
     for (int i = 0; i <= dim; ++i)
-        adj_[i] = 0;
+        adj_[i] = nullptr;
 }
 
 template <int dim>
-inline SimplexBase<dim>::SimplexBase(const std::string& desc,
+inline SimplexBase<dim>::SimplexBase(std::string desc,
         Triangulation<dim>* tri) :
-        description_(desc), tri_(tri) {
+        description_(std::move(desc)), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
-        adj_[i] = 0;
+        adj_[i] = nullptr;
 }
 
 template <int dim>
@@ -715,7 +715,7 @@ void SimplexBase<dim>::isolate() {
 template <int dim>
 Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
-        return 0;
+        return nullptr;
 
     tri_->takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(*tri_);
@@ -723,8 +723,8 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     Simplex<dim>* you = adj_[myFacet];
     int yourFacet = gluing_[myFacet][myFacet];
     assert(you->adj_[yourFacet] == this);
-    you->adj_[yourFacet] = 0;
-    adj_[myFacet] = 0;
+    you->adj_[yourFacet] = nullptr;
+    adj_[myFacet] = nullptr;
 
     tri_->clearAllProperties();
     return you;

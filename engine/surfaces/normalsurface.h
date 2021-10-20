@@ -221,7 +221,7 @@ inline constexpr Perm<4> octDiscArcs[3][8] = {
 };
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
  * Represents a single normal surface in a 3-manifold triangulation.
@@ -329,7 +329,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Creates a new copy of the given normal surface, but relocated
          * to the given triangulation.
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal surface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -382,7 +382,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given vector encoding does not include triangle coordinates.
          * (If this is the case, the vector will be converted automatically.)
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal surface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -415,7 +415,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given vector encoding does not include triangle coordinates.
          * (If this is the case, the vector will be converted automatically.)
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal surface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -510,7 +510,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate system does not include triangle coordinates.
          * (If this is the case, the vector will be converted automatically.)
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal surface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -547,7 +547,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate system does not include triangle coordinates.
          * (If this is the case, the vector will be converted automatically.)
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal surface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -1680,6 +1680,7 @@ inline NormalSurface::NormalSurface(
         enc_ = reconstructTriangles(*tri, vector_, enc_);
 }
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 inline NormalSurface::NormalSurface(const NormalSurface& src,
         const Triangulation<3>& triangulation) :
         NormalSurface(src) {
@@ -1688,6 +1689,7 @@ inline NormalSurface::NormalSurface(const NormalSurface& src,
     triangulation_ = triangulation;
 }
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 inline NormalSurface::NormalSurface(const NormalSurface& src,
         const SnapshotRef<Triangulation<3>>& triangulation) :
         NormalSurface(src) {

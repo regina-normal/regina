@@ -156,7 +156,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Creates a new copy of the given normal hypersurface, but
          * relocated to the given triangulation.
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal hypersurface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -209,7 +209,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * given vector encoding does not include tetrahedron coordinates.
          * (If this is the case, the vector will be converted automatically.)
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal hypersurface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -243,7 +243,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * given vector encoding does not include tetrahedron coordinates.
          * (If this is the case, the vector will be converted automatically.)
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal hypersurface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -339,7 +339,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * given coordinate system does not include tetrahedron coordinates.
          * (If this is the case, the vector will be converted automatically.)
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal hypersurface will still refer to the
          * frozen snapshot that was taken at the time of construction.
@@ -377,7 +377,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * given coordinate system does not include tetrahedron coordinates.
          * (If this is the case, the vector will be converted automatically.)
          *
-         * A snapshot will be taken of the given triangulation as appears
+         * A snapshot will be taken of the given triangulation as it appears
          * right now.  You may change or even delete the triangulation later
          * on; if so, then this normal hypersurface will still refer to the
          * frozen snapshot that was taken at the time of construction.

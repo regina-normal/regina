@@ -96,7 +96,7 @@ class CensusDB {
          * See the desc() routine for further information on how this
          * description might be used.
          */
-        CensusDB(const std::string& filename, const std::string& desc);
+        CensusDB(std::string filename, std::string desc);
 
         /**
          * Creates a new clone of the given database reference.
@@ -298,7 +298,7 @@ class CensusHit {
         /**
          * Constructs a hit with the given details.
          */
-        CensusHit(const std::string& name, const CensusDB* db);
+        CensusHit(std::string name, const CensusDB* db);
 
     friend class CensusDB;
 };
@@ -437,8 +437,8 @@ class Census {
 
 // Inline functions for CensusDB:
 
-inline CensusDB::CensusDB(const std::string& filename,
-        const std::string& desc) : filename_(filename), desc_(desc) {
+inline CensusDB::CensusDB(std::string filename, std::string desc) :
+        filename_(std::move(filename)), desc_(std::move(desc)) {
 }
 
 inline const std::string& CensusDB::filename() const {
@@ -464,8 +464,8 @@ inline CensusHit::CensusHit(const char* name, const CensusDB* db) :
         name_(name), db_(db) {
 }
 
-inline CensusHit::CensusHit(const std::string& name, const CensusDB* db) :
-        name_(name), db_(db) {
+inline CensusHit::CensusHit(std::string name, const CensusDB* db) :
+        name_(std::move(name)), db_(db) {
 }
 
 inline void CensusHit::swap(CensusHit& other) noexcept {

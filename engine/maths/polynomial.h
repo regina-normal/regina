@@ -78,7 +78,7 @@ namespace regina {
 template <typename T>
 class Polynomial : public ShortOutput<Polynomial<T>, true> {
     public:
-        typedef T Coefficient;
+        using Coefficient = T;
             /**< The type of each coefficient of the polynomial. */
 
     private:

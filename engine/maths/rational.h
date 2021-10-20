@@ -435,7 +435,7 @@ class Rational {
          *
          * @author Ryan Budney, B.B.
          */
-        double doubleApprox(bool* inRange = 0) const;
+        double doubleApprox(bool* inRange = nullptr) const;
 
         /**
          * Returns this rational as written using TeX formatting.

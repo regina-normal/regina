@@ -219,7 +219,7 @@ class Perm<5> {
          * permutations on five elements.  In other words, this is a
          * native signed integer type large enough to store (5!).
          */
-        typedef int Index;
+        using Index = int;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -254,7 +254,7 @@ class Perm<5> {
          * on image packs, and how they are used to build the old
          * first-generation permutation codes.
          */
-        typedef uint16_t ImagePack;
+        using ImagePack = uint16_t;
 
         /**
          * A bitmask whose lowest \a imageBits bits are 1, and whose
@@ -268,13 +268,13 @@ class Perm<5> {
          * Indicates the native unsigned integer type used to store a
          * first-generation permutation code.
          */
-        typedef ImagePack Code1;
+        using Code1 = ImagePack;
 
         /**
          * Indicates the native unsigned integer type used to store a
          * second-generation permutation code.
          */
-        typedef uint8_t Code2;
+        using Code2 = uint8_t;
 
         /**
          * An alias for the first-generation code type Code1.
@@ -282,7 +282,7 @@ class Perm<5> {
          * Instead of Code, you should use either Code1 or Code2 to more
          * clearly express which kind of permutation code you are using.
          */
-        typedef Code1 Code [[deprecated]];
+        using Code [[deprecated]] = Code1;
 
         /**
          * Gives array-like access to all possible permutations of

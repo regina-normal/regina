@@ -87,7 +87,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * This type is used to store all \e automorphisms of a facet pairing;
          * that is, all isomorphisms that map the facet pairing to itself.
          */
-        typedef std::list<Isomorphism<dim>> IsoList;
+        using IsoList = std::list<Isomorphism<dim>>;
 
     protected:
         size_t size_;

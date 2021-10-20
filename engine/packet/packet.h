@@ -87,10 +87,10 @@ template <typename Held> class XMLWriter;
 #define REGINA_PACKET(id, name) \
     public: \
         static constexpr const PacketType typeID = id; \
-        inline virtual PacketType type() const override { \
+        inline PacketType type() const override { \
             return id; \
         } \
-        inline virtual std::string typeName() const override { \
+        inline std::string typeName() const override { \
             return name; \
         }
 
@@ -1517,7 +1517,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
         };
 
     protected:
-        typedef std::map<const Packet*, bool> PacketRefs;
+        using PacketRefs = std::map<const Packet*, bool>;
             /**< Used during the XML output routines to manage references
                  between packets in an XML data file.
                  If some packet needs to refer to a packet \a P, then
@@ -2058,19 +2058,19 @@ class PacketOf : public Packet, public Held {
         // We do not implement member or global swaps, since these can be
         // happily inherited via the Held base class.
 
-        virtual void writeTextShort(std::ostream& out) const override {
+        void writeTextShort(std::ostream& out) const override {
             Held::writeTextShort(out);
         }
-        virtual void writeTextLong(std::ostream& out) const override {
+        void writeTextLong(std::ostream& out) const override {
             Held::writeTextLong(out);
         }
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket(
-                std::shared_ptr<Packet>) const override;
-        virtual void writeXMLPacketData(std::ostream& out, FileFormat format,
+        std::shared_ptr<Packet> internalClonePacket(std::shared_ptr<Packet>)
+                const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
                 bool anon, PacketRefs& refs) const override;
-        virtual void addPacketRefs(PacketRefs& refs) const override;
+        void addPacketRefs(PacketRefs& refs) const override;
 };
 
 /**
@@ -2102,7 +2102,7 @@ class PacketData {
         /**
          * Default constructor that sets \a heldBy_ to HELD_BY_NONE.
          */
-        PacketData() {}
+        PacketData() = default;
         /**
          * Copy constructor that ignores its argument, and instead sets
          * \a heldBy_ to HELD_BY_NONE.  This is because \a heldBy_ stores
@@ -2470,18 +2470,18 @@ std::shared_ptr<Packet> open(std::istream& in);
 template <bool const_>
 class ChildIterator {
     public:
-        typedef typename std::conditional<const_, const Packet, Packet>::type
-                value_type;
+        using value_type =
+                typename std::conditional<const_, const Packet, Packet>::type;
             /**< Indicates what the iterator points to.
                  This is either <tt>Packet</tt> or <tt>const Packet</tt>,
                  according to the template argument \a const_. */
-        typedef std::forward_iterator_tag iterator_category;
+        using iterator_category = std::forward_iterator_tag;
             /**< Declares this to be a forward iterator type. */
-        typedef ptrdiff_t difference_type;
+        using difference_type = ptrdiff_t;
             /**< The type obtained by subtracting iterators. */
-        typedef value_type* pointer;
+        using pointer = value_type*;
             /**< A pointer to \a value_type. */
-        typedef value_type& reference;
+        using reference = value_type&;
             /**< A reference to \a value_type. */
 
     private:
@@ -2606,18 +2606,18 @@ class ChildIterator {
 template <bool const_>
 class SubtreeIterator {
     public:
-        typedef typename std::conditional<const_, const Packet, Packet>::type
-                value_type;
+        using value_type =
+                typename std::conditional<const_, const Packet, Packet>::type;
             /**< Indicates what the iterator points to.
                  This is either <tt>Packet</tt> or <tt>const Packet</tt>,
                  according to the template argument \a const_. */
-        typedef std::forward_iterator_tag iterator_category;
+        using iterator_category = std::forward_iterator_tag;
             /**< Declares this to be a forward iterator type. */
-        typedef ptrdiff_t difference_type;
+        using difference_type = ptrdiff_t;
             /**< The type obtained by subtracting iterators. */
-        typedef value_type* pointer;
+        using pointer = value_type*;
             /**< A pointer to \a value_type. */
-        typedef value_type& reference;
+        using reference = value_type&;
             /**< A reference to \a value_type. */
 
     private:
@@ -2796,8 +2796,8 @@ class SubtreeIterator {
 template <bool const_>
 class PacketChildren {
     public:
-        typedef typename std::conditional<const_, const Packet, Packet>::type
-                packet_type;
+        using packet_type =
+                typename std::conditional<const_, const Packet, Packet>::type;
             /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
                  the template argument \a const_. */
 
@@ -2892,8 +2892,8 @@ class PacketChildren {
 template <bool const_>
 class PacketDescendants {
     public:
-        typedef typename std::conditional<const_, const Packet, Packet>::type
-                packet_type;
+        using packet_type =
+                typename std::conditional<const_, const Packet, Packet>::type;
             /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
                  the template argument \a const_. */
 
@@ -3501,12 +3501,12 @@ inline SubtreeIterator<const_>::SubtreeIterator(
 
 template <bool const_>
 inline PacketChildren<const_>::PacketChildren(
-        std::shared_ptr<packet_type> parent) : parent_(parent) {
+        std::shared_ptr<packet_type> parent) : parent_(std::move(parent)) {
 }
 
 template <bool const_>
 inline PacketDescendants<const_>::PacketDescendants(
-        std::shared_ptr<packet_type> subtree) : subtree_(subtree) {
+        std::shared_ptr<packet_type> subtree) : subtree_(std::move(subtree)) {
 }
 
 inline void PacketListener::packetToBeChanged(Packet*) {
@@ -3546,7 +3546,8 @@ inline bool Packet::hasTags() const {
 
 inline const std::set<std::string>& Packet::tags() const {
     if (! tags_.get())
-        const_cast<Packet*>(this)->tags_.reset(new std::set<std::string>());
+        const_cast<Packet*>(this)->tags_ =
+            std::make_unique<std::set<std::string>>();
     return *tags_;
 }
 
@@ -3589,7 +3590,7 @@ inline unsigned Packet::levelsUpTo(std::shared_ptr<const Packet> ancestor)
 
 inline bool Packet::isGrandparentOf(std::shared_ptr<const Packet> descendant)
         const {
-    return isAncestorOf(descendant);
+    return isAncestorOf(std::move(descendant));
 }
 
 inline size_t Packet::countDescendants() const {

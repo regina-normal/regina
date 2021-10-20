@@ -262,8 +262,8 @@ struct OutputBase {
          * str() or detail() at all.  Instead, it is based purely on the
          * inheritance condition as stated above.
          */
-        typedef typename std::remove_reference<
-            decltype(test(std::declval<T>()))>::type type;
+        using type = typename std::remove_reference<
+            decltype(test(std::declval<T>()))>::type;
 };
 
 // Inline functions

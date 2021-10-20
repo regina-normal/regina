@@ -191,7 +191,7 @@ class Perm {
          * type, be careful of the special case of \a n = 8, where (8!) can be
          * stored in an \e unsigned 16-bit type but not a signed 16-bit type.
          */
-        typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::type Index;
+        using Index = typename IntOfMinSize<(imageBits * n + 7) / 8>::type;
 
         /**
          * Indicates the native unsigned integer type used to store a
@@ -199,7 +199,7 @@ class Perm {
          * on image packs, and how they are used as permutation codes
          * for \a n &ge; 7.
          */
-        typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype ImagePack;
+        using ImagePack = typename IntOfMinSize<(imageBits * n + 7) / 8>::utype;
 
         /**
          * A bitmask whose lowest \a imageBits bits are 1, and whose
@@ -218,7 +218,7 @@ class Perm {
          * For \a n = 4,...,7, it is a deprecated typedef that refers to
          * older (first-generation) permutation codes that are no longer used.
          */
-        typedef ImagePack Code;
+        using Code = ImagePack;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -1147,10 +1147,10 @@ Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
     // requires the type argument to be one of short, int, long or long long.
     static_assert(sizeof(Index) <= sizeof(long long),
         "Permutation index cannot fit inside a long long");
-    typedef typename std::conditional<sizeof(Index) <= sizeof(short), short,
+    using Arg = typename std::conditional<sizeof(Index) <= sizeof(short), short,
         typename std::conditional<sizeof(Index) <= sizeof(int), int,
         typename std::conditional<sizeof(Index) <= sizeof(long), long,
-        long long>::type>::type>::type Arg;
+        long long>::type>::type>::type;
 
     if (even) {
         std::uniform_int_distribution<Arg> d(0, (nPerms / 2) - 1);

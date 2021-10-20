@@ -90,7 +90,7 @@ struct FacetSpec {
      * Creates a new specifier with no initialisation.  This
      * specifier must be initialised before it is used.
      */
-    FacetSpec();
+    FacetSpec() = default;
     /**
      * Creates a new specifier referring to the given facet of the given
      * simplex.
@@ -280,10 +280,6 @@ template <int dim>
 std::ostream& operator << (std::ostream& out, const FacetSpec<dim>& spec);
 
 // Inline functions for FacetSpec
-
-template <int dim>
-inline FacetSpec<dim>::FacetSpec() {
-}
 
 template <int dim>
 inline FacetSpec<dim>::FacetSpec(int newSimp, int newFacet) :

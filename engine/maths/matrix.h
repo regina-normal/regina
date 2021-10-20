@@ -171,7 +171,7 @@ class Matrix : public Output<Matrix<T>> {
         "Using Matrix with Regina's own integer types requires ring=true.");
 
     public:
-        typedef T Coefficient;
+        using Coefficient = T;
             /**< The type of each entry in the matrix. */
 
     private:
@@ -1515,7 +1515,7 @@ inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
  *
  * \ingroup maths
  */
-typedef Matrix<Integer> MatrixInt;
+using MatrixInt = Matrix<Integer>;
 
 } // namespace regina
 

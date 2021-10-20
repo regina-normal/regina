@@ -88,28 +88,28 @@ struct CallableArg : public CallableArg<decltype(&Action::operator()), pos> {
 // Implementation for global functions:
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(*)(Args...), pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 
 // Implementation for member functions (and this is also where the
 // lambda implementation ultimately falls through to):
 template <typename Class, typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(Class::*)(Args...) const, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 
 // Implementation for std::function objects:
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<std::function<ReturnType(Args...)>, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<std::function<ReturnType(Args...)>&, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 
 #endif // __DOXYGEN
@@ -155,12 +155,12 @@ struct RetriangulateActionFuncDetail;
 
 template <class Object>
 struct RetriangulateActionFuncDetail<Object, true> {
-    typedef std::function<bool(const std::string&, Object&&)> type;
+    using type = std::function<bool(const std::string&, Object&&)>;
 };
 
 template <class Object>
 struct RetriangulateActionFuncDetail<Object, false> {
-    typedef std::function<bool(Object&&)> type;
+    using type = std::function<bool(Object&&)>;
 };
 
 #endif // __DOXYGEN
@@ -284,7 +284,7 @@ struct RetriangulateActionTraits<Object, Action, const Object&> {
 
 template <class Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const std::string&> {
-    typedef typename CallableArg<Action, 1>::type SecondArg;
+    using SecondArg = typename CallableArg<Action, 1>::type;
     static constexpr bool valid =
         std::is_same<SecondArg, Object>::value ||
         std::is_same<SecondArg, Object&&>::value ||
