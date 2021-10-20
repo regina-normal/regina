@@ -47,7 +47,7 @@ namespace pybind11::detail {
 template <class List>
 struct type_caster<regina::ListView<List>> {
     private:
-        typedef regina::ListView<List> ReginaType;
+        using ReginaType = regina::ListView<List>;
 
     public:
         PYBIND11_TYPE_CASTER(ReginaType, _("ListView"));
