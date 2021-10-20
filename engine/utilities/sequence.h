@@ -70,13 +70,13 @@ namespace regina {
 template <typename T>
 class LightweightSequence {
     public:
-        typedef T* iterator;
+        using iterator = T*;
             /**< An iterator type for read-write access to the elements
                 of a sequence.  Such a type can be dereferenced
                 (yielding a reference to type \a T), and manipulated
                 using the usual pointer arithmetic (such as <tt>p++</tt>,
                 <tt>--p</tt>, <tt>p += n</tt>, and so on). */
-        typedef const T* const_iterator;
+        using const_iterator = const T*;
             /**< An iterator type for read-only access to the elements
                 of a sequence.  Such a type can be dereferenced
                 (yielding a const reference to type \a T), and manipulated

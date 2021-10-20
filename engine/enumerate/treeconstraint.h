@@ -539,7 +539,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
  *
  * \ingroup enumerate
  */
-typedef LPConstraintEulerPositive LPConstraintEuler [[deprecated]];
+using LPConstraintEuler [[deprecated]] = LPConstraintEulerPositive;
 
 /**
  * A class that constraints the tableaux of normal surface matching equations

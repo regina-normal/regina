@@ -516,7 +516,7 @@ class Qitmask2 {
  *
  * \ingroup utilities
  */
-typedef Qitmask1<uint8_t> QitmaskLen8 [[deprecated]];
+using QitmaskLen8 [[deprecated]] = Qitmask1<uint8_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast qitmask
@@ -534,7 +534,7 @@ typedef Qitmask1<uint8_t> QitmaskLen8 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Qitmask1<uint16_t> QitmaskLen16 [[deprecated]];
+using QitmaskLen16 [[deprecated]] = Qitmask1<uint16_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast qitmask
@@ -552,7 +552,7 @@ typedef Qitmask1<uint16_t> QitmaskLen16 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Qitmask1<uint32_t> QitmaskLen32 [[deprecated]];
+using QitmaskLen32 [[deprecated]] = Qitmask1<uint32_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast qitmask
@@ -570,7 +570,7 @@ typedef Qitmask1<uint32_t> QitmaskLen32 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Qitmask1<uint64_t> QitmaskLen64 [[deprecated]];
+using QitmaskLen64 [[deprecated]] = Qitmask1<uint64_t>;
 
 } // namespace regina
 

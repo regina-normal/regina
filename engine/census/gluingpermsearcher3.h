@@ -159,7 +159,7 @@ class GluingPermSearcher<3> {
         };
 
     protected:
-        typedef std::function<void(const GluingPerms<3>&)> ActionWrapper;
+        using ActionWrapper = std::function<void(const GluingPerms<3>&)>;
             /**< The type used to hold the user's action function and
                  arguments when enumerating gluing permutations. */
 

@@ -84,7 +84,7 @@ namespace regina {
  *
  * \ingroup enumerate
  */
-typedef std::vector<std::set<unsigned long>> EnumConstraints;
+using EnumConstraints = std::vector<std::set<unsigned long>>;
 
 } // namespace regina
 

@@ -563,7 +563,7 @@ std::ostream& operator << (std::ostream& out, const Tritmask2<T, U>& mask) {
  *
  * \ingroup utilities
  */
-typedef Tritmask1<uint8_t> TritmaskLen8 [[deprecated]];
+using TritmaskLen8 [[deprecated]] = Tritmask1<uint8_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast tritmask
@@ -581,7 +581,7 @@ typedef Tritmask1<uint8_t> TritmaskLen8 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Tritmask1<uint16_t> TritmaskLen16 [[deprecated]];
+using TritmaskLen16 [[deprecated]] = Tritmask1<uint16_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast tritmask
@@ -599,7 +599,7 @@ typedef Tritmask1<uint16_t> TritmaskLen16 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Tritmask1<uint32_t> TritmaskLen32 [[deprecated]];
+using TritmaskLen32 [[deprecated]] = Tritmask1<uint32_t>;
 
 /**
  * A deprecated typedef that gives a small and extremely fast tritmask
@@ -617,7 +617,7 @@ typedef Tritmask1<uint32_t> TritmaskLen32 [[deprecated]];
  *
  * \ingroup utilities
  */
-typedef Tritmask1<uint64_t> TritmaskLen64 [[deprecated]];
+using TritmaskLen64 [[deprecated]] = Tritmask1<uint64_t>;
 
 } // namespace regina
 

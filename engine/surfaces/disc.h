@@ -227,7 +227,7 @@ class DiscSetTet {
          * code.  Since the DiscSetTet class does not actually hold any data
          * for each normal disc, this typedef should normally not be used.
          */
-        typedef std::nullptr_t Data;
+        using Data = std::nullptr_t;
 
     protected:
         unsigned long discs_[10];
@@ -381,13 +381,13 @@ class DiscSetTetData : public DiscSetTet {
         /**
          * The type of data being stored alongside each normal disc.
          */
-        typedef T Data;
+        using Data = T;
         /**
          * A pointer to the type of data stored alongside each normal disc.
          *
          * \deprecated Simply use <tt>Data*</tt> instead.
          */
-        typedef T* DataPtr [[deprecated]];
+        using DataPtr [[deprecated]] = T*;
 
     protected:
         T* data_[10];
@@ -1018,15 +1018,15 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
 template <class TetData>
 class DiscSpecIterator {
     public:
-        typedef std::forward_iterator_tag iterator_category;
+        using iterator_category = std::forward_iterator_tag;
             /**< Declares this to be a forward iterator type. */
-        typedef regina::DiscSpec value_type;
+        using value_type = regina::DiscSpec;
             /**< Indicates what type the iterator points to. */
-        typedef long difference_type;
+        using difference_type = long;
             /**< The type obtained by subtracting iterators. */
-        typedef const regina::DiscSpec* pointer;
+        using pointer = const regina::DiscSpec*;
             /**< A pointer to \a value_type. */
-        typedef const regina::DiscSpec& reference;
+        using reference = const regina::DiscSpec&;
             /**< The type obtained when dereferencing iterators. */
 
     private:

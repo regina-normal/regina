@@ -137,7 +137,7 @@ class XMLTreeResolutionTask {
  */
 class XMLTreeResolver {
     public:
-        typedef std::map<std::string, std::shared_ptr<Packet>> IDMap;
+        using IDMap = std::map<std::string, std::shared_ptr<Packet>>;
             /**< A type that maps internal IDs from the data file to the
                  corresponding packets. */
 

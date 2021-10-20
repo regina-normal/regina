@@ -56,7 +56,7 @@ class XMLSnapPeaReader;
 class XMLLegacySnapPeaReader;
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
  * \defgroup snappea SnapPea Triangulations

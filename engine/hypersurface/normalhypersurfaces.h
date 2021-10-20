@@ -578,15 +578,15 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          */
         class VectorIterator {
             public:
-                typedef std::bidirectional_iterator_tag iterator_category;
+                using iterator_category = std::bidirectional_iterator_tag;
                     /**< Declares this to be a bidirectional iterator type. */
-                typedef Vector<LargeInteger> value_type;
+                using value_type = Vector<LargeInteger>;
                     /**< Indicates what type the iterator points to. */
-                typedef ptrdiff_t difference_type;
+                using difference_type = ptrdiff_t;
                     /**< The type obtained by subtracting iterators. */
-                typedef const Vector<LargeInteger>* pointer;
+                using pointer = const Vector<LargeInteger>*;
                     /**< A pointer to \a value_type. */
-                typedef const Vector<LargeInteger>& reference;
+                using reference = const Vector<LargeInteger>&;
                     /**< The type obtained when dereferencing iterators. */
 
             private:

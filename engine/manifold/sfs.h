@@ -280,7 +280,7 @@ class SFSpace : public Manifold {
          * to \a ClassType, for consistency with the names of other
          * enumeration types across Regina.
          */
-        typedef ClassType classType [[deprecated]];
+        using classType [[deprecated]] = ClassType;
 
     private:
         ClassType class_;

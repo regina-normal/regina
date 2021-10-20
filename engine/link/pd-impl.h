@@ -58,10 +58,10 @@ Link Link::fromPD(Iterator begin, Iterator end) {
     }
 
     // Represents (crossing index, position in 4-tuple):
-    typedef std::pair<size_t, int> PDPos;
+    using PDPos = std::pair<size_t, int>;
 
     // The two occurrences of each strand in the PD code:
-    typedef std::pair<PDPos, PDPos> PDOccurrence;
+    using PDOccurrence = std::pair<PDPos, PDPos>;
 
     // The zero-based strand numbers that will begin each component:
     std::vector<size_t> components;

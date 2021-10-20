@@ -111,7 +111,7 @@ template <class RayClass, class BitmaskType, typename Action>
 void HilbertDual::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
-    typedef typename RayClass::Element IntegerType;
+    using IntegerType = typename RayClass::Element;
 
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.

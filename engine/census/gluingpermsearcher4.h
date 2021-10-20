@@ -86,7 +86,7 @@ namespace regina {
 template <>
 class GluingPermSearcher<4> {
     protected:
-        typedef std::function<void(const GluingPerms<4>&)> ActionWrapper;
+        using ActionWrapper = std::function<void(const GluingPerms<4>&)>;
             /**< The type used to hold the user's action function and
                  arguments when enumerating gluing permutations. */
 

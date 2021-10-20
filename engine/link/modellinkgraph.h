@@ -958,7 +958,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
         /**
          * An iterator type used when traversing the boundary of a 2-cell.
          */
-        typedef const ModelLinkGraphArc* ArcIterator;
+        using ArcIterator = const ModelLinkGraphArc*;
 
     private:
         ModelLinkGraphArc* arcs_;
