@@ -862,6 +862,7 @@ class BanConstraintBase {
         static bool supported(NormalEncoding enc);
 #endif
 
+    public:
         // Mark this class as non-copyable.
         BanConstraintBase(const BanConstraintBase&) = delete;
         BanConstraintBase& operator = (const BanConstraintBase&) = delete;
@@ -897,9 +898,9 @@ class BanNone {
         template <class LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>&) const {}
 
-        bool marked(size_t column) const { return false; }
+        bool marked(size_t) const { return false; }
         void init(const int*) {}
-        static bool supported(NormalEncoding enc) { return true; }
+        static bool supported(NormalEncoding) { return true; }
 };
 
 /**

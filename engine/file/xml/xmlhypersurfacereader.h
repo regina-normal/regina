@@ -86,12 +86,11 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
          */
         std::optional<NormalHypersurface>& hypersurface();
 
-        virtual void startElement(const std::string& tagName,
+        void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
-        virtual void initialChars(const std::string& chars) override;
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
+        void initialChars(const std::string& chars) override;
+        XMLElementReader* startSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
 };
 
@@ -120,11 +119,10 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -155,11 +153,10 @@ class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id, const Triangulation<4>& tri);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -186,7 +183,8 @@ inline std::shared_ptr<Packet> XMLNormalHypersurfacesReader::packetToCommit() {
 inline XMLLegacyNormalHypersurfacesReader::XMLLegacyNormalHypersurfacesReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id, const Triangulation<4>& tri) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         list_(nullptr), tri_(tri) {
 }
 

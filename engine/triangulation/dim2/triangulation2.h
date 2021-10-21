@@ -79,8 +79,7 @@ namespace regina {
 template <>
 class Triangulation<2> : public detail::TriangulationBase<2> {
     public:
-        using TriangleIterator =
-                std::vector<Triangle<2>*>::const_iterator TriangleIterator;
+        using TriangleIterator = std::vector<Triangle<2>*>::const_iterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through triangles. */
         using EdgeIterator =

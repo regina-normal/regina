@@ -608,9 +608,9 @@ inline AngleStructures& AngleStructures::operator = (AngleStructures&& src) {
     tautOnly_= src.tautOnly_;
     algorithm_ = src.algorithm_;
 
-    // Non-trivial data members:
-    doesSpanStrict_ = std::move(src.doesSpanStrict_);
-    doesSpanTaut_ = std::move(src.doesSpanTaut_);
+    // Trivially copyable std::optional data members:
+    doesSpanStrict_ = src.doesSpanStrict_;
+    doesSpanTaut_ = src.doesSpanTaut_;
 
     return *this;
 }

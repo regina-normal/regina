@@ -132,6 +132,8 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
         // Likewise for the shared pointer ans.
         std::thread([tracker, &owner](MatrixInt e,
                 std::shared_ptr<NormalSurfaces> s) {
+            // Passing ans as a shared_ptr ensures that it survives for
+            // at least the lifetime of this thread.
             Enumerator(s.get(), e, tracker, owner.inAnyPacket()).enumerate();
         }, std::move(eqns), ans).detach();
     } else

@@ -141,11 +141,11 @@ class XMLSimplexReader : public XMLElementReader {
         XMLSimplexReader(Triangulation<dim>* tri, size_t whichSimplex,
             bool permIndex);
 
-        virtual void startElement(const std::string&,
+        void startElement(const std::string&,
                 const regina::xml::XMLPropertyDict& props, XMLElementReader*)
                 override;
 
-        virtual void initialChars(const std::string& chars) override;
+        void initialChars(const std::string& chars) override;
 };
 
 /**
@@ -187,12 +187,11 @@ class XMLLegacySimplicesReader : public XMLElementReader {
         XMLLegacySimplicesReader(Triangulation<dim>* tri,
             size_t& readSimplices);
 
-        virtual void startElement(const std::string&,
+        void startElement(const std::string&,
                 const regina::xml::XMLPropertyDict& props, XMLElementReader*)
                 override;
 
-        virtual XMLElementReader* startSubElement(
-                const std::string& subTagName,
+        XMLElementReader* startSubElement(const std::string& subTagName,
                 const regina::xml::XMLPropertyDict&) override;
 };
 
@@ -258,11 +257,11 @@ class XMLTriangulationReader : public XMLPacketReader {
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual XMLElementReader* startContentSubElement(
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -288,11 +287,10 @@ class AbelianGroupPropertyReader : public XMLElementReader {
          */
         AbelianGroupPropertyReader(PropType& prop);
 
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
+        XMLElementReader* startSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict&) override;
 
-        virtual void endSubElement(const std::string& subTagName,
+        void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -318,11 +316,10 @@ class GroupPresentationPropertyReader : public XMLElementReader {
          */
         GroupPresentationPropertyReader(PropType& prop);
 
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
+        XMLElementReader* startSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict&) override;
 
-        virtual void endSubElement(const std::string& subTagName,
+        void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 

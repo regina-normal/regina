@@ -301,8 +301,7 @@ class Script : public Packet, public PacketListener {
         virtual void packetToBeDestroyed(PacketShell packet) override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket(
-            std::shared_ptr<Packet> parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket() const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
         virtual void addPacketRefs(PacketRefs& refs) const override;

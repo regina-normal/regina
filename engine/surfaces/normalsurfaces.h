@@ -1734,7 +1734,8 @@ inline void swap(NormalSurfaces& lhs, NormalSurfaces& rhs) {
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
         const MatrixInt& eqns, ProgressTracker* tracker,
         std::shared_ptr<Packet> treeParent) :
-        list_(list), eqns_(eqns), tracker_(tracker), treeParent_(treeParent) {
+        list_(list), eqns_(eqns), tracker_(tracker),
+        treeParent_(std::move(treeParent)) {
 }
 
 } // namespace regina

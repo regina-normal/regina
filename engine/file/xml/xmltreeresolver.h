@@ -73,9 +73,9 @@ class XMLTreeResolver;
 class XMLTreeResolutionTask {
     public:
         /**
-         * A default construct that does nothing.
+         * A default destructor that does nothing.
          */
-        virtual ~XMLTreeResolutionTask();
+        virtual ~XMLTreeResolutionTask() = default;
         /**
          * Called by XMLTreeResolver after the entire data file has
          * been read.  Subclasses should override this routine to
@@ -152,7 +152,7 @@ class XMLTreeResolver {
         /**
          * Constructs a resolver with no tasks queued.
          */
-        XMLTreeResolver();
+        XMLTreeResolver() = default;
         /**
          * Destroys any tasks that were queued but not performed.
          */
@@ -294,15 +294,7 @@ class XMLTreeResolver {
         XMLTreeResolver& operator = (const XMLTreeResolver&) = delete;
 };
 
-// Inline functions for XMLTreeResolutionTask
-
-inline XMLTreeResolutionTask::~XMLTreeResolutionTask() {
-}
-
 // Inline functions for XMLTreeResolver
-
-inline XMLTreeResolver::XMLTreeResolver() {
-}
 
 inline XMLTreeResolver::~XMLTreeResolver() {
     for (XMLTreeResolutionTask* task : tasks_)
@@ -317,7 +309,7 @@ inline void XMLTreeResolver::queueTask(XMLTreeResolutionTask* task) {
 
 inline void XMLTreeResolver::storeID(const std::string& id,
         std::shared_ptr<Packet> packet) {
-    ids_.insert(std::make_pair(id, packet));
+    ids_.insert(std::make_pair(id, std::move(packet)));
 }
 
 inline std::shared_ptr<Packet> XMLTreeResolver::resolve(const std::string& id)

@@ -1561,12 +1561,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * inserted into the tree beneath either the same parent as this
          * packet or a clone of that parent.
          *
-         * @param parent the parent beneath which the new packet will
-         * eventually be inserted.
          * @return the newly created packet.
          */
-        virtual std::shared_ptr<Packet> internalClonePacket(
-            std::shared_ptr<Packet> parent) const = 0;
+        virtual std::shared_ptr<Packet> internalClonePacket() const = 0;
 
         /**
          * Writes the opening XML tag for this packet.
@@ -2066,8 +2063,7 @@ class PacketOf : public Packet, public Held {
         }
 
     protected:
-        std::shared_ptr<Packet> internalClonePacket(std::shared_ptr<Packet>)
-                const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
         void writeXMLPacketData(std::ostream& out, FileFormat format,
                 bool anon, PacketRefs& refs) const override;
         void addPacketRefs(PacketRefs& refs) const override;
@@ -3598,8 +3594,7 @@ inline size_t Packet::countDescendants() const {
 }
 
 template <typename Held>
-inline std::shared_ptr<Packet> PacketOf<Held>::internalClonePacket(
-        std::shared_ptr<Packet>) const {
+inline std::shared_ptr<Packet> PacketOf<Held>::internalClonePacket() const {
     return std::make_shared<PacketOf<Held>>(static_cast<const Held&>(*this));
 }
 

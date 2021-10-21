@@ -77,7 +77,8 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
 XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
         std::shared_ptr<Packet> parent, bool anon, std::string label,
         std::string id, const regina::xml::XMLPropertyDict& props) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         list_(nullptr), tri_(resolver_.resolveTri3(props.lookup("tri"))) {
     if (! tri_)
         return;

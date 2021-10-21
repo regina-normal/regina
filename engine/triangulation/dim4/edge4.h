@@ -181,7 +181,7 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
 // Inline functions for Edge<4>
 
 inline Face<4, 1>::Face(Component<4>* component) :
-        detail::FaceBase<4, 1>(component), link_(0) {
+        detail::FaceBase<4, 1>(component), link_(nullptr) {
 }
 
 } // namespace regina

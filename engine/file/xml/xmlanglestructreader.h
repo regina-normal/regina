@@ -75,10 +75,10 @@ class XMLAngleStructureReader : public XMLElementReader {
          */
         std::optional<AngleStructure>& structure();
 
-        virtual void startElement(const std::string& tagName,
+        void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
-        virtual void initialChars(const std::string& chars) override;
+        void initialChars(const std::string& chars) override;
 };
 
 /**
@@ -107,11 +107,10 @@ class XMLAngleStructuresReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -143,13 +142,12 @@ class XMLLegacyAngleStructuresReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id, const Triangulation<3>& tri);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
-        virtual void endElement() override;
+        void endElement() override;
 };
 
 // Inline functions for XMLAngleStructureReader
@@ -173,7 +171,8 @@ inline std::shared_ptr<Packet> XMLAngleStructuresReader::packetToCommit() {
 inline XMLLegacyAngleStructuresReader::XMLLegacyAngleStructuresReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id, const Triangulation<3>& tri) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         list_(nullptr), tri_(tri) {
 }
 

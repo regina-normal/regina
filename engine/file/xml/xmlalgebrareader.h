@@ -63,7 +63,7 @@ class XMLAbelianGroupReader : public XMLElementReader {
         /**
          * Creates a new abelian group reader.
          */
-        XMLAbelianGroupReader();
+        XMLAbelianGroupReader() = default;
 
         /**
          * Returns a reference to the abelian group that has been read by
@@ -74,10 +74,10 @@ class XMLAbelianGroupReader : public XMLElementReader {
          */
         std::optional<AbelianGroup>& group();
 
-        virtual void startElement(const std::string& tagName,
+        void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
-        virtual void initialChars(const std::string& chars) override;
+        void initialChars(const std::string& chars) override;
 };
 
 /**
@@ -96,7 +96,7 @@ class XMLGroupPresentationReader : public XMLElementReader {
         /**
          * Creates a new group presentation reader.
          */
-        XMLGroupPresentationReader();
+        XMLGroupPresentationReader() = default;
 
         /**
          * Returns a reference to the group presentation that has been read by
@@ -107,29 +107,22 @@ class XMLGroupPresentationReader : public XMLElementReader {
          */
         std::optional<GroupPresentation>& group();
 
-        virtual void startElement(const std::string& tagName,
+        void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
+        XMLElementReader* startSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endSubElement(const std::string& subTagName,
+        void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
 // Inline functions for XMLAbelianGroupReader
-
-inline XMLAbelianGroupReader::XMLAbelianGroupReader() {
-}
 
 inline std::optional<AbelianGroup>& XMLAbelianGroupReader::group() {
     return group_;
 }
 
 // Inline functions for XMLGroupPresentationReader
-
-inline XMLGroupPresentationReader::XMLGroupPresentationReader() {
-}
 
 inline std::optional<GroupPresentation>& XMLGroupPresentationReader::group() {
     return group_;

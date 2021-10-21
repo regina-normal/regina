@@ -71,11 +71,10 @@ class XMLLegacyFilterReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -99,7 +98,7 @@ class XMLPlainFilterReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
+        std::shared_ptr<Packet> packetToCommit() override;
 };
 
 /**
@@ -125,7 +124,7 @@ class XMLCombinationFilterReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
+        std::shared_ptr<Packet> packetToCommit() override;
 };
 
 /**
@@ -149,7 +148,7 @@ class XMLLegacyCombinationFilterReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
+        std::shared_ptr<Packet> packetToCommit() override;
         XMLElementReader* startContentSubElement(const std::string& subTagName,
                 const regina::xml::XMLPropertyDict& props) override;
 };
@@ -177,7 +176,7 @@ class XMLPropertiesFilterReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
+        std::shared_ptr<Packet> packetToCommit() override;
 };
 
 /**
@@ -201,7 +200,7 @@ class XMLLegacyPropertiesFilterReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
+        std::shared_ptr<Packet> packetToCommit() override;
         XMLElementReader* startContentSubElement(const std::string& subTagName,
                 const regina::xml::XMLPropertyDict& props) override;
         void endContentSubElement(const std::string& subTagName,
@@ -213,7 +212,8 @@ class XMLLegacyPropertiesFilterReader : public XMLPacketReader {
 inline XMLLegacyFilterReader::XMLLegacyFilterReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         filter_(nullptr) {
 }
 
@@ -226,7 +226,8 @@ inline std::shared_ptr<Packet> XMLLegacyFilterReader::packetToCommit() {
 inline XMLPlainFilterReader::XMLPlainFilterReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         filter_(new SurfaceFilterProperties()) {
 }
 
@@ -245,7 +246,8 @@ inline std::shared_ptr<Packet> XMLCombinationFilterReader::packetToCommit() {
 inline XMLLegacyCombinationFilterReader::XMLLegacyCombinationFilterReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         filter_(nullptr) {
 }
 
@@ -265,7 +267,8 @@ inline std::shared_ptr<Packet> XMLPropertiesFilterReader::packetToCommit() {
 inline XMLLegacyPropertiesFilterReader::XMLLegacyPropertiesFilterReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         filter_(new SurfaceFilterProperties()) {
 }
 

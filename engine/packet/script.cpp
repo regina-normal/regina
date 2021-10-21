@@ -173,8 +173,7 @@ void Script::writeTextLong(std::ostream& o) const {
     o << '\n' << text_;
 }
 
-std::shared_ptr<Packet> Script::internalClonePacket(std::shared_ptr<Packet>)
-        const {
+std::shared_ptr<Packet> Script::internalClonePacket() const {
     auto ans = std::make_shared<Script>();
     ans->text_ = text_;
     ans->variables_ = variables_;

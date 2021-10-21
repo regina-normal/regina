@@ -144,6 +144,9 @@ class DoubleDescription {
             const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker = nullptr, unsigned long initialRows = 0);
 
+        // Mark this class as non-constructible.
+        DoubleDescription() = delete;
+
     private:
         /**
          * A helper class for vertex enumeration, describing a single ray
@@ -309,8 +312,6 @@ class DoubleDescription {
                 template <typename RayClass>
                 void recover(RayClass& dest, const MatrixInt& subspace) const;
         };
-
-        DoubleDescription() = delete;
 
         /**
          * Identical to the public routine enumerateExtremalRays(), except

@@ -598,7 +598,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                 /**
                  * Creates a new uninitialised iterator.
                  */
-                VectorIterator();
+                VectorIterator() = default;
 
                 /**
                  * Creates a copy of the given iterator.
@@ -1033,9 +1033,6 @@ inline MatrixInt NormalHypersurfaces::recreateMatchingEquations() const {
     return makeMatchingEquations(triangulation(), coords_);
 }
 
-inline NormalHypersurfaces::VectorIterator::VectorIterator() {
-}
-
 inline bool NormalHypersurfaces::VectorIterator::operator ==(
         const NormalHypersurfaces::VectorIterator& other) const {
     return (it_ == other.it_);
@@ -1104,7 +1101,8 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
 inline NormalHypersurfaces::Enumerator::Enumerator(NormalHypersurfaces* list,
         const MatrixInt& eqns, ProgressTracker* tracker,
         std::shared_ptr<Packet> treeParent) :
-        list_(list), eqns_(eqns), tracker_(tracker), treeParent_(treeParent) {
+        list_(list), eqns_(eqns), tracker_(tracker),
+        treeParent_(std::move(treeParent)) {
 }
 
 } // namespace regina

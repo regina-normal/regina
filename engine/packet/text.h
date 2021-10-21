@@ -142,8 +142,7 @@ class Text : public Packet {
         virtual void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket(
-            std::shared_ptr<Packet> parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket() const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
@@ -212,8 +211,7 @@ inline void Text::writeTextLong(std::ostream& o) const {
     o << text_ << '\n';
 }
 
-inline std::shared_ptr<Packet> Text::internalClonePacket(
-        std::shared_ptr<Packet>) const {
+inline std::shared_ptr<Packet> Text::internalClonePacket() const {
     return std::make_shared<Text>(text_);
 }
 

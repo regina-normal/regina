@@ -595,7 +595,7 @@ std::shared_ptr<Packet> Packet::cloneAsSibling(bool cloneDescendants,
 
     if (! parent)
         return nullptr;
-    auto ans = internalClonePacket(parent);
+    auto ans = internalClonePacket();
     ans->setLabel(adornedLabel("Clone"));
     if (end)
         parent->insertChildLast(ans);
@@ -639,7 +639,7 @@ bool Packet::save(std::ostream& s, bool compressed, FileFormat format) const {
 
 void Packet::internalCloneDescendants(std::shared_ptr<Packet> parent) const {
     for (auto child = firstTreeChild_; child; child = child->nextTreeSibling_) {
-        auto clone = child->internalClonePacket(parent);
+        auto clone = child->internalClonePacket();
         clone->setLabel(child->label_);
         parent->insertChildLast(clone);
         child->internalCloneDescendants(clone);

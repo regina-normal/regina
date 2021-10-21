@@ -203,7 +203,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
 // Inline functions for Vertex<4>
 
 inline Face<4, 0>::Face(Component<4>* component) :
-        detail::FaceBase<4, 0>(component), link_(0), ideal_(false) {
+        detail::FaceBase<4, 0>(component), link_(nullptr), ideal_(false) {
 }
 
 inline const Triangulation<3>& Face<4, 0>::buildLink() const {

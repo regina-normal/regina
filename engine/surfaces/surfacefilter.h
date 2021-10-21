@@ -76,10 +76,10 @@ class SurfaceFilterProperties;
 #define REGINA_SURFACE_FILTER(class_, id, name) \
     public: \
         static constexpr const SurfaceFilterType filterTypeID = id; \
-        inline virtual SurfaceFilterType filterType() const override { \
+        inline SurfaceFilterType filterType() const override { \
             return id; \
         } \
-        inline virtual std::string filterTypeName() const override { \
+        inline std::string filterTypeName() const override { \
             return name; \
         }
 
@@ -143,7 +143,7 @@ class SurfaceFilter : public Packet {
          */
         virtual std::string filterTypeName() const = 0;
 
-        virtual void writeTextShort(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     protected:
         /**
@@ -244,14 +244,13 @@ class SurfaceFilterCombination : public SurfaceFilter {
          */
         void setUsesAnd(bool value);
 
-        virtual bool accept(const NormalSurface& surface) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        bool accept(const NormalSurface& surface) const override;
+        void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket(
-            std::shared_ptr<Packet> parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
 };
 
 /**
@@ -461,14 +460,13 @@ class SurfaceFilterProperties : public SurfaceFilter {
          */
         void setRealBoundary(BoolSet value);
 
-        virtual bool accept(const NormalSurface& surface) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        bool accept(const NormalSurface& surface) const override;
+        void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket(
-            std::shared_ptr<Packet> parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
 };
 
 /**
@@ -523,8 +521,8 @@ inline void SurfaceFilterCombination::writeTextLong(std::ostream& o) const {
     o << (usesAnd_ ? "AND" : "OR") << " combination normal surface filter\n";
 }
 
-inline std::shared_ptr<Packet> SurfaceFilterCombination::internalClonePacket(
-        std::shared_ptr<Packet>) const {
+inline std::shared_ptr<Packet> SurfaceFilterCombination::internalClonePacket()
+        const {
     return std::make_shared<SurfaceFilterCombination>(*this);
 }
 
@@ -617,8 +615,8 @@ inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
     }
 }
 
-inline std::shared_ptr<Packet> SurfaceFilterProperties::internalClonePacket(
-        std::shared_ptr<Packet>) const {
+inline std::shared_ptr<Packet> SurfaceFilterProperties::internalClonePacket()
+        const {
     return std::make_shared<SurfaceFilterProperties>(*this);
 }
 

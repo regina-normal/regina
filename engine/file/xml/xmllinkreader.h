@@ -64,11 +64,10 @@ class XMLLinkReader : public XMLPacketReader {
         XMLLinkReader(XMLTreeResolver& resolver, std::shared_ptr<Packet> parent,
             bool anon, std::string label, std::string id);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -95,9 +94,9 @@ class XMLLinkCrossingsReader : public XMLElementReader {
          */
         XMLLinkCrossingsReader(Link* link);
 
-        virtual void startElement(const std::string&,
+        void startElement(const std::string&,
             const regina::xml::XMLPropertyDict&, XMLElementReader*) override;
-        virtual void initialChars(const std::string& chars) override;
+        void initialChars(const std::string& chars) override;
 
         /**
          * Indicates whether the XML element has been found to contain

@@ -65,8 +65,8 @@ class XMLSnapPeaReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual void initialChars(const std::string& chars) override;
+        std::shared_ptr<Packet> packetToCommit() override;
+        void initialChars(const std::string& chars) override;
 };
 
 /**
@@ -90,11 +90,10 @@ class XMLLegacySnapPeaReader : public XMLPacketReader {
             std::shared_ptr<Packet> parent, bool anon, std::string label,
             std::string id);
 
-        virtual std::shared_ptr<Packet> packetToCommit() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 

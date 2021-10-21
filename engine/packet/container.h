@@ -114,13 +114,12 @@ class Container : public Packet {
          */
         void swap(Container&) {}
 
-        virtual void writeTextShort(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket(
-            std::shared_ptr<Packet> parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
 };
 
 /**
@@ -145,8 +144,7 @@ inline void Container::writeTextShort(std::ostream& o) const {
     o << "Container";
 }
 
-inline std::shared_ptr<Packet> Container::internalClonePacket(
-        std::shared_ptr<Packet>) const {
+inline std::shared_ptr<Packet> Container::internalClonePacket() const {
     return std::make_shared<Container>();
 }
 

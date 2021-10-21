@@ -287,8 +287,7 @@ class PDF : public Packet {
         virtual void writeTextShort(std::ostream& out) const override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket(
-            std::shared_ptr<Packet> parent) const override;
+        virtual std::shared_ptr<Packet> internalClonePacket() const override;
         virtual void writeXMLPacketData(std::ostream& out,
             FileFormat format, bool anon, PacketRefs& refs) const override;
 };
@@ -365,8 +364,7 @@ inline void PDF::writeTextShort(std::ostream& o) const {
     o << "PDF packet (" << size_ << (size_ == 1 ? " byte)" : " bytes)");
 }
 
-inline std::shared_ptr<Packet> PDF::internalClonePacket(
-        std::shared_ptr<Packet>) const {
+inline std::shared_ptr<Packet> PDF::internalClonePacket() const {
     return std::make_shared<PDF>(data_, size_, DEEP_COPY);
 }
 

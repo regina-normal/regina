@@ -213,13 +213,12 @@ class XMLPacketReader : public XMLElementReader {
         virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader);
 
-        virtual void endElement() override;
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
+        void endElement() override;
+        XMLElementReader* startSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endSubElement(const std::string& subTagName,
+        void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
-        virtual void abort(XMLElementReader *subReader) override;
+        void abort(XMLElementReader *subReader) override;
 
     protected:
         /**
@@ -259,7 +258,7 @@ class XMLPacketReader : public XMLElementReader {
 inline XMLPacketReader::XMLPacketReader(XMLTreeResolver& resolver,
         std::shared_ptr<Packet> parent, bool anon, std::string label,
         std::string id) :
-        resolver_(resolver), parent_(parent), anon_(anon),
+        resolver_(resolver), parent_(std::move(parent)), anon_(anon),
         label_(std::move(label)), id_(std::move(id)) {
 }
 

@@ -86,13 +86,13 @@ class XMLElementReader {
         /**
          * Creates a new element reader.
          */
-        XMLElementReader();
+        XMLElementReader() = default;
         /**
          * Destroys this element reader.
          *
          * The default implementation does nothing.
          */
-        virtual ~XMLElementReader();
+        virtual ~XMLElementReader() = default;
 
         /**
          * Signifies that parsing of this XML element is beginning.
@@ -207,7 +207,7 @@ class XMLCharsReader : public XMLElementReader {
         /**
          * Creates a new XML element reader.
          */
-        XMLCharsReader();
+        XMLCharsReader() = default;
 
         /**
          * Returns the characters stored in the XML element that has
@@ -217,16 +217,10 @@ class XMLCharsReader : public XMLElementReader {
          */
         const std::string& chars();
 
-        virtual void initialChars(const std::string& chars) override;
+        void initialChars(const std::string& chars) override;
 };
 
 // Inline functions for XMLElementReader
-
-inline XMLElementReader::XMLElementReader() {
-}
-
-inline XMLElementReader::~XMLElementReader() {
-}
 
 inline void XMLElementReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict&, XMLElementReader*) {
@@ -254,9 +248,6 @@ inline void XMLElementReader::abort(XMLElementReader*) {
 }
 
 // Inline functions for XMLCharsReader
-
-inline XMLCharsReader::XMLCharsReader() {
-}
 
 inline const std::string& XMLCharsReader::chars() {
     return readChars;

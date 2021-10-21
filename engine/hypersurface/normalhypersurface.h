@@ -1068,6 +1068,7 @@ inline NormalHypersurface::NormalHypersurface(
         enc_ = reconstructTetrahedra(*tri, vector_, enc_);
 }
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
         const Triangulation<4>& triangulation) :
         NormalHypersurface(src) {
@@ -1076,6 +1077,7 @@ inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
     triangulation_ = triangulation;
 }
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
         const SnapshotRef<Triangulation<4>>& triangulation) :
         NormalHypersurface(src) {
