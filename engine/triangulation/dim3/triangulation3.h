@@ -3574,8 +3574,8 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
     // Use RetriangulateActionTraits to deduce whether the given action
     // takes a triangulation or both an isomorphism signature and triangulation
     // as its initial argument(s).
-    using Traits = regina::detail::RetriangulateActionTraits<
-        Triangulation<3>, Action>;
+    using Traits =
+        regina::detail::RetriangulateActionTraits<Triangulation<3>, Action>;
     static_assert(Traits::valid,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {

@@ -4271,15 +4271,15 @@ void swap(Link& lhs, Link& rhs);
  */
 class CrossingIterator {
     public:
-        typedef std::input_iterator_tag iterator_category;
+        using iterator_category = std::input_iterator_tag;
             /**< Declares this to be an input iterator type. */
-        typedef regina::Crossing* value_type;
+        using value_type = regina::Crossing*;
             /**< Indicates what type the iterator points to. */
-        typedef ptrdiff_t difference_type;
+        using difference_type = ptrdiff_t;
             /**< The type obtained by subtracting iterators. */
-        typedef regina::Crossing* const* pointer;
+        using pointer = regina::Crossing* const*;
             /**< A pointer to \a value_type. */
-        typedef regina::Crossing* reference;
+        using reference = regina::Crossing*;
             /**< The type obtained when dereferencing iterators.
                  Note that, for input iterators that are not forward iterators,
                  this does not need to be an actual C++ reference type. */
@@ -4387,15 +4387,15 @@ class CrossingIterator {
  */
 class ArcIterator {
     public:
-        typedef std::input_iterator_tag iterator_category;
+        using iterator_category = std::input_iterator_tag;
             /**< Declares this to be an input iterator type. */
-        typedef regina::StrandRef value_type;
+        using value_type = regina::StrandRef;
             /**< Indicates what type the iterator points to. */
-        typedef ptrdiff_t difference_type;
+        using difference_type = ptrdiff_t;
             /**< The type obtained by subtracting iterators. */
-        typedef regina::StrandRef const* pointer;
+        using pointer = regina::StrandRef const*;
             /**< A pointer to \a value_type. */
-        typedef regina::StrandRef reference;
+        using reference = regina::StrandRef;
             /**< The type obtained when dereferencing iterators.
                  Note that, for input iterators that are not forward iterators,
                  this does not need to be an actual C++ reference type. */
@@ -4778,7 +4778,7 @@ inline bool Link::rewrite(int height, unsigned nThreads,
 
     // Use RetriangulateActionTraits to deduce whether the given action takes
     // a link or both a knot signature and link as its initial argument(s).
-    typedef regina::detail::RetriangulateActionTraits<Link, Action> Traits;
+    using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
     static_assert(Traits::valid,
         "The action that is passed to rewrite() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {

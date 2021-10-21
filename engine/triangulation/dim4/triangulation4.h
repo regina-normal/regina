@@ -90,21 +90,21 @@ template <int> class XMLTriangulationReader;
 template <>
 class Triangulation<4> : public detail::TriangulationBase<4> {
     public:
-        typedef std::vector<Pentachoron<4>*>::const_iterator
-                PentachoronIterator;
+        using PentachoronIterator =
+                std::vector<Pentachoron<4>*>::const_iterator;
             /**< A dimension-specific alias for SimplexIterator, used to
                  iterate through pentachora. */
-        typedef decltype(detail::TriangulationBase<4>().faces<3>().begin())
-                TetrahedronIterator;
+        using TetrahedronIterator =
+                decltype(detail::TriangulationBase<4>().faces<3>().begin());
             /**< Used to iterate through tetrahedra. */
-        typedef decltype(detail::TriangulationBase<4>().faces<2>().begin())
-                TriangleIterator;
+        using TriangleIterator =
+                decltype(detail::TriangulationBase<4>().faces<2>().begin());
             /**< Used to iterate through triangles. */
-        typedef decltype(detail::TriangulationBase<4>().faces<1>().begin())
-                EdgeIterator;
+        using EdgeIterator =
+                decltype(detail::TriangulationBase<4>().faces<1>().begin());
             /**< Used to iterate through edges. */
-        typedef decltype(detail::TriangulationBase<4>().faces<0>().begin())
-                VertexIterator;
+        using VertexIterator =
+                decltype(detail::TriangulationBase<4>().faces<0>().begin());
             /**< Used to iterate through vertices. */
 
     private:
@@ -1039,8 +1039,8 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
     // Use RetriangulateActionTraits to deduce whether the given action
     // takes a triangulation or both an isomorphism signature and triangulation
     // as its initial argument(s).
-    typedef regina::detail::RetriangulateActionTraits<
-        Triangulation<4>, Action> Traits;
+    using Traits =
+        regina::detail::RetriangulateActionTraits<Triangulation<4>, Action>;
     static_assert(Traits::valid,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {
