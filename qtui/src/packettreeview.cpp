@@ -195,7 +195,7 @@ PacketTreeItem* PacketTreeView::find(std::shared_ptr<Packet> packet) {
 
         if (current == packet.get())
             return item;
-        if (current && current->isAncestorOf(packet)) {
+        if (current && current->isAncestorOf(*packet)) {
             rootItem = item;
             itemCount = 0;
         }

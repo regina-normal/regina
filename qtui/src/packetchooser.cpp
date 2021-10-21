@@ -201,7 +201,7 @@ void PacketChooser::fill(bool allowNone, std::shared_ptr<Packet> select) {
 
     // Insert the regular packets.
     std::shared_ptr<Packet> p = subtree;
-    while (p && subtree->isAncestorOf(p)) {
+    while (p && subtree->isAncestorOf(*p)) {
         if ((! filter) || (filter->accept(*p))) {
             if (p->parent())
                 addItem(PacketManager::icon(p.get()), p->humanLabel().c_str());
