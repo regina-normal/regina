@@ -77,15 +77,15 @@ namespace graph {
     template <bool out>
     class IncidentArcIterator {
         public:
-            typedef std::input_iterator_tag iterator_category;
+            using iterator_category = std::input_iterator_tag;
                 /**< Declares this to be an input iterator type. */
-            typedef regina::StrandRef value_type;
+            using value_type = regina::StrandRef;
                 /**< Indicates what type the iterator points to. */
-            typedef int difference_type;
+            using difference_type = int;
                 /**< The type obtained by subtracting iterators. */
-            typedef regina::StrandRef const* pointer;
+            using pointer = regina::StrandRef const*;
                 /**< A pointer to \a value_type. */
-            typedef regina::StrandRef reference;
+            using reference = regina::StrandRef;
                 /**< The type obtained when dereferencing iterators.
                      Note that, for input iterators that are not forward
                      iterators, this does not need to be an actual C++
@@ -198,15 +198,15 @@ namespace graph {
      */
     class AdjacentCrossingIterator {
         public:
-            typedef std::input_iterator_tag iterator_category;
+            using iterator_category = std::input_iterator_tag;
                 /**< Declares this to be an input iterator type. */
-            typedef regina::Crossing* value_type;
+            using value_type = regina::Crossing*;
                 /**< Indicates what type the iterator points to. */
-            typedef int difference_type;
+            using difference_type = int;
                 /**< The type obtained by subtracting iterators. */
-            typedef regina::Crossing* const* pointer;
+            using pointer = regina::Crossing* const*;
                 /**< A pointer to \a value_type. */
-            typedef regina::Crossing* reference;
+            using reference = regina::Crossing*;
                 /**< The type obtained when dereferencing iterators.
                      Note that, for input iterators that are not forward
                      iterators, this does not need to be an actual C++
@@ -548,40 +548,40 @@ namespace boost {
     template <>
     struct property_traits<regina::graph::InherentLinkPropertyMap<
             boost::vertex_index_t>> {
-        typedef size_t value_type;
-        typedef size_t reference;
-        typedef regina::Crossing* key_type;
-        typedef boost::readable_property_map_tag category;
+        using value_type = size_t;
+        using reference = size_t;
+        using key_type = regina::Crossing*;
+        using category = boost::readable_property_map_tag;
     };
 
     template <typename PropertyType>
     struct property_map<regina::Link, PropertyType> {
-        typedef regina::graph::InherentLinkPropertyMap<PropertyType> const_type;
+        using const_type = regina::graph::InherentLinkPropertyMap<PropertyType>;
     };
 
     template <>
     struct graph_traits<regina::Link> {
-        typedef regina::Crossing* vertex_descriptor;
-        typedef regina::StrandRef edge_descriptor;
-        typedef boost::directed_tag directed_category;
-        typedef boost::allow_parallel_edge_tag edge_parallel_category;
+        using vertex_descriptor = regina::Crossing*;
+        using edge_descriptor = regina::StrandRef;
+        using directed_category = boost::directed_tag;
+        using edge_parallel_category = boost::allow_parallel_edge_tag;
         struct traversal_category :
                 public boost::vertex_list_graph_tag,
                 public boost::edge_list_graph_tag,
                 public boost::adjacency_graph_tag,
                 public boost::bidirectional_graph_tag {
         };
-        typedef typename regina::CrossingIterator vertex_iterator;
-        typedef typename regina::ArcIterator edge_iterator;
-        typedef typename regina::graph::AdjacentCrossingIterator
-            adjacency_iterator;
-        typedef typename regina::graph::IncidentArcIterator<false>
-            in_edge_iterator;
-        typedef typename regina::graph::IncidentArcIterator<true>
-            out_edge_iterator;
-        typedef size_t vertices_size_type;
-        typedef size_t edges_size_type;
-        typedef unsigned degree_size_type;
+        using vertex_iterator = typename regina::CrossingIterator;
+        using edge_iterator = typename regina::ArcIterator;
+        using adjacency_iterator =
+            typename regina::graph::AdjacentCrossingIterator;
+        using in_edge_iterator =
+            typename regina::graph::IncidentArcIterator<false>;
+        using out_edge_iterator =
+            typename regina::graph::IncidentArcIterator<true>;
+        using vertices_size_type = size_t;
+        using edges_size_type = size_t;
+        using degree_size_type = unsigned;
 
         static vertex_descriptor null_vertex() {
             return nullptr;

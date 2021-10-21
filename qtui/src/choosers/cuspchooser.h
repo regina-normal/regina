@@ -53,7 +53,7 @@ namespace regina {
  * A filter function, used to determine whether a given cusp
  * should appear in the list.
  */
-typedef bool (*CuspFilterFunc)(const regina::Cusp*);
+using CuspFilterFunc = bool (*)(const regina::Cusp*);
 
 /**
  * A widget through which a single cusp of some SnapPea triangulation

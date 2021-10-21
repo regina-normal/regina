@@ -49,7 +49,7 @@
  * A filter function, used to determine whether a given boundary component
  * should appear in the list.
  */
-typedef bool (*BoundaryComponentFilterFunc)(regina::BoundaryComponent<3>*);
+using BoundaryComponentFilterFunc = bool (*)(regina::BoundaryComponent<3>*);
 
 /**
  * A widget through which a single boundary component of some triangulation

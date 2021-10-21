@@ -69,7 +69,7 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
          * A filter function, used to determine whether a given simplex
          * should appear in the list.
          */
-        typedef bool (*FilterFunc)(regina::Simplex<dim>*);
+        using FilterFunc = bool (*)(regina::Simplex<dim>*);
 
     private:
         regina::Triangulation<dim>* tri_;

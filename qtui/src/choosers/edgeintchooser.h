@@ -49,7 +49,7 @@
  * A filter function, used to determine whether a given edge with
  * integer argument should appear in the list.
  */
-typedef bool (*EdgeIntFilterFunc)(regina::Edge<3>*, int);
+using EdgeIntFilterFunc = bool (*)(regina::Edge<3>*, int);
 
 /**
  * A widget through which a single edge of some triangulation along with

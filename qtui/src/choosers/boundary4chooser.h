@@ -68,7 +68,7 @@ class BoundaryComponent4Chooser :
          * A filter function, used to determine whether a given
          * boundary component should appear in the list.
          */
-        typedef bool (*FilterFunc)(regina::BoundaryComponent<4>*);
+        using FilterFunc = bool (*)(regina::BoundaryComponent<4>*);
 
     private:
         regina::Triangulation<4>* tri_;

@@ -368,7 +368,7 @@ class PacketPane : public QWidget, public regina::PacketListener {
  * A packet-specific interface for opening a packet using an external
  * viewer.
  */
-typedef void (*PacketExternalViewer)(regina::Packet* /* packet */,
+using PacketExternalViewer = void (*)(regina::Packet* /* packet */,
     QWidget* /* parentWidget */);
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :

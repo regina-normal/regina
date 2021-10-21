@@ -86,7 +86,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::Triangulation<3>* (*Tri3Creator)();
+using Tri3Creator = regina::Triangulation<3>* (*)();
 
 /**
  * Represents a single option in the examples picker.

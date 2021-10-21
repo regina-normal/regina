@@ -68,7 +68,7 @@ class FaceChooser : public QComboBox, public regina::PacketListener {
          * A filter function, used to determine whether a given face
          * should appear in the list.
          */
-        typedef bool (*FilterFunc)(regina::Face<dim, subdim>*);
+        using FilterFunc = bool (*)(regina::Face<dim, subdim>*);
 
 
     private:

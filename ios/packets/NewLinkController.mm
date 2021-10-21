@@ -71,7 +71,7 @@
 
 #pragma mark - Example knot/link
 
-typedef regina::Link* (*LinkCreator)();
+using LinkCreator = regina::Link* (*)();
 
 /**
  * Represents a single option in the examples picker.

@@ -76,11 +76,6 @@ class PacketTabbedUI : public QObject, public PacketUI {
 
     private:
         /**
-         * Used for iterating through viewer pages.
-         */
-        typedef std::vector<PacketViewerTab*>::iterator ViewerIterator;
-
-        /**
          * Packet interfaces for individual pages.
          *
          * The indices of viewerTabs correspond precisely to tab
