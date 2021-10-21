@@ -720,7 +720,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
                          or \c null if no progress tracker is in use. */
-                std::shared_ptr<Packet> treeParent_;
+                Packet* treeParent_;
                     /**< The parent packet in the tree, if we should insert the
                          finished list into the packet tree once enumeration
                          has finished, or \c null if we should not. */
@@ -733,8 +733,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                  * the inherited interface of a PacketOf<NormalHypersurfaces>.
                  */
                 Enumerator(NormalHypersurfaces* list, const MatrixInt& eqns,
-                    ProgressTracker* tracker,
-                    std::shared_ptr<Packet> treeParent);
+                    ProgressTracker* tracker, Packet* treeParent);
 
                 /**
                  * Default move constructor.
@@ -1099,10 +1098,8 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
 }
 
 inline NormalHypersurfaces::Enumerator::Enumerator(NormalHypersurfaces* list,
-        const MatrixInt& eqns, ProgressTracker* tracker,
-        std::shared_ptr<Packet> treeParent) :
-        list_(list), eqns_(eqns), tracker_(tracker),
-        treeParent_(std::move(treeParent)) {
+        const MatrixInt& eqns, ProgressTracker* tracker, Packet* treeParent) :
+        list_(list), eqns_(eqns), tracker_(tracker), treeParent_(treeParent) {
 }
 
 } // namespace regina

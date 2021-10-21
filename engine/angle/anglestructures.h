@@ -530,8 +530,7 @@ class AngleStructures :
          * insert the angle structure list into the packet tree once the
          * enumeration has finished, or \c null if we should not.
          */
-        void enumerateInternal(ProgressTracker* tracker,
-            std::shared_ptr<Packet> treeParent);
+        void enumerateInternal(ProgressTracker* tracker, Packet* treeParent);
 
     friend class regina::XMLAngleStructuresReader;
     friend class regina::XMLLegacyAngleStructuresReader;

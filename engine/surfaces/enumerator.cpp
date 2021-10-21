@@ -124,20 +124,22 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
 
     auto ans = makePacket<NormalSurfaces>(std::in_place, coords, which,
         algHints, owner);
+    auto treeParent = owner.inAnyPacket();
 
     if (tracker) {
         // We pass the matching equations as an argument to the thread
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
-        // Likewise for the shared pointer ans.
-        std::thread([tracker, &owner](MatrixInt e,
-                std::shared_ptr<NormalSurfaces> s) {
-            // Passing ans as a shared_ptr ensures that it survives for
-            // at least the lifetime of this thread.
-            Enumerator(s.get(), e, tracker, owner.inAnyPacket()).enumerate();
-        }, std::move(eqns), ans).detach();
+        //
+        // Likewise, passing the shared pointers ans and treeParent into the
+        // thread ensures that they survive for the lifetime of the thread.
+        std::thread([tracker](MatrixInt e,
+                std::shared_ptr<NormalSurfaces> s,
+                std::shared_ptr<Packet> p) {
+            Enumerator(s.get(), e, tracker, p.get()).enumerate();
+        }, std::move(eqns), ans, std::move(treeParent)).detach();
     } else
-        Enumerator(ans.get(), eqns, tracker, owner.inAnyPacket()).enumerate();
+        Enumerator(ans.get(), eqns, tracker, treeParent.get()).enumerate();
     return ans;
 }
 

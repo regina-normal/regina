@@ -96,7 +96,7 @@ void AngleStructures::swap(AngleStructures& other) {
 }
 
 void AngleStructures::enumerateInternal(ProgressTracker* tracker,
-        std::shared_ptr<Packet> treeParent) {
+        Packet* treeParent) {
     // Form the matching equations.
     MatrixInt eqns = regina::makeAngleEquations(*triangulation_);
 
@@ -185,12 +185,18 @@ std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerate(
         ProgressTracker* tracker) {
     auto ans = makePacket<AngleStructures>(std::in_place, tautOnly,
         AS_ALG_DEFAULT, triangulation);
+    auto treeParent = triangulation.inAnyPacket();
 
-    if (tracker)
-        std::thread(&AngleStructures::enumerateInternal,
-            ans, tracker, triangulation.packet()).detach();
-    else
-        ans->enumerateInternal(nullptr, triangulation.packet());
+    if (tracker) {
+        // We pass the shared pointers ans and treeParent into the thread
+        // to ensure that they survive for the lifetime of the thread.
+        std::thread([tracker](
+                std::shared_ptr<AngleStructures> a,
+                std::shared_ptr<Packet> p) {
+            a->enumerateInternal(tracker, p.get());
+        }, ans, std::move(treeParent)).detach();
+    } else
+        ans->enumerateInternal(nullptr, treeParent.get());
     return ans;
 }
 
@@ -198,8 +204,9 @@ std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerateTautDD(
         Triangulation<3>& triangulation) {
     auto ans = makePacket<AngleStructures>(std::in_place, true, AS_ALG_DD,
         triangulation);
+    auto treeParent = triangulation.inAnyPacket();
 
-    ans->enumerateInternal(nullptr /* tracker */, triangulation.packet());
+    ans->enumerateInternal(nullptr /* tracker */, treeParent.get());
     return ans;
 }
 
