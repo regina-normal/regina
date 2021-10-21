@@ -2631,15 +2631,14 @@ void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
     ChangeEventSpan span1(static_cast<Triangulation<dim>&>(*this));
     ChangeEventSpan span2(dest);
 
-    SimplexIterator it;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
+    for (auto* s : simplices_) {
         // This is an abuse of MarkedVector, since for a brief moment
         // each triangle belongs to both vectors simplices_ and dest.simplices_.
         // However, the subsequent clear() operation does not touch the
         // markings (indices), and so we end up with the correct result
         // (i.e., the markings are correct for dest).
-        (*it)->tri_ = &dest;
-        dest.simplices_.push_back(*it);
+        s->tri_ = &dest;
+        dest.simplices_.push_back(s);
     }
     simplices_.clear();
 

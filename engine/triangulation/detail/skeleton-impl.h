@@ -69,8 +69,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // Triangulations are orientable until proven otherwise.
     orientable_ = true;
 
-    SimplexIterator it;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
+    for (auto it = simplices_.begin(); it != simplices_.end(); ++it) {
         (*it)->component_ = 0;
         (*it)->dualForest_ = 0;
     }
@@ -87,7 +86,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     Simplex<dim> *s, *adj;
     int facet;
     int yourOrientation;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
+    for (auto it = simplices_.begin(); it != simplices_.end(); ++it) {
         s = *it;
         if (s->component_ == 0) {
             c = new Component<dim>();

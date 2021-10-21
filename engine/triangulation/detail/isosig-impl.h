@@ -274,8 +274,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig(
     typename Perm<dim+1>::Index perm;
     typename Encoding::SigType curr;
 
-    typename Encoding::SigType* comp =
-        new typename Encoding::SigType[countComponents()];
+    auto* comp = new typename Encoding::SigType[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
         for (simp = 0; simp < (*it)->size(); ++simp)
