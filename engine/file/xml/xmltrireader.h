@@ -271,7 +271,7 @@ class XMLTriangulationReader : public XMLPacketReader {
  */
 class AbelianGroupPropertyReader : public XMLElementReader {
     public:
-        typedef std::optional<AbelianGroup> PropType;
+        using PropType = std::optional<AbelianGroup>;
             /**< The type of the property currently being read. */
 
     private:
@@ -301,7 +301,7 @@ class AbelianGroupPropertyReader : public XMLElementReader {
  */
 class GroupPresentationPropertyReader : public XMLElementReader {
     public:
-        typedef std::optional<GroupPresentation> PropType;
+        using PropType = std::optional<GroupPresentation>;
             /**< The type of the property currently being read. */
 
     private:

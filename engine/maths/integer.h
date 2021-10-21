@@ -1570,20 +1570,20 @@ class IntegerBase : private InfinityBase<supportInfinity> {
 };
 
 /**
- * LargeInteger is a typedef for IntegerBase<true>, which offers
+ * LargeInteger is a type alias for IntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
  *
- * \ifacespython This typedef is available in Python.
+ * \ifacespython This type alias is available in Python.
  *
  * \ingroup maths
  */
 using LargeInteger = IntegerBase<true>;
 
 /**
- * Integer is a typedef for IntegerBase<false>, which offers
+ * Integer is a type alias for IntegerBase<false>, which offers
  * arbitrary precision integers without support for infinity.
  *
- * \ifacespython This typedef is available in Python.
+ * \ifacespython This type alias is available in Python.
  *
  * \ingroup maths
  */
@@ -2397,7 +2397,7 @@ template <int bytes>
 std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
 
 /**
- * NativeLong is a typedef for the NativeInteger template class whose
+ * NativeLong is a type alias for the NativeInteger template class whose
  * underlying integer type is a native long.
  *
  * \ifacespython Not present.
@@ -2407,7 +2407,7 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
 using NativeLong = NativeInteger<sizeof(long)>;
 
 /**
- * A deprecated alias for the NativeLong typedef.
+ * A deprecated alias for the NativeLong type alias.
  *
  * \deprecated Use NativeLong instead.
  *

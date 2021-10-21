@@ -125,9 +125,8 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
     // each facet under case #2 above?
     // For gluing permutations, we store the index of the permutation in
     // Perm<dim+1>::orderedSn.
-    size_t* joinDest = new size_t[nFacets];
-    typedef typename Perm<dim+1>::Index PermIndex;
-    PermIndex* joinGluing = new PermIndex[nFacets];
+    auto* joinDest = new size_t[nFacets];
+    auto* joinGluing = new typename Perm<dim+1>::Index[nFacets];
 
     // ---------------------------------------------------------------------
     // Data for finding the unique canonical isomorphism from this
@@ -135,11 +134,11 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
     // ---------------------------------------------------------------------
 
     // The image for each simplex and its vertices:
-    ptrdiff_t* image = new ptrdiff_t[nSimp];
-    Perm<dim+1>* vertexMap = new Perm<dim+1>[nSimp];
+    auto* image = new ptrdiff_t[nSimp];
+    auto* vertexMap = new Perm<dim+1>[nSimp];
 
     // The preimage for each simplex:
-    ptrdiff_t* preImage = new ptrdiff_t[nSimp];
+    auto* preImage = new ptrdiff_t[nSimp];
 
     // ---------------------------------------------------------------------
     // Looping variables

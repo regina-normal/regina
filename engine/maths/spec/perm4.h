@@ -238,7 +238,7 @@ class Perm<4> {
          * first-generation permutation code.
          *
          * Although types \a Code1 and \a Code2 are identical, they are
-         * provided as separate typedefs to help communicate in your
+         * provided as separate type aliases to help communicate in your
          * source code which type of code is being used.
          */
         using Code1 = ImagePack;
@@ -248,7 +248,7 @@ class Perm<4> {
          * second-generation permutation code.
          *
          * Although types \a Code1 and \a Code2 are identical, they are
-         * provided as separate typedefs to help communicate in your
+         * provided as separate type aliases to help communicate in your
          * source code which type of code is being used.
          */
         using Code2 = uint8_t;

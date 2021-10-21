@@ -1432,7 +1432,7 @@ class Bitmask2 {
 };
 
 /**
- * A deprecated typedef that gives a small and extremely fast bitmask
+ * A deprecated type alias that gives a small and extremely fast bitmask
  * class capable of holding at least 8 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
@@ -1441,7 +1441,8 @@ class Bitmask2 {
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Bitmask1<uint8_t> instead.
+ * \deprecated This type alias is deprecated; just use Bitmask1<uint8_t
+ * instead.
  *
  * \ifacespython Not present, but in Python you can access essentially
  * the same optimised bitmask class via the name Bitmask8.
@@ -1451,7 +1452,7 @@ class Bitmask2 {
 using BitmaskLen8 [[deprecated]] = Bitmask1<uint8_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast bitmask
+ * A deprecated type alias that gives a small and extremely fast bitmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
@@ -1460,7 +1461,8 @@ using BitmaskLen8 [[deprecated]] = Bitmask1<uint8_t>;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Bitmask1<uint16_t> instead.
+ * \deprecated This type alias is deprecated; just use Bitmask1<uint16_t>
+ * instead.
  *
  * \ifacespython Not present, but in Python you can access essentially
  * the same optimised bitmask class via the name Bitmask16.
@@ -1470,7 +1472,7 @@ using BitmaskLen8 [[deprecated]] = Bitmask1<uint8_t>;
 using BitmaskLen16 [[deprecated]] = Bitmask1<uint16_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast bitmask
+ * A deprecated type alias that gives a small and extremely fast bitmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
@@ -1479,7 +1481,8 @@ using BitmaskLen16 [[deprecated]] = Bitmask1<uint16_t>;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Bitmask1<uint32_t> instead.
+ * \deprecated This type alias is deprecated; just use Bitmask1<uint32_t>
+ * instead.
  *
  * \ifacespython Not present, but in Python you can access essentially
  * the same optimised bitmask class via the name Bitmask32.
@@ -1489,7 +1492,7 @@ using BitmaskLen16 [[deprecated]] = Bitmask1<uint16_t>;
 using BitmaskLen32 [[deprecated]] = Bitmask1<uint32_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast bitmask
+ * A deprecated type alias that gives a small and extremely fast bitmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of
@@ -1498,7 +1501,8 @@ using BitmaskLen32 [[deprecated]] = Bitmask1<uint32_t>;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Bitmask1<uint64_t> instead.
+ * \deprecated This type alias is deprecated; just use Bitmask1<uint64_t>
+ * instead.
  *
  * \ifacespython Not present, but in Python you can access essentially
  * the same optimised bitmask class via the name Bitmask64.

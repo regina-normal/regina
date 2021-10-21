@@ -56,7 +56,7 @@ class XMLSnapPeaReader;
 class XMLLegacySnapPeaReader;
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
  * \defgroup snappea SnapPea Triangulations
@@ -420,7 +420,7 @@ class SnapPeaTriangulation :
          * \warning This enumeration must always be kept in sync with
          * SnapPea's own SolutionType enumeration.
          */
-        typedef enum {
+        enum SolutionType {
             not_attempted,
                 /**< A solution has not been attempted. */
             geometric_solution,
@@ -441,7 +441,7 @@ class SnapPeaTriangulation :
                 /**< The gluing equations could not be solved. */
             externally_computed
                 /**< Tetrahedron shapes were inserted into the triangulation. */
-        } SolutionType;
+        };
 
         /**
          * Indicates which types of covers should be enumerated when calling
@@ -457,7 +457,7 @@ class SnapPeaTriangulation :
          * \warning This enumeration must always be kept in sync with
          * SnapPea's PermutationSubgroup enumeration.
          */
-        typedef enum {
+        enum CoverEnumerationType {
             cyclic_covers,
                 /**< Indicates that only cyclic covers should be enumerated.
                      This corresponds to the SnapPea constant
@@ -466,7 +466,7 @@ class SnapPeaTriangulation :
                 /**< Indicates that all covers should be enumerated.
                      This corresponds to the SnapPea constant
                      \a permutation_subgroup_Sn. */
-        } CoverEnumerationType;
+        };
 
         /**
          * Indicates the different types of covers that can be produced
@@ -481,7 +481,7 @@ class SnapPeaTriangulation :
          * \warning This enumeration must always be kept in sync with
          * SnapPea's own CoveringType enumeration.
          */
-        typedef enum {
+        enum CoverType {
             unknown_cover,
                 /**< Indicates that SnapPea has not yet computed the covering
                      type. */
@@ -495,7 +495,7 @@ class SnapPeaTriangulation :
                      covering transformation taking one to the other. */
             cyclic_cover
                 /**< Indicates a cyclic covering. */
-        } CoverType;
+        };
 
     private:
         regina::snappea::Triangulation* data_;

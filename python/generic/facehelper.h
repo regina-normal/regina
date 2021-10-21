@@ -92,7 +92,7 @@ using facesFunc = decltype(T().faces(0)) (T::*)(int) const;
  */
 template <class T, int dim, int subdim>
 struct FaceHelper {
-    typedef regina::Face<dim, subdim> Face;
+    using Face = regina::Face<dim, subdim>;
 
     static size_t countFacesFrom(const T& t, int subdimArg) {
         if (subdimArg == subdim)
@@ -135,7 +135,7 @@ struct FaceHelper {
  */
 template <class T, int dim>
 struct FaceHelper<T, dim, 0> {
-    typedef regina::Face<dim, 0> Face;
+    using Face = regina::Face<dim, 0>;
 
     static size_t countFacesFrom(const T& t, int) {
         return t.template countFaces<0>();

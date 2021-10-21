@@ -548,7 +548,7 @@ std::ostream& operator << (std::ostream& out, const Tritmask2<T, U>& mask) {
 }
 
 /**
- * A deprecated typedef that gives a small and extremely fast tritmask
+ * A deprecated type alias that gives a small and extremely fast tritmask
  * class capable of holding at least 8 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
@@ -557,16 +557,17 @@ std::ostream& operator << (std::ostream& out, const Tritmask2<T, U>& mask) {
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Tritmask1<uint8_t> instead.
+ * \deprecated This type alias is deprecated; just use Tritmask1<uint8_t>
+ * instead.
  *
  * \ifacespython Not present.
  *
  * \ingroup utilities
  */
-typedef Tritmask1<uint8_t> TritmaskLen8 [[deprecated]];
+using TritmaskLen8 [[deprecated]] = Tritmask1<uint8_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast tritmask
+ * A deprecated type alias that gives a small and extremely fast tritmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
@@ -575,16 +576,17 @@ typedef Tritmask1<uint8_t> TritmaskLen8 [[deprecated]];
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Tritmask1<uint16_t> instead.
+ * \deprecated This type alias is deprecated; just use Tritmask1<uint16_t>
+ * instead.
  *
  * \ifacespython Not present.
  *
  * \ingroup utilities
  */
-typedef Tritmask1<uint16_t> TritmaskLen16 [[deprecated]];
+using TritmaskLen16 [[deprecated]] = Tritmask1<uint16_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast tritmask
+ * A deprecated type alias that gives a small and extremely fast tritmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
@@ -593,16 +595,17 @@ typedef Tritmask1<uint16_t> TritmaskLen16 [[deprecated]];
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Tritmask1<uint32_t> instead.
+ * \deprecated This type alias is deprecated; just use Tritmask1<uint32_t>
+ * instead.
  *
  * \ifacespython Not present.
  *
  * \ingroup utilities
  */
-typedef Tritmask1<uint32_t> TritmaskLen32 [[deprecated]];
+using TritmaskLen32 [[deprecated]] = Tritmask1<uint32_t>;
 
 /**
- * A deprecated typedef that gives a small and extremely fast tritmask
+ * A deprecated type alias that gives a small and extremely fast tritmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of
@@ -611,13 +614,14 @@ typedef Tritmask1<uint32_t> TritmaskLen32 [[deprecated]];
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \deprecated This typedef is deprecated; just use Tritmask1<uint64_t> instead.
+ * \deprecated This type alias is deprecated; just use Tritmask1<uint64_t>
+ * instead.
  *
  * \ifacespython Not present.
  *
  * \ingroup utilities
  */
-typedef Tritmask1<uint64_t> TritmaskLen64 [[deprecated]];
+using TritmaskLen64 [[deprecated]] = Tritmask1<uint64_t>;
 
 } // namespace regina
 

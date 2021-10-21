@@ -62,7 +62,7 @@ namespace regina {
 class NormalHypersurfaces;
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
  * Represents a single normal hypersurface in a 4-manifold triangulation.

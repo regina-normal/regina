@@ -83,11 +83,11 @@ namespace regina {
 template <typename T>
 class Laurent2 : public ShortOutput<Laurent2<T>, true> {
     public:
-        typedef T Coefficient;
+        using Coefficient = T;
             /**< The type of each coefficient of the polynomial. */
 
     private:
-        typedef std::pair<long, long> Exponents;
+        using Exponents = std::pair<long, long>;
 
         std::map<Exponents, T> coeff_;
             /**< Stores all non-zero coefficients of the polynomial.

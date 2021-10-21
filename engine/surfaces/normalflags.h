@@ -133,7 +133,7 @@ enum NormalListFlags {
  *
  * \ingroup surfaces
  */
-typedef regina::Flags<NormalListFlags> NormalList;
+using NormalList = regina::Flags<NormalListFlags>;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -354,7 +354,7 @@ enum NormalAlgFlags {
  *
  * \ingroup surfaces
  */
-typedef regina::Flags<NormalAlgFlags> NormalAlg;
+using NormalAlg = regina::Flags<NormalAlgFlags>;
 
 /**
  * Returns the bitwise OR of the two given flags.

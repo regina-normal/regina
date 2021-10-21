@@ -55,7 +55,7 @@ namespace detail {
  * for a callable object.  It can (amongst other things) work with
  * function pointers, member functions, std::function wrappers, and lambdas.
  *
- * This struct provides a single member typedef, named \a type, which is
+ * This struct provides a single member type alias, named \a type, which is
  * the type of the argument to \a Action that appears in position \a pos.
  *
  * If \a Action is a member function, then arguments will still be numbered
@@ -116,9 +116,7 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
 
 /**
  * Declares the internal type used to store a callable action that is passed
- * to a retriangulation or link rewriting function.  This internal type is
- * included here as a member typedef, but you can also access it directly
- * through the simpler type alias RetriangulateActionFunc<Object, withSig>.
+ * to a retriangulation or link rewriting function.
  *
  * A retriangulation or link rewriting function can work with arbitrary
  * callable objects.  However, the \e implementations of such functions are
@@ -136,9 +134,6 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  * retriangulation/rewriting action will be bound in the std::function object).
  * This implementation is subject to change in future versions of Regina.
  *
- * This struct provides a single member typedef, named \a type,
- * which is the internal type used to store the callable action.
- *
  * \tparam Object the class providing the retriangulation/rewriting function,
  * such as regina::Triangulation<dim> or regina::Link.
  * \tparam withSig \c true if we are storing an action that includes both a
@@ -149,33 +144,9 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  * \ingroup detail
  */
 template <class Object, bool withSig>
-struct RetriangulateActionFuncDetail;
-
-#ifndef __DOXYGEN
-
-template <class Object>
-struct RetriangulateActionFuncDetail<Object, true> {
-    using type = std::function<bool(const std::string&, Object&&)>;
-};
-
-template <class Object>
-struct RetriangulateActionFuncDetail<Object, false> {
-    using type = std::function<bool(Object&&)>;
-};
-
-#endif // __DOXYGEN
-
-/**
- * The internal type used to store a callable action that is passed to a
- * retriangulation or link rewriting function.
- * See RetriangulateActionFuncDetail for details.
- *
- * \ingroup detail
- */
-template <class Object, bool withSig>
-using RetriangulateActionFunc =
-    typename RetriangulateActionFuncDetail<Object, withSig>::type;
-
+using RetriangulateActionFunc = typename std::conditional<withSig,
+    std::function<bool(const std::string&, Object&&)>,
+    std::function<bool(Object&&)>>::type;
 
 /**
  * The common implementation of all retriangulation and link rewriting

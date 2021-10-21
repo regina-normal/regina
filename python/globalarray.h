@@ -226,7 +226,7 @@ template <typename T, pybind11::return_value_policy rvp =
     pybind11::return_value_policy::copy>
 class GlobalArray2D {
     public:
-        typedef GlobalArray<T, rvp> Row;
+        using Row = GlobalArray<T, rvp>;
             /**< A wrapper class for each row of this array. */
 
     private:
@@ -463,7 +463,7 @@ template <typename T, pybind11::return_value_policy rvp =
     pybind11::return_value_policy::copy>
 class GlobalArray3D {
     public:
-        typedef GlobalArray2D<T, rvp> Subarray;
+        using Subarray = GlobalArray2D<T, rvp>;
             /**< A wrapper class for each two-dimensional subarray. */
 
     private:

@@ -62,7 +62,7 @@ class SigCensus {
         /**
          * A list of partial isomorphisms on splitting surface signatures.
          */
-        typedef std::list<SigPartialIsomorphism> IsoList;
+        using IsoList = std::list<SigPartialIsomorphism>;
 
     private:
         Signature sig;
@@ -209,14 +209,14 @@ class SigCensus {
 };
 
 /**
- * Deprecated typedef for a list of partial isomorphisms on splitting
+ * Deprecated type alias for a list of partial isomorphisms on splitting
  * surface signatures.
  *
  * \deprecated This has been renamed to SigCensus::IsoList.
  *
  * \ingroup split
  */
-typedef SigCensus::IsoList SigIsoList [[deprecated]];
+using SigIsoList [[deprecated]] = SigCensus::IsoList;
 
 // Inline functions for SigCensus
 

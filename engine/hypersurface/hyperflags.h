@@ -133,7 +133,7 @@ enum HyperListFlags {
  *
  * \ingroup hypersurface
  */
-typedef regina::Flags<HyperListFlags> HyperList;
+using HyperList = regina::Flags<HyperListFlags>;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -264,7 +264,7 @@ enum HyperAlgFlags {
  *
  * \ingroup hypersurface
  */
-typedef regina::Flags<HyperAlgFlags> HyperAlg;
+using HyperAlg = regina::Flags<HyperAlgFlags>;
 
 /**
  * Returns the bitwise OR of the two given flags.

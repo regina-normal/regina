@@ -282,7 +282,7 @@ class RetriangulateThreadSync<false> {
  *
  * Therefore, this backtracing code is disabled at the source code level
  * and not available at all through the API. To turn it on, you will
- * need to edit this source file and change the typedef
+ * need to edit this source file and change the type alias
  * Retriangulator::SigSet from RetriangulateSigGraph<false> to
  * RetriangulateSigGraph<true>.
  *
@@ -359,9 +359,9 @@ class RetriangulateSigGraph<false> : private std::set<std::string> {
 template <class Object, bool threading, bool withSig>
 class Retriangulator : public RetriangulateThreadSync<threading> {
     private:
-        // To switch on backtracing, just change the following typedef to
+        // To switch on backtracing, just change the following type alias to
         // RetriangulateSigGraph<true>.
-        typedef RetriangulateSigGraph<false> SigSet;
+        using SigSet = RetriangulateSigGraph<false>;
 
         const size_t maxSize_;
         RetriangulateActionFunc<Object, withSig> action_;

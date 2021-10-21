@@ -54,7 +54,7 @@
 namespace regina {
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
  * A matrix class for use with linear programming.

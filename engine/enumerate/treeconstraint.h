@@ -532,14 +532,14 @@ class LPConstraintEulerPositive : public LPConstraintBase {
 };
 
 /**
- * A deprecated typedef for LPConstraintEulerPositive.
+ * A deprecated type alias for LPConstraintEulerPositive.
  *
  * The old name LPConstraintEuler should no longer be used, since Regina
  * now provides multiple constraint types relating to Euler characteristic.
  *
  * \ingroup enumerate
  */
-typedef LPConstraintEulerPositive LPConstraintEuler [[deprecated]];
+using LPConstraintEuler [[deprecated]] = LPConstraintEulerPositive;
 
 /**
  * A class that constraints the tableaux of normal surface matching equations

@@ -222,7 +222,7 @@ struct ShortOutput : public Output<T, supportsUtf8> {
 };
 
 /**
- * Provides a typedef to help identify where in the class hierarchy the
+ * Provides a type alias to help identify where in the class hierarchy the
  * output functions T::str() and T::detail() are implemented.
  *
  * If \a T is a class derived (directly or indirectly) from some class
@@ -258,7 +258,7 @@ struct OutputBase {
          * type is the corresponding Output<X> base class.
          * Otherwise, this type is \a T itself.
          *
-         * \note The implementation of this typedef does not look for
+         * \note The implementation of this type alias does not look for
          * str() or detail() at all.  Instead, it is based purely on the
          * inheritance condition as stated above.
          */

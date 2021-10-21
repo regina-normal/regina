@@ -295,8 +295,9 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
         // We can do this using simple arrays - since each subdim-face of each
         // simplex is pushed on at most once, the array size does not need to
         // be very large.
-        typedef std::pair<Simplex<dim>*, int> Spec; /* (simplex, face) */
-        Spec* queue = new Spec[tri->size() * FaceNumbering<dim, subdim>::nFaces];
+        // Each element in our queue is a pair (simplex, face).
+        auto* queue = new std::pair<Simplex<dim>*, int>
+            [tri->size() * FaceNumbering<dim, subdim>::nFaces];
         unsigned queueStart, queueEnd;
         unsigned pos;
 

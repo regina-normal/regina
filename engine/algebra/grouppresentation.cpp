@@ -1450,7 +1450,6 @@ bool GroupPresentation::identifySimplyIsomorphicTo(
     }
 
     // for each relator of this we have lists of potential substitutions
-    // typedef std::list< partialSubType > pSubListType;
     std::list< std::map<unsigned long, GroupExpressionTerm> > allPartialSubs;
     allPartialSubs.emplace_back();
 

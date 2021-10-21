@@ -120,7 +120,7 @@ template <class RayClass, class BitmaskType,
 void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const EnumConstraints* constraints, ProgressTracker* tracker) {
-    typedef typename RayClass::Element IntegerType;
+    using IntegerType = typename RayClass::Element;
 
     // We know at this point that the dimension is non-zero.
     size_t dim = (*raysBegin).size();
