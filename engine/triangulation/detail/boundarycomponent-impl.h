@@ -74,8 +74,8 @@ namespace {
     template <int dim, int subdim>
     class ReorderIterator {
         private:
-            typedef typename std::vector<Face<dim, subdim>*>::const_iterator
-                InternalIterator;
+            using InternalIterator =
+                typename std::vector<Face<dim, subdim>*>::const_iterator;
             InternalIterator it_;
             Face<dim - 1, subdim>** map_;
 

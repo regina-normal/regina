@@ -121,7 +121,7 @@ class SFSpace;
  */
 class SatBlock : public Output<SatBlock> {
     public:
-        typedef std::set<const Tetrahedron<3>*> TetList;
+        using TetList = std::set<const Tetrahedron<3>*>;
             /**< The data structure used to store a list of tetrahedra
                  that should not be examined when searching for
                  saturated blocks. */

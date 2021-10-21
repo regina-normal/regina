@@ -361,7 +361,7 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
     private:
         // To switch on backtracing, just change the following type alias to
         // RetriangulateSigGraph<true>.
-        typedef RetriangulateSigGraph<false> SigSet;
+        using SigSet = RetriangulateSigGraph<false>;
 
         const size_t maxSize_;
         RetriangulateActionFunc<Object, withSig> action_;

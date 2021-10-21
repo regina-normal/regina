@@ -108,7 +108,7 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     const TreeBag *b, *c;
 
     // Cost = (max cost of any tree edge, number of times that cost appears)
-    typedef std::pair<T, int> Cost;
+    using Cost = std::pair<T, int>;
 
     // For each bag, work out the maximum cost of all links *below* that
     // bag if the root is located at or *above* that bag.

@@ -80,7 +80,7 @@ class SmallPermTest : public CppUnit::TestFixture {
     private:
         static constexpr bool requiresPrecompute = (n == 6 || n == 7);
         static constexpr bool usesCode2 = (n >= 4 && n <= 7);
-        typedef typename Perm<n>::Index Index;
+        using Index = typename Perm<n>::Index;
         static constexpr Index nPerms = Perm<n>::nPerms;
 
     public:
