@@ -347,8 +347,7 @@ class GluingPermSearcher<3> {
         GluingPermSearcher(std::istream& in, Action&& action, Args&&... args);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
         virtual ~GluingPermSearcher();
 
@@ -1203,14 +1202,13 @@ class EulerSearcher : public GluingPermSearcher<3> {
         EulerSearcher(std::istream& in, Action&& action, Args&&... args);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
         virtual ~EulerSearcher();
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
-        virtual void runSearch(long maxDepth = -1) override;
+        void dumpData(std::ostream& out) const override;
+        void runSearch(long maxDepth = -1) override;
 
     protected:
         /**
@@ -1243,7 +1241,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
         EulerSearcher(std::istream& in, ActionWrapper&& action);
 
         // Overridden methods:
-        virtual char dataTag() const override;
+        char dataTag() const override;
 
     protected:
         /**
@@ -2040,14 +2038,13 @@ class CompactSearcher : public GluingPermSearcher<3> {
         CompactSearcher(std::istream& in, Action&& action, Args&&... args);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
         virtual ~CompactSearcher();
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
-        virtual void runSearch(long maxDepth = -1) override;
+        void dumpData(std::ostream& out) const override;
+        void runSearch(long maxDepth = -1) override;
 
     protected:
         /**
@@ -2080,7 +2077,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
         CompactSearcher(std::istream& in, ActionWrapper&& action);
 
         // Overridden methods:
-        virtual char dataTag() const override;
+        char dataTag() const override;
 
     protected:
         /**
@@ -2602,14 +2599,13 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
             Action&& action, Args&&... args);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
         virtual ~ClosedPrimeMinSearcher();
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
-        virtual void runSearch(long maxDepth = -1) override;
+        void dumpData(std::ostream& out) const override;
+        void runSearch(long maxDepth = -1) override;
 
     protected:
         /**
@@ -2642,7 +2638,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
         ClosedPrimeMinSearcher(std::istream& in, ActionWrapper&& action);
 
         // Overridden methods:
-        virtual char dataTag() const override;
+        char dataTag() const override;
 
     private:
         /**
@@ -2789,8 +2785,8 @@ class HyperbolicMinSearcher : public EulerSearcher {
             Action&& action, Args&&... args);
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
-        virtual void runSearch(long maxDepth = -1) override;
+        void dumpData(std::ostream& out) const override;
+        void runSearch(long maxDepth = -1) override;
 
     protected:
         /**
@@ -2823,7 +2819,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
         HyperbolicMinSearcher(std::istream& in, ActionWrapper&& action);
 
         // Overridden methods:
-        virtual char dataTag() const override;
+        char dataTag() const override;
 
     private:
         /**

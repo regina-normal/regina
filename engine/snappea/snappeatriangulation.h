@@ -144,7 +144,7 @@ class SnapPeaMemoryFull : public std::exception {
          *
          * @return a description of the error.
          */
-        virtual const char* what() const noexcept override {
+        const char* what() const noexcept override {
             return "SnapPea reports that memory is full";
         }
 };

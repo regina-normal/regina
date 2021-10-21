@@ -103,13 +103,12 @@ class SatMobius : public SatBlock {
          */
         int position() const;
 
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const
-            override;
+        void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeAbbr(std::ostream& out, bool tex = false) const override;
 
     protected:
-        virtual SatBlock* clone() const override;
+        SatBlock* clone() const override;
 
     private:
         /**
@@ -205,14 +204,13 @@ class SatLST : public SatBlock {
          */
         Perm<4> roles() const;
 
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const
-            override;
+        void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeAbbr(std::ostream& out, bool tex = false) const override;
 
     protected:
-        virtual SatBlock* clone() const override;
-        virtual void transform(const Triangulation<3>& originalTri,
+        SatBlock* clone() const override;
+        void transform(const Triangulation<3>& originalTri,
             const Isomorphism<3>& iso, const Triangulation<3>& newTri) override;
 
     private:
@@ -289,10 +287,9 @@ class SatTriPrism : public SatBlock {
          */
         bool isMajor() const;
 
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const
-            override;
+        void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeAbbr(std::ostream& out, bool tex = false) const override;
 
         /**
          * Creates a new model of a triangular prism block.
@@ -304,7 +301,7 @@ class SatTriPrism : public SatBlock {
         static SatBlockModel model(bool major);
 
     protected:
-        virtual SatBlock* clone() const override;
+        SatBlock* clone() const override;
 
     private:
         /**
@@ -379,10 +376,9 @@ class SatTriPrism : public SatBlock {
  */
 class SatCube : public SatBlock {
     public:
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const
-            override;
+        void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeAbbr(std::ostream& out, bool tex = false) const override;
 
         /**
          * Creates a new model of a cube block.
@@ -392,7 +388,7 @@ class SatCube : public SatBlock {
         static SatBlockModel model();
 
     protected:
-        virtual SatBlock* clone() const override;
+        SatBlock* clone() const override;
 
     private:
         /**
@@ -459,10 +455,9 @@ class SatCube : public SatBlock {
  */
 class SatReflectorStrip : public SatBlock {
     public:
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const
-            override;
+        void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeAbbr(std::ostream& out, bool tex = false) const override;
 
         /**
          * Creates a new model of a reflector strip block.
@@ -477,7 +472,7 @@ class SatReflectorStrip : public SatBlock {
         static SatBlockModel model(unsigned length, bool twisted);
 
     protected:
-        virtual SatBlock* clone() const override;
+        SatBlock* clone() const override;
 
     private:
         /**
@@ -565,13 +560,12 @@ class SatLayering : public SatBlock {
          */
         bool overHorizontal() const;
 
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const
-            override;
+        void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeAbbr(std::ostream& out, bool tex = false) const override;
 
     protected:
-        virtual SatBlock* clone() const override;
+        SatBlock* clone() const override;
 
     private:
         /**

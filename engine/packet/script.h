@@ -294,17 +294,17 @@ class Script : public Packet, public PacketListener {
          */
         void removeAllVariables();
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeTextLong(std::ostream& out) const override;
 
-        virtual void packetWasRenamed(Packet* packet) override;
-        virtual void packetToBeDestroyed(PacketShell packet) override;
+        void packetWasRenamed(Packet* packet) override;
+        void packetToBeDestroyed(PacketShell packet) override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket() const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
-        virtual void addPacketRefs(PacketRefs& refs) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
+        void addPacketRefs(PacketRefs& refs) const override;
 };
 
 /**

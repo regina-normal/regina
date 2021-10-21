@@ -138,13 +138,13 @@ class Text : public Packet {
          */
         void setText(const char* newText);
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual std::shared_ptr<Packet> internalClonePacket() const override;
-        virtual void writeXMLPacketData(std::ostream& out,
-            FileFormat format, bool anon, PacketRefs& refs) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
 };
 
 /**
