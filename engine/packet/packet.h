@@ -2451,6 +2451,11 @@ std::shared_ptr<Packet> open(std::istream& in);
  * A forward iterator for iterating through all immediate children of a
  * given packet.
  *
+ * Each iterator will hold a std::shared_ptr to the packet whose children
+ * it is iterating over.  This guarantees that the packet will not be
+ * destroyed mid-iteration, but it also means that you must ensure that
+ * you dispose of your iterators once you are finished with them.
+ *
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the child packets.
  *
@@ -2587,6 +2592,11 @@ class ChildIterator {
  *
  * The order of iteration is depth-first, where a parent packet is always
  * processed before its descendants.
+ *
+ * Each iterator will hold a std::shared_ptr to the packet whose subtree
+ * it is iterating over.  This guarantees that the packet will not be
+ * destroyed mid-iteration, but it also means that you must ensure that
+ * you dispose of your iterators once you are finished with them.
  *
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the packet tree.
@@ -2772,6 +2782,11 @@ class SubtreeIterator {
  *     ...
  * \endcode
  *
+ * Each object of this class will hold a std::shared_ptr to the packet whose
+ * children it gives access to.  This guarantees that the packet will not be
+ * destroyed during iteration, but it also means that you must ensure that
+ * you dispose of these objects once you are finished with them.
+ *
  * These are lightweight objects, small enough to pass by value and swap with
  * std::swap(), with no need for any specialised move operations or swap
  * functions.  Copies of a PacketChildren will iterate over the children
@@ -2867,6 +2882,11 @@ class PacketChildren {
  * for desc in parent.descendants():
  *     ...
  * \endcode
+ *
+ * Each object of this class will hold a std::shared_ptr to the packet whose
+ * descendants it gives access to.  This guarantees that the packet will not be
+ * destroyed during iteration, but it also means that you must ensure that
+ * you dispose of these objects once you are finished with them.
  *
  * These are lightweight objects, small enough to pass by value and swap with
  * std::swap(), with no need for any specialised move operations or swap
@@ -3495,7 +3515,7 @@ template <bool const_>
 inline SubtreeIterator<const_>::SubtreeIterator(
         std::shared_ptr<value_type> subtree,
         std::shared_ptr<value_type> current) :
-        subtree_(subtree), current_(current) {
+        subtree_(std::move(subtree)), current_(std::move(current)) {
 }
 
 template <bool const_>
@@ -3730,7 +3750,7 @@ inline Packet::ChangeEventSpan::~ChangeEventSpan() {
 
 template <bool const_>
 inline ChildIterator<const_>::ChildIterator(
-        std::shared_ptr<value_type> current) : current_(current) {
+        std::shared_ptr<value_type> current) : current_(std::move(current)) {
 }
 
 template <bool const_>
