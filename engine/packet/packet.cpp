@@ -36,6 +36,7 @@
 #include "packet/packet.h"
 #include "packet/script.h"
 #include "utilities/base64.h"
+#include "utilities/exception.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 #include "utilities/zstr.h"
@@ -557,20 +558,31 @@ std::shared_ptr<const Packet> Packet::findPacketLabel(const std::string& label)
     return nullptr;
 }
 
-unsigned Packet::levelsDownTo(std::shared_ptr<const Packet> descendant) const {
-    unsigned levels = 0;
-    while (descendant.get() != this) {
-        descendant = descendant->treeParent_.lock();
+unsigned Packet::levelsDownTo(const Packet& descendant) const {
+    if (std::addressof(descendant) == this)
+        return 0;
+
+    std::shared_ptr<Packet> p = descendant.treeParent_.lock();
+    unsigned levels = 1;
+    while (p) {
+        if (p.get() == this)
+            return levels;
+        p = p->treeParent_.lock();
         ++levels;
     }
-    return levels;
+    throw FailedPrecondition("This and the given packet do not have "
+        "the expected ancestor/descendant relationship");
 }
 
-bool Packet::isAncestorOf(std::shared_ptr<const Packet> descendant) const {
-    while (descendant) {
-        if (descendant.get() == this)
+bool Packet::isAncestorOf(const Packet& descendant) const {
+    if (std::addressof(descendant) == this)
+        return true;
+
+    std::shared_ptr<Packet> p = descendant.treeParent_.lock();
+    while (p) {
+        if (p.get() == this)
             return true;
-        descendant = descendant->treeParent_.lock();
+        p = p->treeParent_.lock();
     }
     return false;
 }

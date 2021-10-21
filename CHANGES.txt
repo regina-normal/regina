@@ -826,11 +826,15 @@ Version 7.0  [ TODO ]
             - New function hasParent().
             - Renamed isGrandparentOf() to isAncestorOf().  The old name
               is kept as a deprecated alias.
+            - Changed levelsDownTo() and levelsUpTo() to throw an exception if
+              the ancestor/descendant precondition fails, instead of crashing.
             - Renamed clone() to cloneAsSibling(), since this is not
               just a plain copy operation and it will not always succeed.
               The old clone() name is removed completely.
-            - All member functions that used to take or return a raw Packet
-              pointer now take or return a shared_ptr instead.
+            - All member functions that used to return a raw Packet pointer
+              return a shared_ptr instead.
+            - All member functions that used to take a raw Packet pointer
+              now take this either by shared_ptr or const reference.
         Class PacketData<Held>, PacketOf<Held>:
             - New template classes to support the new "wrapped" packet types.
         Class PacketInfo:

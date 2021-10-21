@@ -576,30 +576,34 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * descendant in the tree structure.  If \c descendant is this
          * packet, the number of levels is zero.
          *
-         * \pre This packet is equal to \c descendant, or
-         * can be obtained from \c descendant using only child-to-parent
-         * steps.
+         * \pre This packet is equal to \c descendant, or can be obtained
+         * from \c descendant using only child-to-parent steps.
+         *
+         * \exception FailedPrecondition The argument \a descendant is
+         * not equal to or a descendant of this packet.
          *
          * @param descendant the packet whose relationship with this
          * packet we are examining.
          * @return the number of levels difference.
          */
-        unsigned levelsDownTo(std::shared_ptr<const Packet> descendant) const;
+        unsigned levelsDownTo(const Packet& descendant) const;
 
         /**
          * Counts the number of levels between this packet and its given
          * ancestor in the tree structure.  If \c ancestor is this
          * packet, the number of levels is zero.
          *
-         * \pre This packet is equal to \c ancestor, or
-         * can be obtained from \c ancestor using only parent-to-child
-         * steps.
+         * \pre This packet is equal to \c ancestor, or can be obtained
+         * from \c ancestor using only parent-to-child steps.
+         *
+         * \exception FailedPrecondition This packet is not equal to or a
+         * descendant of the argument \a descendant.
          *
          * @param ancestor the packet whose relationship with this
          * packet we are examining.
          * @return the number of levels difference.
          */
-        unsigned levelsUpTo(std::shared_ptr<const Packet> ancestor) const;
+        unsigned levelsUpTo(const Packet& ancestor) const;
 
         /**
          * Determines if this packet is equal to or an ancestor of
@@ -610,7 +614,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * @return \c true if and only if this packet is equal to or an
          * ancestor of \c descendant.
          */
-        bool isAncestorOf(std::shared_ptr<const Packet> descendant) const;
+        bool isAncestorOf(const Packet& descendant) const;
         /**
          * Deprecated function that determines if this packet is equal to or
          * an ancestor of the given packet in the tree structure.
@@ -623,8 +627,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * @return \c true if and only if this packet is equal to or an
          * ancestor of \c descendant.
          */
-        [[deprecated]] bool isGrandparentOf(
-            std::shared_ptr<const Packet> descendant) const;
+        [[deprecated]] bool isGrandparentOf(const Packet& descendant) const;
 
         /**
          * Returns the number of immediate children of this packet.
@@ -3579,14 +3582,12 @@ inline std::shared_ptr<Packet> Packet::nextSibling() const {
     return nextTreeSibling_;
 }
 
-inline unsigned Packet::levelsUpTo(std::shared_ptr<const Packet> ancestor)
-        const {
-    return ancestor->levelsDownTo(shared_from_this());
+inline unsigned Packet::levelsUpTo(const Packet& ancestor) const {
+    return ancestor.levelsDownTo(*this);
 }
 
-inline bool Packet::isGrandparentOf(std::shared_ptr<const Packet> descendant)
-        const {
-    return isAncestorOf(std::move(descendant));
+inline bool Packet::isGrandparentOf(const Packet& descendant) const {
+    return isAncestorOf(descendant);
 }
 
 inline size_t Packet::countDescendants() const {
