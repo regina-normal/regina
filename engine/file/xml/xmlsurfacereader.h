@@ -180,7 +180,8 @@ inline std::shared_ptr<Packet> XMLNormalSurfacesReader::packetToCommit() {
 inline XMLLegacyNormalSurfacesReader::XMLLegacyNormalSurfacesReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id, const Triangulation<3>& tri) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         list_(nullptr), tri_(tri) {
 }
 

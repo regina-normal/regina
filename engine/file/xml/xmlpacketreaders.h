@@ -253,7 +253,8 @@ inline std::shared_ptr<Packet> XMLAnonRefReader::packetToCommit() {
 inline XMLContainerReader::XMLContainerReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         container(new Container()) {
 }
 
@@ -266,7 +267,8 @@ inline std::shared_ptr<Packet> XMLContainerReader::packetToCommit() {
 inline XMLPDFReader::XMLPDFReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         pdf(new PDF()) {
 }
 
@@ -279,7 +281,8 @@ inline std::shared_ptr<Packet> XMLPDFReader::packetToCommit() {
 inline XMLLegacyPDFReader::XMLLegacyPDFReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         pdf(new PDF()) {
 }
 
@@ -300,7 +303,8 @@ inline XMLElementReader* XMLLegacyPDFReader::startContentSubElement(
 inline XMLScriptReader::XMLScriptReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         script(new Script()) {
 }
 
@@ -313,7 +317,8 @@ inline std::shared_ptr<Packet> XMLScriptReader::packetToCommit() {
 inline XMLTextReader::XMLTextReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         text(new Text()) {
 }
 
@@ -330,7 +335,8 @@ inline void XMLTextReader::initialChars(const std::string& chars) {
 inline XMLLegacyTextReader::XMLLegacyTextReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         text(new Text()) {
 }
 

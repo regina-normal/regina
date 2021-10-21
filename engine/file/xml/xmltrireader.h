@@ -430,7 +430,8 @@ template <int dim>
 inline XMLTriangulationReader<dim>::XMLTriangulationReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id, size_t size, bool permIndex) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         tri_(makePacket<Triangulation<dim>>()),
         permIndex_(permIndex), readSimplices_(0) {
     for ( ; size > 0; --size)

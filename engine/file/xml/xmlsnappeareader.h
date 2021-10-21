@@ -102,7 +102,8 @@ class XMLLegacySnapPeaReader : public XMLPacketReader {
 inline XMLSnapPeaReader::XMLSnapPeaReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         snappea_(nullptr) {
 }
 
@@ -119,7 +120,8 @@ inline std::shared_ptr<Packet> XMLSnapPeaReader::packetToCommit() {
 inline XMLLegacySnapPeaReader::XMLLegacySnapPeaReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)),
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
         snappea_(nullptr) {
 }
 

@@ -184,7 +184,8 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
 XMLAnonRefReader::XMLAnonRefReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id) :
-        XMLPacketReader(res, parent, anon, std::move(label), std::move(id)) {
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)) {
     packet = res.resolve(id_);
 }
 
