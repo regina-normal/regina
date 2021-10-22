@@ -192,7 +192,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 if (core) {
                     // We got one!
                     std::unique_ptr<AugTriSolidTorus> ans(
-                        new AugTriSolidTorus(std::move(*core)));
+                        new AugTriSolidTorus(*core));
 
                     // Work out how the mobius strip is glued onto each
                     // annulus.
@@ -284,7 +284,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
 
                     // We have the entire structure!
                     std::unique_ptr<AugTriSolidTorus> ans(
-                        new AugTriSolidTorus(std::move(*core)));
+                        new AugTriSolidTorus(*core));
                     switch (annulusPerm[0]) {
                         case 0:
                             ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(2,0,1,3);
@@ -351,7 +351,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
                             std::unique_ptr<AugTriSolidTorus> ans(
-                                new AugTriSolidTorus(std::move(*core)));
+                                new AugTriSolidTorus(*core));
                             switch (annulusPerm[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
@@ -408,7 +408,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
                             std::unique_ptr<AugTriSolidTorus> ans(
-                                new AugTriSolidTorus(std::move(*core)));
+                                new AugTriSolidTorus(*core));
                             switch (annulusPerm[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
@@ -583,7 +583,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
 
                 // We've got one!
                 std::unique_ptr<AugTriSolidTorus> ans(
-                    new AugTriSolidTorus(std::move(*core)));
+                    new AugTriSolidTorus(*core));
                 for (j = 0; j < 3; j++) {
                     if (whichLayered[j] >= 0) {
                         ans->augTorus_[j] =
@@ -599,7 +599,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 // We're not looking for a layered chain.
                 // This means we have found the entire structure!
                 std::unique_ptr<AugTriSolidTorus> ans(
-                    new AugTriSolidTorus(std::move(*core)));
+                    new AugTriSolidTorus(*core));
                 for (j = 0; j < 3; j++) {
                     ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     if (whichLayered[j] >= 0)

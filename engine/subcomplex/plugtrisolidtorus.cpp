@@ -370,7 +370,7 @@ std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
 
             // Success!
             std::unique_ptr<PlugTriSolidTorus> plug(
-                new PlugTriSolidTorus(std::move(*core)));
+                new PlugTriSolidTorus(*core));
             for (i = 0; i < 3; i++) {
                 plug->chain_[i] = std::move(chain[i]);
                 plug->chainType_[i] = chainType[i];
