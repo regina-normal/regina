@@ -70,7 +70,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     orientable_ = true;
 
     for (auto it = simplices_.begin(); it != simplices_.end(); ++it) {
-        (*it)->component_ = 0;
+        (*it)->component_ = nullptr;
         (*it)->dualForest_ = 0;
     }
 
@@ -79,7 +79,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // component labelling.  We use a plain C array for this queue: since each
     // simplex is processed only once, an array of size simplices_.size()
     // is large enough.
-    Simplex<dim>** queue = new Simplex<dim>*[simplices_.size()];
+    auto* queue = new Simplex<dim>*[simplices_.size()];
     size_t queueStart = 0, queueEnd = 0;
 
     Component<dim>* c;
@@ -88,7 +88,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     int yourOrientation;
     for (auto it = simplices_.begin(); it != simplices_.end(); ++it) {
         s = *it;
-        if (s->component_ == 0) {
+        if (! s->component_) {
             c = new Component<dim>();
             components_.push_back(c);
 

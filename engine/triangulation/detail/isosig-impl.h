@@ -396,7 +396,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
             }
         }
 
-        size_t* joinDest = new size_t[nJoins + 1];
+        auto* joinDest = new size_t[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
             if (c + nChars > end) {
                 delete[] facetAction;
@@ -408,8 +408,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
             c += nChars;
         }
 
-        typename Perm<dim+1>::Index* joinGluing =
-            new typename Perm<dim+1>::Index[nJoins + 1];
+        auto* joinGluing = new typename Perm<dim+1>::Index[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
             if (c + IsoSigPrintable<dim>::charsPerPerm > end) {
                 delete[] facetAction;
@@ -434,7 +433,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
         }
 
         // End of component!
-        Simplex<dim>** simp = new Simplex<dim>*[nSimp];
+        auto* simp = new Simplex<dim>*[nSimp];
         for (pos = 0; pos < nSimp; ++pos)
             simp[pos] = ans.newSimplex();
 

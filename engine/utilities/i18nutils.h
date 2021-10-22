@@ -146,6 +146,7 @@ class IConvStreamBuffer : public std::streambuf {
             /**< The iconv conversion descriptor, or \a cdNone if no
                  conversion descriptor is currently active. */
 
+        // NOLINTNEXTLINE(misc-misplaced-const)
         static const iconv_t cdNone;
             /**< Signifies that no iconv conversion descriptor is
                  currently active. */
@@ -159,7 +160,7 @@ class IConvStreamBuffer : public std::streambuf {
          * Destroys this stream buffer.  This stream buffer will be
          * closed, but the destination output stream will not be.
          */
-        ~IConvStreamBuffer();
+        ~IConvStreamBuffer() override;
 
         /**
          * Opens a new stream buffer that wraps around the given output
@@ -210,20 +211,20 @@ class IConvStreamBuffer : public std::streambuf {
          * internal buffer, or EOF if we simply wish to flush the buffer.
          * @return 0 on success, or EOF on error.
          */
-        int_type overflow(int_type c);
+        int_type overflow(int_type c) override;
         /**
          * Simply returns EOF (since this is not an input stream).
          *
          * @return EOF.
          */
-        int_type underflow();
+        int_type underflow() override;
         /**
          * Flushes all output buffers.  The buffers for both this stream
          * and the destination output stream will be flushed.
          *
          * @return 0 on success, or -1 on error.
          */
-        int sync();
+        int sync() override;
 
         // Make this class non-copyable.
         IConvStreamBuffer(const IConvStreamBuffer&) = delete;
@@ -295,7 +296,7 @@ class IConvStream : public std::ostream {
 // Inline functions for IConvStreamBuffer
 
 inline IConvStreamBuffer::IConvStreamBuffer() :
-        sink(0), cd(cdNone) {
+        sink(nullptr), cd(cdNone) {
 }
 
 inline IConvStreamBuffer::~IConvStreamBuffer() {
@@ -310,7 +311,7 @@ inline IConvStreamBuffer::int_type IConvStreamBuffer::underflow() {
 
 inline IConvStream::IConvStream(std::ostream& dest,
         const char* srcCode, const char* destCode) : std::ostream(&buf) {
-    if (buf.open(dest, srcCode, destCode) == 0)
+    if (buf.open(dest, srcCode, destCode) == nullptr)
         setstate(std::ios::failbit);
 }
 

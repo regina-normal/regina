@@ -54,7 +54,7 @@ mem_streambuf::pos_type mem_streambuf::seekpos(
 }
 
 mem_streambuf::pos_type mem_streambuf::seekoff(off_type off,
-        std::ios_base::seekdir dir, std::ios_base::openmode which) {
+        std::ios_base::seekdir /* dir */, std::ios_base::openmode which) {
     if (! (which & std::ios_base::in))
         return pos_type(off_type(-1));
 

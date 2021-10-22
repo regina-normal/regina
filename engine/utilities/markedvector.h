@@ -296,7 +296,7 @@ class MarkedVector : private std::vector<T*> {
         template <typename Iterator>
         void refill(Iterator begin, Iterator end) {
             Iterator it = begin;
-            typename std::vector<T*>::iterator local = std::vector<T*>::begin();
+            auto local = std::vector<T*>::begin();
             while (it != end && local != std::vector<T*>::end())
                 *local++ = *it++;
 

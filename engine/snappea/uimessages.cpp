@@ -69,6 +69,9 @@ void uFatalError(const char *function, const char *file) {
     throw regina::SnapPeaFatalError(function, file);
 }
 
+// This is really C, not C++, and so we keep the (void) here as is done
+// in the SnapPea kernel.
+// NOLINTNEXTLINE(modernize-redundant-void-arg)
 void uAbortMemoryFull(void) {
     std::cerr << "FATAL ERROR: Available memory has been exhausted."
         << std::endl;

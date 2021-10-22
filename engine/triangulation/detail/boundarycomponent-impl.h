@@ -127,13 +127,13 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
     // new boundary triangulation in the same order as they appear in
     // the boundary component's list of (dim-1)-faces.
     Triangulation<dim>& mainTri = allFacets.front()->triangulation();
-    Simplex<dim-1>** bdrySimplex = new Simplex<dim-1>*[
+    auto* bdrySimplex = new Simplex<dim-1>*[
         mainTri.template countFaces<dim-1>()];
 
     // NOTE: If we ever change this to return by value (and so ans is
     // not a pointer), then we need to change the lambda at the end of
     // this function to capture by reference, not by value.
-    Triangulation<dim-1>* ans = new Triangulation<dim-1>();
+    auto* ans = new Triangulation<dim-1>();
 
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim-1>::ChangeEventSpan span(*ans);
@@ -248,7 +248,7 @@ void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
         // This is a partial function: it is only defined for indices
         // of *boundary* subdim-faces in this d-dim triang.
         // We leave the other values of the map uninitialised.
-        Face<dim - 1, subdim>** map = new Face<dim - 1, subdim>*[
+        auto* map = new Face<dim - 1, subdim>*[
             reference.front()->triangulation().template countFaces<subdim>()];
 
         for (Face<dim - 1, subdim>* f : tri->template faces<subdim>()) {

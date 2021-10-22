@@ -85,6 +85,7 @@ const char* utf8ValidTo(const char* s) {
 
 bool Locale::initialised = false;
 
+// NOLINTNEXTLINE(misc-misplaced-const)
 const iconv_t IConvStreamBuffer::cdNone((iconv_t)(-1));
 
 #ifdef LANGINFO_FOUND

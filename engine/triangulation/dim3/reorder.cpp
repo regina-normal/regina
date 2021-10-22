@@ -127,8 +127,7 @@ inline bool check_consistency_on_face(const int edge_orientations_tet[6],
 
 // checks that the edge_orientations give an ordering of the triangulation
 
-bool check_consistency_on_tet(const Triangulation<3> &trig,
-                              const std::vector<int> &edge_orientations,
+bool check_consistency_on_tet(const std::vector<int> &edge_orientations,
                               const Tetrahedron<3> *tet,
                               bool force_oriented)
 {
@@ -179,7 +178,7 @@ bool check_consistency_around_edge(const Triangulation<3> &trig,
     // iterate through all tetrahedra around an edge
 
     for(auto& emb : *trig.edge(edge_index))
-        if(!check_consistency_on_tet(trig, edge_orientations,
+        if(!check_consistency_on_tet(edge_orientations,
                                      emb.tetrahedron(), force_oriented))
             return false;
 
@@ -200,8 +199,7 @@ Isomorphism<3>* iso_from_edges(const Triangulation<3> &trig,
 
         // consistency check
 
-        if(!check_consistency_on_tet(trig,
-                                     edge_orientations,
+        if(!check_consistency_on_tet(edge_orientations,
                                      trig.tetrahedron(i),
                                      force_oriented))
             reorder_fatal_error("Inconsistent edge orientations in reorder.cpp");

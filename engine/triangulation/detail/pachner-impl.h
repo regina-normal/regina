@@ -277,7 +277,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                     if (i > j) {
                         // Ensure we make the gluing in just one
                         // direction, not both directions.
-                        adjSimp[i] = 0;
+                        adjSimp[i] = nullptr;
                     } else {
                         // Adjust the gluing to point to the new simplex.
                         adjSimp[i] = newSimp;

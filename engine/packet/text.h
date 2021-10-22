@@ -68,7 +68,7 @@ class Text : public Packet {
         /**
          * Initialises the packet to the empty string.
          */
-        Text();
+        Text() = default;
 
         /**
          * Initialises the packet to the given string.
