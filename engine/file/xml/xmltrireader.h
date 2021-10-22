@@ -428,7 +428,9 @@ XMLElementReader* XMLLegacySimplicesReader<dim>::startSubElement(
 
 template <int dim>
 inline XMLTriangulationReader<dim>::XMLTriangulationReader(
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
         std::string label, std::string id, size_t size, bool permIndex) :
         XMLPacketReader(res, std::move(parent), anon, std::move(label),
             std::move(id)),

@@ -10,6 +10,18 @@ Checks: "
   -modernize-use-trailing-return-type,
   performance-*,
   -performance-noexcept-move-constructor,
+  bugprone-*,
+  -bugprone-reserved-identifier,
+  -bugprone-narrowing-conversions,
+  -bugprone-signed-char-misuse,
+  -bugprone-macro-parentheses,
+  -bugprone-exception-escape,
+  -bugprone-branch-clone,
 "
 
-HeaderFilterRegex: ".*"
+# Our aim in the following regex is:
+# - include engine/;
+# - exclude engine/libnormaliz/, engine/syntax and engine/snappea/kernel/;
+# - include python/ and qtui/.
+#
+HeaderFilterRegex: "(engine/([^ls]|link|s[^ny]|snappea/[^k]).*|python/.*|qtui/.*)"
