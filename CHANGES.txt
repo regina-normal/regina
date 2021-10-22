@@ -114,6 +114,9 @@ Version 7.0  [ TODO ]
         Class Base64SigEncoding:
             - New helper class that provides code common to isomorphism
               signatures and knot signatures.
+        Class BitManipulator and related classes:
+            - The class constants ...::specialised are now constexpr bools,
+              not enum values.
         Class Bitmask, Bitmask1, Bitmask2:
             - Added compile-time constant fixedSize.
             - Added != to complement the already-existing == operator.
