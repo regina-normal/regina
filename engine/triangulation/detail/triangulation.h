@@ -2973,7 +2973,7 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
                 s->adj_[f] = simplices_[nOrig + adjacencies[i][f]];
                 s->gluing_[f] = Perm<dim+1>(gluings[i][f]);
             } else
-                s->adj_[f] = 0;
+                s->adj_[f] = nullptr;
         }
     }
 
@@ -3606,7 +3606,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     for (Face<dim, dim - 1>* f : faces<dim - 1>()) {
         if (f->degree() > 1) {
             // Not a boundary facet.
-            bdry[f->index()] = cone[f->index()] = 0;
+            bdry[f->index()] = cone[f->index()] = nullptr;
             continue;
         }
 

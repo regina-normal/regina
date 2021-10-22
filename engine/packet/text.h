@@ -73,16 +73,16 @@ class Text : public Packet {
         /**
          * Initialises the packet to the given string.
          *
-         * @param newText the new value for the packet.
+         * @param text the new value for the packet.
          */
-        Text(const std::string& newText);
+        Text(std::string text);
 
         /**
          * Initialises the packet to the given string.
          *
-         * @param newText the new value for the packet.
+         * @param text the new value for the packet.
          */
-        Text(const char* newText);
+        Text(const char* text);
 
         /**
          * Creates a new copy of the given text packet.
@@ -127,16 +127,16 @@ class Text : public Packet {
         /**
          * Sets the packet data to the given string.
          *
-         * @param newText the new value for the packet.
+         * @param text the new value for the packet.
          */
-        void setText(const std::string& newText);
+        void setText(std::string text);
 
         /**
          * Sets the packet data to the given string.
          *
-         * @param newText the new value for the packet.
+         * @param text the new value for the packet.
          */
-        void setText(const char* newText);
+        void setText(const char* text);
 
         void writeTextShort(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -162,13 +162,10 @@ void swap(Text& a, Text& b);
 
 // Inline functions for Text
 
-inline Text::Text() {
+inline Text::Text(std::string text) : text_(std::move(text)) {
 }
 
-inline Text::Text(const std::string& newText) : text_(newText) {
-}
-
-inline Text::Text(const char* newText) : text_(newText) {
+inline Text::Text(const char* text) : text_(text) {
 }
 
 inline Text& Text::operator = (const Text& src) {
@@ -187,20 +184,20 @@ inline const std::string& Text::text() const {
     return text_;
 }
 
-inline void Text::setText(const std::string& newText) {
-    if (text_ == newText)
+inline void Text::setText(std::string text) {
+    if (text_ == text)
         return; // No change event fired.
 
     ChangeEventSpan span(*this);
-    text_ = newText;
+    text_ = std::move(text);
 }
 
-inline void Text::setText(const char* newText) {
-    if (text_ == newText)
+inline void Text::setText(const char* text) {
+    if (text_ == text)
         return; // No change event fired.
 
     ChangeEventSpan span(*this);
-    text_ = newText;
+    text_ = text;
 }
 
 inline void Text::writeTextShort(std::ostream& o) const {

@@ -321,7 +321,7 @@ std::unique_ptr<BlockedSFS> BlockedSFS::recognise(const Triangulation<3>& tri) {
     // Hunt for a starting block.
     std::unique_ptr<SatRegion> region;
     bool found = SatRegion::find(tri, true,
-            [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& usedTets) {
+            [&](std::unique_ptr<SatRegion> r, SatBlock::TetList& /* used */) {
         // Got one!  Nothing more to do; just stop the search.
         region = std::move(r);
         return true;

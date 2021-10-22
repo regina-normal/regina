@@ -462,7 +462,8 @@ void swap(LightweightSequence<T>& a, LightweightSequence<T>& b) noexcept;
 // Inline functions:
 
 template <typename T>
-inline LightweightSequence<T>::LightweightSequence() : data_(0), size_(0) {
+inline LightweightSequence<T>::LightweightSequence() :
+        data_(nullptr), size_(0) {
 }
 
 template <typename T>
@@ -492,7 +493,7 @@ inline LightweightSequence<T>::~LightweightSequence() {
 template <typename T>
 inline void LightweightSequence<T>::init(size_t size) {
     delete[] data_;
-    data_ = (size ? new T[size] : 0);
+    data_ = (size ? new T[size] : nullptr);
     size_ = size;
 }
 

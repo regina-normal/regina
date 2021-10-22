@@ -133,10 +133,6 @@ class SnapPeaCensusManifold : public Manifold {
          */
         SnapPeaCensusManifold(const SnapPeaCensusManifold&) = default;
         /**
-         * Destroys this structure.
-         */
-        virtual ~SnapPeaCensusManifold();
-        /**
          * Returns the section of the SnapPea census to which this
          * manifold belongs.  This will be one of the section constants
          * defined in this class.
@@ -223,8 +219,6 @@ void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept;
 inline SnapPeaCensusManifold::SnapPeaCensusManifold(char newSection,
         unsigned long newIndex) :
         section_(newSection), index_(newIndex) {
-}
-inline SnapPeaCensusManifold::~SnapPeaCensusManifold() {
 }
 inline char SnapPeaCensusManifold::section() const {
     return section_;

@@ -936,8 +936,8 @@ void metricSwitchCols(const unsigned long &currStage, const unsigned long &i,
 // columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
 void metricColOp(const unsigned long &currStage, const unsigned long &i,
         const unsigned long &j, MatrixInt &matrix, 
-        const Integer a, const Integer b, 
-        const Integer c, const Integer d, 
+        const Integer& a, const Integer& b, 
+        const Integer& c, const Integer& d, 
         MatrixInt *rowBasis, MatrixInt *rowBasisInv, 
         std::vector<Integer> &rowNorm, 
         std::vector<Integer> &colNorm)
@@ -972,8 +972,8 @@ void metricColOp(const unsigned long &currStage, const unsigned long &i,
 // row operation using 2x2-matrix [a b|c d] on rows i, j resp.
 void metricRowOp(const unsigned long &currStage, const unsigned long &i, 
     const unsigned long &j, MatrixInt &matrix, 
-    const Integer a, const Integer b, 
-    const Integer c, const Integer d, 
+    const Integer& a, const Integer& b, 
+    const Integer& c, const Integer& d, 
     MatrixInt *colBasis, MatrixInt *colBasisInv, 
     std::vector<Integer> &rowNorm, std::vector<Integer> &colNorm,
     std::vector<Integer> &rowGCD)

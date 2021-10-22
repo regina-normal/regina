@@ -95,7 +95,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
         /**
          * A destructor that does nothing.
          */
-        virtual ~StandardTriangulation();
+        virtual ~StandardTriangulation() = default;
 
         /**
          * Returns the name of this specific triangulation as a
@@ -326,9 +326,6 @@ class StandardTriangulation : public Output<StandardTriangulation> {
 };
 
 // Inline functions for StandardTriangulation
-
-inline StandardTriangulation::~StandardTriangulation() {
-}
 
 inline std::unique_ptr<Manifold> StandardTriangulation::manifold() const {
     return nullptr;

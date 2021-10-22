@@ -79,10 +79,6 @@ class Handlebody : public Manifold {
          */
         Handlebody(const Handlebody&) = default;
         /**
-         * Destroys this handlebody.
-         */
-        virtual ~Handlebody();
-        /**
          * Returns the number of handles of this handlebody.
          *
          * @return the number of handles.
@@ -152,8 +148,6 @@ void swap(Handlebody& a, Handlebody& b) noexcept;
 
 inline Handlebody::Handlebody(unsigned long newHandles, bool newOrientable) :
         nHandles(newHandles), orientable(newOrientable) {
-}
-inline Handlebody::~Handlebody() {
 }
 inline unsigned long Handlebody::handles() const {
     return nHandles;

@@ -544,9 +544,8 @@ class SatBlock : public Output<SatBlock> {
          */
         template <class List>
         static bool isBad(const Tetrahedron<3>* t, const List& list) {
-            for (typename List::const_iterator it = list.begin();
-                    it != list.end(); ++it)
-                if (*it == t)
+            for (const Tetrahedron<3>* tet : list)
+                if (tet == t)
                     return true;
             return false;
         }

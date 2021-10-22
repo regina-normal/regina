@@ -394,7 +394,7 @@ bool TypeTrie<nTypes>::dominates(const char* vec, unsigned len) const {
                     vec[level - 1])
                 node[level] = node[level - 1]->child_[vec[level - 1]];
             else if (level >= 0)
-                node[level] = 0;
+                node[level] = nullptr;
             continue;
         }
 

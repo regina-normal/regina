@@ -212,7 +212,7 @@ inline unsigned long LayeredLoop::length() const {
     return length_;
 }
 inline bool LayeredLoop::isTwisted() const {
-    return (hinge_[1] == 0);
+    return (hinge_[1] == nullptr);
 }
 inline Edge<3>* LayeredLoop::hinge(int which) const {
     return hinge_[which];

@@ -68,7 +68,7 @@ Link Link::fromPD(Iterator begin, Iterator end) {
 
     // Identify the two crossings that each strand meets.
     // A position of -1 in the 4-tuple means "not yet seen".
-    PDOccurrence* occ = new PDOccurrence[2 * n];
+    auto* occ = new PDOccurrence[2 * n];
     for (size_t i = 0; i < 2 * n; ++i)
         occ[i].first.second = occ[i].second.second = -1;
 
@@ -232,8 +232,8 @@ Link Link::fromPD(Iterator begin, Iterator end) {
     for (auto start : components) {
         const PDPos& from = (dir[start] > 0 ? occ[start].first :
             occ[start].second);
-        ans.components_.push_back(StrandRef(ans.crossings_[from.first],
-            (from.second % 2 ? 1 : 0)));
+        ans.components_.emplace_back(ans.crossings_[from.first],
+            (from.second % 2 ? 1 : 0));
     }
 
     delete[] dir;

@@ -125,7 +125,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     std::list<VecSpec<IntegerType, BitmaskType>*> basis;
     typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator bit;
 
-    Vector<IntegerType>** unitMatch = new Vector<IntegerType>*[dim];
+    auto* unitMatch = new Vector<IntegerType>*[dim];
     int i, j;
     for (i = 0; i < dim; ++i) {
         unitMatch[i] = new Vector<IntegerType>(nEqns);
@@ -136,10 +136,9 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     unsigned stackSize;
     // All vectors/rays are created and destroyed.
     // Bitmasks on the other hand are reused.
-    VecSpec<IntegerType, BitmaskType>** coord =
-        new VecSpec<IntegerType, BitmaskType>*[dim];
-    Vector<IntegerType>** match = new Vector<IntegerType>*[dim];
-    BitmaskType* frozen = new BitmaskType[dim];
+    auto* coord = new VecSpec<IntegerType, BitmaskType>*[dim];
+    auto* match = new Vector<IntegerType>*[dim];
+    auto* frozen = new BitmaskType[dim];
 
     for (i = 0; i < dim; ++i)
         frozen[i].reset(dim); // All false.

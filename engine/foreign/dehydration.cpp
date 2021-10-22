@@ -98,7 +98,8 @@ std::shared_ptr<Container> readDehydrationList(const char *filename,
                     Triangulation<3>::rehydrate(dehydration),
                     (label.empty() ? dehydration : label)));
             } catch (const InvalidArgument&) {
-                errStrings = errStrings + '\n' + dehydration;
+                errStrings += '\n';
+                errStrings += dehydration;
             }
         }
     }

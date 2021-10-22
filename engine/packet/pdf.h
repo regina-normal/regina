@@ -173,7 +173,7 @@ class PDF : public Packet {
         /**
          * Destroys this PDF packet and deallocates data if required.
          */
-        ~PDF();
+        ~PDF() override;
 
         /**
          * Sets this to be a copy of the given PDF packet.

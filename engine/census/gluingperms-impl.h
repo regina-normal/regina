@@ -58,7 +58,7 @@ Triangulation<dim> GluingPerms<dim>::triangulate() const {
     unsigned nSimp = size();
 
     Triangulation<dim> ans;
-    Simplex<dim>** simp = new Simplex<dim>*[nSimp];
+    auto* simp = new Simplex<dim>*[nSimp];
 
     unsigned t, facet;
     for (t = 0; t < nSimp; ++t)

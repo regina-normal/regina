@@ -100,7 +100,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * Creates an empty triangulation.
          */
-        Triangulation();
+        Triangulation() = default;
         /**
          * Creates a new copy of the given triangulation.
          *
@@ -111,7 +111,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * @param copy the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy);
+        Triangulation(const Triangulation& copy) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
@@ -394,14 +394,6 @@ inline void Triangulation<2>::clearAllProperties() {
 namespace regina {
 
 // Inline functions for Triangulation<2>
-
-inline Triangulation<2>::Triangulation() {
-}
-
-inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) :
-        TriangulationBase<2>(cloneMe) {
-    // No properties yet to clone.
-}
 
 inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
         bool cloneProps) :

@@ -113,7 +113,8 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
                 ans->insertChildLast(makePacket(PacketType::fromSig(sig),
                     (label.empty() ? sig : label)));
             } catch (const InvalidArgument&) {
-                errStrings = errStrings + '\n' + sig;
+                errStrings += '\n';
+                errStrings += sig;
             }
         }
     }

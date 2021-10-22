@@ -86,7 +86,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
     for (i = 0; i < aNumCrossings; ++i)
         ans.crossings_.push_back(new Crossing);
 
-    ans.components_.push_back(StrandRef(ans.crossings_.front(), 0));
+    ans.components_.emplace_back(ans.crossings_.front(), 0);
 
     // Here starts the SnapPea code!
 

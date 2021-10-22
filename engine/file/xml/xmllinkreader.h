@@ -127,7 +127,7 @@ class XMLLinkConnectionsReader : public XMLElementReader {
          */
         XMLLinkConnectionsReader(Link* link);
 
-        virtual void initialChars(const std::string& chars);
+        void initialChars(const std::string& chars) override;
 
         /**
          * Indicates whether the XML element has been found to contain
@@ -161,9 +161,9 @@ class XMLLinkComponentsReader : public XMLElementReader {
          */
         XMLLinkComponentsReader(Link* link);
 
-        virtual void startElement(const std::string&,
-            const regina::xml::XMLPropertyDict&, XMLElementReader*);
-        virtual void initialChars(const std::string& chars);
+        void startElement(const std::string&,
+            const regina::xml::XMLPropertyDict&, XMLElementReader*) override;
+        void initialChars(const std::string& chars) override;
 
         /**
          * Indicates whether the XML element has been found to contain

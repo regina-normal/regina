@@ -81,7 +81,7 @@ class Manifold : public Output<Manifold> {
         /**
          * A destructor that does nothing.
          */
-        virtual ~Manifold();
+        virtual ~Manifold() = default;
 
         /**
          * Returns the common name of this 3-manifold as a
@@ -315,9 +315,6 @@ class Manifold : public Output<Manifold> {
 };
 
 // Inline functions for Manifold
-
-inline Manifold::~Manifold() {
-}
 
 inline AbelianGroup Manifold::homologyH1() const {
     return homology();

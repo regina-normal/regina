@@ -507,8 +507,8 @@ class DiscSetTetData : public DiscSetTet {
          * will not be destroyed.
          */
         ~DiscSetTetData() {
-            for (int i=0; i<10; i++)
-                delete[] data_[i];
+            for (T* t : data_)
+                delete[] t;
         }
 
         /**

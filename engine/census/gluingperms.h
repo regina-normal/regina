@@ -591,7 +591,7 @@ inline GluingPerms<dim>::GluingPerms(const GluingPerms<dim>& src) :
 
 template <int dim>
 inline GluingPerms<dim>::GluingPerms(GluingPerms<dim>&& src) noexcept :
-        pairing_(src.pairing_), permIndices_(src.permIndices_) {
+        pairing_(std::move(src.pairing_)), permIndices_(src.permIndices_) {
     src.permIndices_ = nullptr;
 }
 

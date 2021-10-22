@@ -137,8 +137,9 @@ class ExampleFromLowDim<dim, false> {
         "The ExampleFromLowDim template should only set available = false "
         "in dimension 2.");
 
-    // Make this class non-constructible.
-    ExampleFromLowDim() = delete;
+    public:
+        // Make this class non-constructible.
+        ExampleFromLowDim() = delete;
 };
 
 /**
@@ -253,7 +254,7 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::singleCone(
         return ans;
 
     // We have at least one simplex.  Off we go.
-    Simplex<dim>** simp = new Simplex<dim>*[n];
+    auto* simp = new Simplex<dim>*[n];
 
     size_t i;
     int facet;
@@ -297,7 +298,7 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
         return ans;
 
     // We have at least one simplex.  Off we go.
-    Simplex<dim>** simp = new Simplex<dim>*[2 * n];
+    auto* simp = new Simplex<dim>*[2 * n];
 
     size_t i;
     int facet;

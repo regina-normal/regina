@@ -204,7 +204,7 @@ class FileInfo : public Output<FileInfo> {
         /**
          * Create a new uninitialised structure.
          */
-        FileInfo();
+        FileInfo() = default;
 };
 
 /**
@@ -221,9 +221,6 @@ class FileInfo : public Output<FileInfo> {
 void swap(FileInfo& a, FileInfo& b) noexcept;
 
 // Inline functions for FileInfo
-
-inline FileInfo::FileInfo() {
-}
 
 inline const std::string& FileInfo::pathname() const {
     return pathname_;

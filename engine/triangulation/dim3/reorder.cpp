@@ -80,8 +80,7 @@ Perm<4> perm_from_edges(const int edge_orientations_on_tet[6]) {
 
 // writes the result into edge_orientations_tet
 
-void edge_orientations_on_tet(const Triangulation<3> &trig,
-                              const std::vector<int> &edge_orientations,
+void edge_orientations_on_tet(const std::vector<int> &edge_orientations,
                               const Tetrahedron<3> *tet,
                               int edge_orientations_tet[6]) {
     for(int i = 0; i < 6; i++)
@@ -137,7 +136,7 @@ bool check_consistency_on_tet(const Triangulation<3> &trig,
 
     // compute how the assignment of orientations to edges of the triangulation
     // look on the tetrahedron
-    edge_orientations_on_tet(trig,edge_orientations,tet,edge_orientations_tet);
+    edge_orientations_on_tet(edge_orientations,tet,edge_orientations_tet);
 
     // check that edge orientations are acyclic on each face of tet
 
@@ -211,8 +210,7 @@ Isomorphism<3>* iso_from_edges(const Triangulation<3> &trig,
 
         // compute how the edge orientations look on the tetrahedron
 
-        edge_orientations_on_tet(trig,
-                                 edge_orientations,
+        edge_orientations_on_tet(edge_orientations,
                                  trig.tetrahedron(i),
                                  edge_orientations_tet);
 

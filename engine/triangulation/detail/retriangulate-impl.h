@@ -173,7 +173,7 @@ class RetriangulateThreadSync<true> {
         void startThreads(unsigned nThreads, ProgressTrackerOpen* tracker) {
             nRunning_ = nThreads;
 
-            std::thread* t = new std::thread[nThreads];
+            auto* t = new std::thread[nThreads];
             unsigned i;
 
             // In the std::thread constructor, we \e must pass \c this as a
@@ -333,7 +333,7 @@ class RetriangulateSigGraph<false> : private std::set<std::string> {
             return insert(sig);
         }
 
-        auto insertDerived(const std::string& sig, const std::string& from) {
+        auto insertDerived(const std::string& sig, const std::string&) {
             return insert(sig);
         }
 

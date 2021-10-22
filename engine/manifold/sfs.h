@@ -86,7 +86,7 @@ struct SFSFibre {
     /**
      * Creates a new uninitialised exceptional fibre.
      */
-    SFSFibre();
+    SFSFibre() = default;
     /**
      * Creates a new exceptional fibre with the given parameters.
      *
@@ -375,10 +375,6 @@ class SFSpace : public Manifold {
          * The space that was passed will no longer be usable.
          */
         SFSpace(SFSpace&&) noexcept = default;
-        /**
-         * Destroys this Seifert fibred space.
-         */
-        virtual ~SFSpace();
 
         /**
          * Sets this to be a copy of the given Seifert fibred space.
@@ -884,8 +880,6 @@ void swap(SFSpace& a, SFSpace& b) noexcept;
 
 // Inline functions for SFSFibre
 
-inline SFSFibre::SFSFibre() {
-}
 inline SFSFibre::SFSFibre(long newAlpha, long newBeta) :
         alpha(newAlpha), beta(newBeta) {
 }
@@ -916,9 +910,6 @@ inline SFSpace::SFSpace(SFSpace::ClassType useClass, unsigned long genus,
         punctures_(punctures), puncturesTwisted_(puncturesTwisted),
         reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
         nFibres_(0), b_(0) {
-}
-
-inline SFSpace::~SFSpace() {
 }
 
 inline void SFSpace::swap(SFSpace& other) noexcept {

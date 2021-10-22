@@ -107,7 +107,7 @@ class TxICore : public Output<TxICore> {
         /**
          * Destroys this object.
          */
-        virtual ~TxICore();
+        virtual ~TxICore() = default;
         /**
          * Returns a full copy of the <tt>T x I</tt> triangulation that
          * this object describes.
@@ -308,7 +308,7 @@ class TxICore : public Output<TxICore> {
         /**
          * Default constructor that performs no initialisation.
          */
-        TxICore();
+        TxICore() = default;
         /**
          * Copy constructor.
          *
@@ -622,12 +622,6 @@ class TxIParallelCore : public TxICore {
 void swap(TxIParallelCore& lhs, TxIParallelCore& rhs);
 
 // Inline functions for TxICore
-
-inline TxICore::TxICore() {
-}
-
-inline TxICore::~TxICore() {
-}
 
 inline const Triangulation<3>& TxICore::core() const {
     return core_;

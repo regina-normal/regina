@@ -198,7 +198,7 @@ bool SatAnnulus::isTwoSidedTorus() const {
     return true;
 }
 
-void SatAnnulus::transform(const Triangulation<3>& originalTri,
+void SatAnnulus::transform(const Triangulation<3>& /* originalTri */,
         const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
     unsigned which;
     unsigned long tetID;

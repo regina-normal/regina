@@ -1174,9 +1174,10 @@ class GluingPermSearcher<4> {
 // Inline functions for GluingPermSearcher<4>
 
 template <typename Action, typename... Args>
-inline GluingPermSearcher<4>::GluingPermSearcher(FacetPairing<4> pairing,
-        FacetPairing<4>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, Action&& action, Args&&... args) :
+inline GluingPermSearcher<4>::GluingPermSearcher(
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
+        FacetPairing<4> pairing, FacetPairing<4>::IsoList autos,
+        bool orientableOnly, bool finiteOnly, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
         GluingPermSearcher<4>(std::move(pairing), std::move(autos),
             orientableOnly, finiteOnly,

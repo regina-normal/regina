@@ -143,8 +143,7 @@ private:
             /**
              * Construct an empty array.
              */
-            inline SortedArray() {
-            }
+            inline SortedArray() = default;
 
             /**
              * Construct a clone of the given array.
@@ -200,8 +199,7 @@ private:
              * or -1 if the given integer is not stored in this array.
              */
             inline ptrdiff_t index(unsigned long value) const {
-                std::vector<unsigned long>::const_iterator it =
-                    std::lower_bound(data_.begin(), data_.end(), value);
+                auto it = std::lower_bound(data_.begin(), data_.end(), value);
                 if (it != data_.end() && *it == value)
                     return (it - data_.begin());
                 else

@@ -72,7 +72,7 @@ struct PrismSpec {
     /**
      * Creates a new uninitialised prism specifier.
      */
-    PrismSpec();
+    PrismSpec() = default;
     /**
      * Creates a new prism specifier containing the given values.
      *
@@ -133,8 +133,6 @@ std::ostream& operator << (std::ostream& out, const PrismSpec& spec);
 
 // Inline functions for PrismSpec
 
-inline PrismSpec::PrismSpec() {
-}
 inline PrismSpec::PrismSpec(size_t newTetIndex, int newEdge) :
         tetIndex(newTetIndex), edge(newEdge) {
 }

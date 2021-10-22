@@ -1257,7 +1257,7 @@ inline ModelLinkGraphCells::~ModelLinkGraphCells() {
 
 // Inline functions for ModelLinkGraphArc
 
-inline ModelLinkGraphArc::ModelLinkGraphArc() : node_(0), arc_(0) {
+inline ModelLinkGraphArc::ModelLinkGraphArc() : node_(nullptr), arc_(0) {
 }
 
 inline ModelLinkGraphArc::ModelLinkGraphArc(ModelLinkGraphNode* node, int arc) :
@@ -1335,7 +1335,7 @@ inline ModelLinkGraphArc ModelLinkGraphArc::operator -- (int) {
 }
 
 inline ModelLinkGraphArc::operator bool() const {
-    return (node_ != 0);
+    return (node_ != nullptr);
 }
 
 inline std::ostream& operator << (std::ostream& out,

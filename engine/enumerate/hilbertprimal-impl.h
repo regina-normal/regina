@@ -147,7 +147,7 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         std::vector<std::vector<mpz_class> > input;
         for (rit = raysBegin; rit != raysEnd; ++rit)
             if (inFace(*rit, m)) {
-                input.push_back(std::vector<mpz_class>());
+                input.emplace_back();
                 std::vector<mpz_class>& v(input.back());
                 v.reserve(dim);
                 for (i = 0; i < dim; ++i) {

@@ -73,12 +73,12 @@ void Link::addComponents(size_t strandsRemaining,
     if (component.size() == 0) {
         // Support an empty component via { }, though I suspect this is
         // impossible to use because the C++ compiler cannot deduce the type.
-        components_.push_back(StrandRef());
+        components_.emplace_back();
     } else if (component.size() == 1 && *component.begin() == 0) {
         // Support an empty component via { 0 }.
         // Here we increment strandsRemaining, to account for the extra
         // integer (0) in our list that does not belong to any crossing.
-        components_.push_back(StrandRef());
+        components_.emplace_back();
         ++strandsRemaining;
     } else {
         long n = crossings_.size();

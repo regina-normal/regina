@@ -90,10 +90,6 @@ class LensSpace : public Manifold {
          */
         LensSpace(const LensSpace&) = default;
         /**
-         * Destroys this lens space.
-         */
-        virtual ~LensSpace();
-        /**
          * Returns the first parameter \a p of this lens space L(p,q).
          * See the class notes for details.
          *
@@ -178,8 +174,6 @@ void swap(LensSpace& a, LensSpace& b) noexcept;
 inline LensSpace::LensSpace(unsigned long newP, unsigned long newQ) :
         p_(newP), q_(newQ) {
     reduce();
-}
-inline LensSpace::~LensSpace() {
 }
 inline unsigned long LensSpace::p() const {
     return p_;

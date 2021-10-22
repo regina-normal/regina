@@ -762,7 +762,7 @@ class Link : public PacketData<Link>, public Output<Link> {
         /**
          * Constructs an empty link.  This will have zero components.
          */
-        Link();
+        Link() = default;
         /**
          * Constructs the unlink with the given number of components.
          *
@@ -4659,9 +4659,6 @@ inline Crossing::Crossing(int sign) : sign_(sign) {
 }
 
 // Inline functions for Link
-
-inline Link::Link() {
-}
 
 inline Link::Link(size_t unknots) {
     components_.resize(unknots);

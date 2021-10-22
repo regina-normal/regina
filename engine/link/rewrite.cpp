@@ -33,6 +33,7 @@
 #include "link/link.h"
 #include "triangulation/detail/retriangulate-impl.h"
 
+// NOLINTNEXTLINE(modernize-concat-nested-namespaces)
 namespace regina {
 
 namespace detail {

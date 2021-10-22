@@ -477,6 +477,7 @@ class GluingPermSearcher<2> {
 
 template <typename Action, typename... Args>
 inline GluingPermSearcher<2>::GluingPermSearcher(
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
         FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
         bool orientableOnly, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.

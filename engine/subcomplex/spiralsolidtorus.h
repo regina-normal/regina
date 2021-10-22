@@ -124,7 +124,7 @@ class SpiralSolidTorus : public StandardTriangulation {
         /**
          * Destroys this structure.
          */
-        virtual ~SpiralSolidTorus();
+        ~SpiralSolidTorus() override;
 
         /**
          * Sets this to be a copy of the given structure.

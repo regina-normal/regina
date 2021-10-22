@@ -54,7 +54,7 @@ template <int dim>
 TreeDecomposition::TreeDecomposition(
         const Triangulation<dim>& triangulation,
         TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
+        width_(0), root_(nullptr) {
     Graph g(triangulation.size());
 
     int i, j;
@@ -73,7 +73,7 @@ template <int dim>
 TreeDecomposition::TreeDecomposition(
         const FacetPairing<dim>& pairing,
         TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
+        width_(0), root_(nullptr) {
     Graph g(pairing.size());
 
     int i, j;
@@ -88,7 +88,7 @@ TreeDecomposition::TreeDecomposition(
 template <typename T>
 TreeDecomposition::TreeDecomposition(unsigned order, T const** graph,
         TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
+        width_(0), root_(nullptr) {
     Graph g(order);
 
     int i, j;

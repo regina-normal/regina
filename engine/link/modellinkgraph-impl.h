@@ -205,7 +205,7 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
                 l.crossings_[adj]->prev_[adjStrand].crossing_ = l.crossings_[i];
                 l.crossings_[adj]->prev_[adjStrand].strand_ = 0;
             }
-            l.components_.push_back(StrandRef(*l.crossings_.begin(), 1));
+            l.components_.emplace_back(*l.crossings_.begin(), 1);
 
             action(std::move(l), std::forward<Args>(args)...);
 

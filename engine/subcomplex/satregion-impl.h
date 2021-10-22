@@ -75,7 +75,7 @@ bool SatRegion::find(const Triangulation<3>& tri, bool mustBeComplete,
                 usedTets.insert(tri.tetrahedron(iso.tetImage(i)));
 
             // Wrap an initial region around the block, and expand.
-            SatRegion* region = new SatRegion(starter);
+            auto* region = new SatRegion(starter);
             if (! region->expand(usedTets, mustBeComplete)) {
                 // Nope.  Keep on searching.
                 delete region;

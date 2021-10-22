@@ -191,7 +191,9 @@ std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerate(
         // We pass the shared pointers ans and treeParent into the thread
         // to ensure that they survive for the lifetime of the thread.
         std::thread([tracker](
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
                 std::shared_ptr<AngleStructures> a,
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
                 std::shared_ptr<Packet> p) {
             a->enumerateInternal(tracker, p.get());
         }, ans, std::move(treeParent)).detach();

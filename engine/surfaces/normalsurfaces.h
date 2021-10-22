@@ -1083,7 +1083,7 @@ class NormalSurfaces :
                 /**
                  * Creates a new uninitialised iterator.
                  */
-                VectorIterator();
+                VectorIterator() = default;
 
                 /**
                  * Creates a copy of the given iterator.
@@ -1659,9 +1659,6 @@ template <typename Comparison>
 inline void NormalSurfaces::sort(Comparison&& comp) {
     ChangeEventSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
-}
-
-inline NormalSurfaces::VectorIterator::VectorIterator() {
 }
 
 inline bool NormalSurfaces::VectorIterator::operator ==(

@@ -38,7 +38,7 @@
 
 namespace regina {
 
-void LayeredSolidTorus::transform(const Triangulation<3>& originalTri,
+void LayeredSolidTorus::transform(const Triangulation<3>& /* originalTri */,
         const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
     size_t baseTetID = base_->index();
     size_t topTetID = top_->index();

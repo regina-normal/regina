@@ -114,8 +114,12 @@ std::shared_ptr<PacketOf<NormalHypersurfaces>> NormalHypersurfaces::enumerate(
         //
         // Likewise, passing the shared pointers ans and treeParent into the
         // thread ensures that they survive for the lifetime of the thread.
-        std::thread([tracker](MatrixInt e,
+        std::thread([tracker](
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
+                MatrixInt e,
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
                 std::shared_ptr<NormalHypersurfaces> h,
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
                 std::shared_ptr<Packet> p) {
             Enumerator(h.get(), e, tracker, p.get()).enumerate();
         }, std::move(eqns), ans, std::move(treeParent)).detach();
@@ -229,7 +233,7 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */,
         list_->triangulation_);
-    Enumerator e(&vtx, std::move(eqns_), nullptr, nullptr);
+    Enumerator e(&vtx, eqns_, nullptr, nullptr);
     e.fillVertex();
 
     // We cannot use eqns_ beyond this point, since we moved it into e.

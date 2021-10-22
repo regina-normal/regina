@@ -1204,7 +1204,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
         /**
          * Destroys this search manager and all supporting data structures.
          */
-        virtual ~EulerSearcher();
+        ~EulerSearcher() override;
 
         // Overridden methods:
         void dumpData(std::ostream& out) const override;
@@ -2040,7 +2040,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
         /**
          * Destroys this search manager and all supporting data structures.
          */
-        virtual ~CompactSearcher();
+        ~CompactSearcher() override;
 
         // Overridden methods:
         void dumpData(std::ostream& out) const override;
@@ -2601,7 +2601,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
         /**
          * Destroys this search manager and all supporting data structures.
          */
-        virtual ~ClosedPrimeMinSearcher();
+        ~ClosedPrimeMinSearcher() override;
 
         // Overridden methods:
         void dumpData(std::ostream& out) const override;
@@ -2865,9 +2865,11 @@ class HyperbolicMinSearcher : public EulerSearcher {
 // Inline functions for GluingPermSearcher<3>
 
 template <typename Action, typename... Args>
-inline GluingPermSearcher<3>::GluingPermSearcher(FacetPairing<3> pairing,
-        FacetPairing<3>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, Action&& action, Args&&... args) :
+inline GluingPermSearcher<3>::GluingPermSearcher(
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
+        FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
+        bool orientableOnly, bool finiteOnly, int whichPurge,
+        Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
         GluingPermSearcher<3>(std::move(pairing), std::move(autos),
             orientableOnly, finiteOnly, whichPurge,
@@ -2984,6 +2986,7 @@ inline EulerSearcher::TetEdgeState::TetEdgeState() :
 
 template <typename Action, typename... Args>
 inline EulerSearcher::EulerSearcher(int useEuler,
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, int whichPurge, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
@@ -3146,6 +3149,7 @@ inline CompactSearcher::TetEdgeState::TetEdgeState() :
 
 template <typename Action, typename... Args>
 inline CompactSearcher::CompactSearcher(
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, int whichPurge, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
@@ -3299,6 +3303,7 @@ inline bool CompactSearcher::vtxBdryLength2(
 
 template <typename Action, typename... Args>
 inline ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
@@ -3333,6 +3338,7 @@ inline char ClosedPrimeMinSearcher::dataTag() const {
 
 template <typename Action, typename... Args>
 inline HyperbolicMinSearcher::HyperbolicMinSearcher(
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
         bool orientableOnly, Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.

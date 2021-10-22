@@ -147,7 +147,7 @@ XMLNormalSurfacesReader::XMLNormalSurfacesReader(
 
 XMLElementReader* XMLNormalSurfacesReader::startContentSubElement(
         const std::string& subTagName,
-        const regina::xml::XMLPropertyDict& props) {
+        const regina::xml::XMLPropertyDict&) {
     if (list_ && subTagName == "surface")
         return new XMLNormalSurfaceReader(
             list_->triangulation_, list_->coords_);

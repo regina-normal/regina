@@ -119,7 +119,7 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     }
     unsigned nCross = foundCrossings / 2;
 
-    Crossing** tmpCross = new Crossing*[nCross];
+    auto* tmpCross = new Crossing*[nCross];
     std::fill(tmpCross, tmpCross + nCross, nullptr);
 
     try {
