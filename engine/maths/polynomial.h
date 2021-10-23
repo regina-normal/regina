@@ -115,7 +115,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * @param value the polynomial to clone.
          */
-        Polynomial(const Polynomial<T>& value);
+        Polynomial(const Polynomial& value);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -137,7 +137,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * @param value the polynomial to move.
          */
-        Polynomial(Polynomial<T>&& value) noexcept;
+        Polynomial(Polynomial&& value) noexcept;
 
         /**
          * Creates a new polynomial from the given sequence of coefficients.
@@ -298,7 +298,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @return \c true if and only if this and the given polynomial
          * are equal.
          */
-        bool operator == (const Polynomial<T>& rhs) const;
+        bool operator == (const Polynomial& rhs) const;
 
         /**
          * Tests whether this and the given polynomial are not equal.
@@ -307,7 +307,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @return \c true if and only if this and the given polynomial
          * are not equal.
          */
-        bool operator != (const Polynomial<T>& rhs) const;
+        bool operator != (const Polynomial& rhs) const;
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -325,7 +325,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
-        Polynomial& operator = (const Polynomial<T>& value);
+        Polynomial& operator = (const Polynomial& value);
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -355,7 +355,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param value the polynomial to move.
          * @return a reference to this polynomial.
          */
-        Polynomial& operator = (Polynomial<T>&& value) noexcept;
+        Polynomial& operator = (Polynomial&& value) noexcept;
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -366,7 +366,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param other the polynomial whose contents should be swapped
          * with this.
          */
-        void swap(Polynomial<T>& other) noexcept;
+        void swap(Polynomial& other) noexcept;
 
         /**
          * Negates this polynomial.
@@ -409,7 +409,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param other the polynomial to add to this.
          * @return a reference to this polynomial.
          */
-        Polynomial& operator += (const Polynomial<T>& other);
+        Polynomial& operator += (const Polynomial& other);
 
         /**
          * Subtracts the given polynomial from this.
@@ -421,7 +421,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param other the polynomial to subtract from this.
          * @return a reference to this polynomial.
          */
-        Polynomial& operator -= (const Polynomial<T>& other);
+        Polynomial& operator -= (const Polynomial& other);
 
         /**
          * Multiplies this by the given polynomial.
@@ -429,7 +429,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param other the polynomial to multiply this by.
          * @return a reference to this polynomial.
          */
-        Polynomial& operator *= (const Polynomial<T>& other);
+        Polynomial& operator *= (const Polynomial& other);
 
         /**
          * Divides this by the given polynomial.
@@ -460,7 +460,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param other the polynomial to divide this by.
          * @return a reference to this polynomial.
          */
-        Polynomial& operator /= (const Polynomial<T>& other);
+        Polynomial& operator /= (const Polynomial& other);
 
         /**
          * Divides this by the given divisor, and extracts both the
@@ -505,8 +505,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param remainder a polynomial whose contents will be destroyed
          * and replaced with the remainder \a r, as described above.
          */
-        void divisionAlg(const Polynomial<T>& divisor,
-            Polynomial<T>& quotient, Polynomial<T>& remainder) const;
+        void divisionAlg(const Polynomial& divisor,
+            Polynomial& quotient, Polynomial& remainder) const;
 
         /**
          * Calculates the greatest common divisor of this and the given
@@ -533,7 +533,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          */
         template <typename U>
         void gcdWithCoeffs(const Polynomial<U>& other,
-            Polynomial<T>& gcd, Polynomial<T>& u, Polynomial<T>& v) const;
+            Polynomial& gcd, Polynomial& u, Polynomial& v) const;
 
         /**
          * Writes this polynomial to the given output stream, using the
@@ -618,7 +618,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param other the polynomial to subtract this from.
          * @return a reference to this polynomial.
          */
-        Polynomial& subtractFrom(const Polynomial<T>& other);
+        Polynomial& subtractFrom(const Polynomial& other);
 
     template <typename U>
     friend Polynomial<U> operator +(const Polynomial<U>&, const Polynomial<U>&);

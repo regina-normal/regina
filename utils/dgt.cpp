@@ -1057,7 +1057,7 @@ int main(int argc, char* argv[]) {
         /*
          Sum up the values in each vector to give the total number of intersections from other components.
          */
-        long compTotal = std::accumulate(tmpIntersectionMatrix[i].begin(), tmpIntersectionMatrix[i].end(), 0);
+        long compTotal = std::accumulate(tmpIntersectionMatrix[i].begin(), tmpIntersectionMatrix[i].end(), long(0));
         intersectionTotals.push_back(compTotal);
     }
     /*
