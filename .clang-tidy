@@ -21,7 +21,8 @@ Checks: "
 
 # Our aim in the following regex is:
 # - include engine/;
-# - exclude engine/libnormaliz/, engine/syntax and engine/snappea/kernel/;
-# - include python/ and qtui/.
+# - exclude engine/libnormaliz/, engine/syntax and engine/snappea/*/;
+# - include python/ but not any system pythonX.Y/ or cpython/;
+# - include qtui/.
 #
-HeaderFilterRegex: "(engine/([^ls]|link|s[^ny]|snappea/[^k]).*|python/.*|qtui/.*)"
+HeaderFilterRegex: "(engine/([^ls].*|link/.*|s[^ny].*|snappea/[^/]+)|/python/.*|qtui/.*)$"
