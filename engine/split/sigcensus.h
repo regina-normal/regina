@@ -112,7 +112,7 @@ class SigCensus {
          *   changed and reused after \a action returns.
          *
          * - The second argument to \a action must be a const reference to a
-         *   Signature::IsoList.  This will be the list of all automorphisms of
+         *   SigCensus::IsoList.  This will be the list of all automorphisms of
          *   the signature that was found.  Again, if \a action wishes to keep
          *   these automorphisms, it should take a deep copy of this list.
          *
@@ -124,11 +124,6 @@ class SigCensus {
          * \warning Currently upper-case symbols in signatures are not supported
          * by this routine; only signatures whose symbols are all lower-case
          * will be produced.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * \todo \feature Add support for symbols of differing case.
          *
@@ -231,9 +226,9 @@ template <typename Action, typename... Args>
 inline SigCensus::SigCensus(unsigned order, Action&& action, Args&&... args) :
         sig(order), used(new unsigned[order]),
         automorph(new IsoList[order + 2]),
-        action_(std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::placeholders::_2,
-            std::forward<Args>(args)...)) {
+        action_([&](const Signature& sig, const IsoList& isos) {
+            action(sig, isos, std::forward<Args>(args)...);
+        }) {
 }
 
 inline SigCensus::~SigCensus() {

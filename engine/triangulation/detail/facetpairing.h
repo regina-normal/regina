@@ -552,11 +552,6 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * pairing.
          * \todo \feature Allow cancellation of facet pairing generation.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
-         *
          * \ifacespython This function is available, and \a action may be a
          * pure Python function.  However, \a action cannot take any additional
          * arguments beyond the facet pairing and its automorphisms (and

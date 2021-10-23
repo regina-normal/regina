@@ -623,11 +623,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * nothing: it will immediately return \c false, and if a progress
          * tracker was passed then it will be immediately marked as finished.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \pre This triangulation is connected.
          *
          * \exception FailedPrecondition this triangulation has more

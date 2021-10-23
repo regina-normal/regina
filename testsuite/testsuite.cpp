@@ -51,6 +51,7 @@
 #include "testsuite/link/testlink.h"
 #include "testsuite/manifold/testmanifold.h"
 #include "testsuite/maths/testmaths.h"
+#include "testsuite/misc/testmisc.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
 #include "testsuite/surfaces/testsurfaces.h"
@@ -193,6 +194,9 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("link", &addLink));
     // We no longer build-depend on boost, so disable the boost.graph test.
     // sets.insert(std::make_pair("linkgraph", &addLinkGraph));
+
+    // Miscellaneous tests:
+    sets.insert(std::make_pair("callbacks", &addCallbacks));
 
     if (argc <= 1)
         for (const auto& i : sets)

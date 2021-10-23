@@ -1834,11 +1834,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \pre This link has at most one component (i.e., it is empty
          * or it is a knot).
          *

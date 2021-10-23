@@ -1535,11 +1535,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \pre This triangulation is connected.
          *
          * \exception FailedPrecondition this triangulation has more
