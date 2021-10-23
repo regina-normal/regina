@@ -446,6 +446,10 @@ class IntegerTest : public CppUnit::TestFixture {
                 w = x;
                 testLarge(w, "Large = from large", value, sign, false);
 
+                // Test self-assignment.
+                w = w;
+                testLarge(w, "Large = from self", value, sign, false);
+
                 // Test raw GMP assignment.
                 IntType v(5);
                 v.setRaw(y.rawData());

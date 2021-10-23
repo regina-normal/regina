@@ -118,6 +118,27 @@ class RationalTest : public CppUnit::TestFixture {
                     " reports an incorrect string.";
                 CPPUNIT_FAIL(msg.str());
             }
+
+            // Test self-assignment while we're here.
+            r = r;
+            if (r.numerator() != val) {
+                std::ostringstream msg;
+                msg << "Rational IntegerBase<...>" << val <<
+                    " reports an incorrect numerator after self-assignment.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (r.denominator() != 1) {
+                std::ostringstream msg;
+                msg << "Rational IntegerBase<...>" << val <<
+                    " reports an incorrect denominator after self-assignment.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (str(r) != val.stringValue()) {
+                std::ostringstream msg;
+                msg << "Rational IntegerBase<...>" << val <<
+                    " reports an incorrect string after self-assignment.";
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 
         void constructFromInteger() {
