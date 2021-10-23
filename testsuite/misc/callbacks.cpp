@@ -36,6 +36,9 @@
 #include "testsuite/utilities/testutilities.h"
 #include "link/examplelink.h"
 #include "link/link.h"
+#include "link/modellinkgraph.h"
+#include "snappea/examplesnappea.h"
+#include "snappea/snappeatriangulation.h"
 #include "split/sigcensus.h"
 #include "triangulation/example3.h"
 #include "triangulation/example4.h"
@@ -104,29 +107,19 @@ class CallbacksTest : public CppUnit::TestFixture {
         }
 
         void passByReference() {
-            // ModelLinkGraph::generateMinimalLinks()
+            // TODO:
             //
             // GluingPermSearcher<2,3,4> and subclasses.. lots of stuff
             //
             // TreeEnumeration::run()
             // TautEnumeration::run()
             //
-            // GroupPresentation::enumerateCovers()
-            // SnapPeaTriangulation::enumerateCovers()
-            //
             // SatRegion::find()
+
+            // ----- Isomorphism / subcomplex testing -----
 
             {
                 regina::Triangulation<3> t = regina::Example<3>::s2xs1();
-
-                Arg a;
-                t.findAllIsomorphisms(t,
-                        [](const regina::Isomorphism<3>&, Arg& arg) {
-                    arg.flag();
-                    return false;
-                }, std::ref(a));
-                verifyPassedByReference(a,
-                    "Triangulation<3>::findAllIsomorphisms()");
 
                 Arg b;
                 t.findAllIsomorphisms(t,
@@ -137,15 +130,6 @@ class CallbacksTest : public CppUnit::TestFixture {
                 verifyPassedByReference(b,
                     "Triangulation<3>::findAllIsomorphisms()");
 
-                Arg c;
-                t.findAllSubcomplexesIn(t,
-                        [](const regina::Isomorphism<3>&, Arg& arg) {
-                    arg.flag();
-                    return false;
-                }, std::ref(c));
-                verifyPassedByReference(c,
-                    "Triangulation<3>::findAllSubcomplexesIn()");
-
                 Arg d;
                 t.findAllSubcomplexesIn(t,
                         [](const regina::Isomorphism<3>&, Arg& arg) {
@@ -155,15 +139,10 @@ class CallbacksTest : public CppUnit::TestFixture {
                 verifyPassedByReference(d,
                     "Triangulation<3>::findAllSubcomplexesIn()");
             }
-            {
-                Arg a;
-                regina::Example<3>::s2xs1().retriangulate(1, 1, nullptr,
-                        [](const regina::Triangulation<3>&, Arg& arg) {
-                    arg.flag();
-                    return false;
-                }, std::ref(a));
-                verifyPassedByReference(a, "Triangulation<3>::retriangulate()");
 
+            // ----- Retriangulation / rewriting -----
+
+            {
                 Arg b;
                 regina::Example<3>::s2xs1().retriangulate(1, 1, nullptr,
                         [](const regina::Triangulation<3>&, Arg& arg) {
@@ -171,15 +150,6 @@ class CallbacksTest : public CppUnit::TestFixture {
                     return false;
                 }, b);
                 verifyPassedByReference(b, "Triangulation<3>::retriangulate()");
-
-                Arg c;
-                regina::Example<3>::s2xs1().retriangulate(1, 1, nullptr,
-                        [](const std::string&, const regina::Triangulation<3>&,
-                            Arg& arg) {
-                    arg.flag();
-                    return false;
-                }, std::ref(c));
-                verifyPassedByReference(c, "Triangulation<3>::retriangulate()");
 
                 Arg d;
                 regina::Example<3>::s2xs1().retriangulate(1, 1, nullptr,
@@ -191,33 +161,16 @@ class CallbacksTest : public CppUnit::TestFixture {
                 verifyPassedByReference(d, "Triangulation<3>::retriangulate()");
             }
             {
-                Arg a;
-                regina::Example<4>::rp4().retriangulate(0, 1, nullptr,
-                        [](const regina::Triangulation<4>&, Arg& arg) {
-                    arg.flag();
-                    return false;
-                }, std::ref(a));
-                verifyPassedByReference(a, "Triangulation<4>::retriangulate()");
-
                 Arg b;
-                regina::Example<4>::rp4().retriangulate(0, 1, nullptr,
+                regina::Example<4>::rp4().retriangulate(2, 1, nullptr,
                         [](const regina::Triangulation<4>&, Arg& arg) {
                     arg.flag();
                     return false;
                 }, b);
                 verifyPassedByReference(b, "Triangulation<4>::retriangulate()");
 
-                Arg c;
-                regina::Example<4>::rp4().retriangulate(0, 1, nullptr,
-                        [](const std::string&, const regina::Triangulation<4>&,
-                            Arg& arg) {
-                    arg.flag();
-                    return false;
-                }, std::ref(c));
-                verifyPassedByReference(c, "Triangulation<4>::retriangulate()");
-
                 Arg d;
-                regina::Example<4>::rp4().retriangulate(0, 1, nullptr,
+                regina::Example<4>::rp4().retriangulate(2, 1, nullptr,
                         [](const std::string&, const regina::Triangulation<4>&,
                             Arg& arg) {
                     arg.flag();
@@ -226,14 +179,6 @@ class CallbacksTest : public CppUnit::TestFixture {
                 verifyPassedByReference(d, "Triangulation<4>::retriangulate()");
             }
             {
-                Arg a;
-                regina::ExampleLink::trefoil().rewrite(2, 1, nullptr,
-                        [](const regina::Link&, Arg& arg) {
-                    arg.flag();
-                    return false;
-                }, std::ref(a));
-                verifyPassedByReference(a, "Link::rewrite()");
-
                 Arg b;
                 regina::ExampleLink::trefoil().rewrite(2, 1, nullptr,
                         [](const regina::Link&, Arg& arg) {
@@ -241,14 +186,6 @@ class CallbacksTest : public CppUnit::TestFixture {
                     return false;
                 }, b);
                 verifyPassedByReference(b, "Link::rewrite()");
-
-                Arg c;
-                regina::ExampleLink::trefoil().rewrite(2, 1, nullptr,
-                        [](const std::string&, const regina::Link&, Arg& arg) {
-                    arg.flag();
-                    return false;
-                }, std::ref(c));
-                verifyPassedByReference(c, "Link::rewrite()");
 
                 Arg d;
                 regina::ExampleLink::trefoil().rewrite(2, 1, nullptr,
@@ -258,16 +195,33 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, d);
                 verifyPassedByReference(d, "Link::rewrite()");
             }
-            {
-                Arg a;
-                regina::FacetPairing<3>::findAllPairings(1, false, 0,
-                        [](const regina::FacetPairing<3>&,
-                            const regina::FacetPairing<3>::IsoList&, Arg& arg) {
-                    arg.flag();
-                }, std::ref(a));
-                verifyPassedByReference(a,
-                    "FacetPairing<3>::findAllPairings()");
 
+            // ----- Finite-index subgroups -----
+
+            {
+                Arg b;
+                regina::GroupPresentation(2).enumerateCovers<2>([](
+                        const regina::GroupPresentation&, Arg& arg) {
+                    arg.flag();
+                }, b);
+                verifyPassedByReference(b,
+                    "GroupPresentation::enumerateCovers()");
+            }
+            {
+                Arg b;
+                regina::ExampleSnapPea::figureEight().enumerateCovers(
+                        2, regina::SnapPeaTriangulation::all_covers,
+                        [](const regina::SnapPeaTriangulation&,
+                            regina::SnapPeaTriangulation::CoverType, Arg& arg) {
+                    arg.flag();
+                }, b);
+                verifyPassedByReference(b,
+                    "SnapPeaTriangulation::enumerateCovers()");
+            }
+
+            // ----- Census enumeration -----
+
+            {
                 Arg b;
                 regina::FacetPairing<3>::findAllPairings(1, false, 0,
                         [](const regina::FacetPairing<3>&,
@@ -278,14 +232,6 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "FacetPairing<3>::findAllPairings()");
             }
             {
-                Arg a;
-                regina::SigCensus::formCensus(1,
-                        [](const regina::Signature&,
-                            const regina::SigCensus::IsoList&, Arg& arg) {
-                    arg.flag();
-                }, std::ref(a));
-                verifyPassedByReference(a, "SigCensus::formCensus()");
-
                 Arg b;
                 regina::SigCensus::formCensus(1,
                         [](const regina::Signature&,
@@ -294,9 +240,20 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, b);
                 verifyPassedByReference(b, "SigCensus::formCensus()");
             }
+            {
+                auto g = regina::ModelLinkGraph::fromPlantri(
+                    "bbcc,acca,abba");
+
+                Arg b;
+                g.generateMinimalLinks([](const regina::Link&, Arg& arg) {
+                    arg.flag();
+                }, b);
+                verifyPassedByReference(b,
+                    "ModelLinkGraph::generateMinimalLinks()");
+            }
 
             // Routines that use callbacks but whose callbacks don't
-            // have arguments:
+            // take additional user-supplied arguments:
             //
             // CensusDB::lookup()
             // DoubleDescription::enumerateExtremalRays()

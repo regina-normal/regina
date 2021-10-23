@@ -688,11 +688,6 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * TODO: PRE: Knot, not link.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \apinotfinal
          */
         template <typename Action, typename... Args>
@@ -858,7 +853,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * This function \e only takes the comma-separated sequence of
          * alphabetical strings.  So, for example, to construct the graph
-         * correpsonding to the second line of output above, you could call:
+         * corresponding to the second line of output above, you could call:
          *
          * \code{.cpp}
          * fromPlantri("bcdd,aeec,abfd,acfa,bffb,ceed");

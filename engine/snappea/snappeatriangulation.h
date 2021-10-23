@@ -1572,11 +1572,6 @@ class SnapPeaTriangulation :
          * this will nullify the SnapPeaTriangulation.  See the class
          * notes for further explanation.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \apinotfinal
          *
          * \ifacespython There are two versions of this function available

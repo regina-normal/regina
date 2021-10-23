@@ -1422,11 +1422,6 @@ class GroupPresentation : public Output<GroupPresentation> {
          * abelianisations then you are better off using the \e abelian group
          * simplification / computation instead (which is much faster).
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \apinotfinal
          *
          * \ifacespython There are two versions of this function available in
