@@ -71,8 +71,8 @@ public:
         // TODO: Sanitise inputs?
     }
     
-    void add_edges(std::vector<edge3> edgeList){
-        for(auto e : edgeList){
+    void add_edges(const std::vector<edge3>& edgeList){
+        for(const auto& e : edgeList){
             add_edge(e);
         }
     }
@@ -208,7 +208,7 @@ public:
         adjList.erase(v);
     }
     
-    void pd_sub(pdcode code) {
+    void pd_sub(const pdcode& code) {
         vertex3 newNbri;
         for (auto [vert, nbrs] : adjList) {
             for (int i=0; i<dim+1; i++) {
@@ -682,11 +682,11 @@ std::vector<int> pdc_orientations(pdcode code) {
     return orientations;
 }
 
-std::vector<int> pdc_xtype(pdcode code) {
+std::vector<int> pdc_xtype(const pdcode& code) {
 
     std::vector<int> ans;
     
-    for (auto x : code) {
+    for (const auto& x : code) {
         if (x[1]==x[2]) {
             // (x,y,y,w)
             ans.push_back(1);
@@ -712,11 +712,13 @@ std::vector<int> pdc_xtype(pdcode code) {
     return ans;
 }
 
-std::vector<std::pair<int, int>> pdc_xotype(pdcode code) {
+std::vector<std::pair<int, int>> pdc_xotype(const pdcode& code) {
     /*
      Probably too python-esque at the moment (running functions which create vectors, etc...
      */
     std::vector<std::pair<int, int>> ans;
+    ans.reserve(code.size());
+
     std::vector<int> pdc_os = pdc_orientations(code);
     std::vector<int> pdc_xs = pdc_xtype(code);
     
@@ -728,7 +730,7 @@ std::vector<std::pair<int, int>> pdc_xotype(pdcode code) {
 
 graph<4> posCross, negCross, posCurlA, posCurlB, negCurlA, negCurlB;
 
-graph<4> pd2dg(pdcode code) {
+graph<4> pd2dg(const pdcode& code) {
     
     std::vector<std::pair<int, int>> pdc_xot = pdc_xotype(code);
     graph<4> res_graph;
@@ -797,17 +799,18 @@ void printGluList(graph<4> G) {
 }
 
 std::vector<std::tuple<int,int,int>> genGluList(graph<4> G) {
-    std::vector<std::tuple<int,int,int>> ans;
     std::vector<vertex3> verts = G.vertices();
     std::vector<edge3> edges = G.edges();
     std::cout << "[";
+    std::vector<std::tuple<int,int,int>> ans;
+    ans.reserve(edges.size());
     for (const auto& elem : edges) {
         ans.emplace_back(getIndex(verts, std::get<0>(elem)), getIndex(verts, std::get<1>(elem)), std::get<2>(elem));
     }
     return ans;
 }
 
-int writhe(pdcode pdc) {
+int writhe(const pdcode& pdc) {
     int ans=0;
     for (const auto& n : pdc_orientations(pdc)) {
         ans += n;
@@ -1011,6 +1014,7 @@ int main(int argc, char* argv[]) {
      COMPUTE NUMBER OF CROSSINGS IN INDIVIDUAL COMPONENT
      */
     std::vector<regina::StrandRef> comps;
+    comps.reserve(numComps);
     for (int i=0; i<numComps; i++) {
         comps.push_back(tmpLinkObj.component(i));
     }
@@ -1070,6 +1074,7 @@ int main(int argc, char* argv[]) {
      */
     
     std::vector<long> compWrithes;
+    compWrithes.reserve(numComps);
     for (int i=0; i<numComps; i++) {
         compWrithes.push_back(tmpLinkObj.writheOfComponent(i));
     }

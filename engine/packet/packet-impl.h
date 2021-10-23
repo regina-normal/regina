@@ -148,6 +148,7 @@ std::string PacketData<Held>::anonID() const {
     *(reinterpret_cast<const PacketData<Held>**>(&ptrAsBytes)) = this;
 
     char* id = nullptr;
+    // NOLINTNEXTLINE(bugprone-sizeof-expression)
     base64Encode(ptrAsBytes, sizeof(Packet*), &id);
 
     std::string ans;

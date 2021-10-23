@@ -313,6 +313,7 @@ void swap(GraphLoop& a, GraphLoop& b) noexcept;
 
 // Inline functions for GraphLoop
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 inline GraphLoop::GraphLoop(const SFSpace& sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
@@ -320,6 +321,7 @@ inline GraphLoop::GraphLoop(const SFSpace& sfs,
     reduce();
 }
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 inline GraphLoop::GraphLoop(const SFSpace& sfs, const Matrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
     verifySFS();

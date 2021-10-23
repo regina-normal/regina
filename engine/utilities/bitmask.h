@@ -1550,6 +1550,10 @@ inline void Bitmask::reset(size_t length) {
 }
 
 inline Bitmask& Bitmask::operator = (const Bitmask& other) {
+    // std::copy exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(other) == this)
+        return *this;
+
     if (pieces != other.pieces) {
         delete[] mask;
         pieces = other.pieces;

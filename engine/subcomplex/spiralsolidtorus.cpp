@@ -40,6 +40,10 @@
 namespace regina {
 
 SpiralSolidTorus& SpiralSolidTorus::operator = (const SpiralSolidTorus& src) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     if (nTet_ != src.nTet_) {
         delete[] tet_;
         delete[] vertexRoles_;

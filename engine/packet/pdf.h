@@ -251,6 +251,9 @@ class PDF : public Packet {
          * This routine behaves like the class constructor; see the
          * constructor documentation for details.
          *
+         * \warning This cannot be used for self-assignment.  If the argument
+         * \a data is in fact data() then this routine will most likely crash.
+         *
          * \ifacespython Not present.
          *
          * @param data the block of binary data that forms the new PDF
@@ -335,6 +338,10 @@ inline PDF::~PDF() {
 }
 
 inline PDF& PDF::operator = (const PDF& src) {
+    // reset() cannot handle self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     reset(src.data_, src.size_, DEEP_COPY);
     return *this;
 }

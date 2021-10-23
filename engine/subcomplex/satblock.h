@@ -963,11 +963,13 @@ inline SatBlockModel::~SatBlockModel() {
 }
 
 inline SatBlockModel& SatBlockModel::operator = (const SatBlockModel& src) {
+    if (std::addressof(src) != this) {
         delete triangulation_;
         delete block_;
         triangulation_ = new Triangulation<3>(*src.triangulation_);
         block_ = src.block_->clone();
-        return *this;
+    }
+    return *this;
 }
 
 inline SatBlockModel& SatBlockModel::operator = (SatBlockModel&& src) noexcept {

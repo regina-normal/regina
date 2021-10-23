@@ -381,6 +381,8 @@ inline Matrix2::Matrix2(long val00, long val01, long val10, long val11) {
     data[1][0] = val10; data[1][1] = val11;
 }
 
+// Self-assignment should be fine, assuming Integer's self-assignment works.
+// NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
 inline Matrix2& Matrix2::operator = (const Matrix2& cloneMe) {
     data[0][0] = cloneMe.data[0][0]; data[0][1] = cloneMe.data[0][1];
     data[1][0] = cloneMe.data[1][0]; data[1][1] = cloneMe.data[1][1];

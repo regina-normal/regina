@@ -42,11 +42,11 @@ using regina::Triangulation;
 bool subcomplexTesting = false;
 
 template <int dim>
-bool compare(std::shared_ptr<Packet> t1, std::shared_ptr<Packet> t2) {
+bool compare(const Packet& t1, const Packet& t2) {
     const Triangulation<dim>& tri1 =
-        static_cast<const PacketOf<Triangulation<dim>>&>(*t1);
+        static_cast<const PacketOf<Triangulation<dim>>&>(t1);
     const Triangulation<dim>& tri2 =
-        static_cast<const PacketOf<Triangulation<dim>>&>(*t2);
+        static_cast<const PacketOf<Triangulation<dim>>&>(t2);
     if (subcomplexTesting)
         return tri1.isContainedIn(tri2).has_value();
     else
@@ -67,8 +67,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
-void runMatches(std::shared_ptr<Packet> tree1, std::shared_ptr<Packet> tree2,
-        std::ostream& out) {
+void runMatches(const Packet& tree1, const Packet& tree2, std::ostream& out) {
     if (subcomplexTesting)
         out << "Matching (isomorphic subcomplex) triangulations:\n"
             << std::endl;
@@ -77,23 +76,23 @@ void runMatches(std::shared_ptr<Packet> tree1, std::shared_ptr<Packet> tree2,
 
     long nMatches = 0;
 
-    for (auto p1 = tree1; p1; p1 = p1->nextTreePacket())
-        if (p1->type() == regina::PACKET_TRIANGULATION3) {
-            for (auto p2 = tree2; p2; p2 = p2->nextTreePacket())
-                if (p2->type() == regina::PACKET_TRIANGULATION3)
+    for (const Packet& p1 : tree1)
+        if (p1.type() == regina::PACKET_TRIANGULATION3) {
+            for (const Packet& p2 : tree2)
+                if (p2.type() == regina::PACKET_TRIANGULATION3)
                     if (compare<3>(p1, p2)) {
-                        out << "    " << p1->humanLabel()
+                        out << "    " << p1.humanLabel()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
-                            << p2->humanLabel() << std::endl;
+                            << p2.humanLabel() << std::endl;
                         nMatches++;
                     }
-        } else if (p1->type() == regina::PACKET_TRIANGULATION4) {
-            for (auto p2 = tree2; p2; p2 = p2->nextTreePacket())
-                if (p2->type() == regina::PACKET_TRIANGULATION4)
+        } else if (p1.type() == regina::PACKET_TRIANGULATION4) {
+            for (const Packet& p2 : tree2)
+                if (p2.type() == regina::PACKET_TRIANGULATION4)
                     if (compare<4>(p1, p2)) {
-                        out << "    " << p1->label()
+                        out << "    " << p1.label()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
-                            << p2->label() << std::endl;
+                            << p2.label() << std::endl;
                         nMatches++;
                     }
         }
@@ -106,33 +105,37 @@ void runMatches(std::shared_ptr<Packet> tree1, std::shared_ptr<Packet> tree2,
         out << std::endl << nMatches << " matches." << std::endl;
 }
 
-void runNonMatches(const std::string& file1, std::shared_ptr<Packet> tree1,
-        const std::string& file2, std::shared_ptr<Packet> tree2,
+void runNonMatches(const std::string& file1, const Packet& tree1,
+        const std::string& file2, const Packet& tree2,
         std::ostream& out) {
     out << "Triangulations in " << file1 << " but not " << file2
         << ":\n" << std::endl;
     long nMissing = 0;
 
     bool matched;
-    for (auto p1 = tree1; p1; p1 = p1->nextTreePacket())
-        if (p1->type() == regina::PACKET_TRIANGULATION3) {
+    for (const Packet& p1 : tree1)
+        if (p1.type() == regina::PACKET_TRIANGULATION3) {
             matched = false;
-            for (auto p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
-                if (p2->type() == regina::PACKET_TRIANGULATION3)
-                    if (compare<3>(p1, p2))
+            for (const Packet& p2 : tree2)
+                if (p2.type() == regina::PACKET_TRIANGULATION3)
+                    if (compare<3>(p1, p2)) {
                         matched = true;
+                        break;
+                    }
             if (! matched) {
-                out << "    " << p1->humanLabel() << std::endl;
+                out << "    " << p1.humanLabel() << std::endl;
                 nMissing++;
             }
-        } else if (p1->type() == regina::PACKET_TRIANGULATION4) {
+        } else if (p1.type() == regina::PACKET_TRIANGULATION4) {
             matched = false;
-            for (auto p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
-                if (p2->type() == regina::PACKET_TRIANGULATION4)
-                    if (compare<4>(p1, p2))
+            for (const Packet& p2 : tree2)
+                if (p2.type() == regina::PACKET_TRIANGULATION4)
+                    if (compare<4>(p1, p2)) {
                         matched = true;
+                        break;
+                    }
             if (! matched) {
-                out << "    " << p1->label() << std::endl;
+                out << "    " << p1.label() << std::endl;
                 nMissing++;
             }
         }
@@ -221,12 +224,12 @@ int main(int argc, char* argv[]) {
 
     // Run our tests.
     if (listMatches)
-        runMatches(tree1, tree2, out);
+        runMatches(*tree1, *tree2, out);
     else {
-        runNonMatches(file1, tree1, file2, tree2, out);
+        runNonMatches(file1, *tree1, file2, *tree2, out);
         if (! subcomplexTesting) {
             out << std::endl << "--------------------\n" << std::endl;
-            runNonMatches(file2, tree2, file1, tree1, out);
+            runNonMatches(file2, *tree2, file1, *tree1, out);
         }
     }
 

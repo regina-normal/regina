@@ -259,6 +259,7 @@ void swap(TypeTrie<nTypes>& a, TypeTrie<nTypes>& b) noexcept;
 
 template <int nTypes>
 inline TypeTrie<nTypes>::Node::Node() : elementHere_(false) {
+    // NOLINTNEXTLINE(bugprone-sizeof-expression)
     ::memset(child_, 0, sizeof(Node*) * nTypes);
 }
 

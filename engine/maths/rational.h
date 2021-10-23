@@ -564,6 +564,10 @@ inline Rational::~Rational() {
 }
 
 inline Rational& Rational::operator = (const Rational& value) {
+    // We assume that mpq_set() is fine with self-assignment, since:
+    // - the GMP docs state that output and input variables can be the same;
+    // - the libgmpxx classes do not special-case self-assignment.
+    // The C++ test suite tests self-assignment of Rationals also.
     flavour = value.flavour;
     if (flavour == f_normal)
         mpq_set(data, value.data);

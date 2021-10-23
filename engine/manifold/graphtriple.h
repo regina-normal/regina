@@ -361,6 +361,7 @@ void swap(GraphTriple& a, GraphTriple& b) noexcept;
 
 // Inline functions for GraphTriple
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 inline GraphTriple::GraphTriple(const SFSpace& end0, const SFSpace& centre,
         const SFSpace& end1, const Matrix2& matchingReln0,
         const Matrix2& matchingReln1) :

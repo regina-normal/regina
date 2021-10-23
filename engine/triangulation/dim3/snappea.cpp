@@ -50,8 +50,8 @@ Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
     if (in.fail() || in.eof())
         throw InvalidArgument("fromSnapPea(): unexpected end of string");
     // Allow junk on the same line following the triangulation marker.
-    if (strncmp(name, "% Triangulation", 15) &&
-            strncmp(name, "% triangulation", 15))
+    if (strncmp(name, "% Triangulation", 15) != 0 &&
+            strncmp(name, "% triangulation", 15) != 0)
         throw InvalidArgument("fromSnapPea(): missing triangulation marker");
 
     // Read in the manifold name.

@@ -80,6 +80,9 @@ Link::Link(Link&& src) noexcept :
 }
 
 Link& Link::operator = (const Link& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
     ChangeEventSpan span(*this);
 
     for (Crossing* c : crossings_)

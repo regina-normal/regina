@@ -2458,6 +2458,9 @@ TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
 template <int dim>
 TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (const TriangulationBase<dim>& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
     Snapshottable<Triangulation<dim>>::operator =(src);
 
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
@@ -2514,6 +2517,9 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
+    // We have already moved out of src, but this was in fact correct use
+    // of the snapshotting machinery.
+    // NOLINTNEXTLINE(bugprone-use-after-move)
     simplices_.swap(src.simplices_);
     faces_.swap(src.faces_);
     components_.swap(src.components_);

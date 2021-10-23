@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
             // Option.
 
             // Is it an argument we don't understand?
-            if (strcmp(argv[i], "-o"))
+            if (strcmp(argv[i], "-o") != 0)
                 usage(argv[0], std::string("Invalid option: ") + argv[i]);
 
             // Are we missing the actual output filename?

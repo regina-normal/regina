@@ -1042,9 +1042,10 @@ inline bool Polynomial<T>::operator != (const Polynomial<T>& rhs) const {
 }
 
 template <typename T>
+// NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
 Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& value) {
-    // This works even if &value == this, since we don't reallocate if
-    // the degrees are equal.
+    // This works even if &value == this, assuming T itself can handle
+    // self-assignment, since we don't reallocate if the degrees are equal.
     if (degree_ < value.degree_) {
         delete[] coeff_;
         coeff_ = new T[value.degree_ + 1];

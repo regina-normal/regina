@@ -311,6 +311,9 @@ class Vector : public ShortOutput<Vector<T>> {
          * vector.
          */
         inline Vector<T>& operator = (const Vector<T>& cloneMe) {
+            // std::copy() exhibits undefined behaviour with self-assignment.
+            if (std::addressof(cloneMe) == this)
+                return *this;
             std::copy(cloneMe.elements, cloneMe.end, elements);
             return *this;
         }

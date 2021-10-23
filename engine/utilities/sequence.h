@@ -539,6 +539,9 @@ inline typename LightweightSequence<T>::const_iterator
 template <typename T>
 inline LightweightSequence<T>& LightweightSequence<T>::operator = (
         const LightweightSequence& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
     size_ = src.size_;
 
     delete[] data_;

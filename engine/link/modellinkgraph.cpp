@@ -58,6 +58,9 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
 }
 
 ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
     for (ModelLinkGraphNode* n : nodes_)
         delete n;
     nodes_.clear();
@@ -143,7 +146,7 @@ std::string ModelLinkGraph::plantri() const {
         if (it != nodes_.begin())
             ans += ',';
         for (const auto& arc : (*it)->adj_)
-            ans += ('a' + arc.node()->index());
+            ans += static_cast<char>('a' + arc.node()->index());
     }
     return ans;
 }
@@ -211,7 +214,7 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
                             continue;
                         }
 
-                        curr += ('a' + image[adjSrcNode]);
+                        curr += static_cast<char>('a' + image[adjSrcNode]);
 
                         if (! currBetter) {
                             // curr == best for the characters seen so far.

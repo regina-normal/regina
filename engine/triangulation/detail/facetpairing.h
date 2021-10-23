@@ -752,6 +752,10 @@ inline FacetPairingBase<dim>::~FacetPairingBase() {
 template <int dim>
 inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
         const FacetPairingBase& src) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     if (size_ != src.size_) {
         delete[] pairs_;
         size_ = src.size_;

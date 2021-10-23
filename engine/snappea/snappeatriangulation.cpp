@@ -104,6 +104,9 @@ SnapPeaTriangulation::SnapPeaTriangulation(
     Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
+// We don't call the Triangulation<3> copy constructor, since sync()
+// will take care of that work for us.
+// NOLINTNEXTLINE(bugprone-copy-constructor-init)
 SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
     if (tri.data_) {
@@ -135,6 +138,9 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
 
     Triangulation<3>::operator = (std::move(src));
 
+    // We have already moved out of src, but this only touches the
+    // Triangulation<3> data.
+    // NOLINTNEXTLINE(bugprone-use-after-move)
     std::swap(data_, src.data_);
     std::swap(shape_, src.shape_);
     std::swap(cusp_, src.cusp_);
@@ -150,6 +156,9 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
 
 SnapPeaTriangulation& SnapPeaTriangulation::operator = (
         const SnapPeaTriangulation& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
     ChangeAndSyncSpan span(*this);
 
     regina::snappea::free_triangulation(data_);

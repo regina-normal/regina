@@ -321,6 +321,10 @@ class Matrix : public Output<Matrix<T>> {
          * @return a reference to this matrix.
          */
         Matrix& operator = (const Matrix& src) {
+            // std::copy() exhibits undefined behaviour with self-assignment.
+            if (std::addressof(src) == this)
+                return *this;
+
             if (src.data_) {
                 if (rows_ != src.rows_ || cols_ != src.cols_ || ! data_) {
                     if (data_) {

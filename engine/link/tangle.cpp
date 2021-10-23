@@ -233,6 +233,9 @@ Tangle::Tangle(Tangle&& src) noexcept :
 }
 
 Tangle& Tangle::operator = (const Tangle& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
     type_ = src.type_;
 
     for (Crossing* c : crossings_)

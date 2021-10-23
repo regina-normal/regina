@@ -176,7 +176,7 @@ bool EulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
             facesBroken = true;
     }
 
-    if (parent < -1 || parent >= static_cast<long>(6 * nTets))
+    if (parent < -1 || parent >= 6 * static_cast<long>(nTets))
         return false;
     if (rank >= 6 * nTets)
         return false;

@@ -835,10 +835,12 @@ void Packet::writeXMLAnon(std::ostream& out, FileFormat format,
 }
 
 std::string Packet::internalID() const {
+    // NOLINTNEXTLINE(bugprone-sizeof-expression)
     char ptrAsBytes[sizeof(Packet*)];
     *(reinterpret_cast<const Packet**>(&ptrAsBytes)) = this;
 
     char* id = nullptr;
+    // NOLINTNEXTLINE(bugprone-sizeof-expression)
     base64Encode(ptrAsBytes, sizeof(Packet*), &id);
 
     std::string ans = id;

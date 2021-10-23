@@ -70,6 +70,10 @@ SigPartialIsomorphism::SigPartialIsomorphism(
 
 SigPartialIsomorphism& SigPartialIsomorphism::operator = (
         const SigPartialIsomorphism& src) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     if (nLabels != src.nLabels) {
         delete[] labelImage;
         nLabels = src.nLabels;

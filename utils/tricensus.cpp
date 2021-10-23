@@ -102,7 +102,7 @@ int runCensus();
 template <>
 inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
         regina::FacetPairing<2>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, int /* usePurge */,
+        bool /* finiteOnly */, int /* usePurge */,
         std::shared_ptr<regina::Packet> dest) {
     regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
         orientableOnly, foundGluingPerms<2>, dest);

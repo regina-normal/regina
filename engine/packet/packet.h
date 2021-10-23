@@ -1552,6 +1552,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * @return a reference to this packet.
          */
+        // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         Packet& operator = (const Packet&) { return *this; }
 
         /**
@@ -2306,7 +2307,7 @@ template <typename Held>
 std::shared_ptr<PacketOf<Held>> makePacket(Held&& src) {
     static_assert(std::is_class<Held>::value,
         "The template argument to makePacket() must be a plain class type.");
-    return std::make_shared<PacketOf<Held>>(std::move(src));
+    return std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
 }
 
 /**
@@ -2337,7 +2338,7 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
         const std::string& label) {
     static_assert(std::is_class<Held>::value,
         "The template argument to makePacket() must be a plain class type.");
-    auto ans = std::make_shared<PacketOf<Held>>(std::move(src));
+    auto ans = std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
     ans->setLabel(label);
     return ans;
 }

@@ -72,7 +72,7 @@ class mem_istream : public std::istream {
          * Destructor.  Note that this does \e not deallocate the array of
          * characters being read.
          */
-        ~mem_istream();
+        ~mem_istream() override;
 
         // Make this class non-copyable.
         mem_istream(const mem_istream&) = delete;

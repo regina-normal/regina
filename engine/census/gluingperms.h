@@ -597,6 +597,10 @@ inline GluingPerms<dim>::GluingPerms(GluingPerms<dim>&& src) noexcept :
 
 template <int dim>
 inline GluingPerms<dim>& GluingPerms<dim>::operator = (const GluingPerms& src) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     if (size() != src.size()) {
         delete[] permIndices_;
         permIndices_ = new int[src.size() * (dim + 1)];

@@ -925,6 +925,8 @@ inline bool Cyclotomic::operator != (const Cyclotomic& rhs) const {
     return false;
 }
 
+// Self-assignment works, assuming Rational's self-assignment works.
+// NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
 inline Cyclotomic& Cyclotomic::operator = (const Cyclotomic& other) {
     // std::cerr << "Cyclotomic: deep copy (=)" << std::endl;
     if (degree_ < other.degree_) {

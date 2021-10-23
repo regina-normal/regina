@@ -66,6 +66,10 @@ Signature::Signature(const Signature& sig) : order_(sig.order_),
 }
 
 Signature& Signature::operator = (const Signature& sig) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(sig) == this)
+        return *this;
+
     if (order_ != sig.order_) {
         delete[] label;
         delete[] labelInv;

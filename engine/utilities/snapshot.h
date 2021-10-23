@@ -362,8 +362,13 @@ class Snapshottable {
          *
          * The new value will left unenrolled from the snapshotting machinery.
          *
+         * This is safe to use with self-assignment, but this will still
+         * behave as though the object were being modified (i.e., it may
+         * still take a snapshot).
+         *
          * @return a reference to this object.
          */
+        // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         Snapshottable& operator = (const Snapshottable&) {
             if (snapshot_) {
                 snapshot_->freeze();
@@ -641,6 +646,7 @@ class SnapshotRef {
          * @param src the snapshot reference to copy.
          * @return a reference to this object.
          */
+        // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         SnapshotRef& operator = (const SnapshotRef& src) {
             if (snapshot_ != src.snapshot_) {
                 if (--snapshot_->refCount_ == 0)

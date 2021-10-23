@@ -1992,6 +1992,10 @@ template <class LPConstraint>
 inline LPInitialTableaux<LPConstraint>&
         LPInitialTableaux<LPConstraint>::operator = (
         const LPInitialTableaux& src) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     tri_ = src.tri_;
     system_ = src.system_;
     eqns_ = std::move(src.eqns_);

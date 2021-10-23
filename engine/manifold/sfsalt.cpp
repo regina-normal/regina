@@ -35,6 +35,7 @@
 
 namespace regina {
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 SFSAlt::SFSAlt(const SFSpace& original) :
         alt_(original), conversion_(1, 0, 0, 1), reflected_(false) {
     /**

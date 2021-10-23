@@ -446,6 +446,10 @@ inline Isomorphism<dim>::~Isomorphism() {
 
 template <int dim>
 Isomorphism<dim>& Isomorphism<dim>::operator = (const Isomorphism<dim>& src) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     if (nSimplices_ != src.nSimplices_) {
         delete[] simpImage_;
         delete[] facetPerm_;

@@ -521,6 +521,10 @@ class DiscSetTetData : public DiscSetTet {
          * @return a reference to this disc set.
          */
         DiscSetTetData& operator = (const DiscSetTetData& src) {
+            // std::copy() exhibits undefined behaviour with self-assignment.
+            if (std::addressof(src) == this)
+                return *this;
+
             // Resize the data arrays:
             for (int i = 0; i < 10; ++i) {
                 if (discs_[i] != src.discs_[i]) {
@@ -743,6 +747,10 @@ class DiscSetSurfaceDataImpl {
          * @return a reference to this disc set.
          */
         DiscSetSurfaceDataImpl& operator = (const DiscSetSurfaceDataImpl& src) {
+            // The code below will break badly with self-assignment.
+            if (std::addressof(src) == this)
+                return *this;
+
             // Destroy the original data.
             // Note: we could optimise this if it is the same triangulation
             // (not deleting and reallocating the arrays).

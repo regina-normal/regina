@@ -2664,6 +2664,10 @@ template <bool supportInfinity>
 inline IntegerBase<supportInfinity>&
         IntegerBase<supportInfinity>::operator =(
         const IntegerBase<supportInfinity>& value) {
+    // We assume that mpz_set() is fine with self-assignment, since:
+    // - the GMP docs state that output and input variables can be the same;
+    // - the libgmpxx classes do not special-case self-assignment.
+    // The C++ test suite tests self-assignment of Integers also.
     if (value.isInfinite()) {
         makeInfinite();
         return *this;
