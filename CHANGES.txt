@@ -1194,6 +1194,8 @@ Version 7.0  [ TODO ]
         Class Text:
             - Added a copy constructor and a copy assignment operator.
             - Added member and global swap() functions.
+            - The std::string constructor and assignment operator now
+              take a string by value, allowing for more efficient moves.
         Class TorusBundle:
             - Added member and global swap() functions.
         Class TreeDecomposition:
