@@ -1,0 +1,5 @@
+# We want no checks, but clang-tidy insists on at least one.
+Checks: "
+  -*,
+  bugprone-virtual-near-miss,
+"
