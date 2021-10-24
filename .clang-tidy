@@ -19,10 +19,14 @@ Checks: "
   -bugprone-branch-clone,
 "
 
+# Note: In python/ we should really disable:
+# -performance-unnecessary-value-param (passing pybind11::* by value)
+# -misc-redundant-expression (pybind11::self <op> pybind11::self)
+
 # Our aim in the following regex is:
 # - include engine/;
 # - exclude engine/libnormaliz/, engine/syntax and engine/snappea/*/;
 # - include python/ but not pybind11 or any system pythonX.Y/ or cpython/;
 # - include qtui/.
 #
-HeaderFilterRegex: "(engine/([^ls].*|link/.*|s[^ny].*|snappea/[^/]+)|/python/([^p]|p[^y]).*|qtui/.*)$"
+HeaderFilterRegex: "(engine/([^ls].*|link/.*|s[^ny].*|snappea/[^/]+)|/python/([^/]+/../)?([^p]|p[^y])[^/]+(/[^/]+)?|qtui/.*)$"
