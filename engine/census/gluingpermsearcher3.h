@@ -2852,6 +2852,9 @@ inline std::unique_ptr<GluingPermSearcher<3>>
             case ClosedPrimeMinSearcher::dataTag_:
                 return std::make_unique<ClosedPrimeMinSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
+            case EulerSearcher::dataTag_:
+                return std::make_unique<EulerSearcher>(in,
+                    std::forward<Action>(action), std::forward<Args>(args)...);
             case HyperbolicMinSearcher::dataTag_:
                 return std::make_unique<HyperbolicMinSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
