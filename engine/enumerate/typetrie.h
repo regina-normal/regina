@@ -412,8 +412,8 @@ bool TypeTrie<nTypes>::dominates(const char* vec, unsigned len) const {
         // If vec[level] == 0, we must descend to child_[0].
         // Otherwise we try child_[0] and then child_[type].
         //
-        // The following code sets node[level + 1] to the first non-zero
-        // child in this selection, or to 0 if all such children are 0.
+        // The following code sets node[level + 1] to the first non-null
+        // child in this selection, or to null if all such children are null.
         if (node[level]->child_[0])
             node[level + 1] = node[level]->child_[0];
         else

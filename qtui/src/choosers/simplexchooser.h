@@ -76,7 +76,7 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
             /**< The triangulation whose simplices we are choosing from. */
         FilterFunc filter_;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<regina::Simplex<dim>*> options_;
             /**< A list of the available options to choose from. */
 
@@ -104,7 +104,7 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
          * Returns the currently selected simplex.
          *
          * If there are no available simplices to choose from,
-         * this routine will return 0.
+         * this routine will return \c null.
          */
         regina::Simplex<dim>* selected();
 

@@ -639,7 +639,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
                   Cell C
            \endverbatim
          *
-         * Conditions that explicitly return 0:
+         * Conditions that explicitly throw exceptions:
          *
          * - Neither left nor right ends at from.node().
          * - The upper and lower bounding cells are distinct,

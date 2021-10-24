@@ -136,7 +136,7 @@ namespace {
                      the outer tetrahedron (not boundaries that run along the
                      original normal surface).  Specifically, bdry_[i]
                      is the boundary on face i of the outer tetrahedron
-                     (or 0 if this block does not actually meet face i
+                     (or \c null if this block does not actually meet face \a i
                      of the outer tetrahedron). */
 
             Tetrahedron<3>* link_[4];

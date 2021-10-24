@@ -67,7 +67,7 @@ class PacketImporter {
          *
          * If the import is unsuccessful, this routine should display
          * an appropriate error to the user (using the argument
-         * \a parentWidget as a parent for the message box) and return 0.
+         * \a parentWidget as a parent for the message box) and return \c null.
          * Otherwise the imported packet tree should be returned.
          *
          * Sensible packet labels must be assigned to all packets in the

@@ -343,7 +343,7 @@ class FaceBase :
             /**< The component that this face belongs to. */
         BoundaryComponent<dim>* boundaryComponent_;
             /**< The boundary component that this face is a part of,
-                 or 0 if this face is internal. */
+                 or \c null if this face is internal. */
         EnableIf<allowsNonOrientableLinks, bool, true> linkOrientable_;
             /**< Is the link of this face orientable? */
         EnableIf<allowsInvalidFaces && standardDim(dim), unsigned, VALID>
@@ -392,8 +392,9 @@ class FaceBase :
          * an invalid vertex boundary component if the invalid vertex does
          * not already belong to some real boundary component.
          *
-         * @return the boundary component containing this face, or 0 if this
-         * face does not lie entirely within the boundary of the triangulation.
+         * @return the boundary component containing this face, or \c null if
+         * this face does not lie entirely within the boundary of the
+         * triangulation.
          */
         BoundaryComponent<dim>* boundaryComponent() const;
         /**

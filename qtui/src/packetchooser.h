@@ -62,7 +62,7 @@ namespace regina {
  * In particular, if it is possible that the selected packet will be
  * deleted during the lifetime of the packet chooser, it is advisable to
  * call refreshContents() before extracting the packet with selectedPacket().
- * This way the selected packet will be replaced with 0 if it has since
+ * This way the selected packet will be replaced with \c null if it has since
  * been destroyed.
  *
  * By calling setAutoUpdate(), a packet chooser can be modified to
@@ -98,7 +98,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
             /**< The subtree of packets available for selection. */
         PacketFilter* filter;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<regina::Packet*> packets;
             /**< A list of the packets corresponding to the available
                  entries in the packet chooser. */
@@ -152,7 +152,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * cause a crash.
          *
          * If the "None" entry is selected or if there are in fact no
-         * available packets to choose from, this routine will return 0.
+         * available packets to choose from, this routine will return \c null.
          */
         std::shared_ptr<regina::Packet> selectedPacket();
 

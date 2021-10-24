@@ -535,7 +535,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @return \c true if and only if the triangulation was successfully
          * simplified to fewer pentachora.
          */
