@@ -46,7 +46,6 @@
 using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Triangulation;
-using regina::detail::TriangulationBase;
 
 /**
  * An internal C++ representation of a snappy.Manifold or snappy.Triangulation.

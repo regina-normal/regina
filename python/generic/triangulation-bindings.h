@@ -40,7 +40,6 @@
 using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Triangulation;
-using regina::detail::TriangulationBase;
 
 namespace {
     template <int dim, int k = dim>

@@ -38,7 +38,6 @@
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using regina::SatAnnulus;
 using regina::SatBlock;
 using regina::SatBlockModel;
 

@@ -41,7 +41,6 @@
 using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Triangulation;
-using regina::detail::TriangulationBase;
 
 void addTriangulation2(pybind11::module_& m) {
     auto c = pybind11::class_<Triangulation<2>,
