@@ -4799,8 +4799,7 @@ inline bool Link::simplifyExhaustive(int height, unsigned nThreads,
                 return true;
             } else
                 return false;
-        },
-        std::ref(*this), size());
+        }, *this, size());
 }
 
 inline void Link::join(const StrandRef& s, const StrandRef& t) {

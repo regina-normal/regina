@@ -1064,8 +1064,7 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned nThreads,
                 return true;
             } else
                 return false;
-        },
-        std::ref(*this), size());
+        }, *this, size());
 }
 
 inline void Triangulation<4>::swapContents(Triangulation<4>& other) {

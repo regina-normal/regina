@@ -3599,8 +3599,7 @@ inline bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
                 return true;
             } else
                 return false;
-        },
-        std::ref(*this), size());
+        }, *this, size());
 }
 
 inline bool Triangulation<3>::minimizeBoundary() {

@@ -76,7 +76,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             for (size = 0; size <= 5; ++size) {
                 count = 0;
                 FacetPairing<4>::findAllPairings(size, false,
-                    0, countFacetPairings, std::ref(count));
+                    0, countFacetPairings, count);
 
                 if (count != nPairs[size]) {
                     std::ostringstream msg;
@@ -101,7 +101,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             for (size = 0; size <= 6; ++size) {
                 count = 0;
                 FacetPairing<4>::findAllPairings(size, true,
-                    1, countFacetPairings, std::ref(count));
+                    1, countFacetPairings, count);
 
                 if (count != nBdry1[size]) {
                     std::ostringstream msg;
@@ -116,7 +116,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             for (size = 0; size <= 5; ++size) {
                 count = 0;
                 FacetPairing<4>::findAllPairings(size, true,
-                    2, countFacetPairings, std::ref(count));
+                    2, countFacetPairings, count);
 
                 if (count != nBdry2[size]) {
                     std::ostringstream msg;
@@ -131,7 +131,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             for (size = 0; size <= 4; ++size) {
                 count = 0;
                 FacetPairing<4>::findAllPairings(size, true,
-                    -1, countFacetPairings, std::ref(count));
+                    -1, countFacetPairings, count);
 
                 if (count != nBdry[size]) {
                     std::ostringstream msg;

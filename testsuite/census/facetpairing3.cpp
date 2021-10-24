@@ -97,7 +97,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
                 FacetPairing<3>::findAllPairings(nTets, false,
-                    0, countFacePairings, std::ref(count));
+                    0, countFacePairings, count);
 
                 if (count != nPairs[nTets]) {
                     std::ostringstream msg;
@@ -120,7 +120,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
                 FacetPairing<3>::findAllPairings(nTets, true,
-                    1, countFacePairings, std::ref(count));
+                    1, countFacePairings, count);
 
                 if (count != 0) {
                     std::ostringstream msg;
@@ -135,7 +135,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 7; nTets++) {
                 count = 0;
                 FacetPairing<3>::findAllPairings(nTets, true,
-                    2, countFacePairings, std::ref(count));
+                    2, countFacePairings, count);
 
                 if (count != nBdry2[nTets]) {
                     std::ostringstream msg;
@@ -150,7 +150,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 6; nTets++) {
                 count = 0;
                 FacetPairing<3>::findAllPairings(nTets, true,
-                    -1, countFacePairings, std::ref(count));
+                    -1, countFacePairings, count);
 
                 if (count != nBdry[nTets]) {
                     std::ostringstream msg;
