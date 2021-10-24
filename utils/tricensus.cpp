@@ -84,13 +84,12 @@ std::ofstream sigStream;
 
 // Forward declarations:
 template <int dim>
-void foundGluingPerms(const regina::GluingPerms<dim>&,
-    std::shared_ptr<regina::Packet>);
+void foundGluingPerms(const regina::GluingPerms<dim>&, regina::Packet&);
 
 template <int dim>
 void findAllPerms(const regina::FacetPairing<dim>&,
     typename regina::FacetPairing<dim>::IsoList,
-    bool, bool, int, std::shared_ptr<regina::Packet>);
+    bool, bool, int, regina::Packet&);
 
 template <int dim>
 bool mightBeMinimal(regina::Triangulation<dim>&);
@@ -102,8 +101,7 @@ int runCensus();
 template <>
 inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
         regina::FacetPairing<2>::IsoList autos, bool orientableOnly,
-        bool /* finiteOnly */, int /* usePurge */,
-        std::shared_ptr<regina::Packet> dest) {
+        bool /* finiteOnly */, int /* usePurge */, regina::Packet& dest) {
     regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
         orientableOnly, foundGluingPerms<2>, dest);
 }
@@ -116,8 +114,7 @@ inline bool mightBeMinimal<2>(regina::Triangulation<2>& tri) {
 template <>
 inline void findAllPerms<3>(const regina::FacetPairing<3>& p,
         regina::FacetPairing<3>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, int usePurge,
-        std::shared_ptr<regina::Packet> dest) {
+        bool finiteOnly, int usePurge, regina::Packet& dest) {
     regina::GluingPermSearcher<3>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
 }
@@ -130,8 +127,7 @@ inline bool mightBeMinimal<3>(regina::Triangulation<3>& tri) {
 template <>
 inline void findAllPerms<4>(const regina::FacetPairing<4>& p,
         regina::FacetPairing<4>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, int /* usePurge */,
-        std::shared_ptr<regina::Packet> dest) {
+        bool finiteOnly, int /* usePurge */, regina::Packet& dest) {
     regina::GluingPermSearcher<4>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
 }
@@ -146,7 +142,7 @@ inline bool mightBeMinimal<4>(regina::Triangulation<4>&) {
  */
 template <int dim>
 void foundGluingPerms(const regina::GluingPerms<dim>& perms,
-        std::shared_ptr<regina::Packet> container) {
+        regina::Packet& container) {
     regina::Triangulation<dim> tri = perms.triangulate();
 
     // For minimalHyp, we don't run mightBeMinimal<dim>().
@@ -175,7 +171,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         std::ostringstream out;
         out << "Item " << (nSolns + 1);
 
-        container->insertChildLast(
+        container.insertChildLast(
             regina::makePacket(std::move(tri), out.str()));
     }
     ++nSolns;
@@ -187,21 +183,23 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
 template <int dim>
 void foundFacePairing(const regina::FacetPairing<dim>& pairing,
         typename regina::FacetPairing<dim>::IsoList autos,
-        std::shared_ptr<regina::Packet> container) {
+        regina::Packet& container) {
     std::cout << pairing.str() << std::endl;
-    std::shared_ptr<regina::Packet> subContainer;
     // If creating a full .rga file, store triangulations for each face
     // pairing in a different container.
     if (subContainers) {
-        subContainer = std::make_shared<regina::Container>();
+        auto subContainer = std::make_shared<regina::Container>();
         subContainer->setLabel(pairing.str());
-        container->insertChildLast(subContainer);
+        container.insertChildLast(subContainer);
+
+        findAllPerms<dim>(pairing, std::move(autos),
+            ! orientability.hasFalse(), ! finiteness.hasFalse(),
+            whichPurge, *subContainer);
     } else {
-        subContainer = container;
+        findAllPerms<dim>(pairing, std::move(autos),
+            ! orientability.hasFalse(), ! finiteness.hasFalse(),
+            whichPurge, container);
     }
-    findAllPerms<dim>(pairing, std::move(autos),
-        ! orientability.hasFalse(), ! finiteness.hasFalse(),
-        whichPurge, subContainer);
 }
 
 /**
@@ -622,7 +620,7 @@ int runCensus() {
                     pairingList += pairingRep;
                     pairingList += '\n';
                 } else {
-                    foundFacePairing<dim>(*p, p->findAutomorphisms(), census);
+                    foundFacePairing<dim>(*p, p->findAutomorphisms(), *census);
                     pairingList += p->str();
                     pairingList += '\n';
                 }
@@ -642,7 +640,7 @@ int runCensus() {
         std::cout << "Starting census generation..." << std::endl;
 
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
-            foundFacePairing<dim>, census /* dest */);
+            foundFacePairing<dim>, *census /* dest */);
 
         std::cout << "Finished." << std::endl;
     }
