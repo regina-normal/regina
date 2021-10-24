@@ -169,11 +169,6 @@ class GluingPermSearcher<2> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
-         *
          * @param pairing the specific pairing of triangle edges
          * that the generated permutation sets will complement.
          * @param autos the collection of isomorphisms that define equivalence
@@ -207,11 +202,6 @@ class GluingPermSearcher<2> {
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * \exception InvalidInput the data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
@@ -341,11 +331,6 @@ class GluingPermSearcher<2> {
          * \pre The given edge pairing is in canonical form as described
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          */
         template <typename Action, typename... Args>
         static void findAllPerms(FacetPairing<2> pairing,
@@ -374,11 +359,6 @@ class GluingPermSearcher<2> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
-         *
          * @return the new search manager.
          */
         template <typename Action, typename... Args>
@@ -401,11 +381,6 @@ class GluingPermSearcher<2> {
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
@@ -483,8 +458,9 @@ inline GluingPermSearcher<2>::GluingPermSearcher(
         // Delegate to a de-templatised constructor.
         GluingPermSearcher<2>(std::move(pairing), std::move(autos),
             orientableOnly,
-            ActionWrapper(std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<2>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 template <typename Action, typename... Args>
@@ -492,8 +468,9 @@ inline GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
         Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
         GluingPermSearcher<2>(in,
-            ActionWrapper(std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<2>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 inline bool GluingPermSearcher<2>::completePermSet() const {

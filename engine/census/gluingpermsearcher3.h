@@ -275,11 +275,6 @@ class GluingPermSearcher<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
-         *
          * @param pairing the specific pairing of tetrahedron faces
          * that the generated permutation sets will complement.
          * @param autos the collection of isomorphisms that define equivalence
@@ -328,11 +323,6 @@ class GluingPermSearcher<3> {
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * \exception InvalidInput the data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
@@ -461,11 +451,6 @@ class GluingPermSearcher<3> {
          * \pre The given face pairing is in canonical form as described
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          */
         template <typename Action, typename... Args>
         static void findAllPerms(FacetPairing<3> pairing,
@@ -495,11 +480,6 @@ class GluingPermSearcher<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
-         *
          * @return the new search manager.
          */
         template <typename Action, typename... Args>
@@ -523,11 +503,6 @@ class GluingPermSearcher<3> {
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
@@ -1156,11 +1131,6 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
-         *
          * @param useEuler the Euler characteristic that vertex links must
          * have.  For boundary vertices, this is the Euler characteristic
          * of the closed surface that would be obtained if the puncture in
@@ -1183,11 +1153,6 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * \exception InvalidInput the data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
@@ -1996,11 +1961,6 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * \pre The given face pairing is in canonical form as described
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          */
         template <typename Action, typename... Args>
         CompactSearcher(FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
@@ -2019,11 +1979,6 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * \exception InvalidInput the data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
@@ -2556,11 +2511,6 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          * \pre The given face pairing has no boundary faces and has at
          * least three tetrahedra.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          */
         template <typename Action, typename... Args>
         ClosedPrimeMinSearcher(FacetPairing<3> pairing,
@@ -2579,11 +2529,6 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * \exception InvalidInput the data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
@@ -2742,11 +2687,6 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          * \pre The given face pairing has no boundary faces.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          */
         template <typename Action, typename... Args>
         HyperbolicMinSearcher(FacetPairing<3> pairing,
@@ -2765,11 +2705,6 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap then in std::ref or
-         * std::cref.
          *
          * \exception InvalidInput the data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
@@ -2873,9 +2808,9 @@ inline GluingPermSearcher<3>::GluingPermSearcher(
         // Delegate to a de-templatised constructor.
         GluingPermSearcher<3>(std::move(pairing), std::move(autos),
             orientableOnly, finiteOnly, whichPurge,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 template <typename Action, typename... Args>
@@ -2883,9 +2818,9 @@ inline GluingPermSearcher<3>::GluingPermSearcher(std::istream& in,
         Action&& action, Args&&...  args) :
         // Delegate to a de-templatised constructor.
         GluingPermSearcher<3>(in,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 inline bool GluingPermSearcher<3>::completePermSet() const {
@@ -2992,9 +2927,9 @@ inline EulerSearcher::EulerSearcher(int useEuler,
         // Delegate to a de-templatised constructor.
         EulerSearcher(useEuler, std::move(pairing), std::move(autos),
             orientableOnly, whichPurge,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 template <typename Action, typename... Args>
@@ -3002,9 +2937,9 @@ inline EulerSearcher::EulerSearcher(std::istream& in,
         Action&& action, Args&&...  args) :
         // Delegate to a de-templatised constructor.
         EulerSearcher(in,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 inline EulerSearcher::~EulerSearcher() {
@@ -3155,9 +3090,9 @@ inline CompactSearcher::CompactSearcher(
         // Delegate to a de-templatised constructor.
         CompactSearcher(std::move(pairing), std::move(autos), orientableOnly,
             whichPurge,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 template <typename Action, typename... Args>
@@ -3165,9 +3100,9 @@ inline CompactSearcher::CompactSearcher(std::istream& in,
         Action&& action, Args&&...  args) :
         // Delegate to a de-templatised constructor.
         CompactSearcher(in,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 inline CompactSearcher::~CompactSearcher() {
@@ -3309,9 +3244,9 @@ inline ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(
         // Delegate to a de-templatised constructor.
         ClosedPrimeMinSearcher(std::move(pairing), std::move(autos),
             orientableOnly,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 template <typename Action, typename... Args>
@@ -3319,9 +3254,9 @@ inline ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in,
         Action&& action, Args&&...  args) :
         // Delegate to a de-templatised constructor.
         ClosedPrimeMinSearcher(in,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 inline ClosedPrimeMinSearcher::~ClosedPrimeMinSearcher() {
@@ -3344,9 +3279,9 @@ inline HyperbolicMinSearcher::HyperbolicMinSearcher(
         // Delegate to a de-templatised constructor.
         HyperbolicMinSearcher(std::move(pairing), std::move(autos),
             orientableOnly,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 template <typename Action, typename... Args>
@@ -3354,9 +3289,9 @@ inline HyperbolicMinSearcher::HyperbolicMinSearcher(std::istream& in,
         Action&& action, Args&&...  args) :
         // Delegate to a de-templatised constructor.
         HyperbolicMinSearcher(in,
-            ActionWrapper(
-                std::bind(std::forward<Action>(action),
-                std::placeholders::_1, std::forward<Args>(args)...))) {
+            ActionWrapper([&](const regina::GluingPerms<3>& p) {
+                action(p, std::forward<Args>(args)...);
+            })) {
 }
 
 inline HyperbolicMinSearcher::HyperbolicMinSearcher(std::istream& in,

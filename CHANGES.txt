@@ -49,6 +49,8 @@ Version 7.0  [ TODO ]
           are more consistently used, and should need to be set less often.
         - All XML parsing code is now private to Regina's engine, and the
           corresponding xml* headers are no longer installed.
+        - All callback functions now forward reference arguments correctly:
+          there is no longer any need to pass via std::ref() or std::cref().
         - Removed REGINA_API and associated macros.
     ENGINE:
         Class AbelianGroup:
