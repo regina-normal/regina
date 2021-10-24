@@ -70,15 +70,15 @@ class SnapPeaFileUI : public QObject, public PacketViewerTab {
          */
         SnapPeaFileUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
             PacketTabbedUI* useParentUI);
-        ~SnapPeaFileUI();
+        ~SnapPeaFileUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
-        PacketEditIface* getEditIface();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
+        PacketEditIface* getEditIface() override;
 };
 
 inline PacketEditIface* SnapPeaFileUI::getEditIface() {

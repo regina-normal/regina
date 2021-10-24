@@ -121,7 +121,7 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     table->setModel(model);
     layout->addWidget(table, 1);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    auto* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     layout->addWidget(buttonBox);
 
     regina::Packet* p = packetUI->getPacket();

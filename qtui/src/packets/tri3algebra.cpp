@@ -65,7 +65,6 @@
 #include <QTextDocument>
 #include <QValidator>
 
-using regina::Cyclotomic;
 using regina::Packet;
 using regina::Triangulation;
 
@@ -126,11 +125,11 @@ Tri3HomologyFundUI::Tri3HomologyFundUI(
         tri(packet) {
     ui = new QWidget();
 
-    ColumnLayout* master = new ColumnLayout(ui);
+    auto* master = new ColumnLayout(ui);
 
     // Homology:
 
-    QGridLayout* homologyGrid = new QGridLayout();//, 7, 4, 0, 5);
+    auto* homologyGrid = new QGridLayout();//, 7, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(6, 1);
     homologyGrid->setColumnStretch(0, 1);
@@ -334,7 +333,7 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(
     paramsArea->addWidget(paramsLabel);
 
     params = new QLineEdit(ui);
-    QIntValidator* val = new QIntValidator(ui);
+    auto* val = new QIntValidator(ui);
     val->setBottom(0);
     params->setValidator(val);
     params->setWhatsThis(expln);
@@ -374,7 +373,7 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(
     invArea->addWidget(invariants, 4);
 
     invariants->setColumnCount(2);
-    QTreeWidgetItem* header = new QTreeWidgetItem();
+    auto* header = new QTreeWidgetItem();
     header->setText(0, tr("r"));
     header->setText(1, tr("value"));
     for (int i = 0; i < 2; ++i)
@@ -620,7 +619,7 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
         regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    QScrollArea* scroller = new QScrollArea();
+    auto* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
     // Transparency must be applied to both the QScrollArea *and* some of its
@@ -630,10 +629,10 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
                             "}");
     ui = scroller;
 
-    QWidget* grid = new QWidget(scroller->viewport());
+    auto* grid = new QWidget(scroller->viewport());
     scroller->setWidget(grid);
 
-    QGridLayout* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
+    auto* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(11, 1);
     homologyGrid->setColumnStretch(0, 1);

@@ -93,7 +93,7 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     QBoxLayout* hdrLayout = new QHBoxLayout();
     baseLayout->addLayout(hdrLayout);
 
-    QLabel* label = new QLabel(tr("Display graph:"), ui);
+    auto* label = new QLabel(tr("Display graph:"), ui);
     hdrLayout->addWidget(label);
     chooseType = new QComboBox(ui);
     chooseType->addItem(tr("Dual graph"));

@@ -53,7 +53,7 @@ SnapPeaAlgebraUI::SnapPeaAlgebraUI(
         tri(packet) {
     ui = new QWidget();
 
-    ColumnLayout* master = new ColumnLayout(ui);
+    auto* master = new ColumnLayout(ui);
 
     QVBoxLayout* layout;
 

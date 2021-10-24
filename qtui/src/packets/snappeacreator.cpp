@@ -85,7 +85,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     QBoxLayout* typeArea = new QHBoxLayout();//layout, 5);
     layout->addLayout(typeArea);
     QString expln = QObject::tr("Specifies how to create the SnapPea triangulation.");
-    QLabel* label = new QLabel(QObject::tr("Create how?"), ui);
+    auto* label = new QLabel(QObject::tr("Create how?"), ui);
     label->setWhatsThis(expln);
     typeArea->addWidget(label);
     type = new QComboBox(ui);

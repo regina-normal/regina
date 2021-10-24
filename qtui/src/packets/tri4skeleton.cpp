@@ -257,39 +257,37 @@ void Tri4SkelCompUI::viewVertices() {
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
     // Similarly for edges, triangles, etc.
-    SkeletonWindow* win = new SkeletonWindow(this, new Vertex4Model(tri));
+    auto* win = new SkeletonWindow(this, new Vertex4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewEdges() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Edge4Model(tri));
+    auto* win = new SkeletonWindow(this, new Edge4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewTriangles() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Triangle4Model(tri));
+    auto* win = new SkeletonWindow(this, new Triangle4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewTetrahedra() {
-    SkeletonWindow* win = new SkeletonWindow(this,
-        new Tetrahedron4Model(tri));
+    auto* win = new SkeletonWindow(this, new Tetrahedron4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Component4Model(tri));
+    auto* win = new SkeletonWindow(this, new Component4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewBoundaryComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this,
-        new BoundaryComponent4Model(tri));
+    auto* win = new SkeletonWindow(this, new BoundaryComponent4Model(tri));
     win->show();
     viewers.push_back(win);
 }

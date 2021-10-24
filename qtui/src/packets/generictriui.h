@@ -75,7 +75,7 @@ class GenericTriangulationBase : public QObject, public PacketReadOnlyUI {
         /**
          * PacketUI overrides.
          */
-        regina::Packet* getPacket();
+        regina::Packet* getPacket() override;
 
     public slots:
         /**
@@ -109,9 +109,9 @@ class GenericTriangulationUI : public GenericTriangulationBase {
         /**
          * PacketUI overrides.
          */
-        QWidget* getInterface();
-        QString getPacketMenuText() const;
-        void refresh();
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
 };
 
 #endif

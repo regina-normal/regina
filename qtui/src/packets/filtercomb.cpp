@@ -63,7 +63,7 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
     layout->addLayout(typeLayout);
     typeLayout->addStretch(1);
 
-    QLabel* label = new QLabel(tr("Combine using:"), ui);
+    auto* label = new QLabel(tr("Combine using:"), ui);
     label->setWhatsThis(tr("Specifies whether this combination "
         "filter will use boolean AND or boolean OR to combine its "
         "children."));
@@ -103,7 +103,7 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
 
     wideChildLayout->addStretch(1);
 
-    QVBoxLayout* childLayout = new QVBoxLayout();
+    auto* childLayout = new QVBoxLayout();
     wideChildLayout->addLayout(childLayout, 2);
 
     label = new QLabel(tr("Filters to be combined\n"

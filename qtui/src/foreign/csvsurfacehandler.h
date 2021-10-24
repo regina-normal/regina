@@ -59,18 +59,15 @@ class CSVSurfaceHandler : public PacketExporter {
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const override;
-        virtual bool exportData(std::shared_ptr<regina::Packet> data,
+        PacketFilter* canExport() const override;
+        bool exportData(std::shared_ptr<regina::Packet> data,
             const QString& fileName, QWidget* parentWidget) const override;
 
     private:
         /**
          * Don't allow people to construct their own CSV handlers.
          */
-        CSVSurfaceHandler();
+        CSVSurfaceHandler() = default;
 };
-
-inline CSVSurfaceHandler::CSVSurfaceHandler() {
-}
 
 #endif

@@ -77,7 +77,7 @@ SurfacesSummaryUI::SurfacesSummaryUI(
         regina::PacketOf<regina::NormalSurfaces>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
-    QScrollArea* scroller = new QScrollArea();
+    auto* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
     // Transparency must be applied to both the QScrollArea *and* some of its
@@ -88,7 +88,7 @@ SurfacesSummaryUI::SurfacesSummaryUI(
     ui = scroller;
 
     pane = new QWidget(scroller);
-    QVBoxLayout* paneLayout = new QVBoxLayout;
+    auto* paneLayout = new QVBoxLayout;
     pane->setLayout(paneLayout);
     scroller->setWidget(pane);
 

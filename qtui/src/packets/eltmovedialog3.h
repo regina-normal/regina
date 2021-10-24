@@ -105,7 +105,7 @@ class EltMoveDialog3 : public QDialog, public regina::PacketListener {
          */
         EltMoveDialog3(QWidget* parent,
             regina::PacketOf<regina::Triangulation<3>>* useTri);
-        ~EltMoveDialog3();
+        ~EltMoveDialog3() override;
 
         /**
          * Update the overview information if the triangulation changes.

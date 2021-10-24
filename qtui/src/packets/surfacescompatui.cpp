@@ -69,7 +69,7 @@ SurfacesCompatibilityUI::SurfacesCompatibilityUI(
     QBoxLayout* hdrLayout = new QHBoxLayout();
     uiLayout->addLayout(hdrLayout);
 
-    QLabel* label = new QLabel(tr("Display matrix:"), ui);
+    auto* label = new QLabel(tr("Display matrix:"), ui);
     hdrLayout->addWidget(label);
     chooseMatrix = new QComboBox(ui);
     chooseMatrix->addItem(tr("Local compatibility (quads and octagons)"));

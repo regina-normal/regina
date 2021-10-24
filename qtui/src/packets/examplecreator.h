@@ -53,8 +53,8 @@ class ExampleCreator {
         CreatorFunc creator_;
 
     public:
-        ExampleCreator(const QString& name, CreatorFunc creator) :
-                name_(name), creator_(creator) {
+        ExampleCreator(QString name, CreatorFunc creator) :
+                name_(std::move(name)), creator_(creator) {
         }
 
         const QString& name() const {

@@ -93,10 +93,10 @@ class FilterPropUI : public QObject, public PacketUI {
         /**
          * PacketUI overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        QString getPacketMenuText() const;
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
 
     public slots:
         /**

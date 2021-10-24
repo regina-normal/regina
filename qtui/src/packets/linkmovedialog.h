@@ -164,7 +164,7 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
          */
         LinkMoveDialog(QWidget* parent,
             regina::PacketOf<regina::Link>* useLink);
-        ~LinkMoveDialog();
+        ~LinkMoveDialog() override;
 
         /**
          * Update the overview information if the link changes.

@@ -72,7 +72,7 @@ class PythonOutputStream {
         /**
          * Virtual destructor.
          */
-        inline virtual ~PythonOutputStream();
+        inline virtual ~PythonOutputStream() = default;
 
         /**
          * Writes data to this output stream.  Note that this data will
@@ -119,9 +119,6 @@ class PythonOutputStream {
          */
         virtual void processOutput(const std::string& data) = 0;
 };
-
-inline PythonOutputStream::~PythonOutputStream() {
-}
 
 } // namespace regina::python
 

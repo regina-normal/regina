@@ -56,13 +56,13 @@ class BigWidget : public QWidget {
          */
         BigWidget(int desktopFractionNumerator,
                   int desktopFractionDenominator,
-                  QWidget* parent = 0);
+                  QWidget* parent = nullptr);
 
     protected:
         /**
          * Qt overrides.
          */
-        virtual QSize sizeHint() const;
+        QSize sizeHint() const override;
 };
 
 inline BigWidget::BigWidget(int desktopFractionNumerator,

@@ -59,7 +59,7 @@ SnapPeaUI::SnapPeaUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabSnapPeaTri) {
-    SnapPeaHeaderUI* header = new SnapPeaHeaderUI(packet, this);
+    auto* header = new SnapPeaHeaderUI(packet, this);
     shapes = new SnapPeaShapesUI(packet, this);
     gluings = new SnapPeaGluingsUI(packet, this);
     skeleton = new Tri3SkeletonUI(packet, packet, this);

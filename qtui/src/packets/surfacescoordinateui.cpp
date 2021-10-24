@@ -451,7 +451,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     uiLayout->addLayout(hdrLayout);
 
     // Set up the coordinate selector.
-    QLabel* label = new QLabel(tr("Display coordinates:"));
+    auto* label = new QLabel(tr("Display coordinates:"));
     hdrLayout->addWidget(label);
     coords = new CoordinateChooser();
     coords->insertAllViewers(surfaces);

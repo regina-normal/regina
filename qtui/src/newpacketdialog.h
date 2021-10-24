@@ -88,7 +88,7 @@ class NewPacketDialog : public QDialog {
             std::shared_ptr<regina::Packet> packetTree,
             std::shared_ptr<regina::Packet> defaultParent,
             PacketFilter* useFilter, const QString& dialogTitle);
-        virtual ~NewPacketDialog();
+        ~NewPacketDialog() override;
 
         /**
          * Returns whether or not there are any possible parent packets at

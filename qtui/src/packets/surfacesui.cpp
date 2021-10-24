@@ -50,14 +50,12 @@
 #include <QWhatsThis>
 
 using regina::Packet;
-using regina::NormalSurface;
 
 SurfacesUI::SurfacesUI(regina::PacketOf<regina::NormalSurfaces>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabSurfaceList) {
-    SurfacesHeaderUI* header = new SurfacesHeaderUI(packet, this);
-    addHeader(header);
+    addHeader(new SurfacesHeaderUI(packet, this));
 
     // WARNING: If these tabs are reordered, the code below that sets
     // the default tab must be updated accordingly.

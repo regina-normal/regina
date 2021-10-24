@@ -84,7 +84,7 @@ class PacketWindow : public QMainWindow {
         /**
          * Overridden to handle window closing.
          */
-        virtual void closeEvent(QCloseEvent* event);
+        void closeEvent(QCloseEvent* event) override;
 
     friend class PacketPane;
 };

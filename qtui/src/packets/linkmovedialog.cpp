@@ -159,7 +159,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent,
         regina::PacketOf<regina::Link>* useLink) :
         QDialog(parent), link(useLink) {
     setWindowTitle(tr("Reidemeister Moves"));
-    QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+    auto* dialogLayout = new QVBoxLayout(this);
 
     name = new QLabel();
     name->setAlignment(Qt::AlignCenter);
@@ -169,7 +169,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent,
     overview->setAlignment(Qt::AlignCenter);
     dialogLayout->addWidget(overview);
 
-    QGridLayout* layout = new QGridLayout();
+    auto* layout = new QGridLayout();
     dialogLayout->addLayout(layout);
 
     use1up = new QRadioButton(tr("R1 &twist"), this);
@@ -251,7 +251,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent,
     box1down->setWhatsThis(tr("Select which twist to undo, by choosing the "
         "crossing at which the twist appears."));
     layout->addWidget(box1down, 1, 1);
-    QGridLayout* sublayout = new QGridLayout();
+    auto* sublayout = new QGridLayout();
     sublayout->setContentsMargins(0, 0, 0, 0);
     sublayout->setColumnStretch(1, 1);
     sublayout->addWidget(new QLabel(tr("Over:")), 0, 0);

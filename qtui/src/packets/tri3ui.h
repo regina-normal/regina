@@ -75,8 +75,8 @@ class Tri3UI : public PacketTabbedUI {
         /**
          * PacketUI overrides.
          */
-        const std::vector<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        QString getPacketMenuText() const override;
 };
 
 /**

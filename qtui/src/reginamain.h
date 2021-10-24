@@ -158,7 +158,7 @@ class ReginaMain : public QMainWindow {
          * Constructors and destructors.
          */
         ReginaMain(ReginaManager *useManager, bool starterWindow);
-        virtual ~ReginaMain();
+        ~ReginaMain() override;
 
         /**
          * Plug in a new packet specific menu
@@ -229,23 +229,23 @@ class ReginaMain : public QMainWindow {
         /**
          * Overridden for drag-and-drop implementation.
          */
-        virtual void dragEnterEvent(QDragEnterEvent *event);
-        virtual void dropEvent(QDropEvent *event);
+        void dragEnterEvent(QDragEnterEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
 
         /**
          * Overridden to handle window closing.
          */
-        virtual void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent *event) override;
 
         /**
          * Qt override to set preferred size of the window.
          */
-        virtual QSize sizeHint() const;
+        QSize sizeHint() const override;
 
         /**
          * Qt override to allow postponing actions.
          */
-        void customEvent(QEvent* evt);
+        void customEvent(QEvent* evt) override;
 
     public slots:
         /**

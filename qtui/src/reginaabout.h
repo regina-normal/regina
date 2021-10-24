@@ -68,9 +68,9 @@ class ReginaAbout : public QDialog {
         struct AuthorInfo {
             QString name, email, website;
 
-            AuthorInfo(const QString& name_, const QString& email_,
-                    const QString& website_) :
-                    name(name_), email(email_), website(website_) {
+            AuthorInfo(QString name_, QString email_, QString website_) :
+                    name(std::move(name_)), email(std::move(email_)),
+                    website(std::move(website_)) {
             }
         };
 
@@ -80,9 +80,9 @@ class ReginaAbout : public QDialog {
         struct SoftwareInfo {
             QString name, version, website;
 
-            SoftwareInfo(const QString& name_, const QString& version_,
-                    const QString& website_) :
-                    name(name_), version(version_), website(website_) {
+            SoftwareInfo(QString name_, QString version_, QString website_) :
+                    name(std::move(name_)), version(std::move(version_)),
+                    website(std::move(website_)) {
             }
         };
 

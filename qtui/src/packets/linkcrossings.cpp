@@ -210,7 +210,7 @@ CrossingDelegate::CrossingDelegate(QWidget *parent) :
 
 void CrossingDelegate::paint(QPainter *painter,
         const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    const CrossingModel* m = static_cast<const CrossingModel*>(index.model());
+    const auto* m = static_cast<const CrossingModel*>(index.model());
 
     if (m->isPictorial()) {
         painter->drawPixmap(option.rect.x() + hPadding,
@@ -238,7 +238,7 @@ void CrossingDelegate::paint(QPainter *painter,
 
 QSize CrossingDelegate::sizeHint(const QStyleOptionViewItem &option,
         const QModelIndex &index) const {
-    const CrossingModel* m = static_cast<const CrossingModel*>(index.model());
+    const auto* m = static_cast<const CrossingModel*>(index.model());
 
     QRect r = QFontMetrics(option.font).boundingRect(qvariant_cast<QString>(
         m->data(QModelIndex(), Qt::DisplayRole)));
@@ -256,8 +256,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
 
-    QHBoxLayout* sublayout = new QHBoxLayout();
-    QLabel* label = new QLabel(tr("Display crossings:"));
+    auto* sublayout = new QHBoxLayout();
+    auto* label = new QLabel(tr("Display crossings:"));
     sublayout->addWidget(label);
     type = new QComboBox();
     type->setWhatsThis(tr("Allows you to switch between different "
@@ -332,7 +332,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actSimplify);
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
 
-    QAction* actMoves = new QAction(this);
+    auto* actMoves = new QAction(this);
     actMoves->setText(tr("Reidemeister &Moves..."));
     actMoves->setToolTip(tr(
         "Modify the link diagram using Reidemeister moves"));
@@ -345,7 +345,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actMoves);
     connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
 
-    QAction* sep = new QAction(this);
+    auto* sep = new QAction(this);
     sep->setSeparator(true);
     actionList.push_back(sep);
 
@@ -360,7 +360,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
-    QAction* actRotate = new QAction(this);
+    auto* actRotate = new QAction(this);
     actRotate->setText(tr("&Rotate"));
     actRotate->setIcon(ReginaSupport::regIcon("rotate"));
     actRotate->setToolTip(tr("Rotate this link"));
@@ -372,7 +372,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actRotate);
     connect(actRotate, SIGNAL(triggered()), this, SLOT(rotate()));
 
-    QAction* actReverse = new QAction(this);
+    auto* actReverse = new QAction(this);
     actReverse->setText(tr("Re&verse"));
     actReverse->setIcon(ReginaSupport::regIcon("reverse"));
     actReverse->setToolTip(tr("Reverse this link"));
@@ -383,7 +383,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actReverse);
     connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
 
-    QAction* actParallel = new QAction(this);
+    auto* actParallel = new QAction(this);
     actParallel->setText(tr("Parallel Ca&bles..."));
     actParallel->setIcon(ReginaSupport::regIcon("parallel"));
     actParallel->setToolTip(tr("Expand into parallel cables"));
@@ -393,7 +393,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actParallel);
     connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
-    QAction* actComposeWith = new QAction(this);
+    auto* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
     actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actComposeWith->setToolTip(
@@ -585,7 +585,7 @@ void LinkCrossingsUI::refresh() {
         // There are no list views at all.
         // Add some extra space at the end to avoid the "no crossing" labels
         // spreading themselves across the entire widget.
-        QWidget* stretch = new QWidget();
+        auto* stretch = new QWidget();
         layout->addWidget(stretch, 1);
     }
 }
@@ -765,13 +765,13 @@ ParallelDialog::ParallelDialog(QWidget* parent, regina::Link& link) :
     setWhatsThis(tr("This will construct a new link that represents "
         "several cables of the link that you are viewing., all parallel using a chosen framing.  "
         "This link will not be modified."));
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QHBoxLayout* subLayout = new QHBoxLayout();
+    auto* subLayout = new QHBoxLayout();
     layout->addLayout(subLayout);
     QString expln = tr("Choose the number of parallel cables to create.  "
         "This must be a positive integer.");
-    QLabel* label = new QLabel(tr("Number of cables:"), this);
+    auto* label = new QLabel(tr("Number of cables:"), this);
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     nCables = new QLineEdit(this);
@@ -794,7 +794,7 @@ ParallelDialog::ParallelDialog(QWidget* parent, regina::Link& link) :
     framing->setWhatsThis(expln);
     subLayout->addWidget(framing, 1);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 

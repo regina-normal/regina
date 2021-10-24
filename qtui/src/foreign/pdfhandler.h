@@ -60,24 +60,21 @@ class PDFHandler : public PacketImporter, public PacketExporter {
         /**
          * PacketImporter overrides:
          */
-        virtual std::shared_ptr<regina::Packet> importData(
-            const QString& fileName, ReginaMain* parentWidget) const override;
+        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+            ReginaMain* parentWidget) const override;
 
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const override;
-        virtual bool exportData(std::shared_ptr<regina::Packet> data,
+        PacketFilter* canExport() const override;
+        bool exportData(std::shared_ptr<regina::Packet> data,
             const QString& fileName, QWidget* parentWidget) const override;
 
     private:
         /**
          * Don't allow people to construct their own PDF handlers.
          */
-        PDFHandler();
+        PDFHandler() = default;
 };
-
-inline PDFHandler::PDFHandler() {
-}
 
 #endif

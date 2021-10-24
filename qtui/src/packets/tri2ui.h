@@ -68,8 +68,8 @@ class Tri2UI : public PacketTabbedUI {
         /**
          * PacketUI overrides.
          */
-        const std::vector<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        QString getPacketMenuText() const override;
 };
 
 /**
@@ -104,9 +104,9 @@ class Tri2HeaderUI : public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
         /**
          * Allow other UIs to access the summary information.

@@ -97,7 +97,7 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
         "infinite parameterised families.  If the triangulation "
         "is isomorphic to one of these constructions, then the name "
         "of the triangulation will be reported here.");
-    QLabel* label = new QLabel(tr("<qt><b>Triangulation:<b></qt>"), ui);
+    auto* label = new QLabel(tr("<qt><b>Triangulation:<b></qt>"), ui);
     label->setWhatsThis(msg);
     line->addWidget(label);
     standardTri = new QLabel(ui);
@@ -942,7 +942,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
 
             unsigned long spiralTets = spiral->size();
 
-            unsigned long* tetIndex = new unsigned long[spiralTets];
+            auto* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)
                 tetIndex[j] = spiral->tetrahedron(j)->index();
 

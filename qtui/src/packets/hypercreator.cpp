@@ -71,7 +71,7 @@ HyperCreator::HyperCreator() {
     layout->addLayout(coordArea);
     QString expln = ui->tr("Specifies the coordinate system in which the "
         "normal hypersurfaces will be enumerated.");
-    QLabel* label = new QLabel(ui->tr("Coordinate system:"), ui);
+    auto* label = new QLabel(ui->tr("Coordinate system:"), ui);
     label->setWhatsThis(expln);
     coordArea->addWidget(label);
     coords = new HyperCoordinateChooser();

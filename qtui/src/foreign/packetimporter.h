@@ -58,7 +58,7 @@ class PacketImporter {
         /**
          * Default destructor that does nothing.
          */
-        virtual ~PacketImporter();
+        virtual ~PacketImporter() = default;
 
         /**
          * Import a packet tree from the given file.
@@ -84,9 +84,6 @@ class PacketImporter {
          */
         virtual bool useImportEncoding() const;
 };
-
-inline PacketImporter::~PacketImporter() {
-}
 
 inline bool PacketImporter::useImportEncoding() const {
     return false;

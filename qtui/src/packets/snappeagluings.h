@@ -70,14 +70,14 @@ class SnapPeaGluingsUI : public QObject, public PacketViewerTab {
          */
         SnapPeaGluingsUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
                 PacketTabbedUI* useParentUI);
-        ~SnapPeaGluingsUI();
+        ~SnapPeaGluingsUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 };
 
 #endif

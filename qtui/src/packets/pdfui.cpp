@@ -60,7 +60,7 @@ void PDFExternalViewer::view(regina::Packet* packet, QWidget* parentWidget) {
 
     // Set suffix. Note that XXXXXX (exactly 6 X's all uppercase) gets replaced
     // with random letters to ensure the file does not already exist.
-    SharedTempFile* temp = new SharedTempFile("XXXXXX.pdf", parentWidget);
+    auto* temp = new SharedTempFile("XXXXXX.pdf", parentWidget);
     if (! temp->valid()) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("<qt>I could not create the temporary "

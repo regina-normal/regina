@@ -57,7 +57,7 @@ class FilterCreator : public PacketCreator {
          * Constructor and destructor.
          */
         FilterCreator();
-        ~FilterCreator();
+        ~FilterCreator() override;
 
         /**
          * PacketCreator overrides.

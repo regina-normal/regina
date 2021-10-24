@@ -73,15 +73,15 @@ class LinkCodesUI : public QObject, public PacketViewerTab {
          */
         LinkCodesUI(regina::PacketOf<regina::Link>* useLink,
             PacketTabbedUI* useParentUI);
-        ~LinkCodesUI();
+        ~LinkCodesUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
-        PacketEditIface* getEditIface();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
+        PacketEditIface* getEditIface() override;
 
     public slots:
         /**

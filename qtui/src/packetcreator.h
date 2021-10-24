@@ -58,7 +58,7 @@ class PacketCreator {
         /**
          * Virtual destructor.
          */
-        virtual ~PacketCreator();
+        virtual ~PacketCreator() = default;
 
         /**
          * Returns the main interface component for this packet creator.
@@ -131,11 +131,8 @@ class BasicPacketCreator : public PacketCreator {
         }
 };
 
-inline PacketCreator::~PacketCreator() {
-}
-
 inline QWidget* PacketCreator::getInterface() {
-    return 0;
+    return nullptr;
 }
 
 inline QString PacketCreator::parentPrompt() {

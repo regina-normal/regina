@@ -80,14 +80,14 @@ class Tri3SnapPeaUI : public QObject, public PacketViewerTab {
          */
         Tri3SnapPeaUI(regina::PacketOf<regina::Triangulation<3>>* packet,
             PacketTabbedUI* useParentUI);
-        ~Tri3SnapPeaUI();
+        ~Tri3SnapPeaUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

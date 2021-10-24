@@ -74,7 +74,7 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
     if (allowSimplify) {
         layout->addStretch(1);
 
-        QLabel* label = new QLabel(tr("Try to simplify:"));
+        auto* label = new QLabel(tr("Try to simplify:"));
         label->setAlignment(Qt::AlignCenter);
         layout->addWidget(label);
 

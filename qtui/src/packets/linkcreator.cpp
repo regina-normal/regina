@@ -89,7 +89,7 @@ namespace {
     QRegExp reTorusParams(R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
 }
 
-LinkCreator::LinkCreator(ReginaMain* mainWindow) {
+LinkCreator::LinkCreator(ReginaMain*) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -97,7 +97,7 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     QBoxLayout* typeArea = new QHBoxLayout();//layout, 5);
     layout->addLayout(typeArea);
     QString expln = QObject::tr("Specifies what type of knot or link to create.");
-    QLabel* label = new QLabel(QObject::tr("Type of knot/link:"), ui);
+    auto* label = new QLabel(QObject::tr("Type of knot/link:"), ui);
     label->setWhatsThis(expln);
     typeArea->addWidget(label);
     type = new QComboBox(ui);

@@ -92,7 +92,7 @@ class GAPRunner : public QDialog {
          */
         GAPRunner(QWidget* parent, const QString& useExec,
             const regina::GroupPresentation& useOrigGroup);
-        ~GAPRunner();
+        ~GAPRunner() override;
 
         /**
          * Returns the new simplified group.
@@ -117,12 +117,12 @@ class GAPRunner : public QDialog {
         /**
          * Qt override to set preferred size of the window
          */
-        virtual QSize sizeHint() const;
+        QSize sizeHint() const override;
 
         /**
          * Disable the window-close event.
          */
-        virtual void closeEvent(QCloseEvent* e);
+        void closeEvent(QCloseEvent* e) override;
 
     private:
         /**

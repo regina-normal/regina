@@ -101,14 +101,14 @@ class HyperCompatibilityUI : public QObject, public PacketViewerTab {
         HyperCompatibilityUI(
             regina::PacketOf<regina::NormalHypersurfaces>* packet,
             PacketTabbedUI* useParentUI);
-        ~HyperCompatibilityUI();
+        ~HyperCompatibilityUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

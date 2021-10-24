@@ -117,8 +117,8 @@ class CommandEdit : public QLineEdit {
         /**
          * QLineEdit overrides.
          */
-        bool event(QEvent* event);
-        void keyPressEvent(QKeyEvent* event);
+        bool event(QEvent* event) override;
+        void keyPressEvent(QKeyEvent* event) override;
 };
 
 inline unsigned CommandEdit::getSpacesPerTab() {

@@ -82,7 +82,7 @@ class SharedTempFile : public QObject {
          * itself will be created in QDir::tempPath() automatically.
          */
         SharedTempFile(const QString& templateFileName, QObject* parent);
-        ~SharedTempFile();
+        ~SharedTempFile() override;
 
         void share();
 

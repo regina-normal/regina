@@ -130,7 +130,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
                 bool allowNone = false,
                 std::shared_ptr<regina::Packet> initialSelection = nullptr,
                 QWidget* parent = nullptr);
-        ~PacketChooser();
+        ~PacketChooser() override;
 
         /**
          * Returns the filter used by this packet chooser.

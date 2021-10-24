@@ -174,7 +174,7 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * Creates an empty tree.  This tree must be initialised using
          * fill().
          */
-        PacketTreeView(ReginaMain* newMainWindow, QWidget* parent = 0);
+        PacketTreeView(ReginaMain* newMainWindow, QWidget* parent = nullptr);
 
         /**
          * Returns the currently selected packet, or null if no packet is
@@ -275,7 +275,7 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * Allow the user to deselect the current item by clicking on an
          * empty part of the tree.
          */
-        virtual void mousePressEvent(QMouseEvent* event) override;
+        void mousePressEvent(QMouseEvent* event) override;
 
     private slots:
         /**

@@ -77,7 +77,7 @@ namespace {
 
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         const QStyleOptionViewItem&, const QModelIndex&) const {
-    PacketChooser* e = new PacketChooser(script_->root(),
+    auto* e = new PacketChooser(script_->root(),
         nullptr /* filter */, PacketChooser::ROOT_AS_SUBTREE,
         true /* allow "none" */, nullptr /* initial selection */, parent);
     e->setAutoUpdate(true);
@@ -86,13 +86,13 @@ QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
 
 void ScriptValueDelegate::setEditorData(QWidget* editor,
         const QModelIndex& index) const {
-    PacketChooser* e = static_cast<PacketChooser*>(editor);
+    auto* e = static_cast<PacketChooser*>(editor);
     e->selectPacket(script_->variableValue(index.row()));
 }
 
 void ScriptValueDelegate::setModelData(QWidget* editor,
         QAbstractItemModel*, const QModelIndex& index) const {
-    PacketChooser* e = static_cast<PacketChooser*>(editor);
+    auto* e = static_cast<PacketChooser*>(editor);
     script_->setVariableValue(index.row(), e->selectedPacket());
 }
 
@@ -245,20 +245,20 @@ bool ScriptVarModel::nameUsedElsewhere(const QString& name, int exclude) const {
 ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), script(packet) {
     ui = new BigWidget(1, 2);
-    QVBoxLayout* layout = new QVBoxLayout(ui);
+    auto* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
     // --- Action Toolbar ---
 
-    QToolBar* actionBar = new QToolBar(ui);
+    auto* actionBar = new QToolBar(ui);
     actionBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     layout->addWidget(actionBar);
 
     // --- Variable Table ---
 
     // Prepare a splitter for the remaining components.
-    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    auto* splitter = new QSplitter(Qt::Vertical);
     layout->addWidget(splitter, 1);
 
     model = new ScriptVarModel(packet);
@@ -345,13 +345,13 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actionBar->addAction(actRemove);
     scriptActionList.push_back(actRemove);
 
-    QAction* actSep = new QAction(this);
+    auto* actSep = new QAction(this);
     //scriptActions->addAction("script_separator");
     actSep->setSeparator(true);
     actionBar->addAction(actSep);
     scriptActionList.push_back(actSep);
 
-    QAction* actRun = new QAction(this);
+    auto* actRun = new QAction(this);
     //scriptActions->addAction("script_run");;
     actRun->setText(tr("&Run"));
     actRun->setIcon(ReginaSupport::regIcon("run"));

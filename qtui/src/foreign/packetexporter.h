@@ -57,7 +57,7 @@ class PacketExporter {
         /**
          * Default destructor that does nothing.
          */
-        virtual ~PacketExporter();
+        virtual ~PacketExporter() = default;
 
         /**
          * Returns a newly created packet filter describing which
@@ -90,9 +90,6 @@ class PacketExporter {
          */
         virtual bool useExportEncoding() const;
 };
-
-inline PacketExporter::~PacketExporter() {
-}
 
 inline bool PacketExporter::useExportEncoding() const {
     return false;

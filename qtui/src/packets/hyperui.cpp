@@ -50,15 +50,13 @@
 #include <QWhatsThis>
 
 using regina::Packet;
-using regina::NormalHypersurface;
 using regina::Triangulation;
 
 HyperUI::HyperUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabHypersurfaceList) {
-    HyperHeaderUI* header = new HyperHeaderUI(packet, this);
-    addHeader(header);
+    addHeader(new HyperHeaderUI(packet, this));
 
     // WARNING: If these tabs are reordered, the code below that sets
     // the default tab must be updated accordingly.

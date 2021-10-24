@@ -98,7 +98,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent,
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     setWindowTitle(tr("Elementary Moves"));
-    QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+    auto* dialogLayout = new QVBoxLayout(this);
 
     name = new QLabel();
     name->setAlignment(Qt::AlignCenter);
@@ -108,7 +108,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent,
     overview->setAlignment(Qt::AlignCenter);
     dialogLayout->addWidget(overview);
 
-    QGridLayout* layout = new QGridLayout();
+    auto* layout = new QGridLayout();
       //, 10, 2, 0 /* margin */, spacingHint());
     dialogLayout->addLayout(layout);
 

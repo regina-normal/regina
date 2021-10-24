@@ -50,7 +50,7 @@ using regina::Triangulation;
 Tri2UI::Tri2UI(regina::PacketOf<regina::Triangulation<2>>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim2Tri) {
-    Tri2HeaderUI* header = new Tri2HeaderUI(packet, this);
+    auto* header = new Tri2HeaderUI(packet, this);
     gluings = new Tri2GluingsUI(packet, this);
     skeleton = new Tri2SkeletonUI(packet, this);
 

@@ -66,7 +66,7 @@ void CuspModel::rebuild() {
 }
 
 QModelIndex CuspModel::index(int row, int column,
-        const QModelIndex& parent) const {
+        const QModelIndex& /* parent */) const {
     return createIndex(row, column, quint32(3 * row + column));
 }
 
@@ -144,7 +144,7 @@ Qt::ItemFlags CuspModel::flags(const QModelIndex& index) const {
 }
 
 bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
-        int role) {
+        int /* role */) {
     if (index.column() == 2) {
         QString data = value.toString().trimmed();
         if (data.isEmpty() || data == "-") {
@@ -215,7 +215,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QLabel* label = new QLabel(tr("Cusps:"));
+    auto* label = new QLabel(tr("Cusps:"));
     layout->addWidget(label);
 
     model = new CuspModel(packet);
@@ -267,7 +267,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     requiresNonNull.push_back(actRandomise);
     connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
 
-    QAction* actCanonise = new QAction(this);
+    auto* actCanonise = new QAction(this);
     actCanonise->setText(tr("&Canonical Retriangulation"));
     actCanonise->setIcon(ReginaSupport::regIcon("canonical"));
     actCanonise->setToolTip(tr(
@@ -288,7 +288,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     requiresNonNull.push_back(actCanonise);
     connect(actCanonise, SIGNAL(triggered()), this, SLOT(canonise()));
 
-    QAction* actVertexLinks = new QAction(this);
+    auto* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr(

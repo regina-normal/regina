@@ -78,7 +78,7 @@ class FilterCombUI : public QObject, public PacketUI,
          */
         FilterCombUI(regina::SurfaceFilterCombination* packet,
                 PacketPane* newEnclosingPane);
-        ~FilterCombUI();
+        ~FilterCombUI() override;
 
         /**
          * PacketUI overrides.

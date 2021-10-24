@@ -109,7 +109,7 @@ class ReginaPrefGeneral : public QWidget {
         CodecChooser* chooserImportExportCodec;
 
     public:
-        ReginaPrefGeneral(QWidget* parent = 0);
+        ReginaPrefGeneral(QWidget* parent = nullptr);
 
     private slots:
         void orientedChecked(int);
@@ -129,7 +129,7 @@ class ReginaPrefPython : public QWidget {
         QLineEdit* editSpacesPerTab;
 
     public:
-        ReginaPrefPython(QWidget* parent = 0);
+        ReginaPrefPython(QWidget* parent = nullptr);
 
     friend class ReginaPreferences;
 };
@@ -149,7 +149,7 @@ class ReginaPrefTools: public QWidget {
         QLineEdit* editGAPExec;
 
     public:
-        ReginaPrefTools(QWidget* parent = 0);
+        ReginaPrefTools(QWidget* parent = nullptr);
 
     private slots:
         void defaultPDFViewerChanged(int);

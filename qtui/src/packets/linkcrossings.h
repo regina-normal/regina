@@ -90,11 +90,12 @@ class CrossingModel : public QAbstractItemModel {
          * text for what should be approximately the longest string that we
          * need to render.
          */
-        QModelIndex index(int row, int column, const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        QModelIndex index(int row, int column,
+            const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
 };
 
 /**
@@ -115,12 +116,12 @@ class CrossingDelegate : public QStyledItemDelegate {
         static constexpr int iconSize = 22;
 
     public:
-        CrossingDelegate(QWidget *parent = 0);
+        CrossingDelegate(QWidget *parent = nullptr);
 
         void paint(QPainter *painter, const QStyleOptionViewItem &option,
-            const QModelIndex &index) const;
+            const QModelIndex &index) const override;
         QSize sizeHint(const QStyleOptionViewItem &option,
-            const QModelIndex &index) const;
+            const QModelIndex &index) const override;
 };
 
 /**
@@ -166,7 +167,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          */
         LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
             PacketTabbedUI* useParentUI);
-        ~LinkCrossingsUI();
+        ~LinkCrossingsUI() override;
 
         /**
          * Fill the given toolbar with knot/link actions.
@@ -180,10 +181,10 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * PacketEditorTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        void refresh() override;
 
     public slots:
         /**

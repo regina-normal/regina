@@ -54,7 +54,7 @@ namespace {
 
 FilterCreator::FilterCreator() {
     ui = new QWidget();
-    QGridLayout* layout = new QGridLayout(ui);//, 2, 2, 5);
+    auto* layout = new QGridLayout(ui);//, 2, 2, 5);
     layout->setColumnStretch(1, 1);
 
     int iconSize = QApplication::style()->pixelMetric(
@@ -68,8 +68,7 @@ FilterCreator::FilterCreator() {
         iconSize, iconSize));
     layout->addWidget(pic, 0, 0, Qt::AlignRight);
 
-    QRadioButton* props = new QRadioButton(
-        QObject::tr("Filter by properties"), ui);
+    auto* props = new QRadioButton(QObject::tr("Filter by properties"), ui);
     layout->addWidget(props, 0, 1, Qt::AlignLeft);
 
     msg = QObject::tr("Create a filter that examines properties of normal surfaces, "
@@ -82,7 +81,7 @@ FilterCreator::FilterCreator() {
         iconSize, iconSize));
     layout->addWidget(pic, 1, 0, Qt::AlignRight);
 
-    QRadioButton* comb = new QRadioButton(
+    auto* comb = new QRadioButton(
         QObject::tr("Combination (AND/OR) filter"), ui);
     layout->addWidget(comb, 1, 1, Qt::AlignLeft);
 

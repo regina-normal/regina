@@ -74,13 +74,13 @@ class MatchingModel : public QAbstractItemModel {
          * Overrides for describing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 };
 
 /**
@@ -114,14 +114,14 @@ class SurfacesMatchingUI : public QObject, public PacketViewerTab {
          */
         SurfacesMatchingUI(regina::PacketOf<regina::NormalSurfaces>* packet,
                 PacketTabbedUI* useParentUI);
-        ~SurfacesMatchingUI();
+        ~SurfacesMatchingUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     protected slots:
         /**
@@ -138,7 +138,7 @@ inline QModelIndex MatchingModel::index(int row, int column,
         const QModelIndex& /* unused parent */) const {
     if (eqns_)
         return createIndex(row, column,
-            quintptr(eqns_->columns() * row + column));
+            quintptr(eqns_->columns()) * row + column);
     else
         return createIndex(row, column, quintptr(0));
 }

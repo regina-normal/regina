@@ -49,7 +49,7 @@ ContainerUI::ContainerUI(Container* packet, PacketPane* enclosingPane) :
     layout->addStretch(1);
 
     // Give the grid two extra stretchable columns on the outside.
-    QGridLayout* grid = new QGridLayout();
+    auto* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnStretch(3, 1);

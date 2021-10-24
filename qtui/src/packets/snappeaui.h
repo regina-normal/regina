@@ -75,14 +75,14 @@ class SnapPeaUI : public PacketTabbedUI {
          */
         SnapPeaUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
             PacketPane* newEnclosingPane);
-        ~SnapPeaUI();
+        ~SnapPeaUI() override;
 
         /**
          * PacketUI overrides.
          */
-        PacketEditIface* getEditIface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        PacketEditIface* getEditIface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        QString getPacketMenuText() const override;
 };
 
 /**

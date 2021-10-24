@@ -65,7 +65,7 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QLabel* label = new QLabel(tr("<b>Jones</b>"), ui);
+    auto* label = new QLabel(tr("<b>Jones</b>"), ui);
     QString msg = tr("The Jones polynomial of this link.<p>"
         "The Jones polynomial is a Laurent polynomial "
         "in the square root of <i>t</i>, and Regina will try to "
@@ -79,7 +79,7 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
 
     layout->addSpacing(5);
 
-    QHBoxLayout* sublayout = new QHBoxLayout();
+    auto* sublayout = new QHBoxLayout();
     sublayout->setContentsMargins(0, 0, 0, 0);
     sublayout->setSpacing(0);
     jones = new QLabel(ui);

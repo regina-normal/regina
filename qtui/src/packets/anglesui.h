@@ -74,13 +74,13 @@ class AngleModel : public QAbstractItemModel {
          * Overrides for describing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 };
 
 /**
@@ -115,7 +115,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
          */
         AngleStructureUI(regina::PacketOf<regina::AngleStructures>* packet,
                 PacketPane* newEnclosingPane);
-        ~AngleStructureUI();
+        ~AngleStructureUI() override;
 
         /**
          * PacketUI overrides.

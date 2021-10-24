@@ -76,13 +76,13 @@ FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
         "filter."));
 
     // Set up the enclosing grid.
-    QGridLayout* layout = new QGridLayout(ui);//, 6, 4);
+    auto* layout = new QGridLayout(ui);//, 6, 4);
     layout->setRowStretch(0, 1);
     layout->setRowStretch(5, 1);
     layout->setColumnStretch(0, 1);
     layout->setColumnStretch(3, 1);
 
-    QLabel* label = new QLabel(tr("Restrict by:"), ui);
+    auto* label = new QLabel(tr("Restrict by:"), ui);
     layout->addWidget(label, 0, 1, Qt::AlignLeft | Qt::AlignBottom);
 
     // Set up the available restriction types.

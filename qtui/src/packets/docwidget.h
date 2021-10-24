@@ -81,7 +81,7 @@ class DocWidget : public QPlainTextEdit {
 
     public:
         DocWidget(PacketType* packet, QWidget* parent);
-        ~DocWidget();
+        ~DocWidget() override;
 
         /**
          * Refresh this widget with the contents of the packet from the
@@ -98,7 +98,7 @@ class DocWidget : public QPlainTextEdit {
         /**
          * QWidget overrides.
          */
-        virtual void focusOutEvent(QFocusEvent*);
+        void focusOutEvent(QFocusEvent*) override;
 };
 
 /**

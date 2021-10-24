@@ -80,7 +80,7 @@ class PacketUI {
          * Constructor and destructor.
          */
         PacketUI(PacketPane* newEnclosingPane);
-        virtual ~PacketUI();
+        virtual ~PacketUI() = default;
 
         /**
          * Return the packet that this pane is managing.
@@ -101,7 +101,7 @@ class PacketUI {
          * edit and clipboard operations.  This may be 0 if there is no
          * such interaction.
          *
-         * The default implementation simply returns 0.
+         * The default implementation simply returns \c null.
          */
         virtual PacketEditIface* getEditIface();
 
@@ -220,10 +220,10 @@ class DefaultPacketUI : public PacketReadOnlyUI {
         /**
          * Implementations of PacketUI virtual functions.
          */
-        virtual regina::Packet* getPacket();
-        virtual QWidget* getInterface();
-        virtual QString getPacketMenuText() const;
-        virtual void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
 };
 
 /**
@@ -270,8 +270,8 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * by way of the PacketManager class.
          */
         PacketPane(ReginaMain* newMainWindow, regina::Packet* newPacket,
-            QWidget* parent = 0);
-        ~PacketPane();
+            QWidget* parent = nullptr);
+        ~PacketPane() override;
 
         /**
          * Query components and actions.
@@ -375,14 +375,11 @@ inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
         enclosingPane(newEnclosingPane) {
 }
 
-inline PacketUI::~PacketUI() {
-}
-
 inline void PacketUI::endEdit() {
 }
 
 inline PacketEditIface* PacketUI::getEditIface() {
-    return 0;
+    return nullptr;
 }
 
 inline const std::vector<QAction*>& PacketUI::getPacketTypeActions() {

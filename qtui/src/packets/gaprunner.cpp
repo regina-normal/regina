@@ -98,12 +98,12 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) &
         ~(Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint));
 
-    QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+    auto* dialogLayout = new QVBoxLayout(this);
 
     status = new MessageLayer("system-run", tr("Initialising..."));
     dialogLayout->addWidget(status);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox();
+    auto* buttonBox = new QDialogButtonBox();
     killBtn = new QPushButton(
         ReginaSupport::themeIcon("process-stop"), tr("Stop"), this);
     killBtn->setToolTip(tr("Stop the running GAP process"));

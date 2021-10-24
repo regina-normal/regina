@@ -49,7 +49,7 @@ class PacketFilter {
         /**
          * Destructor.
          */
-        virtual ~PacketFilter();
+        virtual ~PacketFilter() = default;
 
         /**
          * Should the given packet be accepted according to this
@@ -66,7 +66,7 @@ class AllPacketsFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(const regina::Packet& packet) override;
+        bool accept(const regina::Packet& packet) override;
 };
 
 /**
@@ -82,7 +82,7 @@ class SingleTypeFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(const regina::Packet& packet) override {
+        bool accept(const regina::Packet& packet) override {
             return (packet.type() == T::typeID);
         }
 };
@@ -100,7 +100,7 @@ class TwoTypeFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(const regina::Packet& packet) override {
+        bool accept(const regina::Packet& packet) override {
             int type = packet.type();
             return (type == S::typeID || type == T::typeID);
         }
@@ -119,13 +119,10 @@ class SubclassFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(const regina::Packet& packet) override {
+        bool accept(const regina::Packet& packet) override {
             return dynamic_cast<const T*>(std::addressof(packet));
         }
 };
-
-inline PacketFilter::~PacketFilter() {
-}
 
 inline bool AllPacketsFilter::accept(const regina::Packet&) {
     return true;

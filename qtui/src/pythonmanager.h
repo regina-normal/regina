@@ -83,8 +83,8 @@ class PythonManager {
          * to the user and null is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent,
-                std::shared_ptr<regina::Packet> tree = 0,
-                std::shared_ptr<regina::Packet> selectedPacket = 0);
+                std::shared_ptr<regina::Packet> tree = nullptr,
+                std::shared_ptr<regina::Packet> selectedPacket = nullptr);
 
         /**
          * Launches a new python console to run the given script.

@@ -63,10 +63,10 @@ Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* tri,
         regina::Packet* triAsPacket, PacketTabbedViewerTab* useParentUI) :
         PacketViewerTab(useParentUI), tri_(tri), triAsPacket_(triAsPacket) {
     ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(ui);
+    auto* layout = new QVBoxLayout(ui);
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout();
+    auto* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5);
@@ -238,32 +238,31 @@ void Tri3SkelCompUI::viewVertices() {
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
     // Similarly for edges, triangles, etc.
-    SkeletonWindow* win = new SkeletonWindow(this, new Vertex3Model(tri_));
+    auto* win = new SkeletonWindow(this, new Vertex3Model(tri_));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewEdges() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Edge3Model(tri_));
+    auto* win = new SkeletonWindow(this, new Edge3Model(tri_));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewTriangles() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Triangle3Model(tri_));
+    auto* win = new SkeletonWindow(this, new Triangle3Model(tri_));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Component3Model(tri_));
+    auto* win = new SkeletonWindow(this, new Component3Model(tri_));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewBoundaryComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this,
-        new BoundaryComponent3Model(tri_));
+    auto* win = new SkeletonWindow(this, new BoundaryComponent3Model(tri_));
     win->show();
     viewers.push_back(win);
 }

@@ -103,14 +103,14 @@ class SurfacesCompatibilityUI : public QObject, public PacketViewerTab {
         SurfacesCompatibilityUI(
             regina::PacketOf<regina::NormalSurfaces>* packet,
             PacketTabbedUI* useParentUI);
-        ~SurfacesCompatibilityUI();
+        ~SurfacesCompatibilityUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**
