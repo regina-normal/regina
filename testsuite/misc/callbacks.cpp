@@ -34,12 +34,14 @@
 #include <string>
 #include <cppunit/extensions/HelperMacros.h>
 #include "testsuite/utilities/testutilities.h"
+#include "enumerate/treetraversal.h"
 #include "link/examplelink.h"
 #include "link/link.h"
 #include "link/modellinkgraph.h"
 #include "snappea/examplesnappea.h"
 #include "snappea/snappeatriangulation.h"
 #include "split/sigcensus.h"
+#include "subcomplex/satregion-impl.h"
 #include "triangulation/example3.h"
 #include "triangulation/example4.h"
 #include "triangulation/dim3.h"
@@ -107,14 +109,7 @@ class CallbacksTest : public CppUnit::TestFixture {
         }
 
         void passByReference() {
-            // TODO:
-            //
-            // GluingPermSearcher<2,3,4> and subclasses.. lots of stuff
-            //
-            // TreeEnumeration::run()
-            // TautEnumeration::run()
-            //
-            // SatRegion::find()
+            // TODO: GluingPermSearcher<2,3,4> and subclasses.. lots of stuff
 
             // ----- Isomorphism / subcomplex testing -----
 
@@ -217,6 +212,44 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, b);
                 verifyPassedByReference(b,
                     "SnapPeaTriangulation::enumerateCovers()");
+            }
+
+            // ----- Polytope vertex enumeration -----
+
+            {
+                auto tri = regina::Example<3>::figureEight();
+
+                Arg b;
+                regina::TreeEnumeration(tri, regina::NS_STANDARD).run(
+                        [](const regina::TreeEnumeration<>&, Arg& arg) {
+                    arg.flag();
+                    return false;
+                }, b);
+                verifyPassedByReference(b, "TreeEnumeration::run()");
+
+                Arg d;
+                regina::TautEnumeration(tri).run(
+                        [](const regina::TautEnumeration<>&, Arg& arg) {
+                    arg.flag();
+                    return false;
+                }, d);
+                verifyPassedByReference(d, "TautEnumeration::run()");
+            }
+
+            // ----- Subcomplex testing -----
+
+            {
+                regina::Triangulation<3> tri;
+                tri.insertSFSOverSphere(2, 1, 3, 1, 4, 1);
+
+                Arg b;
+                regina::SatRegion::find(tri, false,
+                        [](std::unique_ptr<regina::SatRegion>,
+                            const regina::SatBlock::TetList&, Arg& arg) {
+                    arg.flag();
+                    return false;
+                }, b);
+                verifyPassedByReference(b, "SatRegion::find()");
             }
 
             // ----- Census enumeration -----
