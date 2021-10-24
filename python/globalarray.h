@@ -170,7 +170,7 @@ class GlobalArray {
          * \pre This class has already been wrapped in Python by calling
          * wrapClass().
          */
-        GlobalArray() : data_(0), size_(0) {
+        GlobalArray() : data_(nullptr), size_(0) {
         }
 
         /**
@@ -383,7 +383,7 @@ class GlobalArray2D {
          * \pre This class has already been wrapped in Python by calling
          * wrapClass().
          */
-        GlobalArray2D() : data_(0), nRows_(0) {
+        GlobalArray2D() : data_(nullptr), nRows_(0) {
         }
 
         /**

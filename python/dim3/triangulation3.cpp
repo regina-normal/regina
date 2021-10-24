@@ -83,8 +83,8 @@ namespace pybind11::detail {
                 return true;
             }
 
-            static handle cast(const regina::python::SnapPyObject& src,
-                    return_value_policy policy, handle parent) {
+            static handle cast(const regina::python::SnapPyObject& /* src */,
+                    return_value_policy, handle /* parent */) {
                 // We never convert from C++ back to Python, since the user
                 // should never directly hold a SnapPyObject type.
                 return nullptr;
