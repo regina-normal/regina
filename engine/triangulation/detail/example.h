@@ -267,7 +267,7 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::singleCone(
         f = base.simplex(i);
         for (facet = 0; facet < dim; ++facet) {
             adj = f->adjacentSimplex(facet);
-            if (adj == 0)
+            if (! adj)
                 continue;
 
             adjIndex = adj->index();
@@ -315,7 +315,7 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
         f = base.simplex(i);
         for (facet = 0; facet < dim; ++facet) {
             adj = f->adjacentSimplex(facet);
-            if (adj == 0)
+            if (! adj)
                 continue;
 
             adjIndex = adj->index();

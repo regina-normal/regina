@@ -889,14 +889,14 @@ inline void Laurent2<T>::swap(Laurent2<T>& other) noexcept {
 
 template <typename T>
 inline void Laurent2<T>::negate() {
-    for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
-        it->second = -it->second;
+    for (auto& c : coeff_)
+        c.second = -c.second;
 }
 
 template <typename T>
 inline void Laurent2<T>::invertX() {
     std::map<Exponents, T> newCoeff;
-    for (auto c : coeff_)
+    for (const auto& c : coeff_)
         newCoeff.insert(std::make_pair(
             std::make_pair(- c.first.first, c.first.second), c.second));
     coeff_ = std::move(newCoeff);
@@ -905,7 +905,7 @@ inline void Laurent2<T>::invertX() {
 template <typename T>
 inline void Laurent2<T>::invertY() {
     std::map<Exponents, T> newCoeff;
-    for (auto c : coeff_)
+    for (const auto& c : coeff_)
         newCoeff.insert(std::make_pair(
             std::make_pair(c.first.first, - c.first.second), c.second));
     coeff_ = std::move(newCoeff);
@@ -918,16 +918,16 @@ inline Laurent2<T>& Laurent2<T>::operator *= (const T& scalar) {
         coeff_.clear();
     } else {
         // No coefficients become zero that were not zero already.
-        for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
-            it->second *= scalar;
+        for (auto& c : coeff_)
+            c.second *= scalar;
     }
     return *this;
 }
 
 template <typename T>
 inline Laurent2<T>& Laurent2<T>::operator /= (const T& scalar) {
-    for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
-        it->second /= scalar;
+    for (auto& c : coeff_)
+        c.second /= scalar;
 
     // For integer division, we could have zeroed out some coefficients.
     removeZeroes();
