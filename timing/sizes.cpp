@@ -56,7 +56,7 @@
 
 using namespace regina;
 
-int main(int argc, char* argv[]) {
+int main() {
     std::cout << "Algebra:" << std::endl;
     SHOW_SIZE(AbelianGroup);
     SHOW_SIZE(GroupPresentation);

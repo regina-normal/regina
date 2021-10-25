@@ -103,8 +103,7 @@ RecentFilesAction::RecentFilesAction(QWidget *parent) : QMenu(parent) {
 
 void RecentFilesAction::fileActivated() {
     // Open the URL.
-    QAction* action = qobject_cast<QAction*>(sender());
-    if (action)
+    if (auto* action = qobject_cast<QAction*>(sender()))
         emit urlSelected(action->data().toUrl());
 }
 
@@ -118,7 +117,7 @@ void RecentFilesAction::addUrl(const QUrl& url) {
     clearAction_->setEnabled(true);
 
     const QString title = shortName + " [" + file + ']';
-    QAction* action = new QAction(title, this);
+    auto* action = new QAction(title, this);
     action->setData(url);
     urlActions_.push_front(action);
     QMenu::insertAction(actions().value(0), action);
@@ -175,7 +174,7 @@ void RecentFilesAction::fillUrls() {
         shortName = QFileInfo(file).fileName();
 
         title = shortName + " [" + file + ']';
-        QAction* action = new QAction(title, this);
+        auto* action = new QAction(title, this);
         action->setData(url);
         // Insert to the back of the list.
         urlActions_.push_back(action);

@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
                 NS_AN_QUAD_OCT);
             try {
                 TreeEnumeration<> search(t, coords);
-                search.run([](const auto& tree) {
+                search.run([](const auto& /* tree */) {
                     /*
                     std::cout << "SOLN #" << tree.nSolns() << ": ";
                     tree.dumpTypes(std::cout);

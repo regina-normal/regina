@@ -51,7 +51,7 @@ IntroDialog::IntroDialog(QWidget* parent) : QDialog(parent) {
 
     QBoxLayout* titleBox = new QHBoxLayout();
     titleBox->setSpacing(0);
-    QLabel* label = new QLabel();
+    auto* label = new QLabel();
     //label->setPixmap(IconCache::icon(IconCache::regina).pixmap(iconSize));
     label->setPixmap(ReginaSupport::regIcon("welcome").pixmap(iconSize));
     titleBox->addWidget(label);
@@ -85,21 +85,20 @@ IntroDialog::IntroDialog(QWidget* parent) : QDialog(parent) {
     label->setWordWrap(true);
     layout->addWidget(label, 1);
 
-    QFrame* separator = new QFrame();
+    auto* separator = new QFrame();
     separator->setFrameStyle(QFrame::HLine);
     separator->setFrameShadow(QFrame::Sunken);
     layout->addWidget(separator);
 
-    QCheckBox* offerHelp = new QCheckBox(
-        tr("Always offer this help on startup"));
+    auto* offerHelp = new QCheckBox(tr("Always offer this help on startup"));
     offerHelp->setWhatsThis(tr("<qt>Each time Regina starts, offer a "
         "<i>\"click here\"</i> link at the bottom of the main window "
         "that opens this page.</qt>"));
     offerHelp->setChecked(ReginaPrefSet::global().helpIntroOnStartup);
     layout->addWidget(offerHelp);
 
-    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
-    QPushButton* helpBtn = new QPushButton(tr("Open Handbook"));
+    auto* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
+    auto* helpBtn = new QPushButton(tr("Open Handbook"));
     helpBtn->setToolTip("Open the users' handbook in your web browser.");
     helpBtn->setWhatsThis("Open the users' handbook in your web browser.  "
         "The handbook walks you through the different things "

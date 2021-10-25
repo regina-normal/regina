@@ -65,7 +65,7 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::PacketOf<Triangulation<4>>* packet,
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout();
+    auto* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5);

@@ -82,8 +82,9 @@ namespace {
             QString value_;
 
         public:
-            TuraevViroItem(unsigned long r, bool parity, const QString& value) :
-                    QTreeWidgetItem(), r_(r), parity_(parity), value_(value) {
+            TuraevViroItem(unsigned long r, bool parity, QString value) :
+                    QTreeWidgetItem(), r_(r), parity_(parity),
+                    value_(std::move(value)) {
                 if (r_ % 2) {
                     if (parity_)
                         setText(0, QObject::tr("%1, odd").arg(r_));

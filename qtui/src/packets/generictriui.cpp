@@ -106,11 +106,11 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(
     layout->addWidget(boundary);
 
     // Add a central divider.
-    QFrame* divider = new QFrame();
+    auto* divider = new QFrame();
     divider->setFrameStyle(QFrame::HLine | QFrame::Sunken);
     layout->addWidget(divider);
 
-    QLabel* label = new QLabel(QObject::tr(
+    auto* label = new QLabel(QObject::tr(
         "<qt>I cannot view trianguations of dimension ≥ 5 here in the "
         "graphical user interface.<p>"
         "You can, however, work with this triangulation in Python."));

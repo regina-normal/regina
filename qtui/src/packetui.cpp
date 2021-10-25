@@ -139,7 +139,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
 
     layout->addLayout(headerBox);
 
-    QFrame* separator = new QFrame();
+    auto* separator = new QFrame();
     separator->setFrameStyle(QFrame::HLine);
     separator->setFrameShadow(QFrame::Sunken);
     layout->addWidget(separator);

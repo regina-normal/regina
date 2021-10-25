@@ -86,15 +86,15 @@ void GluingsModel4::rebuild() {
 }
 
 QModelIndex GluingsModel4::index(int row, int column,
-        const QModelIndex& parent) const {
+        const QModelIndex& /* parent */) const {
     return createIndex(row, column, quint32(6 * row + column));
 }
 
-int GluingsModel4::rowCount(const QModelIndex& parent) const {
+int GluingsModel4::rowCount(const QModelIndex& /* parent */) const {
     return tri_->size();
 }
 
-int GluingsModel4::columnCount(const QModelIndex& parent) const {
+int GluingsModel4::columnCount(const QModelIndex& /* parent */) const {
     return 6;
 }
 
@@ -148,12 +148,12 @@ QVariant GluingsModel4::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-Qt::ItemFlags GluingsModel4::flags(const QModelIndex& index) const {
+Qt::ItemFlags GluingsModel4::flags(const QModelIndex& /* index */) const {
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 }
 
 bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
-        int role) {
+        int /* role */) {
     regina::Pentachoron<4>* p = tri_->simplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
@@ -385,7 +385,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
     triActionList.push_back(actSimplify);
 
-    QAction* actEltMove = new QAction(this);
+    auto* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
         "Modify the triangulation using elementary moves"));
@@ -415,7 +415,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
-    QAction* actReflect = new QAction(this);
+    auto* actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
@@ -428,7 +428,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
-    QAction* actBarycentricSubdivide = new QAction(this);
+    auto* actBarycentricSubdivide = new QAction(this);
     actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
     actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(tr(
@@ -442,7 +442,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
-    QAction* actIdealToFinite = new QAction(this);
+    auto* actIdealToFinite = new QAction(this);
     actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
     actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
 
@@ -458,7 +458,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
-    QAction* actFiniteToIdeal = new QAction(this);
+    auto* actFiniteToIdeal = new QAction(this);
     actFiniteToIdeal->setText(tr("Make &Ideal"));
     actFiniteToIdeal->setIcon(ReginaSupport::regIcon("cone"));
     actFiniteToIdeal->setToolTip(tr(
@@ -474,7 +474,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
-    QAction* actDoubleCover = new QAction(this);
+    auto* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("&Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
@@ -506,7 +506,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
 
-    QAction* actVertexLinks = new QAction(this);
+    auto* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr(
@@ -520,7 +520,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
-    QAction* actSplitIntoComponents = new QAction(this);
+    auto* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
     actSplitIntoComponents->setToolTip(tr(

@@ -41,7 +41,6 @@
 #include <QString>
 
 using regina::HyperCoords;
-using regina::NormalSurfaces;
 using regina::NormalCoords;
 using regina::Triangle;
 

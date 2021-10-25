@@ -79,7 +79,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         std::shared_ptr<regina::Packet> tree,
         std::shared_ptr<regina::Packet> selectedPacket) {
-    PythonConsole* ans = new PythonConsole(parent, this);
+    auto* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));
 
@@ -90,8 +90,8 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     // Initialise the python interpreter.
     if (ans->importRegina()) {
         ans->addOutput(parent->QObject::tr("\n"));
-        ans->setRootPacket(tree);
-        ans->setSelectedPacket(selectedPacket);
+        ans->setRootPacket(std::move(tree));
+        ans->setSelectedPacket(std::move(selectedPacket));
     }
 
     // All ready!
@@ -102,7 +102,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         regina::Script* script) {
-    PythonConsole* ans = new PythonConsole(parent, this);
+    auto* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));
 

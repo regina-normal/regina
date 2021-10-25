@@ -168,7 +168,7 @@ PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent)
 void PacketTreeView::fill(std::shared_ptr<Packet> topPacket) {
     clear();
 
-    root = topPacket;
+    root = std::move(topPacket);
     root->listen(this);
 
     // The root packet itself does not appear in the tree.
@@ -248,8 +248,7 @@ void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
     // match up.
     std::shared_ptr<Packet> p = fromPacket->firstChild();
     int itemCounter = 0;
-    PacketTreeItem* item = static_cast<PacketTreeItem*>(
-        fromItem->child(itemCounter));
+    auto* item = static_cast<PacketTreeItem*>(fromItem->child(itemCounter));
     PacketTreeItem* prev = nullptr;
     PacketTreeItem* other;
     for ( ; p; ++itemCounter, p = p->nextSibling()) {
@@ -331,7 +330,7 @@ void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
 
 PacketTreeItem* PacketTreeView::createAndSelect(
         std::shared_ptr<Packet> packet) {
-    PacketTreeItem* item = new PacketTreeItem(this, packet.get());
+    auto* item = new PacketTreeItem(this, packet.get());
     if (packet.get() == toSelect) {
         setCurrentItem(item);
         toSelect = nullptr;
@@ -341,7 +340,7 @@ PacketTreeItem* PacketTreeView::createAndSelect(
 
 PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
         std::shared_ptr<Packet> packet) {
-    PacketTreeItem* item = new PacketTreeItem(parent, packet.get());
+    auto* item = new PacketTreeItem(parent, packet.get());
     if (packet.get() == toSelect) {
         setCurrentItem(item);
         toSelect = nullptr;
@@ -351,7 +350,7 @@ PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
 
 PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
         QTreeWidgetItem* after, std::shared_ptr<Packet> packet) {
-    PacketTreeItem* item = new PacketTreeItem(parent, after, packet.get());
+    auto* item = new PacketTreeItem(parent, after, packet.get());
     if (packet.get() == toSelect) {
         setCurrentItem(item);
         toSelect = nullptr;
@@ -373,14 +372,14 @@ void PacketTreeView::customEvent(QEvent* evt) {
 }
 
 void PacketTreeView::handleItemExpanded(QTreeWidgetItem* item) {
-    PacketTreeItem* p = dynamic_cast<PacketTreeItem*>(item);
+    auto* p = dynamic_cast<PacketTreeItem*>(item);
     if (! p)
         return;
     p->markShouldBeExpanded(true);
 }
 
 void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
-    PacketTreeItem* p = dynamic_cast<PacketTreeItem*>(item);
+    auto* p = dynamic_cast<PacketTreeItem*>(item);
     if (! p)
         return;
     p->markShouldBeExpanded(false);

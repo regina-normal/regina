@@ -51,12 +51,12 @@
 
 void ReginaMain::setupActions() {
     QAction* act;
-    
+
     // --- File actions ---
 
     QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
 
-    QAction* actNew = new QAction(this); 
+    auto* actNew = new QAction(this);
     actNew->setText(tr("&New Topology Data"));
     actNew->setIcon(ReginaSupport::themeIcon("document-new"));
     actNew->setShortcuts(QKeySequence::New);
@@ -65,20 +65,20 @@ void ReginaMain::setupActions() {
     connect(actNew, SIGNAL(triggered()), this, SLOT(fileNew()));
     fileMenu->addAction(actNew);
 
-    QAction* actOpen = new QAction(this);
+    auto* actOpen = new QAction(this);
     actOpen->setText(tr("&Open..."));
     actOpen->setIcon(ReginaSupport::themeIcon("document-open"));
     actOpen->setShortcuts(QKeySequence::Open);
     actOpen->setWhatsThis(tr("Open a topology data file."));
     connect(actOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     fileMenu->addAction(actOpen);
-   
-    RecentFilesAction* fileOpenRecent = new RecentFilesAction(this);
+
+    auto* fileOpenRecent = new RecentFilesAction(this);
     connect(fileOpenRecent, SIGNAL(urlSelected(const QUrl&)),
         this, SLOT(fileOpenUrl(const QUrl&)));
     fileMenu->addMenu(fileOpenRecent);
 
-    ExamplesAction* fileExamples = new ExamplesAction(this);
+    auto* fileExamples = new ExamplesAction(this);
     fileExamples->fillStandard();
     connect(fileExamples, SIGNAL(urlSelected(const QUrl&, const QString&)),
         this, SLOT(fileOpenExample(const QUrl&, const QString&)));
@@ -346,13 +346,13 @@ void ReginaMain::setupActions() {
     actPaste->setShortcuts(QKeySequence::Paste);
     actPaste->setEnabled(false);
     editMenu->addAction(actPaste);
-  
+
     // --- Tree actions ---
 
     QMenu* treeMenu = menuBar()->addMenu(tr("&Packet Tree"));
 
     // New packets:
-    QAction* actContainer = new QAction(this);
+    auto* actContainer = new QAction(this);
     actContainer->setText(tr("New &Container"));
     actContainer->setIcon(IconCache::icon(IconCache::packet_container));
     actContainer->setShortcut(tr("Alt+c"));
@@ -364,7 +364,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actContainer);
     treeMenu->addAction(actContainer);
 
-    QAction* actTriangulation2 = new QAction(this);
+    auto* actTriangulation2 = new QAction(this);
     actTriangulation2->setText(tr("New 2-D &Triangulation"));
     actTriangulation2->setIcon(IconCache::icon(
         IconCache::packet_triangulation2));
@@ -377,7 +377,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actTriangulation2);
     treeMenu->addAction(actTriangulation2);
 
-    QAction* actTriangulation3 = new QAction(this);
+    auto* actTriangulation3 = new QAction(this);
     actTriangulation3->setText(tr("New 3-D &Triangulation"));
     actTriangulation3->setIcon(IconCache::icon(
         IconCache::packet_triangulation3));
@@ -390,7 +390,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actTriangulation3);
     treeMenu->addAction(actTriangulation3);
 
-    QAction* actTriangulation4 = new QAction(this);
+    auto* actTriangulation4 = new QAction(this);
     actTriangulation4->setText(tr("New &4-D Triangulation"));
     actTriangulation4->setIcon(IconCache::icon(
         IconCache::packet_triangulation4));
@@ -403,7 +403,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actTriangulation4);
     treeMenu->addAction(actTriangulation4);
 
-    QAction* actSurfaces = new QAction(this);
+    auto* actSurfaces = new QAction(this);
     actSurfaces->setText(tr("New &Normal Surface List (3-D)"));
     actSurfaces->setIcon(IconCache::icon(IconCache::packet_surfaces));
     actSurfaces->setShortcut(tr("Alt+n"));
@@ -414,7 +414,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actSurfaces);
     treeMenu->addAction(actSurfaces);
 
-    QAction* actHypersurfaces = new QAction(this);
+    auto* actHypersurfaces = new QAction(this);
     actHypersurfaces->setText(tr("New Normal &Hypersurface List (4-D)"));
     actHypersurfaces->setIcon(IconCache::icon(IconCache::packet_hypersurfaces));
     actHypersurfaces->setShortcut(tr("Alt+h"));
@@ -426,7 +426,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actHypersurfaces);
     treeMenu->addAction(actHypersurfaces);
 
-    QAction *actAngleStructure = new QAction(this);
+    auto* actAngleStructure = new QAction(this);
     actAngleStructure->setText(tr("New &Angle Structure Solutions"));
     actAngleStructure->setIcon(IconCache::icon(IconCache::packet_angles));
     actAngleStructure->setShortcut(tr("Alt+a"));
@@ -438,7 +438,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actAngleStructure);
     treeMenu->addAction(actAngleStructure);
 
-    QAction* actSnapPeaTriangulation = new QAction(this);
+    auto* actSnapPeaTriangulation = new QAction(this);
     actSnapPeaTriangulation->setText(tr("New SnapP&ea Triangulation"));
     actSnapPeaTriangulation->setIcon(IconCache::icon(IconCache::packet_snappea));
     actSnapPeaTriangulation->setShortcut(tr("Alt+e"));
@@ -450,7 +450,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actSnapPeaTriangulation);
     treeMenu->addAction(actSnapPeaTriangulation);
 
-    QAction* actLink = new QAction(this);
+    auto* actLink = new QAction(this);
     actLink->setText(tr("New &Knot or Link"));
     actLink->setIcon(IconCache::icon(IconCache::packet_link));
     actLink->setShortcut(tr("Alt+k"));
@@ -459,8 +459,8 @@ void ReginaMain::setupActions() {
     connect(actLink, SIGNAL(triggered()), this, SLOT(newLink()));
     treeGeneralEditActions.push_back(actLink);
     treeMenu->addAction(actLink);
-    
-    QAction* actFilter = new QAction(this);
+
+    auto* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
     actFilter->setIcon(IconCache::icon(IconCache::packet_filter));
     actFilter->setShortcut(tr("Alt+f"));
@@ -472,7 +472,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actFilter);
     treeMenu->addAction(actFilter);
 
-    QAction* actText = new QAction(this);
+    auto* actText = new QAction(this);
     actText->setText(tr("New Te&xt"));
     actText->setIcon(IconCache::icon(IconCache::packet_text));
     actText->setShortcut(tr("Alt+x"));
@@ -483,7 +483,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actText);
     treeMenu->addAction(actText);
 
-    QAction* actScript = new QAction(this);
+    auto* actScript = new QAction(this);
     actScript->setText(tr("New &Script"));
     actScript->setIcon(IconCache::icon(IconCache::packet_script));
     actScript->setShortcut(tr("Alt+s"));
@@ -494,7 +494,7 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actScript);
     treeMenu->addAction(actScript);
 
-    QAction* actPDF = new QAction(this);
+    auto* actPDF = new QAction(this);
     actPDF->setText(tr("New &PDF Document"));
     actPDF->setIcon(IconCache::icon(IconCache::packet_pdf));
     actPDF->setShortcut(tr("Alt+p"));
@@ -508,7 +508,7 @@ void ReginaMain::setupActions() {
     treeMenu->addSeparator();
 
     // Basic packet actions:
-    QAction* actView = new QAction(this);
+    auto* actView = new QAction(this);
     actView->setText(tr("&View/Edit"));
     actView->setIcon(ReginaSupport::themeIcon("stock_edit"));
     actView->setShortcut(tr("Alt+v"));
@@ -519,7 +519,7 @@ void ReginaMain::setupActions() {
     treePacketViewActions.push_back(actView);
     treeMenu->addAction(actView);
 
-    QAction* actRename = new QAction(this);
+    auto* actRename = new QAction(this);
     actRename->setText(tr("&Rename"));
     actRename->setIcon(ReginaSupport::themeIcon("edit-rename"));
     actRename->setShortcut(tr("Alt+r"));
@@ -530,7 +530,7 @@ void ReginaMain::setupActions() {
     treePacketEditActions.push_back(actRename);
     treeMenu->addAction(actRename);
 
-    QAction *actDelete = new QAction(this);
+    auto* actDelete = new QAction(this);
     actDelete->setText(tr("&Delete"));
     actDelete->setIcon(ReginaSupport::themeIcon("edit-delete"));
     actDelete->setShortcuts(QKeySequence::Delete);
@@ -570,7 +570,7 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveDeep()) );
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
-    
+
     treeNavMenu->addSeparator();
 
     act = new QAction(this);
@@ -609,7 +609,7 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveTop()) );
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
-    
+
     treeNavMenu->addSeparator();
 
     act = new QAction(this);
@@ -648,7 +648,7 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveBottom()) );
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
-    
+
     treeMenu->addSeparator();
 
     act = new QAction(this);
@@ -678,7 +678,7 @@ void ReginaMain::setupActions() {
 
     toolMenu = menuBar()->addMenu(tr("&Tools"));
 
-    QAction* actPython = new QAction(this);
+    auto* actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
     actPython->setIcon(ReginaSupport::themeIcon("utilities-terminal"));
     actPython->setShortcut(tr("Alt+y"));
@@ -687,7 +687,7 @@ void ReginaMain::setupActions() {
         "mathematical engine."));
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
     toolMenu->addAction(actPython);
-    
+
     toolMenu->addSeparator();
 
     act = new QAction(this);
@@ -787,7 +787,7 @@ void ReginaMain::setupActions() {
     //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
     //    actionCollection());
     //act->setWhatsThis(tr("View tips and hints on how to use Regina."));
-   
+
 
     // --- Toolbars ---
 

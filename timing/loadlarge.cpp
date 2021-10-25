@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     if (argc == 2) {
         traverse = false;
         file = argv[1];
-    } else if (strcmp(argv[1], "-t"))
+    } else if (strcmp(argv[1], "-t") != 0)
         usage(argv[0]);
     else {
         traverse = true;

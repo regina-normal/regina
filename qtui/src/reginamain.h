@@ -417,8 +417,7 @@ class ReginaMain : public QMainWindow {
          * Open, save and rename files.
          */
         bool initData(std::shared_ptr<regina::Packet> usePacketTree,
-            const QString& useLocalFilename,
-            const QString& useDisplayName);
+            QString useLocalFilename, QString useDisplayName);
         bool saveFile();
         void renameWindow(const QString& newName);
 

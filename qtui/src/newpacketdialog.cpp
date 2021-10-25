@@ -52,9 +52,9 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(std::move(packetTree)) {
     setWindowTitle(dialogTitle);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QHBoxLayout* parentStrip = new QHBoxLayout();
+    auto* parentStrip = new QHBoxLayout();
     layout->addLayout(parentStrip);
     QString parentPrompt = newCreator->parentPrompt();
     if (parentPrompt.isNull())
@@ -63,11 +63,12 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     if (expln.isNull())
         expln = tr("Specifies where in the packet tree the new "
             "packet will be placed.");
-    QLabel* createBeneath = new QLabel(parentPrompt);
+    auto* createBeneath = new QLabel(parentPrompt);
     createBeneath->setWhatsThis(expln);
     parentStrip->addWidget(createBeneath);
     chooser = new PacketChooser(tree, useFilter,
-        PacketChooser::ROOT_AS_INSERTION_POINT, false, defaultParent);
+        PacketChooser::ROOT_AS_INSERTION_POINT, false,
+        std::move(defaultParent));
     chooser->setWhatsThis(expln);
     parentStrip->addWidget(chooser, 1);
 
@@ -83,7 +84,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     } else {
         layout->addStretch(1);
     }
-    QDialogButtonBox *box = new QDialogButtonBox(
+    auto *box = new QDialogButtonBox(
             QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     layout->addWidget(box);
     connect(box, SIGNAL(accepted()), this, SLOT(slotOk()));

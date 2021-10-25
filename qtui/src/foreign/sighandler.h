@@ -77,22 +77,18 @@ class SigHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        virtual std::shared_ptr<regina::Packet> importData(
-            const QString& fileName, ReginaMain* parentWidget) const override;
+        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+            ReginaMain* parentWidget) const override;
 
     private:
         /**
          * Don't allow people to construct their own handlers.
          */
-        SigHandler();
+        SigHandler() = default;
 };
 
 template <class PacketType>
 const SigHandler<PacketType> SigHandler<PacketType>::instance;
-
-template <class PacketType>
-inline SigHandler<PacketType>::SigHandler() {
-}
 
 template <class PacketType>
 std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(

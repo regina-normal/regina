@@ -55,7 +55,7 @@ bool CommandEdit::event(QEvent* event) {
     if (event->type() != QEvent::KeyPress) {
         return QLineEdit::event(event);
     } else {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        auto *keyEvent = static_cast<QKeyEvent*>(event);
         bool completerUp = false;
         if (completer() && completer()->popup() &&
             completer()->popup()->hasFocus()) {
@@ -157,8 +157,8 @@ void CommandEdit::highlightErrorInInput() {
 }
 
 void CommandEdit::setCompletionSurrounds(QString start, QString end) {
-    lineStart = start;
-    lineEnd = end;
+    lineStart = std::move(start);
+    lineEnd = std::move(end);
 }
 
 void CommandEdit::clearErrorInInput() {

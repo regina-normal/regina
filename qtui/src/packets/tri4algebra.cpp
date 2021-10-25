@@ -62,11 +62,11 @@ Tri4HomologyFundUI::Tri4HomologyFundUI(
         tri(packet) {
     ui = new QWidget();
 
-    ColumnLayout* master = new ColumnLayout(ui);
+    auto* master = new ColumnLayout(ui);
 
     // Homology:
 
-    QGridLayout* homologyGrid = new QGridLayout();
+    auto* homologyGrid = new QGridLayout();
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(3, 1);
     homologyGrid->setColumnStretch(0, 1);

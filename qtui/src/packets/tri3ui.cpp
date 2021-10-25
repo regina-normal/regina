@@ -57,7 +57,7 @@ using regina::Triangulation;
 Tri3UI::Tri3UI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri) {
-    Tri3HeaderUI* header = new Tri3HeaderUI(packet, this);
+    auto* header = new Tri3HeaderUI(packet, this);
     gluings = new Tri3GluingsUI(packet, this);
     skeleton = new Tri3SkeletonUI(packet, packet, this);
     algebra = new Tri3AlgebraUI(packet, this);

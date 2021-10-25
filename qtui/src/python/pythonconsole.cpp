@@ -102,8 +102,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     setWindowTitle(tr("Python Console"));
 
     // Set up the main widgets.
-    QWidget* box = new QWidget(this);
-    QVBoxLayout* layout = new QVBoxLayout;
+    auto* box = new QWidget(this);
+    auto* layout = new QVBoxLayout;
     session = new QTextEdit();
     session->setReadOnly(true);
     session->setAutoFormatting(QTextEdit::AutoNone);
@@ -113,7 +113,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "output they have produced."));
     layout->addWidget(session, 1);
 
-    QHBoxLayout *inputAreaLayout = new QHBoxLayout;
+    auto *inputAreaLayout = new QHBoxLayout;
 
     QString inputMsg = tr("Type your Python commands into this box.");
     prompt = new QLabel();
@@ -140,11 +140,11 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     // Set up the actions.
     // Don't use XML files since we don't know whether we're in the shell or
     // the part.
-    QMenu* menuConsole = new QMenu(this);
-    QMenu* menuEdit = new QMenu(this);
-    QMenu* menuHelp = new QMenu(this);
+    auto* menuConsole = new QMenu(this);
+    auto* menuEdit = new QMenu(this);
+    auto* menuHelp = new QMenu(this);
 
-    QAction* act = new QAction(this);
+    auto* act = new QAction(this);
     act->setText(tr("&Save Session"));
     act->setIcon(ReginaSupport::themeIcon("document-save"));
     act->setShortcuts(QKeySequence::Save);

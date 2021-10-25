@@ -337,7 +337,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
 
     // If we already have a document open, make a new window.
     ReginaMain* useWindow = (starterWindow_ ? this : manager->newWindow(false));
-    useWindow->initData(data, f, QString());
+    useWindow->initData(data, std::move(f), QString());
     useWindow->starterWindow_ = false;
 }
 
@@ -604,7 +604,7 @@ void ReginaMain::updateTreeActions() {
 }
 
 void ReginaMain::setupWidgets() {
-    QWidget* main = new QWidget(this);
+    auto* main = new QWidget(this);
     QBoxLayout* layout = new QVBoxLayout(main);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
@@ -630,13 +630,13 @@ void ReginaMain::setupWidgets() {
 
         int iconSize = QApplication::style()->pixelMetric(
             QStyle::PM_ToolBarIconSize);
-        QLabel* icon = new QLabel(advice);
+        auto* icon = new QLabel(advice);
         icon->setPixmap(ReginaSupport::regIcon("welcome").pixmap(iconSize));
         advLayout->addWidget(icon);
 
         advLayout->addSpacing(iconSize / 2);
 
-        QLabel* text = new QLabel(tr(
+        auto* text = new QLabel(tr(
             "<qt>New to Regina?  <a href=\"#\">Click here.</a></qt>"), advice);
         text->setWordWrap(false);
         text->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -692,14 +692,13 @@ std::shared_ptr<regina::Packet> ReginaMain::checkSubtreeSelected() {
 }
 
 bool ReginaMain::initData(std::shared_ptr<regina::Packet> usePacketTree,
-        const QString& useLocalFilename,
-        const QString& useDisplayName) {
+        QString useLocalFilename, QString useDisplayName) {
     if (packetTree)
         setModified(false);
 
-    localFile = useLocalFilename;
-    displayName = useDisplayName;
-    packetTree = usePacketTree;
+    localFile = std::move(useLocalFilename);
+    displayName = std::move(useDisplayName);
+    packetTree = std::move(usePacketTree);
 
     if (packetTree) {
         treeView->fill(packetTree);

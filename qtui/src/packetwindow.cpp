@@ -87,20 +87,20 @@ void PacketWindow::setupMenus() {
 
     QMenu* editMenu = menuBar()->addMenu(tr("&Edit"));
 
-    QAction* actCut = new QAction(ReginaSupport::themeIcon("edit-cut"),
+    auto* actCut = new QAction(ReginaSupport::themeIcon("edit-cut"),
         tr("Cu&t"), this);
     actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
     actCut->setShortcuts(QKeySequence::Cut);
     editMenu->addAction(actCut);
 
-    QAction* actCopy = new QAction(ReginaSupport::themeIcon("edit-copy"),
+    auto* actCopy = new QAction(ReginaSupport::themeIcon("edit-copy"),
         tr("&Copy"), this);
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setShortcuts(QKeySequence::Copy);
     editMenu->addAction(actCopy);
 
-    QAction* actPaste = new QAction(ReginaSupport::themeIcon("edit-paste"),
+    auto* actPaste = new QAction(ReginaSupport::themeIcon("edit-paste"),
         tr("&Paste"), this);
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
     actPaste->setShortcuts(QKeySequence::Paste);
@@ -112,7 +112,7 @@ void PacketWindow::setupMenus() {
 
     QMenu* toolMenu = menuBar()->addMenu(tr("&Tools"));
 
-    QAction* actPython = new QAction(this);
+    auto* actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
     actPython->setIcon(ReginaSupport::themeIcon("utilities-terminal"));
     actPython->setShortcut(tr("Alt+y"));
@@ -124,7 +124,7 @@ void PacketWindow::setupMenus() {
 
     toolMenu->addSeparator();
 
-    QAction* act = new QAction(this);
+    auto* act = new QAction(this);
     act->setText(tr("&Configure Regina"));
     act->setIcon(ReginaSupport::themeIcon("configure"));
     act->setShortcuts(QKeySequence::Preferences);

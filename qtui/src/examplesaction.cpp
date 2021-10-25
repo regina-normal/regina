@@ -64,7 +64,7 @@ ExamplesAction::ExamplesAction(QWidget* parent) :
 
 void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
 
-    QAction* action = new QAction(this);
+    auto* action = new QAction(this);
     action->setText(text);
     insertAction(nullptr /* insert last */, action);
     group->addAction(action);

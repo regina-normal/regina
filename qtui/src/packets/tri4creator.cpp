@@ -97,7 +97,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     layout->addLayout(typeArea);
     QString expln =
         QObject::tr("Specifies what type of triangulation to create.");
-    QLabel* label = new QLabel(QObject::tr("Type of triangulation:"), ui);
+    auto* label = new QLabel(QObject::tr("Type of triangulation:"), ui);
     label->setWhatsThis(expln);
     typeArea->addWidget(label);
     type = new QComboBox(ui);

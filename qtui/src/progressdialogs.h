@@ -170,7 +170,7 @@ class ProgressDialogOpen : public QDialog {
          * <tt>tracker->isStarted()</tt> must return \c false.
          */
         ProgressDialogOpen(regina::ProgressTrackerOpen* tracker,
-                const QString& displayText, const QString& detailTemplate,
+                const QString& displayText, QString detailTemplate,
                 QWidget* parent = nullptr);
 
         /**

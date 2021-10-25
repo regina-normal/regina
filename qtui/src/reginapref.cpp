@@ -71,10 +71,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     ReginaPrefSet& prefSet(ReginaPrefSet::global());
 
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto* layout = new QVBoxLayout;
 
     // Construct the individual preferences pages.
-    QTabWidget* item = new QTabWidget(this);
+    auto* item = new QTabWidget(this);
     layout->addWidget(item);
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok |
@@ -336,13 +336,12 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     // Set up the tree jump size.
     QBoxLayout* box = new QHBoxLayout();
 
-    QLabel* label = new QLabel(tr("Packet tree jump size:"));
+    auto* label = new QLabel(tr("Packet tree jump size:"));
     box->addWidget(label);
     editTreeJumpSize = new QLineEdit();
-    editTreeJumpSize->setMaxLength(
-         10 /* ridiculously high number of digits */);
+    editTreeJumpSize->setMaxLength(10 /* ridiculously high number of digits */);
     box->addWidget(editTreeJumpSize);
-    QIntValidator* val = new QIntValidator(this);
+    auto* val = new QIntValidator(this);
     val->setBottom(1);
     editTreeJumpSize->setValidator(val);
     QString msg = tr("The number of steps that a packet moves when Jump Up "
@@ -451,7 +450,7 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
 
     // Set up the GAP executable.
     box = new QHBoxLayout();
-    QLabel* label = new QLabel(tr("GAP executable:"));
+    auto* label = new QLabel(tr("GAP executable:"));
     box->addWidget(label);
     editGAPExec = new QLineEdit();
     box->addWidget(editGAPExec);
@@ -496,12 +495,11 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     // Set up the number of spaces per tab.
     QBoxLayout* box = new QHBoxLayout();
 
-    QLabel* label = new QLabel(tr("Spaces per tab:"));
+    auto* label = new QLabel(tr("Spaces per tab:"));
     box->addWidget(label);
     editSpacesPerTab = new QLineEdit();
-    editSpacesPerTab->setMaxLength(
-         10 /* ridiculously high number of digits */);
-    QIntValidator* val = new QIntValidator(this);
+    editSpacesPerTab->setMaxLength(10 /* ridiculously high number of digits */);
+    auto* val = new QIntValidator(this);
     val->setBottom(1);
     editSpacesPerTab->setValidator(val);
     box->addWidget(editSpacesPerTab);
