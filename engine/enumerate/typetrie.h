@@ -372,7 +372,7 @@ bool TypeTrie<nTypes>::dominates(const char* vec, unsigned len) const {
     // trie we follow at each stage of the search.
     //
     // Here node[i] will store the next candidate node to try at
-    // depth i in the tree (where the root is at depth 0), or 0
+    // depth i in the tree (where the root is at depth 0), or null
     // if we have exhausted our options at that level of the search.
     const Node** node = new const Node*[len + 2];
 

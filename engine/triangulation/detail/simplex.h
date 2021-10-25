@@ -214,7 +214,7 @@ class SimplexBase :
          *
          * @param facet the facet of this simplex to examine; this must
          * be between 0 and \a dim inclusive.
-         * @return the adjacent simplex glued to the given facet, or 0
+         * @return the adjacent simplex glued to the given facet, or \c null
          * if the given facet lies on the boundary.
          */
         Simplex<dim>* adjacentSimplex(int facet) const;

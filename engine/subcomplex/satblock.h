@@ -223,7 +223,7 @@ class SatBlock : public Output<SatBlock> {
          * @param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
-         * @return the other block adjacent along this annulus, or 0
+         * @return the other block adjacent along this annulus, or \c null
          * if there is no adjacent block listed.
          */
         SatBlock* adjacentBlock(unsigned whichAnnulus) const;

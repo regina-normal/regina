@@ -186,14 +186,14 @@ class IConvStreamBuffer : public std::streambuf {
          * written into this stream buffer.
          * @param destCode the character encoding for the translated data
          * that will subsequently be written to the destination output stream.
-         * @return this stream buffer on success, or 0 on error.
+         * @return this stream buffer on success, or \c null on error.
          */
         IConvStreamBuffer* open(std::ostream& dest,
             const char* srcCode, const char* destCode);
         /**
          * Closes this stream buffer.
          *
-         * @return this stream buffer on success, or 0 on error.
+         * @return this stream buffer on success, or \c null on error.
          */
         IConvStreamBuffer* close() noexcept;
 

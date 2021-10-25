@@ -179,8 +179,8 @@ class XMLElementReader {
          * The default implementation does nothing.
          *
          * @param subReader the corresponding child reader if a
-         * subelement is currently being parsed, or 0 otherwise.  If this
-         * parameter is non-zero, it is guaranteed that abort() has
+         * subelement is currently being parsed, or \c null otherwise.
+         * If this parameter is non-zero, it is guaranteed that abort() has
          * already been called upon the child reader and that the child
          * reader has not yet been destroyed.
          */
