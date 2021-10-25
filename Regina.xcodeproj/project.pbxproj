@@ -198,6 +198,8 @@
 		051B97F62321C91A000A2DCA /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051B97F42321C91A000A2DCA /* boundaries.cpp */; };
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
 		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
+		051FD39527257A9E00B3F60F /* callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051FD39327257A9E00B3F60F /* callbacks.cpp */; };
+		051FD39627257A9E00B3F60F /* callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051FD39327257A9E00B3F60F /* callbacks.cpp */; };
 		052121C02662F50A0041FD89 /* jenkins-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052121BE2662F50A0041FD89 /* jenkins-impl.h */; };
 		052121C12662F50A0041FD89 /* pd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052121BF2662F50A0041FD89 /* pd-impl.h */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
@@ -2763,6 +2765,9 @@
 		051B97F42321C91A000A2DCA /* boundaries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundaries.cpp; sourceTree = "<group>"; };
 		051CEA8B1F98969500971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Hypersurfaces.storyboard; sourceTree = "<group>"; };
 		051CEA951F98995D00971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Link.storyboard; sourceTree = "<group>"; };
+		051FD39127257A9E00B3F60F /* testmisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testmisc.h; sourceTree = "<group>"; };
+		051FD39227257A9E00B3F60F /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		051FD39327257A9E00B3F60F /* callbacks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = callbacks.cpp; sourceTree = "<group>"; };
 		052121BE2662F50A0041FD89 /* jenkins-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "jenkins-impl.h"; sourceTree = "<group>"; };
 		052121BF2662F50A0041FD89 /* pd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pd-impl.h"; sourceTree = "<group>"; };
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
@@ -5417,6 +5422,16 @@
 			path = detail;
 			sourceTree = "<group>";
 		};
+		051FD39027257A9E00B3F60F /* misc */ = {
+			isa = PBXGroup;
+			children = (
+				051FD39327257A9E00B3F60F /* callbacks.cpp */,
+				051FD39227257A9E00B3F60F /* CMakeLists.txt */,
+				051FD39127257A9E00B3F60F /* testmisc.h */,
+			);
+			path = misc;
+			sourceTree = "<group>";
+		};
 		05249E991DBB508E001FE29E /* python */ = {
 			isa = PBXGroup;
 			children = (
@@ -6086,6 +6101,7 @@
 				05721F151F97165000A83FFC /* link */,
 				05772F2C270CFC5700D26D8A /* manifold */,
 				052FA0D91806088B00FAE4DF /* maths */,
+				051FD39027257A9E00B3F60F /* misc */,
 				052FA0E51806088B00FAE4DF /* README.txt */,
 				052FA0E61806088B00FAE4DF /* runalltests.cpp */,
 				052FA0E71806088B00FAE4DF /* snappea */,
@@ -8998,6 +9014,7 @@
 				052FA10D1806088B00FAE4DF /* perm5.cpp in Sources */,
 				0591E84F1C4F777100793A9C /* census4.cpp in Sources */,
 				0591E8571C4F77A400793A9C /* triangulation4.cpp in Sources */,
+				051FD39527257A9E00B3F60F /* callbacks.cpp in Sources */,
 				052FA1151806088B00FAE4DF /* incompressible.cpp in Sources */,
 				05772F28270CFC3400D26D8A /* matrix.cpp in Sources */,
 				05772F31270CFC5700D26D8A /* sfs.cpp in Sources */,
@@ -9410,6 +9427,7 @@
 				0588C2A61FD8D13C0093C2C9 /* sig.cpp in Sources */,
 				05249F261DBC170A001FE29E /* pymanifold.cpp in Sources */,
 				05249ED11DBC16DF001FE29E /* component7.cpp in Sources */,
+				051FD39627257A9E00B3F60F /* callbacks.cpp in Sources */,
 				052FA16C1806129B00FAE4DF /* gluingpermsearcher2.cpp in Sources */,
 				059802FC26683C9F002D5D57 /* xmlanglestructreader.cpp in Sources */,
 				059BC6901DC7F7A300AB4206 /* boundarycomponent9.cpp in Sources */,

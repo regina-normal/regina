@@ -210,7 +210,7 @@ class SimplexBase :
          * Returns the adjacent simplex that is glued to the given facet of
          * this simplex.  If there is no adjacent simplex (i.e., the
          * given facet lies on the triangulation boundary), then this
-         * routine will return 0.
+         * routine will return \c null.
          *
          * @param facet the facet of this simplex to examine; this must
          * be between 0 and \a dim inclusive.
@@ -318,7 +318,7 @@ class SimplexBase :
          * @param myFacet the facet of this simplex whose gluing we
          * will undo.  This should be between 0 and \a dim inclusive.
          * @return the simplex that was originally glued to the given facet
-         * of this simplex, or 0 if this was already a boundary facet.
+         * of this simplex, or \c null if this was already a boundary facet.
          */
         Simplex<dim>* unjoin(int myFacet);
         /**

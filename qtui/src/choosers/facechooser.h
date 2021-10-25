@@ -76,7 +76,7 @@ class FaceChooser : public QComboBox, public regina::PacketListener {
             /**< The triangulation whose faces we are choosing from. */
         FilterFunc filter_;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<regina::Face<dim, subdim>*> options_;
             /**< A list of the available options to choose from. */
 
@@ -107,7 +107,7 @@ class FaceChooser : public QComboBox, public regina::PacketListener {
          * Returns the currently selected face.
          *
          * If there are no available faces to choose from,
-         * this routine will return 0.
+         * this routine will return \c null.
          */
         regina::Face<dim, subdim>* selected();
 

@@ -98,7 +98,7 @@ class PacketUI {
 
         /**
          * Return details of the interface's interaction with standard
-         * edit and clipboard operations.  This may be 0 if there is no
+         * edit and clipboard operations.  This may be \c null if there is no
          * such interaction.
          *
          * The default implementation simply returns \c null.

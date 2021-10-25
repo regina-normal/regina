@@ -75,7 +75,7 @@ class BoundaryComponent3Chooser :
                  choosing from. */
         BoundaryComponentFilterFunc filter_;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<regina::BoundaryComponent<3>*> options_;
             /**< A list of the available options to choose from. */
 
@@ -104,7 +104,7 @@ class BoundaryComponent3Chooser :
          * Returns the currently selected boundary component.
          *
          * If there are no available boundary components to choose from,
-         * this routine will return 0.
+         * this routine will return \c null.
          */
         regina::BoundaryComponent<3>* selected();
 

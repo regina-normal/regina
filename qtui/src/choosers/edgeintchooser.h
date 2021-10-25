@@ -77,7 +77,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
                  choosing from. */
         EdgeIntFilterFunc filter_;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<std::pair<regina::Edge<3>*, int> > options_;
             /**< A list of the available options to choose from. */
         int argMin_, argMax_;

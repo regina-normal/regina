@@ -135,7 +135,7 @@ class Locale {
 class IConvStreamBuffer : public std::streambuf {
     private:
         std::ostream* sink;
-            /**< The destination output stream, or 0 if it has not yet
+            /**< The destination output stream, or \c null if it has not yet
                  been initialised. */
         char preBuffer[16];
             /**< The internal pre-conversion character buffer. */

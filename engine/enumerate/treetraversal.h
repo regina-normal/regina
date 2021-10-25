@@ -791,7 +791,7 @@ class TreeEnumeration :
          * that it has not yet finished the search).
          *
          * @param tracker a progress tracker through which progress
-         * will be reported, or 0 if no progress reporting is required.
+         * will be reported, or \c null if no progress reporting is required.
          * @return \c true if we found another vertex surface, or
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
@@ -1084,7 +1084,7 @@ class TautEnumeration :
          * that it has not yet finished the search).
          *
          * @param tracker a progress tracker through which progress
-         * will be reported, or 0 if no progress reporting is required.
+         * will be reported, or \c null if no progress reporting is required.
          * @return \c true if we found another vertex surface, or
          * \c false if the search has now finished and no more taut angle
          * strutures were found.

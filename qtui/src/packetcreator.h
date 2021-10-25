@@ -62,10 +62,10 @@ class PacketCreator {
 
         /**
          * Returns the main interface component for this packet creator.
-         * This may be 0 if there are no non-generic interface elements
+         * This may be \c null if there are no non-generic interface elements
          * required.
          *
-         * The default implementation of this routine returns 0.
+         * The default implementation of this routine returns \c null.
          */
         virtual QWidget* getInterface();
 

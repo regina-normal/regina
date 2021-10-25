@@ -72,7 +72,7 @@ class PacketManager {
          * If this packet should be viewed using an external viewer
          * (e.g., PDF packets), this routine returns an appropriate function.
          * If this packet should be viewed using an internal viewer, this
-         * routine returns 0.
+         * routine returns \c null.
          */
         static PacketExternalViewer externalViewer(regina::Packet* packet);
 };

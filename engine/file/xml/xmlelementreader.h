@@ -102,8 +102,8 @@ class XMLElementReader {
          * @param tagName the name of the opening tag for this element.
          * @param tagProps the properties associated with the opening tag.
          * @param parentReader the reader currently parsing the parent XML
-         * element, or 0 if this is the top-level element.  If this
-         * paraneter is non-zero, it is guaranteed that startSubElement()
+         * element, or \c null if this is the top-level element.  If this
+         * paraneter is non-null, it is guaranteed that startSubElement()
          * has already been called upon the parent reader.
          */
         virtual void startElement(const std::string& tagName,
