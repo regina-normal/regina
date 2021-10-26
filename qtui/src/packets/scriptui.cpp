@@ -338,10 +338,11 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         "refers to a single packet.  "
         "This allows your script to easily access the other packets in "
         "this data file."));
-    connect(actRemove, SIGNAL(triggered()), this, 
+    connect(actRemove, SIGNAL(triggered()), this,
         SLOT(removeSelectedVariables()));
-    connect(varTable, SIGNAL(itemSelectionChanged()), this,
-        SLOT(updateRemoveState()));
+    connect(varTable->selectionModel(),
+        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+        this, SLOT(updateRemoveState()));
     actionBar->addAction(actRemove);
     scriptActionList.push_back(actRemove);
 
@@ -492,11 +493,7 @@ void ScriptUI::removeSelectedVariables() {
 }
 
 void ScriptUI::updateRemoveState() {
-    // Are we read-write?
-    if (actAdd->isEnabled())
-        actRemove->setEnabled(script->countVariables() > 0);
-    else
-        actRemove->setEnabled(false);
+    actRemove->setEnabled(varTable->selectionModel()->hasSelection());
 }
 
 void ScriptUI::execute() {
