@@ -8271,7 +8271,7 @@
 		0575E6511805F36D009E3FC4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = "Regina Development Team";
 				TargetAttributes = {
 					050F5CDC1B9BAAAA00C1F681 = {
