@@ -39,6 +39,7 @@
 
 #include "packet/packet.h"
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 #include "../packettabui.h"
 #include "./coordinates.h" // Use ./ to avoid picking up the iOS header.

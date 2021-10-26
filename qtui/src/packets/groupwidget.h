@@ -37,6 +37,7 @@
 #ifndef __GROUPWIDGET_H
 #define __GROUPWIDGET_H
 
+#include "algebra/grouppresentation.h"
 #include <QWidget>
 
 class QLabel;
@@ -44,7 +45,6 @@ class QListWidget;
 
 namespace regina {
     class Packet;
-    class GroupPresentation;
 };
 
 /**

@@ -39,6 +39,7 @@
 
 #include <QMap>
 #include <QMenu>
+#include <QUrl>
 
 class QUrl;
 class QActionGroup;
