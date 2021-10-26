@@ -83,7 +83,7 @@ std::unique_ptr<LayeredSolidTorus> LayeredSolidTorus::recogniseFromBase(
     int baseFace2 = -1;
     Perm<4> basePerm;
     bool okay;
-    int i, j;
+    int i;
     for (baseFace1 = 0; baseFace1 < 3; baseFace1++)
         if (tet->adjacentTetrahedron(baseFace1) == tet) {
             // This tetrahedron is glued to itself.

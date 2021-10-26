@@ -60,7 +60,7 @@ void NormalSurfaces::buildReducedFromStandard(
     // where, for every quad coordinate where S is zero, T is zero also.
     // For almost normal surfaces, simply replace "quad coordinate" with
     // "quad or oct coordinate".
-    unsigned tet, quad, pos;
+    unsigned tet;
     for (size_t i = 0; i < nUse; ++i) {
         if (! use[i])
             continue;
