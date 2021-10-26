@@ -54,9 +54,24 @@ void addScript(pybind11::module_& m) {
             &Script::variableValue, pybind11::const_))
         .def("variableIndex", &Script::variableIndex)
         .def("setVariableName", &Script::setVariableName)
-        .def("setVariableValue", &Script::setVariableValue)
-        .def("addVariable", &Script::addVariable)
-        .def("addVariableName", &Script::addVariableName)
+        .def("setVariableValue", [](Script& s, size_t index,
+                std::shared_ptr<regina::Packet> value) {
+            // We need to reimplement this, since Regina's function
+            // takes a weak_ptr, not a shared_ptr.
+            s.setVariableValue(index, value);
+        }, pybind11::arg(), pybind11::arg("value") = nullptr)
+        .def("addVariable", [](Script& s, const std::string& name,
+                std::shared_ptr<regina::Packet> value) {
+            // We need to reimplement this, since Regina's function
+            // takes a weak_ptr, not a shared_ptr.
+            return s.addVariable(name, value);
+        }, pybind11::arg(), pybind11::arg("value") = nullptr)
+        .def("addVariableName", [](Script& s, const std::string& name,
+                std::shared_ptr<regina::Packet> value) {
+            // We need to reimplement this, since Regina's function
+            // takes a weak_ptr, not a shared_ptr.
+            return s.addVariableName(name, value);
+        }, pybind11::arg(), pybind11::arg("value") = nullptr)
         .def("removeVariable",
             overload_cast<size_t>(&Script::removeVariable))
         .def("removeVariable",

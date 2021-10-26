@@ -57,15 +57,40 @@ class Script;
  * in your packet tree.  When running a script, the variables should be
  * instantiated in the default namespace before the script is run.
  *
- * The values of variables are given by pointers to packets (not packet
- * labels, as in some old versions of Regina).  This affects how variables
- * react to changes in the packets that they point to.  In particular, if a
- * variable \a V points to some packet \a P, then:
+ * The way variables are stored has changed as of Regina 7.0:
  *
- * - if \a P is renamed then \a V will still point to it and the script will
- *   notify listeners that the script has changed;
- * - if \a P is deleted then \a V will take the value \c None, and the script
- *   will likewise notify listeners of the change.
+ * - the value of each variable is now stored as a std::weak_ptr<Packet>;
+ * - scripts do not listen to packet events on their variables.
+ *
+ * This means that:
+ *
+ * - If a packet is stored as the value of some script variable, this
+ *   does not prevent the packet from being destroyed (since the script
+ *   only holds weak pointers).
+ *
+ * - If such a packet changes its packet label or is destroyed, the script
+ *   will not notify its \e own listeners of the change.  If a user interface
+ *   needs to know about this change (e.g., because it shows packet labels
+ *   of script variables in a visual table), it will need to set up packet
+ *   listeners for the individual variables - it is no longer enough just to
+ *   listen on the script itself.  Note that packet labels are completely
+ *   independent of the variable names stored in the script.
+ *
+ * - If such a packet is destroyed, the script will behave correctly: any
+ *   subsequent request to retrieve the value of the script variable will
+ *   return a null pointer (not an invalid pointer to a non-existent packet).
+ *
+ * For historical reference, the previous behaviour was:
+ *
+ * - In Regina 6.0.1 and earlier (before Regina switched to widespread use of
+ *   std::shared_ptr for packets), scripts would notify their own listeners
+ *   when a variable packet was destroyed or changed its packet label.
+ *   This was implemented by having each script listen for packet events on
+ *   its own variables.
+ *
+ * - In Regina 4.94 and earlier (before the file format supported
+ *   cross-referencing between packets), script variables were stored purely
+ *   by their packet labels (not pointers to the packets themselves).
  *
  * Like all packet types, this class does not support C++ move semantics
  * since this would interfere with the structure of the packet tree.
@@ -76,13 +101,13 @@ class Script;
  *
  * \ingroup packet
  */
-class Script : public Packet, public PacketListener {
+class Script : public Packet {
     REGINA_PACKET(PACKET_SCRIPT, "Script")
 
     private:
         std::string text_;
             /**< The complete text of this script, including newlines. */
-        std::map<std::string, Packet*> variables_;
+        std::map<std::string, std::weak_ptr<Packet>> variables_;
             /**< A map storing the variables with which this script
                  is to be run.  Variable names are mapped to their
                  corresponding values. */
@@ -220,9 +245,11 @@ class Script : public Packet, public PacketListener {
          *
          * @param index the index of the variable whose value should change;
          * this must be between 0 and countVariables()-1 inclusive.
-         * @param value the new value to assign to the variable.
+         * @param value the new value to assign to the variable.  This is
+         * allowed to be a null pointer, and if the argument is omitted then a
+         * null pointer will be used.
          */
-        void setVariableValue(size_t index, std::shared_ptr<Packet> value);
+        void setVariableValue(size_t index, std::weak_ptr<Packet> value = {});
 
         /**
          * Attempts to add a new variable to be associated with this script.
@@ -239,13 +266,14 @@ class Script : public Packet, public PacketListener {
          * variables are kept stored in sorted order by name.
          *
          * @param name the name of the new variable.
-         * @param value the value of the new variable; this is allowed
-         * to be \c null.
+         * @param value the value of the new variable.  This is allowed
+         * to be a null pointer, and if the argument is omitted then a
+         * null pointer will be used.
          * @return \c true if the variable was successfully added, or
          * \c false if a variable with the given name was already stored.
          */
         bool addVariable(const std::string& name,
-            std::shared_ptr<Packet> value);
+            std::weak_ptr<Packet> value = {});
         /**
          * Adds a new variable to be associated with this script, changing
          * its name if necessary.  If the given variable name does not already
@@ -260,13 +288,14 @@ class Script : public Packet, public PacketListener {
          *
          * @param name the string upon which the new variable name will
          * be based.
-         * @param value the value of the new variable; this is allowed
-         * to be \c null.
+         * @param value the value of the new variable.  This is allowed
+         * to be a null pointer, and if the argument is omitted then a
+         * null pointer will be used.
          * @return the name of the variable that was added; this might
          * or might not be equal to \a name.
          */
         const std::string& addVariableName(const std::string& name,
-            std::shared_ptr<Packet> value);
+            std::weak_ptr<Packet> value = {});
         /**
          * Removes the variable stored with the given name.
          * If no variable is stored with the given name, this routine
@@ -296,9 +325,6 @@ class Script : public Packet, public PacketListener {
 
         void writeTextShort(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
-
-        void packetWasRenamed(Packet* packet) override;
-        void packetToBeDestroyed(PacketShell packet) override;
 
     protected:
         std::shared_ptr<Packet> internalClonePacket() const override;
@@ -346,16 +372,11 @@ inline size_t Script::countVariables() const {
 }
 
 inline bool Script::addVariable(const std::string& name,
-        std::shared_ptr<Packet> value) {
+        std::weak_ptr<Packet> value) {
     ChangeEventSpan span(*this);
-    bool ans = variables_.insert(std::make_pair(name, value.get())).second;
-    if (value)
-        value->listen(this);
-    return ans;
+    return variables_.emplace(name, std::move(value)).second;
 }
 inline void Script::removeAllVariables() {
-    unregisterFromAllPackets();
-
     ChangeEventSpan span(*this);
     variables_.clear();
 }
@@ -366,8 +387,8 @@ inline void Script::writeTextShort(std::ostream& o) const {
 
 inline void Script::addPacketRefs(PacketRefs& refs) const {
     for (const auto& v : variables_)
-        if (v.second)
-            refs.insert({ v.second, false });
+        if (auto shared = v.second.lock())
+            refs.insert({ shared.get(), false });
 }
 
 inline void swap(Script& a, Script& b) {

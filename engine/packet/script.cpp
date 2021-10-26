@@ -45,8 +45,6 @@ Script& Script::operator = (const Script& src) {
     text_ = src.text_;
     variables_ = src.variables_;
 
-    PacketListener::operator = (src);
-
     return *this;
 }
 
@@ -56,8 +54,6 @@ void Script::swap(Script& other) {
 
     text_.swap(other.text_);
     variables_.swap(other.variables_);
-
-    swapListeners(other);
 }
 
 const std::string& Script::variableName(size_t index) const {
@@ -69,14 +65,14 @@ const std::string& Script::variableName(size_t index) const {
 std::shared_ptr<Packet> Script::variableValue(size_t index) const {
     auto it = variables_.begin();
     advance(it, index);
-    return (*it).second->shared_from_this();
+    return it->second.lock();
 }
 
 std::shared_ptr<Packet> Script::variableValue(const std::string& name) const {
     auto it = variables_.find(name);
     if (it == variables_.end())
         return nullptr;
-    return (*it).second->shared_from_this();
+    return it->second.lock();
 }
 
 long Script::variableIndex(const std::string& name) const {
@@ -95,43 +91,33 @@ void Script::setVariableName(size_t index, const std::string& name) {
 
     ChangeEventSpan span(*this);
 
-    Packet* value = it->second;
+    std::weak_ptr<Packet> value = std::move(it->second);
     variables_.erase(it);
-    variables_.insert(std::make_pair(name, value));
+    variables_.emplace(name, std::move(value));
 }
 
-void Script::setVariableValue(size_t index, std::shared_ptr<Packet> value) {
+void Script::setVariableValue(size_t index, std::weak_ptr<Packet> value) {
     auto it = variables_.begin();
     advance(it, index);
 
-    if (it->second == value.get())
-        return;
-
     ChangeEventSpan span(*this);
-
-    if (it->second)
-        it->second->unlisten(this);
-    it->second = value.get();
-    if (it->second)
-        it->second->listen(this);
+    it->second = std::move(value);
 }
 
 const std::string& Script::addVariableName(const std::string& name,
-        std::shared_ptr<Packet> value) {
+        std::weak_ptr<Packet> value) {
     ChangeEventSpan span(*this);
 
-    auto result = variables_.insert(std::make_pair(name, value.get()));
+    auto result = variables_.emplace(name, value);
     int which = 2;
     while (! result.second) {
         std::ostringstream s;
         s << name << ' ' << which;
-        result = variables_.insert(std::make_pair(s.str(), value.get()));
+        result = variables_.emplace(s.str(), value);
 
         ++which;
     }
 
-    if (value)
-        value->listen(this);
     return result.first->first;
 }
 
@@ -140,9 +126,6 @@ void Script::removeVariable(const std::string& name) {
     if (it == variables_.end())
         return;
 
-    if (it->second)
-        it->second->unlisten(this);
-
     ChangeEventSpan span(*this);
     variables_.erase(it);
 }
@@ -150,9 +133,6 @@ void Script::removeVariable(const std::string& name) {
 void Script::removeVariable(size_t index) {
     auto it = variables_.begin();
     advance(it, index);
-
-    if (it->second)
-        it->second->unlisten(this);
 
     ChangeEventSpan span(*this);
     variables_.erase(it);
@@ -164,8 +144,8 @@ void Script::writeTextLong(std::ostream& o) const {
     else {
         for (const auto& v : variables_) {
             o << "Variable: " << v.first << " = ";
-            if (v.second)
-                o << v.second->label() << '\n';
+            if (auto shared = v.second.lock())
+                o << shared->label() << '\n';
             else
                 o << "(null)" << '\n';
         }
@@ -187,13 +167,14 @@ void Script::writeXMLPacketData(std::ostream& out, FileFormat format,
     writeXMLHeader(out, "script", format, anon, refs);
 
     for (const auto& v : variables_) {
+        auto shared = v.second.lock();
         out << "  <var name=\"" << xmlEncodeSpecialChars(v.first)
             << "\" valueid=\"";
-        if (v.second)
-            out << v.second->internalID();
+        if (shared)
+            out << shared->internalID();
         out << "\" value=\"";
-        if (v.second)
-            out << xmlEncodeSpecialChars(v.second->label());
+        if (shared)
+            out << xmlEncodeSpecialChars(shared->label());
         out << "\"/>\n";
     }
 
@@ -205,22 +186,6 @@ void Script::writeXMLPacketData(std::ostream& out, FileFormat format,
     if (! anon)
         writeXMLTreeData(out, format, refs);
     writeXMLFooter(out, "script", format);
-}
-
-void Script::packetWasRenamed(Packet*) {
-    // We assume that the packet that was renamed is one of the
-    // variables for this packet.
-    // There is nothing to update here; just fire the update.
-    ChangeEventSpan span(*this);
-}
-
-void Script::packetToBeDestroyed(PacketShell packet) {
-    // We know the script will change, because one of our variables is
-    // listening on this packet.
-    ChangeEventSpan span(*this);
-    for (auto& v : variables_)
-        if (v.second == packet)
-            v.second = nullptr;
 }
 
 } // namespace regina

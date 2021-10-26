@@ -1037,6 +1037,12 @@ Version 7.0  [ TODO ]
         Class Script:
             - Added a copy constructor and a copy assignment operator.
             - Added member and global swap() functions.
+            - Routines addVariable(), addVariableName() and setVariableValue()
+              now take their value arguments by std::weak_ptr, and support a
+              default argument representing a null variable.
+            - Scripts no longer notify their listeners when a variable value
+              is destroyed or changes its packet label (but in the former case
+              they still correctly reset the variable value to null).
         Class SFSAlt, SFSAltSet:
             - Removed the old SFSAltSet class; replaced this with a new SFSAlt
               class with a static altSet() function that returns a std::vector.

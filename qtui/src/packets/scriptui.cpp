@@ -442,7 +442,7 @@ void ScriptUI::addVariable() {
     // Add the new variable.
     // TODO: Alter addVariable() to return the index immediately, so we
     // don't need to fetch it again.
-    script->addVariable(varName.toUtf8().constData(), nullptr);
+    script->addVariable(varName.toUtf8().constData());
     varTable->scrollTo(model->index(
         script->variableIndex(varName.toUtf8().constData()), 0, QModelIndex()));
 }
