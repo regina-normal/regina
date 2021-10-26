@@ -2389,8 +2389,6 @@ std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
  *
  * \ifacespython Not present.
  *
- * @param args the arguments to be forwarded to the appropriate
- * \a Held constructor.
  * @return the new wrapped packet.
  */
 template <typename Held>

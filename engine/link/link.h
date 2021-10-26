@@ -977,7 +977,7 @@ class Link : public PacketData<Link>, public Output<Link> {
         /**
          * Sets this to be a (deep) copy of the given link.
          *
-         * @param copy the link to copy.
+         * @param src the link to copy.
          * @return a reference to this link.
          */
         Link& operator = (const Link& src);
@@ -2443,7 +2443,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @param td a tree decomposition of the planar 4-valent
          * multigraph formed by this link diagram.
          */
-        void useTreeDecomposition(TreeDecomposition);
+        void useTreeDecomposition(TreeDecomposition td);
 
         /*@}*/
         /**

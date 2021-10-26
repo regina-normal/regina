@@ -455,7 +455,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          * @param enc indicates precisely how the given vector encodes a normal
          * surface.
@@ -484,7 +484,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation and copies \a vector.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          * @param enc indicates precisely how the given vector encodes a normal
          * surface.
@@ -591,7 +591,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          * @param coords the coordinate system from which the vector
          * encoding will be deduced.
@@ -624,7 +624,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation and copies \a vector.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          * @param coords the coordinate system from which the vector
          * encoding will be deduced.
