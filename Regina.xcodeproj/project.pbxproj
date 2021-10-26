@@ -1190,7 +1190,6 @@
 		05754CF8258D7D6F00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CE6258D7D6400236ED7 /* randutils.cpp */; };
 		05754D18258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
 		05754D19258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
-		05754D78258EF09C00236ED7 /* libpython2.7.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05754D77258EF07600236ED7 /* libpython2.7.tbd */; };
 		05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05754E73258F92CA00236ED7 /* Assets.xcassets */; };
 		05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
 		05754F662590F0A400236ED7 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
@@ -1756,6 +1755,8 @@
 		05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
 		05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */; };
 		05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
+		05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; };
+		05B0E18D259AAFCB000B62A3 /* Python3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
 		05B1EF181C54299C008E7B49 /* boundary4chooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B1EF141C542991008E7B49 /* boundary4chooser.cpp */; };
 		05B22D0F22D486200099008B /* pysage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0A22D485ED0099008B /* pysage.cpp */; };
@@ -2391,6 +2392,7 @@
 				057EDBC02581EA9D004F0068 /* libgmpxx.xcframework in Embed Frameworks */,
 				057EDA032581BC16004F0068 /* libgmp.xcframework in Embed Frameworks */,
 				057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */,
+				05B0E18D259AAFCB000B62A3 /* Python3.framework in Embed Frameworks */,
 				057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */,
 				057EDBD22581EAA4004F0068 /* jansson.xcframework in Embed Frameworks */,
 				057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */,
@@ -4620,6 +4622,7 @@
 			files = (
 				057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */,
 				057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */,
+				05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */,
 				057EDBD12581EAA4004F0068 /* jansson.xcframework in Frameworks */,
 				057ED8F22581B49E004F0068 /* QtPrintSupport.framework in Frameworks */,
 				057EDBAD2581EA83004F0068 /* libtokyocabinet.xcframework in Frameworks */,
@@ -4633,7 +4636,6 @@
 				057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */,
 				05E0F1532582426400965440 /* libxml2.tbd in Frameworks */,
 				05E0F1432582426100965440 /* libz.tbd in Frameworks */,
-				05754D78258EF09C00236ED7 /* libpython2.7.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10579,7 +10581,7 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					/usr/include/python2.7,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				MACH_O_TYPE = mh_bundle;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -10622,7 +10624,7 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					/usr/include/python2.7,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				MACH_O_TYPE = mh_bundle;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11379,6 +11381,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Qt/5.15.2-macos/lib",
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11400,7 +11403,7 @@
 					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
 					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
 					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
-					/usr/include/python2.7,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
@@ -11410,7 +11413,7 @@
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
-				REGINA_PYTHON_FRAMEWORK = "";
+				REGINA_PYTHON_FRAMEWORK = Python3;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -11432,6 +11435,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Qt/5.15.2-macos/lib",
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11451,7 +11455,7 @@
 					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
 					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
 					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
-					/usr/include/python2.7,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
@@ -11461,7 +11465,7 @@
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
-				REGINA_PYTHON_FRAMEWORK = "";
+				REGINA_PYTHON_FRAMEWORK = Python3;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
