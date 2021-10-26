@@ -3165,14 +3165,13 @@ bool operator != (const Packet* packet, PacketShell shell);
  * A packet listener can be registered to listen for events on a
  * packet by calling Packet::listen().
  *
- * Each time that one of the events listed in this class occurs,
- * the packet will call the appropriate routine for all registered
- * packet listeners.
+ * Each time that one of the events listed in this class occurs, the packet
+ * will call the appropriate callback routine for all registered listeners.
  *
  * These events come in future/past pairs: packetToBeChanged() and
  * packetWasChanged(), childToBeAdded() and childWasAdded(), and so on.
  * These event pairs are mutually exclusive: any event will
- * cause at most one pair of routines to be called for each
+ * cause at most one pair of callback routines to be called for each
  * (packet, listener) pair.  For instance, if a packet is renamed then
  * packetToBeRenamed() and packetWasRenamed() will be called but
  * packetToBeChanged() and packetWasChanged() will not.
@@ -3187,6 +3186,23 @@ bool operator != (const Packet* packet, PacketShell shell);
  * When a listener is destroyed, it is automatically unregistered
  * from any packets to which it is currently listening.  Similarly, when
  * a packet is destroyed all listeners are automatically unregistered.
+ *
+ * To listen for packet events using your own callback routines, you
+ * would typically implement a subclass of PacketListener that overrides
+ * only those callbacks that you are interested in.  Be aware that:
+ *
+ * - Callbacks are called for each listener, one at a time, in the same
+ *   thread in which the event occurred.
+ *
+ * - Callbacks can safely add new packet listeners, but there is no guarantee
+ *   as to whether or not the new listeners will be notified of the
+ *   specific event currently being processed.
+ *
+ * - Callbacks can safely remove other listeners, but they must \e not
+ *   remove the listener whose callback is currently being called.
+ *   The one exception to this is packetToBeDestroyed(), which will
+ *   explicitly remove each listener \e before its callback is called
+ *   (which means, for example, the listener can safely delete itself).
  *
  * \warning Subclass authors should be aware of the default copy semantics
  * that this base class provides.  In particular, this base class provides
