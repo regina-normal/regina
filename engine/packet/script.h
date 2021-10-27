@@ -322,6 +322,36 @@ class Script : public Packet {
          * Removes all variables associated with this script.
          */
         void removeAllVariables();
+        /**
+         * Registers the given packet listener to listen for events on
+         * all of packets identified by this script's variables.
+         *
+         * This is a one-off operation: if the script variables should
+         * change later on, the given listener will not be registered and/or
+         * deregistered to reflect the new variable values.
+         *
+         * This routine is safe to call if some variables have null values,
+         * and/or if the same packet is identified by multiple variables.
+         *
+         * @param listener the listener to register with all packets
+         * identified by the script variables.
+         */
+        void listenVariables(PacketListener* listener);
+        /**
+         * Deregisters the given packet listener from listening for events on
+         * all of packets identified by this script's variables.
+         *
+         * Like listenVariables(), this is a one-off operation: it will not
+         * make any further adjustments if the script variables should change
+         * later on.
+         *
+         * This routine is safe to call if some variables have null values,
+         * and/or if the same packet is identified by multiple variables.
+         *
+         * @param listener the listener to deregister from all packets
+         * identified by the script variables.
+         */
+        void unlistenVariables(PacketListener* listener);
 
         void writeTextShort(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -379,6 +409,18 @@ inline bool Script::addVariable(const std::string& name,
 inline void Script::removeAllVariables() {
     ChangeEventSpan span(*this);
     variables_.clear();
+}
+
+inline void Script::listenVariables(PacketListener* listener) {
+    for (const auto& v : variables_)
+        if (auto shared = v.second.lock())
+            shared->listen(listener);
+}
+
+inline void Script::unlistenVariables(PacketListener* listener) {
+    for (const auto& v : variables_)
+        if (auto shared = v.second.lock())
+            shared->unlisten(listener);
 }
 
 inline void Script::writeTextShort(std::ostream& o) const {
