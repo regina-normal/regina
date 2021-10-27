@@ -848,11 +848,7 @@ std::string Packet::internalID() const {
     return ans;
 }
 
-PacketListener::~PacketListener() {
-    unregisterFromAllPackets();
-}
-
-void PacketListener::unregisterFromAllPackets() {
+void PacketListener::unlisten() {
     // This code relies on the fact that Packet::unlisten() behaves
     // correctly even if we preemptively removed the packet from the
     // listener's internal set (essentially, there is a harmless no-op
@@ -889,7 +885,7 @@ PacketListener& PacketListener::operator = (const PacketListener& src) {
     // The unregister-then-listen process below breaks with self-assignment.
     if (this != std::addressof(src)) {
         // Note: listen() and unlisten() will update the set of packets.
-        unregisterFromAllPackets();
+        unlisten();
 
         for (Packet* p : src.packets)
             p->listen(this);

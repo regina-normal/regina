@@ -847,6 +847,10 @@ Version 7.0  [ TODO ]
               class, and has been stripped down to just a single static name()
               function.  This function is constexpr, so you can still use it
               at compile time if needed, but you can now use it at runtime also.
+        Class PacketListener:
+            - New routine isListening().
+            - Renamed unregisterFromAllPackets() to unlisten().  The old
+              name is kept as a deprecated alias.
         Enum PacketType:
             - New constant PACKET_NONE.
         Class PDF:

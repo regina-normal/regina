@@ -407,7 +407,7 @@ QString ScriptUI::getPacketMenuText() const {
 void ScriptUI::refresh() {
     // Adjusting the listeners is safe, since refresh() should not be
     // called from this object's own PacketListener callbacks.
-    unregisterFromAllPackets();
+    unlisten();
 
     // Refresh the variables.
     model->rebuild();

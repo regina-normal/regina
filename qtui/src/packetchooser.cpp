@@ -113,7 +113,7 @@ void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
             if (p)
                 p->listen(this);
     } else
-        unregisterFromAllPackets();
+        unlisten();
 }
 
 void PacketChooser::packetWasRenamed(regina::Packet* renamed) {
@@ -176,7 +176,7 @@ void PacketChooser::refreshContents() {
     // Empty the combo box.
     // Empty from the end in case it's stored as a vector deep inside.
     if (onAutoUpdate)
-        unregisterFromAllPackets();
+        unlisten();
 
     clear();
     packets.clear();

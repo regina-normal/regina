@@ -3256,10 +3256,27 @@ class PacketListener {
         /*@{*/
 
         /**
-         * Unregisters this listener from any packets to which it is
+         * Determines whether this object is listening for events on any
+         * packets at all.
+         *
+         * @return \c true if and only if this object is listening on at
+         * least one packet.
+         */
+        bool isListening() const;
+
+        /**
+         * Unregisters this listener from all packets to which it is
          * currently listening.
          */
-        void unregisterFromAllPackets();
+        void unlisten();
+
+        /**
+         * Deprecated routine that unregisters this listener from any packets
+         * to which it is currently listening.
+         *
+         * \deprecated This routine has been renamed to unlisten().
+         */
+        [[deprecated]] void unregisterFromAllPackets();
 
         /**
          * Called before the contents of the packet are to be changed.
@@ -3923,6 +3940,18 @@ inline bool operator != (const Packet* packet, PacketShell shell) {
 }
 
 // Inline functions for PacketListener
+
+inline PacketListener::~PacketListener() {
+    unlisten();
+}
+
+inline bool PacketListener::isListening() const {
+    return ! packets.empty();
+}
+
+inline void PacketListener::unregisterFromAllPackets() {
+    unlisten();
+}
 
 inline void PacketListener::packetToBeRenamed(Packet*) {
 }

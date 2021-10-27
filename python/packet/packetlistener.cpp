@@ -116,8 +116,10 @@ void addPacketListener(pybind11::module_& m) {
     auto l = pybind11::class_<PacketListener, PyPacketListener>(
             m, "PacketListener")
         .def(pybind11::init<>()) // necessary for pure python subclasses
-        .def("unregisterFromAllPackets",
-            &PacketListener::unregisterFromAllPackets)
+        .def("isListening", &PacketListener::isListening)
+        .def("unlisten", &PacketListener::unlisten)
+        .def("unregisterFromAllPackets", // deprecated
+            &PacketListener::unlisten)
         .def("packetToBeChanged", &PacketListener::packetToBeChanged)
         .def("packetWasChanged", &PacketListener::packetWasChanged)
         .def("packetToBeRenamed", &PacketListener::packetToBeRenamed)
