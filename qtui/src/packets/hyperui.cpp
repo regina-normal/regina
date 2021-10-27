@@ -215,7 +215,7 @@ void HyperHeaderUI::packetWasChanged(regina::Packet* packet) {
     }
 }
 
-void HyperHeaderUI::packetToBeDestroyed(regina::PacketShell) {
+void HyperHeaderUI::packetBeingDestroyed(regina::PacketShell) {
     // Assume it is the underlying triangulation.
     refresh();
 }

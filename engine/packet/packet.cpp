@@ -761,6 +761,9 @@ void Packet::fireEventAsNull(void (PacketListener::*event)(Packet*, Packet*),
 
 void Packet::fireDestructionEvent() {
     if (listeners_.get()) {
+        // TODO: Think about whether we'd rather clear out listeners_ now
+        // (i.e., swap it into a local temporary set instead) instead of
+        // erasing its elements one at a time in the loop below.
         while (! listeners_->empty()) {
             auto it = listeners_->begin();
             PacketListener* tmp = *it;
@@ -771,7 +774,7 @@ void Packet::fireDestructionEvent() {
             listeners_->erase(it);
             tmp->packets.erase(this);
 
-            tmp->packetToBeDestroyed(this);
+            tmp->packetBeingDestroyed(this);
         }
     }
 }

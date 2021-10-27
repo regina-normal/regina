@@ -56,9 +56,9 @@ class PyPacketListener : public PacketListener {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetWasRenamed, packet);
         }
-        void packetToBeDestroyed(PacketShell packet) override {
+        void packetBeingDestroyed(PacketShell packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
-                packetToBeDestroyed, packet);
+                packetBeingDestroyed, packet);
         }
         void childToBeAdded(Packet* packet, Packet* child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
@@ -124,7 +124,7 @@ void addPacketListener(pybind11::module_& m) {
         .def("packetWasChanged", &PacketListener::packetWasChanged)
         .def("packetToBeRenamed", &PacketListener::packetToBeRenamed)
         .def("packetWasRenamed", &PacketListener::packetWasRenamed)
-        .def("packetToBeDestroyed", &PacketListener::packetToBeDestroyed)
+        .def("packetBeingDestroyed", &PacketListener::packetBeingDestroyed)
         .def("childToBeAdded", &PacketListener::childToBeAdded)
         .def("childWasAdded", &PacketListener::childWasAdded)
         .def("childToBeRemoved", &PacketListener::childToBeRemoved)

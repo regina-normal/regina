@@ -214,7 +214,7 @@ void SurfacesHeaderUI::packetWasChanged(regina::Packet* packet) {
     }
 }
 
-void SurfacesHeaderUI::packetToBeDestroyed(regina::PacketShell) {
+void SurfacesHeaderUI::packetBeingDestroyed(regina::PacketShell) {
     // Assume it is the underlying triangulation.
     refresh();
 }

@@ -170,7 +170,7 @@ class ScriptUI : public QObject, public PacketUI,
          * PacketListener callbacks.
          */
         void packetWasRenamed(regina::Packet* packet) override;
-        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**

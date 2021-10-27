@@ -347,7 +347,7 @@ void AngleStructureUI::packetWasChanged(regina::Packet* packet) {
     }
 }
 
-void AngleStructureUI::packetToBeDestroyed(regina::PacketShell) {
+void AngleStructureUI::packetBeingDestroyed(regina::PacketShell) {
     // Assume it is the underlying triangulation.
     refreshHeader();
 }

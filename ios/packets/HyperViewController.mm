@@ -188,7 +188,7 @@
     }
 }
 
-- (void)packetToBeDestroyed:(regina::PacketShell)packet
+- (void)packetBeingDestroyed:(regina::PacketShell)packet
 {
     // Assume it is the underlying triangulation.
     [self updateTriangulationButton:self.tri];

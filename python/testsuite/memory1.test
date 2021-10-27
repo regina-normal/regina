@@ -43,7 +43,7 @@ class Watcher(PacketListener):
     def __init__(self, packet):
         PacketListener.__init__(self)
         packet.listen(self)
-    def packetToBeDestroyed(self, packet):
+    def packetBeingDestroyed(self, packet):
         print('Destroying: ' + packet.label())
 
 

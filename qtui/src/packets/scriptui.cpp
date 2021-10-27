@@ -427,7 +427,7 @@ void ScriptUI::packetWasRenamed(Packet*) {
     updateRemoveState();
 }
 
-void ScriptUI::packetToBeDestroyed(regina::PacketShell packet) {
+void ScriptUI::packetBeingDestroyed(regina::PacketShell packet) {
     // Do not call refresh(), since that changes our registered packets.
 
     // The packet has not been destroyed yet, so a model rebuild will

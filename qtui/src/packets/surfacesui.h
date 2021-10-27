@@ -113,7 +113,7 @@ class SurfacesHeaderUI : public QObject, public PacketViewerTab,
          */
         void packetWasRenamed(regina::Packet* packet) override;
         void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     private slots:
         /**

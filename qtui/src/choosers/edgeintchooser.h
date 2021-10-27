@@ -137,7 +137,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          */
         void packetToBeChanged(regina::Packet*) override;
         void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -204,7 +204,7 @@ inline void EdgeIntChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void EdgeIntChooser::packetToBeDestroyed(regina::PacketShell) {
+inline void EdgeIntChooser::packetBeingDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }

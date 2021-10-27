@@ -38,7 +38,7 @@ class Watcher(PacketListener):
         PacketListener.__init__(self)
         packet.setLabel(label)
         packet.listen(self)
-    def packetToBeDestroyed(self, packet):
+    def packetBeingDestroyed(self, packet):
         print('Destroying: ' + packet.label())
 
 # Make sure that snapshotting works.

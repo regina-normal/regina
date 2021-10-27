@@ -172,7 +172,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * PacketListener overrides.
          */
-        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**

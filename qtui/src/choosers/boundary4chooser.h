@@ -131,7 +131,7 @@ class BoundaryComponent4Chooser :
          */
         void packetToBeChanged(regina::Packet*) override;
         void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -195,7 +195,7 @@ inline void BoundaryComponent4Chooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void BoundaryComponent4Chooser::packetToBeDestroyed(
+inline void BoundaryComponent4Chooser::packetBeingDestroyed(
         regina::PacketShell) {
     clear();
     options_.clear();

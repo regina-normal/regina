@@ -851,6 +851,9 @@ Version 7.0  [ TODO ]
             - New routine isListening().
             - Renamed unregisterFromAllPackets() to unlisten().  The old
               name is kept as a deprecated alias.
+            - Renamed packetToBeDestroyed() to packetBeingDestroyed(), since
+              it is called when the destructor is already in progress.  The old
+              name is kept and marked final, to ensure it is not reimplemented.
         Enum PacketType:
             - New constant PACKET_NONE.
         Class PDF:

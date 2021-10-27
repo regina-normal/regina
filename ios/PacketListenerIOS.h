@@ -45,7 +45,7 @@
 - (void)packetWasChanged:(regina::Packet*)packet;
 - (void)packetToBeRenamed:(regina::Packet*)packet;
 - (void)packetWasRenamed:(regina::Packet*)packet;
-- (void)packetToBeDestroyed:(regina::PacketShell)packet;
+- (void)packetBeingDestroyed:(regina::PacketShell)packet;
 - (void)childToBeAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
 - (void)childWasAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
 - (void)childToBeRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;

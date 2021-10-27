@@ -128,7 +128,7 @@ void PacketChooser::packetWasRenamed(regina::Packet* renamed) {
     }
 }
 
-void PacketChooser::packetToBeDestroyed(regina::PacketShell toDestroy) {
+void PacketChooser::packetBeingDestroyed(regina::PacketShell toDestroy) {
     // Just remove the item that is being destroyed.
     auto it = std::find(packets.begin(), packets.end(), toDestroy);
     if (it != packets.end()) {
@@ -151,8 +151,7 @@ void PacketChooser::packetToBeDestroyed(regina::PacketShell toDestroy) {
 
         removeItem(destroyIndex);
 
-        // Don't bother unlistening; this will happen in the packet
-        // destructor anyway.
+        // No need to unlisten: the packet will have done this for us already.
     }
 }
 

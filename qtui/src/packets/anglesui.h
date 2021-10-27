@@ -135,7 +135,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
          */
         void packetWasRenamed(regina::Packet*) override;
         void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     public slots:
         /**
