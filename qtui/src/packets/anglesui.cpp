@@ -193,6 +193,13 @@ AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
     table->setModel(model);
     layout->addWidget(table, 1);
 
+    // Listen for events on the underlying triangulation, since we
+    // display its label in the header.
+    // This needs to happen *before* we call refresh(), since
+    // refreshHeader() checks the current listening status.
+    if (auto p = packet->triangulation().inAnyPacket())
+        std::const_pointer_cast<Packet>(p)->listen(this);
+
     refresh();
 
     // Resize columns now that the table is full of data.
@@ -202,11 +209,6 @@ AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
         this, SLOT(columnResized(int, int, int)));
 
     ui->setFocusProxy(table);
-
-    // Listen for events on the underlying triangulation, since we
-    // display its label in the header.
-    if (auto p = packet->triangulation().inAnyPacket())
-        std::const_pointer_cast<Packet>(p)->listen(this);
 }
 
 AngleStructureUI::~AngleStructureUI() {
