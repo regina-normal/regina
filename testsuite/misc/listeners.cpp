@@ -30,18 +30,66 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include <cstring>
+#include <string>
+#include <cppunit/extensions/HelperMacros.h>
+#include "testsuite/misc/testmisc.h"
+#include "packet/script.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+namespace {
+    struct Listener : public regina::PacketListener {
+        bool expired_ { false };
+        std::weak_ptr<regina::Packet> ptr_;
 
-void addCallbacks(CppUnit::TextUi::TestRunner& runner);
-void addListeners(CppUnit::TextUi::TestRunner& runner);
+        void packetBeingDestroyed(regina::PacketShell) override {
+            if (ptr_.expired())
+                expired_ = true;
+        }
+    };
+}
+
+class ListenersTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(ListenersTest);
+
+    CPPUNIT_TEST(expiration);
+
+    CPPUNIT_TEST_SUITE_END();
+
+    public:
+        void setUp() override {
+        }
+
+        void tearDown() override {
+        }
+
+        void expiration() {
+            // This tests the logic used in the Qt user interface, in
+            // ScriptUI::packetBeingDestroyed().  See the more extensive
+            // comments there.  The short summary: the Qt UI code assumes the
+            // behaviour that we are testing here, but I don't think it's
+            // actually promised by the C++ standard (hence this test).
+
+            Listener listener;
+            {
+                auto s = std::make_shared<regina::Script>();
+                listener.ptr_ = s;
+
+                s->listen(&listener);
+
+                if (listener.expired_) {
+                    CPPUNIT_FAIL("Weak pointer expired prematurely.");
+                }
+            }
+            if (! listener.expired_) {
+                CPPUNIT_FAIL("Weak pointer did not expire in time.");
+            }
+            if (! listener.ptr_.expired()) {
+                CPPUNIT_FAIL("Weak pointer did not expire at all.");
+            }
+        }
+};
+
+void addListeners(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(ListenersTest::suite());
+}
 

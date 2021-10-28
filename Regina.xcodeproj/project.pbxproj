@@ -1497,6 +1497,8 @@
 		059474EE1F981E5700F04273 /* Tri2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F01F981E5700F04273 /* Tri2.storyboard */; };
 		059474F11F981F0300F04273 /* Tri3.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F31F981F0300F04273 /* Tri3.storyboard */; };
 		059474F41F981F1800F04273 /* Tri4.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F61F981F1800F04273 /* Tri4.storyboard */; };
+		0594AC22272AD73500A03372 /* listeners.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0594AC21272AD72F00A03372 /* listeners.cpp */; };
+		0594AC23272AD73600A03372 /* listeners.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0594AC21272AD72F00A03372 /* listeners.cpp */; };
 		059802DD26683C6D002D5D57 /* xmlsnappeareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802BD26683C6D002D5D57 /* xmlsnappeareader.h */; };
 		059802DE26683C6D002D5D57 /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802BF26683C6D002D5D57 /* xmlsurfacereader.cpp */; };
 		059802DF26683C6D002D5D57 /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C026683C6D002D5D57 /* xmlhypersurfacereader.cpp */; };
@@ -4017,6 +4019,7 @@
 		059474EF1F981E5700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri2.storyboard; sourceTree = "<group>"; };
 		059474F21F981F0300F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri3.storyboard; sourceTree = "<group>"; };
 		059474F51F981F1800F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri4.storyboard; sourceTree = "<group>"; };
+		0594AC21272AD72F00A03372 /* listeners.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = listeners.cpp; sourceTree = "<group>"; };
 		059802752667067A002D5D57 /* callbacks.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = callbacks.test; sourceTree = "<group>"; };
 		059802762667067B002D5D57 /* callbacks.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = callbacks.out; sourceTree = "<group>"; };
 		059802772667067B002D5D57 /* presentations.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = presentations.out; sourceTree = "<group>"; };
@@ -5433,6 +5436,7 @@
 			children = (
 				051FD39327257A9E00B3F60F /* callbacks.cpp */,
 				051FD39227257A9E00B3F60F /* CMakeLists.txt */,
+				0594AC21272AD72F00A03372 /* listeners.cpp */,
 				051FD39127257A9E00B3F60F /* testmisc.h */,
 			);
 			path = misc;
@@ -9008,6 +9012,7 @@
 				052FA11A1806088B00FAE4DF /* homologicaldata.cpp in Sources */,
 				05431F981C40F527009BC072 /* perm2.cpp in Sources */,
 				052FA11E1806088B00FAE4DF /* bitmask.cpp in Sources */,
+				0594AC23272AD73600A03372 /* listeners.cpp in Sources */,
 				05754CC2258B38C100236ED7 /* laurent2.cpp in Sources */,
 				0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */,
 				052FA11D1806088B00FAE4DF /* base64.cpp in Sources */,
@@ -9386,6 +9391,7 @@
 				05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */,
 				05CB9FFA1F9EA3CF002ECB18 /* LinkMoves.mm in Sources */,
 				0503DCD819B7E3AD0085F3CC /* DocumentListController.mm in Sources */,
+				0594AC22272AD73500A03372 /* listeners.cpp in Sources */,
 				0542090E1DF0DA450018AB24 /* sfs.cpp in Sources */,
 				05249EAD1DBC16B3001FE29E /* pyalgebra.cpp in Sources */,
 				05A73C8D19B2EF130099C617 /* homology.cpp in Sources */,

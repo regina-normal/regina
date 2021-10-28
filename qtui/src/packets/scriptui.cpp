@@ -430,11 +430,26 @@ void ScriptUI::packetWasRenamed(Packet*) {
 void ScriptUI::packetBeingDestroyed(regina::PacketShell packet) {
     // Do not call refresh(), since that changes our registered packets.
 
-    // The packet has not been destroyed yet, so a model rebuild will
-    // not nullify the variable.
+    // Okay. So: what we'd *really* love is if we could just rebuild the
+    // model, the same as when a packet is renamed.  For this to work,
+    // we need the std::weak_ptr to the packet to have *already* expired,
+    // even though we are still in the Packet destructor (and behind that,
+    // still in the shared_ptr destructor).  This way, the model rebuild
+    // will correctly return the value of the script variable as null.
     //
-    // Instead we will nullify the variable ourselves.
-    // TODO: script->nullify(packet);
+    // I *believe* the C++ standard promises nothing here.  However, all
+    // implementations I'm aware of do indeed expire all weak_ptrs (by
+    // setting the shared_ptr ownership count to zero) *before* calling
+    // the managed object's destructor.
+    //
+    // So: for now - since the alternative will be much messier - we assume
+    // this is indeed how shared_ptr and weak_ptr behave, and we explicitly
+    // check this in the C++ test suite (see ListenersTest::expiration()).
+    //
+    // If anyone has a better suggestion, I'm all ears.
+
+    model->rebuild();
+    updateRemoveState();
 }
 
 void ScriptUI::endEdit() {
