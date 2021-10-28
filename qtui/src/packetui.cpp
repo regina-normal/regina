@@ -35,6 +35,7 @@
 #include "packet/packet.h"
 
 // UI includes:
+#include "elidedlabel.h"
 #include "packeteditiface.h"
 #include "packetmanager.h"
 #include "packetui.h"
@@ -148,8 +149,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
 
     headerLayout->addSpacing((headerSize / 2 /* shrug */));
 
-    headerTitle = new QLabel(newPacket->fullName().c_str());
-    headerTitle->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    headerTitle = new ElidedLabel(newPacket->fullName().c_str());
     headerTitle->setSizePolicy(
         QSizePolicy::Maximum /* horizontal */,
         QSizePolicy::Preferred /* vertical */);
