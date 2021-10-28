@@ -1491,6 +1491,8 @@
 		05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */; };
 		05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */; };
 		05937B2319CF819C00160F9A /* PacketTabBarController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937B2219CF819C00160F9A /* PacketTabBarController.mm */; };
+		05941EF9272A9E3500562586 /* elidedlabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05941EF7272A9E3500562586 /* elidedlabel.cpp */; };
+		05941EFA272A9E8600562586 /* elidedlabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 05941EF8272A9E3500562586 /* elidedlabel.h */; };
 		059474E61F98151700F04273 /* SnapPea.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474E41F98151600F04273 /* SnapPea.storyboard */; };
 		059474EE1F981E5700F04273 /* Tri2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F01F981E5700F04273 /* Tri2.storyboard */; };
 		059474F11F981F0300F04273 /* Tri3.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F31F981F0300F04273 /* Tri3.storyboard */; };
@@ -4009,6 +4011,8 @@
 		05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewHeaderCell.m; sourceTree = "<group>"; };
 		05937B2119CF819C00160F9A /* PacketTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTabBarController.h; sourceTree = "<group>"; };
 		05937B2219CF819C00160F9A /* PacketTabBarController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTabBarController.mm; sourceTree = "<group>"; };
+		05941EF7272A9E3500562586 /* elidedlabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = elidedlabel.cpp; sourceTree = "<group>"; };
+		05941EF8272A9E3500562586 /* elidedlabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elidedlabel.h; sourceTree = "<group>"; };
 		059474E51F98151700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SnapPea.storyboard; sourceTree = "<group>"; };
 		059474EF1F981E5700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri2.storyboard; sourceTree = "<group>"; };
 		059474F21F981F0300F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri3.storyboard; sourceTree = "<group>"; };
@@ -6679,6 +6683,8 @@
 				0564A4201811D91E002CC2AE /* coordinates.h */,
 				05A73CD319B2F2040099C617 /* edittableview.h */,
 				05A73CD419B2F2040099C617 /* edittreeview.h */,
+				05941EF7272A9E3500562586 /* elidedlabel.cpp */,
+				05941EF8272A9E3500562586 /* elidedlabel.h */,
 				0564A4211811D91E002CC2AE /* eventids.h */,
 				0564A4221811D91E002CC2AE /* examplesaction.cpp */,
 				0564A4231811D91E002CC2AE /* examplesaction.h */,
@@ -9850,6 +9856,7 @@
 				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
+				05941EFA272A9E8600562586 /* elidedlabel.h in Sources */,
 				0591E83F1C4F769100793A9C /* tri4algebra.cpp in Sources */,
 				0591E8441C4F772B00793A9C /* tri4algebra.h in Sources */,
 				0591E8461C4F773500793A9C /* tri4gluings.h in Sources */,
@@ -9929,6 +9936,7 @@
 				0543AEC31811E12A002758F8 /* reginamanager.h in Sources */,
 				0543AEC41811E12A002758F8 /* reginapref.h in Sources */,
 				0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */,
+				05941EF9272A9E3500562586 /* elidedlabel.cpp in Sources */,
 				0543AEC61811E12A002758F8 /* shortrunner.h in Sources */,
 				0564A95F1811D921002CC2AE /* filtercreator.cpp in Sources */,
 				0564A9561811D921002CC2AE /* compatcanvas.cpp in Sources */,
