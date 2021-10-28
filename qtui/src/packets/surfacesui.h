@@ -87,6 +87,7 @@ class SurfacesHeaderUI : public QObject, public PacketViewerTab,
          * Packet details
          */
         regina::PacketOf<regina::NormalSurfaces>* surfaces;
+        bool triDestroyed { false };
 
         /**
          * Internal components
