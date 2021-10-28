@@ -49,7 +49,8 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
 
-    setWindowTitle(heldPane->getPacket()->humanLabel().c_str());
+    windowAction = new QAction(this);
+    updateWindowTitle(); // renames windowAction also
 
     // On windows, the close button does not seem to appear automatically.
     setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
@@ -60,8 +61,6 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
 
     setupMenus();
 
-    windowAction = new QAction(heldPane->getPacket()->humanLabel().c_str(),
-        this);
     connect(windowAction, SIGNAL(triggered()), this, SLOT(raiseWindow()));
     parent->registerWindow(windowAction);
 
@@ -209,9 +208,11 @@ void PacketWindow::setupMenus() {
     helpMenu->addAction(act);
 }
 
-void PacketWindow::renameWindow(const QString& newName) {
-    setWindowTitle(newName);
-    windowAction->setText(newName);
+void PacketWindow::updateWindowTitle() {
+    QString label = heldPane->getPacket()->label().c_str();
+
+    setWindowTitle(label);
+    windowAction->setText(label);
 }
 
 void PacketWindow::pythonConsole() {

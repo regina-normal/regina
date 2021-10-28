@@ -240,7 +240,7 @@ void PacketPane::packetWasRenamed(regina::Packet*) {
 
     headerTitle->setText(packet->fullName().c_str());
     if (frame)
-        frame->renameWindow(packet->humanLabel().c_str());
+        frame->updateWindowTitle();
 }
 
 void PacketPane::packetBeingDestroyed(regina::PacketShell) {
