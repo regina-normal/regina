@@ -265,14 +265,29 @@ void AngleStructureUI::refreshHeader() {
             span.append(tr("NO Taut"));
     }
 
+    // Beware: we may be calling refresh() from packetBeingDestroyed(), in
+    // which case the triangulation is no longer safe to query.  In this
+    // scenario, isListening() will be false and triDestroyed will be true.
     QString triName;
-    const regina::Triangulation<3>& tri = structures_->triangulation();
-    if (tri.isReadOnlySnapshot())
-        triName = tr("(private copy)");
-    else if (auto p = tri.inAnyPacket())
-        triName = p->humanLabel().c_str();
-    else
-        triName = tr("(anonymous)");
+    if (isListening()) {
+        // The triangulation is a real packet, has not changed, and is
+        // not currently being destroyed.
+        if (auto p = structures_->triangulation().inAnyPacket())
+            triName = p->humanLabel().c_str();
+        else {
+            // This shouldn't happen.
+            // It *was* once a packet: the only possibly explanation is that
+            // we took a snapshot but for some reason no change event was fired.
+            triName = tr("(private copy)");
+        }
+    } else {
+        // Either the triangulation was never a real packet, or it once was
+        // but the packet changed or was/is being destroyed.
+        if (triDestroyed || structures_->triangulation().isReadOnlySnapshot())
+            triName = tr("(private copy)");
+        else
+            triName = tr("(anonymous)");
+    }
 
     stats->setText(tr(
         "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
@@ -338,6 +353,8 @@ void AngleStructureUI::packetWasRenamed(regina::Packet*) {
 
 void AngleStructureUI::packetWasChanged(regina::Packet* packet) {
     // Assume it is the underlying triangulation.
+    // Note: the following test should always be true, since any change
+    // in the triangulation *should* be preceded by taking a local snapshot.
     if (dynamic_cast<regina::PacketOf<regina::Triangulation<3>>*>(packet) !=
             std::addressof(structures_->triangulation())) {
         // Our list has switched to use a local snapshot of the triangulation.
@@ -349,5 +366,6 @@ void AngleStructureUI::packetWasChanged(regina::Packet* packet) {
 
 void AngleStructureUI::packetBeingDestroyed(regina::PacketShell) {
     // Assume it is the underlying triangulation.
+    triDestroyed = true;
     refreshHeader();
 }

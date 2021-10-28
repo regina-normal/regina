@@ -144,14 +144,29 @@ void HyperHeaderUI::refresh() {
         count = header->tr("%1 %2, %3 hypersurfaces").arg(
             surfaces->size()).arg(sType).arg(sEmb);
 
+    // Beware: we may be calling refresh() from packetBeingDestroyed(), in
+    // which case the triangulation is no longer safe to query.  In this
+    // scenario, isListening() will be false and triDestroyed will be true.
     QString triName;
-    const regina::Triangulation<4>& tri = surfaces->triangulation();
-    if (tri.isReadOnlySnapshot())
-        triName = tr("(private copy)");
-    else if (auto p = tri.packet())
-        triName = p->humanLabel().c_str();
-    else
-        triName = tr("(anonymous)");
+    if (isListening()) {
+        // The triangulation is a real packet, has not changed, and is
+        // not currently being destroyed.
+        if (auto p = surfaces->triangulation().packet())
+            triName = p->humanLabel().c_str();
+        else {
+            // This shouldn't happen.
+            // It *was* once a packet: the only possibly explanation is that
+            // we took a snapshot but for some reason no change event was fired.
+            triName = tr("(private copy)");
+        }
+    } else {
+        // Either the triangulation was never a real packet, or it once was
+        // but the packet changed or was/is being destroyed.
+        if (triDestroyed || surfaces->triangulation().isReadOnlySnapshot())
+            triName = tr("(private copy)");
+        else
+            triName = tr("(anonymous)");
+    }
 
     header->setText(header->tr(
         "<qt>%1<br>Enumerated in %2 coordinates<br>"
@@ -206,6 +221,8 @@ void HyperHeaderUI::packetWasRenamed(regina::Packet*) {
 
 void HyperHeaderUI::packetWasChanged(regina::Packet* packet) {
     // Assume it is the underlying triangulation.
+    // Note: the following test should always be true, since any change
+    // in the triangulation *should* be preceded by taking a local snapshot.
     if (dynamic_cast<regina::PacketOf<regina::Triangulation<4>>*>(packet) !=
             std::addressof(surfaces->triangulation())) {
         // Our list has switched to use a local snapshot of the triangulation.
@@ -217,5 +234,6 @@ void HyperHeaderUI::packetWasChanged(regina::Packet* packet) {
 
 void HyperHeaderUI::packetBeingDestroyed(regina::PacketShell) {
     // Assume it is the underlying triangulation.
+    triDestroyed = true;
     refresh();
 }

@@ -87,6 +87,7 @@ class HyperHeaderUI : public QObject, public PacketViewerTab,
          * Packet details
          */
         regina::PacketOf<regina::NormalHypersurfaces>* surfaces;
+        bool triDestroyed { false };
 
         /**
          * Internal components

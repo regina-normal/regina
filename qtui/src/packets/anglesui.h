@@ -96,6 +96,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
          */
         regina::PacketOf<regina::AngleStructures>* structures_;
         AngleModel* model;
+        bool triDestroyed { false };
 
         /**
          * Internal components
