@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                     *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,55 +30,35 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/pdf.h"
+#include "../pybind11/pybind11.h"
+#include "packet/attachment.h"
+#include "../helpers.h"
 
-#include "pdfhandler.h"
-#include "reginamain.h"
-#include "reginasupport.h"
-#include "../packetfilter.h"
+using pybind11::overload_cast;
+using regina::Attachment;
 
-#include <QFile>
-#include <QTextDocument>
+void addAttachment(pybind11::module_& m) {
+    pybind11::class_<Attachment, regina::Packet, std::shared_ptr<Attachment>>(
+            m, "Attachment")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const char*>())
+        .def(pybind11::init<const Attachment&>())
+        .def("swap", &Attachment::swap)
+        .def("isNull", &Attachment::isNull)
+        .def("size", &Attachment::size)
+        .def("filename", &Attachment::filename)
+        .def("extension", &Attachment::extension)
+        .def("reset", overload_cast<>(&Attachment::reset))
+        .def("save", &Attachment::save)
+        .def("savePDF", &Attachment::save) // deprecated
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return Attachment::typeID;
+        })
+    ;
 
-const PDFHandler PDFHandler::instance;
+    m.def("swap", (void(*)(Attachment&, Attachment&))(regina::swap));
 
-std::shared_ptr<regina::Packet> PDFHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
-    std::shared_ptr<regina::PDF> ans = std::make_shared<regina::PDF>(
-        static_cast<const char*>(QFile::encodeName(fileName)));
-    if (ans->isNull()) {
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("The import failed."),
-            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in PDF format.</qt>").arg(fileName.toHtmlEscaped()));
-        return nullptr;
-    } else
-        ans->setLabel(QObject::tr("PDF document").toUtf8().constData());
-    return ans;
-}
-
-PacketFilter* PDFHandler::canExport() const {
-    return new SingleTypeFilter<regina::PDF>();
-}
-
-bool PDFHandler::exportData(std::shared_ptr<regina::Packet> data,
-        const QString& fileName, QWidget* parentWidget) const {
-    auto pdf = std::dynamic_pointer_cast<regina::PDF>(data);
-    if (! pdf->data()) {
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("This PDF packet is empty."),
-            QObject::tr("I can only export packets that contain "
-                "real PDF data."));
-        return false;
-    }
-    if (! pdf->savePDF(static_cast<const char*>(QFile::encodeName(fileName)))) {
-        ReginaSupport::warn(parentWidget,
-            QObject::tr("The export failed."), 
-            QObject::tr("<qt>An unknown error occurred, probably related "
-            "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
-        return false;
-    }
-    return true;
+    m.attr("PDF") = m.attr("Attachment"); // deprecated typedef
 }
 

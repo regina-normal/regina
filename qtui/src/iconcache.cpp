@@ -55,8 +55,8 @@ void IconCache::load(IconID id) {
         case packet_link:
             cache_[id] = ReginaSupport::regIcon("packet_link");
             return;
-        case packet_pdf:
-            cache_[id] = ReginaSupport::regIcon("packet_pdf");
+        case packet_attachment:
+            cache_[id] = ReginaSupport::themeIcon("mail-attachment");
             return;
         case packet_script:
             cache_[id] = ReginaSupport::regIcon("packet_script");

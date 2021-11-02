@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,29 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "packet/pdf.h"
-#include "../helpers.h"
+/*! \file attachmentui.h
+ *  \brief Provides an interface for viewing attachment packets.
+ */
 
-using pybind11::overload_cast;
-using regina::PDF;
+#ifndef __ATTACHMENTUI_H
+#define __ATTACHMENTUI_H
 
-void addPDF(pybind11::module_& m) {
-    pybind11::class_<PDF, regina::Packet, std::shared_ptr<PDF>>(m, "PDF")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const char*>())
-        .def(pybind11::init<const PDF&>())
-        .def("swap", &PDF::swap)
-        .def("isNull", &PDF::isNull)
-        .def("size", &PDF::size)
-        .def("reset", overload_cast<>(&PDF::reset))
-        .def("savePDF", &PDF::savePDF)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return PDF::typeID;
-        })
-    ;
+#include "packetui.h"
 
-    m.def("swap", (void(*)(PDF&, PDF&))(regina::swap));
-}
+/**
+ * An external viewer for attachment packets.
+ */
+class AttachmentExternalViewer {
+    public:
+        static void view(regina::Packet* packet, QWidget* parentWidget);
+};
 
+#endif

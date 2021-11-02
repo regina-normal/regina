@@ -30,51 +30,66 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file pdfhandler.h
- *  \brief Allows interaction with PDF documents.
- */
+// Regina core includes:
+#include "packet/attachment.h"
 
-#ifndef __PDFHANDLER_H
-#define __PDFHANDLER_H
+// UI includes:
+#include "attachmentui.h"
+#include "reginamain.h"
+#include "reginasupport.h"
+#include "sharedtempfile.h"
 
-#include "packetexporter.h"
-#include "packetimporter.h"
+#include <csignal>
+#include <cstdio>
+#include <QDesktopServices>
+#include <QDir>
+#include <QFile>
+#include <QLayout>
+#include <QProcess>
+#include <QTextDocument>
+#include <QUrl>
 
-/**
- * An object responsible for importing and exporting data to and from
- * PDF files.
- *
- * Rather than creating new objects of this class, the globally
- * available object PDFHandler::instance should always be used.
- */
-class PDFHandler : public PacketImporter, public PacketExporter {
-    using PacketExporter::exportData;
-    using PacketImporter::importData;
-    public:
-        /**
-         * A globally available instance of this class.
-         */
-        static const PDFHandler instance;
+void AttachmentExternalViewer::view(regina::Packet* packet,
+        QWidget* parentWidget) {
+    const auto& att = static_cast<regina::Attachment&>(*packet);
 
-    public:
-        /**
-         * PacketImporter overrides:
-         */
-        std::shared_ptr<regina::Packet> importData(const QString& fileName,
-            ReginaMain* parentWidget) const override;
+    // Write the attachment to a temporary file.
+    const char* data = att.data();
+    if (! data) {
+        ReginaSupport::info(parentWidget,
+            QObject::tr("This attachment is empty."));
+        return;
+    }
 
-        /**
-         * PacketExporter overrides:
-         */
-        PacketFilter* canExport() const override;
-        bool exportData(std::shared_ptr<regina::Packet> data,
-            const QString& fileName, QWidget* parentWidget) const override;
+    // Set suffix. Note that XXXXXX (exactly 6 X's all uppercase) gets replaced
+    // with random letters to ensure the file does not already exist.
+    auto* temp = new SharedTempFile(("XXXXXX" + att.extension()).c_str(),
+        parentWidget);
+    if (! temp->valid()) {
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("<qt>I could not create the temporary "
+            "file <i>%1</i>.</qt>").arg(temp->localFileName()));
+        delete temp;
+        return;
+    }
 
-    private:
-        /**
-         * Don't allow people to construct their own PDF handlers.
-         */
-        PDFHandler() = default;
-};
+    if (! att.save(static_cast<const char*>(QFile::encodeName(
+            temp->localFileName())))) {
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("<qt>An error occurred whilst writing the attachment "
+            "to the temporary file <i>%1</i>.</qt>").
+            arg(temp->localFileName()));
+        delete temp;
+        return;
+    }
 
-#endif
+    temp->share();
+
+    if (! QDesktopServices::openUrl(temp->url())) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("I was not able to find a suitable "
+            "viewer for this attachment.<p>"));
+        delete temp;
+    }
+}
+

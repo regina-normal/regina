@@ -143,16 +143,10 @@ class ReginaPrefTools: public QWidget {
 
     private:
         QCheckBox* cbSnapPeaMessages;
-        QCheckBox* cbDefaultPDFViewer;
-        QLineEdit* editPDFViewer;
-        QLabel* labelPDFViewer;
         QLineEdit* editGAPExec;
 
     public:
         ReginaPrefTools(QWidget* parent = nullptr);
-
-    private slots:
-        void defaultPDFViewerChanged(int);
 
     friend class ReginaPreferences;
 };

@@ -70,7 +70,7 @@ class PacketManager {
 
         /**
          * If this packet should be viewed using an external viewer
-         * (e.g., PDF packets), this routine returns an appropriate function.
+         * (e.g., attachments), this routine returns an appropriate function.
          * If this packet should be viewed using an internal viewer, this
          * routine returns \c null.
          */

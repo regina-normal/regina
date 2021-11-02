@@ -79,9 +79,9 @@ void ReginaMain::newNormalHypersurfaces() {
         tr("New Normal Hypersurface List"));
 }
 
-void ReginaMain::newPDF() {
-    // A PDF must be an import; just use the import routine directly.
-    importPDF();
+void ReginaMain::newAttachment() {
+    // An attachment must be an import; just use the import routine directly.
+    importAttachment();
 }
 
 void ReginaMain::newScript() {

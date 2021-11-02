@@ -294,12 +294,12 @@ class ReginaMain : public QMainWindow {
          * New packet routines.
          */
         void newAngleStructures();
+        void newAttachment();
         void newContainer();
         void newFilter();
         void newLink();
         void newNormalSurfaces();
         void newNormalHypersurfaces();
-        void newPDF();
         void newSnapPeaTriangulation();
         void newScript();
         void newText();
@@ -310,12 +310,12 @@ class ReginaMain : public QMainWindow {
         /**
          * Packet import routines.
          */
+        void importAttachment();
         void importDehydration();
         void importIsoSig2();
         void importIsoSig3();
         void importIsoSig4();
         void importKnotSig();
-        void importPDF();
         void importPython();
         void importRegina();
         void importSnapPea();
@@ -324,8 +324,8 @@ class ReginaMain : public QMainWindow {
         /**
          * Packet export routines.
          */
+        void exportAttachment();
         void exportCSVSurfaceList();
-        void exportPDF();
         void exportPython();
         void exportRecogniser();
         void exportRegina();

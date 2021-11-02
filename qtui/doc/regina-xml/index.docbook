@@ -34,13 +34,13 @@
      <member>&xml-angles;</member>
      <member>&xml-anon;</member>
      <member>&xml-anonref;</member>
+     <member>&xml-attachment;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
      <member>&xml-filterprop;</member>
      <member>&xml-filtertrivial;</member>
      <member>&xml-hypersurfaces;</member>
      <member>&xml-link;</member>
-     <member>&xml-pdfdata;</member>
      <member>&xml-script;</member>
      <member>&xml-snappeadata;</member>
      <member>&xml-surfaces;</member>
@@ -48,7 +48,7 @@
      <member>&xml-tri;</member>
     </simplelist>.
     This list includes all of &regina;'s packet types.">
-  <!ENTITY packetsyn1 "(&xml-container;|&xml-textdata;|&xml-script;|&xml-pdfdata;|">
+  <!ENTITY packetsyn1 "(&xml-container;|&xml-textdata;|&xml-script;|&xml-attachment;|">
   <!ENTITY packetsyn2 " &xml-tri;|&xml-link;|&xml-snappeadata;|">
   <!ENTITY packetsyn3 " &xml-angles;|&xml-surfaces;|&xml-hypersurfaces;|">
   <!ENTITY packetsyn4 " &xml-filtercomb;|&xml-filterprop;|&xml-filtertrivial;|">
@@ -59,13 +59,13 @@
      <member>&xml-angles;</member>
      <member>&xml-anon;</member>
      <member>&xml-anonref;</member>
+     <member>&xml-attachment;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
      <member>&xml-filterprop;</member>
      <member>&xml-filtertrivial;</member>
      <member>&xml-hypersurfaces;</member>
      <member>&xml-link;</member>
-     <member>&xml-pdfdata;</member>
      <member>&xml-script;</member>
      <member>&xml-snappeadata;</member>
      <member>&xml-surfaces;</member>
@@ -82,13 +82,13 @@
      <member>&xml-angles;</member>
      <member>&xml-anon;</member>
      <member>&xml-anonref;</member>
+     <member>&xml-attachment;</member>
      <member>&xml-container;</member>
      <member>&xml-filtercomb;</member>
      <member>&xml-filterprop;</member>
      <member>&xml-filtertrivial;</member>
      <member>&xml-hypersurfaces;</member>
      <member>&xml-link;</member>
-     <member>&xml-pdfdata;</member>
      <member>&xml-regina;</member>
      <member>&xml-script;</member>
      <member>&xml-snappeadata;</member>

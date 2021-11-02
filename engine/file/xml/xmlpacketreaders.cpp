@@ -108,7 +108,8 @@ namespace {
 }
 
 namespace {
-    void extractPDFFromBase64(PDF& pdf, std::string base64) {
+    void extractAttachmentFromBase64(Attachment& att, std::string base64,
+            std::string filename) {
         // Strip out the whitespace.
         std::string::iterator in = base64.begin();
         std::string::iterator out = base64.begin();
@@ -126,7 +127,7 @@ namespace {
 
         // Is there any data at all?
         if (out == base64.begin()) {
-            pdf.reset();
+            att.reset();
             return;
         }
 
@@ -134,21 +135,22 @@ namespace {
         char* data;
         size_t dataLen;
         if (base64Decode(base64.c_str(), out - base64.begin(), &data, &dataLen))
-            pdf.reset(data, dataLen, PDF::OWN_NEW);
+            att.reset(data, dataLen, Attachment::OWN_NEW, filename);
         else
-            pdf.reset();
+            att.reset();
     }
 }
 
-void XMLPDFReader::initialChars(const std::string& chars) {
-    extractPDFFromBase64(*pdf, chars);
+void XMLAttachmentReader::initialChars(const std::string& chars) {
+    extractAttachmentFromBase64(*attachment, chars, filename);
 }
 
 void XMLLegacyPDFReader::endContentSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "pdf") {
-        extractPDFFromBase64(*pdf,
-            dynamic_cast<XMLCharsReader*>(subReader)->chars());
+        extractAttachmentFromBase64(*pdf,
+            dynamic_cast<XMLCharsReader*>(subReader)->chars(),
+            "attachment.pdf");
     }
 }
 

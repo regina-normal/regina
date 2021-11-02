@@ -121,16 +121,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     toolsPrefs->cbSnapPeaMessages->setChecked(
         regina::SnapPeaTriangulation::kernelMessagesEnabled());
-    if (prefSet.pdfExternalViewer.isEmpty()) {
-        toolsPrefs->cbDefaultPDFViewer->setChecked(true);
-        toolsPrefs->editPDFViewer->setEnabled(false);
-        toolsPrefs->labelPDFViewer->setEnabled(false);
-    } else {
-        toolsPrefs->cbDefaultPDFViewer->setChecked(false);
-        toolsPrefs->editPDFViewer->setEnabled(true);
-        toolsPrefs->labelPDFViewer->setEnabled(true);
-    }
-    toolsPrefs->editPDFViewer->setText(prefSet.pdfExternalViewer);
     toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
 
     // Finish off.
@@ -222,12 +212,6 @@ void ReginaPreferences::slotApply() {
 
     regina::SnapPeaTriangulation::enableKernelMessages(
         toolsPrefs->cbSnapPeaMessages->isChecked());
-    // Don't be too fussy about what they put in the PDF viewer field, since
-    // Regina tries hard to find a suitable PDF viewer regardless.
-    if (toolsPrefs->cbDefaultPDFViewer->isChecked())
-        prefSet.pdfExternalViewer = "";
-    else
-        prefSet.pdfExternalViewer = toolsPrefs->editPDFViewer->text().trimmed();
 
     strVal = toolsPrefs->editGAPExec->text().trimmed();
     if (strVal.isEmpty()) {
@@ -420,41 +404,13 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
         "not see these messages at all.</qt>"));
     layout->addWidget(cbSnapPeaMessages);
 
-    // Set up the PDF viewer.
-    cbDefaultPDFViewer = new QCheckBox(tr("Use default PDF viewer"));
-    cbDefaultPDFViewer->setWhatsThis(tr("<qt>Use the default PDF application "
-        "on your computer to view PDF packets.<p>"
-        "As an alternative, you may uncheck this box and select your "
-        "own PDF viewer in the text field below.</qt>"));
-    layout->addWidget(cbDefaultPDFViewer);
-    connect(cbDefaultPDFViewer, SIGNAL(stateChanged(int)),
-        this, SLOT(defaultPDFViewerChanged(int)));
-
-    QBoxLayout* box = new QHBoxLayout();
-    labelPDFViewer = new QLabel(tr("Custom PDF viewer:"));
-    box->addWidget(labelPDFViewer);
-    editPDFViewer = new QLineEdit();
-    box->addWidget(editPDFViewer);
-    QString msg = tr("<qt>The command used to view PDF packets.  "
-        "Examples might include "
-        "<tt>okular</tt>, <tt>evince</tt> or <tt>xpdf</tt>.<p>"
-        "You may include optional command-line arguments here.  The PDF "
-        "filename will be added to the end of the argument list, and the "
-        "entire command will be passed to a shell for execution.<p>"
-        "As an alternative, you can check the <i>default PDF viewer</i> "
-        "box above, and Regina will simply use the default PDF application "
-        "on your computer.</qt>");
-    labelPDFViewer->setWhatsThis(msg);
-    editPDFViewer->setWhatsThis(msg);
-    layout->addLayout(box);
-
     // Set up the GAP executable.
-    box = new QHBoxLayout();
+    auto* box = new QHBoxLayout();
     auto* label = new QLabel(tr("GAP executable:"));
     box->addWidget(label);
     editGAPExec = new QLineEdit();
     box->addWidget(editGAPExec);
-    msg = tr("<qt>The command used to run GAP (Groups, Algorithms and "
+    QString msg = tr("<qt>The command used to run GAP (Groups, Algorithms and "
         "Programming).  GAP can be used to help simplify presentations "
         "of fundamental groups.<p>"
         "This should be a single executable name (e.g., <i>%1</i>).  You "
@@ -472,11 +428,6 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
     // Add some space at the end.
     layout->addStretch(1);
     setLayout(layout);
-}
-
-void ReginaPrefTools::defaultPDFViewerChanged(int state) {
-    editPDFViewer->setEnabled(state != Qt::Checked);
-    labelPDFViewer->setEnabled(state != Qt::Checked);
 }
 
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {

@@ -100,6 +100,8 @@ Version 7.0  [ TODO ]
             - When cloning a packet tree, a cloned angle structure list
               will now refer back to the original triangulation, not a
               clone of the original triangulation.
+        Class Attachment:
+            - New packet class that replaces and enhances the old PDF class.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
             - Routine augTorus() now returns a std::optional by const reference,
@@ -856,9 +858,19 @@ Version 7.0  [ TODO ]
               name is kept and marked final, to ensure it is not reimplemented.
         Enum PacketType:
             - New constant PACKET_NONE.
+            - Renamed PACKET_PDF to PACKET_ATTACHMENT.  The old name is
+              kept as a deprecated alias.
         Class PDF:
+            - This has been renamed to Attachment, and expanded to support any
+              kind of file attachment (not just PDF documents).  The old
+              class name PDF is kept as a deprecated type alias.
             - Added a copy constructor and a copy assignment operator.
             - Added member and global swap() functions.
+            - Added a filename() routine.
+            - The binary data constructor and the non-trivial reset() routine
+              both now require an additional filename argument.
+            - Renamed savePDF() to save(), with the old name kept as a
+              deprecated alias.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really

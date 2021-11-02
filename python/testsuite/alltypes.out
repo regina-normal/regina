@@ -13,6 +13,9 @@ Equality type : EqualityType.BY_VALUE
 AngleStructures : class
 Equality type : EqualityType.BY_REFERENCE
 
+Attachment : class
+Equality type : EqualityType.BY_REFERENCE
+
 AugTriSolidTorus : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1474,8 +1477,7 @@ Equality type : EqualityType.BY_REFERENCE
 NotImplemented : class
 Exception type
 
-PDF : class
-Equality type : EqualityType.BY_REFERENCE
+PDF : typedef ->  Attachment
 
 Packet : class
 Equality type : EqualityType.BY_REFERENCE

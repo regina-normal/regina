@@ -181,16 +181,16 @@ TEST: regconvert -2 @TESTDIR@/tiny.rga
 <packet type="Text" typeid="2"
 	label="Read Me">
   <text>Welcome to Regina!</text>
-<packet type="PDF" typeid="10"
-	label="Empty PDF">
+<packet type="Attachment" typeid="10"
+	label="Empty Attachment">
   <pdf encoding="null"></pdf>
-</packet> <!-- Empty PDF (PDF) -->
-<packet type="PDF" typeid="10"
+</packet> <!-- Empty Attachment (Attachment) -->
+<packet type="Attachment" typeid="10"
 	label="Dummy PDF">
   <pdf encoding="base64">
 dGVzdAo=
   </pdf>
-</packet> <!-- Dummy PDF (PDF) -->
+</packet> <!-- Dummy PDF (Attachment) -->
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
@@ -442,16 +442,16 @@ Output (compressed):
 <packet type="Text" typeid="2"
 	label="Read Me">
   <text>Welcome to Regina!</text>
-<packet type="PDF" typeid="10"
+<packet type="Attachment" typeid="10"
 	label="Empty PDF">
   <pdf encoding="null"></pdf>
-</packet> <!-- Empty PDF (PDF) -->
-<packet type="PDF" typeid="10"
+</packet> <!-- Empty PDF (Attachment) -->
+<packet type="Attachment" typeid="10"
 	label="Dummy PDF">
   <pdf encoding="base64">
 dGVzdAo=
   </pdf>
-</packet> <!-- Dummy PDF (PDF) -->
+</packet> <!-- Dummy PDF (Attachment) -->
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
@@ -701,16 +701,16 @@ Output (compressed):
 <packet type="Text" typeid="2"
 	label="Read Me">
   <text>Welcome to Regina!</text>
-<packet type="PDF" typeid="10"
-	label="Empty PDF">
+<packet type="Attachment" typeid="10"
+	label="Empty Attachment">
   <pdf encoding="null"></pdf>
-</packet> <!-- Empty PDF (PDF) -->
-<packet type="PDF" typeid="10"
+</packet> <!-- Empty Attachment (Attachment) -->
+<packet type="Attachment" typeid="10"
 	label="Dummy PDF">
   <pdf encoding="base64">
 dGVzdAo=
   </pdf>
-</packet> <!-- Dummy PDF (PDF) -->
+</packet> <!-- Dummy PDF (Attachment) -->
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
@@ -954,16 +954,16 @@ TEST: regconvert -2 -u @TESTDIR@/tiny-v2.rga
 <packet type="Text" typeid="2"
 	label="Read Me">
   <text>Welcome to Regina!</text>
-<packet type="PDF" typeid="10"
+<packet type="Attachment" typeid="10"
 	label="Empty PDF">
   <pdf encoding="null"></pdf>
-</packet> <!-- Empty PDF (PDF) -->
-<packet type="PDF" typeid="10"
+</packet> <!-- Empty PDF (Attachment) -->
+<packet type="Attachment" typeid="10"
 	label="Dummy PDF">
   <pdf encoding="base64">
 dGVzdAo=
   </pdf>
-</packet> <!-- Dummy PDF (PDF) -->
+</packet> <!-- Dummy PDF (Attachment) -->
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">
@@ -1215,16 +1215,16 @@ Output:
 <packet type="Text" typeid="2"
 	label="Read Me">
   <text>Welcome to Regina!</text>
-<packet type="PDF" typeid="10"
-	label="Empty PDF">
+<packet type="Attachment" typeid="10"
+	label="Empty Attachment">
   <pdf encoding="null"></pdf>
-</packet> <!-- Empty PDF (PDF) -->
-<packet type="PDF" typeid="10"
+</packet> <!-- Empty Attachment (Attachment) -->
+<packet type="Attachment" typeid="10"
 	label="Dummy PDF">
   <pdf encoding="base64">
 dGVzdAo=
   </pdf>
-</packet> <!-- Dummy PDF (PDF) -->
+</packet> <!-- Dummy PDF (Attachment) -->
 </packet> <!-- Read Me (Text) -->
 <packet type="Container" typeid="1"
 	label="3-Manifolds and Links" id="_">

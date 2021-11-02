@@ -9,6 +9,7 @@
 <!ENTITY data-angles SYSTEM "data-angles.docbook">
 <!ENTITY data-anon SYSTEM "data-anon.docbook">
 <!ENTITY data-anonref SYSTEM "data-anonref.docbook">
+<!ENTITY data-attachment SYSTEM "data-attachment.docbook">
 <!ENTITY data-code SYSTEM "data-code.docbook">
 <!ENTITY data-compact-filter SYSTEM "data-compact-filter.docbook">
 <!ENTITY data-compact-surface SYSTEM "data-compact-surface.docbook">
@@ -61,7 +62,6 @@
 <!ENTITY data-pent SYSTEM "data-pent.docbook">
 <!ENTITY data-pentachora SYSTEM "data-pentachora.docbook">
 <!ENTITY data-pdf SYSTEM "data-pdf.docbook">
-<!ENTITY data-pdfdata SYSTEM "data-pdfdata.docbook">
 <!ENTITY data-realbdry-filter SYSTEM "data-realbdry-filter.docbook">
 <!ENTITY data-realbdry-surface SYSTEM "data-realbdry-surface.docbook">
 <!ENTITY data-regina SYSTEM "data-regina.docbook">
@@ -213,8 +213,8 @@
  '<link linkend="data-pentachora"><sgmltag>pentachora</sgmltag></link>'>
 <!ENTITY xml-pdf
  '<link linkend="data-pdf"><sgmltag>pdf</sgmltag></link>'>
-<!ENTITY xml-pdfdata
- '<link linkend="data-pdfdata"><sgmltag>pdfdata</sgmltag></link>'>
+<!ENTITY xml-attachment
+ '<link linkend="data-attachment"><sgmltag>attachment</sgmltag></link>'>
 <!ENTITY xml-realbdry-filter
  '<link linkend="data-realbdry-filter"><sgmltag>realbdry</sgmltag> (filter)</link>'>
 <!ENTITY xml-realbdry-surface

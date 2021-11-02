@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>packet (&pdf;)</refname>
-  <refpurpose>Replaced by &xml-pdfdata;</refpurpose>
+  <refpurpose>Replaced by &xml-attachment;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -48,8 +48,9 @@ packet ::= (&xml-pdf;,
    This page describes how the &xml-packet; element was structured when
    storing a &pdf; packet.
    Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
-   in particular, &pdf; packets are now stored using the
-   &xml-pdfdata; element.
+   in particular, &pdf; packets are now stored using the new
+   &xml-attachment; element (which can also store other types of
+   attachments, not just &pdf; documents).
   </para>
   <para>
    A <emphasis>&pdf;</emphasis> packet stores a single

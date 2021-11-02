@@ -127,13 +127,6 @@ class ReginaPrefSet : public QObject {
         TriGraphType linkInitialGraphType;
             /**< Indicates which graph to initially display in a
                  link viewer.  Must not be DualGraph. */
-        QString pdfExternalViewer;
-            /**< The external program used to view PDFs.
-                 This string may contain
-                 additional arguments for the viewer; the PDF filename will
-                 added to the end (separated by whitespace) and the entire
-                 string will be passed to a shell for interpretation.  If this
-                 is empty, Regina will do its best to find a suitable viewer. */
         bool pythonAutoIndent;
             /**< Should auto-indent be enabled in python consoles? */
         unsigned pythonSpacesPerTab;

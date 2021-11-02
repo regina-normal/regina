@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>pdf</refname>
-  <refpurpose>Replaced by &xml-pdfdata;</refpurpose>
+  <refpurpose>Replaced by &xml-attachment;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -48,7 +48,7 @@ pdf ::= (#PCDATA)</synopsis>
   <para>
    This element was used in the past to store the contents of a &pdf; packet.
    Since &regina;&nbsp;7.0, &pdf; packets now store their content
-   directly in the character data of the &xml-pdfdata; element
+   directly in the character data of an &xml-attachment; element
    (which replaces the old &xml-packet; element for &pdf; packets).
   </para>
   <para>

@@ -108,11 +108,11 @@ File @INVALIDFILE@ could not be read.
 <regina engine="_">
 <container label="Combined Data">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" filename="" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
@@ -302,11 +302,11 @@ File @BADFILE@ could not be read.
 <regina engine="_">
 <container label="Combined Data">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" filename="" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
@@ -498,11 +498,11 @@ Output (compressed):
 <regina engine="_">
 <container label="Combined Data">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" filename="" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
@@ -694,11 +694,11 @@ Output (compressed):
 <regina engine="_">
 <container label="Combined Data">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" filename="" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
@@ -883,11 +883,11 @@ TEST: regconcat @TESTDIR@/tiny.rga
 <regina engine="_">
 <container label="Combined Data">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" filename="" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
@@ -1058,11 +1058,11 @@ TEST: regconcat @TESTDIR@/tiny.rga @TESTDIR@/b5.rga
 <regina engine="_">
 <container label="Combined Data">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" filename="" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
@@ -1253,11 +1253,11 @@ Output (compressed):
 <regina engine="_">
 <container label="Combined Data">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" filename="" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">
@@ -1430,11 +1430,11 @@ Output (compressed):
 <regina engine="_">
 <container label="Combined Data">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" filename="" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="_">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">

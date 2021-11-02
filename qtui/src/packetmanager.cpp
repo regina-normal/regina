@@ -49,6 +49,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "packets/anglesui.h"
+#include "packets/attachmentui.h"
 #include "packets/tri2ui.h"
 #include "packets/tri4ui.h"
 #include "packets/filtercomb.h"
@@ -57,7 +58,6 @@
 #include "packets/containerui.h"
 #include "packets/hyperui.h"
 #include "packets/linkui.h"
-#include "packets/pdfui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
 #include "packets/surfacesui.h"
@@ -82,8 +82,8 @@ QIcon PacketManager::icon(Packet* packet) {
         case PACKET_LINK:
             id = IconCache::packet_link;
             break;
-        case PACKET_PDF :
-            id = IconCache::packet_pdf;
+        case PACKET_ATTACHMENT:
+            id = IconCache::packet_attachment;
             break;
         case PACKET_SURFACEFILTER :
             switch (((SurfaceFilter*)packet)->filterType()) {
@@ -263,8 +263,8 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
 }
 
 PacketExternalViewer PacketManager::externalViewer(regina::Packet* packet) {
-    if (packet->type() == PACKET_PDF)
-        return &PDFExternalViewer::view;
+    if (packet->type() == PACKET_ATTACHMENT)
+        return &AttachmentExternalViewer::view;
     return nullptr;
 }
 

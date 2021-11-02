@@ -1,6 +1,7 @@
 SET ( FILES
   anglescreator.cpp
   anglesui.cpp
+  attachmentui.cpp
   compatcanvas.cpp
   containerui.cpp
   eltmovedialog3.cpp
@@ -24,7 +25,6 @@ SET ( FILES
   linkmovedialog.cpp
   linkpoly.cpp
   linkui.cpp
-  pdfui.cpp
   scriptui.cpp
   skeletonwindow.cpp
   snappeaalgebra.cpp

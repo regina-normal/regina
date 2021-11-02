@@ -18,7 +18,7 @@ Any questions?  Just mail the authors; see Help → About for our email addresse
 Enjoy!
 
 - The Regina development team</textdata>
-<pdfdata encoding="base64" label="LaTeX Document">
+<attachment encoding="base64" filename="welcome.pdf" label="LaTeX Document">
 JVBERi0xLjUKJdDUxdgKNSAwIG9iago8PAovTGVuZ3RoIDExODMgICAgICAKL0ZpbHRlciAvRmxh
 dGVEZWNvZGUKPj4Kc3RyZWFtCnja1Vfdb9s2EH/3X6E+TQJqRvym+rItSINt6IZsM7AO6x5Um0mE
 2lIqyUnz3++OR8lyrazYOgwbDJjk8XgfvzseT+erxdmlMAnnrNBaJKvrREjHlFGJ5Y5pxZPVJvkt
@@ -1803,7 +1803,7 @@ MNWYl6r83500AHwJ9wPCcxACMgkRVGSttkVPdMRAdEVfDMWIPO/s81hQhIQjXBEWDREXEeGLmIgS
 /t0W1EVZJEVKpEVGZEVO5IVHVA42ViAWc0tFYru3VCKO0+COx9NqhXj9L6oS74ulGll1QM7WVpvk
 6mqpJSbkaRm83jb4AQKcEukKZW5kc3RyZWFtCmVuZG9iagpzdGFydHhyZWYKMTAxMjA5CiUlRU9G
 Cg==
-</pdfdata>
+</attachment>
 <container label="3-Manifolds and Knots" id="wAxBn2FVAAA=">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus" id="gKxCn2FVAAA=">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>

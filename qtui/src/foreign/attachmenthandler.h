@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,19 +30,50 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file packet/pdf.h
- *  \brief Deprecated header for packets that contain arbitrary file
- *  attachments.
+/*! \file attachmenthandler.h
+ *  \brief Allows interaction with file attachments.
  */
 
-#ifndef __REGINA_PDF_H
-#ifndef __DOXYGEN
-#define __REGINA_PDF_H
+#ifndef __ATTACHMENTHANDLER_H
+#define __ATTACHMENTHANDLER_H
+
+#include "packetexporter.h"
+#include "packetimporter.h"
+
+/**
+ * An object responsible for importing and exporting file attachments.
+ *
+ * Rather than creating new objects of this class, the globally
+ * available object AttachmentHandler::instance should always be used.
+ */
+class AttachmentHandler : public PacketImporter, public PacketExporter {
+    using PacketExporter::exportData;
+    using PacketImporter::importData;
+    public:
+        /**
+         * A globally available instance of this class.
+         */
+        static const AttachmentHandler instance;
+
+    public:
+        /**
+         * PacketImporter overrides:
+         */
+        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+            ReginaMain* parentWidget) const override;
+
+        /**
+         * PacketExporter overrides:
+         */
+        PacketFilter* canExport() const override;
+        bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const override;
+
+    private:
+        /**
+         * Don't allow people to construct their own attachment handlers.
+         */
+        AttachmentHandler() = default;
+};
+
 #endif
-
-#warning This header is deprecated; please use packet/attachment.h instead.
-
-#include "packet/attachment.h"
-
-#endif
-

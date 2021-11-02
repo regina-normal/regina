@@ -85,9 +85,16 @@ enum PacketType {
      */
     PACKET_ANGLESTRUCTURES = 9,
     /**
-     * Represents a PDF document, of class PDF.
+     * Represents an arbitrary file attachment, of class Attachment.
      */
-    PACKET_PDF = 10,
+    PACKET_ATTACHMENT = 10,
+    /**
+     * A legacy constant that represents a PDF document.  This is stored
+     * using the Attachment class, which can now represent any kind of
+     * file attachment (not just a PDF document).  This legacy constant
+     * PACKET_PDF takes the same value as the new constant PACKET_ATTACHMENT.
+     */
+    PACKET_PDF [[deprecated]] = PACKET_ATTACHMENT,
     /**
      * Represents a normal hypersurface list, of class NormalHypersurfaces.
      */
@@ -200,8 +207,8 @@ class PacketInfo {
                     return "Surface filter";
                 case PACKET_ANGLESTRUCTURES:
                     return "Angle structure list";
-                case PACKET_PDF:
-                    return "PDF";
+                case PACKET_ATTACHMENT:
+                    return "Attachment";
                 case PACKET_NORMALHYPERSURFACES:
                     return "Normal hypersurface list";
                 case PACKET_SNAPPEATRIANGULATION:

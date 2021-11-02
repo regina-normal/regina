@@ -54,7 +54,7 @@ constexpr int PACKET_ANON = -3;
 constexpr int PACKET_ANONREF = -4;
 constexpr int PACKET_TRIANGULATION_ANY = -5;
 constexpr int PACKET_V7_TEXT = -16;
-constexpr int PACKET_V7_PDF = -17;
+constexpr int PACKET_V7_ATTACHMENT = -17;
 constexpr int PACKET_V7_SNAPPEA = -18;
 constexpr int PACKET_V7_SURFACES = -19;
 constexpr int PACKET_V7_HYPERSURFACES = -20;
@@ -64,13 +64,13 @@ constexpr int PACKET_V7_FILTER_COMBINATION = -33;
 constexpr int PACKET_V7_FILTER_PLAIN = -34;
 const std::map<std::string, int> packetXMLTags = {
     { "angles", PACKET_V7_ANGLES },
+    { "attachment", PACKET_V7_ATTACHMENT },
     { "container", PACKET_CONTAINER },
     { "filtercomb", PACKET_V7_FILTER_COMBINATION },
     { "filterplain", PACKET_V7_FILTER_PLAIN },
     { "filterprop", PACKET_V7_FILTER_PROPERTIES },
     { "hypersurfaces", PACKET_V7_HYPERSURFACES },
     { "link", PACKET_LINK },
-    { "pdfdata", PACKET_V7_PDF },
     { "script", PACKET_SCRIPT },
     { "snappeadata", PACKET_V7_SNAPPEA },
     { "surfaces", PACKET_V7_SURFACES },
@@ -221,12 +221,12 @@ XMLElementReader* XMLPacketReader::startSubElement(
             case PACKET_V7_FILTER_PLAIN:
                 return new XMLPlainFilterReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_PDF:
+            case PACKET_ATTACHMENT:
                 return new XMLLegacyPDFReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID));
-            case PACKET_V7_PDF:
-                return new XMLPDFReader(resolver_, packet_, anon_,
-                    std::move(childLabel), std::move(childID));
+            case PACKET_V7_ATTACHMENT:
+                return new XMLAttachmentReader(resolver_, packet_, anon_,
+                    std::move(childLabel), std::move(childID), subTagProps);
             case PACKET_V7_SURFACES:
                 return new XMLNormalSurfacesReader(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), subTagProps);

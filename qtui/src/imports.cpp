@@ -34,11 +34,11 @@
 
 #include "packettreeview.h"
 #include "reginamain.h"
+#include "foreign/attachmenthandler.h"
 #include "foreign/dehydrationhandler.h"
 #include "foreign/importdialog.h"
 #include "foreign/sighandler.h"
 #include "foreign/orbhandler.h"
-#include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
@@ -75,9 +75,9 @@ void ReginaMain::importKnotSig() {
         tr(FILTER_ALL), tr("Import Knot Signature List"));
 }
 
-void ReginaMain::importPDF() {
-    importFile(PDFHandler::instance, nullptr, tr(FILTER_PDF),
-        tr("Import PDF Document"));
+void ReginaMain::importAttachment() {
+    importFile(AttachmentHandler::instance, nullptr, tr(FILTER_ALL),
+        tr("Import File Attachment"));
 }
 
 void ReginaMain::importPython() {

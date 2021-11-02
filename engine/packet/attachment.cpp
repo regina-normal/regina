@@ -31,8 +31,9 @@
  **************************************************************************/
 
 #include <cstdio>
+#include <filesystem>
 #include <sys/stat.h>
-#include "packet/pdf.h"
+#include "packet/attachment.h"
 #include "utilities/base64.h"
 #include "utilities/xmlutils.h"
 
@@ -40,11 +41,12 @@
 
 namespace regina {
 
-PDF::PDF(const char* filename) : data_(nullptr), size_(0), alloc_(OWN_NEW) {
+Attachment::Attachment(const char* pathname) :
+        data_(nullptr), size_(0), alloc_(OWN_NEW) {
     // Use FILE* so we can call fstat().
 
     // Open the file.
-    FILE* in = fopen(filename, "rb");
+    FILE* in = fopen(pathname, "rb");
     if (! in)
         return;
 
@@ -82,9 +84,22 @@ PDF::PDF(const char* filename) : data_(nullptr), size_(0), alloc_(OWN_NEW) {
 
     data_ = data;
     size_ = size;
+    try {
+        filename_ = std::filesystem::path(pathname).filename();
+    } catch (const std::exception&) {
+        filename_.clear();
+    }
 }
 
-void PDF::reset() {
+std::string Attachment::extension() const {
+    try {
+        return std::filesystem::path(filename_).extension();
+    } catch (const std::exception&) {
+        return {};
+    }
+}
+
+void Attachment::reset() {
     ChangeEventSpan span(*this);
 
     if (data_) {
@@ -97,9 +112,11 @@ void PDF::reset() {
     data_ = nullptr;
     size_ = 0;
     alloc_ = OWN_NEW;
+    filename_.clear();
 }
 
-void PDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
+void Attachment::reset(char* data, size_t size, OwnershipPolicy alloc,
+        std::string filename) {
     ChangeEventSpan span(*this);
 
     // Out with the old data.
@@ -126,16 +143,18 @@ void PDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
         size_ = 0;
         alloc_ = OWN_NEW;
     }
+
+    filename_ = std::move(filename);
 }
 
-bool PDF::savePDF(const char* filename) const {
+bool Attachment::save(const char* pathname) const {
     if (! data_)
         return false;
 
-    // Use FILE* for symmetry with the PDF load routine.
+    // Use FILE* for symmetry with the file load routine.
 
     // Open the file.
-    FILE* out = fopen(filename, "wb");
+    FILE* out = fopen(pathname, "wb");
     if (!out)
         return false;
 
@@ -150,7 +169,7 @@ bool PDF::savePDF(const char* filename) const {
     return true;
 }
 
-void PDF::writeXMLPacketData(std::ostream& out, FileFormat format,
+void Attachment::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
     char* base64 = nullptr;
     size_t len64 = 0;
@@ -159,19 +178,20 @@ void PDF::writeXMLPacketData(std::ostream& out, FileFormat format,
         len64 = base64Encode(data_, size_, &base64);
 
     if (! base64) {
-        // Either we have an empty PDF packet, or the base64 conversion failed.
-        writeXMLHeader(out, "pdfdata", format, anon, refs, true,
-            std::pair("encoding", "null"));
+        // Either we have an empty attachment, or the base64 conversion failed.
+        writeXMLHeader(out, "attachment", format, anon, refs, true,
+            std::pair("encoding", "null"), std::pair("filename", ""));
         if (format == REGINA_XML_GEN_2)
             out << "  <pdf encoding=\"null\"></pdf>\n";
         if (! anon)
             writeXMLTreeData(out, format, refs);
-        writeXMLFooter(out, "pdfdata", format);
+        writeXMLFooter(out, "attachment", format);
         return;
     }
 
-    writeXMLHeader(out, "pdfdata", format, anon, refs, true,
-        std::pair("encoding", "base64"));
+    writeXMLHeader(out, "attachment", format, anon, refs, true,
+        std::pair("encoding", "base64"),
+        std::pair("filename", regina::xml::xmlEncodeSpecialChars(filename_)));
     if (format == REGINA_XML_GEN_2)
         out << "  <pdf encoding=\"base64\">\n";
 
@@ -192,7 +212,7 @@ void PDF::writeXMLPacketData(std::ostream& out, FileFormat format,
         out << "  </pdf>\n";
     if (! anon)
         writeXMLTreeData(out, format, refs);
-    writeXMLFooter(out, "pdfdata", format);
+    writeXMLFooter(out, "attachment", format);
 
     delete[] base64;
 }

@@ -34,9 +34,9 @@
 
 #include "packettreeview.h"
 #include "reginamain.h"
+#include "foreign/attachmenthandler.h"
 #include "foreign/csvsurfacehandler.h"
 #include "foreign/exportdialog.h"
-#include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/recogniserhandler.h"
 #include "foreign/reginahandler.h"
@@ -52,9 +52,9 @@ void ReginaMain::exportCSVSurfaceList() {
         tr("Export CSV Surface List"));
 }
 
-void ReginaMain::exportPDF() {
-    exportFile(PDFHandler::instance, tr(FILTER_PDF),
-        tr("Export PDF Document"));
+void ReginaMain::exportAttachment() {
+    exportFile(AttachmentHandler::instance, tr(FILTER_ALL),
+        tr("Export Attachment"));
 }
 
 void ReginaMain::exportPython() {

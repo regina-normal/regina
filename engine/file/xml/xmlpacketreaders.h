@@ -41,8 +41,8 @@
 
 #include "regina-core.h"
 #include "file/xml/xmlpacketreader.h"
+#include "packet/attachment.h"
 #include "packet/container.h"
-#include "packet/pdf.h"
 #include "packet/script.h"
 #include "packet/text.h"
 
@@ -112,43 +112,45 @@ class XMLContainerReader : public XMLPacketReader {
 };
 
 /**
- * An XML packet reader that reads a single PDF packet.
+ * An XML packet reader that reads a single file attachment.
  *
  * \ifacespython Not present.
  */
-class XMLPDFReader : public XMLPacketReader {
+class XMLAttachmentReader : public XMLPacketReader {
     private:
-        std::shared_ptr<PDF> pdf;
-            /**< The PDF packet currently being read. */
+        std::string filename;
+            /**< The name of the file attachment. */
+        std::shared_ptr<Attachment> attachment;
+            /**< The file attachment currently being read. */
 
     public:
         /**
-         * Creates a new PDF reader.
+         * Creates a new attachment reader.
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLPDFReader(XMLTreeResolver& resolver,
+        XMLAttachmentReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
-            std::string id);
+            std::string id, const regina::xml::XMLPropertyDict& props);
 
         std::shared_ptr<Packet> packetToCommit() override;
         void initialChars(const std::string& chars) override;
 };
 
 /**
- * An XML packet reader that reads a single PDF packet using the
+ * An XML packet reader that reads a single PDF attachment using the
  * older second-generation file format.
  *
  * \ifacespython Not present.
  */
 class XMLLegacyPDFReader : public XMLPacketReader {
     private:
-        std::shared_ptr<PDF> pdf;
-            /**< The PDF packet currently being read. */
+        std::shared_ptr<Attachment> pdf;
+            /**< The PDF attachment currently being read. */
 
     public:
         /**
-         * Creates a new PDF reader.
+         * Creates a new PDF attachment reader.
          *
          * All parameters are the same as for the parent class XMLPacketReader.
          */
@@ -262,18 +264,19 @@ inline std::shared_ptr<Packet> XMLContainerReader::packetToCommit() {
     return container;
 }
 
-// Inline functions for XMLPDFReader
+// Inline functions for XMLAttachmentReader
 
-inline XMLPDFReader::XMLPDFReader(
+inline XMLAttachmentReader::XMLAttachmentReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
-        std::string label, std::string id) :
+        std::string label, std::string id,
+        const regina::xml::XMLPropertyDict& props) :
         XMLPacketReader(res, std::move(parent), anon, std::move(label),
             std::move(id)),
-        pdf(new PDF()) {
+        filename(props.lookup("filename")), attachment(new Attachment()) {
 }
 
-inline std::shared_ptr<Packet> XMLPDFReader::packetToCommit() {
-    return pdf;
+inline std::shared_ptr<Packet> XMLAttachmentReader::packetToCommit() {
+    return attachment;
 }
 
 // Inline functions for XMLLegacyPDFReader
@@ -283,7 +286,7 @@ inline XMLLegacyPDFReader::XMLLegacyPDFReader(
         std::string label, std::string id) :
         XMLPacketReader(res, std::move(parent), anon, std::move(label),
             std::move(id)),
-        pdf(new PDF()) {
+        pdf(new Attachment()) {
 }
 
 inline std::shared_ptr<Packet> XMLLegacyPDFReader::packetToCommit() {

@@ -53,6 +53,7 @@
  &data-angles;
  &data-anon;
  &data-anonref;
+ &data-attachment;
  &data-code;
  &data-compact-surface;
  &data-components;
@@ -77,7 +78,6 @@
  &data-irreducible;
  &data-link;
  &data-orbl-surface;
- &data-pdfdata;
  &data-realbdry-surface;
  &data-regina;
  &data-reln;

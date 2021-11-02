@@ -165,24 +165,24 @@ Welcome to Regina!
 
 ************************************************************
 *
-* Label: Empty PDF
-* Type: PDF
+* Label: Empty Attachment
+* Type: Attachment
 * Parent: Read Me
 *
 ************************************************************
 
-PDF packet (0 bytes)
+Attachment (0 bytes)
 
 
 ************************************************************
 *
 * Label: Dummy PDF
-* Type: PDF
+* Type: Attachment
 * Parent: Read Me
 *
 ************************************************************
 
-PDF packet (5 bytes)
+Attachment (5 bytes): dummy.pdf
 
 
 ************************************************************
@@ -697,24 +697,24 @@ Welcome to Regina!
 
 ************************************************************
 *
-* Label: Empty PDF
-* Type: PDF
+* Label: Empty Attachment
+* Type: Attachment
 * Parent: Read Me
 *
 ************************************************************
 
-PDF packet (0 bytes)
+Attachment (0 bytes)
 
 
 ************************************************************
 *
 * Label: Dummy PDF
-* Type: PDF
+* Type: Attachment
 * Parent: Read Me
 *
 ************************************************************
 
-PDF packet (5 bytes)
+Attachment (5 bytes): dummy.pdf
 
 
 ************************************************************
@@ -1209,8 +1209,8 @@ TEST: regfiledump -l @TESTDIR@/tiny.rga
 --------------------
 Sample Data File (Container)
 Read Me (Text)
-Empty PDF (PDF)
-Dummy PDF (PDF)
+Empty Attachment (Attachment)
+Dummy PDF (Attachment)
 3-Manifolds and Links (Container)
 Layered Solid Torus (3-D triangulation)
 RP² x S¹ (3-D triangulation)
@@ -1240,8 +1240,8 @@ TEST: regfiledump -l -c @TESTDIR@/tiny.rga
 --------------------
 Sample Data File (Container)
 Read Me (Text)
-Empty PDF (PDF)
-Dummy PDF (PDF)
+Empty Attachment (Attachment)
+Dummy PDF (Attachment)
 3-Manifolds and Links (Container)
 Layered Solid Torus (3-D triangulation)
 RP² x S¹ (3-D triangulation)

@@ -196,22 +196,22 @@ void ReginaMain::setupActions() {
     importMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("&PDF Document"));
-    act->setIcon(IconCache::icon(IconCache::packet_pdf));
-    act->setToolTip(tr("Import a PDF document"));
-    act->setWhatsThis(tr("Import an external PDF document as a new PDF "
-        "packet in this tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importPDF()) );
-    treeGeneralEditActions.push_back(act);
-    importMenu->addAction(act);
-
-    act = new QAction(this);
     act->setText(tr("P&ython Script"));
     act->setIcon(IconCache::icon(IconCache::packet_script));
     act->setToolTip(tr("Import a Python script"));
     act->setWhatsThis(tr("Import an external Python file as a new script "
         "packet in this tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importPython()) );
+    treeGeneralEditActions.push_back(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Attachment"));
+    act->setIcon(IconCache::icon(IconCache::packet_attachment));
+    act->setToolTip(tr("Import a file attachment"));
+    act->setWhatsThis(tr("Import an external file as a new attachment "
+        "in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importAttachment()) );
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -285,21 +285,21 @@ void ReginaMain::setupActions() {
     exportMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("&PDF Document"));
-    act->setIcon(IconCache::icon(IconCache::packet_pdf));
-    act->setToolTip(tr("Export a PDF document"));
-    act->setWhatsThis(tr("Export a PDF packet from this packet tree "
-        "to a separate PDF document."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportPDF()) );
-    exportMenu->addAction(act);
-
-    act = new QAction(this);
     act->setText(tr("P&ython Script"));
     act->setIcon(IconCache::icon(IconCache::packet_script));
     act->setToolTip(tr("Export a Python script"));
     act->setWhatsThis(tr("Export a script packet from this packet tree "
         "to a separate Python file."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Attachment"));
+    act->setIcon(IconCache::icon(IconCache::packet_attachment));
+    act->setToolTip(tr("Export a file attachment"));
+    act->setWhatsThis(tr("Export an attachment from this packet tree "
+        "to an external file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportAttachment()) );
     exportMenu->addAction(act);
 
     fileMenu->addSeparator();
@@ -365,7 +365,7 @@ void ReginaMain::setupActions() {
     treeMenu->addAction(actContainer);
 
     auto* actTriangulation2 = new QAction(this);
-    actTriangulation2->setText(tr("New 2-D &Triangulation"));
+    actTriangulation2->setText(tr("New &2-D Triangulation"));
     actTriangulation2->setIcon(IconCache::icon(
         IconCache::packet_triangulation2));
     actTriangulation2->setShortcut(tr("Alt+2"));
@@ -494,16 +494,16 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.push_back(actScript);
     treeMenu->addAction(actScript);
 
-    auto* actPDF = new QAction(this);
-    actPDF->setText(tr("New &PDF Document"));
-    actPDF->setIcon(IconCache::icon(IconCache::packet_pdf));
-    actPDF->setShortcut(tr("Alt+p"));
-    actPDF->setToolTip(tr("New PDF document"));
-    actPDF->setWhatsThis(tr("Create a new PDF packet containing a copy of "
-        "an external PDF document."));
-    connect(actPDF, SIGNAL(triggered()), this, SLOT(newPDF()) );
-    treeGeneralEditActions.push_back(actPDF);
-    treeMenu->addAction(actPDF);
+    auto* actAttachment = new QAction(this);
+    actAttachment->setText(tr("New Attachment"));
+    actAttachment->setIcon(IconCache::icon(IconCache::packet_attachment));
+    actAttachment->setShortcut(tr("Alt++"));
+    actAttachment->setToolTip(tr("New file attachment"));
+    actAttachment->setWhatsThis(tr("Create a new attachment that "
+        "contains a copy of an external file."));
+    connect(actAttachment, SIGNAL(triggered()), this, SLOT(newAttachment()) );
+    treeGeneralEditActions.push_back(actAttachment);
+    treeMenu->addAction(actAttachment);
 
     treeMenu->addSeparator();
 
@@ -822,6 +822,6 @@ void ReginaMain::setupActions() {
 
     // Leave some packets out of the toolbar (they are still available
     // through the menus).
-    // toolBarPacket->addAction(actPDF);
+    // toolBarPacket->addAction(actAttachment);
 }
 

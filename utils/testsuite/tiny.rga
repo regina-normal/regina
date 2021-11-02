@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <regina engine="7.0">
 <container label="Sample Data File">
-<textdata label="Read Me">Welcome to Regina!<pdfdata encoding="null" label="Empty PDF">
-</pdfdata>
-<pdfdata encoding="base64" label="Dummy PDF">
+<textdata label="Read Me">Welcome to Regina!<attachment encoding="null" label="Empty Attachment">
+</attachment>
+<attachment encoding="base64" filename="dummy.pdf" label="Dummy PDF">
 dGVzdAo=
-</pdfdata>
+</attachment>
 </textdata>
 <container label="3-Manifolds and Links" id="cNBrz1dVAAA=">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus">

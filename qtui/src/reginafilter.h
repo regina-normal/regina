@@ -56,12 +56,6 @@
     QT_TR_NOOP("Python Libraries (*.py);;All Files (*)")
 
 /**
- * Filename filter for PDF documents.
- */
-#define FILTER_PDF \
-    QT_TR_NOOP("PDF Documents (*.pdf);;All Files (*)")
-
-/**
  * Filename filter for Python scripts.
  */
 #define FILTER_PYTHON_SCRIPTS \

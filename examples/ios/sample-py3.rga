@@ -14,7 +14,7 @@ Any questions?  Just mail the authors; see the website regina-normal.github.io f
 Enjoy!
 
 - The Regina development team</textdata>
-<pdfdata encoding="base64" label="LaTeX document">
+<attachment encoding="base64" filename="welcome.pdf" label="LaTeX Document">
 JVBERi0xLjUKJdDUxdgKNSAwIG9iago8PAovTGVuZ3RoIDkxNCAgICAgICAKL0ZpbHRlciAvRmxh
 dGVEZWNvZGUKPj4Kc3RyZWFtCnja1VZLj9s2EL77Vyg3Cqi4fD9yabvYLpqeksJACzQ9aC3uWoge
 iSTHyL/v8CGvvBYSpAmCBAbMITkznG9mRH7X283VLVUZpdhKybLtfca4wUKJTFODpaDZtsr+QX/l
@@ -1885,7 +1885,7 @@ SCIRqCJANiuR2IOFmERKn5v86n+r7v2qPgB4Ec4DhPdEDHCzIhojVJ9iKPriWwzEl/gRv2JEHvd2
 EQqKmHBEXCTEh8iIpKiLtEgR/sYeaItA5EReFERRuMITJVEWFSJY2W2VmIRWNWK2sPKJdS/60elq
 Y4O4w6pJ/J+tWqTrgQznNnbI6cWqSy5vVj0xJg/baO9vhzekBRZFCmVuZHN0cmVhbQplbmRvYmoK
 c3RhcnR4cmVmCjEwNjEyMQolJUVPRgo=
-</pdfdata>
+</attachment>
 <container label="3-Manifolds and Knots" id="4FK8oGhVAAA=">
 <tri dim="3" size="4" perm="index" label="Layered Solid Torus" id="cFa8oGhVAAA=">
   <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>

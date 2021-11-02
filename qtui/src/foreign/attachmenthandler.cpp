@@ -30,21 +30,56 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file pdfui.h
- *  \brief Provides an interface for viewing PDF packets.
- */
+#include "packet/attachment.h"
 
-#ifndef __PDFUI_H
-#define __PDFUI_H
+#include "attachmenthandler.h"
+#include "reginamain.h"
+#include "reginasupport.h"
+#include "../packetfilter.h"
 
-#include "packetui.h"
+#include <QFile>
+#include <QTextDocument>
 
-/**
- * An external viewer for PDF packets.
- */
-class PDFExternalViewer {
-    public:
-        static void view(regina::Packet* packet, QWidget* parentWidget);
-};
+const AttachmentHandler AttachmentHandler::instance;
 
-#endif
+std::shared_ptr<regina::Packet> AttachmentHandler::importData(
+        const QString& fileName, ReginaMain* parentWidget) const {
+    std::shared_ptr<regina::Attachment> ans =
+        std::make_shared<regina::Attachment>(
+        static_cast<const char*>(QFile::encodeName(fileName)));
+    if (ans->isNull()) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
+            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
+            "is readable and non-empty.</qt>").arg(fileName.toHtmlEscaped()));
+        return nullptr;
+    } else
+        ans->setLabel(ans->filename());
+    return ans;
+}
+
+PacketFilter* AttachmentHandler::canExport() const {
+    return new SingleTypeFilter<regina::Attachment>();
+}
+
+bool AttachmentHandler::exportData(std::shared_ptr<regina::Packet> data,
+        const QString& fileName, QWidget* parentWidget) const {
+    auto att = std::dynamic_pointer_cast<regina::Attachment>(data);
+    if (! att->data()) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("This attachment is empty."),
+            QObject::tr("I can only export packets that contain "
+                "non-empty file attachments."));
+        return false;
+    }
+    if (! att->save(static_cast<const char*>(QFile::encodeName(fileName)))) {
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."), 
+            QObject::tr("<qt>An unknown error occurred, probably related "
+            "to file I/O.  Please check that you have permissions to write "
+            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
+        return false;
+    }
+    return true;
+}
+
