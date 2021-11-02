@@ -318,7 +318,7 @@
         self.title = [NSString stringWithUTF8String:packet->label().c_str()];
 }
 
-- (void)packetToBeDestroyed:(regina::PacketShell)packet
+- (void)packetBeingDestroyed:(regina::PacketShell)packet
 {
     // TODO: Check that this works via python.
     if (packet == self.packet)

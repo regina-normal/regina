@@ -214,7 +214,7 @@ GluingPermSearcher<4>::GluingPermSearcher(
     order_ = new FacetSpec<4>[(nPent * 5) / 2];
     orderElt_ = orderSize_ = 0;
 
-    FacetSpec<4> facet, adj;
+    FacetSpec<4> facet;
     for (facet.setFirst(); ! facet.isPastEnd(nPent, true); facet++)
         if (! perms_.pairing().isUnmatched(facet))
             if (facet < perms_.pairing().dest(facet))

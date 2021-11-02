@@ -137,7 +137,7 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
          */
         void packetToBeChanged(regina::Packet*) override;
         void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
         /**
          * Some ready-made cusp filters.
@@ -207,7 +207,7 @@ inline void CuspChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void CuspChooser::packetToBeDestroyed(regina::PacketShell) {
+inline void CuspChooser::packetBeingDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }

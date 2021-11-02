@@ -40,7 +40,7 @@ class Watcher(PacketListener):
         print('RENAMING: ' + packet.label())
     def packetWasRenamed(self, packet):
         print('RENAMED: ' + packet.label())
-    def packetToBeDestroyed(self, packet):
+    def packetBeingDestroyed(self, packet):
         print('DESTROYING: ' + packet.label())
     def childToBeAdded(self, packet, child):
         print('ADDING CHILD: ' + packet.label() + ' -> ' + child.label())

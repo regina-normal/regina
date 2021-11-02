@@ -43,4 +43,5 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addCallbacks(CppUnit::TextUi::TestRunner& runner);
+void addListeners(CppUnit::TextUi::TestRunner& runner);
 

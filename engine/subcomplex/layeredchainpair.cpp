@@ -57,9 +57,6 @@ std::unique_ptr<LayeredChainPair> LayeredChainPair::recognise(
     // Start with tetrahedron 0.  This must belong to *some* chain.
     Tetrahedron<3>* base = comp->tetrahedron(0);
 
-    LayeredChain* first;
-    LayeredChain* second;
-
     // Note that we only need check permutations in S3 since we can
     // arbitrarily assign the role of one vertex in the tetrahedron.
     Tetrahedron<3>* firstBottom;

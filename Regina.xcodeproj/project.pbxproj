@@ -1190,7 +1190,6 @@
 		05754CF8258D7D6F00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CE6258D7D6400236ED7 /* randutils.cpp */; };
 		05754D18258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
 		05754D19258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
-		05754D78258EF09C00236ED7 /* libpython2.7.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05754D77258EF07600236ED7 /* libpython2.7.tbd */; };
 		05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05754E73258F92CA00236ED7 /* Assets.xcassets */; };
 		05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
 		05754F662590F0A400236ED7 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
@@ -1492,10 +1491,14 @@
 		05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */; };
 		05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */; };
 		05937B2319CF819C00160F9A /* PacketTabBarController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937B2219CF819C00160F9A /* PacketTabBarController.mm */; };
+		05941EF9272A9E3500562586 /* elidedlabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05941EF7272A9E3500562586 /* elidedlabel.cpp */; };
+		05941EFA272A9E8600562586 /* elidedlabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 05941EF8272A9E3500562586 /* elidedlabel.h */; };
 		059474E61F98151700F04273 /* SnapPea.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474E41F98151600F04273 /* SnapPea.storyboard */; };
 		059474EE1F981E5700F04273 /* Tri2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F01F981E5700F04273 /* Tri2.storyboard */; };
 		059474F11F981F0300F04273 /* Tri3.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F31F981F0300F04273 /* Tri3.storyboard */; };
 		059474F41F981F1800F04273 /* Tri4.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F61F981F1800F04273 /* Tri4.storyboard */; };
+		0594AC22272AD73500A03372 /* listeners.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0594AC21272AD72F00A03372 /* listeners.cpp */; };
+		0594AC23272AD73600A03372 /* listeners.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0594AC21272AD72F00A03372 /* listeners.cpp */; };
 		059802DD26683C6D002D5D57 /* xmlsnappeareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802BD26683C6D002D5D57 /* xmlsnappeareader.h */; };
 		059802DE26683C6D002D5D57 /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802BF26683C6D002D5D57 /* xmlsurfacereader.cpp */; };
 		059802DF26683C6D002D5D57 /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C026683C6D002D5D57 /* xmlhypersurfacereader.cpp */; };
@@ -1756,6 +1759,8 @@
 		05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
 		05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */; };
 		05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
+		05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; };
+		05B0E18D259AAFCB000B62A3 /* Python3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
 		05B1EF181C54299C008E7B49 /* boundary4chooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B1EF141C542991008E7B49 /* boundary4chooser.cpp */; };
 		05B22D0F22D486200099008B /* pysage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0A22D485ED0099008B /* pysage.cpp */; };
@@ -2391,6 +2396,7 @@
 				057EDBC02581EA9D004F0068 /* libgmpxx.xcframework in Embed Frameworks */,
 				057EDA032581BC16004F0068 /* libgmp.xcframework in Embed Frameworks */,
 				057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */,
+				05B0E18D259AAFCB000B62A3 /* Python3.framework in Embed Frameworks */,
 				057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */,
 				057EDBD22581EAA4004F0068 /* jansson.xcframework in Embed Frameworks */,
 				057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */,
@@ -4007,10 +4013,13 @@
 		05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewHeaderCell.m; sourceTree = "<group>"; };
 		05937B2119CF819C00160F9A /* PacketTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTabBarController.h; sourceTree = "<group>"; };
 		05937B2219CF819C00160F9A /* PacketTabBarController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTabBarController.mm; sourceTree = "<group>"; };
+		05941EF7272A9E3500562586 /* elidedlabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = elidedlabel.cpp; sourceTree = "<group>"; };
+		05941EF8272A9E3500562586 /* elidedlabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elidedlabel.h; sourceTree = "<group>"; };
 		059474E51F98151700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SnapPea.storyboard; sourceTree = "<group>"; };
 		059474EF1F981E5700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri2.storyboard; sourceTree = "<group>"; };
 		059474F21F981F0300F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri3.storyboard; sourceTree = "<group>"; };
 		059474F51F981F1800F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri4.storyboard; sourceTree = "<group>"; };
+		0594AC21272AD72F00A03372 /* listeners.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = listeners.cpp; sourceTree = "<group>"; };
 		059802752667067A002D5D57 /* callbacks.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = callbacks.test; sourceTree = "<group>"; };
 		059802762667067B002D5D57 /* callbacks.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = callbacks.out; sourceTree = "<group>"; };
 		059802772667067B002D5D57 /* presentations.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = presentations.out; sourceTree = "<group>"; };
@@ -4620,6 +4629,7 @@
 			files = (
 				057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */,
 				057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */,
+				05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */,
 				057EDBD12581EAA4004F0068 /* jansson.xcframework in Frameworks */,
 				057ED8F22581B49E004F0068 /* QtPrintSupport.framework in Frameworks */,
 				057EDBAD2581EA83004F0068 /* libtokyocabinet.xcframework in Frameworks */,
@@ -4633,7 +4643,6 @@
 				057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */,
 				05E0F1532582426400965440 /* libxml2.tbd in Frameworks */,
 				05E0F1432582426100965440 /* libz.tbd in Frameworks */,
-				05754D78258EF09C00236ED7 /* libpython2.7.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5427,6 +5436,7 @@
 			children = (
 				051FD39327257A9E00B3F60F /* callbacks.cpp */,
 				051FD39227257A9E00B3F60F /* CMakeLists.txt */,
+				0594AC21272AD72F00A03372 /* listeners.cpp */,
 				051FD39127257A9E00B3F60F /* testmisc.h */,
 			);
 			path = misc;
@@ -6677,6 +6687,8 @@
 				0564A4201811D91E002CC2AE /* coordinates.h */,
 				05A73CD319B2F2040099C617 /* edittableview.h */,
 				05A73CD419B2F2040099C617 /* edittreeview.h */,
+				05941EF7272A9E3500562586 /* elidedlabel.cpp */,
+				05941EF8272A9E3500562586 /* elidedlabel.h */,
 				0564A4211811D91E002CC2AE /* eventids.h */,
 				0564A4221811D91E002CC2AE /* examplesaction.cpp */,
 				0564A4231811D91E002CC2AE /* examplesaction.h */,
@@ -8269,7 +8281,7 @@
 		0575E6511805F36D009E3FC4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = "Regina Development Team";
 				TargetAttributes = {
 					050F5CDC1B9BAAAA00C1F681 = {
@@ -9000,6 +9012,7 @@
 				052FA11A1806088B00FAE4DF /* homologicaldata.cpp in Sources */,
 				05431F981C40F527009BC072 /* perm2.cpp in Sources */,
 				052FA11E1806088B00FAE4DF /* bitmask.cpp in Sources */,
+				0594AC23272AD73600A03372 /* listeners.cpp in Sources */,
 				05754CC2258B38C100236ED7 /* laurent2.cpp in Sources */,
 				0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */,
 				052FA11D1806088B00FAE4DF /* base64.cpp in Sources */,
@@ -9378,6 +9391,7 @@
 				05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */,
 				05CB9FFA1F9EA3CF002ECB18 /* LinkMoves.mm in Sources */,
 				0503DCD819B7E3AD0085F3CC /* DocumentListController.mm in Sources */,
+				0594AC22272AD73500A03372 /* listeners.cpp in Sources */,
 				0542090E1DF0DA450018AB24 /* sfs.cpp in Sources */,
 				05249EAD1DBC16B3001FE29E /* pyalgebra.cpp in Sources */,
 				05A73C8D19B2EF130099C617 /* homology.cpp in Sources */,
@@ -9848,6 +9862,7 @@
 				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
+				05941EFA272A9E8600562586 /* elidedlabel.h in Sources */,
 				0591E83F1C4F769100793A9C /* tri4algebra.cpp in Sources */,
 				0591E8441C4F772B00793A9C /* tri4algebra.h in Sources */,
 				0591E8461C4F773500793A9C /* tri4gluings.h in Sources */,
@@ -9927,6 +9942,7 @@
 				0543AEC31811E12A002758F8 /* reginamanager.h in Sources */,
 				0543AEC41811E12A002758F8 /* reginapref.h in Sources */,
 				0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */,
+				05941EF9272A9E3500562586 /* elidedlabel.cpp in Sources */,
 				0543AEC61811E12A002758F8 /* shortrunner.h in Sources */,
 				0564A95F1811D921002CC2AE /* filtercreator.cpp in Sources */,
 				0564A9561811D921002CC2AE /* compatcanvas.cpp in Sources */,
@@ -10579,7 +10595,7 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					/usr/include/python2.7,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				MACH_O_TYPE = mh_bundle;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -10622,7 +10638,7 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					/usr/include/python2.7,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				MACH_O_TYPE = mh_bundle;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11379,6 +11395,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Qt/5.15.2-macos/lib",
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11400,7 +11417,7 @@
 					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
 					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
 					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
-					/usr/include/python2.7,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
@@ -11410,7 +11427,7 @@
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
-				REGINA_PYTHON_FRAMEWORK = "";
+				REGINA_PYTHON_FRAMEWORK = Python3;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -11432,6 +11449,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Qt/5.15.2-macos/lib",
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11451,7 +11469,7 @@
 					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
 					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
 					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
-					/usr/include/python2.7,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
@@ -11461,7 +11479,7 @@
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
-				REGINA_PYTHON_FRAMEWORK = "";
+				REGINA_PYTHON_FRAMEWORK = Python3;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -11475,7 +11493,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_COMMA = NO;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -11487,7 +11505,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -11534,7 +11552,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_COMMA = NO;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -11546,7 +11564,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

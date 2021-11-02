@@ -121,7 +121,8 @@ class ScriptValueDelegate : public QStyledItemDelegate {
 /**
  * A packet interface for viewing script packets.
  */
-class ScriptUI : public QObject, public PacketUI {
+class ScriptUI : public QObject, public PacketUI,
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -164,6 +165,12 @@ class ScriptUI : public QObject, public PacketUI {
         QString getPacketMenuText() const override;
         void refresh() override;
         void endEdit() override;
+
+        /**
+         * PacketListener callbacks.
+         */
+        void packetWasRenamed(regina::Packet* packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**

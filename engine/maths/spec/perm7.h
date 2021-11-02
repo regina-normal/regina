@@ -380,7 +380,7 @@ class Perm<7> {
          * respectively.
          *
          * \pre {<i>a0</i>,<i>b0</i>,<i>c0</i>,<i>d0</i>,<i>e0</i>,<i>f0</i>,<i>g0</i>} =
-         * {<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>,<i>e1</i>,<i>f1</i>,>i>g1</i>} =
+         * {<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>,<i>e1</i>,<i>f1</i>,<i>g1</i>} =
          * {0,1,2,3,4,5,6}.
          *
          * @param a0 the desired preimage of <i>a1</i>.

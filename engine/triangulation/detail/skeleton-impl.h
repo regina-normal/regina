@@ -208,7 +208,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
         Face<dim, dim-2>* f;
         Simplex<dim> *simp, *adj;
         int adjFace;
-        Perm<dim+1> map, adjMap;
+        Perm<dim+1> adjMap;
         int dir, exitFacet;
         for (auto s : tri->simplices_) {
             for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces;

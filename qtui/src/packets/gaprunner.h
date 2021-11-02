@@ -37,6 +37,7 @@
 #ifndef __GAPRUNNER_H
 #define __GAPRUNNER_H
 
+#include "algebra/grouppresentation.h"
 #include <QDialog>
 #include <QProcess>
 #include <map>
@@ -46,11 +47,6 @@ class MessageLayer;
 class QDialogButtonBox;
 class QLabel;
 class QSize;
-
-namespace regina {
-    class GroupExpression;
-    class GroupPresentation;
-};
 
 /**
  * A dialog that handles communications with GAP in order to simplify a

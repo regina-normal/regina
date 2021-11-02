@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                     *
+ *  Test Suite                                                            *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,71 +30,66 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file examplesaction.h
- *  \brief Provides an action class that offers access to sample data files.
- */
+#include <cstring>
+#include <string>
+#include <cppunit/extensions/HelperMacros.h>
+#include "testsuite/misc/testmisc.h"
+#include "packet/script.h"
 
-#ifndef __EXAMPLESACTION_H
-#define __EXAMPLESACTION_H
+namespace {
+    struct Listener : public regina::PacketListener {
+        bool expired_ { false };
+        std::weak_ptr<regina::Packet> ptr_;
 
-#include <QMap>
-#include <QMenu>
-#include <QUrl>
+        void packetBeingDestroyed(regina::PacketShell) override {
+            if (ptr_.expired())
+                expired_ = true;
+        }
+    };
+}
 
-class QUrl;
-class QActionGroup;
+class ListenersTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(ListenersTest);
 
-/**
- * An action offering a selection of sample data files that can be
- * opened.
- *
- * Much of this class is based upon KRecentFilesAction, as taken from
- * KDE 3.2.3.  KRecentFilesAction was written by Michael Koch and is
- * released under the GNU Library General Public License (v2).
- */
-class ExamplesAction : public QMenu {
-    Q_OBJECT
+    CPPUNIT_TEST(expiration);
 
-    private:
-        /**
-         * Sample data files
-         */
-        QMap<QAction*, QUrl> urls_;
-
-        /**
-         * Group of actions in the menu
-         */
-        QActionGroup* group;
+    CPPUNIT_TEST_SUITE_END();
 
     public:
-        /**
-         * Constructor and destructor.
-         */
-        ExamplesAction(QWidget* parent);
+        void setUp() override {
+        }
 
-        /**
-         * Add a sample data file to the list of offerings.
-         *
-         * The filename should be relative to the Regina examples directory.
-         */
-        void addUrl(const QString& fileName, const QString& description);
+        void tearDown() override {
+        }
 
-        /**
-         * Fill this action with Regina's standard example files.
-         */
-        void fillStandard();
+        void expiration() {
+            // This tests the logic used in the Qt user interface, in
+            // ScriptUI::packetBeingDestroyed().  See the more extensive
+            // comments there.  The short summary: the Qt UI code assumes the
+            // behaviour that we are testing here, but I don't think it's
+            // actually promised by the C++ standard (hence this test).
 
-    signals:
-        /**
-         * Emitted when a sample data file is selected for opening.
-         */
-        void urlSelected(const QUrl& url, const QString& description);
+            Listener listener;
+            {
+                auto s = std::make_shared<regina::Script>();
+                listener.ptr_ = s;
 
-    protected slots:
-        /**
-         * All activation events lead here.
-         */
-        void exampleActivated(QAction*);
+                s->listen(&listener);
+
+                if (listener.expired_) {
+                    CPPUNIT_FAIL("Weak pointer expired prematurely.");
+                }
+            }
+            if (! listener.expired_) {
+                CPPUNIT_FAIL("Weak pointer did not expire in time.");
+            }
+            if (! listener.ptr_.expired()) {
+                CPPUNIT_FAIL("Weak pointer did not expire at all.");
+            }
+        }
 };
 
-#endif
+void addListeners(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(ListenersTest::suite());
+}
+

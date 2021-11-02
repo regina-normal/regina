@@ -74,7 +74,7 @@ class PacketWindow : public QMainWindow {
         void setupMenus();
 
     public:
-        void renameWindow(const QString& newName);
+        void updateWindowTitle();
 
     public slots:
         void pythonConsole();

@@ -81,6 +81,8 @@ void addScript(pybind11::module_& m) {
             // We cannot take the address of typeID, so use a getter function.
             return Script::typeID;
         })
+        .def("listenVariables", &Script::listenVariables)
+        .def("unlistenVariables", &Script::unlistenVariables)
     ;
 
     m.def("swap", (void(*)(Script&, Script&))(regina::swap));

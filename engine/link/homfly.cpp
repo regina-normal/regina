@@ -315,7 +315,6 @@ namespace {
 
             // Identify all strands where one crossing is forgotten and
             // the other is not.
-            int strandID;
             StrandRef from, to;
             for (int strandID : *childKey) {
                 // In the child bag, this strand ran between the bag and the

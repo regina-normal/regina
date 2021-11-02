@@ -96,7 +96,6 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         return nullptr;
 
     // Do what we can through components.
-    StandardTriangulation* ans;
     if (auto ans = recognise(tri.component(0)))
         return ans;
 

@@ -54,7 +54,7 @@ GluingPermSearcher<2>::GluingPermSearcher(
     order = new FacetSpec<2>[(nTris * 3) / 2];
     orderElt = orderSize = 0;
 
-    FacetSpec<2> edge, adj;
+    FacetSpec<2> edge;
     for (edge.setFirst(); ! edge.isPastEnd(nTris, true); edge++)
         if (! perms_.pairing().isUnmatched(edge))
             if (edge < perms_.pairing().dest(edge))

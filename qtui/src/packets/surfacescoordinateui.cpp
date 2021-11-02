@@ -612,8 +612,8 @@ void SurfacesCoordinateUI::refresh() {
     }
 }
 
-void SurfacesCoordinateUI::packetToBeDestroyed(regina::PacketShell) {
-    // Our currently applied filter is about to be destroyed.
+void SurfacesCoordinateUI::packetBeingDestroyed(regina::PacketShell) {
+    // Our currently applied filter is being destroyed.
     filter->setCurrentIndex(0); // (i.e., None)
     refresh();
 }

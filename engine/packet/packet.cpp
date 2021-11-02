@@ -761,6 +761,9 @@ void Packet::fireEventAsNull(void (PacketListener::*event)(Packet*, Packet*),
 
 void Packet::fireDestructionEvent() {
     if (listeners_.get()) {
+        // TODO: Think about whether we'd rather clear out listeners_ now
+        // (i.e., swap it into a local temporary set instead) instead of
+        // erasing its elements one at a time in the loop below.
         while (! listeners_->empty()) {
             auto it = listeners_->begin();
             PacketListener* tmp = *it;
@@ -771,7 +774,7 @@ void Packet::fireDestructionEvent() {
             listeners_->erase(it);
             tmp->packets.erase(this);
 
-            tmp->packetToBeDestroyed(this);
+            tmp->packetBeingDestroyed(this);
         }
     }
 }
@@ -848,11 +851,7 @@ std::string Packet::internalID() const {
     return ans;
 }
 
-PacketListener::~PacketListener() {
-    unregisterFromAllPackets();
-}
-
-void PacketListener::unregisterFromAllPackets() {
+void PacketListener::unlisten() {
     // This code relies on the fact that Packet::unlisten() behaves
     // correctly even if we preemptively removed the packet from the
     // listener's internal set (essentially, there is a harmless no-op
@@ -889,7 +888,7 @@ PacketListener& PacketListener::operator = (const PacketListener& src) {
     // The unregister-then-listen process below breaks with self-assignment.
     if (this != std::addressof(src)) {
         // Note: listen() and unlisten() will update the set of packets.
-        unregisterFromAllPackets();
+        unlisten();
 
         for (Packet* p : src.packets)
             p->listen(this);

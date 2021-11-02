@@ -86,13 +86,13 @@ public:
         }
     }
     
-    inline void packetToBeDestroyed(regina::PacketShell packet) override {
-        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeDestroyed:)]) {
+    inline void packetBeingDestroyed(regina::PacketShell packet) override {
+        if ([(__bridge id)_object respondsToSelector:@selector(packetBeingDestroyed:)]) {
             if ([NSThread isMainThread])
-                [(__bridge id)_object packetToBeDestroyed:packet];
+                [(__bridge id)_object packetBeingDestroyed:packet];
             else
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [(__bridge id)_object packetToBeDestroyed:packet];
+                    [(__bridge id)_object packetBeingDestroyed:packet];
                 });
         }
     }

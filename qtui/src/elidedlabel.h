@@ -30,71 +30,56 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file examplesaction.h
- *  \brief Provides an action class that offers access to sample data files.
+/*! \file elidedlabel.h
+ *  \brief Provides a label that supports text elision.
  */
 
-#ifndef __EXAMPLESACTION_H
-#define __EXAMPLESACTION_H
+#ifndef __ELIDEDLABEL_H
+#define __ELIDEDLABEL_H
 
-#include <QMap>
-#include <QMenu>
-#include <QUrl>
-
-class QUrl;
-class QActionGroup;
+#include <QFontMetrics>
+#include <QWidget>
 
 /**
- * An action offering a selection of sample data files that can be
- * opened.
+ * A label whose text is elided on the right (truncated with an ellipsis)
+ * if it does not fit within the widget's current size.
  *
- * Much of this class is based upon KRecentFilesAction, as taken from
- * KDE 3.2.3.  KRecentFilesAction was written by Michael Koch and is
- * released under the GNU Library General Public License (v2).
+ * Currently this class is very basic:
+ *
+ * - the text is always elided to the right;
+ * - the text is always centred vertically, and left-aligned horizontally;
+ * - the size hint is always precisely the size of the full text.
+ *
+ * More functionality will be added if/when this becomes necessary.
  */
-class ExamplesAction : public QMenu {
+class ElidedLabel : public QWidget {
     Q_OBJECT
 
     private:
-        /**
-         * Sample data files
-         */
-        QMap<QAction*, QUrl> urls_;
-
-        /**
-         * Group of actions in the menu
-         */
-        QActionGroup* group;
+        QString fullText_;
 
     public:
-        /**
-         * Constructor and destructor.
-         */
-        ExamplesAction(QWidget* parent);
+        ElidedLabel(QWidget* parent = nullptr);
+        ElidedLabel(const QString& text, QWidget* parent = nullptr);
 
-        /**
-         * Add a sample data file to the list of offerings.
-         *
-         * The filename should be relative to the Regina examples directory.
-         */
-        void addUrl(const QString& fileName, const QString& description);
+        void setText(const QString& text);
 
-        /**
-         * Fill this action with Regina's standard example files.
-         */
-        void fillStandard();
+        QSize sizeHint() const override;
 
-    signals:
-        /**
-         * Emitted when a sample data file is selected for opening.
-         */
-        void urlSelected(const QUrl& url, const QString& description);
-
-    protected slots:
-        /**
-         * All activation events lead here.
-         */
-        void exampleActivated(QAction*);
+    protected:
+        void paintEvent(QPaintEvent* event) override;
 };
+
+inline ElidedLabel::ElidedLabel(QWidget* parent) : QWidget(parent) {
+}
+
+inline ElidedLabel::ElidedLabel(const QString& text, QWidget* parent) :
+        QWidget(parent), fullText_(text) {
+}
+
+inline void ElidedLabel::setText(const QString& text) {
+    fullText_ = text;
+    update();
+}
 
 #endif

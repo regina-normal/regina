@@ -42,6 +42,7 @@
 #include <vector>
 #include <QWidget>
 
+class ElidedLabel;
 class PacketEditIface;
 class PacketPane;
 class PacketWindow;
@@ -246,7 +247,7 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * Internal components
          */
         QLabel* headerIcon;
-        QLabel* headerTitle;
+        ElidedLabel* headerTitle;
         PacketUI* mainUI;
 
         /**
@@ -327,7 +328,7 @@ class PacketPane : public QWidget, public regina::PacketListener {
          */
         void packetWasChanged(regina::Packet* packet) override;
         void packetWasRenamed(regina::Packet* packet) override;
-        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**

@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   callbacks.cpp
+  listeners.cpp
   )
 
 # Prepend folder name

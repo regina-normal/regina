@@ -114,7 +114,7 @@ void PacketTreeItem::packetWasRenamed(regina::Packet*) {
     getMainWindow()->setModified(true);
 }
 
-void PacketTreeItem::packetToBeDestroyed(regina::PacketShell) {
+void PacketTreeItem::packetBeingDestroyed(regina::PacketShell) {
     packet = nullptr;
     refreshLabel();
     getMainWindow()->setModified(true);
@@ -132,7 +132,7 @@ void PacketTreeItem::childWasAdded(regina::Packet*, regina::Packet*) {
 
 void PacketTreeItem::childWasRemoved(regina::Packet* p, regina::Packet*) {
     // If we're in the parent destructor, it's all going to be done in
-    // this->packetToBeDestroyed() anyway.
+    // this->packetBeingDestroyed() anyway.
     if (p) { // not in parent destructor
         refreshSubtree();
         getMainWindow()->setModified(true);

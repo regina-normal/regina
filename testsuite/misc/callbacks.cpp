@@ -33,7 +33,7 @@
 #include <cstring>
 #include <string>
 #include <cppunit/extensions/HelperMacros.h>
-#include "testsuite/utilities/testutilities.h"
+#include "testsuite/misc/testmisc.h"
 #include "census/gluingpermsearcher2.h"
 #include "census/gluingpermsearcher3.h"
 #include "census/gluingpermsearcher4.h"

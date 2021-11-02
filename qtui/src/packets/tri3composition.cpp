@@ -281,9 +281,8 @@ void Tri3CompositionUI::refresh() {
     details->setRootIsDecorated(foundInnerChildren);
 }
 
-void Tri3CompositionUI::packetToBeDestroyed(regina::PacketShell) {
-    // Our current isomorphism test triangulation is about to be
-    // destroyed.
+void Tri3CompositionUI::packetBeingDestroyed(regina::PacketShell) {
+    // Our current isomorphism test triangulation is being destroyed.
     isoTest->setCurrentIndex(0); // (i.e., None)
     compare_ = nullptr; // The packet destructor will handle the unlisten.
     updateIsoPanel();

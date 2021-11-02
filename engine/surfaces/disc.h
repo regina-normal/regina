@@ -430,7 +430,6 @@ class DiscSetTetData : public DiscSetTet {
         DiscSetTetData(const NormalSurface& surface,
                 size_t tetIndex, const T& initValue) :
                 DiscSetTet(surface, tetIndex) {
-            unsigned long disc;
             for (int i=0; i<10; i++)
                 if (discs_[i]) {
                     data_[i] = new T[discs_[i]];

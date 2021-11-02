@@ -145,7 +145,6 @@ std::unique_ptr<PluggedTorusBundle> PluggedTorusBundle::hunt(
         Perm<4> annulusToUpperLayer;
         SatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
         SatBlock::TetList avoidTets;
-        SatBlock* starter;
         bool bdryRefVert, bdryRefHoriz;
 
         // Look for the corresponding layering.

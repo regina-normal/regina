@@ -140,7 +140,7 @@ class SkeletonWindow : public QDialog, public regina::PacketListener {
          */
         void packetWasChanged(regina::Packet* packet) override;
         void packetWasRenamed(regina::Packet* packet) override;
-        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 };
 
 /**

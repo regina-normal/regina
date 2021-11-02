@@ -124,7 +124,7 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
          */
         void packetWasChanged(regina::Packet* packet) override;
         void packetWasRenamed(regina::Packet* packet) override;
-        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
         void childWasAdded(regina::Packet* packet, regina::Packet* child)
             override;
         void childWasRemoved(regina::Packet* packet, regina::Packet* child)

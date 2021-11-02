@@ -30,71 +30,33 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file examplesaction.h
- *  \brief Provides an action class that offers access to sample data files.
- */
+#include "elidedlabel.h"
+#include <QFontMetrics>
+#include <QPainter>
 
-#ifndef __EXAMPLESACTION_H
-#define __EXAMPLESACTION_H
+void ElidedLabel::paintEvent(QPaintEvent* event) {
+    QWidget::paintEvent(event);
 
-#include <QMap>
-#include <QMenu>
-#include <QUrl>
+    QPainter painter(this);
+    // TODO: This gets the default widget palette, not the default label
+    // palette.  Is this a problem?
+    painter.setPen(palette().color(QPalette::WindowText));
 
-class QUrl;
-class QActionGroup;
+    QFontMetrics metrics = fontMetrics();
 
-/**
- * An action offering a selection of sample data files that can be
- * opened.
- *
- * Much of this class is based upon KRecentFilesAction, as taken from
- * KDE 3.2.3.  KRecentFilesAction was written by Michael Koch and is
- * released under the GNU Library General Public License (v2).
- */
-class ExamplesAction : public QMenu {
-    Q_OBJECT
+    painter.drawText(
+        QPoint(0, (height() - metrics.height()) / 2 + metrics.ascent()),
+        metrics.elidedText(fullText_, Qt::ElideRight, width()));
+}
 
-    private:
-        /**
-         * Sample data files
-         */
-        QMap<QAction*, QUrl> urls_;
+QSize ElidedLabel::sizeHint() const {
+    // Add 2 to the width, since on macOS the bounding rectangle is
+    // enough to trigger text elision even if there is enough room.
+    //
+    // (Why +2?  Because we assume some antialiasing effect causes
+    // the text to bleed into the adjacent pixels on either side.)
 
-        /**
-         * Group of actions in the menu
-         */
-        QActionGroup* group;
+    QSize s = QFontMetrics(font()).boundingRect(fullText_).size();
+    return QSize(s.width() + 2, s.height());
+}
 
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        ExamplesAction(QWidget* parent);
-
-        /**
-         * Add a sample data file to the list of offerings.
-         *
-         * The filename should be relative to the Regina examples directory.
-         */
-        void addUrl(const QString& fileName, const QString& description);
-
-        /**
-         * Fill this action with Regina's standard example files.
-         */
-        void fillStandard();
-
-    signals:
-        /**
-         * Emitted when a sample data file is selected for opening.
-         */
-        void urlSelected(const QUrl& url, const QString& description);
-
-    protected slots:
-        /**
-         * All activation events lead here.
-         */
-        void exampleActivated(QAction*);
-};
-
-#endif

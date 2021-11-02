@@ -197,6 +197,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // Miscellaneous tests:
     sets.insert(std::make_pair("callbacks", &addCallbacks));
+    sets.insert(std::make_pair("listeners", &addListeners));
 
     if (argc <= 1)
         for (const auto& i : sets)

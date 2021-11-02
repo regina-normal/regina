@@ -82,7 +82,9 @@ std::shared_ptr<Packet> PacketChooser::selectedPacket() {
     if (count() == 0)
         return nullptr;
     int curr = currentIndex();
-    return (curr < 0 ? nullptr : packets[curr]->shared_from_this());
+    return (curr < 0 ? nullptr :
+            packets[curr] ? packets[curr]->shared_from_this() :
+            nullptr);
 }
 
 void PacketChooser::selectPacket(std::shared_ptr<Packet> packet) {
@@ -111,7 +113,7 @@ void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
             if (p)
                 p->listen(this);
     } else
-        unregisterFromAllPackets();
+        unlisten();
 }
 
 void PacketChooser::packetWasRenamed(regina::Packet* renamed) {
@@ -126,7 +128,7 @@ void PacketChooser::packetWasRenamed(regina::Packet* renamed) {
     }
 }
 
-void PacketChooser::packetToBeDestroyed(regina::PacketShell toDestroy) {
+void PacketChooser::packetBeingDestroyed(regina::PacketShell toDestroy) {
     // Just remove the item that is being destroyed.
     auto it = std::find(packets.begin(), packets.end(), toDestroy);
     if (it != packets.end()) {
@@ -149,8 +151,7 @@ void PacketChooser::packetToBeDestroyed(regina::PacketShell toDestroy) {
 
         removeItem(destroyIndex);
 
-        // Don't bother unlistening; this will happen in the packet
-        // destructor anyway.
+        // No need to unlisten: the packet will have done this for us already.
     }
 }
 
@@ -174,7 +175,7 @@ void PacketChooser::refreshContents() {
     // Empty the combo box.
     // Empty from the end in case it's stored as a vector deep inside.
     if (onAutoUpdate)
-        unregisterFromAllPackets();
+        unlisten();
 
     clear();
     packets.clear();

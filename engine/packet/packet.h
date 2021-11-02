@@ -1816,11 +1816,11 @@ class Packet : public std::enable_shared_from_this<Packet>,
             Packet* arg2);
 
         /**
-         * Calls PacketListener::packetToBeDestroyed() for all registered
+         * Calls PacketListener::packetBeingDestroyed() for all registered
          * packet listeners.
          *
-         * This routine unregisters each listener just before it calls
-         * packetToBeDestroyed() for that listener.
+         * This routine unregisters each listener before it calls
+         * packetBeingDestroyed() for that listener.
          *
          * Calling this routine is better than iterating through listeners
          * manually, since it behaves correctly even if listeners unregister
@@ -2389,8 +2389,6 @@ std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
  *
  * \ifacespython Not present.
  *
- * @param args the arguments to be forwarded to the appropriate
- * \a Held constructor.
  * @return the new wrapped packet.
  */
 template <typename Held>
@@ -2971,10 +2969,10 @@ class PacketDescendants {
 /**
  * Gives access to the final remains of a packet that is in the process
  * of being destroyed.  The main use of this class is to pass packet details
- * to the callback function PacketListener::packetToBeDestroyed().
+ * to the callback function PacketListener::packetBeingDestroyed().
  *
  * All functions in this class mirror the corresponding Packet functions,
- * and are safe to call during PacketListener::packetToBeDestroyed().
+ * and are safe to call during PacketListener::packetBeingDestroyed().
  *
  * This class works with raw Packet pointers, not std::shared_ptr, because
  * it typically only becomes relevant when a Packet is already in the
@@ -3167,21 +3165,21 @@ bool operator != (const Packet* packet, PacketShell shell);
  * A packet listener can be registered to listen for events on a
  * packet by calling Packet::listen().
  *
- * Each time that one of the events listed in this class occurs,
- * the packet will call the appropriate routine for all registered
- * packet listeners.
+ * Each time that one of the events listed in this class occurs, the packet
+ * will call the appropriate callback routine for all registered listeners.
  *
  * These events come in future/past pairs: packetToBeChanged() and
  * packetWasChanged(), childToBeAdded() and childWasAdded(), and so on.
  * These event pairs are mutually exclusive: any event will
- * cause at most one pair of routines to be called for each
+ * cause at most one pair of callback routines to be called for each
  * (packet, listener) pair.  For instance, if a packet is renamed then
  * packetToBeRenamed() and packetWasRenamed() will be called but
  * packetToBeChanged() and packetWasChanged() will not.
  *
- * As a special case, when a packet is destroyed there is only the future
- * event packetToBeDestroyed() with no matching "past" event, since \e after
- * the packet has been destroyed the set of listeners is no longer available.
+ * As a special case, when a packet is destroyed there is only the one
+ * event packetBeingDestroyed(), since this is called \e during the packet
+ * destructor (at a time when the set of listeners is still available, but
+ * some of the other packet data may have already been destroyed).
  *
  * No guarantees are made as to the order in which the different packet
  * listeners are notified of an event.
@@ -3189,6 +3187,23 @@ bool operator != (const Packet* packet, PacketShell shell);
  * When a listener is destroyed, it is automatically unregistered
  * from any packets to which it is currently listening.  Similarly, when
  * a packet is destroyed all listeners are automatically unregistered.
+ *
+ * To listen for packet events using your own callback routines, you
+ * would typically implement a subclass of PacketListener that overrides
+ * only those callbacks that you are interested in.  Be aware that:
+ *
+ * - Callbacks are called for each listener, one at a time, in the same
+ *   thread in which the event occurred.
+ *
+ * - Callbacks can safely add new packet listeners, but there is no guarantee
+ *   as to whether or not the new listeners will be notified of the
+ *   specific event currently being processed.
+ *
+ * - Callbacks can safely remove other listeners, but they must \e not
+ *   remove the listener whose callback is currently being called.
+ *   The one exception to this is packetBeingDestroyed(), which will
+ *   explicitly remove each listener \e before its callback is called
+ *   (which means, for example, the listener can safely delete itself).
  *
  * \warning Subclass authors should be aware of the default copy semantics
  * that this base class provides.  In particular, this base class provides
@@ -3242,10 +3257,27 @@ class PacketListener {
         /*@{*/
 
         /**
-         * Unregisters this listener from any packets to which it is
+         * Determines whether this object is listening for events on any
+         * packets at all.
+         *
+         * @return \c true if and only if this object is listening on at
+         * least one packet.
+         */
+        bool isListening() const;
+
+        /**
+         * Unregisters this listener from all packets to which it is
          * currently listening.
          */
-        void unregisterFromAllPackets();
+        void unlisten();
+
+        /**
+         * Deprecated routine that unregisters this listener from any packets
+         * to which it is currently listening.
+         *
+         * \deprecated This routine has been renamed to unlisten().
+         */
+        [[deprecated]] void unregisterFromAllPackets();
 
         /**
          * Called before the contents of the packet are to be changed.
@@ -3290,22 +3322,7 @@ class PacketListener {
          */
         virtual void packetWasRenamed(Packet* packet);
         /**
-         * Called before the packet is about to be destroyed.  Note that
-         * there is no matching function called \e after the
-         * packet is destroyed, since the set of listeners will no
-         * longer be available at that stage.
-         *
-         * When an entire packet subtree is to be destroyed, child packets
-         * will notify their listeners of the impending destruction
-         * before parent packets will.
-         *
-         * Note that the packet will forcibly unregister this listener
-         * immediately \e before packetToBeDestroyed() is called, to avoid
-         * any unpleasant consequences if this listener should also try to
-         * unregister itself.  This means that, by the time this routine is
-         * called, this listener will no longer be registered with the
-         * packet in question (and any attempt to unregister it again
-         * will be harmless).
+         * Called as the packet is being destroyed.
          *
          * By the time this function is called, we are already inside the
          * Packet destructor, and so most Packet member functions are no
@@ -3316,11 +3333,40 @@ class PacketListener {
          * in case you need to identify which particular packet is being
          * destroyed.
          *
+         * When a packet is destroyed, it will automatically unregister each
+         * listener \e before calling packetBeingDestroyed() on that listener.
+         * Therefore, for this (and only this) callback, it is safe for a
+         * listener to unregister itself (since this will be a harmless
+         * operation that does nothing).  In particular, this makes it safe
+         * for a listener to delete itself during this callback.
+         *
+         * When an entire packet subtree is to be destroyed, child packets
+         * will notify their listeners of the impending destruction
+         * before parent packets will.
+         *
          * The default implementation of this routine is to do nothing.
          *
          * @param packet gives access to the packet being listened to.
          */
-        virtual void packetToBeDestroyed(PacketShell packet);
+        virtual void packetBeingDestroyed(PacketShell packet);
+        /**
+         * A placeholder for the old (and now unused) callback that was
+         * used in Regina 6.0.1 and earlier when a packet was being destroyed.
+         *
+         * In Regina 7.0 this was renamed to packetBeingDestroyed(), to
+         * emphasise the fact that we are already well inside the packet
+         * destructor when this is called.
+         *
+         * The main purpose for keeping this old function is so that we
+         * can mark it \c final, thus forcing a compiler error for any
+         * code that still attempts to reimplement it.
+         *
+         * The implementation of this function does nothing.
+         *
+         * \ifacespython Not present, since Python does not provide a mechanism
+         * such as \c final to prevent subclasses from overriding a function.
+         */
+        virtual void packetToBeDestroyed(PacketShell) final;
         /**
          * Called before a child packet is to be inserted directly beneath
          * the packet.
@@ -3910,10 +3956,25 @@ inline bool operator != (const Packet* packet, PacketShell shell) {
 
 // Inline functions for PacketListener
 
+inline PacketListener::~PacketListener() {
+    unlisten();
+}
+
+inline bool PacketListener::isListening() const {
+    return ! packets.empty();
+}
+
+inline void PacketListener::unregisterFromAllPackets() {
+    unlisten();
+}
+
 inline void PacketListener::packetToBeRenamed(Packet*) {
 }
 
 inline void PacketListener::packetWasRenamed(Packet*) {
+}
+
+inline void PacketListener::packetBeingDestroyed(PacketShell) {
 }
 
 inline void PacketListener::packetToBeDestroyed(PacketShell) {

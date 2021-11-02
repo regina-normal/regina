@@ -40,7 +40,7 @@ void smithNormalForm(MatrixInt& matrix) {
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
     bool flag;
-    unsigned long i, j, k;
+    unsigned long i, j;
     unsigned long pivotRow, pivotCol;
     Integer d, u, v, a, b;
     Integer tmp;
@@ -141,7 +141,7 @@ void smithNormalForm(MatrixInt& matrix,
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
     bool flag;
-    unsigned long i, j, k;
+    unsigned long i, j;
     unsigned long pivotRow, pivotCol;
     Integer d, u, v, a, b;
     Integer tmp;

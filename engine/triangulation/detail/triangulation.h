@@ -1481,7 +1481,7 @@ class TriangulationBase :
          *
          * \ifacespython There are two versions of this function
          * available in Python.  The first form is
-         * <tt>findAllIsomorphisms(other, action)<tt>, which mirrors the C++
+         * <tt>findAllIsomorphisms(other, action)</tt>, which mirrors the C++
          * function: it takes \a action which may be a pure Python function,
          * the return value indicates whether \a action ever terminated the
          * search, but it does \e not take an additonal argument list (\a args).
@@ -1538,7 +1538,7 @@ class TriangulationBase :
          *
          * \ifacespython There are two versions of this function
          * available in Python.  The first form is
-         * <tt>findAllSubcomplexesIn(other, action)<tt>, which mirrors the C++
+         * <tt>findAllSubcomplexesIn(other, action)</tt>, which mirrors the C++
          * function: it takes \a action which may be a pure Python function,
          * the return value indicates whether \a action ever terminated the
          * search, but it does \e not take an additonal argument list (\a args).
@@ -1927,7 +1927,7 @@ class TriangulationBase :
          * TriangulationBase never calls this operator itself; it is only
          * ever called by the Triangulation<dim> assignment operator.
          *
-         * @param copy the triangulation to copy.
+         * @param src the triangulation to copy.
          * @return a reference to this triangulation.
          */
         TriangulationBase& operator = (const TriangulationBase& src);

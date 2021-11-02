@@ -112,7 +112,7 @@ class EltMoveDialog3 : public QDialog, public regina::PacketListener {
          */
         void packetWasRenamed(regina::Packet*) override;
         void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     protected slots:
         /**

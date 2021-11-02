@@ -59,6 +59,7 @@ SET(SOURCES ${SOURCES}
   bigwidget.cpp
   codecchooser.cpp
   columnlayout.cpp
+  elidedlabel.cpp
   examplesaction.cpp
   iconcache.cpp
   introdialog.cpp

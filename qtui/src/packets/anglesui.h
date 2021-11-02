@@ -96,6 +96,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
          */
         regina::PacketOf<regina::AngleStructures>* structures_;
         AngleModel* model;
+        bool triDestroyed { false };
 
         /**
          * Internal components
@@ -135,7 +136,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
          */
         void packetWasRenamed(regina::Packet*) override;
         void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     public slots:
         /**
