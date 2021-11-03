@@ -10,6 +10,39 @@
 # restrictions that are required by its terms of service.
 
 
+# Macro: CHECK_STDFS
+#
+# Sets the boolean variable STDFS_FOUND according to whether one of
+# std::filesystem or std::experimental::filesystem is available.
+#
+# Sets the variable STDFS_LIBRARY to any additional library that is required
+# to use std::filesystem, beyond the standard C++ library.  This is important
+# for example with gcc7, which provides only std::experimental::filesystem,
+# and which needs the linker flag -lstdc++fs in order to use it.
+#
+macro (CHECK_STDFS)
+  SET (_SRCFILE "${CMAKE_SOURCE_DIR}/cmake/modules/stdfs.cpp")
+  SET (_BINDIR "${CMAKE_BINARY_DIR}/cmake/modules")
+
+  MESSAGE(STATUS "Checking for C++17 std::filesystem")
+  try_compile(_REGINA_STDFS_RAW ${_BINDIR} ${_SRCFILE})
+  IF (_REGINA_STDFS_RAW)
+    SET (STDFS_FOUND TRUE)
+    SET (STDFS_LIBRARY)
+    MESSAGE(STATUS "Checking for C++17 std::filesystem -- found")
+  ELSE (_REGINA_STDFS_RAW)
+    try_compile(_REGINA_STDFS_LIB ${_BINDIR} ${_SRCFILE} LINK_LIBRARIES stdc++fs)
+    IF (_REGINA_STDFS_LIB)
+      SET (STDFS_FOUND TRUE)
+      SET (STDFS_LIBRARY stdc++fs)
+      MESSAGE(STATUS "Checking for C++17 std::filesystem -- requires ${STDFS_LIBRARY}")
+    ELSE (_REGINA_STDFS_LIB)
+      SET (STDFS_FOUND FALSE)
+    ENDIF (_REGINA_STDFS_LIB)
+  ENDIF (_REGINA_STDFS_RAW)
+endmacro (CHECK_STDFS)
+
+
 # Macro: REGINA_ESCAPE_BASH(input)
 #
 # Sets the variable BASH_${input} to be a variant of the variable ${input}
