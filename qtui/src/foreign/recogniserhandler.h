@@ -39,6 +39,7 @@
 #define __RECOGNISERHANDLER_H
 
 #include "packetexporter.h"
+#include <QString>
 
 /**
  * An object responsible for exporting triangulations
@@ -62,6 +63,7 @@ class RecogniserHandler : public PacketExporter {
         PacketFilter* canExport() const override;
         bool exportData(std::shared_ptr<regina::Packet> data,
             const QString& fileName, QWidget* parentWidget) const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 
     private:
         /**
@@ -69,5 +71,10 @@ class RecogniserHandler : public PacketExporter {
          */
         RecogniserHandler() = default;
 };
+
+inline QString RecogniserHandler::defaultExtension(const regina::Packet&)
+        const {
+    return ".txt";
+}
 
 #endif

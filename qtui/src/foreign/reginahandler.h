@@ -39,6 +39,7 @@
 
 #include "packetexporter.h"
 #include "packetimporter.h"
+#include <QString>
 
 /**
  * An object responsible for importing and export data to and from
@@ -69,10 +70,15 @@ class ReginaHandler : public PacketImporter, public PacketExporter {
         PacketFilter* canExport() const override;
         bool exportData(std::shared_ptr<regina::Packet> data,
             const QString& fileName, QWidget* parentWidget) const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 };
 
 inline ReginaHandler::ReginaHandler(bool newCompressed) :
         compressed(newCompressed) {
+}
+
+inline QString ReginaHandler::defaultExtension(const regina::Packet&) const {
+    return ".rga";
 }
 
 #endif

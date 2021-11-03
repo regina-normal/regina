@@ -60,6 +60,7 @@ class SourceHandler : public PacketExporter {
         bool exportData(std::shared_ptr<regina::Packet> data,
             const QString& fileName, QWidget* parentWidget) const override;
         bool useExportEncoding() const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 
     private:
         /**
@@ -70,6 +71,10 @@ class SourceHandler : public PacketExporter {
 
 inline bool SourceHandler::useExportEncoding() const {
     return true;
+}
+
+inline QString SourceHandler::defaultExtension(const regina::Packet&) const {
+    return ".cpp";
 }
 
 #endif

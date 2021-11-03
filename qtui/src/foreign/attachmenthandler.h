@@ -37,8 +37,10 @@
 #ifndef __ATTACHMENTHANDLER_H
 #define __ATTACHMENTHANDLER_H
 
+#include "packet/attachment.h"
 #include "packetexporter.h"
 #include "packetimporter.h"
+#include <QString>
 
 /**
  * An object responsible for importing and exporting file attachments.
@@ -68,6 +70,7 @@ class AttachmentHandler : public PacketImporter, public PacketExporter {
         PacketFilter* canExport() const override;
         bool exportData(std::shared_ptr<regina::Packet> data,
             const QString& fileName, QWidget* parentWidget) const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 
     private:
         /**
@@ -75,5 +78,10 @@ class AttachmentHandler : public PacketImporter, public PacketExporter {
          */
         AttachmentHandler() = default;
 };
+
+inline QString AttachmentHandler::defaultExtension(const regina::Packet& data)
+        const {
+    return static_cast<const regina::Attachment&>(data).extension().c_str();
+}
 
 #endif

@@ -92,6 +92,9 @@ Attachment::Attachment(const char* pathname) :
 }
 
 std::string Attachment::extension() const {
+    if (! data_)
+        return {};
+
     try {
         return std::filesystem::path(filename_).extension();
     } catch (const std::exception&) {

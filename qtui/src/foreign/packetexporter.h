@@ -83,6 +83,16 @@ class PacketExporter {
             const QString& fileName, QWidget* parentWidget) const = 0;
 
         /**
+         * Returns an appropriate filename extension for exporting the
+         * given packet.
+         *
+         * The extension should begin with a period.  If no appropriate
+         * extension can be determined, this routine should return an
+         * empty string (which may or may not be a null string).
+         */
+        virtual QString defaultExtension(const regina::Packet& data) const = 0;
+
+        /**
          * Should the GUI inform the user that their preferred codec
          * will be used?
          *

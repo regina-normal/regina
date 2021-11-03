@@ -39,6 +39,7 @@
 
 #include "packetexporter.h"
 #include "packetimporter.h"
+#include <QString>
 
 /**
  * An object responsible for importing and export data to and from
@@ -69,6 +70,7 @@ class PythonHandler : public PacketImporter, public PacketExporter {
         bool exportData(std::shared_ptr<regina::Packet> data,
             const QString& fileName, QWidget* parentWidget) const override;
         bool useExportEncoding() const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 
     private:
         /**
@@ -83,6 +85,10 @@ inline bool PythonHandler::useImportEncoding() const {
 
 inline bool PythonHandler::useExportEncoding() const {
     return true;
+}
+
+inline QString PythonHandler::defaultExtension(const regina::Packet&) const {
+    return ".py";
 }
 
 #endif
