@@ -38,6 +38,7 @@
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
 #include "algebra/markedabeliangroup.h"
+#include "utilities/exception.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -64,9 +65,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def(pybind11::init<const GroupExpressionTerm&>())
         .def(pybind11::init<unsigned long, long>())
         .def(pybind11::init<const GroupExpression&>())
-        .def(pybind11::init([](const std::string& str) {
-            return new GroupExpression(str, nullptr);
-        }))
+        .def(pybind11::init<const std::string&>())
         .def("swap", &GroupExpression::swap)
         .def("terms", overload_cast<>(
             &GroupExpression::terms, pybind11::const_))
@@ -88,8 +87,24 @@ void addGroupPresentation(pybind11::module_& m) {
             &GroupExpression::addTermLast))
         .def("addTermsFirst", &GroupExpression::addTermsFirst)
         .def("addTermsLast", &GroupExpression::addTermsLast)
-        .def("addStringFirst", &GroupExpression::addStringFirst)
-        .def("addStringLast", &GroupExpression::addStringLast)
+        .def("addStringFirst", [](GroupExpression& g, const std::string& s) {
+            // This is deprecated, so we reimplement it here.
+            try {
+                g.addTermsFirst(s);
+            } catch (const regina::InvalidArgument&) {
+                return false;
+            }
+            return true;
+        })
+        .def("addStringLast", [](GroupExpression& g, const std::string& s) {
+            // This is deprecated, so we reimplement it here.
+            try {
+                g.addTermsLast(s);
+            } catch (const regina::InvalidArgument&) {
+                return false;
+            }
+            return true;
+        })
         .def("cycleLeft", &GroupExpression::cycleLeft)
         .def("cycleRight", &GroupExpression::cycleRight)
         .def("inverse", &GroupExpression::inverse)
@@ -121,6 +136,7 @@ void addGroupPresentation(pybind11::module_& m) {
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long>())
+        .def(pybind11::init<unsigned long, const std::vector<std::string>&>())
         .def(pybind11::init<const GroupPresentation&>())
         .def("swap", &GroupPresentation::swap)
         .def("addGenerator", &GroupPresentation::addGenerator,

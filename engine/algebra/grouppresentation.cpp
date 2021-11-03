@@ -43,6 +43,7 @@
 #include "algebra/abeliangroup.h"
 #include "maths/numbertheory.h"
 #include "maths/matrixops.h"
+#include "utilities/exception.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -587,81 +588,71 @@ void GroupExpression::cycleLeft()
     }
 }
 
-GroupExpression::GroupExpression( const std::string &input, bool* valid )
+GroupExpression::GroupExpression( const char* input )
 {
     // interpret input as GroupExpression as one of forms a^7b^-2,
-    // a^7B^2, aaaaaaaBB, g0^7g1^-2. Initialize. If valid allocated set to true
-    // or false depending on if operation is successful or not.
+    // a^7B^2, aaaaaaaBB, g0^7g1^-2.
 
     // WSNULL - at start of word, nothing has been input.
-    // WSVARLET - read a letter, but do not know if we're in an a^5 or g2^-2 sit.
+    // WSVARLET - read a letter, but don't know if we're in an a^5 or g2^-2 sit.
     // WSVARNUM - gk situation read.
     // WSEXP - ^ read
     // WSEXPSIG ^- read
     // WSEXPNUM reading numbers after ^ or ^-
-    // WSERR - an error occured.
-    enum WORD_STATUS { WSNULL, WSVARLET, WSVARNUM, WSEXP, WSEXPSIG,
-                       WSEXPNUM, WSERR
-                     };
+    enum WORD_STATUS { WSNULL, WSVARLET, WSVARNUM, WSEXP, WSEXPSIG, WSEXPNUM };
 
     // a loop that goes through the entries of input.
     WORD_STATUS WS(WSNULL);
     GroupExpressionTerm buildTerm;
-    for (char i : input) {
-        // read i, see what to do next.
+    for (const char* i = input; *i; ++i) {
+        // read *i, see what to do next.
         // case 1: it is a letter a..z or A..Z
-        if ( ( i >= 'a' && i <= 'z' ) || ( i >= 'A' && i <= 'Z' ) ) {
+        if ( ( *i >= 'a' && *i <= 'z' ) || ( *i >= 'A' && *i <= 'Z' ) ) {
             if (WS==WSNULL) { // fresh letter
                 // build buildTerm.
-                if ( i >= 'a' && i <= 'z' ) {
-                    buildTerm.generator = i - 'a';
+                if ( *i >= 'a' && *i <= 'z' ) {
+                    buildTerm.generator = *i - 'a';
                     buildTerm.exponent = 1;
-                } else if ( i >= 'A' && i <= 'Z' ) {
-                    buildTerm.generator = i - 'A';
-                    buildTerm.exponent = -1;
                 } else {
-                    WS=WSERR;
-                    break;
+                    buildTerm.generator = *i - 'A';
+                    buildTerm.exponent = -1;
                 }
                 WS=WSVARLET;
                 continue;
             } else if ( (WS==WSVARLET) || (WS==WSVARNUM) || (WS==WSEXPNUM) ) {
                 // new letter but previous letter to finish
                 terms_.push_back(buildTerm);
-                if ( i >= 'a' && i <= 'z' ) {
-                    buildTerm.generator = i - 'a';
+                if ( *i >= 'a' && *i <= 'z' ) {
+                    buildTerm.generator = *i - 'a';
                     buildTerm.exponent = 1;
-                } else if ( i >= 'A' && i <= 'Z' ) {
-                    buildTerm.generator = i - 'A';
-                    buildTerm.exponent = -1;
                 } else {
-                    WS=WSERR;
-                    break;
+                    buildTerm.generator = *i - 'A';
+                    buildTerm.exponent = -1;
                 }
                 WS=WSVARLET;
                 continue;
             } else {
                 // anything else is a mistake.
-                WS=WSERR;    // end case 1
-                break;
+                throw InvalidArgument(
+                    "Unexpected letter found in group expression");
             }
         }
 
         // case 2: it is a ^, can only occur after a generator
-        if ( i == '^' ) {
+        if ( *i == '^' ) {
             if (!( (WS==WSVARLET) || (WS==WSVARNUM) ) ) {
-                WS=WSERR;
-                break;
+                throw InvalidArgument(
+                    "Unexpected exponent found in group expression");
             }
             WS=WSEXP;
             continue;
         } // end case 2
 
         // case 3: it is a -, only valid after ^
-        if ( i == '-' ) {
+        if ( *i == '-' ) {
             if (!(WS==WSEXP)) {
-                WS=WSERR;
-                break;
+                throw InvalidArgument(
+                    "Unexpected minus sign found in group expression");
             }
             buildTerm.exponent = -buildTerm.exponent; // ok with A^-1.
             WS=WSEXPSIG;
@@ -669,79 +660,68 @@ GroupExpression::GroupExpression( const std::string &input, bool* valid )
         } // end case 3
 
         // case 4: it is a number
-        if ( ::isdigit(i) ) {
+        if ( ::isdigit(*i) ) {
             //  subcase (a) this is to build a variable
             // buildTerm.generator == 'g'
             if ( (WS==WSVARLET) && (buildTerm.generator == ('g' - 'a') ) ) {
-                buildTerm.generator=(i - '0');
+                buildTerm.generator=(*i - '0');
                 WS=WSVARNUM;
                 continue;
             } else // we've already started building the variable number
                 if ( WS==WSVARNUM ) {
-                    buildTerm.generator=10*buildTerm.generator + (i - '0');
+                    buildTerm.generator=10*buildTerm.generator + (*i - '0');
                     continue;
                 } else //  subcase (b) this is to build an exponent.
                     if ( (WS==WSEXP) || (WS==WSEXPSIG) ) { // ^num or ^-num
                         if (buildTerm.exponent<0)
-                            buildTerm.exponent = - static_cast<long>(i - '0');
+                            buildTerm.exponent = - static_cast<long>(*i - '0');
                         else
-                            buildTerm.exponent = (i - '0');
+                            buildTerm.exponent = (*i - '0');
                         WS=WSEXPNUM;
                         continue;
                     } else if (WS==WSEXPNUM) {
                         // blah[num] previously dealt with numbers
                         if (buildTerm.exponent<0)
                             buildTerm.exponent = 10*buildTerm.exponent -
-                                                 (i - '0');
+                                                 (*i - '0');
                         else
                             buildTerm.exponent = 10*buildTerm.exponent +
-                                                 (i - '0');
+                                                 (*i - '0');
                         continue;
                     } else {
-                        WS=WSERR;
-                        break;
+                        throw InvalidArgument(
+                            "Unexpected number found in group expression");
                     }
         } // end case 4
         // now we've dealt will all important input.  Let's deal with spaces
         // next, and any other input will fail.
-        if ( ::isspace(i) )
+        if ( ::isspace(*i) )
             continue;
-        else {
-            WS=WSERR;
-            break;
-        }
+
+        throw InvalidArgument("Invalid character in group expression");
     } // end i loop
-    // did we reach the end of input without any errors? if so, append buildTerm
-    if (WS!=WSERR) {
-        terms_.push_back(buildTerm);
-        if (valid)
-            *valid = true;
-    }
-    // if not, delete everything in this word
-    else {
-        if (valid)
-            *valid = false;
-        terms_.clear();
-    }
+
+    // we reached the end of input without any errors
+    terms_.push_back(buildTerm);
 }
 
 bool GroupExpression::addStringFirst( const std::string& input)
 {
-    bool temp;
-    GroupExpression tword( input, &temp );
-    if (!temp)
+    try {
+        addTermsFirst(GroupExpression(input));
+    } catch (const InvalidArgument&) {
         return false;
-    addTermsFirst(std::move(tword));
+    }
     return true;
 }
 
 bool GroupExpression::addStringLast( const std::string& input)
 {
-    bool temp;
-    GroupExpression tword( input, &temp );
-    if (!temp)
+    try {
+        addTermsLast(GroupExpression(input));
+    } catch (const InvalidArgument&) {
         return false;
-    addTermsLast(std::move(tword));
+    }
     return true;
 }
 

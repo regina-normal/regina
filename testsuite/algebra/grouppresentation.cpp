@@ -79,49 +79,49 @@ class GroupPresentationTest : public CppUnit::TestFixture {
 
         // Z modulo 6
         Z6_pres.addGenerator(1);
-        Z6_pres.addRelation( GroupExpression("a^6") );
+        Z6_pres.addRelation( "a^6" );
 
         // dihedral group of octagon.
         D8_pres.addGenerator(2);
-        D8_pres.addRelation( GroupExpression("a^8") );
-        D8_pres.addRelation( GroupExpression("b^2") );
-        D8_pres.addRelation( GroupExpression("abab") );
+        D8_pres.addRelation( "a^8" );
+        D8_pres.addRelation( "b^2" );
+        D8_pres.addRelation( "abab" );
 
         // figure-8 knot exterior.
         fig8_pres.addGenerator(2);
-        fig8_pres.addRelation( GroupExpression("aaBAbabAB") );
+        fig8_pres.addRelation( "aaBAbabAB" );
 
         // Bundle over S^1 with fiber S^1 x S^2 # S^1 x S^2.
         KSUM_pres.addGenerator(2);
-        KSUM_pres.addRelation( GroupExpression("a^2b^3") );
+        KSUM_pres.addRelation( "a^2b^3" );
 
         // Fox quick trip example 11.
         FOX_pres.addGenerator(2);
-        FOX_pres.addRelation( GroupExpression("a^2BAb") );
+        FOX_pres.addRelation( "a^2BAb" );
 
         // Cappell-Shaneson with Alex 1+t-t^3
         CS_pres.addGenerator(2);
-        CS_pres.addRelation( GroupExpression("a^3BA^2b^2") );
-        CS_pres.addRelation( GroupExpression("a^2B^2Ab^3") );
+        CS_pres.addRelation( "a^3BA^2b^2" );
+        CS_pres.addRelation( "a^2B^2Ab^3" );
 
         // Fibers over S^1 with fiber (S^1)^3 # (S^1)^3
         CSCS_pres.addGenerator(2);
-        CSCS_pres.addRelation( GroupExpression("A^2b^2a^4B^3") );
-        CSCS_pres.addRelation( GroupExpression("a^2bA^4ba^2B^2") );
+        CSCS_pres.addRelation( "A^2b^2a^4B^3" );
+        CSCS_pres.addRelation( "a^2bA^4ba^2B^2" );
 
         // Fibers over S^1 with fiber a Poincare Dodecahedral space.
         KPDS_pres.addGenerator(2);
-        KPDS_pres.addRelation( GroupExpression("aBBabbAbb") );
-        KPDS_pres.addRelation( GroupExpression("AbbaabbbaB") );
+        KPDS_pres.addRelation( "aBBabbAbb" );
+        KPDS_pres.addRelation( "AbbaabbbaB" );
 
         // Z_2 + Z_3 + Z_8
         Z2Z3Z8_pres.addGenerator(3);
-        Z2Z3Z8_pres.addRelation( GroupExpression("a^2") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("b^3") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("c^8") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("abAB") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("acAC") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("bcBC") );
+        Z2Z3Z8_pres.addRelation( "a^2" );
+        Z2Z3Z8_pres.addRelation( "b^3" );
+        Z2Z3Z8_pres.addRelation( "c^8" );
+        Z2Z3Z8_pres.addRelation( "abAB" );
+        Z2Z3Z8_pres.addRelation( "acAC" );
+        Z2Z3Z8_pres.addRelation( "bcBC" );
 
         presList.push_back( &Z_pres );    presList.push_back( &Z6_pres );
         presList.push_back( &D8_pres );   presList.push_back( &fig8_pres );
@@ -200,7 +200,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Invalid presentation.");
         GroupPresentation DPRES;
         DPRES.addGenerator(1);
-        DPRES.addRelation( GroupExpression("ab^2aaa") );
+        DPRES.addRelation( "ab^2aaa" );
         if (DPRES.isValid())
             CPPUNIT_FAIL("DPRES: invalid presentation.");
     }

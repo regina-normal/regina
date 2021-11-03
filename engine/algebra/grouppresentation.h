@@ -227,24 +227,29 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          *
          * The string may contain whitespace, which will simply be ignored.
          *
-         * The argument \a valid may be \c null, but if it is non-null
-         * then the boolean it points to will be used for error reporting.
-         * This routine sets valid to \c true if the string was successfully
-         * interpreted, or \c false if the algorithm failed to interpret the
-         * string.
-         *
-         * Regardless of whether \a valid is \c null, if the string
-         * could not be interpreted then this expression will be initialised
-         * to the trivial word.
-         *
-         * \ifacespython The second argument \a valid is not present,
-         * and will be assumed to be \c null.
+         * \exception InvalidArgument the given string could not be
+         * interpreted as a group expression.
          *
          * @param input the input string that is to be interpreted.
-         * @param valid used for error reporting as described above, or
-         * \c null if no error reporting is required.
          */
-        GroupExpression(const std::string &input, bool* valid=nullptr);
+        GroupExpression(const char* input);
+        /**
+         * Attempts to interpret the given input string as a word in a group.
+         * Regina can recognise strings in the following four basic forms:
+         *
+         *  - \c a^7b^-2
+         *  - \c aaaaaaaBB
+         *  - \c a^7B^2
+         *  - \c g0^7g1^-2
+         *
+         * The string may contain whitespace, which will simply be ignored.
+         *
+         * \exception InvalidArgument the given string could not be
+         * interpreted as a group expression.
+         *
+         * @param input the input string that is to be interpreted.
+         */
+        GroupExpression(const std::string &input);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -466,11 +471,16 @@ class GroupExpression : public ShortOutput<GroupExpression> {
         void addTermsLast(GroupExpression word);
 
         /**
-         * Multiplies this expression on the left by the word
-         * respresented by the given string.
+         * Deprecated routine that multiplies this expression on the left by
+         * the word respresented by the given string.
+         *
+         * \deprecated Simply call <tt>addTermsFirst(input)</tt>, which will
+         * automatically construct a GroupExpression from the string \a input.
+         * The only change is that you will need to use a try/catch block to
+         * detect errors, instead of checking a return value.
          *
          * See the string-based constructor
-         * GroupExpression(const std::string&, bool*) for further
+         * GroupExpression(const std::string&) for further
          * information on how this string should be formatted.
          *
          * If the given string cannot be interpreted as a word in a group,
@@ -483,14 +493,19 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * \c false if the given string could not be interpreted
          * (in which case this expression will be left untouched).
          */
-        bool addStringFirst(const std::string& input);
+        [[deprecated]] bool addStringFirst(const std::string& input);
 
         /**
-         * Multiplies this expression on the right by the word
-         * respresented by the given string.
+         * Deprecated routine that multiplies this expression on the right by
+         * the word respresented by the given string.
+         *
+         * \deprecated Simply call <tt>addTermsLast(input)</tt>, which will
+         * automatically construct a GroupExpression from the string \a input.
+         * The only change is that you will need to use a try/catch block to
+         * detect errors, instead of checking a return value.
          *
          * See the string-based constructor
-         * GroupExpression(const std::string&, bool*) for further
+         * GroupExpression(const std::string&) for further
          * information on how this string should be formatted.
          *
          * If the given string cannot be interpreted as a word in a group,
@@ -503,7 +518,7 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * \c false if the given string could not be interpreted
          * (in which case this expression will be left untouched).
          */
-        bool addStringLast(const std::string& input);
+        [[deprecated]] bool addStringLast(const std::string& input);
 
         /**
          * Cycles this word by moving the leftmost term around to the rightmost.
@@ -791,20 +806,17 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The first argument \a nGens is the number of generators one wants
          * the group to have. The second argument \a rels is a vector
          * of strings, where each string gives a single relator.  See
-         * the GroupExpression::GroupExpression(const std::string&, bool*)
+         * the GroupExpression::GroupExpression(const std::string&)
          * constructor notes for information on what format these strings
          * can take.
-         *
-         * If any of the given strings could not be interpreted as
-         * words, this routine will insert the trivial (unit) word in
-         * its place.
          *
          * If you are compiling Regina against C++11, you can use the
          * C++11 initializer_list construction to construct an
          * GroupPresentation directly using syntax of the form
          * <tt>GroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
          *
-         * \ifacespython Not present.
+         * \exception InvalidArgument one or more of the given strings
+         * could not be interpreted as a group expression.
          *
          * @param nGens the number of generators.
          * @param rels a vector of relations each given in string form,
@@ -1815,6 +1827,10 @@ inline GroupExpression::GroupExpression(const GroupExpressionTerm& term) {
 inline GroupExpression::GroupExpression(unsigned long generator,
         long exponent) {
     terms_.emplace_back(generator, exponent);
+}
+
+inline GroupExpression::GroupExpression(const std::string &input) :
+        GroupExpression(input.c_str()) {
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {

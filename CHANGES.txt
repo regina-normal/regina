@@ -354,6 +354,11 @@ Version 7.0  [ TODO ]
             - Added move constructors and move assignment operators.
             - Added a constructor that takes a single term, or a single
               generator/exponent pair.
+            - Changed the string constructor to throw an exception on error;
+              the old optional validity reporting argument is now removed.
+            - Added a C-style string constructor.
+            - Deprecated addStringFirst() and addStringLast(); just use
+              addTermsFirst(string) and addTermsLast(string) instead.
             - New variant of substitute() that can replace all generators
               simultaneously.
             - Functions inverse() and power() now return by value, not pointer.
@@ -364,6 +369,8 @@ Version 7.0  [ TODO ]
             - New routines enumerateCovers(), incidence() and gap().
             - Added move constructors and move assignment operators.
             - New constructor to create free groups.
+            - The vector-of-strings constructor now throws an exception
+              on error, instead of silently removing the invalid relation.
             - Functions abelianisation() and markedAbelianisation() now
               return groups by value (which can then be moved from).
             - New routine abelianRank().
