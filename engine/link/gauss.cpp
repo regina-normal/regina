@@ -49,7 +49,7 @@
     #define __regina_has_to_chars 1
   #else
     // On macOS, Xcode provides std::to_chars() but only enables it
-    // for macOS 15 / iOS 13 and above.
+    // for macOS 10.15 / iOS 13 and above.
     // Until we can check this properly, just use the same fallback as below.
     #include <cstdio>
     #undef __regina_has_to_chars
