@@ -7,8 +7,11 @@
   using filesystem_path = std::experimental::filesystem::path;
 #endif
 
+#include <iostream>
+
 int main() {
-    filesystem_path p;
+    filesystem_path p("/usr/bin/foo");
+    std::cout << p.filename() << std::endl;
     return 0;
 }
 
