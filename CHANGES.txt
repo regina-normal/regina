@@ -611,8 +611,10 @@ Version 7.0  [ TODO ]
               matrices over Regina's integer types (including MatrixInt).
             - New operator * for multiplying a matrix by a vector.
             - New routines combRows() and combCols().
+            - New constructor that takes the side length of a square matrix.
             - New constructor that takes a hard-coded list of entries
-              via a C++11 initialiser list.
+              via a C++11 initialiser list.  The old python-only
+              initialise([...]) is now deprecated in favour of this constructor.
             - New default constructor that leaves the matrix in an
               uninitialised state.
             - Added member and global swap() functions.

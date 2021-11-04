@@ -203,9 +203,31 @@ class Matrix : public Output<Matrix<T>> {
         Matrix() : rows_(0), cols_(0), data_(nullptr) {
         }
         /**
-         * Creates a new matrix of the given size.
-         * All entries will be initialised using their default constructors.
+         * Creates a new square matrix of the given size.  Both the number of
+         * rows and the number of columns will be set to \a size.
          *
+         * All entries will be initialised using their default constructors.
+         * In particular, this means that for Regina's own integer classes
+         * (Integer, LargeInteger and NativeInteger), all entries will be
+         * initialised to zero.
+         *
+         * \warning If \a T is a native C++ integer type (such as \c int
+         * or \c long), then the matrix elements will not be initialised
+         * to any particular value.
+         *
+         * \pre The given size is strictly positive.
+         *
+         * @param size the number of rows and columns in the new matrix.
+         */
+        Matrix(unsigned long size) :
+                rows_(size), cols_(size), data_(new T*[size]) {
+            for (unsigned long i = 0; i < size; ++i)
+                data_[i] = new T[size];
+        }
+        /**
+         * Creates a new matrix of the given size.
+         *
+         * All entries will be initialised using their default constructors.
          * In particular, this means that for Regina's own integer classes
          * (Integer, LargeInteger and NativeInteger), all entries will be
          * initialised to zero.
@@ -221,7 +243,7 @@ class Matrix : public Output<Matrix<T>> {
          */
         Matrix(unsigned long rows, unsigned long cols) :
                 rows_(rows), cols_(cols), data_(new T*[rows]) {
-            for (unsigned long i = 0; i < rows; i++)
+            for (unsigned long i = 0; i < rows; ++i)
                 data_[i] = new T[cols];
         }
         /**
@@ -239,7 +261,8 @@ class Matrix : public Output<Matrix<T>> {
          * \pre All elements of \a data (representing the rows of the matrix)
          * are lists of the same size.
          *
-         * \ifacespython Not available.
+         * \ifacespython The argument \a data should be a Python list of
+         * Python lists.
          *
          * @param data the rows of the matrix, each given as a list of elements.
          */
@@ -393,19 +416,22 @@ class Matrix : public Output<Matrix<T>> {
 
 #ifdef __DOXYGEN
         /**
-         * A Python-only routine that fills the matrix with the given
-         * set of elements.
+         * A deprecated Python-only routine that fills the matrix with the
+         * given set of elements.
          *
          * The argument \a allValues must be a Python list of length
          * rows() * columns().  Its values will be inserted into the
          * matrix row by row (i.e., the first row will be filled, then
          * the second row, and so on).
          *
+         * \deprecated Use the list-based constructor instead, which is
+         * now available to Python users.
+         *
          * \ifacescpp Not available; this routine is for Python only.
          *
          * @param allValues the individual elements to place into the matrix.
          */
-        void initialise(List allValues);
+        [[deprecated]] void initialise(List allValues);
 #endif
 
         /**
