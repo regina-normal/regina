@@ -183,7 +183,7 @@ void metricalSmithNormalForm(MatrixInt& matrix,
  *
  * \ingroup maths
  */
-unsigned rowBasis(MatrixInt& matrix);
+unsigned long rowBasis(MatrixInt& matrix);
 
 /**
  * Finds a basis for the row space of the given matrix, as well as an

@@ -257,17 +257,17 @@ void smithNormalForm(MatrixInt& matrix,
     }
 }
 
-unsigned rowBasis(MatrixInt& matrix) {
-    unsigned n = matrix.columns();
+unsigned long rowBasis(MatrixInt& matrix) {
+    unsigned long n = matrix.columns();
 
     // Make a copy of the input matrix, and reduce it to row echelon form.
     MatrixInt echelon(matrix);
 
-    unsigned doneRows = 0;
-    unsigned rank = echelon.rows();
+    unsigned long doneRows = 0;
+    unsigned long rank = echelon.rows();
 
-    auto* lead = new unsigned[n];
-    unsigned r, c, tmp;
+    auto* lead = new unsigned long[n];
+    unsigned long r, c, tmp;
     for (c = 0; c < n; ++c)
         lead[c] = c;
 
