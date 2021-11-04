@@ -110,10 +110,8 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * the matrix that one takes the kernel of when computing homology.
          * @param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
-         *
-         * @author Ryan Budney
          */
-        AbelianGroup(const MatrixInt& M, const MatrixInt& N);
+        AbelianGroup(MatrixInt M, MatrixInt N);
         /**
          * Creates an abelian group as the homology of a chain complex,
          * using mod-\a p coefficients.
@@ -417,25 +415,29 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          */
         void writeTextShort(std::ostream& out, bool utf8 = false) const;
 
-    protected:
+    private:
         /**
          * Replaces the torsion elements of this group with those
          * in the abelian group represented by the given Smith normal
-         * form presentation matrix.  Any zero columns in the matrix
-         * will also be added to the rank as additional copies of Z.
-         * Note that preexisting torsion elements will be deleted, but
-         * preexisting rank will not.
+         * form presentation matrix.
+         *
+         * The rank of this group will be adjusted also: if \a rankFromCols is
+         * \c true then rank_ will be incremented by the number of zero columns
+         * in \a matrix; otherwise rank_ will be incremented by the number of
+         * zero rows.
+         *
+         * Any preexisting torsion elements will be deleted; however, any
+         * preexisting rank will be preserved.
          *
          * \pre The given matrix is in Smith normal
          * form, with the diagonal consisting of a series of positive,
          * non-decreasing integers followed by zeroes.
          *
-         * @param matrix a matrix containing the Smith normal form
-         * presentation matrix for the new torsion elements,
-         * where each column represents a generator
-         * and each row a relation.
+         * @param matrix a matrix containing the Smith normal form presentation
+         * matrix for the new torsion elements, where each column represents a
+         * generator and each row a relation.
          */
-        void replaceTorsion(const MatrixInt& matrix);
+        void replaceTorsion(const MatrixInt& matrix, bool rankFromCols = true);
 };
 
 /**

@@ -209,7 +209,7 @@ void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
         out << '0';
 }
 
-void AbelianGroup::replaceTorsion(const MatrixInt& matrix) {
+void AbelianGroup::replaceTorsion(const MatrixInt& matrix, bool rankFromCols) {
     // Delete any preexisting torsion.
     invariantFactors_.clear();
 
@@ -218,20 +218,37 @@ void AbelianGroup::replaceTorsion(const MatrixInt& matrix) {
     // looking for 0 because the SNF calculation should end up with
     // many 1s for a unnecessarily large presentation matrix such as
     // is produced for instance by homology calculations.
-    unsigned long rows = matrix.rows();
-    unsigned long i = matrix.columns();
-    if (i > rows) {
-        rank_ += (i - rows);
-        i = rows;
+    unsigned long i;
+    if (rankFromCols) {
+        i = matrix.columns();
+
+        unsigned long rows = matrix.rows();
+        if (rows < i) {
+            // There are more columns than rows; these extras cols must be zero.
+            rank_ += (i - rows);
+            i = rows;
+        }
+    } else {
+        i = matrix.rows();
+
+        unsigned long cols = matrix.columns();
+        if (cols < i) {
+            // There are more rows than columns; these extras rows must be zero.
+            rank_ += (i - cols);
+            i = cols;
+        }
     }
+
+    // Now i is precisely the length of the diagonal.
+
     while (i > 0) {
-        if (matrix.entry(i-1, i-1) == 0)
+        --i;
+        if (matrix.entry(i, i) == 0)
             ++rank_;
-        else if (matrix.entry(i-1, i-1) == 1)
+        else if (matrix.entry(i, i) == 1)
             break;
         else
-            invariantFactors_.push_back(matrix.entry(i-1, i-1));
-        --i;
+            invariantFactors_.push_back(matrix.entry(i, i));
     }
 
     // We inserted the invariant factors in reverse order; fix this now.
@@ -246,29 +263,11 @@ void AbelianGroup::writeXMLData(std::ostream& out) const {
 }
 
 // ---N--> CC --M-->  ie: M*N = 0.
-AbelianGroup::AbelianGroup(const MatrixInt& M, const MatrixInt& N) {
-    rank_ = N.rows();
-    MatrixInt tempN(N);
-    metricalSmithNormalForm(tempN);
-    unsigned long lim =
-        (tempN.rows() < tempN.columns() ? tempN.rows() : tempN.columns() );
-    std::multiset<Integer> torsion;
-    for (unsigned long i=0; i<lim; i++) {
-        if (tempN.entry(i,i) != 0) {
-            rank_--;
-            if (tempN.entry(i,i) > 1)
-                torsion.insert(tempN.entry(i,i));
-        }
-    }
-    addTorsionElements(torsion);
+AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
+    metricalSmithNormalForm(N);
+    replaceTorsion(N, false /* rank comes from the zero rows of N */);
 
-    MatrixInt tempM(M);
-    metricalSmithNormalForm(tempM);
-    lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns());
-    for (unsigned long i=0; i<lim; ++i) {
-        if (tempM.entry(i,i) != 0)
-            rank_--;
-    }
+    rank_ -= M.rowEchelonForm(); // subtracts the rank of M
 }
 
 AbelianGroup::AbelianGroup(const MatrixInt& M, const MatrixInt& N,
