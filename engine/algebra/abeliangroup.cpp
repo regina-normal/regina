@@ -270,42 +270,38 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
     rank_ -= M.rowEchelonForm(); // subtracts the rank of M
 }
 
-AbelianGroup::AbelianGroup(const MatrixInt& M, const MatrixInt& N,
-        const Integer &p) {
+AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
     Integer cof(p.abs());
     rank_ = N.rows();
 
-    MatrixInt tempN(N);
-    metricalSmithNormalForm(tempN);
-    unsigned long lim =
-        (tempN.rows() < tempN.columns() ? tempN.rows() : tempN.columns() );
+    metricalSmithNormalForm(N);
+    unsigned long lim = (N.rows() < N.columns() ? N.rows() : N.columns() );
     std::multiset<Integer> torsion;
 
     if (cof == 0) {
         for (unsigned long i=0; i<lim; i++)
-            if (tempN.entry(i,i) != 0) {
+            if (N.entry(i,i) != 0) {
                 rank_--;
-                if (tempN.entry(i,i) > 1)
-                    torsion.insert(tempN.entry(i,i));
+                if (N.entry(i,i) > 1)
+                    torsion.insert(N.entry(i,i));
             }
     } else {
         for (unsigned long i=0; i<lim; i++)
-            if (tempN.entry(i,i) !=0) {
+            if (N.entry(i,i) !=0) {
                 rank_--;
-                Integer g( tempN.entry(i,i).gcd(cof) );
+                Integer g( N.entry(i,i).gcd(cof) );
                 if (g > 1)
                     torsion.insert(g);
             }
     }
 
-    MatrixInt tempM(M);
-    metricalSmithNormalForm(tempM);
-    lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns() );
+    metricalSmithNormalForm(M);
+    lim = (M.rows() < M.columns() ? M.rows() : M.columns() );
     for (unsigned long i=0; i<lim; i++) {
-        if (tempM.entry(i,i) != 0) {
+        if (M.entry(i,i) != 0) {
             rank_--;
             if (cof != 0) {
-                Integer g( tempM.entry(i,i).gcd(cof) );
+                Integer g( M.entry(i,i).gcd(cof) );
                 if (g>1)
                     torsion.insert(g);
             }

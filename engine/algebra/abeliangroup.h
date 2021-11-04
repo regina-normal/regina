@@ -126,13 +126,11 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param p the modulus, which may be any Integer.
          * Zero is interpreted as a request for integer coefficents,
          * which will give the same result as the
-         * AbelianGroup(const MatrixInt&, const MatrixInt&) constructor.
+         * AbelianGroup(MatrixInt, MatrixInt) constructor.
          *
          * @author Ryan Budney
          */
-        AbelianGroup(const MatrixInt& M, const MatrixInt& N,
-            const Integer &p);
-
+        AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p);
         /**
          * Increments the rank of the group by the given integer.
          * This integer may be positive, negative or zero.
