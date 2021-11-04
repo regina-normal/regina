@@ -34,6 +34,8 @@
  *  \brief Assists with conversions involving lists and iterators.
  */
 
+#include "utilities/exception.h"
+
 namespace regina::python {
 
 /**
@@ -108,16 +110,14 @@ class MATCH_PYBIND11_VISIBILITY SafeIterator {
 template <typename T>
 T* seqFromList(pybind11::list l) {
     size_t len = l.size();
-    T* coeffs = new T[len];
-    if (! coeffs)
-        throw std::bad_alloc();
+    T* coeffs = new T[len]; // throws on failure; otherwise non-null
     for (size_t i = 0; i < len; ++i) {
         try {
             coeffs[i] = l[i].cast<T>();
             continue;
         } catch (pybind11::cast_error const &) {
             delete[] coeffs;
-            throw std::invalid_argument("List element not convertible to " +
+            throw regina::InvalidArgument("List element not convertible to " +
                 std::string(pybind11::str(pybind11::type::of<T>())));
         }
     }

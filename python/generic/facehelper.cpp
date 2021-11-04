@@ -43,7 +43,7 @@ void invalidFaceDimension(const char* functionName, int minDim, int maxDim) {
     else
         s << functionName << "() requires a face dimension in the range "
             << minDim << ".." << maxDim;
-    throw std::invalid_argument(s.str());
+    throw regina::InvalidArgument(s.str());
 }
 
 } // namespace regina::python

@@ -52,14 +52,14 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
                     type = item.cast<int>();
                     if (type < 0 || type >= nTypes) {
                         delete[] c;
-                        throw std::invalid_argument(
+                        throw regina::InvalidArgument(
                             "Element of type vector is out of range");
                     }
                     c[len++] = type;
                 }
             } catch (pybind11::cast_error const&) {
                 delete[] c;
-                throw std::invalid_argument(
+                throw regina::InvalidArgument(
                     "Element of type vector not convertible to integer");
             }
             c[len] = 0;
@@ -75,14 +75,14 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
                     type = item.cast<int>();
                     if (type < 0 || type >= nTypes) {
                         delete[] c;
-                        throw std::invalid_argument(
+                        throw regina::InvalidArgument(
                             "Element of type vector is out of range");
                     }
                     c[len++] = type;
                 }
             } catch (pybind11::cast_error const&) {
                 delete[] c;
-                throw std::invalid_argument(
+                throw regina::InvalidArgument(
                     "Element of type vector not convertible to integer");
             }
             c[len] = 0;

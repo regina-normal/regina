@@ -59,7 +59,7 @@ void addNormalHypersurface(pybind11::module_& m) {
                 for (size_t i = 0; i < v.size(); ++i)
                     v[i] = values[i].cast<regina::LargeInteger>();
             } catch (pybind11::cast_error const &) {
-                throw std::invalid_argument(
+                throw regina::InvalidArgument(
                     "List element not convertible to LargeInteger");
             }
             return new NormalHypersurface(t, enc, std::move(v));
@@ -75,7 +75,7 @@ void addNormalHypersurface(pybind11::module_& m) {
                 for (size_t i = 0; i < v.size(); ++i)
                     v[i] = values[i].cast<regina::LargeInteger>();
             } catch (pybind11::cast_error const &) {
-                throw std::invalid_argument(
+                throw regina::InvalidArgument(
                     "List element not convertible to LargeInteger");
             }
             return new NormalHypersurface(t, enc, std::move(v));

@@ -52,7 +52,7 @@ namespace {
                 set.insert(item.cast<regina::Integer>());
                 continue;
             } catch (pybind11::cast_error const &) {
-                throw std::invalid_argument(
+                throw regina::InvalidArgument(
                     "List element not convertible to Integer");
             }
         }

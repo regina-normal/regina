@@ -93,7 +93,7 @@ void addPerm5(pybind11::module_& m) {
                 for (long i = 0; i < 5; i++)
                     image[i] = l[i].cast<int>();
             } catch (pybind11::cast_error const &) {
-                throw std::invalid_argument(
+                throw regina::InvalidArgument(
                     "List element not convertible to int");
             }
             return new Perm<5>(image);

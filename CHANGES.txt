@@ -1527,6 +1527,8 @@ Version 7.0  [ TODO ]
         - Likewise, BoolSet and DiscType now have __repr__().
         - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
           in C++ for a long time but was somehow never wrapped in Python.
+        - All regina functions that used to throw std::invalid_argument on
+          error now throw regina::InvalidArgument instead.
     USER INTERFACES:
         - Removed the View/Edit action from the toolbar, since you might as
           well just double-click on the packet instead.

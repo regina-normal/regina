@@ -126,7 +126,7 @@ void addTreeDecomposition(pybind11::module_& m) {
                     // Clean up and throw an exception.
                     for (k = 0; k < i; ++k) delete[] g[k];
                     delete[] g;
-                    throw std::invalid_argument(
+                    throw regina::InvalidArgument(
                         "Graph must be presented as a list of lists");
                 }
                 if (row.size() != len) {
@@ -145,7 +145,7 @@ void addTreeDecomposition(pybind11::module_& m) {
                     // Clean up and throw an exception.
                     for (k = 0; k <= i; ++k) delete[] g[k];
                     delete[] g;
-                    throw std::invalid_argument(
+                    throw regina::InvalidArgument(
                         "Matrix element not convertible to a boolean");
                 }
             }

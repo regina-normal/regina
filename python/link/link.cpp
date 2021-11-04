@@ -140,19 +140,19 @@ void addLink(pybind11::module_& m) {
                 try {
                     pyTuple = obj.cast<pybind11::tuple>();
                 } catch (pybind11::cast_error const &) {
-                    throw std::invalid_argument("List element not "
-                        "convertible to a Python tuple");
+                    throw regina::InvalidArgument(
+                        "List element not convertible to a Python tuple");
                 }
                 if (pyTuple.size() != 4) {
-                    throw std::invalid_argument("List element is not "
-                        "a tuple of size 4");
+                    throw regina::InvalidArgument(
+                        "List element is not a tuple of size 4");
                 }
                 try {
                     for (int i = 0; i < 4; ++i)
                         cppTuple[i] = pyTuple[i].cast<long>();
                 } catch (pybind11::cast_error const &) {
-                    throw std::invalid_argument("Tuple element not "
-                        "convertible to a C++ long integer");
+                    throw regina::InvalidArgument(
+                        "Tuple element not convertible to a C++ long integer");
                 }
                 tuples.push_back(cppTuple);
             }

@@ -33,7 +33,6 @@
 #include "../pybind11/pybind11.h"
 #include "maths/matrix.h"
 #include "maths/vector.h"
-#include "utilities/exception.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;

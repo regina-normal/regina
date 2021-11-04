@@ -57,7 +57,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
                 try {
                     arg.push_back(item.cast<size_t>());
                 } catch (pybind11::cast_error const&) {
-                    throw std::invalid_argument(
+                    throw regina::InvalidArgument(
                         "Bitmask index not convertible to integer");
                 }
             }
@@ -102,7 +102,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
                 try {
                     arg.push_back(item.cast<size_t>());
                 } catch (pybind11::cast_error const&) {
-                    throw std::invalid_argument(
+                    throw regina::InvalidArgument(
                         "Bitmask index not convertible to integer");
                 }
             }
