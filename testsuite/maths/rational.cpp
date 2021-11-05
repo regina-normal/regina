@@ -381,43 +381,34 @@ class RationalTest : public CppUnit::TestFixture {
 
         void checkDoubleInRange(const Rational& r,
                 double lowerBnd, double upperBnd, const char* name) {
-            bool inRange;
-            double ans = r.doubleApprox(&inRange);
+            try {
+                double ans = r.doubleApprox();
 
-            if (! inRange) {
+                if (ans < lowerBnd || ans > upperBnd) {
+                    std::ostringstream msg;
+                    msg << "Rational " << name <<
+                        " converts to the double " << ans <<
+                        ", which is outside the expected range [ "
+                        << lowerBnd << ", " << upperBnd << " ].";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::UnsolvedCase&) {
                 std::ostringstream msg;
                 msg << "Rational " << name <<
                     " should be reported as within the range of double.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            if (ans < lowerBnd || ans > upperBnd) {
-                std::ostringstream msg;
-                msg << "Rational " << name <<
-                    " converts to the double " << ans <<
-                    ", which is outside the expected range [ "
-                    << lowerBnd << ", " << upperBnd << " ].";
-                CPPUNIT_FAIL(msg.str());
-            }
         }
 
         void checkDoubleOutOfRange(const Rational& r, const char* name) {
-            bool inRange;
-            double ans = r.doubleApprox(&inRange);
+            try {
+                r.doubleApprox();
 
-            if (inRange) {
                 std::ostringstream msg;
                 msg << "Rational " << name <<
                     " should be reported as outside the range of double.";
                 CPPUNIT_FAIL(msg.str());
-            }
-
-            if (ans < -epsilon || ans > epsilon) {
-                std::ostringstream msg;
-                msg << "Rational " << name <<
-                    " converts to the double " << ans <<
-                    ", which should be zero to indicate out-of-range.";
-                CPPUNIT_FAIL(msg.str());
+            } catch (const regina::UnsolvedCase&) {
             }
         }
 

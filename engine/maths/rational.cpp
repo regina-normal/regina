@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "maths/rational.h"
+#include "utilities/exception.h"
 #include <cfloat>
 #include <sstream>
 
@@ -289,7 +290,7 @@ std::ostream& Rational::writeTeX(std::ostream &out) const {
     return out;
 }
 
-double Rational::doubleApprox(bool* inRange) const {
+double Rational::doubleApprox() const {
     // Initialise maxDouble and minDouble if this has not already been done.
     // Do this even if the current doubleApprox() call is trivial, since we
     // promise this initialisation on the very first call to doubleApprox().
@@ -297,32 +298,20 @@ double Rational::doubleApprox(bool* inRange) const {
         initDoubleBounds();
 
     // Trivial cases.
-    if (flavour == Rational::f_infinity || flavour == Rational::f_undefined) {
-        if (inRange)
-            *inRange = false;
-        return 0.0;
-    }
+    if (flavour == Rational::f_infinity || flavour == Rational::f_undefined)
+        throw UnsolvedCase("Rational is infinite or undefined");
 
     // Treat zero separately so that "abs < minDouble" is meaningful later on.
-    if (*this == zero) {
-        if (inRange)
-            *inRange = true;
+    if (*this == zero)
         return 0.0;
-    }
 
     // In bounds or out of bounds?
     Rational magnitude = this->abs();
-    if (magnitude < minDouble || magnitude > maxDouble) {
-        if (inRange)
-            *inRange = false;
-        return 0.0;
-    }
+    if (magnitude < minDouble || magnitude > maxDouble)
+        throw UnsolvedCase("Rational is out of range for double");
 
     // The rational is in range.  Use GMP's native conversion routines,
     // since GMP knows best.
-    if (inRange)
-        *inRange = true;
-
     return mpq_get_d(data);
 }
 

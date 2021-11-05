@@ -431,6 +431,10 @@ Version 7.0  [ TODO ]
         Class HomologicalData:
             - Now supports copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Some routines related to the torsion linking form can now throw
+              exceptions.  This will only happen if an internal
+              rational-to-double conversion fails; previously these
+              routines just silently did the wrong thing.
         Class HyperEncoding:
             - New class to describe how the internal integer vector is encoded.
         Class HyperInfo:
@@ -995,6 +999,9 @@ Version 7.0  [ TODO ]
         Class Rational:
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
+            - Routine doubleApprox() now throws an exception on error
+              instead of using an extra bool* argument.  The python-only
+              doubleApproxCheck() is now deprecated.
         Class ReginaException:
             - New exception base class.
         Class Returns, ReturnsTraits:

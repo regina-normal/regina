@@ -431,6 +431,10 @@ private:
      * this routine unless you know the manifold is orientable.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      */
     void computeTorsionLinkingForm();
     /**
@@ -439,6 +443,10 @@ private:
      * orientable double cover).
      *
      * \pre The triangulation is of a connected 3-manifold.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      */
     void computeEmbeddabilityString();
 
@@ -699,6 +707,10 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return the torsion form rank vector.
      */
     const std::vector< std::pair< Integer,
@@ -707,6 +719,10 @@ public:
      * Same as torsionRankVector() but returns as a human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return human-readable prime power factorization of the order of
      * the torsion subgroup of H1.
@@ -722,6 +738,10 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return the Kawauchi-Kojima sigma-vector.
      */
     const std::vector<LargeInteger>& torsionSigmaVector();
@@ -730,6 +750,10 @@ public:
      * This is an orientation-sensitive invariant.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return the Kawauchi-Kojima sigma-vector in human readable form.
      */
@@ -745,6 +769,10 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return the Legendre symbol vector associated to the torsion
      * linking form.
      */
@@ -755,6 +783,10 @@ public:
      * human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return the Legendre symbol vector in human-readable form.
      */
@@ -774,6 +806,10 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return \c true iff the torsion linking form is hyperbolic.
      */
     bool formIsHyperbolic();
@@ -781,6 +817,10 @@ public:
      * Returns true iff the torsion linking form is split.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return \c true iff the linking form is split.
      */
@@ -795,6 +835,10 @@ public:
      * perhaps with boundary to embed in a homology 4-sphere.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return \c true iff the form satisfies the 2-torsion
      * condition of Kawauchi-Kojima.
@@ -816,6 +860,10 @@ public:
      * additional information regarding the orientable double cover.
      *
      * \pre The triangulation is of a connected 3-manifold.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return a string giving a one-line description of what
      * is known about where this manifold embeds, based solely

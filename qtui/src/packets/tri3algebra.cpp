@@ -579,12 +579,21 @@ void Tri3CellularInfoUI::refresh() {
             // 8 principle cases:
             // orientable y/n, boundary y/n, torsion exists y/n
             if (tri->isOrientable()) {
-                TorForOrders->setText(
-                    minfo.torsionRankVectorString().c_str());
-                TorForSigma->setText(
-                    minfo.torsionSigmaVectorString().c_str());
-                TorForLegendre->setText(
-                    minfo.torsionLegendreSymbolVectorString().c_str());
+                try {
+                    TorForOrders->setText(
+                        minfo.torsionRankVectorString().c_str());
+                    TorForSigma->setText(
+                        minfo.torsionSigmaVectorString().c_str());
+                    TorForLegendre->setText(
+                        minfo.torsionLegendreSymbolVectorString().c_str());
+                } catch (const regina::UnsolvedCase&) {
+                    QString msg(QObject::tr("Torsion linking form could "
+                        "not be computed."));
+
+                    TorForOrders->setText(msg);
+                    TorForSigma->setText(msg);
+                    TorForLegendre->setText(msg);
+                }
             } else {
                 // The torsion linking form routines insist on orientability,
                 // so we should avoid calling them.
