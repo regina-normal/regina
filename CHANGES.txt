@@ -630,6 +630,10 @@ Version 7.0  [ TODO ]
               MatrixBool.
         Class Matrix2:
             - Added member and global swap() functions.
+            - Re-engineered to use std::array internally.  This means
+              that the row access functions change their return type
+              (but the syntax for the user should stay the same).
+              All functions that take a long[2][2] array are now deprecated.
         Class MaxAdmissible:
             - Function enumerate() now returns by value, not by pointer.
         Class ModelLinkGraph:

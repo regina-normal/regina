@@ -45,7 +45,7 @@ namespace regina {
      */
     class Matrix2Row {
         private:
-            long* row;
+            std::array<long, 2>& row;
 
         public:
             Matrix2Row(Matrix2& matrix, int whichRow) :
