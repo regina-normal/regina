@@ -154,7 +154,7 @@ AbelianGroup TrivialTri::homology() const {
         ans.addRank();
     else if (type_ == N3_1 || type_ == N3_2) {
         ans.addRank();
-        ans.addTorsionElement(2);
+        ans.addTorsion(2);
     }
 
     return ans;

@@ -3755,7 +3755,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     } else if (! c->isOrientable()) {
                         // X + Z_2 -> X + Z
                         expectH2.addRank();
-                        foundH2.addTorsionElement(2);
+                        foundH2.addTorsion(2);
                     }
 
                     if (foundH2 != expectH2) {

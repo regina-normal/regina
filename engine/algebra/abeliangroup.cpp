@@ -37,43 +37,32 @@
 
 namespace regina {
 
-void AbelianGroup::addTorsionElement(const Integer& degree,
-        unsigned mult) {
-    // If there are no current torsion elements, just throw in the new
-    // ones.
-    if (invariantFactors_.empty()) {
-        for (unsigned j=0; j<mult; j++)
-            invariantFactors_.push_back(degree);
-        return;
+void AbelianGroup::addTorsion(Integer degree) {
+    for (auto it = invariantFactors_.rbegin();
+            it != invariantFactors_.rend(); ++it) {
+        // INV: We still need to introduce an torsion element of degree,
+        // and we know that degree divides all invariant factors beyond it
+        // (i.e. all invariant factors that have already been seen in
+        // this reverse loop).
+
+        // Replace (degree, *it) with (gcd, lcm).
+
+        Integer g = degree.gcd(*it);
+        degree.divByExact(g);
+        (*it) *= degree;
+
+        degree = g;
+        if (degree == 1)
+            return;
     }
 
-    // Build a presentation matrix for the torsion.
-    size_t len = invariantFactors_.size() + mult;
-    MatrixInt a(len, len);
-
-    // Put our own invariant factors in the top.
-    unsigned i=0;
-    for (const auto& f : invariantFactors_) {
-        a.entry(i,i) = f;
-        ++i;
-    }
-
-    // Put the passed torsion elements beneath.
-    for (unsigned j=0; j<mult; j++) {
-        a.entry(i,i) = degree;
-        ++i;
-    }
-
-    // Go calculate!
-    smithNormalForm(a);
-    replaceTorsion(a);
+    if (degree > 1)
+        invariantFactors_.push_front(degree);
 }
 
-void AbelianGroup::addTorsionElements(const std::multiset<Integer>&
-        torsion) {
+void AbelianGroup::addTorsionElements(const std::multiset<Integer>& torsion) {
     // Build a presentation matrix for the torsion.
-    size_t len = invariantFactors_.size() + torsion.size();
-    MatrixInt a(len, len);
+    MatrixInt a(invariantFactors_.size() + torsion.size());
 
     // Put our own invariant factors in the top.
     unsigned i=0;
@@ -276,14 +265,13 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
 
     metricalSmithNormalForm(N);
     unsigned long lim = (N.rows() < N.columns() ? N.rows() : N.columns() );
-    std::multiset<Integer> torsion;
 
     if (cof == 0) {
         for (unsigned long i=0; i<lim; i++)
             if (N.entry(i,i) != 0) {
                 rank_--;
                 if (N.entry(i,i) > 1)
-                    torsion.insert(N.entry(i,i));
+                    addTorsion(N.entry(i,i));
             }
     } else {
         for (unsigned long i=0; i<lim; i++)
@@ -291,7 +279,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
                 rank_--;
                 Integer g( N.entry(i,i).gcd(cof) );
                 if (g > 1)
-                    torsion.insert(g);
+                    addTorsion(g);
             }
     }
 
@@ -303,16 +291,12 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
             if (cof != 0) {
                 Integer g( M.entry(i,i).gcd(cof) );
                 if (g>1)
-                    torsion.insert(g);
+                    addTorsion(g);
             }
         }
     }
-    if (cof != 0) {
-        for (unsigned long i=0; i<rank_; i++)
-            torsion.insert(cof);
-        rank_ = 0;
-    }
-    addTorsionElements(torsion);
+    for ( ; rank_ > 0; --rank_)
+        addTorsion(cof);
 }
 
 } // namespace regina

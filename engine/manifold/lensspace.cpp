@@ -71,7 +71,7 @@ AbelianGroup LensSpace::homology() const {
     if (p_ == 0)
         ans.addRank();
     else if (p_ > 1)
-        ans.addTorsionElement(p_);
+        ans.addTorsion(p_);
     return ans;
 }
 

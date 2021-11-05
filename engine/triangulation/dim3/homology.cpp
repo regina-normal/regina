@@ -143,7 +143,8 @@ const AbelianGroup& Triangulation<3>::homologyBdry() const {
     // Build the group and tidy up.
     AbelianGroup ans;
     ans.addRank(rank);
-    ans.addTorsionElement(2, z2rank);
+    for (unsigned long i = 0; i < z2rank; ++i)
+        ans.addTorsion(2);
     return *(H1Bdry_ = std::move(ans));
 }
 
@@ -180,8 +181,8 @@ const AbelianGroup& Triangulation<3>::homologyH2() const {
     // Build the new group and tidy up.
     AbelianGroup ans;
     ans.addRank(rank);
-    if (z2rank)
-        ans.addTorsionElement(2, z2rank);
+    for (long i = 0; i < z2rank; ++i)
+        ans.addTorsion(2);
     return *(H2_ = std::move(ans));
 }
 

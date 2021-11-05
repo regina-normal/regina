@@ -58,6 +58,9 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
+            - Replaced the old addTorsionElement() and addTorsionElements()
+              with a simpler and much faster addTorsion().  The old routines
+              are kept but deprecated, and are reimplemented using addTorsion().
         Enum AngleAlgFlags, Class AngleAlg:
             - New flags to specifiy angle structure enumeration algorithms.
         Class AngleStructure, AngleStructureVector:

@@ -195,13 +195,14 @@ AbelianGroup LayeredLoop::homology() const {
     if (hinge_[1]) {
         // Untwisted.
         if (length_ > 1)
-            ans.addTorsionElement(length_);
+            ans.addTorsion(length_);
     } else {
         // Twisted.
-        if (length_ % 2 == 0)
-            ans.addTorsionElement(2, 2);
-        else
-            ans.addTorsionElement(4);
+        if (length_ % 2 == 0) {
+            ans.addTorsion(2);
+            ans.addTorsion(2);
+        } else
+            ans.addTorsion(4);
     }
     return ans;
 }

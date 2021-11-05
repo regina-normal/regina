@@ -91,7 +91,7 @@ std::unique_ptr<Manifold> L31Pillow::manifold() const {
 
 AbelianGroup L31Pillow::homology() const {
     AbelianGroup ans;
-    ans.addTorsionElement(3);
+    ans.addTorsion(3);
     return ans;
 }
 

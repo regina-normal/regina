@@ -40,27 +40,6 @@ using regina::AbelianGroup;
 using regina::Integer;
 using regina::MatrixInt;
 
-namespace {
-    void addTorsionElements(AbelianGroup& g, pybind11::list elements) {
-        std::multiset<regina::Integer> set;
-
-        for (auto item : elements) {
-            // Accept any type that we know how to convert to a large integer.
-            // This includes (at least) regina::Integer, python integers
-            // (both int and long), and strings.
-            try {
-                set.insert(item.cast<regina::Integer>());
-                continue;
-            } catch (pybind11::cast_error const &) {
-                throw regina::InvalidArgument(
-                    "List element not convertible to Integer");
-            }
-        }
-
-        g.addTorsionElements(set);
-    }
-}
-
 void addAbelianGroup(pybind11::module_& m) {
     auto c = pybind11::class_<AbelianGroup>(m, "AbelianGroup")
         .def(pybind11::init<>())
@@ -71,14 +50,32 @@ void addAbelianGroup(pybind11::module_& m) {
         .def("swap", &AbelianGroup::swap)
         .def("addRank", &AbelianGroup::addRank,
             pybind11::arg("extraRank") = 1)
-        .def("addTorsionElement",
-            overload_cast<const regina::Integer&, unsigned>(
-            &AbelianGroup::addTorsionElement),
-            pybind11::arg(), pybind11::arg("mult") = 1)
-        .def("addTorsionElement", overload_cast<unsigned long, unsigned>(
-            &AbelianGroup::addTorsionElement),
-            pybind11::arg(), pybind11::arg("mult") = 1)
-        .def("addTorsionElements", addTorsionElements)
+        .def("addTorsion", &AbelianGroup::addTorsion)
+        .def("addTorsionElement", // deprecated
+                [](AbelianGroup& g, const regina::Integer& d, unsigned m) {
+            for ( ; m > 0; --m)
+                g.addTorsion(d);
+        }, pybind11::arg(), pybind11::arg("mult") = 1)
+        .def("addTorsionElement", // deprecated
+                [](AbelianGroup& g, unsigned long d, unsigned m) {
+            for ( ; m > 0; --m)
+                g.addTorsion(d);
+        }, pybind11::arg(), pybind11::arg("mult") = 1)
+        .def("addTorsionElements", [](AbelianGroup& g, pybind11::list l) {
+            // This routine is now deprecated.
+            // Reimplement it using addTorsionElement() instead.
+            for (auto item : l) {
+                // Accept any type that we know how to convert to Integer.
+                // This includes (at least) regina::Integer, python integers
+                // (both int and long), and strings.
+                try {
+                    g.addTorsion(item.cast<regina::Integer>());
+                } catch (pybind11::cast_error const &) {
+                    throw regina::InvalidArgument(
+                        "List element not convertible to Integer");
+                }
+            }
+        })
         .def("addGroup", overload_cast<const MatrixInt&>(
             &AbelianGroup::addGroup))
         .def("addGroup", overload_cast<const AbelianGroup&>(

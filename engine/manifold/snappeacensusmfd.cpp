@@ -184,15 +184,13 @@ AbelianGroup SnapPeaCensusManifold::homology() const {
     ans.addRank(val);
 
     // The remaining characters represent torsion.
-    std::multiset<Integer> torsion;
     for (c = hom + 1; *c; ++c) {
         val = homDecode(*c);
         if (val < 0)
             throw regina::FileError("Read invalid torsion from the "
                 "SnapPea census database");
-        torsion.insert(val);
+        ans.addTorsion(val);
     }
-    ans.addTorsionElements(torsion);
     return ans;
 }
 

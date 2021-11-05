@@ -71,7 +71,7 @@ AbelianGroup SimpleSurfaceBundle::homology() const {
     AbelianGroup ans;
     ans.addRank();
     if (type_ == RP2xS1)
-        ans.addTorsionElement(2);
+        ans.addTorsion(2);
     return ans;
 }
 

@@ -40,7 +40,7 @@
 #endif
 
 #include <set>
-#include <vector>
+#include <deque>
 #include "regina-core.h"
 #include "maths/integer.h"
 #include "core/output.h"
@@ -80,7 +80,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
     protected:
         unsigned rank_;
             /**< The rank of the group (the number of Z components). */
-        std::vector<Integer> invariantFactors_;
+        std::deque<Integer> invariantFactors_;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
              *   described in the AbelianGroup notes. */
 
@@ -144,16 +144,34 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         void addRank(int extraRank = 1);
         /**
          * Adds the given torsion element to the group.
-         * Note that this routine might be slow since calculating the
-         * new invariant factors is not trivial.  If many different
-         * torsion elements are to be added, consider using
-         * addTorsionElements() instead so the invariant factors need
-         * only be calculated once.
+         *
+         * As of Regina 7.0, this routine is much faster than it used to be.
+         * In particular, if you have many torsion elements to add, it is now
+         * efficient just to call addTorsion() for each new torsion element,
+         * one at a time.
+         *
+         * In this routine we add a single copy of Z_<i>d</i>, where \a d is
+         * the given degree.
+         *
+         * @param degree the degree of the new torsion element; this
+         * must be strictly positive.
+         */
+        void addTorsion(Integer degree);
+        /**
+         * Deprecated routine that adds the given torsion element to the group.
+         *
+         * As of Regina 7.0, this routine is much faster than it used to be.
+         * In particular, if you have many torsion elements to add, it is now
+         * efficient just to call addTorsion() for each new torsion element,
+         * one at a time.
          *
          * In this routine we add a specified number of copies of
          * Z_<i>d</i>, where <i>d</i> is some given degree.
          *
-         * \pre The given degree is at least 2 and the
+         * \deprecated Use addTorsion() instead, multiple times if
+         * necessary (which is exactly how this routine is implemented).
+         *
+         * \pre The given degree is strictly positive, and the
          * given multiplicity is at least 1.
          *
          * @param degree <i>d</i>, where we are adding copies of
@@ -161,19 +179,23 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param mult the multiplicity <i>m</i>, where we are adding
          * precisely <i>m</i> copies of <i>Z_d</i>; this defaults to 1.
          */
-        void addTorsionElement(const Integer& degree, unsigned mult = 1);
+        [[deprecated]] void addTorsionElement(const Integer& degree,
+            unsigned mult = 1);
         /**
-         * Adds the given torsion element to the group.
-         * Note that this routine might be slow since calculating the
-         * new invariant factors is not trivial.  If many different
-         * torsion elements are to be added, consider using
-         * addTorsionElements() instead so the invariant factors need
-         * only be calculated once.
+         * Deprecated routine that adds the given torsion element to the group.
+         *
+         * As of Regina 7.0, this routine is much faster than it used to be.
+         * In particular, if you have many torsion elements to add, it is now
+         * efficient just to call addTorsion() for each new torsion element,
+         * one at a time.
          *
          * In this routine we add a specified number of copies of
          * Z_<i>d</i>, where <i>d</i> is some given degree.
          *
-         * \pre The given degree is at least 2 and the
+         * \deprecated Use addTorsion() instead, multiple times if
+         * necessary (which is exactly how this routine is implemented).
+         *
+         * \pre The given degree is strictly positive, and the
          * given multiplicity is at least 1.
          *
          * @param degree <i>d</i>, where we are adding copies of
@@ -181,9 +203,12 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param mult the multiplicity <i>m</i>, where we are adding
          * precisely <i>m</i> copies of <i>Z_d</i>; this defaults to 1.
          */
-        void addTorsionElement(unsigned long degree, unsigned mult = 1);
+        [[deprecated]] void addTorsionElement(unsigned long degree,
+            unsigned mult = 1);
         /**
-         * Adds the given set of torsion elements to this group.
+         * Deprecated routine that adds the given set of torsion elements to
+         * this group.
+         *
          * Note that this routine might be slow since calculating the
          * new invariant factors is not trivial.
          *
@@ -192,6 +217,10 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * Z_<i>k1</i>,...,Z_<i>km</i>.  Unlike invariant factors, the
          * <i>ki</i> are not required to divide each other.
          *
+         * \deprecated This routine uses an old implementation, and it is now
+         * much faster just to add each torsion element one at a time using
+         * addTorsion().
+         *
          * \pre Each integer in the given list is strictly greater than 1.
          *
          * \ifacespython This routine takes a python list as its argument.
@@ -199,7 +228,8 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param torsion a list containing the torsion elements to add,
          * as described above.
          */
-        void addTorsionElements(const std::multiset<Integer>& torsion);
+        [[deprecated]] void addTorsionElements(
+            const std::multiset<Integer>& torsion);
         /**
          * Adds the abelian group defined by the given presentation to this
          * group.
@@ -465,9 +495,17 @@ inline void AbelianGroup::addRank(int extraRank) {
     rank_ += extraRank;
 }
 
+inline void AbelianGroup::addTorsionElement(const Integer& degree,
+        unsigned mult) {
+    for ( ; mult > 0; --mult)
+        addTorsion(degree);
+}
+
 inline void AbelianGroup::addTorsionElement(unsigned long degree,
         unsigned mult) {
-    addTorsionElement(Integer(degree), mult);
+    Integer d(degree);
+    for ( ; mult > 0; --mult)
+        addTorsion(d);
 }
 
 inline unsigned AbelianGroup::rank() const {

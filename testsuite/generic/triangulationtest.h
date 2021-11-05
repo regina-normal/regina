@@ -1001,7 +1001,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 // or to be missing a copy of Z_2.
                 if (tri.isValid() && (tri.homology() != cover.homology())) {
                     regina::AbelianGroup hCover(cover.homology());
-                    hCover.addTorsionElement(2);
+                    hCover.addTorsion(2);
                     if (tri.homology() != hCover) {
                         std::ostringstream msg;
                         msg << name << ": Orientable double cover has H1 = "

@@ -104,15 +104,10 @@ void XMLAbelianGroupReader::initialChars(const std::string& chars) {
     if (group_) {
         std::list<std::string> tokens;
         if (basicTokenise(back_inserter(tokens), chars) > 0) {
-            std::multiset<Integer> torsion;
             Integer val;
-
             for (const std::string& t : tokens)
                 if (valueOf(t, val))
-                    torsion.insert(val);
-
-            if (! torsion.empty())
-                group_->addTorsionElements(torsion);
+                    group_->addTorsion(val);
         }
     }
 }
