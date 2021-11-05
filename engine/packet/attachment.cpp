@@ -95,7 +95,8 @@ Attachment::Attachment(const char* pathname) :
     data_ = data;
     size_ = size;
     try {
-        filename_ = filesystem_path(pathname).filename();
+        // The choice bewteen string() vs generic_string() is irrelevant here.
+        filename_ = filesystem_path(pathname).filename().string();
     } catch (const std::exception&) {
         filename_.clear();
     }
@@ -106,7 +107,8 @@ std::string Attachment::extension() const {
         return {};
 
     try {
-        return filesystem_path(filename_).extension();
+        // The choice bewteen string() vs generic_string() is irrelevant here.
+        return filesystem_path(filename_).extension().string();
     } catch (const std::exception&) {
         return {};
     }
