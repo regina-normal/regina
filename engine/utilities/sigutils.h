@@ -171,7 +171,7 @@ struct Base64SigEncoding {
     }
 
     /**
-     * Returns a single base64 character that encoded up to three trits.
+     * Returns a single base64 character that encodes up to three trits.
      * A \e trit is either 0, 1 or 2.
      *
      * The given trits will be packed into a single base64 character, with
