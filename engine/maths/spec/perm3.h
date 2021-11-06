@@ -350,16 +350,32 @@ class Perm<3> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1,2.
          *
+         * \pre The elements of \a image are 0, 1 and 2 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 3>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1,2.
+         *
+         * \deprecated Use the three-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains three elements, which are
          * 0, 1 and 2 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], ..., \a a[2]) to
-         * (\a b[0], ..., \a b[2]) respectively.
+         * Deprecated constructor that creates a permutation mapping
+         * (\a a[0], ..., \a a[2]) to (\a b[0], ..., \a b[2]) respectively.
+         *
+         * \deprecated Use the six-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain 3 elements, which
          * are 0,...,2 in some order.
@@ -370,7 +386,7 @@ class Perm<3> {
          * @param b the corresponding array of images; this must also have
          * length 3.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping (<i>a0</i>,<i>b0</i>,<i>c0</i>) to
@@ -964,6 +980,12 @@ inline constexpr Perm<3>::Perm(int a, int b, int) :
         code_(a == 0 ? (b == 1 ? 0 : 1) :
               a == 1 ? (b == 2 ? 2 : 3) :
                        (b == 0 ? 4 : 5)) {
+}
+
+inline constexpr Perm<3>::Perm(const std::array<int, 3>& image) :
+        code_(image[0] == 0 ? (image[1] == 1 ? 0 : 1) :
+              image[0] == 1 ? (image[1] == 2 ? 2 : 3) :
+                              (image[1] == 0 ? 4 : 5)) {
 }
 
 inline constexpr Perm<3>::Perm(const int* image) :

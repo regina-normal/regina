@@ -43,6 +43,7 @@
 #define __REGINA_PERM_H
 #endif
 
+#include <array>
 #include <cstdlib>
 #include <string>
 #include "regina-core.h"
@@ -364,17 +365,31 @@ class Perm {
          * Creates a permutation mapping \a i to \a image[\a i] for each
          * 0 &le; \a i < \a n.
          *
+         * \pre The elements of \a image are 0,...,<i>n</i>-1 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, n>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[\a i] for each 0 &le; \a i < \a n.
+         *
+         * \deprecated Use the std::array constructor instead.
+         *
          * \pre The array \a image contains \a n elements, which are
          * 0,...,<i>n</i>-1 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping
+         * Deprecated constructor that creates a permutation mapping
          * (\a a[0], ..., \a a[<i>n</i>-1]) to
          * (\a b[0], ..., \a b[<i>n</i>-1]) respectively.
+         *
+         * \deprecated Use the std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain \a n elements, which
          * are 0,...,<i>n</i>-1 in some order.
@@ -385,7 +400,7 @@ class Perm {
          * @param b the corresponding array of images; this must also have
          * length \a n.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -921,6 +936,12 @@ inline constexpr Perm<n>::Perm(int a, int b) : code_(idCode_) {
     code_ &= ~(imageMask << (imageBits * b));
     code_ |= (static_cast<Code>(a) << (imageBits * b));
     code_ |= (static_cast<Code>(b) << (imageBits * a));
+}
+
+template <int n>
+inline constexpr Perm<n>::Perm(const std::array<int, n>& image) : code_(0) {
+    for (int i = 0; i < n; ++i)
+        code_ |= (static_cast<Code>(image[i]) << (imageBits * i));
 }
 
 template <int n>

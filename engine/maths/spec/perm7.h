@@ -351,16 +351,33 @@ class Perm<7> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1,2,3,4,5,6.
          *
+         * \pre The elements of \a image are 0, 1, 2, 3, 4, 5 and 6 in some
+         * order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 7>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1,2,3,4,5,6.
+         *
+         * \deprecated Use the seven-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains seven elements, which are
          * 0, 1, 2, 3, 4, 5 and 6 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], ..., \a a[6]) to
-         * (\a b[0], ..., \a b[6]) respectively.
+         * Deprecated constructor that creates a permutation mapping
+         * (\a a[0], ..., \a a[6]) to (\a b[0], ..., \a b[6]) respectively.
+         *
+         * \deprecated Use the 14-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain seven elements, which
          * are 0,...,6 in some order.
@@ -371,7 +388,7 @@ class Perm<7> {
          * @param b the corresponding array of images; this must also have
          * length 7.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -1813,6 +1830,12 @@ inline constexpr Perm<7>::Perm(int a, int b) : code2_(swapTable[a][b]) {
 
 inline constexpr Perm<7>::Perm(int a, int b, int c, int d, int e, int f,
         int g) : code2_(static_cast<Code2>(S7Index(a, b, c, d, e, f, g))) {
+}
+
+inline constexpr Perm<7>::Perm(const std::array<int, 7>& image) :
+        code2_(static_cast<Code2>(S7Index(
+            image[0], image[1], image[2], image[3], image[4], image[5],
+            image[6]))) {
 }
 
 inline constexpr Perm<7>::Perm(const int* image) :

@@ -100,7 +100,7 @@ namespace regina::detail {
             "The generic movePerm() implementation cannot be used in "
             "standard dimensions.");
 
-        int image[dim + 1];
+        std::array<int, dim + 1> image;
         int i;
         int oldFacet, newFacet;
 

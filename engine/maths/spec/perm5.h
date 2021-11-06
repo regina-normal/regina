@@ -538,16 +538,32 @@ class Perm<5> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1,2,3,4.
          *
+         * \pre The elements of \a image are 0, 1, 2, 3 and 4 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 5>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1,2,3,4.
+         *
+         * \deprecated Use the five-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains five elements, which are
          * 0, 1, 2, 3 and 4 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], ..., \a a[4]) to
-         * (\a b[0], ..., \a b[4]) respectively.
+         * Deprecated constuctor that creates a permutation mapping
+         * (\a a[0], ..., \a a[4]) to (\a b[0], ..., \a b[4]) respectively.
+         *
+         * \deprecated Use the ten-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain 5 elements, which
          * are 0,...,4 in some order.
@@ -558,7 +574,7 @@ class Perm<5> {
          * @param b the corresponding array of images; this must also have
          * length 5.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -1599,6 +1615,11 @@ inline constexpr Perm<5>::Perm(int a, int b) : code2_(swapTable[a][b]) {
 
 inline constexpr Perm<5>::Perm(int a, int b, int c, int d, int e) :
         code2_(static_cast<Code2>(S5Index(a, b, c, d, e))) {
+}
+
+inline constexpr Perm<5>::Perm(const std::array<int, 5>& image) :
+        code2_(static_cast<Code2>(S5Index(
+            image[0], image[1], image[2], image[3], image[4]))) {
 }
 
 inline constexpr Perm<5>::Perm(const int* image) :

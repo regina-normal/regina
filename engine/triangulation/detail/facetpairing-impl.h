@@ -321,7 +321,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     FacetSpec<dim> fImg, fPre;
     bool stepDown;
     int simp, facet;
-    int permImg[dim + 1];
     for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(size_, true);
             ++preImage[0]) {
         // Note that we know firstFace is not unmatched.
@@ -375,6 +374,7 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                 Isomorphism<dim> ans(size_);
                 for (i = 0; i < size_; i++) {
                     ans.simpImage(i) = image[i * (dim + 1)].simp;
+                    std::array<int, dim+1> permImg;
                     for (j = 0; j <= dim; ++j)
                         permImg[j] = image[i * (dim + 1) + j].facet;
                     ans.facetPerm(i) = Perm<dim+1>(permImg);

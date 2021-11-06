@@ -274,16 +274,32 @@ class Perm<2> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1.
          *
+         * \pre The elements of \a image are 0 and 1 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 2>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1.
+         *
+         * \deprecated Use the two-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains two elements, which are
          * 0 and 1 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], \a a[1]) to
-         * (\a b[0], \a b[1]) respectively.
+         * Deprecated constructor that creates a permutation mapping
+         * (\a a[0], \a a[1]) to (\a b[0], \a b[1]) respectively.
+         *
+         * \deprecated Use the four-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain two elements, which
          * are 0 and 1 in some order.
@@ -294,7 +310,7 @@ class Perm<2> {
          * @param b the corresponding array of images; this must also have
          * length 2.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -745,6 +761,10 @@ inline constexpr Perm<2>::Perm(Code code) : code_(code) {
 }
 
 inline constexpr Perm<2>::Perm(int a, int b) : code_(a == b ? 0 : 1) {
+}
+
+inline constexpr Perm<2>::Perm(const std::array<int, 2>& image) :
+        code_(image[0]) {
 }
 
 inline constexpr Perm<2>::Perm(const int* image) : code_(image[0]) {

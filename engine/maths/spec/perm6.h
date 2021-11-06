@@ -335,16 +335,32 @@ class Perm<6> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1,2,3,4,5.
          *
+         * \pre The elements of \a image are 0, 1, 2, 3, 4 and 5 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 6>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1,2,3,4,5.
+         *
+         * \deprecated Use the six-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains six elements, which are
          * 0, 1, 2, 3, 4 and 5 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], ..., \a a[5]) to
-         * (\a b[0], ..., \a b[5]) respectively.
+         * Deprecated constructor that creates a permutation mapping
+         * (\a a[0], ..., \a a[5]) to (\a b[0], ..., \a b[5]) respectively.
+         *
+         * \deprecated Use the 12-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain six elements, which
          * are 0,...,5 in some order.
@@ -355,7 +371,7 @@ class Perm<6> {
          * @param b the corresponding array of images; this must also have
          * length 6.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -3143,6 +3159,11 @@ inline constexpr Perm<6>::Perm(int a, int b) : code2_(swapTable[a][b]) {
 
 inline constexpr Perm<6>::Perm(int a, int b, int c, int d, int e, int f) :
         code2_(static_cast<Code2>(S6Index(a, b, c, d, e, f))) {
+}
+
+inline constexpr Perm<6>::Perm(const std::array<int, 6>& image) :
+        code2_(static_cast<Code2>(S6Index(
+            image[0], image[1], image[2], image[3], image[4], image[5]))) {
 }
 
 inline constexpr Perm<6>::Perm(const int* image) :

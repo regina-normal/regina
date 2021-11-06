@@ -898,6 +898,8 @@ Version 7.0  [ TODO ]
             - Replaced lookup tables S1, S2, S3, ..., orderedS2, orderedS3, ...
               with lightweight objects whose square bracket operators compute
               and/or look up the relevant permutations on the fly.
+            - The C-style array constructors are now deprecated, and
+              std::array constructors have been added in their place.
             - Renamed preImageOf() to pre().  The old name is kept as a
               deprecated alias.
             - Now all n (not just small n) have static members Sn and orderedSn

@@ -62,6 +62,14 @@ namespace {
      * in-place, without performing deep copies.
      */
     char genericName[] = "Regina";
+
+    /**
+     * Converts a single gluing from snappea::TetrahedronData::gluing
+     * into one of Regina's permutations.
+     */
+    Perm<4> snappeaGluing(const int* gluing) {
+        return Perm<4>(gluing[0], gluing[1], gluing[2], gluing[3]);
+    }
 }
 
 void Cusp::writeTextShort(std::ostream& out) const {
@@ -958,7 +966,7 @@ void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
             if (! tet[i]->adjacentTetrahedron(j))
                 tet[i]->join(j,
                     tet[tData->tetrahedron_data[i].neighbor_index[j]],
-                    Perm<4>(tData->tetrahedron_data[i].gluing[j]));
+                    snappeaGluing(tData->tetrahedron_data[i].gluing[j]));
 
     delete[] tet;
     regina::snappea::free_triangulation_data(tData);

@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/perm.h"
 #include "../constarray.h"
 #include "../helpers.h"
@@ -102,20 +103,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
         .def(pybind11::init<const Perm<n>&>())
-        .def(pybind11::init([](pybind11::list l) {
-            if (l.size() != n)
-                throw pybind11::index_error(
-                    "Initialisation list has the wrong length");
-            int image[n];
-            try {
-                for (long i = 0; i < n; i++)
-                    image[i] = l[i].cast<int>();
-            } catch (pybind11::cast_error const &) {
-                throw regina::InvalidArgument(
-                    "List element not convertible to int");
-            }
-            return new Perm<n>(image);
-        }))
+        .def(pybind11::init<const std::array<int, n>&>())
         .def("permCode", &Perm<n>::permCode)
         .def("setPermCode", &Perm<n>::setPermCode)
         .def_static("fromPermCode", &Perm<n>::fromPermCode)

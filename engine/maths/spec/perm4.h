@@ -464,16 +464,32 @@ class Perm<4> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1,2,3.
          *
+         * \pre The elements of \a image are 0, 1, 2 and 3 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 4>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1,2,3.
+         *
+         * \deprecated Use the four-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains four elements, which are
          * 0, 1, 2 and 3 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], ..., \a a[3]) to
-         * (\a b[0], ..., \a b[3]) respectively.
+         * Deprecated constructor that creates a permutation mapping
+         * (\a a[0], ..., \a a[3]) to (\a b[0], ..., \a b[3]) respectively.
+         *
+         * \deprecated Use the eight-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain 4 elements, which
          * are 0,...,3 in some order.
@@ -484,7 +500,7 @@ class Perm<4> {
          * @param b the corresponding array of images; this must also have
          * length 4.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -1384,6 +1400,11 @@ inline constexpr Perm<4>::Perm(int a, int b) : code_(swapTable[a][b]) {
 
 inline constexpr Perm<4>::Perm(int a, int b, int c, int d) :
         code_(static_cast<Code2>(S4Index(a, b, c, d))) {
+}
+
+inline constexpr Perm<4>::Perm(const std::array<int, 4>& image) :
+        code_(static_cast<Code2>(S4Index(
+        image[0], image[1], image[2], image[3]))) {
 }
 
 inline constexpr Perm<4>::Perm(const int* image) :
