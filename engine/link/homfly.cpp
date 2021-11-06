@@ -882,7 +882,7 @@ namespace {
     inline void aggregate(
             std::map<LightweightSequence<int>, Laurent2<Integer>*>* solns,
             const LightweightSequence<int>& key, Laurent2<Integer>* value) {
-        auto existingSoln = solns->emplace(key, value);
+        auto existingSoln = solns->try_emplace(key, value);
         if (! existingSoln.second) {
             *(existingSoln.first->second) += *value;
             delete value;
