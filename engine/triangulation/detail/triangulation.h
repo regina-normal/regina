@@ -2977,7 +2977,31 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
         for (f = 0; f <= dim; ++f) {
             if (adjacencies[i][f] >= 0) {
                 s->adj_[f] = simplices_[nOrig + adjacencies[i][f]];
-                s->gluing_[f] = Perm<dim+1>(gluings[i][f]);
+                if constexpr (dim == 2) {
+                    s->gluing_[f] = Perm<3>(
+                        gluings[i][f][0], gluings[i][f][1], gluings[i][f][2]);
+                } else if constexpr (dim == 3) {
+                    s->gluing_[f] = Perm<4>(
+                        gluings[i][f][0], gluings[i][f][1],
+                        gluings[i][f][2], gluings[i][f][3]);
+                } else if constexpr (dim == 4) {
+                    s->gluing_[f] = Perm<5>(
+                        gluings[i][f][0], gluings[i][f][1], gluings[i][f][2],
+                        gluings[i][f][3], gluings[i][f][4]);
+                } else {
+                    static_assert(! standardDim(dim));
+
+                    // This is inefficient in that it deep-copies each C-style
+                    // array of gluing images into a std::array.  However, we
+                    // presume it is rarely called since the dimension is high,
+                    // and regardless this is dwarfed by the cost of later
+                    // constructing the skeleton of the triangulation.
+
+                    std::array<int, dim + 1> img;
+                    std::copy(gluings[i][f], gluings[i][f] + dim + 1,
+                        img.begin());
+                    s->gluing_[f] = img;
+                }
             } else
                 s->adj_[f] = nullptr;
         }

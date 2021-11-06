@@ -1260,7 +1260,8 @@ class LPData {
         const LPInitialTableaux<LPConstraint>* origTableaux_;
             /**< The original starting tableaux that holds the adjusted
                  matrix of matching equations, before the tree traversal
-                 algorithm began. */
+                 algorithm began.  This is stored by pointer, not reference,
+                 to facilitate the create-reserve-initialise process. */
         IntType* rhs_;
             /**< An array of length origTableaux_->rank() that stores
                  the column vector of constants on the right-hand side
@@ -1388,7 +1389,7 @@ class LPData {
          * adjusted matrix of matching equations, before the tree traversal
          * algorithm began.
          */
-        void reserve(const LPInitialTableaux<LPConstraint>* origTableaux);
+        void reserve(const LPInitialTableaux<LPConstraint>& origTableaux);
 
         /**
          * Initialises this tableaux by beginning at the original
@@ -2205,12 +2206,12 @@ inline void LPData<LPConstraint, IntType>::swap(LPData& other) noexcept {
 
 template <class LPConstraint, typename IntType>
 inline void LPData<LPConstraint, IntType>::reserve(
-        const LPInitialTableaux<LPConstraint>* origTableaux) {
-    origTableaux_ = origTableaux;
-    rhs_ = new IntType[origTableaux->rank()];
-    rowOps_.reserve(origTableaux->rank(), origTableaux->rank());
-    basis_ = new int[origTableaux->rank()];
-    basisRow_ = new int[origTableaux->columns()];
+        const LPInitialTableaux<LPConstraint>& origTableaux) {
+    origTableaux_ = std::addressof(origTableaux);
+    rhs_ = new IntType[origTableaux.rank()];
+    rowOps_.reserve(origTableaux.rank(), origTableaux.rank());
+    basis_ = new int[origTableaux.rank()];
+    basisRow_ = new int[origTableaux.columns()];
 }
 
 template <class LPConstraint, typename IntType>

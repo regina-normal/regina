@@ -190,7 +190,7 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
 
     // Reserve space for all the tableaux that we will ever need.
     for (i = 0; i < nTableaux_; ++i)
-        lp_[i].reserve(&origTableaux_);
+        lp_[i].reserve(origTableaux_);
 
     // Mark the location of the initial tableaux at the root node.
     lpSlot_[0] = lp_;
@@ -200,10 +200,10 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
     BanConstraint::init(origTableaux_.columnPerm());
 
     // Reserve space for our additional temporary tableaux.
-    tmpLP_[0].reserve(&origTableaux_);
-    tmpLP_[1].reserve(&origTableaux_);
-    tmpLP_[2].reserve(&origTableaux_);
-    tmpLP_[3].reserve(&origTableaux_);
+    tmpLP_[0].reserve(origTableaux_);
+    tmpLP_[1].reserve(origTableaux_);
+    tmpLP_[2].reserve(origTableaux_);
+    tmpLP_[3].reserve(origTableaux_);
 }
 
 /**

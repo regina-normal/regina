@@ -590,6 +590,8 @@ Version 7.0  [ TODO ]
         Class LPConstraintEulerZero:
             - New constraint to use with normal surface enumeration that
               fixes Euler characteristic to be zero.
+        Class LPData:
+            - Routine reserve() now takes the tableaux by reference.
         Class LPInitialTableaux:
             - The constraintsBroken() routines are gone; instead the class
               constructor throws an exception on error.
