@@ -278,9 +278,7 @@ Triangulation<3> Example<3>::trefoil() {
 
 Triangulation<3> Example<3>::whiteheadLink() {
     Triangulation<3> ans;
-
     ans.insertConstruction(4, whiteheadAdj, whiteheadGluings);
-
     return ans;
 }
 
