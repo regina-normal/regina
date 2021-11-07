@@ -303,31 +303,8 @@ class LightweightSequence {
         bool operator < (const LightweightSequence& rhs) const;
 
         /**
-         * A binary function object that compares sequences lexicographically,
-         * for use in containers that hold pointers to sequences.
-         *
-         * \pre The type \a T supports the less-than operator.
-         */
-        struct Less {
-            /**
-             * Compares two sequences lexicographically.  The sequences
-             * need not be the same size.
-             *
-             * This routine is identical to testing <tt>(*a) &lt; (*b)</tt>.
-             *
-             * @param a a pointer to the first of the two sequences to compare.
-             * @param b a pointer to the second of the two sequences to compare.
-             * @return \c true if sequence \a a is strictly lexicographically
-             * smaller than sequence \a b, or \c false if \a a is either
-             * lexicographically greater than or equal to \a b.
-             */
-            bool operator () (const LightweightSequence* a,
-                    const LightweightSequence* b) const;
-        };
-
-        /**
          * A binary function object for comparing subsequences, for use in
-         * associative containers whose keys are pointers to sequences.
+         * associative containers whose keys are sequences.
          *
          * This is a very specialised comparison object, for use in the
          * following settings:
@@ -338,12 +315,12 @@ class LightweightSequence {
          *
          * - The actual objects that we compare are not the sequences
          *   themselves, but iterators that point to (key, value) pairs,
-         *   whose keys are pointers to sequences.
+         *   whose keys are sequences.
          *
          * More precisely: suppose the indices of the elements to
          * compare are \a i0, \a i1, \a i2, ..., and that we are comparing
          * iterators \a a, \a b.  Then this function object will consider the
-         * sequences <tt>s = *(a->first)</tt> and <tt>t = *(b->first)</tt>,
+         * sequences <tt>s = a->first</tt> and <tt>t = b->first</tt>,
          * and will lexicographically compare their subsequences
          * <tt>s[i0], s[i1], ...</tt> and <tt>t[i0], t[i1], ...</tt>.
          *
@@ -359,7 +336,7 @@ class LightweightSequence {
          * versions of Regina the list of elements was copied on construction.
          */
         template <typename Iterator>
-        class SubsequenceCompareFirstPtr {
+        class SubsequenceCompareFirst {
             private:
                 size_t nSub_;
                     /**< The number of elements to compare in each sequence. */
@@ -388,20 +365,20 @@ class LightweightSequence {
                  * from each sequence; that is, the indices \a i0,
                  * \a i1, ..., as described in the class notes.
                  */
-                SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub);
+                SubsequenceCompareFirst(size_t nSub, const size_t* sub);
                 /**
                  * Copies the given function object into this new object.
                  */
-                SubsequenceCompareFirstPtr(
-                    const SubsequenceCompareFirstPtr<Iterator>&) = default;
+                SubsequenceCompareFirst(
+                    const SubsequenceCompareFirst<Iterator>&) = default;
 
                 /**
                  * Copies the given function object into this object.
                  *
                  * @return a reference to this function object.
                  */
-                SubsequenceCompareFirstPtr<Iterator>& operator = (
-                    const SubsequenceCompareFirstPtr<Iterator>&) = default;
+                SubsequenceCompareFirst<Iterator>& operator = (
+                    const SubsequenceCompareFirst<Iterator>&) = default;
 
                 /**
                  * Tests whether the subsequences referred to by the
@@ -654,20 +631,6 @@ inline bool LightweightSequence<T>::operator < (
 }
 
 template <typename T>
-inline bool LightweightSequence<T>::Less::operator () (
-        const LightweightSequence<T>* a, const LightweightSequence<T>* b)
-        const {
-    for (size_t i = 0; i < b->size_; ++i)
-        if (i >= a->size_ || a->data_[i] < b->data_[i])
-            return true;
-        else if (b->data_[i] < a->data_[i])
-            return false;
-    // The sequences match for the first b->size_ elements, and
-    // sequence a is at least as long as sequence b.
-    return false;
-}
-
-template <typename T>
 inline std::ostream& operator << (std::ostream& out,
         const LightweightSequence<T>& s) {
     out << '(';
@@ -681,41 +644,41 @@ inline std::ostream& operator << (std::ostream& out,
 
 template <typename T>
 template <typename Iterator>
-inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
-        SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub) :
+inline LightweightSequence<T>::SubsequenceCompareFirst<Iterator>::
+        SubsequenceCompareFirst(size_t nSub, const size_t* sub) :
         nSub_(nSub), sub_(sub) {
 }
 
 template <typename T>
 template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<Iterator>::
         equal(Iterator a, Iterator b) const {
     for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[sub_[i]] != (*(b->first))[sub_[i]])
+        if (a->first[sub_[i]] != b->first[sub_[i]])
             return false;
     return true;
 }
 
 template <typename T>
 template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<Iterator>::
         less(Iterator a, Iterator b) const {
     for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[sub_[i]] < (*(b->first))[sub_[i]])
+        if (a->first[sub_[i]] < b->first[sub_[i]])
             return true;
-        else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
+        else if (a->first[sub_[i]] > b->first[sub_[i]])
             return false;
     return false;
 }
 
 template <typename T>
 template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<Iterator>::
         operator () (Iterator a, Iterator b) const {
     for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[sub_[i]] < (*(b->first))[sub_[i]])
+        if (a->first[sub_[i]] < b->first[sub_[i]])
             return true;
-        else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
+        else if (a->first[sub_[i]] > b->first[sub_[i]])
             return false;
     return false;
 }

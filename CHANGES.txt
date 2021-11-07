@@ -540,6 +540,10 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions.
             - Added a constructor that takes a combination of elements
               and iterator pairs.
+            - Renamed SubsequenceCompareFirstPtr to SubsequenceCompareFirst,
+              which is now designed to work with containers whose keys
+              are sequences, not pointers to sequences.
+            - Removed the inner class Less.
         Class Link:
             - New routines writheOfComponent() and selfFrame().
             - New routine group().

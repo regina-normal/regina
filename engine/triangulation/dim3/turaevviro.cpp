@@ -903,21 +903,17 @@ namespace {
             }
         }
 
-        using SolnSet = std::map<LightweightSequence<int>*, TVType,
-            LightweightSequence<int>::Less>;
+        using SolnSet = std::map<LightweightSequence<int>, TVType>;
         using SolnIterator = typename SolnSet::iterator;
 
         auto* partial = new SolnSet*[nBags];
         std::fill(partial, partial + nBags, nullptr);
 
-        LightweightSequence<int>* seq;
-        SolnIterator it;
         std::pair<SolnIterator, bool> existingSoln;
         int tetEdge[6];
         int colour[6];
         int level;
         bool ok;
-        TVType val;
 
         auto* overlap = new size_t[nEdges];
         size_t nOverlap;
@@ -954,12 +950,14 @@ namespace {
                 }
 
                 // A single empty colouring.
-                seq = new LightweightSequence<int>(nEdges);
-                std::fill(seq->begin(), seq->end(), TV_UNCOLOURED);
+                LightweightSequence<int> seq(nEdges);
+                std::fill(seq.begin(), seq.end(), TV_UNCOLOURED);
+
+                TVType val;
+                init.initOne(val);
 
                 partial[index] = new SolnSet;
-                init.initOne(val);
-                partial[index]->insert(std::make_pair(seq, val));
+                partial[index]->emplace(std::move(seq), std::move(val));
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
                 if (tracker) {
@@ -1011,7 +1009,7 @@ namespace {
                 increment = 100.0 / partial[child->index()]->size();
                 percent = 0;
 
-                for (it = partial[child->index()]->begin();
+                for (auto it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it) {
                     if (tracker) {
                         percent += increment;
@@ -1020,7 +1018,7 @@ namespace {
                     }
                     for (i = 0; i < 6; ++i)
                         colour[i] = (choiceType[i] < 0 ?
-                            (*(it->first))[tetEdge[i]] : -1);
+                            it->first[tetEdge[i]] : -1);
 
                     level = 5;
                     while (level < 6) {
@@ -1028,7 +1026,7 @@ namespace {
                             // We have an admissible partial colouring.
 
                             // First, compute its (partial) weight:
-                            val = it->second;
+                            TVType val = it->second;
                             init.tetContrib(tet,
                                 colour[0], colour[1], colour[2],
                                 colour[3], colour[4], colour[5], val);
@@ -1037,26 +1035,24 @@ namespace {
                             // that we will use as a lookup key.
                             // For any edges that never appear beyond
                             // this bag, we mark them for aggregation.
-                            seq = new LightweightSequence<int>(nEdges);
+                            LightweightSequence<int> seq(nEdges);
                             for (i = 0; i < nEdges; ++i)
                                 if (seenDegree[index][i] < 0)
-                                    (*seq)[i] = TV_AGGREGATED;
+                                    seq[i] = TV_AGGREGATED;
                                 else
-                                    (*seq)[i] = (*it->first)[i];
+                                    seq[i] = it->first[i];
                             for (i = 0; i < 6; ++i)
                                 if (choiceType[i] == 0 &&
-                                        (*seq)[tetEdge[i]] != TV_AGGREGATED)
-                                    (*seq)[tetEdge[i]] = colour[i];
+                                        seq[tetEdge[i]] != TV_AGGREGATED)
+                                    seq[tetEdge[i]] = colour[i];
 
                             // Finally, insert the solution into the
                             // lookup table, aggregating with existing
                             // solutions if need be.
-                            existingSoln = partial[index]->insert(
-                                std::make_pair(seq, val));
-                            if (! existingSoln.second) {
+                            existingSoln = partial[index]->try_emplace(
+                                std::move(seq), std::move(val));
+                            if (! existingSoln.second)
                                 existingSoln.first->second += val;
-                                delete seq;
-                            }
 
                             ++level;
                             while (level < 6 && choiceType[level] != 0)
@@ -1108,8 +1104,6 @@ namespace {
                     }
                 }
 
-                for (auto& soln : *(partial[child->index()]))
-                    delete soln.first;
                 delete partial[child->index()];
                 partial[child->index()] = nullptr;
             } else {
@@ -1134,15 +1128,15 @@ namespace {
                             seenDegree[sibling->index()][i] != 0)
                     overlap[nOverlap++] = i;
 
-                LightweightSequence<int>::SubsequenceCompareFirstPtr<
-                    SolnIterator> compare(nOverlap, overlap);
+                LightweightSequence<int>::SubsequenceCompareFirst<SolnIterator>
+                    compare(nOverlap, overlap);
 
                 if (tracker && tracker->isCancelled())
                     break;
 
                 nLeft = 0;
                 leftIndexed = new SolnIterator[partial[child->index()]->size()];
-                for (it = partial[child->index()]->begin();
+                for (auto it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
                     leftIndexed[nLeft++] = it;
                 std::sort(leftIndexed, leftIndexed + nLeft, compare);
@@ -1153,7 +1147,7 @@ namespace {
                 nRight = 0;
                 rightIndexed = new SolnIterator[
                     partial[sibling->index()]->size()];
-                for (it = partial[sibling->index()]->begin();
+                for (auto it = partial[sibling->index()]->begin();
                         it != partial[sibling->index()]->end(); ++it)
                     rightIndexed[nRight++] = it;
                 std::sort(rightIndexed, rightIndexed + nRight, compare);
@@ -1199,47 +1193,38 @@ namespace {
                             // We have two compatible solutions.
                             // Combine them and store the corresponding
                             // value, again aggregating if necessary.
-                            val = (*subit)->second;
-                            val *= (*subit2)->second;
+                            TVType val = (*subit)->second * (*subit2)->second;
 
-                            seq = new LightweightSequence<int>(nEdges);
+                            LightweightSequence<int> seq(nEdges);
                             for (i = 0; i < nEdges; ++i)
                                 if (seenDegree[index][i] < 0)
-                                    (*seq)[i] = TV_AGGREGATED;
+                                    seq[i] = TV_AGGREGATED;
                                 else if (seenDegree[child->index()][i] > 0)
-                                    (*seq)[i] = (*((*subit)->first))[i];
+                                    seq[i] = ((*subit)->first)[i];
                                 else
-                                    (*seq)[i] = (*((*subit2)->first))[i];
+                                    seq[i] = ((*subit2)->first)[i];
 
-                            existingSoln = partial[index]->insert(
-                                std::make_pair(seq, val));
-                            if (! existingSoln.second) {
+                            existingSoln = partial[index]->try_emplace(
+                                std::move(seq), std::move(val));
+                            if (! existingSoln.second)
                                 existingSoln.first->second += val;
-                                delete seq;
-                            }
                         }
                 }
 
                 delete[] leftIndexed;
                 delete[] rightIndexed;
 
-                for (auto& soln : *(partial[child->index()]))
-                    delete soln.first;
                 delete partial[child->index()];
                 partial[child->index()] = nullptr;
 
-                for (auto& soln : *(partial[sibling->index()]))
-                    delete soln.first;
                 delete partial[sibling->index()];
                 partial[sibling->index()] = nullptr;
             }
 
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
             std::cout << "Bag " << bag->index() << ":" << std::endl;
-            for (it = partial[index]->begin(); it != partial[index]->end();
-                    ++it)
-                std::cout << *(it->first) << " -> "
-                    << it->second << std::endl;
+            for (const auto& soln : partial[index])
+                std::cout << soln.first << " -> " soln.second << std::endl;
 #endif
         }
 
@@ -1255,11 +1240,7 @@ namespace {
             // We don't know which elements of partial[] have been
             // deallocated, so check them all.
             for (i = 0; i < nBags; ++i)
-                if (partial[i]) {
-                    for (auto& soln : *(partial[i]))
-                        delete soln.first;
-                    delete partial[i];
-                }
+                delete partial[i];
             delete[] partial;
 
             return TuraevViroDetails<exact>::zero();
@@ -1272,8 +1253,6 @@ namespace {
         // only one colouring stored (in which all edge colours are aggregated).
         TVType ans = partial[nBags - 1]->begin()->second;
 
-        for (auto& soln : *(partial[nBags - 1]))
-            delete soln.first;
         delete partial[nBags - 1];
         delete[] partial;
 
