@@ -880,29 +880,24 @@ namespace {
     // Convenience functions for the treewidth HOMFLY algorithm:
 
     inline void aggregate(
-            std::map<LightweightSequence<int>, Laurent2<Integer>*>* solns,
-            LightweightSequence<int>&& key, Laurent2<Integer>* value) {
-        auto existingSoln = solns->emplace(std::move(key), value);
-        if (! existingSoln.second) {
-            *(existingSoln.first->second) += *value;
-            delete value;
-        }
+            std::map<LightweightSequence<int>, Laurent2<Integer>>* solns,
+            LightweightSequence<int>&& key, Laurent2<Integer> value) {
+        auto existingSoln = solns->try_emplace(
+            std::move(key), std::move(value));
+        if (! existingSoln.second)
+            existingSoln.first->second += value;
     }
 
-    inline Laurent2<Integer>* passValue(const Laurent2<Integer>* from) {
-        return new Laurent2<Integer>(*from);
-    }
-
-    inline Laurent2<Integer>* switchValue(const Laurent2<Integer>* from,
+    inline Laurent2<Integer> switchValue(const Laurent2<Integer>& from,
             Crossing* c) {
-        return new Laurent2<Integer>(*from, (c->sign() > 0 ? -2 : 2), 0);
+        return Laurent2<Integer>(from, (c->sign() > 0 ? -2 : 2), 0);
     }
 
-    inline Laurent2<Integer>* spliceValue(const Laurent2<Integer>* from,
+    inline Laurent2<Integer> spliceValue(const Laurent2<Integer>& from,
             Crossing* c) {
-        auto* ans = new Laurent2<Integer>(*from, (c->sign() > 0 ? -1 : 1), 1);
+        Laurent2<Integer> ans(from, (c->sign() > 0 ? -1 : 1), 1);
         if (c->sign() < 0)
-            ans->negate();
+            ans.negate();
         return ans;
     }
 }
@@ -1304,7 +1299,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
     using Key = LightweightSequence<int>;
     using Value = Laurent2<Integer>;
-    using SolnSet = std::map<Key, Value*>;
+    using SolnSet = std::map<Key, Value>;
 
     auto* partial = new SolnSet*[nBags];
     std::fill(partial, partial + nBags, nullptr);
@@ -1331,7 +1326,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             }
 
             partial[index] = new SolnSet;
-            partial[index]->emplace(Key(), new Laurent2<Integer>(0, 0));
+            partial[index]->emplace(Key(), Laurent2<Integer>(0, 0));
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
             child = bag->children();
@@ -1396,15 +1391,12 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                 // total number of loops.
                 if (index != nBags - 1)
                     for (auto& soln : *(partial[index]))
-                        (*soln.second) *= delta;
+                        soln.second *= delta;
 
                 continue;
             }
 
             partial[index] = new SolnSet;
-
-            const Value *vChild;
-            Value *vNew;
 
             // Identify if/where the four strands touching this
             // crossing appear in the key:
@@ -1467,13 +1459,15 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                         // Therefore we need to finish the loop to ensure that
                         // all remaining child keys and values are deleted,
                         // even if we do not want to process them.
-                        delete soln.second;
+                        //
+                        // TODO: Now we don't need to delete keys and values,
+                        // is this still necessary?
                         continue;
                     }
                 }
 
                 const Key& kChild = soln.first;
-                vChild = soln.second;
+                const Value& vChild = soln.second;
 
 #ifdef IDENTIFY_NONVIABLE_KEYS
                 vData.foundViable = false;
@@ -1517,7 +1511,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             break;
                         case 1:
@@ -1529,7 +1523,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             break;
                         case 8:
@@ -1544,7 +1538,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             break;
                         case 9:
@@ -1561,11 +1555,13 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // where we must remember to subtract 1
                                     // from the total number of loops.
                                     if (vData.keyViable(k)) {
-                                        vNew = passValue(vChild);
-                                        if (index != nBags - 1)
-                                            (*vNew) *= delta;
-                                        aggregate(partial[index], std::move(k),
-                                            vNew);
+                                        if (index == nBags - 1) {
+                                            aggregate(partial[index],
+                                                std::move(k), vChild);
+                                        } else {
+                                            aggregate(partial[index],
+                                                std::move(k), vChild * delta);
+                                        }
                                     }
                                 }
                             } else {
@@ -1583,7 +1579,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            passValue(vChild));
+                                            vChild);
                                 }
                             }
                             break;
@@ -1609,7 +1605,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             break;
                         case 2:
@@ -1621,7 +1617,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             break;
                         case 4:
@@ -1633,7 +1629,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             break;
                         case 6:
@@ -1653,11 +1649,13 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // where we must remember to subtract 1
                                     // from the total number of loops.
                                     if (vData.keyViable(k)) {
-                                        vNew = passValue(vChild);
-                                        if (index != nBags - 1)
-                                            (*vNew) *= delta;
-                                        aggregate(partial[index], std::move(k),
-                                            vNew);
+                                        if (index == nBags - 1) {
+                                            aggregate(partial[index],
+                                                std::move(k), vChild);
+                                        } else {
+                                            aggregate(partial[index],
+                                                std::move(k), vChild * delta);
+                                        }
                                     }
                                 }
                             } else {
@@ -1675,7 +1673,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            passValue(vChild));
+                                            vChild);
                                 }
                             }
                             break;
@@ -1706,7 +1704,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                     if (vData.keyViable(k1))
                                         aggregate(partial[index], std::move(k1),
-                                            passValue(vChild));
+                                            vChild);
 
                                     // Switch:
                                     Key k2(keySize);
@@ -1769,7 +1767,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             for (i = pos[0][0] + 1; i <= kChild.size();
                                     i += 2) {
@@ -1830,7 +1828,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k1))
                                     aggregate(partial[index], std::move(k1),
-                                        passValue(vChild));
+                                        vChild);
 
                                 // Splice:
                                 Key k2(keySize);
@@ -1889,12 +1887,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             kChild.end() - 2,
                                             k.begin() + i + 2);
 
-                                        if (vData.keyViable(k)) {
-                                            vNew = passValue(vChild);
-                                            (*vNew) *= delta;
+                                        if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k), vNew);
-                                        }
+                                                std::move(k), vChild * delta);
                                     }
                                 }
                             } else if (pos[0][0] < pos[0][1]) {
@@ -1926,8 +1921,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                         if (vData.keyViable(k2))
                                             aggregate(partial[index],
-                                                std::move(k2),
-                                                passValue(vChild));
+                                                std::move(k2), vChild);
                                     }
                                     for (i = pos[0][1] + 2;
                                             i <= kChild.size(); i += 2) {
@@ -2010,7 +2004,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             break;
                         case 5:
@@ -2043,7 +2037,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             }
                             break;
                         case 6:
@@ -2071,12 +2065,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             kChild.end() - 2,
                                             k2.begin() + i + 2);
 
-                                        if (vData.keyViable(k2)) {
-                                            vNew = spliceValue(vChild, c);
-                                            (*vNew) *= delta;
+                                        if (vData.keyViable(k2))
                                             aggregate(partial[index],
-                                                std::move(k2), vNew);
-                                        }
+                                                std::move(k2),
+                                                spliceValue(vChild, c) * delta);
                                     }
                                 }
                             } else {
@@ -2088,7 +2080,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                     if (vData.keyViable(k1))
                                         aggregate(partial[index], std::move(k1),
-                                            passValue(vChild));
+                                            vChild);
 
                                     if (pos[1][0] + 1 == pos[0][1]) {
                                         // Splice:
@@ -2150,12 +2142,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         kChild.end() - 2, k.begin());
                                     k[pos[0][0]] = id[1][1];
 
-                                    if (vData.keyViable(k)) {
-                                        vNew = spliceValue(vChild, c);
-                                        (*vNew) *= delta;
+                                    if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            vNew);
-                                    }
+                                            spliceValue(vChild, c) * delta);
                                 }
                             } else if (pos[0][1] + 1 == pos[0][0]) {
                                 // d=a
@@ -2166,12 +2155,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         kChild.end() - 2, k.begin());
                                     k[pos[1][0]] = id[1][1];
 
-                                    if (vData.keyViable(k)) {
-                                        vNew = passValue(vChild);
-                                        (*vNew) *= delta;
+                                    if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            vNew);
-                                    }
+                                            vChild * delta);
                                 }
                             } else {
                                 if (pos[0][0] + 1 == pos[0][1]) {
@@ -2189,8 +2175,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k),
-                                                passValue(vChild));
+                                                std::move(k), vChild);
                                     } else {
                                         Key k(keySize);
                                         std::copy(kChild.begin(),
@@ -2265,7 +2250,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k1))
                                     aggregate(partial[index], std::move(k1),
-                                        passValue(vChild));
+                                        vChild);
 
                                 // Splice:
                                 Key k2(keySize);
@@ -2297,7 +2282,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
-                                        passValue(vChild));
+                                        vChild);
                             } else {
                                 if (pos[1][1] < pos[0][0]) {
                                     // Pass:
@@ -2307,7 +2292,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            passValue(vChild));
+                                            vChild);
                                 } else {
                                     // Switch:
                                     Key k1 = kChild;
@@ -2366,7 +2351,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (vData.keyViable(k1))
                                     aggregate(partial[index], std::move(k1),
-                                        passValue(vChild));
+                                        vChild);
 
                                 // Splice:
                                 Key k2 = kChild;
@@ -2389,12 +2374,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         kChild.end() - 2, k.begin());
                                     k[pos[1][1]] = id[1][0];
 
-                                    if (vData.keyViable(k)) {
-                                        vNew = passValue(vChild);
-                                        (*vNew) *= delta;
+                                    if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            vNew);
-                                    }
+                                            vChild * delta);
                                 }
                             } else if (pos[1][1] + 1 == pos[0][0]) {
                                 // c=a
@@ -2411,7 +2393,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            passValue(vChild));
+                                            vChild);
                                 }
                             } else {
                                 if (pos[0][0] + 1 == pos[0][1]) {
@@ -2429,8 +2411,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k),
-                                                passValue(vChild));
+                                                std::move(k), vChild);
                                     } else {
                                         Key k(keySize);
                                         std::copy(kChild.begin(),
@@ -2491,12 +2472,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             kChild.end() - 2,
                                             k2.begin() + i + 2);
 
-                                        if (vData.keyViable(k2)) {
-                                            vNew = switchValue(vChild, c);
-                                            (*vNew) *= delta;
+                                        if (vData.keyViable(k2))
                                             aggregate(partial[index],
-                                                std::move(k2), vNew);
-                                        }
+                                                std::move(k2),
+                                                switchValue(vChild, c) * delta);
                                     }
                                 }
                             } else {
@@ -2549,8 +2528,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k),
-                                                passValue(vChild));
+                                                std::move(k), vChild);
                                     }
                                 }
                             }
@@ -2572,7 +2550,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            passValue(vChild));
+                                            vChild);
                                 }
                             } else if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
@@ -2583,12 +2561,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         kChild.end() - 2, k.begin());
                                     k[pos[0][0]] = id[0][1];
 
-                                    if (vData.keyViable(k)) {
-                                        vNew = switchValue(vChild, c);
-                                        (*vNew) *= delta;
+                                    if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            vNew);
-                                    }
+                                            switchValue(vChild, c) * delta);
                                 }
                                 if (pos[0][0] + 1 == pos[1][1]) {
                                     Key k(keySize);
@@ -2620,8 +2595,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k),
-                                                passValue(vChild));
+                                                std::move(k), vChild);
                                     } else {
                                         Key k(keySize);
                                         std::copy(kChild.begin(),
@@ -2681,12 +2655,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         kChild.end() - 2, k.begin());
                                     k[pos[1][1]] = id[0][0];
 
-                                    if (vData.keyViable(k)) {
-                                        vNew = spliceValue(vChild, c);
-                                        (*vNew) *= delta;
+                                    if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
-                                            vNew);
-                                    }
+                                            spliceValue(vChild, c) * delta);
                                 }
                             } else if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
@@ -2710,12 +2681,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         kChild.end() - 2, k.begin());
                                     k[pos[0][1]] = id[0][0];
 
-                                    if (vData.keyViable(k)) {
-                                        vNew = switchValue(vChild, c);
-                                        (*vNew) *= delta;
-                                        aggregate(partial[index],
-                                            std::move(k), vNew);
-                                    }
+                                    if (vData.keyViable(k))
+                                        aggregate(partial[index], std::move(k),
+                                            switchValue(vChild, c) * delta);
                                 }
                             } else {
                                 if (pos[1][0] + 1 == pos[1][1]) {
@@ -2733,8 +2701,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k),
-                                                passValue(vChild));
+                                                std::move(k), vChild);
                                     } else {
                                         Key k(keySize);
                                         std::copy(kChild.begin(),
@@ -2788,12 +2755,15 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         // where we must remember to subtract 1
                                         // from the total number of loops.
                                         if (vData.keyViable(k)) {
-                                            vNew = passValue(vChild);
-                                            (*vNew) *= delta;
-                                            if (index != nBags - 1)
-                                                (*vNew) *= delta;
-                                            aggregate(partial[index],
-                                                std::move(k), vNew);
+                                            if (index == nBags - 1) {
+                                                aggregate(partial[index],
+                                                    std::move(k),
+                                                    vChild * delta);
+                                            } else {
+                                                aggregate(partial[index],
+                                                    std::move(k),
+                                                    vChild * delta * delta);
+                                            }
                                         }
                                     }
                                 } else {
@@ -2810,12 +2780,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             kChild.end() - 2,
                                             k.begin() + pos[1][0]);
 
-                                        if (vData.keyViable(k)) {
-                                            vNew = passValue(vChild);
-                                            (*vNew) *= delta;
+                                        if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k), vNew);
-                                        }
+                                                std::move(k), vChild * delta);
                                     }
                                 }
                             } else if (pos[0][1] + 1 == pos[1][0]) {
@@ -2833,11 +2800,14 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         // where we must remember to subtract 1
                                         // from the total number of loops.
                                         if (vData.keyViable(k)) {
-                                            vNew = passValue(vChild);
-                                            if (index != nBags - 1)
-                                                (*vNew) *= delta;
-                                            aggregate(partial[index],
-                                                std::move(k), vNew);
+                                            if (index == nBags - 1) {
+                                                aggregate(partial[index],
+                                                    std::move(k), vChild);
+                                            } else {
+                                                aggregate(partial[index],
+                                                    std::move(k),
+                                                    vChild * delta);
+                                            }
                                         }
                                     }
                                 } else {
@@ -2869,12 +2839,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             kChild.end() - 2,
                                             k.begin() + pos[0][0]);
 
-                                        if (vData.keyViable(k)) {
-                                            vNew = spliceValue(vChild, c);
-                                            (*vNew) *= delta;
+                                        if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k), vNew);
-                                        }
+                                                std::move(k),
+                                                spliceValue(vChild, c) * delta);
                                     }
                                 }
                             } else {
@@ -2892,12 +2860,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             kChild.end() - 2,
                                             k.begin() + pos[0][0]);
 
-                                        if (vData.keyViable(k)) {
-                                            vNew = switchValue(vChild, c);
-                                            (*vNew) *= delta;
+                                        if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k), vNew);
-                                        }
+                                                std::move(k),
+                                                switchValue(vChild, c) * delta);
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[1][0] + 1 == pos[0][1]) {
                                         Key k(keySize);
@@ -2930,8 +2896,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
-                                                std::move(k),
-                                                passValue(vChild));
+                                                std::move(k), vChild);
                                     }
                                 } else {
                                     // Pass, switch and splice:
@@ -2953,8 +2918,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                             if (vData.keyViable(k))
                                                 aggregate(partial[index],
-                                                    std::move(k),
-                                                    passValue(vChild));
+                                                    std::move(k), vChild);
                                         } else {
                                             Key k(keySize);
                                             std::copy(kChild.begin(),
@@ -3005,8 +2969,6 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                 if (! vData.foundViable)
                     std::cerr << "UNUSED: " << kChild << std::endl;
 #endif
-
-                delete vChild;
             }
 
             delete partial[child->index()];
@@ -3059,9 +3021,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                 partial[index] = partial[sibling->index()];
                 for (auto& soln : *(partial[index]))
-                    (*soln.second) *= *(emptySoln->second);
+                    soln.second *= emptySoln->second;
 
-                delete emptySoln->second;
                 delete partial[child->index()];
 
                 partial[child->index()] = partial[sibling->index()] = nullptr;
@@ -3072,9 +3033,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                 partial[index] = partial[child->index()];
                 for (auto& soln : *(partial[index]))
-                    (*soln.second) *= *(emptySoln->second);
+                    soln.second *= emptySoln->second;
 
-                delete emptySoln->second;
                 delete partial[sibling->index()];
 
                 partial[child->index()] = partial[sibling->index()] = nullptr;
@@ -3107,19 +3067,16 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                 }
 
                 const Key& k1 = soln1.first;
-                const Value* v1 = soln1.second;
 
 #ifdef IDENTIFY_NONVIABLE_KEYS
                 vData.foundViable = false;
 #endif
                 for (auto& soln2 : *(partial[sibling->index()])) {
                     const Key& k2 = soln2.first;
-                    const Value* v2 = soln2.second;
 
                     // Combine the two child keys and values in all
                     // possible ways.
-                    Value val(*v1);
-                    val *= *v2;
+                    Value val = soln1.second * soln2.second;
 
                     // Fill the final key from the end to the beginning, so
                     // that we can more aggressively test for non-viable keys.
@@ -3138,8 +3095,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // Here we make a deep copy of kNew,
                                 // which is unavoidable since we are
                                 // using kNew directly as our scratch space.
+                                // We also make a deep copy of val,
+                                // which is unavoidable since we need to
+                                // do this many times for the same value.
                                 if (! partial[index]->emplace(
-                                        kNew, new Value(val)).second)
+                                        kNew, val).second)
                                     std::cerr << "ERROR: Combined keys in join "
                                         "bag are not unique" << std::endl;
                             }
@@ -3207,11 +3167,6 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 #endif
             }
 
-            for (auto& soln : *(partial[child->index()]))
-                delete soln.second;
-            for (auto& soln : *(partial[sibling->index()]))
-                delete soln.second;
-
             delete partial[child->index()];
             delete partial[sibling->index()];
             partial[child->index()] = partial[sibling->index()] = nullptr;
@@ -3230,11 +3185,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
         // We don't know which elements of partial[] have been
         // deallocated, so check them all.
         for (size_t i = 0; i < nBags; ++i)
-            if (partial[i]) {
-                for (auto& soln : *(partial[i]))
-                    delete soln.second;
-                delete partial[i];
-            }
+            delete partial[i];
         delete[] partial;
         return Value();
     }
@@ -3243,12 +3194,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 #ifdef DUMP_STAGES
     std::cerr << "FINISH" << std::endl;
 #endif
-    Value ans = std::move(*partial[nBags - 1]->begin()->second);
+    Value ans = std::move(partial[nBags - 1]->begin()->second);
 
-    for (auto& soln : *(partial[nBags - 1]))
-        delete soln.second;
     delete partial[nBags - 1];
-
     delete[] partial;
 
     // Finally, factor in any zero-crossing components.
