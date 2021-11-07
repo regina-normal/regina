@@ -105,6 +105,37 @@ class LightweightSequence {
          */
         explicit LightweightSequence(size_t size);
         /**
+         * Create a new sequence containing the given elements, which
+         * may be given through a combination of individual elements and
+         * iterator pairs.
+         *
+         * Specifically, this constructor will step through the \a elements
+         * arguments in turn:
+         *
+         * - If the next argument is of type \a T (or can be implicitly
+         *   converted to type \a T), then the corresponding value will be
+         *   added onto the end of the sequence.
+         *
+         * - If the next argument is a LightweightSequence iterator, then this
+         *   must be followed by \e another LightweightSequence iterator.
+         *   The range defined by this iterator pair will be copied onto
+         *   the end of the sequence.
+         *
+         * The routine requires you to pass the entire length of the sequence
+         * in advance; this is so the necessary memory can be pre-allocated
+         * without requiring any unnecessary arithmetic.
+         *
+         * \pre The argument \a size is precisely the sum of the lengths of all
+         * iterator ranges plus the number of standalone elements in the
+         * argument list \a elements.
+         *
+         * @param size the number of elements in the new sequence.
+         * @param elements the elements and/or iterator ranges with which to
+         * fill the sequence, as described above.
+         */
+        template <typename... Args>
+        explicit LightweightSequence(size_t size, Args&&... elements);
+        /**
          * Create a copy of the given sequence.
          *
          * This induces a deep copy of \a src, in that all of the elements of
@@ -425,6 +456,30 @@ class LightweightSequence {
                  */
                 bool operator () (Iterator a, Iterator b) const;
         };
+
+    private:
+        /**
+         * Implementation details for the iterators-and-values constructor.
+         */
+        template <typename... Args>
+        void fill(T* dest, const T* from, const T* to, Args&&... args) {
+            fill(std::copy(from, to, dest), std::forward<Args>(args)...);
+        }
+
+        /**
+         * Implementation details for the iterators-and-values constructor.
+         */
+        template <typename... Args>
+        void fill(T* dest, T elt, Args&&... args) {
+            *dest = std::move(elt);
+            fill(dest + 1, std::forward<Args>(args)...);
+        }
+
+        /**
+         * Implementation details for the iterators-and-values constructor.
+         */
+        void fill(T* /* dest */) {
+        }
 };
 
 /**
@@ -469,6 +524,13 @@ inline LightweightSequence<T>::LightweightSequence() :
 template <typename T>
 inline LightweightSequence<T>::LightweightSequence(size_t size) :
         data_(new T[size]), size_(size) {
+}
+
+template <typename T>
+template <typename... Args>
+inline LightweightSequence<T>::LightweightSequence(size_t size,
+        Args&&... args) : data_(new T[size]), size_(size) {
+    fill(data_, std::forward<Args>(args)...);
 }
 
 template <typename T>

@@ -538,6 +538,8 @@ Version 7.0  [ TODO ]
             - Removed completely.  Just use a lamba if you need to.
         Class LightweightSequence<T>:
             - Added member and global swap() functions.
+            - Added a constructor that takes a combination of elements
+              and iterator pairs.
         Class Link:
             - New routines writheOfComponent() and selfFrame().
             - New routine group().

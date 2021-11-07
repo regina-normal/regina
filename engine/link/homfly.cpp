@@ -1501,14 +1501,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                         case 0:
                             // Neither strand is from the forgotten zone.
                             for (i = 0; i <= kChild.size(); i += 2) {
-                                Key k(keySize);
-                                std::copy(kChild.begin(), kChild.begin() + i,
-                                    k.begin());
-                                k[i] = id[0][0];
-                                k[i + 1] = id[1][1];
-                                std::copy(kChild.begin() + i, kChild.end(),
-                                    k.begin() + i + 2);
-
+                                Key k(keySize,
+                                    kChild.begin(), kChild.begin() + i,
+                                    id[0][0], id[1][1],
+                                    kChild.begin() + i, kChild.end());
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
                                         vChild);
@@ -1546,9 +1542,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             if (pos[1][1] + 1 == pos[0][0]) {
                                 // We are closing off a loop.
                                 if (pos[1][1] == kChild.size() - 2) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.end() - 2, k.begin());
+                                    Key k(keySize,
+                                        kChild.begin(), kChild.end() - 2);
 
                                     // This is one of the few cases that
                                     // could describe the last forget bag,
@@ -1570,13 +1565,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 #ifdef REPORT_TEST_PATHS
                                     std::cerr << "loop1a 9 merge" << std::endl;
 #endif
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[0][0], k.begin());
-                                    std::copy(
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[0][0],
                                         kChild.begin() + pos[0][0] + 2,
-                                        kChild.end(), k.begin() + pos[0][0]);
-
+                                            kChild.end());
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             vChild);
@@ -1595,14 +1588,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                         case 0:
                             // Neither strand is from the forgotten zone.
                             for (i = 0; i <= kChild.size(); i += 2) {
-                                Key k(keySize);
-                                std::copy(kChild.begin(), kChild.begin() + i,
-                                    k.begin());
-                                k[i] = id[1][0];
-                                k[i + 1] = id[0][1];
-                                std::copy(kChild.begin() + i, kChild.end(),
-                                    k.begin() + i + 2);
-
+                                Key k(keySize,
+                                    kChild.begin(), kChild.begin() + i,
+                                    id[1][0], id[0][1],
+                                    kChild.begin() + i, kChild.end());
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
                                         vChild);
@@ -1640,9 +1629,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 #ifdef REPORT_TEST_PATHS
                                     std::cerr << "loop1b 6 pass" << std::endl;
 #endif
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.end() - 2, k.begin());
+                                    Key k(keySize,
+                                        kChild.begin(), kChild.end() - 2);
 
                                     // This is one of the few cases that
                                     // could describe the last forget bag,
@@ -1664,13 +1652,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 #ifdef REPORT_TEST_PATHS
                                     std::cerr << "loop1b 6 merge" << std::endl;
 #endif
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[1][0], k.begin());
-                                    std::copy(
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[1][0],
                                         kChild.begin() + pos[1][0] + 2,
-                                        kChild.end(), k.begin() + pos[1][0]);
-
+                                            kChild.end());
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             vChild);
@@ -1689,59 +1675,34 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             for (i = 0; i <= kChild.size(); i += 2)
                                 for (j = i; j <= kChild.size(); j += 2) {
                                     // Pass:
-                                    Key k1(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + i, k1.begin());
-                                    k1[i] = id[1][0];
-                                    k1[i + 1] = id[1][1];
-                                    std::copy(kChild.begin() + i,
-                                        kChild.begin() + j,
-                                        k1.begin() + i + 2);
-                                    k1[j + 2] = id[0][0];
-                                    k1[j + 3] = id[0][1];
-                                    std::copy(kChild.begin() + j, kChild.end(),
-                                        k1.begin() + j + 4);
-
+                                    Key k1(keySize,
+                                        kChild.begin(), kChild.begin() + i,
+                                        id[1][0], id[1][1],
+                                        kChild.begin() + i, kChild.begin() + j,
+                                        id[0][0], id[0][1],
+                                        kChild.begin() + j, kChild.end());
                                     if (vData.keyViable(k1))
                                         aggregate(partial[index], std::move(k1),
                                             vChild);
 
                                     // Switch:
-                                    Key k2(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + i,
-                                        k2.begin());
-                                    k2[i] = id[0][0];
-                                    k2[i + 1] = id[0][1];
-                                    std::copy(kChild.begin() + i,
-                                        kChild.begin() + j,
-                                        k2.begin() + i + 2);
-                                    k2[j + 2] = id[1][0];
-                                    k2[j + 3] = id[1][1];
-                                    std::copy(kChild.begin() + j,
-                                        kChild.end(),
-                                        k2.begin() + j + 4);
-
+                                    Key k2(keySize,
+                                        kChild.begin(), kChild.begin() + i,
+                                        id[0][0], id[0][1],
+                                        kChild.begin() + i, kChild.begin() + j,
+                                        id[1][0], id[1][1],
+                                        kChild.begin() + j, kChild.end());
                                     if (vData.keyViable(k2))
                                         aggregate(partial[index], std::move(k2),
                                             switchValue(vChild, c));
 
                                     // Splice:
-                                    Key k3(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + i,
-                                        k3.begin());
-                                    k3[i] = id[0][0];
-                                    k3[i + 1] = id[1][1];
-                                    std::copy(kChild.begin() + i,
-                                        kChild.begin() + j,
-                                        k3.begin() + i + 2);
-                                    k3[j + 2] = id[1][0];
-                                    k3[j + 3] = id[0][1];
-                                    std::copy(kChild.begin() + j,
-                                        kChild.end(),
-                                        k3.begin() + j + 4);
-
+                                    Key k3(keySize,
+                                        kChild.begin(), kChild.begin() + i,
+                                        id[0][0], id[1][1],
+                                        kChild.begin() + i, kChild.begin() + j,
+                                        id[1][0], id[0][1],
+                                        kChild.begin() + j, kChild.end());
                                     if (vData.keyViable(k3))
                                         aggregate(partial[index], std::move(k3),
                                             spliceValue(vChild, c));
@@ -1751,19 +1712,14 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             // Case verified.
                             for (i = 0; i < pos[0][0]; i += 2) {
                                 // Pass:
-                                Key k(keySize);
-                                std::copy(kChild.begin(),
+                                Key k(keySize,
+                                    kChild.begin(), kChild.begin() + i,
+                                    id[1][0], id[1][1],
                                     kChild.begin() + i,
-                                    k.begin());
-                                k[i] = id[1][0];
-                                k[i + 1] = id[1][1];
-                                std::copy(kChild.begin() + i,
-                                    kChild.begin() + pos[0][0],
-                                    k.begin() + i + 2);
-                                k[pos[0][0] + 2] = id[0][1];
-                                std::copy(kChild.begin() + pos[0][0] + 1,
-                                    kChild.end(),
-                                    k.begin() + pos[0][0] + 3);
+                                        kChild.begin() + pos[0][0],
+                                    id[0][1],
+                                    kChild.begin() + pos[0][0] + 1,
+                                        kChild.end());
 
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
@@ -1772,39 +1728,25 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             for (i = pos[0][0] + 1; i <= kChild.size();
                                     i += 2) {
                                 // Switch:
-                                Key k1(keySize);
-                                std::copy(kChild.begin(),
-                                    kChild.begin() + pos[0][0],
-                                    k1.begin());
-                                k1[pos[0][0]] = id[0][1];
-                                std::copy(kChild.begin() + pos[0][0] + 1,
-                                    kChild.begin() + i,
-                                    k1.begin() + pos[0][0] + 1);
-                                k1[i] = id[1][0];
-                                k1[i + 1] = id[1][1];
-                                std::copy(kChild.begin() + i,
-                                    kChild.end(),
-                                    k1.begin() + i + 2);
-
+                                Key k1(keySize,
+                                    kChild.begin(), kChild.begin() + pos[0][0],
+                                    id[0][1],
+                                    kChild.begin() + pos[0][0] + 1,
+                                        kChild.begin() + i,
+                                    id[1][0], id[1][1],
+                                    kChild.begin() + i, kChild.end());
                                 if (vData.keyViable(k1))
                                     aggregate(partial[index], std::move(k1),
                                         switchValue(vChild, c));
 
                                 // Splice:
-                                Key k2(keySize);
-                                std::copy(kChild.begin(),
-                                    kChild.begin() + pos[0][0],
-                                    k2.begin());
-                                k2[pos[0][0]] = id[1][1];
-                                std::copy(kChild.begin() + pos[0][0] + 1,
-                                    kChild.begin() + i,
-                                    k2.begin() + pos[0][0] + 1);
-                                k2[i] = id[1][0];
-                                k2[i + 1] = id[0][1];
-                                std::copy(kChild.begin() + i,
-                                    kChild.end(),
-                                    k2.begin() + i + 2);
-
+                                Key k2(keySize,
+                                    kChild.begin(), kChild.begin() + pos[0][0],
+                                    id[1][1],
+                                    kChild.begin() + pos[0][0] + 1,
+                                        kChild.begin() + i,
+                                    id[1][0], id[0][1],
+                                    kChild.begin() + i, kChild.end());
                                 if (vData.keyViable(k2))
                                     aggregate(partial[index], std::move(k2),
                                         spliceValue(vChild, c));
@@ -1814,36 +1756,27 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             // Case verified.
                             for (i = 0; i <= pos[0][1]; i += 2) {
                                 // Pass:
-                                Key k1(keySize);
-                                std::copy(kChild.begin(), kChild.begin() + i,
-                                    k1.begin());
-                                k1[i] = id[1][0];
-                                k1[i + 1] = id[1][1];
-                                std::copy(kChild.begin() + i,
-                                    kChild.begin() + pos[0][1],
-                                    k1.begin() + i + 2);
-                                k1[pos[0][1] + 2] = id[0][0];
-                                std::copy(kChild.begin() + pos[0][1] + 1,
-                                    kChild.end(), k1.begin() + pos[0][1] + 3);
-
+                                Key k1(keySize,
+                                    kChild.begin(), kChild.begin() + i,
+                                    id[1][0], id[1][1],
+                                    kChild.begin() + i,
+                                        kChild.begin() + pos[0][1],
+                                    id[0][0],
+                                    kChild.begin() + pos[0][1] + 1,
+                                        kChild.end());
                                 if (vData.keyViable(k1))
                                     aggregate(partial[index], std::move(k1),
                                         vChild);
 
                                 // Splice:
-                                Key k2(keySize);
-                                std::copy(kChild.begin(), kChild.begin() + i,
-                                    k2.begin());
-                                k2[i] = id[0][0];
-                                k2[i + 1] = id[1][1];
-                                std::copy(kChild.begin() + i,
-                                    kChild.begin() + pos[0][1],
-                                    k2.begin() + i + 2);
-                                k2[pos[0][1] + 2] = id[1][0];
-                                std::copy(kChild.begin() + pos[0][1] + 1,
-                                    kChild.end(),
-                                    k2.begin() + pos[0][1] + 3);
-
+                                Key k2(keySize,
+                                    kChild.begin(), kChild.begin() + i,
+                                    id[0][0], id[1][1],
+                                    kChild.begin() + i,
+                                        kChild.begin() + pos[0][1],
+                                    id[1][0],
+                                    kChild.begin() + pos[0][1] + 1,
+                                        kChild.end());
                                 if (vData.keyViable(k2))
                                     aggregate(partial[index], std::move(k2),
                                         spliceValue(vChild, c));
@@ -1851,18 +1784,13 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             for (i = pos[0][1] + 2; i <= kChild.size();
                                     i += 2) {
                                 // Switch:
-                                Key k(keySize);
-                                std::copy(kChild.begin(),
-                                    kChild.begin() + pos[0][1], k.begin());
-                                k[pos[0][1]] = id[0][0];
-                                std::copy(kChild.begin() + pos[0][1] + 1,
-                                    kChild.begin() + i,
-                                    k.begin() + pos[0][1] + 1);
-                                k[i] = id[1][0];
-                                k[i + 1] = id[1][1];
-                                std::copy(kChild.begin() + i, kChild.end(),
-                                    k.begin() + i + 2);
-
+                                Key k(keySize,
+                                    kChild.begin(), kChild.begin() + pos[0][1],
+                                    id[0][0],
+                                    kChild.begin() + pos[0][1] + 1,
+                                        kChild.begin() + i,
+                                    id[1][0], id[1][1],
+                                    kChild.begin() + i, kChild.end());
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
                                         switchValue(vChild, c));
@@ -1878,15 +1806,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     std::cerr << "3a pass" << std::endl;
 #endif
                                     for (i = 0; i < kChild.size(); i += 2) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + i, k.begin());
-                                        k[i] = id[1][0];
-                                        k[i + 1] = id[1][1];
-                                        std::copy(kChild.begin() + i,
-                                            kChild.end() - 2,
-                                            k.begin() + i + 2);
-
+                                        Key k(keySize,
+                                            kChild.begin(), kChild.begin() + i,
+                                            id[1][0], id[1][1],
+                                            kChild.begin() + i,
+                                                kChild.end() - 2);
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k), vChild * delta);
@@ -1905,39 +1829,26 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[0][0] + 1 == pos[0][1]) {
                                     // Pass and switch:
                                     for (i = 0; i < pos[0][0]; i += 2) {
-                                        Key k2(keySize);
-                                        std::copy(kChild.begin(),
+                                        Key k2(keySize,
+                                            kChild.begin(), kChild.begin() + i,
+                                            id[1][0], id[1][1],
                                             kChild.begin() + i,
-                                            k2.begin());
-                                        k2[i] = id[1][0];
-                                        k2[i + 1] = id[1][1];
-                                        std::copy(kChild.begin() + i,
-                                            kChild.begin() + pos[0][0],
-                                            k2.begin() + i + 2);
-                                        std::copy(
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.end(),
-                                            k2.begin() + pos[0][0] + 2);
-
+                                                kChild.end());
                                         if (vData.keyViable(k2))
                                             aggregate(partial[index],
                                                 std::move(k2), vChild);
                                     }
                                     for (i = pos[0][1] + 2;
                                             i <= kChild.size(); i += 2) {
-                                        Key k2(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k2.begin());
-                                        std::copy(
+                                        Key k2(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.begin() + i,
-                                            k2.begin() + pos[0][0]);
-                                        k2[i - 2] = id[1][0];
-                                        k2[i - 1] = id[1][1];
-                                        std::copy(kChild.begin() + i,
-                                            kChild.end(), k2.begin() + i);
-
+                                                kChild.begin() + i,
+                                            id[1][0], id[1][1],
+                                            kChild.begin() + i, kChild.end());
                                         if (vData.keyViable(k2))
                                             aggregate(partial[index],
                                                 std::move(k2),
@@ -1950,39 +1861,27 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             // Case verified.
                             for (i = 0; i < pos[1][0]; i += 2) {
                                 // Switch:
-                                Key k1(keySize);
-                                std::copy(kChild.begin(),
+                                Key k1(keySize,
+                                    kChild.begin(), kChild.begin() + i,
+                                    id[0][0], id[0][1],
                                     kChild.begin() + i,
-                                    k1.begin());
-                                k1[i] = id[0][0];
-                                k1[i + 1] = id[0][1];
-                                std::copy(kChild.begin() + i,
-                                    kChild.begin() + pos[1][0],
-                                    k1.begin() + i + 2);
-                                k1[pos[1][0] + 2] = id[1][1];
-                                std::copy(kChild.begin() + pos[1][0] + 1,
-                                    kChild.end(),
-                                    k1.begin() + pos[1][0] + 3);
-
+                                        kChild.begin() + pos[1][0],
+                                    id[1][1],
+                                    kChild.begin() + pos[1][0] + 1,
+                                        kChild.end());
                                 if (vData.keyViable(k1))
                                     aggregate(partial[index], std::move(k1),
                                         switchValue(vChild, c));
 
                                 // Splice:
-                                Key k2(keySize);
-                                std::copy(kChild.begin(),
+                                Key k2(keySize,
+                                    kChild.begin(), kChild.begin() + i,
+                                    id[0][0], id[1][1],
                                     kChild.begin() + i,
-                                    k2.begin());
-                                k2[i] = id[0][0];
-                                k2[i + 1] = id[1][1];
-                                std::copy(kChild.begin() + i,
-                                    kChild.begin() + pos[1][0],
-                                    k2.begin() + i + 2);
-                                k2[pos[1][0] + 2] = id[0][1];
-                                std::copy(kChild.begin() + pos[1][0] + 1,
-                                    kChild.end(),
-                                    k2.begin() + pos[1][0] + 3);
-
+                                        kChild.begin() + pos[1][0],
+                                    id[0][1],
+                                    kChild.begin() + pos[1][0] + 1,
+                                        kChild.end());
                                 if (vData.keyViable(k2))
                                     aggregate(partial[index], std::move(k2),
                                         spliceValue(vChild, c));
@@ -1990,18 +1889,13 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             for (i = pos[1][0] + 1; i <= kChild.size();
                                     i += 2) {
                                 // Pass:
-                                Key k(keySize);
-                                std::copy(kChild.begin(),
-                                    kChild.begin() + pos[1][0], k.begin());
-                                k[pos[1][0]] = id[1][1];
-                                std::copy(kChild.begin() + pos[1][0] + 1,
-                                    kChild.begin() + i,
-                                    k.begin() + pos[1][0] + 1);
-                                k[i] = id[0][0];
-                                k[i + 1] = id[0][1];
-                                std::copy(kChild.begin() + i, kChild.end(),
-                                    k.begin() + i + 2);
-
+                                Key k(keySize,
+                                    kChild.begin(), kChild.begin() + pos[1][0],
+                                    id[1][1],
+                                    kChild.begin() + pos[1][0] + 1,
+                                        kChild.begin() + i,
+                                    id[0][0], id[0][1],
+                                    kChild.begin() + i, kChild.end());
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
                                         vChild);
@@ -2056,15 +1950,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[0][1] == kChild.size() - 2) {
                                     // Splice:
                                     for (i = 0; i < kChild.size(); i += 2) {
-                                        Key k2(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + i, k2.begin());
-                                        k2[i] = id[0][0];
-                                        k2[i + 1] = id[1][1];
-                                        std::copy(kChild.begin() + i,
-                                            kChild.end() - 2,
-                                            k2.begin() + i + 2);
-
+                                        Key k2(keySize,
+                                            kChild.begin(), kChild.begin() + i,
+                                            id[0][0], id[1][1],
+                                            kChild.begin() + i,
+                                                kChild.end() - 2);
                                         if (vData.keyViable(k2))
                                             aggregate(partial[index],
                                                 std::move(k2),
@@ -2085,20 +1975,14 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     if (pos[1][0] + 1 == pos[0][1]) {
                                         // Splice:
                                         for (i = 0; i < pos[1][0]; i += 2) {
-                                            Key k2(keySize);
-                                            std::copy(kChild.begin(),
+                                            Key k2(keySize,
+                                                kChild.begin(),
+                                                    kChild.begin() + i,
+                                                id[0][0], id[1][1],
                                                 kChild.begin() + i,
-                                                k2.begin());
-                                            k2[i] = id[0][0];
-                                            k2[i + 1] = id[1][1];
-                                            std::copy(kChild.begin() + i,
-                                                kChild.begin() + pos[1][0],
-                                                k2.begin() + i + 2);
-                                            std::copy(
+                                                    kChild.begin() + pos[1][0],
                                                 kChild.begin() + pos[1][0] + 2,
-                                                kChild.end(),
-                                                k2.begin() + pos[1][0] + 2);
-
+                                                    kChild.end());
                                             if (vData.keyViable(k2))
                                                 aggregate(partial[index],
                                                     std::move(k2),
@@ -2123,23 +2007,19 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // d=b
                                 // Switch and splice:
                                 if (pos[0][0] + 1 == pos[0][1]) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[0][0],
-                                        k.begin());
-                                    k[pos[0][0]] = id[1][1];
-                                    std::copy(kChild.begin() + pos[0][0] + 3,
-                                        kChild.end(),
-                                        k.begin() + pos[0][0] + 1);
-
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[0][0],
+                                        id[1][1],
+                                        kChild.begin() + pos[0][0] + 3,
+                                            kChild.end());
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             switchValue(vChild, c));
                                 }
                                 if (pos[0][1] == kChild.size() - 2) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.end() - 2, k.begin());
+                                    Key k(keySize,
+                                        kChild.begin(), kChild.end() - 2);
                                     k[pos[0][0]] = id[1][1];
 
                                     if (vData.keyViable(k))
@@ -2150,9 +2030,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // d=a
                                 // Pass:
                                 if (pos[0][1] == kChild.size() - 2) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.end() - 2, k.begin());
+                                    Key k(keySize,
+                                        kChild.begin(), kChild.end() - 2);
                                     k[pos[1][0]] = id[1][1];
 
                                     if (vData.keyViable(k))
@@ -2163,28 +2042,22 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[0][0] + 1 == pos[0][1]) {
                                     // Pass and switch:
                                     if (pos[1][0] < pos[0][0]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[0][0]);
+                                                kChild.end());
                                         k[pos[1][0]] = id[1][1];
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k), vChild);
                                     } else {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[0][0]);
+                                                kChild.end());
                                         k[pos[1][0] - 2] = id[1][1];
 
                                         if (vData.keyViable(k))
@@ -2195,14 +2068,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 } else if (pos[1][0] + 1 == pos[0][1] &&
                                         pos[0][0] < pos[1][0]) {
                                     // Splice:
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[1][0],
-                                        k.begin());
-                                    std::copy(
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[1][0],
                                         kChild.begin() + pos[1][0] + 2,
-                                        kChild.end(),
-                                        k.begin() + pos[1][0]);
+                                            kChild.end());
                                     k[pos[0][0]] = id[1][1];
 
                                     if (vData.keyViable(k))
@@ -2215,19 +2085,14 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             // Case verified.
                             for (i = 0; i <= pos[1][1]; i += 2) {
                                 // Switch:
-                                Key k(keySize);
-                                std::copy(kChild.begin(), kChild.begin() + i,
-                                    k.begin());
-                                k[i] = id[0][0];
-                                k[i + 1] = id[0][1];
-                                std::copy(kChild.begin() + i,
-                                    kChild.begin() + pos[1][1],
-                                    k.begin() + i + 2);
-                                k[pos[1][1] + 2] = id[1][0];
-                                std::copy(kChild.begin() + pos[1][1] + 1,
-                                    kChild.end(),
-                                    k.begin() + pos[1][1] + 3);
-
+                                Key k(keySize,
+                                    kChild.begin(), kChild.begin() + i,
+                                    id[0][0], id[0][1],
+                                    kChild.begin() + i,
+                                        kChild.begin() + pos[1][1],
+                                    id[1][0],
+                                    kChild.begin() + pos[1][1] + 1,
+                                        kChild.end());
                                 if (vData.keyViable(k))
                                     aggregate(partial[index], std::move(k),
                                         switchValue(vChild, c));
@@ -2235,37 +2100,25 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             for (i = pos[1][1] + 2; i <= kChild.size();
                                     i += 2) {
                                 // Pass:
-                                Key k1(keySize);
-                                std::copy(kChild.begin(),
-                                    kChild.begin() + pos[1][1],
-                                    k1.begin());
-                                k1[pos[1][1]] = id[1][0];
-                                std::copy(kChild.begin() + pos[1][1] + 1,
-                                    kChild.begin() + i,
-                                    k1.begin() + pos[1][1] + 1);
-                                k1[i] = id[0][0];
-                                k1[i + 1] = id[0][1];
-                                std::copy(kChild.begin() + i, kChild.end(),
-                                    k1.begin() + i + 2);
-
+                                Key k1(keySize,
+                                    kChild.begin(), kChild.begin() + pos[1][1],
+                                    id[1][0],
+                                    kChild.begin() + pos[1][1] + 1,
+                                        kChild.begin() + i,
+                                    id[0][0], id[0][1],
+                                    kChild.begin() + i, kChild.end());
                                 if (vData.keyViable(k1))
                                     aggregate(partial[index], std::move(k1),
                                         vChild);
 
                                 // Splice:
-                                Key k2(keySize);
-                                std::copy(kChild.begin(),
-                                    kChild.begin() + pos[1][1],
-                                    k2.begin());
-                                k2[pos[1][1]] = id[0][0];
-                                std::copy(kChild.begin() + pos[1][1] + 1,
-                                    kChild.begin() + i,
-                                    k2.begin() + pos[1][1] + 1);
-                                k2[i] = id[1][0];
-                                k2[i + 1] = id[0][1];
-                                std::copy(kChild.begin() + i, kChild.end(),
-                                    k2.begin() + i + 2);
-
+                                Key k2(keySize,
+                                    kChild.begin(), kChild.begin() + pos[1][1],
+                                    id[0][0],
+                                    kChild.begin() + pos[1][1] + 1,
+                                        kChild.begin() + i,
+                                    id[1][0], id[0][1],
+                                    kChild.begin() + i, kChild.end());
                                 if (vData.keyViable(k2))
                                     aggregate(partial[index], std::move(k2),
                                         spliceValue(vChild, c));
@@ -2307,20 +2160,14 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         // Splice:
                                         for (i = pos[1][1] + 2;
                                                 i <= kChild.size(); i += 2) {
-                                            Key k2(keySize);
-                                            std::copy(kChild.begin(),
-                                                kChild.begin() + pos[0][0],
-                                                k2.begin());
-                                            std::copy(
+                                            Key k2(keySize,
+                                                kChild.begin(),
+                                                    kChild.begin() + pos[0][0],
                                                 kChild.begin() + pos[0][0] + 2,
+                                                    kChild.begin() + i,
+                                                id[1][0], id[0][1],
                                                 kChild.begin() + i,
-                                                k2.begin() + pos[0][0]);
-                                            k2[i - 2] = id[1][0];
-                                            k2[i - 1] = id[0][1];
-                                            std::copy(kChild.begin() + i,
-                                                kChild.end(),
-                                                k2.begin() + i);
-
+                                                    kChild.end());
                                             if (vData.keyViable(k2))
                                                 aggregate(partial[index],
                                                     std::move(k2),
@@ -2369,9 +2216,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // d=a
                                 // Pass:
                                 if (pos[0][1] == kChild.size() - 2) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.end() - 2, k.begin());
+                                    Key k(keySize,
+                                        kChild.begin(), kChild.end() - 2);
                                     k[pos[1][1]] = id[1][0];
 
                                     if (vData.keyViable(k))
@@ -2382,15 +2228,12 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // c=a
                                 // Pass:
                                 if (pos[0][0] + 1 == pos[0][1]) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[1][1],
-                                        k.begin());
-                                    k[pos[1][1]] = id[1][0];
-                                    std::copy(kChild.begin() + pos[1][1] + 3,
-                                        kChild.end(),
-                                        k.begin() + pos[1][1] + 1);
-
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[1][1],
+                                        id[1][0],
+                                        kChild.begin() + pos[1][1] + 3,
+                                            kChild.end());
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             vChild);
@@ -2399,28 +2242,22 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[0][0] + 1 == pos[0][1]) {
                                     // Pass and switch:
                                     if (pos[1][1] < pos[0][1]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[0][0]);
+                                                kChild.end());
                                         k[pos[1][1]] = id[1][0];
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k), vChild);
                                     } else {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[0][0]);
+                                                kChild.end());
                                         k[pos[1][1] - 2] = id[1][0];
 
                                         if (vData.keyViable(k))
@@ -2431,14 +2268,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 } else if (pos[0][0] + 1 == pos[1][1] &&
                                         pos[1][1] < pos[0][1]) {
                                     // Splice:
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[0][0],
-                                        k.begin());
-                                    std::copy(
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[0][0],
                                         kChild.begin() + pos[0][0] + 2,
-                                        kChild.end(),
-                                        k.begin() + pos[0][0]);
+                                            kChild.end());
                                     k[pos[0][1] - 2] = id[1][0];
 
                                     if (vData.keyViable(k))
@@ -2462,16 +2296,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[1][1] == kChild.size() - 2) {
                                     // Switch:
                                     for (i = 0; i < kChild.size(); i += 2) {
-                                        Key k2(keySize);
-                                        std::copy(kChild.begin(),
+                                        Key k2(keySize,
+                                            kChild.begin(), kChild.begin() + i,
+                                            id[0][0], id[0][1],
                                             kChild.begin() + i,
-                                            k2.begin());
-                                        k2[i] = id[0][0];
-                                        k2[i + 1] = id[0][1];
-                                        std::copy(kChild.begin() + i,
-                                            kChild.end() - 2,
-                                            k2.begin() + i + 2);
-
+                                                kChild.end() - 2);
                                         if (vData.keyViable(k2))
                                             aggregate(partial[index],
                                                 std::move(k2),
@@ -2491,20 +2320,13 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 } else if (pos[1][0] + 1 == pos[1][1]) {
                                     // Pass and switch:
                                     for (i = 0; i < pos[1][0]; i += 2) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
+                                        Key k(keySize,
+                                            kChild.begin(), kChild.begin() + i,
+                                            id[0][0], id[0][1],
                                             kChild.begin() + i,
-                                            k.begin());
-                                        k[i] = id[0][0];
-                                        k[i + 1] = id[0][1];
-                                        std::copy(kChild.begin() + i,
-                                            kChild.begin() + pos[1][0],
-                                            k.begin() + i + 2);
-                                        std::copy(
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[1][0] + 2);
-
+                                                kChild.end());
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k),
@@ -2512,20 +2334,13 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     }
                                     for (i = pos[1][1] + 2;
                                             i <= kChild.size(); i += 2) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[1][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 2,
-                                            kChild.begin() + i,
-                                            k.begin() + pos[1][0]);
-                                        k[i - 2] = id[0][0];
-                                        k[i - 1] = id[0][1];
-                                        std::copy(kChild.begin() + i,
-                                            kChild.end(),
-                                            k.begin() + i);
-
+                                                kChild.begin() + i,
+                                            id[0][0], id[0][1],
+                                            kChild.begin() + i, kChild.end());
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k), vChild);
@@ -2539,15 +2354,12 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // c=a
                                 // Pass:
                                 if (pos[1][0] + 1 == pos[1][1]) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[1][0],
-                                        k.begin());
-                                    k[pos[1][0]] = id[0][1];
-                                    std::copy(kChild.begin() + pos[1][0] + 3,
-                                        kChild.end(),
-                                        k.begin() + pos[1][0] + 1);
-
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[1][0],
+                                        id[0][1],
+                                        kChild.begin() + pos[1][0] + 3,
+                                            kChild.end());
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             vChild);
@@ -2556,9 +2368,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // c=b
                                 // Switch and splice:
                                 if (pos[1][1] == kChild.size() - 2) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.end() - 2, k.begin());
+                                    Key k(keySize,
+                                        kChild.begin(), kChild.end() - 2);
                                     k[pos[0][0]] = id[0][1];
 
                                     if (vData.keyViable(k))
@@ -2566,15 +2377,12 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             switchValue(vChild, c) * delta);
                                 }
                                 if (pos[0][0] + 1 == pos[1][1]) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[0][0],
-                                        k.begin());
-                                    k[pos[0][0]] = id[0][1];
-                                    std::copy(kChild.begin() + pos[0][0] + 3,
-                                        kChild.end(),
-                                        k.begin() + pos[0][0] + 1);
-
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[0][0],
+                                        id[0][1],
+                                        kChild.begin() + pos[0][0] + 3,
+                                            kChild.end());
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             spliceValue(vChild, c));
@@ -2583,28 +2391,22 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[1][0] + 1 == pos[1][1]) {
                                     // Pass and switch:
                                     if (pos[1][0] < pos[0][0]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[1][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[1][0]);
+                                                kChild.end());
                                         k[pos[0][0] - 2] = id[0][1];
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k), vChild);
                                     } else {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[1][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[1][0]);
+                                                kChild.end());
                                         k[pos[0][0]] = id[0][1];
 
                                         if (vData.keyViable(k))
@@ -2615,14 +2417,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 } else if (pos[0][0] + 1 == pos[1][1] &&
                                         pos[0][0] < pos[1][0]) {
                                     // Splice:
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[0][0],
-                                        k.begin());
-                                    std::copy(
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[0][0],
                                         kChild.begin() + pos[0][0] + 2,
-                                        kChild.end(),
-                                        k.begin() + pos[0][0]);
+                                            kChild.end());
                                     k[pos[1][0] - 2] = id[0][1];
 
                                     if (vData.keyViable(k))
@@ -2637,22 +2436,18 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // d=b
                                 // Switch and splice:
                                 if (pos[1][0] + 1 == pos[1][1]) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[0][1],
-                                        k.begin());
-                                    k[pos[0][1]] = id[0][0];
-                                    std::copy(kChild.begin() + pos[0][1] + 3,
-                                        kChild.end(),
-                                        k.begin() + pos[0][1] + 1);
-
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[0][1],
+                                        id[0][0],
+                                        kChild.begin() + pos[0][1] + 3,
+                                            kChild.end());
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             switchValue(vChild, c));
                                 } else if (pos[0][1] == kChild.size() - 2) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.end() - 2, k.begin());
+                                    Key k(keySize,
+                                        kChild.begin(), kChild.end() - 2);
                                     k[pos[1][1]] = id[0][0];
 
                                     if (vData.keyViable(k))
@@ -2663,22 +2458,18 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // c=b
                                 // Switch and splice:
                                 if (pos[1][0] + 1 == pos[0][1]) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[1][1],
-                                        k.begin());
-                                    k[pos[1][1]] = id[0][0];
-                                    std::copy(kChild.begin() + pos[1][1] + 3,
-                                        kChild.end(),
-                                        k.begin() + pos[1][1] + 1);
-
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[1][1],
+                                        id[0][0],
+                                        kChild.begin() + pos[1][1] + 3,
+                                            kChild.end());
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             spliceValue(vChild, c));
                                 } else if (pos[1][1] == kChild.size() - 2) {
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.end() - 2, k.begin());
+                                    Key k(keySize,
+                                        kChild.begin(), kChild.end() - 2);
                                     k[pos[0][1]] = id[0][0];
 
                                     if (vData.keyViable(k))
@@ -2689,28 +2480,22 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[1][0] + 1 == pos[1][1]) {
                                     // Pass and switch:
                                     if (pos[1][1] < pos[0][1]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[1][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[1][0]);
+                                                kChild.end());
                                         k[pos[0][1] - 2] = id[0][0];
 
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k), vChild);
                                     } else {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[1][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[1][0]);
+                                                kChild.end());
                                         k[pos[0][1]] = id[0][0];
 
                                         if (vData.keyViable(k))
@@ -2721,14 +2506,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 } else if (pos[1][0] + 1 == pos[0][1] &&
                                         pos[1][1] < pos[0][1]) {
                                     // Splice:
-                                    Key k(keySize);
-                                    std::copy(kChild.begin(),
-                                        kChild.begin() + pos[1][0],
-                                        k.begin());
-                                    std::copy(
+                                    Key k(keySize,
+                                        kChild.begin(),
+                                            kChild.begin() + pos[1][0],
                                         kChild.begin() + pos[1][0] + 2,
-                                        kChild.end(),
-                                        k.begin() + pos[1][0]);
+                                            kChild.end());
                                     k[pos[1][1]] = id[0][0];
 
                                     if (vData.keyViable(k))
@@ -2746,9 +2528,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // Pass:
                                     if (pos[1][1] == kChild.size() - 4 &&
                                             pos[0][1] == kChild.size() - 2) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.end() - 4, k.begin());
+                                        Key k(keySize,
+                                            kChild.begin(), kChild.end() - 4);
 
                                         // This is one of the few cases that
                                         // could describe the last forget bag,
@@ -2771,15 +2552,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // Pass:
                                     if (pos[0][1] == kChild.size() - 2 &&
                                             pos[1][0] + 1 == pos[1][1]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[1][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 2,
-                                            kChild.end() - 2,
-                                            k.begin() + pos[1][0]);
-
+                                                kChild.end() - 2);
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k), vChild * delta);
@@ -2791,9 +2568,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // Pass:
                                     if (pos[1][1] == kChild.size() - 4 &&
                                             pos[0][1] == kChild.size() - 2) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.end() - 4, k.begin());
+                                        Key k(keySize,
+                                            kChild.begin(), kChild.end() - 4);
 
                                         // This is one of the few cases that
                                         // could describe the last forget bag,
@@ -2815,30 +2591,22 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // Switch and splice:
                                     if (pos[1][0] + 1 == pos[1][1] &&
                                             pos[0][0] + 1 == pos[0][1]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 4,
-                                            kChild.end(),
-                                            k.begin() + pos[0][0]);
-
+                                                kChild.end());
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k),
                                                 switchValue(vChild, c));
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[0][1] == kChild.size() - 2) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.end() - 2,
-                                            k.begin() + pos[0][0]);
-
+                                                kChild.end() - 2);
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k),
@@ -2851,30 +2619,22 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // Switch and splice:
                                     if (pos[0][0] + 1 == pos[0][1] &&
                                             pos[1][1] == kChild.size() - 2) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.end() - 2,
-                                            k.begin() + pos[0][0]);
-
+                                                kChild.end() - 2);
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k),
                                                 switchValue(vChild, c) * delta);
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[1][0] + 1 == pos[0][1]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 4,
-                                            kChild.end(),
-                                            k.begin() + pos[0][0]);
-
+                                                kChild.end());
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k),
@@ -2885,15 +2645,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // Pass:
                                     if (pos[1][0] + 1 == pos[1][1] &&
                                             pos[0][0] + 1 == pos[0][1]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[1][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 4,
-                                            kChild.end(),
-                                            k.begin() + pos[1][0]);
-
+                                                kChild.end());
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k), vChild);
@@ -2903,36 +2659,24 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     if (pos[0][0] + 1 == pos[0][1] &&
                                             pos[1][0] + 1 == pos[1][1]) {
                                         if (pos[1][0] < pos[0][0]) {
-                                            Key k(keySize);
-                                            std::copy(kChild.begin(),
-                                                kChild.begin() + pos[1][0],
-                                                k.begin());
-                                            std::copy(
+                                            Key k(keySize,
+                                                kChild.begin(),
+                                                    kChild.begin() + pos[1][0],
                                                 kChild.begin() + pos[1][0] + 2,
-                                                kChild.begin() + pos[0][0],
-                                                k.begin() + pos[1][0]);
-                                            std::copy(
+                                                    kChild.begin() + pos[0][0],
                                                 kChild.begin() + pos[0][0] + 2,
-                                                kChild.end(),
-                                                k.begin() + pos[0][0] - 2);
-
+                                                    kChild.end());
                                             if (vData.keyViable(k))
                                                 aggregate(partial[index],
                                                     std::move(k), vChild);
                                         } else {
-                                            Key k(keySize);
-                                            std::copy(kChild.begin(),
-                                                kChild.begin() + pos[0][0],
-                                                k.begin());
-                                            std::copy(
+                                            Key k(keySize,
+                                                kChild.begin(),
+                                                    kChild.begin() + pos[0][0],
                                                 kChild.begin() + pos[0][0] + 2,
-                                                kChild.begin() + pos[1][0],
-                                                k.begin() + pos[0][0]);
-                                            std::copy(
+                                                    kChild.begin() + pos[1][0],
                                                 kChild.begin() + pos[1][0] + 2,
-                                                kChild.end(),
-                                                k.begin() + pos[1][0] - 2);
-
+                                                    kChild.end());
                                             if (vData.keyViable(k))
                                                 aggregate(partial[index],
                                                     std::move(k),
@@ -2941,19 +2685,13 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[1][0] + 1 == pos[0][1] &&
                                             pos[0][0] < pos[1][0]) {
-                                        Key k(keySize);
-                                        std::copy(kChild.begin(),
-                                            kChild.begin() + pos[0][0],
-                                            k.begin());
-                                        std::copy(
+                                        Key k(keySize,
+                                            kChild.begin(),
+                                                kChild.begin() + pos[0][0],
                                             kChild.begin() + pos[0][0] + 2,
-                                            kChild.begin() + pos[1][0],
-                                            k.begin() + pos[0][0]);
-                                        std::copy(
+                                                kChild.begin() + pos[1][0],
                                             kChild.begin() + pos[1][0] + 2,
-                                            kChild.end(),
-                                            k.begin() + pos[1][0] - 2);
-
+                                                kChild.end());
                                         if (vData.keyViable(k))
                                             aggregate(partial[index],
                                                 std::move(k),
