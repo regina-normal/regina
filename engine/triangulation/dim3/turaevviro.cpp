@@ -1009,8 +1009,7 @@ namespace {
                 increment = 100.0 / partial[child->index()]->size();
                 percent = 0;
 
-                for (auto it = partial[child->index()]->begin();
-                        it != partial[child->index()]->end(); ++it) {
+                for (const auto& soln : *partial[child->index()]) {
                     if (tracker) {
                         percent += increment;
                         if (! tracker->setPercent(percent))
@@ -1018,7 +1017,7 @@ namespace {
                     }
                     for (i = 0; i < 6; ++i)
                         colour[i] = (choiceType[i] < 0 ?
-                            it->first[tetEdge[i]] : -1);
+                            soln.first[tetEdge[i]] : -1);
 
                     level = 5;
                     while (level < 6) {
@@ -1026,7 +1025,7 @@ namespace {
                             // We have an admissible partial colouring.
 
                             // First, compute its (partial) weight:
-                            TVType val = it->second;
+                            TVType val = soln.second;
                             init.tetContrib(tet,
                                 colour[0], colour[1], colour[2],
                                 colour[3], colour[4], colour[5], val);
@@ -1040,7 +1039,7 @@ namespace {
                                 if (seenDegree[index][i] < 0)
                                     seq[i] = TV_AGGREGATED;
                                 else
-                                    seq[i] = it->first[i];
+                                    seq[i] = soln.first[i];
                             for (i = 0; i < 6; ++i)
                                 if (choiceType[i] == 0 &&
                                         seq[tetEdge[i]] != TV_AGGREGATED)
@@ -1128,8 +1127,8 @@ namespace {
                             seenDegree[sibling->index()][i] != 0)
                     overlap[nOverlap++] = i;
 
-                LightweightSequence<int>::SubsequenceCompareFirst<SolnIterator>
-                    compare(nOverlap, overlap);
+                LightweightSequence<int>::SubsequenceCompareFirst compare(
+                    overlap, overlap + nOverlap);
 
                 if (tracker && tracker->isCancelled())
                     break;

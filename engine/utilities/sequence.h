@@ -334,15 +334,21 @@ class LightweightSequence {
          * (which is a C-style array) has a lifespan at least as long as
          * this object.  This behaviour is new as of Regina 5.96; in past
          * versions of Regina the list of elements was copied on construction.
+         *
+         * \tparam IndexIterator the iterator type used to store the range
+         * of indices that define the subsequences being compared (that is,
+         * the range of indices \a i0, \a i1, \a i2, ...).  This can typically
+         * be deduced from the constructor arguments.
          */
-        template <typename Iterator>
+        template <typename IndexIterator>
         class SubsequenceCompareFirst {
             private:
-                size_t nSub_;
-                    /**< The number of elements to compare in each sequence. */
-                const size_t* sub_;
-                    /**< The indices of the elements to compare in each
-                         sequence. */
+                IndexIterator beginSub_;
+                    /**< The beginning of the range of indices of elements to
+                         compare in each sequence. */
+                IndexIterator endSub_;
+                    /**< The beginning of the range of indices of elements to
+                         compare in each sequence. */
 
             public:
                 /**
@@ -351,34 +357,39 @@ class LightweightSequence {
                  * As explained in the class notes, this object compares
                  * just some, not necessarily all, elements of two
                  * sequences.  The indices of the elements to compare
-                 * should be passed to this constructor.
+                 * should be passed to this constructor using an iterator range.
+                 * Specifically, the range defined by \a beginSub and \a endSub
+                 * should contain the indices \a i0, \a i1, ..., as described
+                 * in the class notes.
                  *
-                 * \warning This class merely copies the pointer \a sub,
-                 * and does not take a deep copy.  The caller of this
-                 * routine must ensure that the array \a sub has a lifespan
-                 * at least as long as this function object and any
-                 * function objects that are copied from it.
+                 * \warning This class merely copies the iterators \a beginSub
+                 * and \a endSub, and does not take a deep copy of the range
+                 * that they define.  The caller of this routine must ensure
+                 * that these iterators remain valid for the entire lifespan of
+                 * this function object and any function objects that are
+                 * copied from it.
                  *
-                 * @param nSub the number of elements to compare from
-                 * each sequence.
-                 * @param sub the indices of the elements to compare
-                 * from each sequence; that is, the indices \a i0,
-                 * \a i1, ..., as described in the class notes.
+                 * @param beginSub the beginning of the range of indices of
+                 * elements to compare from each sequence.
+                 * @param endSub the end (i.e., a past-the-end iterator) of
+                 * the range of indices of elements to compare from each
+                 * sequence.
                  */
-                SubsequenceCompareFirst(size_t nSub, const size_t* sub);
+                SubsequenceCompareFirst(IndexIterator beginSub,
+                    IndexIterator endSub);
                 /**
                  * Copies the given function object into this new object.
                  */
-                SubsequenceCompareFirst(
-                    const SubsequenceCompareFirst<Iterator>&) = default;
+                SubsequenceCompareFirst(const SubsequenceCompareFirst&) =
+                    default;
 
                 /**
                  * Copies the given function object into this object.
                  *
                  * @return a reference to this function object.
                  */
-                SubsequenceCompareFirst<Iterator>& operator = (
-                    const SubsequenceCompareFirst<Iterator>&) = default;
+                SubsequenceCompareFirst& operator = (
+                    const SubsequenceCompareFirst&) = default;
 
                 /**
                  * Tests whether the subsequences referred to by the
@@ -394,7 +405,8 @@ class LightweightSequence {
                  * @return \c true if and only if the two subsequences
                  * are identical.
                  */
-                bool equal(Iterator a, Iterator b) const;
+                template <typename SeqIterator>
+                bool equal(SeqIterator a, SeqIterator b) const;
                 /**
                  * Lexicographically compares the subsequences referred to
                  * by the given pair of iterators.
@@ -412,7 +424,8 @@ class LightweightSequence {
                  * indicated by \a a is lexicographically smaller than
                  * the subsequence indicated by \a b.
                  */
-                bool less(Iterator a, Iterator b) const;
+                template <typename SeqIterator>
+                bool less(SeqIterator a, SeqIterator b) const;
                 /**
                  * Lexicographically compares the subsequences referred to
                  * by the given pair of iterators.
@@ -431,8 +444,13 @@ class LightweightSequence {
                  * indicated by \a a is lexicographically smaller than
                  * the subsequence indicated by \a b.
                  */
-                bool operator () (Iterator a, Iterator b) const;
+                template <typename SeqIterator>
+                bool operator () (SeqIterator a, SeqIterator b) const;
         };
+
+        template <class IndexIterator>
+        SubsequenceCompareFirst(IndexIterator, IndexIterator) ->
+            SubsequenceCompareFirst<IndexIterator>;
 
     private:
         /**
@@ -643,42 +661,45 @@ inline std::ostream& operator << (std::ostream& out,
 }
 
 template <typename T>
-template <typename Iterator>
-inline LightweightSequence<T>::SubsequenceCompareFirst<Iterator>::
-        SubsequenceCompareFirst(size_t nSub, const size_t* sub) :
-        nSub_(nSub), sub_(sub) {
+template <typename IndexIterator>
+inline LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
+        SubsequenceCompareFirst(IndexIterator beginSub, IndexIterator endSub) :
+        beginSub_(beginSub), endSub_(endSub) {
 }
 
 template <typename T>
-template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirst<Iterator>::
-        equal(Iterator a, Iterator b) const {
-    for (size_t i = 0; i < nSub_; ++i)
-        if (a->first[sub_[i]] != b->first[sub_[i]])
+template <typename IndexIterator>
+template <typename SeqIterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
+        equal(SeqIterator a, SeqIterator b) const {
+    for (auto it = beginSub_; it != endSub_; ++it)
+        if (a->first[*it] != b->first[*it])
             return false;
     return true;
 }
 
 template <typename T>
-template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirst<Iterator>::
-        less(Iterator a, Iterator b) const {
-    for (size_t i = 0; i < nSub_; ++i)
-        if (a->first[sub_[i]] < b->first[sub_[i]])
+template <typename IndexIterator>
+template <typename SeqIterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
+        less(SeqIterator a, SeqIterator b) const {
+    for (auto it = beginSub_; it != endSub_; ++it)
+        if (a->first[*it] < b->first[*it])
             return true;
-        else if (a->first[sub_[i]] > b->first[sub_[i]])
+        else if (a->first[*it] > b->first[*it])
             return false;
     return false;
 }
 
 template <typename T>
-template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirst<Iterator>::
-        operator () (Iterator a, Iterator b) const {
-    for (size_t i = 0; i < nSub_; ++i)
-        if (a->first[sub_[i]] < b->first[sub_[i]])
+template <typename IndexIterator>
+template <typename SeqIterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
+        operator () (SeqIterator a, SeqIterator b) const {
+    for (auto it = beginSub_; it != endSub_; ++it)
+        if (a->first[*it] < b->first[*it])
             return true;
-        else if (a->first[sub_[i]] > b->first[sub_[i]])
+        else if (a->first[*it] > b->first[*it])
             return false;
     return false;
 }
