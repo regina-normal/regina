@@ -1400,6 +1400,8 @@ Version 7.0  [ TODO ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
+            - Changed isAnnulusSelfIdentified() to return a std::optional,
+              instead of returning the permutation via a pointer argument.
         Class TritmaskLen8, TritmaskLen16, TritmaskLen32, TritmaskLen64:
             - Deprecated.  Just use Tritmask1<uint8_t>, etc.
         Class TrivialTri:

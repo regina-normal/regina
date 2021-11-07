@@ -38,23 +38,20 @@
 
 namespace regina {
 
-bool TriSolidTorus::isAnnulusSelfIdentified(int index, Perm<4>* roleMap) const {
+std::optional<Perm<4>> TriSolidTorus::isAnnulusSelfIdentified(int index) const {
     int lower = (index + 1) % 3;
     int upper = (index + 2) % 3;
     if (tet_[lower]->adjacentTetrahedron(vertexRoles_[lower][2]) != tet_[upper])
-        return false;
+        return std::nullopt;
     if (tet_[lower]->adjacentFace(vertexRoles_[lower][2]) !=
             vertexRoles_[upper][1])
-        return false;
+        return std::nullopt;
 
     // We have a self-identification.
 
-    if (roleMap)
-        *roleMap = vertexRoles_[upper].inverse() *
-            tet_[lower]->adjacentGluing(vertexRoles_[lower][2]) *
-            vertexRoles_[lower];
-
-    return true;
+    return vertexRoles_[upper].inverse() *
+        tet_[lower]->adjacentGluing(vertexRoles_[lower][2]) *
+        vertexRoles_[lower];
 }
 
 unsigned long TriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {

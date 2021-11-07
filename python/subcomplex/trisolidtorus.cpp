@@ -49,8 +49,7 @@ void addTriSolidTorus(pybind11::module_& m) {
         .def("tetrahedron", &TriSolidTorus::tetrahedron,
             pybind11::return_value_policy::reference)
         .def("vertexRoles", &TriSolidTorus::vertexRoles)
-        .def("isAnnulusSelfIdentified",
-            &TriSolidTorus::isAnnulusSelfIdentified)
+        .def("isAnnulusSelfIdentified", &TriSolidTorus::isAnnulusSelfIdentified)
         .def("areAnnuliLinkedMajor", &TriSolidTorus::areAnnuliLinkedMajor)
         .def("areAnnuliLinkedAxis", &TriSolidTorus::areAnnuliLinkedAxis)
         .def_static("recognise", &TriSolidTorus::recognise)

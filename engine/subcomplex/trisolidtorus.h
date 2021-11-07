@@ -39,6 +39,7 @@
 #define __REGINA_TRISOLIDTORUS_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "maths/perm.h"
 #include "subcomplex/standardtri.h"
@@ -172,13 +173,12 @@ class TriSolidTorus : public StandardTriangulation {
          * Determines whether the two triangles of the requested annulus are
          * glued to each other.
          *
-         * If the two triangles are glued, parameter \a roleMap will be
-         * modified to return a permutation describing how the vertex
-         * roles are glued to each other.  This will describe directly
-         * how axis edges, major edges and minor edges map to each other
-         * without having to worry about the specific assignment of
-         * tetrahedron vertex numbers.  For a discussion of vertex
-         * roles, see vertexRoles().
+         * If the two triangles are glued, this routine will return a
+         * permutation describing how the vertex roles are glued to each other.
+         * This will describe directly how axis edges, major edges and minor
+         * edges map to each other without having to worry about the specific
+         * assignment of tetrahedron vertex numbers.  For a discussion of
+         * vertex roles, see vertexRoles().
          *
          * Note that annulus <tt>index</tt> uses faces
          * from tetrahedra <tt>index+1</tt> and <tt>index+2</tt>.
@@ -189,13 +189,11 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * @param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
-         * @param roleMap a pointer to a permutation that, if this
-         * routine returns \c true, will be modified to describe the gluing
-         * of vertex roles.  This parameter may be \c null.
-         * @return \c true if and only if the two triangles of the requested
-         * annulus are glued together.
+         * @return a permutation that describes the gluing of vertex roles,
+         * or \c nullopt if the two triangles of the requested annulus are
+         * not glued together.
          */
-        bool isAnnulusSelfIdentified(int index, Perm<4>* roleMap) const;
+        std::optional<Perm<4>> isAnnulusSelfIdentified(int index) const;
 
         /**
          * Determines whether the two given annuli are linked in a

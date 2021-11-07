@@ -183,7 +183,9 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 // Since the component is orientable, that's all we need
                 // to know.
                 for (j = 0; j < 3; j++) {
-                    if (! core->isAnnulusSelfIdentified(j, annulusMap + j)) {
+                    if (auto id = core->isAnnulusSelfIdentified(j)) {
+                        annulusMap[j] = *id;
+                    } else {
                         core.reset();
                         break;
                     }
@@ -253,7 +255,8 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
 
         // Run through all possible cores to which it might belong.
         int i;
-        Perm<4> p, annulusPerm;
+        Perm<4> p;
+        std::optional<Perm<4>> gluing;
         std::unique_ptr<TriSolidTorus> core;
         int torusAnnulus;
         unsigned long chainLen;
@@ -268,7 +271,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
             // Let's try this core.
             // Look for an identified annulus.
             for (torusAnnulus = 0; torusAnnulus < 3; torusAnnulus++)
-                if (core->isAnnulusSelfIdentified(torusAnnulus, &annulusPerm)) {
+                if ((gluing = core->isAnnulusSelfIdentified(torusAnnulus))) {
                     // Look now for a layered chain.
                     // If we don't find it, the entire core must be wrong.
                     int chainType = CHAIN_NONE;
@@ -285,7 +288,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                     // We have the entire structure!
                     std::unique_ptr<AugTriSolidTorus> ans(
                         new AugTriSolidTorus(*core));
-                    switch (annulusPerm[0]) {
+                    switch ((*gluing)[0]) {
                         case 0:
                             ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(2,0,1,3);
                             break;
@@ -347,12 +350,11 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                 (top->adjacentGluing(topRoles[3])
                                     * topRoles * Perm<4>(0, 1, 3, 2) ==
                                     core->vertexRoles(2)) &&
-                                core->isAnnulusSelfIdentified(
-                                    0, &annulusPerm)) {
+                                (gluing = core->isAnnulusSelfIdentified(0))) {
                             // We have the entire structure!
                             std::unique_ptr<AugTriSolidTorus> ans(
                                 new AugTriSolidTorus(*core));
-                            switch (annulusPerm[0]) {
+                            switch ((*gluing)[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
                                     break;
@@ -404,12 +406,11 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                 (top->adjacentGluing(topRoles[3])
                                     * topRoles * Perm<4>(1, 2, 3, 0) ==
                                     core->vertexRoles(2)) &&
-                                core->isAnnulusSelfIdentified(
-                                    0, &annulusPerm)) {
+                                (gluing = core->isAnnulusSelfIdentified(0))) {
                             // We have the entire structure!
                             std::unique_ptr<AugTriSolidTorus> ans(
                                 new AugTriSolidTorus(*core));
-                            switch (annulusPerm[0]) {
+                            switch ((*gluing)[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
                                     break;
@@ -477,7 +478,6 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
     int usedLayered;
     Perm<4> edgeGroupRoles[3];
     int torusAnnulus;
-    Perm<4> q;
     for (int p = 0; p < 6; p++) {
         core = TriSolidTorus::recognise(coreTet,
             swap3Top * Perm<4>::S3[p] * swap23);
@@ -495,7 +495,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 // Check annulus j.
                 // Recall that the 3-manifold is orientable so we don't
                 // have to check for wacky reversed gluings.
-                if (core->isAnnulusSelfIdentified(j, &q)) {
+                if (auto q = core->isAnnulusSelfIdentified(j)) {
                     // We have a degenerate (2,1,1) glued in here.
                     if (needChain) {
                         // We already know there is a non-degenerate
@@ -506,7 +506,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                         break;
                     }
                     whichLayered[j] = -1;
-                    switch (q[0]) {
+                    switch ((*q)[0]) {
                         case 0:
                             edgeGroupRoles[j] = Perm<4>(2, 0, 1, 3); break;
                         case 2:
@@ -525,7 +525,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                 coreVertexRoles[(j+2)%3][1]) ==
                                 top[whichLayered[j]]) {
                             // Annulus j is glued to torus whichLayered[j].
-                            q = coreTets[(j+1)%3]->
+                            Perm<4> q = coreTets[(j+1)%3]->
                                 adjacentGluing(
                                 coreVertexRoles[(j+1)%3][2]) *
                                 coreVertexRoles[(j+1)%3];
