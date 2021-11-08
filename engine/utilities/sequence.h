@@ -337,8 +337,9 @@ class LightweightSequence {
          *
          * \tparam IndexIterator the iterator type used to store the range
          * of indices that define the subsequences being compared (that is,
-         * the range of indices \a i0, \a i1, \a i2, ...).  This can typically
-         * be deduced from the constructor arguments.
+         * the range of indices \a i0, \a i1, \a i2, ...).  This would be
+         * deducible from the constructor arguments, were it not for a
+         * gcc bug (#79501) that prevents us from declaring a deduction guide.
          */
         template <typename IndexIterator>
         class SubsequenceCompareFirst {
@@ -448,9 +449,11 @@ class LightweightSequence {
                 bool operator () (SeqIterator a, SeqIterator b) const;
         };
 
+#if 0 // gcc bug #79501 incorrectly marked this as an error prior to gcc10.
         template <class IndexIterator>
         SubsequenceCompareFirst(IndexIterator, IndexIterator) ->
             SubsequenceCompareFirst<IndexIterator>;
+#endif
 
     private:
         /**

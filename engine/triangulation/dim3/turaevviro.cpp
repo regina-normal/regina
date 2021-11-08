@@ -1127,8 +1127,11 @@ namespace {
                             seenDegree[sibling->index()][i] != 0)
                     overlap[nOverlap++] = i;
 
-                LightweightSequence<int>::SubsequenceCompareFirst compare(
-                    overlap, overlap + nOverlap);
+                // The final template argument (which expands to size_t*)
+                // should be deducible, but gcc bug #79501 prevents us from
+                // declaring the appropriate deduction guide.
+                LightweightSequence<int>::SubsequenceCompareFirst<
+                    decltype(overlap)> compare(overlap, overlap + nOverlap);
 
                 if (tracker && tracker->isCancelled())
                     break;
