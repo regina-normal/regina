@@ -42,7 +42,7 @@
 #define __REGINA_EXCEPTION_H
 #endif
 
-#include <exception>
+#include <stdexcept>
 #include <string>
 
 namespace regina {
