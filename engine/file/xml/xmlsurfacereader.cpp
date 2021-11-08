@@ -65,16 +65,15 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
     long pos;
     LargeInteger value;
     for (unsigned long i = 0; i < tokens.size(); i += 2) {
-        if (valueOf(tokens[i], pos))
-            if (valueOf(tokens[i + 1], value))
-                if (pos >= 0 && pos < vecLen_) {
-                    // All looks valid.
-                    vec[pos] = value;
-                    continue;
-                }
-
-        // Found something invalid.
-        return;
+        if (! valueOf(tokens[i], pos))
+            return;
+        if (pos < 0 || pos >= vecLen_)
+            return;
+        try {
+            vec[pos] = tokens[i + 1];
+        } catch (const regina::InvalidArgument&) {
+            return;
+        }
     }
 
     if (vecEnc_ != 0)
@@ -94,9 +93,10 @@ XMLElementReader* XMLNormalSurfaceReader::startSubElement(
         return new XMLElementReader();
 
     if (subTagName == "euler") {
-        LargeInteger val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->eulerChar_ = val;
+        try {
+            surface_->eulerChar_ = props.lookup("value");
+        } catch (const regina::InvalidArgument&) {
+        }
     } else if (subTagName == "orbl") {
         bool val;
         if (valueOf(props.lookup("value"), val))

@@ -276,13 +276,16 @@ bool valueOf(const std::string& str, long long& dest);
  */
 bool valueOf(const std::string& str, unsigned long long& dest);
 /**
- * Converts the entire given string to an arbitrary precision integer and
- * reports whether this conversion was successful.
+ * Deprecated routine that converts the entire given string to an arbitrary
+ * precision integer and reports whether this conversion was successful.
  *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
+ *
+ * \deprecated Simply use the string constructor or string assignment operator
+ * for Integer / LargeInteger (but note that these throw exceptions on error).
  *
  * \ifacespython Not present.
  *
@@ -295,7 +298,8 @@ bool valueOf(const std::string& str, unsigned long long& dest);
  * \ingroup utilities
  */
 template <bool supportInfinity>
-bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest);
+[[deprecated]] bool valueOf(const std::string& str,
+    IntegerBase<supportInfinity>& dest);
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.

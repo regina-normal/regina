@@ -65,16 +65,15 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
     long pos;
     LargeInteger value;
     for (size_t i = 0; i < tokens.size(); i += 2) {
-        if (valueOf(tokens[i], pos))
-            if (valueOf(tokens[i + 1], value))
-                if (pos >= 0 && pos < vecLen_) {
-                    // All looks valid.
-                    vec[pos] = value;
-                    continue;
-                }
-
-        // Found something invalid.
-        return;
+        if (! valueOf(tokens[i], pos))
+            return;
+        if (pos < 0 || pos >= vecLen_)
+            return;
+        try {
+            vec[pos] = tokens[i + 1];
+        } catch (const regina::InvalidArgument&) {
+            return;
+        }
     }
 
     if (vecEnc_ != 0)

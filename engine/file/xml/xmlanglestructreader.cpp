@@ -59,16 +59,15 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
     long pos;
     Integer value;
     for (unsigned long i = 0; i < tokens.size(); i += 2) {
-        if (valueOf(tokens[i], pos))
-            if (valueOf(tokens[i + 1], value))
-                if (pos >= 0 && pos < vecLen) {
-                    // All looks valid.
-                    vec[pos] = value;
-                    continue;
-                }
-
-        // Found something invalid.
-        return;
+        if (! valueOf(tokens[i], pos))
+            return;
+        if (pos < 0 || pos >= vecLen)
+            return;
+        try {
+            vec[pos] = tokens[i + 1];
+        } catch (const regina::InvalidArgument&) {
+            return;
+        }
     }
 
     angles_ = AngleStructure(tri_, std::move(vec));

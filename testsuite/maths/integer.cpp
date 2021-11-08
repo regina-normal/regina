@@ -33,6 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/integer.h"
+#include "utilities/exception.h"
 #include "testsuite/utilities/testutilities.h"
 
 using regina::IntegerBase;
@@ -603,7 +604,6 @@ class IntegerTest : public CppUnit::TestFixture {
         template <typename IntType>
         void testStringNative(const std::string& s, int base,
                 long value, int sign) {
-            bool valid;
             std::string str;
             for (int i = 0; i < 4; ++i) {
                 if (i < 2)
@@ -619,12 +619,7 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    IntType x(str.c_str(), base, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str.c_str(), base);
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
                         msg << name.str() << " has incorrect stringValue(base).";
@@ -635,12 +630,7 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    IntType x(str, base, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str, base);
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
                         msg << name.str() << " has incorrect stringValue(base).";
@@ -673,27 +663,30 @@ class IntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                IntType x(str.c_str(), base, &valid);
-                if (valid) {
+                try {
+                    IntType x(str.c_str(), base);
+
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
             {
                 str = s + "!";
-                IntType x(str, base, &valid);
-                if (valid) {
+                try {
+                    IntType x(str, base);
+
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
         }
 
         template <typename IntType>
         void testStringLarge(const std::string& s, int sign) {
-            bool valid;
             std::string str;
             for (int i = 0; i < 4; ++i) {
                 if (i < 2)
@@ -709,23 +702,13 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    IntType x(str.c_str(), 10, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str.c_str(), 10);
                     testLarge(x, name.str().c_str(), s, sign);
                 }
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    IntType x(str, 10, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str, 10);
                     testLarge(x, name.str().c_str(), s, sign);
                 }
                 {
@@ -751,20 +734,24 @@ class IntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                IntType x(str.c_str(), 10, &valid);
-                if (valid) {
+                try {
+                    IntType x(str.c_str(), 10);
+
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
             {
                 str = s + "!";
-                IntType x(str, 10, &valid);
-                if (valid) {
+                try {
+                    IntType x(str, 10);
+
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
         }
@@ -772,7 +759,6 @@ class IntegerTest : public CppUnit::TestFixture {
         template <typename IntType>
         void testStringLarge(const std::string& s, int base,
                 const std::string& valueBase10, int sign) {
-            bool valid;
             std::string str;
             for (int i = 0; i < 4; ++i) {
                 if (i < 2)
@@ -788,12 +774,7 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    IntType x(str.c_str(), base, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str.c_str(), base);
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
                         msg << name.str() << " has incorrect stringValue(base).";
@@ -804,12 +785,7 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    IntType x(str, base, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str, base);
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
                         msg << name.str() << " has incorrect stringValue(base).";
@@ -842,20 +818,24 @@ class IntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                IntType x(str.c_str(), base, &valid);
-                if (valid) {
+                try {
+                    IntType x(str.c_str(), base);
+
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
             {
                 str = s + "!";
-                IntType x(str, base, &valid);
-                if (valid) {
+                try {
+                    IntType x(str, base);
+
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
         }

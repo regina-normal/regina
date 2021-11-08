@@ -249,8 +249,9 @@ bool FilterPropUI::notifyOptionsChanged() {
         // We have a valid and non-empty list of Euler characteristics.
         filter->removeAllEulerChars();
 
-        QStringList list = ecText.split(reECSeps);
-        for (const auto& ec : list)
+        // We do not catch exceptions in the string-to-integer conversion,
+        // since our regex should have prevented any possible problems.
+        for (const auto& ec : ecText.split(reECSeps))
             filter->addEulerChar(ec.toUtf8().constData());
 
         // Refill the text box so that it looks nice.

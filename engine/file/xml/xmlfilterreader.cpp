@@ -142,17 +142,13 @@ XMLPropertiesFilterReader::XMLPropertiesFilterReader(
     std::string euler = props.lookup("euler");
     if (! euler.empty()) {
         std::istringstream str(euler);
-
         std::string val;
-        LargeInteger i;
-        while (std::getline(str, val, ',')) {
-            if (valueOf(val, i))
-                filter_->addEulerChar(i);
-            else {
-                // We cannot parse the list of Euler characteristics.  Abort.
-                filter_.reset();
-                return;
-            }
+        try {
+            while (std::getline(str, val, ','))
+                filter_->addEulerChar(LargeInteger(val));
+        } catch (const regina::InvalidArgument&) {
+            // We cannot parse the list of Euler characteristics.  Abort.
+            filter_.reset();
         }
     }
 }
@@ -185,10 +181,16 @@ void XMLLegacyPropertiesFilterReader::endContentSubElement(
         basicTokenise(back_inserter(tokens),
             dynamic_cast<XMLCharsReader*>(subReader)->chars());
 
-        LargeInteger val;
-        for (const auto& t : tokens)
-            if (valueOf(t, val))
-                filter_->addEulerChar(val);
+        for (const auto& t : tokens) {
+            try {
+                filter_->addEulerChar(LargeInteger(t));
+            } catch (const regina::InvalidArgument&) {
+                // Silently fail with this token, but move on and try the next.
+                // Note that this behaviour changes with the second-generation
+                // file format, where an unparseable Euler characteristic
+                // will result in the entire filter being dropped.
+            }
+        }
     }
 }
 

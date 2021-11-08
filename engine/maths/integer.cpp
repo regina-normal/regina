@@ -37,6 +37,7 @@
 #include <mutex>
 #include "maths/integer.h"
 #include "maths/numbertheory.h"
+#include "utilities/exception.h"
 
 // We instantiate both variants of the IntegerBase template at the bottom
 // of this file.
@@ -97,8 +98,7 @@ namespace {
 // I could be wrong about this.
 
 template <bool supportInfinity>
-IntegerBase<supportInfinity>::IntegerBase(
-        const char* value, int base, bool* valid) :
+IntegerBase<supportInfinity>::IntegerBase(const char* value, int base) :
         large_(nullptr) {
     char* endptr;
     errno = 0;
@@ -113,25 +113,18 @@ IntegerBase<supportInfinity>::IntegerBase(
             while (*value && isspace(*value))
                 ++value;
             if (strncmp(value, "inf", 3) == 0) {
-                if (valid)
-                    *valid = true;
                 makeInfinite();
                 return;
             }
         }
         large_ = new __mpz_struct[1];
-        if (valid)
-            *valid = (mpz_init_set_str(large_, value, base) == 0);
-        else
-            mpz_init_set_str(large_, value, base);
-        // If the error was just trailing whitespace, we might still fit
-        // into a native long.
+        if (mpz_init_set_str(large_, value, base) != 0)
+            throw InvalidArgument("Could not parse the given string "
+                "as an arbitrary-precision integer");
+        // If the strtol() error was just trailing whitespace, we might still
+        // fit into a native long.
         if (maybeTrailingWhitespace)
             tryReduce();
-    } else {
-        // All good.
-        if (valid)
-            *valid = true;
     }
 }
 
@@ -181,14 +174,18 @@ IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator =(
                 return *this;
             }
         }
-        if (large_)
-            mpz_set_str(large_, value, 10 /* base */);
-        else {
+        if (large_) {
+            if (mpz_set_str(large_, value, 10 /* base */) != 0)
+                throw InvalidArgument("Could not parse the given string "
+                    "as an arbitrary-precision integer");
+        } else {
             large_ = new __mpz_struct[1];
-            mpz_init_set_str(large_, value, 10 /* base */);
+            if (mpz_init_set_str(large_, value, 10 /* base */) != 0)
+                throw InvalidArgument("Could not parse the given string "
+                    "as an arbitrary-precision integer");
         }
-        // If the error was just trailing whitespace, we might still fit
-        // into a native long.
+        // If the strtol() error was just trailing whitespace, we might still
+        // fit into a native long.
         if (maybeTrailingWhitespace)
             tryReduce();
     } else if (large_) {

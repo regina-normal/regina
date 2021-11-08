@@ -311,9 +311,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Whitespace may be present at the beginning or the end
          * of the given string, and will simply be ignored.
          *
-         * Error detection is possible by passing a non-null boolean
-         * pointer as the third parameter to this constructor.
-         *
          * For finer details on how the string parsing works, see
          * strtol() from the standard C library (on which this method
          * is based).
@@ -322,16 +319,14 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
-         * \ifacespython The final parameter \a valid is not present.
+         * \exception InvalidArgument the given string was not a valid
+         * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base \a base.
          * @param base the base in which \a value is given.
-         * @param valid if this pointer is not null, the boolean referenced
-         * will be set to \c true if the entire given string was a valid
-         * large integer representation and \c false otherwise.
          */
-        IntegerBase(const char* value, int base = 10, bool* valid = nullptr);
+        IntegerBase(const char* value, int base = 10);
         /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
@@ -350,9 +345,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Whitespace may be present at the beginning or the end
          * of the given string, and will simply be ignored.
          *
-         * Error detection is possible by passing a non-null boolean
-         * pointer as the third parameter to this constructor.
-         *
          * For finer details on how the string parsing works, see
          * strtol() from the standard C library (on which this method
          * is based).
@@ -361,17 +353,14 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
-         * \ifacespython The final parameter \a valid is not present.
+         * \exception InvalidArgument the given string was not a valid
+         * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base \a base.
          * @param base the base in which \a value is given.
-         * @param valid if this pointer is not null, the boolean referenced
-         * will be set to \c true if the entire given string was a valid
-         * large integer representation and \c false otherwise.
          */
-        IntegerBase(const std::string& value, int base = 10,
-                bool* valid = nullptr);
+        IntegerBase(const std::string& value, int base = 10);
         /**
          * Destroys this integer.
          */
@@ -560,6 +549,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * large integer representation.
+         *
          * @param value the new value of this integer, represented as a string
          * of digits in base 10.
          * @return a reference to this integer with its new value.
@@ -578,6 +570,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
+         *
+         * \exception InvalidArgument the given string was not a valid
+         * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base 10.
@@ -2600,8 +2595,8 @@ typename IntOfSize<bytes>::type
 
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(
-        const std::string& value, int base, bool* valid) :
-        IntegerBase(value.c_str(), base, valid) {
+        const std::string& value, int base) :
+        IntegerBase(value.c_str(), base) {
 }
 
 template <bool supportInfinity>

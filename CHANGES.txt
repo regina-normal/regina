@@ -454,8 +454,10 @@ Version 7.0  [ TODO ]
             - Added a global swap() to complement the member swap().
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
-            - The string constructors and assignment operators recognise
-              "inf" as infinity.
+            - The string constructors and assignment operators now recognise
+              "inf" as infinity.  Also, these routines all now throw exceptions
+              if the input string is invalid: the old bool pointer argument to
+              the string constructors for testing validity is no longer present.
         Class InvalidArgument, InvalidInput:
             - New exception classes.
         Class Isomorphism<dim>, IsomorphismBase<dim>:
@@ -1518,6 +1520,9 @@ Version 7.0  [ TODO ]
               types of integers.
         Function torsionAutInverse():
             - Now returns a MatrixInt by value.
+        Function valueOf():
+            - The Integer / LargeInteger variants are deprecated.  Just use the
+              (Large)Integer assignment operator inside a try/catch block.
         Global constants base64Table, base64Spare:
             - Added to support the base64 encoding/decoding routines.
         Global constant packetTypeHolds<T>:
