@@ -575,7 +575,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             Vertex<dim>* v1 = (copy.isEmpty() ? nullptr : copy.vertex(0));
             if (v1 == v0 && ! t.isEmpty()) {
                 std::ostringstream msg;
-                msg << name << ": copy constructed uses the same crossings.";
+                msg << name << ": copy constructed uses the same vertices.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -590,7 +590,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             if (v2 != v1) {
                 std::ostringstream msg;
                 msg << name << ": move constructed does not use the "
-                    "same crossings.";
+                    "same vertices.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -606,7 +606,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             Vertex<dim>* v3 = (copyAss.isEmpty() ? nullptr : copyAss.vertex(0));
             if (v3 == v0 && ! t.isEmpty()) {
                 std::ostringstream msg;
-                msg << name << ": copy assigned uses the same crossings.";
+                msg << name << ": copy assigned uses the same vertices.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -623,7 +623,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             if (v4 != v3) {
                 std::ostringstream msg;
                 msg << name << ": move assigned does not use the "
-                    "same crossings.";
+                    "same vertices.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
