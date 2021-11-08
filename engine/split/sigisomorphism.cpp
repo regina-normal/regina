@@ -128,8 +128,9 @@ void SigPartialIsomorphism::makeCanonical(const Signature& sig,
                 cycleStart[c] = start1;
             else {
                 // Two possible starting points; we must choose between them.
-                if (Signature::cycleCmp(sig, c, start1, dir, labelImage,
-                        sig, c, start2, dir, labelImage) <= 0)
+                if (sig.cycleCmp(
+                        c, start1, dir, labelImage,
+                        c, start2, dir, labelImage) <= 0)
                     cycleStart[c] = start1;
                 else
                     cycleStart[c] = start2;
@@ -149,11 +150,10 @@ void SigPartialIsomorphism::makeCanonical(const Signature& sig,
 int SigPartialIsomorphism::compareWith(const Signature& sig,
         const SigPartialIsomorphism& other, unsigned fromCycleGroup) const {
     for (unsigned c = sig.cycleGroupStart[fromCycleGroup]; c < nCycles; c++) {
-        int result = Signature::cycleCmp(sig, cyclePreImage[c],
-            cycleStart[cyclePreImage[c]], dir, labelImage,
-            sig, other.cyclePreImage[c],
-            other.cycleStart[other.cyclePreImage[c]], other.dir,
-            other.labelImage);
+        int result = sig.cycleCmp(
+            cyclePreImage[c], cycleStart[cyclePreImage[c]], dir, labelImage,
+            other.cyclePreImage[c], other.cycleStart[other.cyclePreImage[c]],
+                other.dir, other.labelImage);
         if (result < 0)
             return -1;
         if (result > 0)
@@ -165,9 +165,9 @@ int SigPartialIsomorphism::compareWith(const Signature& sig,
 int SigPartialIsomorphism::compareWithIdentity(const Signature& sig,
         unsigned fromCycleGroup) const {
     for (unsigned c = sig.cycleGroupStart[fromCycleGroup]; c < nCycles; c++) {
-        int result = Signature::cycleCmp(sig, cyclePreImage[c],
-            cycleStart[cyclePreImage[c]], dir, labelImage,
-            sig, c, 0, 1, nullptr);
+        int result = sig.cycleCmp(
+            cyclePreImage[c], cycleStart[cyclePreImage[c]], dir, labelImage,
+            c, 0, 1, nullptr);
         if (result < 0)
             return -1;
         if (result > 0)

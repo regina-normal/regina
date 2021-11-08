@@ -223,8 +223,7 @@ class Signature : public ShortOutput<Signature> {
 
         /**
          * Lexicographically compares the results of transformations upon
-         * two given cycles.  Even if transformations are specified, the
-         * underlying signatures will not be changed.
+         * two given cycles within this signature.
          *
          * This comparison is \e not case-sensitive.
          *
@@ -232,50 +231,44 @@ class Signature : public ShortOutput<Signature> {
          *
          * \ifacespython Not present.
          *
-         * @param sig1 the signature containing the first cycle to examine.
-         * @param cycle1 specifies which cycle to examine in signature
-         * \a sig1.  This must be less than the total number of cycles in
-         * \a sig1.
+         * @param cycle1 specifies the first cycle to examine.
+         * This must be less than the total number of cycles in this signature.
          * @param start1 allows the first cycle to be transformed by
          * rotation; this parameter is the new starting position of the first
-         * cycle.  This must be between 0 and
-         * <tt>sig1.getCycleLength(cycle1)-1</tt> inclusive.
+         * cycle.  This must be between 0 and <tt>getCycleLength(cycle1)-1</tt>
+         * inclusive.
          * @param dir1 allows the first cycle to be transformed by
          * reversal; this parameter must be positive to use an unreversed
          * cycle or negative to use a reversed cycle.
          * @param relabel1 allows the first cycle to be transformed by
          * relabelling; this parameter must be an array of size at least
-         * <tt>sig1.order()</tt> mapping old labels 0,1,...
-         * (representing letters A,B,...) to new labels (which must also be
-         * 0,1,..., possibly in a different order).  This parameter may
-         * be \c null if no relabelling is to be used.
+         * order(), mapping old labels 0,1,...  (representing letters A,B,...)
+         * to new labels (which must also be 0,1,..., possibly in a different
+         * order).  This may be \c null if no relabelling is to be used.
          *
-         * @param sig2 the signature containing the second cycle to examine.
-         * @param cycle2 specifies which cycle to examine in signature
-         * \a sig2.  This must be less than the total number of cycles in
-         * \a sig2.
+         * @param cycle2 specifies the second cycle to examine.
+         * This must be less than the total number of cycles in this signature.
          * @param start2 allows the second cycle to be transformed by
-         * rotation; this parameter is the new starting position of the
-         * second cycle.  This must be between 0 and
-         * <tt>sig2.getCycleLength(cycle2)-1</tt> inclusive.
+         * rotation; this parameter is the new starting position of the second
+         * cycle.  This must be between 0 and <tt>getCycleLength(cycle2)-1</tt>
+         * inclusive.
          * @param dir2 allows the second cycle to be transformed by
          * reversal; this parameter must be positive to use an unreversed
          * cycle or negative to use a reversed cycle.
          * @param relabel2 allows the second cycle to be transformed by
          * relabelling; this parameter must be an array of size at least
-         * <tt>sig2.order()</tt> mapping old labels 0,1,...
-         * (representing letters A,B,...) to new labels (which must also be
-         * 0,1,..., possibly in a different order).  This parameter may
-         * be \c null if no relabelling is to be used.
+         * order(), mapping old labels 0,1,...  (representing letters A,B,...)
+         * to new labels (which must also be 0,1,..., possibly in a different
+         * order).  This may be \c null if no relabelling is to be used.
          *
          * @return -1, 1 or 0 if the transformed first cycle is
          * lexicographically less than, greater than or equal to the
          * transformed second cycle respectively.
          */
-        static int cycleCmp(const Signature& sig1, unsigned cycle1,
-            unsigned start1, int dir1, unsigned* relabel1,
-            const Signature& sig2, unsigned cycle2, unsigned start2,
-            int dir2, unsigned* relabel2);
+        int cycleCmp(
+            unsigned cycle1, unsigned start1, int dir1, unsigned* relabel1,
+            unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2)
+            const;
 
         /**
          * Writes a string representation of this signature to the given

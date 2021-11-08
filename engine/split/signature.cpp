@@ -250,12 +250,12 @@ Triangulation<3> Signature::triangulate() const {
     return tri;
 }
 
-int Signature::cycleCmp(const Signature& sig1, unsigned cycle1,
-        unsigned start1, int dir1, unsigned* relabel1, const Signature& sig2,
-        unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2) {
-    unsigned len = sig1.cycleStart[cycle1 + 1] - sig1.cycleStart[cycle1];
-    unsigned* arr1 = sig1.label + sig1.cycleStart[cycle1];
-    unsigned* arr2 = sig2.label + sig2.cycleStart[cycle2];
+int Signature::cycleCmp(
+        unsigned cycle1, unsigned start1, int dir1, unsigned* relabel1,
+        unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2) const {
+    unsigned len = cycleStart[cycle1 + 1] - cycleStart[cycle1];
+    unsigned* arr1 = label + cycleStart[cycle1];
+    unsigned* arr2 = label + cycleStart[cycle2];
     unsigned pos1 = start1;
     unsigned pos2 = start2;
     for (unsigned i = 0; i < len; i++) {

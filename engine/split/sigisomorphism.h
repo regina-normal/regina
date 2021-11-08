@@ -378,9 +378,9 @@ inline SigPartialIsomorphism::ShorterCycle::ShorterCycle(
 
 inline bool SigPartialIsomorphism::ShorterCycle::operator ()
         (unsigned cycle1, unsigned cycle2) const {
-    return (Signature::cycleCmp(sig, cycle1, iso.cycleStart[cycle1],
-        iso.dir, iso.labelImage, sig, cycle2, iso.cycleStart[cycle2],
-        iso.dir, iso.labelImage) < 0);
+    return (sig.cycleCmp(
+        cycle1, iso.cycleStart[cycle1], iso.dir, iso.labelImage,
+        cycle2, iso.cycleStart[cycle2], iso.dir, iso.labelImage) < 0);
 }
 
 inline void swap(SigPartialIsomorphism& a, SigPartialIsomorphism& b) noexcept {

@@ -1126,6 +1126,8 @@ Version 7.0  [ TODO ]
             - Function parse() now returns by value (not pointer), and throws
               an exception on error (instead of returning null).
             - Function triangulate() now returns by value.
+            - Function cycleCmp() is now a member function (and so both
+              cycles being compared must belong to the same signature).
         Class SigPartialIsomorphism:
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.

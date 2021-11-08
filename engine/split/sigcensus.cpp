@@ -131,8 +131,9 @@ void SigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                 i = 1;
                 while (sig.label[startPos + i] != sig.label[startPos])
                     i++;
-                if (Signature::cycleCmp(sig, sig.nCycles - 1, 0, 1, nullptr,
-                        sig, sig.nCycles - 1, i, 1, nullptr) > 0)
+                if (sig.cycleCmp(
+                        sig.nCycles - 1, 0, 1, nullptr,
+                        sig.nCycles - 1, i, 1, nullptr) > 0)
                     avoid = true;
             }
 
