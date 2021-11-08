@@ -61,48 +61,37 @@ void AbelianGroup::addTorsion(Integer degree) {
 }
 
 void AbelianGroup::addTorsionElements(const std::multiset<Integer>& torsion) {
-    // Build a presentation matrix for the torsion.
-    MatrixInt a(revInvFactors_.size() + torsion.size());
-
-    // Put our own invariant factors in the top.
-    unsigned i=0;
-    for (auto it = revInvFactors_.rbegin(); it != revInvFactors_.rend(); ++it) {
-        a.entry(i,i) = *it;
-        ++i;
-    }
-
-    // Put the passed torsion elements beneath.
-    for (const auto& f : torsion) {
-        a.entry(i,i) = f;
-        ++i;
-    }
-
-    // Go calculate!
-    smithNormalForm(a);
-    replaceTorsion(a);
+    for (const Integer& i : torsion)
+        addTorsion(i);
 }
 
-void AbelianGroup::addGroup(const MatrixInt& presentation) {
-    // Prepare to calculate invariant factors.
-    size_t len = revInvFactors_.size();
-    MatrixInt a(len + presentation.rows(), len + presentation.columns());
+void AbelianGroup::addGroup(MatrixInt presentation) {
+    smithNormalForm(presentation);
 
-    // Fill in the complete presentation matrix.
-    // Fill the bottom half of the matrix with the presentation.
-    for (unsigned i=0; i<presentation.rows(); i++)
-        for (unsigned j=0; j<presentation.columns(); j++)
-            a.entry(len + i, len + j) = presentation.entry(i, j);
+    // Run up the diagonal until we hit 1.
+    // Hopefully this will be faster than running down the diagonal
+    // looking for 0 because the SNF calculation should end up with
+    // many 1s for a unnecessarily large presentation matrix such as
+    // is produced for instance by homology calculations.
+    unsigned long i = presentation.columns();
 
-    // Fill in the invariant factors in the top.
-    unsigned i = 0;
-    for (auto it = revInvFactors_.rbegin(); it != revInvFactors_.rend(); ++it) {
-        a.entry(i,i) = *it;
-        ++i;
+    unsigned long rows = presentation.rows();
+    if (rows < i) {
+        // There are more columns than rows; these extras cols must be zero.
+        rank_ += (i - rows);
+        i = rows;
     }
 
-    // Go calculate!
-    smithNormalForm(a);
-    replaceTorsion(a);
+    // Now i is precisely the length of the diagonal.
+    while (i > 0) {
+        --i;
+        if (presentation.entry(i, i) == 0)
+            ++rank_;
+        else if (presentation.entry(i, i) == 1)
+            return;
+        else
+            addTorsion(presentation.entry(i, i));
+    }
 }
 
 void AbelianGroup::addGroup(const AbelianGroup& group) {
@@ -110,34 +99,11 @@ void AbelianGroup::addGroup(const AbelianGroup& group) {
 
     // Work out the torsion elements.
     if (revInvFactors_.empty()) {
-        // Copy the other group's factors!
         revInvFactors_ = group.revInvFactors_;
-        return;
+    } else {
+        for (const Integer& i : group.revInvFactors_)
+            addTorsion(i);
     }
-    if (group.revInvFactors_.empty())
-        return;
-
-    // We will have to calculate the invariant factors ourselves.
-    size_t len = revInvFactors_.size() + group.revInvFactors_.size();
-    MatrixInt a(len, len);
-
-    // Put our own invariant factors in the top.
-    unsigned i = 0;
-    for (auto it = revInvFactors_.rbegin(); it != revInvFactors_.rend(); ++it) {
-        a.entry(i,i) = *it;
-        ++i;
-    }
-
-    // Put the other group's invariant factors beneath.
-    for (auto it = group.revInvFactors_.rbegin();
-            it != group.revInvFactors_.rend(); ++it) {
-        a.entry(i,i) = *it;
-        ++i;
-    }
-
-    // Go calculate!
-    smithNormalForm(a);
-    replaceTorsion(a);
 }
 
 unsigned AbelianGroup::torsionRank(const Integer& degree) const {
@@ -198,51 +164,6 @@ void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
         out << '0';
 }
 
-void AbelianGroup::replaceTorsion(const MatrixInt& matrix, bool rankFromCols) {
-    // Delete any preexisting torsion.
-    revInvFactors_.clear();
-
-    // Run up the diagonal until we hit 1.
-    // Hopefully this will be faster than running down the diagonal
-    // looking for 0 because the SNF calculation should end up with
-    // many 1s for a unnecessarily large presentation matrix such as
-    // is produced for instance by homology calculations.
-    unsigned long i;
-    if (rankFromCols) {
-        i = matrix.columns();
-
-        unsigned long rows = matrix.rows();
-        if (rows < i) {
-            // There are more columns than rows; these extras cols must be zero.
-            rank_ += (i - rows);
-            i = rows;
-        }
-    } else {
-        i = matrix.rows();
-
-        unsigned long cols = matrix.columns();
-        if (cols < i) {
-            // There are more rows than columns; these extras rows must be zero.
-            rank_ += (i - cols);
-            i = cols;
-        }
-    }
-
-    // Now i is precisely the length of the diagonal.
-
-    // We inserted the invariant factors in reverse order, but this is
-    // exactly what we need to do.
-    while (i > 0) {
-        --i;
-        if (matrix.entry(i, i) == 0)
-            ++rank_;
-        else if (matrix.entry(i, i) == 1)
-            break;
-        else
-            revInvFactors_.push_back(matrix.entry(i, i));
-    }
-}
-
 void AbelianGroup::writeXMLData(std::ostream& out) const {
     out << "<abeliangroup rank=\"" << rank_ << "\"> ";
     for (auto it = revInvFactors_.rbegin(); it != revInvFactors_.rend(); ++it)
@@ -253,9 +174,39 @@ void AbelianGroup::writeXMLData(std::ostream& out) const {
 // ---N--> CC --M-->  ie: M*N = 0.
 AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
     smithNormalForm(N);
-    replaceTorsion(N, false /* rank comes from the zero rows of N */);
 
-    rank_ -= M.rowEchelonForm(); // subtracts the rank of M
+    // Note: the rank comes from the zero *rows* of N.
+
+    // Run up the diagonal until we hit 1.
+    // Hopefully this will be faster than running down the diagonal
+    // looking for 0 because the SNF calculation should end up with
+    // many 1s for a unnecessarily large presentation matrix such as
+    // is produced for instance by homology calculations.
+    unsigned long i = N.rows();
+
+    unsigned long cols = N.columns();
+    if (cols < i) {
+        // There are more rows than columns; these extras rows must be zero.
+        rank_ += (i - cols);
+        i = cols;
+    }
+
+    // Now i is precisely the length of the diagonal.
+
+    // We insert the invariant factors in reverse order, but this is
+    // exactly what we need to do.
+    while (i > 0) {
+        --i;
+        if (N.entry(i, i) == 0)
+            ++rank_;
+        else if (N.entry(i, i) == 1)
+            break;
+        else
+            revInvFactors_.push_back(N.entry(i, i));
+    }
+
+    // Finally, subtract the rank of M.
+    rank_ -= M.rowEchelonForm();
 }
 
 AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {

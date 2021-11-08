@@ -214,9 +214,6 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * Deprecated routine that adds the given set of torsion elements to
          * this group.
          *
-         * Note that this routine might be slow since calculating the
-         * new invariant factors is not trivial.
-         *
          * The torsion elements to add are described by a list of
          * integers <i>k1</i>,...,<i>km</i>, where we are adding
          * Z_<i>k1</i>,...,Z_<i>km</i>.  Unlike invariant factors, the
@@ -237,19 +234,16 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
             const std::multiset<Integer>& torsion);
         /**
          * Adds the abelian group defined by the given presentation to this
-         * group.
-         * Note that this routine might be slow since calculating the
+         * group.  Note that this routine might be slow since calculating the
          * new invariant factors is not trivial.
          *
          * @param presentation a presentation matrix for the group to be
          * added to this group, where each column represents a generator
          * and each row a relation.
          */
-        void addGroup(const MatrixInt& presentation);
+        void addGroup(MatrixInt presentation);
         /**
          * Adds the given abelian group to this group.
-         * Note that this routine might be slow since calculating the
-         * new invariant factors is not trivial.
          *
          * @param group the group to add to this one.
          */
@@ -447,30 +441,6 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * the output will use subscript digits and the blackboard bold Z.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false) const;
-
-    private:
-        /**
-         * Replaces the torsion elements of this group with those
-         * in the abelian group represented by the given Smith normal
-         * form presentation matrix.
-         *
-         * The rank of this group will be adjusted also: if \a rankFromCols is
-         * \c true then rank_ will be incremented by the number of zero columns
-         * in \a matrix; otherwise rank_ will be incremented by the number of
-         * zero rows.
-         *
-         * Any preexisting torsion elements will be deleted; however, any
-         * preexisting rank will be preserved.
-         *
-         * \pre The given matrix is in Smith normal
-         * form, with the diagonal consisting of a series of positive,
-         * non-decreasing integers followed by zeroes.
-         *
-         * @param matrix a matrix containing the Smith normal form presentation
-         * matrix for the new torsion elements, where each column represents a
-         * generator and each row a relation.
-         */
-        void replaceTorsion(const MatrixInt& matrix, bool rankFromCols = true);
 };
 
 /**
