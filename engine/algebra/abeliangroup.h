@@ -40,7 +40,7 @@
 #endif
 
 #include <set>
-#include <deque>
+#include <vector>
 #include "regina-core.h"
 #include "maths/integer.h"
 #include "core/output.h"
@@ -80,9 +80,14 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
     protected:
         unsigned rank_;
             /**< The rank of the group (the number of Z components). */
-        std::deque<Integer> invariantFactors_;
+        std::vector<Integer> revInvFactors_;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
-             *   described in the AbelianGroup notes. */
+                 described in the AbelianGroup notes.
+                 These are stored in reverse order, since addTorsion()
+                 always extends the vector on the \a d0 end.
+                 Note that we cannot use std::deque (which does support
+                 pushing to the front), since older gcc versions do not
+                 have a noexcept std::deque move constructor. */
 
     public:
         /**
@@ -488,7 +493,7 @@ inline AbelianGroup::AbelianGroup() : rank_(0) {
 
 inline void AbelianGroup::swap(AbelianGroup& other) noexcept {
     std::swap(rank_, other.rank_);
-    invariantFactors_.swap(other.invariantFactors_);
+    revInvFactors_.swap(other.revInvFactors_);
 }
 
 inline void AbelianGroup::addRank(int extraRank) {
@@ -517,45 +522,43 @@ inline unsigned AbelianGroup::torsionRank(unsigned long degree) const {
 }
 
 inline size_t AbelianGroup::countInvariantFactors() const {
-    return invariantFactors_.size();
+    return revInvFactors_.size();
 }
 
 inline const Integer& AbelianGroup::invariantFactor(size_t index) const {
-    return invariantFactors_[index];
+    return revInvFactors_[revInvFactors_.size() - index - 1];
 }
 
 inline bool AbelianGroup::isTrivial() const {
-    return (rank_ == 0 && invariantFactors_.empty());
+    return (rank_ == 0 && revInvFactors_.empty());
 }
 
 inline bool AbelianGroup::isZ() const {
-    return (rank_ == 1 && invariantFactors_.empty());
+    return (rank_ == 1 && revInvFactors_.empty());
 }
 
 inline bool AbelianGroup::isFree(unsigned r) const {
-    return (rank_ == r && invariantFactors_.empty());
+    return (rank_ == r && revInvFactors_.empty());
 }
 
 inline bool AbelianGroup::isZn(unsigned long n) const {
     return (n == 0 ? isZ() : n == 1 ? isTrivial() :
-        (rank_ == 0 && invariantFactors_.size() == 1 &&
-            invariantFactors_.front() == n));
+        (rank_ == 0 && revInvFactors_.size() == 1 &&
+            revInvFactors_.front() == n));
 }
 
 inline bool AbelianGroup::operator == (const AbelianGroup& other) const {
-    return (rank_ == other.rank_ &&
-        invariantFactors_ == other.invariantFactors_);
+    return (rank_ == other.rank_ && revInvFactors_ == other.revInvFactors_);
 }
 
 inline bool AbelianGroup::operator != (const AbelianGroup& other) const {
-    return (rank_ != other.rank_ ||
-        invariantFactors_ != other.invariantFactors_);
+    return (rank_ != other.rank_ || revInvFactors_ != other.revInvFactors_);
 }
 
 inline void AbelianGroup::tightEncode(std::ostream& out) const {
     regina::tightEncode(out, rank_);
-    for (const auto& i : invariantFactors_)
-        regina::tightEncode(out, i);
+    for (auto it = revInvFactors_.rbegin(); it != revInvFactors_.rend(); ++it)
+        regina::tightEncode(out, *it);
     regina::tightEncode(out, 0);
 }
 
