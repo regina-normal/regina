@@ -253,7 +253,7 @@ void AbelianGroup::writeXMLData(std::ostream& out) const {
 
 // ---N--> CC --M-->  ie: M*N = 0.
 AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
-    metricalSmithNormalForm(N);
+    smithNormalForm(N);
     replaceTorsion(N, false /* rank comes from the zero rows of N */);
 
     rank_ -= M.rowEchelonForm(); // subtracts the rank of M
@@ -263,7 +263,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
     Integer cof(p.abs());
     rank_ = N.rows();
 
-    metricalSmithNormalForm(N);
+    smithNormalForm(N);
     unsigned long lim = (N.rows() < N.columns() ? N.rows() : N.columns() );
 
     if (cof == 0) {
@@ -283,7 +283,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
             }
     }
 
-    metricalSmithNormalForm(M);
+    smithNormalForm(M);
     lim = (M.rows() < M.columns() ? M.rows() : M.columns() );
     for (unsigned long i=0; i<lim; i++) {
         if (M.entry(i,i) != 0) {

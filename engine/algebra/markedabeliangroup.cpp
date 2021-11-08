@@ -69,7 +69,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
 {
     MatrixInt tM(OM);
 
-    metricalSmithNormalForm(tM, &OMR, &OMRi, &OMC, &OMCi);
+    metricalSmithNormalForm(tM, OMR, OMRi, OMC, OMCi);
 
     for (unsigned long i=0; (i<tM.rows()) && (i<tM.columns()); i++)
         if (tM.entry(i,i) != 0) rankOM++;
@@ -87,7 +87,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     // build the list of invariant factors and their row indexes
     // now compute the rank and column indexes ...
 
-    metricalSmithNormalForm(ORN, &ornR, &ornRi, &ornC, &ornCi);
+    metricalSmithNormalForm(ORN, ornR, ornRi, ornC, ornCi);
 
     for (unsigned long i=0; ( (i<ORN.rows()) && (i<ORN.columns()) ); i++)
     {
@@ -128,7 +128,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
     // find SNF(M).
     MatrixInt tM(OM);
 
-    metricalSmithNormalForm(tM, &OMR, &OMRi, &OMC, &OMCi);
+    metricalSmithNormalForm(tM, OMR, OMRi, OMC, OMCi);
 
     for (unsigned i=0; ( (i<tM.rows()) && (i<tM.columns()) ); i++)
         if (tM.entry(i,i) != 0) rankOM++;
@@ -155,7 +155,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
         for (unsigned long i=0; i< OMRiN.rows() - rankOM; i++)
              tensorPres.entry(i, OMRiN.columns() + i) = coeff;
 
-        metricalSmithNormalForm(tensorPres, &otR, &otRi, &otC, &otCi);
+        metricalSmithNormalForm(tensorPres, otR, otRi, otC, otCi);
 
         // this group is a direct sum of groups of the form Z_q where q =
         // gcd(p, TORVec[i]), and groups Z_q where q is on the diagonal of
@@ -185,7 +185,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
                     i - TORVec.size() + tensorIfLoc);
         }
 
-        metricalSmithNormalForm(diagPres, &ornR, &ornRi, &ornC, &ornCi);
+        metricalSmithNormalForm(diagPres, ornR, ornRi, ornC, ornCi);
         for (unsigned long i=0; i<diagPres.rows(); i++) {
             // should only have terms > 1 or == 0. 
             if (diagPres.entry(i,i) > 1)
@@ -201,7 +201,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
             for (unsigned long j=0; j<OMRiN.columns(); j++)
                 tensorPres.entry(i,j) = OMRiN.entry(i+rankOM, j);
 
-        metricalSmithNormalForm(tensorPres, &ornR, &ornRi, &ornC, &ornCi);
+        metricalSmithNormalForm(tensorPres, ornR, ornRi, ornC, ornCi);
 
         for (unsigned long i=0; i<tensorPres.rows() && i<tensorPres.columns();
                 ++i) {
@@ -900,7 +900,7 @@ void HomMarkedAbelianGroup::computeKernel() {
         MatrixInt dcLpreimage( *reducedKernelLattice_ );
 
         MatrixInt R, Ri, C, Ci;
-        metricalSmithNormalForm( dcLpreimage, &R, &Ri, &C, &Ci );
+        metricalSmithNormalForm( dcLpreimage, R, Ri, C, Ci );
 
         // the matrix representing the domain lattice in dcLpreimage
         // coordinates is given by domainLattice * R * (dcLpreimage inverse) * C

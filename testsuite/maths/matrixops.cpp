@@ -297,12 +297,9 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             // Do it now with the five-argument routine, to collect
             // change of basis matrices.
             MatrixInt snfBasis(m);
-            MatrixInt R(m.columns(), m.columns());
-            MatrixInt C(m.rows(), m.rows());
-            MatrixInt invR(R);
-            MatrixInt invC(C);
+            MatrixInt R, C, invR, invC;
 
-            regina::metricalSmithNormalForm(snfBasis, &R, &invR, &C, &invC);
+            regina::metricalSmithNormalForm(snfBasis, R, invR, C, invC);
 
             if (! (snf == snfBasis)) {
                 CPPUNIT_FAIL(std::string("In smithNormalForm(") +

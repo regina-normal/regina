@@ -123,7 +123,7 @@ void smithNormalForm(MatrixInt& matrix,
  * description of pivoting methods.
  *
  * The only input argument is \a matrix.  The four remaining arguments
- * (the change of basis matrices), if passed, will be refilled.
+ * (the change of basis matrices) will be refilled.
  * All five arguments are used to return information as follows.
  *
  * Let \a M be the initial value of \a matrix, and let \a S be the Smith
@@ -138,32 +138,30 @@ void smithNormalForm(MatrixInt& matrix,
  * Thus, one obtains the Smith normal form the original matrix by multiplying
  * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
  *
- * The matrices \a rowSpaceBasis and \a rowSpaceBasisInv, if passed,
+ * The matrices \a rowSpaceBasis and \a rowSpaceBasisInv that are passed
  * may be of any size, or they may even be uninitialised; upon return they
  * will both be square with side length matrix.columns().
- * Likewise, the matrices \a colSpaceBasis and \a colSpaceBasisInv, if passed,
- * may be of any size or may be uninitialised; upon return they
+ * Likewise, the matrices \a colSpaceBasis and \a colSpaceBasisInv that are
+ * passed may be of any size or may be uninitialised; upon return they
  * will both be square with side length matrix.rows().
  *
  * @param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is
  * in its Smith Normal Form.
  * @param rowSpaceBasis used to return a change of basis matrix (see
- * above for details).  This is optional; you may pass a null pointer instead.
+ * above for details).
  * @param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
- * This is optional; you may pass a null pointer instead.
  * @param colSpaceBasis used to return a change of basis matrix (see
- * above for details).  This is optional; you may pass a null pointer instead.
+ * above for details).
  * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
- * This is optional; you may pass a null pointer instead.
  *
  * \author Ryan Budney
  *
  * \ingroup maths
  */
 void metricalSmithNormalForm(MatrixInt& matrix,
-        MatrixInt *rowSpaceBasis=nullptr, MatrixInt *rowSpaceBasisInv=nullptr,
-        MatrixInt *colSpaceBasis=nullptr, MatrixInt *colSpaceBasisInv=nullptr);
+        MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
+        MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv);
 
 /**
  * Find a basis for the row space of the given matrix.

@@ -1506,6 +1506,8 @@ Version 7.0  [ TODO ]
         Function smithNormalForm(), metricalSmithNormalForm():
             - The change of basis matrices no longer need to have the correct
               size (and may even be uninitialised) before they are passed in.
+            - The change of basis matrices are now passed by reference, which
+              means for metricalSmithNormalForm() they are no longer optional.
         Function stringToToken()
             - Replaced the two overloads with a single function that
               takes a std::string by value, for better move optimisation.
