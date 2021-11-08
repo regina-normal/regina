@@ -222,55 +222,6 @@ class Signature : public ShortOutput<Signature> {
         Triangulation<3> triangulate() const;
 
         /**
-         * Lexicographically compares the results of transformations upon
-         * two given cycles within this signature.
-         *
-         * This comparison is \e not case-sensitive.
-         *
-         * \pre The two specified cycles have the same length.
-         *
-         * \ifacespython Not present.
-         *
-         * @param cycle1 specifies the first cycle to examine.
-         * This must be less than the total number of cycles in this signature.
-         * @param start1 allows the first cycle to be transformed by
-         * rotation; this parameter is the new starting position of the first
-         * cycle.  This must be between 0 and <tt>getCycleLength(cycle1)-1</tt>
-         * inclusive.
-         * @param dir1 allows the first cycle to be transformed by
-         * reversal; this parameter must be positive to use an unreversed
-         * cycle or negative to use a reversed cycle.
-         * @param relabel1 allows the first cycle to be transformed by
-         * relabelling; this parameter must be an array of size at least
-         * order(), mapping old labels 0,1,...  (representing letters A,B,...)
-         * to new labels (which must also be 0,1,..., possibly in a different
-         * order).  This may be \c null if no relabelling is to be used.
-         *
-         * @param cycle2 specifies the second cycle to examine.
-         * This must be less than the total number of cycles in this signature.
-         * @param start2 allows the second cycle to be transformed by
-         * rotation; this parameter is the new starting position of the second
-         * cycle.  This must be between 0 and <tt>getCycleLength(cycle2)-1</tt>
-         * inclusive.
-         * @param dir2 allows the second cycle to be transformed by
-         * reversal; this parameter must be positive to use an unreversed
-         * cycle or negative to use a reversed cycle.
-         * @param relabel2 allows the second cycle to be transformed by
-         * relabelling; this parameter must be an array of size at least
-         * order(), mapping old labels 0,1,...  (representing letters A,B,...)
-         * to new labels (which must also be 0,1,..., possibly in a different
-         * order).  This may be \c null if no relabelling is to be used.
-         *
-         * @return -1, 1 or 0 if the transformed first cycle is
-         * lexicographically less than, greater than or equal to the
-         * transformed second cycle respectively.
-         */
-        int cycleCmp(
-            unsigned cycle1, unsigned start1, int dir1, unsigned* relabel1,
-            unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2)
-            const;
-
-        /**
          * Writes a string representation of this signature to the given
          * output stream.
          *
@@ -319,6 +270,53 @@ class Signature : public ShortOutput<Signature> {
          * strictly positive.
          */
         Signature(unsigned newOrder);
+
+        /**
+         * Lexicographically compares the results of transformations upon
+         * two given cycles within this signature.
+         *
+         * This comparison is \e not case-sensitive.
+         *
+         * \pre The two specified cycles have the same length.
+         *
+         * @param cycle1 specifies the first cycle to examine.
+         * This must be less than the total number of cycles in this signature.
+         * @param start1 allows the first cycle to be transformed by
+         * rotation; this parameter is the new starting position of the first
+         * cycle.  This must be between 0 and <tt>getCycleLength(cycle1)-1</tt>
+         * inclusive.
+         * @param dir1 allows the first cycle to be transformed by
+         * reversal; this parameter must be positive to use an unreversed
+         * cycle or negative to use a reversed cycle.
+         * @param relabel1 allows the first cycle to be transformed by
+         * relabelling; this parameter must be an array of size at least
+         * order(), mapping old labels 0,1,...  (representing letters A,B,...)
+         * to new labels (which must also be 0,1,..., possibly in a different
+         * order).  This may be \c null if no relabelling is to be used.
+         *
+         * @param cycle2 specifies the second cycle to examine.
+         * This must be less than the total number of cycles in this signature.
+         * @param start2 allows the second cycle to be transformed by
+         * rotation; this parameter is the new starting position of the second
+         * cycle.  This must be between 0 and <tt>getCycleLength(cycle2)-1</tt>
+         * inclusive.
+         * @param dir2 allows the second cycle to be transformed by
+         * reversal; this parameter must be positive to use an unreversed
+         * cycle or negative to use a reversed cycle.
+         * @param relabel2 allows the second cycle to be transformed by
+         * relabelling; this parameter must be an array of size at least
+         * order(), mapping old labels 0,1,...  (representing letters A,B,...)
+         * to new labels (which must also be 0,1,..., possibly in a different
+         * order).  This may be \c null if no relabelling is to be used.
+         *
+         * @return -1, 1 or 0 if the transformed first cycle is
+         * lexicographically less than, greater than or equal to the
+         * transformed second cycle respectively.
+         */
+        int cycleCmp(
+            unsigned cycle1, unsigned start1, int dir1, unsigned* relabel1,
+            unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2)
+            const;
 
     friend class regina::SigPartialIsomorphism;
     friend class regina::SigCensus;
