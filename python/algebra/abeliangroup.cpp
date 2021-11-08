@@ -76,7 +76,7 @@ void addAbelianGroup(pybind11::module_& m) {
                 }
             }
         })
-        .def("addGroup", overload_cast<const MatrixInt&>(
+        .def("addGroup", overload_cast<MatrixInt>(
             &AbelianGroup::addGroup))
         .def("addGroup", overload_cast<const AbelianGroup&>(
             &AbelianGroup::addGroup))
