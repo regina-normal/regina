@@ -432,6 +432,12 @@ private:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
@@ -443,6 +449,12 @@ private:
      * orientable double cover).
      *
      * \pre The triangulation is of a connected 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
      *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
@@ -707,6 +719,12 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
@@ -719,6 +737,12 @@ public:
      * Same as torsionRankVector() but returns as a human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
      *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
@@ -738,6 +762,12 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
@@ -750,6 +780,12 @@ public:
      * This is an orientation-sensitive invariant.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
      *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
@@ -769,6 +805,12 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
@@ -783,6 +825,12 @@ public:
      * human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
      *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
@@ -806,6 +854,12 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
@@ -817,6 +871,12 @@ public:
      * Returns true iff the torsion linking form is split.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
      *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
@@ -835,6 +895,12 @@ public:
      * perhaps with boundary to embed in a homology 4-sphere.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
      *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal
@@ -860,6 +926,12 @@ public:
      * additional information regarding the orientable double cover.
      *
      * \pre The triangulation is of a connected 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
      *
      * \exception UnsolvedCase The torsion linking form could not be computed.
      * This should be rare: the only way it can occur is during an internal

@@ -1448,17 +1448,11 @@ void HomologicalData::computeTorsionLinkingForm() {
     //           and LargeInteger instead.
     // decide on if there is 2-torsion...
     Integer twoPow;
-    static const Rational pi = Rational(
-                Integer("314159265358979323846264338327950288"),
-                Integer("100000000000000000000000000000000000") );
     std::vector< Integer > groupV;
     bool notatend;
-    Rational tSum;
 
     unsigned long incind;
     bool incrun;
-    long double tLD;
-    long double xlD, ylD;
 
     std::vector< Integer > ProperPrimePower;
 
@@ -1497,11 +1491,11 @@ void HomologicalData::computeTorsionLinkingForm() {
                 // h1PrimePowerDecomp[0].second which is an increasing list
                 // of the powers of 2, ie: 2^i...
 
-                twoPow = Integer(2);
+                twoPow = 2;
                 twoPow.raiseToPower(i+1);
 
-                xlD=0.0;
-                ylD=0.0;
+                long double xlD=0.0;
+                long double ylD=0.0;
 
                 // now start the sum through the group.
                 notatend=true;
@@ -1510,7 +1504,7 @@ void HomologicalData::computeTorsionLinkingForm() {
                     // call doubleApprox()
                     // first we evaluate the form(x,x) for x==groupV.
                     // the form is linkingformPD[0]
-                    tSum=Rational::zero;
+                    Rational tSum; // init to 0
                     for (j=0; j<linkingFormPD[0].rows(); j++)
                         for (k=0; k<linkingFormPD[0].columns();
                                 k++)
@@ -1522,8 +1516,8 @@ void HomologicalData::computeTorsionLinkingForm() {
                     tN = tSum.numerator();
                     tD = tSum.denominator();
                     tN.divisionAlg(tD,tR);
-                    tSum = Rational(twoPow) * pi * Rational( tR, tD );
-                    tLD = tSum.doubleApprox();
+                    long double tLD =
+                        (Rational(tR, tD) * twoPow).doubleApprox() * M_PI;
                     // we ignore `inrange' parameter as the number is reduced
                     // mod 1, so either way it is
                     // returning essentially the correct number.
