@@ -180,19 +180,22 @@ struct Base64SigEncoding {
      *
      * The inverse to this routine is decodeTrits().
      *
-     * @param trits an array containing the trits to encode; this must
-     * contain at least \a nTrits characters, each of which is 0, 1 or 2.
+     * @param trits an input iterator pointing to the first trit to encode;
+     * it must be possible to read and advance this iterator at least
+     * \a nTrits times.  Each trit will be cast to a \c char, and must take
+     * the value 0, 1 or 2.
      * @param nTrits the number of trits to encode; this must be at most 3.
      * @return the resulting printable base64 character.
      */
-    static char encodeTrits(const char* trits, unsigned nTrits) {
+    template <typename InputIterator>
+    static char encodeTrits(InputIterator trits, unsigned nTrits) {
         char ans = 0;
         if (nTrits >= 1)
-            ans |= trits[0];
+            ans |= static_cast<char>(*trits++);
         if (nTrits >= 2)
-            ans |= (trits[1] << 2);
+            ans |= (static_cast<char>(*trits++) << 2);
         if (nTrits >= 3)
-            ans |= (trits[2] << 4);
+            ans |= (static_cast<char>(*trits++) << 4);
         return encodeSingle(ans);
     }
 
@@ -204,14 +207,17 @@ struct Base64SigEncoding {
      * for details of the encoding.
      *
      * @param c the base64 character to decode.
-     * @param result an array into which the resulting trits should be placed;
-     * this must have size at least 3.
+     * @param result an output iterator pointing to the location where the
+     * resulting trits will be stored; it must be possible to write and advance
+     * this iterator at least three times.  Each trit will be written as a
+     * \c char.
      */
-    static void decodeTrits(char c, char* result) {
-        unsigned val = decodeSingle(c);
-        result[0] = val & 3;
-        result[1] = (val >> 2) & 3;
-        result[2] = (val >> 4) & 3;
+    template <typename OutputIterator>
+    static void decodeTrits(char c, OutputIterator result) {
+        char val = static_cast<char>(decodeSingle(c));
+        *result++ = val & 3;
+        *result++ = (val >> 2) & 3;
+        *result++ = (val >> 4) & 3;
     }
 };
 
