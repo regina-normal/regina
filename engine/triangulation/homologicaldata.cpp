@@ -30,13 +30,20 @@
  *                                                                        *
  **************************************************************************/
 
+// We use M_PI from <cmath>, which seems to cause problems under windows.
+// The fix seems to be to include <cmath> before anything else, *and*
+// to set _USE_MATH_DEFINES beforehand.
+#if defined(_WIN32)
+  #define _USE_MATH_DEFINES
+#endif
+#include <cmath>
+
 #include "maths/matrixops.h"
 #include "maths/primes.h"
 #include "triangulation/homologicaldata.h"
 #include <list>
 #include <iostream>
 #include <sstream>
-#include <cmath>
 
 namespace regina {
 
