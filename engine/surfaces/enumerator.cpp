@@ -302,19 +302,19 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
 void NormalSurfaces::Enumerator::fillVertexDD() {
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, &c, tracker_);
+            }, eqns_, c, tracker_);
     } else {
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, nullptr, tracker_);
+            }, eqns_, ValidityConstraints::none, tracker_);
     }
 }
 
@@ -545,19 +545,19 @@ void NormalSurfaces::Enumerator::fillFundamentalDual() {
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, &c, tracker_);
+            }, eqns_, c, tracker_);
     } else {
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, nullptr, tracker_);
+            }, eqns_, ValidityConstraints::none, tracker_);
     }
 }
 
@@ -569,19 +569,19 @@ void NormalSurfaces::Enumerator::fillFundamentalCD() {
             "Enumerating Hilbert basis\n(Contejean-Devie method)");
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertCD::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, &c);
+            }, eqns_, c);
     } else {
         HilbertCD::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, nullptr);
+            }, eqns_, ValidityConstraints::none);
     }
 }
 
@@ -626,19 +626,20 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, shadows.begin(), shadows.end(), &c, tracker_);
+            }, shadows.begin(), shadows.end(), c, tracker_);
     } else {
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, shadows.begin(), shadows.end(), nullptr, tracker_);
+            }, shadows.begin(), shadows.end(), ValidityConstraints::none,
+                tracker_);
     }
 }
 
@@ -684,9 +685,9 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
             tracker_->newStage("Extracting relevant solutions", 0.2);
 
         // Fetch validity constraints from the registry.
-        std::unique_ptr<EnumConstraints> constraints =
+        std::unique_ptr<ValidityConstraints> constraints =
             (list_->which_.has(NS_EMBEDDED_ONLY) ?
-            std::make_unique<EnumConstraints>(makeEmbeddedConstraints(
+            std::make_unique<ValidityConstraints>(makeEmbeddedConstraints(
                 *list_->triangulation_, list_->coords_)) :
             nullptr);
 
@@ -695,14 +696,16 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         for (const auto& b : basis) {
             bool broken = false;
             if (constraints) {
-                for (const auto& posSet : *constraints) {
+                // This algorithm is about correctness, not efficiency.
+                // Just use the unbounded-size bitmask class.
+                auto constraintMasks = constraints->bitmasks<Bitmask>(dim);
+
+                for (const Bitmask& constraint : constraintMasks) {
                     int nonZero = 0;
-                    for (auto pos : posSet) {
-                        if (b[pos] != 0) {
+                    for (size_t i = 0; i < dim; ++i)
+                        if (constraint.get(i) && (b[i] != 0))
                             if (++nonZero > 1)
                                 break;
-                        }
-                    }
                     if (nonZero > 1) {
                         broken = true;
                         break;

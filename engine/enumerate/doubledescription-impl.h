@@ -48,6 +48,7 @@
 #include "regina-core.h"
 #include "regina-config.h"
 #include "enumerate/doubledescription.h"
+#include "enumerate/validityconstraints.h"
 #include "maths/matrixops.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
@@ -205,7 +206,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
 
 template <class RayClass, typename Action>
 void DoubleDescription::enumerateExtremalRays(Action&& action,
-        const MatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
@@ -258,7 +259,7 @@ void DoubleDescription::enumerateExtremalRays(Action&& action,
 
 template <class RayClass, class BitmaskType, typename Action>
 void DoubleDescription::enumerateUsingBitmask(Action&& action,
-        const MatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     using IntegerType = typename RayClass::Element;
 
@@ -308,20 +309,7 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
         list[0].push_back(new RaySpec<IntegerType, BitmaskType>(
             i, subspace, hyperplanes));
 
-    // Convert the set of constraints into a bitmask, where for every original
-    // facet listed in the constraint the corresponding bit is set to 1.
-    BitmaskType* constraintsBegin = nullptr;
-    BitmaskType* constraintsEnd = nullptr;
-    if (constraints && ! constraints->empty()) {
-        constraintsBegin = new BitmaskType[constraints->size()];
-
-        EnumConstraints::const_iterator cit;
-        for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
-                cit != constraints->end(); ++cit, ++constraintsEnd) {
-            constraintsEnd->reset(dim);
-            constraintsEnd->set(cit->begin(), cit->end(), true);
-        }
-    }
+    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
 #if 0
     std::cout << "Initial size: " << list[0].size() << std::endl;
@@ -341,7 +329,7 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
         // space *without* this hyperplane (and therefore satisfies the
         // relevant dimensional constraints without this hyperplane).
         if (intersectHyperplane(list[workingList], list[1 - workingList],
-                dim, used, constraintsBegin, constraintsEnd, tracker))
+                dim, used, constraintMasks, tracker))
             ++used;
 
         workingList = 1 - workingList;
@@ -356,8 +344,6 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
 
     // We're done!
     delete[] hyperplanes;
-    if (constraintsBegin)
-        delete[] constraintsBegin;
 
     if (tracker && tracker->isCancelled()) {
         // The operation was cancelled.  Clean up before returning.
@@ -385,8 +371,7 @@ bool DoubleDescription::intersectHyperplane(
         std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
         std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
         unsigned long dim, unsigned long prevHyperplanes,
-        const BitmaskType* constraintsBegin,
-        const BitmaskType* constraintsEnd,
+        const std::vector<BitmaskType>& constraintMasks,
         ProgressTracker* tracker) {
     if (src.empty())
         return false;
@@ -461,15 +446,14 @@ bool DoubleDescription::intersectHyperplane(
                 continue;
 
             // Are we supposed to check for compatibility?
-            if (constraintsBegin) {
+            if (! constraintMasks.empty()) {
                 BitmaskType inv(join);
                 inv.flip();
 
                 broken = false;
-                for (constraint = constraintsBegin;
-                        constraint != constraintsEnd; ++constraint) {
+                for (const BitmaskType& constraint : constraintMasks) {
                     BitmaskType mask(inv);
-                    mask &= *constraint;
+                    mask &= constraint;
                     if (! mask.atMostOneBit()) {
                         broken = true;
                         break;

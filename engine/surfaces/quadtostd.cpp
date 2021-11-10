@@ -336,16 +336,8 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     // constraints for almost normal surfaces) as bitmasks.
     // Since we have a non-empty triangulation, we know the list of
     // constraints is non-empty.
-    EnumConstraints constraints = makeEmbeddedConstraints(tri, coords_);
-
-    auto* constraintsBegin = new BitmaskType[constraints.size()];
-    auto* constraintsEnd = constraintsBegin;
-
-    for (const auto& c : constraints) {
-        constraintsEnd->reset(stdLen);
-        constraintsEnd->set(c.begin(), c.end(), true);
-        ++constraintsEnd;
-    }
+    auto constraints = makeEmbeddedConstraints(tri, coords_).
+        bitmasks<BitmaskType>(stdLen);
 
     // Create all vertex links.
     // TODO: Do this by value.
@@ -407,7 +399,6 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                 for (++vtx; vtx < nLinks; ++vtx)
                     delete link[vtx];
                 delete[] link;
-                delete[] constraintsBegin;
                 return;
             }
 
@@ -443,7 +434,6 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                             for (++vtx; vtx < nLinks; ++vtx)
                                 delete link[vtx];
                             delete[] link;
-                            delete[] constraintsBegin;
                             return;
                         }
                     }
@@ -471,11 +461,9 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                     // non-zero coordinate.
                     join.flip();
                     broken = false;
-                    for (constraintMask = constraintsBegin;
-                            constraintMask != constraintsEnd;
-                            ++constraintMask) {
+                    for (const BitmaskType& constraint : constraints) {
                         BitmaskType mask(join);
-                        mask &= *constraintMask;
+                        mask &= constraint;
                         if (! mask.atMostOneBit()) {
                             broken = true;
                             break;
@@ -537,7 +525,6 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     }
 
     delete[] link;
-    delete[] constraintsBegin;
 
     if (tracker)
         tracker->setPercent(100);

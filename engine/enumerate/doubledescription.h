@@ -41,7 +41,6 @@
 #endif
 
 #include "regina-core.h"
-#include "enumerate/enumconstraints.h"
 #include "enumerate/ordering.h"
 #include "maths/matrix.h"
 #include "maths/vector.h"
@@ -51,6 +50,7 @@
 namespace regina {
 
 class ProgressTracker;
+class ValidityConstraints;
 
 /**
  * \defgroup enumerate Vertex Enumeration
@@ -99,7 +99,7 @@ class DoubleDescription {
          * in which case this routine will only return \e valid extremal
          * rays.  Each validity constraint is of the form "an extremal ray
          * may only lie outside at most one of these facets of the original
-         * cone"; see the EnumConstraints class for details.  These
+         * cone"; see the ValidityConstraints class for details.  These
          * contraints have the important property that, although validity is
          * not preserved under convex combination, \e invalidity is.
          *
@@ -130,8 +130,8 @@ class DoubleDescription {
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described
-         * above, or \c null if no additional constraints should be imposed.
+         * @param constraints a set of validity constraints as described above,
+         * or ValidityConstraints::none if none should be imposed.
          * @param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
          * @param initialRows specifies how many initial rows of \a subspace
@@ -141,7 +141,7 @@ class DoubleDescription {
          */
         template <class RayClass, typename Action>
         static void enumerateExtremalRays(Action&& action,
-            const MatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr, unsigned long initialRows = 0);
 
         // Mark this class as non-constructible.
@@ -330,7 +330,7 @@ class DoubleDescription {
          */
         template <class RayClass, class BitmaskType, typename Action>
         static void enumerateUsingBitmask(Action&& action,
-            const MatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker, unsigned long initialRows);
 
         /**
@@ -344,10 +344,11 @@ class DoubleDescription {
          * places the vertices of the new solution space in the output
          * list \a dest.
          *
-         * The set of validity constraints must be passed here as a
-         * C-style array of bitmasks.  Each bitmask is a bitmask of facets,
-         * as seen in the RaySpec inner class.  Each constraint is of the
-         * form "a point cannot live outside more than one of these facets";
+         * The set of validity constraints must be passed here as a container
+         * of bitmasks, as returned by ValidityConstraints::bitmasks().
+         * Each bitmask will be treated as a bitmask of facets, as seen in the
+         * RaySpec inner class.  Each constraint will be interpreted as
+         * "a point cannot live outside more than one of these facets";
          * the bits for these facets must be set to 1 in the corresponding
          * bitmask, and all other bits must be set to 0.
          *
@@ -370,12 +371,8 @@ class DoubleDescription {
          * already been intersected with the original cone to form the
          * current solution set.  This does not include the hyperplane
          * currently under consideration.
-         * @param constraintsBegin the beginning of the C-style array of
-         * validity constraints.  This should be \c null if no additional
-         * constraints are to be imposed.
-         * @param constraintsEnd a pointer just past the end of the
-         * C-style array of validity constraints.  This should be \c null
-         * if no additional constraints are to be imposed.
+         * @param constraintsMask the list of additional validity constraints
+         * to impose.
          * @param tracker an optional progress tracker that will be polled
          * for cancellation (though no incremental progress will be reported
          * within this routine).  This may be null.
@@ -390,8 +387,7 @@ class DoubleDescription {
             std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
             std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
             unsigned long dim, unsigned long prevHyperplanes,
-            const BitmaskType* constraintsBegin,
-            const BitmaskType* constraintsEnd,
+            const std::vector<BitmaskType>& constraintMasks,
             ProgressTracker* tracker);
 };
 

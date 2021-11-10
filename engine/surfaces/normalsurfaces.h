@@ -45,7 +45,7 @@
 #include <optional>
 #include <vector>
 #include "regina-core.h"
-#include "enumerate/enumconstraints.h"
+#include "enumerate/validityconstraints.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
 #include "progress/progresstracker.h"
@@ -1561,8 +1561,8 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
  *
  * \ingroup surfaces
  */
-EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
-    NormalCoords coords);
+ValidityConstraints makeEmbeddedConstraints(
+    const Triangulation<3>& triangulation, NormalCoords coords);
 
 // Inline functions for NormalSurfaces
 

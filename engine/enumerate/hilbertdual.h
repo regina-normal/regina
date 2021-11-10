@@ -78,6 +78,7 @@
 namespace regina {
 
 class ProgressTracker;
+class ValidityConstraints;
 
 /**
  * Implements a modified dual algorithm for enumerating Hilbert bases.
@@ -124,7 +125,7 @@ class HilbertDual {
          * in which case this routine will only return \e valid basis elements.
          * Each validity constraint is of the form "a basis element may only
          * lie outside at most one of these facets of the original
-         * cone"; see the EnumConstraints class for details.  These
+         * cone"; see the ValidityConstraints class for details.  These
          * contraints have the important property that, although validity is
          * not preserved under addition, \e invalidity is.
          *
@@ -155,8 +156,8 @@ class HilbertDual {
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described
-         * above, or \c null if no additional constraints should be imposed.
+         * @param constraints a set of validity constraints as described above,
+         * or ValidityConstraints::none if none should be imposed.
          * @param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
          * @param initialRows specifies how many initial rows of \a subspace
@@ -166,7 +167,7 @@ class HilbertDual {
          */
         template <class RayClass, typename Action>
         static void enumerateHilbertBasis(Action&& action,
-            const MatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr, unsigned initialRows = 0);
 
         // Mark this class as non-constructible.
@@ -355,7 +356,7 @@ class HilbertDual {
          */
         template <class RayClass, class BitmaskType, typename Action>
         static void enumerateUsingBitmask(Action&& action,
-            const MatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker, unsigned initialRows);
 
         /**
@@ -424,13 +425,13 @@ class HilbertDual {
          * constraints (such as the normal surface quadrilateral
          * constraints), as described in enumerateHilbertBasis().
          *
-         * The set of validity constraints must be passed here as a
-         * C-style array of bitmasks.  Each bitmask contains one bit per
-         * coordinate position, as seen in the VecSpec inner class.
-         * Each constraint is of the form "at most one of these
-         * coordinates can be non-zero"; the bits for these coordinates must
-         * be set to 1 in the corresponding bitmask, and all other bits must
-         * be set to 0.
+         * The set of validity constraints must be passed here as a container
+         * of bitmasks, as returned by ValidityConstraints::bitmasks().
+         * Each bitmask must contain one bit per coordinate position, as seen
+         * in the VecSpec inner class.  Each constraint will be interpreted as
+         * "at most one of these coordinates can be non-zero"; the bits for
+         * these coordinates must be set to 1 in the corresponding bitmask,
+         * and all other bits must be set to 0.
          *
          * @param list contains the original Hilbert basis on entry to
          * this function, and will contain the updated Hilbert basis upon
@@ -439,19 +440,14 @@ class HilbertDual {
          * @param row indicates which row of \a subspace contains the
          * hyperplane that we will intersect with the cone defined by
          * the old Hilbert basis.
-         * @param constraintsBegin the beginning of the C-style array of
-         * validity constraints.  This should be \c null if no additional
-         * constraints are to be imposed.
-         * @param constraintsEnd a pointer just past the end of the
-         * C-style array of validity constraints.  This should be \c null
-         * if no additional constraints are to be imposed.
+         * @param constraintsBegin the list of additional validity constraints
+         * to impose.
          */
         template <class IntegerType, class BitmaskType>
         static void intersectHyperplane(
             std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
             const MatrixInt& subspace, unsigned row,
-            const BitmaskType* constraintsBegin,
-            const BitmaskType* constraintsEnd);
+            const std::vector<BitmaskType>& constraintMasks);
 };
 
 // Inline functions for HilbertDual::VecSpec

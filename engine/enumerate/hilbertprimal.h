@@ -47,6 +47,7 @@
 namespace regina {
 
 class ProgressTracker;
+class ValidityConstraints;
 
 /**
  * Implements a modified primal algorithm for enumerating Hilbert bases.
@@ -95,7 +96,7 @@ class HilbertPrimal {
          * constraints, in which case this routine will only return \e valid
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
-         * EnumConstraints class for details.  These contraints have the
+         * ValidityConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
@@ -141,15 +142,15 @@ class HilbertPrimal {
          * list of extremal rays.
          * @param raysEnd an iterator pointing past the end of the
          * list of extremal rays.
-         * @param constraints a set of validity constraints as described
-         * above, or \c null if no additional constraints should be imposed.
+         * @param constraints a set of validity constraints as described above,
+         * or ValidityConstraints::none if none should be imposed.
          * @param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
          */
         template <class RayClass, class RayIterator, typename Action>
         static void enumerateHilbertBasis(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const EnumConstraints* constraints,
+            const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr);
 
         // Mark this class as non-constructible.
@@ -175,7 +176,7 @@ class HilbertPrimal {
             class RayIterator, typename Action>
         static void enumerateUsingBitmask(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const EnumConstraints* constraints, ProgressTracker* tracker);
+            const ValidityConstraints& constraints, ProgressTracker* tracker);
 
         /**
          * Determines whether the given ray lies in the face specified

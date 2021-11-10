@@ -415,7 +415,6 @@
 		052F9EBD180600FB00FAE4DF /* docs.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C4C180600FA00FAE4DF /* docs.h */; };
 		052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C55180600FA00FAE4DF /* doubledescription-impl.h */; };
 		052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C56180600FA00FAE4DF /* doubledescription.h */; };
-		052F9EC5180600FB00FAE4DF /* enumconstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5A180600FA00FAE4DF /* enumconstraints.h */; };
 		052F9EC6180600FB00FAE4DF /* hilbertcd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5B180600FA00FAE4DF /* hilbertcd-impl.h */; };
 		052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5C180600FA00FAE4DF /* hilbertcd.h */; };
 		052F9EC9180600FB00FAE4DF /* hilbertdual-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5E180600FA00FAE4DF /* hilbertdual-impl.h */; };
@@ -1925,6 +1924,7 @@
 		05CB9FF01F9AD7D5002ECB18 /* LinkCodes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */; };
 		05CB9FF51F9B890F002ECB18 /* LinkCrossings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FF11F9B8905002ECB18 /* LinkCrossings.mm */; };
 		05CB9FFA1F9EA3CF002ECB18 /* LinkMoves.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */; };
+		05CBE6ED273B6504009F0674 /* validityconstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CBE6EC273B6504009F0674 /* validityconstraints.h */; };
 		05D047062599F5AE00FA2B3E /* plainCompleter.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 05D046E62599F58A00FA2B3E /* plainCompleter.py */; };
 		05D0A1101812F0BE005ED097 /* Tri3ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */; };
 		05D1172919EDF43F003BEC55 /* WelcomeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1172819EDF43F003BEC55 /* WelcomeViewController.mm */; };
@@ -2819,7 +2819,6 @@
 		052F9C54180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C55180600FA00FAE4DF /* doubledescription-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "doubledescription-impl.h"; sourceTree = "<group>"; };
 		052F9C56180600FA00FAE4DF /* doubledescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = doubledescription.h; sourceTree = "<group>"; };
-		052F9C5A180600FA00FAE4DF /* enumconstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = enumconstraints.h; sourceTree = "<group>"; };
 		052F9C5B180600FA00FAE4DF /* hilbertcd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hilbertcd-impl.h"; sourceTree = "<group>"; };
 		052F9C5C180600FA00FAE4DF /* hilbertcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hilbertcd.h; sourceTree = "<group>"; };
 		052F9C5E180600FA00FAE4DF /* hilbertdual-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hilbertdual-impl.h"; sourceTree = "<group>"; };
@@ -4373,6 +4372,7 @@
 		05CB9FF21F9B8907002ECB18 /* LinkCrossings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkCrossings.h; sourceTree = "<group>"; };
 		05CB9FF61F9E9FD8002ECB18 /* LinkMoves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkMoves.h; sourceTree = "<group>"; };
 		05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkMoves.mm; sourceTree = "<group>"; };
+		05CBE6EC273B6504009F0674 /* validityconstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = validityconstraints.h; sourceTree = "<group>"; };
 		05D046E62599F58A00FA2B3E /* plainCompleter.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = plainCompleter.py; path = regina/plainCompleter.py; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* Tri3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3ViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3ViewController.mm; sourceTree = "<group>"; };
@@ -5584,7 +5584,6 @@
 				052F9C54180600FA00FAE4DF /* CMakeLists.txt */,
 				052F9C55180600FA00FAE4DF /* doubledescription-impl.h */,
 				052F9C56180600FA00FAE4DF /* doubledescription.h */,
-				052F9C5A180600FA00FAE4DF /* enumconstraints.h */,
 				052F9C5B180600FA00FAE4DF /* hilbertcd-impl.h */,
 				052F9C5C180600FA00FAE4DF /* hilbertcd.h */,
 				052F9C5E180600FA00FAE4DF /* hilbertdual-impl.h */,
@@ -5603,6 +5602,7 @@
 				052F9C95180600FA00FAE4DF /* treetraversal.cpp */,
 				052F9C96180600FA00FAE4DF /* treetraversal.h */,
 				052F9C99180600FA00FAE4DF /* typetrie.h */,
+				05CBE6EC273B6504009F0674 /* validityconstraints.h */,
 			);
 			path = enumerate;
 			sourceTree = "<group>";
@@ -7770,7 +7770,7 @@
 				052F9F4B180600FB00FAE4DF /* rational.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
 				059802F126683C6D002D5D57 /* xmlanglestructreader.h in Headers */,
-				052F9EC5180600FB00FAE4DF /* enumconstraints.h in Headers */,
+				05CBE6ED273B6504009F0674 /* validityconstraints.h in Headers */,
 				0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */,
 				0582FDE82731FE0900203AE7 /* attachment.h in Headers */,
 				05721F001F9715C700A83FFC /* laurent.h in Headers */,
