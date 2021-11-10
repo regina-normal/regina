@@ -1270,6 +1270,9 @@ Version 7.0  [ TODO ]
         Class TreeDecomposition:
             - Added a move constructor and move/copy assignment operators.
             - Added member and global swap() functions.
+            - Changed the "raw graph" constructor from taking a raw C-style
+              array to take either a Matrix<bool> or a std::vector of rows.
+              The old constructor is removed completely.
             - The fromPACE() routines now return by value (not pointer),
               and throw an exception on error instead of (returning null)
         Class TreeTraversal, TreeEnumeration, TreeSingleSoln, TautEnumeration:

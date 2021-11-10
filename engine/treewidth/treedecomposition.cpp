@@ -57,12 +57,6 @@ template TreeDecomposition::TreeDecomposition(
 template TreeDecomposition::TreeDecomposition(
     const FacetPairing<4>&, TreeDecompositionAlg);
 
-// Instantiate templates for common types:
-template TreeDecomposition::TreeDecomposition(
-    unsigned, bool const** const, TreeDecompositionAlg);
-template TreeDecomposition::TreeDecomposition(
-    unsigned, int const** const, TreeDecompositionAlg);
-
 template void TreeDecomposition::reroot(const int*, const int*, const int*);
 
 bool TreeBag::contains(int element) const {

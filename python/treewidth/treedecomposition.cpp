@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "link/link.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/facetpairing.h"
@@ -111,52 +112,13 @@ void addTreeDecomposition(pybind11::module_& m) {
         .def(pybind11::init<const regina::Link&>())
         .def(pybind11::init<const regina::Link&,
             regina::TreeDecompositionAlg>())
+        .def(pybind11::init<const regina::Matrix<bool>&>())
+        .def(pybind11::init<const regina::Matrix<bool>&,
+            regina::TreeDecompositionAlg>())
+        .def(pybind11::init<const std::vector<std::vector<bool>>&>())
+        .def(pybind11::init<const std::vector<std::vector<bool>>&,
+            regina::TreeDecompositionAlg>())
         .def(pybind11::init<const regina::TreeDecomposition&>())
-        .def(pybind11::init([](pybind11::list graph,
-                regina::TreeDecompositionAlg alg) {
-            size_t len = graph.size();
-            bool** g = new bool*[len];
-
-            long i, j, k;
-            pybind11::list row;
-            for (i = 0; i < len; ++i) {
-                try {
-                    row = graph[i].cast<pybind11::list>();
-                } catch (pybind11::cast_error const &) {
-                    // Clean up and throw an exception.
-                    for (k = 0; k < i; ++k) delete[] g[k];
-                    delete[] g;
-                    throw regina::InvalidArgument(
-                        "Graph must be presented as a list of lists");
-                }
-                if (row.size() != len) {
-                    // Clean up and throw an exception.
-                    for (k = 0; k < i; ++k) delete[] g[k];
-                    delete[] g;
-                    throw pybind11::index_error("Initialisation list "
-                        "does not describe a square matrix");
-                }
-
-                g[i] = new bool[len];
-                try {
-                    for (j = 0; j < len; ++j)
-                        g[i][j] = row[j].cast<bool>();
-                } catch (pybind11::cast_error const &) {
-                    // Clean up and throw an exception.
-                    for (k = 0; k <= i; ++k) delete[] g[k];
-                    delete[] g;
-                    throw regina::InvalidArgument(
-                        "Matrix element not convertible to a boolean");
-                }
-            }
-            auto* ans = new TreeDecomposition(
-                len, const_cast<bool const**>(g), alg);
-
-            // Clean up and return.
-            for (i = 0; i < len; ++i) delete[] g[i];
-            delete[] g;
-            return ans;
-        }), pybind11::arg(), pybind11::arg("alg") = regina::TD_UPPER)
         .def("swap", &TreeDecomposition::swap)
         .def("width", &TreeDecomposition::width)
         .def("size", &TreeDecomposition::size)
