@@ -40,6 +40,7 @@
 #define __REGINA_TREEDECOMPOSITION_H
 #endif
 
+#include <vector>
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/matrix.h"
