@@ -1326,6 +1326,8 @@ Version 7.0  [ TODO ]
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).
             - Routine isoSig() now supports different encodings (but not
               different decodings), via a new template parameter.
+              It also no longer takes an optional relabelling pointer; instead
+              there is a new function isoSigDetail() for returning this.
             - Functions isIsomorphicTo() and isContainedIn() now return a
               std::optional<Isomorphism>, not a std::unique_ptr<Isomorphism>.
               The C++ syntax should be largely unaffected, and the Python

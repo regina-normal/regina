@@ -1737,18 +1737,13 @@ class TriangulationBase :
          * from an isomorphism signature (but only if the default encoding
          * has been used).  The triangulation recovered might not be identical
          * to the original, but it \e will be combinatorially isomorphic.
+         * If you need the precise relabelling, you can call isoSigDetail()
+         * instead.
+         *
          * The time required to construct the isomorphism signature of a
          * triangulation is <tt>O((dim!) n^2 log^2 n)</tt>.  Whilst this
          * is fine for large triangulation, it will be extremly slow for
          * large \e dimensions.
-         *
-         * If \a relabelling is non-null (i.e., it points to some
-         * Isomorphism pointer \a p), then it will be modified to point
-         * to a new isomorphism that describes the precise relationship
-         * between this triangulation and the reconstruction from fromIsoSig().
-         * Specifically, the triangulation that is reconstructed from
-         * fromIsoSig() will be combinatorially identical to
-         * <tt>relabelling.apply(this)</tt>.
          *
          * For a full and precise description of the isomorphism signature
          * format for 3-manifold triangulations, see <i>Simplification paths
@@ -1758,30 +1753,60 @@ class TriangulationBase :
          * minor dimension-specific adjustments.
          *
          * \ifacespython There are no template arguments: only the default
-         * encoding is supported.  Moreover, the isomorphism argument is not
-         * present; instead there are two routines: isoSig(), which returns a
-         * string only, and isoSigDetail(), which returns a pair
-         * (\a signature, \a relabelling).
-         *
-         * \pre If \a relabelling is non-null, then this triangulation
-         * must be non-empty and connected.  The facility to return a
-         * relabelling for disconnected triangulations may be added to
-         * Regina in a later release.
+         * encoding is supported.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
-         * @param relabelling if this is non-null, it will be modified to
-         * point to a new isomorphism that describes the relationship between
-         * this triangulation and the triangulation that will be reconstructed
-         * from fromIsoSig(), as described above.
          * @return the isomorphism signature of this triangulation.
          */
         template <class Encoding = IsoSigPrintable<dim>>
-        typename Encoding::SigType isoSig(
-            Isomorphism<dim>** relabelling = nullptr) const;
+        typename Encoding::SigType isoSig() const;
+
+        /**
+         * Constructs the isomorphism signature for this triangulation, along
+         * with the relabelling that will occur when the triangulation is
+         * reconstructed from it.
+         *
+         * Essentially, an isomorphism signature is a compact representation
+         * of a triangulation that uniquely determines the triangulation up to
+         * combinatorial isomorphism.  See isoSig() for much more detail on
+         * isomorphism signatures as well as the support for different
+         * encodings.
+         *
+         * As described in the isoSig() notes, you can call fromIsoSig() to
+         * recover a triangulation from an isomorphism signature (assuming
+         * the default encoding was used).  Whilst the triangulation that is
+         * recovered will be combinatorially isomorphic to the original,
+         * it might not be identical.  This routine returns not only the
+         * isomorphism signature, but also an isomorphism that describes the
+         * precise relationship between this triangulation and the
+         * reconstruction from fromIsoSig().
+         *
+         * Specifically, if this routine returns the pair
+         * (\a sig, \a relabelling), this means that the triangulation
+         * reconstructed from <tt>fromIsoSig(sig)</tt> will be identical to
+         * <tt>relabelling.apply(this)</tt>.
+         *
+         * \ifacespython There are no template arguments: only the default
+         * encoding is supported.
+         *
+         * \pre This triangulation must be non-empty and connected.  The
+         * facility to return a relabelling for disconnected triangulations
+         * may be added to Regina in a later release.
+         *
+         * \exception FailedPrecondition This triangulation is either
+         * empty or disconnected.
+         *
+         * @return a pair containing (i) the isomorphism signature of this
+         * triangulation, and (ii) the isomorphism between this triangulation
+         * and the triangulation that would be reconstructed from fromIsoSig().
+         */
+        template <class Encoding = IsoSigPrintable<dim>>
+        std::pair<typename Encoding::SigType, Isomorphism<dim>> isoSigDetail()
+            const;
 
         /**
          * Returns C++ code that can be used with insertConstruction()
@@ -2132,7 +2157,7 @@ class TriangulationBase :
             Face<dim, dim-1>* facet);
 
         /**
-         * Internal to isoSig<Encoding>().
+         * Internal to isoSig().
          *
          * Constructs a candidate isomorphism signature for a single
          * component of this triangulation.  This candidate signature

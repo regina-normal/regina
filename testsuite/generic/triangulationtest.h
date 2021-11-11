@@ -871,22 +871,27 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             if (tri.countComponents() == 1) {
-                Isomorphism<dim>* relabelling;
-                tri.isoSig(&relabelling);
+                auto detail = tri.isoSigDetail();
+
+                if (detail.first != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": isoSig() and isoSigDetail() give "
+                        "different signatures: "
+                        << sig << " != " << detail.first << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
 
                 Triangulation<dim> rebuild =
-                    Triangulation<dim>::fromIsoSig(sig);
-                Triangulation<dim> relabel = relabelling->apply(tri);
+                    Triangulation<dim>::fromIsoSig(detail.first);
+                Triangulation<dim> relabel = detail.second.apply(tri);
 
                 if (relabel.detail() != rebuild.detail()) {
                     std::ostringstream msg;
                     msg << name << ": relabelling returned from "
-                        "isoSig() does not recover fromIsoSig(\""
+                        "isoSigDetail() does not recover fromIsoSig(\""
                         << sig << "\")." << std::endl;
                     CPPUNIT_FAIL(msg.str());
                 }
-
-                delete relabelling;
             }
         }
 

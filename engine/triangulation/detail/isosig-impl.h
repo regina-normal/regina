@@ -248,20 +248,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
 
 template <int dim>
 template <class Encoding>
-typename Encoding::SigType TriangulationBase<dim>::isoSig(
-        Isomorphism<dim>** relabelling) const {
-    // Make sure the user is not trying to do something illegal.
-    if (relabelling && countComponents() != 1) {
-        *relabelling = nullptr; // Return 0 to the user...
-        relabelling = nullptr;  // ... and forget they asked for an isomorphism.
-    }
-
-    Isomorphism<dim>* currRelabelling = nullptr;
-    if (relabelling) {
-        *relabelling = new Isomorphism<dim>(size());
-        currRelabelling = new Isomorphism<dim>(size());
-    }
-
+typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
         return Encoding::emptySig();
 
@@ -274,19 +261,14 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig(
     typename Encoding::SigType curr;
 
     auto* comp = new typename Encoding::SigType[countComponents()];
-    for (it = components().begin(), i = 0;
-            it != components().end(); ++it, ++i) {
+    for (it = components().begin(), i = 0; it != components().end(); ++it, ++i)
         for (simp = 0; simp < (*it)->size(); ++simp)
             for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
                 curr = isoSigFrom<Encoding>((*it)->simplex(simp)->index(),
-                    Perm<dim+1>::orderedSn[perm], currRelabelling);
-                if ((simp == 0 && perm == 0) || (curr < comp[i])) {
+                    Perm<dim+1>::orderedSn[perm], nullptr);
+                if ((simp == 0 && perm == 0) || (curr < comp[i]))
                     comp[i].swap(curr);
-                    if (relabelling)
-                        std::swap(*relabelling, currRelabelling);
-                }
             }
-    }
 
     // Pack the components together.
     std::sort(comp, comp + countComponents());
@@ -296,7 +278,53 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig(
         ans += comp[i];
 
     delete[] comp;
-    delete currRelabelling;
+    return ans;
+}
+
+template <int dim>
+template <class Encoding>
+std::pair<typename Encoding::SigType, Isomorphism<dim>>
+        TriangulationBase<dim>::isoSigDetail() const {
+    // Make sure the user is not trying to do something illegal.
+    if (isEmpty())
+        throw FailedPrecondition(
+            "isoSigDetail() requires a non-empty triangulation");
+    if (countComponents() > 1)
+        throw FailedPrecondition(
+            "isoSigDetail() requires a connected triangulation");
+
+    std::pair<typename Encoding::SigType, Isomorphism<dim>> ans(
+        std::piecewise_construct, std::forward_as_tuple(),
+        std::forward_as_tuple(size()));
+    Isomorphism<dim> currRelabelling(size());
+
+    // The triangulation is non-empty.  Get a signature string for each
+    // connected component.
+    ComponentIterator it;
+    size_t i;
+    size_t simp;
+    typename Perm<dim+1>::Index perm;
+    typename Encoding::SigType curr;
+
+    auto* comp = new typename Encoding::SigType[countComponents()];
+    for (it = components().begin(), i = 0; it != components().end(); ++it, ++i)
+        for (simp = 0; simp < (*it)->size(); ++simp)
+            for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
+                curr = isoSigFrom<Encoding>((*it)->simplex(simp)->index(),
+                    Perm<dim+1>::orderedSn[perm], &currRelabelling);
+                if ((simp == 0 && perm == 0) || (curr < comp[i])) {
+                    comp[i].swap(curr);
+                    ans.second.swap(currRelabelling);
+                }
+            }
+
+    // Pack the components together.
+    std::sort(comp, comp + countComponents());
+
+    for (i = 0; i < countComponents(); ++i)
+        ans.first += comp[i];
+
+    delete[] comp;
     return ans;
 }
 

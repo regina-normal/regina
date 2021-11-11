@@ -255,14 +255,8 @@ void addTriangulation4(pybind11::module_& m) {
             &Triangulation<4>::barycentricSubdivision)
         .def("idealToFinite", &Triangulation<4>::idealToFinite)
         .def("insertTriangulation", &Triangulation<4>::insertTriangulation)
-        .def("isoSig", [](const Triangulation<4>& t) {
-            return t.isoSig();
-        })
-        .def("isoSigDetail", [](const Triangulation<4>& t) {
-            Isomorphism<4>* iso;
-            std::string sig = t.isoSig(&iso);
-            return pybind11::make_tuple(sig, iso);
-        })
+        .def("isoSig", &Triangulation<4>::isoSig<>)
+        .def("isoSigDetail", &Triangulation<4>::isoSigDetail<>)
         .def_static("fromIsoSig", &Triangulation<4>::fromIsoSig)
         .def_static("fromSig", &Triangulation<4>::fromSig)
         .def_static("isoSigComponentSize",
