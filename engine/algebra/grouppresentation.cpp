@@ -376,8 +376,7 @@ void GroupPresentation::dehnAlgorithmSubMetric(
     // TODO: should check to whatever extent the above is of much use...
 
     // this -> splayed to this_word, that_word -> reducer
-    std::vector< GroupExpressionTerm > this_word_vec( 0 );
-    std::vector< GroupExpressionTerm > reducer( 0 );
+    std::vector<GroupExpressionTerm> this_word_vec, reducer;
     this_word_vec.reserve( this_length );
     reducer.reserve( that_length );
     for (const auto& t : this_word.terms()) {
@@ -455,12 +454,13 @@ void GroupPresentation::applySubstitution( GroupExpression& this_word,
         const GroupExpression &that_word,
         const WordSubstitutionData &sub_data )
 {
-    // okay, so let's do a quick cut-and-replace, reduce the word and hand it back.
+    // okay, so let's do a quick cut-and-replace, reduce the word and
+    // hand it back.
     unsigned long this_length ( this_word.wordLength() );
     unsigned long that_length ( that_word.wordLength() );
-    std::vector< GroupExpressionTerm > this_word_vec( 0 );
-    std::vector< GroupExpressionTerm > reducer( 0 ); // we'll splay-out *this and
-    // that_word so that it's easier to search for commonalities.
+    std::vector<GroupExpressionTerm> this_word_vec, reducer;
+    // we'll splay-out *this and that_word so that it's easier to search
+    // for commonalities.
     this_word_vec.reserve( this_length );
     reducer.reserve( that_length );
     // start the splaying of terms
@@ -533,7 +533,7 @@ namespace { // anonymous namespace
      // cut subData into bits, assemble what we're cutting
      //  out and what we're pasting in.
      unsigned long word_length ( word.wordLength() );
-     std::vector< GroupExpressionTerm > reducer( 0 );
+     std::vector< GroupExpressionTerm > reducer;
      reducer.reserve( word_length );
       // splay word
      for (auto it = word.terms().begin(); it!=word.terms().end(); it++)
@@ -1899,8 +1899,7 @@ namespace { // anonymous namespace
         if (first.countTerms() > second.countTerms()) return false;
     // now we can compare them lexicographically, letter by letter.
     // first we lay them out one letter at a time.
-        std::vector< GroupExpressionTerm > first_word_vec( 0 );
-        std::vector< GroupExpressionTerm > second_word_vec( 0 );
+        std::vector<GroupExpressionTerm> first_word_vec, second_word_vec;
         first_word_vec.reserve( first.wordLength() );
         second_word_vec.reserve( second.wordLength() );
         for (const auto& t : first.terms()) {

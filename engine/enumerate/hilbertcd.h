@@ -48,6 +48,8 @@
 
 namespace regina {
 
+class ValidityConstraints;
+
 /**
  * Implements a modified Contejean-Devie algorithm for enumerating Hilbert
  * bases.  This is based on the stack-based algorithm described in
@@ -98,7 +100,7 @@ class HilbertCD {
          * constraints, in which case this routine will only return \e valid
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
-         * EnumConstraints class for details.  These contraints have the
+         * ValidityConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
@@ -127,12 +129,12 @@ class HilbertCD {
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described
-         * above, or \c null if no additional constraints should be imposed.
+         * @param constraints a set of validity constraints as described above,
+         * or ValidityConstraints::none if none should be imposed.
          */
         template <class RayClass, typename Action>
         static void enumerateHilbertBasis(Action&& action,
-            const MatrixInt& subspace, const EnumConstraints* constraints);
+            const MatrixInt& subspace, const ValidityConstraints& constraints);
 
         // Mark this class as non-constructible.
         HilbertCD() = delete;
@@ -197,7 +199,7 @@ class HilbertCD {
          */
         template <class RayClass, class BitmaskType, typename Action>
         static void enumerateUsingBitmask(Action&& action,
-            const MatrixInt& subspace, const EnumConstraints* constraints);
+            const MatrixInt& subspace, const ValidityConstraints& constraints);
 };
 
 // Inline functions for HilbertCD::VecSpec

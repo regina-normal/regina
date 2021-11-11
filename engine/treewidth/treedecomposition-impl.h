@@ -86,20 +86,6 @@ TreeDecomposition::TreeDecomposition(
 }
 
 template <typename T>
-TreeDecomposition::TreeDecomposition(unsigned order, T const** graph,
-        TreeDecompositionAlg alg) :
-        width_(0), root_(nullptr) {
-    Graph g(order);
-
-    int i, j;
-    for (i = 0; i < order; ++i)
-        for (j = 0; j < order; ++j)
-            g.adj_[i][j] = graph[i][j] || graph[j][i];
-
-    construct(g, alg);
-}
-
-template <typename T>
 void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
         const T* costRoot) {
     if (size_ <= 1)

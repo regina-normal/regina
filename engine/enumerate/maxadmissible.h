@@ -46,6 +46,8 @@
 
 namespace regina {
 
+class ValidityConstraints;
+
 /**
  * Used to enumerate all maximal admissible faces of a polyhedral cone
  * under a given set of admissibility constraints.  See the routine
@@ -67,7 +69,7 @@ class MaxAdmissible {
          *
          * Admissibility is defined by the given set of constraints.  Each
          * constraint requires that at most one of a given set of coordinates
-         * can be non-zero; see the EnumConstraints class for details.
+         * can be non-zero; see the ValidityConstraints class for details.
          * In particular, the quadrilateral constraints from normal surface
          * theory are of this type.
          *
@@ -112,16 +114,16 @@ class MaxAdmissible {
          * @param endExtremalRays an iterator that is past-the-end of the set
          * of admissible extremal rays.  Typically this would be rays.end()
          * if \a rays is a standard container type.
-         * @param constraints a set of validity constraints as described
-         * above.  This may be 0 to indicate no constraints (in which
-         * case there will be just one maximal admissible face).
+         * @param constraints a set of validity constraints as described above.
+         * This may be ValidityConstraints::none to indicate no constraints
+         * (in which case there will be just one maximal admissible face).
          * @return a vector containing one bitmask representing each
          * maximal admissible face, as described above.
          */
         template <class BitmaskType, class RayIterator>
         static std::vector<BitmaskType> enumerate(
                 RayIterator beginExtremalRays, RayIterator endExtremalRays,
-                const EnumConstraints* constraints);
+                const ValidityConstraints& constraints);
 
         // Mark this class as non-constructible.
         MaxAdmissible() = delete;

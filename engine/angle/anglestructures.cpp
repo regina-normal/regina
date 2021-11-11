@@ -124,23 +124,15 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         } else {
             // Use the double description method.
             MatrixInt eqns = regina::makeAngleEquations(*triangulation_);
-            auto* constraints = new EnumConstraints(triangulation_->size());
 
-            unsigned base = 0;
-            for (auto& c : *constraints) {
-                c.insert(c.end(), base++);
-                c.insert(c.end(), base++);
-                c.insert(c.end(), base++);
-            }
+            ValidityConstraints compat(3, triangulation_->size(), 1);
+            compat.addLocal({ 0, 1, 2 });
 
             // Find the angle structures.
             DoubleDescription::enumerateExtremalRays<VectorInt>(
                 [this](VectorInt&& v) {
                     structures_.emplace_back(triangulation_, std::move(v));
-                }, eqns, constraints, tracker);
-
-            // All done!
-            delete constraints;
+                }, eqns, compat, tracker);
         }
 
         if (treeParent && ! (tracker && tracker->isCancelled()))
@@ -167,7 +159,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         DoubleDescription::enumerateExtremalRays<VectorInt>(
             [this](VectorInt&& v) {
                 structures_.emplace_back(triangulation_, std::move(v));
-            }, eqns, nullptr /* constraints */, tracker);
+            }, eqns, ValidityConstraints::none, tracker);
 
         // All done!
         if (treeParent && ! (tracker && tracker->isCancelled()))

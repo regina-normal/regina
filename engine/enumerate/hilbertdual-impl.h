@@ -44,9 +44,10 @@
 
 #include <algorithm>
 #include <iterator>
-#include "enumerate/enumconstraints.h"
+#include <set>
 #include "enumerate/hilbertdual.h"
 #include "enumerate/ordering.h"
+#include "enumerate/validityconstraints.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
 #include "utilities/intutils.h"
@@ -55,7 +56,7 @@ namespace regina {
 
 template <class RayClass, typename Action>
 void HilbertDual::enumerateHilbertBasis(Action&& action,
-        const MatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
@@ -109,7 +110,7 @@ void HilbertDual::enumerateHilbertBasis(Action&& action,
 
 template <class RayClass, class BitmaskType, typename Action>
 void HilbertDual::enumerateUsingBitmask(Action&& action,
-        const MatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     using IntegerType = typename RayClass::Element;
 
@@ -146,21 +147,7 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
     std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
         PosOrder(subspace));
 
-    // Convert the set of constraints into bitmasks, where for every
-    // original coordinate listed in the constraint, the corresponding
-    // bit is set to 1.
-    BitmaskType* constraintsBegin = nullptr;
-    BitmaskType* constraintsEnd = nullptr;
-    if (constraints && ! constraints->empty()) {
-        constraintsBegin = new BitmaskType[constraints->size()];
-
-        EnumConstraints::const_iterator cit;
-        for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
-                cit != constraints->end(); ++cit, ++constraintsEnd) {
-            constraintsEnd->reset(dim);
-            constraintsEnd->set(cit->begin(), cit->end(), true);
-        }
-    }
+    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
     // Create the vector list with which we will work.
     // Fill it with the initial basis elements.
@@ -174,8 +161,7 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
 
     // Intersect the hyperplanes one at a time.
     for (i=0; i<nEqns; i++) {
-        intersectHyperplane(list, subspace, hyperplanes[i],
-            constraintsBegin, constraintsEnd);
+        intersectHyperplane(list, subspace, hyperplanes[i], constraintMasks);
 
 #if 0
         std::cout << "LIST SIZE: " << list.size() << std::endl;
@@ -187,7 +173,6 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
 
     // We're done!
     delete[] hyperplanes;
-    delete[] constraintsBegin;
 
     typename std::vector<VecSpec<IntegerType, BitmaskType>*>::iterator it;
 
@@ -314,10 +299,8 @@ void HilbertDual::reduceBasis(
 template <class IntegerType, class BitmaskType>
 void HilbertDual::intersectHyperplane(
         std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
-        const MatrixInt& subspace,
-        unsigned row,
-        const BitmaskType* constraintsBegin,
-        const BitmaskType* constraintsEnd) {
+        const MatrixInt& subspace, unsigned row,
+        const std::vector<BitmaskType>& constraintMasks) {
     // These must be linked lists because we need fast insertion and
     // deletion at arbitrary locations.
     std::list<VecSpec<IntegerType, BitmaskType>*>
@@ -388,14 +371,14 @@ void HilbertDual::intersectHyperplane(
 #endif
 
                 // Check for validity.
-                if (constraintsBegin) {
+                if (! constraintMasks.empty()) {
                     comb = (*posit)->mask();
                     comb |= (*negit)->mask();
 
                     broken = false;
-                    for (cit = constraintsBegin; cit != constraintsEnd; ++cit) {
+                    for (const BitmaskType& constraint : constraintMasks) {
                         tmpMask = comb;
-                        tmpMask &= (*cit);
+                        tmpMask &= constraint;
                         if (! tmpMask.atMostOneBit()) {
                             broken = true;
                             break;

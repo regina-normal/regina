@@ -1277,8 +1277,7 @@ namespace {
         unsigned long i;
         for (Edge<3>* edge : tri.edges()) {
             for (auto& emb : *edge) {
-                input.emplace_back();
-                std::vector<mpz_class>& v(input.back());
+                std::vector<mpz_class>& v(input.emplace_back());
                 v.reserve(3 * nTri);
 
                 for (i = 0; i < 3 * nTri; ++i)

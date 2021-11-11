@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/enumconstraints.h"
+#include "enumerate/validityconstraints.h"
 #include "hypersurface/normalhypersurface.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
@@ -40,36 +40,27 @@
 
 namespace regina {
 
-EnumConstraints makeEmbeddedConstraints(
+ValidityConstraints makeEmbeddedConstraints(
         const Triangulation<4>& triangulation, HyperCoords coords) {
     const HyperEncoding enc(coords);
+    const int base = (enc.storesTetrahedra() ? 5 : 0);
 
-    EnumConstraints ans(30 * triangulation.size());
+    ValidityConstraints ans(enc.block(), triangulation.size(), 30);
 
-    size_t base = (enc.storesTetrahedra() ? 5 : 0);
-    size_t c = 0;
-    for (size_t pent = 0; pent < triangulation.size(); ++pent) {
-        for (int edge1 = 0; edge1 < 10; ++edge1)
-            for (int i = 0; i < 3; ++i) {
-                int edge2 = Edge<4>::edgeNumber[
-                    Edge<4>::edgeVertex[edge1][0]][
-                    Triangle<4>::triangleVertex[edge1][i]];
-                if (edge1 < edge2) {
-                    ans[c].insert(ans[c].end(), base + edge1);
-                    ans[c].insert(ans[c].end(), base + edge2);
-                    ++c;
-                }
-                edge2 = Edge<4>::edgeNumber[
-                    Edge<4>::edgeVertex[edge1][1]][
-                    Triangle<4>::triangleVertex[edge1][i]];
-                if (edge1 < edge2) {
-                    ans[c].insert(ans[c].end(), base + edge1);
-                    ans[c].insert(ans[c].end(), base + edge2);
-                    ++c;
-                }
-            }
-        base += enc.block();
-    }
+    for (int edge1 = 0; edge1 < 10; ++edge1)
+        for (int i = 0; i < 3; ++i) {
+            int edge2 = Edge<4>::edgeNumber[
+                Edge<4>::edgeVertex[edge1][0]][
+                Triangle<4>::triangleVertex[edge1][i]];
+            if (edge1 < edge2)
+                ans.addLocal({ base + edge1, base + edge2 });
+
+            edge2 = Edge<4>::edgeNumber[
+                Edge<4>::edgeVertex[edge1][1]][
+                Triangle<4>::triangleVertex[edge1][i]];
+            if (edge1 < edge2)
+                ans.addLocal({ base + edge1, base + edge2 });
+        }
 
     return ans;
 }

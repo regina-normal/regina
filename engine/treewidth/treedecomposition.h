@@ -42,7 +42,9 @@
 
 #include "regina-core.h"
 #include "core/output.h"
+#include "maths/matrix.h"
 #include "triangulation/forward.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -782,33 +784,61 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Builds a tree decomposition of an arbitrary graph.
          * The graph may be directed or undirected.
          *
-         * The graph is specified by an adjacency matrix.  The matrix
-         * may contain any data type (this is the template argument \a T).
-         * However, the contents of this matrix will be interpreted as
-         * booleans: an arc runs from node \a i to node \a j if and
-         * only if \a graph[i][j] is \c true when interpreted as a boolean.
+         * The graph is specified by an adjacency matrix, expressed
+         * using Regina's own matrix type.
          *
-         * \headers This routine is implemented in a separate header
-         * (treedecomposition-impl.h), which is not included automatically
-         * by this file.  Regina's calculation engine already includes
-         * explicit instantiations for types \c bool and \c int, but for
-         * other types you will need to include treedecomposition-impl.h
-         * along with this header.
+         * Each entry \a graph[i][j] will be treated as a boolean, indicating
+         * whether the graph contains an arc from node \a i to node \a j.
          *
-         * \ifacespython The argument \a order is not present (it will be
-         * deduced automatically from \a graph).  The adjacency matrix should
-         * be given as a list of lists.  There is no need to use the same data
-         * type \a T throughout: each element of the matrix will be individually
-         * interpreted as a boolean as described above.
+         * \exception InvalidArgument the adjacency matrix does not have
+         * the same number of rows as columns.
          *
-         * @param order the number of nodes in the graph.
+         * \ifacespython The argument \a graph must be of type \c MatrixBool
+         * (which is the Python type corresponding to the C++ class
+         * Matrix<bool>).
+         *
          * @param graph the adjacency matrix of the graph.
          * @param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
         template <typename T>
-        TreeDecomposition(unsigned order, T const** const graph,
+        TreeDecomposition(const Matrix<T>& graph,
+            TreeDecompositionAlg alg = TD_UPPER);
+
+        /**
+         * Builds a tree decomposition of an arbitrary graph.
+         * The graph may be directed or undirected.
+         *
+         * The graph is specified by an adjacency matrix, given as a
+         * vector of rows:
+         *
+         * - The number of elements in each row should be equal to the
+         *   number of rows (i.e., the adjacency matrix should be square).
+         *
+         * - The individual elements of each row \a r should be accessible
+         *   using a range-based \c for loop over \a r.
+         *
+         * - Each entry in row \a i, column \a j will be treated as a boolean,
+         *   indicating whether the graph contains an arc from node \a i to
+         *   node \a j.
+         *
+         * An example of a suitable type for the adjacency matrix could be
+         * std::vector<std::vector<bool>>.
+         *
+         * \exception InvalidArgument the adjacency matrix does not have
+         * the same number of rows as columns.
+         *
+         * \ifacespython The adjacency matrix should be given as a list of
+         * lists.
+         *
+         * @param graph the adjacency matrix of the graph.
+         * @param alg the algorithm that should be used to compute the
+         * tree decomposition; in particular, this specifies whether to
+         * use a slow exact algorithm or a fast greedy algorithm.
+         */
+        template <typename Row>
+        TreeDecomposition(const std::vector<Row>& graph,
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**
@@ -1035,7 +1065,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * then the size of this array should be the number of nodes in
          * the underlying graph.
          */
-        void makeNice(int* heightHint = nullptr);
+        void makeNice(const int* heightHint = nullptr);
 
         /**
          * Reverses child-parent relationships so that the given bag
@@ -1486,6 +1516,45 @@ inline TreeDecomposition::TreeDecomposition(TreeDecomposition&& src) noexcept :
     src.root_ = nullptr;
 }
 
+template <typename T>
+TreeDecomposition::TreeDecomposition(const Matrix<T>& graph,
+        TreeDecompositionAlg alg) : width_(0), root_(nullptr) {
+    if (graph.rows() != graph.columns())
+        throw InvalidArgument("The adjacency matrix must be square");
+
+    Graph g(graph.rows());
+
+    for (int i = 0; i < graph.rows(); ++i)
+        for (int j = 0; j < graph.columns(); ++j)
+            g.adj_[i][j] = graph.entry(i, j) || graph.entry(j, i);
+
+    construct(g, alg);
+}
+
+template <typename Row>
+TreeDecomposition::TreeDecomposition(const std::vector<Row>& graph,
+        TreeDecompositionAlg alg) : width_(0), root_(nullptr) {
+    size_t order = graph.size();
+    Graph g(order);
+
+    int r = 0;
+    for (const auto& row : graph) {
+        int c = 0;
+        for (const auto& entry: row) {
+            if (c >= order)
+                throw InvalidArgument("The adjacency matrix must be square");
+            if (entry)
+                g.adj_[r][c] = g.adj_[c][r] = true;
+            ++c;
+        }
+        if (c != order)
+            throw InvalidArgument("The adjacency matrix must be square");
+        ++r;
+    }
+
+    construct(g, alg);
+}
+
 inline TreeDecomposition::~TreeDecomposition() {
     delete root_;
 }
@@ -1542,11 +1611,9 @@ inline void swap(TreeDecomposition& a, TreeDecomposition& b) noexcept {
 
 inline TreeDecomposition::Graph::Graph(int order) :
         order_(order), adj_(new bool*[order]) {
-    int i, j;
-    for (i = 0; i < order; ++i) {
+    for (int i = 0; i < order; ++i) {
         adj_[i] = new bool[order];
-        for (j = 0; j < order; ++j)
-            adj_[i][j] = false;
+        std::fill(adj_[i], adj_[i] + order, false);
     }
 }
 

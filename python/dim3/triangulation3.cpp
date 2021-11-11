@@ -413,14 +413,8 @@ void addTriangulation3(pybind11::module_& m) {
         })
         .def("dehydrate", &Triangulation<3>::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate)
-        .def("isoSig", [](const Triangulation<3>& t) {
-            return t.isoSig();
-        })
-        .def("isoSigDetail", [](const Triangulation<3>& t) {
-            Isomorphism<3>* iso;
-            std::string sig = t.isoSig(&iso);
-            return pybind11::make_tuple(sig, iso);
-        })
+        .def("isoSig", &Triangulation<3>::isoSig<>)
+        .def("isoSigDetail", &Triangulation<3>::isoSigDetail<>)
         .def_static("fromIsoSig", &Triangulation<3>::fromIsoSig)
         .def_static("fromSig", &Triangulation<3>::fromSig)
         .def_static("isoSigComponentSize",

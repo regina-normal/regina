@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/enumconstraints.h"
 #include "surfaces/normalsurface.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"

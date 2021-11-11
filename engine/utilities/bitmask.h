@@ -514,6 +514,9 @@ class Bitmask {
 /**
  * Swaps the contents of the two given bitmasks.
  *
+ * This global routine simply calls Bitmask::swap(); it is provided
+ * so that Bitmask meets the C++ Swappable requirements.
+ *
  * @param a the first bitmask whose contents should be swapped.
  * @param b the second bitmask whose contents should be swapped.
  *

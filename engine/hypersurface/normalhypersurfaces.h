@@ -45,7 +45,7 @@
 #include <optional>
 #include <vector>
 #include "regina-core.h"
-#include "enumerate/enumconstraints.h"
+#include "enumerate/validityconstraints.h"
 #include "hypersurface/hypercoords.h"
 #include "hypersurface/hyperflags.h"
 #include "hypersurface/normalhypersurface.h"
@@ -926,8 +926,8 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
  *
  * \ingroup hypersurface
  */
-EnumConstraints makeEmbeddedConstraints(const Triangulation<4>& triangulation,
-    HyperCoords coords);
+ValidityConstraints makeEmbeddedConstraints(
+    const Triangulation<4>& triangulation, HyperCoords coords);
 
 // Inline functions for NormalHypersurfaces
 

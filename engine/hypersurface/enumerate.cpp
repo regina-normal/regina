@@ -175,19 +175,19 @@ void NormalHypersurfaces::Enumerator::fillVertex() {
 
 void NormalHypersurfaces::Enumerator::fillVertexDD() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(
+        ValidityConstraints c = makeEmbeddedConstraints(
             *list_->triangulation_, list_->coords_);
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, &c, tracker_);
+            }, eqns_, c, tracker_);
     } else {
         DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, nullptr, tracker_);
+            }, eqns_, ValidityConstraints::none, tracker_);
     }
 }
 
@@ -257,19 +257,20 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, shadows.begin(), shadows.end(), &c, tracker_);
+            }, shadows.begin(), shadows.end(), c, tracker_);
     } else {
         HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, shadows.begin(), shadows.end(), nullptr, tracker_);
+            }, shadows.begin(), shadows.end(), ValidityConstraints::none,
+                tracker_);
     }
 }
 
@@ -280,19 +281,19 @@ void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, &c, tracker_);
+            }, eqns_, c, tracker_);
     } else {
         HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
-            }, eqns_, nullptr, tracker_);
+            }, eqns_, ValidityConstraints::none, tracker_);
     }
 }
 

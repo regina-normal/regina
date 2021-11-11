@@ -234,6 +234,9 @@ Version 7.0  [ TODO ]
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
               for triangulation faces).
+        Class EnumConstraints:
+            - This has been removed completely, in favour of the new class
+              ValidityConstraints.
         Class Example<dim>, ExampleLink, ExampleSnapPea:
             - All examples now return by value, not by newly allocated pointer.
         Class Face<dim, subdim>:
@@ -1267,6 +1270,9 @@ Version 7.0  [ TODO ]
         Class TreeDecomposition:
             - Added a move constructor and move/copy assignment operators.
             - Added member and global swap() functions.
+            - Changed the "raw graph" constructor from taking a raw C-style
+              array to take either a Matrix<bool> or a std::vector of rows.
+              The old constructor is removed completely.
             - The fromPACE() routines now return by value (not pointer),
               and throw an exception on error instead of (returning null)
         Class TreeTraversal, TreeEnumeration, TreeSingleSoln, TautEnumeration:
@@ -1320,6 +1326,8 @@ Version 7.0  [ TODO ]
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).
             - Routine isoSig() now supports different encodings (but not
               different decodings), via a new template parameter.
+              It also no longer takes an optional relabelling pointer; instead
+              there is a new function isoSigDetail() for returning this.
             - Functions isIsomorphicTo() and isContainedIn() now return a
               std::optional<Isomorphism>, not a std::unique_ptr<Isomorphism>.
               The C++ syntax should be largely unaffected, and the Python
@@ -1425,6 +1433,10 @@ Version 7.0  [ TODO ]
             - Added short and detailed output functions.
         Class UnsolvedCase:
             - New exception class.
+        Class ValidityConstraints:
+            - This is a new, completely re-engineered class that replaces the
+              old EnumConstraints.  It is easier to use within enumeration
+              algorithms, and it carries significantly less overhead.
         Class Vector:
             - New operator !=.
             - New constructors that take iterator ranges and initialiser lists.

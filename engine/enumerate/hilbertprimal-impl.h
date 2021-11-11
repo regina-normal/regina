@@ -44,9 +44,9 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
-#include "enumerate/enumconstraints.h"
 #include "enumerate/hilbertprimal.h"
 #include "enumerate/maxadmissible.h"
+#include "enumerate/validityconstraints.h"
 #include "libnormaliz/cone.h"
 #include "maths/vector.h"
 #include "progress/progresstracker.h"
@@ -61,7 +61,7 @@ namespace regina {
 template <class RayClass, class RayIterator, typename Action>
 void HilbertPrimal::enumerateHilbertBasis(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
-        const EnumConstraints* constraints, ProgressTracker* tracker) {
+        const ValidityConstraints& constraints, ProgressTracker* tracker) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
         "HilbertPrimal::enumerateHilbertBasis() requires the RayClass "
@@ -119,7 +119,7 @@ template <class RayClass, class BitmaskType,
         class RayIterator, typename Action>
 void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
-        const EnumConstraints* constraints, ProgressTracker* tracker) {
+        const ValidityConstraints& constraints, ProgressTracker* tracker) {
     using IntegerType = typename RayClass::Element;
 
     // We know at this point that the dimension is non-zero.
@@ -147,8 +147,7 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         std::vector<std::vector<mpz_class> > input;
         for (rit = raysBegin; rit != raysEnd; ++rit)
             if (inFace(*rit, m)) {
-                input.emplace_back();
-                std::vector<mpz_class>& v(input.back());
+                std::vector<mpz_class>& v(input.emplace_back());
                 v.reserve(dim);
                 for (i = 0; i < dim; ++i) {
                     if ((*rit)[i].isNative())

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/enumconstraints.h"
+#include "enumerate/validityconstraints.h"
 #include "surfaces/normalsurface.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
@@ -38,42 +38,32 @@
 
 namespace regina {
 
-EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
-        NormalCoords coords) {
+ValidityConstraints makeEmbeddedConstraints(
+        const Triangulation<3>& triangulation, NormalCoords coords) {
     const NormalEncoding enc(coords);
     if (enc.storesOctagons()) {
         // At most one quad/oct per tetrahedron.
         // Also at most one oct type overall.
-        EnumConstraints ans(triangulation.size() + 1);
+        ValidityConstraints ans(enc.block(), triangulation.size(), 1, 1);
 
-        unsigned base = (enc.storesTriangles() ? 4 : 0);
-        for (unsigned c = 1; c < ans.size(); ++c) {
-            ans[c].insert(ans[c].end(), base);
-            ans[c].insert(ans[c].end(), base + 1);
-            ans[c].insert(ans[c].end(), base + 2);
-            ans[c].insert(ans[c].end(), base + 3);
-            ans[c].insert(ans[c].end(), base + 4);
-            ans[c].insert(ans[c].end(), base + 5);
-
-            ans[0].insert(ans[0].end(), base + 3);
-            ans[0].insert(ans[0].end(), base + 4);
-            ans[0].insert(ans[0].end(), base + 5);
-
-            base += enc.block();
+        if (enc.storesTriangles()) {
+            ans.addLocal({ 4, 5, 6, 7, 8, 9 });
+            ans.addGlobal({ 7, 8, 9 });
+        } else {
+            ans.addLocal({ 0, 1, 2, 3, 4, 5 });
+            ans.addGlobal({ 3, 4, 5 });
         }
+
         return ans;
     } else {
         // No octagon constraints.
-        EnumConstraints ans(triangulation.size());
+        ValidityConstraints ans(enc.block(), triangulation.size(), 1);
 
-        unsigned base = (enc.storesTriangles() ? 4 : 0);
-        for (auto& c : ans) {
-            c.insert(c.end(), base);
-            c.insert(c.end(), base + 1);
-            c.insert(c.end(), base + 2);
+        if (enc.storesTriangles())
+            ans.addLocal({ 4, 5, 6 });
+        else
+            ans.addLocal({ 0, 1, 2 });
 
-            base += enc.block();
-        }
         return ans;
     }
 }

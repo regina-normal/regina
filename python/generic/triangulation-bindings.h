@@ -188,14 +188,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         })
         .def("makeCanonical", &Triangulation<dim>::makeCanonical)
         .def("insertTriangulation", &Triangulation<dim>::insertTriangulation)
-        .def("isoSig", [](const Triangulation<dim>& t) {
-            return t.isoSig();
-        })
-        .def("isoSigDetail", [](const Triangulation<dim>& t) {
-            Isomorphism<dim>* iso;
-            std::string sig = t.isoSig(&iso);
-            return pybind11::make_tuple(sig, iso);
-        })
+        .def("isoSig", &Triangulation<dim>::template isoSig<>)
+        .def("isoSigDetail", &Triangulation<dim>::template isoSigDetail<>)
         .def_static("fromIsoSig", &Triangulation<dim>::fromIsoSig)
         .def_static("fromSig", &Triangulation<dim>::fromSig)
         .def_static("isoSigComponentSize",
