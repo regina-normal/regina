@@ -132,7 +132,9 @@ class Isomorphism :
          * The images of the simplices and their vertices must be
          * explicitly set using simpImage() and facetPerm().
          *
-         * \ifacespython Not present.
+         * \ifacespython For Python users, the images of the simplices and
+         * their vertices must be set using setSimpImage() and setFacetPerm()
+         * instead.
          *
          * @param nSimplices the number of simplices in the source
          * triangulation associated with this isomorphism.
@@ -211,8 +213,10 @@ class Isomorphism :
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
-         * \ifacespython This is not available for Python users.
-         * However, the read-only version of this routine is.
+         * \ifacespython Python users can only access the read-only version
+         * of this function that returns by value: you cannot use simpImage()
+         * to edit the isomorphism.  As an alternative however, Python users
+         * can call <tt>setSimpImage(sourceSimp, image)</tt> instead.
          *
          * @param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>size()-1</tt> inclusive.
@@ -238,8 +242,10 @@ class Isomorphism :
          * facet <tt>facetPerm(sourceSimp)[i]</tt> of simplex
          * <tt>simpImage(sourceSimp)</tt>.
          *
-         * \ifacespython This is not available for Python users.
-         * However, the read-only version of this routine is.
+         * \ifacespython Python users can only access the read-only version
+         * of this function that returns by value: you cannot use facetPerm()
+         * to edit the isomorphism.  As an alternative however, Python users
+         * can call <tt>setFacetPerm(sourceSimp, perm)</tt> instead.
          *
          * @param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
@@ -343,6 +349,37 @@ class Isomorphism :
          * should be applied.
          */
         void applyInPlace(Triangulation<dim>& tri) const;
+
+        /**
+         * Returns the composition of this isomorphism with the given
+         * isomorphism.
+         *
+         * This follows the same order convention as Regina's permutation
+         * classes: the composition <tt>a * b</tt> first applies the right-hand
+         * isomorphism \a b, and then the left-hand isomorphism \a a.
+         *
+         * \pre The source triangulation for this isomorphism (the left-hand
+         * side) is at least as large as the destination triangulation
+         * for \a rhs (the right-hand side).  In other words, the maximum
+         * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
+         * <tt>this->size()</tt>.
+         *
+         * @return the composition of both isomorphisms.
+         */
+        Isomorphism operator * (const Isomorphism& rhs) const;
+
+        /**
+         * Returns the inverse of this isomorphism.
+         *
+         * \pre The destination triangulation has precisely the same
+         * number of simplices as the source triangulation.  In other words,
+         * there are no "gaps" in the simplex images: the values
+         * <tt>simpImage(0)</tt>, ..., <tt>simpImage(size()-1)</tt> must be
+         * a permutation of 0, ..., <tt>size()-1</tt>.
+         *
+         * @return the inverse isomorphism.
+         */
+        Isomorphism inverse() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -578,6 +615,26 @@ template <int dim>
 void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
     Triangulation<dim> staging = apply(tri);
     tri.swap(staging);
+}
+
+template <int dim>
+Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
+    Isomorphism<dim> ans(rhs.nSimplices_);
+    for (unsigned i = 0; i < nSimplices_; ++i) {
+        ans.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
+        ans.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
+    }
+    return ans;
+}
+
+template <int dim>
+Isomorphism<dim> Isomorphism<dim>::inverse() const {
+    Isomorphism<dim> ans(nSimplices_);
+    for (unsigned i = 0; i < nSimplices_; ++i) {
+        ans.simpImage_[simpImage_[i]] = i;
+        ans.facetPerm_[simpImage_[i]] = facetPerm_[i].inverse();
+    }
+    return ans;
 }
 
 template <int dim>

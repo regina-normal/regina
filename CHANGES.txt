@@ -467,6 +467,7 @@ Version 7.0  [ TODO ]
             - Added member and global swap() functions to Isomorphism<dim>.
             - Removed the IsomorphismBase<dim> base class; all functionality
               now lives directly within Isomorphism<dim>.
+            - Added composition operator (*) and inverse().
             - Functions apply() and applyInPlace() now take their
               arguments by reference, not pointer, and throw exceptions in some
               cases if input requirements are not met.  Moreover, apply() now

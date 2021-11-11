@@ -51,6 +51,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(enumeration);
     CPPUNIT_TEST(application);
     CPPUNIT_TEST(isomorphic);
+    CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(automorphismsAndSubcomplexes);
 
     CPPUNIT_TEST_SUITE_END();
@@ -332,6 +333,23 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                 msg << "Making a tetrahedron of " << name <<
                     " invalid results in a supercomplex (and should not).";
                 CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void inverse() {
+            const int size = 5;
+            for (int i = 0; i < 10; ++i) {
+                Isomorphism a = Isomorphism<3>::random(size);
+                Isomorphism b = a.inverse();
+                Isomorphism c = a * b;
+
+                for (int j = 0; j < size; ++j)
+                    if (c.simpImage(j) != j || c.facetPerm(j) != Perm<4>()) {
+                        std::ostringstream msg;
+                        msg << "Isomorphism composed with its inverse "
+                            "does not give the identity.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
             }
         }
 

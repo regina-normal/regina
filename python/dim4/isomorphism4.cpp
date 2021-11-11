@@ -31,27 +31,41 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::Perm;
 
 void addIsomorphism4(pybind11::module_& m) {
     auto c = pybind11::class_<Isomorphism<4>>(m, "Isomorphism4")
         .def(pybind11::init<const Isomorphism<4>&>())
+        .def(pybind11::init<unsigned>())
         .def("swap", &Isomorphism<4>::swap)
         .def("size", &Isomorphism<4>::size)
         .def("simpImage", overload_cast<unsigned>(
             &Isomorphism<4>::simpImage, pybind11::const_))
+        .def("setSimpImage", [](Isomorphism<4>& iso, unsigned s, int image) {
+            iso.simpImage(s) = image;
+        })
         .def("pentImage", overload_cast<unsigned>(
             &Isomorphism<4>::pentImage, pybind11::const_))
+        .def("setPentImage", [](Isomorphism<4>& iso, unsigned s, int image) {
+            iso.pentImage(s) = image;
+        })
         .def("facetPerm", overload_cast<unsigned>(
             &Isomorphism<4>::facetPerm, pybind11::const_))
+        .def("setFacetPerm", [](Isomorphism<4>& iso, unsigned s, Perm<5> p) {
+            iso.facetPerm(s) = p;
+        })
         .def("__getitem__", &Isomorphism<4>::operator[])
         .def("isIdentity", &Isomorphism<4>::isIdentity)
         .def("apply", &Isomorphism<4>::apply)
         .def("applyInPlace", &Isomorphism<4>::applyInPlace)
+        .def(pybind11::self * pybind11::self)
+        .def("inverse", &Isomorphism<4>::inverse)
         .def_static("random", &Isomorphism<4>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<4>::identity)
