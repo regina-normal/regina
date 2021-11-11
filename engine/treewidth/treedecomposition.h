@@ -1065,7 +1065,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * then the size of this array should be the number of nodes in
          * the underlying graph.
          */
-        void makeNice(int* heightHint = nullptr);
+        void makeNice(const int* heightHint = nullptr);
 
         /**
          * Reverses child-parent relationships so that the given bag

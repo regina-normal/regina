@@ -640,7 +640,7 @@ bool TreeDecomposition::compress() {
     return changed;
 }
 
-void TreeDecomposition::makeNice(int* heightHint) {
+void TreeDecomposition::makeNice(const int* heightHint) {
     if (! root_)
         return;
 
