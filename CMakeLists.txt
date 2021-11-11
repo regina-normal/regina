@@ -45,6 +45,9 @@ IF (WIN32)
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-ipa-cp-clone")
 ENDIF (WIN32)
 
+# Regina's own cmake scripts:
+INCLUDE( ReginaMacros )
+
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
 # HPC = filesystem installation suitable for HPC systems where there is
@@ -89,6 +92,10 @@ ELSE()
   MESSAGE(FATAL_ERROR
     "REGINA_INSTALL_TYPE must be XDG, HPC or Windows.")
 ENDIF()
+
+IF(NOT (WIN32 OR APPLE))
+  CHECK_LSB_RELEASE()
+ENDIF(NOT (WIN32 OR APPLE))
 
 # Are we installing development files?
 SET (REGINA_INSTALL_DEV ON)
@@ -137,9 +144,6 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   # under g++; otherwise it builds but throws an exception at runtime.
   SET(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
-
-# Regina's own cmake scripts:
-INCLUDE( ReginaMacros )
 
 # Make everything use C++17 (or later).
 SET(CMAKE_CXX_STANDARD 17)

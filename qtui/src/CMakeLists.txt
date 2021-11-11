@@ -50,6 +50,15 @@ IF(LIBGVC_FOUND)
       # subdirectory graphviz/ beneath the main library path.
       SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
       LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
+
+      # Ubuntu focal (20.04 LTS) has an error where the graphviz plugins
+      # fail to link due to missing __XXX_finite symbols from the math
+      # library.  It's not clear to me why this happens, and ubuntu focal
+      # is the only place I've seen it.  Therefore we hard-code the fix
+      # specifically for ubuntu focal.
+      IF("${LSB_RELEASE_ID}" STREQUAL Ubuntu AND "${LSB_RELEASE_VERSION}" MATCHES ^20\.04)
+        ADD_LINK_OPTIONS(-Wl,--allow-shlib-undefined)
+      ENDIF()
     ENDIF(WIN32)
     SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
   ENDIF (${GRAPHVIZ_TYPE} STREQUAL Framework)

@@ -43,6 +43,29 @@ macro (CHECK_STDFS)
 endmacro (CHECK_STDFS)
 
 
+# Macro: CHECK_LSB_RELEASE
+#
+# Sets the string variables LSB_RELEASE_ID and LSB_RELEASE_VERSION, if
+# this information can be deduced from the system lsb_release command.
+#
+# Otherwise these variables will be unset.
+#
+macro (CHECK_LSB_RELEASE)
+  find_program(LSB_RELEASE lsb_release)
+  if (LSB_RELEASE)
+    execute_process(COMMAND "${LSB_RELEASE}" -is
+      OUTPUT_VARIABLE LSB_RELEASE_ID OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND "${LSB_RELEASE}" -rs
+      OUTPUT_VARIABLE LSB_RELEASE_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+    MESSAGE(STATUS "Checking Linux distribution -- ${LSB_RELEASE_ID} ${LSB_RELEASE_VERSION}")
+  else (LSB_RELEASE)
+    MESSAGE(STATUS "Checking Linux distribution -- not available")
+    UNSET(LSB_RELEASE_ID)
+    UNSET(LSB_RELEASE_VERSION)
+  endif (LSB_RELEASE)
+endmacro (CHECK_LSB_RELEASE)
+
+
 # Macro: REGINA_ESCAPE_BASH(input)
 #
 # Sets the variable BASH_${input} to be a variant of the variable ${input}
