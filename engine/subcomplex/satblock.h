@@ -424,8 +424,8 @@ class SatBlock : public Output<SatBlock> {
          * and no newline should be written.  In TeX mode, no leading or
          * trailing dollar signs should be written.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * \ifacespython Not present; instead use the variant abbr() that
+         * returns a string.
          *
          * @param out the output stream to which to write.
          * @param tex \c true if the output should be formatted for TeX,
@@ -453,28 +453,28 @@ class SatBlock : public Output<SatBlock> {
          *
          * This must be implemented by subclasses.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
-         virtual void writeTextShort(std::ostream& out) const = 0;
+        virtual void writeTextShort(std::ostream& out) const = 0;
 
-         /**
+        /**
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
          * This may be reimplemented by subclasses, but the parent
          * SatBlock class offers a reasonable default implementation.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
-         virtual void writeTextLong(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
 
-         // Mark this class as non-assignable.
-         // There is a copy constructor, but that is protected.
-         SatBlock& operator = (const SatBlock&) = delete;
+        // Mark this class as non-assignable.
+        // There is a copy constructor, but that is protected.
+        SatBlock& operator = (const SatBlock&) = delete;
 
     protected:
         /**

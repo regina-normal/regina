@@ -732,13 +732,13 @@ HomMarkedAbelianGroup MarkedAbelianGroup::torsionInclusion() const {
 
 HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
         MarkedAbelianGroup tmpDom, MarkedAbelianGroup tmpRan) :
-        domain_(std::move(tmpDom)), range_(std::move(tmpRan)),
-        matrix(range_.M().columns(), domain_.M().columns()),
+        domain_(std::move(tmpDom)), codomain_(std::move(tmpRan)),
+        matrix(codomain_.M().columns(), domain_.M().columns()),
         reducedMatrix_(std::move(tmpRedMat)) {
     // If using mod p coeff, p != 0: 
     //
     // we build up the CC map in reverse from the way we computed
-    //  the structure of the domain/range groups.
+    //  the structure of the domain/codomain groups.
     //  which was: 3) SNF(M,M'), truncate off first TORLoc coords. 
     //             2) SNF the tensorPres matrix, TOR coords fixed. 
     //                Truncate off first tensorIfLoc terms.
@@ -753,7 +753,7 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     // If using integer coefficients:
     // 
     // we build up the CC map in reverse of the process for which we found 
-    //  the structure of the domain/range
+    //  the structure of the domain/codomain
     // groups, which was:  2) SNF(M,M'), truncate off the first 
     //                        rankOM==TORLoc coords
     //                     1) SNF(N,N'), truncate off the first ifLoc terms.
@@ -763,19 +763,19 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     // Step 2: --void--
     // Step 3: OMR*(step 1)*[trunc OMRi]
     // so we have a common Step 1. 
-    MatrixInt step1Mat(range_.ornCi.rows(), domain_.ornC.rows());
+    MatrixInt step1Mat(codomain_.ornCi.rows(), domain_.ornC.rows());
     for (unsigned long i=0; i<step1Mat.rows(); i++) 
         for (unsigned long j=0; j<step1Mat.columns(); j++)
     { // ran->ornCi.entry(i, k)*reducedMatrix_.entry(k, l)*dom->ornC.entry(l, j)
       for (unsigned long k=0; k<reducedMatrix_->rows(); k++) 
       for (unsigned long l=0;l<reducedMatrix_->columns(); l++)
         step1Mat.entry(i,j) += 
-        range_.ornCi.entry(i,k+range_.ifLoc)*reducedMatrix_->entry(k,l)*
+        codomain_.ornCi.entry(i,k+codomain_.ifLoc)*reducedMatrix_->entry(k,l)*
          domain_.ornC.entry(l+domain_.ifLoc,j);
     }
     // with mod p coefficients we have this fiddly middle step 2.
 
-    MatrixInt step2Mat( step1Mat.rows()+range_.tensorIfLoc, 
+    MatrixInt step2Mat( step1Mat.rows()+codomain_.tensorIfLoc, 
                          step1Mat.columns()+domain_.tensorIfLoc );
     // if coeff==0, we'll just copy the step1Mat, if coeff>0 we multiply 
     // the tensor part by ran.otCi, dom.otC resp.
@@ -788,7 +788,7 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
       for (unsigned long j=0; j<step2Mat.columns(); j++)
        { // (ID_TOR xran->otCi.entry(i,k)*incl_tensorIfLoc)*step1Mat.entry(k,l)*
          // ID_TOR x trunc_tensorIfLoc*dom->otC.entry(l, j)) app shifted...
-        if (i < range_.TORVec.size()) 
+        if (i < codomain_.TORVec.size()) 
          {
           if (j < domain_.TORVec.size()) 
            { step2Mat.entry(i,j) = step1Mat.entry(i,j); } else
@@ -801,15 +801,15 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
          } else
         if (j < domain_.TORVec.size()) 
          {
-          for (unsigned long k=range_.tensorIfLoc; k<range_.otCi.columns(); k++) 
-           step2Mat.entry(i,j) += range_.otCi.entry(i-range_.TORVec.size(),k)*
-           step1Mat.entry(k-range_.tensorIfLoc+range_.TORVec.size(),j);
+          for (unsigned long k=codomain_.tensorIfLoc; k<codomain_.otCi.columns(); k++) 
+           step2Mat.entry(i,j) += codomain_.otCi.entry(i-codomain_.TORVec.size(),k)*
+           step1Mat.entry(k-codomain_.tensorIfLoc+codomain_.TORVec.size(),j);
          } else 
         {
-         for (unsigned long k=range_.tensorIfLoc; k<range_.otCi.rows(); k++) 
+         for (unsigned long k=codomain_.tensorIfLoc; k<codomain_.otCi.rows(); k++) 
          for (unsigned long l=domain_.tensorIfLoc; l<domain_.otC.rows(); l++)
-         step2Mat.entry(i,j) += range_.otCi.entry(i-range_.TORVec.size(),k)*
-         step1Mat.entry(k-range_.tensorIfLoc+range_.TORVec.size(),
+         step2Mat.entry(i,j) += codomain_.otCi.entry(i-codomain_.TORVec.size(),k)*
+         step1Mat.entry(k-codomain_.tensorIfLoc+codomain_.TORVec.size(),
          l-domain_.tensorIfLoc+domain_.TORVec.size())*
          domain_.otC.entry(l,j-domain_.TORVec.size());
         }
@@ -818,10 +818,10 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     // mult and divisions. multiply first ran.TORLoc rows by p/gcd(p,q)
     // divide first dom.TORLoc rows by p/gcd(p,q)
 
-    for (unsigned long i=0; i<range_.TORVec.size(); i++) 
+    for (unsigned long i=0; i<codomain_.TORVec.size(); i++) 
       for (unsigned long j=0; j<step2Mat.columns(); j++)
         step2Mat.entry(i,j) *=
-            range_.coeff.divExact(range_.coeff.gcd(range_.TORVec[i]));
+            codomain_.coeff.divExact(codomain_.coeff.gcd(codomain_.TORVec[i]));
     for (unsigned long i=0; i<step2Mat.rows(); i++) 
       for (unsigned long j=0; j<domain_.TORVec.size(); j++)
         step2Mat.entry(i,j) /=
@@ -832,10 +832,10 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     for (unsigned long i=0; i<matrix.rows(); i++) 
      for (unsigned long j=0; j<matrix.columns(); j++)
     {
-     for (unsigned long k=range_.TORLoc; k<range_.OMR.columns(); k++) 
+     for (unsigned long k=codomain_.TORLoc; k<codomain_.OMR.columns(); k++) 
        for (unsigned long l=domain_.TORLoc;l<domain_.OMRi.rows(); l++)
-          matrix.entry(i,j) += range_.OMR.entry(i,k) *
-          step2Mat.entry(k-range_.TORLoc,l-domain_.TORLoc) *
+          matrix.entry(i,j) += codomain_.OMR.entry(i,k) *
+          step2Mat.entry(k-codomain_.TORLoc,l-domain_.TORLoc) *
           domain_.OMRi.entry(l,j);
     }
  // done
@@ -844,7 +844,7 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
 
 void HomMarkedAbelianGroup::swap(HomMarkedAbelianGroup& other) noexcept {
     domain_.swap(other.domain_);
-    range_.swap(other.range_);
+    codomain_.swap(other.codomain_);
     matrix.swap(other.matrix);
     reducedMatrix_.swap(other.reducedMatrix_);
     kernel_.swap(other.kernel_);
@@ -857,7 +857,7 @@ void HomMarkedAbelianGroup::computeReducedMatrix()
 {
  if (!reducedMatrix_)
   {
-   reducedMatrix_ = MatrixInt( range_.minNumberOfGenerators(),
+   reducedMatrix_ = MatrixInt( codomain_.minNumberOfGenerators(),
     domain_.minNumberOfGenerators() );
 
    for (unsigned long j=0; j<reducedMatrix_->columns(); j++)
@@ -870,7 +870,7 @@ void HomMarkedAbelianGroup::computeReducedMatrix()
      for (unsigned long i=0; i<icv.size(); i++) 
       for (unsigned long k=0; k<matrix.columns(); k++)
        icv[i] += matrix.entry(i,k) * colV[k];
-     std::vector<Integer> midge( range_.snfRep(icv) );
+     std::vector<Integer> midge( codomain_.snfRep(icv) );
      for (unsigned long i=0; i<midge.size(); i++)
      reducedMatrix_->entry(i,j) = midge[i];
     }
@@ -882,11 +882,11 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
         computeReducedMatrix();
         const MatrixInt& redMatrix(*reducedMatrix_);
 
-        std::vector<Integer> dcL(range_.rank() +
-            range_.countInvariantFactors() );
+        std::vector<Integer> dcL(codomain_.rank() +
+            codomain_.countInvariantFactors() );
         for (unsigned long i=0; i<dcL.size(); i++)
-            if (i<range_.countInvariantFactors())
-                dcL[i]=range_.invariantFactor(i);
+            if (i<codomain_.countInvariantFactors())
+                dcL[i]=codomain_.invariantFactor(i);
             else
                 dcL[i]=Integer::zero;
 
@@ -927,14 +927,14 @@ void HomMarkedAbelianGroup::computeCokernel() {
         computeReducedMatrix();
 
         MatrixInt ccrelators( reducedMatrix_->rows(),
-            reducedMatrix_->columns() + range_.countInvariantFactors() );
+            reducedMatrix_->columns() + codomain_.countInvariantFactors() );
         unsigned i,j;
         for (i=0;i<reducedMatrix_->rows();i++)
             for (j=0;j<reducedMatrix_->columns();j++)
                 ccrelators.entry(i,j)=reducedMatrix_->entry(i,j);
-        for (i=0;i<range_.countInvariantFactors();i++)
+        for (i=0;i<codomain_.countInvariantFactors();i++)
             ccrelators.entry(i,i+reducedMatrix_->columns())=
-                range_.invariantFactor(i);
+                codomain_.invariantFactor(i);
 
         coKernel_ = MarkedAbelianGroup(MatrixInt(1, reducedMatrix_->rows()),
             std::move(ccrelators));
@@ -965,15 +965,15 @@ void HomMarkedAbelianGroup::computeImage() {
 
 HomMarkedAbelianGroup HomMarkedAbelianGroup::operator * (
         const HomMarkedAbelianGroup& X) const {
-    // Induces a deep copy of X.domain_ and this->range_.
-    return HomMarkedAbelianGroup(X.domain_, range_,
+    // Induces a deep copy of X.domain_ and this->codomain_.
+    return HomMarkedAbelianGroup(X.domain_, codomain_,
         matrix * X.matrix);
 }
 
 HomMarkedAbelianGroup HomMarkedAbelianGroup::operator * (
         HomMarkedAbelianGroup&& X) const {
-    // Induces a deep copy of this->range_.
-    return HomMarkedAbelianGroup(std::move(X.domain_), range_,
+    // Induces a deep copy of this->codomain_.
+    return HomMarkedAbelianGroup(std::move(X.domain_), codomain_,
         matrix * X.matrix);
 }
 
@@ -993,15 +993,15 @@ std::vector<Integer> HomMarkedAbelianGroup::evalSNF(
     const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     if (input.size() != domain_.minNumberOfGenerators() ) return {};
     std::vector<Integer> retval( 
-          range_.minNumberOfGenerators(), Integer::zero );
+          codomain_.minNumberOfGenerators(), Integer::zero );
 
     for (unsigned long i=0; i<retval.size(); i++) 
     {
         for (unsigned long j=0; j<reducedMatrix().columns(); j++)
             retval[i] += input[j] * reducedMatrix().entry(i,j);
-        if ( i < range_.countInvariantFactors() ) {
-            retval[i] %= range_.invariantFactor(i);
-            if (retval[i]<0) retval[i] += range_.invariantFactor(i); }
+        if ( i < codomain_.countInvariantFactors() ) {
+            retval[i] %= codomain_.invariantFactor(i);
+            if (retval[i]<0) retval[i] += codomain_.invariantFactor(i); }
     }
     return retval;
 }
@@ -1016,8 +1016,8 @@ void HomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
     out<<"Reduced Matrix is "<<reducedMatrix_->rows()<<" by "
         <<reducedMatrix_->columns()<<" corresponding to domain ";
     domain_.writeTextShort(out);
-    out<<" and range ";
-    range_.writeTextShort(out);
+    out<<" and codomain ";
+    codomain_.writeTextShort(out);
     out<<"\n";
     for (unsigned long i=0;i<reducedMatrix_->rows();i++) {
         out<<"[";
@@ -1030,9 +1030,11 @@ void HomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
 }
 
 void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
-    if (isIsomorphism()) out<<"isomorphism"; else 
-    if (isZero()) out<<"zero map"; else 
-    if (isMonic()) { // monic not epic
+    if (isIsomorphism())
+        out<<"isomorphism";
+    else if (isZero())
+        out<<"zero map";
+    else if (isMonic()) { // monic not epic
         out<<"monic, with cokernel ";
         cokernel().writeTextShort(out);
     } else if (isEpic()) { // epic not monic
@@ -1050,15 +1052,52 @@ void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
 
 void HomMarkedAbelianGroup::writeTextLong(std::ostream& out) const
 {
-    out<<"hom[ "; domain_.writeTextShort(out); out<<" --> ";
-    range_.writeTextShort(out); out<<" ] ";
-    writeTextShort(out);
+    out << "Hom: ";
+    domain_.writeTextShort(out);
+    out << " --> ";
+    codomain_.writeTextShort(out);
+    out << std::endl;
+
+    if (isIsomorphism())
+        out << "Isomorphism" << std::endl;
+    else if (isZero())
+        out << "Zero map" << std::endl;
+    else if (isMonic()) {
+        // monic not epic
+        out << "Monic, cokernel: ";
+        cokernel().writeTextShort(out);
+        out << std::endl;
+    } else if (isEpic()) {
+        // epic not monic
+        out << "Epic, kernel: ";
+        kernel().writeTextShort(out);
+        out << std::endl;
+    } else {
+        // nontrivial not epic, not monic
+        out << "Kernel: ";
+        kernel().writeTextShort(out);
+        out << std::endl;
+        out << "Cokernel: ";
+        cokernel().writeTextShort(out);
+        out << std::endl;
+        out << "Image: ";
+        image().writeTextShort(out);
+        out << std::endl;
+    }
+
+    // Cast away const to compute the reduced matrix -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+
+    out << "Reduced Matrix (torsion coordinates appear first):" << std::endl;
+    reducedMatrix_->writeTextLong(out);
 }
 
 
 bool HomMarkedAbelianGroup::isIdentity() const
 {
-    if (!(domain_.equalTo(range_))) return false;
+    if (!(domain_.equalTo(codomain_))) return false;
     const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     if (!reducedMatrix_->isIdentity()) return false;
     return true;
@@ -1069,11 +1108,11 @@ bool HomMarkedAbelianGroup::isCycleMap() const
     for (unsigned long j=0; j<domain_.minNumberCycleGens(); j++)
     {
         std::vector<Integer> cycJ( domain_.cycleGen(j) );
-        std::vector<Integer> FcycJ( range_.rankCC(), Integer::zero );
+        std::vector<Integer> FcycJ( codomain_.rankCC(), Integer::zero );
         for (unsigned long i=0; i<matrix.rows(); i++) 
           for (unsigned long k=0; k<matrix.columns(); k++)
             FcycJ[i] += matrix.entry(i,k) * cycJ[k];
-        if (!range_.isCycle(FcycJ)) { return false; }
+        if (!codomain_.isCycle(FcycJ)) { return false; }
     }
     return true;
 }
@@ -1082,15 +1121,15 @@ bool HomMarkedAbelianGroup::isCycleMap() const
 //  on the torsion subgroups. 
 HomMarkedAbelianGroup HomMarkedAbelianGroup::torsionSubgroup() const {
     MarkedAbelianGroup dom = domain_.torsionSubgroup();
-    MarkedAbelianGroup ran = range_.torsionSubgroup();
+    MarkedAbelianGroup ran = codomain_.torsionSubgroup();
 
-    MatrixInt mat(range_.countInvariantFactors(),
+    MatrixInt mat(codomain_.countInvariantFactors(),
         domain_.countInvariantFactors() );
     for (unsigned long j=0; j<domain_.countInvariantFactors(); j++) {
-        // std::vector<Integer> in range's snfRep coords
-        std::vector<Integer> temp(range_.snfRep(evalCC(
+        // std::vector<Integer> in codomain's snfRep coords
+        std::vector<Integer> temp(codomain_.snfRep(evalCC(
             domain_.torsionRep(j))));
-        for (unsigned long i=0; i<range_.countInvariantFactors(); i++)
+        for (unsigned long i=0; i<codomain_.countInvariantFactors(); i++)
             mat.entry(i,j) = temp[i];
     }
 
@@ -1110,14 +1149,14 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::torsionSubgroup() const {
  */
 bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other) const
 {
- if ( (range().M().rows() != other.range().N().rows()) ||
-      (range().M().columns() != other.range().N().columns()) ||
+ if ( (codomain().M().rows() != other.codomain().N().rows()) ||
+      (codomain().M().columns() != other.codomain().N().columns()) ||
       (domain().M().rows() != other.domain().N().rows()) ||
       (domain().M().columns() != other.domain().N().columns())
     ) return false;
- if ( (range().M() != other.range().N()) ||
+ if ( (codomain().M() != other.codomain().N()) ||
       (domain().M() != other.domain().N()) ) return false;
- MatrixInt prodLU = range_.M() * definingMatrix();
+ MatrixInt prodLU = codomain_.M() * definingMatrix();
  MatrixInt prodBR = other.definingMatrix() * domain_.M();
  if ( prodLU != prodBR ) return false;
  return true;
@@ -1130,8 +1169,8 @@ bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other) const
 //  [---]  where D is an inveritble square matrix, 0 is a zero matrix,  
 //  [0|D]  A a square matrix and B maybe not square. 
 //         the columns of D represent the free factors of the domain, 
-//      the rows of D the free factors of the range, 
-//     the columns/rows of A represent the torsion factors of the domain/range
+//      the rows of D the free factors of the codomain, 
+//     the columns/rows of A represent the torsion factors of the domain/codomain
 //     respectively.  So the inverse matrix must have the form
 //  [A'|B']
 //  [-----]
@@ -1147,15 +1186,15 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
  const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
  MatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );
  if (!isIsomorphism())
-    return HomMarkedAbelianGroup( std::move(invMat), range_, domain_ );
+    return HomMarkedAbelianGroup( std::move(invMat), codomain_, domain_ );
  // get A, B, D from reducedMatrix
- // A must be square with domain/range_.countInvariantFactors() columns
- // D must be square with domain/range_.rank() columns
+ // A must be square with domain/codomain_.countInvariantFactors() columns
+ // D must be square with domain/codomain_.rank() columns
  // B may not be square with domain_.rank() columns and
- //  range_.countInvariantFactors() rows.
- MatrixInt A(range_.countInvariantFactors(), domain_.countInvariantFactors());
- MatrixInt B(range_.countInvariantFactors(), domain_.rank());
- MatrixInt D(range_.rank(), domain_.rank());
+ //  codomain_.countInvariantFactors() rows.
+ MatrixInt A(codomain_.countInvariantFactors(), domain_.countInvariantFactors());
+ MatrixInt B(codomain_.countInvariantFactors(), domain_.rank());
+ MatrixInt D(codomain_.rank(), domain_.rank());
  for (unsigned long i=0; i<A.rows(); i++)
    for (unsigned long j=0; j<A.columns(); j++)
      A.entry(i,j) = reducedMatrix_->entry(i,j);
@@ -1181,8 +1220,8 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
     invF[i] = domain_.invariantFactor(i);
  MatrixInt Ai = torsionAutInverse( A, invF);
  // then Bi is given by Bi = -AiBDi
-    MatrixInt Bi(range_.countInvariantFactors(), domain_.rank());
-    MatrixInt Btemp(range_.countInvariantFactors(), domain_.rank());
+    MatrixInt Bi(codomain_.countInvariantFactors(), domain_.rank());
+    MatrixInt Btemp(codomain_.countInvariantFactors(), domain_.rank());
     // Btemp will give -BDi
     // Bi will be AiBtemp
     for (unsigned long i=0; i<Btemp.rows(); i++) 
@@ -1224,7 +1263,7 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
  for (unsigned long i=0; i<Bi.rows(); i++) 
    for (unsigned long j=0; j<Bi.columns(); j++)
      invMat.entry(i,j+Ai.columns()) = Bi.entry(i,j);
- return HomMarkedAbelianGroup(std::move(invMat), range_, domain_);
+ return HomMarkedAbelianGroup(std::move(invMat), codomain_, domain_);
 }
 
 } // namespace regina

@@ -41,7 +41,7 @@ std::string TxICore::name() const {
     return out.str();
 }
 
-std::string TxICore::TeXName() const {
+std::string TxICore::texName() const {
     std::ostringstream out;
     writeTeXName(out);
     return out.str();

@@ -228,9 +228,6 @@ void addLink(pybind11::module_& m) {
         .def("pdData", &Link::pdData)
         .def("pd",
             overload_cast<>(&Link::pd, pybind11::const_))
-        .def("writePACE", [](const Link& l) {
-            l.writePACE(std::cout);
-        })
         .def("pace", &Link::pace)
         .def("knotSig", &Link::knotSig,
             pybind11::arg("useReflection") = true,

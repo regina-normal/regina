@@ -3237,20 +3237,28 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * Allows the user to interactively enter a triangulation in
-         * plain text.  Prompts will be sent to the given output stream
-         * and information will be read from the given input stream.
+         * Deprecated function that allows the user to interactively enter a
+         * triangulation in plain text.  Prompts will be sent to the given
+         * output stream and information will be read from the given input
+         * stream.
          *
-         * \ifacespython This routine is a member of class Engine.
-         * It takes no parameters; \a in and \a out are always assumed
-         * to be standard input and standard output respectively.
+         * \deprecated This is essentially an ancient piece of an interactive
+         * user interface, buried inside what is otherwise a mathematical
+         * library, and dating back to before Regina offered Python bindings.
+         * Nowadays there are better ways of interacting with Regina at a low
+         * level (e.g., Python), and so this routine will soon be removed
+         * completely.
+         *
+         * \ifacespython This routine takes no parameters; \a in and \a out
+         * are always assumed to be standard input and standard output
+         * respectively.
          *
          * @param in the input stream from which text will be read.
          * @param out the output stream to which prompts will be written.
          * @return the triangulation entered in by the user.
          */
-        static Triangulation<3> enterTextTriangulation(std::istream& in,
-                std::ostream& out);
+        [[deprecated]] static Triangulation<3> enterTextTriangulation(
+                std::istream& in, std::ostream& out);
         /**
          * Rehydrates the given alphabetical string into a 3-dimensional
          * triangulation.

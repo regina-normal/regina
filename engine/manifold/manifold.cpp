@@ -43,7 +43,7 @@ std::string Manifold::name() const {
     return ans.str();
 }
 
-std::string Manifold::TeXName() const {
+std::string Manifold::texName() const {
     std::ostringstream ans;
     writeTeXName(ans);
     return ans.str();

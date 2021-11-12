@@ -433,7 +433,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * invariant factors of the group, as described in the
          * AbelianGroup notes.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 if \c true, then richer unicode characters will

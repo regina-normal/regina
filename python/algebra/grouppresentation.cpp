@@ -120,13 +120,11 @@ void addGroupPresentation(pybind11::module_& m) {
             overload_cast<const std::vector<GroupExpression>&, bool>(
                 &GroupExpression::substitute),
             pybind11::arg(), pybind11::arg("cyclic") = false)
-        .def("toTeX", &GroupExpression::toTeX)
+        .def("tex", &GroupExpression::tex)
+        .def("toTeX", &GroupExpression::tex) // deprecated
         .def("writeText", [](const GroupExpression& e, bool sw, bool utf8) {
             e.writeText(std::cout, sw, utf8);
         }, pybind11::arg("shortword") = false, pybind11::arg("utf8") = false)
-        .def("writeTeX", [](const GroupExpression& e) {
-            e.writeTeX(std::cout);
-        })
     ;
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);
@@ -216,14 +214,9 @@ void addGroupPresentation(pybind11::module_& m) {
             return 0;
         })
         .def("incidence", &GroupPresentation::incidence)
-        .def("toTeX", &GroupPresentation::toTeX)
+        .def("tex", &GroupPresentation::tex)
+        .def("toTeX", &GroupPresentation::tex) // deprecated
         .def("compact", &GroupPresentation::compact)
-        .def("writeTeX", [](const GroupPresentation& p) {
-            p.writeTeX(std::cout);
-        })
-        .def("writeTextCompact", [](const GroupPresentation& p) {
-            p.writeTextCompact(std::cout);
-        })
         .def("gap", &GroupPresentation::gap,
             pybind11::arg("groupVariable") = "g")
     ;

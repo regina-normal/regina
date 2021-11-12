@@ -371,6 +371,7 @@ Version 7.0  [ TODO ]
             - Functions addTermsFirst() and addTermsLast() now take the
               GroupExpression argument by value, not by const reference.
             - Added member and global swap() functions.
+            - Renamed toTeX() to tex().  The old name is kept but deprecated.
         Class GroupPresentation:
             - New routines enumerateCovers(), incidence() and gap().
             - Added move constructors and move assignment operators.
@@ -392,6 +393,7 @@ Version 7.0  [ TODO ]
               instead of a std::unique_ptr<HomGroupPresentation>.  The C++
               syntax should be largely unaffected, and the Python behaviour
               (returns None if there is no homomorphism) should remain the same.
+            - Renamed toTeX() to tex().  The old name is kept but deprecated.
             - Other major cleanup and reorganisation under the hood.
         Class Handlebody:
             - Added member and global swap() functions.
@@ -410,6 +412,7 @@ Version 7.0  [ TODO ]
             - Added operator * for composition; the old composeWith() is
               now deprecated.
             - Added member and global swap() functions.
+            - Renamed range() to codomain(), since this is what it actually is.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take a domain, range and map(s) by
@@ -424,6 +427,7 @@ Version 7.0  [ TODO ]
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
             - Added member and global swap() functions.
+            - Renamed range() to codomain(), since this is what it actually is.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MarkedAbelianGroup&) and
@@ -431,6 +435,8 @@ Version 7.0  [ TODO ]
               MatrixInt arguments by value.
             - The composition operator (*) now has an overload whose argument
               is an rvalue reference.
+            - Routine writeReducedMatrix() is now deprecated; instead this
+              information is output via writeTextLong() / detail().
         Class HomologicalData:
             - Now supports copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
@@ -614,6 +620,8 @@ Version 7.0  [ TODO ]
         Class Manifold:
             - Routines construct() and homology() now return by value, not by
               pointer, and throw exceptions on error instead of returning null.
+            - Renamed TeXName() to texName().  The old name is kept but
+              deprecated.
         Class MarkedAbelianGroup:
             - New move constructor.
             - New copy assignment and move assignment operators.
@@ -1019,6 +1027,7 @@ Version 7.0  [ TODO ]
             - Routine doubleApprox() now throws an exception on error
               instead of using an extra bool* argument.  The python-only
               doubleApproxCheck() is now deprecated.
+            - Renamed TeX() to tex().  The old name is kept but deprecated.
         Class ReginaException:
             - New exception base class.
         Class Returns, ReturnsTraits:
@@ -1234,6 +1243,8 @@ Version 7.0  [ TODO ]
               throw an exception on error instead of returning null.
               Also, the alias homologyH1() is now deprecated.
             - Routine manifold() now returns a std::unique_ptr.
+            - Renamed TeXName() to texName().  The old name is kept but
+              deprecated.
         Class SurfaceFilter:
             - This is now an abstract base class.  If you need a filter
               that accepts everything, use a default-constructed
@@ -1388,6 +1399,8 @@ Version 7.0  [ TODO ]
               even if a progress tracker was passed.
             - Routine connectedSumWith() now adds fewer tetrahedra (thanks
               to Adele Jackson).
+            - Routine enterTextTriangulation() is now deprecated; this
+              is a relic from Regina's ancient past.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
@@ -1425,6 +1438,9 @@ Version 7.0  [ TODO ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Deprecated clone().  Just use the copy constructor instead.
+        Class TxICore:
+            - Renamed TeXName() to texName().  The old name is kept but
+              deprecated.
         Class TxIDiagonalCore, TxIParallelCore:
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
@@ -1570,6 +1586,10 @@ Version 7.0  [ TODO ]
         Header utilities/registryutils.h:
             - Removed completely.
     PYTHON:
+        - Much more of Regina's C++ interface is accessible to Python.
+          Essentially what is now wrapped is what cannot be wrapped
+          (e.g. direct interaction with C++ input/output streams, and code
+          that is heavily templated using custom types as template arguments).
         - Updated the included pybind11 library from 2.6.1 to 2.6.2.
         - All face embedding classes now have a __repr__() for easier printing.
           This means, for instance, that print(face.embeddings()) is now useful.
@@ -1578,6 +1598,10 @@ Version 7.0  [ TODO ]
           in C++ for a long time but was somehow never wrapped in Python.
         - All regina functions that used to throw std::invalid_argument on
           error now throw regina::InvalidArgument instead.
+        - Removed wrappings for all C++ functions that took an output stream,
+          where this was assumed to be std::cout in Python
+          (e.g., Link::writePACE(std::ostream&).  Python users should just use
+          the string versions of these functions instead (e.g., Link::pace()).
     USER INTERFACES:
         - Removed the View/Edit action from the toolbar, since you might as
           well just double-click on the packet instead.

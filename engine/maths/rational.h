@@ -430,15 +430,24 @@ class Rational {
          *
          * @author Ryan Budney
          */
-        std::string TeX() const;
+        std::string tex() const;
+
+        /**
+         * Deprecated routine that returns this rational as written using TeX
+         * formatting.
+         *
+         * \deprecated This routine has been renamed to tex().
+         *
+         * @return this rational as written using TeX formatting.
+         */
+        [[deprecated]] std::string TeX() const;
 
         /**
          * Writes this rational in TeX format to the given output stream.
          * No leading or trailing dollar signs will be included.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant tex()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -604,6 +613,10 @@ inline bool Rational::operator >= (const Rational& compare) const {
 }
 inline bool Rational::operator != (const Rational& compare) const {
     return ! (*this == compare);
+}
+
+inline std::string Rational::TeX() const {
+    return tex();
 }
 
 inline void swap(Rational& a, Rational& b) noexcept {

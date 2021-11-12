@@ -60,7 +60,7 @@ std::string StandardTriangulation::name() const {
     return ans.str();
 }
 
-std::string StandardTriangulation::TeXName() const {
+std::string StandardTriangulation::texName() const {
     std::ostringstream ans;
     writeTeXName(ans);
     return ans.str();

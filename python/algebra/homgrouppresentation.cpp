@@ -50,7 +50,7 @@ void addHomGroupPresentation(pybind11::module_& m) {
         .def("swap", &HomGroupPresentation::swap)
         .def("domain", &HomGroupPresentation::domain,
             pybind11::return_value_policy::reference_internal)
-        .def("range", &HomGroupPresentation::range,
+        .def("codomain", &HomGroupPresentation::codomain,
             pybind11::return_value_policy::reference_internal)
         .def("knowsInverse", &HomGroupPresentation::knowsInverse)
         .def("evaluate", overload_cast<unsigned long>(

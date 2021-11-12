@@ -430,7 +430,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def("saveRecogniser", &Triangulation<3>::saveRecogniser)
         .def("saveRecognizer", &Triangulation<3>::saveRecognizer)
         .def_static("fromSnapPea", &Triangulation<3>::fromSnapPea)
-        .def_static("enterTextTriangulation", []() {
+        .def_static("enterTextTriangulation", []() { // deprecated
             return Triangulation<3>::enterTextTriangulation(
                 std::cin, std::cout);
         })

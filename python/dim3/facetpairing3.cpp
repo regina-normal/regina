@@ -67,19 +67,10 @@ void addFacetPairing3(pybind11::module_& m) {
         .def("findAutomorphisms", &FacetPairing<3>::findAutomorphisms)
         .def("toTextRep", &FacetPairing<3>::toTextRep)
         .def_static("fromTextRep", &FacetPairing<3>::fromTextRep)
-        .def("writeDot", [](const FacetPairing<3>& p, const char* prefix,
-                bool subgraph, bool labels) {
-            p.writeDot(std::cout, prefix, subgraph, labels);
-        }, pybind11::arg("prefix") = nullptr,
-            pybind11::arg("subgraph") = false,
-            pybind11::arg("labels") = false)
         .def("dot", &FacetPairing<3>::dot,
             pybind11::arg("prefix") = nullptr,
             pybind11::arg("subgraph") = false,
             pybind11::arg("labels") = false)
-        .def_static("writeDotHeader", [](const char* graphName) {
-            FacetPairing<3>::writeDotHeader(std::cout, graphName);
-        }, pybind11::arg("graphName") = nullptr)
         .def_static("dotHeader", &FacetPairing<3>::dotHeader,
             pybind11::arg("graphName") = nullptr)
         .def("isClosed", &FacetPairing<3>::isClosed)

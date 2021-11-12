@@ -672,7 +672,17 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          *
          * @return a TeX representation of this expression.
          */
-        std::string toTeX() const;
+        std::string tex() const;
+
+        /**
+         * Deprecated function that returns a TeX representation of this
+         * expression.  See writeTeX() for details on how this is formed.
+         *
+         * \deprecated This function has been renamed to tex().
+         *
+         * @return a TeX representation of this expression.
+         */
+        [[deprecated]] std::string toTeX() const;
 
         /**
          * Writes a TeX represesentation of this expression to the given
@@ -681,8 +691,8 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * The text representation will be of the form
          * <tt>g_2^4 g_{13}^{-5} g_4</tt>.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython Not present; instead use the variant tex() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -723,7 +733,7 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * The text representation will be of the form
          * <tt>g2^4 g13^-5 g4</tt>.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1481,7 +1491,17 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * @return a TeX representation of this group presentation.
          */
-        std::string toTeX() const;
+        std::string tex() const;
+
+        /**
+         * Deprecated function that returns a TeX representation of this group
+         * presentation.  See writeTeX() for details on how this is formed.
+         *
+         * \deprecated This function has been renamed to tex().
+         *
+         * @return a TeX representation of this group presentation.
+         */
+        [[deprecated]] std::string toTeX() const;
 
         /**
          * Writes a TeX represesentation of this group presentation
@@ -1490,8 +1510,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The output will be of the form &lt; generators | relators &gt;.
          * There will be no final newline.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython Not present; instead use the variant tex() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -1514,8 +1534,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The full relations will be included, and the entire output
          * will be written on a single line.  There will be no final newline.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython Not present; instead use the variant compact() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -1525,7 +1545,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1534,7 +1554,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1908,6 +1928,10 @@ inline void GroupExpression::erase() {
     terms_.clear();
 }
 
+inline std::string GroupExpression::toTeX() const {
+    return tex();
+}
+
 inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {
     lhs.swap(rhs);
 }
@@ -1949,6 +1973,10 @@ inline const GroupExpression& GroupPresentation::relation(size_t index) const {
 inline const std::vector<GroupExpression>& GroupPresentation::relations()
         const {
     return relations_;
+}
+
+inline std::string GroupPresentation::toTeX() const {
+    return tex();
 }
 
 inline void GroupPresentation::writeTextShort(std::ostream& out) const {

@@ -65,8 +65,9 @@ class AbelianGroup;
  * - may optionally override construct(), homology() and/or writeStructure(),
  *   if they are able to provide this functionality;
  *
- * - must \e not override writeTextShort() or writeTextLong(), since routines
- *   are not virtual, and are provided directly by the Manifold base class;
+ * - must \e not override writeTextShort() or writeTextLong(), since these
+ *   routines are not virtual, and are provided directly by the Manifold base
+ *   class;
  *
  * - must provide value semantics (including at least a copy constructor and
  *   assignment operator);
@@ -100,7 +101,16 @@ class Manifold : public Output<Manifold> {
          *
          * @return the common name of this 3-manifold in TeX format.
          */
-        std::string TeXName() const;
+        std::string texName() const;
+        /**
+         * Deprecated routine that returns the common name of this 3-manifold
+         * in TeX format.
+         *
+         * \deprecated This routine has been renamed to texName().
+         *
+         * @return the common name of this 3-manifold in TeX format.
+         */
+        [[deprecated]] std::string TeXName() const;
         /**
          * Returns details of the structure of this 3-manifold that
          * might not be evident from its common name.  For instance, for
@@ -218,9 +228,8 @@ class Manifold : public Output<Manifold> {
          * Writes the common name of this 3-manifold as a
          * human-readable string to the given output stream.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant name()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -235,9 +244,8 @@ class Manifold : public Output<Manifold> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant texName()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -253,9 +261,8 @@ class Manifold : public Output<Manifold> {
          * details are deemed necessary.  The default implementation of
          * this routine behaves in this way.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant structure()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -269,7 +276,7 @@ class Manifold : public Output<Manifold> {
          * Subclasses must not override this routine.  They should
          * override writeName() instead.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -281,7 +288,7 @@ class Manifold : public Output<Manifold> {
          * Subclasses must not override this routine.  They should
          * override writeName() and writeStructure() instead.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -315,6 +322,10 @@ class Manifold : public Output<Manifold> {
 };
 
 // Inline functions for Manifold
+
+inline std::string Manifold::TeXName() const {
+    return texName();
+}
 
 inline AbelianGroup Manifold::homologyH1() const {
     return homology();

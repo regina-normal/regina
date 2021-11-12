@@ -368,6 +368,8 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * invariant factors of the group, as described in the
          * MarkedAbelianGroup notes.
          *
+         * \ifacespython Not present; use str() or utf8() instead.
+         *
          * @param out the stream to write to.
          * @param utf8 if \c true, then richer unicode characters will
          * be used to make the output more pleasant to read.  In particular,
@@ -697,22 +699,22 @@ void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
  *
  * One initializes such a homomorphism by providing:
  *
- * - two finitely generated abelian groups, which act as domain and range;
+ * - two finitely generated abelian groups, which act as domain and codomain;
  * - a matrix describing the linear map between the free abelian
  *   groups in the centres of the respective chain complexes that were
- *   used to define the domain and range.  If the abelian groups are computed
- *   via homology with coefficients, the range coefficients must be a quotient
- *   of the domain coefficients.
+ *   used to define the domain and codomain.  If the abelian groups are computed
+ *   via homology with coefficients, the codomain coefficients must be a
+ *   quotient of the domain coefficients.
  *
  * So for example, if the domain was initialized by the chain complex
- * <tt>Z^a --A--> Z^b --B--> Z^c</tt> with mod p coefficients, and the range
+ * <tt>Z^a --A--> Z^b --B--> Z^c</tt> with mod p coefficients, and the codomain
  * was initialized by <tt>Z^d --D--> Z^e --E--> Z^f</tt> with mod q
  * coefficients, then the matrix needs to be an e-by-b matrix.
  * Furthermore, you only obtain a well-defined
  * homomorphism if this matrix extends to a cycle map, which this class
  * assumes but which the user can confirm with isCycleMap(). Moreover,
  * \a q should divide \a p: this allows for \a q > 0 and \a p = 0,
- * which means the domain has Z coefficients and the range has mod \a q
+ * which means the domain has Z coefficients and the codomain has mod \a q
  * coefficients.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
@@ -729,7 +731,7 @@ void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
  * flexible set of tools. Also add an isInImage() in various coordinates.
  *
  * \todo \optlong writeTextShort() have completely different set of
- * descriptors if an endomorphism domain = range (not so important at the
+ * descriptors if an endomorphism domain = codomain (not so important at the
  * moment though).  New descriptors would include things like automorphism,
  * projection, differential, finite order, etc.
  *
@@ -746,16 +748,16 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
     private:
         /** internal rep of domain of the homomorphism */
         MarkedAbelianGroup domain_;
-        /** internal rep of range of the homomorphism */
-        MarkedAbelianGroup range_;
-        /** matrix describing map from domain to range, in the coordinates
-            of the chain complexes used to construct domain and range, see
+        /** internal rep of codomain of the homomorphism */
+        MarkedAbelianGroup codomain_;
+        /** matrix describing map from domain to codomain, in the coordinates
+            of the chain complexes used to construct domain and codomain, see
             above description */
         MatrixInt matrix;
 
         /** short description of matrix in SNF coordinates -- this means we've
             conjugated matrix by the relevant change-of-basis maps in both the
-            domain and range so that we are using the coordinates of Smith
+            domain and codomain so that we are using the coordinates of Smith
             Normal form.  We also truncate off the trivial Z/Z factors so that
             reducedMatrix will not have the same dimensions as matrix. This
             means the torsion factors appear first, followed by the free
@@ -791,12 +793,12 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * The matrix must be given in the chain-complex coordinates.
          * Specifically, if the domain was defined via the chain complex
-         * <tt>Z^a --N1--> Z^b --M1--> Z^c</tt> and the range was
+         * <tt>Z^a --N1--> Z^b --M1--> Z^c</tt> and the codomain was
          * defined via <tt>Z^d --N2--> Z^e --M2--> Z^f</tt>, then \a mat is
          * an e-by-b matrix that describes a homomorphism from Z^b to Z^e.
          *
          * In order for this to make sense as a homomorphism of the groups
-         * represented by the domain and range respectively, one requires
+         * represented by the domain and codomain respectively, one requires
          * img(mat*N1) to be a subset of img(N2).  Similarly, ker(M1) must
          * be sent into ker(M2).  These facts are not checked, but are
          * assumed as preconditions of this constructor.
@@ -806,11 +808,11 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * into ker(M2), as explained in the detailed notes above.
          *
          * @param dom the domain group.
-         * @param ran the range group.
+         * @param codom the codomain group.
          * @param mat the matrix that describes the homomorphism from 
          * \a dom to \a ran.
          */
-        HomMarkedAbelianGroup(MarkedAbelianGroup dom, MarkedAbelianGroup ran,
+        HomMarkedAbelianGroup(MarkedAbelianGroup dom, MarkedAbelianGroup codom,
             MatrixInt mat);
 
         /**
@@ -913,7 +915,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         /**
          * Is this the identity automorphism?
          *
-         * @return true if and only if the domain and range are defined via
+         * @return true if and only if the domain and codomain are defined via
          * the same chain complexes and the induced map on homology is the
          * identity.
          */
@@ -949,12 +951,16 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * - if it is not epic, describes the co-kernel;
          * - if it is neither monic nor epic, describes the image.
          *
+         * \ifacespython Not present; use str() instead.
+         *
          * @param out the stream to write to.
          */
         void writeTextShort(std::ostream& out) const;
 
         /**
          * A more detailed text representation of the homomorphism.
+         *
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the stream to write to.
          */
@@ -967,11 +973,11 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          */
         const MarkedAbelianGroup& domain() const;
         /**
-         * Returns the range of this homomorphism.
+         * Returns the codomain of this homomorphism.
          *
-         * @return the range that was used to define the homomorphism.
+         * @return the codomain that was used to define the homomorphism.
          */
-        const MarkedAbelianGroup& range() const;
+        const MarkedAbelianGroup& codomain() const;
         /**
          * Returns the defining matrix for the homomorphism.
          *
@@ -1004,8 +1010,8 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * @param input an input vector in the domain chain complex's
          * coordinates, of length domain().M().columns().
-         * @return the image of this vector in the range chain complex's
-         * coordinates, of length range().M().columns().
+         * @return the image of this vector in the codomain chain complex's
+         * coordinates, of length codomain().M().columns().
          */
         std::vector<Integer> evalCC(const std::vector<Integer> &input) const;
 
@@ -1021,8 +1027,8 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * @param input an input vector in the domain SNF coordinates,
          * of length domain().minNumberOfGenerators().
-         * @return the image of this vector in the range chain complex's
-         * coordinates, of length range().minNumberOfGenerators().
+         * @return the image of this vector in the codomain chain complex's
+         * coordinates, of length codomain().minNumberOfGenerators().
          */
         std::vector<Integer> evalSNF(const std::vector<Integer> &input) const;
 
@@ -1047,7 +1053,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * Returns the composition of two homomorphisms.
          *
          * \pre the homomorphisms must be composable, meaning that the
-         * range of X must have the same presentation matrices as the
+         * codomain of X must have the same presentation matrices as the
          * domain of this homomorphism.
          *
          * @param X the homomorphism to compose this with.
@@ -1059,7 +1065,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * Returns the composition of two homomorphisms.
          *
          * \pre the homomorphisms must be composable, meaning that the
-         * range of X must have the same presentation matrices as the
+         * codomain of X must have the same presentation matrices as the
          * domain of this homomorphism.
          *
          * @param X the homomorphism to compose this with.
@@ -1074,19 +1080,23 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         HomMarkedAbelianGroup torsionSubgroup() const;
 
         /**
-         * Writes a human-readable version of the reduced matrix to the
-         * given output stream.  This is a description of the homomorphism
-         * in some specific coordinates at present only meant to be
-         * internal to HomMarkedAbelianGroup.  At present, these coordinates
-         * have the torsion factors of the group appearing first, followed by
-         * the free factors.
+         * Deprecated routine that writes a human-readable version of the
+         * reduced matrix to the given output stream.  This is a description
+         * of the homomorphism in some specific coordinates at present only
+         * meant to be internal to HomMarkedAbelianGroup.  At present, these
+         * coordinates have the torsion factors of the group appearing first,
+         * followed by the free factors.
+         *
+         * \deprecated All of the information that this routine outputs
+         * is now written by writeTextLong() and returned in string form
+         * by detail().  Use those routines instead.
          *
          * \ifacespython The \a out argument is missing; instead this is
          * assumed to be standard output.
          *
          * @param out the output stream.
          */
-        void writeReducedMatrix(std::ostream& out) const;
+        [[deprecated]] void writeReducedMatrix(std::ostream& out) const;
 
     private:
         /**
@@ -1213,15 +1223,15 @@ inline void swap(MarkedAbelianGroup& a, MarkedAbelianGroup& b) noexcept {
 
 inline HomMarkedAbelianGroup::HomMarkedAbelianGroup(
         MarkedAbelianGroup dom, MarkedAbelianGroup ran, MatrixInt mat) :
-        domain_(std::move(dom)), range_(std::move(ran)),
+        domain_(std::move(dom)), codomain_(std::move(ran)),
         matrix(std::move(mat)) {
 }
 
 inline const MarkedAbelianGroup& HomMarkedAbelianGroup::domain() const {
     return domain_;
 }
-inline const MarkedAbelianGroup& HomMarkedAbelianGroup::range() const {
-    return range_;
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::codomain() const {
+    return codomain_;
 }
 inline const MatrixInt& HomMarkedAbelianGroup::definingMatrix() const {
     return matrix;

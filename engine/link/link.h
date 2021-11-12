@@ -556,7 +556,7 @@ class Crossing : public MarkedElement, public Output<Crossing> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -565,7 +565,7 @@ class Crossing : public MarkedElement, public Output<Crossing> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -2522,7 +2522,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * See also brief(), which returns the brief format as a string.
          *
          * \ifacespython Not present; instead use the variant
-         * brief() that returns a string.
+         * brief() that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -2617,7 +2617,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * as a machine-readable sequence of integers.
          *
          * \ifacespython Not present; instead use the variants
-         * gauss() or gaussData().
+         * gauss() or gaussData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -2724,7 +2724,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * as a machine-readable sequence of tokens.
          *
          * \ifacespython Not present; instead use the variants
-         * orientedGauss() or orientedGaussData().
+         * orientedGauss() or orientedGaussData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -2826,7 +2826,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * as a machine-readable sequence of integers.
          *
          * \ifacespython Not present; instead use the variants
-         * jenkins() or jenkinsData().
+         * jenkins() or jenkinsData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -2954,7 +2954,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * variant only as a machine-readable sequence of integers.
          *
          * \ifacespython Not present; instead use the variants
-         * dt(bool) or dtData().
+         * dt(bool) or dtData() that take no arguments.
          *
          * @param out the output stream to which to write.
          * @param alpha \c true to use alphabetical notation, or \c false
@@ -3077,7 +3077,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * as a machine-readable sequence of 4-tuples of integers.
          *
          * \ifacespython Not present; instead use the variants
-         * pd() or pdData().
+         * pd() or pdData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -3117,6 +3117,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * \ifacespython The \a out argument is not present; instead
          * standard output is assumed.
+         *
+         * \ifacespython Not present; instead use the variant pace() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          *

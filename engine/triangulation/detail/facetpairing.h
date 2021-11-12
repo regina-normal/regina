@@ -351,7 +351,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * The string returned will contain no newlines.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -406,8 +406,8 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * directed graphs.  The final DOT file should be used with
          * either the \a neato or \a fdp programs shipped with Graphviz.
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
+         * \ifacespython Not present; instead use the variant dot() that
+         * returns a string.
          *
          * @param out the output stream to which to write.
          * @param prefix a string to prepend to the name of each graph
@@ -483,8 +483,8 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * directed graphs.  The final DOT file should be used with
          * either the \a neato or \a fdp programs shipped with Graphviz.
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
+         * \ifacespython Not present; instead use the variant dotHeader() that
+         * returns a string.
          *
          * @param out the output stream to which to write.
          * @param graphName the name of the graph in the DOT file.

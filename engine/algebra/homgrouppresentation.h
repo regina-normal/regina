@@ -77,15 +77,15 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
     private:
         GroupPresentation domain_;
             /**< The domain of the homomorphism. */
-        GroupPresentation range_;
-            /**< The range of the homomorphism. */
+        GroupPresentation codomain_;
+            /**< The codomain of the homomorphism. */
         std::vector<GroupExpression> map_;
-            /**< A map whose ith element is the image in the range
+            /**< A map whose ith element is the image in the codomain
                  of the ith generator from the domain. */
         std::optional<std::vector<GroupExpression>> inv_;
             /**< No value unless this is a declared isomorphism, in which case
                  this will be a map whose ith element is the image in the
-                 domain of the ith generator from the range. */
+                 domain of the ith generator from the codomain. */
 
     public:
         /**
@@ -94,40 +94,40 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \ifacespython Not present.
          *
          * @param domain the domain of the homomorphism.
-         * @param range the range of the homomorphism.
+         * @param codomain the codomain of the homomorphism.
          * @param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
-         * element <tt>map[i]</tt> of the range.
+         * element <tt>map[i]</tt> of the codomain.
          *
          * \ifacespython Not present.
          */
         HomGroupPresentation(GroupPresentation domain,
-                GroupPresentation range,
+                GroupPresentation codomain,
                 std::vector<GroupExpression> map);
 
         /**
          * Creates a declared isomorphism from the given data.
-         * Here you must provide both a map from the domain to range,
-         * and the inverse map from the range to domain.
+         * Here you must provide both a map from the domain to codomain,
+         * and the inverse map from the codomain to domain.
          *
          * \pre The argument \a inv is indeed the inverse of \a map.
          *
          * \ifacespython Not present.
          *
          * @param domain the domain of the homomorphism.
-         * @param range the range of the homomorphism.
+         * @param codomain the codomain of the homomorphism.
          * @param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
-         * element <tt>map[i]</tt> of the range.
+         * element <tt>map[i]</tt> of the codomain.
          * @param inv a vector of length \a k where \a k is the number
-         * of generators of the range, and where the inverse homomorphism
-         * sends the <i>i</i>th generator of the range to the
+         * of generators of the codomain, and where the inverse homomorphism
+         * sends the <i>i</i>th generator of the codomain to the
          * element <tt>inv[i]</tt> of the domain.
          */
         HomGroupPresentation(GroupPresentation domain,
-                GroupPresentation range,
+                GroupPresentation codomain,
                 std::vector<GroupExpression> map,
                 std::vector<GroupExpression> inv);
 
@@ -137,7 +137,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * This will be a declared isomorphism (see the
          * HomGroupPresentation class notes for details).
          *
-         * @param groupForIdentity both the range and domain of the
+         * @param groupForIdentity both the domain and codomain of the
          * new identity homomorphism.
          */
         HomGroupPresentation(const GroupPresentation& groupForIdentity);
@@ -189,11 +189,11 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          */
         const GroupPresentation& domain() const;
         /**
-         * The range of the map.
+         * The codomain of the map.
          *
-         * @return a reference to the range.
+         * @return a reference to the codomain.
          */
-        const GroupPresentation& range() const;
+        const GroupPresentation& codomain() const;
 
         /**
          * Returns whether or not this is a declared isomorphism.
@@ -211,7 +211,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Evaluate the homomorphism at an element of the domain.
          *
          * @param arg an element of the domain.
-         * @return the image of this element in the range.
+         * @return the image of this element in the codomain.
          */
         GroupExpression evaluate(GroupExpression arg) const;
 
@@ -219,29 +219,29 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Evaluate the homomorphism at a generator of the domain.
          *
          * @param i the index of a generator in the domain.
-         * @return the image of the <i>i</i>th generator in the range.
+         * @return the image of the <i>i</i>th generator in the codomain.
          */
         GroupExpression evaluate(unsigned long i) const;
 
         /**
-         * Evaluate the isomorphisms's inverse at an element of the range.
+         * Evaluate the isomorphisms's inverse at an element of the codomain.
          *
          * \pre This homomorphism is in fact a declared isomorphism.
          * See the HomGroupPresentation class notes for details
          * on what this means.
          *
-         * @param arg an element of the range.
+         * @param arg an element of the codomain.
          * @return the image of this element in the domain.
          */
         GroupExpression invEvaluate(GroupExpression arg) const;
         /**
-         * Evaluate the isomorphism at a generator of the range.
+         * Evaluate the isomorphism at a generator of the codomain.
          *
          * \pre This homomorphism is in fact a declared isomorphism.
          * See the HomGroupPresentation class notes for details
          * on what this means.
          *
-         * @param i the index of a generator in the range.
+         * @param i the index of a generator in the codomain.
          * @return the image of this generator in the domain.
          */
         GroupExpression invEvaluate(unsigned long i) const;
@@ -250,7 +250,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Simultaneously simplifies:
          *
          * - the presentation of the domain;
-         * - the presentation of the range;
+         * - the presentation of the codomain;
          * - the description of the map.
          *
          * Uses the underlying GroupPresentation::intelligentSimplify().
@@ -262,7 +262,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         bool intelligentSimplify();
 
         /**
-         * Simplifies the domain and range using only Nielsen moves, keeping
+         * Simplifies the domain and codomain using only Nielsen moves, keeping
          * track of the resulting map in the progress.
          *
          * @return \c true if and only if either presentation and/or the
@@ -271,7 +271,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         bool intelligentNielsen();
 
         /**
-         * Simplifies the domain and range using only small cancellation
+         * Simplifies the domain and codomain using only small cancellation
          * theory.
          *
          * @return \c true if and only if either presentation and/or the
@@ -290,7 +290,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * If both of the given homomorphisms are declared isomorphisms,
          * then the return value will be a declared isomoprhism also.
          *
-         * \pre the range of \a rhs must be the same as the domain of this
+         * \pre the codomain of \a rhs must be the same as the domain of this
          * homomorphism.
          *
          * @param rhs the homomorphism to compose this with.
@@ -309,7 +309,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * If both of the given homomorphisms are declared isomorphisms,
          * then the return value will be a declared isomoprhism also.
          *
-         * \pre the range of \a rhs must be the same as the domain of this
+         * \pre the codomain of \a rhs must be the same as the domain of this
          * homomorphism.
          *
          * @param rhs the homomorphism to compose this with.
@@ -324,7 +324,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \deprecated Instead of <tt>a.composeWith(b)</tt>, use the
          * multiplication operator <tt>a * b</tt>.
          *
-         * \pre the range of \a rhs must be the same as the domain of this
+         * \pre the codomain of \a rhs must be the same as the domain of this
          * homomorphism.
          *
          * @param rhs the homomorphism to compose this with.
@@ -355,7 +355,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Verifies the map is a valid homomorphism.  Specifically, this
          * routine runs through all the relators in the domain, evaluates
          * the homomorphism on the relators and checks that they simplify
-         * to 1 in the range.
+         * to 1 in the codomain.
          *
          * This routine does not guarantee a conclusive result (since
          * the word problem is, in general, undecidable).  If this
@@ -378,7 +378,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * This routine works by attempting to verify that
          * <tt>f^-1(f(x))x^-1</tt> simplifes to 1 for all generators \a x
-         * in the domain, and likewise for the range.
+         * in the domain, and likewise for the codomain.
          *
          * This routine does not guarantee a conclusive result.  If this
          * routine returns \c true then this proves that this is indeed
@@ -405,7 +405,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
 
         /**
          * Computes the induced map on the abelianizations of the domain
-         * and range.
+         * and codomain.
          *
          * @return the induced map on the abelianizations.
          */
@@ -415,7 +415,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -424,7 +424,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -446,27 +446,27 @@ void swap(HomGroupPresentation& lhs, HomGroupPresentation& rhs) noexcept;
 
 inline HomGroupPresentation::HomGroupPresentation(
             GroupPresentation domain,
-            GroupPresentation range,
+            GroupPresentation codomain,
             std::vector<GroupExpression> map ) :
         domain_(std::move(domain)),
-        range_(std::move(range)),
+        codomain_(std::move(codomain)),
         map_(std::move(map)) {
 }
 
 inline HomGroupPresentation::HomGroupPresentation(
             GroupPresentation domain,
-            GroupPresentation range,
+            GroupPresentation codomain,
             std::vector<GroupExpression> map,
             std::vector<GroupExpression> inv ) :
         domain_(std::move(domain)),
-        range_(std::move(range)),
+        codomain_(std::move(codomain)),
         map_(std::move(map)),
         inv_(std::move(inv)) {
 }
 
 inline void HomGroupPresentation::swap(HomGroupPresentation& other) noexcept {
     domain_.swap(other.domain_);
-    range_.swap(other.range_);
+    codomain_.swap(other.codomain_);
     map_.swap(other.map_);
     inv_.swap(other.inv_);
 }
@@ -475,8 +475,8 @@ inline const GroupPresentation& HomGroupPresentation::domain() const {
     return domain_;
 }
 
-inline const GroupPresentation& HomGroupPresentation::range() const {
-    return range_;
+inline const GroupPresentation& HomGroupPresentation::codomain() const {
+    return codomain_;
 }
 
 inline bool HomGroupPresentation::knowsInverse() const {

@@ -572,7 +572,7 @@ public:
      * not yet asked HomologicalData to compute anything about this
      * triangulation, writeTextShort may be empty.
      *
-     * \ifacespython Not present.
+     * \ifacespython Not present; use str() instead.
      *
      * @param out the output stream to which to write.
      */

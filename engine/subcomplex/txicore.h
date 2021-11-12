@@ -256,16 +256,24 @@ class TxICore : public Output<TxICore> {
          *
          * @return the name of this triangulation in TeX format.
          */
-        std::string TeXName() const;
+        std::string texName() const;
+        /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation of <tt>T x I</tt> in TeX format.
+         *
+         * \deprecated This routine has been renamed to texName().
+         *
+         * @return the name of this triangulation in TeX format.
+         */
+        [[deprecated]] std::string TeXName() const;
 
         /**
          * Writes the name of this specific triangulation of
          * <tt>T x I</tt> to the given output stream.  The name will be
          * written as a human-readable string.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant name()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -276,9 +284,8 @@ class TxICore : public Output<TxICore> {
          * <tt>T x I</tt> in TeX format to the given output stream.
          * No leading or trailing dollar signs will be written.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant texName()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -289,7 +296,7 @@ class TxICore : public Output<TxICore> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -298,7 +305,7 @@ class TxICore : public Output<TxICore> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -643,6 +650,10 @@ inline const Matrix2& TxICore::bdryReln(unsigned whichBdry) const {
 
 inline const Matrix2& TxICore::parallelReln() const {
     return parallelReln_;
+}
+
+inline std::string TxICore::TeXName() const {
+    return texName();
 }
 
 inline void TxICore::writeTextShort(std::ostream& out) const {

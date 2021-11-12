@@ -642,7 +642,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Writes this hypersurface to the given output stream, using
          * standard tetrahedron-prism coordinates.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */

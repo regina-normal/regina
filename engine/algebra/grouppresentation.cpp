@@ -2080,7 +2080,7 @@ void GroupExpression::writeText(std::ostream& out, bool shortword,
     }
 }
 
-std::string GroupExpression::toTeX() const {
+std::string GroupExpression::tex() const {
     std::ostringstream out;
     writeTeX(out);
     return out.str();
@@ -2111,7 +2111,7 @@ void GroupExpression::writeTextShort(std::ostream& out) const {
 
 // presentation output routines below
 
-std::string GroupPresentation::toTeX() const {
+std::string GroupPresentation::tex() const {
     std::ostringstream out;
     writeTeX(out);
     return out.str();

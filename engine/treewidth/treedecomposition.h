@@ -474,7 +474,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1200,8 +1200,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * contained in each bag.  The resulting DOT file should be used
          * with the \a dot program shipped with Graphviz.
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
+         * \ifacespython Not present; instead use the variant dot() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          *
@@ -1234,8 +1234,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * the PACE text format stores the connections between bags as an
          * undirected, unrooted tree.
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
+         * \ifacespython Not present; instead use the variant pace() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          *
@@ -1265,7 +1265,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1275,7 +1275,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */

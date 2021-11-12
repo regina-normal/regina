@@ -162,17 +162,15 @@
 
 /*! \page i18n Encodings for international strings
  *
- *  As of version 4.5, Regina (finally) pays attention to character encodings.
- *
- *  The calculation engine uses UTF-8 for all strings (except possibly
+ *  Regina's calculation engine uses UTF-8 for all strings (except possibly
  *  for filenames; see below).  This means that programmers who pass
  *  strings \e into routines must ensure that they use UTF-8, and
  *  programmers who receive strings \e from routines may assume that
  *  they are returned in UTF-8.  Note that plain ASCII is a subset of
  *  UTF-8, so plain ASCII text is always fine to use.
  *
- *  Regina's XML data files are also stored using UTF-8.  Older versions of
- *  Regina used LATIN1 (the default at the time for the Qt libraries)
+ *  Regina's XML data files are also stored using UTF-8.  Very old versions
+ *  of Regina used LATIN1 (the default at the time for the Qt libraries)
  *  and did not specify an encoding in the XML header; however, Regina's
  *  file I/O routines are aware of this, and will convert older data into
  *  UTF-8 as it is loaded into memory (the files themselves are
@@ -200,9 +198,15 @@
  *
  *  Regina's <i>standard dimensions</i> are those for which it offers
  *  rich support (as opposed to basic support).
- *  For the current release, the <b>standard dimensions are 2, 3 and 4</b>.
+ *  <b>The standard dimensions are 2, 3 and 4.</b>
  *
- *  This list is expected to grow in future releases.
+ *  The interface in higher dimensions is much more basic.  Partly this
+ *  is due to inefficiencies that grow with dimension (e.g., the exponential
+ *  growth in the size of the face lattice).  Partly this is due to the
+ *  intrinsic difficulty of solving even simple problems in higher dimensions
+ *  (for instance, in dimension&nbsp;5 it is not known how to reliably test
+ *  whether a given triangulation represents a closed 5-manifold, and
+ *  in dimensions &ge;&nbsp;6 this is provably undecidable).
  */
 
 // Put ourselves in the regina namespace so that automatic links work.
@@ -288,13 +292,13 @@ namespace regina {
  *    However, not all classes and functions are wrapped.
  *    If a class or function is not available in Python then you will
  *    see a bold <b>Python:</b> note indicating this.  See for instance
- *    the class Bitmask, or the function base64Encode().
+ *    the class MarkedVector, or the function base64Encode().
  *
  *  - Most of Regina's classes and functions have the same interface
  *    in both C++ and Python, but occasionally there are differences.
  *    Again, you will see a bold <b>Python:</b> note indicating this.
- *    See for instance the method Triangulation<3>::tetrahedra(),
- *    or the global function writeResUsage().
+ *    See for instance the method Link::rewrite(), or the global function
+ *    writeResUsage().
  *
  *  <h3>Testing equality</h3>
  *

@@ -114,7 +114,16 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          *
          * @return the name of this triangulation in TeX format.
          */
-        std::string TeXName() const;
+        std::string texName() const;
+        /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation in TeX format.
+         *
+         * \deprecated This routine has been renamed to texName().
+         *
+         * @return the name of this triangulation in TeX format.
+         */
+        [[deprecated]] std::string TeXName() const;
         /**
          * Returns the 3-manifold represented by this triangulation, if
          * such a recognition routine has been implemented.  If the 3-manifold
@@ -191,8 +200,8 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Writes the name of this triangulation as a human-readable
          * string to the given output stream.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * \ifacespython Not present; instead use the variant name() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -207,8 +216,8 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * \ifacespython Not present; instead use the variant texName() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -223,7 +232,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * StandardTriangulation class offers a reasonable default
          * implementation based on writeName().
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -237,7 +246,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * StandardTriangulation class offers a reasonable default
          * implementation based on writeName().
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -326,6 +335,10 @@ class StandardTriangulation : public Output<StandardTriangulation> {
 };
 
 // Inline functions for StandardTriangulation
+
+inline std::string StandardTriangulation::TeXName() const {
+    return texName();
+}
 
 inline std::unique_ptr<Manifold> StandardTriangulation::manifold() const {
     return nullptr;

@@ -1861,7 +1861,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This must be reimplemented by subclasses.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1873,7 +1873,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This may be reimplemented by subclasses, but the parent
          * Packet class offers a reasonable default implementation.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */

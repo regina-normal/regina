@@ -665,7 +665,7 @@ class Matrix : public Output<Matrix<T>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -676,7 +676,7 @@ class Matrix : public Output<Matrix<T>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1543,9 +1543,25 @@ inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
  * Regina's Integer class, calculations will be exact regardless of
  * how large the integers become.
  *
+ * \ifacespython This instance of the Matrix template class is made
+ * available to Python.
+ *
  * \ingroup maths
  */
 using MatrixInt = Matrix<Integer>;
+
+/**
+ * A matrix of booleans.
+ *
+ * This is used in a handful of places in Regina to represent incidence or
+ * adjacency matrices.
+ *
+ * \ifacespython This instance of the Matrix template class is made
+ * available to Python.
+ *
+ * \ingroup maths
+ */
+using MatrixBool = Matrix<bool>;
 
 } // namespace regina
 

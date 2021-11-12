@@ -140,13 +140,7 @@ void addTreeDecomposition(pybind11::module_& m) {
             // templated and non-templated version.
             t.reroot(b);
         })
-        .def("writeDot", [](const TreeDecomposition& t) {
-            t.writeDot(std::cout);
-        })
         .def("dot", &TreeDecomposition::dot)
-        .def("writePACE", [](const TreeDecomposition& t) {
-            t.writePACE(std::cout);
-        })
         .def("pace", &TreeDecomposition::pace)
         .def_static("fromPACE",
             overload_cast<const std::string&>(&TreeDecomposition::fromPACE))

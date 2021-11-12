@@ -876,7 +876,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * will only be written if the surface is stored using an encoding
          * that supports almost normal surfaces.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */

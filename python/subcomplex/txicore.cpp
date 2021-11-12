@@ -49,13 +49,8 @@ void addTxICore(pybind11::module_& m) {
         .def("parallelReln", &TxICore::parallelReln,
             pybind11::return_value_policy::reference_internal)
         .def("name", &TxICore::name)
-        .def("TeXName", &TxICore::TeXName)
-        .def("writeName", [](const TxICore& c) {
-            c.writeName(std::cout);
-        })
-        .def("writeTeXName", [](const TxICore& c) {
-            c.writeTeXName(std::cout);
-        })
+        .def("texName", &TxICore::texName)
+        .def("TeXName", &TxICore::texName) // deprecated
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

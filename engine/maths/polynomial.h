@@ -544,7 +544,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * This will make the output nicer, but will require more complex
          * fonts to be available on the user's machine.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 \c true if unicode superscript characters may be used.
