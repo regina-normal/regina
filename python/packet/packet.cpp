@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
+#include "../pybind11/iostream.h"
 #include "packet/packet.h"
 #include "../helpers.h"
 
@@ -158,9 +159,12 @@ void addPacket(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("compressed") = true,
             pybind11::arg("format") = regina::REGINA_CURRENT_FILE_FORMAT)
-        .def("writeXMLFile", [](const Packet& p, regina::FileFormat format) {
+        .def("writeXMLFile", [](const Packet& p, pybind11::object file,
+                regina::FileFormat format) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
             p.writeXMLFile(std::cout, format);
-        }, pybind11::arg("format") = regina::REGINA_CURRENT_FILE_FORMAT)
+        }, pybind11::arg(),
+            pybind11::arg("format") = regina::REGINA_CURRENT_FILE_FORMAT)
         .def("internalID", &Packet::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {
             return (s == p);

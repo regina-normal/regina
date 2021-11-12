@@ -1414,8 +1414,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Typically this will be called from the root of the packet tree,
          * which will write the entire packet tree to the output stream.
          *
-         * \ifacespython The argument \a out is not present; instead the
-         * XML data is written to standard output.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML data file should
          * be written.
