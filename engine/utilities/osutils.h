@@ -41,6 +41,7 @@
 #endif
 
 #include <iostream>
+#include <tuple>
 #include "regina-core.h"
 
 namespace regina {
