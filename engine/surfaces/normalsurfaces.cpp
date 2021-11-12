@@ -120,7 +120,11 @@ void NormalSurfaces::writeTextLong(std::ostream& out) const {
 
     out << "Coordinates: " << NormalInfo::name(coords_) << '\n';
 
-    writeAllSurfaces(out);
+    out << "Number of surfaces is " << size() << '\n';
+    for (const NormalSurface& s : surfaces_) {
+        s.writeTextShort(out);
+        out << '\n';
+    }
 }
 
 std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::quadToStandard()

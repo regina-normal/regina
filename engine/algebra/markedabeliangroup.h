@@ -1091,8 +1091,8 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * is now written by writeTextLong() and returned in string form
          * by detail().  Use those routines instead.
          *
-         * \ifacespython The \a out argument is missing; instead this is
-         * assumed to be standard output.
+         * \ifacespython Not present; instead use detail(), which returns a
+         * string including all this information (plus a little more).
          *
          * @param out the output stream.
          */

@@ -90,9 +90,6 @@ void addNormalSurfaces(pybind11::module_& m) {
         })
         .def("surface", &NormalSurfaces::surface,
             pybind11::return_value_policy::reference_internal)
-        .def("writeAllSurfaces", [](const NormalSurfaces& s) {
-            s.writeAllSurfaces(std::cout);
-        })
         .def_static("enumerate", [](Triangulation<3>& owner,
                 regina::NormalCoords coords, regina::NormalList which,
                 regina::NormalAlg algHints) {

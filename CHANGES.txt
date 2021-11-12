@@ -836,6 +836,8 @@ Version 7.0  [ TODO ]
             - When cloning a packet tree, a cloned normal surface list
               will now refer back to the original triangulation, not a
               clone of the original triangulation.
+            - Deprecated writeAllSurfaces(); just use writeTextLong() or
+              detail() instead.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
             - Removed completely.  Normal surfaces/hypersurfaces now hold
               their coordinates using a plain Vector<LargeInteger>.

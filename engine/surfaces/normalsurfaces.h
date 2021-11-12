@@ -635,16 +635,20 @@ class NormalSurfaces :
          */
         auto end() const;
         /**
-         * Writes the number of surfaces in this list followed by the
-         * details of each surface to the given output stream.  Output
-         * will be over many lines.
+         * Deprecated routine that writes the number of surfaces in this list
+         * followed by the details of each surface to the given output stream.
+         * Output will be over many lines.
          *
-         * \ifacespython Parameter \a out is not present and is assumed
-         * to be standard output.
+         * \deprecated All of the information that this routine outputs
+         * is also written by writeTextLong() and returned in string form
+         * by detail().  Use those routines instead.
+         *
+         * \ifacespython Not present; instead use detail(), which returns a
+         * string including all this information (plus a little more).
          *
          * @param out the output stream to which to write.
          */
-        void writeAllSurfaces(std::ostream& out) const;
+        [[deprecated]] void writeAllSurfaces(std::ostream& out) const;
 
         /**
          * Writes a short text representation of this object to the
