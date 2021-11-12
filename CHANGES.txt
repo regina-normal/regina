@@ -1538,6 +1538,9 @@ Version 7.0  [ TODO ]
               also triangulations of any dimension.  The old readIsoSigList()
               has been kept as a deprecated alias.
             - Now returns a shared_ptr instead of a raw pointer.
+        Function resUsage():
+            - New function that fetches the same as writeResUsage(), but
+              returns it directly instead of writing to an output stream.
         Function smithNormalForm(), metricalSmithNormalForm():
             - The change of basis matrices no longer need to have the correct
               size (and may even be uninitialised) before they are passed in.

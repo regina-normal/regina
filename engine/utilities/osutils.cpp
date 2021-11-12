@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "utilities/exception.h"
 #include "utilities/osutils.h"
 
 #include <cstdio>
@@ -38,14 +39,12 @@
 
 namespace regina {
 
-void writeResUsage(std::ostream& out) {
+std::tuple<unsigned long, unsigned long, unsigned long> resUsage() {
     FILE* stat = fopen("/proc/self/stat", "r");
-    if (! stat) {
-        out << "no /proc/self/stat";
-        return;
-    }
+    if (! stat)
+        throw FileError("no /proc/self/stat");
 
-    unsigned long utime, stime, vsize;
+    std::tuple<unsigned long, unsigned long, unsigned long> ans;
 
     int dtmp;
     char stmp[256];
@@ -56,13 +55,24 @@ void writeResUsage(std::ostream& out) {
             "%lu%lu%ld%ld%ld%ld%ld%ld%lu%lu",
             &dtmp, stmp, stmp, &dtmp, &dtmp, &dtmp, &dtmp, &dtmp,
             &lutmp, &lutmp, &lutmp, &lutmp, &lutmp,
-            &utime, &stime, &ldtmp, &ldtmp, &ldtmp, &ldtmp, &ldtmp, &ldtmp,
-            &lutmp, &vsize) == 23)
-        out << "utime=" << utime << ", stime=" << stime << ", vsize=" << vsize;
-    else
-        out << "could not parse /proc/self/stat";
+            &std::get<0>(ans), &std::get<1>(ans),
+            &ldtmp, &ldtmp, &ldtmp, &ldtmp, &ldtmp, &ldtmp, &lutmp,
+            &std::get<2>(ans)) == 23) {
+        fclose(stat);
+        return ans;
+    } else {
+        fclose(stat);
+        throw FileError("could not parse /proc/self/stat");
+    }
+}
 
-    fclose(stat);
+void writeResUsage(std::ostream& out) {
+    try {
+        auto [utime, stime, vsize] = resUsage();
+        out << "utime=" << utime << ", stime=" << stime << ", vsize=" << vsize;
+    } catch (const FileError& err) {
+        out << err.what();
+    }
 }
 
 } // namespace regina
