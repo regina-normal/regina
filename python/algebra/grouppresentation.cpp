@@ -122,9 +122,10 @@ void addGroupPresentation(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg("cyclic") = false)
         .def("tex", &GroupExpression::tex)
         .def("toTeX", &GroupExpression::tex) // deprecated
-        .def("writeText", [](const GroupExpression& e, bool sw, bool utf8) {
-            e.writeText(std::cout, sw, utf8);
-        }, pybind11::arg("shortword") = false, pybind11::arg("utf8") = false)
+        .def("str",
+            overload_cast<bool>(&GroupExpression::str, pybind11::const_))
+        .def("utf8",
+            overload_cast<bool>(&GroupExpression::utf8, pybind11::const_))
     ;
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);

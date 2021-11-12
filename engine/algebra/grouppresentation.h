@@ -181,7 +181,7 @@ std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
  *
  * \ingroup algebra
  */
-class GroupExpression : public ShortOutput<GroupExpression> {
+class GroupExpression : public ShortOutput<GroupExpression, true> {
     private:
         std::list<GroupExpressionTerm> terms_;
             /** The terms that make up this expression. */
@@ -698,46 +698,110 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          */
         void writeTeX(std::ostream& out) const;
 
+        using ShortOutput<GroupExpression, true>::str;
+        using ShortOutput<GroupExpression, true>::utf8;
+
         /**
-         * Writes a text representation of this expression to the given
-         * output stream, using either numbered generators or
-         * alphabetic generators.
+         * Returns a short text representation of this group expression, with
+         * a choice of either numbered generators or alphabetic generators.
          *
-         * The text representation will be of the form
-         * <tt>g2^4 g13^-5 g4</tt>. If the \a shortword flag is \c true, it
-         * will assume your word is in an alphabet of no more than 26 letters,
-         * and will write the word using lower-case ASCII, i.e.,
-         * <tt>c^4 n^-5 e</tt>.  If the \a utf8 flag is \c true, all exponents
-         * will be written using superscript characters encoded in UTF-8.
+         * If \a alphaGen is \c false, the text representation will be of
+         * the form <tt>g2^4 g13^-5 g4</tt>.  If \a alphaGen is \c true,
+         * this routine will assume your word is in an alphabet of no more
+         * than 26 letters, and will format the word using lower-case ASCII,
+         * i.e., <tt>c^4 n^-5 e</tt>.
          *
-         * \pre If \a shortword is \c true, the number of generators in
+         * Note that there is also a zero-argument version of str(), inherited
+         * through the ShortOutput base class.  This zero-argument str()
+         * gives the same output as <tt>str(false)</tt>.
+         *
+         * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * @param alphaGen indicates whether to use numbered or
+         * alphabetic generators, as described above.
+         * @return a short text representation of this group expression.
+         */
+        std::string str(bool alphaGen) const;
+
+        /**
+         * Returns a short text representation of this group expression using
+         * unicode characters, with a choice of either numbered generators or
+         * alphabetic generators.
+         *
+         * This outputs a similar text representation to str(bool), except that
+         * all exponents will be written using superscript characters encoded
+         * in UTF-8.  See str(bool) for further details.
+         *
+         * Note that there is also a zero-argument version of utf8(), inherited
+         * through the ShortOutput base class.  This zero-argument utf8()
+         * gives the same output as <tt>utf8(false)</tt>.
+         *
+         * \pre If \a alphaGen is \c true, the number of generators in
+         * the corresponding group must be 26 or fewer.
+         *
+         * @param alphaGen indicates whether to use numbered or
+         * alphabetic generators, as described above.
+         * @return a short text representation of this group expression.
+         */
+        std::string utf8(bool alphaGen) const;
+
+        /**
+         * Deprecated routine that writes a text representation of this
+         * expression to the given output stream, using either numbered
+         * generators or alphabetic generators.
+         *
+         * Note that, prior to Regina 7.0, this routine output numbered
+         * generators in the form <tt>g_3</tt>, despite the documentation
+         * claiming that the format would be <tt>g3</tt>.  In Regina 7.0
+         * (which also deprecated this function), the behaviour was
+         * changed to match the documentation (and not vice versa).
+         *
+         * \deprecated This writes exactly the same text as writeTextShort(),
+         * though the optional arguments are given in a different order.
+         * Use writeTextShort() instead.
+         *
+         * \pre If \a alphaGen is \c true, the number of generators in
+         * the corresponding group must be 26 or fewer.
+         *
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
-         * @param shortword indicates whether to use numbered or
+         * @param alphaGen indicates whether to use numbered or
          * alphabetic generators, as described above.
          * @param utf8 \c true if exponents should be written using
          * unicode superscript characters, or \c false if they should be
          * written using a caret (^) symbol.
          */
-        void writeText(std::ostream& out, bool shortword = false,
+        [[deprecated]] void writeText(std::ostream& out, bool alphaGen = false,
             bool utf8 = false) const;
 
         /**
          * Writes a short text representation of this object to the
-         * given output stream.
+         * given output stream, using either numbered generators or
+         * alphabetic generators.
          *
          * The text representation will be of the form
-         * <tt>g2^4 g13^-5 g4</tt>.
+         * <tt>g2^4 g13^-5 g4</tt>. If the \a alphaGen flag is \c true, it
+         * will assume your word is in an alphabet of no more than 26 letters,
+         * and will write the word using lower-case ASCII, i.e.,
+         * <tt>c^4 n^-5 e</tt>.  If the \a utf8 flag is \c true, all exponents
+         * will be written using superscript characters encoded in UTF-8.
          *
-         * \ifacespython Not present; use str() instead.
+         * \pre If \a alphaGen is \c true, the number of generators in
+         * the corresponding group must be 26 or fewer.
+         *
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
+         * @param utf8 \c true if exponents should be written using
+         * unicode superscript characters, or \c false if they should be
+         * written using a caret (^) symbol.
+         * @param alphaGen indicates whether to use numbered or
+         * alphabetic generators, as described above.
          */
-        void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out, bool utf8 = false,
+            bool alphaGen = false) const;
 };
 
 /**
@@ -1930,6 +1994,24 @@ inline void GroupExpression::erase() {
 
 inline std::string GroupExpression::toTeX() const {
     return tex();
+}
+
+inline std::string GroupExpression::str(bool alphaGen) const {
+    std::ostringstream out;
+    writeTextShort(out, false, alphaGen);
+    return out.str();
+}
+
+inline std::string GroupExpression::utf8(bool alphaGen) const {
+    std::ostringstream out;
+    writeTextShort(out, true, alphaGen);
+    return out.str();
+}
+
+inline void GroupExpression::writeText(std::ostream& out, bool alphaGen,
+        bool utf8) const {
+    // Note: argument are given in a different order.
+    writeTextShort(out, utf8, alphaGen);
 }
 
 inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {

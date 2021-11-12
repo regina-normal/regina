@@ -372,6 +372,11 @@ Version 7.0  [ TODO ]
               GroupExpression argument by value, not by const reference.
             - Added member and global swap() functions.
             - Renamed toTeX() to tex().  The old name is kept but deprecated.
+            - Added more customisation options to writeTextShort(), and
+              deprecated writeText() which is now redundant.
+            - Now offers utf8() with UTF-8 exponents, as well as str(bool)
+              and utf8(bool) that offer the choice of numbered or alphabetic
+              generators.
         Class GroupPresentation:
             - New routines enumerateCovers(), incidence() and gap().
             - Added move constructors and move assignment operators.
@@ -1103,6 +1108,8 @@ Version 7.0  [ TODO ]
               SatBlock::isBlock().
             - Routine expand() is now private, since all publicly accessible
               functions that construct regions will expand them automatically.
+            - New routine blockAbbrs() that returns the output of
+              writeBlockAbbrs() in string format.
             - All access to the underlying triangulation is now const only.
         Class Script:
             - Added a copy constructor and a copy assignment operator.
@@ -1145,6 +1152,8 @@ Version 7.0  [ TODO ]
             - Function triangulate() now returns by value.
             - Function cycleCmp() is now a private member function (it was
               very specialised).
+            - New function str() that takes extra arguments to customise
+              the output, in the same manner as writeCycles().
         Class SigPartialIsomorphism:
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.

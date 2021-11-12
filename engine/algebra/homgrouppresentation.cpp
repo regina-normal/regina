@@ -85,11 +85,13 @@ void HomGroupPresentation::writeTextLong(std::ostream& out) const {
 
     out<<"map[";
     for (unsigned long i=0; i<domain_.countGenerators(); i++) {
-        if (i!=0) out<<", ";
-        if (domain_.countGenerators()<=26) out<<char('a' + i)<<" --> ";
-        else  out<<"g"<<i<<" --> ";
-        if (codomain_.countGenerators()<=26) map_[i].writeText(out, true);
-        else map_[i].writeText(out, false);
+        if (i!=0)
+            out<<", ";
+        if (domain_.countGenerators()<=26)
+            out<<char('a' + i)<<" --> ";
+        else
+            out<<"g"<<i<<" --> ";
+        map_[i].writeTextShort(out, false, codomain_.countGenerators()<=26);
     }
     out<<"] ";
 

@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include <cctype>
-#include <iterator>
 #include <list>
 #include <map>
 #include <sstream>
@@ -255,24 +254,26 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
         if (AUT) {
             // Let's try to identify the fibre.
             std::string domStr( AUT->domain().recogniseGroup(moreUtf8) );
-            if (domStr.length()>0) { {
+            if (domStr.length()>0) {
                 if (moreUtf8)
                     out << "\u2124~"; // unicode blackboard bold Z
                 else
                     out << "Z~";
                 out << domStr << " w/monodromy ";
-            }
-            unsigned long numGen = AUT->domain().countGenerators();
-            for (unsigned long i=0; i<numGen; i++) {
-              if (i!=0) out<<", ";
-              if (numGen<27) out<<( (char) (i+97) );
-              else out<<"g"<<i;
-              out<<" \u21A6 "; // mapsto symbol in unicode
-              AUT->evaluate(i).writeText(out, (numGen<27), moreUtf8);
-              }
-             return out.str();
+                unsigned long numGen = AUT->domain().countGenerators();
+                for (unsigned long i=0; i<numGen; i++) {
+                    if (i!=0)
+                        out<<", ";
+                    if (numGen<27)
+                        out<<( (char) (i+97) );
+                    else
+                        out<<"g"<<i;
+                    out<<" \u21A6 "; // mapsto symbol in unicode
+                    AUT->evaluate(i).writeTextShort(out, moreUtf8, numGen<27);
+                }
+                return out.str();
             } // domain not recognised, but it is an extension
-          // TODO: put in something here for this case.
+            // TODO: put in something here for this case.
         }
     }
 
@@ -2058,28 +2059,6 @@ void GroupExpression::writeXMLData(std::ostream& out) const {
 
 // group expression output routines
 
-void GroupExpression::writeText(std::ostream& out, bool shortword,
-        bool utf8) const {
-    if (terms_.empty())
-        out << '1';
-    else {
-        for (auto i = terms_.begin(); i!=terms_.end(); i++) {
-            if (i != terms_.begin())
-                out << ' ';
-            if (shortword)
-                out << char('a' + i->generator);
-            else
-                out << "g_" << i->generator;
-            if (i->exponent != 1) {
-                if (utf8)
-                    out << regina::superscript(i->exponent);
-                else
-                    out << '^' << i->exponent;
-            }
-        }
-    }
-}
-
 std::string GroupExpression::tex() const {
     std::ostringstream out;
     writeTeX(out);
@@ -2098,14 +2077,25 @@ void GroupExpression::writeTeX(std::ostream& out) const {
     }
 }
 
-void GroupExpression::writeTextShort(std::ostream& out) const {
+void GroupExpression::writeTextShort(std::ostream& out, bool utf8,
+        bool alphaGen) const {
     if (terms_.empty())
         out << '1';
     else {
-        auto last = --terms_.end();
-        copy(terms_.begin(), last,
-            std::ostream_iterator<GroupExpressionTerm>(out, " "));
-        out << *last;
+        for (auto i = terms_.begin(); i!=terms_.end(); i++) {
+            if (i != terms_.begin())
+                out << ' ';
+            if (alphaGen)
+                out << char('a' + i->generator);
+            else
+                out << 'g' << i->generator;
+            if (i->exponent != 1) {
+                if (utf8)
+                    out << regina::superscript(i->exponent);
+                else
+                    out << '^' << i->exponent;
+            }
+        }
     }
 }
 
@@ -2161,7 +2151,7 @@ void GroupPresentation::writeTextLong(std::ostream& out) const {
     else
         for (const auto& r : relations_) {
             out << "    ";
-            r.writeText(out, nGenerators_ <= 26);
+            r.writeTextShort(out, false /* utf8 */, nGenerators_ <= 26);
             out << std::endl;
         }
 }
@@ -2198,7 +2188,7 @@ void GroupPresentation::writeTextCompact(std::ostream& out) const {
             first = false;
         else
             out << ", ";
-        r.writeText(out, nGenerators_ <= 26);
+        r.writeTextShort(out, false /* utf8 */, nGenerators_ <= 26);
     }
     out << " >";
 }

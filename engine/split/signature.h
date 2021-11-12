@@ -221,12 +221,31 @@ class Signature : public ShortOutput<Signature> {
          */
         Triangulation<3> triangulate() const;
 
+        using ShortOutput<Signature>::str;
+
         /**
-         * Writes a string representation of this signature to the given
-         * output stream.
+         * Returns a customised string representation of this signature.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * Note that there is also a zero-argument version of str(), inherited
+         * through the ShortOutput base class.  This zero-argument str()
+         * make sensible default choices for the three arguments required here.
+         *
+         * @param cycleOpen the text to write at the beginning of each cycle
+         * (such as <tt>"("</tt>).
+         * @param cycleClose the text to write at the end of each cycle
+         * (such as <tt>")"</tt>).
+         * @param cycleJoin the text to write between each pair of consecutive
+         * cycles.
+         */
+        std::string str(const std::string& cycleOpen,
+            const std::string& cycleClose, const std::string& cycleJoin) const;
+
+        /**
+         * Writes a customised string representation of this signature to the
+         * given output stream.
+         *
+         * \ifacespython Not present; instead use the variant of str() that
+         * takes the same three string arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @param cycleOpen the text to write at the beginning of a cycle
@@ -399,6 +418,13 @@ inline Signature::~Signature() {
 
 inline unsigned Signature::order() const {
     return order_;
+}
+
+inline std::string Signature::str(const std::string& cycleOpen,
+        const std::string& cycleClose, const std::string& cycleJoin) const {
+    std::ostringstream s;
+    writeCycles(s, cycleOpen, cycleClose, cycleJoin);
+    return s.str();
 }
 
 inline void Signature::writeTextShort(std::ostream& out) const {

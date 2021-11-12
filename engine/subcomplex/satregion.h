@@ -584,18 +584,35 @@ class SatRegion : public Output<SatRegion> {
         SFSpace createSFS(bool reflect) const;
 
         /**
-         * Writes an abbreviated list of blocks within this region to
-         * the given output stream.  Blocks will be written using their
-         * abbreviated names, and these names will be separated by
-         * commas.  See SatBlock::writeAbbr() for further details.
+         * Returns an abbreviated list of blocks within this region in
+         * string format.  The string that is returned will consist of
+         * the abbreviated names of all blocks in this region, separated by
+         * commas and spaces.  See SatBlock::abbr() for further details.
          *
          * The blocks within this region will be sorted before their
          * abbreviated names are output.  The particular method of sorting
          * is an arbitrary aesthetic decision on the part of the author,
          * and is subject to change in future versions of Regina.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * @param tex \c true if the output should be formatted for TeX,
+         * or \c false if it should be written as plain text.
+         * @return the abbreviated list of all blocks.
+         */
+        std::string blockAbbrs(bool tex = false) const;
+
+        /**
+         * Writes an abbreviated list of blocks within this region to
+         * the given output stream.  Blocks will be written using their
+         * abbreviated names, and these names will be separated by
+         * commas and spaces.  See SatBlock::writeAbbr() for further details.
+         *
+         * The blocks within this region will be sorted before their
+         * abbreviated names are output.  The particular method of sorting
+         * is an arbitrary aesthetic decision on the part of the author,
+         * and is subject to change in future versions of Regina.
+         *
+         * \ifacespython Not present; instead use the variant blockAbbrs()
+         * that returns a string.
          *
          * @param out the output stream to which to write.
          * @param tex \c true if the output should be formatted for TeX,
@@ -613,8 +630,9 @@ class SatRegion : public Output<SatRegion> {
          * a number of lines describing the individual blocks that make
          * up this region and the various adjacencies between them.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * \ifacespython Not present; instead use detail(), which returns
+         * the same detailed information in string form (but without the
+         * option of using a custom title).
          *
          * @param out the output stream to which to write.
          * @param title the name of this region, to be written on the
@@ -978,6 +996,12 @@ inline size_t SatRegion::countBoundaryAnnuli() const {
 
 inline size_t SatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
+}
+
+inline std::string SatRegion::blockAbbrs(bool tex) const {
+    std::ostringstream s;
+    writeBlockAbbrs(s, tex);
+    return s.str();
 }
 
 inline void SatRegion::writeTextLong(std::ostream& out) const {

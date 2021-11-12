@@ -76,12 +76,8 @@ void addSatRegion(pybind11::module_& m) {
                 block, annulus, blockRefVert, blockRefHoriz);
         }, pybind11::return_value_policy::reference_internal)
         .def("createSFS", &SatRegion::createSFS)
-        .def("writeBlockAbbrs", [](const SatRegion& r, bool tex) {
-            r.writeBlockAbbrs(std::cout, tex);
-        }, pybind11::arg("tex") = false)
-        .def("writeDetail", [](const SatRegion& r, const std::string& title) {
-            r.writeDetail(std::cout, title);
-        })
+        .def("blockAbbrs", &SatRegion::blockAbbrs,
+            pybind11::arg("tex") = false)
         .def_static("find", [](regina::Triangulation<3>& tri, bool complete,
                 const std::function<bool(std::unique_ptr<SatRegion>)>& action) {
             // We need to strip out any reference to the TetList argument.
