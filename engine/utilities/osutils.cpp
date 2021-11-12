@@ -42,7 +42,7 @@ namespace regina {
 std::tuple<unsigned long, unsigned long, unsigned long> resUsage() {
     FILE* stat = fopen("/proc/self/stat", "r");
     if (! stat)
-        throw FileError("no /proc/self/stat");
+        throw FileError("Could not read /proc/self/stat");
 
     std::tuple<unsigned long, unsigned long, unsigned long> ans;
 
@@ -62,7 +62,7 @@ std::tuple<unsigned long, unsigned long, unsigned long> resUsage() {
         return ans;
     } else {
         fclose(stat);
-        throw FileError("could not parse /proc/self/stat");
+        throw FileError("Could not parse /proc/self/stat");
     }
 }
 
