@@ -35,32 +35,21 @@ IF(LIBGVC_FOUND)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
     SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
 
-    # Alas, the pkg-config files shipped with Graphviz under windows are wrong.
-    # They give the wrong library directory, and even worse they give the
-    # wrong library *names* (graph.dll instead of cgraph.dll).
-    # For now, we hard-code fixes for these errors in the WIN32 code below.
-    IF(WIN32)
-      # Note that, under windows, Graphviz ships its plugins in the same
-      # directory as its core library DLLs.
-      SET(LINK_LIBS ${LINK_LIBS} gvc cgraph cdt)
-      LINK_DIRECTORIES("${LIBGVC_LIBDIR}/release/dll")
-    ELSE(WIN32)
-      # Assume that pkg-config is telling us the truth.
-      # Note, however, that the graphviz plugins typically live in a
-      # subdirectory graphviz/ beneath the main library path.
-      SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
-      LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
-
-      # Ubuntu focal (20.04 LTS) has an error where the graphviz plugins
-      # fail to link due to missing __XXX_finite symbols from the math
-      # library.  It's not clear to me why this happens, and ubuntu focal
-      # is the only place I've seen it.  Therefore we hard-code the fix
-      # specifically for ubuntu focal.
-      IF("${LSB_RELEASE_ID}" STREQUAL Ubuntu AND "${LSB_RELEASE_VERSION}" MATCHES ^20\.04)
-        ADD_LINK_OPTIONS(-Wl,--allow-shlib-undefined)
-      ENDIF()
-    ENDIF(WIN32)
+    # Assume that pkg-config is telling us the truth.
+    # Note, however, that the graphviz plugins often live in a
+    # subdirectory graphviz/ beneath the main library path.
+    SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
     SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
+    LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
+
+    # Ubuntu focal (20.04 LTS) has an error where the graphviz plugins
+    # fail to link due to missing __XXX_finite symbols from the math
+    # library.  It's not clear to me why this happens, and ubuntu focal
+    # is the only place I've seen it.  Therefore we hard-code the fix
+    # specifically for ubuntu focal.
+    IF("${LSB_RELEASE_ID}" STREQUAL Ubuntu AND "${LSB_RELEASE_VERSION}" MATCHES ^20\.04)
+      ADD_LINK_OPTIONS(-Wl,--allow-shlib-undefined)
+    ENDIF()
   ENDIF (${GRAPHVIZ_TYPE} STREQUAL Framework)
 ENDIF(LIBGVC_FOUND)
 
