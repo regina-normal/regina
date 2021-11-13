@@ -620,7 +620,7 @@ void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
 template <int dim>
 Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
     Isomorphism<dim> ans(rhs.nSimplices_);
-    for (unsigned i = 0; i < nSimplices_; ++i) {
+    for (unsigned i = 0; i < rhs.nSimplices_; ++i) {
         ans.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
         ans.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
     }
