@@ -369,6 +369,24 @@ class Isomorphism :
         Isomorphism operator * (const Isomorphism& rhs) const;
 
         /**
+         * Returns the composition of this isomorphism with the given
+         * isomorphism.
+         *
+         * This follows the same order convention as Regina's permutation
+         * classes: the composition <tt>a * b</tt> first applies the right-hand
+         * isomorphism \a b, and then the left-hand isomorphism \a a.
+         *
+         * \pre The source triangulation for this isomorphism (the left-hand
+         * side) is at least as large as the destination triangulation
+         * for \a rhs (the right-hand side).  In other words, the maximum
+         * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
+         * <tt>this->size()</tt>.
+         *
+         * @return the composition of both isomorphisms.
+         */
+        Isomorphism operator * (Isomorphism&& rhs) const;
+
+        /**
          * Returns the inverse of this isomorphism.
          *
          * \pre The destination triangulation has precisely the same
@@ -625,6 +643,16 @@ Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
         ans.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
     }
     return ans;
+}
+
+template <int dim>
+Isomorphism<dim> Isomorphism<dim>::operator * (Isomorphism&& rhs) const {
+    // We will construct the result by overwriting rhs.
+    for (unsigned i = 0; i < rhs.nSimplices_; ++i) {
+        rhs.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
+        rhs.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
+    }
+    return std::move(rhs);
 }
 
 template <int dim>

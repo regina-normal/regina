@@ -341,10 +341,22 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             for (int i = 0; i < 10; ++i) {
                 Isomorphism a = Isomorphism<3>::random(size);
                 Isomorphism b = a.inverse();
-                Isomorphism c = a * b;
+                Isomorphism c = b * a;
 
                 for (int j = 0; j < size; ++j)
                     if (c.simpImage(j) != j || c.facetPerm(j) != Perm<4>()) {
+                        std::ostringstream msg;
+                        msg << "Isomorphism composed with its inverse "
+                            "does not give the identity.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                // Try the rvalue reference variant of composition.
+                // (And, at the same time, compose the other way around.)
+                Isomorphism d = a * a.inverse();
+
+                for (int j = 0; j < size; ++j)
+                    if (d.simpImage(j) != j || d.facetPerm(j) != Perm<4>()) {
                         std::ostringstream msg;
                         msg << "Isomorphism composed with its inverse "
                             "does not give the identity.";
