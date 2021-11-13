@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/iostream.h"
 #include "angle/anglestructure.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -76,6 +77,11 @@ void addAngleStructure(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("rawVector", &AngleStructure::vector, // deprecated
             pybind11::return_value_policy::reference_internal)
+        .def("writeXMLData", [](const AngleStructure& s,
+                pybind11::object file) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            s.writeXMLData(std::cout);
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

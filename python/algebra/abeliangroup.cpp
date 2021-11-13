@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/iostream.h"
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
 #include "../helpers.h"
@@ -93,6 +94,10 @@ void addAbelianGroup(pybind11::module_& m) {
         .def("isZn", &AbelianGroup::isZn)
         .def("utf8", &AbelianGroup::utf8)
         .def("tightEncoding", &AbelianGroup::tightEncoding)
+        .def("writeXMLData", [](const AbelianGroup& g, pybind11::object file) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            g.writeXMLData(std::cout);
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

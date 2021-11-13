@@ -660,7 +660,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         /**
          * Writes a chunk of XML containing this expression.
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -1167,7 +1168,8 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Writes a chunk of XML containing this group presentation.
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
          */

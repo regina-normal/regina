@@ -417,7 +417,8 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         /**
          * Writes a chunk of XML containing this abelian group.
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
          */

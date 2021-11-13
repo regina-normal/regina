@@ -31,8 +31,9 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/iostream.h"
 #include "../pybind11/operators.h"
-#include "hypersurface/normalhypersurface.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
@@ -99,8 +100,11 @@ void addNormalHypersurface(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("name", &NormalHypersurface::name)
         .def("setName", &NormalHypersurface::setName)
-        .def("writeRawVector", [](const NormalHypersurface& s) { // deprecated
-            std::cout << s.vector();
+        .def("writeXMLData", [](const NormalHypersurface& s,
+                pybind11::object file, regina::FileFormat f,
+                const regina::NormalHypersurfaces* list) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            s.writeXMLData(std::cout, f, list);
         })
         .def("isEmpty", &NormalHypersurface::isEmpty)
         .def("isCompact", &NormalHypersurface::isCompact)

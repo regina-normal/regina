@@ -435,7 +435,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * of its properties.  This routine will be called from within
          * AngleStructures::writeXMLPacketData().
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
          */

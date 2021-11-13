@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/functional.h"
+#include "../pybind11/iostream.h"
 #include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
@@ -120,6 +121,11 @@ void addGroupPresentation(pybind11::module_& m) {
             overload_cast<const std::vector<GroupExpression>&, bool>(
                 &GroupExpression::substitute),
             pybind11::arg(), pybind11::arg("cyclic") = false)
+        .def("writeXMLData", [](const GroupExpression& e,
+                pybind11::object file) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            e.writeXMLData(std::cout);
+        })
         .def("tex", &GroupExpression::tex)
         .def("toTeX", &GroupExpression::tex) // deprecated
         .def("str",
@@ -175,6 +181,11 @@ void addGroupPresentation(pybind11::module_& m) {
             &GroupPresentation::identifySimplyIsomorphicTo)
         .def("recogniseGroup", &GroupPresentation::recogniseGroup,
             pybind11::arg("moreUtf8") = false)
+        .def("writeXMLData", [](const GroupPresentation& p,
+                pybind11::object file) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            p.writeXMLData(std::cout);
+        })
         .def("relatorLength", &GroupPresentation::relatorLength)
         .def("abelianisation", &GroupPresentation::abelianisation)
         .def("abelianRank", &GroupPresentation::abelianRank)

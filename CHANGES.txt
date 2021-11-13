@@ -1601,9 +1601,9 @@ Version 7.0  [ TODO ]
             - Removed completely.
     PYTHON:
         - Much more of Regina's C++ interface is accessible to Python.
-          Essentially what is now wrapped is what cannot be wrapped
-          (e.g. direct interaction with C++ input/output streams, and code
-          that is heavily templated using custom types as template arguments).
+          Essentially what remains unwrapped is that which makes no sense to
+          wrap: direct interaction with C++ input/output streams, and code
+          that is heavily templated using custom types as template arguments.
         - Updated the included pybind11 library from 2.6.1 to 2.8.1.
         - All face embedding classes now have a __repr__() for easier printing.
           This means, for instance, that print(face.embeddings()) is now useful.

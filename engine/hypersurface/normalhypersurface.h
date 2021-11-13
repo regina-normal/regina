@@ -656,8 +656,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \deprecated Just write vector() directly to the output stream.
          *
-         * \ifacespython The paramater \a out does not exist, and is
-         * taken to be standard output.
+         * \ifacespython Not present; instead just write vector() to the
+         * appropriate output stream.
          *
          * @param out the output stream to which to write.
          */
@@ -668,7 +668,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * of its properties.  This routine will be called from within
          * NormalHypersurfaces::writeXMLPacketData().
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
          * @param format indicates which of Regina's XML file formats to write.

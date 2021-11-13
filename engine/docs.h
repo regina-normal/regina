@@ -185,9 +185,10 @@
  *  I/O routines (such as fopen() or std::ifstream::open()) without modifying
  *  them in any way.
  *
- *  \ifacespython Users and programmers who use the Python interface must
- *  take special care, since Python does not pass strings around in UTF-8
- *  by default.
+ *  \ifacespython The translation of international strings between Python and
+ *  C++ should be seamless: all unicode strings passed from Python to C++ will
+ *  be encoded using UTF-8, and all strings passed from C++ to Python will be
+ *  assumed to be encoded in UTF-8.
  */
 
 /*! \page stddim Standard dimensions

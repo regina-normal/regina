@@ -31,10 +31,11 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/iostream.h"
 #include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "maths/matrix.h"
-#include "surfaces/normalsurface.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
@@ -123,8 +124,10 @@ void addNormalSurface(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("name", &NormalSurface::name)
         .def("setName", &NormalSurface::setName)
-        .def("writeRawVector", [](const NormalSurface& s) { // deprecated
-            std::cout << s.vector();
+        .def("writeXMLData", [](const NormalSurface& s, pybind11::object file,
+                regina::FileFormat f, const regina::NormalSurfaces* list) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            s.writeXMLData(std::cout, f, list);
         })
         .def("isEmpty", &NormalSurface::isEmpty)
         .def("isCompact", &NormalSurface::isCompact)
