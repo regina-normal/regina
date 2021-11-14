@@ -542,10 +542,10 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \pre The given integer \a n must be strictly positive.
          *
-         * \ifacespython This routine returns a newly allocated polynomial
-         * (not a constant reference).  Moreover, since Python exposes the
-         * class Polynomial<Rational> but not Polynomial<Integer>, this
-         * routine returns an object of type Polynomial<Rational> instead.
+         * \ifacespython Since Python exposes the class Polynomial<Rational>
+         * but not Polynomial<Integer>, this routine will convert the result
+         * to a Polynomial<Rational> (and will therefore return by value,
+         * not by reference).
          *
          * @param n indicates which cyclotomic polynomial to return.
          * @return the cyclotomic polynomial <tt>Φ_n</tt>.

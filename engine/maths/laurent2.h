@@ -180,10 +180,19 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * Laurent2<Integer> p = { { 0, 0, 3 }, { 1, -1, 2 } };
          * \endcode
          *
+         * Unlike the other polynomial-like classes, there is no corresponding
+         * "pair of iterators" constructor that allows the list of coefficients
+         * to be built at runtime (or passed from Python).  This is because
+         * the developer does not have a good way to ensure that a pair of
+         * numeric arguments would invoke the (long, long) constructor and not
+         * this templated (iterator, iterator) constructor.  This may change in
+         * future releases of Regina (and please tell Ben if you know how
+         * to solve this without requiring C++20).
+         *
          * \pre Each tuple has a non-zero value \a v, and no two tuples
          * share the same pair of exponents (\a d, \a e).
          *
-         * \ifacespython Not available.
+         * \ifacespython Not available (see above for why).
          *
          * @param coefficients the set of all non-zero coefficients, as
          * outlined above.

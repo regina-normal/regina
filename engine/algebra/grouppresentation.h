@@ -884,9 +884,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * constructor notes for information on what format these strings
          * can take.
          *
-         * If you are compiling Regina against C++11, you can use the
-         * C++11 initializer_list construction to construct an
-         * GroupPresentation directly using syntax of the form
+         * If you wish to create a group presentation from a hard-coded list
+         * of relations, you can use this constructor with an initialiser list,
+         * via syntax of the form
          * <tt>GroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
          *
          * \exception InvalidArgument one or more of the given strings
