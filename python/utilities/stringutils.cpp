@@ -40,6 +40,9 @@ void addStringUtils(pybind11::module_& m) {
     m.def("startsWith", &regina::startsWith);
     m.def("stripWhitespace", &regina::stripWhitespace);
     m.def("stringToToken", &regina::stringToToken);
+
+    // overload_cast has trouble with templated vs non-templated overloads.
+    // Just cast directly.
     m.def("basicTokenise", (std::vector<std::string> (*)(const std::string&))(
         &regina::basicTokenise));
 
