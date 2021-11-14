@@ -80,7 +80,7 @@ p[2,3] = 7; # should work
 print(p)
 print()
 
-p = Cyclotomic(3, 2)
+p = Cyclotomic(3, [2, 5])
 print(p)
 p[1] = 4
 print(p)
