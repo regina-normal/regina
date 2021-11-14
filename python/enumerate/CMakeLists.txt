@@ -5,6 +5,7 @@ SET ( FILES
   pyenumerate.cpp
   treelp.cpp
   typetrie.cpp
+  validityconstraints.cpp
   )
 
 # Prepend folder name

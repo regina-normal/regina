@@ -30,15 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "enumerate/validityconstraints.h"
+#include "utilities/bitmask.h"
+#include "../helpers.h"
 
-void addTreeLP(pybind11::module_& m);
-void addTypeTrie(pybind11::module_& m);
-void addValidityConstraints(pybind11::module_& m);
+using regina::ValidityConstraints;
 
-void addEnumerateClasses(pybind11::module_& m) {
-    addTreeLP(m);
-    addTypeTrie(m);
-    addValidityConstraints(m);
+void addValidityConstraints(pybind11::module_& m) {
+    auto c = pybind11::class_<ValidityConstraints>(m, "ValidityConstraints")
+        .def(pybind11::init<int, size_t, size_t, size_t>(),
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("reserveLocal") = 0,
+            pybind11::arg("reserveGlobal") = 0)
+        .def(pybind11::init<const ValidityConstraints&>())
+        .def("swap", &ValidityConstraints::swap)
+        .def("bitmasks", &ValidityConstraints::bitmasks<regina::Bitmask>)
+        .def_readonly_static("none", &ValidityConstraints::none)
+    ;
+    regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(ValidityConstraints&, ValidityConstraints&))(regina::swap));
 }
 

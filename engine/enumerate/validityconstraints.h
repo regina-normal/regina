@@ -200,6 +200,8 @@ class ValidityConstraints {
          * normal surfaces in standard coordinates, you can make the
          * single call <tt>addLocal({4, 5, 6})</tt>.
          *
+         * \ifacespython Not present.
+         *
          * @param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
          */
@@ -216,6 +218,8 @@ class ValidityConstraints {
          * As an example, for almost normal surfaces in standard coordinates,
          * you can encode the constraint that there is at most one octagon
          * in the entire surface by calling <tt>addGlobal({7, 8, 9})</tt>.
+         *
+         * \ifacespython Not present.
          *
          * @param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
@@ -247,6 +251,9 @@ class ValidityConstraints {
          *
          * \pre A bitmask of type \a BitmaskType is large enough to store
          * \a len bits.
+         *
+         * \ifacespython This routine is only available in Python for the
+         * bitmask type regina::Bitmask.
          *
          * \tparam BitmaskType the bitmask type used to encode each constraint;
          * this must be one of Regina's own bitmask types, such as Bitmask,

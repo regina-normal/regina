@@ -1915,6 +1915,8 @@
 		05C1BEEE1DCA89E3007C946B /* triangulation14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BED21DCA89DA007C946B /* triangulation14.cpp */; };
 		05C1BEEF1DCA89E3007C946B /* triangulation15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BED31DCA89DA007C946B /* triangulation15.cpp */; };
 		05C1BEF11DCAB4DC007C946B /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BEF01DCAB4DC007C946B /* isomorphism.h */; };
+		05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
+		05CAE6022741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -4359,6 +4361,7 @@
 		05C1BED21DCA89DA007C946B /* triangulation14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation14.cpp; sourceTree = "<group>"; };
 		05C1BED31DCA89DA007C946B /* triangulation15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation15.cpp; sourceTree = "<group>"; };
 		05C1BEF01DCAB4DC007C946B /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
+		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -7157,6 +7160,7 @@
 				05772F15270CFBA900D26D8A /* treelp.cpp */,
 				05772F16270CFBA900D26D8A /* typetrie.cpp */,
 				05772F17270CFBA900D26D8A /* pyenumerate.cpp */,
+				05CAE6002741C871007C93F3 /* validityconstraints.cpp */,
 			);
 			path = enumerate;
 			sourceTree = "<group>";
@@ -8926,6 +8930,7 @@
 				050F5E471B9BAB9C00C1F681 /* isomorphism3.cpp in Sources */,
 				05431FC41C40F5D4009BC072 /* pygeneric.cpp in Sources */,
 				0591E81B1C4F763B00793A9C /* triangulation4.cpp in Sources */,
+				05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */,
 				050C64951DA12FC000C9420F /* examplesnappea.cpp in Sources */,
 				057EE4BD1C600A3600C4D155 /* simplex5.cpp in Sources */,
 				05772ED8270CFA8B00D26D8A /* angleflags.cpp in Sources */,
@@ -9696,6 +9701,7 @@
 				05D1173119EE0172003BEC55 /* triangulation3.cpp in Sources */,
 				05249EC61DBC16CA001FE29E /* vertex4.cpp in Sources */,
 				05772ECB270CF99C00D26D8A /* xmlanglestructwriter.cpp in Sources */,
+				05CAE6022741C871007C93F3 /* validityconstraints.cpp in Sources */,
 				05B7FFAA25AC22D2003BAF5C /* matrix.cpp in Sources */,
 				05772EDC270CFAA200D26D8A /* fileformat.cpp in Sources */,
 				052FA216180612DD00FAE4DF /* chern_simons.c in Sources */,
