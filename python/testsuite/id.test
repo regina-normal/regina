@@ -4,7 +4,7 @@
 # Copyright (c) 2007-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides tests for passing by value vs reference.
+# Provides tests for variables that should be the same object in Python.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -33,30 +33,17 @@
 
 from __future__ import print_function
 
-g = Example3.poincareHomologySphere().fundamentalGroup()
+a = VectorInt.zero
+b = VectorInt.zero
+c = Integer(0)
+d = Integer(0)
 
-print(g.relation(0))
-g.relation(0).term(0).exponent = 2
-print(g.relation(0))
-g.relation(0).terms()[0].exponent = 3
-print(g.relation(0))
-g.relations()[0].term(0).exponent = 4
-print(g.relation(0))
-g.relations()[0].terms()[0].exponent = 5
-print(g.relation(0))
+print(a is b, c is d, a is c)
 
-print()
+p = VectorLarge.one
+q = VectorLarge.one
+r = LargeInteger(1)
+s = LargeInteger(1)
 
-r = g.relations()[0]
-print(r)
-g.relation(0).term(0).exponent = 6
-print(r)
-r = None
-
-print()
-
-t = g.relation(0).terms()[0]
-print(t)
-g.relation(0).term(0).exponent = 7
-print(t)
+print(p is q, r is s, p is r)
 

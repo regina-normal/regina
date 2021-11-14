@@ -1,2 +1,11 @@
-True False False
-True False False
+g0 g1 g0^-1 g1 g0 g1^-1
+g0^2 g1 g0^-1 g1 g0 g1^-1
+g0^3 g1 g0^-1 g1 g0 g1^-1
+g0^4 g1 g0^-1 g1 g0 g1^-1
+g0^5 g1 g0^-1 g1 g0 g1^-1
+
+g0^5 g1 g0^-1 g1 g0 g1^-1
+g0^6 g1 g0^-1 g1 g0 g1^-1
+
+g0^6
+g0^7

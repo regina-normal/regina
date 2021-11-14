@@ -68,8 +68,8 @@ void addGroupPresentation(pybind11::module_& m) {
         .def(pybind11::init<const GroupExpression&>())
         .def(pybind11::init<const std::string&>())
         .def("swap", &GroupExpression::swap)
-        .def("terms", overload_cast<>(
-            &GroupExpression::terms, pybind11::const_))
+        .def("terms", overload_cast<>(&GroupExpression::terms),
+            pybind11::return_value_policy::reference_internal)
         .def("countTerms", &GroupExpression::countTerms)
         .def("wordLength", &GroupExpression::wordLength)
         .def("isTrivial", &GroupExpression::isTrivial)
@@ -151,7 +151,8 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("countRelations", &GroupPresentation::countRelations)
         .def("relation", &GroupPresentation::relation,
             pybind11::return_value_policy::reference_internal)
-        .def("relations", &GroupPresentation::relations)
+        .def("relations", &GroupPresentation::relations,
+            pybind11::return_value_policy::reference_internal)
         .def("isValid", &GroupPresentation::isValid)
         .def("intelligentSimplify", &GroupPresentation::intelligentSimplify)
         .def("intelligentSimplifyDetail",

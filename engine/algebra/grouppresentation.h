@@ -304,8 +304,11 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
          * <tt>g6^1</tt> in that order.
          *
-         * \ifacespython Not present; only the const version of this
-         * routine is available.
+         * \ifacespython The list itself is not returned by reference
+         * (instead this routine returns a new Python list).  However,
+         * the terms within this list are still returned by reference
+         * (i.e., you can use the elements of this list to modify each
+         * term individually).
          *
          * @return the list of terms.
          */
@@ -318,10 +321,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
          * <tt>g6^1</tt> in that order.
          *
-         * \ifacespython This routine returns a python list of copied
-         * GroupExpressionTerm objects.  In particular, modifying this
-         * list or the terms within it will not modify the group
-         * expression from which they came.
+         * \ifacespython The list itself is not returned by reference
+         * (instead this routine returns a new Python list).  However,
+         * the terms within this list are still returned by reference.
          *
          * @return the list of terms.
          */
@@ -386,9 +388,6 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * \warning This routine is <i>O(n)</i> where \a n is the number
          * of terms in this expression.
-         *
-         * \ifacespython Not present; only the non-const version of this
-         * routine is available.
          *
          * @param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
@@ -984,6 +983,10 @@ class GroupPresentation : public Output<GroupPresentation> {
          * GroupExpression objects.  In particular, modifying this
          * list or the relations within it will not modify the group
          * presentation from which they came.
+         *
+         * \ifacespython The list itself is not returned by reference
+         * (instead this routine returns a new Python list).  However,
+         * the relations within this list are still returned by reference.
          *
          * @return the list of relations.
          */
