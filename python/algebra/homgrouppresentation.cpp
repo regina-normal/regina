@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
@@ -47,6 +48,10 @@ void addHomGroupPresentation(pybind11::module_& m) {
     auto c = pybind11::class_<HomGroupPresentation>(m, "HomGroupPresentation")
         .def(pybind11::init<const HomGroupPresentation&>())
         .def(pybind11::init<const GroupPresentation&>())
+        .def(pybind11::init<GroupPresentation, GroupPresentation,
+            std::vector<GroupExpression>>())
+        .def(pybind11::init<GroupPresentation, GroupPresentation,
+            std::vector<GroupExpression>, std::vector<GroupExpression>>())
         .def("swap", &HomGroupPresentation::swap)
         .def("domain", &HomGroupPresentation::domain,
             pybind11::return_value_policy::reference_internal)

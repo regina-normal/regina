@@ -953,8 +953,6 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and children() for iterating just through the immediate children
          * of this packet (not the full subtree).
          *
-         * \ifacespython Not present, but the non-const version is available.
-         *
          * @return an iterator at the beginning of this subtree.
          */
         SubtreeIterator<true> begin() const;
@@ -967,8 +965,6 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * an entire packet subtree using C++11 range-based \c for loops.
          *
          * See the begin() documentation for further details.
-         *
-         * \ifacespython Not present, but the non-const version is available.
          *
          * @return an iterator beyond the end of this subtree.
          */
@@ -1053,8 +1049,6 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * subtree \e including this packet, and children() for iterating
          * over just this packet's immediate children.
          *
-         * \ifacespython Not present, but the non-const version is available.
-         *
          * @return an object for iterating through the strict descendants
          * of this packet.
          */
@@ -1123,8 +1117,6 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * See begin() and end(), as well as descendants(), for iterating
          * through the subtree rooted at this packet (not just the immediate
          * children).
-         *
-         * \ifacespython Not present, but the non-const version is available.
          *
          * @return an object for iterating through the children of this packet.
          */
@@ -1387,7 +1379,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given stream is open for writing.
          * \pre The given packet does not depend on its parent.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, to avoid confusion with the
+         * filename-based save().  However, if you wish to write a Regina
+         * XML data file directly to an open Python file, you can still use
+         * writeXMLFile() for this.
          *
          * @param s the output stream to which to write.
          * @param compressed \c true if the XML data should be compressed,
@@ -2362,7 +2357,9 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since this routine is too heavily templated
+ * for Python.  Instead you can just directly call the constructor
+ * <tt>PacketOfHeld(args...)</tt>.
  *
  * @param args the arguments to be forwarded to the appropriate
  * \a Held constructor.
@@ -2387,7 +2384,9 @@ std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since this routine is too heavily templated
+ * for Python.  Instead you can just directly call the constructor
+ * <tt>PacketOfHeld()</tt>.
  *
  * @return the new wrapped packet.
  */

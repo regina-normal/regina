@@ -91,16 +91,12 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Creates a new homomorphism from the given data.
          *
-         * \ifacespython Not present.
-         *
          * @param domain the domain of the homomorphism.
          * @param codomain the codomain of the homomorphism.
          * @param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
          * element <tt>map[i]</tt> of the codomain.
-         *
-         * \ifacespython Not present.
          */
         HomGroupPresentation(GroupPresentation domain,
                 GroupPresentation codomain,
@@ -112,8 +108,6 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * and the inverse map from the codomain to domain.
          *
          * \pre The argument \a inv is indeed the inverse of \a map.
-         *
-         * \ifacespython Not present.
          *
          * @param domain the domain of the homomorphism.
          * @param codomain the codomain of the homomorphism.
