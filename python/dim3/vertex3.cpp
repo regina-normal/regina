@@ -58,18 +58,17 @@ void addVertex3(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0")
         .def("index", &Vertex<3>::index)
+        // Make all embeddings functions return by value in Python, since
+        // embeddings are lightweight and we wish to enforce constness.
         .def("embeddings", [](const Vertex<3>& v) {
             pybind11::list ans;
             for (const auto& emb : v)
                 ans.append(emb);
             return ans;
         })
-        .def("embedding", &Vertex<3>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Vertex<3>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Vertex<3>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Vertex<3>::embedding)
+        .def("front", &Vertex<3>::front)
+        .def("back", &Vertex<3>::back)
         .def("triangulation", &Vertex<3>::triangulation)
         .def("component", &Vertex<3>::component,
             pybind11::return_value_policy::reference)

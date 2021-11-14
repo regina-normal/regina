@@ -134,7 +134,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * combinatorially identical to, the triangulation on which
          * \a src is placed.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
          *
          * @param src the angle structure to copy.
          * @param triangulation a snapshot, frozen in time, of the

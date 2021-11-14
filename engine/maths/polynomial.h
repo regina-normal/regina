@@ -256,12 +256,25 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * If this is the zero polynomial, then the leading coefficient
          * will be zero.
          *
+         * \ifacespython This routine returns by value, not by reference,
+         * since constness is important here and Python cannot enforce
+         * it otherwise.
+         *
          * @return the leading coefficient of this polynomial.
          */
         const T& leading() const;
 
         /**
          * Returns the given coefficient of this polynomial.
+         *
+         * \ifacespython Python users can also use this operator to \e set
+         * cofficients; that is, you can write <tt>poly[exp] = value</tt>.
+         * However, when \e getting a coefficient this operator will return
+         * by value (to enforce constness), which means for example you
+         * cannot write something like <tt>poly[exp].negate()</tt>.
+         *
+         * \ifacescpp C++ users must always set coefficients using the
+         * separate routine set(), since this square bracket operator is const.
          *
          * @param exp the exponent of the term whose coefficient should
          * be returned.  This must be between 0 and degree() inclusive.

@@ -33,6 +33,61 @@
 
 from __future__ import print_function
 
+v = VectorInt([1,2,3,4])
+print(v)
+v[2].negate()
+print(v)
+v[3] = 5
+print(v)
+print()
+
+v = VectorLarge([1,2,3,4])
+print(v)
+v[2].makeInfinite()
+print(v)
+v[3] = 5
+print(v)
+print()
+
+m = MatrixInt([[1,2], [3,4]])
+print(m.detail())
+m.entry(0,1).negate()
+print(m.detail())
+
+p = Polynomial([2,3,4,5])
+print(p)
+p.leading().negate() # should do nothing due to constness
+print(p)
+p[2].negate() # should do nothing due to constness
+print(p)
+p[1] = 7; # should work
+print(p)
+print()
+
+p = Laurent(-1, [2,3,4,5])
+print(p)
+p[1].negate() # should do nothing due to constness
+print(p)
+p[1] = 7; # should work
+print(p)
+print()
+
+p = Laurent2(2,3)
+print(p)
+p[2,3].negate() # should do nothing due to constness
+print(p)
+p[2,3] = 7; # should work
+print(p)
+print()
+
+p = Cyclotomic(3, 2)
+print(p)
+p[1] = 4
+print(p)
+p[1].negate()
+print(p)
+print()
+
 g = Example3.poincareHomologySphere().fundamentalGroup()
 
 print(g.relation(0))
@@ -44,7 +99,6 @@ g.relations()[0].term(0).exponent = 4
 print(g.relation(0))
 g.relations()[0].terms()[0].exponent = 5
 print(g.relation(0))
-
 print()
 
 r = g.relations()[0]
@@ -52,11 +106,18 @@ print(r)
 g.relation(0).term(0).exponent = 6
 print(r)
 r = None
-
 print()
 
 t = g.relation(0).terms()[0]
 print(t)
 g.relation(0).term(0).exponent = 7
 print(t)
+print()
+
+n = NormalSurfaces(Example3.figureEight(), NS_QUAD)
+for s in n:
+	s.setName('foo')
+for s in n:
+	print(s.name())
+print()
 

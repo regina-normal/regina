@@ -70,7 +70,7 @@ void addLaurent(pybind11::module_& m) {
         .def("isZero", &Laurent<regina::Integer>::isZero)
         .def("__getitem__", [](const Laurent<regina::Integer>& p, long exp) {
             return p[exp];
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::copy) // to enforce constness
         .def("__setitem__", [](Laurent<regina::Integer>& p, long exp,
                 const regina::Integer& value) {
             p.set(exp, value);

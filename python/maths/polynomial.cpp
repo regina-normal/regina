@@ -66,10 +66,10 @@ void addPolynomial(pybind11::module_& m) {
         .def("isZero", &Polynomial<Rational>::isZero)
         .def("isMonic", &Polynomial<Rational>::isMonic)
         .def("leading", &Polynomial<Rational>::leading,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::copy) // to enforce constness
         .def("__getitem__", [](const Polynomial<Rational>& p, size_t exp) {
             return p[exp];
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::copy) // to enforce constness
         .def("__setitem__", [](Polynomial<Rational>& p, size_t exp,
                 const regina::Rational& value) {
             p.set(exp, value);

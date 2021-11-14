@@ -280,8 +280,12 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          *
          * \ifacespython Python users can also use this operator to \e set
          * cofficients; that is, you can write <tt>poly[exp] = value</tt>.
-         * In contrast, C++ users must use the separate routine set(), due to
-         * the fact that in C++ this square bracket operator is const.
+         * However, when \e getting a coefficient this operator will return
+         * by value (to enforce constness), which means for example you
+         * cannot write something like <tt>poly[exp].negate()</tt>.
+         *
+         * \ifacescpp C++ users must always set coefficients using the
+         * separate routine set(), since this square bracket operator is const.
          *
          * @param exp the exponent of the term whose coefficient should
          * be returned.

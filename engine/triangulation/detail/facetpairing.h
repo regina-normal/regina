@@ -220,6 +220,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
          *
+         * \ifacespython This routine returns by value, not by reference,
+         * since Python cannot enforce constness otherwise.
+         *
          * @param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
@@ -230,6 +233,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * paired.  If the given facet is left deliberately unmatched,
          * the value returned will be boundary (as returned by
          * FacetSpec<dim>::isBoundary()).
+         *
+         * \ifacespython This routine returns by value, not by reference,
+         * since Python cannot enforce constness otherwise.
          *
          * @param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
@@ -251,6 +257,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
+         *
+         * \ifacespython This routine returns by value, not by reference,
+         * since Python cannot enforce constness otherwise.
          *
          * @param source the facet under investigation.
          * @return the other facet to which the given facet is paired.

@@ -75,3 +75,15 @@ doit(s.tetrahedron(0).embeddings())
 doit(s.pentachoron(0).embeddings())
 doit(s.face(5, 0).embeddings())
 
+print()
+
+t = Example3.poincareHomologySphere()
+list = t.vertex(0).embeddings()
+front = t.vertex(0).front()
+back = t.vertex(0).back()
+# Embeddings can outlive their faces, but currently this means we
+# don't ensure they do *not* outlive their triangulations.
+# t = None
+print(list)
+print(front, back)
+

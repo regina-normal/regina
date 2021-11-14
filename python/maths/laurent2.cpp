@@ -65,7 +65,7 @@ void addLaurent2(pybind11::module_& m) {
         .def("__getitem__", [](const Laurent2<regina::Integer>& p,
                 std::pair<long, long> exponents) {
             return p(exponents.first, exponents.second);
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::copy) // to enforce constness
         .def("__setitem__", [](Laurent2<regina::Integer>& p,
                 std::pair<long, long> exponents, const regina::Integer& value) {
             p.set(exponents.first, exponents.second, value);

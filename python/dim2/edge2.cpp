@@ -61,6 +61,8 @@ void addEdge2(pybind11::module_& m) {
         .def("hasBadIdentification", &Edge<2>::hasBadIdentification)
         .def("hasBadLink", &Edge<2>::hasBadLink)
         .def("isLinkOrientable", &Edge<2>::isLinkOrientable)
+        // Make all embeddings functions return by value in Python, since
+        // embeddings are lightweight and we wish to enforce constness.
         .def("embeddings", [](const Edge<2>& e) {
             pybind11::list ans;
             for (const auto& emb : e)
@@ -68,12 +70,9 @@ void addEdge2(pybind11::module_& m) {
             return ans;
         })
         .def("degree", &Edge<2>::degree)
-        .def("embedding", &Edge<2>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Edge<2>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Edge<2>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Edge<2>::embedding)
+        .def("front", &Edge<2>::front)
+        .def("back", &Edge<2>::back)
         .def("triangulation", &Edge<2>::triangulation)
         .def("component", &Edge<2>::component,
             pybind11::return_value_policy::reference)

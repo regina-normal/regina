@@ -135,8 +135,9 @@ class Component<4> : public detail::ComponentBase<4>,
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python users should call this function in the
-         * form <tt>faces(subdim)</tt>.  It will then return a Python list
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>faces(subdim)</tt>.  It will then return a Python list
          * containing all the <i>subdim</i>-faces of the component.
          *
          * \tparam subdim the face dimension; this must be between 0 and 3

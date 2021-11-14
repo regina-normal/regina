@@ -65,18 +65,17 @@ void addTriangle4(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2")
         .def("index", &Triangle<4>::index)
+        // Make all embeddings functions return by value in Python, since
+        // embeddings are lightweight and we wish to enforce constness.
         .def("embeddings", [](const Triangle<4>& t) {
             pybind11::list ans;
             for (const auto& emb : t)
                 ans.append(emb);
             return ans;
         })
-        .def("embedding", &Triangle<4>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Triangle<4>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Triangle<4>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Triangle<4>::embedding)
+        .def("front", &Triangle<4>::front)
+        .def("back", &Triangle<4>::back)
         .def("triangulation", &Triangle<4>::triangulation)
         .def("component", &Triangle<4>::component,
             pybind11::return_value_policy::reference)

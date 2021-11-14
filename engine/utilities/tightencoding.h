@@ -263,7 +263,7 @@ namespace detail {
      * This routine does support passing infinity as the given value (which is
      * only relevant when the integer type \a Int is regina::LargeInteger).
      *
-     * \ifacespython not present.
+     * \ifacespython Not present; use regina::tightEncoding(...) instead.
      *
      * \tparam Int The type of integer to encode; this must be either
      * (i) a native C++ integer type, or (ii) one of Regina's arbitrary

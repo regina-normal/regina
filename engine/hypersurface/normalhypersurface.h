@@ -180,7 +180,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
          *
          * @param src the normal hypersurface to copy.
          * @param triangulation a snapshot, frozen in time, of the

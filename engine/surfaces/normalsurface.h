@@ -353,7 +353,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
          *
          * @param src the normal surface to copy.
          * @param triangulation a snapshot, frozen in time, of the

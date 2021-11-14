@@ -48,7 +48,7 @@ void addCyclotomic(pybind11::module_& m) {
         .def("init", &Cyclotomic::init)
         .def("field", &Cyclotomic::field)
         .def("degree", &Cyclotomic::degree)
-        .def("__getitem__", [](const Cyclotomic& c, int exp) {
+        .def("__getitem__", [](Cyclotomic& c, int exp) -> regina::Rational& {
             return c[exp];
         }, pybind11::return_value_policy::reference_internal)
         .def("__setitem__", [](Cyclotomic& c, int exp,

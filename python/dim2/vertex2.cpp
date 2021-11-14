@@ -60,18 +60,17 @@ void addVertex2(pybind11::module_& m) {
         .def("hasBadIdentification", &Vertex<2>::hasBadIdentification)
         .def("hasBadLink", &Vertex<2>::hasBadLink)
         .def("isLinkOrientable", &Vertex<2>::isLinkOrientable)
+        // Make all embeddings functions return by value in Python, since
+        // embeddings are lightweight and we wish to enforce constness.
         .def("embeddings", [](const Vertex<2>& v) {
             pybind11::list ans;
             for (const auto& emb : v)
                 ans.append(emb);
             return ans;
         })
-        .def("embedding", &Vertex<2>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Vertex<2>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Vertex<2>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Vertex<2>::embedding)
+        .def("front", &Vertex<2>::front)
+        .def("back", &Vertex<2>::back)
         .def("triangulation", &Vertex<2>::triangulation)
         .def("component", &Vertex<2>::component,
             pybind11::return_value_policy::reference)

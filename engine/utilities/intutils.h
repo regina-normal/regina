@@ -63,6 +63,8 @@ class NativeInteger;
  * The result will be available through the compile-time boolean constant
  * IsReginaInteger<T>::value.
  *
+ * \ifacespython Not present.
+ *
  * \ingroup utilities
  */
 template <typename T>
@@ -84,6 +86,8 @@ struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
  *
  * The result will be available through the compile-time boolean constant
  * IsReginaArbitraryPrecisionInteger<T>::value.
+ *
+ * \ifacespython Not present.
  *
  * \ingroup utilities
  */
@@ -321,6 +325,8 @@ struct IntOfSize<8> {
  * Currently this is only implemented for Regina's own integer types
  * (Integer, LargeInteger and NativeInteger).  If you attempt to use this
  * with other types (e.g., int or long), this struct will be undefined.
+ *
+ * \ifacespython Not present.
  *
  * \ingroup utilities
  */

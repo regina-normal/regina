@@ -58,14 +58,17 @@ void addTriangle3(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2")
         .def("index", &Triangle<3>::index)
+        // Make all embeddings functions return by value in Python, since
+        // embeddings are lightweight and we wish to enforce constness.
         .def("embeddings", [](const Triangle<3>& t) {
             pybind11::list ans;
             for (const auto& emb : t)
                 ans.append(emb);
             return ans;
         }, pybind11::return_value_policy::reference_internal)
-        .def("embedding", &Triangle<3>::embedding,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Triangle<3>::embedding)
+        .def("front", &Triangle<3>::front)
+        .def("back", &Triangle<3>::back)
         .def("isBoundary", &Triangle<3>::isBoundary)
         .def("inMaximalForest", &Triangle<3>::inMaximalForest)
         .def("type", &Triangle<3>::type)
@@ -77,10 +80,6 @@ void addTriangle3(pybind11::module_& m) {
         .def("hasBadLink", &Triangle<3>::hasBadLink)
         .def("isLinkOrientable", &Triangle<3>::isLinkOrientable)
         .def("degree", &Triangle<3>::degree)
-        .def("front", &Triangle<3>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Triangle<3>::back,
-            pybind11::return_value_policy::reference_internal)
         .def("triangulation", &Triangle<3>::triangulation)
         .def("component", &Triangle<3>::component,
             pybind11::return_value_policy::reference)

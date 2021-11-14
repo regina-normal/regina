@@ -58,18 +58,17 @@ void addTetrahedron4(pybind11::module_& m) {
     auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3")
         .def("index", &Tetrahedron<4>::index)
         .def("degree", &Tetrahedron<4>::degree)
+        // Make all embeddings functions return by value in Python, since
+        // embeddings are lightweight and we wish to enforce constness.
         .def("embeddings", [](const Tetrahedron<4>& t) {
             pybind11::list ans;
             for (const auto& emb : t)
                 ans.append(emb);
             return ans;
         })
-        .def("embedding", &Tetrahedron<4>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Tetrahedron<4>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Tetrahedron<4>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Tetrahedron<4>::embedding)
+        .def("front", &Tetrahedron<4>::front)
+        .def("back", &Tetrahedron<4>::back)
         .def("triangulation", &Tetrahedron<4>::triangulation)
         .def("component", &Tetrahedron<4>::component,
             pybind11::return_value_policy::reference)

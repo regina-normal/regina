@@ -77,8 +77,10 @@ class MATCH_PYBIND11_VISIBILITY SafeIterator {
 
         static void addBindings(pybind11::module_& m, const char* name) {
             auto i = pybind11::class_<SafeIterator>( m, name)
-                .def("next", &SafeIterator::next) // for python 2
-                .def("__next__", &SafeIterator::next) // for python 3
+                .def("next", &SafeIterator::next, // for python 2
+                    pybind11::return_value_policy::reference_internal)
+                .def("__next__", &SafeIterator::next, // for python 3
+                    pybind11::return_value_policy::reference_internal)
                 ;
             regina::python::add_eq_operators(i);
         }

@@ -50,15 +50,15 @@ void addFacetPairing3(pybind11::module_& m) {
         .def(pybind11::init<const Triangulation<3>&>())
         .def("swap", &FacetPairing<3>::swap)
         .def("size", &FacetPairing<3>::size)
+        // We do not ask dest() or operator[] to return by reference,
+        // since FacetSpec is lightweight and we want to enforce constness.
+        // Use the default policy for (const T&) which is to return by copy.
         .def("dest", overload_cast<const FacetSpec<3>&>(
-            &FacetPairing<3>::dest, pybind11::const_),
-            pybind11::return_value_policy::reference)
+            &FacetPairing<3>::dest, pybind11::const_))
         .def("dest", overload_cast<size_t, unsigned>(
-            &FacetPairing<3>::dest, pybind11::const_),
-            pybind11::return_value_policy::reference)
+            &FacetPairing<3>::dest, pybind11::const_))
         .def("__getitem__", overload_cast<const FacetSpec<3>&>(
-            &FacetPairing<3>::operator[], pybind11::const_),
-            pybind11::return_value_policy::reference)
+            &FacetPairing<3>::operator[], pybind11::const_))
         .def("isUnmatched", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
         .def("isUnmatched", overload_cast<size_t, unsigned>(

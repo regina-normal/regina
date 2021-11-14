@@ -219,9 +219,13 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * not the round bracket operator; that is, Python users can access
          * coefficients through the syntax <tt>poly[xExp, yExp]</tt>.
          * Moreover, this operator can also \e set cofficients; that is,
-         * you can write <tt>poly[xExp, yExp] = value</tt>.  In contrast,
-         * C++ users must use the separate routine set(), due to the fact
-         * that in C++ this bracket operator is const.
+         * you can write <tt>poly[xExp, yExp] = value</tt>.
+         * However, when \e getting a coefficient this operator will return
+         * by value (to enforce constness), which means for example you
+         * cannot write something like <tt>poly[xExp, yExp].negate()</tt>.
+         *
+         * \ifacescpp C++ users must always set coefficients using the
+         * separate routine set(), since this bracket operator is const.
          *
          * @param xExp the exponent attached to \a x.
          * @param yExp the exponent attached to \a y.

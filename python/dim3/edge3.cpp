@@ -63,18 +63,17 @@ void addEdge3(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<3, 1>>(m, "Face3_1")
         .def("index", &Edge<3>::index)
+        // Make all embeddings functions return by value in Python, since
+        // embeddings are lightweight and we wish to enforce constness.
         .def("embeddings", [](const Edge<3>& e) {
             pybind11::list ans;
             for (const auto& emb : e)
                 ans.append(emb);
             return ans;
         })
-        .def("embedding", &Edge<3>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Edge<3>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Edge<3>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Edge<3>::embedding)
+        .def("front", &Edge<3>::front)
+        .def("back", &Edge<3>::back)
         .def("triangulation", &Edge<3>::triangulation)
         .def("component", &Edge<3>::component,
             pybind11::return_value_policy::reference)

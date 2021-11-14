@@ -191,18 +191,17 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification)
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
         .def("degree", &Face<dim, subdim>::degree)
+        // Make all embeddings functions return by value in Python, since
+        // embeddings are lightweight and we wish to enforce constness.
         .def("embeddings", [](const Face<dim, subdim>& f) {
             pybind11::list ans;
             for (const auto& emb : f)
                 ans.append(emb);
             return ans;
         })
-        .def("embedding", &Face<dim, subdim>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Face<dim, subdim>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Face<dim, subdim>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Face<dim, subdim>::embedding)
+        .def("front", &Face<dim, subdim>::front)
+        .def("back", &Face<dim, subdim>::back)
         .def("index", &Face<dim, subdim>::index)
         .def("triangulation", &Face<dim, subdim>::triangulation)
         .def("component", &Face<dim, subdim>::component,
