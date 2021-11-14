@@ -37,6 +37,7 @@
 
 using pybind11::overload_cast;
 using regina::Cyclotomic;
+using regina::Rational;
 
 void addCyclotomic(pybind11::module_& m) {
     auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic")
