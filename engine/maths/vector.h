@@ -196,7 +196,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * @param data the elements of the vector.
          */
-        inline Vector(std::initializer_list<std::initializer_list<T>> data) :
+        inline Vector(std::initializer_list<T> data) :
                 elements(new T[data.size]), end(elements + data.size()) {
             std::copy(data.begin(), data.end(), elements);
         }
