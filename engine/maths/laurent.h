@@ -156,7 +156,7 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         /**
          * Creates a new polynomial from the given sequence of coefficients.
          *
-         * The coefficients should appear in order from the smallest
+         * The coefficients should be given in order from the smallest
          * exponent term to the largest.  The first coefficient in the
          * sequence will be associated with the exponent \a minExp.
          *
@@ -184,10 +184,9 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         /**
          * Creates a new polynomial from a hard-coded sequence of coefficients.
          *
-         * This constructor takes a C++11 initialiser list, which should
-         * contain the coefficients in order from the smallest exponent
-         * term to the largest.  The first coefficient in the sequence
-         * will be associated with the exponent \a minExp.
+         * The coefficients should be given in order from the smallest
+         * exponent term to the largest.  The first coefficient in the
+         * sequence will be associated with the exponent \a minExp.
          *
          * There is no problem if the first and/or last coefficient in
          * the sequence is zero.

@@ -141,7 +141,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 
         /**
          * Creates a new polynomial from the given sequence of coefficients.
-         * The coefficients should appear in order from the constant
+         * The coefficients should be given in order from the constant
          * coefficient to the leading coefficient.
          *
          * There is no problem if the leading coefficient (i.e., the
@@ -165,10 +165,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 
         /**
          * Creates a new polynomial from a hard-coded sequence of coefficients.
-         *
-         * This constructor takes a C++11 initialiser list, which should
-         * contain the coefficients in order from the constant coefficient
-         * to the leading coefficient.
+         * The coefficients should be given in order from the constant
+         * coefficient to the leading coefficient.
          *
          * There is no problem if the leading coefficient (i.e., the
          * last coefficient in the sequence) is zero.

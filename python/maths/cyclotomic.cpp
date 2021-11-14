@@ -45,6 +45,12 @@ void addCyclotomic(pybind11::module_& m) {
         .def(pybind11::init<size_t, int>())
         .def(pybind11::init<size_t, const regina::Rational&>())
         .def(pybind11::init<const Cyclotomic&>())
+        .def(pybind11::init([](size_t field, pybind11::list l) {
+            Rational* coeffs = regina::python::seqFromList<Rational>(l);
+            auto* ans = new Cyclotomic(field, coeffs, coeffs + l.size());
+            delete[] coeffs;
+            return ans;
+        }))
         .def("init", &Cyclotomic::init)
         .def("field", &Cyclotomic::field)
         .def("degree", &Cyclotomic::degree)

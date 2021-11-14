@@ -162,21 +162,46 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          */
         Cyclotomic(Cyclotomic&& value) noexcept;
         /**
-         * Creates a new field element from a hard-coded sequence of
-         * coefficients.
-         *
-         * This constructor takes a C++11 initialiser list, which should
-         * contain the coefficients of the field element's polynomial
-         * representation, in order from the constant coefficient
-         * upwards.  See operator[] for details on what this polynomial
-         * representation means.
+         * Creates a new field element from the given sequence of coefficients.
+         * The coefficients should describe the field element's polynomial
+         * representation, and should be given in order from the constant
+         * coefficient upwards.  See operator[] for details on what this
+         * polynomial representation means.
          *
          * There should be at most <tt>deg(Φ_n) = φ(n)</tt> coefficients in
          * the list, where \a n is the given order of the underlying field;
          * any missing coefficients are assumed to be zero.  In particular,
          * an empty sequence is allowed (and represents the zero field element).
          *
-         * \ifacespython Not available.
+         * \pre Rationals can be assigned values from dereferenced iterators
+         * of type \a iterator.
+         *
+         * \ifacespython Instead of a pair of iterators, this routine
+         * takes a python list of coefficients.
+         *
+         * @param field the order of the underlying cyclotomic field;
+         * this must be strictly positive.
+         * @param begin the beginning of a sequence of at most <tt>φ(n)</tt>
+         * coefficients, as described above.
+         * @param end a past-the-end iterator indicating the end of the
+         * sequence of coefficients.
+         */
+        template <typename iterator>
+        Cyclotomic(size_t field, iterator begin, iterator end);
+        /**
+         * Creates a new field element from a hard-coded sequence of
+         * coefficients.  The coefficients should describe the field element's
+         * polynomial representation, and should be given in order from the
+         * constant coefficient upwards.  See operator[] for details on what
+         * this polynomial representation means.
+         *
+         * There should be at most <tt>deg(Φ_n) = φ(n)</tt> coefficients in
+         * the list, where \a n is the given order of the underlying field;
+         * any missing coefficients are assumed to be zero.  In particular,
+         * an empty sequence is allowed (and represents the zero field element).
+         *
+         * \ifacespython Not available, but there is a Python constructor
+         * that takes a list of coefficients (which need not be constant).
          *
          * @param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
@@ -868,10 +893,19 @@ inline Cyclotomic::Cyclotomic(size_t field, size_t degree, Rational* coeff) :
         field_(field), degree_(degree), coeff_(coeff) {
 }
 
+template <typename iterator>
+inline Cyclotomic::Cyclotomic(size_t field, iterator begin, iterator end) :
+        field_(field), degree_(cyclotomic(field).degree()),
+        coeff_(new Rational[degree_]) {
+    // Rationals initialise to 0, so a shorter list of coefficients is ok.
+    std::copy(begin, end, coeff_);
+}
+
 inline Cyclotomic::Cyclotomic(size_t field,
         std::initializer_list<Rational> coefficients) :
         field_(field), degree_(cyclotomic(field).degree()),
         coeff_(new Rational[degree_]) {
+    // Rationals initialise to 0, so a shorter list of coefficients is ok.
     std::copy(coefficients.begin(), coefficients.end(), coeff_);
 }
 
