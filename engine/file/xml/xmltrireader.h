@@ -342,8 +342,8 @@ inline void XMLSimplexReader<dim>::startElement(const std::string&,
 
 template <int dim>
 void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
-    std::vector<std::string> tokens;
-    if (basicTokenise(back_inserter(tokens), chars) != 2 * (dim + 1))
+    std::vector<std::string> tokens = basicTokenise(chars);
+    if (tokens.size() != 2 * (dim + 1))
         return;
 
     long simpIndex;

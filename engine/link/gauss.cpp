@@ -81,8 +81,7 @@ Link Link::fromGauss(const std::string& s) {
 }
 
 Link Link::fromOrientedGauss(const std::string& s) {
-    std::vector<std::string> terms;
-    basicTokenise(std::back_inserter(terms), s);
+    std::vector<std::string> terms = basicTokenise(s);
     return fromOrientedGauss(terms.begin(), terms.end());
 }
 
@@ -300,8 +299,7 @@ void Tangle::orientedGauss(std::ostream& out) const {
 }
 
 Tangle Tangle::fromOrientedGauss(const std::string& s) {
-    std::vector<std::string> terms;
-    basicTokenise(std::back_inserter(terms), s);
+    std::vector<std::string> terms = basicTokenise(s);
     return fromOrientedGauss(terms.begin(), terms.end());
 }
 

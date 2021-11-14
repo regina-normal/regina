@@ -56,9 +56,9 @@ std::string stripWhitespace(const std::string& str) {
     std::string::size_type end = str.length();
 
     while (start < end && isspace(str[start]))
-        start++;
+        ++start;
     while (start < end && isspace(str[end - 1]))
-        end--;
+        --end;
 
     return str.substr(start, end - start);
 }
@@ -173,6 +173,36 @@ std::string stringToToken(std::string str) {
         if (isspace(c))
             c = '_';
     return str; // I *believe* this is a move, not a copy (C++ Core Issue 1148).
+}
+
+std::vector<std::string> basicTokenise(const std::string& str) {
+    std::vector<std::string> ans;
+
+    std::string::size_type len = str.length();
+    std::string::size_type pos = 0;
+
+    // Skip initial whitespace.
+    while (pos < len && isspace(str[pos]))
+        ++pos;
+
+    if (pos == len)
+        return {};
+
+    // Extract each token.
+    std::string::size_type tokStart;
+    while (pos < len) {
+        // Find the characters making up this token.
+        tokStart = pos;
+        while (pos < len && ! isspace(str[pos]))
+            ++pos;
+        ans.push_back(str.substr(tokStart, pos - tokStart));
+
+        // Skip the subsequent whitespace.
+        while (pos < len && isspace(str[pos]))
+            ++pos;
+    }
+
+    return ans;
 }
 
 } // namespace regina

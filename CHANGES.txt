@@ -1496,6 +1496,9 @@ Version 7.0  [ TODO ]
             - Removed these global functions (which were never available in
               python). Use Face<dim, subdim>::allowsNonOrientableLinks
               and Face<dim, subdim>::allowsInvalidFaces instead.
+        Function basicTokenise():
+            - Rewritten to return the list of tokens as a std::vector.
+              The old version has been kept also but is now deprecated.
         Function binomSmall(), binomMedium():
             - Both these functions are now inline and constexpr.
         Function clonePtr():

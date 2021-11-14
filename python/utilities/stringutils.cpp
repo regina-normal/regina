@@ -31,12 +31,17 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "utilities/stringutils.h"
 
 using pybind11::overload_cast;
 
 void addStringUtils(pybind11::module_& m) {
+    m.def("startsWith", &regina::startsWith);
+    m.def("stripWhitespace", &regina::stripWhitespace);
     m.def("stringToToken", &regina::stringToToken);
+    m.def("basicTokenise", (std::vector<std::string> (*)(const std::string&))(
+        &regina::basicTokenise));
 
     m.def("subscript",
         &regina::subscript<long>);

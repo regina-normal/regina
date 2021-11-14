@@ -57,8 +57,7 @@ namespace {
             }
 
             void initialChars(const std::string& chars) override {
-                std::list<std::string> tokens;
-                basicTokenise(back_inserter(tokens), chars);
+                std::vector<std::string> tokens = basicTokenise(chars);
 
                 std::string genStr, powStr;
                 long gen, pow;
@@ -102,15 +101,13 @@ void XMLAbelianGroupReader::startElement(const std::string&,
 
 void XMLAbelianGroupReader::initialChars(const std::string& chars) {
     if (group_) {
-        std::list<std::string> tokens;
-        if (basicTokenise(back_inserter(tokens), chars) > 0) {
-            try {
-                for (const std::string& t : tokens)
-                    group_->addTorsion(Integer(t));
-            } catch (const regina::InvalidArgument&) {
-                // Unparseable.
-                group_.reset();
-            }
+        std::vector<std::string> tokens = basicTokenise(chars);
+        try {
+            for (const std::string& t : tokens)
+                group_->addTorsion(Integer(t));
+        } catch (const regina::InvalidArgument&) {
+            // Unparseable.
+            group_.reset();
         }
     }
 }

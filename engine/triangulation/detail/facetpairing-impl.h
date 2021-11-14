@@ -207,13 +207,12 @@ std::string FacetPairingBase<dim>::toTextRep() const {
 
 template <int dim>
 FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
-    std::vector<std::string> tokens;
-    unsigned nTokens = basicTokenise(back_inserter(tokens), rep);
+    std::vector<std::string> tokens = basicTokenise(rep);
 
-    if (nTokens == 0 || nTokens % (2 * (dim + 1)) != 0)
+    if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
         throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
-    long nSimp = nTokens / (2 * (dim + 1));
+    long nSimp = tokens.size() / (2 * (dim + 1));
     FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.

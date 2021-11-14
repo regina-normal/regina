@@ -49,8 +49,8 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
     if (vecLen < 0)
         return;
 
-    std::vector<std::string> tokens;
-    if (basicTokenise(back_inserter(tokens), chars) % 2 != 0)
+    std::vector<std::string> tokens = basicTokenise(chars);
+    if (tokens.size() % 2 != 0)
         return;
 
     // Create a new vector and read all non-zero entries.
