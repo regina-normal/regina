@@ -84,7 +84,7 @@ class HilbertPrimal {
          * subspace is a pointed polyhedral cone with apex at the origin,
          * and this routine requires the extremal rays of this cone to
          * be provided as input.  The extremal rays can be computed
-         * using DoubleDescription::enumerateExtremalRays() in general cases,
+         * using DoubleDescription::enumerate() in general cases,
          * though sometimes (such as with normal surface theory) more
          * efficient methods are available.
          *
@@ -148,7 +148,7 @@ class HilbertPrimal {
          * will be reported, or \c null if no progress reporting is required.
          */
         template <class RayClass, class RayIterator, typename Action>
-        static void enumerateHilbertBasis(Action&& action,
+        static void enumerate(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr);
@@ -158,13 +158,13 @@ class HilbertPrimal {
 
     private:
         /**
-         * Identical to the public routine enumerateHilbertBasis(),
+         * Identical to the public routine enumerate(),
          * except that there is an extra template parameter \a BitmaskType.
          * This describes what type should be used for bitmasks that
          * represent maximal admissible faces.
          *
          * All arguments to this function are identical to those for the
-         * public routine enumerateHilbertBasis().
+         * public routine enumerate().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
          * as Bitmask, Bitmask1 or Bitmask2.

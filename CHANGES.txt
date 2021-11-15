@@ -225,6 +225,8 @@ Version 7.0  [ TODO ]
             - DiscSetTet::discFromArc() now returns a std::pair instead
               of taking output variables by reference.
         Class DoubleDescription:
+            - Renamed enumerateExtremalRays() to enumerate().  The old name
+              is removed completely.
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
             - The main enumeration routine no longer takes an output iterator;
@@ -406,6 +408,8 @@ Version 7.0  [ TODO ]
         Class HasReturnType:
             - Removed completely.
         Class HilbertCD, HilbertDual, HilbertPrimal:
+            - Renamed enumerateHilbertBasis() to enumerate().  The old name
+              is removed completely.
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
             - The main enumeration routine no longer takes an output iterator;

@@ -129,8 +129,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
             compat.addLocal({ 0, 1, 2 });
 
             // Find the angle structures.
-            DoubleDescription::enumerateExtremalRays<VectorInt>(
-                [this](VectorInt&& v) {
+            DoubleDescription::enumerate<VectorInt>([this](VectorInt&& v) {
                     structures_.emplace_back(triangulation_, std::move(v));
                 }, eqns, compat, tracker);
         }
@@ -156,8 +155,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
             tracker->newStage("Enumerating vertex angle structures");
 
         // Find the angle structures.
-        DoubleDescription::enumerateExtremalRays<VectorInt>(
-            [this](VectorInt&& v) {
+        DoubleDescription::enumerate<VectorInt>([this](VectorInt&& v) {
                 structures_.emplace_back(triangulation_, std::move(v));
             }, eqns, ValidityConstraints::none, tracker);
 

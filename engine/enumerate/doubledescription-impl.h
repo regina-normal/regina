@@ -205,12 +205,12 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
 }
 
 template <class RayClass, typename Action>
-void DoubleDescription::enumerateExtremalRays(Action&& action,
+void DoubleDescription::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
-        "DoubleDescription::enumerateExtremalRays() requires the RayClass "
+        "DoubleDescription::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
 

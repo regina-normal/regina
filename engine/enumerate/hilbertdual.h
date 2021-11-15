@@ -166,7 +166,7 @@ class HilbertDual {
          * before they are processed.
          */
         template <class RayClass, typename Action>
-        static void enumerateHilbertBasis(Action&& action,
+        static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr, unsigned initialRows = 0);
 
@@ -341,13 +341,13 @@ class HilbertDual {
         };
 
         /**
-         * Identical to the public routine enumerateHilbertBasis(),
+         * Identical to the public routine enumerate(),
          * except that there is an extra template parameter \a BitmaskType.
          * This describes what type should be used for bitmasks that
          * represent zero/non-zero coordinates in a vector.
          *
          * All argument are identical to those for the public routine
-         * enumerateHilbertBasis().
+         * enumerate().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
          * as Bitmask, Bitmask1 or Bitmask2.
@@ -423,7 +423,7 @@ class HilbertDual {
          *
          * This routine can optionally enforce a set of validity
          * constraints (such as the normal surface quadrilateral
-         * constraints), as described in enumerateHilbertBasis().
+         * constraints), as described in enumerate().
          *
          * The set of validity constraints must be passed here as a container
          * of bitmasks, as returned by ValidityConstraints::bitmasks().

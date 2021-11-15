@@ -55,12 +55,12 @@
 namespace regina {
 
 template <class RayClass, typename Action>
-void HilbertDual::enumerateHilbertBasis(Action&& action,
+void HilbertDual::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
-        "HilbertDual::enumerateHilbertBasis() requires the RayClass "
+        "HilbertDual::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
 

@@ -55,8 +55,7 @@ namespace regina {
  * order before enumerating vertex or fundamental normal surfaces
  * A hyperplane is described by a row of the \a subspace matrix,
  * as passed to an enumeration routine such as
- * DoubleDescription::enumerateExtremalRays() or
- * HilbertDual::enumerateHilbertBasis().
+ * DoubleDescription::enumerate() or HilbertDual::enumerate().
  *
  * The ordering is defined as follows.  For each hyperplane, we
  * create a <i>position vector</i> (h_1, ..., h_f), where h_i is 0 if the

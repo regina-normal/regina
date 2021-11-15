@@ -133,7 +133,7 @@ class HilbertCD {
          * or ValidityConstraints::none if none should be imposed.
          */
         template <class RayClass, typename Action>
-        static void enumerateHilbertBasis(Action&& action,
+        static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints);
 
         // Mark this class as non-constructible.
@@ -183,13 +183,13 @@ class HilbertCD {
             VecSpec& operator = (const VecSpec&) = default;
         };
         /**
-         * Identical to the public routine enumerateHilbertBasis(),
+         * Identical to the public routine enumerate(),
          * except that there is an extra template parameter \a BitmaskType.
          * This describes what type should be used for bitmasks that
          * assign flags to individual coordinate positions.
          *
          * All arguments to this function are identical to those for the
-         * public routine enumerateHilbertBasis().
+         * public routine enumerate().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
          * as Bitmask, Bitmask1 or Bitmask2.

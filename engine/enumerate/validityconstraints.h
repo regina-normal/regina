@@ -49,10 +49,10 @@ namespace regina {
  * Represents a set of combinatorial validity constraints for use with
  * polytope vertex enumeration.
  *
- * Vertex enumeration routines such as
- * DoubleDescription::enumerateExtremalRays() take a cone (specifically the
- * non-negative orthant), form the intersection of that cone with a given
- * linear subspace, and return the extremal rays of the new cone that results.
+ * Vertex enumeration routines such as DoubleDescription::enumerate() take a
+ * cone (specifically the non-negative orthant), form the intersection of that
+ * cone with a given linear subspace, and return the extremal rays of the new
+ * cone that results.
  *
  * In some cases we are only interested in \e valid rays of the new cone.
  * The ValidityConstraints class stores a number of "validity constraints";

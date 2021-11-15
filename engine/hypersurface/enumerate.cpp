@@ -177,13 +177,13 @@ void NormalHypersurfaces::Enumerator::fillVertexDD() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         ValidityConstraints c = makeEmbeddedConstraints(
             *list_->triangulation_, list_->coords_);
-        DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
+        DoubleDescription::enumerate<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
             }, eqns_, c, tracker_);
     } else {
-        DoubleDescription::enumerateExtremalRays<Vector<LargeInteger>>(
+        DoubleDescription::enumerate<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
@@ -259,13 +259,13 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
-        HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
+        HilbertPrimal::enumerate<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
             }, shadows.begin(), shadows.end(), c, tracker_);
     } else {
-        HilbertPrimal::enumerateHilbertBasis<Vector<LargeInteger>>(
+        HilbertPrimal::enumerate<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
@@ -283,13 +283,13 @@ void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
             list_->coords_);
-        HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
+        HilbertDual::enumerate<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));
             }, eqns_, c, tracker_);
     } else {
-        HilbertDual::enumerateHilbertBasis<Vector<LargeInteger>>(
+        HilbertDual::enumerate<Vector<LargeInteger>>(
             [this](Vector<LargeInteger>&& v) {
                 list_->surfaces_.emplace_back(list_->triangulation_,
                     list_->coords_, std::move(v));

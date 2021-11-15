@@ -82,7 +82,7 @@ class MaxAdmissible {
          *
          * The input for this routine is the set of all admissible extremal rays
          * of the cone.  These should be computed beforehand; for instance,
-         * using the routine DoubleDescription::enumerateExtremalRays().
+         * using the routine DoubleDescription::enumerate().
          *
          * The return value is a vector containing all maximal admissible
          * faces.  Each face \a F is described by a bitmask.  Specifically:

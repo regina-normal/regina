@@ -140,7 +140,7 @@ class DoubleDescription {
          * before they are processed.
          */
         template <class RayClass, typename Action>
-        static void enumerateExtremalRays(Action&& action,
+        static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr, unsigned long initialRows = 0);
 
@@ -156,7 +156,7 @@ class DoubleDescription {
          * store the coordinates of the ray.  Instead it stores:
          *
          * - the dot products of this ray with each of the hyperplanes
-         *   passed to DoubleDescription::enumerateExtremalRays();
+         *   passed to DoubleDescription::enumerate();
          *
          * - a bitmask indicating which facets of the original cone this
          *   ray belongs to.
@@ -314,13 +314,13 @@ class DoubleDescription {
         };
 
         /**
-         * Identical to the public routine enumerateExtremalRays(), except
+         * Identical to the public routine enumerate(), except
          * that there is an extra template parameter \a BitmaskType.
          * This specifies what type should be used for the bitmask
          * describing which original facets a ray belongs to.
          *
          * All arguments to this function are identical to those for the
-         * public routine enumerateExtremalRays().
+         * public routine enumerate().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
          * as Bitmask, Bitmask1 or Bitmask2.

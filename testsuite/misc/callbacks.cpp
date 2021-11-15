@@ -590,10 +590,10 @@ class CallbacksTest : public CppUnit::TestFixture {
             // take additional user-supplied arguments:
             //
             // CensusDB::lookup()
-            // DoubleDescription::enumerateExtremalRays()
-            // HilbertCD::enumerateHilbertBasis()
-            // HilbertDual::enumerateHilbertBasis()
-            // HilbertPrimal::enumerateHilbertBasis()
+            // DoubleDescription::enumerate()
+            // HilbertCD::enumerate()
+            // HilbertDual::enumerate()
+            // HilbertPrimal::enumerate()
         }
 };
 
