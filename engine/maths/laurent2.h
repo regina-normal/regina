@@ -163,12 +163,48 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         Laurent2(const Laurent2<U>& value);
 
         /**
+         * Creates a new polynomial from the given collection of coefficients.
+         *
+         * The coefficients should be presented as a collection of tuples of
+         * the form (\a d, \a e, \a v), each representing a term of the form
+         * <tt>v x^d y^e</tt>.
+         *
+         * The tuples may be given in any order.
+         * An empty sequence will be treated as the zero polynomial.
+         *
+         * Unlike the std::initializer_list constructor, zero coefficients are
+         * allowed (these will be silently ignored), and multiple coefficients
+         * with the same exponents are also allowed (these will be aggregated
+         * using the += operator).
+         *
+         * \ifacespython Instead of the iterators \a begin and \a end,
+         * this routine takes a python list of tuples.
+         *
+         * \tparam iterator an iterator type which, when dereferenced, gives a
+         * std::tuple of the form (\a d, \a e, \a v), where \a d and \a e can
+         * be assigned to long integers, and where \a v can be assigned to
+         * type \a T.
+         *
+         * \tparam deref a dummy argument that should be ignored.  This is
+         * present to ensure that \a iterator can be dereferenced, so that
+         * a call such as Laurent2(int, int) falls through to the (long, long)
+         * constructor, and not this iterator-based constructor instead.
+         *
+         * @param begin the beginning of the set of coefficients, as outlined
+         * above.
+         * @param end a past-the-end iterator indicating the end of the set of
+         * coefficients.
+         */
+        template <typename iterator, typename deref = decltype(*iterator())>
+        Laurent2(iterator begin, iterator end);
+
+        /**
          * Creates a new polynomial from a hard-coded collection of
          * non-zero coefficients.
          *
-         * This constructor takes a C++11 initialiser list, which should
-         * contain a collection of tuples of the form (\a d, \a e, \a v)
-         * each representing a term of the form <tt>v x^d y^e</tt>.
+         * The coefficients should be presented as a collection of tuples of
+         * the form (\a d, \a e, \a v) each representing a term of the form
+         * <tt>v x^d y^e</tt>.
          *
          * The tuples may be given in any order.
          * An empty sequence will be treated as the zero polynomial.
@@ -180,19 +216,11 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * Laurent2<Integer> p = { { 0, 0, 3 }, { 1, -1, 2 } };
          * \endcode
          *
-         * Unlike the other polynomial-like classes, there is no corresponding
-         * "pair of iterators" constructor that allows the list of coefficients
-         * to be built at runtime (or passed from Python).  This is because
-         * the developer does not have a good way to ensure that a pair of
-         * numeric arguments would invoke the (long, long) constructor and not
-         * this templated (iterator, iterator) constructor.  This may change in
-         * future releases of Regina (and please tell Ben if you know how
-         * to solve this without requiring C++20).
-         *
          * \pre Each tuple has a non-zero value \a v, and no two tuples
          * share the same pair of exponents (\a d, \a e).
          *
-         * \ifacespython Not available (see above for why).
+         * \ifacespython Not available, but there is a Python constructor
+         * that takes a list of coefficients (which need not be constant).
          *
          * @param coefficients the set of all non-zero coefficients, as
          * outlined above.
@@ -803,6 +831,24 @@ template <typename U>
 inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
         coeff_(value.coeff_) {
     // std::cerr << "Laurent2: deep copy (init)" << std::endl;
+}
+
+template <typename T>
+template <typename iterator, typename deref>
+inline Laurent2<T>::Laurent2(iterator begin, iterator end) {
+    for (auto it = begin; it != end; ++it) {
+        if (std::get<2>(*it) == 0)
+            continue;
+
+        auto res = coeff_.emplace(Exponents(std::get<0>(*it), std::get<1>(*it)),
+            std::get<2>(*it));
+        if (! res.second) {
+            // This pair of exponents is already present.
+            // Accumulate, and erase if the resulting coefficient is zero.
+            if ((res.first->second += std::get<2>(*it)) == 0)
+                coeff_.erase(res.first);
+        }
+    }
 }
 
 template <typename T>
