@@ -41,6 +41,7 @@
 #endif
 
 #include "regina-core.h"
+#include "maths/matrix.h"
 #include "maths/vector.h"
 #include <iterator>
 #include <list>
@@ -65,8 +66,6 @@ class ValidityConstraints;
  * extremely slow, even when modified to incorporate admissibility
  * constraints.  Consider using the much faster HilbertPrimal or
  * HilbertDual instead.
- *
- * \ifacespython Not present.
  *
  * \ingroup enumerate
  */
@@ -120,6 +119,14 @@ class HilbertCD {
          * extremely slow, even when modified to incorporate admissibility
          * constraints.  Consider using the much faster HilbertPrimal or
          * HilbertDual instead.
+         *
+         * \ifacespython There are two versions of this function available
+         * in Python.  The first version is the same as the C++ function;
+         * here you must pass \a action, which may be a pure Python function.
+         * The second form does not have an \a action argument; instead you
+         * call <tt>enumerate(subspace, constraints)</tt>,
+         * and it returns a Python list containing all Hilbert basis elements.
+         * In both versions, the argument \a RayClass is fixed as VectorInt.
          *
          * @param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single

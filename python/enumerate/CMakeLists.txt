@@ -2,6 +2,10 @@
 
 # Files to compile
 SET ( FILES
+  doubledescription.cpp
+  hilbertcd.cpp
+  hilbertdual.cpp
+  hilbertprimal.cpp
   pyenumerate.cpp
   treelp.cpp
   typetrie.cpp

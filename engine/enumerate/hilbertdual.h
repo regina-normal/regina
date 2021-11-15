@@ -91,8 +91,6 @@ class ValidityConstraints;
  * All routines of interest within this class are static; no object of
  * this class should ever be created.
  *
- * \ifacespython Not present.
- *
  * \ingroup enumerate
  */
 class HilbertDual {
@@ -147,6 +145,14 @@ class HilbertDual {
          * \pre The template argument RayClass is derived from (or equal to)
          * Vector<T>, where \a T is one of Regina's arbitrary-precision
          * integer classes (Integer or LargeInteger).
+         *
+         * \ifacespython There are two versions of this function available
+         * in Python.  The first version is the same as the C++ function;
+         * here you must pass \a action, which may be a pure Python function.
+         * The second form does not have an \a action argument; instead you
+         * call <tt>enumerate(subspace, constraints, tracker, initialRows)</tt>,
+         * and it returns a Python list containing all Hilbert basis elements.
+         * In both versions, the argument \a RayClass is fixed as VectorInt.
          *
          * @param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single

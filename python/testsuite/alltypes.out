@@ -289,6 +289,9 @@ Equality type : EqualityType.BY_VALUE
 DiscType : class
 Equality type : EqualityType.BY_VALUE
 
+DoubleDescription : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 Edge10 : typedef ->  Face10_1
 
 Edge11 : typedef ->  Face11_1
@@ -1293,6 +1296,15 @@ Equality type : EqualityType.BY_REFERENCE
 
 Handlebody : class
 Equality type : EqualityType.BY_VALUE
+
+HilbertCD : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+HilbertDual : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+HilbertPrimal : class
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 HomGroupPresentation : class
 Equality type : EqualityType.BY_REFERENCE

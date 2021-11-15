@@ -67,8 +67,6 @@ class ValidityConstraints;
  * All routines of interest within this class are static; no object of
  * this class should ever be created.
  *
- * \ifacespython Not present.
- *
  * \ingroup enumerate
  */
 class HilbertPrimal {
@@ -134,6 +132,17 @@ class HilbertPrimal {
          * \warning If a progress tracker is passed, be aware that the
          * present implementation updates percentage progress very infrequently,
          * and may take a very long time to honour cancellation requests.
+         *
+         * \ifacespython There are two versions of this function available
+         * in Python.  The first version is
+         * <tt>enumerate(action, rays, constraints, tracker)</tt>, which
+         * mirrors the C++ function; here \a action may be a pure Python
+         * function.  The second version does not have an \a action argument;
+         * instead you call <tt>enumerate(rays, constraints, tracker)</tt>,
+         * and it returns a Python list containing all Hilbert basis elements.
+         * In both versions, the extremal rays must be passed as a Python list
+         * of VectorInt objects, and the output type \a RayClass is likewise
+         * fixed as VectorInt.
          *
          * @param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single

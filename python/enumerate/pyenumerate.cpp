@@ -35,10 +35,18 @@ namespace pybind11 { class module_; }
 void addTreeLP(pybind11::module_& m);
 void addTypeTrie(pybind11::module_& m);
 void addValidityConstraints(pybind11::module_& m);
+void addDoubleDescription(pybind11::module_& m);
+void addHilbertCD(pybind11::module_& m);
+void addHilbertDual(pybind11::module_& m);
+void addHilbertPrimal(pybind11::module_& m);
 
 void addEnumerateClasses(pybind11::module_& m) {
     addTreeLP(m);
     addTypeTrie(m);
     addValidityConstraints(m);
+    addDoubleDescription(m);
+    addHilbertCD(m);
+    addHilbertDual(m);
+    addHilbertPrimal(m);
 }
 
