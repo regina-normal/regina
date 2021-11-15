@@ -45,6 +45,12 @@ void addValidityConstraints(pybind11::module_& m) {
             pybind11::arg("reserveLocal") = 0,
             pybind11::arg("reserveGlobal") = 0)
         .def(pybind11::init<const ValidityConstraints&>())
+        .def("addLocal", [](ValidityConstraints& v, std::vector<int> pos) {
+            v.addLocal(pos.begin(), pos.end());
+        })
+        .def("addGlobal", [](ValidityConstraints& v, std::vector<int> pos) {
+            v.addGlobal(pos.begin(), pos.end());
+        })
         .def("swap", &ValidityConstraints::swap)
         .def("bitmasks", &ValidityConstraints::bitmasks<regina::Bitmask>)
         .def_readonly_static("none", &ValidityConstraints::none)

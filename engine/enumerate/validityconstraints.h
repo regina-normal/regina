@@ -193,6 +193,32 @@ class ValidityConstraints {
          *
          * A single call to addLocal() will effectively add one local
          * constraint for every block.  Each local constraint will
+         * constraint the coordinates in the given iterator range, where these
+         * coordinate positions are given relative to the start of each block.
+         *
+         * For example, to encode the quadrilateral constraints for
+         * normal surfaces in standard coordinates, you can pass an
+         * iterator range that encodes the three integers 4, 5, 6.
+         *
+         * \pre The iterator type \a iterator, when dereferenced, can be
+         * assigned to a native C++ \c int.
+         *
+         * \ifacespython Instead of the iterators \a begin and \a end,
+         * this routine takes a python list of integers.
+         *
+         * @param begin the beginning of the list of coordinates to constraint
+         * within each block, relative to the start of the block, as outlined
+         * above.
+         * @param end a past-the-end iterator indicating the end of the list of
+         * coordinates to constraint within each block.
+         */
+        template <typename iterator>
+        void addLocal(iterator begin, iterator end);
+        /**
+         * Adds a new family of hard-coded local constraints to this set.
+         *
+         * A single call to addLocal() will effectively add one local
+         * constraint for every block.  Each local constraint will
          * constraint the coordinates in \a pattern, where these
          * coordinate positions are given relative to the start of each block.
          *
@@ -200,7 +226,9 @@ class ValidityConstraints {
          * normal surfaces in standard coordinates, you can make the
          * single call <tt>addLocal({4, 5, 6})</tt>.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but there is a Python version of this
+         * function that takes the coordinate pattern as a Python list
+         * (which need not be constant).
          *
          * @param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
@@ -208,6 +236,34 @@ class ValidityConstraints {
         void addLocal(std::initializer_list<int> pattern);
         /**
          * Adds one new global constraint to this set.
+         *
+         * A call to addGlobal() will add a single global constraint, using
+         * coordinates from every block.  Within each block, the coordinates
+         * that are constrained will be those listed in the given iterator
+         * range, where these coordinate positions are given relative to
+         * the start of each block.
+         *
+         * As an example, for almost normal surfaces in standard coordinates,
+         * you can encode the constraint that there is at most one octagon
+         * in the entire surface by passing an iterator range that
+         * encodes the three integers 7, 8, 9.
+         *
+         * \pre The iterator type \a iterator, when dereferenced, can be
+         * assigned to a native C++ \c int.
+         *
+         * \ifacespython Instead of the iterators \a begin and \a end,
+         * this routine takes a python list of integers.
+         *
+         * @param begin the beginning of the list of coordinates to constraint
+         * within each block, relative to the start of the block, as outlined
+         * above.
+         * @param end a past-the-end iterator indicating the end of the list of
+         * coordinates to constraint within each block.
+         */
+        template <typename iterator>
+        void addGlobal(iterator begin, iterator end);
+        /**
+         * Adds one new hard-coded global constraint to this set.
          *
          * A call to addGlobal() will add a single global constraint, using
          * coordinates from every block.  Within each block, the coordinates
@@ -219,7 +275,9 @@ class ValidityConstraints {
          * you can encode the constraint that there is at most one octagon
          * in the entire surface by calling <tt>addGlobal({7, 8, 9})</tt>.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but there is a Python version of this
+         * function that takes the coordinate pattern as a Python list
+         * (which need not be constant).
          *
          * @param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
@@ -303,8 +361,16 @@ inline ValidityConstraints::ValidityConstraints(int blockSize, size_t nBlocks,
     global_.reserve(reserveGlobal);
 }
 
+template <typename iterator>
+inline void ValidityConstraints::addLocal(iterator begin, iterator end) {
+    local_.emplace_back(begin, end);
+}
 inline void ValidityConstraints::addLocal(std::initializer_list<int> pattern) {
     local_.emplace_back(std::move(pattern));
+}
+template <typename iterator>
+inline void ValidityConstraints::addGlobal(iterator begin, iterator end) {
+    global_.emplace_back(begin, end);
 }
 inline void ValidityConstraints::addGlobal(std::initializer_list<int> pattern) {
     global_.emplace_back(std::move(pattern));
