@@ -54,7 +54,10 @@ void addValidityConstraints(pybind11::module_& m) {
             v.addGlobal(pos.begin(), pos.end());
         })
         .def("swap", &ValidityConstraints::swap)
-        .def("bitmasks", &ValidityConstraints::bitmasks<regina::Bitmask>)
+        .def("bitmasks", pybind11::overload_cast<size_t>(
+            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_))
+        .def("bitmasks", pybind11::overload_cast<>(
+            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_))
         .def_readonly_static("none", &ValidityConstraints::none)
     ;
     regina::python::add_eq_operators(c);

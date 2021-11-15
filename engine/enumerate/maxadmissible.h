@@ -56,8 +56,6 @@ class ValidityConstraints;
  * All routines of interest within this class are static; no object of
  * this class should ever be created.
  *
- * \ifacespython Not present.
- *
  * \ingroup enumerate
  */
 class MaxAdmissible {
@@ -107,6 +105,10 @@ class MaxAdmissible {
          * \a endExtremalRays).  This is always true of Bitmask, but
          * you must be careful when using one of the fast but size-limited
          * types Bitmask1 or Bitmask2.
+         *
+         * \ifacespython The extremal rays should be passed as a Python list
+         * of VectorInt objects, not a pair of iterators.  The bitmasks
+         * that are returned will be of type regina::Bitmask.
          *
          * @param beginExtremalRays an iterator that begins the set of
          * admissible extremal rays, as described above.  Typically this would

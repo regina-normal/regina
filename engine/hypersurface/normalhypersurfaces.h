@@ -915,8 +915,6 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
  * HS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
  * allows for immersed and/or singular hypersurfaces.
  *
- * \ifacespython Not present.
- *
  * @param triangulation the triangulation upon which these validity constraints
  * will be based.
  * @param coords the coordinate system to be used;

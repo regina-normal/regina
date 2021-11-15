@@ -61,6 +61,7 @@ void addNormalSurfaces(pybind11::module_& m) {
     ;
 
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
+    m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
 
     SafeIterator<NormalSurfaces>::addBindings(m, "NormalSurfaceIterator");
 

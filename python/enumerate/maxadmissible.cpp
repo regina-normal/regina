@@ -30,25 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
+#include "enumerate/maxadmissible.h"
+#include "maths/vector.h"
+#include "../helpers.h"
 
-void addTreeLP(pybind11::module_& m);
-void addTypeTrie(pybind11::module_& m);
-void addValidityConstraints(pybind11::module_& m);
-void addDoubleDescription(pybind11::module_& m);
-void addHilbertCD(pybind11::module_& m);
-void addHilbertDual(pybind11::module_& m);
-void addHilbertPrimal(pybind11::module_& m);
-void addMaxAdmissible(pybind11::module_& m);
+using regina::MaxAdmissible;
+using regina::VectorInt;
 
-void addEnumerateClasses(pybind11::module_& m) {
-    addTreeLP(m);
-    addTypeTrie(m);
-    addValidityConstraints(m);
-    addDoubleDescription(m);
-    addHilbertCD(m);
-    addHilbertDual(m);
-    addHilbertPrimal(m);
-    addMaxAdmissible(m);
+void addMaxAdmissible(pybind11::module_& m) {
+    auto c = pybind11::class_<MaxAdmissible>(m, "MaxAdmissible")
+        .def_static("enumerate", [](const std::vector<VectorInt>& rays,
+                const regina::ValidityConstraints& c) {
+            return MaxAdmissible::enumerate<regina::Bitmask>(
+                rays.begin(), rays.end(), c);
+        })
+    ;
+    regina::python::no_eq_operators(c);
 }
 

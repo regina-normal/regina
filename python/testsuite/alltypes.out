@@ -1441,6 +1441,9 @@ Equality type : EqualityType.BY_VALUE
 MatrixInt : class
 Equality type : EqualityType.BY_VALUE
 
+MaxAdmissible : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 ModelLinkGraph : class
 Equality type : EqualityType.BY_REFERENCE
 

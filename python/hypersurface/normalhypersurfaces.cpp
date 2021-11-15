@@ -46,6 +46,7 @@ using regina::Triangulation;
 
 void addNormalHypersurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
+    m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
 
     SafeIterator<NormalHypersurfaces>::addBindings(m,
         "NormalHypersurfaceIterator");

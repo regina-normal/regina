@@ -292,7 +292,7 @@ class ValidityConstraints {
 
         /**
          * Returns the list of all individual validity constraints, each
-         * expressed as a bitmask.
+         * expressed as a bitmask of the given length.
          *
          * Each local constraint "pattern" that was added using addLocal()
          * will produce many bitmasks, since there will be one local constraint
@@ -321,6 +321,45 @@ class ValidityConstraints {
          */
         template <typename BitmaskType>
         std::vector<BitmaskType> bitmasks(size_t len) const;
+
+        /**
+         * Returns the list of all individual validity constraints, each
+         * expressed as a bitmask of the smallest possible length.
+         *
+         * Calling <tt>bitmasks()</tt> is equivalent to calling
+         * <tt>bitmasks(len)</tt>, where \a len is the block size multiplied
+         * by the number of blocks.
+         *
+         * As an example, this is appropriate for normal surface coordinate
+         * systems, where the normal coordinates incorporate precisely
+         * one block for each tetrahedron and nothing more.  However, it is
+         * not appropriate for angle structure coordinates, where there is an
+         * additional "scaling coordinate" that appears after all the blocks.
+         *
+         * Each local constraint "pattern" that was added using addLocal()
+         * will produce many bitmasks, since there will be one local constraint
+         * for every block.  Each global constraint that was added using
+         * addGlobal() will produce just one bitmask.
+         *
+         * The bits corresponding to coordinate positions that are constrained
+         * will be set to \c true; all other bits will be set to \c false.
+         *
+         * \pre A bitmask of type \a BitmaskType is large enough to store
+         * \a len bits, where \a len is the block size multiplied by the
+         * number of blocks.  Each bitmask that is returned will be created
+         * with this length.
+         *
+         * \ifacespython This routine uses the bitmask type regina::Bitmask.
+         *
+         * \tparam BitmaskType the bitmask type used to encode each constraint;
+         * this must be one of Regina's own bitmask types, such as Bitmask,
+         * Bitmask1 or Bitmask2.
+         *
+         * @return the list of bitmasks describing the full set of validity
+         * constraints.
+         */
+        template <typename BitmaskType>
+        std::vector<BitmaskType> bitmasks() const;
 
     private:
         /**
@@ -406,6 +445,11 @@ std::vector<BitmaskType> ValidityConstraints::bitmasks(size_t len) const {
     }
 
     return ans;
+}
+
+template <typename BitmaskType>
+inline std::vector<BitmaskType> ValidityConstraints::bitmasks() const {
+    return bitmasks<BitmaskType>(blockSize_ * nBlocks_);
 }
 
 inline void swap(ValidityConstraints& a, ValidityConstraints& b) noexcept {
