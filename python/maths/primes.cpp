@@ -53,7 +53,7 @@ void addPrimes(pybind11::module_& m) {
         })
         .def_static("primePowerDecomp", &Primes::primePowerDecomp)
         .def_static("primePowerDecompInt", [](const Integer& n) {
-            std::vector<std::pair<Integer, unsigned long> >
+            std::vector<std::pair<Integer, unsigned long>>
                 factors = Primes::primePowerDecomp(n);
             pybind11::list ans;
             for (auto& f : factors)
