@@ -4380,6 +4380,12 @@
 		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
 		05CAE60327427A8A007C93F3 /* ordering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ordering.cpp; sourceTree = "<group>"; };
 		05CAE60427427A8A007C93F3 /* maxadmissible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxadmissible.cpp; sourceTree = "<group>"; };
+		05CAE60927429B18007C93F3 /* id.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = id.out; sourceTree = "<group>"; };
+		05CAE60A27429B18007C93F3 /* enumerate.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = enumerate.test; sourceTree = "<group>"; };
+		05CAE60B27429B18007C93F3 /* sets.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = sets.out; sourceTree = "<group>"; };
+		05CAE60C27429B19007C93F3 /* id.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = id.test; sourceTree = "<group>"; };
+		05CAE60D27429B19007C93F3 /* enumerate.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = enumerate.out; sourceTree = "<group>"; };
+		05CAE60E27429B19007C93F3 /* sets.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = sets.test; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5119,6 +5125,8 @@
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
 				0577E6DF1F97087A00CBDF15 /* embeddings.out */,
 				0577E6EA1F97088000CBDF15 /* embeddings.test */,
+				05CAE60D27429B19007C93F3 /* enumerate.out */,
+				05CAE60A27429B18007C93F3 /* enumerate.test */,
 				05431FD21C40F67C009BC072 /* equality.out */,
 				05431FD31C40F67C009BC072 /* equality.test */,
 				050F5D881B9BAB9C00C1F681 /* euler.out */,
@@ -5142,6 +5150,8 @@
 				050F5D911B9BAB9C00C1F681 /* i18n-utf8.rga */,
 				050F5D921B9BAB9C00C1F681 /* i18n.out */,
 				050F5D931B9BAB9C00C1F681 /* i18n.test */,
+				05CAE60927429B18007C93F3 /* id.out */,
+				05CAE60C27429B19007C93F3 /* id.test */,
 				0598027B2667067C002D5D57 /* index.out */,
 				0598027E2667067C002D5D57 /* index.test */,
 				05199A3025C63B7F0006B8FA /* integer.out */,
@@ -5178,6 +5188,8 @@
 				0577E6E01F97087A00CBDF15 /* safeheldtype_packet.out */,
 				0577E6E41F97087C00CBDF15 /* safeheldtype_packet.test */,
 				050F5D9F1B9BAB9C00C1F681 /* sample.pdf */,
+				05CAE60B27429B18007C93F3 /* sets.out */,
+				05CAE60E27429B19007C93F3 /* sets.test */,
 				05431FD41C40F67C009BC072 /* skeleton.out */,
 				05431FD51C40F67C009BC072 /* skeleton.test */,
 				05772F06270CFB6000D26D8A /* snapshot.out */,
