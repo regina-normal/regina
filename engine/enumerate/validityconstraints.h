@@ -105,8 +105,6 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Not present.
- *
  * \ingroup enumerate
  */
 class ValidityConstraints {
@@ -310,8 +308,7 @@ class ValidityConstraints {
          * \pre A bitmask of type \a BitmaskType is large enough to store
          * \a len bits.
          *
-         * \ifacespython This routine is only available in Python for the
-         * bitmask type regina::Bitmask.
+         * \ifacespython This routine uses the bitmask type regina::Bitmask.
          *
          * \tparam BitmaskType the bitmask type used to encode each constraint;
          * this must be one of Regina's own bitmask types, such as Bitmask,
