@@ -275,9 +275,13 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("hasGeneralAngleStructure",
             &Triangulation<3>::hasGeneralAngleStructure)
+        .def("maximalForestInBoundary",
+            &Triangulation<3>::maximalForestInBoundary,
+            pybind11::return_value_policy::reference_internal)
         .def("maximalForestInSkeleton",
             &Triangulation<3>::maximalForestInSkeleton,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            pybind11::arg("canJoinBoundaries") = true)
         .def("intelligentSimplify", &Triangulation<3>::intelligentSimplify)
         .def("simplifyToLocalMinimum",
             &Triangulation<3>::simplifyToLocalMinimum,

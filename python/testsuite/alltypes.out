@@ -1672,6 +1672,9 @@ Equality type : EqualityType.BY_REFERENCE
 Polynomial : class
 Equality type : EqualityType.BY_VALUE
 
+PosOrder : class
+Equality type : EqualityType.BY_REFERENCE
+
 Primes : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 

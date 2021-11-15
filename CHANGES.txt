@@ -1421,6 +1421,9 @@ Version 7.0  [ TODO ]
               to Adele Jackson).
             - Changed maximalForestInSkeleton() to return by value
               instead of returning through a reference argument.
+            - Changed maximalForestInBoundary() to return the edge set by
+              value, and to not return the vertex set at all (since this
+              is just all boundary vertices).
             - Routine enterTextTriangulation() is now deprecated; this
               is a relic from Regina's ancient past.
         Class Triangluation<4>:

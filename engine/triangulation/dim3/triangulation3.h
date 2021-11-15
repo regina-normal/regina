@@ -1280,25 +1280,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * Produces a maximal forest in the 1-skeleton of the
-         * triangulation boundary.
-         * Both given sets will be emptied and the edges and vertices of
-         * the maximal forest will be placed into them.
-         * A vertex that forms its own boundary component (such as an
-         * ideal vertex) will still be placed in \c vertexSet.
+         * Produces a maximal forest in the 1-skeleton of the triangulation
+         * boundary.
          *
-         * Note that the edge and vertex pointers returned will become
-         * invalid once the triangulation has changed.
+         * Note that the edge pointers returned will become invalid once the
+         * triangulation has changed.
          *
-         * \ifacespython Not present.
-         *
-         * @param edgeSet the set to be emptied and into which the edges
-         * of the maximal forest will be placed.
-         * @param vertexSet the set to be emptied and into which the
-         * vertices of the maximal forest will be placed.
+         * @return a set containing the edges of the maximal forest.
          */
-        void maximalForestInBoundary(std::set<Edge<3>*>& edgeSet,
-                std::set<Vertex<3>*>& vertexSet) const;
+        std::set<Edge<3>*> maximalForestInBoundary() const;
         /**
          * Produces a maximal forest in the triangulation's 1-skeleton.
          * It can be specified whether or not different boundary components
