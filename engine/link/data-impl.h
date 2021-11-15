@@ -146,6 +146,79 @@ void Link::addComponents(size_t strandsRemaining,
     addComponents(strandsRemaining - component.size(), otherComponents...);
 }
 
+template <typename SignIterator, typename ComponentIterator>
+Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
+        ComponentIterator beginComponents, ComponentIterator endComponents) {
+    Link ans;
+
+    for (auto sit = beginSigns; sit != endSigns; ++sit) {
+        if (*sit == 1 || *sit == -1)
+            ans.crossings_.push_back(new Crossing(*sit));
+        else
+            throw InvalidArgument("fromData(): crossing sign not +/-1");
+    }
+
+    size_t strandsFound = 0;
+    long n = ans.crossings_.size();
+
+    for (auto cit = beginComponents; cit != endComponents; ++cit) {
+        if (cit->size() == 0) {
+            // Support an empty component via { }.
+            ans.components_.emplace_back();
+        } else if (cit->size() == 1 && *cit->begin() == 0) {
+            // Support an empty component via { 0 }.
+            ans.components_.emplace_back();
+        } else {
+            bool first = true;
+            StrandRef curr, prev;
+            for (auto c : *cit) {
+                if (c == 0 || c > n || c < -n)
+                    throw InvalidArgument("fromData(): crossing out of range");
+                if (c > 0)
+                    curr = ans.crossings_[c - 1]->upper();
+                else
+                    curr = ans.crossings_[(-c) - 1]->lower();
+
+                if (first) {
+                    ans.components_.push_back(curr);
+                    first = false;
+                } else {
+                    if (prev.crossing()->next_[prev.strand()])
+                        throw InvalidArgument("fromData(): multiple passes "
+                            "out of same strand of crossing");
+                    prev.crossing()->next_[prev.strand()] = curr;
+
+                    if (curr.crossing()->prev_[curr.strand()])
+                        throw InvalidArgument("fromData(): multiple passes "
+                            "into same strand of crossing");
+                    curr.crossing()->prev_[curr.strand()] = prev;
+                }
+
+                prev = curr;
+            }
+
+            curr = ans.components_.back();
+
+            if (prev.crossing()->next_[prev.strand()])
+                throw InvalidArgument("fromData(): multiple passes "
+                    "out of same strand of crossing");
+            prev.crossing()->next_[prev.strand()] = curr;
+
+            if (curr.crossing()->prev_[curr.strand()])
+                throw InvalidArgument("fromData(): multiple passes "
+                    "into same strand of crossing");
+            curr.crossing()->prev_[curr.strand()] = prev;
+
+            strandsFound += cit->size();
+        }
+    }
+
+    if (strandsFound != 2 * ans.crossings_.size())
+        throw InvalidArgument("fromData(): incorrect number of strands");
+
+    return ans;
+}
+
 } // namespace regina
 
 #endif

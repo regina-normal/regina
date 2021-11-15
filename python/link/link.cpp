@@ -158,6 +158,18 @@ void addLink(pybind11::module_& m) {
             }
             return Link::fromPD(tuples.begin(), tuples.end());
         })
+        .def_static("fromData", [](const std::vector<int>& s,
+                const std::vector<std::vector<int>>& c) {
+            return Link::fromData(s.begin(), s.end(), c.begin(), c.end());
+        })
+        .def_static("fromData", [](const std::vector<int>& s,
+                const std::vector<int>& c) {
+            // Allow [...] instead of [[...]]] if there is just one component.
+            // We need to make an iterator pair.  Possibly what we're
+            // about to do is illegal C++; I hope not.
+            auto begin = std::addressof(c);
+            return Link::fromData(s.begin(), s.end(), begin, begin + 1);
+        })
         .def_static("fromKnotSig", &Link::fromKnotSig)
         .def_static("fromSig", &Link::fromSig)
         .def("swap", &Link::swap)

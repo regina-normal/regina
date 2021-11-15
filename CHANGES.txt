@@ -583,6 +583,8 @@ Version 7.0  [ TODO ]
             - Routine fromData() now returns by value, and throws an exception
               on error (it used to return a newly allocated pointer that was
               null on error).
+            - Added a variant of fromData() that takes iterator pairs,
+              which allows the data to be constructed at runtime.
             - New routine brief(std::ostream&) to complement brief().
             - New alias fromSig(), which is is identical to fromKnotSig().
             - Class constants for Jones / HOMFLY-PT variable strings are

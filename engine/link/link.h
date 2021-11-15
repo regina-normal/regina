@@ -3231,7 +3231,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * Creates a new link from hard-coded information about its
          * crossings and components.
          *
-         * This constructor takes a series of C++11 initialiser lists
+         * This routine takes a series of C++11 initialiser lists
          * (each a list of integers), which makes it useful for creating
          * hard-coded examples directly in C++ code.
          *
@@ -3279,7 +3279,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * \exception InvalidArgument a link could not be reconstructed from
          * the given data.
          *
-         * \ifacespython Not available.
+         * \ifacespython Not available, but there is a variant of fromData()
+         * that takes the same data using two Python lists (which need not
+         * be constant).
          *
          * @param crossingSigns a list containing the signs of the
          * crossings; each sign must be either +1 or -1.
@@ -3291,6 +3293,81 @@ class Link : public PacketData<Link>, public Output<Link> {
         template <typename... Args>
         static Link fromData(std::initializer_list<int> crossingSigns,
             std::initializer_list<Args>... components);
+
+        /**
+         * Creates a new link from information about its crossings and
+         * components.
+         *
+         * This routine is an analogue to the variant of fromData() that
+         * takes C++11 initialiser lists; however, here the input data may be
+         * constructed at runtime (which makes it accessible to Python,
+         * amongst other things).
+         *
+         * For the purposes of this routine, we number the crossings
+         * 1, 2, ..., \a n.  The information that you must pass to this
+         * routine is the following:
+         *
+         * - The first iterator range (\a beginSigns, \a endSigns)
+         *   encodes the signs of crossings 1, ..., \a n in order.
+         *   Each iterator in this range must dereference to either +1 or -1.
+         *
+         * - The second iterator range (\a beginComponents, \a endComponents)
+         *   identifies the individual components of the link.
+         *   Each iterator in this range must dereference to a container
+         *   that has a size() function and supports range-based \c for loops
+         *   (so standard C++ container classes such as std::vector<int> and
+         *   std::list<int> are be fine).
+         *
+         * - The container for each component must be filled with integers,
+         *   which identify the crossings you visit in order when traversing
+         *   the component.  A positive entry \a i indicates that you pass
+         *   over crossing \a i, and a negative entry -\a i indicates that you
+         *   pass under crossing \a i.
+         *
+         * - To encode a component with no crossings, you may use either an
+         *   empty container or a container containing the single integer 0.
+         *
+         * Be aware that, once the link has been constructed, the crossings
+         * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
+         * (since every Link object numbers its crossings starting from 0).
+         *
+         * As an example, Python users can construct the left-hand trefoil and
+         * the Hopf link as follows:
+         *
+         * \code{.py}
+         * trefoil = Link.fromData([ -1, -1, -1 ], [[ 1, -2, 3, -1, 2, -3 ]])
+         * hopf = Link.fromData([ +1, +1 ], [[ 1, -2 ], [ -1, 2 ]])
+         * \endcode
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a link diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument a link could not be reconstructed from
+         * the given data.
+         *
+         * \ifacespython The signs should be passed as a single Python list of
+         * integers (not an iterator pair).  Likewise, the components should be
+         * passed as a Python list of lists of integers (not an iterator pair).
+         * In the case of a knot (which has only one component), you are
+         * welcome to replace the list of lists <tt>[[...]]</tt> with a
+         * single list <tt>[...]</tt>.
+         *
+         * @param beginSigns the beginning of the list of crossing signs.
+         * @param endSigns a past-the-end iterator indicating the end of
+         * the list of crossing signs.
+         * @param beginComponents the beginning of the list of containers
+         * describing each link component.
+         * @param endComponents a past-the-end iterator indicating the
+         * end of the list of link components.
+         * @return the reconstructed link.
+         */
+        template <typename SignIterator, typename ComponentIterator>
+        static Link fromData(SignIterator beginSigns, SignIterator endSigns,
+            ComponentIterator beginComponents, ComponentIterator endComponents);
 
         /**
          * Recovers a knot diagram from its signature.
