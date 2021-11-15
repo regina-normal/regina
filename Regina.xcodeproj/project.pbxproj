@@ -201,6 +201,14 @@
 		051FD39627257A9E00B3F60F /* callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051FD39327257A9E00B3F60F /* callbacks.cpp */; };
 		052121C02662F50A0041FD89 /* jenkins-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052121BE2662F50A0041FD89 /* jenkins-impl.h */; };
 		052121C12662F50A0041FD89 /* pd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052121BF2662F50A0041FD89 /* pd-impl.h */; };
+		05226DF027422C82000A45D5 /* hilbertdual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05226DEC27422C81000A45D5 /* hilbertdual.cpp */; };
+		05226DF127422C82000A45D5 /* hilbertdual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05226DEC27422C81000A45D5 /* hilbertdual.cpp */; };
+		05226DF227422C82000A45D5 /* hilbertprimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05226DED27422C81000A45D5 /* hilbertprimal.cpp */; };
+		05226DF327422C82000A45D5 /* hilbertprimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05226DED27422C81000A45D5 /* hilbertprimal.cpp */; };
+		05226DF427422C82000A45D5 /* doubledescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05226DEE27422C81000A45D5 /* doubledescription.cpp */; };
+		05226DF527422C82000A45D5 /* doubledescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05226DEE27422C81000A45D5 /* doubledescription.cpp */; };
+		05226DF627422C82000A45D5 /* hilbertcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05226DEF27422C82000A45D5 /* hilbertcd.cpp */; };
+		05226DF727422C82000A45D5 /* hilbertcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05226DEF27422C82000A45D5 /* hilbertcd.cpp */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		05249EA51DBC169D001FE29E /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		05249EA81DBC16A6001FE29E /* modulemain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D3D1B9BAB9C00C1F681 /* modulemain.cpp */; };
@@ -2780,6 +2788,10 @@
 		052121BE2662F50A0041FD89 /* jenkins-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "jenkins-impl.h"; sourceTree = "<group>"; };
 		052121BF2662F50A0041FD89 /* pd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pd-impl.h"; sourceTree = "<group>"; };
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
+		05226DEC27422C81000A45D5 /* hilbertdual.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertdual.cpp; sourceTree = "<group>"; };
+		05226DED27422C81000A45D5 /* hilbertprimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertprimal.cpp; sourceTree = "<group>"; };
+		05226DEE27422C81000A45D5 /* doubledescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = doubledescription.cpp; sourceTree = "<group>"; };
+		05226DEF27422C82000A45D5 /* hilbertcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertcd.cpp; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
@@ -7157,6 +7169,10 @@
 			isa = PBXGroup;
 			children = (
 				05772F14270CFBA900D26D8A /* CMakeLists.txt */,
+				05226DEE27422C81000A45D5 /* doubledescription.cpp */,
+				05226DEF27422C82000A45D5 /* hilbertcd.cpp */,
+				05226DEC27422C81000A45D5 /* hilbertdual.cpp */,
+				05226DED27422C81000A45D5 /* hilbertprimal.cpp */,
 				05772F15270CFBA900D26D8A /* treelp.cpp */,
 				05772F16270CFBA900D26D8A /* typetrie.cpp */,
 				05772F17270CFBA900D26D8A /* pyenumerate.cpp */,
@@ -8723,6 +8739,7 @@
 				05772EE5270CFAD200D26D8A /* trieset.cpp in Sources */,
 				05721F111F97162600A83FFC /* pylink.cpp in Sources */,
 				050F5DE81B9BAB9C00C1F681 /* pyfile.cpp in Sources */,
+				05226DF227422C82000A45D5 /* hilbertprimal.cpp in Sources */,
 				05CAFB511C4CEA160001C253 /* face13.cpp in Sources */,
 				050F5E0F1B9BAB9C00C1F681 /* pyprogress.cpp in Sources */,
 				05772EF7270CFB2000D26D8A /* vectorlarge.cpp in Sources */,
@@ -8766,6 +8783,7 @@
 				050F5E331B9BAB9C00C1F681 /* disctype.cpp in Sources */,
 				050F5DF71B9BAB9C00C1F681 /* integer.cpp in Sources */,
 				054C6A6D1DCC1FF3005373F0 /* example12.cpp in Sources */,
+				05226DF027422C82000A45D5 /* hilbertdual.cpp in Sources */,
 				050F5E311B9BAB9C00C1F681 /* pysubcomplex.cpp in Sources */,
 				05A0669F1DFA67D40047872E /* layeredloop.cpp in Sources */,
 				0550010A1C4D9EF900501C24 /* face6.cpp in Sources */,
@@ -8907,6 +8925,7 @@
 				054209071DF0DA450018AB24 /* torusbundle.cpp in Sources */,
 				054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */,
 				057EE4D11C600A3600C4D155 /* triangulation14.cpp in Sources */,
+				05226DF627422C82000A45D5 /* hilbertcd.cpp in Sources */,
 				050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */,
 				050F5E441B9BAB9C00C1F681 /* example3.cpp in Sources */,
 				050F5DFA1B9BAB9C00C1F681 /* matrixint.cpp in Sources */,
@@ -8955,6 +8974,7 @@
 				05431FCC1C40F653009BC072 /* facetpairing3.cpp in Sources */,
 				050F5E431B9BAB9C00C1F681 /* edge3.cpp in Sources */,
 				054C6A6A1DCC1FF3005373F0 /* example9.cpp in Sources */,
+				05226DF427422C82000A45D5 /* doubledescription.cpp in Sources */,
 				050F5DF61B9BAB9C00C1F681 /* cyclotomic.cpp in Sources */,
 				05772EF3270CFB2000D26D8A /* perm6.cpp in Sources */,
 				057EE4C01C600A3600C4D155 /* simplex8.cpp in Sources */,
@@ -9176,6 +9196,7 @@
 				0591E8601C50D28D00793A9C /* enumerate.cpp in Sources */,
 				05249F361DBC1711001FE29E /* rational.cpp in Sources */,
 				05A066BC1DFA67D50047872E /* layeredsolidtorus.cpp in Sources */,
+				05226DF727422C82000A45D5 /* hilbertcd.cpp in Sources */,
 				05B7FFAF25AC22D2003BAF5C /* descent.cpp in Sources */,
 				05FB46EE1DD92D5100BB00E5 /* abeliangroup.cpp in Sources */,
 				05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */,
@@ -9460,6 +9481,7 @@
 				058FADBB19D506160001B5B5 /* Tri3Composition.mm in Sources */,
 				05C0DB111F9969E6001773C3 /* LinkViewController.mm in Sources */,
 				05B7FF9125AC22AA003BAF5C /* input.cpp in Sources */,
+				05226DF127422C82000A45D5 /* hilbertdual.cpp in Sources */,
 				05772F32270CFC5700D26D8A /* sfs.cpp in Sources */,
 				0541AF631B8BE411002E166B /* treedecomposition.cpp in Sources */,
 				05249ED31DBC16DF001FE29E /* component9.cpp in Sources */,
@@ -9514,6 +9536,7 @@
 				052FA1D21806129B00FAE4DF /* components.cpp in Sources */,
 				0589FAC3181484860064CD57 /* Tri3Gluings.mm in Sources */,
 				05F2033820A17C6000FC74ED /* knot.cpp in Sources */,
+				05226DF527422C82000A45D5 /* doubledescription.cpp in Sources */,
 				05249F2B1DBC1711001FE29E /* matrixint.cpp in Sources */,
 				05FB46D71DD92D2900BB00E5 /* grouppresentation.cpp in Sources */,
 				052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */,
@@ -9717,6 +9740,7 @@
 				05249F761DBC1747001FE29E /* tetrahedron3.cpp in Sources */,
 				05249F291DBC1711001FE29E /* largeinteger.cpp in Sources */,
 				05249EED1DBC16EA001FE29E /* facetpairing9.cpp in Sources */,
+				05226DF327422C82000A45D5 /* hilbertprimal.cpp in Sources */,
 				057B0CAC26A2ABF60017F5EA /* base64.cpp in Sources */,
 				05249EF71DBC16F1001FE29E /* isomorphism7.cpp in Sources */,
 				05249F0A1DBC16F6001FE29E /* simplex14.cpp in Sources */,
