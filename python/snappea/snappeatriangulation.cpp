@@ -69,13 +69,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("isNull", &SnapPeaTriangulation::isNull)
         .def("name", &SnapPeaTriangulation::name)
         .def("solutionType", &SnapPeaTriangulation::solutionType)
-        .def("volume", overload_cast<>(
-            &SnapPeaTriangulation::volume, pybind11::const_))
-        .def("volumeWithPrecision", [](const SnapPeaTriangulation& t) {
-            int precision;
-            double volume = t.volume(precision);
-            return pybind11::make_tuple(volume, precision);
-        })
+        .def("volume", &SnapPeaTriangulation::volume)
+        .def("volumeWithPrecision", &SnapPeaTriangulation::volumeWithPrecision)
         .def("volumeZero", &SnapPeaTriangulation::volumeZero)
         .def("shape", &SnapPeaTriangulation::shape)
         .def("minImaginaryShape", &SnapPeaTriangulation::minImaginaryShape)

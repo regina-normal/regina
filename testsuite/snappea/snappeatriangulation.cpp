@@ -535,8 +535,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_ASSERT_MESSAGE(msg.str(), ! s.isNull());
             }
 
-            int precision;
-            double foundVol = s.volume(precision);
+            auto [foundVol, precision] = s.volumeWithPrecision();
             if (precision < static_cast<int>(places)) {
                 std::ostringstream msg;
                 msg << "Volume for " << name << " has a precision of "
@@ -640,8 +639,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                     SnapPeaTriangulation::flat_solution);
             }
 
-            int precision;
-            double foundVol = s.volume(precision);
+            auto [foundVol, precision] = s.volumeWithPrecision();
             {
                 std::ostringstream msg;
                 msg << triName << " has a volume with a precision of "
@@ -752,11 +750,14 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         static void testStability(const Triangulation<3>& tri, const char*) {
             // Just make sure SnapPea can work with the triangulation
             // without crashing.
-            SnapPeaTriangulation s(tri);
-            s.volume();
-            s.randomize();
-            s.volume();
-            Triangulation<3> t(s);
+            try {
+                SnapPeaTriangulation s(tri);
+                s.volume();
+                s.randomize();
+                s.volume();
+                Triangulation<3> t(s);
+            } catch (const regina::SnapPeaIsNull&) {
+            }
         }
 
         void stability() {

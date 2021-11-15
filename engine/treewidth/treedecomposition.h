@@ -645,8 +645,6 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * This is an internal class, used to convert input graphs into
          * a common format before passing them to the main tree
          * decomposition algorithms.
-         *
-         * \ifacespython Not present.
          */
         struct Graph {
             int order_;
@@ -1368,7 +1366,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * As documented more thoroughly in the string variant of this
          * routine, the checks performed here are not exhaustive.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; instead you can use the variant of
+         * fromPACE() that takes a string.
          *
          * @param in an input stream that provides a text
          * representation of the tree decomposition using the PACE text format.

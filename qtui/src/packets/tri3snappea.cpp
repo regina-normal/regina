@@ -179,8 +179,7 @@ void Tri3SnapPeaUI::refresh() {
         solutionTypeLabel->setWhatsThis(expln);
         solutionType->setWhatsThis(expln);
 
-        int places;
-        double ans = snappeaTri->volume(places);
+        auto ans = snappeaTri->volumeWithPrecision();
 
         if (snappeaTri->volumeZero()) {
             // Zero is within the margin of error, and this margin of
@@ -188,10 +187,10 @@ void Tri3SnapPeaUI::refresh() {
             // beneath.
             volume->setText(tr("Possibly zero\n(calculated %1,\n"
                 "est. %2 places accuracy)").
-                arg(ans, 0, 'g', 9).arg(places));
+                arg(ans.first, 0, 'g', 9).arg(ans.second));
         } else {
             volume->setText(tr("%1\n(est. %2 places accuracy)").
-                arg(ans, 0, 'g', 9).arg(places));
+                arg(ans.first, 0, 'g', 9).arg(ans.second));
         }
 
         volume->setEnabled(true);

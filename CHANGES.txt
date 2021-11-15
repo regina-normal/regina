@@ -1213,6 +1213,11 @@ Version 7.0  [ TODO ]
             - Changed homologyFilled() and fundGroupFilled() to return by
               const reference (not by pointer), and to throw exceptions
               when preconditions are not met (instead of returning null).
+            - Replaced the two versions of volume() with separate functions
+              volume() and volumeWithPrecision() (which was already what
+              the Python interface offered).  Also, these routines now
+              throw exceptions in the case of a null triangulation instead of
+              silently returning zero volume.
             - Changed slopeEquations() to return by value (not by pointer),
               and to throw an exception if the triangulation is null.
             - Routines gluingEquations(), gluingEquationsRect(),

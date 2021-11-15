@@ -347,14 +347,16 @@ SnapPeaTriangulation::SolutionType SnapPeaTriangulation::solutionType()
 
 double SnapPeaTriangulation::volume() const {
     if (! data_)
-        return 0;
+        throw SnapPeaIsNull("SnapPeaTriangulation::volume");
     return regina::snappea::volume(data_, nullptr);
 }
 
-double SnapPeaTriangulation::volume(int& precision) const {
+std::pair<double, int> SnapPeaTriangulation::volumeWithPrecision() const {
     if (! data_)
-        return 0;
-    return regina::snappea::volume(data_, &precision);
+        throw SnapPeaIsNull("SnapPeaTriangulation::volumeWithPrecision");
+    int precision;
+    double volume = regina::snappea::volume(data_, &precision);
+    return { volume, precision };
 }
 
 bool SnapPeaTriangulation::volumeZero() const {

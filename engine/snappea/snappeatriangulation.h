@@ -733,7 +733,8 @@ class SnapPeaTriangulation :
          * The given SnapPea kernel data may be \c null, in which case this
          * will become a null SnapPea triangulation.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since this talks directly to the
+         * SnapPea kernel.
          *
          * @param data the raw SnapPea kernel data to use in this triangulation.
          */
@@ -903,8 +904,9 @@ class SnapPeaTriangulation :
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume()</tt>.
          *
-         * @return the estimated volume of the underlying 3-manifold,
-         * or 0 if this is a null triangulation.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * @return the estimated volume of the underlying 3-manifold.
          */
         double volume() const;
 
@@ -916,19 +918,13 @@ class SnapPeaTriangulation :
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume(accuracy=True)</tt>.
          *
-         * \ifacespython The \a precision argument is not present.
-         * Instead, two routines are offered.  The routine \a volume()
-         * takes no arguments and returns the volume only, whereas the
-         * routine \a volumeWithPrecision() takes no arguments and
-         * returns a (\a volume, \a precision) tuple.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
-         * @param precision used to return an estimate of the number of
-         * decimal places of accuracy in the calculated volume.
-         *
-         * @return the estimated volume of the underlying 3-manifold,
-         * or 0 if this is a null triangulation.
+         * @return a pair whose first element is the estimated volume of the
+         * underlying 3-manifold, and whose second element is an estimate
+         * of the number of decimal places of accuracy in this volume.
          */
-        double volume(int& precision) const;
+        std::pair<double, int> volumeWithPrecision() const;
 
         /**
          * Determines whether the current solution to the gluing equations
@@ -1877,7 +1873,8 @@ class SnapPeaTriangulation :
          * If this is a null triangulation, then nothing will be written
          * to the output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; instead you can use the variant of
+         * snapPea() that takes no arguments and returns a string.
          *
          * @param out the output stream to which the SnapPea data file
          * will be written.
