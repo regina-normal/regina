@@ -136,18 +136,10 @@ class BlockedSFS : public StandardTriangulation {
          * 3-manifold triangulations", Benjamin A. Burton,
          * J. Knot Theory Ramifications 16 (2007), 545--574.
          *
-         * \ifacespython The argument \a name is not present.  Instead,
-         * this routine returns a tuple of size two: the boolean usually
-         * returned from this function, and the string usually returned in
-         * the argument \a name.
-         *
-         * @param name used to return the name of the plugged thin/thick
-         * I-bundle, if the triangulation is of this form.  If the
-         * triangulation is not of this form, this string is not touched.
-         * @return \c true if this triangulation is indeed a plugged thin
-         * I-bundle or a plugged thick I-bundle.
+         * @return the name of the plugged thin/thick I-bundle, if the
+         * triangulation is of this form, or no value if it is not.
          */
-        bool isPluggedIBundle(std::string& name) const;
+        std::optional<std::string> isPluggedIBundle() const;
 
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -203,11 +195,10 @@ class BlockedSFS : public StandardTriangulation {
          *
          * If the two blocks are indeed solid torus plugs (either layered
          * solid tori or Mobius bands), the full name of the plugged
-         * thin/thick I-bundle will be filled in and \c true will be
-         * returned.  Note that this name may be normalised or otherwise
-         * modified to return a simpler set of parameters for the same
-         * triangulation.  If either block is not a solid torus plug then
-         * \c false will be returned.
+         * thin/thick I-bundle will be returned.  Note that this name may be
+         * normalised or otherwise modified to return a simpler set of
+         * parameters for the same triangulation.  If either block is not a
+         * solid torus plug then no value will be returned.
          *
          * @param thin \c true if the overall structure being identified
          * is a plugged thin I-bundle, or \c false if it is a plugged
@@ -218,9 +209,6 @@ class BlockedSFS : public StandardTriangulation {
          * I-bundles or the four thick twisted I-bundles described in
          * the paper "Structures of small closed non-orientable
          * 3-manifold triangulations" (see isPluggedIBundle for details).
-         * @param name used to return the full parameterised name of this
-         * triangulation.  If the two given blocks are not solid torus
-         * plugs, this string is not touched.
          * @param torus0 the block that should provide the solid torus plug
          * corresponding to the first pair of integers in the plugged
          * thin/thick I-bundle parameters.
@@ -239,11 +227,11 @@ class BlockedSFS : public StandardTriangulation {
          * horizontal edges of the adjacent block (not the block
          * \a torus1, but its neighbour), or \c false if the vertical
          * and diagonal edges should be used instead.
-         * @return \c true if the two given blocks are both solid torus
-         * plugs (either layered solid tori or Mobius bands), or \c false
-         * otherwise.
+         * @return the full parameterised name of this triangulation, if the
+         * two given blocks are both solid torus plugs (either layered
+         * solid tori or Mobius bands), or no value otherwise.
          */
-        static bool findPluggedTori(bool thin, int id, std::string& name,
+        static std::optional<std::string> findPluggedTori(bool thin, int id,
             const SatBlock* torus0, bool horiz0,
             const SatBlock* torus1, bool horiz1);
 };

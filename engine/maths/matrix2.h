@@ -82,10 +82,10 @@ class Matrix2 {
          * row \a r, column \a c.
          *
          * \deprecated This class aims to remove its reliance on raw
-         * C-style arrays, and so this constructor will be removed at
-         * some point in the future.
+         * C-style arrays, and so this constructor will be removed at some
+         * point in the future.  Use the four-argument constructor instead.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use the four-argument constructor instead.
          *
          * @param values the four values to insert into the new matrix.
          */
@@ -116,8 +116,6 @@ class Matrix2 {
          * \deprecated This class aims to remove its reliance on raw
          * C-style arrays, and so this operator will be removed at
          * some point in the future.
-         *
-         * \ifacespython Not present.
          *
          * @param values the four values to copy into this matrix.
          * @return a reference to this matrix.

@@ -269,8 +269,6 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * \pre Both \a R and \a Ri are square matrices with side length M.columns(),
  * and these matrices are inverses of each other.
  *
- * \ifacespython The argument \a rowList should be supplied as a python list.
- *
  * @param M the matrix to reduce.
  * @param R used to return the row-reduction matrix, as described above.
  * @param Ri used to return the inverse of \a R.
@@ -304,8 +302,6 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  * above) is some rank \a n lattice in Z^n.  This algorithm finds and
  * returns a basis for the lattice.
  *
- * \ifacespython The argument \a sublattice should be supplied as a python list.
- *
  * @param hom the matrix representing the homomorphism from Z^n to Z^k;
  * this must be a \a k by \a n matrix.
  * @param sublattice a list of length \a k describing the sublattice of Z^k;
@@ -336,8 +332,6 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
  *
  * \pre The list p1, p2, ..., pn is a list of invariant factors,
  * which means that p1|p2, ..., p{n-1}|pn.
- *
- * \ifacespython The argument \a invF should be supplied as a python list.
  *
  * @param input the n-by-n matrix \a A, which must be a lift of a genuine
  * automorphism as described above.

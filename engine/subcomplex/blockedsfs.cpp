@@ -50,14 +50,14 @@ namespace {
     }
 }
 
-bool BlockedSFS::isPluggedIBundle(std::string& name) const {
+std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
     // The triangulation needs to be closed.
     if (region_.countBoundaryAnnuli() > 0)
-        return false;
+        return std::nullopt;
 
     unsigned long n = region_.countBlocks();
     if (n < 3 || n > 4)
-        return false;
+        return std::nullopt;
 
     // Try one thing at a time.
     const SatBlock* block;
@@ -77,43 +77,43 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
             if (cube->adjacentBlock(0) == cube &&
                     cube->adjacentAnnulus(0) == 2) {
                 if (cube->adjacentReflected(0) || cube->adjacentBackwards(0))
-                    return false;
-                return findPluggedTori(true, 3, name,
+                    return std::nullopt;
+                return findPluggedTori(true, 3,
                     cube->adjacentBlock(1), true,
                     cube->adjacentBlock(3), false);
             } else if (cube->adjacentBlock(1) == cube &&
                     cube->adjacentAnnulus(1) == 3) {
                 if (cube->adjacentReflected(1) || cube->adjacentBackwards(1))
-                    return false;
-                return findPluggedTori(true, 3, name,
+                    return std::nullopt;
+                return findPluggedTori(true, 3,
                     cube->adjacentBlock(0), true,
                     cube->adjacentBlock(2), false);
             } else if (cube->adjacentBlock(0) == cube &&
                     cube->adjacentAnnulus(0) == 1) {
                 if (cube->adjacentReflected(0) || cube->adjacentBackwards(0))
-                    return false;
-                return findPluggedTori(false, 1, name,
+                    return std::nullopt;
+                return findPluggedTori(false, 1,
                     cube->adjacentBlock(2), false,
                     cube->adjacentBlock(3), true);
             } else if (cube->adjacentBlock(1) == cube &&
                     cube->adjacentAnnulus(1) == 2) {
                 if (cube->adjacentReflected(1) || cube->adjacentBackwards(1))
-                    return false;
-                return findPluggedTori(false, 1, name,
+                    return std::nullopt;
+                return findPluggedTori(false, 1,
                     cube->adjacentBlock(3), false,
                     cube->adjacentBlock(0), true);
             } else if (cube->adjacentBlock(2) == cube &&
                     cube->adjacentAnnulus(2) == 3) {
                 if (cube->adjacentReflected(2) || cube->adjacentBackwards(2))
-                    return false;
-                return findPluggedTori(false, 1, name,
+                    return std::nullopt;
+                return findPluggedTori(false, 1,
                     cube->adjacentBlock(0), false,
                     cube->adjacentBlock(1), true);
             } else if (cube->adjacentBlock(3) == cube &&
                     cube->adjacentAnnulus(3) == 0) {
                 if (cube->adjacentReflected(3) || cube->adjacentBackwards(3))
-                    return false;
-                return findPluggedTori(false, 1, name,
+                    return std::nullopt;
+                return findPluggedTori(false, 1,
                     cube->adjacentBlock(1), false,
                     cube->adjacentBlock(2), true);
             }
@@ -122,28 +122,28 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
         ref = dynamic_cast<const SatReflectorStrip*>(block);
         if (ref) {
             if (ref->twistedBoundary())
-                return false;
+                return std::nullopt;
 
             if (ref->countAnnuli() == 1) {
                 tri = dynamic_cast<const SatTriPrism*>(ref->adjacentBlock(0));
                 if (! tri)
-                    return false;
+                    return std::nullopt;
 
                 adjAnn = ref->adjacentAnnulus(0);
                 if (tri->isMajor())
-                    return findPluggedTori(false, 4, name,
+                    return findPluggedTori(false, 4,
                         tri->adjacentBlock((adjAnn + 2) % 3), true,
                         tri->adjacentBlock((adjAnn + 1) % 3), false);
                 else
-                    return findPluggedTori(false, 4, name,
+                    return findPluggedTori(false, 4,
                         tri->adjacentBlock((adjAnn + 1) % 3), false,
                         tri->adjacentBlock((adjAnn + 2) % 3), true);
             } else if (ref->countAnnuli() == 2) {
-                return findPluggedTori(true, 4, name,
+                return findPluggedTori(true, 4,
                     ref->adjacentBlock(0), true,
                     ref->adjacentBlock(1), true);
             } else
-                return false;
+                return std::nullopt;
         }
 
         tri = dynamic_cast<const SatTriPrism*>(block);
@@ -153,12 +153,12 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
                 if (tri->adjacentBlock(j) == tri &&
                         tri->adjacentAnnulus(j) == ((j + 1) % 3)) {
                     if (tri->adjacentReflected(j) || tri->adjacentBackwards(j))
-                        return false;
+                        return std::nullopt;
 
                     triAdj = dynamic_cast<const SatTriPrism*>(
                         tri->adjacentBlock((j + 2) % 3));
                     if (! triAdj)
-                        return false;
+                        return std::nullopt;
 
                     // Do we have major to major and minor to minor?
                     consistent = true;
@@ -174,20 +174,20 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
                     adjAnn = tri->adjacentAnnulus((j + 2) % 3);
                     if (consistent) {
                         if (triAdj->isMajor())
-                            return findPluggedTori(false, 2, name,
+                            return findPluggedTori(false, 2,
                                 triAdj->adjacentBlock((adjAnn + 1) % 3), false,
                                 triAdj->adjacentBlock((adjAnn + 2) % 3), true);
                         else
-                            return findPluggedTori(false, 2, name,
+                            return findPluggedTori(false, 2,
                                 triAdj->adjacentBlock((adjAnn + 2) % 3), true,
                                 triAdj->adjacentBlock((adjAnn + 1) % 3), false);
                     } else {
                         if (triAdj->isMajor())
-                            return findPluggedTori(false, 3, name,
+                            return findPluggedTori(false, 3,
                                 triAdj->adjacentBlock((adjAnn + 2) % 3), true,
                                 triAdj->adjacentBlock((adjAnn + 1) % 3), true);
                         else
-                            return findPluggedTori(false, 3, name,
+                            return findPluggedTori(false, 3,
                                 triAdj->adjacentBlock((adjAnn + 1) % 3), false,
                                 triAdj->adjacentBlock((adjAnn + 2) % 3), false);
                     }
@@ -215,10 +215,10 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
                     if (tri->adjacentBlock((j + delta) % 3) == triAdj) {
                         if (regXor(tri->adjacentReflected(j),
                                 tri->adjacentReflected((j + delta) % 3)))
-                            return false;
+                            return std::nullopt;
                         if (! regXor(tri->adjacentBackwards(j),
                                 tri->adjacentBackwards((j + delta) % 3)))
-                            return false;
+                            return std::nullopt;
 
                         // We have our Mobius strip!
                         // Make sure we come at it via the correct joining.
@@ -233,7 +233,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
 
                         // Our LSTs need to be measured against the
                         // major edges in all cases here.
-                        return findPluggedTori(true, consistent ? 2 : 1, name,
+                        return findPluggedTori(true, consistent ? 2 : 1,
                             tri->adjacentBlock((j + 2 * delta) % 3),
                                 tri->isMajor(),
                             triAdj->adjacentBlock((adjAnn + 2 * deltaAdj) % 3),
@@ -244,7 +244,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
     }
 
     // Nothing.
-    return false;
+    return std::nullopt;
 }
 
 std::unique_ptr<Manifold> BlockedSFS::manifold() const {
@@ -341,7 +341,7 @@ std::unique_ptr<BlockedSFS> BlockedSFS::recognise(const Triangulation<3>& tri) {
     return nullptr;
 }
 
-bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
+std::optional<std::string> BlockedSFS::findPluggedTori(bool thin, int id,
         const SatBlock* torus0, bool horiz0,
         const SatBlock* torus1, bool horiz1) {
     long p0, q0;
@@ -378,7 +378,7 @@ bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
         if (! ((roles[2] == 2 && horiz0) || (roles[1] == 2 && ! horiz0)))
             q0 = -q0;
     } else
-        return false;
+        return std::nullopt;
 
     if ((mobius = dynamic_cast<const SatMobius*>(torus1))) {
         if (mobius->position() == 2) {
@@ -398,7 +398,7 @@ bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
         if (! ((roles[2] == 2 && horiz1) || (roles[1] == 2 && ! horiz1)))
             q1 = -q1;
     } else
-        return false;
+        return std::nullopt;
 
     // Do a little normalisation.
     if ((thin && (id == 3 || id == 4)) || ((! thin) && id == 1)) {
@@ -434,9 +434,7 @@ bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
     if (p1 != 2 || q1 != -1)
         ans << " | " << p1 << ',' << q1;
     ans << ')';
-    name = ans.str();
-
-    return true;
+    return ans.str();
 }
 
 } // namespace regina

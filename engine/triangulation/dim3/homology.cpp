@@ -46,8 +46,7 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
 
     // Find a maximal forest in the 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    std::set<Edge<3>*> forest;
-    maximalForestInSkeleton(forest, false);
+    std::set<Edge<3>*> forest = maximalForestInSkeleton(false);
 
     // Build a presentation matrix.
     // Each non-boundary not-in-forest edge is a generator.

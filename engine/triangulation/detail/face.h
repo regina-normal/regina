@@ -102,7 +102,8 @@ class FaceEmbeddingBase :
          * Default constructor.  This object is unusable until it has
          * some data assigned to it using <tt>operator =</tt>.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since the C++ assignment operators
+         * are not accessible to Python.
          */
         FaceEmbeddingBase();
         /**

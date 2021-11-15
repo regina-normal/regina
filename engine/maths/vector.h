@@ -192,7 +192,8 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre The list \a data is non-empty.
          *
-         * \ifacespython Not available.
+         * \ifacespython Not available, but there is a Python constructor
+         * that takes a list of coefficients (which need not be constant).
          *
          * @param data the elements of the vector.
          */
@@ -267,9 +268,6 @@ class Vector : public ShortOutput<Vector<T>> {
          * \deprecated Simply use the square bracker operator instead.
          *
          * \pre \c index is between 0 and size()-1 inclusive.
-         *
-         * \ifacespython In Python also, you can now set elements directly
-         * using syntax of the form <tt>v[index] = value</tt>.
          *
          * @param index the vector index to examine.
          * @param value the new value to assign to the element.
@@ -646,8 +644,6 @@ inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
  * The vector will be written on a single line with elements separated
  * by a single space.  No newline will be written.
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param vector the vector to write.
  * @return a reference to \a out.
@@ -711,7 +707,8 @@ using VectorLarge = Vector<LargeInteger>;
  * only the \e name Ray is deprecated; the \e class Vector<LargeInteger>
  * that it refers to remains in active use.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but you can use the equivalent type VectorLarge
+ * instead.
  *
  * \ingroup maths
  */

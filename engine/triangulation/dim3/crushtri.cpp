@@ -72,23 +72,25 @@ void Triangulation<3>::stretchBoundaryForestFromVertex(Vertex<3>* from,
     }
 }
 
-void Triangulation<3>::maximalForestInSkeleton(std::set<Edge<3>*>& edgeSet,
+std::set<Edge<3>*> Triangulation<3>::maximalForestInSkeleton(
         bool canJoinBoundaries) const {
     ensureSkeleton();
 
     std::set<Vertex<3>*> vertexSet;
     std::set<Vertex<3>*> thisBranch;
+    std::set<Edge<3>*> edgeSet;
 
-    if (canJoinBoundaries)
-        edgeSet.clear();
-    else
-        maximalForestInBoundary(edgeSet, vertexSet);
+    if (! canJoinBoundaries)
+        for (auto bc : boundaryComponents())
+            stretchBoundaryForestFromVertex(bc->vertex(0), edgeSet, vertexSet);
 
     for (Vertex<3>* v : vertices())
         if (! (vertexSet.count(v))) {
             stretchForestFromVertex(v, edgeSet, vertexSet, thisBranch);
             thisBranch.clear();
         }
+
+    return edgeSet;
 }
 
 bool Triangulation<3>::stretchForestFromVertex(Vertex<3>* from,

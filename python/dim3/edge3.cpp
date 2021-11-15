@@ -113,6 +113,13 @@ void addEdge3(pybind11::module_& m) {
         .def_property_readonly_static("subdimension", [](pybind11::object) {
             return Edge<3>::subdimension;
         })
+        // Since the Triangulation<3> maximal forest routines return
+        // sets of edges, we need edges to be hashable.
+        .def("__hash__", [](const Edge<3>& e) {
+            // Edges are equal in python if they reference the same C++
+            // objects.  Therefore we can just use the C++ pointer as a hash.
+            return long(std::addressof(e));
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

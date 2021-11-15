@@ -45,11 +45,7 @@ void addBlockedSFS(pybind11::module_& m) {
         .def("swap", &BlockedSFS::swap)
         .def("region", &BlockedSFS::region,
             pybind11::return_value_policy::reference_internal)
-        .def("isPluggedIBundle", [](const BlockedSFS& b) {
-            std::string name;
-            bool ans = b.isPluggedIBundle(name);
-            return pybind11::make_tuple(ans, name);
-        })
+        .def("isPluggedIBundle", &BlockedSFS::isPluggedIBundle)
         .def_static("recognise", &BlockedSFS::recognise)
         .def_static("isBlockedSFS", &BlockedSFS::recognise) // deprecated
     ;

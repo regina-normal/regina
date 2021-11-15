@@ -1301,10 +1301,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                 std::set<Vertex<3>*>& vertexSet) const;
         /**
          * Produces a maximal forest in the triangulation's 1-skeleton.
-         * The given set will be emptied and will have the edges of the
-         * maximal forest placed into it.  It can be specified whether
-         * or not different boundary components may be joined by the
-         * maximal forest.
+         * It can be specified whether or not different boundary components
+         * may be joined by the maximal forest.
          *
          * An edge leading to an ideal vertex is still a
          * candidate for inclusion in the maximal forest.  For the
@@ -1315,15 +1313,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Note that the edge pointers returned will become
          * invalid once the triangulation has changed.
          *
-         * \ifacespython Not present.
-         *
-         * @param edgeSet the set to be emptied and into which the edges
-         * of the maximal forest will be placed.
          * @param canJoinBoundaries \c true if and only if different
-         * boundary components are allowed to be joined by the maximal
-         * forest.
+         * boundary components are allowed to be joined by the maximal forest.
+         * @return a set containing the edges of the maximal forest.
          */
-        void maximalForestInSkeleton(std::set<Edge<3>*>& edgeSet,
+        std::set<Edge<3>*> maximalForestInSkeleton(
                 bool canJoinBoundaries = true) const;
 
         /**

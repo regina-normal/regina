@@ -138,6 +138,8 @@ Version 7.0  [ TODO ]
               The old names are kept as deprecated aliases.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Changed BlockedSFS::isPluggedIBundle() to take no arguments,
+              and instead return a std::optional<std::string>.
         Class BoolSet:
             - Almost everything in this class is now constexpr.
             - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
@@ -1417,6 +1419,8 @@ Version 7.0  [ TODO ]
               even if a progress tracker was passed.
             - Routine connectedSumWith() now adds fewer tetrahedra (thanks
               to Adele Jackson).
+            - Changed maximalForestInSkeleton() to return by value
+              instead of returning through a reference argument.
             - Routine enterTextTriangulation() is now deprecated; this
               is a relic from Regina's ancient past.
         Class Triangluation<4>:
