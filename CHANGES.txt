@@ -198,6 +198,7 @@ Version 7.0  [ TODO ]
         Class Cyclotomic:
             - Added member and global swap() functions.
             - Changed polynomial() to return by value, not by pointer.
+            - Added a constructor that takes coefficients via an iterator pair.
         Class DiscType:
             - Almost everything in this class is now constexpr.
             - The class constant NONE is deprecated.  Just use DiscType().
@@ -500,6 +501,8 @@ Version 7.0  [ TODO ]
               well-defined (but unimportant) total order.
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
+            - Added a constructor for Laurent2 that takes coefficients via an
+              iterator pair.
         Class LayeredChain:
             - Added copy assignment operator.
             - Added member and global swap() functions.
