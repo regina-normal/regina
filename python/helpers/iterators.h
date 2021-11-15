@@ -86,45 +86,5 @@ class MATCH_PYBIND11_VISIBILITY SafeIterator {
         }
 };
 
-/**
- * Converts a python list into a C-style array of objects of type \a T.
- * The type \a T must be one of Regina's classes that is wrapped in Python;
- * in particular, it cannot be a native C++ type such as \c int or \c char.
- *
- * The list may contain any combination of types that we know how to convert
- * to \a T.  If some element of the given list cannot be converted, this
- * routine will throw an exception.
- *
- * In particular:
- *
- * - If \a T is regina::Integer, then the list may contain
- *   any combination of Regina's large integer classes, python integers
- *   (both \c int and \c long), and python strings.
- *
- * - If \a T is regina::Rational, then the list may contain
- *   any combination of Regina's rational and large integer classes, and
- *   python integers (both \c int and \c long).
- *
- * If this routine returns at all, then it guarantees to return a non-null
- * pointer.  The returned array will have been allocated via array \c new,
- * and must be destroyed by the caller using array \c delete.
- */
-template <typename T>
-T* seqFromList(pybind11::list l) {
-    size_t len = l.size();
-    T* coeffs = new T[len]; // throws on failure; otherwise non-null
-    for (size_t i = 0; i < len; ++i) {
-        try {
-            coeffs[i] = l[i].cast<T>();
-            continue;
-        } catch (pybind11::cast_error const &) {
-            delete[] coeffs;
-            throw regina::InvalidArgument("List element not convertible to " +
-                std::string(pybind11::str(pybind11::type::of<T>())));
-        }
-    }
-    return coeffs;
-}
-
 } // namespace regina::python
 

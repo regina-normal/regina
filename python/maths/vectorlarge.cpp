@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/vector.h"
 #include "../helpers.h"
 
@@ -50,12 +51,8 @@ void addVectorLarge(pybind11::module_& m) {
         .def(pybind11::init<size_t>())
         .def(pybind11::init<size_t, const regina::Integer&>())
         .def(pybind11::init<const VectorLarge&>())
-        .def(pybind11::init([](pybind11::list l) {
-            regina::Integer* coeffs =
-                regina::python::seqFromList<regina::Integer>(l);
-            auto* ans = new VectorLarge(coeffs, coeffs + l.size());
-            delete[] coeffs;
-            return ans;
+        .def(pybind11::init([](const std::vector<regina::LargeInteger> v) {
+            return new VectorLarge(v.begin(), v.end());
         }))
         .def("size", &VectorLarge::size)
         .def("__getitem__", [](VectorLarge& v, size_t index) ->

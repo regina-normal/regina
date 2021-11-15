@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/polynomial.h"
 #include "maths/rational.h"
 #include "../helpers.h"
@@ -45,11 +46,8 @@ void addPolynomial(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())
         .def(pybind11::init<const Polynomial<Rational>&>())
-        .def(pybind11::init([](pybind11::list l) {
-            Rational* coeffs = regina::python::seqFromList<Rational>(l);
-            auto* ans = new Polynomial<Rational>(coeffs, coeffs + l.size());
-            delete[] coeffs;
-            return ans;
+        .def(pybind11::init([](const std::vector<Rational>& coeffs) {
+            return new Polynomial<Rational>(coeffs.begin(), coeffs.end());
         }))
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
@@ -57,10 +55,9 @@ void addPolynomial(pybind11::module_& m) {
             &Polynomial<Rational>::init)
         .def("init", (void (Polynomial<Rational>::*)(size_t))
             &Polynomial<Rational>::init)
-        .def("init", [](Polynomial<Rational>& p, pybind11::list l) {
-            Rational* coeffs = regina::python::seqFromList<Rational>(l);
-            p.init(coeffs, coeffs + l.size());
-            delete[] coeffs;
+        .def("init", [](Polynomial<Rational>& p,
+                const std::vector<Rational>& c) {
+            p.init(c.begin(), c.end());
         })
         .def("degree", &Polynomial<Rational>::degree)
         .def("isZero", &Polynomial<Rational>::isZero)
