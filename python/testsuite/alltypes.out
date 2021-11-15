@@ -2016,6 +2016,9 @@ Equality type : EqualityType.BY_REFERENCE
 UnsolvedCase : class
 Exception type
 
+ValidityConstraints : class
+Equality type : EqualityType.BY_REFERENCE
+
 VectorInt : class
 Equality type : EqualityType.BY_VALUE
 
