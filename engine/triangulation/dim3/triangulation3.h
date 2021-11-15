@@ -869,7 +869,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * change from Regina 4.96 and earlier, which computed
          * floating-point approximations instead.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine returns a Python dictionary.
+         * It also returns by value, not by reference (i.e., if more
+         * Turaev-Viro invariants are computed later on, the dictionary
+         * that was originally returned will not change as a result).
          *
          * @return the cache of all Turaev-Viro invariants that have
          * already been calculated.
@@ -3101,7 +3104,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * triangles (which SnapPea cannot represent), then nothing will
          * be written to the output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can call snapPea() with
+         * no arguments which returns this data as a string.
          *
          * @param out the output stream to which the SnapPea data file
          * will be written.
@@ -3174,7 +3178,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation is not invalid, and does not contain
          * any boundary triangles.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can call recogniser() with
+         * no arguments which returns this data as a string.
          *
          * @param out the output stream to which the recogniser data file
          * will be written.
@@ -3189,7 +3194,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation is not invalid, and does not contain
          * any boundary triangles.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can call recognizer() with
+         * no arguments which returns this data as a string.
          *
          * @param out the output stream to which the recogniser data file
          * will be written.

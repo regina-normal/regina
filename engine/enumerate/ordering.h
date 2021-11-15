@@ -65,8 +65,6 @@ namespace regina {
  * A PosOrder object behaves like a reference: it is lightweight and can be
  * copy-constructed cheaply, but it does not support assignments or swaps.
  *
- * \ifacespython Not present.
- *
  * \ingroup enumerate
  */
 class PosOrder {
@@ -94,6 +92,9 @@ class PosOrder {
          * than the hyperplane described by row \a j.
          * Here "smaller" is defined by position vectors;
          * see the PosOrder class notes for details.
+         *
+         * \ifacespython This is available as the member function
+         * <tt>less(i, j)</tt>.
          *
          * @param i the first matrix row index; this must be between
          * 0 and matrix.rows()-1 inclusive, where \a matrix is

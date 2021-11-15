@@ -243,6 +243,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
             pybind11::arg(), pybind11::arg("whichRoot") = 1,
             pybind11::arg("alg") = regina::ALG_DEFAULT)
+        .def("allCalculatedTuraevViro",
+            &Triangulation<3>::allCalculatedTuraevViro)
         .def("longitude", &Triangulation<3>::longitude,
             pybind11::return_value_policy::reference_internal)
         .def("meridianLongitude", &Triangulation<3>::meridianLongitude,

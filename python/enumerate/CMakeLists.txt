@@ -7,6 +7,7 @@ SET ( FILES
   hilbertdual.cpp
   hilbertprimal.cpp
   maxadmissible.cpp
+  ordering.cpp
   pyenumerate.cpp
   treelp.cpp
   typetrie.cpp

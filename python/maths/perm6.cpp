@@ -109,6 +109,9 @@ void addPerm6(pybind11::module_& m) {
         .def("preImageOf", &Perm<6>::pre) // deprecated
         .def("compareWith", &Perm<6>::compareWith)
         .def("isIdentity", &Perm<6>::isIdentity)
+        .def("inc", [](Perm<6>& p) {
+            return p++;
+        })
         .def(pybind11::self < pybind11::self)
         .def_static("rot", &Perm<6>::rot)
         // index and atIndex are deprecated, so do not call them directly.

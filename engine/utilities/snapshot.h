@@ -54,8 +54,6 @@ template <class T> class Snapshottable;
  * An exception thrown when someone tries to modify the read-only deep copy
  * taken by a snapshot.  See the Snapshot class notes for more information.
  *
- * \ifacespython Not present.
- *
  * \ingroup utilities
  */
 class SnapshotWriteError : public std::exception {

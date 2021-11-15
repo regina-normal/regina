@@ -394,7 +394,7 @@ class Perm {
          * \pre Both arrays \a a and \a b contain \a n elements, which
          * are 0,...,<i>n</i>-1 in some order.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use the single-array constructor instead.
          *
          * @param a the array of preimages; this must have length \a n.
          * @param b the corresponding array of images; this must also have

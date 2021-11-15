@@ -1925,6 +1925,10 @@
 		05C1BEF11DCAB4DC007C946B /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BEF01DCAB4DC007C946B /* isomorphism.h */; };
 		05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE6022741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
+		05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
+		05CAE60627427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
+		05CAE60727427A8A007C93F3 /* maxadmissible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60427427A8A007C93F3 /* maxadmissible.cpp */; };
+		05CAE60827427A8A007C93F3 /* maxadmissible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60427427A8A007C93F3 /* maxadmissible.cpp */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -4374,6 +4378,8 @@
 		05C1BED31DCA89DA007C946B /* triangulation15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation15.cpp; sourceTree = "<group>"; };
 		05C1BEF01DCAB4DC007C946B /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
 		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
+		05CAE60327427A8A007C93F3 /* ordering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ordering.cpp; sourceTree = "<group>"; };
+		05CAE60427427A8A007C93F3 /* maxadmissible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxadmissible.cpp; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -7173,6 +7179,8 @@
 				05226DEF27422C82000A45D5 /* hilbertcd.cpp */,
 				05226DEC27422C81000A45D5 /* hilbertdual.cpp */,
 				05226DED27422C81000A45D5 /* hilbertprimal.cpp */,
+				05CAE60427427A8A007C93F3 /* maxadmissible.cpp */,
+				05CAE60327427A8A007C93F3 /* ordering.cpp */,
 				05772F15270CFBA900D26D8A /* treelp.cpp */,
 				05772F16270CFBA900D26D8A /* typetrie.cpp */,
 				05772F17270CFBA900D26D8A /* pyenumerate.cpp */,
@@ -8925,6 +8933,7 @@
 				054209071DF0DA450018AB24 /* torusbundle.cpp in Sources */,
 				054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */,
 				057EE4D11C600A3600C4D155 /* triangulation14.cpp in Sources */,
+				05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */,
 				05226DF627422C82000A45D5 /* hilbertcd.cpp in Sources */,
 				050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */,
 				050F5E441B9BAB9C00C1F681 /* example3.cpp in Sources */,
@@ -8934,6 +8943,7 @@
 				057EE4C51C600A3600C4D155 /* simplex13.cpp in Sources */,
 				050F5DFD1B9BAB9C00C1F681 /* perm5.cpp in Sources */,
 				050F5E551B9BAB9C00C1F681 /* census.cpp in Sources */,
+				05CAE60727427A8A007C93F3 /* maxadmissible.cpp in Sources */,
 				057EE4CE1C600A3600C4D155 /* triangulation11.cpp in Sources */,
 				05A066A01DFA67D40047872E /* layeredsolidtorus.cpp in Sources */,
 				057EE4EA1C600A3600C4D155 /* facetpairing15.cpp in Sources */,
@@ -9687,6 +9697,7 @@
 				05249F631DBC1737001FE29E /* disctype.cpp in Sources */,
 				05249ED51DBC16DF001FE29E /* component11.cpp in Sources */,
 				05431F911C40F40E009BC072 /* offload_handler.cpp in Sources */,
+				05CAE60827427A8A007C93F3 /* maxadmissible.cpp in Sources */,
 				059BC68C1DC7F7A300AB4206 /* boundarycomponent5.cpp in Sources */,
 				05249EE31DBC16E4001FE29E /* face13.cpp in Sources */,
 				0542088D1DF0D0CF0018AB24 /* definition.cpp in Sources */,
@@ -9795,6 +9806,7 @@
 				05B7FFAE25AC22D2003BAF5C /* cone_dual_mode.cpp in Sources */,
 				05C1BEEE1DCA89E3007C946B /* triangulation14.cpp in Sources */,
 				05249EC81DBC16D1001FE29E /* fileinfo.cpp in Sources */,
+				05CAE60627427A8A007C93F3 /* ordering.cpp in Sources */,
 				05249ED41DBC16DF001FE29E /* component10.cpp in Sources */,
 				05F0A0621DBF0B7000117BFC /* surfaces.cpp in Sources */,
 				05249F3C1DBC1718001FE29E /* script.cpp in Sources */,

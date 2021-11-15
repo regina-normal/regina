@@ -274,44 +274,30 @@ class Perm<3> {
          */
         static constexpr S2Lookup S2 {};
 
-        enum {
-            /**
-             * The internal code for the permutation (0,1,2).
-             *
-             * \ifacespython Not present.
-             */
-            code012 = 0,
-            /**
-             * The internal code for the permutation (0,2,1).
-             *
-             * \ifacespython Not present.
-             */
-            code021 = 1,
-            /**
-             * The internal code for the permutation (1,2,0).
-             *
-             * \ifacespython Not present.
-             */
-            code120 = 2,
-            /**
-             * The internal code for the permutation (1,0,2).
-             *
-             * \ifacespython Not present.
-             */
-            code102 = 3,
-            /**
-             * The internal code for the permutation (2,0,1).
-             *
-             * \ifacespython Not present.
-             */
-            code201 = 4,
-            /**
-             * The internal code for the permutation (2,1,0).
-             *
-             * \ifacespython Not present.
-             */
-            code210 = 5
-        };
+        /**
+         * The internal code for the permutation (0,1,2).
+         */
+        static constexpr Code code012 = 0;
+        /**
+         * The internal code for the permutation (0,2,1).
+         */
+        static constexpr Code code021 = 1;
+        /**
+         * The internal code for the permutation (1,2,0).
+         */
+        static constexpr Code code120 = 2;
+        /**
+         * The internal code for the permutation (1,0,2).
+         */
+        static constexpr Code code102 = 3;
+        /**
+         * The internal code for the permutation (2,0,1).
+         */
+        static constexpr Code code201 = 4;
+        /**
+         * The internal code for the permutation (2,1,0).
+         */
+        static constexpr Code code210 = 5;
 
     protected:
         Code code_;
@@ -380,7 +366,7 @@ class Perm<3> {
          * \pre Both arrays \a a and \a b contain 3 elements, which
          * are 0,...,2 in some order.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use the single-array constructor instead.
          *
          * @param a the array of preimages; this must have length 3.
          * @param b the corresponding array of images; this must also have
@@ -605,7 +591,8 @@ class Perm<3> {
          * then this will wrap around to become the first permutation in
          * Perm<3>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, although the postincrement operator is
+         * present in python as the member function inc().
          *
          * @return a reference to this permutation after the increment.
          */
@@ -617,7 +604,8 @@ class Perm<3> {
          * then this will wrap around to become the first permutation in
          * Perm<3>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine is named inc() since python does
+         * not support the increment operator.
          *
          * @return a copy of this permutation before the increment took place.
          */

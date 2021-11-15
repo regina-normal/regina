@@ -365,7 +365,7 @@ class Perm<6> {
          * \pre Both arrays \a a and \a b contain six elements, which
          * are 0,...,5 in some order.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use the single-array constructor instead.
          *
          * @param a the array of preimages; this must have length 6.
          * @param b the corresponding array of images; this must also have
@@ -906,7 +906,8 @@ class Perm<6> {
          * then this will wrap around to become the first permutation in
          * Perm<6>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, although the postincrement operator is
+         * present in python as the member function inc().
          *
          * @return a reference to this permutation after the increment.
          */
@@ -918,7 +919,8 @@ class Perm<6> {
          * then this will wrap around to become the first permutation in
          * Perm<6>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine is named inc() since python does
+         * not support the increment operator.
          *
          * @return a copy of this permutation before the increment took place.
          */

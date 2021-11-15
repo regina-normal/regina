@@ -30,27 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "enumerate/ordering.h"
+#include "maths/matrix.h"
+#include "../helpers.h"
 
-void addTreeLP(pybind11::module_& m);
-void addTypeTrie(pybind11::module_& m);
-void addValidityConstraints(pybind11::module_& m);
-void addDoubleDescription(pybind11::module_& m);
-void addHilbertCD(pybind11::module_& m);
-void addHilbertDual(pybind11::module_& m);
-void addHilbertPrimal(pybind11::module_& m);
-void addMaxAdmissible(pybind11::module_& m);
-void addOrdering(pybind11::module_& m);
+using regina::MatrixInt;
+using regina::PosOrder;
 
-void addEnumerateClasses(pybind11::module_& m) {
-    addTreeLP(m);
-    addTypeTrie(m);
-    addValidityConstraints(m);
-    addDoubleDescription(m);
-    addHilbertCD(m);
-    addHilbertDual(m);
-    addHilbertPrimal(m);
-    addMaxAdmissible(m);
-    addOrdering(m);
+void addOrdering(pybind11::module_& m) {
+    auto c = pybind11::class_<PosOrder>(m, "PosOrder")
+        .def(pybind11::init<const MatrixInt&>())
+        .def(pybind11::init<const PosOrder&>())
+        .def("less", [](const PosOrder& p, long i, long j) {
+            return p(i, j);
+        })
+    ;
+    regina::python::add_eq_operators(c);
 }
 

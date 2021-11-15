@@ -93,6 +93,9 @@ void addPerm3(pybind11::module_& m) {
         .def("preImageOf", &Perm<3>::pre) // deprecated
         .def("compareWith", &Perm<3>::compareWith)
         .def("isIdentity", &Perm<3>::isIdentity)
+        .def("inc", [](Perm<3>& p) {
+            return p++;
+        })
         .def(pybind11::self < pybind11::self)
         .def_static("rot", &Perm<3>::rot)
         // index and atIndex are deprecated, so do not call them directly.
@@ -122,6 +125,12 @@ void addPerm3(pybind11::module_& m) {
         .def_readonly_static("orderedSn", &Perm3_orderedS3_arr)
         .def_readonly_static("S2", &Perm3_S2_arr)
         .def_readonly_static("Sn_1", &Perm3_S2_arr)
+        .def_readonly_static("code012", &Perm<3>::code012)
+        .def_readonly_static("code021", &Perm<3>::code021)
+        .def_readonly_static("code102", &Perm<3>::code102)
+        .def_readonly_static("code120", &Perm<3>::code120)
+        .def_readonly_static("code201", &Perm<3>::code201)
+        .def_readonly_static("code210", &Perm<3>::code210)
     ;
     Perm3_contract<4>::add_bindings(c);
     regina::python::add_output_basic(c, true /* __repr__ */);
