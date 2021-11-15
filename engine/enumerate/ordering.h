@@ -93,9 +93,6 @@ class PosOrder {
          * Here "smaller" is defined by position vectors;
          * see the PosOrder class notes for details.
          *
-         * \ifacespython This is available as the member function
-         * <tt>less(i, j)</tt>.
-         *
          * @param i the first matrix row index; this must be between
          * 0 and matrix.rows()-1 inclusive, where \a matrix is
          * the matrix passed to the class constructor.

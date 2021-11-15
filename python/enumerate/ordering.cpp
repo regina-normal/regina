@@ -42,7 +42,7 @@ void addOrdering(pybind11::module_& m) {
     auto c = pybind11::class_<PosOrder>(m, "PosOrder")
         .def(pybind11::init<const MatrixInt&>())
         .def(pybind11::init<const PosOrder&>())
-        .def("less", [](const PosOrder& p, long i, long j) {
+        .def("__call__", [](const PosOrder& p, long i, long j) {
             return p(i, j);
         })
     ;
