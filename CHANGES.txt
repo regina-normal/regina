@@ -1038,6 +1038,8 @@ Version 7.0  [ TODO ]
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
             - Removed the StoreConstPtr storage policy, which was never used.
+        Class Qitmask1, Qitmask2:
+            - Added != operator to complement the already-existing == operator.
         Class QitmaskLen8, QitmaskLen16, QitmaskLen32, QitmaskLen64:
             - Deprecated.  Just use Qitmask1<uint8_t>, etc.
         Class Ray:
@@ -1474,8 +1476,9 @@ Version 7.0  [ TODO ]
             - Deprecated clone().  Just use the copy constructor instead.
             - Changed isAnnulusSelfIdentified() to return a std::optional,
               instead of returning the permutation via a pointer argument.
-        Class TritmaskLen8, TritmaskLen16, TritmaskLen32, TritmaskLen64:
-            - Deprecated.  Just use Tritmask1<uint8_t>, etc.
+        Class Tritmask1, Tritmask2, TritmaskLen{8,16,32,64}:
+            - Removed completely.  These classes were not being used anywhere
+              within Regina, and did not support tritmasks of arbitrary length.
         Class TrivialTri:
             - Class constants are now constexpr.
             - Routine isTrivialTriangulation() is now called recognise(), and

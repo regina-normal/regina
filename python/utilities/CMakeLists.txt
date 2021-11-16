@@ -11,6 +11,7 @@ SET ( FILES
   intutils.cpp
   osutils.cpp
   pyutilities.cpp
+  qitmask.cpp
   randutils.cpp
   stringutils.cpp
   tightencoding.cpp

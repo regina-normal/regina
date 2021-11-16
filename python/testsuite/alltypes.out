@@ -19,6 +19,9 @@ Equality type : EqualityType.BY_REFERENCE
 AugTriSolidTorus : class
 Equality type : EqualityType.BY_REFERENCE
 
+BitManipulator : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 Bitmask : class
 Equality type : EqualityType.BY_VALUE
 
@@ -1686,6 +1689,24 @@ Equality type : EqualityType.BY_REFERENCE
 
 ProgressTrackerOpen : class
 Equality type : EqualityType.BY_REFERENCE
+
+Qitmask128 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask16 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask256 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask32 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask64 : class
+Equality type : EqualityType.BY_VALUE
+
+Qitmask8 : class
+Equality type : EqualityType.BY_VALUE
 
 RandomEngine : class
 Equality type : EqualityType.NEVER_INSTANTIATED

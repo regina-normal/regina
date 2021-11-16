@@ -45,7 +45,6 @@ if (${REGINA_INSTALL_DEV})
     stringutils-impl.h
     tightencoding.h
     trieset.h
-    tritmask.h
     typeutils.h
     xmlutils.h
     DESTINATION "${INCLUDEDIR}/utilities" COMPONENT Development)

@@ -57,8 +57,6 @@ class Qitmask1;
  * Since the length of the qitmask is not stored, the number of qits
  * written will be 8 * sizeof(\a T).
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param mask the qitmask to write.
  * @return a reference to the given output stream.
@@ -95,7 +93,13 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Not present.
+ * \ifacespython Python does not support templates, and so instead Regina's
+ * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
+ * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
+ * Qitmask256.  Each of these will be an optimised qitmask class that
+ * can hold the corresponding number of bits, and is guaranteed to be an
+ * instance of either the C++ Qitmask1<T> class (where possible) or the
+ * C++ Qitmask2<T,U> template class (if necessary).
  *
  * \ingroup utilities
  */
@@ -237,6 +241,17 @@ class Qitmask1 {
         }
 
         /**
+         * Determines whether this and the given qitmask are different.
+         *
+         * @param other the qitmask to compare against this.
+         * @return \c true if and only if this and the given qitmask are
+         * different.
+         */
+        inline bool operator != (const Qitmask1<T>& other) const {
+            return (mask1 != other.mask1 || mask2 != other.mask2);
+        }
+
+        /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
          * index \a i for which <tt>get(i)</tt> and <tt>other.get(i)</tt>
@@ -268,8 +283,6 @@ class Qitmask2;
  *
  * Since the length of the qitmask is not stored, the number of qits
  * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
- *
- * \ifacespython Not present.
  *
  * @param out the output stream to which to write.
  * @param mask the qitmask to write.
@@ -309,7 +322,13 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
- * \ifacespython Not present.
+ * \ifacespython Python does not support templates, and so instead Regina's
+ * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
+ * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
+ * Qitmask256.  Each of these will be an optimised qitmask class that
+ * can hold the corresponding number of bits, and is guaranteed to be an
+ * instance of either the C++ Qitmask1<T> class (where possible) or the
+ * C++ Qitmask2<T,U> template class (if necessary).
  *
  * \ingroup utilities
  */
@@ -477,6 +496,18 @@ class Qitmask2 {
         }
 
         /**
+         * Determines whether this and the given qitmask are different.
+         *
+         * @param other the qitmask to compare against this.
+         * @return \c true if and only if this and the given qitmask are
+         * different.
+         */
+        inline bool operator != (const Qitmask2<T, U>& other) const {
+            return (low1 != other.low1 || low2 != other.low2 ||
+                high1 != other.high1 || high2 != other.high2);
+        }
+
+        /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
          * index \a i for which <tt>get(i)</tt> and <tt>other.get(i)</tt>
@@ -513,7 +544,8 @@ class Qitmask2 {
  * \deprecated This type alias is deprecated; just use Qitmask1<uint8_t>
  * instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised qitmask class via the name Qitmask8.
  *
  * \ingroup utilities
  */
@@ -532,7 +564,8 @@ using QitmaskLen8 [[deprecated]] = Qitmask1<uint8_t>;
  * \deprecated This type alias is deprecated; just use Qitmask1<uint16_t>
  * instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised qitmask class via the name Qitmask16.
  *
  * \ingroup utilities
  */
@@ -551,7 +584,8 @@ using QitmaskLen16 [[deprecated]] = Qitmask1<uint16_t>;
  * \deprecated This type alias is deprecated; just use Qitmask1<uint32_t>
  * instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised qitmask class via the name Qitmask32.
  *
  * \ingroup utilities
  */
@@ -570,7 +604,8 @@ using QitmaskLen32 [[deprecated]] = Qitmask1<uint32_t>;
  * \deprecated This type alias is deprecated; just use Qitmask1<uint64_t>
  * instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised qitmask class via the name Qitmask64.
  *
  * \ingroup utilities
  */
