@@ -1042,6 +1042,7 @@ Version 7.0  [ TODO ]
             - Removed the StoreConstPtr storage policy, which was never used.
         Class Qitmask1, Qitmask2:
             - Added != operator to complement the already-existing == operator.
+            - Routines get() and set() now use values of type uint8_t, not char.
         Class QitmaskLen8, QitmaskLen16, QitmaskLen32, QitmaskLen64:
             - Deprecated.  Just use Qitmask1<uint8_t>, etc.
         Class Ray:
