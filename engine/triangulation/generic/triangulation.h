@@ -89,9 +89,9 @@ namespace regina {
  *
  * You can construct a triangulation from scratch using routines such as
  * newSimplex() and Simplex<dim>::join().  There are also routines for
- * importing and exporting triangulations in bulk, such as isoSig() and
- * fromIsoSig() (which uses <em>isomorphism signatures</em>), or
- * insertConstruction() and dumpConstruction() (which exports C++ code).
+ * exporting and importing triangulations in bulk, such as isoSig() and
+ * fromIsoSig() (which use <em>isomorphism signatures</em>), or
+ * dumpConstruction() and fromGluings() (which use C++ code).
  *
  * In additional to top-dimensional simplices, this class also tracks:
  *

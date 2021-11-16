@@ -1421,6 +1421,8 @@ Version 7.0  [ TODO ]
             - Functions snapPea() and saveSnapPea() are no longer virtual.
             - The Link constructor is now deprecated, since Link::complement()
               is more efficient and now returns by value.
+            - New static routine fromGluings().  This replaces the old
+              insertConstruction(), which is now deprecated.
             - Function enterTextTriangulation() returns by value, not pointer.
             - Routine fromSnapPea() now returns by value (not pointer), and
               throws an exception on error (instead of returning null).

@@ -1610,17 +1610,13 @@ class TriangulationBase :
         void insertTriangulation(const Triangulation<dim>& source);
 
         /**
-         * Inserts a given triangulation into this triangulation, where
-         * the given triangulation is described by a pair of integer arrays.
+         * Deprecated routine that inserts a given triangulation into this
+         * triangulation, where the given triangulation is described by a
+         * pair of integer arrays.
          *
-         * The main purpose of this routine is to allow users to hard-code
-         * triangulations into C++ source files.  In particular, all of the
-         * simplex gluings can be hard-coded into a pair of integer arrays
-         * at the beginning of the source file, avoiding an otherwise tedious
-         * sequence of many calls to Simplex<dim>::join().  If you have
-         * a particular triangulation that you would like to hard-code
-         * in this way, you can call dumpConstruction() to generate the
-         * corresponding integer arrays as C++ source code.
+         * The main purpose of this routine was to help users to hard-code
+         * triangulations into C++ source files.  Nowadays you are better off
+         * doing this through fromGluings() instead.
          *
          * This routine will insert an additional \a nSimplices top-dimensional
          * simplices into this triangulation.  We number these simplices
@@ -1656,7 +1652,12 @@ class TriangulationBase :
          * ensure that the given arrays are correct and consistent.
          * No error checking will be performed by this routine.
          *
-         * \ifacespython Not present.
+         * \deprecated Use the static routine fromGluings() instead.
+         * Code that uses fromGluings() is more compact and still readable;
+         * also fromGluings() performs error checking on the input.
+         *
+         * \ifacespython Not present; instead you can use fromGluings(),
+         * which is better in many ways (and which is not deprecated).
          *
          * @param nSimplices the number of additional simplices to insert.
          * @param adjacencies describes which simplices are adjace to
@@ -1666,7 +1667,7 @@ class TriangulationBase :
          * described above.  This array must also have initial dimension
          * at least \a nSimplices.
          */
-        void insertConstruction(
+        [[deprecated]] void insertConstruction(
             size_t nSimplices,
             const int adjacencies[][dim+1],
             const int gluings[][dim+1][dim+1]);
@@ -1809,18 +1810,14 @@ class TriangulationBase :
             const;
 
         /**
-         * Returns C++ code that can be used with insertConstruction()
-         * to reconstruct this triangulation.
+         * Returns C++ code that can be used to reconstruct this triangulation.
          *
-         * The code produced will consist of the following:
+         * This code will call Triangulation<dim>::fromGluings(), passing
+         * a hard-coded C++11 initialiser list.
          *
-         * - the declaration and initialisation of two integer arrays,
-         *   describing the gluings between simplices of this trianguation;
-         * - two additional lines that declare a new Triangulation<dim> and
-         *   call insertConstruction() to rebuild this triangulation.
-         *
-         * The main purpose of this routine is to generate the two integer
-         * arrays, which can be tedious and error-prone to code up by hand.
+         * The main purpose of this routine is to generate this hard-coded
+         * initialiser list, which can be tedious and error-prone to write
+         * by hand.
          *
          * Note that the number of lines of code produced grows linearly
          * with the number of simplices.  If this triangulation is very
@@ -1835,6 +1832,130 @@ class TriangulationBase :
          * \name Importing Triangulations
          */
         /*@{*/
+
+        /**
+         * Creates a triangulation from a hard-coded list of gluings.
+         *
+         * This routine takes a C++11 initialiser list, which makes it useful
+         * for creating hard-coded examples directly in C++ code without
+         * needing to write a tedious sequence of calls to Simplex<dim>::join().
+         *
+         * Each element of the initialiser list should be a tuple of the form
+         * (\a simp, \a facet, \a adj, \a gluing), which indicates that facet
+         * \a facet of top-dimensional simplex number \a simp should be glued
+         * to top-dimensional simplex number \a adj using the permutation
+         * \a gluing.  In other words, such a tuple encodes the same information
+         * as calling <tt>simplex(simp).join(facet, simplex(adj), gluing)</tt>
+         * upon the triangulation being constructed.
+         *
+         * Every gluing should be encoded from <i>one direction only</i>.
+         * This means, for example, that to build a closed 3-manifold
+         * triangulation with \a n tetrahedra, you would pass a list of
+         * 2<i>n</i> such tuples.  If you attempt to make the same gluing
+         * twice (e.g., once from each direction), then this routine will
+         * throw an exception.
+         *
+         * Any facet of a simplex that does not feature in the given list of
+         * gluings (either as a source or a destination) will be left as a
+         * boundary facet.
+         *
+         * Note that, as usual, the top-dimensional simplices are numbered
+         * 0,...,(<i>size</i>-1), and the facets of each simplex are numbered
+         * 0,...,\a dim.
+         *
+         * As an example, you can construct the figure eight knot complement
+         * using the following code:
+         *
+         * \code
+         * Triangulation<3> tri = Triangulation<3>::fromGluings(2, {
+         *     { 0, 0, 1, {1,3,0,2} }, { 0, 1, 1, {2,0,3,1} },
+         *     { 0, 2, 1, {0,3,2,1} }, { 0, 3, 1, {2,1,0,3} }});
+         * \endcode
+         *
+         * \note If you have an existing triangulation that you would like to
+         * hard-code in this way, you can call dumpConstruction() to generate
+         * the corresponding C++ source code.
+         *
+         * \exception InvalidArgument the given list of gluings does not
+         * correctly describe a triangulation with \a size top-dimensional
+         * simplices.
+         *
+         * \ifacespython Not available, but there is a variant of fromGluings()
+         * that takes the same data using a Python list (which need not be
+         * constant).
+         *
+         * @param size the number of top-dimensional simplices in the
+         * triangulation to construct.
+         * @param gluings describes the gluings between these top-dimensional
+         * simplices, as described above.
+         * @return the reconstructed triangulation.
+         */
+        static Triangulation<dim> fromGluings(size_t size,
+            std::initializer_list<std::tuple<size_t, int, size_t, Perm<dim+1>>>
+            gluings);
+
+        /**
+         * Creates a triangulation from a list of gluings.
+         *
+         * This routine is an analogue to the variant of fromGluings() that
+         * takes a C++11 initialiser list; however, here the input data may be
+         * constructed at runtime (which makes it accessible to Python,
+         * amongst other things).
+         *
+         * The iterator range (\a beginGluings, \a endGluings) should encode
+         * the list of gluings for the triangulation.  Each iterator in
+         * this range must dereference to a tuple of the form
+         * (\a simp, \a facet, \a adj, \a gluing); here \a simp, \a facet
+         * and \a adj are all integers, and \a gluing is of type Perm<dim+1>.
+         * Each such tuple indicates that facet \a facet of top-dimensional
+         * simplex number \a simp should be glued to top-dimensional simplex
+         * number \a adj using the permutation \a gluing.  In other words,
+         * such a tuple encodes the same information as calling
+         * <tt>simplex(simp).join(facet, simplex(adj), gluing)</tt>
+         * upon the triangulation being constructed.
+         *
+         * Every gluing should be encoded from <i>one direction only</i>.
+         * This means, for example, that to build a closed 3-manifold
+         * triangulation with \a n tetrahedra, you would pass a list of
+         * 2<i>n</i> such tuples.  If you attempt to make the same gluing
+         * twice (e.g., once from each direction), then this routine will
+         * throw an exception.
+         *
+         * Any facet of a simplex that does not feature in the given list of
+         * gluings (either as a source or a destination) will be left as a
+         * boundary facet.
+         *
+         * Note that, as usual, the top-dimensional simplices are numbered
+         * 0,...,(<i>size</i>-1), and the facets of each simplex are numbered
+         * 0,...,\a dim.
+         *
+         * As an example, Python users can construct the figure eight knot
+         * complement as follows:
+         *
+         * \code{.py}
+         * tri = Triangulation3.fromGluings(2, [
+         *     ( 0, 0, 1, Perm4(1,3,0,2) ), ( 0, 1, 1, Perm4(2,0,3,1) ),
+         *     ( 0, 2, 1, Perm4(0,3,2,1) ), ( 0, 3, 1, Perm4(2,1,0,3) )])
+         * \endcode
+         *
+         * \exception InvalidArgument the given list of gluings does not
+         * correctly describe a triangulation with \a size top-dimensional
+         * simplices.
+         *
+         * \ifacespython The gluings should be passed as a single Python
+         * list of tuples (not an iterator pair).
+         *
+         * @param size the number of top-dimensional simplices in the
+         * triangulation to construct.
+         * @param beginGluings the beginning of the list of gluings, as
+         * described above.
+         * @param endGluings a past-the-end iterator indicating the end
+         * of the list of gluings.
+         * @return the reconstructed triangulation.
+         */
+        template <typename Iterator>
+        static Triangulation<dim> fromGluings(size_t size,
+            Iterator beginGluings, Iterator endGluings);
 
         /**
          * Recovers a full triangulation from an isomorphism signature.
@@ -2977,6 +3098,58 @@ void TriangulationBase<dim>::insertTriangulation(
 }
 
 template <int dim>
+template <typename Iterator>
+Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
+        Iterator beginGluings, Iterator endGluings) {
+    Triangulation<dim> ans;
+
+    // Note: new simplices are initialised with all adj_[i] null.
+    for (size_t i = 0; i < size; ++i)
+        ans.simplices_.push_back(new Simplex<dim>(&ans));
+
+    for (auto it = beginGluings; it != endGluings; ++it) {
+        if (std::get<0>(*it) >= size)
+            throw InvalidArgument(
+                "fromGluings(): source simplex out of range");
+        if (std::get<2>(*it) >= size)
+            throw InvalidArgument(
+                "fromGluings(): adjacent simplex out of range");
+        if (std::get<1>(*it) < 0 || std::get<1>(*it) > dim)
+            throw InvalidArgument(
+                "fromGluings(): facet number out of range");
+
+        Simplex<dim>* s = ans.simplices_[std::get<0>(*it)];
+        Simplex<dim>* adj = ans.simplices_[std::get<2>(*it)];
+        int facet = std::get<1>(*it);
+
+        if (s->adj_[facet])
+            throw InvalidArgument(
+                "fromGluings(): source facet already glued to something");
+        if (adj->adj_[std::get<3>(*it)[facet]])
+            throw InvalidArgument(
+                "fromGluings(): destination facet already glued to something");
+        if (s == adj && std::get<3>(*it)[facet] == facet)
+            throw InvalidArgument(
+                "fromGluings(): a facet cannot be glued to itself");
+
+        s->adj_[facet] = adj;
+        s->gluing_[facet] = std::get<3>(*it);
+
+        adj->adj_[std::get<3>(*it)[facet]] = s;
+        adj->gluing_[std::get<3>(*it)[facet]] = std::get<3>(*it).inverse();
+    }
+
+    return ans;
+}
+
+template <int dim>
+inline Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
+        std::initializer_list<std::tuple<size_t, int, size_t, Perm<dim+1>>>
+        gluings) {
+    return fromGluings(size, gluings.begin(), gluings.end());
+}
+
+template <int dim>
 void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
         const int adjacencies[][dim+1], const int gluings[][dim+1][dim+1]) {
     if (nSimplices == 0)
@@ -3038,97 +3211,40 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
 template <int dim>
 std::string TriangulationBase<dim>::dumpConstruction() const {
     std::ostringstream ans;
-    ans <<
-"/**\n"
-" * " << dim << "-dimensional triangulation:\n"
-" * Code automatically generated by dumpConstruction().\n"
-" */\n"
-"\n";
 
-    if (simplices_.empty()) {
-        ans <<
-"/* This triangulation is empty.  No code is being generated. */\n";
-        return ans.str();
-    }
+    ans << "Triangulation<" << dim << "> tri = Triangulation<" << dim
+        << ">::fromGluings(" << size() << ", {\n";
 
-    ans <<
-"/**\n"
-" * The following arrays describe the gluings between simplices.\n"
-" */\n"
-"\n";
-
-    size_t nSimplices = simplices_.size();
-    Simplex<dim>* s;
-    Perm<dim+1> perm;
-    size_t p;
-    int f, i;
-
-    ans << "const int adjacencies[" << nSimplices << "][" << (dim+1)
-        << "] = {\n";
-    for (p = 0; p < nSimplices; ++p) {
-        s = simplices_[p];
-
-        ans << "    { ";
-        for (f = 0; f <= dim; ++f) {
-            if (s->adjacentSimplex(f)) {
-                ans << s->adjacentSimplex(f)->index();
-            } else
-                ans << "-1";
-
-            if (f < dim)
-                ans << ", ";
-            else if (p != nSimplices - 1)
-                ans << "},\n";
-            else
-                ans << "}\n";
-        }
-    }
-    ans << "};\n\n";
-
-    ans << "const int gluings[" << nSimplices << "][" << (dim+1)
-        << "][" << (dim+1) << "] = {\n";
-    for (p = 0; p < nSimplices; ++p) {
-        s = simplices_[p];
-
-        ans << "    { ";
-        for (f = 0; f <= dim; ++f) {
-            if (s->adjacentSimplex(f)) {
-                perm = s->adjacentGluing(f);
-                ans << "{ ";
-                for (i = 0; i <= dim; ++i) {
-                    ans << perm[i];
-                    if (i < dim)
-                        ans << ", ";
+    size_t wrote = 0;
+    for (size_t i = 0; i < size(); ++i) {
+        Simplex<dim>* s = simplices_[i];
+        for (int j = 0; j <= dim; ++j) {
+            Simplex<dim>* adj = s->adjacentSimplex(j);
+            if (adj) {
+                Perm<dim + 1> g = s->adjacentGluing(j);
+                if (adj->index() > i || (adj->index() == i && g[j] > j)) {
+                    if (wrote == 0)
+                        ans << "    ";
+                    else if (wrote % 2 == 0)
+                        ans << ",\n    ";
                     else
-                        ans << " }";
-                }
-            } else {
-                ans << "{ ";
-                for (i = 0; i < dim; ++i)
-                    ans << "0, ";
-                ans << "0 }";
-            }
+                        ans << ", ";
 
-            if (f < dim)
-                ans << ", ";
-            else if (p != nSimplices - 1)
-                ans << " },\n";
-            else
-                ans << " }\n";
+                    ans << "{ " << i << ", " << j << ", " << adj->index()
+                        << ", {";
+                    for (int k = 0; k <= dim; ++k) {
+                        if (k > 0)
+                            ans << ',';
+                        ans << g[k];
+                    }
+                    ans << "} }";
+
+                    ++wrote;
+                }
+            }
         }
     }
-    ans << "};\n\n";
-
-    ans <<
-"/**\n"
-" * The following code constructs a " << dim << "-dimensional triangulation\n"
-" * based on the information stored in the arrays above.\n"
-" */\n"
-"\n"
-"Triangulation<" << dim << "> tri;\n"
-"tri.insertConstruction(" << nSimplices << ", adjacencies, gluings);\n"
-"\n";
-
+    ans << "});\n";
     return ans.str();
 }
 

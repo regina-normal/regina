@@ -36,30 +36,6 @@
 
 namespace regina {
 
-namespace {
-    // The following gluings describe a punctured ideal unknot complement.
-    // The real 2-sphere boundary is a triangular pillow, formed from
-    // faces 5 (013) and 5 (213).
-
-    const int puncturedUnknotAdjacencies[6][4] = {
-        { 1, 1, 1, 3},
-        { 0, 0, 3, 0},
-        { 2, 2, 5, 3},
-        { 0, 1, 2, 4},
-        { 4, 3, 5, 4},
-        { -1, 2, -1, 4}
-    };
-
-    const int puncturedUnknotGluings[6][4][4] = {
-        { { 1, 3, 0, 2 }, { 3, 0, 1, 2 }, { 0, 1, 3, 2 }, { 1, 2, 3, 0 } },
-        { { 1, 2, 3, 0 }, { 2, 0, 3, 1 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 } },
-        { { 1, 0, 2, 3 }, { 1, 0, 2, 3 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 } },
-        { { 3, 0, 1, 2 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 }, { 0, 3, 2, 1 } },
-        { { 3, 1, 2, 0 }, { 0, 3, 2, 1 }, { 0, 1, 3, 2 }, { 3, 1, 2, 0 } },
-        { { 0, 0, 0, 0 }, { 0, 2, 1, 3 }, { 0, 0, 0, 0 }, { 0, 1, 3, 2 } }
-    };
-}
-
 Triangulation<3> Link::complement(bool simplify) const {
     // This implementation produces an oriented triangluation.
     // The orientation follows a right-hand rule, where the thumb points
@@ -231,14 +207,27 @@ Triangulation<3> Link::complement(bool simplify) const {
         Tetrahedron<3>* tet1 = f->embedding(1).simplex();
         Perm<4> vert1 = f->embedding(1).vertices();
 
-        ans.insertConstruction(6, puncturedUnknotAdjacencies,
-            puncturedUnknotGluings);
-        Tetrahedron<3>* unknotBdry = ans.tetrahedra().back();
-        // Boundary triangles are 013 and 213.
+        // The following gluings describe a punctured ideal unknot complement.
+        // The real 2-sphere boundary is a triangular pillow, formed from
+        // faces p5 (013) and p5 (213).
+
+        Tetrahedron<3>* p0 = ans.newTetrahedron();
+        Tetrahedron<3>* p1 = ans.newTetrahedron();
+        Tetrahedron<3>* p2 = ans.newTetrahedron();
+        Tetrahedron<3>* p3 = ans.newTetrahedron();
+        Tetrahedron<3>* p4 = ans.newTetrahedron();
+        Tetrahedron<3>* p5 = ans.newTetrahedron();
+
+        p0->join(0, p1, {1,3,0,2}); p0->join(1, p1, {3,0,1,2});
+        p0->join(2, p1, {0,1,3,2}); p0->join(3, p3, {1,2,3,0});
+        p1->join(2, p3, {0,2,1,3}); p2->join(0, p2, {1,0,2,3});
+        p2->join(2, p5, {0,2,1,3}); p2->join(3, p3, {0,1,3,2});
+        p3->join(3, p4, {0,3,2,1}); p4->join(0, p4, {3,1,2,0});
+        p4->join(2, p5, {0,1,3,2});
 
         tet0->unjoin(vert0[3]);
-        unknotBdry->join(2, tet0, vert0 * Perm<4>(3,2));
-        unknotBdry->join(0, tet1, vert1 * Perm<4>(3,1,0,2));
+        p5->join(2, tet0, vert0 * Perm<4>(3,2));
+        p5->join(0, tet1, vert1 * Perm<4>(3,1,0,2));
 
         ++idealVertices;
     }

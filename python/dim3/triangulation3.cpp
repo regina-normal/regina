@@ -442,6 +442,10 @@ void addTriangulation3(pybind11::module_& m) {
         .def_static("rehydrate", &Triangulation<3>::rehydrate)
         .def("isoSig", &Triangulation<3>::isoSig<>)
         .def("isoSigDetail", &Triangulation<3>::isoSigDetail<>)
+        .def_static("fromGluings", [](size_t size, const std::vector<
+                std::tuple<size_t, int, size_t, regina::Perm<4>>>& g) {
+            return Triangulation<3>::fromGluings(size, g.begin(), g.end());
+        })
         .def_static("fromIsoSig", &Triangulation<3>::fromIsoSig)
         .def_static("fromSig", &Triangulation<3>::fromSig)
         .def_static("isoSigComponentSize",
