@@ -71,6 +71,12 @@ void addInteger(pybind11::module_& m) {
         .def(pybind11::self <= long())
         .def(pybind11::self >= pybind11::self)
         .def(pybind11::self >= long())
+        .def("inc", [](Integer& i) {
+            return i++;
+        })
+        .def("dec", [](Integer& i) {
+            return i--;
+        })
         .def(pybind11::self + pybind11::self)
         .def(pybind11::self + long())
         .def(pybind11::self - pybind11::self)

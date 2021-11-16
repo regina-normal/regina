@@ -72,6 +72,12 @@ void addLargeInteger(pybind11::module_& m) {
         .def(pybind11::self <= long())
         .def(pybind11::self >= pybind11::self)
         .def(pybind11::self >= long())
+        .def("inc", [](LargeInteger& i) {
+            return i++;
+        })
+        .def("dec", [](LargeInteger& i) {
+            return i--;
+        })
         .def(pybind11::self + pybind11::self)
         .def(pybind11::self + long())
         .def(pybind11::self - pybind11::self)

@@ -1047,12 +1047,18 @@ class DiscSpecIterator {
          * Creates a new uninitialised iterator.
          * This iterator cannot be used or queried until either init() or the
          * assignmemnt operator is called.
+         *
+         * \ifacespython Not present; the only way to create a
+         * DiscSpecIterator is to iterate over a DiscSetSurface.
          */
         DiscSpecIterator() : internalDiscSet(nullptr) {
         }
         /**
          * Creates a new iterator pointing to the first disc in the
          * given disc set.
+         *
+         * \ifacespython Not present; the only way to create a
+         * DiscSpecIterator is to iterate over a DiscSetSurface.
          *
          * @param discSet the disc set used to initialise this iterator.
          */
@@ -1066,6 +1072,11 @@ class DiscSpecIterator {
         DiscSpecIterator(const DiscSpecIterator&) = default;
         /**
          * Points this iterator to the first disc in the given disc set.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current DiscSpec and
+         * increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
          * @param discSet the disc set used to reinitialise this iterator.
          */
@@ -1088,8 +1099,8 @@ class DiscSpecIterator {
          * \pre This iterator is not past-the-end.
          *
          * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current packet in the
-         * subtree and increments the iterator, or else throws a
+         * <tt>next()</tt>, which either returns the current DiscSpec and
+         * increments the iterator, or else throws a
          * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
          * @return a reference to this iterator.
@@ -1105,8 +1116,8 @@ class DiscSpecIterator {
          * \pre This iterator is not past-the-end.
          *
          * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current packet in the
-         * subtree and increments the iterator, or else throws a
+         * <tt>next()</tt>, which either returns the current DiscSpec and
+         * increments the iterator, or else throws a
          * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
          * @return a copy of this iterator before it was incremented.
@@ -1122,8 +1133,10 @@ class DiscSpecIterator {
          *
          * \pre This iterator is not past-the-end.
          *
-         * \ifacespython This routine is called deref(), since Python does
-         * not support the dereference operator.
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current DiscSpec and
+         * increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
          * @return a reference to the disc pointed to by this iterator.
          */
@@ -1132,6 +1145,11 @@ class DiscSpecIterator {
         }
         /**
          * Determines if this iterator is past-the-end.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current DiscSpec and
+         * increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
          * @return \c true if and only if this iterator is past-the-end.
          */

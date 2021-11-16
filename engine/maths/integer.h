@@ -265,7 +265,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * compile-time assertion, but may be lifted in future versions
          * of Regina.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since NativeInteger is not available to
+         * Python users.
          *
          * @param value the new value of this integer.
          */
@@ -450,7 +451,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinity.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can use the non-templated
+         * longValue() instead.
          *
          * @return the value of this integer.
          */
@@ -704,7 +706,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator increments this integer by one, and returns a
          * reference to the integer \e after the increment.
          *
-         * \ifacespython Not available.
+         * \ifacespython Not present, although the postincrement operator is
+         * present in python as the member function inc().
          *
          * @return a reference to this integer after the increment.
          */
@@ -715,10 +718,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator increments this integer by one, and returns a
          * copy of the integer \e before the increment.
          *
-         * \ifacespython Not available.
+         * \ifacespython This routine is named inc() since python does not
+         * support the increment operator.
          *
-         * @return a copy of this integer before the
-         * increment took place.
+         * @return a copy of this integer before the increment took place.
          */
         IntegerBase operator ++(int);
 
@@ -727,7 +730,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator decrements this integer by one, and returns a
          * reference to the integer \e after the decrement.
          *
-         * \ifacespython Not available.
+         * \ifacespython Not present, although the postdecrement operator is
+         * present in python as the member function dec().
          *
          * @return a reference to this integer after the decrement.
          */
@@ -738,10 +742,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator decrements this integer by one, and returns a
          * copy of the integer \e before the decrement.
          *
-         * \ifacespython Not available.
+         * \ifacespython This routine is named dec() since python does not
+         * support the decrement operator.
          *
-         * @return a copy of this integer before the
-         * decrement took place.
+         * @return a copy of this integer before the decrement took place.
          */
         IntegerBase operator --(int);
 
@@ -1568,8 +1572,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
  * LargeInteger is a type alias for IntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
  *
- * \ifacespython This type alias is available in Python.
- *
  * \ingroup maths
  */
 using LargeInteger = IntegerBase<true>;
@@ -1577,8 +1579,6 @@ using LargeInteger = IntegerBase<true>;
 /**
  * Integer is a type alias for IntegerBase<false>, which offers
  * arbitrary precision integers without support for infinity.
- *
- * \ifacespython This type alias is available in Python.
  *
  * \ingroup maths
  */
@@ -1617,8 +1617,6 @@ std::ostream& operator << (std::ostream& out,
  * Adds the given native integer to the given large integer.
  * If the large integer is infinite, the result will also be infinity.
  *
- * \ifacespython Not available.
- *
  * @param lhs the native integer to add.
  * @param rhs the large integer to add.
  * @return the sum \a lhs plus \a rhs.
@@ -1632,8 +1630,6 @@ IntegerBase<supportInfinity> operator + (long lhs,
 /**
  * Multiplies the given native integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
- *
- * \ifacespython Not available.
  *
  * @param lhs the native integer to multiply.
  * @param rhs the large integer to multiply.
@@ -1709,7 +1705,10 @@ std::string tightEncoding(IntegerBase<supportInfinity> value);
  * \pre The system must support integers of the given size; in particular,
  * there must be an appropriate specialisation IntOfSize<bytes>.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since the purpose of NativeInteger is to be a
+ * highly optimised drop-in replacement for Integer as a C++ template parameter.
+ * Python users should just use regina.Integer if you need Regina's integer
+ * interface, or Python's own integer type if you do not.
  *
  * \ingroup maths
  */
@@ -1759,8 +1758,6 @@ class NativeInteger {
          * but may be lifted in future versions of Regina.
          *
          * \pre The given integer is not infinity.
-         *
-         * \ifacespython Not present.
          *
          * @param value the new value of this integer.
          */
@@ -1911,8 +1908,6 @@ class NativeInteger {
          * This operator increments this integer by one, and returns a
          * reference to the integer \e after the increment.
          *
-         * \ifacespython Not available.
-         *
          * @return a reference to this integer after the increment.
          */
         NativeInteger& operator ++();
@@ -1921,8 +1916,6 @@ class NativeInteger {
          * The postincrement operator.
          * This operator increments this integer by one, and returns a
          * copy of the integer \e before the increment.
-         *
-         * \ifacespython Not available.
          *
          * @return a copy of this integer before the
          * increment took place.
@@ -1934,8 +1927,6 @@ class NativeInteger {
          * This operator decrements this integer by one, and returns a
          * reference to the integer \e after the decrement.
          *
-         * \ifacespython Not available.
-         *
          * @return a reference to this integer after the decrement.
          */
         NativeInteger& operator --();
@@ -1944,8 +1935,6 @@ class NativeInteger {
          * The postdecrement operator.
          * This operator decrements this integer by one, and returns a
          * copy of the integer \e before the decrement.
-         *
-         * \ifacespython Not available.
          *
          * @return a copy of this integer before the
          * decrement took place.
@@ -2395,7 +2384,8 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  * NativeLong is a type alias for the NativeInteger template class whose
  * underlying integer type is a native long.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since NativeInteger is not available to
+ * Python users.
  *
  * \ingroup maths
  */
@@ -2406,7 +2396,8 @@ using NativeLong = NativeInteger<sizeof(long)>;
  *
  * \deprecated Use NativeLong instead.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since NativeInteger is not available to
+ * Python users.
  *
  * \ingroup maths
  */
