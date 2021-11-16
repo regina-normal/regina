@@ -4392,6 +4392,11 @@
 		05CAE6102743F1ED007C93F3 /* discs.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = discs.test; sourceTree = "<group>"; };
 		05CAE6112743F207007C93F3 /* qitmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qitmask.cpp; sourceTree = "<group>"; };
 		05CAE6122743F207007C93F3 /* bitmanip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitmanip.cpp; sourceTree = "<group>"; };
+		05CAE617274470DF007C93F3 /* sort.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = sort.out; sourceTree = "<group>"; };
+		05CAE618274470DF007C93F3 /* sort.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = sort.test; sourceTree = "<group>"; };
+		05CAE619274470FF007C93F3 /* gil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gil.h; sourceTree = "<group>"; };
+		05CAE61B274470FF007C93F3 /* filesystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = filesystem.h; sourceTree = "<group>"; };
+		05CAE61C27447121007C93F3 /* type_caster_base.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = type_caster_base.h; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5202,6 +5207,8 @@
 				05431FD51C40F67C009BC072 /* skeleton.test */,
 				05772F06270CFB6000D26D8A /* snapshot.out */,
 				05772F07270CFB6000D26D8A /* snapshot.test */,
+				05CAE617274470DF007C93F3 /* sort.out */,
+				05CAE618274470DF007C93F3 /* sort.test */,
 				05772F00270CFB5F00D26D8A /* standardtri.out */,
 				05772F01270CFB5F00D26D8A /* standardtri.test */,
 				050F5DA01B9BAB9C00C1F681 /* surfaces.out */,
@@ -5452,6 +5459,7 @@
 				05199A7025C63D200006B8FA /* embed.h */,
 				05199A8425C63D200006B8FA /* eval.h */,
 				05199A7A25C63D200006B8FA /* functional.h */,
+				05CAE619274470FF007C93F3 /* gil.h */,
 				05199A7425C63D200006B8FA /* iostream.h */,
 				05199A7125C63D200006B8FA /* numpy.h */,
 				05199A7325C63D200006B8FA /* operators.h */,
@@ -5460,6 +5468,7 @@
 				05199A8825C63D200006B8FA /* pytypes.h */,
 				05199A7725C63D200006B8FA /* stl_bind.h */,
 				05199A7B25C63D200006B8FA /* stl.h */,
+				05CAE61A274470FF007C93F3 /* stl */,
 			);
 			path = pybind11;
 			sourceTree = "<group>";
@@ -5472,6 +5481,7 @@
 				05199A7E25C63D200006B8FA /* descr.h */,
 				05199A8225C63D200006B8FA /* init.h */,
 				05199A7F25C63D200006B8FA /* internals.h */,
+				05CAE61C27447121007C93F3 /* type_caster_base.h */,
 				05199A7D25C63D200006B8FA /* typeid.h */,
 			);
 			path = detail;
@@ -7596,6 +7606,14 @@
 				05E0EFEE258241E100965440 /* libz.tbd */,
 			);
 			name = System;
+			sourceTree = "<group>";
+		};
+		05CAE61A274470FF007C93F3 /* stl */ = {
+			isa = PBXGroup;
+			children = (
+				05CAE61B274470FF007C93F3 /* filesystem.h */,
+			);
+			path = stl;
 			sourceTree = "<group>";
 		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {
