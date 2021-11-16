@@ -2436,7 +2436,8 @@ std::shared_ptr<Packet> open(const char* filename);
  *
  * \pre The given stream is open for reading.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present; instead you can use the variant of open() that
+ * takes a filename.
  *
  * @param in the input stream to read from.
  * @return the packet tree read from file, or \c null on error.
