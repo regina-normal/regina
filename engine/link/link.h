@@ -3147,7 +3147,7 @@ class Link : public PacketData<Link>, public Output<Link> {
         /**
          * Returns C++ code that can be used to reconstruct this link.
          *
-         * This code will use the Link constructor that takes a series of
+         * This code will call Link::fromData(), passing a series of
          * hard-coded C++11 initialiser lists.
          *
          * The main purpose of this routine is to generate these hard-coded
@@ -3228,8 +3228,8 @@ class Link : public PacketData<Link>, public Output<Link> {
         void insertTorusLink(int p, int q, bool positive = true);
 
         /**
-         * Creates a new link from hard-coded information about its
-         * crossings and components.
+         * Creates a link from hard-coded information about its crossings
+         * and components.
          *
          * This routine takes a series of C++11 initialiser lists
          * (each a list of integers), which makes it useful for creating
@@ -3274,7 +3274,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * \note If you have an existing link that you would like to
          * hard-code, the routine dumpConstruction() will output C++ code
-         * that can reconstruct the link by calling this constructor.
+         * that can reconstruct the link by calling this routine.
          *
          * \exception InvalidArgument a link could not be reconstructed from
          * the given data.
