@@ -34,6 +34,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <functional>
 #include <sstream>
 #include "census/census-impl.h"
 #include "file/globaldirs.h"
@@ -48,6 +49,10 @@ CensusDB* Census::cuspedHypOr_ = nullptr;
 CensusDB* Census::cuspedHypNor_ = nullptr;
 CensusDB* Census::christy_ = nullptr;
 bool Census::dbInit_ = false;
+
+// Instantiate this template, which we use in the python bindings.
+template bool CensusDB::lookup<const std::function<void(CensusHit&&)>&>(
+    const std::string&, const std::function<void(CensusHit&&)>&) const;
 
 std::list<CensusHit> Census::lookup(const Triangulation<3>& tri) {
     return lookup(tri.isoSig());

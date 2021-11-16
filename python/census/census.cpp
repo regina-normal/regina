@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "census/census.h"
 #include "triangulation/dim3.h"
@@ -49,6 +50,8 @@ void addCensus(pybind11::module_& m) {
         .def("filename", &CensusDB::filename)
         .def("desc", &CensusDB::desc)
         .def("swap", &CensusDB::swap)
+        .def("lookup", &CensusDB::lookup<const std::function<
+            void(CensusHit&&)>&>)
     ;
     regina::python::add_eq_operators(db);
 
