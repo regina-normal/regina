@@ -76,10 +76,66 @@ class MATCH_PYBIND11_VISIBILITY SafeIterator {
         }
 
         static void addBindings(pybind11::module_& m, const char* name) {
-            auto i = pybind11::class_<SafeIterator>( m, name)
+            auto i = pybind11::class_<SafeIterator>(m, name)
                 .def("next", &SafeIterator::next, // for python 2
                     pybind11::return_value_policy::reference_internal)
                 .def("__next__", &SafeIterator::next, // for python 3
+                    pybind11::return_value_policy::reference_internal)
+                ;
+            regina::python::add_eq_operators(i);
+        }
+};
+
+/**
+ * A single Python object that implements the Python iterable/iterator
+ * interface for a given C++ iterator pair.
+ *
+ * This is designed for scenarios where the iterator pair is not obtained
+ * from the underlying container via the usual begin() and end() functions.
+ * For example, this can be used with NormalSurfaces::vectors(), where the
+ * iterator pair is obtained via beginVectors() and endVectors() instead.
+ *
+ * The iterator will store its own local Python reference to the underlying
+ * container.  If the container is held using a shared pointer (as, for example,
+ * a normal surface list is), then this will ensure that the container survives
+ * for the entire iteration, even if the list was a temporary object.
+ */
+template <class Iterator>
+class MATCH_PYBIND11_VISIBILITY BeginEndIterator {
+    private:
+        Iterator curr_, end_;
+        pybind11::object localRef_;
+
+    public:
+        template <typename Container>
+        BeginEndIterator(Iterator begin, Iterator end, const Container& c) :
+                curr_(begin), end_(end), localRef_(pybind11::cast(c)) {
+        }
+
+        BeginEndIterator(const BeginEndIterator&) = default;
+
+        decltype(*curr_) next() {
+            if (curr_ == end_)
+                throw pybind11::stop_iteration();
+            return *curr_++;
+        }
+
+        bool operator == (const BeginEndIterator& rhs) const {
+            return curr_ == rhs.curr_;
+        }
+
+        bool operator != (const BeginEndIterator& rhs) const {
+            return curr_ != rhs.curr_;
+        }
+
+        static void addBindings(pybind11::module_& m, const char* name) {
+            auto i = pybind11::class_<BeginEndIterator>(m, name)
+                .def("__iter__", [](pybind11::object const& it) {
+                    return it;
+                })
+                .def("next", &BeginEndIterator::next, // for python 2
+                    pybind11::return_value_policy::reference_internal)
+                .def("__next__", &BeginEndIterator::next, // for python 3
                     pybind11::return_value_policy::reference_internal)
                 ;
             regina::python::add_eq_operators(i);

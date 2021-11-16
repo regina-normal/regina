@@ -817,9 +817,10 @@ class NormalSurfaces :
          *
          * The implementation of this routine uses std::stable_sort.
          *
-         * \ifacespython Not present.
+         * \ifacespython This is available in Python, and \a comp may be
+         * a pure Python function.
          *
-         * @param comp a binary function (or function object) that
+         * @param comp a binary function (or other callable object) that
          * accepts two const NormalSurface references, and returns \c true
          * if and only if the first surface should appear before the second
          * in the sorted list.
@@ -1043,7 +1044,16 @@ class NormalSurfaces :
          * An iterator that gives access to the raw vectors for surfaces in
          * this list, pointing to the beginning of this surface list.
          *
-         * \ifacespython Not present.
+         * In Python, beginVectors() and endVectors() are replaced
+         * by a single routine vectors(), which returns an iterable object:
+         *
+         * \code{.py}
+         * list = NormalSurfaces(...)
+         * for v in list.vectors():
+         *     ...
+         * \endcode
+         *
+         * \ifacespython Not present; use vectors() instead.
          *
          * @return an iterator at the beginning of this surface list.
          */
@@ -1054,7 +1064,11 @@ class NormalSurfaces :
          * this list, pointing past the end of this surface list.
          * This iterator is not dereferenceable.
          *
-         * \ifacespython Not present.
+         * In Python, beginVectors() and endVectors() are replaced
+         * by a single routine vectors(), which returns an iterable object;
+         * see the beginVectors() documentation for further details.
+         *
+         * \ifacespython Not present; use vectors() instead.
          *
          * @return an iterator past the end of this surface list.
          */
@@ -1064,7 +1078,9 @@ class NormalSurfaces :
          * A bidirectional iterator that runs through the raw vectors for
          * surfaces in this list.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present.  Instead NormalSurfaces::vectors()
+         * returns an object of a different (hidden) class that supports
+         * the Python iterable/iterator interface.
          */
         class VectorIterator {
             public:

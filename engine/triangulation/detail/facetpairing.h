@@ -149,8 +149,6 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * \exception InvalidInput the data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present.
-         *
          * @param in the input stream from which to read.
          */
         FacetPairingBase(std::istream& in);

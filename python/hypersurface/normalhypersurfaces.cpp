@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "maths/matrix.h"
@@ -40,6 +41,7 @@
 
 using namespace regina::python;
 using regina::HyperCoords;
+using regina::NormalHypersurface;
 using regina::NormalHypersurfaces;
 using regina::ProgressTracker;
 using regina::Triangulation;
@@ -50,6 +52,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
 
     SafeIterator<NormalHypersurfaces>::addBindings(m,
         "NormalHypersurfaceIterator");
+    BeginEndIterator<NormalHypersurfaces::VectorIterator>::addBindings(m,
+        "NormalHypersurfaceVectorIterator");
 
     auto l = pybind11::class_<NormalHypersurfaces,
             std::shared_ptr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
@@ -79,6 +83,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::HS_ALG_DEFAULT)
+        .def("sort", &NormalHypersurfaces::sort<const std::function<
+            bool(const NormalHypersurface&, const NormalHypersurface&)>&>)
         .def("recreateMatchingEquations",
             &NormalHypersurfaces::recreateMatchingEquations)
         .def("coords", &NormalHypersurfaces::coords)
@@ -92,6 +98,10 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("__iter__", [](const NormalHypersurfaces& list) {
             return SafeIterator(list);
+        })
+        .def("vectors", [](const NormalHypersurfaces& list) {
+            return BeginEndIterator<NormalHypersurfaces::VectorIterator>(
+                list.beginVectors(), list.endVectors(), list);
         })
     ;
     regina::python::add_output(l);

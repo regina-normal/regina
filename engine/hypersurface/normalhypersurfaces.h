@@ -516,9 +516,10 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *
          * The implementation of this routine uses std::stable_sort.
          *
-         * \ifacespython Not present.
+         * \ifacespython This is available in Python, and \a comp may be
+         * a pure Python function.
          *
-         * @param comp a binary function (or function object) that
+         * @param comp a binary function (or other callable object) that
          * accepts two const HyperSurface references, and returns \c true
          * if and only if the first hypersurface should appear before the
          * second in the sorted list.
@@ -553,7 +554,16 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * An iterator that gives access to the raw vectors for hypersurfaces
          * in this list, pointing to the beginning of this hypersurface list.
          *
-         * \ifacespython Not present.
+         * In Python, beginVectors() and endVectors() are replaced
+         * by a single routine vectors(), which returns an iterable object:
+         *
+         * \code{.py}
+         * list = NormalHypersurfaces(...)
+         * for v in list.vectors():
+         *     ...
+         * \endcode
+         *
+         * \ifacespython Not present; use vectors() instead.
          *
          * @return an iterator at the beginning of this hypersurface list.
          */
@@ -564,7 +574,11 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * in this list, pointing past the end of this hypersurface list.
          * This iterator is not dereferenceable.
          *
-         * \ifacespython Not present.
+         * In Python, beginVectors() and endVectors() are replaced
+         * by a single routine vectors(), which returns an iterable object;
+         * see the beginVectors() documentation for further details.
+         *
+         * \ifacespython Not present; use vectors() instead.
          *
          * @return an iterator past the end of this hypersurface list.
          */
@@ -574,7 +588,9 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * A bidirectional iterator that runs through the raw vectors for
          * hypersurfaces in this list.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present.  Instead NormalHypersurfaces::vectors()
+         * returns an object of a different (hidden) class that supports
+         * the Python iterable/iterator interface.
          */
         class VectorIterator {
             public:

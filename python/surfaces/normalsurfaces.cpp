@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
@@ -64,6 +65,8 @@ void addNormalSurfaces(pybind11::module_& m) {
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
 
     SafeIterator<NormalSurfaces>::addBindings(m, "NormalSurfaceIterator");
+    BeginEndIterator<NormalSurfaces::VectorIterator>::addBindings(
+        m, "NormalSurfaceVectorIterator");
 
     auto l = pybind11::class_<NormalSurfaces,
             std::shared_ptr<NormalSurfaces>>(m, "NormalSurfaces")
@@ -165,6 +168,8 @@ void addNormalSurfaces(pybind11::module_& m) {
                 return std::shared_ptr<regina::PacketOf<NormalSurfaces>>();
             }
         })
+        .def("sort", &NormalSurfaces::sort<const std::function<
+            bool(const regina::NormalSurface&, const regina::NormalSurface&)>&>)
         .def("filter", [](const NormalSurfaces& src, const SurfaceFilter& f) {
             // This is deprecated, so we reimplement it here ourselves.
             auto p = src.packet();
@@ -227,6 +232,10 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
             pybind11::arg(),
             pybind11::arg("additionalFields") = regina::surfaceExportAll)
+        .def("vectors", [](const NormalSurfaces& list) {
+            return BeginEndIterator<NormalSurfaces::VectorIterator>(
+                list.beginVectors(), list.endVectors(), list);
+        })
     ;
     regina::python::add_output(l);
     regina::python::add_eq_operators(l);
