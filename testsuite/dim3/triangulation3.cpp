@@ -284,80 +284,74 @@ class Triangulation3Test : public TriangulationTest<3> {
             fig8_bary.barycentricSubdivision();
 
             // The rest alas must be done manually.
-            Tetrahedron<3>* r;
-            Tetrahedron<3>* s;
-            Tetrahedron<3>* t;
-            Tetrahedron<3>* u;
 
-            // A two-tetrahedron two-vertex L(3,1) is straightforward to
-            // construct using a vertex of degree two.
-            r = lens3_1.newTetrahedron();
-            s = lens3_1.newTetrahedron();
-            r->join(0, s, Perm<4>(0, 2, 3, 1));
-            r->join(1, s, Perm<4>());
-            r->join(2, s, Perm<4>());
-            r->join(3, s, Perm<4>());
-
-            // For a triangulation with invalid edges, we simply fold
-            // the faces of a tetrahedron together in pairs (as in a
-            // 3-sphere triangulation) but apply a reflection to each fold.
-            r = invalidEdges.newTetrahedron();
-            r->join(0, r, Perm<4>(1, 0, 3, 2));
-            r->join(2, r, Perm<4>(1, 0, 3, 2));
+            {
+                // A two-tetrahedron two-vertex L(3,1) is straightforward to
+                // construct using a vertex of degree two.
+                auto [r, s] = lens3_1.newTetrahedra<2>();
+                r->join(0, s, Perm<4>(0, 2, 3, 1));
+                r->join(1, s, Perm<4>());
+                r->join(2, s, Perm<4>());
+                r->join(3, s, Perm<4>());
+            }
+            {
+                // For a triangulation with invalid edges, we simply fold
+                // the faces of a tetrahedron together in pairs (as in a
+                // 3-sphere triangulation) but apply a reflection to each fold.
+                auto r = invalidEdges.newTetrahedron();
+                r->join(0, r, Perm<4>(1, 0, 3, 2));
+                r->join(2, r, Perm<4>(1, 0, 3, 2));
+            }
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
             twoProjPlaneCusps.barycentricSubdivision();
 
-            // To construct a solid torus with a pinched longitude, we
-            // identify two opposite faces of a square pyramid.
-            r = pinchedSolidTorus.newTetrahedron();
-            s = pinchedSolidTorus.newTetrahedron();
-            r->join(3, s, Perm<4>(0, 1, 2, 3));
-            r->join(2, s, Perm<4>(0, 3, 1, 2));
-
-            // The pinched solid Klein bottle is much the same, except
-            // for a twist before the opposite faces are identified.
-            r = pinchedSolidKB.newTetrahedron();
-            s = pinchedSolidKB.newTetrahedron();
-            r->join(3, s, Perm<4>(0, 1, 2, 3));
-            r->join(2, s, Perm<4>(0, 2, 1, 3));
-
-            // This ball used to cause a crash once upon a time.
-            // Throw it into the test suite for good measure.
-            r = ball_large.newTetrahedron();
-            s = ball_large.newTetrahedron();
-            t = ball_large.newTetrahedron();
-            u = ball_large.newTetrahedron();
-            r->join(2, r, Perm<4>(0,2));
-            r->join(1, s, Perm<4>(2,0,1,3));
-            s->join(2, t, Perm<4>());
-            s->join(1, t, Perm<4>(2,0,1,3));
-            t->join(1, u, Perm<4>(2,0,1,3));
-            u->join(2, u, Perm<4>(1,2));
-
-            // Make two triangular pillows, then join them together.
-            // This crashed with 2-0 vertex moves once upon a time.
-            r = ball_large_pillows.newTetrahedron();
-            s = ball_large_pillows.newTetrahedron();
-            t = ball_large_pillows.newTetrahedron();
-            u = ball_large_pillows.newTetrahedron();
-            r->join(0, s, Perm<4>());
-            r->join(1, s, Perm<4>());
-            r->join(2, s, Perm<4>());
-            t->join(0, u, Perm<4>());
-            t->join(1, u, Perm<4>());
-            t->join(2, u, Perm<4>());
-            r->join(3, t, Perm<4>());
-
-            // Make three snapped balls and join them together.
-            r = ball_large_snapped.newTetrahedron();
-            s = ball_large_snapped.newTetrahedron();
-            t = ball_large_snapped.newTetrahedron();
-            r->join(2, r, Perm<4>(2, 3));
-            s->join(2, s, Perm<4>(2, 3));
-            t->join(2, t, Perm<4>(2, 1));
-            r->join(1, s, Perm<4>());
-            s->join(0, t, Perm<4>());
+            {
+                // To construct a solid torus with a pinched longitude, we
+                // identify two opposite faces of a square pyramid.
+                auto [r, s] = pinchedSolidTorus.newTetrahedra<2>();
+                r->join(3, s, Perm<4>(0, 1, 2, 3));
+                r->join(2, s, Perm<4>(0, 3, 1, 2));
+            }
+            {
+                // The pinched solid Klein bottle is much the same, except
+                // for a twist before the opposite faces are identified.
+                auto [r, s] = pinchedSolidKB.newTetrahedra<2>();
+                r->join(3, s, Perm<4>(0, 1, 2, 3));
+                r->join(2, s, Perm<4>(0, 2, 1, 3));
+            }
+            {
+                // This ball used to cause a crash once upon a time.
+                // Throw it into the test suite for good measure.
+                auto [r, s, t, u] = ball_large.newTetrahedra<4>();
+                r->join(2, r, Perm<4>(0,2));
+                r->join(1, s, Perm<4>(2,0,1,3));
+                s->join(2, t, Perm<4>());
+                s->join(1, t, Perm<4>(2,0,1,3));
+                t->join(1, u, Perm<4>(2,0,1,3));
+                u->join(2, u, Perm<4>(1,2));
+            }
+            {
+                // Make two triangular pillows, then join them together.
+                // This crashed with 2-0 vertex moves once upon a time.
+                auto [r, s, t, u] = ball_large_pillows.newTetrahedra<4>();
+                r->join(0, s, Perm<4>());
+                r->join(1, s, Perm<4>());
+                r->join(2, s, Perm<4>());
+                t->join(0, u, Perm<4>());
+                t->join(1, u, Perm<4>());
+                t->join(2, u, Perm<4>());
+                r->join(3, t, Perm<4>());
+            }
+            {
+                // Make three snapped balls and join them together.
+                auto [r, s, t] = ball_large_snapped.newTetrahedra<3>();
+                r->join(2, r, Perm<4>(2, 3));
+                s->join(2, s, Perm<4>(2, 3));
+                t->join(2, t, Perm<4>(2, 1));
+                r->join(1, s, Perm<4>());
+                s->join(0, t, Perm<4>());
+            }
 
             // Build disconnected triangulations from others that we
             // already have.
@@ -2455,10 +2449,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Poincare homology sphere as a plugged triangular solid torus:
             tri = new Triangulation<3>;
-            Tetrahedron<3>* tet[5];
-            int i;
-            for (i = 0; i < 5; i++)
-                tet[i] = tri->newTetrahedron();
+            auto tet = tri->newTetrahedra<5>();
             tet[0]->join(0, tet[4], Perm<4>(1,0,2,3));
             tet[0]->join(1, tet[3], Perm<4>(0,2,3,1));
             tet[0]->join(2, tet[1], Perm<4>(0,1,3,2));
@@ -2605,9 +2596,6 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void threeBallRecognition() {
-            Triangulation<3>* tri;
-            Tetrahedron<3>* tet[4];
-
             // Balls:
             {
                 Triangulation<3> tri;
@@ -2617,15 +2605,14 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             {
                 Triangulation<3> tri;
-                tet[0] = tri.newTetrahedron();
-                tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
+                auto tet = tri.newTetrahedron();
+                tet->join(0, tet, Perm<4>(3, 1, 2, 0));
                 verifyThreeBall(tri, "Snapped tetrahedron");
             }
 
             {
                 Triangulation<3> tri;
-                tet[0] = tri.newTetrahedron();
-                tet[1] = tri.newTetrahedron();
+                auto tet = tri.newTetrahedra<2>();
                 tet[0]->join(0, tet[1], Perm<4>());
                 tet[0]->join(1, tet[1], Perm<4>());
                 tet[0]->join(2, tet[1], Perm<4>());
@@ -2636,10 +2623,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 // This ball used to crash the simplification routines once
                 // upon a time.  Throw it into the test suite for good measure.
                 Triangulation<3> tri;
-                tet[0] = tri.newTetrahedron();
-                tet[1] = tri.newTetrahedron();
-                tet[2] = tri.newTetrahedron();
-                tet[3] = tri.newTetrahedron();
+                auto tet = tri.newTetrahedra<4>();
                 tet[0]->join(2, tet[0], Perm<4>(0,2));
                 tet[0]->join(1, tet[1], Perm<4>(2,0,1,3));
                 tet[1]->join(2, tet[2], Perm<4>());
@@ -2650,18 +2634,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Non-balls:
-            {
-                Triangulation<3> tri;
-                tri.insertLayeredSolidTorus(1, 2);
-                verifyNotThreeBall(tri, "LST(1,2,3)");
-            }
-
-            {
-                Triangulation<3> tri;
-                tri.insertLayeredSolidTorus(3, 4);
-                verifyNotThreeBall(tri, "LST(3,4,7)");
-            }
-
+            verifyNotThreeBall(Example<3>::lst(1, 2), "LST(1,2,3)");
+            verifyNotThreeBall(Example<3>::lst(3, 4), "LST(3,4,7)");
             verifyNotThreeBall(Triangulation<3>(), "Empty triangulation");
 
             // Make a punctured Poincare homology sphere.
@@ -2674,16 +2648,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Throw in a couple of closed manifolds for good measure.
-            {
-                Triangulation<3> tri = Example<3>::lens(1,0);
-                verifyNotThreeBall(tri, "L(1,0)");
-            }
-
-            {
-                Triangulation<3> tri = Example<3>::lens(2,1);
-                verifyNotThreeBall(tri, "L(2,1)");
-            }
-
+            verifyNotThreeBall(Example<3>::lens(1, 0), "L(1,0)");
+            verifyNotThreeBall(Example<3>::lens(2, 1), "L(2,1)");
             verifyNotThreeBall(Example<3>::poincare(),
                 "Poincare homology sphere");
 
@@ -2693,8 +2659,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             {
                 Triangulation<3> tri;
-                tri.newTetrahedron();
-                tri.newTetrahedron();
+                tri.newTetrahedra(2);
                 verifyNotThreeBall(tri, "B^3 U B^3");
             }
         }
@@ -3577,8 +3542,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // invalid vertex.  The result should be a solid torus.
             {
                 Triangulation<3> ball;
-                Tetrahedron<3>* a = ball.newTetrahedron();
-                Tetrahedron<3>* b = ball.newTetrahedron();
+                auto [a, b] = ball.newTetrahedra<2>();
                 a->join(0, b, Perm<4>());
                 a->join(1, b, Perm<4>());
 
@@ -4003,58 +3967,54 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifySimplification(singleTet_bary, 1, "B3 (3-vtx)");
 
             // Some triangulations that should not simplify.
-            Triangulation<3>* tri;
-            Tetrahedron<3>* tet[4];
 
             // A triangulation with two degree two projective plane cusps
             // (that should not be simplified away):
             verifyNoSimplification(Triangulation<3>::rehydrate("cabbbbxww"), 2,
                 "Custom two-cusped triangluation");
 
-            // A triangulation with an invalid edge that simplifies
-            // (where the invalid edge must not be simplified away):
-            tri = new Triangulation<3>();
-            tet[0] = tri->newTetrahedron();
-            tet[1] = tri->newTetrahedron();
-            tet[2] = tri->newTetrahedron();
-            tet[3] = tri->newTetrahedron();
-            tet[0]->join(3, tet[2], Perm<4>());
-            tet[0]->join(2, tet[1], Perm<4>(2, 3));
-            tet[3]->join(3, tet[2], Perm<4>(2, 3));
-            tet[3]->join(2, tet[1], Perm<4>(1, 0));
-            if (tri->isValid())
-                CPPUNIT_FAIL("Custom invalid triangulation was not built "
-                    "properly.");
+            {
+                // A triangulation with an invalid edge that simplifies
+                // (where the invalid edge must not be simplified away):
+                Triangulation<3> tri;
+                auto tet = tri.newTetrahedra<4>();
+                tet[0]->join(3, tet[2], Perm<4>());
+                tet[0]->join(2, tet[1], Perm<4>(2, 3));
+                tet[3]->join(3, tet[2], Perm<4>(2, 3));
+                tet[3]->join(2, tet[1], Perm<4>(1, 0));
+                if (tri.isValid())
+                    CPPUNIT_FAIL("Custom invalid triangulation was not built "
+                        "properly.");
 
-            tri->intelligentSimplify();
-            clearProperties(*tri);
-            if (tri->size() != 1)
-                CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
-                    "to 1 tetrahedron.");
-            if (tri->isValid() || tri->edge(0)->isValid())
-                CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
-                    "to an invalid triangulation with an invalid edge.");
-            delete tri;
+                tri.intelligentSimplify();
+                clearProperties(tri);
+                if (tri.size() != 1)
+                    CPPUNIT_FAIL("Custom invalid triangulation did not "
+                        "simplify to 1 tetrahedron.");
+                if (tri.isValid() || tri.edge(0)->isValid())
+                    CPPUNIT_FAIL("Custom invalid triangulation did not "
+                        "simplify to an invalid triangulation with an "
+                        "invalid edge.");
+            }
 
-            // A solid torus that once upon a time was incorrectly simplified
-            // away to a ball.
-            tri = new Triangulation<3>();
-            tet[0] = tri->newTetrahedron();
-            tet[1] = tri->newTetrahedron();
-            tet[2] = tri->newTetrahedron();
-            tet[2]->join(3, tet[2], Perm<4>(2, 3));
-            tet[2]->join(1, tet[1], Perm<4>(0, 2, 3, 1));
-            tet[2]->join(0, tet[0], Perm<4>(3, 0, 1, 2));
-            tet[1]->join(3, tet[0], Perm<4>(0, 3, 1, 2));
-            tet[1]->join(1, tet[0], Perm<4>());
-            if (tri->homology().str() != "Z")
-                CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
-            tri->intelligentSimplify();
-            clearProperties(*tri);
-            if (tri->homology().str() != "Z")
-                CPPUNIT_FAIL("Custom solid torus simplifies to "
-                    "something different.");
-            delete tri;
+            {
+                // A solid torus that once upon a time was incorrectly
+                // simplified away to a ball.
+                Triangulation<3> tri;
+                auto tet = tri.newTetrahedra<3>();
+                tet[2]->join(3, tet[2], Perm<4>(2, 3));
+                tet[2]->join(1, tet[1], Perm<4>(0, 2, 3, 1));
+                tet[2]->join(0, tet[0], Perm<4>(3, 0, 1, 2));
+                tet[1]->join(3, tet[0], Perm<4>(0, 3, 1, 2));
+                tet[1]->join(1, tet[0], Perm<4>());
+                if (tri.homology().str() != "Z")
+                    CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
+                tri.intelligentSimplify();
+                clearProperties(tri);
+                if (tri.homology().str() != "Z")
+                    CPPUNIT_FAIL("Custom solid torus simplifies to "
+                        "something different.");
+            }
         }
 
         void verifyRetriangulation(const char* isoSig,

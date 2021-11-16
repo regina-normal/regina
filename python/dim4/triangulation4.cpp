@@ -75,6 +75,18 @@ void addTriangulation4(pybind11::module_& m) {
         .def("newSimplex", overload_cast<const std::string&>(
             &Triangulation<4>::newSimplex),
             pybind11::return_value_policy::reference_internal)
+        .def("newSimplices", [](Triangulation<4>& t, size_t k) {
+            pybind11::tuple ans(k);
+            for (size_t i = 0; i < k; ++i)
+                ans[i] = t.newSimplex();
+            return ans;
+        }, pybind11::return_value_policy::reference_internal)
+        .def("newPentachora", [](Triangulation<4>& t, size_t k) {
+            pybind11::tuple ans(k);
+            for (size_t i = 0; i < k; ++i)
+                ans[i] = t.newSimplex();
+            return ans;
+        }, pybind11::return_value_policy::reference_internal)
         .def("removePentachoron", &Triangulation<4>::removePentachoron)
         .def("removeSimplex", &Triangulation<4>::removeSimplex)
         .def("removePentachoronAt", &Triangulation<4>::removePentachoronAt)

@@ -341,10 +341,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             // Poincare homology sphere as a plugged triangular solid torus:
             Triangulation<3> p1;
-            Tetrahedron<3>* tet[5];
-            int i;
-            for (i = 0; i < 5; i++)
-                tet[i] = p1.newTetrahedron();
+            auto tet = p1.newTetrahedra<5>();
             tet[0]->join(0, tet[4], Perm<4>(1,0,2,3));
             tet[0]->join(1, tet[3], Perm<4>(0,2,3,1));
             tet[0]->join(2, tet[1], Perm<4>(0,1,3,2));

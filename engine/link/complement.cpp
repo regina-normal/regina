@@ -80,45 +80,41 @@ Triangulation<3> Link::complement(bool simplify) const {
         return ans;
     }
 
-    struct CrossingTet {
-        Tetrahedron<3>* tet[4];
-        /**
-         *
-         * Tetrahedra, for -ve crossing:
-         *   tet[0]: upper forward -> lower forward
-         *   tet[1]: lower forward -> upper backward
-         *   tet[2]: upper backward -> lower backward
-         *   tet[3]: lower backward -> upper forward
-         *
-         * Tetrahedra, for +ve crossing:
-         *   replace upper <-> lower in the list above
-         *
-         * Tetrahedron vertices:
-         *   0 = north pole
-         *   1 = south pole
-         *   2->3 represents the arrow in the tetrahedron list above
-         */
-    };
-
     size_t n = size();
-    auto* ctet = new CrossingTet[n];
+    auto* ctet = new std::array<Tetrahedron<3>*, 4>[n];
+
+    /**
+     *
+     * Tetrahedra, for -ve crossing:
+     *   ctet[i][0]: upper forward -> lower forward
+     *   ctet[i][1]: lower forward -> upper backward
+     *   ctet[i][2]: upper backward -> lower backward
+     *   ctet[i][3]: lower backward -> upper forward
+     *
+     * Tetrahedra, for +ve crossing:
+     *   replace upper <-> lower in the list above
+     *
+     * Tetrahedron vertices:
+     *   0 = north pole
+     *   1 = south pole
+     *   2->3 represents the arrow in the tetrahedron list above
+     */
 
     size_t i, j;
 
     // Create the local structure around each crossing:
     for (i = 0; i < n; ++i) {
-        for (j = 0; j < 4; ++j)
-            ctet[i].tet[j] = ans.newTetrahedron();
+        ctet[i] = ans.newTetrahedra<4>();
         if (crossing(i)->sign() > 0) {
-            ctet[i].tet[0]->join(0, ctet[i].tet[1], Perm<4>(2,3));
-            ctet[i].tet[1]->join(1, ctet[i].tet[2], Perm<4>(2,3));
-            ctet[i].tet[2]->join(0, ctet[i].tet[3], Perm<4>(2,3));
-            ctet[i].tet[3]->join(1, ctet[i].tet[0], Perm<4>(2,3));
+            ctet[i][0]->join(0, ctet[i][1], Perm<4>(2,3));
+            ctet[i][1]->join(1, ctet[i][2], Perm<4>(2,3));
+            ctet[i][2]->join(0, ctet[i][3], Perm<4>(2,3));
+            ctet[i][3]->join(1, ctet[i][0], Perm<4>(2,3));
         } else {
-            ctet[i].tet[0]->join(1, ctet[i].tet[1], Perm<4>(2,3));
-            ctet[i].tet[1]->join(0, ctet[i].tet[2], Perm<4>(2,3));
-            ctet[i].tet[2]->join(1, ctet[i].tet[3], Perm<4>(2,3));
-            ctet[i].tet[3]->join(0, ctet[i].tet[0], Perm<4>(2,3));
+            ctet[i][0]->join(1, ctet[i][1], Perm<4>(2,3));
+            ctet[i][1]->join(0, ctet[i][2], Perm<4>(2,3));
+            ctet[i][2]->join(1, ctet[i][3], Perm<4>(2,3));
+            ctet[i][3]->join(0, ctet[i][0], Perm<4>(2,3));
         }
     }
 
@@ -140,21 +136,21 @@ Triangulation<3> Link::complement(bool simplify) const {
         adj = s.crossing();
         if ((adj->sign() > 0 && s.strand() == 1) ||
                 (adj->sign() < 0 && s.strand() == 0)) {
-            ctet[i].tet[3]->join(2, ctet[adj->index()].tet[3], Perm<4>(2,3));
-            ctet[i].tet[0]->join(3, ctet[adj->index()].tet[2], Perm<4>(2,3));
+            ctet[i][3]->join(2, ctet[adj->index()][3], Perm<4>(2,3));
+            ctet[i][0]->join(3, ctet[adj->index()][2], Perm<4>(2,3));
         } else {
-            ctet[i].tet[3]->join(2, ctet[adj->index()].tet[2], Perm<4>(2,3));
-            ctet[i].tet[0]->join(3, ctet[adj->index()].tet[1], Perm<4>(2,3));
+            ctet[i][3]->join(2, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][0]->join(3, ctet[adj->index()][1], Perm<4>(2,3));
         }
 
         adj = t.crossing();
         if ((adj->sign() > 0 && t.strand() == 1) ||
                 (adj->sign() < 0 && t.strand() == 0)) {
-            ctet[i].tet[0]->join(2, ctet[adj->index()].tet[3], Perm<4>(2,3));
-            ctet[i].tet[1]->join(3, ctet[adj->index()].tet[2], Perm<4>(2,3));
+            ctet[i][0]->join(2, ctet[adj->index()][3], Perm<4>(2,3));
+            ctet[i][1]->join(3, ctet[adj->index()][2], Perm<4>(2,3));
         } else {
-            ctet[i].tet[0]->join(2, ctet[adj->index()].tet[2], Perm<4>(2,3));
-            ctet[i].tet[1]->join(3, ctet[adj->index()].tet[1], Perm<4>(2,3));
+            ctet[i][0]->join(2, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][1]->join(3, ctet[adj->index()][1], Perm<4>(2,3));
         }
     }
 
@@ -211,12 +207,7 @@ Triangulation<3> Link::complement(bool simplify) const {
         // The real 2-sphere boundary is a triangular pillow, formed from
         // faces p5 (013) and p5 (213).
 
-        Tetrahedron<3>* p0 = ans.newTetrahedron();
-        Tetrahedron<3>* p1 = ans.newTetrahedron();
-        Tetrahedron<3>* p2 = ans.newTetrahedron();
-        Tetrahedron<3>* p3 = ans.newTetrahedron();
-        Tetrahedron<3>* p4 = ans.newTetrahedron();
-        Tetrahedron<3>* p5 = ans.newTetrahedron();
+        auto [p0, p1, p2, p3, p4, p5] = ans.newTetrahedra<6>();
 
         p0->join(0, p1, {1,3,0,2}); p0->join(1, p1, {3,0,1,2});
         p0->join(2, p1, {0,1,3,2}); p0->join(3, p3, {1,2,3,0});

@@ -46,8 +46,7 @@ Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
         // Fact: punctures >= 1.
         unsigned n = 3 * punctures - 2;
         unsigned i;
-        for (i = 0; i < n; ++i)
-            ans.newTriangle();
+        ans.newTriangles(n);
         for (i = 0; i < n - 1; ++i)
             ans.triangle(i)->join(1, ans.triangle(i + 1), Perm<3>(1, 2));
         ans.triangle(0)->join(0, ans.triangle(n - 1), Perm<3>(0, 1));
@@ -57,8 +56,7 @@ Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
     } else {
         unsigned n = 4 * genus + 3 * punctures - 2;
         unsigned i;
-        for (i = 0; i < n; ++i)
-            ans.newTriangle();
+        ans.newTriangles(n);
         for (i = 0; i < n - 1; ++i)
             ans.triangle(i)->join(1, ans.triangle(i + 1), Perm<3>(1, 2));
         ans.triangle(0)->join(2, ans.triangle(n - 1), Perm<3>(0, 2));
@@ -87,8 +85,7 @@ Triangulation<2> Example<2>::nonOrientable(unsigned genus, unsigned punctures) {
 
     unsigned n = 2 * genus + 3 * punctures - 2;
     unsigned i;
-    for (i = 0; i < n; ++i)
-        ans.newTriangle();
+    ans.newTriangles(n);
     for (i = 0; i < n - 1; ++i)
         ans.triangle(i)->join(1, ans.triangle(i + 1), Perm<3>(1, 2));
     ans.triangle(0)->join(2, ans.triangle(n - 1), Perm<3>(2, 0, 1));
@@ -104,14 +101,7 @@ Triangulation<2> Example<2>::nonOrientable(unsigned genus, unsigned punctures) {
 Triangulation<2> Example<2>::sphereOctahedron() {
     Triangulation<2> ans;
 
-    Triangle<2>* r = ans.newTriangle();
-    Triangle<2>* s = ans.newTriangle();
-    Triangle<2>* t = ans.newTriangle();
-    Triangle<2>* u = ans.newTriangle();
-    Triangle<2>* v = ans.newTriangle();
-    Triangle<2>* w = ans.newTriangle();
-    Triangle<2>* x = ans.newTriangle();
-    Triangle<2>* y = ans.newTriangle();
+    auto [r, s, t, u, v, w, x, y] = ans.newTriangles<8>();
     r->join(1, s, Perm<3>(1, 2));
     s->join(1, t, Perm<3>(1, 2));
     t->join(1, u, Perm<3>(1, 2));
@@ -131,8 +121,7 @@ Triangulation<2> Example<2>::sphereOctahedron() {
 Triangulation<2> Example<2>::rp2() {
     Triangulation<2> ans;
 
-    Triangle<2>* r = ans.newTriangle();
-    Triangle<2>* s = ans.newTriangle();
+    auto [r, s] = ans.newTriangles<2>();
     r->join(0, s, Perm<3>(1, 2));
     r->join(1, s, Perm<3>());
     r->join(2, s, Perm<3>());

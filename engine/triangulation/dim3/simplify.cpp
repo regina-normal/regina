@@ -870,8 +870,7 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     // Since e is an internal edge (a precondition of this routine),
     // this is topologically the same as collapsing e itself.
 
-    Tetrahedron<3>* t0 = newTetrahedron();
-    Tetrahedron<3>* t1 = newTetrahedron();
+    auto [t0, t1] = newTetrahedra<2>();
     t0->join(0, t1, Perm<4>(1, 2));
     t0->join(3, t1, Perm<4>(0, 1));
     t1->join(1, t1, Perm<4>(1, 2));

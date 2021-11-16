@@ -172,10 +172,6 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
     public:
         void setUp() override {
-            Tetrahedron<3>* r;
-            Tetrahedron<3>* s;
-            Tetrahedron<3>* t;
-
             // The empty triangulation has no face identifications at all.
 
             oneTet.newTetrahedron();
@@ -200,9 +196,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // A 3-tetrahedron non-orientable twisted I-bundle over the
             // Klein bottle is described in Chapter 3 of Burton's PhD thesis.
-            r = twistedKxI.newTetrahedron();
-            s = twistedKxI.newTetrahedron();
-            t = twistedKxI.newTetrahedron();
+            auto [r, s, t] = twistedKxI.newTetrahedra<3>();
             r->join(0, s, Perm<4>(0, 1, 2, 3));
             r->join(1, t, Perm<4>(2, 1, 0, 3));
             r->join(2, t, Perm<4>(1, 3, 2, 0));

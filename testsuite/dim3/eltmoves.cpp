@@ -65,8 +65,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
     public:
         void setUp() override {
-            Tetrahedron<3>* r = base.newTetrahedron();
-            Tetrahedron<3>* s = base.newTetrahedron();
+            auto [r, s] = base.newTetrahedra<2>();
             r->join(0, s, Perm<4>());
             r->join(1, s, Perm<4>());
 
@@ -222,10 +221,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // All four faces internal, but the two equatorial edges
                 // both boundary.
                 Triangulation<3> t = base;
-                Tetrahedron<3>* p = t.newTetrahedron();
-                Tetrahedron<3>* q = t.newTetrahedron();
-                Tetrahedron<3>* r = t.newTetrahedron();
-                Tetrahedron<3>* s = t.newTetrahedron();
+                auto [p, q, r, s] = t.newTetrahedra<4>();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());
@@ -238,10 +234,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // All four faces internal, and the two equatorial edges
                 // internal but identified (sphere).
                 Triangulation<3> t = base;
-                Tetrahedron<3>* p = t.newTetrahedron();
-                Tetrahedron<3>* q = t.newTetrahedron();
-                Tetrahedron<3>* r = t.newTetrahedron();
-                Tetrahedron<3>* s = t.newTetrahedron();
+                auto [p, q, r, s] = t.newTetrahedra<4>();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());
@@ -263,10 +256,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // All four faces internal, and the two equatorial edges
                 // internal but identified (RP2).
                 Triangulation<3> t = base;
-                Tetrahedron<3>* p = t.newTetrahedron();
-                Tetrahedron<3>* q = t.newTetrahedron();
-                Tetrahedron<3>* r = t.newTetrahedron();
-                Tetrahedron<3>* s = t.newTetrahedron();
+                auto [p, q, r, s] = t.newTetrahedra<4>();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());

@@ -443,6 +443,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         Tetrahedron<3>* newTetrahedron(const std::string& desc);
         /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        template <int k>
+        std::array<Tetrahedron<3>*, k> newTetrahedra();
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        void newTetrahedra(size_t k);
+        /**
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
@@ -3471,6 +3484,15 @@ inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron(const std::string& desc) {
     return newSimplex(desc);
+}
+
+template <int k>
+inline std::array<Tetrahedron<3>*, k> Triangulation<3>::newTetrahedra() {
+    return newSimplices<k>();
+}
+
+inline void Triangulation<3>::newTetrahedra(size_t k) {
+    newSimplices(k);
 }
 
 inline void Triangulation<3>::removeTetrahedronAt(size_t index) {

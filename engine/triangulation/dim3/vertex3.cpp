@@ -59,8 +59,7 @@ const Triangulation<2>& Face<3, 0>::buildLink() const {
         // Ensure only one event pair is fired in this sequence of changes.
         Triangulation<2>::ChangeEventSpan span(*ans);
 
-        for (auto it = begin(); it != end(); ++it)
-            ans->newTriangle();
+        ans->newTriangles(degree());
 
         size_t i = 0;
         for (auto it = begin(); it != end(); ++it, ++i) {

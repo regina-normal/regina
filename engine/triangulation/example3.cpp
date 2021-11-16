@@ -40,8 +40,7 @@ namespace regina {
 Triangulation<3> Example<3>::bingsHouse() {
     Triangulation<3> ans;
 
-    Tetrahedron<3>* r = ans.newTetrahedron();
-    Tetrahedron<3>* s = ans.newTetrahedron();
+    auto [r, s] = ans.newTetrahedra<2>();
     r->join(0, r, Perm<4>(0, 1));
     s->join(0, s, Perm<4>(0, 1));
     r->join(2, s, Perm<4>(3, 1, 2, 0));
@@ -56,9 +55,7 @@ Triangulation<3> Example<3>::rp2xs1() {
     // three-tetrahedron solid Klein bottle.
     Triangulation<3> ans;
 
-    Tetrahedron<3>* r = ans.newTetrahedron();
-    Tetrahedron<3>* s = ans.newTetrahedron();
-    Tetrahedron<3>* t = ans.newTetrahedron();
+    auto [r, s, t] = ans.newTetrahedra<3>();
     s->join(0, r, Perm<4>(0, 1, 2, 3));
     s->join(3, r, Perm<4>(3, 0, 1, 2));
     s->join(1, t, Perm<4>(3, 0, 1, 2));
@@ -152,9 +149,7 @@ Triangulation<3> Example<3>::augTriSolidTorus(long a1, long b1,
     Triangulation<3>::ChangeEventSpan span(ans);
 
     // Construct the core triangular solid torus.
-    Tetrahedron<3>* core[3];
-    for (int i = 0; i < 3; i++)
-        core[i] = ans.newTetrahedron();
+    auto core = ans.newTetrahedra<3>();
     for (int i = 0; i < 3; i++)
         core[i]->join(0, core[(i + 1) % 3], Perm<4>(3, 0, 1, 2));
 
@@ -346,8 +341,7 @@ Triangulation<3> Example<3>::figureEight() {
 
     // The two-tetrahedron figure eight knot complement is described at
     // the beginning of chapter 8 of Richard Rannard's PhD thesis.
-    Tetrahedron<3>* r = ans.newTetrahedron();
-    Tetrahedron<3>* s = ans.newTetrahedron();
+    auto [r, s] = ans.newTetrahedra<2>();
     r->join(0, s, Perm<4>(1, 3, 0, 2));
     r->join(1, s, Perm<4>(2, 0, 3, 1));
     r->join(2, s, Perm<4>(0, 3, 2, 1));
@@ -359,8 +353,7 @@ Triangulation<3> Example<3>::figureEight() {
 Triangulation<3> Example<3>::trefoil() {
     Triangulation<3> ans;
 
-    Tetrahedron<3>* r = ans.newTetrahedron();
-    Tetrahedron<3>* s = ans.newTetrahedron();
+    auto [r, s] = ans.newTetrahedra<2>();
     r->join(0, s, Perm<4>(2, 3));
     r->join(1, s, Perm<4>(2, 3));
     r->join(2, s, Perm<4>(1, 3));
@@ -392,10 +385,7 @@ Triangulation<3> Example<3>::cuspedGenusTwoTorus() {
 
     // We create this by first constructing an ordinary solid genus two
     // torus and then converting the real boundary to an ideal vertex.
-    Tetrahedron<3>* r = ans.newTetrahedron();
-    Tetrahedron<3>* s = ans.newTetrahedron();
-    Tetrahedron<3>* t = ans.newTetrahedron();
-    Tetrahedron<3>* u = ans.newTetrahedron();
+    auto [r, s, t, u] = ans.newTetrahedra<4>();
     r->join(0, s, Perm<4>());
     r->join(1, t, Perm<4>(1, 2, 3, 0));
     r->join(2, u, Perm<4>(1, 0, 3, 2));

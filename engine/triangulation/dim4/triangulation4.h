@@ -234,6 +234,19 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         Pentachoron<4>* newPentachoron(const std::string& desc);
         /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        template <int k>
+        std::array<Pentachoron<4>*, k> newPentachora();
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        void newPentachora(size_t k);
+        /**
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
@@ -997,6 +1010,15 @@ inline Pentachoron<4>* Triangulation<4>::newPentachoron() {
 inline Pentachoron<4>* Triangulation<4>::newPentachoron(
         const std::string& desc) {
     return newSimplex(desc);
+}
+
+template <int k>
+inline std::array<Pentachoron<4>*, k> Triangulation<4>::newPentachora() {
+    return newSimplices<k>();
+}
+
+inline void Triangulation<4>::newPentachora(size_t k) {
+    newSimplices(k);
 }
 
 inline void Triangulation<4>::removePentachoron(Pentachoron<4>* pent) {

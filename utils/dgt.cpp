@@ -1222,10 +1222,7 @@ int main(int argc, char* argv[]) {
             regina::Triangulation<3> tmp_t;
             regina::Perm<4> perm;
             std::vector<regina::Simplex<3>> tmp_p;
-            size_t size = pdc_g.size();
-            for (int i=0; i<size; i++) {
-                tmp_t.newTetrahedron();
-            }
+            tmp_t.newTetrahedra(pdc_g.size());
             for (const auto& g : gl) {
                 tmp_t.tetrahedron(std::get<0>(g))->join(std::get<2>(g), tmp_t.tetrahedron(std::get<1>(g)), perm);
             }

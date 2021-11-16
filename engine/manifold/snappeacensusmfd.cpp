@@ -59,8 +59,7 @@ Triangulation<3> SnapPeaCensusManifold::construct() const {
             return Example<3>::gieseking();
         } else if (index_ == 1) {
             Triangulation<3> ans;
-            Tetrahedron<3>* r = ans.newTetrahedron();
-            Tetrahedron<3>* s = ans.newTetrahedron();
+            auto [r, s] = ans.newTetrahedra<2>();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(2, 3, 1, 0));
             r->join(2, s, Perm<4>(3, 2, 1, 0));
@@ -68,8 +67,7 @@ Triangulation<3> SnapPeaCensusManifold::construct() const {
             return ans;
         } else if (index_ == 2) {
             Triangulation<3> ans;
-            Tetrahedron<3>* r = ans.newTetrahedron();
-            Tetrahedron<3>* s = ans.newTetrahedron();
+            auto [r, s] = ans.newTetrahedra<2>();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(3, 1, 2, 0));
             r->join(2, s, Perm<4>(2, 1, 3, 0));
@@ -77,8 +75,7 @@ Triangulation<3> SnapPeaCensusManifold::construct() const {
             return ans;
         } else if (index_ == 3) {
             Triangulation<3> ans;
-            Tetrahedron<3>* r = ans.newTetrahedron();
-            Tetrahedron<3>* s = ans.newTetrahedron();
+            auto [r, s] = ans.newTetrahedra<2>();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(2, 1, 0, 3));
             r->join(2, s, Perm<4>(0, 3, 2, 1));

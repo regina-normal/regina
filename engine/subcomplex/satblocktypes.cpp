@@ -431,9 +431,7 @@ SatTriPrism* SatTriPrism::beginsRegionMajor(const SatAnnulus& annulus,
 
 SatBlockModel SatTriPrism::model(bool major) {
     auto* tri = new Triangulation<3>;
-    Tetrahedron<3>* a = tri->newTetrahedron();
-    Tetrahedron<3>* b = tri->newTetrahedron();
-    Tetrahedron<3>* c = tri->newTetrahedron();
+    auto [a, b, c] = tri->newTetrahedra<3>();
     a->join(1, c, Perm<4>(2, 0, 3, 1));
     b->join(1, a, Perm<4>(2, 0, 3, 1));
     c->join(1, b, Perm<4>(2, 0, 3, 1));
@@ -565,33 +563,29 @@ SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
 
 SatBlockModel SatCube::model() {
     auto* tri = new Triangulation<3>;
-    Tetrahedron<3>* bdry0 = tri->newTetrahedron();
-    Tetrahedron<3>* bdry1 = tri->newTetrahedron();
-    Tetrahedron<3>* bdry2 = tri->newTetrahedron();
-    Tetrahedron<3>* bdry3 = tri->newTetrahedron();
-    Tetrahedron<3>* central0 = tri->newTetrahedron();
-    Tetrahedron<3>* central1 = tri->newTetrahedron();
+    auto bdry = tri->newTetrahedra<4>();
+    auto central = tri->newTetrahedra<2>();
 
     const Perm<4> id;
-    bdry0->join(1, central0, id);
-    bdry0->join(0, central1, Perm<4>(0, 1));
-    bdry1->join(2, central0, Perm<4>(2, 1, 3, 0));
-    bdry1->join(0, central1, Perm<4>(0, 3));
-    bdry2->join(0, central0, id);
-    bdry2->join(1, central1, Perm<4>(0, 1));
-    bdry3->join(3, central0, Perm<4>(0, 3, 1, 2));
-    bdry3->join(1, central1, Perm<4>(1, 2));
+    bdry[0]->join(1, central[0], id);
+    bdry[0]->join(0, central[1], Perm<4>(0, 1));
+    bdry[1]->join(2, central[0], Perm<4>(2, 1, 3, 0));
+    bdry[1]->join(0, central[1], Perm<4>(0, 3));
+    bdry[2]->join(0, central[0], id);
+    bdry[2]->join(1, central[1], Perm<4>(0, 1));
+    bdry[3]->join(3, central[0], Perm<4>(0, 3, 1, 2));
+    bdry[3]->join(1, central[1], Perm<4>(1, 2));
 
     auto* ans = new SatCube();
 
-    ans->annulus_[0].tet[0] = bdry0;
-    ans->annulus_[0].tet[1] = bdry1;
-    ans->annulus_[1].tet[0] = bdry1;
-    ans->annulus_[1].tet[1] = bdry2;
-    ans->annulus_[2].tet[0] = bdry2;
-    ans->annulus_[2].tet[1] = bdry3;
-    ans->annulus_[3].tet[0] = bdry3;
-    ans->annulus_[3].tet[1] = bdry0;
+    ans->annulus_[0].tet[0] = bdry[0];
+    ans->annulus_[0].tet[1] = bdry[1];
+    ans->annulus_[1].tet[0] = bdry[1];
+    ans->annulus_[1].tet[1] = bdry[2];
+    ans->annulus_[2].tet[0] = bdry[2];
+    ans->annulus_[2].tet[1] = bdry[3];
+    ans->annulus_[3].tet[0] = bdry[3];
+    ans->annulus_[3].tet[1] = bdry[0];
 
     ans->annulus_[0].roles[0] = Perm<4>(0, 1);
     ans->annulus_[0].roles[1] = Perm<4>(2, 0, 3, 1);
@@ -795,13 +789,10 @@ SatBlockModel SatReflectorStrip::model(unsigned length, bool twisted) {
     auto* ans = new SatReflectorStrip(length, twisted);
 
     const Perm<4> id;
-    Tetrahedron<3> *upper, *lower, *middle;
     Tetrahedron<3> *prevRight = nullptr, *firstLeft = nullptr;
     for (unsigned i = 0; i < length; i++) {
         // Create the three tetrahedra behind boundary annulus #i.
-        upper = tri->newTetrahedron();
-        lower = tri->newTetrahedron();
-        middle = tri->newTetrahedron();
+        auto [upper, lower, middle] = tri->newTetrahedra<3>();
 
         upper->join(0, middle, Perm<4>(2, 1, 3, 0));
         lower->join(0, middle, Perm<4>(0, 3, 1, 2));

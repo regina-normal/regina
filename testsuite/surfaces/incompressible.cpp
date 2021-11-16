@@ -141,20 +141,8 @@ class IncompressibleTest : public CppUnit::TestFixture {
         }
 
         void hasCompressingDisc() {
-            Triangulation<3>* tri;
-            Tetrahedron<3>* tet[4];
-
-            {
-                Triangulation<3> tri;
-                tri.insertLayeredSolidTorus(1, 2);
-                verifyHasCompressingDisc(tri, "LST(1,2,3)");
-            }
-
-            {
-                Triangulation<3> tri;
-                tri.insertLayeredSolidTorus(3, 4);
-                verifyHasCompressingDisc(tri, "LST(3,4,7)");
-            }
+            verifyHasCompressingDisc(Example<3>::lst(1, 2), "LST(1,2,3)");
+            verifyHasCompressingDisc(Example<3>::lst(3, 4), "LST(3,4,7)");
 
             {
                 Triangulation<3> tri;
@@ -169,8 +157,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
 
             {
                 Triangulation<3> tri;
-                tet[0] = tri.newTetrahedron();
-                tet[1] = tri.newTetrahedron();
+                auto tet = tri.newTetrahedra<2>();
                 tet[0]->join(0, tet[1], Perm<4>());
                 tet[0]->join(1, tet[1], Perm<4>());
                 tet[0]->join(2, tet[1], Perm<4>());
@@ -179,17 +166,14 @@ class IncompressibleTest : public CppUnit::TestFixture {
 
             {
                 Triangulation<3> tri;
-                tet[0] = tri.newTetrahedron();
-                tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
+                auto tet = tri.newTetrahedron();
+                tet->join(0, tet, Perm<4>(3, 1, 2, 0));
                 verifyNoCompressingDisc(tri, "Snapped tetrahedron");
             }
 
             {
                 Triangulation<3> tri;
-                tet[0] = tri.newTetrahedron();
-                tet[1] = tri.newTetrahedron();
-                tet[2] = tri.newTetrahedron();
-                tet[3] = tri.newTetrahedron();
+                auto tet = tri.newTetrahedra<4>();
                 tet[0]->join(2, tet[0], Perm<4>(0,2));
                 tet[0]->join(1, tet[1], Perm<4>(2,0,1,3));
                 tet[1]->join(2, tet[2], Perm<4>());

@@ -134,6 +134,18 @@ void addTriangulation3(pybind11::module_& m) {
         .def("newSimplex", overload_cast<const std::string&>(
             &Triangulation<3>::newSimplex),
             pybind11::return_value_policy::reference_internal)
+        .def("newSimplices", [](Triangulation<3>& t, size_t k) {
+            pybind11::tuple ans(k);
+            for (size_t i = 0; i < k; ++i)
+                ans[i] = t.newSimplex();
+            return ans;
+        }, pybind11::return_value_policy::reference_internal)
+        .def("newTetrahedra", [](Triangulation<3>& t, size_t k) {
+            pybind11::tuple ans(k);
+            for (size_t i = 0; i < k; ++i)
+                ans[i] = t.newSimplex();
+            return ans;
+        }, pybind11::return_value_policy::reference_internal)
         .def("removeTetrahedron", &Triangulation<3>::removeTetrahedron)
         .def("removeSimplex", &Triangulation<3>::removeSimplex)
         .def("removeTetrahedronAt", &Triangulation<3>::removeTetrahedronAt)

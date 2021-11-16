@@ -1355,6 +1355,10 @@ Version 7.0  [ TODO ]
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
               The old names are kept as deprecated aliases.
+            - New routines newSimplices<k>() and newSimplices(k), along
+              with dimension-specific aliases newTriangles(), newTetrahedra()
+              and newPentachora().  The templated versions of these functions
+              can be used with structured binding.
             - Routine splitIntoComponents() is replaced with a new routine
               triangulateComponents() with different behaviour: it does not
               insert the results into the packet tree or assign packet labels.

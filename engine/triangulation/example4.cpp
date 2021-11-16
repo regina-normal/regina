@@ -40,10 +40,7 @@ Triangulation<4> Example<4>::rp4() {
     Triangulation<4> ans;
 
     // Thanks Ryan, you rock. :)
-    Pentachoron<4>* p = ans.newPentachoron();
-    Pentachoron<4>* q = ans.newPentachoron();
-    Pentachoron<4>* r = ans.newPentachoron();
-    Pentachoron<4>* s = ans.newPentachoron();
+    auto [p, q, r, s] = ans.newPentachora<4>();
     p->join(0, s, Perm<5>(1,0,3,2,4));
     p->join(1, s, Perm<5>(1,0,3,2,4));
     p->join(2, q, Perm<5>());
@@ -62,8 +59,7 @@ Triangulation<4> Example<4>::cappellShaneson() {
     // Use the gluings described in arXiv:1109.3899.
     Triangulation<4> ans;
 
-    Pentachoron<4>* p = ans.newPentachoron();
-    Pentachoron<4>* q = ans.newPentachoron();
+    auto [p, q] = ans.newPentachora<2>();
     q->join(0, p, Perm<5>(2,0,1,3,4));
     q->join(2, p, Perm<5>(0,1,4,2,3));
     q->join(3, p, Perm<5>(0,2,3,1,4));

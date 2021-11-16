@@ -346,8 +346,7 @@ Triangulation<dim> ExampleBase<dim>::sphere() {
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    Simplex<dim>* p = ans.newSimplex();
-    Simplex<dim>* q = ans.newSimplex();
+    auto [p, q] = ans.template newSimplices<2>();
     for (int i = 0; i <= dim; ++i)
         p->join(i, q, Perm<dim+1>());
 
@@ -360,18 +359,16 @@ Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    Simplex<dim>* simps[dim + 2]; // One for every vertex of the (dim+1)-simplex
-    unsigned i, j, k;
-    for (i = 0; i < dim + 2; i++)
-        simps[i] = ans.newSimplex();
+    // One top-dimensional simplex for every vertex of the (dim+1)-simplex
+    auto simps = ans.template newSimplices<dim + 2>(); // One for ever
 
     // One gluing for every distinct pair of vertices of the (dim+1)-simplex.
     // We are gluing facet j-1 of simplex i to facet i of simplex j
     // using the cycle i -> i+1 -> ... -> j-1 -> i. 
-    for (i = 0; i <= dim; i++)
-        for (j = i + 1; j < dim + 2; j++) {
+    for (int i = 0; i <= dim; i++)
+        for (int j = i + 1; j < dim + 2; j++) {
             std::array<int, dim + 1> map;
-            for (k = 0; k <= dim; k++) {
+            for (int k = 0; k <= dim; k++) {
                 if ((k < i) || (k >= j))
                     map[k] = k;
                 else if (k < (j-1))
@@ -392,10 +389,8 @@ Triangulation<dim> ExampleBase<dim>::sphereBundle() {
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    Simplex<dim>* p = ans.newSimplex();
-    Simplex<dim>* q = ans.newSimplex();
-    int i;
-    for (i = 1; i < dim; ++i)
+    auto [p, q] = ans.template newSimplices<2>();
+    for (int i = 1; i < dim; ++i)
         p->join(i, q, Perm<dim+1>());
 
     // Now join each facet 0 to a facet dim to join up the S1 loop.
@@ -423,10 +418,8 @@ Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    Simplex<dim>* p = ans.newSimplex();
-    Simplex<dim>* q = ans.newSimplex();
-    int i;
-    for (i = 1; i < dim; ++i)
+    auto [p, q] = ans.template newSimplices<2>();
+    for (int i = 1; i < dim; ++i)
         p->join(i, q, Perm<dim+1>());
 
     // Now join each facet 0 to a facet dim to join up the S1 loop.
@@ -473,8 +466,7 @@ Triangulation<dim> ExampleBase<dim>::ballBundle() {
         Simplex<dim>* s = ans.newSimplex();
         s->join(0, s, Perm<dim+1>(map));
     } else {
-        Simplex<dim>* s = ans.newSimplex();
-        Simplex<dim>* t = ans.newSimplex();
+        auto [s, t] = ans.template newSimplices<2>();
         s->join(0, t, Perm<dim+1>(map));
         t->join(0, s, Perm<dim+1>(map));
     }
@@ -499,8 +491,7 @@ Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
     Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
 
     if (dim % 2) {
-        Simplex<dim>* s = ans.newSimplex();
-        Simplex<dim>* t = ans.newSimplex();
+        auto [s, t] = ans.template newSimplices<2>();
         s->join(0, t, Perm<dim+1>(map));
         map = map * Perm<dim+1>(dim - 1, dim);
         t->join(0, s, Perm<dim+1>(map));

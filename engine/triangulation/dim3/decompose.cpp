@@ -159,19 +159,15 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
     }
 
     while (finalZ++ < initZ) {
-        Triangulation<3>& t = primeComponents.emplace_back();
+        auto [t0, t1] = primeComponents.emplace_back().newTetrahedra<2>();
         if (initOrientable) {
             // Build S2 x S1.
-            Tetrahedron<3>* t0 = t.newTetrahedron();
-            Tetrahedron<3>* t1 = t.newTetrahedron();
             t0->join(0, t1, Perm<4>(2, 3, 0, 1));
             t0->join(1, t1, Perm<4>(2, 3, 0, 1));
             t0->join(3, t0, Perm<4>(3, 0, 1, 2));
             t1->join(0, t1, Perm<4>(1, 2, 3, 0));
         } else {
             // Build S2 x~ S1.
-            Tetrahedron<3>* t0 = t.newTetrahedron();
-            Tetrahedron<3>* t1 = t.newTetrahedron();
             t0->join(0, t1, Perm<4>(0, 1, 3, 2));
             t0->join(1, t1, Perm<4>(0, 1, 3, 2));
             t0->join(2, t1, Perm<4>(1, 3, 2, 0));
@@ -181,9 +177,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
         zeroEfficient_ = false; // Implied by the S2xS1 or S2x~S1 summand.
     }
     while (finalZ2++ < initZ2) {
-        Triangulation<3>& t = primeComponents.emplace_back();
-        Tetrahedron<3>* t0 = t.newTetrahedron();
-        Tetrahedron<3>* t1 = t.newTetrahedron();
+        auto [t0, t1] = primeComponents.emplace_back().newTetrahedra<2>();
         t0->join(0, t1, Perm<4>(0, 3));
         t0->join(1, t1, Perm<4>(1, 2));
         t0->join(3, t0, Perm<4>(2, 3));
@@ -191,9 +185,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
         zeroEfficient_ = false; // Implied by the RP3 summand.
     }
     while (finalZ3++ < initZ3) {
-        Triangulation<3>& t = primeComponents.emplace_back();
-        Tetrahedron<3>* t0 = t.newTetrahedron();
-        Tetrahedron<3>* t1 = t.newTetrahedron();
+        auto [t0, t1] = primeComponents.emplace_back().newTetrahedra<2>();
         t0->join(0, t1, Perm<4>(2, 3, 0, 1));
         t0->join(1, t1, Perm<4>(2, 3, 0, 1));
         t0->join(3, t0, Perm<4>(1, 3, 0, 2));

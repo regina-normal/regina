@@ -195,6 +195,19 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          */
         Triangle<2>* newTriangle(const std::string& desc);
         /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        template <int k>
+        std::array<Triangle<2>*, k> newTriangles();
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        void newTriangles(size_t k);
+        /**
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
@@ -412,6 +425,15 @@ inline Triangle<2>* Triangulation<2>::newTriangle() {
 
 inline Triangle<2>* Triangulation<2>::newTriangle(const std::string& desc) {
     return newSimplex(desc);
+}
+
+template <int k>
+inline std::array<Triangle<2>*, k> Triangulation<2>::newTriangles() {
+    return newSimplices<k>();
+}
+
+inline void Triangulation<2>::newTriangles(size_t k) {
+    newSimplices(k);
 }
 
 inline void Triangulation<2>::removeTriangle(Triangle<2>* tri) {

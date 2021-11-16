@@ -457,6 +457,70 @@ class TriangulationBase :
          */
         Simplex<dim>* newSimplex();
         /**
+         * Creates \a k new top-dimensional simplices, adds them to this
+         * triangulation, and returns them in a std::array.
+         *
+         * The main purpose of this routine is to support structured binding;
+         * for example:
+         *
+         * \code{.cpp}
+         * auto [r, s, t] = ans.newSimplices<3>();
+         * r->join(0, s, {1, 2, 3, 0});
+         * ...
+         * \endcode
+         *
+         * All new simplices will have empty descriptions, and all facets
+         * of each new simplex will be boundary facets.
+         *
+         * The new simplices will become the last \a k simplices in this
+         * triangulation.  Specifically, if the return value is the array
+         * \a ret, then each simplex <tt>ret[i]</tt> will have index
+         * <tt>size()-k+i</tt> in the overall triangulation.
+         *
+         * \ifacespython For Python users, the two variants of newSimplices()
+         * are essentially merged: the argument \a k is passed as an ordinary
+         * runtime argument, and the new top-dimensional simplices will
+         * be returned in a Python tuple of size \a k.
+         *
+         * \tparam k the number of new top-dimensional simplices to add;
+         * this must be non-negative.
+         *
+         * @return an array containing all of the new simplices, in the order
+         * in which they were added.
+         */
+        template <int k>
+        std::array<Simplex<dim>*, k> newSimplices();
+        /**
+         * Creates \a k new top-dimensional simplices and adds them to this
+         * triangulation.
+         *
+         * This is similar to the templated routine <tt>newSimplices<k>()</tt>,
+         * but with two key differences:
+         *
+         * - This routine has the disadvantage that it does not return the new
+         *   top-dimensional simplices, which means you cannot use it with
+         *   structured binding.
+         *
+         * - This routine has the advantage that \a k does not need to be known
+         *   until runtime, which means this routine is accessible to Python
+         *   users.
+         *
+         * All new simplices will have empty descriptions, and all facets
+         * of each new simplex will be boundary facets.
+         *
+         * The new simplices will become the last \a k simplices in this
+         * triangulation.
+         *
+         * \ifacespython For Python users, the two variants of newSimplices()
+         * are essentially merged: the argument \a k is passed as an ordinary
+         * runtime argument, and the new top-dimensional simplices will
+         * be returned in a Python tuple of size \a k.
+         *
+         * @param k the number of new top-dimensional simplices to add;
+         * this must be non-negative.
+         */
+        void newSimplices(size_t k);
+        /**
          * Creates a new top-dimensional simplex with the given
          * description and adds it to this triangulation.
          *
@@ -1938,6 +2002,12 @@ class TriangulationBase :
          *     ( 0, 2, 1, Perm4(0,3,2,1) ), ( 0, 3, 1, Perm4(2,1,0,3) )])
          * \endcode
          *
+         * \note The assumption is that the iterators dereference to a
+         * std::tuple<size_t, int, size_t, Perm<dim+1>>.  However, this is
+         * not strictly necessary - the dereferenced type may be any type that
+         * supports std::get (and for which std::get<0..3>() yields suitable
+         * integer/permutation types).
+         *
          * \exception InvalidArgument the given list of gluings does not
          * correctly describe a triangulation with \a size top-dimensional
          * simplices.
@@ -2725,6 +2795,36 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex() {
     simplices_.push_back(s);
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
     return s;
+}
+
+template <int dim>
+template <int k>
+std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
+    static_assert(k >= 0,
+        "The template argument k to newSimplices() must be non-negative.");
+
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+
+    std::array<Simplex<dim>*, k> ans;
+    for (int i = 0; i < k; ++i)
+        simplices_.push_back(ans[i] = new Simplex<dim>(
+            static_cast<Triangulation<dim>*>(this)));
+
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+    return ans;
+}
+
+template <int dim>
+void TriangulationBase<dim>::newSimplices(size_t k) {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+
+    for (size_t i = 0; i < k; ++i)
+        simplices_.push_back(new Simplex<dim>(
+            static_cast<Triangulation<dim>*>(this)));
+
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>

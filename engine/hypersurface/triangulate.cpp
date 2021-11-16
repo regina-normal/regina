@@ -290,9 +290,6 @@ Triangulation<3> NormalHypersurface::triangulate() const {
     TriangleData* triData;
     DiscSpec outerTetDisc;
 
-    Tetrahedron<3>* innerTet[3];
-    int facet;
-
     for (pent = 0; pent < nPents; ++pent) {
         outerPent = outer.pentachoron(pent);
         for (type = 0; type < 5; ++type)
@@ -301,9 +298,9 @@ Triangulation<3> NormalHypersurface::triangulate() const {
                     ++pieceNumber) {
                 // Create a new tetrahedron for the final 3-manifold
                 // triangulation.
-                innerTet[0] = inner.newTetrahedron();
+                auto innerTet = inner.newTetrahedron();
 
-                for (facet = 0; facet < 5; ++facet) {
+                for (int facet = 0; facet < 5; ++facet) {
                     if (facet == type)
                         continue;
 
@@ -320,7 +317,7 @@ Triangulation<3> NormalHypersurface::triangulate() const {
                         outerTetDisc.type, outerTetDisc.number);
 
                     triData = discData->data; // Only one triangle.
-                    triData->map[triData->nMaps].dest = innerTet[0];
+                    triData->map[triData->nMaps].dest = innerTet;
                     triData->map[triData->nMaps].vertexMap = Perm<4>::contract(
                         Perm<5>(4, type) *
                         outerTetEmb *
@@ -348,16 +345,14 @@ Triangulation<3> NormalHypersurface::triangulate() const {
             for (pieceNumber = 0; pieceNumber < prisms(pent, type).longValue();
                     ++pieceNumber) {
                 // Triangulate the normal prism with three tetrahedra.
-                innerTet[0] = inner.newTetrahedron();
-                innerTet[1] = inner.newTetrahedron();
-                innerTet[2] = inner.newTetrahedron();
+                auto innerTet = inner.newTetrahedra<3>();
                 innerTet[0]->join(0, innerTet[1], Perm<4>());
                 innerTet[2]->join(1, innerTet[1], Perm<4>());
 
                 // First pick off the triangles at the ends of the prism.
 
                 // Tetrahedron #1:
-                facet = e0;
+                int facet = e0;
 
                 outerTet = outerPent->tetrahedron(facet);
                 outerTetEmb = outerPent->tetrahedronMapping(facet);

@@ -195,39 +195,41 @@ class Triangulation4Test : public TriangulationTest<4> {
             // Build the rest manually.
             Pentachoron<4>* p[2];
 
-            p[0] = ball_foldedPent.newPentachoron();
-            p[0]->join(2, p[0], Perm<5>(2, 4));
-
-            p[0] = ball_layerAndFold.newPentachoron();
-            p[1] = ball_layerAndFold.newPentachoron();
-            p[0]->join(0, p[1], Perm<5>());
-            p[0]->join(1, p[1], Perm<5>());
-            p[0]->join(2, p[1], Perm<5>());
-            p[0]->join(3, p[0], Perm<5>(3, 4));
-
-            p[0] = pillow_twoCycle.newPentachoron();
-            p[1] = pillow_twoCycle.newPentachoron();
-            p[0]->join(0, p[1], Perm<5>());
-            p[0]->join(1, p[1], Perm<5>());
-            p[0]->join(2, p[1], Perm<5>());
-            p[0]->join(3, p[1], Perm<5>());
-            p[0]->join(4, p[1], Perm<5>(1, 2));
-
-            p[0] = pillow_threeCycle.newPentachoron();
-            p[1] = pillow_threeCycle.newPentachoron();
-            p[0]->join(0, p[1], Perm<5>());
-            p[0]->join(1, p[1], Perm<5>());
-            p[0]->join(2, p[1], Perm<5>());
-            p[0]->join(3, p[1], Perm<5>());
-            p[0]->join(4, p[1], Perm<5>(2, 0, 1, 3, 4));
-
-            p[0] = pillow_fourCycle.newPentachoron();
-            p[1] = pillow_fourCycle.newPentachoron();
-            p[0]->join(0, p[1], Perm<5>());
-            p[0]->join(1, p[1], Perm<5>());
-            p[0]->join(2, p[1], Perm<5>());
-            p[0]->join(3, p[1], Perm<5>());
-            p[0]->join(4, p[1], Perm<5>(3, 2, 0, 1, 4));
+            {
+                auto p = ball_foldedPent.newPentachoron();
+                p->join(2, p, Perm<5>(2, 4));
+            }
+            {
+                auto p = ball_layerAndFold.newPentachora<2>();
+                p[0]->join(0, p[1], Perm<5>());
+                p[0]->join(1, p[1], Perm<5>());
+                p[0]->join(2, p[1], Perm<5>());
+                p[0]->join(3, p[0], Perm<5>(3, 4));
+            }
+            {
+                auto p = pillow_twoCycle.newPentachora<2>();
+                p[0]->join(0, p[1], Perm<5>());
+                p[0]->join(1, p[1], Perm<5>());
+                p[0]->join(2, p[1], Perm<5>());
+                p[0]->join(3, p[1], Perm<5>());
+                p[0]->join(4, p[1], Perm<5>(1, 2));
+            }
+            {
+                auto p = pillow_threeCycle.newPentachora<2>();
+                p[0]->join(0, p[1], Perm<5>());
+                p[0]->join(1, p[1], Perm<5>());
+                p[0]->join(2, p[1], Perm<5>());
+                p[0]->join(3, p[1], Perm<5>());
+                p[0]->join(4, p[1], Perm<5>(2, 0, 1, 3, 4));
+            }
+            {
+                auto p = pillow_fourCycle.newPentachora<2>();
+                p[0]->join(0, p[1], Perm<5>());
+                p[0]->join(1, p[1], Perm<5>());
+                p[0]->join(2, p[1], Perm<5>());
+                p[0]->join(3, p[1], Perm<5>());
+                p[0]->join(4, p[1], Perm<5>(3, 2, 0, 1, 4));
+            }
 
             // Build disconnected triangulations from others that we
             // already have.
@@ -2071,8 +2073,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             // This is the two-vertex, two-tetrahedron L(3,1);
             // the degree two vertex is 0(0) == 1(1).
             Triangulation<3> tri;
-            Tetrahedron<3>* t0 = tri.newTetrahedron();
-            Tetrahedron<3>* t1 = tri.newTetrahedron();
+            auto [t0, t1] = tri.newTetrahedra<2>();
             t0->join(0, t1, regina::Perm<4>(1,3,0,2));
             t0->join(1, t1, regina::Perm<4>(1,2,3,0));
             t0->join(2, t1, regina::Perm<4>(1,2,3,0));
