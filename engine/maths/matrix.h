@@ -198,7 +198,8 @@ class Matrix : public Output<Matrix<T>> {
          *   case the other matrix will become uninitialised also and subject
          *   to similar constraints.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since the C++ assignment operators
+         * are not accessible to Python.
          */
         Matrix() : rows_(0), cols_(0), data_(nullptr) {
         }
@@ -469,11 +470,13 @@ class Matrix : public Output<Matrix<T>> {
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
          *
-         * \ifacespython Although the entry() routine gives direct
-         * read-write access to matrix elements, the syntax
-         * <tt>matrix.entry(row, column) = value</tt> still cannot be
-         * used in python to set a matrix element directly.  For this,
-         * you can use the syntax <tt>matrix.set(row, column, value)</tt>.
+         * \ifacespython The entry() routine gives direct read-write access
+         * to matrix elements, but does not allow them to be set using
+         * the assignment operator.  In other words, code such as
+         * <tt>matrix.entry(r, c).negate()</tt> will work, but
+         * <tt>matrix.entry(r, c) = value</tt> will not.
+         * To assign values to matrix elements, you should instead use the
+         * syntax <tt>matrix.set(row, column, value)</tt>.
          * This set() routine returns nothing, and is provided for python
          * only (i.e., it is not part of the C++ calculation engine).
          *
@@ -490,9 +493,6 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
-         *
-         * \ifacespython Not present, although the non-const form of
-         * this routine is.
          *
          * @param row the row of the desired entry.
          * @param column the column of the desired entry.
@@ -576,25 +576,22 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Writes a complete representation of the matrix to the given
-         * output stream.
+         * Deprecated function that writes a complete representation of the
+         * matrix to the given output stream.
+         *
          * Each row will be written on a separate line with elements in
          * each row separated by single spaces.
          *
-         * \ifacespython Not present, even if a subclass of Matrix
-         * is mirrored and its inherited routines are mirrored also.
+         * \deprecated This routine is identical to writeTextLong().
+         * Call writeTextLong() instead, or detail() if you want the text
+         * representation in string form.
+         *
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
-        void writeMatrix(std::ostream& out) const {
-            unsigned long r, c;
-            for (r = 0; r < rows_; r++) {
-                for (c = 0; c < cols_; c++) {
-                    if (c > 0) out << ' ';
-                    out << data_[r][c];
-                }
-                out << '\n';
-            }
+        [[deprecated]] void writeMatrix(std::ostream& out) const {
+            writeTextLong(out);
         }
 
         /**
@@ -681,7 +678,14 @@ class Matrix : public Output<Matrix<T>> {
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const {
-            writeMatrix(out);
+            unsigned long r, c;
+            for (r = 0; r < rows_; r++) {
+                for (c = 0; c < cols_; c++) {
+                    if (c > 0) out << ' ';
+                    out << data_[r][c];
+                }
+                out << '\n';
+            }
         }
 
         /**

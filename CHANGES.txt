@@ -676,6 +676,8 @@ Version 7.0  [ TODO ]
             - Routine swapRows() is now constant time.
             - The type Matrix<bool> is now wrapped in Python under the name
               MatrixBool.
+            - Routine writeMatrix() is now deprecated, since it is
+              identical to writeTextLong().
         Class Matrix2:
             - Added member and global swap() functions.
             - Re-engineered to use std::array internally.  This means

@@ -53,6 +53,10 @@ m = MatrixInt([[1,2], [3,4]])
 print(m.detail())
 m.entry(0,1).negate()
 print(m.detail())
+# The following line does not even compile:
+# m.entry(1,1) = 3 # should not work
+m.set(1,1,5)
+print(m.detail())
 
 p = Polynomial([2,3,4,5])
 print(p)
