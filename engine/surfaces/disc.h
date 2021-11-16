@@ -644,10 +644,8 @@ class DiscSetSurfaceDataImpl {
     private:
         TetData** discSets;
             /**< The disc sets and associated data for each tetrahedron. */
-        const Triangulation<3>* triangulation;
-            /**< The triangulation in which the normal surface lives.
-                 This is kept as a pointer to support assignment; it
-                 must never be null. */
+        SnapshotRef<Triangulation<3>> triangulation_;
+            /**< The triangulation in which the normal surface lives. */
 
     public:
         /**
@@ -656,11 +654,17 @@ class DiscSetSurfaceDataImpl {
          * The data for each disc will be initialised using its default
          * constructor.
          *
+         * This disc set will be usable even if it outlives the given surface
+         * and/or its underlying triangulation.  This is because it takes
+         * a snapshot of the necessary information as it appears right now
+         * (using Regina's snapshotting machinery, which only takes a
+         * deep copy when absolutely necessary).
+         *
          * @param surface the normal surface whose discs we shall use.
          */
         DiscSetSurfaceDataImpl(const NormalSurface& surface) :
-                triangulation(&surface.triangulation()) {
-            size_t tot = triangulation->size();
+                triangulation_(surface.triangulation()) {
+            size_t tot = triangulation_->size();
             if (tot) {
                 discSets = new TetData*[tot];
                 for (size_t index = 0; index < tot; index++)
@@ -673,6 +677,12 @@ class DiscSetSurfaceDataImpl {
          * given normal surface.
          * The data for each disc will be initialised to the given value.
          *
+         * This disc set will be usable even if it outlives the given surface
+         * and/or its underlying triangulation.  This is because it takes
+         * a snapshot of the necessary information as it appears right now
+         * (using Regina's snapshotting machinery, which only takes a
+         * deep copy when absolutely necessary).
+         *
          * \pre The template argument TetData is a class of the form
          * DiscSetTetData<T>, not DiscSetTet.
          *
@@ -682,8 +692,8 @@ class DiscSetSurfaceDataImpl {
          */
         DiscSetSurfaceDataImpl(const NormalSurface& surface,
                 const typename TetData::Data& initValue) :
-                triangulation(&surface.triangulation()) {
-            size_t tot = triangulation->size();
+                triangulation_(surface.triangulation()) {
+            size_t tot = triangulation_->size();
             if (tot) {
                 discSets = new TetData*[tot];
                 for (size_t index = 0; index < tot; index++)
@@ -701,8 +711,8 @@ class DiscSetSurfaceDataImpl {
          * @param src the disc set to copy.
          */
         DiscSetSurfaceDataImpl(const DiscSetSurfaceDataImpl& src) :
-                triangulation(src.triangulation) {
-            size_t tot = triangulation->size();
+                triangulation_(src.triangulation_) {
+            size_t tot = triangulation_->size();
             if (tot) {
                 discSets = new TetData*[tot];
                 for (size_t index = 0; index < tot; index++)
@@ -720,7 +730,8 @@ class DiscSetSurfaceDataImpl {
          * @param src the disc set to move from.
          */
         DiscSetSurfaceDataImpl(DiscSetSurfaceDataImpl&& src) noexcept :
-                discSets(src.discSets), triangulation(src.triangulation) {
+                discSets(src.discSets),
+                triangulation_(std::move(src.triangulation_)) {
             src.discSets = nullptr;
         }
 
@@ -761,9 +772,9 @@ class DiscSetSurfaceDataImpl {
                 delete[] discSets;
             }
 
-            triangulation = src.triangulation;
+            triangulation_ = src.triangulation_;
 
-            size_t tot = triangulation->size();
+            size_t tot = triangulation_->size();
             if (tot) {
                 discSets = new TetData*[tot];
                 for (size_t index = 0; index < tot; index++)
@@ -799,7 +810,7 @@ class DiscSetSurfaceDataImpl {
             }
 
             discSets = src.discSets;
-            triangulation = src.triangulation;
+            triangulation_ = std::move(src.triangulation_);
 
             src.discSets = nullptr;
             return *this;
@@ -812,7 +823,7 @@ class DiscSetSurfaceDataImpl {
          */
         void swap(DiscSetSurfaceDataImpl& other) noexcept {
             std::swap(discSets, other.discSets);
-            std::swap(triangulation, other.triangulation);
+            triangulation_.swap(other.triangulation_);
         }
 
         /**
@@ -821,7 +832,7 @@ class DiscSetSurfaceDataImpl {
          * @return the number of tetrahedra.
          */
         size_t nTets() const {
-            return triangulation->size();
+            return triangulation_->size();
         }
 
         /**
@@ -891,7 +902,7 @@ class DiscSetSurfaceDataImpl {
          */
         std::optional<std::pair<DiscSpec, Perm<4>>> adjacentDisc(
                 const DiscSpec& disc, Perm<4> arc) const {
-            const Tetrahedron<3>* tet = triangulation->tetrahedron(
+            const Tetrahedron<3>* tet = triangulation_->tetrahedron(
                 disc.tetIndex);
             int arcFace = arc[3];
             if (tet->adjacentTetrahedron(arcFace) == nullptr)
@@ -948,7 +959,7 @@ class DiscSetSurfaceDataImpl {
          */
         DiscSpecIterator<TetData> end() const {
             DiscSpecIterator<TetData> ans(*this);
-            ans.current.tetIndex = triangulation->size();
+            ans.current.tetIndex = triangulation_->size();
             ans.current.type = 0;
             ans.current.number = 0;
             return ans;
