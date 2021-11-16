@@ -232,8 +232,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
                 Triangulation<3> orig;
                 orig.insertConstruction(5, adj, glu);
-                Triangulation<3> lens;
-                lens.insertLayeredLensSpace(10, 3);
+                Triangulation<3> lens = regina::Example<3>::lens(10, 3);
                 Triangulation<3> copy(orig);
 
                 verify20Edge(&orig, 5, &lens, "internal-loop-twist");

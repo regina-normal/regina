@@ -155,7 +155,7 @@ def testIso(inner, innerName, outer, outerName, countOnly = False):
 # Individual test cases:
 ########################################################################
 
-tri = Example3.poincareHomologySphere()
+tri = Example3.poincare()
 testDisplay(tri, 'Poincare homology sphere', 1, 1)
 testDisplay(tri, 'Poincare homology sphere', 1, 2)
 testStopAfter10(tri, 'Poincare homology sphere', 1, 1)

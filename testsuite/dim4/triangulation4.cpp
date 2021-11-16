@@ -180,7 +180,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
 
             {
-                Triangulation<3> base = Example<3>::poincareHomologySphere();
+                Triangulation<3> base = Example<3>::poincare();
                 idealPoincareProduct = Example<4>::doubleCone(base);
                 idealCappellShaneson = Example<4>::cappellShaneson();
                 mixedPoincareProduct = Example<4>::singleCone(base);

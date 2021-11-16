@@ -41,9 +41,11 @@
 #include "progress/progresstracker.h"
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/normalsurface.h"
+#include "triangulation/example3.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
+using regina::Example;
 using regina::Isomorphism;
 using regina::Triangulation;
 
@@ -410,12 +412,26 @@ void addTriangulation3(pybind11::module_& m) {
         .def("insertLayeredSolidTorus",
             &Triangulation<3>::insertLayeredSolidTorus,
             pybind11::return_value_policy::reference)
-        .def("insertLayeredLensSpace",
-            &Triangulation<3>::insertLayeredLensSpace)
-        .def("insertLayeredLoop", &Triangulation<3>::insertLayeredLoop)
-        .def("insertAugTriSolidTorus",
-            &Triangulation<3>::insertAugTriSolidTorus)
-        .def("insertSFSOverSphere", &Triangulation<3>::insertSFSOverSphere)
+        .def("insertLayeredLensSpace", // deprecated
+                [](Triangulation<3>& t, size_t p, size_t q) {
+            t.insertTriangulation(Example<3>::lens(p, q));
+        })
+        .def("insertLayeredLoop", // deprecated
+                [](Triangulation<3>& t, size_t len, bool twisted) {
+            t.insertTriangulation(Example<3>::layeredLoop(len, twisted));
+        })
+        .def("insertAugTriSolidTorus", // deprecated
+                [](Triangulation<3>& t, long a1, long a2, long b1, long b2,
+                    long c1, long c2) {
+            t.insertTriangulation(Example<3>::augTriSolidTorus(
+                a1, a2, b1, b2, c1, c2));
+        })
+        .def("insertSFSOverSphere", // deprecated
+                [](Triangulation<3>& t, long a1, long a2, long b1, long b2,
+                    long c1, long c2) {
+            t.insertTriangulation(Example<3>::sfsOverSphere(
+                a1, a2, b1, b2, c1, c2));
+        })
         .def("connectedSumWith", &Triangulation<3>::connectedSumWith)
         .def("insertTriangulation", &Triangulation<3>::insertTriangulation)
         .def("insertRehydration", [](Triangulation<3>& tri,

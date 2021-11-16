@@ -41,7 +41,7 @@ print("-----------------------------------------------------------")
 print("Basic:")
 print()
 
-print(PacketOfTriangulation3(Example3.poincareHomologySphere()).isoSig())
+print(PacketOfTriangulation3(Example3.poincare()).isoSig())
 print(Text("Hello World"))
 print(Text("Hello World").text())
 
@@ -51,7 +51,7 @@ print("Basic container tests:")
 print()
 
 t1 = PacketOfTriangulation3()
-t2 = PacketOfTriangulation3(Example3.poincareHomologySphere())
+t2 = PacketOfTriangulation3(Example3.poincare())
 t3 = PacketOfTriangulation3(Example3.figureEight())
 p = PDF()
 

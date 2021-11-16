@@ -33,15 +33,16 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/simplesurfacebundle.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 namespace regina {
 
 Triangulation<3> SimpleSurfaceBundle::construct() const {
-    Triangulation<3> ans;
+    if (type_ == S2xS1)
+        return Example<3>::lens(0, 1);
 
-    if (type_ == S2xS1) {
-        ans.insertLayeredLensSpace(0, 1);
-    } else if (type_ == S2xS1_TWISTED) {
+    Triangulation<3> ans;
+    if (type_ == S2xS1_TWISTED) {
         // Taken from section 3.5.1 of Ben Burton's PhD thesis.
         Tetrahedron<3>* r = ans.newTetrahedron();
         Tetrahedron<3>* s = ans.newTetrahedron();
@@ -63,7 +64,6 @@ Triangulation<3> SimpleSurfaceBundle::construct() const {
         r->join(1, t, Perm<4>(2, 3, 0, 1));
         r->join(3, t, Perm<4>(2, 3, 0, 1));
     }
-
     return ans;
 }
 

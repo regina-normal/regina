@@ -79,7 +79,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             triGieseking = Example<3>::gieseking();
 
             // Layered loops can be constructed automatically.
-            triLoopC2.insertLayeredLoop(2, false);
+            triLoopC2 = Example<3>::layeredLoop(2, false);
 
             // Other things must be done manually.
             triOneTet.newTetrahedron();

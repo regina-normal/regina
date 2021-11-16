@@ -71,4 +71,4 @@ angleStats(t, 'Empty triangulation')
 
 angleStats(regina.Example3.figureEight(), 'Figure eight knot complement')
 angleStats(regina.Example3.whiteheadLink(), 'Whitehead link complement')
-angleStats(regina.Example3.poincareHomologySphere(), 'Poincare homology sphere')
+angleStats(regina.Example3.poincare(), 'Poincare homology sphere')

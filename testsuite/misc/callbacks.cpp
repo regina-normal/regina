@@ -243,12 +243,10 @@ class CallbacksTest : public CppUnit::TestFixture {
             // ----- Subcomplex testing -----
 
             {
-                regina::Triangulation<3> tri;
-                tri.insertSFSOverSphere(2, 1, 3, 1, 4, 1);
-
                 Arg b;
-                regina::SatRegion::find(tri, false,
-                        [](std::unique_ptr<regina::SatRegion>,
+                regina::SatRegion::find(
+                        regina::Example<3>::sfsOverSphere(2, 1, 3, 1, 4, 1),
+                        false, [](std::unique_ptr<regina::SatRegion>,
                             const regina::SatBlock::TetList&, Arg& arg) {
                     arg.flag();
                     return false;

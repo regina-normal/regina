@@ -229,21 +229,21 @@ class Triangulation3Test : public TriangulationTest<3> {
             TriangulationTest<3>::setUp();
 
             // Some of our triangulations can be constructed automatically.
-            s3.insertLayeredLensSpace(1, 0);
+            s3 = Example<3>::lens(1, 0);
 
-            rp3_1.insertLayeredLensSpace(2, 1);
+            rp3_1 = Example<3>::lens(2, 1);
 
-            rp3_2.insertLayeredLoop(2, false);
+            rp3_2 = Example<3>::layeredLoop(2, false);
 
-            lens8_3.insertLayeredLensSpace(8, 3);
+            lens8_3 = Example<3>::lens(8, 3);
 
-            lens100_1.insertLayeredLensSpace(100, 1);
+            lens100_1 = Example<3>::lens(100, 1);
 
             lst3_4_7.insertLayeredSolidTorus(3, 4);
 
-            q28.insertLayeredLoop(7, true);
+            q28 = Example<3>::layeredLoop(7, true);
 
-            lens7_1_loop.insertLayeredLoop(7, false);
+            lens7_1_loop = Example<3>::layeredLoop(7, false);
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
@@ -2381,10 +2381,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifySigThreeSphere("(abcd)(aefg)(b)(c)(d)(e)(f)(g)");
 
             // 3-spheres obtained as Lens spaces:
-            tri = new Triangulation<3>();
-            tri->insertLayeredLensSpace(1,0);
-            verifyThreeSphere(*tri, "L(1,0)");
-            delete tri;
+            verifyThreeSphere(Example<3>::lens(1, 0), "L(1,0)");
 
             // Non-3-spheres obtained from splitting surface signatures:
             verifySigNotThreeSphere("(aab)(b)");
@@ -2453,7 +2450,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // We'll build this a few different ways.
 
             // First, one out of the can:
-            verifyNotThreeSphere(Example<3>::poincareHomologySphere(),
+            verifyNotThreeSphere(Example<3>::poincare(),
                 "Poincare homology sphere (example)");
 
             // Poincare homology sphere as a plugged triangular solid torus:
@@ -2477,17 +2474,15 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Poincare homology sphere as an augmented triangular solid
             // torus:
-            tri = new Triangulation<3>();
-            tri->insertAugTriSolidTorus(2, -1, 3, 1, 5, -4);
-            verifyNotThreeSphere(*tri, "Poincare homology sphere (aug I)");
-            delete tri;
+            verifyNotThreeSphere(
+                regina::Example<3>::augTriSolidTorus(2, -1, 3, 1, 5, -4),
+                "Poincare homology sphere (aug I)");
 
             // Poincare homology sphere as another augmented triangular solid
             // torus:
-            tri = new Triangulation<3>();
-            tri->insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
-            verifyNotThreeSphere(*tri, "Poincare homology sphere (aug II)");
-            delete tri;
+            verifyNotThreeSphere(
+                regina::Example<3>::augTriSolidTorus(2, -1, 3, -2, 5, 1),
+                "Poincare homology sphere (aug II)");
 
             // Let's make sure silly things like balls aren't picked up.
             tri = new Triangulation<3>();
@@ -2519,11 +2514,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyNotThreeSphere(disjoint2, "Disjoint, 2 components");
             verifyNotThreeSphere(disjoint3, "Disjoint, 3 components");
 
-            tri = new Triangulation<3>();
-            tri->insertLayeredLensSpace(1,0);
-            tri->insertLayeredLensSpace(1,0);
-            verifyNotThreeSphere(*tri, "S^3 U S^3");
-            delete tri;
+            {
+                Triangulation<3> s3s3 = Example<3>::lens(1,0);
+                s3s3.insertTriangulation(s3s3);
+                verifyNotThreeSphere(s3s3, "S^3 U S^3");
+            }
 
             // An exhaustive census run:
             runCensusMinClosed(&testThreeSphere6);
@@ -2671,7 +2666,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Make a punctured Poincare homology sphere.
             {
-                Triangulation<3> tri = Example<3>::poincareHomologySphere();
+                Triangulation<3> tri = Example<3>::poincare();
                 tri.barycentricSubdivision();
                 tri.removeTetrahedronAt(0);
                 tri.intelligentSimplify();
@@ -2680,18 +2675,16 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Throw in a couple of closed manifolds for good measure.
             {
-                Triangulation<3> tri;
-                tri.insertLayeredLensSpace(1,0);
+                Triangulation<3> tri = Example<3>::lens(1,0);
                 verifyNotThreeBall(tri, "L(1,0)");
             }
 
             {
-                Triangulation<3> tri;
-                tri.insertLayeredLensSpace(2,1);
+                Triangulation<3> tri = Example<3>::lens(2,1);
                 verifyNotThreeBall(tri, "L(2,1)");
             }
 
-            verifyNotThreeBall(Example<3>::poincareHomologySphere(),
+            verifyNotThreeBall(Example<3>::poincare(),
                 "Poincare homology sphere");
 
             // Some disconnected examples.
@@ -2920,18 +2913,16 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Throw in a couple of closed manifolds for good measure.
             {
-                Triangulation<3> tri;
-                tri.insertLayeredLensSpace(1,0);
+                Triangulation<3> tri = Example<3>::lens(1,0);
                 verifyNotSolidTorus(tri, "L(1,0)");
             }
 
             {
-                Triangulation<3> tri;
-                tri.insertLayeredLensSpace(2,1);
+                Triangulation<3> tri = Example<3>::lens(2,1);
                 verifyNotSolidTorus(tri, "L(2,1)");
             }
 
-            verifyNotSolidTorus(Example<3>::poincareHomologySphere(),
+            verifyNotSolidTorus(Example<3>::poincare(),
                 "Poincare homology sphere");
 
             // Some disconnected triangulations:
@@ -4438,8 +4429,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
                 } else {
-                    Triangulation<3> compare;
-                    compare.insertLayeredLensSpace(lensP, lensQ);
+                    Triangulation<3> compare = Example<3>::lens(lensP, lensQ);
                     compare.intelligentSimplify();
 
                     if (! t.isIsomorphicTo(compare)) {

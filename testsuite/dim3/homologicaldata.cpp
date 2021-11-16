@@ -142,18 +142,18 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             // First deal with ready-made example triangulations.
             s3 = Example<3>::threeSphere();
             s2xs1 = Example<3>::s2xs1();
-            poincare = Example<3>::poincareHomologySphere();
+            poincare = Example<3>::poincare();
             weberSeifert = Example<3>::weberSeifert();
             gieseking = Example<3>::gieseking();
             figureEight = Example<3>::figureEight();
 
             // Next deal with triangulations that are easy to build.
-            lens3_1.insertLayeredLensSpace(3, 1);
-            lens4_1.insertLayeredLensSpace(4, 1);
-            lens7_1.insertLayeredLensSpace(7, 1);
-            d88xz15.insertAugTriSolidTorus(2, -1, 2, -1, 11, -30);
-            torusBundleA.insertAugTriSolidTorus(2, 1, 4, -7, 4, 1);
-            torusBundleB.insertAugTriSolidTorus(3, -1, 3, -1, 3, -1);
+            lens3_1 = Example<3>::lens(3, 1);
+            lens4_1 = Example<3>::lens(4, 1);
+            lens7_1 = Example<3>::lens(7, 1);
+            d88xz15 = Example<3>::augTriSolidTorus(2, -1, 2, -1, 11, -30);
+            torusBundleA = Example<3>::augTriSolidTorus(2, 1, 4, -7, 4, 1);
+            torusBundleB = Example<3>::augTriSolidTorus(3, -1, 3, -1, 3, -1);
             lst3_4_7.insertLayeredSolidTorus(3, 4);
 
             // The others we recreate using dehydration strings.

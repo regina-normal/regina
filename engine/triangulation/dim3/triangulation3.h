@@ -2811,12 +2811,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);
         /**
-         * Inserts a new layered lens space L(p,q) into the triangulation.
+         * Deprecated routine that inserts a new layered lens space L(p,q)
+         * into this triangulation.
          * The lens space will be created by gluing together two layered
          * solid tori in a way that uses the fewest possible tetrahedra.
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
+         *
+         * \deprecated If you just wish to create a layered lens space,
+         * call <tt>Example<3>::lens(p, q)</tt>.  If you wish to insert a
+         * copy of it into an existing triangulation, call
+         * <tt>insertTriangulation(Example<3>::lens(p, q))</tt>.
          *
          * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1);
          * \pre gcd(\a p, \a q) = 1.
@@ -2826,11 +2832,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * @see LayeredLensSpace
          */
-        void insertLayeredLensSpace(unsigned long p, unsigned long q);
+        [[deprecated]] void insertLayeredLensSpace(size_t p, size_t q);
         /**
-         * Inserts a layered loop of the given length into this triangulation.
-         * Layered loops are described in more detail in the LayeredLoop
-         * class notes.
+         * Deprecated routine that inserts a layered loop of the given length
+         * into this triangulation.  Layered loops are described in more
+         * detail in the LayeredLoop class notes.
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
@@ -2840,27 +2846,36 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @param twisted \c true if the new layered loop should be twisted,
          * or \c false if it should be untwisted.
          *
+         * \deprecated If you just wish to create a layered loop, call
+         * <tt>Example<3>::layeredLoop(...)</tt>.  If you wish to
+         * insert a copy of it into an existing triangulation, call
+         * <tt>insertTriangulation(Example<3>::layeredLoop(...))</tt>.
+         *
          * @see LayeredLoop
          */
-        void insertLayeredLoop(unsigned long length, bool twisted);
+        [[deprecated]] void insertLayeredLoop(size_t length, bool twisted);
         /**
-         * Inserts an augmented triangular solid torus with the given
-         * parameters into this triangulation.  Almost all augmented
-         * triangular solid tori represent Seifert fibred spaces with three
-         * or fewer exceptional fibres.  Augmented triangular solid tori
+         * Deprecated routine that inserts an augmented triangular solid torus
+         * with the given parameters into this triangulation.  Almost all
+         * augmented triangular solid tori represent Seifert fibred spaces with
+         * three or fewer exceptional fibres.  Augmented triangular solid tori
          * are described in more detail in the AugTriSolidTorus class notes.
          *
          * The resulting Seifert fibred space will be
-         * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)
-         * (<i>a3</i>,<i>b3</i>) (1,1)), where the parameters
-         * <i>a1</i>, ..., <i>b3</i> are passed as arguments to this
-         * routine.  The three layered solid tori that are attached to
+         * SFS((\a a1, \a b1), (\a a2, \a b2), (\a a3, \a b3), (1,1)),
+         * where the parameters \a a1, ..., \a b3 are passed as arguments to
+         * this routine.  The three layered solid tori that are attached to
          * the central triangular solid torus will be
          * LST(|<i>a1</i>|, |<i>b1</i>|, |-<i>a1</i>-<i>b1</i>|), ...,
          * LST(|<i>a3</i>|, |<i>b3</i>|, |-<i>a3</i>-<i>b3</i>|).
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
+         *
+         * \deprecated If you just wish to create an augmented triangular solid
+         * torus, call <tt>Example<3>::augTriSolidTorus(...)</tt>.  If you wish
+         * to insert a copy of it into an existing triangulation, call
+         * <tt>insertTriangulation(Example<3>::augTriSolidTorus(...))</tt>.
          *
          * \pre gcd(\a a1, \a b1) = 1.
          * \pre gcd(\a a2, \a b2) = 1.
@@ -2885,30 +2900,33 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * torus in the augmented triangular solid torus; this may be
          * either positive or negative.
          */
-        void insertAugTriSolidTorus(long a1, long b1, long a2, long b2,
-            long a3, long b3);
+        [[deprecated]] void insertAugTriSolidTorus(long a1, long b1,
+            long a2, long b2, long a3, long b3);
         /**
-         * Inserts an orientable Seifert fibred space with at most three
-         * exceptional fibres over the 2-sphere into this triangulation.
+         * Deprecated routine that inserts an orientable Seifert fibred space
+         * with at most three exceptional fibres over the 2-sphere into this
+         * triangulation.
          *
-         * The inserted Seifert fibred space will be
-         * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)
-         * (<i>a3</i>,<i>b3</i>) (1,1)), where the parameters
-         * <i>a1</i>, ..., <i>b3</i> are passed as arguments to this
-         * routine.
+         * The Seifert fibred space will be
+         * SFS((\a a1, \a b1), (\a a2, \a b2), (\a a3, \a b3)), where the
+         * parameters \a a1, ..., \a b3 are passed as arguments to this routine.
          *
-         * The three pairs of parameters (<i>a</i>,<i>b</i>) do not need
+         * The three pairs of parameters (\a a, \a b) do not need
          * to be normalised, i.e., the parameters can be positive or
-         * negative and <i>b</i> may lie outside the range [0..<i>a</i>).
+         * negative and \a b may lie outside the range [0..\a a).
          * There is no separate twisting parameter; each additional
-         * twist can be incorporated into the existing parameters
-         * by replacing some pair (<i>a</i>,<i>b</i>) with the pair
-         * (<i>a</i>,<i>a</i>+<i>b</i>).  For Seifert fibred
-         * spaces with less than three exceptional fibres, some or all
-         * of the parameter pairs may be (1,<i>k</i>) or even (1,0).
+         * twist can be incorporated into the existing parameters by replacing
+         * some pair (\a a>, \a b) with the pair (\a a, \a a + \a b).
+         * For Seifert fibred spaces with less than three exceptional fibres,
+         * some or all of the parameter pairs may be (1, \a k) or even (1, 0).
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
+         *
+         * \deprecated If you just wish to triangulate the given Seifert fibred
+         * space, call <tt>Example<3>::sfsOverSphere(...)</tt>.  If you wish
+         * to insert a copy of it into an existing triangulation, call
+         * <tt>insertTriangulation(Example<3>::sfsOverSphere(...))</tt>.
          *
          * \pre None of \a a1, \a a2 or \a a3 are 0.
          * \pre gcd(\a a1, \a b1) = 1.
@@ -2922,7 +2940,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @param a3 a parameter describing the third exceptional fibre.
          * @param b3 a parameter describing the third exceptional fibre.
          */
-        void insertSFSOverSphere(long a1 = 1, long b1 = 0,
+        [[deprecated]] void insertSFSOverSphere(long a1 = 1, long b1 = 0,
             long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
         /**
          * Forms the connected sum of this triangulation with the given

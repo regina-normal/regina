@@ -88,7 +88,7 @@ p[1].negate()
 print(p)
 print()
 
-g = Example3.poincareHomologySphere().fundamentalGroup()
+g = Example3.poincare().fundamentalGroup()
 
 print(g.relation(0))
 g.relation(0).term(0).exponent = 2

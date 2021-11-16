@@ -244,6 +244,11 @@ Version 7.0  [ TODO ]
               ValidityConstraints.
         Class Example<dim>, ExampleLink, ExampleSnapPea:
             - All examples now return by value, not by newly allocated pointer.
+        Class Example<3>:
+            - All of the changes from Example<dim> described above.
+            - Renamed poincareHomologySphere() to poincare().  The old name
+              is kept but deprecated.
+            - Added sfsOverSphere() and layeredLoop().
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.
@@ -1431,6 +1436,9 @@ Version 7.0  [ TODO ]
             - Changed maximalForestInBoundary() to return the edge set by
               value, and to not return the vertex set at all (since this
               is just all boundary vertices).
+            - Routines insertLayeredLoop(), insertLayeredLensSpace(),
+              insertAugTriSolidTorus() and insertSFSOverSphere() are all
+              deprecated.  Use the routines from Example<3> instead.
             - Routine enterTextTriangulation() is now deprecated; this
               is a relic from Regina's ancient past.
         Class Triangluation<4>:

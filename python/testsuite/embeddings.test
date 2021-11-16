@@ -79,7 +79,7 @@ doit(s.face(5, 0).embeddings())
 
 print()
 
-t = Example3.poincareHomologySphere()
+t = Example3.poincare()
 list = t.vertex(0).embeddings()
 front = t.vertex(0).front()
 back = t.vertex(0).back()

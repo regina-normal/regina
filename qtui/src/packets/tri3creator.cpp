@@ -84,7 +84,7 @@ namespace {
         ExampleCreator<3>(QObject::tr("Figure eight knot complement"), &regina::Example<3>::figureEight),
         ExampleCreator<3>(QObject::tr("Gieseking manifold"), &regina::Example<3>::gieseking),
         ExampleCreator<3>(QObject::tr("Lens space L(8,3)"), [](){ return regina::Example<3>::lens(8, 3); }),
-        ExampleCreator<3>(QObject::tr("Poincaré homology sphere"), &regina::Example<3>::poincareHomologySphere),
+        ExampleCreator<3>(QObject::tr("Poincaré homology sphere"), &regina::Example<3>::poincare),
         ExampleCreator<3>(QObject::tr("Product ℝP² × S¹"), &regina::Example<3>::rp2xs1),
         ExampleCreator<3>(QObject::tr("Product S² × S¹"), &regina::Example<3>::s2xs1),
         ExampleCreator<3>(QObject::tr("ℝP³"), [](){ return regina::Example<3>::lens(2, 1); }),

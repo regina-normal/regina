@@ -40,6 +40,7 @@
 #include "split/signature.h"
 #include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/dim3/testtriangulation.h"
@@ -277,8 +278,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             verifySigThreeSphere("(abcd)(aefg)(b)(c)(d)(e)(f)(g)");
 
             // 3-spheres obtained as Lens spaces:
-            Triangulation<3> tri;
-            tri.insertLayeredLensSpace(1,0);
+            Triangulation<3> tri = regina::Example<3>::lens(1, 0);
             verifyThreeSphere(tri, "L(1,0)");
         }
 
@@ -360,15 +360,15 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             // Poincare homology sphere as an augmented triangular solid
             // torus:
-            Triangulation<3> p2;
-            p2.insertAugTriSolidTorus(2, -1, 3, 1, 5, -4);
-            verifyPrime(p2, "the Poincare homology sphere (aug I)", "S3/P120");
+            verifyPrime(
+                regina::Example<3>::augTriSolidTorus(2, -1, 3, 1, 5, -4),
+                "the Poincare homology sphere (aug I)", "S3/P120");
 
             // Poincare homology sphere as another augmented triangular solid
             // torus:
-            Triangulation<3> p3;
-            p3.insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
-            verifyPrime(p3, "the Poincare homology sphere (aug II)", "S3/P120");
+            verifyPrime(
+                regina::Example<3>::augTriSolidTorus(2, -1, 3, -2, 5, 1),
+                "the Poincare homology sphere (aug II)", "S3/P120");
         }
 
         void nonTrivialSums() {

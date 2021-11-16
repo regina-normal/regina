@@ -186,11 +186,11 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             gieseking = Example<3>::gieseking();
 
             // Layered loops can be constructed automatically.
-            S3.insertLayeredLoop(1, false);
+            S3 = Example<3>::layeredLoop(1, false);
 
-            loopC2.insertLayeredLoop(2, false);
+            loopC2 = Example<3>::layeredLoop(2, false);
 
-            loopCtw3.insertLayeredLoop(3, true);
+            loopCtw3 = Example<3>::layeredLoop(3, true);
 
             // Some non-minimal triangulations can be generated from
             // splitting surfaces.
@@ -1373,8 +1373,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void testStandardLoopCtwGeneric(unsigned len) {
-            Triangulation<3> loop;
-            loop.insertLayeredLoop(len, true);
+            Triangulation<3> loop = Example<3>::layeredLoop(len, true);
             NormalSurfaces list(loop, NS_STANDARD);
 
             std::ostringstream label;
@@ -1408,8 +1407,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void testQuadLoopCtwGeneric(unsigned len) {
-            Triangulation<3> loop;
-            loop.insertLayeredLoop(len, true);
+            Triangulation<3> loop = Example<3>::layeredLoop(len, true);
             NormalSurfaces list(loop, NS_QUAD);
 
             std::ostringstream label;
@@ -1436,8 +1434,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void testAlmostNormalLoopCtwGeneric(unsigned len) {
-            Triangulation<3> loop;
-            loop.insertLayeredLoop(len, true);
+            Triangulation<3> loop = Example<3>::layeredLoop(len, true);
             NormalSurfaces list(loop, NS_AN_STANDARD);
 
             std::ostringstream label;

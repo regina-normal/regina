@@ -97,19 +97,17 @@ class IncompressibleTest : public CppUnit::TestFixture {
             // Try RP3 (no incompressible surfaces, since we
             // always work with the double cover of a 1-sided surface).
             {
-                Triangulation<3> tri;
-                tri.insertLayeredLensSpace(2, 1);
+                Triangulation<3> tri = Example<3>::lens(2, 1);
                 verifyAllNotIncompressible(tri, "RP3 (1 vtx)");
             }
 
             {
-                Triangulation<3> tri;
-                tri.insertLayeredLoop(2, false);
+                Triangulation<3> tri = Example<3>::layeredLoop(2, false);
                 verifyAllNotIncompressible(tri, "RP3 (2 vtx)");
             }
 
             // Try some other non-Haken manifolds.
-            verifyAllNotIncompressible(Example<3>::poincareHomologySphere(),
+            verifyAllNotIncompressible(Example<3>::poincare(),
                 "Poincare homology sphere");
 
             // Try some SFSs that should be Haken.

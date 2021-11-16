@@ -38,6 +38,7 @@
 #include "snappea/snappeatriangulation.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 // UI includes:
 #include "edittableview.h"
@@ -1259,8 +1260,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                 tr("No changes are necessary."));
         } else {
             // Replace this with a minimal, 0-efficient 3-sphere triangulation.
-            tri->removeAllTetrahedra();
-            tri->insertLayeredLensSpace(1,0);
+            *tri = regina::Example<3>::lens(1, 0);
         }
     } else if (summands.size() > 1) {
         // Composite 3-manifold.

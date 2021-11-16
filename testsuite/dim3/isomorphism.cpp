@@ -82,11 +82,11 @@ class Isomorphism3Test : public CppUnit::TestFixture {
     public:
         void setUp() override {
             rp2xs1 = Example<3>::rp2xs1();
-            lens8_1.insertLayeredLensSpace(8, 1);
-            lens13_3.insertLayeredLensSpace(13, 3);
-            twisted5.insertLayeredLoop(5, true);
-            untwisted5.insertLayeredLoop(5, false);
-            aug.insertAugTriSolidTorus(3, -1, 5, -3, 2, -1);
+            lens8_1 = Example<3>::lens(8, 1);
+            lens13_3 = Example<3>::lens(13, 3);
+            twisted5 = Example<3>::layeredLoop(5, true);
+            untwisted5 = Example<3>::layeredLoop(5, false);
+            aug = Example<3>::augTriSolidTorus(3, -1, 5, -3, 2, -1);
             ball.newTetrahedron();
         }
 

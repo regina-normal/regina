@@ -172,7 +172,7 @@ class CoversTest : public CppUnit::TestFixture {
 
         void manifolds() {
             // No covers until we hit degree 5 and beyond:
-            compareResults<7>(regina::Example<3>::poincareHomologySphere(),
+            compareResults<7>(regina::Example<3>::poincare(),
                 "Poincare homology sphere");
 
             // Cover (which is trivial) only for degree 3:
