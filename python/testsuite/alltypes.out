@@ -1474,6 +1474,9 @@ Equality type : EqualityType.BY_REFERENCE
 NormalHypersurfaceIterator : class
 Equality type : EqualityType.BY_VALUE
 
+NormalHypersurfaceVectorIterator : class
+Equality type : EqualityType.BY_VALUE
+
 NormalHypersurfaces : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1487,6 +1490,9 @@ NormalSurface : class
 Equality type : EqualityType.BY_REFERENCE
 
 NormalSurfaceIterator : class
+Equality type : EqualityType.BY_VALUE
+
+NormalSurfaceVectorIterator : class
 Equality type : EqualityType.BY_VALUE
 
 NormalSurfaces : class

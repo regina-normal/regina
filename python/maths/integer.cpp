@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/integer.h"
 #include "../helpers.h"
 
@@ -118,7 +119,10 @@ void addInteger(pybind11::module_& m) {
         .def("gcd", &Integer::gcd)
         .def("lcmWith", &Integer::lcmWith)
         .def("lcm", &Integer::lcm)
-        .def("gcdWithCoeffs", &Integer::gcdWithCoeffs)
+        .def("gcdWithCoeffs", overload_cast<const Integer&>(
+            &Integer::gcdWithCoeffs, pybind11::const_))
+        .def("gcdWithCoeffs", overload_cast<const Integer&, Integer&, Integer&>(
+            &Integer::gcdWithCoeffs, pybind11::const_))
         .def("legendre", &Integer::legendre)
         .def("randomBoundedByThis", &Integer::randomBoundedByThis)
         .def_static("randomBinary", &Integer::randomBinary)

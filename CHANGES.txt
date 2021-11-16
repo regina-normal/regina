@@ -484,6 +484,8 @@ Version 7.0  [ TODO ]
               "inf" as infinity.  Also, these routines all now throw exceptions
               if the input string is invalid: the old bool pointer argument to
               the string constructors for testing validity is no longer present.
+            - Added a variant of gcdWithCoeffs() that returns a tuple
+              instead of using reference arguments.
         Class InvalidArgument, InvalidInput:
             - New exception classes.
         Class Isomorphism<dim>, IsomorphismBase<dim>:
@@ -1561,6 +1563,9 @@ Version 7.0  [ TODO ]
               type-safe template-based mechanism for callbacks instead of a
               function pointer with a single void* argument.  The old function
               is removed completely.
+        Function gcdWithCoeffs():
+            - Changed this to return a tuple instead of using reference
+              arguments.  The old version is kept but deprecated.
         Function makeAngleEquations():
             - Now takes a const reference (not a const pointer), and returns
               a MatrixInt by value (not by newly allocated pointer).

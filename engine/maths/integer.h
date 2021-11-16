@@ -42,6 +42,7 @@
 #include <climits>
 #include <cstdint> // MPIR (and thus SAGE) needs this *before* gmp.h.
 #include <cstddef> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
+#include <tuple>
 #include <gmp.h>
 #include "regina-core.h"
 #include "utilities/tightencoding.h"
@@ -1296,23 +1297,68 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Note that the given integers need not be non-negative.
          * However, the gcd returned is guaranteed to be non-negative.
          *
-         * If \a d is the gcd of \a this and \a other, the values placed
-         * into \a u and \a v will be those for which
-         * <tt>u*this + v*other = d</tt>,
-         * <tt>-abs(this)/d < v*sign(other) <= 0</tt> and
-         * <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         * If \a d is the gcd of \a this and \a other, then this routine
+         * returns the tuple (\a d, \a u, \a v), where \a u and \a v are
+         * coefficients for which:
+         *
+         * - <tt>u*this + v*other = d</tt>;
+         * - <tt>-abs(this)/d < v*sign(other) <= 0</tt>; and
+         * - <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         *
          * These equations are not satisfied when either of \a this or
-         * \a other are zero, but in this case \a u and \a v are both
+         * \a other are zero, but in this case \a u and \a v will both be
          * 0, 1 or -1, using as many zeros as possible.
          *
          * \pre Neither this integer nor \a other is infinite.
          *
+         * \note There are two variants of this routine: one returns the
+         * coefficients \a u and \a v as part of a tuple, and one returns
+         * them via reference arguments.  For now both versions remain
+         * supported, but there is a long-term plan to eventually phase out
+         * the reference argument variant (i.e., not this variant).
+         *
          * @param other the integer whose greatest common divisor with
          * this will be found.
-         * @param u a variable into which the final coefficient of
-         * \a this will be placed.
-         * @param v a variable into which the final coefficient of
-         * \a other will be placed.
+         * @return a tuple containing: the greatest common divisor of
+         * \a this and \a other; the final coefficient of \a this; and
+         * the final coefficient of \a other.
+         */
+        std::tuple<IntegerBase, IntegerBase, IntegerBase> gcdWithCoeffs(
+            const IntegerBase<supportInfinity>& other) const;
+
+        /**
+         * Determines the greatest common divisor of this and the given
+         * integer and finds the smallest coefficients with which these
+         * integers combine to give their gcd.
+         *
+         * Note that the given integers need not be non-negative.
+         * However, the gcd returned is guaranteed to be non-negative.
+         *
+         * If \a d is the gcd of \a this and \a other, the values placed
+         * into \a u and \a v will be coefficients for which:
+         *
+         * - <tt>u*this + v*other = d</tt>;
+         * - <tt>-abs(this)/d < v*sign(other) <= 0</tt>; and
+         * - <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         *
+         * These equations are not satisfied when either of \a this or
+         * \a other are zero, but in this case \a u and \a v will both be
+         * 0, 1 or -1, using as many zeros as possible.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * \note There are two variants of this routine: one returns the
+         * coefficients \a u and \a v as part of a tuple, and one returns
+         * them via reference arguments.  For now both versions remain
+         * supported, but there is a long-term plan to eventually phase out
+         * the reference argument variant (i.e., this variant).
+         *
+         * @param other the integer whose greatest common divisor with
+         * this will be found.
+         * @param u a variable into which the final coefficient of \a this
+         * will be placed.  Any existing contents of \a u will be overwritten.
+         * @param v a variable into which the final coefficient of \a other
+         * will be placed.  Any existing contents of \a v will be overwritten.
          * @return the greatest common divisor of \a this and \a other.
          */
         IntegerBase<supportInfinity> gcdWithCoeffs(
@@ -3347,6 +3393,18 @@ template <bool supportInfinity>
 inline IntegerBase<supportInfinity> operator *(long lhs,
         const IntegerBase<supportInfinity>& rhs) {
     return rhs * lhs;
+}
+
+template <bool supportInfinity>
+inline std::tuple<IntegerBase<supportInfinity>, IntegerBase<supportInfinity>,
+        IntegerBase<supportInfinity>>
+        IntegerBase<supportInfinity>::gcdWithCoeffs(
+        const IntegerBase<supportInfinity>& other) const {
+    // In the long term, this will eventually become the preferred
+    // implementation.  For now though, just forward to the non-tuple variant.
+    std::tuple<IntegerBase, IntegerBase, IntegerBase> ans;
+    std::get<0>(ans) = gcdWithCoeffs(other, std::get<1>(ans), std::get<2>(ans));
+    return ans;
 }
 
 template <bool supportInfinity>

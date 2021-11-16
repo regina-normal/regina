@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/integer.h"
 #include "../helpers.h"
 
@@ -122,7 +123,11 @@ void addLargeInteger(pybind11::module_& m) {
         .def("gcd", &LargeInteger::gcd)
         .def("lcmWith", &LargeInteger::lcmWith)
         .def("lcm", &LargeInteger::lcm)
-        .def("gcdWithCoeffs", &LargeInteger::gcdWithCoeffs)
+        .def("gcdWithCoeffs", overload_cast<const LargeInteger&>(
+            &LargeInteger::gcdWithCoeffs, pybind11::const_))
+        .def("gcdWithCoeffs",
+            overload_cast<const LargeInteger&, LargeInteger&, LargeInteger&>(
+                &LargeInteger::gcdWithCoeffs, pybind11::const_))
         .def("legendre", &LargeInteger::legendre)
         .def("randomBoundedByThis", &LargeInteger::randomBoundedByThis)
         .def_static("randomBinary", &LargeInteger::randomBinary)
