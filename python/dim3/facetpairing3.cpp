@@ -90,11 +90,9 @@ void addFacetPairing3(pybind11::module_& m) {
         .def("hasSingleStar", &FacetPairing<3>::hasSingleStar)
         .def("hasDoubleStar", &FacetPairing<3>::hasDoubleStar)
         .def("hasDoubleSquare", &FacetPairing<3>::hasDoubleSquare)
-        .def_static("findAllPairings", [](size_t n, BoolSet bdry, int nBdry,
-                const std::function<void(const FacetPairing<3>&,
-                    FacetPairing<3>::IsoList)>& action) {
-            FacetPairing<3>::findAllPairings(n, bdry, nBdry, action);
-        });
+        .def_static("findAllPairings", &FacetPairing<3>::findAllPairings<
+            const std::function<void(const FacetPairing<3>&,
+                FacetPairing<3>::IsoList)>&>)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

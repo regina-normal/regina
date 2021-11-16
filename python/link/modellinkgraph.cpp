@@ -91,10 +91,8 @@ void addModelLinkGraph(pybind11::module_& m) {
             pybind11::arg("useReflection") = true,
             pybind11::arg("tight") = false)
         .def_static("fromPlantri", &ModelLinkGraph::fromPlantri)
-        .def("generateMinimalLinks", [](const ModelLinkGraph& g,
-                const std::function<void(regina::Link&&)>& action) {
-            g.generateMinimalLinks(action);
-        });
+        .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
+            const std::function<void(regina::Link&&)>&>)
     ;
     regina::python::add_output(g);
     regina::python::add_eq_operators(g);

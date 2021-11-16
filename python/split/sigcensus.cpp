@@ -40,11 +40,8 @@ using regina::SigCensus;
 
 void addSigCensus(pybind11::module_& m) {
     auto c = pybind11::class_<SigCensus>(m, "SigCensus")
-        .def_static("formCensus", [](unsigned order,
-                const std::function<void(const regina::Signature&,
-                    const regina::SigCensus::IsoList&)>& action) {
-            SigCensus::formCensus(order, action);
-        });
+        .def_static("formCensus", &SigCensus::formCensus<const std::function<
+            void(const regina::Signature&, const SigCensus::IsoList&)>&>)
     ;
     regina::python::no_eq_operators(c);
 }

@@ -41,11 +41,8 @@ using regina::VectorInt;
 
 void addHilbertCD(pybind11::module_& m) {
     auto c = pybind11::class_<HilbertCD>(m, "HilbertCD")
-        .def_static("enumerate", [](const std::function<void(VectorInt&&)>& a,
-                const regina::MatrixInt& s,
-                const regina::ValidityConstraints& c) {
-            HilbertCD::enumerate<VectorInt>(a, s, c);
-        })
+        .def_static("enumerate", &HilbertCD::enumerate<VectorInt,
+            const std::function<void(VectorInt&&)>&>)
         .def_static("enumerate", [](const regina::MatrixInt& s,
                 const regina::ValidityConstraints& c) {
             std::vector<VectorInt> ans;

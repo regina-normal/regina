@@ -76,11 +76,10 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
             pybind11::arg("labels") = false)
         .def_static("dotHeader", &FacetPairing<dim>::dotHeader,
             pybind11::arg("graphName") = nullptr)
-        .def_static("findAllPairings", [](size_t n, BoolSet bdry, int nBdry,
+        .def_static("findAllPairings",
+            &FacetPairing<dim>::template findAllPairings<
                 const std::function<void(const FacetPairing<dim>&,
-                    typename FacetPairing<dim>::IsoList)>& action) {
-            FacetPairing<dim>::findAllPairings(n, bdry, nBdry, action);
-        });
+                    typename FacetPairing<dim>::IsoList)>&>)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

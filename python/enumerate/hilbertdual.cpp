@@ -41,12 +41,9 @@ using regina::VectorInt;
 
 void addHilbertDual(pybind11::module_& m) {
     auto c = pybind11::class_<HilbertDual>(m, "HilbertDual")
-        .def_static("enumerate", [](const std::function<void(VectorInt&&)>& a,
-                const regina::MatrixInt& s,
-                const regina::ValidityConstraints& c,
-                regina::ProgressTracker* p, unsigned long r) {
-            HilbertDual::enumerate<VectorInt>(a, s, c, p, r);
-        }, pybind11::arg(), pybind11::arg(), pybind11::arg(),
+        .def_static("enumerate", &HilbertDual::enumerate<VectorInt,
+                const std::function<void(VectorInt&&)>&>,
+            pybind11::arg(), pybind11::arg(), pybind11::arg(),
             pybind11::arg("tracker") = nullptr,
             pybind11::arg("initialRows") = 0)
         .def_static("enumerate", [](const regina::MatrixInt& s,
