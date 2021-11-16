@@ -162,7 +162,12 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
         Triangulation<3>& t = primeComponents.emplace_back();
         if (initOrientable) {
             // Build S2 x S1.
-            t.insertLayeredLensSpace(0, 1);
+            Tetrahedron<3>* t0 = t.newTetrahedron();
+            Tetrahedron<3>* t1 = t.newTetrahedron();
+            t0->join(0, t1, Perm<4>(2, 3, 0, 1));
+            t0->join(1, t1, Perm<4>(2, 3, 0, 1));
+            t0->join(3, t0, Perm<4>(3, 0, 1, 2));
+            t1->join(0, t1, Perm<4>(1, 2, 3, 0));
         } else {
             // Build S2 x~ S1.
             Tetrahedron<3>* t0 = t.newTetrahedron();
@@ -177,12 +182,22 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
     }
     while (finalZ2++ < initZ2) {
         Triangulation<3>& t = primeComponents.emplace_back();
-        t.insertLayeredLensSpace(2, 1);
+        Tetrahedron<3>* t0 = t.newTetrahedron();
+        Tetrahedron<3>* t1 = t.newTetrahedron();
+        t0->join(0, t1, Perm<4>(0, 3));
+        t0->join(1, t1, Perm<4>(1, 2));
+        t0->join(3, t0, Perm<4>(2, 3));
+        t1->join(0, t1, Perm<4>(1, 2, 3, 0));
         zeroEfficient_ = false; // Implied by the RP3 summand.
     }
     while (finalZ3++ < initZ3) {
         Triangulation<3>& t = primeComponents.emplace_back();
-        t.insertLayeredLensSpace(3, 1);
+        Tetrahedron<3>* t0 = t.newTetrahedron();
+        Tetrahedron<3>* t1 = t.newTetrahedron();
+        t0->join(0, t1, Perm<4>(2, 3, 0, 1));
+        t0->join(1, t1, Perm<4>(2, 3, 0, 1));
+        t0->join(3, t0, Perm<4>(1, 3, 0, 2));
+        t1->join(0, t1, Perm<4>(1, 2, 3, 0));
     }
 
     // All done!
