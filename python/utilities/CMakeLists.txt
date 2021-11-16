@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   base64.cpp
+  bitmanip.cpp
   bitmask.cpp
   boolset.cpp
   exception.cpp

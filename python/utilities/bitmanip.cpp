@@ -30,35 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "utilities/bitmanip.h"
+#include "../helpers.h"
 
-void addBase64(pybind11::module_& m);
-void addBitManipulator(pybind11::module_& m);
-void addBitmask(pybind11::module_& m);
-void addBoolSet(pybind11::module_& m);
-void addException(pybind11::module_& m);
-void addIntUtils(pybind11::module_& m);
-void addLocale(pybind11::module_& m);
-void addOSUtils(pybind11::module_& m);
-void addRandUtils(pybind11::module_& m);
-void addStringUtils(pybind11::module_& m);
-void addTightEncoding(pybind11::module_& m);
-void addTrieSet(pybind11::module_& m);
-void addXMLUtils(pybind11::module_& m);
-
-void addUtilitiesClasses(pybind11::module_& m) {
-    addBase64(m);
-    addBitManipulator(m);
-    addBitmask(m);
-    addBoolSet(m);
-    addException(m);
-    addIntUtils(m);
-    addLocale(m);
-    addOSUtils(m);
-    addRandUtils(m);
-    addStringUtils(m);
-    addTightEncoding(m);
-    addTrieSet(m);
-    addXMLUtils(m);
+void addBitManipulator(pybind11::module_& m) {
+    using BitManip = regina::BitManipulator<unsigned long>;
+    auto c = pybind11::class_<BitManip>(m, "BitManipulator")
+        .def_static("firstBit", &BitManip::firstBit)
+        .def_static("lastBit", &BitManip::lastBit)
+        .def_readonly_static("specialised", &BitManip::specialised)
+    ;
+    regina::python::no_eq_operators(c);
 }
 

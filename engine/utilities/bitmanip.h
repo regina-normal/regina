@@ -53,6 +53,9 @@ namespace regina {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
+ * \ifacespython Only the end-user class BitManipulator<unsigned long> is
+ * available to Python users.
+ *
  * @tparam T an unsigned integral numeric type, which we treat as a
  * sequence of \c true and/or \c false bits.
  *
@@ -169,6 +172,9 @@ class BitManipulatorByType<unsigned long long> {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
+ *
+ * \ifacespython Only the end-user class BitManipulator<unsigned long> is
+ * available to Python users.
  *
  * @tparam T an unsigned integral numeric type, which we treat as a
  * sequence of \c true and/or \c false bits.
@@ -306,7 +312,12 @@ class BitManipulatorBySize<T, 8> {
  * \pre Type \a T is an unsigned integral numeric type whose size in
  * bits is a power of two.
  *
- * \ifacespython Not present.
+ * \ifacespython For Python users, the class BitManipulator represents the
+ * C++ type BitManipulator<unsigned long>.  In particular, you should be aware
+ * that BitManipulator is designed specifically to work with native C++ integer
+ * types, and \e cannot handle Python's arbitrary-precision integers.  It is
+ * up to you to ensure that any Python integers that you pass into the
+ * BitManipulator routines are small enough to fit inside a C++ unsigned long.
  */
 template <typename T>
 class BitManipulator :
