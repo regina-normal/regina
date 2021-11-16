@@ -592,7 +592,6 @@
 		052FA08F180600FB00FAE4DF /* markedvector.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6D180600FB00FAE4DF /* markedvector.h */; };
 		052FA093180600FB00FAE4DF /* qitmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E71180600FB00FAE4DF /* qitmask.h */; };
 		052FA097180600FB00FAE4DF /* trieset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E75180600FB00FAE4DF /* trieset.h */; };
-		052FA098180600FB00FAE4DF /* tritmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E76180600FB00FAE4DF /* tritmask.h */; };
 		052FA099180600FB00FAE4DF /* osutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E77180600FB00FAE4DF /* osutils.cpp */; };
 		052FA09A180600FB00FAE4DF /* osutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E78180600FB00FAE4DF /* osutils.h */; };
 		052FA09D180600FB00FAE4DF /* stringutils-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E7B180600FB00FAE4DF /* stringutils-impl.h */; };
@@ -1929,6 +1928,10 @@
 		05CAE60627427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
 		05CAE60727427A8A007C93F3 /* maxadmissible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60427427A8A007C93F3 /* maxadmissible.cpp */; };
 		05CAE60827427A8A007C93F3 /* maxadmissible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60427427A8A007C93F3 /* maxadmissible.cpp */; };
+		05CAE6132743F207007C93F3 /* qitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6112743F207007C93F3 /* qitmask.cpp */; };
+		05CAE6142743F207007C93F3 /* qitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6112743F207007C93F3 /* qitmask.cpp */; };
+		05CAE6152743F207007C93F3 /* bitmanip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6122743F207007C93F3 /* bitmanip.cpp */; };
+		05CAE6162743F207007C93F3 /* bitmanip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6122743F207007C93F3 /* bitmanip.cpp */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -3055,7 +3058,6 @@
 		052F9E6D180600FB00FAE4DF /* markedvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markedvector.h; sourceTree = "<group>"; };
 		052F9E71180600FB00FAE4DF /* qitmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qitmask.h; sourceTree = "<group>"; };
 		052F9E75180600FB00FAE4DF /* trieset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trieset.h; sourceTree = "<group>"; };
-		052F9E76180600FB00FAE4DF /* tritmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tritmask.h; sourceTree = "<group>"; };
 		052F9E77180600FB00FAE4DF /* osutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = osutils.cpp; sourceTree = "<group>"; };
 		052F9E78180600FB00FAE4DF /* osutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osutils.h; sourceTree = "<group>"; };
 		052F9E7B180600FB00FAE4DF /* stringutils-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "stringutils-impl.h"; sourceTree = "<group>"; };
@@ -4386,6 +4388,10 @@
 		05CAE60C27429B19007C93F3 /* id.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = id.test; sourceTree = "<group>"; };
 		05CAE60D27429B19007C93F3 /* enumerate.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = enumerate.out; sourceTree = "<group>"; };
 		05CAE60E27429B19007C93F3 /* sets.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = sets.test; sourceTree = "<group>"; };
+		05CAE60F2743F1ED007C93F3 /* discs.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = discs.out; sourceTree = "<group>"; };
+		05CAE6102743F1ED007C93F3 /* discs.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = discs.test; sourceTree = "<group>"; };
+		05CAE6112743F207007C93F3 /* qitmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qitmask.cpp; sourceTree = "<group>"; };
+		05CAE6122743F207007C93F3 /* bitmanip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitmanip.cpp; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5122,6 +5128,8 @@
 				05A0251E25D48E500091372D /* constructors.out */,
 				05A0251D25D48E500091372D /* constructors.test */,
 				050F5D861B9BAB9C00C1F681 /* cube.orb */,
+				05CAE60F2743F1ED007C93F3 /* discs.out */,
+				05CAE6102743F1ED007C93F3 /* discs.test */,
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
 				0577E6DF1F97087A00CBDF15 /* embeddings.out */,
 				0577E6EA1F97088000CBDF15 /* embeddings.test */,
@@ -5248,6 +5256,7 @@
 			children = (
 				050F5DBA1B9BAB9C00C1F681 /* CMakeLists.txt */,
 				057B0CA226A2ABE90017F5EA /* base64.cpp */,
+				05CAE6122743F207007C93F3 /* bitmanip.cpp */,
 				05772EDF270CFAD100D26D8A /* bitmask.cpp */,
 				050F5DBC1B9BAB9C00C1F681 /* boolset.cpp */,
 				05772EDE270CFAD100D26D8A /* exception.cpp */,
@@ -5255,6 +5264,7 @@
 				05431FCD1C40F65D009BC072 /* intutils.cpp */,
 				050F5DBD1B9BAB9C00C1F681 /* osutils.cpp */,
 				050F5DBE1B9BAB9C00C1F681 /* pyutilities.cpp */,
+				05CAE6112743F207007C93F3 /* qitmask.cpp */,
 				05754D17258D834E00236ED7 /* randutils.cpp */,
 				050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */,
 				057B0CA326A2ABE90017F5EA /* tightencoding.cpp */,
@@ -6095,7 +6105,6 @@
 				057B0C9F26A2AB760017F5EA /* tightencoding.h */,
 				052F9E75180600FB00FAE4DF /* trieset.h */,
 				0512E0A026DF356300DDB222 /* trieset.cpp */,
-				052F9E76180600FB00FAE4DF /* tritmask.h */,
 				05199A5B25C63CCE0006B8FA /* typeutils.h */,
 				052F9E7F180600FB00FAE4DF /* xmlutils.cpp */,
 				052F9E80180600FB00FAE4DF /* xmlutils.h */,
@@ -7764,7 +7773,6 @@
 				05431F7A1C40F3C9009BC072 /* matrix.h in Headers */,
 				0534FAE422DFDDA7000A96A3 /* zstr.h in Headers */,
 				052121C02662F50A0041FD89 /* jenkins-impl.h in Headers */,
-				052FA098180600FB00FAE4DF /* tritmask.h in Headers */,
 				052F9EFE180600FB00FAE4DF /* typetrie.h in Headers */,
 				0512E08D26DF34AF00DDB222 /* modellinkgraph-impl.h in Headers */,
 				05A0673D1DFA68190047872E /* trisolidtorus.h in Headers */,
@@ -8802,6 +8810,7 @@
 				054C6A701DCC1FF3005373F0 /* example15.cpp in Sources */,
 				050F5E331B9BAB9C00C1F681 /* disctype.cpp in Sources */,
 				050F5DF71B9BAB9C00C1F681 /* integer.cpp in Sources */,
+				05CAE6152743F207007C93F3 /* bitmanip.cpp in Sources */,
 				054C6A6D1DCC1FF3005373F0 /* example12.cpp in Sources */,
 				05226DF027422C82000A45D5 /* hilbertdual.cpp in Sources */,
 				050F5E311B9BAB9C00C1F681 /* pysubcomplex.cpp in Sources */,
@@ -9024,6 +9033,7 @@
 				050F5E4A1B9BAB9C00C1F681 /* triangle3.cpp in Sources */,
 				057EE4601C6009F300C4D155 /* component15.cpp in Sources */,
 				05A066A71DFA67D40047872E /* satblock.cpp in Sources */,
+				05CAE6132743F207007C93F3 /* qitmask.cpp in Sources */,
 				05721F131F97162600A83FFC /* link.cpp in Sources */,
 				050F5E0B1B9BAB9C00C1F681 /* pypacket.cpp in Sources */,
 				0591E8121C4F763B00793A9C /* boundarycomponent4.cpp in Sources */,
@@ -9814,6 +9824,8 @@
 				0588C2A51FD8D13C0093C2C9 /* rewrite.cpp in Sources */,
 				0512E08926DF349800DDB222 /* matching.cpp in Sources */,
 				0542088F1DF0D0CF0018AB24 /* keywordlist.cpp in Sources */,
+				05CAE6142743F207007C93F3 /* qitmask.cpp in Sources */,
+				05CAE6162743F207007C93F3 /* bitmanip.cpp in Sources */,
 				05C1BEE71DCA89E3007C946B /* triangulation7.cpp in Sources */,
 				05B7FFAE25AC22D2003BAF5C /* cone_dual_mode.cpp in Sources */,
 				05C1BEEE1DCA89E3007C946B /* triangulation14.cpp in Sources */,
