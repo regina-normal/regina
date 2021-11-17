@@ -291,10 +291,10 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg a;
-                regina::GluingPermSearcher<2>::bestSearcher(p, isos, true,
-                        [](const regina::GluingPerms<2>&, Arg& arg) {
-                    arg.flag();
-                }, a)->runSearch();
+                regina::GluingPermSearcher<2>::bestSearcher(p, isos, true)->
+                    runSearch([](const regina::GluingPerms<2>&, Arg& arg) {
+                        arg.flag();
+                    }, a);
                 verifyPassedByReference(a,
                     "GluingPermSearcher<2>::bestSearcher()");
 
@@ -307,31 +307,30 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<2>::findAllPerms()");
 
                 Arg c;
-                regina::GluingPermSearcher<2> searcher(p, isos, true,
-                        [](const regina::GluingPerms<2>&, Arg& arg) {
-                    arg.flag();
-                }, c);
+                regina::GluingPermSearcher<2> searcher(p, isos, true);
                 std::ostringstream data;
                 searcher.dumpData(data);
                 std::string taggedData = searcher.taggedData();
-                searcher.runSearch();
+                searcher.runSearch([](const regina::GluingPerms<2>&, Arg& arg) {
+                    arg.flag();
+                }, c);
                 verifyPassedByReference(c,
                     "GluingPermSearcher<2> standard constructor");
 
                 Arg d;
                 std::istringstream iData(data.str());
-                regina::GluingPermSearcher<2>(iData,
+                regina::GluingPermSearcher<2>(iData).runSearch(
                         [](const regina::GluingPerms<2>&, Arg& arg) {
                     arg.flag();
-                }, d).runSearch();
+                }, d);
                 verifyPassedByReference(d,
                     "GluingPermSearcher<2> istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<2>::fromTaggedData(taggedData,
-                        [](const regina::GluingPerms<2>&, Arg& arg) {
-                    arg.flag();
-                }, e)->runSearch();
+                regina::GluingPermSearcher<2>::fromTaggedData(taggedData)->
+                    runSearch([](const regina::GluingPerms<2>&, Arg& arg) {
+                        arg.flag();
+                    }, e);
                 verifyPassedByReference(e,
                     "GluingPermSearcher<2>::fromTaggedData()");
             }
@@ -340,11 +339,10 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg a;
-                regina::GluingPermSearcher<3>::bestSearcher(p, isos,
-                        true, true, {},
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, a)->runSearch();
+                regina::GluingPermSearcher<3>::bestSearcher(p, isos, true, true,
+                    {})->runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                        arg.flag();
+                    }, a);
                 verifyPassedByReference(a,
                     "GluingPermSearcher<3>::bestSearcher()");
 
@@ -358,31 +356,30 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<3>::findAllPerms()");
 
                 Arg c;
-                regina::GluingPermSearcher<3> searcher(p, isos, true, true, {},
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, c);
+                regina::GluingPermSearcher<3> searcher(p, isos, true, true, {});
                 std::ostringstream data;
                 searcher.dumpData(data);
                 std::string taggedData = searcher.taggedData();
-                searcher.runSearch();
+                searcher.runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                    arg.flag();
+                }, c);
                 verifyPassedByReference(c,
                     "GluingPermSearcher<3> standard constructor");
 
                 Arg d;
                 std::istringstream iData(data.str());
-                regina::GluingPermSearcher<3>(iData,
+                regina::GluingPermSearcher<3>(iData).runSearch(
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
-                }, d).runSearch();
+                }, d);
                 verifyPassedByReference(d,
                     "GluingPermSearcher<3> istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, e)->runSearch();
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData)->
+                    runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                        arg.flag();
+                    }, e);
                 verifyPassedByReference(e,
                     "GluingPermSearcher<3>::fromTaggedData()");
             }
@@ -393,31 +390,30 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg c;
-                regina::ClosedPrimeMinSearcher searcher(p, isos, true,
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, c);
+                regina::ClosedPrimeMinSearcher searcher(p, isos, true);
                 std::ostringstream data;
                 searcher.dumpData(data);
                 std::string taggedData = searcher.taggedData();
-                searcher.runSearch();
+                searcher.runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                    arg.flag();
+                }, c);
                 verifyPassedByReference(c,
                     "ClosedPrimeMinSearcher standard constructor");
 
                 Arg d;
                 std::istringstream iData(data.str());
-                regina::ClosedPrimeMinSearcher(iData,
+                regina::ClosedPrimeMinSearcher(iData).runSearch(
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
-                }, d).runSearch();
+                }, d);
                 verifyPassedByReference(d,
                     "ClosedPrimeMinSearcher istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, e)->runSearch();
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData)->
+                    runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                        arg.flag();
+                    }, e);
                 verifyPassedByReference(e,
                     "ClosedPrimeMinSearcher variant of fromTaggedData()");
             }
@@ -426,31 +422,30 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg c;
-                regina::CompactSearcher searcher(p, isos, true, {},
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, c);
+                regina::CompactSearcher searcher(p, isos, true, {});
                 std::ostringstream data;
                 searcher.dumpData(data);
                 std::string taggedData = searcher.taggedData();
-                searcher.runSearch();
+                searcher.runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                    arg.flag();
+                }, c);
                 verifyPassedByReference(c,
                     "CompactSearcher standard constructor");
 
                 Arg d;
                 std::istringstream iData(data.str());
-                regina::CompactSearcher(iData,
+                regina::CompactSearcher(iData).runSearch(
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
-                }, d).runSearch();
+                }, d);
                 verifyPassedByReference(d,
                     "CompactSearcher istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, e)->runSearch();
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData)->
+                    runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                        arg.flag();
+                    }, e);
                 verifyPassedByReference(e,
                     "CompactSearcher variant of fromTaggedData()");
             }
@@ -459,31 +454,30 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg c;
-                regina::EulerSearcher searcher(0, p, isos, true, {},
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, c);
+                regina::EulerSearcher searcher(0, p, isos, true, {});
                 std::ostringstream data;
                 searcher.dumpData(data);
                 std::string taggedData = searcher.taggedData();
-                searcher.runSearch();
+                searcher.runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                    arg.flag();
+                }, c);
                 verifyPassedByReference(c,
                     "EulerSearcher standard constructor");
 
                 Arg d;
                 std::istringstream iData(data.str());
-                regina::EulerSearcher(iData,
+                regina::EulerSearcher(iData).runSearch(
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
-                }, d).runSearch();
+                }, d);
                 verifyPassedByReference(d,
                     "EulerSearcher istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, e)->runSearch();
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData)->
+                    runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                        arg.flag();
+                    }, e);
                 verifyPassedByReference(e,
                     "EulerSearcher variant of fromTaggedData()");
             }
@@ -492,31 +486,30 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg c;
-                regina::HyperbolicMinSearcher searcher(p, isos, true,
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, c);
+                regina::HyperbolicMinSearcher searcher(p, isos, true);
                 std::ostringstream data;
                 searcher.dumpData(data);
                 std::string taggedData = searcher.taggedData();
-                searcher.runSearch();
+                searcher.runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                    arg.flag();
+                }, c);
                 verifyPassedByReference(c,
                     "HyperbolicMinSearcher standard constructor");
 
                 Arg d;
                 std::istringstream iData(data.str());
-                regina::HyperbolicMinSearcher(iData,
+                regina::HyperbolicMinSearcher(iData).runSearch(
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
-                }, d).runSearch();
+                }, d);
                 verifyPassedByReference(d,
                     "HyperbolicMinSearcher istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
-                        [](const regina::GluingPerms<3>&, Arg& arg) {
-                    arg.flag();
-                }, e)->runSearch();
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData)->
+                    runSearch([](const regina::GluingPerms<3>&, Arg& arg) {
+                        arg.flag();
+                    }, e);
                 verifyPassedByReference(e,
                     "HyperbolicMinSearcher variant of fromTaggedData()");
             }
@@ -525,10 +518,10 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg a;
-                regina::GluingPermSearcher<4>::bestSearcher(p, isos, true, true,
-                        [](const regina::GluingPerms<4>&, Arg& arg) {
-                    arg.flag();
-                }, a)->runSearch();
+                regina::GluingPermSearcher<4>::bestSearcher(p, isos, true, true)
+                    ->runSearch([](const regina::GluingPerms<4>&, Arg& arg) {
+                        arg.flag();
+                    }, a);
                 verifyPassedByReference(a,
                     "GluingPermSearcher<4>::bestSearcher()");
 
@@ -541,31 +534,30 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<4>::findAllPerms()");
 
                 Arg c;
-                regina::GluingPermSearcher<4> searcher(p, isos, true, true,
-                        [](const regina::GluingPerms<4>&, Arg& arg) {
-                    arg.flag();
-                }, c);
+                regina::GluingPermSearcher<4> searcher(p, isos, true, true);
                 std::ostringstream data;
                 searcher.dumpData(data);
                 std::string taggedData = searcher.taggedData();
-                searcher.runSearch();
+                searcher.runSearch([](const regina::GluingPerms<4>&, Arg& arg) {
+                    arg.flag();
+                }, c);
                 verifyPassedByReference(c,
                     "GluingPermSearcher<4> standard constructor");
 
                 Arg d;
                 std::istringstream iData(data.str());
-                regina::GluingPermSearcher<4>(iData,
+                regina::GluingPermSearcher<4>(iData).runSearch(
                         [](const regina::GluingPerms<4>&, Arg& arg) {
                     arg.flag();
-                }, d).runSearch();
+                }, d);
                 verifyPassedByReference(d,
                     "GluingPermSearcher<4> istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<4>::fromTaggedData(taggedData,
-                        [](const regina::GluingPerms<4>&, Arg& arg) {
-                    arg.flag();
-                }, e)->runSearch();
+                regina::GluingPermSearcher<4>::fromTaggedData(taggedData)->
+                    runSearch([](const regina::GluingPerms<4>&, Arg& arg) {
+                        arg.flag();
+                    }, e);
                 verifyPassedByReference(e,
                     "GluingPermSearcher<4>::fromTaggedData()");
             }
