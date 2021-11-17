@@ -1932,6 +1932,10 @@
 		05CAE6142743F207007C93F3 /* qitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6112743F207007C93F3 /* qitmask.cpp */; };
 		05CAE6152743F207007C93F3 /* bitmanip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6122743F207007C93F3 /* bitmanip.cpp */; };
 		05CAE6162743F207007C93F3 /* bitmanip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6122743F207007C93F3 /* bitmanip.cpp */; };
+		05CAE61F2744A397007C93F3 /* gluingpermsearcher2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE61D2744A397007C93F3 /* gluingpermsearcher2.cpp */; };
+		05CAE6202744A397007C93F3 /* gluingpermsearcher2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE61D2744A397007C93F3 /* gluingpermsearcher2.cpp */; };
+		05CAE6212744A397007C93F3 /* gluingpermsearcher4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE61E2744A397007C93F3 /* gluingpermsearcher4.cpp */; };
+		05CAE6222744A397007C93F3 /* gluingpermsearcher4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE61E2744A397007C93F3 /* gluingpermsearcher4.cpp */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -4397,6 +4401,8 @@
 		05CAE619274470FF007C93F3 /* gil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gil.h; sourceTree = "<group>"; };
 		05CAE61B274470FF007C93F3 /* filesystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = filesystem.h; sourceTree = "<group>"; };
 		05CAE61C27447121007C93F3 /* type_caster_base.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = type_caster_base.h; sourceTree = "<group>"; };
+		05CAE61D2744A397007C93F3 /* gluingpermsearcher2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingpermsearcher2.cpp; sourceTree = "<group>"; };
+		05CAE61E2744A397007C93F3 /* gluingpermsearcher4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingpermsearcher4.cpp; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5286,7 +5292,9 @@
 			children = (
 				050F5DC11B9BAB9C00C1F681 /* CMakeLists.txt */,
 				050F5DC41B9BAB9C00C1F681 /* census.cpp */,
+				05CAE61D2744A397007C93F3 /* gluingpermsearcher2.cpp */,
 				050F5DC61B9BAB9C00C1F681 /* gluingpermsearcher3.cpp */,
+				05CAE61E2744A397007C93F3 /* gluingpermsearcher4.cpp */,
 				050F5DC71B9BAB9C00C1F681 /* pycensus.cpp */,
 			);
 			path = census;
@@ -8813,6 +8821,7 @@
 				05A0669E1DFA67D40047872E /* layeredlensspace.cpp in Sources */,
 				050F5E4B1B9BAB9C00C1F681 /* triangulation3.cpp in Sources */,
 				057EE45F1C6009F300C4D155 /* component14.cpp in Sources */,
+				05CAE61F2744A397007C93F3 /* gluingpermsearcher2.cpp in Sources */,
 				050F5DDB1B9BAB9C00C1F681 /* boundarycomponent2.cpp in Sources */,
 				057EE4BF1C600A3600C4D155 /* simplex7.cpp in Sources */,
 				050F5E081B9BAB9C00C1F681 /* script.cpp in Sources */,
@@ -8854,6 +8863,7 @@
 				059BC6841DC7F7A200AB4206 /* boundarycomponent8.cpp in Sources */,
 				05870CAE1FAD24EF00835F9E /* modellinkgraph.cpp in Sources */,
 				057EE4E81C600A3600C4D155 /* facetpairing13.cpp in Sources */,
+				05CAE6212744A397007C93F3 /* gluingpermsearcher4.cpp in Sources */,
 				05A0669D1DFA67D40047872E /* layeredchainpair.cpp in Sources */,
 				050F5E381B9BAB9C00C1F681 /* prism.cpp in Sources */,
 				050F5E4C1B9BAB9C00C1F681 /* vertex3.cpp in Sources */,
@@ -9305,6 +9315,7 @@
 				05249F421DBC1722001FE29E /* pysnappea.cpp in Sources */,
 				05B22D1622D543E80099008B /* pythoninterpreter.cpp in Sources */,
 				05A067481DFA68470047872E /* layeredchain.cpp in Sources */,
+				05CAE6202744A397007C93F3 /* gluingpermsearcher2.cpp in Sources */,
 				05A0674A1DFA68470047872E /* layeredlensspace.cpp in Sources */,
 				05C1BEEC1DCA89E3007C946B /* triangulation12.cpp in Sources */,
 				05F0A05E1DBF0B7000117BFC /* simplifyglobal.cpp in Sources */,
@@ -9718,6 +9729,7 @@
 				05C064681C56C135006E6483 /* Tri4Graph.mm in Sources */,
 				05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */,
 				05F0A05C1DBF0B7000117BFC /* retriangulate.cpp in Sources */,
+				05CAE6222744A397007C93F3 /* gluingpermsearcher4.cpp in Sources */,
 				0591E7EC1C4F751B00793A9C /* triangulate.cpp in Sources */,
 				0542088C1DF0D0CF0018AB24 /* contextswitch.cpp in Sources */,
 				0598030626683C9F002D5D57 /* xmlalgebrareader.cpp in Sources */,
