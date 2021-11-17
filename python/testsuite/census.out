@@ -1,13 +1,21 @@
-SEARCH: foo
-Hits: 0
+0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+cMcabbjqw
+cMcabbjxr
+cMcabbjaj
+cMcabbjak
+cMcabbjqs
+cMcabbgqw
+cMcabbgaj
+1:0 1:1 1:2 1:3 | 0:0 0:1 0:2 0:3
+cPcbbbaaa
+cPcbbbaai
+cPcbbbqxh
+cPcbbbahh
 
-SEARCH: cPcbbbiht
-Hits: 2
-  Cusped hyperbolic census (orientable)  -  m004 : #1
-  Christy's collection of knot/link complements  -  L104001
-
-SEARCH: nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng
-Hits: 2
-  Christy's collection of knot/link complements  -  L111376
-  Christy's collection of knot/link complements  -  L111449
-
+0:1 0:0 1:0 | 0:2 1:2 1:1
+cMabcd
+cMabcc
+1:0 1:1 1:2 | 0:0 0:1 0:2
+cPbbde
+cPbbaa
+cPbbde

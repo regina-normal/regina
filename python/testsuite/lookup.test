@@ -4,7 +4,7 @@
 # Copyright (c) 2007-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Tests the census generation code.
+# Tests the census database lookup routines.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -33,29 +33,14 @@
 
 from __future__ import print_function
 
-#######################################################################
+def search(sig):
+	print('SEARCH:', sig)
+	hits = Census.lookup(sig)
+	print('Hits:', len(hits))
+	for h in hits:
+		print('  ' + h.db().desc() + '  -  ' + h.name())
+	print()
 
-def foundGluings3(g):
-	t = g.triangulate()
-	if not t.intelligentSimplify():
-		print(t.isoSig())
-
-def foundFacetPairing3(p, isos):
-	print(p.str())
-	GluingPermSearcher3.findAllPerms(p, isos, True, True, PURGE_NON_MINIMAL, \
-		foundGluings3)
-
-FacetPairing3.findAllPairings(2, False, 0, foundFacetPairing3)
-print()
-
-#######################################################################
-
-def foundGluings2(g):
-	print(g.triangulate().isoSig())
-
-def foundFacetPairing2(p, isos):
-	print(p.str())
-	b = GluingPermSearcher2.bestSearcher(p, isos, True, foundGluings2)
-	b.runSearch()
-
-FacetPairing2.findAllPairings(2, False, 0, foundFacetPairing2)
+search('foo')
+search('cPcbbbiht')
+search('nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng')

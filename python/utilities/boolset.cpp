@@ -85,5 +85,7 @@ void addBoolSet(pybind11::module_& m) {
     ;
     regina::python::add_output_ostream(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
+
+    pybind11::implicitly_convertible<bool, BoolSet>();
 }
 
