@@ -1297,6 +1297,48 @@ Equality type : EqualityType.BY_REFERENCE
 GluingPermSearcher4 : class
 Equality type : EqualityType.BY_REFERENCE
 
+GluingPerms10 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms11 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms12 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms13 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms14 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms15 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms6 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms7 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms8 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPerms9 : class
+Equality type : EqualityType.BY_REFERENCE
+
 GraphLoop : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1880,6 +1922,9 @@ StrandRef : class
 Equality type : EqualityType.BY_VALUE
 
 SubtreeIterator : class
+Equality type : EqualityType.BY_VALUE
+
+SurfaceExport : class
 Equality type : EqualityType.BY_VALUE
 
 SurfaceFilter : class

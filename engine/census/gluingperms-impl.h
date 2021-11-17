@@ -46,12 +46,20 @@
 
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include "census/gluingperms.h"
 #include "triangulation/forward.h"
 #include "utilities/exception.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
+
+template <int dim>
+std::string GluingPerms<dim>::data() const {
+    std::ostringstream out;
+    dumpData(out);
+    return out.str();
+}
 
 template <int dim>
 Triangulation<dim> GluingPerms<dim>::triangulate() const {
@@ -76,16 +84,16 @@ Triangulation<dim> GluingPerms<dim>::triangulate() const {
 }
 
 template <int dim>
-int GluingPerms<dim>::gluingToIndex(const FacetSpec<dim>& source,
-        const Perm<dim+1>& gluing) const {
+typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
+        const FacetSpec<dim>& source, const Perm<dim+1>& gluing) const {
     Perm<dim+1> permSn_1 = Perm<dim+1>(pairing_.dest(source).facet, dim)
         * gluing * Perm<dim+1>(source.facet, dim);
     return Perm<dim>::contract(permSn_1).SnIndex();
 }
 
 template <int dim>
-int GluingPerms<dim>::gluingToIndex(unsigned simp, unsigned facet,
-        const Perm<dim+1>& gluing) const {
+typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
+        unsigned simp, unsigned facet, const Perm<dim+1>& gluing) const {
     Perm<dim+1> permSn_1 =
         Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) * gluing *
         Perm<dim+1>(facet, dim);
@@ -108,7 +116,7 @@ void GluingPerms<dim>::dumpData(std::ostream& out) const {
 
 template <int dim>
 GluingPerms<dim>::GluingPerms(std::istream& in) :
-        pairing_(in), permIndices_(new int[pairing_.size() * (dim + 1)]) {
+        pairing_(in), permIndices_(new Index[pairing_.size() * (dim + 1)]) {
     // The FacetPairing constructor has already skipped whitespace and
     // read a single line describing the facet pairing.
 
@@ -124,6 +132,16 @@ GluingPerms<dim>::GluingPerms(std::istream& in) :
     if (in.eof())
         throw InvalidInput("Unexpected end of input stream "
             "while attempting to read GluingPerms");
+}
+
+template <int dim>
+GluingPerms<dim> GluingPerms<dim>::fromData(const std::string& data) {
+    try {
+        std::istringstream in(data);
+        return GluingPerms<dim>(in);
+    } catch (const InvalidInput& exc) {
+        throw InvalidArgument(exc.what());
+    }
 }
 
 } // namespace regina

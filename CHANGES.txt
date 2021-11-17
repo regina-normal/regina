@@ -331,6 +331,8 @@ Version 7.0  [ TODO ]
         Class GluingPerms<dim>:
             - Added a move constructor and copy/move assignment operators.
             - Added member and global swap() functions.
+            - Added a type alias Index, which is now used instead of int
+              to properly represent permutation indices in higher dimensions.
             - Routine facetPairing() now returns by reference, not pointer.
             - Routines facetPairing() and gluingPerm() are renamed to pairing()
               and perm(); the old names are kept as deprecated aliases.
@@ -341,6 +343,9 @@ Version 7.0  [ TODO ]
               FacetPairing constructor.
             - The destuctor and dumpData() are no longer virtual.
             - Routine triangulate() now returns by value, not pointer.
+            - The read-only versions of permIndex() now return by value,
+              not by const reference.
+            - New static routine fromData().
         Class GluingPermSearcher<dim> and subclasses:
             - No longer derived from GluingPerms<dim>, which means that
               none of the previously-inherited functions are available.
