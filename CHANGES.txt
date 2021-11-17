@@ -868,6 +868,8 @@ Version 7.0  [ TODO ]
               handled by a completely different collection of classes.
             - Renamed allowsSpun() to allowsNonCompact(); the old name
               is kept as a deprecated alias.
+            - Routines saveCSVEdgeWeight() and saveCSVStandard() now take the
+              optional fields argument using the new type SurfaceExport.
             - When cloning a packet tree, a cloned normal surface list
               will now refer back to the original triangulation, not a
               clone of the original triangulation.
@@ -1294,6 +1296,9 @@ Version 7.0  [ TODO ]
             - Routine manifold() now returns a std::unique_ptr.
             - Renamed TeXName() to texName().  The old name is kept but
               deprecated.
+        Class SurfaceExport:
+            - A proper flags class for the normal surface CSV export constants,
+              built from the SurfaceExportFields enumeration type.
         Class SurfaceFilter:
             - This is now an abstract base class.  If you need a filter
               that accepts everything, use a default-constructed

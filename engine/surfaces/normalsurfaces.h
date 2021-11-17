@@ -62,17 +62,17 @@ class SurfaceFilter;
 
 /**
  * Used to describe a field, or a set of fields, that can be exported
- * alongside a normal surface list.  This enumeration type is used with
- * export routines such as NormalSurfaces::saveCSVStandard() or
- * NormalSurfaces::saveCSVEdgeWeight().
+ * alongside a normal surface list.  This enumeration type, and the
+ * corresponding flags class SurfaceExport, is used with export routines such
+ * as NormalSurfaces::saveCSVStandard() or NormalSurfaces::saveCSVEdgeWeight().
  *
  * This type describes fields in addition to normal coordinates, not the
  * normal coordinates themselves (which are always exported).  Each field
  * describes some property of a single normal surface, and corresponds to a
  * single column in a table of normal surfaces.
  *
- * This type should be treated as a bitmask: you can describe a set of fields
- * by combining the values for individual fields using bitwise \e or.
+ * You can describe a set of fields by combining the values for individual
+ * fields using the bitwise OR operator.
  *
  * The list of available fields may grow with future releases of Regina.
  *
@@ -131,6 +131,32 @@ enum SurfaceExportFields {
              of available fields may grow with future releases, the numerical
              value of this constant may change as a result. */
 };
+
+/**
+ * A set of fields to export alongside a normal surface list.
+ *
+ * If a function requires a SurfaceExport object as an argument, you can
+ * pass a single SurfaceExportFields constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no fields at all.
+ *
+ * \ingroup surfaces
+ */
+using SurfaceExport = regina::Flags<SurfaceExportFields>;
+
+/**
+ * Returns the bitwise OR of the two given flags.
+ *
+ * @param lhs the first flag to combine.
+ * @param rhs the second flag to combine.
+ * @return the combination of both flags.
+ *
+ * \ingroup surfaces
+ */
+inline SurfaceExport operator | (
+        SurfaceExportFields lhs, SurfaceExportFields rhs) {
+    return SurfaceExport(lhs) | rhs;
+}
 
 /**
  * A collection of normal surfaces in a 3-manifold triangulation.
@@ -974,9 +1000,9 @@ class NormalSurfaces :
          * As well as the normal surface coordinates, additional properties
          * of the normal surfaces (such as Euler characteristic, orientability,
          * and so on) can be included as extra fields in the export.  Users can
-         * select precisely which properties to include by passing a bitmask,
-         * formed as a bitwise \e or combination of constants from
-         * the regina::SurfaceExportFields enumeration type.
+         * select precisely which properties to include by passing a
+         * bitwise OR combination of constants from the
+         * regina::SurfaceExportFields enumeration type.
          *
          * The CSV format used here begins with a header row, and uses commas
          * as field separators.  Text fields with arbitrary contents are
@@ -992,13 +1018,13 @@ class NormalSurfaces :
          * in UTF-8.
          *
          * @param filename the name of the CSV file to export to.
-         * @param additionalFields a bitwise combination of constants from
+         * @param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
          * @return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVStandard(const char* filename,
-            int additionalFields = regina::surfaceExportAll) const;
+            SurfaceExport additionalFields = regina::surfaceExportAll) const;
 
         /**
          * Exports the given list of normal surfaces as a plain text CSV
@@ -1014,9 +1040,9 @@ class NormalSurfaces :
          * As well as the normal surface coordinates, additional properties
          * of the normal surfaces (such as Euler characteristic, orientability,
          * and so on) can be included as extra fields in the export.  Users can
-         * select precisely which properties to include by passing a bitmask,
-         * formed as a bitwise \e or combination of constants from
-         * the regina::SurfaceExportFields enumeration type.
+         * select precisely which properties to include by passing a
+         * bitwise OR combination of constants from the
+         * regina::SurfaceExportFields enumeration type.
          *
          * The CSV format used here begins with a header row, and uses commas
          * as field separators.  Text fields with arbitrary contents are
@@ -1032,13 +1058,13 @@ class NormalSurfaces :
          * in UTF-8.
          *
          * @param filename the name of the CSV file to export to.
-         * @param additionalFields a bitwise combination of constants from
+         * @param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
          * @return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVEdgeWeight(const char* filename,
-            int additionalFields = regina::surfaceExportAll) const;
+            SurfaceExport additionalFields = regina::surfaceExportAll) const;
 
         /**
          * An iterator that gives access to the raw vectors for surfaces in

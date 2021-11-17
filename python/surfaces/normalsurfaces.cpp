@@ -39,6 +39,7 @@
 #include "surfaces/surfacefilter.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../flags.h"
 
 using namespace regina::python;
 using regina::NormalSurfaces;
@@ -47,19 +48,19 @@ using regina::SurfaceFilter;
 using regina::Triangulation;
 
 void addNormalSurfaces(pybind11::module_& m) {
-    pybind11::enum_<regina::SurfaceExportFields>(m, "SurfaceExportFields")
-        .value("surfaceExportName", regina::surfaceExportName)
-        .value("surfaceExportEuler", regina::surfaceExportEuler)
-        .value("surfaceExportOrient", regina::surfaceExportOrient)
-        .value("surfaceExportSides", regina::surfaceExportSides)
-        .value("surfaceExportBdry", regina::surfaceExportBdry)
-        .value("surfaceExportLink", regina::surfaceExportLink)
-        .value("surfaceExportType", regina::surfaceExportType)
-        .value("surfaceExportNone", regina::surfaceExportNone)
-        .value("surfaceExportAllButName", regina::surfaceExportAllButName)
-        .value("surfaceExportAll", regina::surfaceExportAll)
-        .export_values()
-    ;
+    regina::python::add_flags<regina::SurfaceExportFields>(
+        m, "SurfaceExportFields", "SurfaceExport", {
+            { "surfaceExportName", regina::surfaceExportName },
+            { "surfaceExportEuler", regina::surfaceExportEuler },
+            { "surfaceExportOrient", regina::surfaceExportOrient },
+            { "surfaceExportSides", regina::surfaceExportSides },
+            { "surfaceExportBdry", regina::surfaceExportBdry },
+            { "surfaceExportLink", regina::surfaceExportLink },
+            { "surfaceExportType", regina::surfaceExportType },
+            { "surfaceExportNone", regina::surfaceExportNone },
+            { "surfaceExportAllButName", regina::surfaceExportAllButName },
+            { "surfaceExportAll", regina::surfaceExportAll }
+        });
 
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);

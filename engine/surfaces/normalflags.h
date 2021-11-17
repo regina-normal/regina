@@ -52,10 +52,9 @@ namespace regina {
  * whereas the NormalAlgFlags enumeration refers to the \e algorithm
  * used to build it.
  *
- * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as NormalList objects (and they can be
- * combined and/or queried as such).
- * The underlying enumeration type is not exposed to Python.
+ * These flags can be combined using the bitwise OR operator, and then
+ * passed to enumeration routines such as the NormalSurfaces
+ * class constructor.
  *
  * \ingroup surfaces
  */
@@ -128,8 +127,10 @@ enum NormalListFlags {
 /**
  * A combination of flags for types of normal surface lists.
  *
- * \ifacespython This is present, and all values in the NormalListFlags
- * enumeration type are treated as members of this NormalList class.
+ * If a function requires a NormalList object as an argument, you can
+ * pass a single NormalListFlags constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no flags at all.
  *
  * \ingroup surfaces
  */
@@ -152,14 +153,9 @@ inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
  * Represents options and variants of algorithms for enumerating various
  * types of normal surfaces in 3-manifold triangulations.
  *
- * These options are typically combined in a bitwise fashion using the
- * NormalAlg type, and then passed to enumeration routines such as
- * the NormalSurfaces class constructor.
- *
- * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as NormalAlg objects (and they can be
- * combined and/or queried as such).
- * The underlying enumeration type is not exposed to Python.
+ * These options can be combined using the bitwise OR operator, and then
+ * passed to enumeration routines such as the NormalSurfaces
+ * class constructor.
  *
  * \ingroup surfaces
  */
@@ -349,8 +345,10 @@ enum NormalAlgFlags {
 /**
  * A combination of flags for normal surface enumeration algorithms.
  *
- * \ifacespython This is present, and all values in the NormalAlgFlags
- * enumeration type are treated as members of this NormalAlg class.
+ * If a function requires a NormalAlg object as an argument, you can
+ * pass a single NormalAlgFlags constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no flags at all.
  *
  * \ingroup surfaces
  */

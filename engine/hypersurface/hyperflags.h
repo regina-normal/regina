@@ -52,10 +52,9 @@ namespace regina {
  * whereas the HyperAlgFlags enumeration refers to the \e algorithm
  * used to build it.
  *
- * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as HyperList objects (and they can be
- * combined and/or queried as such).
- * The underlying enumeration type is not exposed to Python.
+ * These flags can be combined using the bitwise OR operator, and then
+ * passed to enumeration routines such as the NormalHypersurfaces
+ * class constructor.
  *
  * \ingroup hypersurface
  */
@@ -128,8 +127,10 @@ enum HyperListFlags {
 /**
  * A combination of flags for types of normal hypersurface lists.
  *
- * \ifacespython This is present, and all values in the HyperListFlags
- * enumeration type are treated as members of this HyperList class.
+ * If a function requires a HyperList object as an argument, you can
+ * pass a single HyperListFlags constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no flags at all.
  *
  * \ingroup hypersurface
  */
@@ -152,14 +153,9 @@ inline HyperList operator | (HyperListFlags lhs, HyperListFlags rhs) {
  * Represents options and variants of algorithms for enumerating various
  * types of normal hypersurfaces in 4-manifold triangulations.
  *
- * These options are typically combined in a bitwise fashion using the
- * HyperAlg type, and then passed to enumeration routines such as
- * the NormalHypersurfaces class constructor.
- *
- * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as HyperAlg objects (and they can be
- * combined and/or queried as such).
- * The underlying enumeration type is not exposed to Python.
+ * These options can be combined using the bitwise OR operator, and then
+ * passed to enumeration routines such as the NormalHypersurfaces
+ * class constructor.
  *
  * \ingroup hypersurface
  */
@@ -259,8 +255,10 @@ enum HyperAlgFlags {
 /**
  * A combination of flags for normal hypersurface enumeration algorithms.
  *
- * \ifacespython This is present, and all values in the HyperAlgFlags
- * enumeration type are treated as members of this HyperAlg class.
+ * If a function requires a HyperAlg object as an argument, you can
+ * pass a single HyperAlgFlags constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no flags at all.
  *
  * \ingroup hypersurface
  */

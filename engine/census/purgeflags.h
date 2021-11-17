@@ -56,14 +56,9 @@ namespace regina {
  * census that uses the flag PURGE_NON_MINIMAL will promise to include
  * every \e minimal triangulations.
  *
- * These flags can be combined using bitwise OR.  See (for example) the
- * GluingPermSearcher<3> constructor documentation for further details on
- * how these flags are used.
- *
- * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as CensusPurge objects (and they can be
- * combined and/or queried as such).
- * The underlying enumeration type is not exposed to Python.
+ * These flags can be combined using the bitwise OR operator.
+ * See (for example) the GluingPermSearcher<3> constructor documentation for
+ * further details on how these flags are used.
  *
  * \ingroup census
  */
@@ -107,8 +102,10 @@ enum CensusPurgeFlags {
 /**
  * A combination of flags for census generation.
  *
- * \ifacespython This is present, and all values in the CensusPurgeFlags
- * enumeration type are treated as members of this CensusPurge class.
+ * If a function requires a CensusPurge object as an argument, you can
+ * pass a single CensusPurgeFlags constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no flags at all.
  *
  * \ingroup census
  */
