@@ -1936,6 +1936,9 @@
 		05CAE6202744A397007C93F3 /* gluingpermsearcher2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE61D2744A397007C93F3 /* gluingpermsearcher2.cpp */; };
 		05CAE6212744A397007C93F3 /* gluingpermsearcher4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE61E2744A397007C93F3 /* gluingpermsearcher4.cpp */; };
 		05CAE6222744A397007C93F3 /* gluingpermsearcher4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE61E2744A397007C93F3 /* gluingpermsearcher4.cpp */; };
+		05CAE624274509ED007C93F3 /* purgeflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CAE623274509ED007C93F3 /* purgeflags.h */; };
+		05CAE62927450A25007C93F3 /* purgeflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62727450A1F007C93F3 /* purgeflags.cpp */; };
+		05CAE62A27450A26007C93F3 /* purgeflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62727450A1F007C93F3 /* purgeflags.cpp */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -4403,6 +4406,9 @@
 		05CAE61C27447121007C93F3 /* type_caster_base.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = type_caster_base.h; sourceTree = "<group>"; };
 		05CAE61D2744A397007C93F3 /* gluingpermsearcher2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingpermsearcher2.cpp; sourceTree = "<group>"; };
 		05CAE61E2744A397007C93F3 /* gluingpermsearcher4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingpermsearcher4.cpp; sourceTree = "<group>"; };
+		05CAE623274509ED007C93F3 /* purgeflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = purgeflags.h; sourceTree = "<group>"; };
+		05CAE62527450A05007C93F3 /* flags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flags.h; sourceTree = "<group>"; };
+		05CAE62727450A1F007C93F3 /* purgeflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = purgeflags.cpp; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -4885,6 +4891,7 @@
 				0591E7F71C4F760500793A9C /* dim4 */,
 				05772F13270CFBA900D26D8A /* enumerate */,
 				050F5D181B9BAB9C00C1F681 /* file */,
+				05CAE62527450A05007C93F3 /* flags.h */,
 				050F5DC81B9BAB9C00C1F681 /* foreign */,
 				05431FAB1C40F5B3009BC072 /* generic */,
 				050F5D1E1B9BAB9C00C1F681 /* globalarray.h */,
@@ -5295,6 +5302,7 @@
 				05CAE61D2744A397007C93F3 /* gluingpermsearcher2.cpp */,
 				050F5DC61B9BAB9C00C1F681 /* gluingpermsearcher3.cpp */,
 				05CAE61E2744A397007C93F3 /* gluingpermsearcher4.cpp */,
+				05CAE62727450A1F007C93F3 /* purgeflags.cpp */,
 				050F5DC71B9BAB9C00C1F681 /* pycensus.cpp */,
 			);
 			path = census;
@@ -5625,6 +5633,7 @@
 				0591E7EF1C4F75C300793A9C /* gluingpermsearcher4.cpp */,
 				0591E7F01C4F75C300793A9C /* gluingpermsearcher4.h */,
 				05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */,
+				05CAE623274509ED007C93F3 /* purgeflags.h */,
 			);
 			path = census;
 			sourceTree = "<group>";
@@ -7982,6 +7991,7 @@
 				052F9EF4180600FB00FAE4DF /* treeconstraint.h in Headers */,
 				05A0671B1DFA68190047872E /* layeredloop.h in Headers */,
 				052FA09A180600FB00FAE4DF /* osutils.h in Headers */,
+				05CAE624274509ED007C93F3 /* purgeflags.h in Headers */,
 				052F9F55180600FB00FAE4DF /* packet.h in Headers */,
 				055114FD1DCDF63000EC753C /* component.h in Headers */,
 				05A067291DFA68190047872E /* satannulus.h in Headers */,
@@ -8931,6 +8941,7 @@
 				057B0CA726A2ABF40017F5EA /* tightencoding.cpp in Sources */,
 				057EE4D71C600A3600C4D155 /* isomorphism9.cpp in Sources */,
 				05A066AF1DFA67D40047872E /* trisolidtorus.cpp in Sources */,
+				05CAE62927450A25007C93F3 /* purgeflags.cpp in Sources */,
 				050F5DDC1B9BAB9C00C1F681 /* component2.cpp in Sources */,
 				05A066AA1DFA67D40047872E /* snappeacensustri.cpp in Sources */,
 				054209011DF0DA450018AB24 /* handlebody.cpp in Sources */,
@@ -9741,6 +9752,7 @@
 				05C0DB101F9969E2001773C3 /* LinkGraph.mm in Sources */,
 				052FA228180612DD00FAE4DF /* hyperbolic_structure.c in Sources */,
 				05D1173D19EE0197003BEC55 /* perm5.cpp in Sources */,
+				05CAE62A27450A26007C93F3 /* purgeflags.cpp in Sources */,
 				05249F151DBC16FA001FE29E /* triangulation14.cpp in Sources */,
 				05754CC3258B38C100236ED7 /* laurent2.cpp in Sources */,
 				05B7FF8B25AC22AA003BAF5C /* options.cpp in Sources */,
