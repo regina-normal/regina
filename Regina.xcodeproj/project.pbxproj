@@ -849,8 +849,6 @@
 		054209251DF28C990018AB24 /* definitionref.h in Headers */ = {isa = PBXBuildFile; fileRef = 054209201DF28C990018AB24 /* definitionref.h */; };
 		054209261DF28C990018AB24 /* keywordlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 054209211DF28C990018AB24 /* keywordlist.h */; };
 		054209271DF28C990018AB24 /* rule.h in Headers */ = {isa = PBXBuildFile; fileRef = 054209221DF28C990018AB24 /* rule.h */; };
-		05431EEC1C40F069009BC072 /* gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* gluingperms.cpp */; };
-		05431EED1C40F071009BC072 /* gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* gluingperms.cpp */; };
 		05431F121C40F257009BC072 /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F0F1C40F257009BC072 /* face.h */; };
 		05431F131C40F257009BC072 /* facenumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F101C40F257009BC072 /* facenumber.h */; };
 		05431F141C40F257009BC072 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F111C40F257009BC072 /* simplex.h */; };
@@ -1939,6 +1937,34 @@
 		05CAE624274509ED007C93F3 /* purgeflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CAE623274509ED007C93F3 /* purgeflags.h */; };
 		05CAE62927450A25007C93F3 /* purgeflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62727450A1F007C93F3 /* purgeflags.cpp */; };
 		05CAE62A27450A26007C93F3 /* purgeflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62727450A1F007C93F3 /* purgeflags.cpp */; };
+		05CAE63B27450D89007C93F3 /* gluingperms11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62C27450D89007C93F3 /* gluingperms11.cpp */; };
+		05CAE63C27450D89007C93F3 /* gluingperms11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62C27450D89007C93F3 /* gluingperms11.cpp */; };
+		05CAE63D27450D89007C93F3 /* gluingperms10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62D27450D89007C93F3 /* gluingperms10.cpp */; };
+		05CAE63E27450D89007C93F3 /* gluingperms10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62D27450D89007C93F3 /* gluingperms10.cpp */; };
+		05CAE63F27450D89007C93F3 /* gluingperms12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62E27450D89007C93F3 /* gluingperms12.cpp */; };
+		05CAE64027450D89007C93F3 /* gluingperms12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62E27450D89007C93F3 /* gluingperms12.cpp */; };
+		05CAE64127450D89007C93F3 /* gluingperms13.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62F27450D89007C93F3 /* gluingperms13.cpp */; };
+		05CAE64227450D89007C93F3 /* gluingperms13.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE62F27450D89007C93F3 /* gluingperms13.cpp */; };
+		05CAE64427450D89007C93F3 /* gluingperms14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63127450D89007C93F3 /* gluingperms14.cpp */; };
+		05CAE64527450D89007C93F3 /* gluingperms14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63127450D89007C93F3 /* gluingperms14.cpp */; };
+		05CAE64627450D89007C93F3 /* gluingperms15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63227450D89007C93F3 /* gluingperms15.cpp */; };
+		05CAE64727450D89007C93F3 /* gluingperms15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63227450D89007C93F3 /* gluingperms15.cpp */; };
+		05CAE64827450D89007C93F3 /* gluingperms4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63327450D89007C93F3 /* gluingperms4.cpp */; };
+		05CAE64927450D89007C93F3 /* gluingperms4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63327450D89007C93F3 /* gluingperms4.cpp */; };
+		05CAE64A27450D89007C93F3 /* gluingperms5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63427450D89007C93F3 /* gluingperms5.cpp */; };
+		05CAE64B27450D89007C93F3 /* gluingperms5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63427450D89007C93F3 /* gluingperms5.cpp */; };
+		05CAE64C27450D89007C93F3 /* gluingperms7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63527450D89007C93F3 /* gluingperms7.cpp */; };
+		05CAE64D27450D89007C93F3 /* gluingperms7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63527450D89007C93F3 /* gluingperms7.cpp */; };
+		05CAE64E27450D89007C93F3 /* gluingperms6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63627450D89007C93F3 /* gluingperms6.cpp */; };
+		05CAE64F27450D89007C93F3 /* gluingperms6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63627450D89007C93F3 /* gluingperms6.cpp */; };
+		05CAE65027450D89007C93F3 /* gluingperms2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63727450D89007C93F3 /* gluingperms2.cpp */; };
+		05CAE65127450D89007C93F3 /* gluingperms2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63727450D89007C93F3 /* gluingperms2.cpp */; };
+		05CAE65227450D89007C93F3 /* gluingperms3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63827450D89007C93F3 /* gluingperms3.cpp */; };
+		05CAE65327450D89007C93F3 /* gluingperms3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63827450D89007C93F3 /* gluingperms3.cpp */; };
+		05CAE65427450D89007C93F3 /* gluingperms8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63927450D89007C93F3 /* gluingperms8.cpp */; };
+		05CAE65527450D89007C93F3 /* gluingperms8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63927450D89007C93F3 /* gluingperms8.cpp */; };
+		05CAE65627450D89007C93F3 /* gluingperms9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63A27450D89007C93F3 /* gluingperms9.cpp */; };
+		05CAE65727450D89007C93F3 /* gluingperms9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE63A27450D89007C93F3 /* gluingperms9.cpp */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -3217,7 +3243,6 @@
 		054209201DF28C990018AB24 /* definitionref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = definitionref.h; sourceTree = "<group>"; };
 		054209211DF28C990018AB24 /* keywordlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keywordlist.h; sourceTree = "<group>"; };
 		054209221DF28C990018AB24 /* rule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rule.h; sourceTree = "<group>"; };
-		05431EEB1C40F069009BC072 /* gluingperms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms.cpp; sourceTree = "<group>"; };
 		05431F0E1C40F257009BC072 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05431F0F1C40F257009BC072 /* face.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		05431F101C40F257009BC072 /* facenumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facenumber.h; sourceTree = "<group>"; };
@@ -4409,6 +4434,21 @@
 		05CAE623274509ED007C93F3 /* purgeflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = purgeflags.h; sourceTree = "<group>"; };
 		05CAE62527450A05007C93F3 /* flags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flags.h; sourceTree = "<group>"; };
 		05CAE62727450A1F007C93F3 /* purgeflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = purgeflags.cpp; sourceTree = "<group>"; };
+		05CAE62C27450D89007C93F3 /* gluingperms11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms11.cpp; sourceTree = "<group>"; };
+		05CAE62D27450D89007C93F3 /* gluingperms10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms10.cpp; sourceTree = "<group>"; };
+		05CAE62E27450D89007C93F3 /* gluingperms12.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms12.cpp; sourceTree = "<group>"; };
+		05CAE62F27450D89007C93F3 /* gluingperms13.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms13.cpp; sourceTree = "<group>"; };
+		05CAE63027450D89007C93F3 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05CAE63127450D89007C93F3 /* gluingperms14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms14.cpp; sourceTree = "<group>"; };
+		05CAE63227450D89007C93F3 /* gluingperms15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms15.cpp; sourceTree = "<group>"; };
+		05CAE63327450D89007C93F3 /* gluingperms4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms4.cpp; sourceTree = "<group>"; };
+		05CAE63427450D89007C93F3 /* gluingperms5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms5.cpp; sourceTree = "<group>"; };
+		05CAE63527450D89007C93F3 /* gluingperms7.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms7.cpp; sourceTree = "<group>"; };
+		05CAE63627450D89007C93F3 /* gluingperms6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms6.cpp; sourceTree = "<group>"; };
+		05CAE63727450D89007C93F3 /* gluingperms2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms2.cpp; sourceTree = "<group>"; };
+		05CAE63827450D89007C93F3 /* gluingperms3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms3.cpp; sourceTree = "<group>"; };
+		05CAE63927450D89007C93F3 /* gluingperms8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms8.cpp; sourceTree = "<group>"; };
+		05CAE63A27450D89007C93F3 /* gluingperms9.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms9.cpp; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5622,8 +5662,8 @@
 				052F9C14180600FA00FAE4DF /* CMakeLists.txt */,
 				052F9C15180600FA00FAE4DF /* compact.cpp */,
 				05B9EC1A18245F2100DCACF3 /* euler.cpp */,
+				05CAE62B27450D89007C93F3 /* explicit */,
 				052F9C25180600FA00FAE4DF /* gluingperms-impl.h */,
-				05431EEB1C40F069009BC072 /* gluingperms.cpp */,
 				052F9C26180600FA00FAE4DF /* gluingperms.h */,
 				055114ED1DCD5D0500EC753C /* gluingpermsearcher.h */,
 				052F9C1C180600FA00FAE4DF /* gluingpermsearcher2.cpp */,
@@ -7633,6 +7673,28 @@
 			path = stl;
 			sourceTree = "<group>";
 		};
+		05CAE62B27450D89007C93F3 /* explicit */ = {
+			isa = PBXGroup;
+			children = (
+				05CAE63027450D89007C93F3 /* CMakeLists.txt */,
+				05CAE63727450D89007C93F3 /* gluingperms2.cpp */,
+				05CAE63827450D89007C93F3 /* gluingperms3.cpp */,
+				05CAE63327450D89007C93F3 /* gluingperms4.cpp */,
+				05CAE63427450D89007C93F3 /* gluingperms5.cpp */,
+				05CAE63627450D89007C93F3 /* gluingperms6.cpp */,
+				05CAE63527450D89007C93F3 /* gluingperms7.cpp */,
+				05CAE63927450D89007C93F3 /* gluingperms8.cpp */,
+				05CAE63A27450D89007C93F3 /* gluingperms9.cpp */,
+				05CAE62D27450D89007C93F3 /* gluingperms10.cpp */,
+				05CAE62C27450D89007C93F3 /* gluingperms11.cpp */,
+				05CAE62E27450D89007C93F3 /* gluingperms12.cpp */,
+				05CAE62F27450D89007C93F3 /* gluingperms13.cpp */,
+				05CAE63127450D89007C93F3 /* gluingperms14.cpp */,
+				05CAE63227450D89007C93F3 /* gluingperms15.cpp */,
+			);
+			path = explicit;
+			sourceTree = "<group>";
+		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -9163,6 +9225,7 @@
 				0512E09F26DF354500DDB222 /* matching.cpp in Sources */,
 				05D322CB1F9FFF9600E5F9B8 /* simplify_triangulation.c in Sources */,
 				05249EFC1DBC16F1001FE29E /* isomorphism12.cpp in Sources */,
+				05CAE64027450D89007C93F3 /* gluingperms12.cpp in Sources */,
 				05249F651DBC1737001FE29E /* normalflags.cpp in Sources */,
 				05249EC51DBC16CA001FE29E /* triangulation4.cpp in Sources */,
 				05249F161DBC16FA001FE29E /* triangulation15.cpp in Sources */,
@@ -9181,12 +9244,12 @@
 				058FADB119D3C37D0001B5B5 /* Tri2Skeleton.mm in Sources */,
 				05721EF81F97156600A83FFC /* homfly.cpp in Sources */,
 				05249F381DBC1718001FE29E /* packet.cpp in Sources */,
-				05431EED1C40F071009BC072 /* gluingperms.cpp in Sources */,
 				05721EFA1F97156600A83FFC /* complement.cpp in Sources */,
 				05DC13821FEB86EF00171D66 /* retriangulate.cpp in Sources */,
 				0542090D1DF0DA450018AB24 /* manifold.cpp in Sources */,
 				05249F311DBC1711001FE29E /* perm4.cpp in Sources */,
 				054208941DF0D0CF0018AB24 /* themedata.cpp in Sources */,
+				05CAE64927450D89007C93F3 /* gluingperms4.cpp in Sources */,
 				05249EC01DBC16CA001FE29E /* example4.cpp in Sources */,
 				05FB46F01DD92D5100BB00E5 /* homgrouppresentation.cpp in Sources */,
 				05721F101F97162600A83FFC /* examplelink.cpp in Sources */,
@@ -9204,6 +9267,7 @@
 				05C1BEC31DCA7CB3007C946B /* boundary13.cpp in Sources */,
 				05A067581DFA68470047872E /* snappedball.cpp in Sources */,
 				052FA213180612DD00FAE4DF /* canonize_part_2.c in Sources */,
+				05CAE64B27450D89007C93F3 /* gluingperms5.cpp in Sources */,
 				0598F9761DBC9D3700E6CE11 /* PythonConsoleController.mm in Sources */,
 				05A066C71DFA67D50047872E /* snappedball.cpp in Sources */,
 				05249EEC1DBC16EA001FE29E /* facetpairing8.cpp in Sources */,
@@ -9227,6 +9291,7 @@
 				05A066C21DFA67D50047872E /* satannulus.cpp in Sources */,
 				052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */,
 				059BC6951DC7F7A300AB4206 /* boundarycomponent14.cpp in Sources */,
+				05CAE64727450D89007C93F3 /* gluingperms15.cpp in Sources */,
 				059802FD26683C9F002D5D57 /* xmlsurfacereader.cpp in Sources */,
 				05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
 				05721F051F97160900A83FFC /* laurent.cpp in Sources */,
@@ -9337,6 +9402,7 @@
 				0598030726683C9F002D5D57 /* xmlsnappeareader.cpp in Sources */,
 				0568743120C5D8D3001C435B /* tangle.cpp in Sources */,
 				059BC6941DC7F7A300AB4206 /* boundarycomponent13.cpp in Sources */,
+				05CAE63E27450D89007C93F3 /* gluingperms10.cpp in Sources */,
 				05C1BEBF1DCA7CB3007C946B /* boundary9.cpp in Sources */,
 				05772ECC270CF99C00D26D8A /* xmlsurfacewriter.cpp in Sources */,
 				05249ED01DBC16DF001FE29E /* component6.cpp in Sources */,
@@ -9387,6 +9453,7 @@
 				05249EC91DBC16D1001FE29E /* globaldirs.cpp in Sources */,
 				05C1BEC41DCA7CB3007C946B /* boundary14.cpp in Sources */,
 				052FA219180612DD00FAE4DF /* complex.c in Sources */,
+				05CAE63C27450D89007C93F3 /* gluingperms11.cpp in Sources */,
 				05431F991C40F528009BC072 /* perm.cpp in Sources */,
 				05F0A05B1DBF0B7000117BFC /* reorder.cpp in Sources */,
 				05A067491DFA68470047872E /* layeredchainpair.cpp in Sources */,
@@ -9426,6 +9493,7 @@
 				054208901DF0D0CF0018AB24 /* repository.cpp in Sources */,
 				0598030026683C9F002D5D57 /* xmlpacketreaders.cpp in Sources */,
 				059BC6931DC7F7A300AB4206 /* boundarycomponent12.cpp in Sources */,
+				05CAE64227450D89007C93F3 /* gluingperms13.cpp in Sources */,
 				054209101DF0DA450018AB24 /* snappeacensusmfd.cpp in Sources */,
 				0591E7F61C4F75CE00793A9C /* gluingpermsearcher4.cpp in Sources */,
 				054208D01DF0D2A60018AB24 /* snappeacensusmfd.cpp in Sources */,
@@ -9440,6 +9508,7 @@
 				05772F1E270CFBAA00D26D8A /* pyenumerate.cpp in Sources */,
 				054208CB1DF0D29C0018AB24 /* lensspace.cpp in Sources */,
 				05A73C9D19B2EF5A0099C617 /* fundamental_group.c in Sources */,
+				05CAE64D27450D89007C93F3 /* gluingperms7.cpp in Sources */,
 				05249EFF1DBC16F1001FE29E /* isomorphism15.cpp in Sources */,
 				05249EB41DBC16C4001FE29E /* boundarycomponent2.cpp in Sources */,
 				05B22D1122D486210099008B /* pysage.cpp in Sources */,
@@ -9504,6 +9573,7 @@
 				054208CD1DF0D2A60018AB24 /* sfs.cpp in Sources */,
 				05F0A0521DBF0B7000117BFC /* angle.cpp in Sources */,
 				05FB46D81DD92D2900BB00E5 /* homgrouppresentation.cpp in Sources */,
+				05CAE64F27450D89007C93F3 /* gluingperms6.cpp in Sources */,
 				052FA236180612DD00FAE4DF /* tables.c in Sources */,
 				052FA19D1806129B00FAE4DF /* matrix2.cpp in Sources */,
 				052FA215180612DD00FAE4DF /* change_peripheral_curves.c in Sources */,
@@ -9524,6 +9594,7 @@
 				052FA22E180612DD00FAE4DF /* orient.c in Sources */,
 				05870CAF1FAD24F000835F9E /* modellinkgraph.cpp in Sources */,
 				05721EF61F97156600A83FFC /* examplelink.cpp in Sources */,
+				05CAE65727450D89007C93F3 /* gluingperms9.cpp in Sources */,
 				05249ED91DBC16DF001FE29E /* component15.cpp in Sources */,
 				05249F6B1DBC1737001FE29E /* pysurfaces.cpp in Sources */,
 				05B22D1222D486210099008B /* registerIntFromPyIndex.cpp in Sources */,
@@ -9563,6 +9634,7 @@
 				05249F001DBC16F1001FE29E /* pygeneric.cpp in Sources */,
 				05A067531DFA68470047872E /* satblock.cpp in Sources */,
 				05249F101DBC16F9001FE29E /* triangulation9.cpp in Sources */,
+				05CAE65527450D89007C93F3 /* gluingperms8.cpp in Sources */,
 				05249F701DBC1747001FE29E /* edge3.cpp in Sources */,
 				05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */,
 				05249EE01DBC16E4001FE29E /* face10.cpp in Sources */,
@@ -9587,6 +9659,7 @@
 				05A067571DFA68470047872E /* snappeacensustri.cpp in Sources */,
 				05F0A0641DBF0B7000117BFC /* triangulation3.cpp in Sources */,
 				05D1172F19EE0172003BEC55 /* homologicaldata.cpp in Sources */,
+				05CAE65127450D89007C93F3 /* gluingperms2.cpp in Sources */,
 				05249F301DBC1711001FE29E /* perm3.cpp in Sources */,
 				055FF38519BFB3C30057462A /* NewPacketPageViewController.mm in Sources */,
 				05772ED5270CFA1F00D26D8A /* transform.cpp in Sources */,
@@ -9654,6 +9727,7 @@
 				054209091DF0DA450018AB24 /* graphpair.cpp in Sources */,
 				052FA19C1806129B00FAE4DF /* integer.cpp in Sources */,
 				052FA22C180612DD00FAE4DF /* my_malloc.c in Sources */,
+				05CAE64527450D89007C93F3 /* gluingperms14.cpp in Sources */,
 				051B97F62321C91A000A2DCA /* boundaries.cpp in Sources */,
 				05249F0E1DBC16F9001FE29E /* triangulation7.cpp in Sources */,
 				052FA225180612DD00FAE4DF /* gcd.c in Sources */,
@@ -9662,6 +9736,7 @@
 				05249F441DBC1729001FE29E /* pysplit.cpp in Sources */,
 				05754D19258D834E00236ED7 /* randutils.cpp in Sources */,
 				052FA226180612DD00FAE4DF /* gluing_equations.c in Sources */,
+				05CAE65327450D89007C93F3 /* gluingperms3.cpp in Sources */,
 				05A066C11DFA67D50047872E /* plugtrisolidtorus.cpp in Sources */,
 				05249EDE1DBC16E4001FE29E /* face8.cpp in Sources */,
 				05249EBB1DBC16C4001FE29E /* vertex2.cpp in Sources */,
@@ -10200,6 +10275,8 @@
 				05A067281DFA68190047872E /* satannulus.cpp in Sources */,
 				05F0A0461DBF0B5E00117BFC /* skeleton.cpp in Sources */,
 				054208B11DF0D2740018AB24 /* graphloop.cpp in Sources */,
+				05CAE63D27450D89007C93F3 /* gluingperms10.cpp in Sources */,
+				05CAE64127450D89007C93F3 /* gluingperms13.cpp in Sources */,
 				059802EE26683C6D002D5D57 /* xmlreader.cpp in Sources */,
 				05B7FFCB25AC22D3003BAF5C /* cone.cpp in Sources */,
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,
@@ -10215,6 +10292,7 @@
 				05F0A0421DBF0B5E00117BFC /* reorder.cpp in Sources */,
 				05A0673E1DFA68190047872E /* trivialtri.cpp in Sources */,
 				0591E7E01C4F750200793A9C /* normalhypersurface.cpp in Sources */,
+				05CAE65227450D89007C93F3 /* gluingperms3.cpp in Sources */,
 				05C1BED81DCA89DA007C946B /* triangulation6.cpp in Sources */,
 				05F09FDA1DBF01B600117BFC /* triangulation2.cpp in Sources */,
 				054208871DF0D0B50018AB24 /* theme.cpp in Sources */,
@@ -10269,6 +10347,7 @@
 				05F0A0471DBF0B5E00117BFC /* snappea.cpp in Sources */,
 				05A067321DFA68190047872E /* snappeacensustri.cpp in Sources */,
 				05F0A0501DBF0B5E00117BFC /* vertex3.cpp in Sources */,
+				05CAE65027450D89007C93F3 /* gluingperms2.cpp in Sources */,
 				05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */,
 				0588C2AA1FD8D1750093C2C9 /* cover.c in Sources */,
 				05C1BEAB1DCA7CA9007C946B /* boundary3.cpp in Sources */,
@@ -10320,6 +10399,8 @@
 				052F9F4A180600FB00FAE4DF /* rational.cpp in Sources */,
 				054208B71DF0D2740018AB24 /* handlebody.cpp in Sources */,
 				05A067341DFA68190047872E /* snappedball.cpp in Sources */,
+				05CAE63F27450D89007C93F3 /* gluingperms12.cpp in Sources */,
+				05CAE64427450D89007C93F3 /* gluingperms14.cpp in Sources */,
 				054208B31DF0D2740018AB24 /* graphpair.cpp in Sources */,
 				054208821DF0D0B50018AB24 /* rule.cpp in Sources */,
 				052F9F94180600FB00FAE4DF /* positioned_tet.c in Sources */,
@@ -10328,20 +10409,22 @@
 				05A067361DFA68190047872E /* snappedtwosphere.cpp in Sources */,
 				05772EC6270CF98F00D26D8A /* xmlsurfacewriter.cpp in Sources */,
 				052FA02D180600FB00FAE4DF /* normalsurface.cpp in Sources */,
+				05CAE64E27450D89007C93F3 /* gluingperms6.cpp in Sources */,
 				057B0CB826A506840017F5EA /* covers.cpp in Sources */,
 				05F0A0361DBF0B5E00117BFC /* angle.cpp in Sources */,
 				05F0A0451DBF0B5E00117BFC /* simplifyglobal.cpp in Sources */,
 				05A067221DFA68190047872E /* pillowtwosphere.cpp in Sources */,
 				05F0A04F1DBF0B5E00117BFC /* turaevviro.cpp in Sources */,
 				05A73C8A19B2EF130099C617 /* fundgroup.cpp in Sources */,
-				05431EEC1C40F069009BC072 /* gluingperms.cpp in Sources */,
 				05A0670A1DFA68190047872E /* blockedsfs.cpp in Sources */,
 				052F9F81180600FB00FAE4DF /* find_cusp.c in Sources */,
+				05CAE65627450D89007C93F3 /* gluingperms9.cpp in Sources */,
 				054208B51DF0D2740018AB24 /* graphtriple.cpp in Sources */,
 				0512E09526DF34E800DDB222 /* perm7.cpp in Sources */,
 				05A0673C1DFA68190047872E /* trisolidtorus.cpp in Sources */,
 				052F9F79180600FB00FAE4DF /* cusp_cross_sections.c in Sources */,
 				0568742920C5D86B001C435B /* tangle.cpp in Sources */,
+				05CAE64C27450D89007C93F3 /* gluingperms7.cpp in Sources */,
 				05F0A0491DBF0B5E00117BFC /* surfaces.cpp in Sources */,
 				05B7FF8C25AC22AA003BAF5C /* collection.cpp in Sources */,
 				0591E7E21C4F750200793A9C /* normalhypersurfaces.cpp in Sources */,
@@ -10382,6 +10465,7 @@
 				052F9EA9180600FB00FAE4DF /* gluingpermsearcher3.cpp in Sources */,
 				05A067261DFA68190047872E /* plugtrisolidtorus.cpp in Sources */,
 				05A73CAD19B2EFF90099C617 /* open.cpp in Sources */,
+				05CAE64827450D89007C93F3 /* gluingperms4.cpp in Sources */,
 				054208C11DF0D2740018AB24 /* simplesurfacebundle.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* facepair.cpp in Sources */,
 				05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */,
@@ -10435,6 +10519,7 @@
 				054208711DF0D0B50018AB24 /* context.cpp in Sources */,
 				052F9F48180600FB00FAE4DF /* primes.cpp in Sources */,
 				052FA022180600FB00FAE4DF /* enumerator.cpp in Sources */,
+				05CAE64A27450D89007C93F3 /* gluingperms5.cpp in Sources */,
 				05A0672A1DFA68190047872E /* satblock.cpp in Sources */,
 				052F9E9B180600FB00FAE4DF /* gluingpermsearcher2.cpp in Sources */,
 				05A067381DFA68190047872E /* spiralsolidtorus.cpp in Sources */,
@@ -10458,6 +10543,7 @@
 				05721EEB1F97153E00A83FFC /* homfly.cpp in Sources */,
 				052F9E94180600FB00FAE4DF /* compact.cpp in Sources */,
 				052F9F92180600FB00FAE4DF /* orient.c in Sources */,
+				05CAE64627450D89007C93F3 /* gluingperms15.cpp in Sources */,
 				052F9FE2180600FB00FAE4DF /* sigisomorphism.cpp in Sources */,
 				05F0A03A1DBF0B5E00117BFC /* crushtri.cpp in Sources */,
 				05F0A0431DBF0B5E00117BFC /* retriangulate.cpp in Sources */,
@@ -10467,11 +10553,13 @@
 				05A067181DFA68190047872E /* layeredlensspace.cpp in Sources */,
 				052F9F10180600FB00FAE4DF /* orb.cpp in Sources */,
 				05F0A00B1DBF078800117BFC /* vertex4.cpp in Sources */,
+				05CAE63B27450D89007C93F3 /* gluingperms11.cpp in Sources */,
 				059802DE26683C6D002D5D57 /* xmlsurfacereader.cpp in Sources */,
 				052F9F0E180600FB00FAE4DF /* isosig.cpp in Sources */,
 				050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
 				05B7FF8E25AC22AA003BAF5C /* general.cpp in Sources */,
+				05CAE65427450D89007C93F3 /* gluingperms8.cpp in Sources */,
 				052F9F7D180600FB00FAE4DF /* Dehn_coefficients.c in Sources */,
 				052F9F5B180600FB00FAE4DF /* script.cpp in Sources */,
 				05F09FD81DBF01B600117BFC /* skeleton.cpp in Sources */,

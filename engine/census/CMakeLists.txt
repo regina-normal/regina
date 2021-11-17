@@ -6,7 +6,6 @@ SET ( FILES
   closedprimemin.cpp
   compact.cpp
   euler.cpp
-  gluingperms.cpp
   gluingpermsearcher2.cpp
   gluingpermsearcher3.cpp
   gluingpermsearcher4.cpp
@@ -17,6 +16,9 @@ SET ( FILES
 FOREACH ( SOURCE_FILE ${FILES} )
   SET ( SOURCES ${SOURCES} census/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
+
+ADD_SUBDIRECTORY(explicit)
+
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})

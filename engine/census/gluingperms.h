@@ -93,7 +93,7 @@ namespace regina {
  * (gluingperms-impl.h), which is not included automatically by
  * this file.  However, typical end users should never need this extra header,
  * since Regina's calculation engine already includes explicit instantiations
- * for \ref stddim "standard dimensions".
+ * for all dimensions.
  *
  * \ifacespython Not available.
  *
@@ -693,15 +693,29 @@ inline const int& GluingPerms<dim>::permIndex(
 template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         const FacetSpec<dim>& source, int index) const {
-    return Perm<dim+1>(pairing_.dest(source).facet, dim) *
-        Perm<dim+1>::Sn_1[index] * Perm<dim+1>(source.facet, dim);
+    if constexpr (standardDim(dim)) {
+        return Perm<dim+1>(pairing_.dest(source).facet, dim) *
+            Perm<dim+1>::Sn_1[index] * Perm<dim+1>(source.facet, dim);
+    } else {
+        // The fast Sn_1 lookup is only provided in standard dimensions.
+        return Perm<dim+1>(pairing_.dest(source).facet, dim) *
+            Perm<dim+1>::extend(Perm<dim>::Sn[index]) *
+            Perm<dim+1>(source.facet, dim);
+    }
 }
 
 template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         unsigned simp, unsigned facet, int index) const {
-    return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
-        Perm<dim+1>::Sn_1[index] * Perm<dim+1>(facet, dim);
+    if constexpr (standardDim(dim)) {
+        return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
+            Perm<dim+1>::Sn_1[index] * Perm<dim+1>(facet, dim);
+    } else {
+        // The fast Sn_1 lookup is only provided in standard dimensions.
+        return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
+            Perm<dim+1>::extend(Perm<dim>::Sn[index]) *
+            Perm<dim+1>(facet, dim);
+    }
 }
 
 template <int dim>

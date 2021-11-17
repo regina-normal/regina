@@ -34,16 +34,8 @@
 
 // Headers required for our template instantiations:
 #include "census/gluingperms.h"
-#include "census/gluingperms.h"
-#include "census/gluingperms.h"
-#include "triangulation/dim2.h"
-#include "triangulation/dim3.h"
-#include "triangulation/dim4.h"
+#include "triangulation/generic.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 
 // Instantiate templates for standard dimensions.
-template class regina::GluingPerms<2>;
-template class regina::GluingPerms<3>;
-template class regina::GluingPerms<4>;
-
+template class regina::GluingPerms<15>;
