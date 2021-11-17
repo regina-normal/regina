@@ -31,6 +31,8 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h" // for Action
+#include "../pybind11/stl.h" // for IsoList
 #include "census/gluingpermsearcher2.h"
 #include "triangulation/dim2.h"
 #include "../helpers.h"
