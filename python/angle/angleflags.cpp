@@ -31,56 +31,17 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
-#include "../pybind11/operators.h"
 #include "angle/angleflags.h"
 #include "../helpers.h"
-
-using pybind11::overload_cast;
-using regina::AngleAlg;
-using regina::AngleAlgFlags;
+#include "../flags.h"
 
 void addAngleFlags(pybind11::module_& m) {
-    pybind11::enum_<AngleAlgFlags>(m, "AngleAlgFlags")
-        .value("AS_ALG_DEFAULT", regina::AS_ALG_DEFAULT)
-        .value("AS_ALG_TREE", regina::AS_ALG_TREE)
-        .value("AS_ALG_DD", regina::AS_ALG_DD)
-        .value("AS_ALG_LEGACY", regina::AS_ALG_LEGACY)
-        .value("AS_ALG_CUSTOM", regina::AS_ALG_CUSTOM)
-        .export_values()
-        // This __or__ promotes the argument from a flags enum to a
-        // "combination of flags" object.  It must come *after* export_values,
-        // since it returns a pybind11::class and not a pybind11::enum,
-        // which means a subsequent export_values() would fail.
-        .def("__or__", [](const AngleAlgFlags& lhs, const AngleAlgFlags& rhs){
-                return AngleAlg(lhs) | rhs;});
-
-    auto a = pybind11::class_<AngleAlg>(m, "AngleAlg")
-        .def(pybind11::init<>())
-        .def(pybind11::init<AngleAlgFlags>())
-        .def(pybind11::init<const AngleAlg&>())
-        .def("has", overload_cast<const AngleAlg&>(
-            &AngleAlg::has, pybind11::const_))
-        .def("intValue", &AngleAlg::intValue)
-        .def_static("fromInt", &AngleAlg::fromInt)
-        .def(pybind11::self |= pybind11::self)
-        .def(pybind11::self &= pybind11::self)
-        .def(pybind11::self ^= pybind11::self)
-        .def(pybind11::self | pybind11::self)
-        .def(pybind11::self & pybind11::self)
-        .def(pybind11::self ^ pybind11::self)
-        .def("clear", overload_cast<const AngleAlg&>(&AngleAlg::clear))
-        .def("ensureOne",
-            overload_cast<AngleAlgFlags, AngleAlgFlags>(
-            &AngleAlg::ensureOne))
-        .def("ensureOne",
-            overload_cast<AngleAlgFlags, AngleAlgFlags, AngleAlgFlags>(
-            &AngleAlg::ensureOne))
-        .def("ensureOne",
-            overload_cast<AngleAlgFlags, AngleAlgFlags, AngleAlgFlags,
-                AngleAlgFlags>(
-            &AngleAlg::ensureOne))
-        ;
-    regina::python::add_eq_operators(a);
-
-    pybind11::implicitly_convertible<AngleAlgFlags, AngleAlg>();
+    regina::python::add_flags<regina::AngleAlgFlags>(
+        m, "AngleAlgFlags", "AngleAlg", {
+            { "AS_ALG_DEFAULT", regina::AS_ALG_DEFAULT },
+            { "AS_ALG_TREE", regina::AS_ALG_TREE },
+            { "AS_ALG_DD", regina::AS_ALG_DD },
+            { "AS_ALG_LEGACY", regina::AS_ALG_LEGACY },
+            { "AS_ALG_CUSTOM", regina::AS_ALG_CUSTOM }
+        });
 }

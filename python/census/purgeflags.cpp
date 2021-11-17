@@ -31,57 +31,18 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
-#include "../pybind11/operators.h"
 #include "census/purgeflags.h"
 #include "../helpers.h"
-
-using pybind11::overload_cast;
-using regina::CensusPurge;
-using regina::CensusPurgeFlags;
+#include "../flags.h"
 
 void addPurgeFlags(pybind11::module_& m) {
-    pybind11::enum_<CensusPurgeFlags>(m, "CensusPurgeFlags")
-        .value("PURGE_NONE", regina::PURGE_NONE)
-        .value("PURGE_NON_MINIMAL", regina::PURGE_NON_MINIMAL)
-        .value("PURGE_NON_PRIME", regina::PURGE_NON_PRIME)
-        .value("PURGE_NON_MINIMAL_PRIME", regina::PURGE_NON_MINIMAL_PRIME)
-        .value("PURGE_NON_MINIMAL_HYP", regina::PURGE_NON_MINIMAL_HYP)
-        .value("PURGE_P2_REDUCIBLE", regina::PURGE_P2_REDUCIBLE)
-        .export_values()
-        // This __or__ promotes the argument from a flags enum to a
-        // "combination of flags" object.  It must come *after* export_values,
-        // since it returns a pybind11::class and not a pybind11::enum,
-        // which means a subsequent export_values() would fail.
-        .def("__or__", [](const CensusPurgeFlags& lhs, const CensusPurgeFlags& rhs){
-                return CensusPurge(lhs) | rhs;});
-
-    auto l = pybind11::class_<CensusPurge>(m, "CensusPurge")
-        .def(pybind11::init<>())
-        .def(pybind11::init<CensusPurgeFlags>())
-        .def(pybind11::init<const CensusPurge&>())
-        .def("has", overload_cast<const CensusPurge&>(
-            &CensusPurge::has, pybind11::const_))
-        .def("intValue", &CensusPurge::intValue)
-        .def_static("fromInt", &CensusPurge::fromInt)
-        .def(pybind11::self |= pybind11::self)
-        .def(pybind11::self &= pybind11::self)
-        .def(pybind11::self ^= pybind11::self)
-        .def(pybind11::self | pybind11::self)
-        .def(pybind11::self & pybind11::self)
-        .def(pybind11::self ^ pybind11::self)
-        .def("clear", overload_cast<const CensusPurge&>(&CensusPurge::clear))
-        .def("ensureOne",
-            overload_cast<CensusPurgeFlags, CensusPurgeFlags>(
-            &CensusPurge::ensureOne))
-        .def("ensureOne",
-            overload_cast<CensusPurgeFlags, CensusPurgeFlags, CensusPurgeFlags>(
-            &CensusPurge::ensureOne))
-        .def("ensureOne",
-            overload_cast<CensusPurgeFlags, CensusPurgeFlags, CensusPurgeFlags,
-                CensusPurgeFlags>(
-            &CensusPurge::ensureOne))
-        ;
-    regina::python::add_eq_operators(l);
-
-    pybind11::implicitly_convertible<CensusPurgeFlags, CensusPurge>();
+    regina::python::add_flags<regina::CensusPurgeFlags>(
+        m, "CensusPurgeFlags", "CensusPurge", {
+            { "PURGE_NONE", regina::PURGE_NONE },
+            { "PURGE_NON_MINIMAL", regina::PURGE_NON_MINIMAL },
+            { "PURGE_NON_PRIME", regina::PURGE_NON_PRIME },
+            { "PURGE_NON_MINIMAL_PRIME", regina::PURGE_NON_MINIMAL_PRIME },
+            { "PURGE_NON_MINIMAL_HYP", regina::PURGE_NON_MINIMAL_HYP },
+            { "PURGE_P2_REDUCIBLE", regina::PURGE_P2_REDUCIBLE }
+        });
 }
