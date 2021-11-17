@@ -96,24 +96,11 @@ void addTriangle3(pybind11::module_& m) {
         .def_static("ordering", &Triangle<3>::ordering)
         .def_static("faceNumber", &Triangle<3>::faceNumber)
         .def_static("containsVertex", &Triangle<3>::containsVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Triangle<3>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Triangle<3>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Triangle<3>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Triangle<3>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Triangle<3>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Triangle<3>::nFaces)
+        .def_readonly_static("lexNumbering", &Triangle<3>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Triangle<3>::oppositeDim)
+        .def_readonly_static("dimension", &Triangle<3>::dimension)
+        .def_readonly_static("subdimension", &Triangle<3>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

@@ -215,24 +215,11 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def_static("ordering", &Face<dim, subdim>::ordering)
         .def_static("faceNumber", &Face<dim, subdim>::faceNumber)
         .def_static("containsVertex", &Face<dim, subdim>::containsVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Face<dim, subdim>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Face<dim, subdim>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Face<dim, subdim>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Face<dim, subdim>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Face<dim, subdim>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Face<dim, subdim>::nFaces)
+        .def_readonly_static("lexNumbering", &Face<dim, subdim>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Face<dim, subdim>::oppositeDim)
+        .def_readonly_static("dimension", &Face<dim, subdim>::dimension)
+        .def_readonly_static("subdimension", &Face<dim, subdim>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
