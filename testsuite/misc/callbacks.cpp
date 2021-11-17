@@ -313,8 +313,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, c);
                 std::ostringstream data;
                 searcher.dumpData(data);
-                std::ostringstream taggedData;
-                searcher.dumpTaggedData(taggedData);
+                std::string taggedData = searcher.taggedData();
                 searcher.runSearch();
                 verifyPassedByReference(c,
                     "GluingPermSearcher<2> standard constructor");
@@ -329,8 +328,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<2> istream constructor");
 
                 Arg e;
-                std::istringstream iTagged(taggedData.str());
-                regina::GluingPermSearcher<2>::readTaggedData(iTagged,
+                regina::GluingPermSearcher<2>::readTaggedData(taggedData,
                         [](const regina::GluingPerms<2>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
@@ -366,8 +364,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, c);
                 std::ostringstream data;
                 searcher.dumpData(data);
-                std::ostringstream taggedData;
-                searcher.dumpTaggedData(taggedData);
+                std::string taggedData = searcher.taggedData();
                 searcher.runSearch();
                 verifyPassedByReference(c,
                     "GluingPermSearcher<3> standard constructor");
@@ -382,8 +379,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<3> istream constructor");
 
                 Arg e;
-                std::istringstream iTagged(taggedData.str());
-                regina::GluingPermSearcher<3>::readTaggedData(iTagged,
+                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
@@ -403,8 +399,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, c);
                 std::ostringstream data;
                 searcher.dumpData(data);
-                std::ostringstream taggedData;
-                searcher.dumpTaggedData(taggedData);
+                std::string taggedData = searcher.taggedData();
                 searcher.runSearch();
                 verifyPassedByReference(c,
                     "ClosedPrimeMinSearcher standard constructor");
@@ -419,8 +414,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "ClosedPrimeMinSearcher istream constructor");
 
                 Arg e;
-                std::istringstream iTagged(taggedData.str());
-                regina::GluingPermSearcher<3>::readTaggedData(iTagged,
+                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
@@ -438,8 +432,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, c);
                 std::ostringstream data;
                 searcher.dumpData(data);
-                std::ostringstream taggedData;
-                searcher.dumpTaggedData(taggedData);
+                std::string taggedData = searcher.taggedData();
                 searcher.runSearch();
                 verifyPassedByReference(c,
                     "CompactSearcher standard constructor");
@@ -454,8 +447,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "CompactSearcher istream constructor");
 
                 Arg e;
-                std::istringstream iTagged(taggedData.str());
-                regina::GluingPermSearcher<3>::readTaggedData(iTagged,
+                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
@@ -473,8 +465,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, c);
                 std::ostringstream data;
                 searcher.dumpData(data);
-                std::ostringstream taggedData;
-                searcher.dumpTaggedData(taggedData);
+                std::string taggedData = searcher.taggedData();
                 searcher.runSearch();
                 verifyPassedByReference(c,
                     "EulerSearcher standard constructor");
@@ -489,8 +480,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "EulerSearcher istream constructor");
 
                 Arg e;
-                std::istringstream iTagged(taggedData.str());
-                regina::GluingPermSearcher<3>::readTaggedData(iTagged,
+                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
@@ -508,8 +498,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, c);
                 std::ostringstream data;
                 searcher.dumpData(data);
-                std::ostringstream taggedData;
-                searcher.dumpTaggedData(taggedData);
+                std::string taggedData = searcher.taggedData();
                 searcher.runSearch();
                 verifyPassedByReference(c,
                     "HyperbolicMinSearcher standard constructor");
@@ -524,8 +513,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "HyperbolicMinSearcher istream constructor");
 
                 Arg e;
-                std::istringstream iTagged(taggedData.str());
-                regina::GluingPermSearcher<3>::readTaggedData(iTagged,
+                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
@@ -559,8 +547,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 }, c);
                 std::ostringstream data;
                 searcher.dumpData(data);
-                std::ostringstream taggedData;
-                searcher.dumpTaggedData(taggedData);
+                std::string taggedData = searcher.taggedData();
                 searcher.runSearch();
                 verifyPassedByReference(c,
                     "GluingPermSearcher<4> standard constructor");
@@ -575,8 +562,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<4> istream constructor");
 
                 Arg e;
-                std::istringstream iTagged(taggedData.str());
-                regina::GluingPermSearcher<4>::readTaggedData(iTagged,
+                regina::GluingPermSearcher<4>::readTaggedData(taggedData,
                         [](const regina::GluingPerms<4>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
