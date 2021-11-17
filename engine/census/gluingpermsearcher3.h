@@ -45,6 +45,7 @@
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
+#include "census/purgeflags.h"
 #include "triangulation/facetpairing3.h"
 #include "utilities/exception.h"
 #include "utilities/qitmask.h"
@@ -106,52 +107,19 @@ class GluingPermSearcher<3> {
                  and writing tagged data in text format. */
 
         /**
-         * Flags to indicate that our enumeration may (at the discretion of
-         * the enumeration algorithm) ignore certain classes of triangulations.
-         * These flags can be combined using bitwise OR.
+         * Deprecated type alias for flags that indicate that our enumeration
+         * may ignore certain classes of triangulations.
          *
-         * See the GluingPermSearcher<3> constructor documentation for further
-         * details on how these flags are used.
+         * \deprecated This enumeration has now been renamed to
+         * regina::CensusPurgeFlags (and it now lives at the namespace level).
+         * Bitwise combinations of flags are now represented by
+         * regina::CensusPurge (not raw integers).
          *
-         * \ifacespython For convenience, these constants are also made
-         * available directly in Python's regina namespace.
+         * \ifacespython The enumeration constants (but not the PurgeFlags
+         * type itself) are still available through the GluingPermSearcher<3>
+         * class for backward compatibility.
          */
-        enum PurgeFlags {
-            /**
-             * Indicates that no triangulations should be ignored.
-             */
-            PURGE_NONE = 0,
-            /**
-             * Indicates that non-minimal triangulations may be ignored.
-             */
-            PURGE_NON_MINIMAL = 1,
-            /**
-             * Indicates that any triangulation that is not prime (i.e.,
-             * can be written as a non-trivial connected sum) and any bounded
-             * triangulation that is reducible over a disc may be ignored.
-             */
-            PURGE_NON_PRIME = 2,
-            /**
-             * Indicates that any triangulation that is not prime (i.e.,
-             * can be written as a non-trivial connected sum), any
-             * bounded triangulation that is reducible over a disc and
-             * any triangulation that is non-minimal may be ignored.
-             * Note that this is simply a combination of the constants
-             * \a PURGE_NON_MINIMAL and \a PURGE_NON_PRIME.
-             */
-            PURGE_NON_MINIMAL_PRIME = 3,
-            /**
-             * Indicates that any triangulation that is not a minimal ideal
-             * triangulation of a cusped finite-volume hyperbolic 3-manifold
-             * may be ignored.
-             */
-            PURGE_NON_MINIMAL_HYP = 9,
-            /**
-             * Indicates that any triangulation containing an embedded
-             * two-sided projective plane may be ignored.
-             */
-            PURGE_P2_REDUCIBLE = 4
-        };
+        using PurgeFlags [[deprecated]] = CensusPurgeFlags;
 
     protected:
         using ActionWrapper = std::function<void(const GluingPerms<3>&)>;
@@ -170,10 +138,10 @@ class GluingPermSearcher<3> {
         bool finiteOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to finite triangulations? */
-        int whichPurge_;
+        CensusPurge whichPurge_;
             /**< Are there any types of triangulation that we may optionally
                  avoid constructing?  This should be a bitwise OR of constants
-                 from the PurgeFlags enumeration.  See the constructor
+                 from the CensusPurgeFlags enumeration.  See the constructor
                  documentation for further details on this search parameter. */
         ActionWrapper action_;
             /**< The action to perform each time a gluing permutation set is
@@ -293,8 +261,9 @@ class GluingPermSearcher<3> {
          * might still be produced; see the notes above for details.
          * @param whichPurge specifies which permutation sets we may avoid
          * constructing (see the function notes above for details).  This
-         * should be a bitwise OR of constants from the PurgeFlags enumeration,
-         * or 0 if we should simply generate every possible permutation set.
+         * should be a bitwise OR of constants from the CensusPurgeFlags
+         * enumeration, or PURGE_NONE if we should simply generate every
+         * possible permutation set.
          * If a variety of purge constants are bitwise ORed together, a
          * permutation set whose triangulation satisfies \e any of these
          * constraints may be avoided.  Note that not all such
@@ -308,7 +277,7 @@ class GluingPermSearcher<3> {
         template <typename Action, typename... Args>
         GluingPermSearcher(FacetPairing<3> pairing,
                 FacetPairing<3>::IsoList autos, bool orientableOnly,
-                bool finiteOnly, int whichPurge,
+                bool finiteOnly, CensusPurge whichPurge,
                 Action&& action, Args&&... args);
 
         /**
@@ -543,7 +512,7 @@ class GluingPermSearcher<3> {
         template <typename Action, typename... Args>
         static void findAllPerms(FacetPairing<3> pairing,
                 FacetPairing<3>::IsoList autos, bool orientableOnly,
-                bool finiteOnly, int whichPurge,
+                bool finiteOnly, CensusPurge whichPurge,
                 Action&& action, Args&&... args);
 
         /**
@@ -578,7 +547,7 @@ class GluingPermSearcher<3> {
         template <typename Action, typename... Args>
         static std::unique_ptr<GluingPermSearcher<3>> bestSearcher(
                 FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
+                bool orientableOnly, bool finiteOnly, CensusPurge whichPurge,
                 Action&& action, Args&&... args);
 
         /**
@@ -665,7 +634,7 @@ class GluingPermSearcher<3> {
          */
         GluingPermSearcher(FacetPairing<3>&& pairing,
             FacetPairing<3>::IsoList&& autos, bool orientableOnly,
-            bool finiteOnly, int whichPurge, ActionWrapper&& action);
+            bool finiteOnly, CensusPurge whichPurge, ActionWrapper&& action);
 
         /**
          * A de-templatised version of the public input stream constructor.
@@ -1267,7 +1236,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
         template <typename Action, typename... Args>
         EulerSearcher(int useEuler, FacetPairing<3> pairing,
                 FacetPairing<3>::IsoList autos, bool orientableOnly,
-                int whichPurge, Action&& action, Args&&... args);
+                CensusPurge whichPurge, Action&& action, Args&&... args);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1325,7 +1294,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          */
         EulerSearcher(int useEuler, FacetPairing<3>&& pairing,
             FacetPairing<3>::IsoList&& autos, bool orientableOnly,
-            int whichPurge, ActionWrapper&& action);
+            CensusPurge whichPurge, ActionWrapper&& action);
 
         /**
          * A de-templatised version of the public input stream constructor.
@@ -2097,7 +2066,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          */
         template <typename Action, typename... Args>
         CompactSearcher(FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-                bool orientableOnly, int whichPurge,
+                bool orientableOnly, CensusPurge whichPurge,
                 Action&& action, Args&&... args);
 
         /**
@@ -2156,7 +2125,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          */
         CompactSearcher(FacetPairing<3>&& pairing,
             FacetPairing<3>::IsoList&& autos, bool orientableOnly,
-            int whichPurge, ActionWrapper&& action);
+            CensusPurge whichPurge, ActionWrapper&& action);
 
         /**
          * A de-templatised version of the public input stream constructor.
@@ -2953,7 +2922,7 @@ template <typename Action, typename... Args>
 inline GluingPermSearcher<3>::GluingPermSearcher(
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-        bool orientableOnly, bool finiteOnly, int whichPurge,
+        bool orientableOnly, bool finiteOnly, CensusPurge whichPurge,
         Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
         GluingPermSearcher<3>(std::move(pairing), std::move(autos),
@@ -3048,14 +3017,14 @@ template <typename Action, typename... Args>
 inline std::unique_ptr<GluingPermSearcher<3>>
         GluingPermSearcher<3>::bestSearcher(
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-        bool orientableOnly, bool finiteOnly, int whichPurge,
+        bool orientableOnly, bool finiteOnly, CensusPurge whichPurge,
         Action&& action, Args&&... args) {
     // Use an optimised algorithm if possible.
     if (finiteOnly) {
         if (pairing.isClosed() && pairing.size() >= 3 &&
-                (whichPurge & PURGE_NON_MINIMAL) &&
-                (whichPurge & PURGE_NON_PRIME) &&
-                (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {
+                whichPurge.has(PURGE_NON_MINIMAL) &&
+                whichPurge.has(PURGE_NON_PRIME) &&
+                (orientableOnly || whichPurge.has(PURGE_P2_REDUCIBLE))) {
             // Closed prime minimal P2-irreducible triangulations with >= 3
             // tetrahedra.
             return std::make_unique<ClosedPrimeMinSearcher>(std::move(pairing),
@@ -3067,8 +3036,7 @@ inline std::unique_ptr<GluingPermSearcher<3>>
             std::forward<Action>(action), std::forward<Args>(args)...);
     }
 
-    if (pairing.isClosed() && ((whichPurge & PURGE_NON_MINIMAL_HYP) ==
-            PURGE_NON_MINIMAL_HYP))
+    if (pairing.isClosed() && whichPurge.has(PURGE_NON_MINIMAL_HYP))
         return std::make_unique<HyperbolicMinSearcher>(std::move(pairing),
             std::move(autos), orientableOnly, std::forward<Action>(action),
             std::forward<Args>(args)...);
@@ -3080,8 +3048,8 @@ inline std::unique_ptr<GluingPermSearcher<3>>
 
 template <typename Action, typename... Args>
 inline void GluingPermSearcher<3>::findAllPerms(FacetPairing<3> pairing,
-        FacetPairing<3>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, Action&& action, Args&&... args) {
+        FacetPairing<3>::IsoList autos, bool orientableOnly, bool finiteOnly,
+        CensusPurge whichPurge, Action&& action, Args&&... args) {
     std::unique_ptr<GluingPermSearcher<3>> searcher = bestSearcher(
         std::move(pairing), std::move(autos), orientableOnly, finiteOnly,
         whichPurge, std::forward<Action>(action), std::forward<Args>(args)...);
@@ -3104,7 +3072,8 @@ template <typename Action, typename... Args>
 inline EulerSearcher::EulerSearcher(int useEuler,
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-        bool orientableOnly, int whichPurge, Action&& action, Args&&... args) :
+        bool orientableOnly, CensusPurge whichPurge,
+        Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
         EulerSearcher(useEuler, std::move(pairing), std::move(autos),
             orientableOnly, whichPurge,
@@ -3267,7 +3236,8 @@ template <typename Action, typename... Args>
 inline CompactSearcher::CompactSearcher(
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
         FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
-        bool orientableOnly, int whichPurge, Action&& action, Args&&... args) :
+        bool orientableOnly, CensusPurge whichPurge,
+        Action&& action, Args&&... args) :
         // Delegate to a de-templatised constructor.
         CompactSearcher(std::move(pairing), std::move(autos), orientableOnly,
             whichPurge,

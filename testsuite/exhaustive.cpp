@@ -92,8 +92,8 @@ namespace {
             false /* orientable only */,
             ! finite.hasFalse() /* finite only */,
             (minimal ?
-                GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
-                GluingPermSearcher<3>::PURGE_P2_REDUCIBLE : 0) /* purge */,
+                regina::PURGE_NON_MINIMAL_PRIME | regina::PURGE_P2_REDUCIBLE :
+                regina::PURGE_NONE),
             &foundGluingPerms3, f, finite, minimal);
     }
 

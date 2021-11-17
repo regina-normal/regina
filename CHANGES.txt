@@ -184,6 +184,10 @@ Version 7.0  [ TODO ]
             - CensusHit::db() now returns by reference, not pointer.
             - CensusDB::lookup() now takes a callback action to perform
               on each hit, not a CensusHits pointer.
+        Enum CensusPurgeFlags, Class CensusPurge:
+            - A proper flags class for the purge constants that used to live
+              within GluingPerms<3>.  Now these flags are more carefully typed.
+            - Moved out of GluingPerms<3> and into Regina's main namespace.
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the
               aliases vertices(), edges(), etc. no longer return a
@@ -361,6 +365,9 @@ Version 7.0  [ TODO ]
             - Added string-based functions taggedData(), data(), and
               readTaggedData(const std::string&).
             - Renamed public constants ...::dataTag_ to ...::dataTag.
+            - Moved GluingPermSearcher<3>::PurgeFlags to the more carefully
+              typed regina::CensusPurge and regina::CensusPurgeFlags.
+              The old name is kept as a deprecated type alias.
         Class GraphLoop, GraphPair, GraphTriple:
             - Constructors now take Seifert fibred spaces either by
               const reference (which copy) or by rvalue reference (which move),

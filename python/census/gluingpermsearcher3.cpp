@@ -47,7 +47,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
 
     auto g = pybind11::class_<GluingPermSearcher<3>>(m, "GluingPermSearcher3")
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
-            bool, bool, int, Action>())
+            bool, bool, regina::CensusPurge, Action>())
         .def("runSearch", &GluingPermSearcher<3>::runSearch,
             pybind11::arg("maxDepth") = -1)
         .def("completePermSet", &GluingPermSearcher<3>::completePermSet)
@@ -64,39 +64,18 @@ void addGluingPermSearcher3(pybind11::module_& m) {
         ;
     regina::python::add_eq_operators(g);
 
-    pybind11::enum_<regina::GluingPermSearcher<3>::PurgeFlags>(g, "PurgeFlags")
-        .value("PURGE_NONE",
-            regina::GluingPermSearcher<3>::PURGE_NONE)
-        .value("PURGE_NON_MINIMAL",
-            regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL)
-        .value("PURGE_NON_PRIME",
-            regina::GluingPermSearcher<3>::PURGE_NON_PRIME)
-        .value("PURGE_NON_MINIMAL_PRIME",
-            regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME)
-        .value("PURGE_NON_MINIMAL_HYP",
-            regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP)
-        .value("PURGE_P2_REDUCIBLE",
-            regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE)
-        .export_values();
-
-    // For backward compatibility with the old boost.python bindings:
-    m.attr("PURGE_NONE") =
-        GluingPermSearcher<3>::PURGE_NONE;
-    m.attr("PURGE_NON_MINIMAL") =
-        GluingPermSearcher<3>::PURGE_NON_MINIMAL;
-    m.attr("PURGE_NON_PRIME") =
-        GluingPermSearcher<3>::PURGE_NON_PRIME;
-    m.attr("PURGE_NON_MINIMAL_PRIME") =
-        GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
-    m.attr("PURGE_NON_MINIMAL_HYP") =
-        GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
-    m.attr("PURGE_P2_REDUCIBLE") =
-        GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
+    // For backward compatibility; these inner class constants are deprecated.
+    g.attr("PURGE_NONE") = regina::PURGE_NONE;
+    g.attr("PURGE_NON_MINIMAL") = regina::PURGE_NON_MINIMAL;
+    g.attr("PURGE_NON_PRIME") = regina::PURGE_NON_PRIME;
+    g.attr("PURGE_NON_MINIMAL_PRIME") = regina::PURGE_NON_MINIMAL_PRIME;
+    g.attr("PURGE_NON_MINIMAL_HYP") = regina::PURGE_NON_MINIMAL_HYP;
+    g.attr("PURGE_P2_REDUCIBLE") = regina::PURGE_P2_REDUCIBLE;
 
     auto e = pybind11::class_<EulerSearcher, GluingPermSearcher<3>>(
             m, "EulerSearcher")
         .def(pybind11::init<int, FacetPairing<3>, FacetPairing<3>::IsoList,
-            bool, int, Action>())
+            bool, regina::CensusPurge, Action>())
         .def_readonly_static("dataTag", &EulerSearcher::dataTag)
         ;
     regina::python::add_eq_operators(e);
@@ -104,7 +83,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     auto c = pybind11::class_<CompactSearcher, GluingPermSearcher<3>>(
             m, "CompactSearcher")
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
-            bool, int, Action>())
+            bool, regina::CensusPurge, Action>())
         .def_readonly_static("dataTag", &CompactSearcher::dataTag)
         ;
     regina::python::add_eq_operators(c);

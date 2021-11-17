@@ -193,7 +193,7 @@ bool CompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
 
 CompactSearcher::CompactSearcher(FacetPairing<3>&& pairing,
         FacetPairing<3>::IsoList&& autos, bool orientableOnly,
-        int whichPurge, ActionWrapper&& action) :
+        CensusPurge whichPurge, ActionWrapper&& action) :
         GluingPermSearcher<3>(std::move(pairing), std::move(autos),
             orientableOnly, true /* finiteOnly */, whichPurge,
             std::move(action)) {

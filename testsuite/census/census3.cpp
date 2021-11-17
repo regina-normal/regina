@@ -141,31 +141,31 @@ class Census3Test : public CppUnit::TestFixture {
             unsigned nAll[] = { 1, 5, 61, 1581 };
             rawCountsCompare(1, 3, nAll, "closed/ideal",
                 BoolSet(true, true), BoolSet(true, true), false,
-                0, 0, false);
+                0, regina::PURGE_NONE, false);
 
             unsigned nOrientable[] = { 1, 4, 35, 454, 13776 };
             rawCountsCompare(1, 3, nOrientable, "closed/ideal orbl",
                 BoolSet(true, true), true, false,
-                0, 0, false);
+                0, regina::PURGE_NONE, false);
         }
 
         void rawCountsCompact() {
             unsigned nAll[] = { 1, 4, 17, 81, 577, 5184, 57753 };
             rawCountsCompare(1, 4, nAll, "closed compact",
                 true, BoolSet(true, true), false,
-                0, 0, false);
+                0, regina::PURGE_NONE, false);
 
             unsigned nOrientable[] = { 1, 4, 16, 76, 532, 4807, 52946 };
             rawCountsCompare(1, 4, nOrientable, "closed compact orbl",
                 true, true, false,
-                0, 0, false);
+                0, regina::PURGE_NONE, false);
         }
 
         void rawCountsPrimeMinimalOr() {
             unsigned nOrientable[] = { 1, 4, 11, 7, 17, 50 };
             rawCountsCompare(1, 4, nOrientable, "closed orbl prime minimal",
                 true, true, false, 0,
-                GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME, true);
+                regina::PURGE_NON_MINIMAL_PRIME, true);
         }
 
         void rawCountsPrimeMinimalNor() {
@@ -173,20 +173,20 @@ class Census3Test : public CppUnit::TestFixture {
             rawCountsCompare(1, 4, nNonOrientable,
                 "closed non-orbl prime minimal P2-irreducible",
                 true, false, false, 0,
-                GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
-                GluingPermSearcher<3>::PURGE_P2_REDUCIBLE, true);
+                regina::PURGE_NON_MINIMAL_PRIME | regina::PURGE_P2_REDUCIBLE,
+                true);
         }
 
         void rawCountsBounded() {
             unsigned nAll[] = { 1, 3, 17, 156, 2308 };
             rawCountsCompare(1, 3, nAll, "bounded compact",
                 true, BoolSet(true, true), true,
-                -1, 0, false);
+                -1, regina::PURGE_NONE, false);
 
             unsigned nOrientable[] = { 1, 3, 14, 120, 1531 };
             rawCountsCompare(1, 3, nOrientable, "bounded compact orbl",
                 true, true, true,
-                -1, 0, false);
+                -1, regina::PURGE_NONE, false);
         }
 
         void rawCountsHypMin() {
@@ -194,25 +194,25 @@ class Census3Test : public CppUnit::TestFixture {
             unsigned nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
             rawCountsCompare(1, 4, nAll, "candidate minimal cusped hyperbolic",
                 false, BoolSet(true, true), false, -1,
-                GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP, false);
+                regina::PURGE_NON_MINIMAL_HYP, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
             rawCountsCompare(1, 5, nOrientable,
                 "candidate minimal cusped hyperbolic orbl",
                 false, true, false, -1,
-                GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP, false);
+                regina::PURGE_NON_MINIMAL_HYP, false);
         }
 
         struct CensusSpec {
             BoolSet finite_;
             BoolSet orbl_;
-            int purge_;
+            regina::CensusPurge purge_;
             bool minimal_;
 
             unsigned long count_;
 
             CensusSpec(BoolSet finite, BoolSet orbl,
-                    int purge, bool minimal) :
+                    regina::CensusPurge purge, bool minimal) :
                     finite_(finite), orbl_(orbl),
                     purge_(purge), minimal_(minimal), count_(0) {}
         };
@@ -238,9 +238,8 @@ class Census3Test : public CppUnit::TestFixture {
 
         static void rawCountsCompare(unsigned minTets, unsigned maxTets,
                 const unsigned* realAns, const char* censusType,
-                BoolSet finiteness, BoolSet orientability,
-                BoolSet boundary, int nBdryFaces, int whichPurge,
-                bool minimal) {
+                BoolSet finiteness, BoolSet orientability, BoolSet boundary,
+                int nBdryFaces, regina::CensusPurge whichPurge, bool minimal) {
             for (unsigned nTets = minTets; nTets <= maxTets; nTets++) {
                 CensusSpec spec(finiteness, orientability, whichPurge, minimal);
 

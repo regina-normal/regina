@@ -343,7 +343,7 @@ class CallbacksTest : public CppUnit::TestFixture {
 
                 Arg a;
                 regina::GluingPermSearcher<3>::bestSearcher(p, isos,
-                        true, true, 0,
+                        true, true, {},
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, a)->runSearch();
@@ -352,7 +352,7 @@ class CallbacksTest : public CppUnit::TestFixture {
 
                 Arg b;
                 regina::GluingPermSearcher<3>::findAllPerms(p, isos,
-                        true, true, 0,
+                        true, true, {},
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, b);
@@ -360,7 +360,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<3>::findAllPerms()");
 
                 Arg c;
-                regina::GluingPermSearcher<3> searcher(p, isos, true, true, 0,
+                regina::GluingPermSearcher<3> searcher(p, isos, true, true, {},
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, c);
@@ -432,7 +432,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg c;
-                regina::CompactSearcher searcher(p, isos, true, 0,
+                regina::CompactSearcher searcher(p, isos, true, {},
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, c);
@@ -467,7 +467,7 @@ class CallbacksTest : public CppUnit::TestFixture {
                 auto isos = p.findAutomorphisms();
 
                 Arg c;
-                regina::EulerSearcher searcher(0, p, isos, true, 0,
+                regina::EulerSearcher searcher(0, p, isos, true, {},
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, c);

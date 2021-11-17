@@ -38,7 +38,7 @@ namespace regina {
 
 GluingPermSearcher<3>::GluingPermSearcher(
         FacetPairing<3>&& pairing, FacetPairing<3>::IsoList&& autos,
-        bool orientableOnly, bool finiteOnly, int whichPurge,
+        bool orientableOnly, bool finiteOnly, CensusPurge whichPurge,
         ActionWrapper&& action) :
         perms_(std::move(pairing)), autos_(std::move(autos)),
         // pairing and autos are no longer usable
@@ -139,7 +139,7 @@ void GluingPermSearcher<3>::runSearch(long maxDepth) {
         // subclass of GluingPermSearcher<3> with its own custom
         // implementation of runSearch().
         if (lowDegreeEdge(face, false /* degree 1,2 */,
-                whichPurge_ & PURGE_NON_MINIMAL))
+                whichPurge_.has(PURGE_NON_MINIMAL)))
             continue;
         if (! orientableOnly_)
             if (badEdgeLink(face))
@@ -210,7 +210,7 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
     out << (orientableOnly_ ? 'o' : '.');
     out << (finiteOnly_ ? 'f' : '.');
     out << (started ? 's' : '.');
-    out << ' ' << whichPurge_ << std::endl;
+    out << ' ' << whichPurge_.intValue() << std::endl;
 
     int nTets = perms_.size();
     int i;
@@ -266,18 +266,21 @@ GluingPermSearcher<3>::GluingPermSearcher(std::istream& in,
         throw InvalidInput("Invalid started tag "
             "while attempting to read GluingPermSearcher<3>");
 
-    in >> whichPurge_;
+    {
+        int whichPurge;
+        in >> whichPurge;
+        whichPurge_ = CensusPurge::fromInt(whichPurge);
+    }
 
     int nTets = perms_.size();
-    int t;
 
     orientation = new int[nTets];
-    for (t = 0; t < nTets; t++)
+    for (int t = 0; t < nTets; t++)
         in >> orientation[t];
 
     order = new FacetSpec<3>[2 * nTets];
     in >> orderElt >> orderSize;
-    for (t = 0; t < orderSize; t++) {
+    for (int t = 0; t < orderSize; t++) {
         in >> order[t].simp >> order[t].facet;
         if (order[t].simp >= nTets || order[t].simp < 0 ||
                 order[t].facet >= 4 || order[t].facet < 0)

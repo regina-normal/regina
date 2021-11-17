@@ -69,7 +69,7 @@ int dim2 = 0;
 int dim4 = 0;
 int usePairs = 0;
 int sigs = 0;
-int whichPurge = 0;
+regina::CensusPurge whichPurge;
 int genPairs = 0;
 int subContainers = 0;
 std::string outFile;
@@ -89,7 +89,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>&, regina::Packet&);
 template <int dim>
 void findAllPerms(const regina::FacetPairing<dim>&,
     typename regina::FacetPairing<dim>::IsoList,
-    bool, bool, int, regina::Packet&);
+    bool, bool, regina::CensusPurge, regina::Packet&);
 
 template <int dim>
 bool mightBeMinimal(regina::Triangulation<dim>&);
@@ -101,7 +101,7 @@ int runCensus();
 template <>
 inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
         regina::FacetPairing<2>::IsoList autos, bool orientableOnly,
-        bool /* finiteOnly */, int /* usePurge */, regina::Packet& dest) {
+        bool /* finiteOnly */, regina::CensusPurge, regina::Packet& dest) {
     regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
         orientableOnly, foundGluingPerms<2>, dest);
 }
@@ -114,7 +114,7 @@ inline bool mightBeMinimal<2>(regina::Triangulation<2>& tri) {
 template <>
 inline void findAllPerms<3>(const regina::FacetPairing<3>& p,
         regina::FacetPairing<3>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, int usePurge, regina::Packet& dest) {
+        bool finiteOnly, regina::CensusPurge usePurge, regina::Packet& dest) {
     regina::GluingPermSearcher<3>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
 }
@@ -127,7 +127,7 @@ inline bool mightBeMinimal<3>(regina::Triangulation<3>& tri) {
 template <>
 inline void findAllPerms<4>(const regina::FacetPairing<4>& p,
         regina::FacetPairing<4>::IsoList autos, bool orientableOnly,
-        bool finiteOnly, int /* usePurge */, regina::Packet& dest) {
+        bool finiteOnly, regina::CensusPurge, regina::Packet& dest) {
     regina::GluingPermSearcher<4>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
 }
@@ -579,14 +579,14 @@ int runCensus() {
 
     // Start the census running.
     if (minimalPrimeP2)
-        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
-            regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
+        whichPurge = regina::PURGE_NON_MINIMAL_PRIME |
+            regina::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
-        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
+        whichPurge = regina::PURGE_NON_MINIMAL_PRIME;
     else if (minimalHyp)
-        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
+        whichPurge = regina::PURGE_NON_MINIMAL_HYP;
     else if (minimal)
-        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL;
+        whichPurge = regina::PURGE_NON_MINIMAL;
 
     if (usePairs) {
         // Only use the face pairings read from standard input.

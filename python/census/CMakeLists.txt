@@ -6,6 +6,7 @@ SET ( FILES
   gluingpermsearcher2.cpp
   gluingpermsearcher3.cpp
   gluingpermsearcher4.cpp
+  purgeflags.cpp
   pycensus.cpp
   )
 
