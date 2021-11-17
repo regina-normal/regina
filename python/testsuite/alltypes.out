@@ -109,6 +109,12 @@ Equality type : EqualityType.BY_VALUE
 ChildIterator : class
 Equality type : EqualityType.BY_VALUE
 
+ClosedPrimeMinSearcher : class
+Equality type : EqualityType.BY_REFERENCE
+
+CompactSearcher : class
+Equality type : EqualityType.BY_REFERENCE
+
 Component10 : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -350,6 +356,9 @@ EdgeEmbedding7 : typedef ->  FaceEmbedding7_1
 EdgeEmbedding8 : typedef ->  FaceEmbedding8_1
 
 EdgeEmbedding9 : typedef ->  FaceEmbedding9_1
+
+EulerSearcher : class
+Equality type : EqualityType.BY_REFERENCE
 
 Example10 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -1276,7 +1285,13 @@ Equality type : EqualityType.BY_REFERENCE
 GlobalDirs : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
+GluingPermSearcher2 : class
+Equality type : EqualityType.BY_REFERENCE
+
 GluingPermSearcher3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+GluingPermSearcher4 : class
 Equality type : EqualityType.BY_REFERENCE
 
 GraphLoop : class
@@ -1329,6 +1344,9 @@ Equality type : EqualityType.NEVER_INSTANTIATED
 
 HyperList : class
 Equality type : EqualityType.BY_VALUE
+
+HyperbolicMinSearcher : class
+Equality type : EqualityType.BY_REFERENCE
 
 Integer : class
 Equality type : EqualityType.BY_VALUE
@@ -1700,9 +1718,6 @@ Qitmask128 : class
 Equality type : EqualityType.BY_VALUE
 
 Qitmask16 : class
-Equality type : EqualityType.BY_VALUE
-
-Qitmask256 : class
 Equality type : EqualityType.BY_VALUE
 
 Qitmask32 : class

@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
 #include "census/gluingpermsearcher3.h"
 #include "triangulation/facepair.h"
 #include "triangulation/dim3.h"

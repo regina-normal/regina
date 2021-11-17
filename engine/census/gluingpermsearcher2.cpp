@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include <algorithm>
-#include <sstream>
 #include "census/gluingpermsearcher2.h"
 #include "triangulation/dim2.h"
 
@@ -188,11 +187,6 @@ void GluingPermSearcher<2>::runSearch(long maxDepth) {
     }
 
     // And the search is over.
-}
-
-void GluingPermSearcher<2>::dumpTaggedData(std::ostream& out) const {
-    out << dataTag() << std::endl;
-    dumpData(out);
 }
 
 void GluingPermSearcher<2>::dumpData(std::ostream& out) const {

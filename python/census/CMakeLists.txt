@@ -3,7 +3,9 @@
 # Files to compile
 SET ( FILES
   census.cpp
+  gluingpermsearcher2.cpp
   gluingpermsearcher3.cpp
+  gluingpermsearcher4.cpp
   pycensus.cpp
   )
 

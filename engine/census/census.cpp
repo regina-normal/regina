@@ -35,7 +35,6 @@
 #include <algorithm>
 #include <cstdlib>
 #include <functional>
-#include <sstream>
 #include "census/census-impl.h"
 #include "file/globaldirs.h"
 #include "triangulation/dim3.h"

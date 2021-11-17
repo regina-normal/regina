@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,49 +30,34 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file census/gluingpermsearcher.h
- *  \brief Supports searching through all possible sets of gluing permutations
- *  for a given facet pairing.
- */
+#include "../pybind11/pybind11.h"
+#include "census/gluingpermsearcher2.h"
+#include "triangulation/dim2.h"
+#include "../helpers.h"
 
-#ifndef __REGINA_GLUINGPERMSEARCHER_H
-#ifndef __DOXYGEN
-#define __REGINA_GLUINGPERMSEARCHER_H
-#endif
+using regina::FacetPairing;
+using regina::GluingPermSearcher;
 
-#include "regina-core.h"
+void addGluingPermSearcher2(pybind11::module_& m) {
+    using Action = const std::function<void(const regina::GluingPerms<2>&)>&;
 
-namespace regina {
-
-/**
- * A utility class used to build a census of triangulations, by searching
- * through all possible sets of gluing permutations to match a given
- * facet pairing.
- *
- * Currently this class is only implemented in Regina's
- * \ref stddim "standard dimensions".  In higher dimensions, the class
- * GluingPermSearcher<dim> remains undefined, as a placeholder for
- * if/when Regina implements higher-dimensional census code.
- *
- * Gluing permutation searchers are designed to manage the construction of
- * a large census of triangulations, and so they cannot be copied, moved or
- * swapped.  They can be constructed manually if you need fine-grained control,
- * but often this is not necessary either; instead you can run a "typical"
- * census using the static routine GluingPermSearcher<dim>::findAllPerms().
- *
- * For further information, see the documentation for the specialisations
- * GluingPermSearcher<2>, GluingPermSearcher<3> and GluingPermSearcher<4>.
- *
- * \ifacespython Python does not support templates.  Instead this class can
- * be used by appending the dimension as a suffix (e.g., GluingPermSearcher2
- * and GluingPermSearcher3 for dimensions 2 and 3).
- *
- * \ingroup census
- */
-template <int dim>
-class GluingPermSearcher;
-
-} // namespace regina
-
-#endif
+    auto c = pybind11::class_<GluingPermSearcher<2>>(m, "GluingPermSearcher2")
+        .def(pybind11::init<FacetPairing<2>, FacetPairing<2>::IsoList, bool,
+            Action>())
+        .def("runSearch", &GluingPermSearcher<2>::runSearch,
+            pybind11::arg("maxDepth") = -1)
+        .def("completePermSet", &GluingPermSearcher<2>::completePermSet)
+        .def("taggedData", &GluingPermSearcher<2>::taggedData)
+        .def("data", &GluingPermSearcher<2>::data)
+        .def_static("findAllPerms",
+            &GluingPermSearcher<2>::findAllPerms<Action>)
+        .def_static("bestSearcher",
+            &GluingPermSearcher<2>::bestSearcher<Action>)
+        .def_static("readTaggedData",
+            pybind11::overload_cast<const std::string&, Action>(
+                &GluingPermSearcher<2>::readTaggedData<Action>))
+        .def_readonly_static("dataTag_", &GluingPermSearcher<2>::dataTag_)
+        ;
+    regina::python::add_eq_operators(c);
+}
 

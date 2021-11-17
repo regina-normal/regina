@@ -42,6 +42,7 @@
 
 #include <functional>
 #include <memory>
+#include <sstream>
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
@@ -70,8 +71,6 @@ namespace regina {
  *
  * This class is designed to manage the construction of a large census of
  * triangulations, and so it does not support copying, moving or swapping.
- *
- * \ifacespython Not present.
  *
  * \ingroup census
  */
@@ -169,6 +168,11 @@ class GluingPermSearcher<2> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
+         * \ifacespython This constructor is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
+         *
          * @param pairing the specific pairing of triangle edges
          * that the generated permutation sets will complement.
          * @param autos the collection of isomorphisms that define equivalence
@@ -205,6 +209,13 @@ class GluingPermSearcher<2> {
          *
          * \exception InvalidInput the data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present, since this constructor is fundamentally
+         * designed around working through a single input stream as we make
+         * our way from base class constructors down to subclass constructors.
+         * Python users should use taggedData() and readTaggedData() instead,
+         * which incorporate this same text data as part of their richer text
+         * format.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
@@ -281,9 +292,19 @@ class GluingPermSearcher<2> {
          * This routine can be used with readTaggedData() to transport
          * objects from place to place whose precise class is unknown.
          *
+         * This routine outputs the same information that taggedData() returns.
+         *
+         * The key difference between dumpData() and dumpTaggedData() is that
+         * dumpTaggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * dumpData() only writes information pertaining to this base class.
+         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
+         *
+         * \ifacespython Not present; instead use taggedData(), which
+         * returns this same information as a string.
          *
          * @param out the output stream to which the data should be
          * written.
@@ -291,9 +312,31 @@ class GluingPermSearcher<2> {
         void dumpTaggedData(std::ostream& out) const;
 
         /**
+         * Returns all internal data in a plain text format, along with a
+         * marker to signify which precise class the data belongs to.
+         * This routine can be used with readTaggedData() to transport
+         * objects from place to place whose precise class is unknown.
+         *
+         * This routine returns the same information that dumpTaggedData()
+         * writes.
+         *
+         * The key difference between data() and taggedData() is that
+         * taggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * data() only writes information pertaining to this base class.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @return all of this object's internal data in plain text format.
+         */
+        std::string taggedData() const;
+
+        /**
          * Dumps all internal data in a plain text format to the given
-         * output stream.  This object can be recreated from this text
-         * data by calling the input stream constructor for this class.
+         * output stream.  This object can be recreated from this text data
+         * by calling the input stream constructor for the appropriate class.
          *
          * This routine may be useful for transferring objects from
          * one processor to another.
@@ -303,13 +346,57 @@ class GluingPermSearcher<2> {
          * from a subclass and then recreate a new superclass object from
          * that data (though subclass-specific information will be lost).
          *
+         * This routine outputs the same information that data() returns.
+         *
+         * The key difference between dumpData() and dumpTaggedData() is that
+         * dumpTaggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * dumpData() only writes information pertaining to this base class.
+         *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \ifacespython Not present; instead use data(), which returns this
+         * same information as a string.  However, the matching input stream
+         * constructor is not available in Python either, so it is recommended
+         * that Python users use taggedData() and readTaggedData() instead.
+         *
          * @param out the output stream to which the data should be written.
          */
         virtual void dumpData(std::ostream& out) const;
+
+        /**
+         * Returns all internal data in a plain text format.
+         * This object can be recreated from this text data by calling the
+         * input stream constructor for the appropriate class.
+         *
+         * This routine may be useful for transferring objects from
+         * one processor to another.
+         *
+         * If subclasses override this function, they should write subclass
+         * data after superclass data.  This means it is safe to dump data
+         * from a subclass and then recreate a new superclass object from
+         * that data (though subclass-specific information will be lost).
+         *
+         * This routine returns the same information that dumpData() writes.
+         *
+         * The key difference between data() and taggedData() is that
+         * taggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * data() only writes information pertaining to this base class.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * \ifacespython This routine is available, but the matching
+         * input stream constructor is not.  Python users should use
+         * taggedData() and readTaggedData() instead.
+         *
+         * @param all of this object's internal data in plain text format.
+         */
+        std::string data() const;
 
         /**
          * The main entry routine for running a search for all gluing
@@ -331,6 +418,11 @@ class GluingPermSearcher<2> {
          * \pre The given edge pairing is in canonical form as described
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
+         *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
          */
         template <typename Action, typename... Args>
         static void findAllPerms(FacetPairing<2> pairing,
@@ -359,6 +451,11 @@ class GluingPermSearcher<2> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
+         *
          * @return the new search manager.
          */
         template <typename Action, typename... Args>
@@ -382,6 +479,9 @@ class GluingPermSearcher<2> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \ifacespython Not present; instead you can use the variant of
+         * readTaggedData() that takes its input as a string.
+         *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
          * for each permutation set that is found when the search is run.
@@ -393,6 +493,40 @@ class GluingPermSearcher<2> {
         template <typename Action, typename... Args>
         static std::unique_ptr<GluingPermSearcher<2>> readTaggedData(
                 std::istream& in, Action&& action, Args&&... args);
+
+        /**
+         * Creates a new search manager based on tagged data stored in
+         * the given string.  This may be a new search or a
+         * partially completed search.
+         *
+         * The tagged data should be in the format returned by taggedData().
+         * The precise class of the search manager
+         * will be determined from the tagged data, and does not need to
+         * be known in advance.  This is in contrast to dumpData() and
+         * the input stream constructors, where the class of the data being
+         * read must be known at compile time.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
+         *
+         * @param data the tagged data from which to reconstruct a
+         * search manager.
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found when the search is run.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
+         * @return the new search manager, or \c null if the data in the
+         * given string was invalid or incorrectly formatted.
+         */
+        template <typename Action, typename... Args>
+        static std::unique_ptr<GluingPermSearcher<2>> readTaggedData(
+                const std::string& data, Action&& action, Args&&... args);
 
         // Make this class non-copyable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
@@ -477,6 +611,23 @@ inline bool GluingPermSearcher<2>::completePermSet() const {
     return (orderElt == orderSize);
 }
 
+inline void GluingPermSearcher<2>::dumpTaggedData(std::ostream& out) const {
+    out << dataTag() << std::endl;
+    dumpData(out);
+}
+
+inline std::string GluingPermSearcher<2>::taggedData() const {
+    std::ostringstream out;
+    dumpTaggedData(out);
+    return out.str();
+}
+
+inline std::string GluingPermSearcher<2>::data() const {
+    std::ostringstream out;
+    dumpData(out);
+    return out.str();
+}
+
 inline char GluingPermSearcher<2>::dataTag() const {
     return GluingPermSearcher<2>::dataTag_;
 }
@@ -502,6 +653,17 @@ inline std::unique_ptr<GluingPermSearcher<2>>
     } catch (const InvalidInput&) {
         return nullptr;
     }
+}
+
+template <typename Action, typename... Args>
+inline std::unique_ptr<GluingPermSearcher<2>>
+        GluingPermSearcher<2>::readTaggedData(
+        const std::string& data, Action&& action, Args&&... args) {
+    // With C++20 we will be able to move the string into the input stream,
+    // which means the argument should become a string (not const string&).
+    std::istringstream in(data);
+    return readTaggedData(in, std::forward<Action>(action),
+        std::forward<Args>(args)...);
 }
 
 template <typename Action, typename... Args>

@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include <algorithm>
-#include <sstream>
 #include "census/gluingpermsearcher4.h"
 #include "triangulation/dim4.h"
 
@@ -500,11 +499,6 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
                     << std::endl;
     }
 #endif
-}
-
-void GluingPermSearcher<4>::dumpTaggedData(std::ostream& out) const {
-    out << dataTag() << std::endl;
-    dumpData(out);
 }
 
 void GluingPermSearcher<4>::dumpData(std::ostream& out) const {

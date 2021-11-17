@@ -32,11 +32,15 @@
 
 namespace pybind11 { class module_; }
 
+void addGluingPermSearcher2(pybind11::module_& m);
 void addGluingPermSearcher3(pybind11::module_& m);
+void addGluingPermSearcher4(pybind11::module_& m);
 void addCensus(pybind11::module_& m);
 
 void addCensusClasses(pybind11::module_& m) {
+    addGluingPermSearcher2(m);
     addGluingPermSearcher3(m);
+    addGluingPermSearcher4(m);
     addCensus(m);
 }
 
