@@ -35,6 +35,19 @@ from __future__ import print_function
 
 #######################################################################
 
+def foundGluings2(g):
+	print(g.triangulate().isoSig())
+
+def foundFacetPairing2(p, isos):
+	print(p.str())
+	b = GluingPermSearcher2.bestSearcher(p, isos, False)
+	b.runSearch(foundGluings2)
+
+FacetPairing2.findAllPairings(2, False, 0, foundFacetPairing2)
+print()
+
+#######################################################################
+
 def foundGluings3(g):
 	t = g.triangulate()
 	if not t.intelligentSimplify():
@@ -48,14 +61,3 @@ def foundFacetPairing3(p, isos):
 FacetPairing3.findAllPairings(2, False, 0, foundFacetPairing3)
 print()
 
-#######################################################################
-
-def foundGluings2(g):
-	print(g.triangulate().isoSig())
-
-def foundFacetPairing2(p, isos):
-	print(p.str())
-	b = GluingPermSearcher2.bestSearcher(p, isos, False)
-	b.runSearch(foundGluings2)
-
-FacetPairing2.findAllPairings(2, False, 0, foundFacetPairing2)
