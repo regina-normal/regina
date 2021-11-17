@@ -477,11 +477,7 @@ void addTriangulation3(pybind11::module_& m) {
             return Triangulation<3>::enterTextTriangulation(
                 std::cin, std::cout);
         })
-        // We cannot take the addresses of the following properties, so we
-        // define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Triangulation<3>::dimension;
-        })
+        .def_readonly_static("dimension", &Triangulation<3>::dimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

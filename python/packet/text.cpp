@@ -47,10 +47,7 @@ void addText(pybind11::module_& m) {
         .def("text", &Text::text)
         .def("setText", overload_cast<std::string>(&Text::setText))
         .def("setText", overload_cast<const char*>(&Text::setText))
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Text::typeID;
-        })
+        .def_readonly_static("typeID", &Text::typeID)
     ;
 
     m.def("swap", (void(*)(Text&, Text&))(regina::swap));

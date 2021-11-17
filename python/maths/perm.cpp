@@ -131,16 +131,11 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("clear", &Perm<n>::clear)
         .def("SnIndex", &Perm<n>::SnIndex)
         .def("orderedSnIndex", &Perm<n>::orderedSnIndex)
-        .def_property_readonly_static("codeType",
-            [](pybind11::object /* self */) { return Perm<n>::codeType; })
-        .def_property_readonly_static("nPerms",
-            [](pybind11::object /* self */) { return Perm<n>::nPerms; })
-        .def_property_readonly_static("nPerms_1",
-            [](pybind11::object /* self */) { return Perm<n>::nPerms_1; })
-        .def_property_readonly_static("imageBits",
-            [](pybind11::object /* self */) { return Perm<n>::imageBits; })
-        .def_property_readonly_static("imageMask",
-            [](pybind11::object /* self */) { return Perm<n>::imageMask; })
+        .def_readonly_static("codeType", &Perm<n>::codeType)
+        .def_readonly_static("imageBits", &Perm<n>::imageBits)
+        .def_readonly_static("imageMask", &Perm<n>::imageMask)
+        .def_readonly_static("nPerms", &Perm<n>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<n>::nPerms_1)
         .def_readonly_static("Sn", &Perm_Sn_arr<n>)
         .def_readonly_static("orderedSn", &Perm_orderedSn_arr<n>)
     ;

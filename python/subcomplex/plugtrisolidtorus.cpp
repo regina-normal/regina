@@ -55,24 +55,11 @@ void addPlugTriSolidTorus(pybind11::module_& m) {
         .def_static("recognise", &PlugTriSolidTorus::recognise)
         .def_static("isPlugTriSolidTorus", // deprecated
             &PlugTriSolidTorus::recognise)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("CHAIN_NONE", [](pybind11::object) {
-            return PlugTriSolidTorus::CHAIN_NONE;
-        })
-        .def_property_readonly_static("CHAIN_MAJOR", [](pybind11::object) {
-            return PlugTriSolidTorus::CHAIN_MAJOR;
-        })
-        .def_property_readonly_static("CHAIN_MINOR", [](pybind11::object) {
-            return PlugTriSolidTorus::CHAIN_MINOR;
-        })
-        .def_property_readonly_static("EQUATOR_MAJOR", [](pybind11::object) {
-            return PlugTriSolidTorus::EQUATOR_MAJOR;
-        })
-        .def_property_readonly_static("EQUATOR_MINOR", [](pybind11::object) {
-            return PlugTriSolidTorus::EQUATOR_MINOR;
-        })
+        .def_readonly_static("CHAIN_NONE", &PlugTriSolidTorus::CHAIN_NONE)
+        .def_readonly_static("CHAIN_MAJOR", &PlugTriSolidTorus::CHAIN_MAJOR)
+        .def_readonly_static("CHAIN_MINOR", &PlugTriSolidTorus::CHAIN_MINOR)
+        .def_readonly_static("EQUATOR_MAJOR", &PlugTriSolidTorus::EQUATOR_MAJOR)
+        .def_readonly_static("EQUATOR_MINOR", &PlugTriSolidTorus::EQUATOR_MINOR)
     ;
 }
 

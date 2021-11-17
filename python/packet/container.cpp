@@ -42,10 +42,7 @@ void addContainer(pybind11::module_& m) {
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const Container&>())
         .def("swap", &Container::swap)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Container::typeID;
-        })
+        .def_readonly_static("typeID", &Container::typeID)
     ;
 
     m.def("swap", (void(*)(Container&, Container&))(regina::swap));

@@ -59,18 +59,9 @@ void addAugTriSolidTorus(pybind11::module_& m) {
         .def_static("recognise", &AugTriSolidTorus::recognise)
         .def_static("isAugTriSolidTorus", // deprecated
             &AugTriSolidTorus::recognise)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("CHAIN_NONE", [](pybind11::object) {
-            return AugTriSolidTorus::CHAIN_NONE;
-        })
-        .def_property_readonly_static("CHAIN_MAJOR", [](pybind11::object) {
-            return AugTriSolidTorus::CHAIN_MAJOR;
-        })
-        .def_property_readonly_static("CHAIN_AXIS", [](pybind11::object) {
-            return AugTriSolidTorus::CHAIN_AXIS;
-        })
+        .def_readonly_static("CHAIN_NONE", &AugTriSolidTorus::CHAIN_NONE)
+        .def_readonly_static("CHAIN_MAJOR", &AugTriSolidTorus::CHAIN_MAJOR)
+        .def_readonly_static("CHAIN_AXIS", &AugTriSolidTorus::CHAIN_AXIS)
     ;
 }
 

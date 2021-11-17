@@ -96,20 +96,11 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
         .def("isIdeal", &BoundaryComponent<dim>::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<dim>::isInvalidVertex)
         .def("isOrientable", &BoundaryComponent<dim>::isOrientable)
-        // We cannot take the addresses of the following header-only properties,
-        // so we define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return BoundaryComponent<dim>::dimension;
-        })
-        .def_property_readonly_static("allFaces", [](pybind11::object) {
-            return BoundaryComponent<dim>::allFaces;
-        })
-        .def_property_readonly_static("allowVertex", [](pybind11::object) {
-            return BoundaryComponent<dim>::allowVertex;
-        })
-        .def_property_readonly_static("canBuild", [](pybind11::object) {
-            return BoundaryComponent<dim>::canBuild;
-        })
+        .def_readonly_static("dimension", &BoundaryComponent<dim>::dimension)
+        .def_readonly_static("allFaces", &BoundaryComponent<dim>::allFaces)
+        .def_readonly_static("allowVertex",
+            &BoundaryComponent<dim>::allowVertex)
+        .def_readonly_static("canBuild", &BoundaryComponent<dim>::canBuild)
     ;
     if constexpr (dim == 5) {
         c.def("countPentachora", &BoundaryComponent<dim>::size);

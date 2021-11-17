@@ -113,12 +113,9 @@ void addPerm3(pybind11::module_& m) {
         .def("orderedSnIndex", &Perm<3>::orderedS3Index)
         .def("isConjugacyMinimal", &Perm<3>::isConjugacyMinimal)
         .def_static("extend", &Perm<3>::extend<2>)
-        .def_property_readonly_static("codeType",
-            [](pybind11::object /* self */) { return Perm<3>::codeType; })
-        .def_property_readonly_static("nPerms",
-            [](pybind11::object /* self */) { return Perm<3>::nPerms; })
-        .def_property_readonly_static("nPerms_1",
-            [](pybind11::object /* self */) { return Perm<3>::nPerms_1; })
+        .def_readonly_static("codeType", &Perm<3>::codeType)
+        .def_readonly_static("nPerms", &Perm<3>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<3>::nPerms_1)
         .def_readonly_static("S3", &Perm3_S3_arr)
         .def_readonly_static("Sn", &Perm3_S3_arr)
         .def_readonly_static("orderedS3", &Perm3_orderedS3_arr)

@@ -47,10 +47,7 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def("accept", &SurfaceFilter::accept)
         .def("filterType", &SurfaceFilter::filterType)
         .def("filterTypeName", &SurfaceFilter::filterTypeName)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return SurfaceFilter::typeID;
-        })
+        .def_readonly_static("typeID", &SurfaceFilter::typeID)
     ;
 
     pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
@@ -61,9 +58,8 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def("swap", &SurfaceFilterCombination::swap)
         .def("usesAnd", &SurfaceFilterCombination::usesAnd)
         .def("setUsesAnd", &SurfaceFilterCombination::setUsesAnd)
-        .def_property_readonly_static("filterTypeID", [](pybind11::object) {
-            return SurfaceFilterCombination::filterTypeID;
-        })
+        .def_readonly_static("filterTypeID",
+            &SurfaceFilterCombination::filterTypeID)
     ;
 
     m.def("swap", (void(*)(SurfaceFilterCombination&,
@@ -88,9 +84,8 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def("setOrientability", &SurfaceFilterProperties::setOrientability)
         .def("setCompactness", &SurfaceFilterProperties::setCompactness)
         .def("setRealBoundary", &SurfaceFilterProperties::setRealBoundary)
-        .def_property_readonly_static("filterTypeID", [](pybind11::object) {
-            return SurfaceFilterProperties::filterTypeID;
-        })
+        .def_readonly_static("filterTypeID",
+            &SurfaceFilterProperties::filterTypeID)
     ;
 
     m.def("swap", (void(*)(SurfaceFilterProperties&,

@@ -201,11 +201,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def_static("isoSigComponentSize",
             &Triangulation<dim>::isoSigComponentSize)
         .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
-        // We cannot take the addresses of the following properties, so we
-        // define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Triangulation<dim>::dimension;
-        })
+        .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
     add_pachner<dim>::add(c);
     regina::python::add_output(c);

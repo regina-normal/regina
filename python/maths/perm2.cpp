@@ -104,12 +104,9 @@ void addPerm2(pybind11::module_& m) {
         .def("orderedS2Index", &Perm<2>::orderedS2Index)
         .def("orderedSnIndex", &Perm<2>::orderedS2Index)
         .def("isConjugacyMinimal", &Perm<2>::isConjugacyMinimal)
-        .def_property_readonly_static("codeType",
-            [](pybind11::object /* self */) { return Perm<2>::codeType; })
-        .def_property_readonly_static("nPerms",
-            [](pybind11::object /* self */) { return Perm<2>::nPerms; })
-        .def_property_readonly_static("nPerms_1",
-            [](pybind11::object /* self */) { return Perm<2>::nPerms_1; })
+        .def_readonly_static("codeType", &Perm<2>::codeType)
+        .def_readonly_static("nPerms", &Perm<2>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<2>::nPerms_1)
         .def_readonly_static("S2", &Perm2_S2_arr)
         .def_readonly_static("Sn", &Perm2_S2_arr)
         .def_readonly_static("orderedS2", &Perm2_S2_arr)

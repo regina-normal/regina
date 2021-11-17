@@ -76,12 +76,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
         .def("firstBit", &B::firstBit)
         .def("lastBit", &B::lastBit)
         .def("atMostOneBit", &B::atMostOneBit)
-        // On some systems we cannot take addresses of inline class constants
-        // (e.g., this fails with gcc10 on windows).  We therefore define
-        // getter functions instead.
-        .def_property_readonly_static("fixedSize", [](pybind11::object) {
-            return B::fixedSize;
-        })
+        .def_readonly_static("fixedSize", &B::fixedSize)
     ;
     regina::python::add_output_ostream(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
@@ -125,12 +120,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
         .def("firstBit", &Bitmask::firstBit)
         .def("lastBit", &Bitmask::lastBit)
         .def("atMostOneBit", &Bitmask::atMostOneBit)
-        // On some systems we cannot take addresses of inline class constants
-        // (e.g., this fails with gcc10 on windows).  We therefore define
-        // getter functions instead.
-        .def_property_readonly_static("fixedSize", [](pybind11::object) {
-            return Bitmask::fixedSize;
-        })
+        .def_readonly_static("fixedSize", &Bitmask::fixedSize)
     ;
     regina::python::add_output_ostream(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);

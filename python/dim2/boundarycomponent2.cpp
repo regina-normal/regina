@@ -69,21 +69,10 @@ void addBoundaryComponent2(pybind11::module_& m) {
         .def("isIdeal", &BoundaryComponent<2>::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<2>::isInvalidVertex)
         .def("isOrientable", &BoundaryComponent<2>::isOrientable)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return BoundaryComponent<2>::dimension;
-        })
-        .def_property_readonly_static("allFaces", [](pybind11::object) {
-            return BoundaryComponent<2>::allFaces;
-        })
-        .def_property_readonly_static("allowVertex", [](pybind11::object) {
-            return BoundaryComponent<2>::allowVertex;
-        })
-        .def_property_readonly_static("canBuild", [](pybind11::object) {
-            return BoundaryComponent<2>::canBuild;
-        })
+        .def_readonly_static("dimension", &BoundaryComponent<2>::dimension)
+        .def_readonly_static("allFaces", &BoundaryComponent<2>::allFaces)
+        .def_readonly_static("allowVertex", &BoundaryComponent<2>::allowVertex)
+        .def_readonly_static("canBuild", &BoundaryComponent<2>::canBuild)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

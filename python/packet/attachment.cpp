@@ -51,10 +51,7 @@ void addAttachment(pybind11::module_& m) {
         .def("reset", overload_cast<>(&Attachment::reset))
         .def("save", &Attachment::save)
         .def("savePDF", &Attachment::save) // deprecated
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Attachment::typeID;
-        })
+        .def_readonly_static("typeID", &Attachment::typeID)
     ;
 
     m.def("swap", (void(*)(Attachment&, Attachment&))(regina::swap));

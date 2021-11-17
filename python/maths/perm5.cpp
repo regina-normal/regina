@@ -137,16 +137,11 @@ void addPerm5(pybind11::module_& m) {
         .def_static("extend", &Perm<5>::extend<2>)
         .def_static("extend", &Perm<5>::extend<3>)
         .def_static("extend", &Perm<5>::extend<4>)
-        .def_property_readonly_static("codeType",
-            [](pybind11::object /* self */) { return Perm<5>::codeType; })
-        .def_property_readonly_static("imageBits",
-            [](pybind11::object /* self */) { return Perm<5>::imageBits; })
-        .def_property_readonly_static("imageMask",
-            [](pybind11::object /* self */) { return Perm<5>::imageMask; })
-        .def_property_readonly_static("nPerms",
-            [](pybind11::object /* self */) { return Perm<5>::nPerms; })
-        .def_property_readonly_static("nPerms_1",
-            [](pybind11::object /* self */) { return Perm<5>::nPerms_1; })
+        .def_readonly_static("codeType", &Perm<5>::codeType)
+        .def_readonly_static("imageBits", &Perm<5>::imageBits)
+        .def_readonly_static("imageMask", &Perm<5>::imageMask)
+        .def_readonly_static("nPerms", &Perm<5>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<5>::nPerms_1)
         .def_readonly_static("S5", &Perm5_S5_arr)
         .def_readonly_static("Sn", &Perm5_S5_arr)
         .def_readonly_static("orderedS5", &Perm5_orderedS5_arr)

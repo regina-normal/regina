@@ -77,10 +77,7 @@ void addScript(pybind11::module_& m) {
         .def("removeVariable",
             overload_cast<const std::string&>(&Script::removeVariable))
         .def("removeAllVariables", &Script::removeAllVariables)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Script::typeID;
-        })
+        .def_readonly_static("typeID", &Script::typeID)
         .def("listenVariables", &Script::listenVariables)
         .def("unlistenVariables", &Script::unlistenVariables)
     ;

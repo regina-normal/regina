@@ -67,10 +67,7 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     return pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
             std::shared_ptr<regina::PacketOf<Held>>>(m, className)
         .def(pybind11::init<const Held&>()) // also takes PacketOf<Held>
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return regina::PacketOf<Held>::typeID;
-        })
+        .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
 }
 
