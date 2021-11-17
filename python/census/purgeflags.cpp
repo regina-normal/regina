@@ -36,7 +36,7 @@
 #include "../flags.h"
 
 void addPurgeFlags(pybind11::module_& m) {
-    regina::python::add_flags<regina::CensusPurgeFlags>(
+    regina::python::add_flags<regina::CensusPurgeFlags, 2 /* hex digits */>(
         m, "CensusPurgeFlags", "CensusPurge", {
             { "PURGE_NONE", regina::PURGE_NONE },
             { "PURGE_NON_MINIMAL", regina::PURGE_NON_MINIMAL },

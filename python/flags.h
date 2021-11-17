@@ -34,6 +34,8 @@
  *  \brief Assists with wrapping Regina's flag constants and related classes.
  */
 
+#include <iomanip>
+#include <sstream>
 #include "utilities/flags.h"
 #include "pybind11/operators.h"
 
@@ -50,8 +52,12 @@ namespace regina::python {
  *
  * The corresponding flags class is assumed to be regina::Flags<Enum>,
  * and will be given the Python class name \a flagsName.
+ *
+ * This routine will define __str__ and __repr__ functions for the flags class,
+ * so that users can easily see what value a combination of flags holds.  The
+ * flag will be written in hexadecimal, using a minimum of \a hexWidth digits.
  */
-template <typename Enum>
+template <typename Enum, int hexWidth = 4>
 void add_flags(pybind11::module_& m,
         const char* enumName, const char* flagsName,
         std::initializer_list<std::pair<const char*, Enum>> values) {
@@ -88,6 +94,15 @@ void add_flags(pybind11::module_& m,
             &Flags::ensureOne))
         ;
     regina::python::add_eq_operators(f);
+
+    auto repr = [](Flags f) {
+        std::ostringstream out;
+        out << "0x" << std::hex << std::setw(hexWidth) << std::setfill('0')
+            << f.intValue();
+        return out.str();
+    };
+    f.def("__str__", repr);
+    f.def("__repr__", repr);
 
     pybind11::implicitly_convertible<Enum, Flags>();
 }
