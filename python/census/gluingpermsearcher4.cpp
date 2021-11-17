@@ -53,9 +53,9 @@ void addGluingPermSearcher4(pybind11::module_& m) {
             &GluingPermSearcher<4>::findAllPerms<Action>)
         .def_static("bestSearcher",
             &GluingPermSearcher<4>::bestSearcher<Action>)
-        .def_static("readTaggedData",
+        .def_static("fromTaggedData",
             pybind11::overload_cast<const std::string&, Action>(
-                &GluingPermSearcher<4>::readTaggedData<Action>))
+                &GluingPermSearcher<4>::fromTaggedData<Action>))
         .def_readonly_static("dataTag", &GluingPermSearcher<4>::dataTag)
         ;
     regina::python::add_eq_operators(c);

@@ -328,12 +328,12 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<2> istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<2>::readTaggedData(taggedData,
+                regina::GluingPermSearcher<2>::fromTaggedData(taggedData,
                         [](const regina::GluingPerms<2>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
                 verifyPassedByReference(e,
-                    "GluingPermSearcher<2>::readTaggedData()");
+                    "GluingPermSearcher<2>::fromTaggedData()");
             }
             {
                 const regina::FacetPairing<3> p(regina::Example<3>::sphere());
@@ -379,12 +379,12 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<3> istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
                 verifyPassedByReference(e,
-                    "GluingPermSearcher<3>::readTaggedData()");
+                    "GluingPermSearcher<3>::fromTaggedData()");
             }
             {
                 // Note: ClosedPrimeMinSearcher insists on >= 3 tetrahedra.
@@ -414,12 +414,12 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "ClosedPrimeMinSearcher istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
                 verifyPassedByReference(e,
-                    "ClosedPrimeMinSearcher variant of readTaggedData()");
+                    "ClosedPrimeMinSearcher variant of fromTaggedData()");
             }
             {
                 const regina::FacetPairing<3> p(regina::Example<3>::sphere());
@@ -447,12 +447,12 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "CompactSearcher istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
                 verifyPassedByReference(e,
-                    "CompactSearcher variant of readTaggedData()");
+                    "CompactSearcher variant of fromTaggedData()");
             }
             {
                 const regina::FacetPairing<3> p(regina::Example<3>::sphere());
@@ -480,12 +480,12 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "EulerSearcher istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
                 verifyPassedByReference(e,
-                    "EulerSearcher variant of readTaggedData()");
+                    "EulerSearcher variant of fromTaggedData()");
             }
             {
                 const regina::FacetPairing<3> p(regina::Example<3>::sphere());
@@ -513,12 +513,12 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "HyperbolicMinSearcher istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<3>::readTaggedData(taggedData,
+                regina::GluingPermSearcher<3>::fromTaggedData(taggedData,
                         [](const regina::GluingPerms<3>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
                 verifyPassedByReference(e,
-                    "HyperbolicMinSearcher variant of readTaggedData()");
+                    "HyperbolicMinSearcher variant of fromTaggedData()");
             }
             {
                 const regina::FacetPairing<4> p(regina::Example<4>::sphere());
@@ -562,12 +562,12 @@ class CallbacksTest : public CppUnit::TestFixture {
                     "GluingPermSearcher<4> istream constructor");
 
                 Arg e;
-                regina::GluingPermSearcher<4>::readTaggedData(taggedData,
+                regina::GluingPermSearcher<4>::fromTaggedData(taggedData,
                         [](const regina::GluingPerms<4>&, Arg& arg) {
                     arg.flag();
                 }, e)->runSearch();
                 verifyPassedByReference(e,
-                    "GluingPermSearcher<4>::readTaggedData()");
+                    "GluingPermSearcher<4>::fromTaggedData()");
             }
 
             // Routines that use callbacks but whose callbacks don't

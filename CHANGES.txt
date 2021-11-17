@@ -365,10 +365,12 @@ Version 7.0  [ TODO ]
             - Several class constants are now constexpr.
             - The input stream constructor now throws an InvalidInput
               exception upon error.  The inputError() routine has been removed.
-            - Routines bestSearcher() and readTaggedData() now return a
-              std::unique_ptr.
+            - Routine bestSearcher() now returns a std::unique_ptr.
+            - Routine readTaggedData(std::iostream&) has been renamed to
+              fromTaggedData(), returns a std::unique_ptr, and throws an
+              exception on error instead of returning null.
             - Added string-based functions taggedData(), data(), and
-              readTaggedData(const std::string&).
+              fromTaggedData(const std::string&).
             - Renamed public constants ...::dataTag_ to ...::dataTag.
             - Moved GluingPermSearcher<3>::PurgeFlags to the more carefully
               typed regina::CensusPurge and regina::CensusPurgeFlags.

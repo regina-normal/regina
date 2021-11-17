@@ -287,7 +287,7 @@ class GluingPermSearcher<3> {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -299,7 +299,7 @@ class GluingPermSearcher<3> {
          * \ifacespython Not present, since this constructor is fundamentally
          * designed around working through a single input stream as we make
          * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and readTaggedData() instead,
+         * Python users should use taggedData() and fromTaggedData() instead,
          * which incorporate this same text data as part of their richer text
          * format.
          *
@@ -374,7 +374,7 @@ class GluingPermSearcher<3> {
         /**
          * Dumps all internal data in a plain text format, along with a
          * marker to signify which precise class the data belongs to.
-         * This routine can be used with readTaggedData() to transport
+         * This routine can be used with fromTaggedData() to transport
          * objects from place to place whose precise class is unknown.
          *
          * This routine outputs the same information that taggedData() returns.
@@ -399,7 +399,7 @@ class GluingPermSearcher<3> {
         /**
          * Returns all internal data in a plain text format, along with a
          * marker to signify which precise class the data belongs to.
-         * This routine can be used with readTaggedData() to transport
+         * This routine can be used with fromTaggedData() to transport
          * objects from place to place whose precise class is unknown.
          *
          * This routine returns the same information that dumpTaggedData()
@@ -445,7 +445,7 @@ class GluingPermSearcher<3> {
          * \ifacespython Not present; instead use data(), which returns this
          * same information as a string.  However, the matching input stream
          * constructor is not available in Python either, so it is recommended
-         * that Python users use taggedData() and readTaggedData() instead.
+         * that Python users use taggedData() and fromTaggedData() instead.
          *
          * @param out the output stream to which the data should be written.
          */
@@ -477,7 +477,7 @@ class GluingPermSearcher<3> {
          *
          * \ifacespython This routine is available, but the matching
          * input stream constructor is not.  Python users should use
-         * taggedData() and readTaggedData() instead.
+         * taggedData() and fromTaggedData() instead.
          *
          * @param all of this object's internal data in plain text format.
          */
@@ -566,8 +566,11 @@ class GluingPermSearcher<3> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \exception InvalidInput the data found in the given input stream
+         * is invalid, incomplete, or incorrectly formatted.
+         *
          * \ifacespython Not present; instead you can use the variant of
-         * readTaggedData() that takes its input as a string.
+         * fromTaggedData() that takes its input as a string.
          *
          * @param in the input stream from which to read.
          * @param action a function (or other callable object) to call
@@ -578,7 +581,7 @@ class GluingPermSearcher<3> {
          * input stream was invalid or incorrectly formatted.
          */
         template <typename Action, typename... Args>
-        static std::unique_ptr<GluingPermSearcher<3>> readTaggedData(
+        static std::unique_ptr<GluingPermSearcher<3>> fromTaggedData(
                 std::istream& in, Action&& action, Args&&... args);
 
         /**
@@ -597,6 +600,9 @@ class GluingPermSearcher<3> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \exception InvalidArgument the data found in the given string
+         * is invalid, incomplete, or incorrectly formatted.
+         *
          * \ifacespython This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial gluing permutation set
@@ -612,7 +618,7 @@ class GluingPermSearcher<3> {
          * given string was invalid or incorrectly formatted.
          */
         template <typename Action, typename... Args>
-        static std::unique_ptr<GluingPermSearcher<3>> readTaggedData(
+        static std::unique_ptr<GluingPermSearcher<3>> fromTaggedData(
                 const std::string& data, Action&& action, Args&&... args);
 
         // Make this class non-copyable.
@@ -1245,7 +1251,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -1257,7 +1263,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * \ifacespython Not present, since this constructor is fundamentally
          * designed around working through a single input stream as we make
          * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and readTaggedData() instead,
+         * Python users should use taggedData() and fromTaggedData() instead,
          * which incorporate this same text data as part of their richer text
          * format.
          *
@@ -2076,7 +2082,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -2088,7 +2094,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * \ifacespython Not present, since this constructor is fundamentally
          * designed around working through a single input stream as we make
          * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and readTaggedData() instead,
+         * Python users should use taggedData() and fromTaggedData() instead,
          * which incorporate this same text data as part of their richer text
          * format.
          *
@@ -2631,7 +2637,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -2643,7 +2649,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * \ifacespython Not present, since this constructor is fundamentally
          * designed around working through a single input stream as we make
          * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and readTaggedData() instead,
+         * Python users should use taggedData() and fromTaggedData() instead,
          * which incorporate this same text data as part of their richer text
          * format.
          *
@@ -2812,7 +2818,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -2824,7 +2830,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * \ifacespython Not present, since this constructor is fundamentally
          * designed around working through a single input stream as we make
          * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and readTaggedData() instead,
+         * Python users should use taggedData() and fromTaggedData() instead,
          * which incorporate this same text data as part of their richer text
          * format.
          *
@@ -2969,48 +2975,50 @@ inline char GluingPermSearcher<3>::dataTagInternal() const {
 
 template <typename Action, typename... Args>
 inline std::unique_ptr<GluingPermSearcher<3>>
-        GluingPermSearcher<3>::readTaggedData(
+        GluingPermSearcher<3>::fromTaggedData(
         std::istream& in, Action&& action, Args&&... args) {
     // Read the class marker.
     char c;
     in >> c;
     if (in.eof())
-        return nullptr;
+        throw InvalidInput("Missing class marker "
+            "when reading tagged GluingPermSearcher<3> data");
 
-    try {
-        switch (c) {
-            case GluingPermSearcher<3>::dataTag:
-                return std::make_unique<GluingPermSearcher<3>>(in,
-                    std::forward<Action>(action), std::forward<Args>(args)...);
-            case CompactSearcher::dataTag:
-                return std::make_unique<CompactSearcher>(in,
-                    std::forward<Action>(action), std::forward<Args>(args)...);
-            case ClosedPrimeMinSearcher::dataTag:
-                return std::make_unique<ClosedPrimeMinSearcher>(in,
-                    std::forward<Action>(action), std::forward<Args>(args)...);
-            case EulerSearcher::dataTag:
-                return std::make_unique<EulerSearcher>(in,
-                    std::forward<Action>(action), std::forward<Args>(args)...);
-            case HyperbolicMinSearcher::dataTag:
-                return std::make_unique<HyperbolicMinSearcher>(in,
-                    std::forward<Action>(action), std::forward<Args>(args)...);
-            default:
-                return nullptr;
-        }
-    } catch (const InvalidInput&) {
-        return nullptr;
+    switch (c) {
+        case GluingPermSearcher<3>::dataTag:
+            return std::make_unique<GluingPermSearcher<3>>(in,
+                std::forward<Action>(action), std::forward<Args>(args)...);
+        case CompactSearcher::dataTag:
+            return std::make_unique<CompactSearcher>(in,
+                std::forward<Action>(action), std::forward<Args>(args)...);
+        case ClosedPrimeMinSearcher::dataTag:
+            return std::make_unique<ClosedPrimeMinSearcher>(in,
+                std::forward<Action>(action), std::forward<Args>(args)...);
+        case EulerSearcher::dataTag:
+            return std::make_unique<EulerSearcher>(in,
+                std::forward<Action>(action), std::forward<Args>(args)...);
+        case HyperbolicMinSearcher::dataTag:
+            return std::make_unique<HyperbolicMinSearcher>(in,
+                std::forward<Action>(action), std::forward<Args>(args)...);
+        default:
+            throw InvalidInput("Invalid class marker "
+                "when reading tagged GluingPermSearcher<3> data");
     }
 }
 
 template <typename Action, typename... Args>
 inline std::unique_ptr<GluingPermSearcher<3>>
-        GluingPermSearcher<3>::readTaggedData(
+        GluingPermSearcher<3>::fromTaggedData(
         const std::string& data, Action&& action, Args&&... args) {
     // With C++20 we will be able to move the string into the input stream,
     // which means the argument should become a string (not const string&).
-    std::istringstream in(data);
-    return readTaggedData(in, std::forward<Action>(action),
-        std::forward<Args>(args)...);
+    try {
+        std::istringstream in(data);
+        return fromTaggedData(in, std::forward<Action>(action),
+            std::forward<Args>(args)...);
+    } catch (const InvalidInput& exc) {
+        throw InvalidArgument(exc.what());
+    }
 }
 
 template <typename Action, typename... Args>
