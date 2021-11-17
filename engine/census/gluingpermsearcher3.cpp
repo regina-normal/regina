@@ -37,13 +37,12 @@
 namespace regina {
 
 GluingPermSearcher<3>::GluingPermSearcher(
-        FacetPairing<3>&& pairing, FacetPairing<3>::IsoList&& autos,
-        bool orientableOnly, bool finiteOnly, CensusPurge whichPurge,
-        ActionWrapper&& action) :
+        FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
+        bool orientableOnly, bool finiteOnly, CensusPurge whichPurge) :
         perms_(std::move(pairing)), autos_(std::move(autos)),
         // pairing and autos are no longer usable
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
-        whichPurge_(whichPurge), action_(std::move(action)),
+        whichPurge_(whichPurge),
         started(false), orientation(new int[perms_.size()]) {
     // Initialise arrays.
     unsigned nTets = perms_.size();
@@ -67,7 +66,7 @@ GluingPermSearcher<3>::~GluingPermSearcher() {
     delete[] order;
 }
 
-void GluingPermSearcher<3>::runSearch(long maxDepth) {
+void GluingPermSearcher<3>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     // In this generation algorithm, each orientation is simply +/-1.
 
     unsigned nTetrahedra = perms_.size();
@@ -231,10 +230,8 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-GluingPermSearcher<3>::GluingPermSearcher(std::istream& in,
-        ActionWrapper&& action) :
+GluingPermSearcher<3>::GluingPermSearcher(std::istream& in) :
         perms_(in), autos_(perms_.pairing().findAutomorphisms()),
-        action_(std::move(action)),
         orientation(nullptr), order(nullptr), orderSize(0), orderElt(0) {
     // Keep reading.
     char c;

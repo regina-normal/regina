@@ -55,7 +55,7 @@ def foundGluings2(g):
 
 def foundFacetPairing2(p, isos):
 	print(p.str())
-	b = GluingPermSearcher2.bestSearcher(p, isos, True, foundGluings2)
-	b.runSearch()
+	b = GluingPermSearcher2.bestSearcher(p, isos, True)
+	b.runSearch(foundGluings2)
 
 FacetPairing2.findAllPairings(2, False, 0, foundFacetPairing2)

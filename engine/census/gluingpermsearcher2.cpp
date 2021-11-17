@@ -36,12 +36,11 @@
 
 namespace regina {
 
-GluingPermSearcher<2>::GluingPermSearcher(
-        FacetPairing<2>&& pairing, FacetPairing<2>::IsoList&& autos,
-        bool orientableOnly, ActionWrapper&& action) :
+GluingPermSearcher<2>::GluingPermSearcher(FacetPairing<2> pairing,
+        FacetPairing<2>::IsoList autos, bool orientableOnly) :
         perms_(std::move(pairing)), autos_(std::move(autos)),
         // pairing and autos are no longer usable
-        orientableOnly_(orientableOnly), action_(std::move(action)),
+        orientableOnly_(orientableOnly),
         started(false), orientation(new int[perms_.size()]) {
     // Initialise arrays.
     unsigned nTris = perms_.size();
@@ -65,7 +64,7 @@ GluingPermSearcher<2>::~GluingPermSearcher() {
     delete[] order;
 }
 
-void GluingPermSearcher<2>::runSearch(long maxDepth) {
+void GluingPermSearcher<2>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     // In this generation algorithm, each orientation is simply +/-1.
 
     unsigned nTriangles = perms_.size();
@@ -215,10 +214,8 @@ void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
-        ActionWrapper&& action) :
+GluingPermSearcher<2>::GluingPermSearcher(std::istream& in) :
         perms_(in), autos_(perms_.pairing().findAutomorphisms()),
-        action_(std::move(action)),
         orientation(nullptr), order(nullptr), orderSize(0), orderElt(0) {
     // Keep reading.
     char c;

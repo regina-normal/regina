@@ -351,6 +351,9 @@ Version 7.0  [ TODO ]
               none of the previously-inherited functions are available.
             - Significant reorganisation of the API for enumerating
               permuatation sets; this includes:
+                * The callback function is passed to runSearch() or
+                  partialSearch(), not the class constructor or other static
+                  construction routines;
                 * The callback function and its arguments now use a type-safe
                   template mechanism, not function pointers and void pointers;
                 * The callback function now receives its permutation by
@@ -360,6 +363,8 @@ Version 7.0  [ TODO ]
                 * The search manager now copies (or moves, if possible) the
                   given facet pairing, and so no longer relies on the original
                   facet pairing existing for the lifetime of the search;
+                * The runSearch() routine no longer takes a depth argument;
+                  instead there is a new partialSearch() routine for that.
                 * Several other arguments are now passed by reference or
                   by value, not by pointer.
             - Several class constants are now constexpr.

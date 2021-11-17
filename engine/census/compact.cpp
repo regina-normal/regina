@@ -191,12 +191,11 @@ bool CompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
     return true;
 }
 
-CompactSearcher::CompactSearcher(FacetPairing<3>&& pairing,
-        FacetPairing<3>::IsoList&& autos, bool orientableOnly,
-        CensusPurge whichPurge, ActionWrapper&& action) :
+CompactSearcher::CompactSearcher(FacetPairing<3> pairing,
+        FacetPairing<3>::IsoList autos, bool orientableOnly,
+        CensusPurge whichPurge) :
         GluingPermSearcher<3>(std::move(pairing), std::move(autos),
-            orientableOnly, true /* finiteOnly */, whichPurge,
-            std::move(action)) {
+            orientableOnly, true /* finiteOnly */, whichPurge) {
     // Initialise the internal arrays to accurately reflect the underlying
     // face pairing.
 
@@ -252,7 +251,7 @@ CompactSearcher::CompactSearcher(FacetPairing<3>&& pairing,
 }
 
 // TODO (net): See what was removed when we brought in vertex link checking.
-void CompactSearcher::runSearch(long maxDepth) {
+void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
     unsigned nTets = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
@@ -513,8 +512,8 @@ void CompactSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-CompactSearcher::CompactSearcher(std::istream& in, ActionWrapper&& action) :
-        GluingPermSearcher<3>(in, std::move(action)),
+CompactSearcher::CompactSearcher(std::istream& in) :
+        GluingPermSearcher<3>(in),
         nVertexClasses(0), vertexState(nullptr), vertexStateChanged(nullptr),
         nEdgeClasses(0), edgeState(nullptr), edgeStateChanged(nullptr) {
     unsigned nTets = perms_.size();

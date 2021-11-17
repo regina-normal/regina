@@ -44,20 +44,18 @@ void addGluingPermSearcher2(pybind11::module_& m) {
     using Action = const std::function<void(const regina::GluingPerms<2>&)>&;
 
     auto c = pybind11::class_<GluingPermSearcher<2>>(m, "GluingPermSearcher2")
-        .def(pybind11::init<FacetPairing<2>, FacetPairing<2>::IsoList, bool,
-            Action>())
-        .def("runSearch", &GluingPermSearcher<2>::runSearch,
-            pybind11::arg("maxDepth") = -1)
+        .def(pybind11::init<FacetPairing<2>, FacetPairing<2>::IsoList, bool>())
+        .def("runSearch", &GluingPermSearcher<2>::runSearch<Action>)
+        .def("partialSearch", &GluingPermSearcher<2>::partialSearch<Action>)
         .def("completePermSet", &GluingPermSearcher<2>::completePermSet)
         .def("taggedData", &GluingPermSearcher<2>::taggedData)
         .def("data", &GluingPermSearcher<2>::data)
         .def_static("findAllPerms",
             &GluingPermSearcher<2>::findAllPerms<Action>)
-        .def_static("bestSearcher",
-            &GluingPermSearcher<2>::bestSearcher<Action>)
+        .def_static("bestSearcher", &GluingPermSearcher<2>::bestSearcher)
         .def_static("fromTaggedData",
-            pybind11::overload_cast<const std::string&, Action>(
-                &GluingPermSearcher<2>::fromTaggedData<Action>))
+            pybind11::overload_cast<const std::string&>(
+                &GluingPermSearcher<2>::fromTaggedData))
         .def_readonly_static("dataTag", &GluingPermSearcher<2>::dataTag)
         ;
     regina::python::add_eq_operators(c);

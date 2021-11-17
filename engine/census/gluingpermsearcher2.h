@@ -95,11 +95,6 @@ class GluingPermSearcher<2> {
         bool orientableOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to orientable triangulations? */
-        ActionWrapper action_;
-            /**< The action to perform each time a gluing permutation set is
-                 found during the search.  This incorporates the user's
-                 callback function along with any extra arguments that
-                 the user wants passed to it. */
 
         bool started;
             /**< Has the search started yet?  This helps distinguish
@@ -147,31 +142,12 @@ class GluingPermSearcher<2> {
          * The arguments to this constructor describe the search
          * parameters in detail.
          *
-         * For each facet pairing that is generated, this routine will call
-         * \a action (which must be a function or some other callable object).
-         *
-         * - The first argument to \a action must be a const reference to a
-         *   GluingPerms<2>.  This will be the permutation set that was found.
-         *   If \a action wishes to keep the permutation set, it should take a
-         *   deep copy (not a reference), since the permutation set may be
-         *   changed and reused after \a action returns.
-         *
-         * - If there are any additional arguments supplied in the list \a args,
-         *   then these will be passed as subsequent arguments to \a action.
-         *
-         * - \a action must return \c void.
-         *
          * \pre The given edge pairing is connected, i.e., it is possible
          * to reach any triangle from any other triangle via a
          * series of matched edge pairs.
          * \pre The given edge pairing is in canonical form as described
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
-         *
-         * \ifacespython This constructor is available, and \a action may be
-         * a pure Python function.  However, \a action cannot take any
-         * additional arguments beyond the initial gluing permutation set
-         * (and therefore the additional \a args list is omitted here).
          *
          * @param pairing the specific pairing of triangle edges
          * that the generated permutation sets will complement.
@@ -184,15 +160,9 @@ class GluingPermSearcher<2> {
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
-         * @param action a function (or other callable object) to call
-         * for each permutation set that is found.
-         * @param args any additional arguments that should be passed to
-         * \a action, following the initial permutation set argument.
          */
-        template <typename Action, typename... Args>
         GluingPermSearcher(FacetPairing<2> pairing,
-                FacetPairing<2>::IsoList autos, bool orientableOnly,
-                Action&& action, Args&&... args);
+                FacetPairing<2>::IsoList autos, bool orientableOnly);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -218,17 +188,11 @@ class GluingPermSearcher<2> {
          * format.
          *
          * @param in the input stream from which to read.
-         * @param action a function (or other callable object) to call
-         * for each permutation set that is found when the search is run.
-         * @param args any additional arguments that should be passed to
-         * \a action, following the initial permutation set argument.
          */
-        template <typename Action, typename... Args>
-        GluingPermSearcher(std::istream& in, Action&& action, Args&&... args);
+        GluingPermSearcher(std::istream& in);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
         virtual ~GluingPermSearcher();
 
@@ -242,21 +206,56 @@ class GluingPermSearcher<2> {
          * once up to equivalence, where equivalence is defined by the
          * given set of automorphisms of the given edge pairing.
          *
-         * For each permutation set \a p that is generated, the function
-         * or callable object \a action_ (as passed to the class constructor)
-         * will be called with a const reference to \a p as its first argument.
+         * For each permutation set that is generated, this routine will call
+         * \a action (which must be a function or some other callable object).
          *
-         * Subclasses corresponding to more specialised search criteria
-         * should override this routine to use a better optimised algorithm
-         * where possible.
+         * - The first argument to \a action must be a const reference to a
+         *   GluingPerms<2>.  This will be the permutation set that was found.
+         *   If \a action wishes to keep the permutation set, it should take a
+         *   deep copy (not a reference), since the permutation set may be
+         *   changed and reused after \a action returns.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
          *
          * It is possible to run only a partial search, branching to a
-         * given depth but no further.  In this case, rather than
-         * producing complete gluing permutation sets, the search will
+         * given depth but no further; for this you should use the
+         * separate routine partialSearch(), not runSearch().
+         *
+         * \todo \feature Allow cancellation of permutation set generation.
+         *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
+         *
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
+         */
+        template <typename Action, typename... Args>
+        void runSearch(Action&& action, Args&&... args);
+
+        /**
+         * Runs a partial search for all possible gluing permutations
+         * that satisfy the search criteria, branching only to the
+         * given depth and no further.
+         *
+         * This routine essentially does some but not all of the work of
+         * runSearch().  See the runSearch() documentation for a detailed
+         * overview of what the full search aims to achieve.
+         *
+         * If runSearch() enumerates an entire search tree, then you can
+         * think of partialSearch() as only enumerating the first
+         * \a maxDepth levels of this search tree.  Rather than
+         * producing complete gluing permutation sets, this search will
          * produce a series of partially-complete GluingPermSearcher<2>
          * objects.  These partial searches may then be restarted by
-         * calling runSearch() once more (usually after being frozen or
-         * passed on to a different processor).  If necessary, the \a action_
+         * calling runSearch() later on (perhaps after being frozen or
+         * passed on to a different processor).  If necessary, the \a action
          * routine may call completePermSet() to distinguish between
          * a complete set of gluing permutations and a partial search state.
          *
@@ -266,20 +265,27 @@ class GluingPermSearcher<2> {
          * many branches, and then calling runSearch() on each resulting
          * partial search will complete each of these branches without overlap.
          *
-         * \todo \feature Allow cancellation of permutation set generation.
+         * If the search tree is shallow enough (or if \a maxDepth is
+         * large enough), it is possible that this routine will produce
+         * complete gluing permutation sets.
          *
-         * @param maxDepth the depth of the partial search to run, or a
-         * negative number if a full search should be run (the default).
+         * @param maxDepth the depth of the partial search to run.
+         * A negative number indicates that a full search should be run.
+         * @param action a function (or other callable object) to call
+         * for each permutation set (partial or complete) that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        virtual void runSearch(long maxDepth = -1);
+        template <typename Action, typename... Args>
+        void partialSearch(long maxDepth, Action&& action, Args&&... args);
 
         /**
          * Determines whether this search manager holds a complete
          * gluing permutation set or just a partially completed search
          * state.
          *
-         * This may assist the \a action_ routine when running partial
-         * depth-based searches.  See runSearch() for further details.
+         * This may assist the \a action routine when running partial
+         * depth-based searches.  See partialSearch() for further details.
          *
          * @return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
@@ -410,7 +416,7 @@ class GluingPermSearcher<2> {
          * See the GluingPermSearcher<2> constructor for documentation on
          * the arguments to this routine.  See the runSearch() method
          * for documentation on how the search runs and returns its
-         * results.
+         * results via \a action and \a args.
          *
          * \pre The given edge pairing is connected, i.e., it is possible
          * to reach any triangle from any other triangle via a
@@ -451,17 +457,11 @@ class GluingPermSearcher<2> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * \ifacespython This function is available, and \a action may be
-         * a pure Python function.  However, \a action cannot take any
-         * additional arguments beyond the initial gluing permutation set
-         * (and therefore the additional \a args list is omitted here).
-         *
          * @return the new search manager.
          */
-        template <typename Action, typename... Args>
         static std::unique_ptr<GluingPermSearcher<2>> bestSearcher(
                 FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
-                bool orientableOnly, Action&& action, Args&&... args);
+                bool orientableOnly);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -486,16 +486,11 @@ class GluingPermSearcher<2> {
          * fromTaggedData() that takes its input as a string.
          *
          * @param in the input stream from which to read.
-         * @param action a function (or other callable object) to call
-         * for each permutation set that is found when the search is run.
-         * @param args any additional arguments that should be passed to
-         * \a action, following the initial permutation set argument.
          * @return the new search manager, or \c null if the data in the
          * input stream was invalid or incorrectly formatted.
          */
-        template <typename Action, typename... Args>
         static std::unique_ptr<GluingPermSearcher<2>> fromTaggedData(
-                std::istream& in, Action&& action, Args&&... args);
+                std::istream& in);
 
         /**
          * Creates a new search manager based on tagged data stored in
@@ -516,23 +511,13 @@ class GluingPermSearcher<2> {
          * \exception InvalidArgument the data found in the given string
          * is invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython This function is available, and \a action may be
-         * a pure Python function.  However, \a action cannot take any
-         * additional arguments beyond the initial gluing permutation set
-         * (and therefore the additional \a args list is omitted here).
-         *
          * @param data the tagged data from which to reconstruct a
          * search manager.
-         * @param action a function (or other callable object) to call
-         * for each permutation set that is found when the search is run.
-         * @param args any additional arguments that should be passed to
-         * \a action, following the initial permutation set argument.
          * @return the new search manager, or \c null if the data in the
          * given string was invalid or incorrectly formatted.
          */
-        template <typename Action, typename... Args>
         static std::unique_ptr<GluingPermSearcher<2>> fromTaggedData(
-                const std::string& data, Action&& action, Args&&... args);
+                const std::string& data);
 
         // Make this class non-copyable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
@@ -540,33 +525,18 @@ class GluingPermSearcher<2> {
 
     protected:
         /**
-         * A de-templatised version of the main public constructor.
+         * A de-templatised implementation of runSearch() and partialSearch().
          *
          * Here the templated action plus arguments are bundled together
          * in a wrapper whose full type is known in advance.
          *
-         * See the public input stream constructor for further details.
+         * Subclasses corresponding to more specialised search criteria
+         * should override this routine to use a better optimised algorithm
+         * where possible.
          *
-         * We will eventually be storing \a pairing, \a autos and \a action,
-         * and so we insist on rvalue references so these can be moved instead
-         * of copied.
+         * See runSearch() and partialSearch() for further details.
          */
-        GluingPermSearcher(FacetPairing<2>&& pairing,
-                FacetPairing<2>::IsoList&& autos,
-                bool orientableOnly, ActionWrapper&& action);
-
-        /**
-         * A de-templatised version of the public input stream constructor.
-         *
-         * Here the templated action plus arguments are bundled together
-         * in a wrapper whose full type is known in advance.
-         *
-         * See the public input stream constructor for further details.
-         *
-         * We will eventually be storing \a action, and so we insist on
-         * an rvalue reference so this can be moved instead of copied.
-         */
-        GluingPermSearcher(std::istream& in, ActionWrapper&& action);
+        virtual void searchImpl(long maxDepth, ActionWrapper&& action);
 
         /**
          * Compares the current set of gluing permutations with its
@@ -591,26 +561,20 @@ class GluingPermSearcher<2> {
 // Inline functions for GluingPermSearcher<2>
 
 template <typename Action, typename... Args>
-inline GluingPermSearcher<2>::GluingPermSearcher(
-        // NOLINTNEXTLINE(performance-unnecessary-value-param)
-        FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
-        bool orientableOnly, Action&& action, Args&&... args) :
-        // Delegate to a de-templatised constructor.
-        GluingPermSearcher<2>(std::move(pairing), std::move(autos),
-            orientableOnly,
-            ActionWrapper([&](const regina::GluingPerms<2>& p) {
-                action(p, std::forward<Args>(args)...);
-            })) {
+inline void GluingPermSearcher<2>::runSearch(Action&& action, Args&&... args) {
+    // Delegate to a de-templatised function.
+    searchImpl(-1, ActionWrapper([&](const regina::GluingPerms<2>& p) {
+        action(p, std::forward<Args>(args)...);
+    }));
 }
 
 template <typename Action, typename... Args>
-inline GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
-        Action&& action, Args&&... args) :
-        // Delegate to a de-templatised constructor.
-        GluingPermSearcher<2>(in,
-            ActionWrapper([&](const regina::GluingPerms<2>& p) {
-                action(p, std::forward<Args>(args)...);
-            })) {
+inline void GluingPermSearcher<2>::partialSearch(long maxDepth,
+        Action&& action, Args&&... args) {
+    // Delegate to a de-templatised function.
+    searchImpl(maxDepth, ActionWrapper([&](const regina::GluingPerms<2>& p) {
+        action(p, std::forward<Args>(args)...);
+    }));
 }
 
 inline bool GluingPermSearcher<2>::completePermSet() const {
@@ -638,10 +602,8 @@ inline char GluingPermSearcher<2>::dataTagInternal() const {
     return GluingPermSearcher<2>::dataTag;
 }
 
-template <typename Action, typename... Args>
 inline std::unique_ptr<GluingPermSearcher<2>>
-        GluingPermSearcher<2>::fromTaggedData(
-        std::istream& in, Action&& action, Args&&... args) {
+        GluingPermSearcher<2>::fromTaggedData(std::istream& in) {
     // Read the class marker.
     char c;
     in >> c;
@@ -651,40 +613,34 @@ inline std::unique_ptr<GluingPermSearcher<2>>
 
     switch (c) {
         case GluingPermSearcher<2>::dataTag:
-            return std::make_unique<GluingPermSearcher<2>>(in,
-                std::forward<Action>(action), std::forward<Args>(args)...);
+            return std::make_unique<GluingPermSearcher<2>>(in);
         default:
             throw InvalidInput("Invalid class marker "
                 "when reading tagged GluingPermSearcher<2> data");
     }
 }
 
-template <typename Action, typename... Args>
 inline std::unique_ptr<GluingPermSearcher<2>>
-        GluingPermSearcher<2>::fromTaggedData(
-        const std::string& data, Action&& action, Args&&... args) {
+        GluingPermSearcher<2>::fromTaggedData(const std::string& data) {
     // With C++20 we will be able to move the string into the input stream,
     // which means the argument should become a string (not const string&).
     try {
         std::istringstream in(data);
-        return fromTaggedData(in, std::forward<Action>(action),
-            std::forward<Args>(args)...);
+        return fromTaggedData(in);
     } catch (const InvalidInput& exc) {
         throw InvalidArgument(exc.what());
     }
 }
 
-template <typename Action, typename... Args>
 inline std::unique_ptr<GluingPermSearcher<2>>
         GluingPermSearcher<2>::bestSearcher(
         FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
-        bool orientableOnly, Action&& action, Args&&... args) {
+        bool orientableOnly) {
     // We only have one algorithm for now.
     // If we ever get to the point of choosing, we should change
     // findAllPerms() to call bestSearcher() also.
     return std::make_unique<GluingPermSearcher<2>>(std::move(pairing),
-        std::move(autos), orientableOnly, std::forward<Action>(action),
-        std::forward<Args>(args)...);
+        std::move(autos), orientableOnly);
 }
 
 template <typename Action, typename... Args>
@@ -693,9 +649,8 @@ void GluingPermSearcher<2>::findAllPerms(FacetPairing<2> pairing,
         Action&& action, Args&&... args) {
     // We don't call bestSearcher() because at present there is only one
     // algorithm.  Just use it.
-    GluingPermSearcher<2>(std::move(pairing), std::move(autos), orientableOnly,
-        std::forward<Action>(action), std::forward<Args>(args)...).
-        runSearch();
+    GluingPermSearcher<2>(std::move(pairing), std::move(autos), orientableOnly).
+        runSearch(std::forward<Action>(action), std::forward<Args>(args)...);
 }
 
 } // namespace regina

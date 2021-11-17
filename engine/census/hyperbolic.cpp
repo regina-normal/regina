@@ -36,14 +36,13 @@
 
 namespace regina {
 
-HyperbolicMinSearcher::HyperbolicMinSearcher(FacetPairing<3>&& pairing,
-        FacetPairing<3>::IsoList&& autos, bool orientableOnly,
-        ActionWrapper&& action) :
+HyperbolicMinSearcher::HyperbolicMinSearcher(FacetPairing<3> pairing,
+        FacetPairing<3>::IsoList autos, bool orientableOnly) :
         EulerSearcher(0, std::move(pairing), std::move(autos), orientableOnly,
-            PURGE_NON_MINIMAL_HYP, std::move(action)) {
+            PURGE_NON_MINIMAL_HYP) {
 }
 
-void HyperbolicMinSearcher::runSearch(long maxDepth) {
+void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
     unsigned nTets = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).

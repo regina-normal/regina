@@ -196,13 +196,12 @@ bool GluingPermSearcher<4>::PentTriangleState::readData(std::istream& in,
 }
 
 GluingPermSearcher<4>::GluingPermSearcher(
-        FacetPairing<4>&& pairing, FacetPairing<4>::IsoList&& autos,
-        bool orientableOnly, bool finiteOnly, ActionWrapper&& action) :
+        FacetPairing<4> pairing, FacetPairing<4>::IsoList autos,
+        bool orientableOnly, bool finiteOnly) :
         perms_(std::move(pairing)), autos_(std::move(autos)),
         // pairing and autos are no longer usable
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
-        action_(std::move(action)), started_(false),
-        orientation_(new int[perms_.size()]) {
+        started_(false), orientation_(new int[perms_.size()]) {
     // Initialise arrays.
     unsigned nPent = perms_.size();
 
@@ -255,7 +254,7 @@ GluingPermSearcher<4>::~GluingPermSearcher() {
     delete[] order_;
 }
 
-void GluingPermSearcher<4>::runSearch(long maxDepth) {
+void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     // In this generation algorithm, each orientation is simply +/-1.
 
     unsigned nPentachora = perms_.size();
@@ -554,11 +553,9 @@ void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-GluingPermSearcher<4>::GluingPermSearcher(std::istream& in,
-        ActionWrapper&& action) :
+GluingPermSearcher<4>::GluingPermSearcher(std::istream& in) :
         perms_(in), autos_(perms_.pairing().findAutomorphisms()),
-        action_(std::move(action)), orientation_(nullptr),
-        order_(nullptr), orderSize_(0), orderElt_(0),
+        orientation_(nullptr), order_(nullptr), orderSize_(0), orderElt_(0),
         nEdgeClasses_(0), edgeState_(nullptr), edgeStateChanged_(nullptr),
         nTriangleClasses_(0), triState_(nullptr), triStateChanged_(nullptr) {
     // Keep reading.

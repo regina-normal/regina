@@ -49,19 +49,18 @@ void addGluingPermSearcher3(pybind11::module_& m) {
 
     auto g = pybind11::class_<GluingPermSearcher<3>>(m, "GluingPermSearcher3")
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
-            bool, bool, regina::CensusPurge, Action>())
-        .def("runSearch", &GluingPermSearcher<3>::runSearch,
-            pybind11::arg("maxDepth") = -1)
+            bool, bool, regina::CensusPurge>())
+        .def("runSearch", &GluingPermSearcher<3>::runSearch<Action>)
+        .def("partialSearch", &GluingPermSearcher<3>::partialSearch<Action>)
         .def("completePermSet", &GluingPermSearcher<3>::completePermSet)
         .def("taggedData", &GluingPermSearcher<3>::taggedData)
         .def("data", &GluingPermSearcher<3>::data)
         .def_static("findAllPerms",
             &GluingPermSearcher<3>::findAllPerms<Action>)
-        .def_static("bestSearcher",
-            &GluingPermSearcher<3>::bestSearcher<Action>)
+        .def_static("bestSearcher", &GluingPermSearcher<3>::bestSearcher)
         .def_static("fromTaggedData",
-            pybind11::overload_cast<const std::string&, Action>(
-                &GluingPermSearcher<3>::fromTaggedData<Action>))
+            pybind11::overload_cast<const std::string&>(
+                &GluingPermSearcher<3>::fromTaggedData))
         .def_readonly_static("dataTag", &GluingPermSearcher<3>::dataTag)
         ;
     regina::python::add_eq_operators(g);
@@ -77,7 +76,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     auto e = pybind11::class_<EulerSearcher, GluingPermSearcher<3>>(
             m, "EulerSearcher")
         .def(pybind11::init<int, FacetPairing<3>, FacetPairing<3>::IsoList,
-            bool, regina::CensusPurge, Action>())
+            bool, regina::CensusPurge>())
         .def_readonly_static("dataTag", &EulerSearcher::dataTag)
         ;
     regina::python::add_eq_operators(e);
@@ -85,23 +84,21 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     auto c = pybind11::class_<CompactSearcher, GluingPermSearcher<3>>(
             m, "CompactSearcher")
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
-            bool, regina::CensusPurge, Action>())
+            bool, regina::CensusPurge>())
         .def_readonly_static("dataTag", &CompactSearcher::dataTag)
         ;
     regina::python::add_eq_operators(c);
 
     auto p = pybind11::class_<ClosedPrimeMinSearcher, GluingPermSearcher<3>>(
             m, "ClosedPrimeMinSearcher")
-        .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
-            bool, Action>())
+        .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList, bool>())
         .def_readonly_static("dataTag", &ClosedPrimeMinSearcher::dataTag)
         ;
     regina::python::add_eq_operators(p);
 
     auto h = pybind11::class_<HyperbolicMinSearcher, GluingPermSearcher<3>>(
             m, "HyperbolicMinSearcher")
-        .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
-            bool, Action>())
+        .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList, bool>())
         .def_readonly_static("dataTag", &HyperbolicMinSearcher::dataTag)
         ;
     regina::python::add_eq_operators(h);

@@ -193,12 +193,11 @@ bool EulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
     return true;
 }
 
-EulerSearcher::EulerSearcher(int useEuler, FacetPairing<3>&& pairing,
-        FacetPairing<3>::IsoList&& autos, bool orientableOnly,
-        CensusPurge whichPurge, ActionWrapper&& action) :
+EulerSearcher::EulerSearcher(int useEuler, FacetPairing<3> pairing,
+        FacetPairing<3>::IsoList autos, bool orientableOnly,
+        CensusPurge whichPurge) :
         GluingPermSearcher<3>(std::move(pairing), std::move(autos),
-            orientableOnly, true /* finiteOnly */, whichPurge,
-            std::move(action)),
+            orientableOnly, true /* finiteOnly */, whichPurge),
         euler_(useEuler) {
     // Initialise the internal arrays to accurately reflect the underlying
     // face pairing.
@@ -255,7 +254,7 @@ EulerSearcher::EulerSearcher(int useEuler, FacetPairing<3>&& pairing,
     }
 }
 
-void EulerSearcher::runSearch(long maxDepth) {
+void EulerSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
     unsigned nTets = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
@@ -523,8 +522,8 @@ void EulerSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-EulerSearcher::EulerSearcher(std::istream& in, ActionWrapper&& action) :
-        GluingPermSearcher<3>(in, std::move(action)),
+EulerSearcher::EulerSearcher(std::istream& in) :
+        GluingPermSearcher<3>(in),
         nVertexClasses(0), vertexState(nullptr), vertexStateChanged(nullptr),
         nEdgeClasses(0), edgeState(nullptr), edgeStateChanged(nullptr) {
     in >> euler_;

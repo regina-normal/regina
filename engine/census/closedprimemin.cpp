@@ -45,12 +45,10 @@ const char ClosedPrimeMinSearcher::coneNoTwist[12] = {
     1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1
 };
 
-ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3>&& pairing,
-        FacetPairing<3>::IsoList&& autos, bool orientableOnly,
-        ActionWrapper&& action) :
+ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3> pairing,
+        FacetPairing<3>::IsoList autos, bool orientableOnly) :
         CompactSearcher(std::move(pairing), std::move(autos), orientableOnly,
-            PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
-            std::move(action)) {
+            PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE) {
     // Initialise internal arrays, specifically those relating to face
     // orderings and properties of chains, to accurately reflect the
     // underlying face pairing.
@@ -303,7 +301,8 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3>&& pairing,
 }
 
 // TODO (net): See what was removed when we brought in vertex link checking.
-void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
+void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
+        ActionWrapper&& action_) {
     // Preconditions:
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
@@ -677,9 +676,8 @@ void ClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
 #endif
 }
 
-ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in,
-        ActionWrapper&& action) :
-        CompactSearcher(in, std::move(action)),
+ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in) :
+        CompactSearcher(in),
         orderType(nullptr), nChainEdges(0), chainPermIndices(nullptr) {
     unsigned nTets = perms_.size();
     int i;

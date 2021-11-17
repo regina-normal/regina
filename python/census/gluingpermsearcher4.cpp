@@ -45,19 +45,18 @@ void addGluingPermSearcher4(pybind11::module_& m) {
 
     auto c = pybind11::class_<GluingPermSearcher<4>>(m, "GluingPermSearcher4")
         .def(pybind11::init<FacetPairing<4>, FacetPairing<4>::IsoList,
-            bool, bool, Action>())
-        .def("runSearch", &GluingPermSearcher<4>::runSearch,
-            pybind11::arg("maxDepth") = -1)
+            bool, bool>())
+        .def("runSearch", &GluingPermSearcher<4>::runSearch<Action>)
+        .def("partialSearch", &GluingPermSearcher<4>::partialSearch<Action>)
         .def("completePermSet", &GluingPermSearcher<4>::completePermSet)
         .def("taggedData", &GluingPermSearcher<4>::taggedData)
         .def("data", &GluingPermSearcher<4>::data)
         .def_static("findAllPerms",
             &GluingPermSearcher<4>::findAllPerms<Action>)
-        .def_static("bestSearcher",
-            &GluingPermSearcher<4>::bestSearcher<Action>)
+        .def_static("bestSearcher", &GluingPermSearcher<4>::bestSearcher)
         .def_static("fromTaggedData",
-            pybind11::overload_cast<const std::string&, Action>(
-                &GluingPermSearcher<4>::fromTaggedData<Action>))
+            pybind11::overload_cast<const std::string&>(
+                &GluingPermSearcher<4>::fromTaggedData))
         .def_readonly_static("dataTag", &GluingPermSearcher<4>::dataTag)
         ;
     regina::python::add_eq_operators(c);
