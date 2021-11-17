@@ -118,7 +118,21 @@ void addEdge3(pybind11::module_& m) {
         .def("__hash__", [](const Edge<3>& e) {
             // Edges are equal in python if they reference the same C++
             // objects.  Therefore we can just use the C++ pointer as a hash.
-            return long(std::addressof(e));
+            //
+            // So: we cannot cast to long, since this is too small on
+            // 64-bit Windows.  The *correct* type is uintptr_t, but the
+            // C++ standard says this is optional.  Does any compiler *not*
+            // support uintptr_t?  If anyone gets a compile error from this,
+            // please do let Ben know (and in the meantime if you are on a
+            // 64-bit machine then you should be able to change it back to a
+            // long for your own quick fix.)
+            //
+            // A further note: even though long is too small on 64-bit Windows,
+            // this is harmless - since we are only using this as a hash, so
+            // it is okay if the integer is truncated.  Perhaps then the
+            // real standards-compliant solution is to just cast to a long
+            // regardless of platform.
+            return uintptr_t(std::addressof(e));
         })
     ;
     regina::python::add_output(c);
