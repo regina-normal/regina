@@ -44,9 +44,9 @@ def classInfo(name, object):
     else:
         realName = m.group(1)
         if realName == name:
-            if name == 'Bitmask256':
-                # This class is only present on 64-bit machines.
-                # Omit it here so that this test generates the same output
+            if name == 'Bitmask256' or name == 'Qitmask256':
+                # These classes are only present on 64-bit machines.
+                # Omit them here so that this test generates the same output
                 # across all platforms.
                 return
             print(name, ': class')
