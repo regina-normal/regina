@@ -399,7 +399,7 @@ class GluingPermSearcher<4> {
         };
 
     public:
-        static constexpr char dataTag_ = 'g';
+        static constexpr char dataTag = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -981,7 +981,7 @@ class GluingPermSearcher<4> {
          *
          * @return the class tag.
          */
-        virtual char dataTag() const;
+        virtual char dataTagInternal() const;
 
         /**
          * Returns the representative of the equivalence class containing
@@ -1320,7 +1320,7 @@ inline bool GluingPermSearcher<4>::completePermSet() const {
 }
 
 inline void GluingPermSearcher<4>::dumpTaggedData(std::ostream& out) const {
-    out << dataTag() << std::endl;
+    out << dataTagInternal() << std::endl;
     dumpData(out);
 }
 
@@ -1336,8 +1336,8 @@ inline std::string GluingPermSearcher<4>::data() const {
     return out.str();
 }
 
-inline char GluingPermSearcher<4>::dataTag() const {
-    return GluingPermSearcher<4>::dataTag_;
+inline char GluingPermSearcher<4>::dataTagInternal() const {
+    return GluingPermSearcher<4>::dataTag;
 }
 
 inline int GluingPermSearcher<4>::findTriangleClass(int triID) const {
@@ -1441,7 +1441,7 @@ inline std::unique_ptr<GluingPermSearcher<4>>
 
     try {
         switch (c) {
-            case GluingPermSearcher<4>::dataTag_:
+            case GluingPermSearcher<4>::dataTag:
                 return std::make_unique<GluingPermSearcher<4>>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
             default:

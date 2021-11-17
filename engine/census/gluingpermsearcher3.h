@@ -101,7 +101,7 @@ namespace regina {
 template <>
 class GluingPermSearcher<3> {
     public:
-        static constexpr char dataTag_ = 'g';
+        static constexpr char dataTag = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -753,7 +753,7 @@ class GluingPermSearcher<3> {
          *
          * @return the class tag.
          */
-        virtual char dataTag() const;
+        virtual char dataTagInternal() const;
 };
 
 /**
@@ -1173,7 +1173,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
         };
 
     public:
-        static constexpr char dataTag_ = 'e';
+        static constexpr char dataTag = 'e';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -1341,7 +1341,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
         EulerSearcher(std::istream& in, ActionWrapper&& action);
 
         // Overridden methods:
-        char dataTag() const override;
+        char dataTagInternal() const override;
 
     protected:
         /**
@@ -2023,7 +2023,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
         };
 
     public:
-        static constexpr char dataTag_ = 'f';
+        static constexpr char dataTag = 'f';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -2172,7 +2172,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
         CompactSearcher(std::istream& in, ActionWrapper&& action);
 
         // Overridden methods:
-        char dataTag() const override;
+        char dataTagInternal() const override;
 
     protected:
         /**
@@ -2571,7 +2571,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
                  the TetEdgeState class. */
 
     public:
-        static constexpr char dataTag_ = 'c';
+        static constexpr char dataTag = 'c';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -2728,7 +2728,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
         ClosedPrimeMinSearcher(std::istream& in, ActionWrapper&& action);
 
         // Overridden methods:
-        char dataTag() const override;
+        char dataTagInternal() const override;
 
     private:
         /**
@@ -2801,7 +2801,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
                  distinct tetrahedra). */
 
     public:
-        static constexpr char dataTag_ = 'h';
+        static constexpr char dataTag = 'h';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -2904,7 +2904,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
         HyperbolicMinSearcher(std::istream& in, ActionWrapper&& action);
 
         // Overridden methods:
-        char dataTag() const override;
+        char dataTagInternal() const override;
 
     private:
         /**
@@ -2978,7 +2978,7 @@ inline bool GluingPermSearcher<3>::completePermSet() const {
 }
 
 inline void GluingPermSearcher<3>::dumpTaggedData(std::ostream& out) const {
-    out << dataTag() << std::endl;
+    out << dataTagInternal() << std::endl;
     dumpData(out);
 }
 
@@ -2994,8 +2994,8 @@ inline std::string GluingPermSearcher<3>::data() const {
     return out.str();
 }
 
-inline char GluingPermSearcher<3>::dataTag() const {
-    return GluingPermSearcher<3>::dataTag_;
+inline char GluingPermSearcher<3>::dataTagInternal() const {
+    return GluingPermSearcher<3>::dataTag;
 }
 
 template <typename Action, typename... Args>
@@ -3010,19 +3010,19 @@ inline std::unique_ptr<GluingPermSearcher<3>>
 
     try {
         switch (c) {
-            case GluingPermSearcher<3>::dataTag_:
+            case GluingPermSearcher<3>::dataTag:
                 return std::make_unique<GluingPermSearcher<3>>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
-            case CompactSearcher::dataTag_:
+            case CompactSearcher::dataTag:
                 return std::make_unique<CompactSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
-            case ClosedPrimeMinSearcher::dataTag_:
+            case ClosedPrimeMinSearcher::dataTag:
                 return std::make_unique<ClosedPrimeMinSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
-            case EulerSearcher::dataTag_:
+            case EulerSearcher::dataTag:
                 return std::make_unique<EulerSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
-            case HyperbolicMinSearcher::dataTag_:
+            case HyperbolicMinSearcher::dataTag:
                 return std::make_unique<HyperbolicMinSearcher>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
             default:
@@ -3130,8 +3130,8 @@ inline EulerSearcher::~EulerSearcher() {
     delete[] edgeStateChanged;
 }
 
-inline char EulerSearcher::dataTag() const {
-    return EulerSearcher::dataTag_;
+inline char EulerSearcher::dataTagInternal() const {
+    return EulerSearcher::dataTag;
 }
 
 inline int EulerSearcher::findEdgeClass(int edgeID) const {
@@ -3293,8 +3293,8 @@ inline CompactSearcher::~CompactSearcher() {
     delete[] edgeStateChanged;
 }
 
-inline char CompactSearcher::dataTag() const {
-    return CompactSearcher::dataTag_;
+inline char CompactSearcher::dataTagInternal() const {
+    return CompactSearcher::dataTag;
 }
 
 inline int CompactSearcher::findEdgeClass(int edgeID) const {
@@ -3446,8 +3446,8 @@ inline ClosedPrimeMinSearcher::~ClosedPrimeMinSearcher() {
         delete[] chainPermIndices;
 }
 
-inline char ClosedPrimeMinSearcher::dataTag() const {
-    return ClosedPrimeMinSearcher::dataTag_;
+inline char ClosedPrimeMinSearcher::dataTagInternal() const {
+    return ClosedPrimeMinSearcher::dataTag;
 }
 
 // Inline functions for HyperbolicMinSearcher
@@ -3480,8 +3480,8 @@ inline HyperbolicMinSearcher::HyperbolicMinSearcher(std::istream& in,
         EulerSearcher(in, std::move(action)) {
 }
 
-inline char HyperbolicMinSearcher::dataTag() const {
-    return HyperbolicMinSearcher::dataTag_;
+inline char HyperbolicMinSearcher::dataTagInternal() const {
+    return HyperbolicMinSearcher::dataTag;
 }
 
 } // namespace regina

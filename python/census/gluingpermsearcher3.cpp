@@ -60,7 +60,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
         .def_static("readTaggedData",
             pybind11::overload_cast<const std::string&, Action>(
                 &GluingPermSearcher<3>::readTaggedData<Action>))
-        .def_readonly_static("dataTag_", &GluingPermSearcher<3>::dataTag_)
+        .def_readonly_static("dataTag", &GluingPermSearcher<3>::dataTag)
         ;
     regina::python::add_eq_operators(g);
 
@@ -97,7 +97,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             m, "EulerSearcher")
         .def(pybind11::init<int, FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, int, Action>())
-        .def_readonly_static("dataTag_", &EulerSearcher::dataTag_)
+        .def_readonly_static("dataTag", &EulerSearcher::dataTag)
         ;
     regina::python::add_eq_operators(e);
 
@@ -105,7 +105,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             m, "CompactSearcher")
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, int, Action>())
-        .def_readonly_static("dataTag_", &CompactSearcher::dataTag_)
+        .def_readonly_static("dataTag", &CompactSearcher::dataTag)
         ;
     regina::python::add_eq_operators(c);
 
@@ -113,7 +113,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             m, "ClosedPrimeMinSearcher")
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, Action>())
-        .def_readonly_static("dataTag_", &ClosedPrimeMinSearcher::dataTag_)
+        .def_readonly_static("dataTag", &ClosedPrimeMinSearcher::dataTag)
         ;
     regina::python::add_eq_operators(p);
 
@@ -121,7 +121,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             m, "HyperbolicMinSearcher")
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, Action>())
-        .def_readonly_static("dataTag_", &HyperbolicMinSearcher::dataTag_)
+        .def_readonly_static("dataTag", &HyperbolicMinSearcher::dataTag)
         ;
     regina::python::add_eq_operators(h);
 }

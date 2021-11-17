@@ -77,7 +77,7 @@ namespace regina {
 template <>
 class GluingPermSearcher<2> {
     public:
-        static constexpr char dataTag_ = 'g';
+        static constexpr char dataTag = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -579,7 +579,7 @@ class GluingPermSearcher<2> {
          *
          * @return the class tag.
          */
-        virtual char dataTag() const;
+        virtual char dataTagInternal() const;
 };
 
 // Inline functions for GluingPermSearcher<2>
@@ -612,7 +612,7 @@ inline bool GluingPermSearcher<2>::completePermSet() const {
 }
 
 inline void GluingPermSearcher<2>::dumpTaggedData(std::ostream& out) const {
-    out << dataTag() << std::endl;
+    out << dataTagInternal() << std::endl;
     dumpData(out);
 }
 
@@ -628,8 +628,8 @@ inline std::string GluingPermSearcher<2>::data() const {
     return out.str();
 }
 
-inline char GluingPermSearcher<2>::dataTag() const {
-    return GluingPermSearcher<2>::dataTag_;
+inline char GluingPermSearcher<2>::dataTagInternal() const {
+    return GluingPermSearcher<2>::dataTag;
 }
 
 template <typename Action, typename... Args>
@@ -644,7 +644,7 @@ inline std::unique_ptr<GluingPermSearcher<2>>
 
     try {
         switch (c) {
-            case GluingPermSearcher<2>::dataTag_:
+            case GluingPermSearcher<2>::dataTag:
                 return std::make_unique<GluingPermSearcher<2>>(in,
                     std::forward<Action>(action), std::forward<Args>(args)...);
             default:
