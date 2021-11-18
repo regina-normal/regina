@@ -847,9 +847,6 @@ class SatRegion : public Output<SatRegion> {
          * \pre The list \a avoidTets includes all tetrahedra on the
          * boundaries of any blocks already contained in this region.
          *
-         * \ifacespython The first argument \a avoidTets is not present.
-         * An empty list will be passed instead.
-         *
          * @param avoidTets a list of tetrahedra that should not be
          * considered for new blocks, as discussed above.  Note that
          * this list may be modified by this routine.
