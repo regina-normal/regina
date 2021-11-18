@@ -80,6 +80,8 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("swap", &ModelLinkGraph::swap)
         .def("swapContents", &ModelLinkGraph::swap) // deprecated
         .def("reflect", &ModelLinkGraph::reflect)
+        .def("cells", &ModelLinkGraph::cells,
+            pybind11::return_value_policy::reference_internal)
         .def("findFlype", &ModelLinkGraph::findFlype)
         .def("flype", overload_cast<const ModelLinkGraphArc&,
                 const ModelLinkGraphArc&, const ModelLinkGraphArc&>(
@@ -97,11 +99,19 @@ void addModelLinkGraph(pybind11::module_& m) {
     regina::python::add_output(g);
     regina::python::add_eq_operators(g);
 
+    regina::python::BeginEndIterator<ModelLinkGraphCells::ArcIterator>::
+        addBindings(m, "ModelLinkGraphCells_ArcIterator");
+
     auto c = pybind11::class_<ModelLinkGraphCells>(m, "ModelLinkGraphCells")
         .def("isValid", &ModelLinkGraphCells::isValid)
         .def("countCells", &ModelLinkGraphCells::countCells)
         .def("size", &ModelLinkGraphCells::size)
         .def("arc", &ModelLinkGraphCells::arc)
+        .def("arcs", [](const ModelLinkGraphCells& c, size_t cell) {
+            return regina::python::BeginEndIterator<
+                ModelLinkGraphCells::ArcIterator>(
+                c.begin(cell), c.end(cell), c);
+        })
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
     ;

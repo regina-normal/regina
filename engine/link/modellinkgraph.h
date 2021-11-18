@@ -321,8 +321,8 @@ class ModelLinkGraphArc {
         /**
          * Tests whether this is a non-null arc.
          *
-         * \ifacespython This is not available to python users.
-         * Instead you can simply test whether <tt>node() == None</tt>.
+         * \ifacespython Not available; instead you can simply test whether
+         * <tt>node() == None</tt>.
          *
          * @return \c true if this is not a null arc (i.e., node()
          * does not return a null pointer), or \c false if this is a null
@@ -618,9 +618,6 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * - The common cell is the inside cell at from.node().
          *
          * \pre This graph is connected and TODO: valid.
-         *
-         * \ifacespython Instead of a C++ pair, this routine returns a
-         * Python tuple containing two ModelLinkGraphArc objects.
          */
         std::pair<ModelLinkGraphArc, ModelLinkGraphArc> findFlype(
             const ModelLinkGraphArc& from) const;
@@ -1091,12 +1088,23 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Dereferencing the <i>j</i>th iterator in this range gives the
          * same result as calling <tt>arc(cell, j)</tt>.
          *
+         * In Python, begin(\a cell) and end(\a cell) are replaced by a
+         * single routine arcs(\a cell), which returns an iterable object:
+         *
+         * \code{.py}
+         * graph = ModelLinkGraph(...)
+         * cells = graph.cells()
+         * for i in range(cells.countCells()):
+         *     for a in cells.arcs(i):
+         *         ...
+         * \endcode
+         *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present.  Use arc() and size() instead.
+         * \ifacespython Not present; use arcs(\a cell) instead.
          *
          * @return the beginning of an iterator range for the boundary
          * of the given cell.
@@ -1118,12 +1126,16 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Dereferencing the <i>j</i>th iterator in this range gives the
          * same result as calling <tt>arc(cell, j)</tt>.
          *
+         * In Python, begin(\a cell) and end(\a cell) are replaced by a
+         * single routine arcs(\a cell), which returns an iterable object;
+         * see the begin(\a cell) documentation for further details.
+         *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present.  Use arc() and size() instead.
+         * \ifacespython Not present; use arcs(\a cell) instead.
          *
          * @return the end of an iterator range for the boundary
          * of the given cell.

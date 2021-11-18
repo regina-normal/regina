@@ -96,3 +96,12 @@ for s in NormalHypersurfaces(Example4.rp4(), HS_STANDARD):
     tot = tot + 1
 print(tot)
 
+print('Model link graph cell arc iteration:')
+g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+c = g.cells()
+for i in range(c.countCells()):
+	bdry = []
+	for a in c.arcs(i):
+		bdry.append(str(a.node().index()) + ':' + str(a.arc()))
+	print(bdry)
+
