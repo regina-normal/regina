@@ -4492,6 +4492,10 @@
 		05CAE6642745256D007C93F3 /* gluingperms5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms5.cpp; sourceTree = "<group>"; };
 		05CAE6652745256E007C93F3 /* gluingperms11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms11.cpp; sourceTree = "<group>"; };
 		05CAE6662745256E007C93F3 /* gluingperms10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms10.cpp; sourceTree = "<group>"; };
+		05CAE6832746878C007C93F3 /* bytes.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = bytes.test; sourceTree = "<group>"; };
+		05CAE6842746878C007C93F3 /* bytes.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = bytes.out; sourceTree = "<group>"; };
+		05CAE6852746878C007C93F3 /* lookup.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = lookup.test; sourceTree = "<group>"; };
+		05CAE6862746878C007C93F3 /* lookup.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = lookup.out; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5219,6 +5223,8 @@
 				05431FD11C40F67C009BC072 /* alltypes.test */,
 				05772F03270CFB6000D26D8A /* angles.out */,
 				05772F08270CFB6000D26D8A /* angles.test */,
+				05CAE6842746878C007C93F3 /* bytes.out */,
+				05CAE6832746878C007C93F3 /* bytes.test */,
 				059802762667067B002D5D57 /* callbacks.out */,
 				059802752667067A002D5D57 /* callbacks.test */,
 				059802782667067B002D5D57 /* census.out */,
@@ -5271,6 +5277,8 @@
 				050F5D951B9BAB9C00C1F681 /* knotted-Y.orb */,
 				05199A3225C63B7F0006B8FA /* listener.out */,
 				05199A3725C63B7F0006B8FA /* listener.test */,
+				05CAE6862746878C007C93F3 /* lookup.out */,
+				05CAE6852746878C007C93F3 /* lookup.test */,
 				0577E6E11F97087B00CBDF15 /* memory1.out */,
 				0577E6E21F97087B00CBDF15 /* memory1.test */,
 				0577E6EC1F97088100CBDF15 /* memory2.out */,
