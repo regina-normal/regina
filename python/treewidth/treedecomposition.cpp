@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
 #include "link/link.h"
-#include "treewidth/treedecomposition.h"
+#include "treewidth/treedecomposition-impl.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/facetpairing3.h"
 #include "triangulation/dim2.h"
@@ -132,13 +132,59 @@ void addTreeDecomposition(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("compress", &TreeDecomposition::compress)
         .def("makeNice", [](TreeDecomposition& t) {
-            // In python we don't allow passing the heightHint array.
             t.makeNice();
         })
-        .def("reroot", [](TreeDecomposition& t, TreeBag* b) {
-            // overload_cast breaks since reroot is overloaded with a
-            // templated and non-templated version.
-            t.reroot(b);
+        .def("makeNice", [](TreeDecomposition& t, nullptr_t) {
+            t.makeNice();
+        })
+        .def("makeNice", [](TreeDecomposition& t, const std::vector<int>& h) {
+            // We cannot sanity-check the size of h, since a tree decomposition
+            // does not know how many nodes are in its underlying graph.
+            t.makeNice(h.data());
+        })
+        // overload_cast cannot handle template vs non-template overloads.
+        .def("reroot", (void (TreeDecomposition::*)(TreeBag*))(
+            &TreeDecomposition::reroot))
+        .def("reroot", [](TreeDecomposition& t,
+                const std::vector<double>& costSame,
+                const std::vector<double>& costReverse) {
+            if (costSame.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costSame is a list of the wrong size");
+            if (costReverse.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costReverse is a list of the wrong size");
+
+            t.reroot(costSame.data(), costReverse.data());
+        })
+        .def("reroot", [](TreeDecomposition& t,
+                const std::vector<double>& costSame,
+                const std::vector<double>& costReverse,
+                nullptr_t) {
+            if (costSame.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costSame is a list of the wrong size");
+            if (costReverse.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costReverse is a list of the wrong size");
+
+            t.reroot(costSame.data(), costReverse.data());
+        })
+        .def("reroot", [](TreeDecomposition& t,
+                const std::vector<double>& costSame,
+                const std::vector<double>& costReverse,
+                const std::vector<double>& costRoot) {
+            if (costSame.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costSame is a list of the wrong size");
+            if (costReverse.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costReverse is a list of the wrong size");
+            if (costRoot.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costRoot is a list of the wrong size");
+
+            t.reroot(costSame.data(), costReverse.data(), costRoot.data());
         })
         .def("dot", &TreeDecomposition::dot)
         .def("pace", &TreeDecomposition::pace)

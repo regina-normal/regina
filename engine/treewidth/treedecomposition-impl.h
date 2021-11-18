@@ -166,11 +166,13 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
         else if (maxAbove[b->index()].first == maxBelow[b->index()].first)
             maxBelow[b->index()].second += maxAbove[b->index()].second;
 
-        if (costRoot && costRoot[b->index()] > maxBelow[b->index()].first) {
-            maxBelow[b->index()].first = costRoot[b->index()];
-            maxBelow[b->index()].second = 1;
-        } else if (costRoot[b->index()] == maxBelow[b->index()].first)
-            ++maxBelow[b->index()].second;
+        if (costRoot) {
+            if (costRoot[b->index()] > maxBelow[b->index()].first) {
+                maxBelow[b->index()].first = costRoot[b->index()];
+                maxBelow[b->index()].second = 1;
+            } else if (costRoot[b->index()] == maxBelow[b->index()].first)
+                ++maxBelow[b->index()].second;
+        }
 
         /*
         std::cerr << "Bag " << b->index() << ": "

@@ -1056,7 +1056,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * there is no need to explicitly call compress() before calling
          * makeNice().
          *
-         * \ifacespython The \e heightHint argument is not present.
+         * \ifacespython If a \e heightHint argument is given, it should
+         * be passed as a Python list of integers.
          *
          * @param heightHint an optional array where, for each node \a i,
          * a higher value of <tt>heightHint[i]</tt> indicates that the node
@@ -1169,7 +1170,9 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for common types.
          *
-         * \ifacespython Not present.
+         * \ifacespython The \a costSame and \a costReverse arrays,
+         * as well as \a costRoot if it is given, should be passed as
+         * Python lists of real numbers.
          *
          * \tparam T the type being used to estimate costs.
          * It must be possible to assign 0 to a variable of type \a T
