@@ -966,14 +966,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
-         * Thus IntegerBase(-7).divisionAlg(3) gives quotient -3 and
-         * remainder 2, whereas (-7)/3 gives quotient -2 and (-7)\%3 gives
-         * remainder -1.
-         *
-         * The two results are passed back to the caller as follows:
-         * The quotient \a q is passed back as the return value of the
-         * function, and the remainder \a r is stored in the reference
-         * argument \a r.
+         * Thus (-7).divisionAlg(3) gives quotient -3 and remainder 2,
+         * whereas (-7)/3 gives quotient -2 and (-7)\%3 gives remainder -1.
          *
          * In the special case where the given divisor is 0 (not
          * allowed by the usual division algorithm), this routine selects
@@ -981,21 +975,38 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre Neither this nor the divisor are infinite.
          *
-         * \ifacespython The argument \a remainder is missing; instead both
-         * the quotient and remainder are passed back through the return
-         * value of the function.  Specifically, this function returns a
-         * (\a quotient, \a remainder) pair.
-         *
          * @param divisor the divisor \a d.
-         * @param remainder used to store the remainder \a r when the
-         * functon returns.  The initial value of this argument is ignored.
-         * @return the quotient \a q.
-         *
-         * @author Ryan Budney & B.B.
+         * @return the pair (\a q, \a r), where \a q is the quotient and
+         * \a r is the remainder, as described above.
          */
-        IntegerBase<supportInfinity> divisionAlg(
-                const IntegerBase<supportInfinity>& divisor,
-                IntegerBase<supportInfinity>& remainder) const;
+        std::pair<IntegerBase, IntegerBase> divisionAlg(
+            const IntegerBase& divisor) const;
+
+        /**
+         * Deprecated function that uses the division algorithm to obtain a
+         * quotient and remainder when dividing by the given integer.
+         *
+         * This function performs the same task as the one-argument
+         * variant of divisionAlg(); however, instead of incorporating the
+         * remainder into the return value, it sends it back using a
+         * reference argument.
+         *
+         * See the one-argument variant of divisionAlg() for further details.
+         *
+         * \deprecated Use the one-argument variant of divisionAlg() instead.
+         *
+         * \pre Neither this nor the divisor are infinite.
+         *
+         * \ifacespython Not present; instead you can use the one-argument
+         * variant of divisionAlg().
+         *
+         * @param divisor the divisor.
+         * @param remainder an integer whose contents will be destroyed and
+         * replaced with the remainder.
+         * @return the quotient.
+         */
+        [[deprecated]] IntegerBase divisionAlg(const IntegerBase& divisor,
+            IntegerBase& remainder) const;
 
         /**
          * Determines the negative of this integer.
@@ -2158,29 +2169,43 @@ class NativeInteger {
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
-         * Thus NativeInteger(-7).divisionAlg(3) gives quotient -3 and
-         * remainder 2, whereas (-7)/3 gives quotient -2 and (-7)\%3 gives
-         * remainder -1.
-         *
-         * The two results are passed back to the caller as follows:
-         * The quotient \a q is passed back as the return value of the
-         * function, and the remainder \a r is stored in the reference
-         * argument \a r.
+         * Thus (-7).divisionAlg(3) gives quotient -3 and remainder 2,
+         * whereas (-7)/3 gives quotient -2 and (-7)\%3 gives remainder -1.
          *
          * In the special case where the given divisor is 0 (not
          * allowed by the usual division algorithm), this routine selects
          * quotient 0 and remainder \a n.
          *
          * @param divisor the divisor \a d.
-         * @param remainder used to store the remainder \a r when the
-         * functon returns.  The initial value of this argument is ignored.
-         * @return the quotient \a q.
-         *
-         * @author Ryan Budney & B.B.
+         * @return the pair (\a q, \a r), where \a q is the quotient and
+         * \a r is the remainder, as described above.
          */
-        NativeInteger<bytes> divisionAlg(
-                const NativeInteger<bytes>& divisor,
-                NativeInteger<bytes>& remainder) const;
+        std::pair<NativeInteger, NativeInteger> divisionAlg(
+            const NativeInteger& divisor) const;
+
+        /**
+         * Deprecated function that uses the division algorithm to obtain a
+         * quotient and remainder when dividing by the given integer.
+         *
+         * This function performs the same task as the one-argument
+         * variant of divisionAlg(); however, instead of incorporating the
+         * remainder into the return value, it sends it back using a
+         * reference argument.
+         *
+         * See the one-argument variant of divisionAlg() for further details.
+         *
+         * \deprecated Use the one-argument variant of divisionAlg() instead.
+         *
+         * \ifacespython Not present; instead you can use the one-argument
+         * variant of divisionAlg().
+         *
+         * @param divisor the divisor.
+         * @param remainder an integer whose contents will be destroyed and
+         * replaced with the remainder.
+         * @return the quotient.
+         */
+        [[deprecated]] NativeInteger divisionAlg(const NativeInteger& divisor,
+            NativeInteger& remainder) const;
 
         /**
          * Determines the negative of this integer.
@@ -3253,6 +3278,15 @@ inline IntegerBase<supportInfinity>
 }
 
 template <bool supportInfinity>
+inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
+        const IntegerBase<supportInfinity>& divisor,
+        IntegerBase<supportInfinity>& remainder) const {
+    auto [q, r] = divisionAlg(divisor);
+    remainder = r;
+    return q;
+}
+
+template <bool supportInfinity>
 inline IntegerBase<supportInfinity>
         IntegerBase<supportInfinity>::operator %(
         const IntegerBase<supportInfinity>& other) const {
@@ -3738,30 +3772,38 @@ inline NativeInteger<bytes> NativeInteger<bytes>::operator %(
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::divisionAlg(
-        const NativeInteger<bytes>& divisor,
-        NativeInteger<bytes>& remainder) const {
-    if (divisor == 0) {
-        remainder.data_ = data_;
-        return 0;
-    }
+inline std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
+        NativeInteger<bytes>::divisionAlg(const NativeInteger& divisor) const {
+    if (divisor == 0)
+        return { 0, data_ };
+
+    std::pair<NativeInteger, NativeInteger> ans;
 
     // Native integer division could leave a negative remainder
     // regardless of the sign of the divisor (I think the standard
     // indicates that the decision is based on the sign of *this?).
-    NativeInteger<bytes> quotient = data_ / divisor.data_;
-    remainder = data_ - (quotient.data_ * divisor.data_);
-    if (remainder.data_ < 0) {
+    ans.first = data_ / divisor.data_;
+    ans.second = data_ - (ans.first.data_ * divisor.data_);
+    if (ans.second.data_ < 0) {
         if (divisor.data_ > 0) {
-            remainder.data_ += divisor.data_;
-            --quotient.data_;
+            ans.second.data_ += divisor.data_;
+            --ans.first.data_;
         } else {
-            remainder.data_ -= divisor.data_;
-            ++quotient.data_;
+            ans.second.data_ -= divisor.data_;
+            ++ans.first.data_;
         }
     }
 
-    return quotient;
+    return ans;
+}
+
+template <int bytes>
+inline NativeInteger<bytes> NativeInteger<bytes>::divisionAlg(
+        const NativeInteger<bytes>& divisor,
+        NativeInteger<bytes>& remainder) const {
+    auto [q, r] = divisionAlg(divisor);
+    remainder = r;
+    return q;
 }
 
 template <int bytes>

@@ -510,6 +510,8 @@ Version 7.0  [ TODO ]
               the string constructors for testing validity is no longer present.
             - Added a variant of gcdWithCoeffs() that returns a tuple
               instead of using reference arguments.
+            - Changed divisionAlg() to return a pair instead of using
+              reference arguments.  The old version is kept but deprecated.
         Class InvalidArgument, InvalidInput:
             - New exception classes.
         Class Isomorphism<dim>, IsomorphismBase<dim>:
@@ -731,6 +733,8 @@ Version 7.0  [ TODO ]
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
             - Added a global swap() to complement the member swap().
+            - Changed divisionAlg() to return a pair instead of using
+              reference arguments.  The old version is kept but deprecated.
         Class NewFunction<...>:
             - Removed completely.
         Class NNativeLong:
@@ -1062,7 +1066,7 @@ Version 7.0  [ TODO ]
             - Deprecated clone().  Just use the copy constructor instead.
         Class Polynomial:
             - Added member and global swap() functions.
-            - Changed divisionAlg() to return a tuple instead of using
+            - Changed divisionAlg() to return a pair instead of using
               reference arguments.  The old version is kept but deprecated.
         Class Property<...>:
             - Removed completely.  Use either std::optional<...> or

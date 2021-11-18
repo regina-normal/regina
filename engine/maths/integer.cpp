@@ -814,16 +814,13 @@ IntegerBase<supportInfinity> IntegerBase<supportInfinity>::gcdWithCoeffs(
 }
 
 template <bool supportInfinity>
-IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
-        const IntegerBase<supportInfinity>& divisor,
-        IntegerBase<supportInfinity>& remainder) const {
-    if (divisor.isZero()) {
-        remainder = *this;
-        return zero;
-    }
+std::pair<IntegerBase<supportInfinity>, IntegerBase<supportInfinity>>
+        IntegerBase<supportInfinity>::divisionAlg(
+        const IntegerBase<supportInfinity>& divisor) const {
+    if (divisor.isZero())
+        return { 0, *this };
 
     // Preconditions state that nothing is infinite, and we've dealt with d=0.
-    IntegerBase<supportInfinity> quotient;
 
     // Throughout the following code:
     // - GMP mpz_fdiv_qr() could give a negative remainder, but that this
@@ -832,32 +829,34 @@ IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
     //   regardless of the sign of the divisor (I think the standard
     //   indicates that the decision is based on the sign of *this?).
 
+    std::pair<IntegerBase, IntegerBase> ans;
+
     if (large_) {
         // We will have to use GMP routines.
-        quotient.makeLarge();
-        remainder.makeLarge();
+        ans.first.makeLarge();
+        ans.second.makeLarge();
 
         if (divisor.large_) {
             // Just pass everything straight through to GMP.
-            mpz_fdiv_qr(quotient.large_, remainder.large_, large_,
+            mpz_fdiv_qr(ans.first.large_, ans.second.large_, large_,
                 divisor.large_);
-            if (remainder < 0) {
-                remainder -= divisor;
-                ++quotient;
+            if (ans.second < 0) {
+                ans.second -= divisor;
+                ++ans.first;
             }
         } else {
             // Put the divisor in GMP format for the GMP routines to use.
             mpz_t divisorGMP;
             mpz_init_set_si(divisorGMP, divisor.small_);
-            mpz_fdiv_qr(quotient.large_, remainder.large_, large_, divisorGMP);
+            mpz_fdiv_qr(ans.first.large_, ans.second.large_, large_, divisorGMP);
             mpz_clear(divisorGMP);
 
             // The remainder must fit into a long, since
             // 0 <= remainder < |divisor|.
-            remainder.forceReduce();
-            if (remainder.small_ < 0) {
-                remainder.small_ -= divisor.small_;
-                ++quotient;
+            ans.second.forceReduce();
+            if (ans.second.small_ < 0) {
+                ans.second.small_ -= divisor.small_;
+                ++ans.first;
             }
         }
     } else {
@@ -877,19 +876,19 @@ IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
             //
             // NOTE: Be careful not to take -small_ when small_ is negative!
             if (small_ >= 0 && (divisor > small_ || divisor < -small_)) {
-                quotient = 0;
-                remainder = small_;
+                // quotient is already initialised to 0
+                ans.second.small_ = small_;
             } else if (small_ < 0 && divisor < small_) {
-                quotient = 1;
-                remainder = small_;
-                remainder -= divisor;
+                ans.first.small_ = 1;
+                ans.second.small_ = small_;
+                ans.second -= divisor;
             } else if (small_ < 0 && -divisor < small_) {
-                quotient = -1;
-                remainder = small_;
-                remainder += divisor;
+                ans.first.small_ = -1;
+                ans.second.small_ = small_;
+                ans.second += divisor;
             } else if (small_ == LONG_MIN && -divisor == small_) {
-                quotient = -1;
-                remainder = 0;
+                ans.first.small_ = -1;
+                // remainder is already initialised to 0
             } else {
                 // Since we know we can reduce divisor to a native integer,
                 // be kind: cast away the const and reduce it.
@@ -907,26 +906,27 @@ IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
             // Only happens if this = LONG_MIN, divisor = -1.
             // 2) |quotient| < |LONG_MIN| --> quotient fits into a long also.
             if (small_ == LONG_MIN && divisor.small_ == -1) {
-                quotient = LONG_MIN;
-                quotient.negate();
-                remainder = 0;
+                ans.first = LONG_MIN;
+                ans.first.negate();
+                // remainder is already initialised to 0
             } else {
-                quotient = small_ / divisor.small_;
-                remainder = small_ - (quotient.small_ * divisor.small_);
-                if (remainder.small_ < 0) {
+                ans.first.small_ = small_ / divisor.small_;
+                ans.second.small_ =
+                    small_ - (ans.first.small_ * divisor.small_);
+                if (ans.second.small_ < 0) {
                     if (divisor.small_ > 0) {
-                        remainder.small_ += divisor.small_;
-                        --quotient;
+                        ans.second.small_ += divisor.small_;
+                        --ans.first;
                     } else {
-                        remainder.small_ -= divisor.small_;
-                        ++quotient;
+                        ans.second.small_ -= divisor.small_;
+                        ++ans.first;
                     }
                 }
             }
         }
     }
 
-    return quotient;
+    return ans;
 }
 
 template <bool supportInfinity>

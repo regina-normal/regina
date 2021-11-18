@@ -50,7 +50,7 @@ Integer Primes::prime(unsigned long which, bool autoGrow) {
         if (autoGrow)
             growPrimeList(which - numPrimeSeeds - largePrimes.size() + 1);
         else
-            return Integer::zero;
+            return {}; // zero
     }
 
     // Got it.
@@ -77,19 +77,15 @@ void Primes::growPrimeList(unsigned long extras) {
 }
 
 std::vector<Integer> Primes::primeDecomp(const Integer& n) {
-    std::vector<Integer> retval;
-
     // Deal with n=0 first.
-    if (n == Integer::zero) {
-        retval.push_back(Integer::zero);
-        return retval;
-    }
+    if (n == 0)
+        return { 0 };
 
+    std::vector<Integer> retval;
     Integer temp(n);
-    Integer r,q;
 
     // if the number is negative, put -1 as first factor.
-    if (temp < Integer::zero) {
+    if (temp < 0) {
         temp.negate();
         retval.emplace_back(-1);
     }
@@ -107,10 +103,10 @@ std::vector<Integer> Primes::primeDecomp(const Integer& n) {
     unsigned long iterSinceDivision=0; // keeps track of how many iterations
                                        // since the last successful division
 
-    while ( temp != Integer::one ) {
+    while ( temp != 1 ) {
         // now cpi<size(), check to see if temp % prime(cpi) == 0
-        q = temp.divisionAlg(prime(cpi), r); // means temp = q*prime(cpi) + r
-        if (r == Integer::zero) {
+        auto [q, r] = temp.divisionAlg(prime(cpi)); // temp = q*prime(cpi) + r
+        if (r == 0) {
             temp=q;
             retval.push_back(prime(cpi));
             iterSinceDivision=0;

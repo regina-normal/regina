@@ -502,7 +502,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * If not (e.g., if \a T is Integer) then this requires some
          * prior knowledge about the arguments.
          *
-         * @param divisor the polynomial to divide by this.
+         * @param divisor the polynomial to divide this by.
          * @return a pair holding the quotient and remainder, as described
          * above.
          */
@@ -535,7 +535,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \ifacespython Not present; instead you can use the one-argument
          * variant of divisionAlg().
          *
-         * @param divisor the polynomial to divide by this.
+         * @param divisor the polynomial to divide this by.
          * @param quotient a polynomial whose contents will be destroyed and
          * replaced with the quotient.
          * @param remainder a polynomial whose contents will be destroyed

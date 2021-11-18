@@ -92,11 +92,8 @@ void addInteger(pybind11::module_& m) {
             &Integer::divExact, pybind11::const_))
         .def(pybind11::self % pybind11::self)
         .def(pybind11::self % long())
-        .def("divisionAlg", [](const Integer& n, const Integer& divisor) {
-            Integer remainder;
-            Integer quotient = n.divisionAlg(divisor, remainder);
-            return pybind11::make_tuple(quotient, remainder);
-        })
+        .def("divisionAlg", overload_cast<const Integer&>(
+            &Integer::divisionAlg, pybind11::const_))
         .def(- pybind11::self)
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self += long())

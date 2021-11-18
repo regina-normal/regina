@@ -1372,7 +1372,6 @@ class Matrix : public Output<Matrix<T>> {
             unsigned long currCol = 0;
 
             // The algorithm works from left to right.
-            T d, r, u, v, gcd, a, b, tmp;
             while (currRow < rows_ && currCol < cols_) {
                 // Identify the first non-zero entry in currCol.
                 for (i = currRow; i < rows_; ++i)
@@ -1395,12 +1394,12 @@ class Matrix : public Output<Matrix<T>> {
                 // Zero out all entries in currCol that appear *below* currRow.
                 for (i = currRow + 1; i < rows_; ++i)
                     if (data_[i][currCol] != 0) {
-                        gcd = data_[currRow][currCol].gcdWithCoeffs(
-                            data_[i][currCol], u, v);
-                        a = data_[currRow][currCol].divExact(gcd);
-                        b = data_[i][currCol].divExact(gcd);
+                        auto [gcd, u, v] = data_[currRow][currCol].
+                            gcdWithCoeffs(data_[i][currCol]);
+                        T a = data_[currRow][currCol].divExact(gcd);
+                        T b = data_[i][currCol].divExact(gcd);
                         for (j = 0; j < cols_; ++j) {
-                            tmp = u * data_[currRow][j] + v * data_[i][j];
+                            T tmp = u * data_[currRow][j] + v * data_[i][j];
                             data_[i][j] = a * data_[i][j] -
                                 b * data_[currRow][j];
                             data_[currRow][j] = tmp;
@@ -1415,11 +1414,10 @@ class Matrix : public Output<Matrix<T>> {
 
                 // Finally, reduce the entries in currCol *above* currRow.
                 for (i = 0; i < currRow; ++i) {
-                    d = data_[i][currCol].divisionAlg(data_[currRow][currCol],
-                        r);
-                    if (d != 0) {
+                    auto [d, r] = data_[i][currCol].divisionAlg(
+                        data_[currRow][currCol]);
+                    if (d != 0)
                         addRow(currRow /* source */, i /* dest */, -d);
-                    }
                 }
 
                 ++currRow;
@@ -1465,7 +1463,6 @@ class Matrix : public Output<Matrix<T>> {
             unsigned long currCol = 0;
 
             // The algorithm works from top to bottom.
-            T d, r, u, v, gcd, a, b, tmp;
             while (currRow < rows_ && currCol < cols_) {
                 // Identify the first non-zero entry in currRow.
                 for (i = currCol; i < cols_; ++i)
@@ -1488,12 +1485,12 @@ class Matrix : public Output<Matrix<T>> {
                 // Zero out all entries in currRow that appear right of currCol.
                 for (i = currCol + 1; i < cols_; ++i)
                     if (data_[currRow][i] != 0) {
-                        gcd = data_[currRow][currCol].gcdWithCoeffs(
-                            data_[currRow][i], u, v);
-                        a = data_[currRow][currCol].divExact(gcd);
-                        b = data_[currRow][i].divExact(gcd);
+                        auto [gcd, u, v] = data_[currRow][currCol].
+                            gcdWithCoeffs(data_[currRow][i]);
+                        T a = data_[currRow][currCol].divExact(gcd);
+                        T b = data_[currRow][i].divExact(gcd);
                         for (j = 0; j < rows_; ++j) {
-                            tmp = u * data_[j][currCol] + v * data_[j][i];
+                            T tmp = u * data_[j][currCol] + v * data_[j][i];
                             data_[j][i] = a * data_[j][i] -
                                 b * data_[j][currCol];
                             data_[j][currCol] = tmp;
@@ -1508,11 +1505,10 @@ class Matrix : public Output<Matrix<T>> {
 
                 // Finally, reduce the entries in currRow left of currCol.
                 for (i = 0; i < currCol; ++i) {
-                    d = data_[currRow][i].divisionAlg(data_[currRow][currCol],
-                        r);
-                    if (d != 0) {
+                    auto [d, r] = data_[currRow][i].divisionAlg(
+                        data_[currRow][currCol]);
+                    if (d != 0)
                         addCol(currCol /* source */, i /* dest */, -d);
-                    }
                 }
 
                 ++currRow;

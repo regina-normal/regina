@@ -1313,7 +1313,7 @@ void HomologicalData::computeTorsionLinkingForm() {
 
     unsigned long rankON=0;
     for (i=0; ((i<ON.rows()) && (i<ON.columns())); i++)
-        if (ON.entry(i,i) != Integer::zero) rankON++;
+        if (ON.entry(i,i) != 0) rankON++;
 
     MatrixInt stepb( R.columns(), stepa.columns() );
 
@@ -1335,8 +1335,6 @@ void HomologicalData::computeTorsionLinkingForm() {
 
     // Dereference the SnapshotRef just once.
     const Triangulation<3>& tri(*tri_);
-
-    Integer tN,tD,tR;
 
     for (i=0; i<pvList.size(); i++)
         for (j=0; j<pvList.size(); j++) {
@@ -1370,9 +1368,9 @@ void HomologicalData::computeTorsionLinkingForm() {
                             tri.triangle(dNBF[k])->embedding(0).
                                 vertices().sign() ), ppList[i] );
             }
-            tN=torsionLinkingFormPresentationMat.entry(i,j).numerator();
-            tD=torsionLinkingFormPresentationMat.entry(i,j).denominator();
-            tN.divisionAlg(tD,tR);
+            Integer tN=torsionLinkingFormPresentationMat.entry(i,j).numerator();
+            Integer tD=torsionLinkingFormPresentationMat.entry(i,j).denominator();
+            auto [tQ, tR] = tN.divisionAlg(tD);
             tN = tR.gcd(tD);
             tR.divByExact(tN);
             tD.divByExact(tN);
@@ -1520,9 +1518,9 @@ void HomologicalData::computeTorsionLinkingForm() {
 
                     // reduce mod 1, then turn into a long double and
                     // evaluate cos, sin
-                    tN = tSum.numerator();
-                    tD = tSum.denominator();
-                    tN.divisionAlg(tD,tR);
+                    Integer tN = tSum.numerator();
+                    Integer tD = tSum.denominator();
+                    auto [tQ, tR] = tN.divisionAlg(tD);
                     long double tLD =
                         (Rational(tR, tD) * twoPow).doubleApprox() * M_PI;
                     // we ignore `inrange' parameter as the number is reduced
@@ -1537,7 +1535,7 @@ void HomologicalData::computeTorsionLinkingForm() {
                     while (incrun) {
                         groupV[incind] = (groupV[incind] + Integer::one)
                             % ProperPrimePower[incind];
-                        if (groupV[incind] == Integer::zero) {
+                        if (groupV[incind] == 0) {
                             incind++;
                         } else {
                             incrun=false;
@@ -1649,9 +1647,7 @@ void HomologicalData::computeTorsionLinkingForm() {
         for (i=0; i<oddTorLegSymV.size(); i++)
             for (j=0; j<oddTorLegSymV[i].second.size(); j++) {
                 if ( ( (Integer(torRankV[i+starti].second[j])*
-                        (torRankV[i+starti].first -
-                        Integer::one))/Integer(4) ) %
-                        Integer(2) == Integer::zero ) {
+                        (torRankV[i+starti].first - 1)) / 4 ) % 2 == 0 ) {
                     if (oddTorLegSymV[i].second[j] != 1)
                         torsionLinkingFormIsSplit=false;
                 } // does this know how to deal with .second[j]==0??
@@ -1664,7 +1660,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     if (starti==1) // have 2-torsion
     { // all the sigmas need to be 0 or inf.
         for (i=0; i<twoTorSigmaV.size(); i++)
-            if ( (twoTorSigmaV[i]!=LargeInteger::zero) &&
+            if ( (twoTorSigmaV[i]!=0) &&
                     (twoTorSigmaV[i]!=LargeInteger::infinity) )
                 torsionLinkingFormIsSplit=false;
     }
@@ -1674,7 +1670,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     if ( (torsionLinkingFormIsSplit) && (starti==1) ) {
         torsionLinkingFormIsHyperbolic = true;
         for (i=0; i<twoTorSigmaV.size(); i++)
-            if (twoTorSigmaV[i]!=LargeInteger::zero)
+            if (twoTorSigmaV[i]!=0)
                 torsionLinkingFormIsHyperbolic=false;
     }
 
@@ -1695,10 +1691,10 @@ void HomologicalData::computeTorsionLinkingForm() {
             tI = Integer(2);
             tI.raiseToPower(h1PrimePowerDecomp[0].second[i]-1);
             tRat = Rational(tI) * linkingFormPD[0].entry(i,i);
-            tN = tRat.numerator();
-            tD = tRat.denominator();
-            tN.divisionAlg(tD,tR);
-            if (tR != Integer::zero)
+            Integer tN = tRat.numerator();
+            Integer tD = tRat.denominator();
+            auto [tQ, tR] = tN.divisionAlg(tD);
+            if (tR != 0)
                 torsionLinkingFormSatisfiesKKtwoTorCondition=false;
         }
 

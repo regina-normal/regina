@@ -428,8 +428,6 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
                                      // list of column coordinates
                                      // for the non-zero entries.
 
-    Integer d,r; // given two Integers a and b, we will represent
-                 // a/b by d and a % b by r in the algorithm.
     Integer u,v,gcd, a,b; // for column operations u,v,a,b represent
                           // a 2x2 matrix.
     Integer tmp;
@@ -467,8 +465,8 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
                 }
                 // step 2: reduce entries(CR,i) for i<CC
                 for (i=0;i<CC;i++) { // write entry(CR,i) as d*entry(CR,CC) + r.
-                    d = M.entry(rowList[CR],i).divisionAlg(
-                        M.entry(rowList[CR],CC), r );
+                    auto [d, r] = M.entry(rowList[CR],i).divisionAlg(
+                        M.entry(rowList[CR],CC) );
                     // perform reduction on column i. this is subtracting
                     // d times column CC from column i.
                     for (j=0;j<M.rows();j++)
@@ -759,12 +757,10 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
         wRow--;
         // step 1 modular reduction on the current row. And find last non-zero 
         // entry in this row up to wRow column
-        Integer R; // divisionAlg needs a remainder so we give it one, 
-                   //  although we discard it.
         unsigned long pivCol=0; 
         for (unsigned long i=0; i<=wRow; i++)
         {
-            workMat.entry(wRow, i).divisionAlg(invF[wRow], R);
+            auto [Q, R] = workMat.entry(wRow, i).divisionAlg(invF[wRow]);
             workMat.entry(wRow, i) = R;
             if (R!=0) pivCol=i;
         } // now pivCol is the last non-zero entry in the 0..wRow square smatrix 
@@ -816,7 +812,7 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
 
         // step 4 mod reduce the only entry left, 
         //  recurse back to step 1 on the next row up. 
-        workMat.entry(wRow, pivCol).divisionAlg(invF[wRow], R); 
+        auto [Q, R] = workMat.entry(wRow, pivCol).divisionAlg(invF[wRow]);
         workMat.entry(wRow, pivCol) = R;
         // so we should have 1's down the diagonal now as long 
         //  as I haven't screwed up.

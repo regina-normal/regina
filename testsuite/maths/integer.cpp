@@ -2455,8 +2455,7 @@ class IntegerTest : public CppUnit::TestFixture {
 
         template <typename IntType>
         void testDivisionAlg(const IntType& n, const IntType& divisor) {
-            IntType q, r;
-            q = IntType(n).divisionAlg(divisor, r);
+            auto [q, r] = IntType(n).divisionAlg(divisor);
 
             shouldBeEqual(q * divisor + r, n);
             if (divisor == 0) {
@@ -2740,9 +2739,8 @@ class IntegerTest : public CppUnit::TestFixture {
                                         shouldBeEqual(x % y, x2 % y2); break;
                                     case 14:
                                         {
-                                            IntType q, r, q2, r2;
-                                            q = x.divisionAlg(y, r);
-                                            q2 = x2.divisionAlg(y2, r2);
+                                            auto [q, r] = x.divisionAlg(y);
+                                            auto [q2, r2] = x2.divisionAlg(y2);
                                             shouldBeEqual(q, q2);
                                             shouldBeEqual(r, r2);
                                         }

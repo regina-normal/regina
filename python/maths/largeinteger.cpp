@@ -93,12 +93,8 @@ void addLargeInteger(pybind11::module_& m) {
             &LargeInteger::divExact, pybind11::const_))
         .def(pybind11::self % pybind11::self)
         .def(pybind11::self % long())
-        .def("divisionAlg", [](const LargeInteger& n,
-                const LargeInteger& divisor) {
-            LargeInteger remainder;
-            LargeInteger quotient = n.divisionAlg(divisor, remainder);
-            return pybind11::make_tuple(quotient, remainder);
-        })
+        .def("divisionAlg", overload_cast<const LargeInteger&>(
+            &LargeInteger::divisionAlg, pybind11::const_))
         .def(- pybind11::self)
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self += long())
