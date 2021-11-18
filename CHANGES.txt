@@ -377,6 +377,8 @@ Version 7.0  [ TODO ]
             - Added string-based functions taggedData(), data(), and
               fromTaggedData(const std::string&).
             - Renamed public constants ...::dataTag_ to ...::dataTag.
+            - Renamed completePermSet() to isComplete().  The old name
+              is kept as a deprecated alias.
             - Moved GluingPermSearcher<3>::PurgeFlags to the more carefully
               typed regina::CensusPurge and regina::CensusPurgeFlags.
               The old name is kept as a deprecated type alias.

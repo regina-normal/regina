@@ -47,7 +47,9 @@ void addGluingPermSearcher2(pybind11::module_& m) {
         .def(pybind11::init<FacetPairing<2>, FacetPairing<2>::IsoList, bool>())
         .def("runSearch", &GluingPermSearcher<2>::runSearch<Action>)
         .def("partialSearch", &GluingPermSearcher<2>::partialSearch<Action>)
-        .def("completePermSet", &GluingPermSearcher<2>::completePermSet)
+        .def("isComplete", &GluingPermSearcher<2>::isComplete)
+        .def("completePermSet", // deprecated
+            &GluingPermSearcher<2>::isComplete)
         .def("taggedData", &GluingPermSearcher<2>::taggedData)
         .def("data", &GluingPermSearcher<2>::data)
         .def_static("findAllPerms",

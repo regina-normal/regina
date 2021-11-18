@@ -338,12 +338,13 @@ class GluingPermSearcher<3> {
          * think of partialSearch() as only enumerating the first
          * \a maxDepth levels of this search tree.  Rather than
          * producing complete gluing permutation sets, this search will
-         * produce a series of partially-complete GluingPermSearcher<3>
-         * objects.  These partial searches may then be restarted by
-         * calling runSearch() later on (perhaps after being frozen or
-         * passed on to a different processor).  If necessary, the \a action
-         * routine may call completePermSet() to distinguish between
-         * a complete set of gluing permutations and a partial search state.
+         * produce a series of partially-constructed permutation sets.
+         * A partial searche can be continued by calling runSearch()
+         * again on the underlying GluingPermSearcher (perhaps after being
+         * frozen, or passed on to a different processor via taggedData() and
+         * fromTaggedData()).  If necessary, the \a action routine may call
+         * isComplete() to distinguish between a complete set of
+         * gluing permutations and a partial search state.
          *
          * Note that a restarted search will never drop below its
          * initial depth.  That is, calling runSearch() with a fixed
@@ -376,7 +377,19 @@ class GluingPermSearcher<3> {
          * @return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
-        bool completePermSet() const;
+        bool isComplete() const;
+
+        /**
+         * Deprecated function that determines whether this search manager
+         * holds a complete gluing permutation set or just a partially
+         * completed search state.
+         *
+         * \deprecated This routine has been renamed to isComplete().
+         *
+         * @return \c true if a complete gluing permutation set is held,
+         * or \c false otherwise.
+         */
+        [[deprecated]] bool completePermSet() const;
 
         /**
          * Dumps all internal data in a plain text format, along with a
@@ -2764,6 +2777,10 @@ inline void GluingPermSearcher<3>::partialSearch(long maxDepth,
     searchImpl(maxDepth, ActionWrapper([&](const regina::GluingPerms<3>& p) {
         action(p, std::forward<Args>(args)...);
     }));
+}
+
+inline bool GluingPermSearcher<3>::isComplete() const {
+    return (orderElt == orderSize);
 }
 
 inline bool GluingPermSearcher<3>::completePermSet() const {

@@ -633,12 +633,13 @@ class GluingPermSearcher<4> {
          * think of partialSearch() as only enumerating the first
          * \a maxDepth levels of this search tree.  Rather than
          * producing complete gluing permutation sets, this search will
-         * produce a series of partially-complete GluingPermSearcher<4>
-         * objects.  These partial searches may then be restarted by
-         * calling runSearch() later on (perhaps after being frozen or
-         * passed on to a different processor).  If necessary, the \a action
-         * routine may call completePermSet() to distinguish between
-         * a complete set of gluing permutations and a partial search state.
+         * produce a series of partially-constructed permutation sets.
+         * A partial searche can be continued by calling runSearch()
+         * again on the underlying GluingPermSearcher (perhaps after being
+         * frozen, or passed on to a different processor via taggedData() and
+         * fromTaggedData()).  If necessary, the \a action routine may call
+         * isComplete() to distinguish between a complete set of
+         * gluing permutations and a partial search state.
          *
          * Note that a restarted search will never drop below its
          * initial depth.  That is, calling runSearch() with a fixed
@@ -671,7 +672,19 @@ class GluingPermSearcher<4> {
          * @return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
-        bool completePermSet() const;
+        bool isComplete() const;
+
+        /**
+         * Deprecated function that determines whether this search manager
+         * holds a complete gluing permutation set or just a partially
+         * completed search state.
+         *
+         * \deprecated This routine has been renamed to isComplete().
+         *
+         * @return \c true if a complete gluing permutation set is held,
+         * or \c false otherwise.
+         */
+        [[deprecated]] bool completePermSet() const;
 
         /**
          * Dumps all internal data in a plain text format, along with a
@@ -1283,6 +1296,10 @@ inline GluingPermSearcher<4>::PentEdgeState::PentEdgeState() :
 inline GluingPermSearcher<4>::PentTriangleState::PentTriangleState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp() /* ID */,
         hadEqualRank(false) {
+}
+
+inline bool GluingPermSearcher<4>::isComplete() const {
+    return (orderElt_ == orderSize_);
 }
 
 inline bool GluingPermSearcher<4>::completePermSet() const {
