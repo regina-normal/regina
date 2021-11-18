@@ -57,3 +57,4 @@ print(s)
 b2 = regina.base64Decode(s)
 print(b == b2)
 
+print(regina.base64Decode('!!')) # should be None
