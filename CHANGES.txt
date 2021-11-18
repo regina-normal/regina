@@ -1062,6 +1062,8 @@ Version 7.0  [ TODO ]
             - Deprecated clone().  Just use the copy constructor instead.
         Class Polynomial:
             - Added member and global swap() functions.
+            - Changed divisionAlg() to return a tuple instead of using
+              reference arguments.  The old version is kept but deprecated.
         Class Property<...>:
             - Removed completely.  Use either std::optional<...> or
               std::unique_ptr<...> instead (according to your storage policy).

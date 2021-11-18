@@ -474,14 +474,14 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial& operator /= (const Polynomial& other);
 
         /**
-         * Divides this by the given divisor, and extracts both the
+         * Divides this by the given divisor, and returns both the
          * quotient and the remainder.
          *
          * More precisely: suppose there exist polynomials \a q and \a r with
          * coefficients of type \a T for which <tt>this = q.divisor + r</tt>,
          * and where \a r has smaller degree than \a divisor.  Then this
-         * routine sets the given polynomial \a quotient to \a q, and sets
-         * the given polynomial \a remainder to \a r.
+         * routine returns the pair (\a q, \a r); that is, the \e quotient
+         * and the \e remainder.
          *
          * If you do not need the remainder (e.g., if you know in
          * advance that \a divisor divides into this polynomial exactly),
@@ -502,21 +502,46 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * If not (e.g., if \a T is Integer) then this requires some
          * prior knowledge about the arguments.
          *
+         * @param divisor the polynomial to divide by this.
+         * @return a pair holding the quotient and remainder, as described
+         * above.
+         */
+        std::pair<Polynomial, Polynomial> divisionAlg(
+            const Polynomial& divisor) const;
+
+        /**
+         * Deprecated function that divides this by the given divisor,
+         * and extracts both the quotient and the remainder.
+         *
+         * This function performs the same task as the one-argument
+         * variant of divisionAlg(); however, instead of send the
+         * quotient and remainder back through the return value, it
+         * sends them back via the given polynomial references.
+         *
+         * See the one-argument variant of divisionAlg() for further details.
+         *
+         * \deprecated Use the one-argument variant of divisionAlg() instead.
+         *
          * \pre Neither \a quotient nor \a remainder is a reference to
          * this polynomial.
          *
-         * \ifacespython The arguments \a quotient and \a remainder are
-         * missing; instead these are passed back through the return
-         * value of the function.  Specifically, this function returns a
-         * (\a quotient, \a remainder) pair.
+         * \pre The given divisor is not the zero polynomial.
+         *
+         * \pre The quotient as defined above exists.  If \a T is a field
+         * type (e.g., if \a T is Rational) then this is true automatically.
+         * If not (e.g., if \a T is Integer) then this requires some
+         * prior knowledge about the arguments.
+         *
+         * \ifacespython Not present; instead you can use the one-argument
+         * variant of divisionAlg().
          *
          * @param divisor the polynomial to divide by this.
          * @param quotient a polynomial whose contents will be destroyed and
-         * replaced with the quotient \a q, as described above.
+         * replaced with the quotient.
          * @param remainder a polynomial whose contents will be destroyed
-         * and replaced with the remainder \a r, as described above.
+         * and replaced with the remainder.
          */
-        void divisionAlg(const Polynomial& divisor,
+        [[deprecated]] void divisionAlg(const Polynomial& divisor,
             Polynomial& quotient, Polynomial& remainder) const;
 
         /**
@@ -1241,6 +1266,55 @@ Polynomial<T>& Polynomial<T>::operator /= (const Polynomial<T>& other) {
 }
 
 template <typename T>
+std::pair<Polynomial<T>, Polynomial<T>> Polynomial<T>::divisionAlg(
+        const Polynomial<T>& divisor) const {
+    // The code below breaks if divisor and *this are the same object, so
+    // treat this case specially.
+    if (&divisor == this)
+        return { {1}, {} }; // q = 1, r = 0
+
+    if (divisor.degree_ > degree_)
+        return { {}, *this }; // q = 0, r = this
+
+    if (divisor.degree_ == 0) {
+        // q = this / divisor[0], r = 0
+        std::pair<Polynomial<T>, Polynomial<T>> ans(*this, {});
+        for (size_t i = 0; i <= ans.first.degree_; ++i)
+            ans.first.coeff_[i] /= divisor.coeff_[0];
+        return ans;
+    }
+
+    // From here we have: 0 < deg(divisor) <= deg(this).
+    // In particular, both this and divisor have strictly positive degree.
+
+    // We initialise the quotient to be x^k where k is the correct degree;
+    // this is just so the constructor corretly allocated the right number of
+    // coefficients.  We will overwrite the unwanted leading coefficient later.
+    //
+    // We initialise the remainer to be a copy of this.
+
+    std::pair<Polynomial<T>, Polynomial<T>> ans(
+        degree_ - divisor.degree_, *this);
+
+    for (size_t i = degree_; i >= divisor.degree_; --i) {
+        ans.first.coeff_[i - divisor.degree_] = ans.second.coeff_[i];
+        ans.first.coeff_[i - divisor.degree_] /=
+            divisor.coeff_[divisor.degree_];
+        for (size_t j = 0; j <= divisor.degree_; ++j)
+            ans.second.coeff_[j + i - divisor.degree_] -=
+                (ans.first.coeff_[i - divisor.degree_] * divisor.coeff_[j]);
+    }
+
+    // Although the degree of the quotient is correct, the remainder
+    // might have zero coefficients at any (or all) positions.
+    ans.second.degree_ = divisor.degree_ - 1;
+    while (ans.second.degree_ > 0 && ans.second.coeff_[ans.second.degree_] == 0)
+        --ans.second.degree_;
+
+    return ans;
+}
+
+template <typename T>
 void Polynomial<T>::divisionAlg(const Polynomial<T>& divisor,
         Polynomial<T>& quotient, Polynomial<T>& remainder) const {
     // The code below breaks if divisor and *this are the same object, so
@@ -1354,9 +1428,8 @@ void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
         v.swap(vv);
     }
 
-    Polynomial<T> tmp, q, r;
     while (! y.isZero()) {
-        gcd.divisionAlg(y, q, r);
+        auto [q, r] = gcd.divisionAlg(y);
 
         u -= (q * uu);
         v -= (q * vv);

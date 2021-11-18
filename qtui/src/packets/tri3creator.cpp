@@ -433,7 +433,6 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         // Build the Seifert fibred space.
         regina::SFSpace sfs;
         long a, b;
-        long d, u, v;
         long pos = 0;
         long whichPair = 1;
 
@@ -451,7 +450,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
 
             // For gcd calculations, use gcdWithCoeffs() which can cope with
             // negatives.
-            d = regina::gcdWithCoeffs(a, b, u, v);
+            auto [d, u, v] = regina::gcdWithCoeffs(a, b);
             if (d != 1 && d != -1) {
                 ReginaSupport::sorry(parentWidget,
                     QObject::tr("<qt>The two parameters "

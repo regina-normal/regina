@@ -92,14 +92,8 @@ void addPolynomial(pybind11::module_& m) {
         .def(pybind11::self * pybind11::self)
         .def(pybind11::self / pybind11::self)
         .def(- pybind11::self)
-        .def("divisionAlg", [](const Polynomial<Rational>& p,
-                const Polynomial<Rational>& divisor) {
-            std::unique_ptr<Polynomial<Rational>> q(new Polynomial<Rational>);
-            std::unique_ptr<Polynomial<Rational>> r(new Polynomial<Rational>);
-
-            p.divisionAlg(divisor, *q, *r);
-            return std::make_pair(std::move(q), std::move(r));
-        })
+        .def("divisionAlg", overload_cast<const Polynomial<Rational>&>(
+            &Polynomial<Rational>::divisionAlg, pybind11::const_))
         .def("gcdWithCoeffs", &Polynomial<Rational>::gcdWithCoeffs<Rational>)
     ;
     regina::python::add_output(c, true /* __repr__ */);
