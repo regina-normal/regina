@@ -73,6 +73,13 @@ template <int dim> class XMLTriangulationReader;
  * This encoding represents an isomorphism signature as a std::string,
  * using only printable characters from the 7-bit ASCII range.
  *
+ * \ifacespython Not present.  This is essentially part of the default
+ * implementation of Triangulation<dim>::isoSig(), and users should have
+ * no need to access this class directly.  It therefore seems unnecessary
+ * to pollute Regina's Python namespace with 14 extra classes (one per
+ * supported dimension) that nobody will use.  If you do need access to
+ * this class in Python, please drop Ben an email.
+ *
  * \ingroup detail
  */
 template <int dim>
