@@ -121,26 +121,21 @@ std::unique_ptr<BlockedSFSTriple> BlockedSFSTriple::recognise(
             return false;
 
         // Insist on the boundary annuli being disjoint and untwisted.
-        const SatBlock* bdryBlock[2];
-        unsigned bdryAnnulus[2];
-        bool bdryVert[2], bdryHoriz[2], bdryRef[2];
+        auto [bdryBlock0, bdryAnnulus0, bdryVert0, bdryHoriz0] =
+            r->boundaryAnnulus(0);
+        auto [bdryBlock1, bdryAnnulus1, bdryVert1, bdryHoriz1] =
+            r->boundaryAnnulus(1);
 
-        r->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
-            bdryVert[0], bdryHoriz[0]);
-        r->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
-            bdryVert[1], bdryHoriz[1]);
-
-        bdryRef[0] = ((bdryVert[0] && ! bdryHoriz[0]) ||
-            (bdryHoriz[0] && ! bdryVert[0]));
-        bdryRef[1] = ((bdryVert[1] && ! bdryHoriz[1]) ||
-            (bdryHoriz[1] && ! bdryVert[1]));
+        bool bdryRef[2] = {
+            ((bdryVert0 && ! bdryHoriz0) || (bdryHoriz0 && ! bdryVert0)),
+            ((bdryVert1 && ! bdryHoriz1) || (bdryHoriz1 && ! bdryVert1)) };
 
         // We either want two disjoint one-annulus boundaries, or else a
         // single two-annulus boundary that is pinched to turn each annulus
         // into a two-sided torus.  The following test handles all cases.
-        SatAnnulus bdry[2];
-        bdry[0] = bdryBlock[0]->annulus(bdryAnnulus[0]);
-        bdry[1] = bdryBlock[1]->annulus(bdryAnnulus[1]);
+        SatAnnulus bdry[2] = {
+            bdry[0] = bdryBlock0->annulus(bdryAnnulus0),
+            bdry[1] = bdryBlock1->annulus(bdryAnnulus1) };
 
         if (! (bdry[0].isTwoSidedTorus() && bdry[1].isTwoSidedTorus()))
             return false;

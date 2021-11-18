@@ -108,10 +108,8 @@ std::unique_ptr<BlockedSFSPair> BlockedSFSPair::recognise(
             return false;
 
         // Insist on this boundary being untwisted.
-        const SatBlock* bdryBlock;
-        unsigned bdryAnnulus;
-        bool bdryVert, bdryHoriz;
-        r->boundaryAnnulus(0, bdryBlock, bdryAnnulus, bdryVert, bdryHoriz);
+        auto [bdryBlock, bdryAnnulus, bdryVert, bdryHoriz] =
+            r->boundaryAnnulus(0);
 
         bool firstRegionReflected =
             ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));

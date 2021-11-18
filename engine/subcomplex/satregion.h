@@ -416,8 +416,8 @@ class SatRegion : public Output<SatRegion> {
          */
         [[deprecated]] size_t numberOfBoundaryAnnuli() const;
         /**
-         * Returns the requested saturated annulus on the boundary of
-         * this region.
+         * Returns details of the requested saturated annulus on
+         * the boundary of this region.
          *
          * The saturated annuli that together form the boundary
          * components of this region are numbered from 0 to
@@ -436,59 +436,6 @@ class SatRegion : public Output<SatRegion> {
          * the overall region, then the first such annulus in the starter
          * block will be numbered 0 here.
          *
-         * The structure returned will be the annulus precisely as it
-         * appears within its particular saturated block.  As discussed
-         * in the SatBlockSpec class notes, the block might be
-         * reflected horizontally and/or vertically within the overall
-         * region, which will affect how the annulus is positioned as
-         * part of the overall region boundary (e.g., the annulus might
-         * be positioned upside-down in the overall region boundary,
-         * or it might be positioned with its second triangle appearing before
-         * its first triangle as one walks around the boundary).  To account
-         * for this, the two boolean arguments \a blockRefVert and
-         * \a blockRefHoriz will be modified to indicate if and how the
-         * block is reflected.
-         *
-         * \warning This routine is quite slow, since it currently scans
-         * through every annulus of every saturated block.  Use it
-         * sparingly!
-         *
-         * \ifacespython Both variants of boundaryAnnulus() are
-         * combined into a single routine, which takes the integer
-         * \a which as its only argument and returns its results as a
-         * tuple.  See the alternate version of boundaryAnnulus() for
-         * details on how the return tuple is structured.
-         *
-         * @param which specifies which boundary annulus of this region
-         * to return; this must be between 0 and countBoundaryAnnuli()-1
-         * inclusive.
-         * @param blockRefVert used to return whether the block
-         * containing the requested annulus is vertically reflected
-         * within this region (see SatBlockSpec for details).  This
-         * will be set to \c true if the block is vertically reflected,
-         * or \c false if not.
-         * @param blockRefHoriz used to return whether the block
-         * containing the requested annulus is horizontally reflected
-         * within this region (see SatBlockSpec for details).  This
-         * will be set to \c true if the block is horizontally reflected,
-         * or \c false if not.
-         * @return details of the requested boundary annulus, precisely
-         * as it appears within its particular saturated block.
-         */
-        const SatAnnulus& boundaryAnnulus(size_t which,
-            bool& blockRefVert, bool& blockRefHoriz) const;
-        /**
-         * Returns fine details of the requested saturated annulus on
-         * the boundary of this region.
-         *
-         * The argument \a which specifies which one of these
-         * annuli should be returned.  See the
-         * boundaryAnnulus(size_t, bool&, bool&) documentation
-         * for details on how the boundary annuli are numbered.
-         *
-         * Various details of the requested boundary annulus are
-         * returned in the various arguments, as described below.
-         *
          * Be aware that the block containing the requested annulus
          * might be reflected horizontally and/or vertically within the
          * overall region, as discussed in the SatBlockSpec class notes.
@@ -496,42 +443,33 @@ class SatRegion : public Output<SatRegion> {
          * part of the overall region boundary (e.g., the annulus might
          * be positioned upside-down in the overall region boundary,
          * or it might be positioned with its second triangle appearing before
-         * its first triangle as one walks around the boundary).  The two
-         * boolean arguments \a blockRefVert and \a blockRefHoriz will
-         * be modified to indicate if and how the block is reflected.
+         * its first triangle as one walks around the boundary).  To account
+         * for this, the return value will include two booleans \a refVert and
+         * \a refHoriz to indicate if and how the block is reflected.
          *
          * \warning This routine is quite slow, since it currently scans
          * through every annulus of every saturated block.  Use it
          * sparingly!
          *
-         * \ifacespython This routine only takes a single argument (the
-         * integer \a which).  The return value is a tuple of four values:
-         * the block returned in \a block, the integer returned in \a annulus,
-         * the boolean returned in \a blockRefVert, and the boolean returned
-         * in \a blockRefHoriz.
+         * \exception InvalidArgument the argument \a which was not
+         * between 0 and countBoundaryAnnuli()-1 inclusive.
          *
-         * @param which specifies which boundary annulus of this region
-         * to return; this must be between 0 and countBoundaryAnnuli()-1
-         * inclusive.
-         * @param block used to return the particular saturated block
-         * containing the requested annulus.
-         * @param annulus used to return which annulus number in the
-         * returned block is the requested annulus; this will be between
-         * 0 and block->countAnnuli() inclusive.
-         * @param blockRefVert used to return whether the block
-         * containing the requested annulus is vertically reflected
-         * within this region (see SatBlockSpec for details).  This
-         * will be set to \c true if the block is vertically reflected,
-         * or \c false if not.
-         * @param blockRefHoriz used to return whether the block
-         * containing the requested annulus is horizontally reflected
-         * within this region (see SatBlockSpec for details).  This
-         * will be set to \c true if the block is horizontally reflected,
-         * or \c false if not.
+         * @param which specifies which boundary annulus of this region to
+         * return; this must be between 0 and countBoundaryAnnuli()-1 inclusive.
+         * @return a tuple (\a block, annulus, refVert, refHoriz), where:
+         * \a block is a pointer to the the particular saturated block
+         * containing the requested annulus;
+         * \a annulus indicates which annulus number in the returned block
+         * is the requested annulus, as an integer between 0 and
+         * block->countAnnuli()-1 inclusive;
+         * \a refVert is \c true if and only if the block containing the
+         * requested annulus is vertically reflected within this region; and
+         * \a refHoriz is \c true if and only if the block containing the
+         * requested annulus is horizontally reflected within this region.
+         * See SatBlockSpec for further details on these reflections.
          */
-        void boundaryAnnulus(size_t which,
-            SatBlock const* &block, unsigned& annulus,
-            bool& blockRefVert, bool& blockRefHoriz) const;
+        std::tuple<const SatBlock*, unsigned, bool, bool> boundaryAnnulus(
+            size_t which) const;
 
         /**
          * Returns details of the Seifert fibred space represented by
@@ -709,7 +647,12 @@ class SatRegion : public Output<SatRegion> {
          * automatically by this file.  If you wish to use this function
          * in your own code, you will need to include satregion-impl.h.
          *
-         * \ifacespython Not present.
+         * \ifacespython This function is available, and \a action may be a
+         * pure Python function.  However, \a action must take only one
+         * argument: the newly constructed SatRegion (i.e., the first argument
+         * in the description above).  The SatBlock::TetList& argument will
+         * \e not be passed, and there can be no additional argument list
+         * \a args.
          *
          * @param tri the triangulation in which to search for starter blocks.
          * @param mustBeComplete \c true if you are searching for a region

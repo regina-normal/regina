@@ -143,9 +143,8 @@ std::unique_ptr<PluggedTorusBundle> PluggedTorusBundle::hunt(
             [&ans, &bundle, &tri](const Isomorphism<3>& iso) {
         int regionPos;
         Perm<4> annulusToUpperLayer;
-        SatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
+        SatAnnulus upperAnnulus, lowerAnnulus;
         SatBlock::TetList avoidTets;
-        bool bdryRefVert, bdryRefHoriz;
 
         // Look for the corresponding layering.
 
@@ -216,12 +215,14 @@ std::unique_ptr<PluggedTorusBundle> PluggedTorusBundle::hunt(
 
             // From the SatRegion specifications we know that the first
             // boundary annulus will be upperAnnulus.  Find the second.
-            bdryAnnulus = region->boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
+            auto [bdryBlock, bdryAnnulus, bdryRefVert, bdryRefHoriz] =
+                region->boundaryAnnulus(1);
 
             // Hope like hell that this meets up with the lower layering
             // boundary.  Note that this will force it to be a torus also.
             Matrix2 upperRolesToLower;
-            if (! lowerAnnulus.isJoined(bdryAnnulus, upperRolesToLower))
+            if (! lowerAnnulus.isJoined(bdryBlock->annulus(bdryAnnulus),
+                    upperRolesToLower))
                 continue;
 
             // All good!

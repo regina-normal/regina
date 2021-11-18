@@ -1152,10 +1152,11 @@ Version 7.0  [ TODO ]
         Class SatLST:
             - Routine lst() now returns by reference, not pointer.
         Class SatRegion:
-            - Routine createSFS() now return by value, and throws an exception
+            - Routine createSFS() now returns by value, and throws an exception
               in the (rare) cases where it cannot determine the answer.
-            - The block output argument for boundaryAnnulus() now sends back a
-              const pointer.
+            - Changed the two versions boundaryAnnulus() into a single
+              function that returns tuple instead of using reference arguments.
+              The old functions are removed completely.
             - Added move construction, and move assignment.
             - New static routine find(), which replaces the old class
               SatBlockStarterSearcher.

@@ -95,13 +95,10 @@ std::unique_ptr<BlockedSFSLoop> BlockedSFSLoop::recognise(
         if (r->countBoundaryAnnuli() != 2)
             return false;
 
-        const SatBlock* bdryBlock[2];
-        unsigned bdryAnnulus[2];
-        bool bdryRefVert[2], bdryRefHoriz[2];
-        r->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
-            bdryRefVert[0], bdryRefHoriz[0]);
-        r->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
-            bdryRefVert[1], bdryRefHoriz[1]);
+        auto [bdryBlock0, bdryAnnulus0, bdryRefVert0, bdryRefHoriz0] =
+            r->boundaryAnnulus(0);
+        auto [bdryBlock1, bdryAnnulus1, bdryRefVert1, bdryRefHoriz1] =
+            r->boundaryAnnulus(1);
 
         // We either want two disjoint one-annulus torus boundaries, or else a
         // single two-annulus boundary that is pinched to turn each annulus into
@@ -110,8 +107,8 @@ std::unique_ptr<BlockedSFSLoop> BlockedSFSLoop::recognise(
         // through the layering in the pinched case, since this will fail
         // our test anyway (either boundaries do not form tori, or they are
         // not two-sided).
-        SatAnnulus bdry0 = bdryBlock[0]->annulus(bdryAnnulus[0]);
-        SatAnnulus bdry1 = bdryBlock[1]->annulus(bdryAnnulus[1]);
+        SatAnnulus bdry0 = bdryBlock0->annulus(bdryAnnulus0);
+        SatAnnulus bdry1 = bdryBlock1->annulus(bdryAnnulus1);
 
         if (! (bdry0.isTwoSidedTorus() && bdry1.isTwoSidedTorus()))
             return false;
@@ -158,10 +155,10 @@ std::unique_ptr<BlockedSFSLoop> BlockedSFSLoop::recognise(
         // First find mappings from the fibre/base curves (fi, oi) to
         // annulus #i edges (first triangle: 01, first triangle: 02).
         // Note that each of these matrices is self-inverse.
-        Matrix2 curves0ToAnnulus0(bdryRefVert[0] ? 1 : -1, 0, 0,
-            bdryRefHoriz[0] ? -1 : 1);
-        Matrix2 curves1ToAnnulus1(bdryRefVert[1] ? 1 : -1, 0, 0,
-            bdryRefHoriz[1] ? -1 : 1);
+        Matrix2 curves0ToAnnulus0(bdryRefVert0 ? 1 : -1, 0, 0,
+            bdryRefHoriz0 ? -1 : 1);
+        Matrix2 curves1ToAnnulus1(bdryRefVert1 ? 1 : -1, 0, 0,
+            bdryRefHoriz1 ? -1 : 1);
 
         // Put it all together.
         // Remember that curves1ToAnnulus1 is self-inverse.

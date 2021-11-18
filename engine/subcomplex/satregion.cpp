@@ -152,47 +152,18 @@ SatRegion::SatRegion(const SatRegion& src) :
     }
 }
 
-const SatAnnulus& SatRegion::boundaryAnnulus(size_t which,
-        bool& blockRefVert, bool& blockRefHoriz) const {
-    unsigned ann;
+std::tuple<const SatBlock*, unsigned, bool, bool>
+        SatRegion::boundaryAnnulus(size_t which) const {
     for (const SatBlockSpec& b : blocks_)
-        for (ann = 0; ann < b.block()->countAnnuli(); ann++)
+        for (unsigned ann = 0; ann < b.block()->countAnnuli(); ++ann)
             if (! b.block()->hasAdjacentBlock(ann)) {
-                if (which == 0) {
-                    blockRefVert = b.refVert();
-                    blockRefHoriz = b.refHoriz();
-                    return b.block()->annulus(ann);
-                }
-
-                which--;
+                if (which == 0)
+                    return { b.block(), ann, b.refVert(), b.refHoriz() };
+                --which;
             }
 
-    // Given the precondition, we should never reach this point.
-
-    // We need to return a reference, so to keep the compiler happy,
-    // create a memory leak.  Again, we should never actually reach this point.
-    return *(new SatAnnulus());
-}
-
-void SatRegion::boundaryAnnulus(size_t which,
-        SatBlock const* &block, unsigned& annulus,
-        bool& blockRefVert, bool& blockRefHoriz) const {
-    unsigned ann;
-    for (const SatBlockSpec& b : blocks_)
-        for (ann = 0; ann < b.block()->countAnnuli(); ann++)
-            if (! b.block()->hasAdjacentBlock(ann)) {
-                if (which == 0) {
-                    block = b.block();
-                    annulus = ann;
-                    blockRefVert = b.refVert();
-                    blockRefHoriz = b.refHoriz();
-                    return;
-                }
-
-                which--;
-            }
-
-    // Given the precondition, we should never reach this point.
+    throw InvalidArgument(
+        "SatRegion::boundaryAnnulus(): Invalid boundary annulus index");
 }
 
 SFSpace SatRegion::createSFS(bool reflect) const {

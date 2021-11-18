@@ -65,16 +65,8 @@ void addSatRegion(pybind11::module_& m) {
         .def("countBoundaryAnnuli", &SatRegion::countBoundaryAnnuli)
         .def("numberOfBoundaryAnnuli", // deprecated
             &SatRegion::countBoundaryAnnuli)
-        .def("boundaryAnnulus", [](const SatRegion& r, unsigned which) {
-            const SatBlock* block;
-            unsigned annulus;
-            bool blockRefVert, blockRefHoriz;
-
-            r.boundaryAnnulus(which, block, annulus,
-                blockRefVert, blockRefHoriz);
-            return pybind11::make_tuple(
-                block, annulus, blockRefVert, blockRefHoriz);
-        }, pybind11::return_value_policy::reference_internal)
+        .def("boundaryAnnulus", &SatRegion::boundaryAnnulus,
+            pybind11::return_value_policy::reference_internal)
         .def("createSFS", &SatRegion::createSFS)
         .def("blockAbbrs", &SatRegion::blockAbbrs,
             pybind11::arg("tex") = false)
