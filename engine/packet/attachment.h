@@ -81,7 +81,8 @@ class Attachment : public Packet {
          * Describes how an attachment packet should claim ownership of a block
          * of binary data.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since for Python users, blocks are
+         * always copied (i.e., the ownership policy is always DEEP_COPY).
          */
         enum OwnershipPolicy {
             /**
@@ -171,7 +172,11 @@ class Attachment : public Packet {
          * which case the new packet will have no attachment stored
          * (so isNull() will return \c true).
          *
-         * \ifacespython Not present.
+         * \ifacespython The \a size and \a alloc arguments are not present,
+         * since a Python \c bytes object knows its size, and in Python the
+         * only available ownership policy is to make a deep copy.
+         * In Python 3, the binary data should be passed as a Python
+         * \c bytes object; in Python 2 it should be passed as a byte string.
          *
          * @param data the block of binary data that forms the attachment,
          * or \c null if no attachment is to be stored.
@@ -257,7 +262,11 @@ class Attachment : public Packet {
          * (i.e., if isNull() returns \c true), then this routine will return
          * \c null.
          *
-         * \ifacespython Not present.
+         * \ifacespython In Python 3, this routine returns a Python \c bytes
+         * object; in Python 2 it returns a Python byte string.  Unlike the
+         * C++ version of this routine, the Python version returns a deep copy
+         * of the raw data (so this routine becomes slower, but the resulting
+         * byte sequence can be freely modified).
          *
          * @return the raw attachment data.
          */
@@ -331,7 +340,11 @@ class Attachment : public Packet {
          * \warning This cannot be used for self-assignment.  If the argument
          * \a data is in fact data() then this routine will most likely crash.
          *
-         * \ifacespython Not present.
+         * \ifacespython The \a size and \a alloc arguments are not present,
+         * since a Python \c bytes object knows its size, and in Python the
+         * only available ownership policy is to make a deep copy.
+         * In Python 3, the binary data should be passed as a Python
+         * \c bytes object; in Python 2 it should be passed as a byte string.
          *
          * @param data the block of binary data that forms the new attachment,
          * or \c null if no attachment is to be stored.

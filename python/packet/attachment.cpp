@@ -43,12 +43,49 @@ void addAttachment(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<const char*>())
         .def(pybind11::init<const Attachment&>())
+        .def(pybind11::init([](pybind11::bytes data, std::string filename) {
+            char* in = nullptr;
+            Py_ssize_t inlen = 0;
+
+            // The macro PYBIND11_BYTES_AS_STRING_AND_SIZE calls either
+            // PyBytes_AsStringAndSize or PyString_AsStringAndSize,
+            // according to whether are using Python 3 or 2 respectively.
+
+            if (PYBIND11_BYTES_AS_STRING_AND_SIZE(data.ptr(), &in, &inlen)) {
+                // pybind11_fail throws a std::runtime_error.
+                // We use this for consistency with other parts of pybind11
+                // that work directly with the Python C API.
+                pybind11::pybind11_fail("Unable to extract Python "
+                    "bytes contents in Attachment constructor");
+            }
+
+            return new Attachment(in, inlen, Attachment::DEEP_COPY, filename);
+        }))
         .def("swap", &Attachment::swap)
         .def("isNull", &Attachment::isNull)
+        .def("data", [](const Attachment& a) -> pybind11::object {
+            if (a.isNull())
+                return pybind11::none();
+            else
+                return pybind11::bytes(a.data(), a.size());
+        })
         .def("size", &Attachment::size)
         .def("filename", &Attachment::filename)
         .def("extension", &Attachment::extension)
         .def("reset", overload_cast<>(&Attachment::reset))
+        .def("reset", [](Attachment& a, pybind11::bytes data,
+                std::string filename) {
+            char* in = nullptr;
+            Py_ssize_t inlen = 0;
+
+            // See the constructor above for an explanation of this code.
+            if (PYBIND11_BYTES_AS_STRING_AND_SIZE(data.ptr(), &in, &inlen)) {
+                pybind11::pybind11_fail("Unable to extract Python "
+                    "bytes contents in Attachment constructor");
+            }
+
+            a.reset(in, inlen, Attachment::DEEP_COPY, filename);
+        })
         .def("save", &Attachment::save)
         .def("savePDF", &Attachment::save) // deprecated
         .def_readonly_static("typeID", &Attachment::typeID)

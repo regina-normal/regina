@@ -58,3 +58,23 @@ b2 = regina.base64Decode(s)
 print(b == b2)
 
 print(regina.base64Decode('!!')) # should be None
+
+print()
+
+########################################################################
+
+a = Attachment()
+print(a.data())
+
+b = b'as\0df'
+a = Attachment(b, 'bytes.dat')
+print(a.size())
+print(base64Encode(b))
+print(base64Encode(a.data()))
+
+b = b'\0\0\0'
+a.reset(b, 'null.dat')
+print(a.size())
+print(base64Encode(b))
+print(base64Encode(a.data()))
+
