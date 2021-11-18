@@ -59,12 +59,7 @@ void addBase64(pybind11::module_& m) {
         char* out = new char[outlen + 1];
         regina::base64Encode(in, inlen, out, outlen);
 
-        // We encode the result as a std::string, not a pybind11:str.
-        // This is because, under python 2, using pybind11::str results
-        // in the output being of type unicode.
-        // Unfortunately this means yet another deep copy will happen,
-        // as we translate from (char*) to std::string to Python string.
-        std::string ans(out, outlen);
+        pybind11::str ans(out, outlen);
         delete[] out;
         return ans;
     });
