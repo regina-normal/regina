@@ -142,7 +142,10 @@ inline constexpr char base64Spare[] = "_-.";
  * The routine base64Length() can be used to precalculate precisely how
  * many output characters will be required.
  *
- * \ifacespython Not present.
+ * \ifacespython These base64 encoding routines are made available to
+ * Python in the form <tt>base64Encode(input_bytes)</tt>.  This routine
+ * takes a single Python \c bytes object as input, and returns a string.
+ * You do not need to supply any input or output buffer lengths.
  *
  * @param in the sequence of input bytes; this does not need to be
  * terminated in any special way.
@@ -169,7 +172,10 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * If the output array is too large (in particular, the expected size
  * will overflow a \c size_t), the \a out pointer will be set to \c null.
  *
- * \ifacespython Not present.
+ * \ifacespython These base64 encoding routines are made available to
+ * Python in the form <tt>base64Encode(input_bytes)</tt>.  This routine
+ * takes a single Python \c bytes object as input, and returns a string.
+ * You do not need to supply any input or output buffer lengths.
  *
  * @param in the sequence of input bytes; this does not need to be
  * terminated in any special way.
@@ -203,7 +209,10 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * The total number of output bytes is important to know, since the output
  * array is not terminated in any special way.
  *
- * \ifacespython Not present.
+ * \ifacespython These base64 decoding routines are made available to
+ * Python in the form <tt>base64Decode(input_string)</tt>.  This routine
+ * takes a single string as input, and returns a Python \c bytes object.
+ * You do not need to supply any input or output buffer lengths.
  *
  * @param in the input sequence of base64 characters; this does not need
  * to be terminated in any special way.
@@ -244,7 +253,10 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * null pointer may be passed in the \a outlen argument.  Note however
  * that the output array is not terminated in any special way.
  *
- * \ifacespython Not present.
+ * \ifacespython These base64 decoding routines are made available to
+ * Python in the form <tt>base64Decode(input_string)</tt>.  This routine
+ * takes a single string as input, and returns a Python \c bytes object.
+ * You do not need to supply any input or output buffer lengths.
  *
  * @param in the input sequence of base64 characters; this does not need
  * to be terminated in any special way.
