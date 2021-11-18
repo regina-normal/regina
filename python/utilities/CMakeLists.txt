@@ -13,6 +13,7 @@ SET ( FILES
   pyutilities.cpp
   qitmask.cpp
   randutils.cpp
+  sigutils.cpp
   stringutils.cpp
   tightencoding.cpp
   trieset.cpp

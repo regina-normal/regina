@@ -30,39 +30,36 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
+#include "utilities/sigutils.h"
+#include "../helpers.h"
 
-void addBase64(pybind11::module_& m);
-void addBitManipulator(pybind11::module_& m);
-void addBitmask(pybind11::module_& m);
-void addBoolSet(pybind11::module_& m);
-void addException(pybind11::module_& m);
-void addIntUtils(pybind11::module_& m);
-void addLocale(pybind11::module_& m);
-void addOSUtils(pybind11::module_& m);
-void addQitmask(pybind11::module_& m);
-void addRandUtils(pybind11::module_& m);
-void addSigUtils(pybind11::module_& m);
-void addStringUtils(pybind11::module_& m);
-void addTightEncoding(pybind11::module_& m);
-void addTrieSet(pybind11::module_& m);
-void addXMLUtils(pybind11::module_& m);
+using regina::Base64SigEncoding;
 
-void addUtilitiesClasses(pybind11::module_& m) {
-    addBase64(m);
-    addBitManipulator(m);
-    addBitmask(m);
-    addBoolSet(m);
-    addException(m);
-    addIntUtils(m);
-    addLocale(m);
-    addOSUtils(m);
-    addQitmask(m);
-    addRandUtils(m);
-    addSigUtils(m);
-    addStringUtils(m);
-    addTightEncoding(m);
-    addTrieSet(m);
-    addXMLUtils(m);
+void addSigUtils(pybind11::module_& m) {
+    auto c = pybind11::class_<Base64SigEncoding>(m, "Base64SigEncoding")
+        .def_static("decodeSingle", &Base64SigEncoding::decodeSingle)
+        .def_static("encodeSingle", &Base64SigEncoding::encodeSingle)
+        .def_static("isValid", &Base64SigEncoding::isValid)
+        .def_static("encodeInt", &Base64SigEncoding::encodeInt<long>)
+        .def_static("decodeInt", &Base64SigEncoding::decodeInt<long>)
+        .def_static("encodeTrits",
+            pybind11::overload_cast<const std::array<uint8_t, 0>&>(
+            &Base64SigEncoding::encodeTrits<0>))
+        .def_static("encodeTrits",
+            pybind11::overload_cast<const std::array<uint8_t, 1>&>(
+            &Base64SigEncoding::encodeTrits<1>))
+        .def_static("encodeTrits",
+            pybind11::overload_cast<const std::array<uint8_t, 2>&>(
+            &Base64SigEncoding::encodeTrits<2>))
+        .def_static("encodeTrits",
+            pybind11::overload_cast<const std::array<uint8_t, 3>&>(
+            &Base64SigEncoding::encodeTrits<3>))
+        // overload_cast cannot handle template vs non-template overloads.
+        .def_static("decodeTrits", (std::array<uint8_t, 3> (*)(char))(
+            &Base64SigEncoding::decodeTrits))
+    ;
+    regina::python::no_eq_operators(c);
 }
 
