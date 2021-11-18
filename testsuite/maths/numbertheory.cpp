@@ -221,8 +221,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
         }
 
         static void gcdWithCoeffsSpec(long a, long b) {
-            long u, v;
-            long d = regina::gcdWithCoeffs(a, b, u, v);
+            auto [d, u, v] = regina::gcdWithCoeffs(a, b);
 
             std::ostringstream msg;
             msg << "gcdWithCoeffs(" << a << ", " << b
