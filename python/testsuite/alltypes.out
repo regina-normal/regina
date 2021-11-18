@@ -19,6 +19,9 @@ Equality type : EqualityType.BY_REFERENCE
 AugTriSolidTorus : class
 Equality type : EqualityType.BY_REFERENCE
 
+Base64SigEncoding : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 BitManipulator : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
@@ -1518,6 +1521,9 @@ Equality type : EqualityType.BY_VALUE
 
 ModelLinkGraphCells : class
 Equality type : EqualityType.BY_REFERENCE
+
+ModelLinkGraphCells_ArcIterator : class
+Equality type : EqualityType.BY_VALUE
 
 ModelLinkGraphNode : class
 Equality type : EqualityType.BY_REFERENCE
