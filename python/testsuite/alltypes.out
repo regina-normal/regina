@@ -1450,6 +1450,33 @@ Equality type : EqualityType.BY_REFERENCE
 L31Pillow : class
 Equality type : EqualityType.BY_REFERENCE
 
+LPData : class
+Equality type : EqualityType.BY_REFERENCE
+
+LPData_EulerPositive : class
+Equality type : EqualityType.BY_REFERENCE
+
+LPData_EulerZero : class
+Equality type : EqualityType.BY_REFERENCE
+
+LPData_NonSpun : class
+Equality type : EqualityType.BY_REFERENCE
+
+LPInitialTableaux : class
+Equality type : EqualityType.BY_REFERENCE
+
+LPInitialTableaux_EulerPositive : class
+Equality type : EqualityType.BY_REFERENCE
+
+LPInitialTableaux_EulerZero : class
+Equality type : EqualityType.BY_REFERENCE
+
+LPInitialTableaux_NonSpun : class
+Equality type : EqualityType.BY_REFERENCE
+
+LPMatrix : class
+Equality type : EqualityType.BY_REFERENCE
+
 LPSystem : class
 Equality type : EqualityType.BY_VALUE
 
