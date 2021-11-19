@@ -43,6 +43,7 @@
 #include "maths/integer.h"
 #include "surfaces/normalcoords.h"
 #include "surfaces/normalsurface.h"
+#include "triangulation/dim3.h" // for Triangulation<3>::size()
 
 namespace regina {
 
