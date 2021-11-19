@@ -927,6 +927,12 @@ class BanNone {
  * as a template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
+ * \headers Some templated parts of this class are implemented in a separate
+ * header (treeconstraint-impl.h), which is not included automatically by this
+ * file.  Most end users should not need this extra header, since Regina's
+ * calculation engine already includes explicit instantiations for common
+ * template arguments.
+ *
  * \ifacespython It is rare that you would need to access this class directly
  * through Python.  Instead, to use a ban constraint class, you would typically
  * create a tree traversal object with the appropriate class suffix (e.g., one
@@ -990,6 +996,12 @@ class BanBoundary : public BanConstraintBase {
  * object of these classes.  Instead, to use a ban constraint class, pass it
  * as a template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \headers Some templated parts of this class are implemented in a separate
+ * header (treeconstraint-impl.h), which is not included automatically by this
+ * file.  Most end users should not need this extra header, since Regina's
+ * calculation engine already includes explicit instantiations for common
+ * template arguments.
  *
  * \ifacespython It is rare that you would need to access this class directly
  * through Python.  Instead, to use a ban constraint class, you would typically
@@ -1210,6 +1222,17 @@ inline bool LPConstraintNonSpun::verify(const AngleStructure&) {
 
 inline bool LPConstraintNonSpun::supported(NormalEncoding enc) {
     return ! (enc.storesTriangles() || enc.storesAngles());
+}
+
+template <class LPConstraint>
+inline BanConstraintBase::BanConstraintBase(
+        const LPInitialTableaux<LPConstraint>& init) :
+        tri_(init.tri()), system_(init.system()) {
+    const size_t nCols = system_.coords(tri_.size());
+    banned_ = new bool[nCols];
+    marked_ = new bool[nCols];
+    std::fill(banned_, banned_ + nCols, false);
+    std::fill(marked_, marked_ + nCols, false);
 }
 
 inline BanConstraintBase::~BanConstraintBase() {

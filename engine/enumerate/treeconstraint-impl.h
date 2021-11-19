@@ -51,17 +51,6 @@
 namespace regina {
 
 template <class LPConstraint>
-BanConstraintBase::BanConstraintBase(
-        const LPInitialTableaux<LPConstraint>& init) :
-        tri_(init.tri()), system_(init.system()) {
-    const size_t nCols = system_.coords(tri_.size());
-    banned_ = new bool[nCols];
-    marked_ = new bool[nCols];
-    std::fill(banned_, banned_ + nCols, false);
-    std::fill(marked_, marked_ + nCols, false);
-}
-
-template <class LPConstraint>
 BanBoundary::BanBoundary(const LPInitialTableaux<LPConstraint>& init) :
         BanConstraintBase(init) {
     unsigned n = tri_.size();
