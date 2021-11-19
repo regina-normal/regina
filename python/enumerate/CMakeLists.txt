@@ -9,6 +9,7 @@ SET ( FILES
   maxadmissible.cpp
   ordering.cpp
   pyenumerate.cpp
+  treeconstraint.cpp
   treelp.cpp
   treetraversal.cpp
   typetrie.cpp

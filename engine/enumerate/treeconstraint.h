@@ -740,15 +740,20 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * and must implement supported(), which indicates which normal or angle
  * structure coordinate system this constraint class can work with.
  *
- * All ban constraint classes are designed to help TreeTraversal manage
- * significant enumeration and search operations, and objects of these classes
- * cannot be constructed directly by end users.  To use a ban constraint class,
- * pass it as a template parameter to one of the tree traversal subclasses
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
- * \apinotfinal
+ * \ifacespython This base class is not present, but all subclasses are
+ * available.  However, as noted above, it is rare that you would need
+ * to access any of these ban constraint classes directly through Python.
+ * Instead, to use a ban constraint class, you would typically create
+ * a tree traversal object with the appropriate class suffix (e.g., one
+ * such Python class is \c TreeEnumeration_BanBoundary).
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -771,7 +776,7 @@ class BanConstraintBase {
                  structure coordinates (so we explicitly exclude extra columns
                  that arise from the template parameter LPConstraint. */
 
-    protected:
+    public:
         /**
          * Constructs and initialises the \a banned_ and \a marked_ arrays
          * to be entirely \c false.  The only purpose of passing the
@@ -826,6 +831,9 @@ class BanConstraintBase {
          * corresponding tableaux columns in the \a banned_ and \a marked_
          * arrays respectively.
          *
+         * \ifacespython The argument \a columnPerm should be passed as a
+         * Python list.
+         *
          * @param columnPerm the permutation of columns that describes how
          * columns of the tableaux correspond to normal or angle strutcure
          * coordinates in the underlying triangulation.  Specifically, this
@@ -862,7 +870,6 @@ class BanConstraintBase {
         static bool supported(NormalEncoding enc);
 #endif
 
-    public:
         // Mark this class as non-copyable.
         BanConstraintBase(const BanConstraintBase&) = delete;
         BanConstraintBase& operator = (const BanConstraintBase&) = delete;
@@ -885,14 +892,21 @@ class BanConstraintBase {
  * template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
- * \apinotfinal
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use this ban constraint class, you would
+ * typically create a tree traversal object with no ban constraint class suffix
+ * at all (since BanNone is the default behaviour).  For example, all of the
+ * Python classes \c TreeEnumeration_NonSpun, \c TreeSingleSoln_EulerPositive
+ * and \c TautEnumeration use this do-nothing BanNone class.  See the
+ * BanConstraintBase class notes for further details on accessing other
+ * types of ban constraints from within Python.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
 class BanNone {
-    protected:
+    public:
         BanNone(const Triangulation<3>&, NormalEncoding) {}
 
         template <class LPConstraint, typename IntType>
@@ -928,14 +942,18 @@ class BanNone {
  * template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration or TreeSingleSolution).
  *
- * \apinotfinal
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a ban constraint class, you would typically
+ * create a tree traversal object with the appropriate class suffix (e.g., one
+ * such Python class is \c TreeEnumeration_BanBoundary).  See the
+ * BanConstraintBase class notes for further details.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
 class BanBoundary : public BanConstraintBase {
-    protected:
+    public:
         /**
          * Constructs and initialises the \a banned_ and \a marked_ arrays
          * to be entirely \c false, as described in the BanConstraintBase
@@ -990,14 +1008,18 @@ class BanBoundary : public BanConstraintBase {
  * template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration or TreeSingleSolution).
  *
- * \apinotfinal
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a ban constraint class, you would typically
+ * create a tree traversal object with the appropriate class suffix (e.g., one
+ * such Python class is \c TreeEnumeration_BanTorusBoundary).  See the
+ * BanConstraintBase class notes for further details.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
 class BanTorusBoundary : public BanConstraintBase {
-    protected:
+    public:
         /**
          * Constructs and initialises the \a banned_ and \a marked_ arrays
          * to be entirely \c false, as described in the BanConstraintBase
