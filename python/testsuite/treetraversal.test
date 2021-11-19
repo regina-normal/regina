@@ -93,12 +93,12 @@ else:
 	print('Not feasible')
 dat.constrainPositive(2)
 if dat.isFeasible():
-	print(dat.extractSolution([0, 3])) # tetrahedra are permuted
+	print(dat.extractSolution([3, 0]))
 else:
 	print('Not feasible')
 dat.constrainZero(3) # already zero, should do nothing
 if dat.isFeasible():
-	print(dat.extractSolution([0, 3])) # tetrahedra are permuted
+	print(dat.extractSolution([3, 0]))
 else:
 	print('Not feasible')
 dat.constrainPositive(5)
