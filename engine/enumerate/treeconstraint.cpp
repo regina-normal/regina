@@ -158,6 +158,11 @@ BanConstraintBase::BanConstraintBase(const Triangulation<3>& tri,
     std::fill(marked_, marked_ + nCols, false);
 }
 
+inline BanBoundary::BanBoundary(const Triangulation<3>& tri,
+        NormalEncoding enc) :
+        BanConstraintBase(tri, enc) {
+}
+
 void BanBoundary::init(const int* columnPerm) {
     unsigned n = tri_.size();
     unsigned tet, type, i, k;
@@ -197,6 +202,11 @@ void BanBoundary::init(const int* columnPerm) {
                     break;
                 }
         }
+}
+
+inline BanTorusBoundary::BanTorusBoundary(
+        const Triangulation<3>& tri, NormalEncoding enc) :
+        BanConstraintBase(tri, enc) {
 }
 
 void BanTorusBoundary::init(const int* columnPerm) {

@@ -1249,19 +1249,9 @@ inline bool BanConstraintBase::marked(size_t column) const {
     return marked_[column];
 }
 
-inline BanBoundary::BanBoundary(const Triangulation<3>& tri,
-        NormalEncoding enc) :
-        BanConstraintBase(tri, enc) {
-}
-
 inline bool BanBoundary::supported(NormalEncoding enc) {
     // Note: storesTriangles() will ensure we are not using angle structures.
     return enc.storesTriangles();
-}
-
-inline BanTorusBoundary::BanTorusBoundary(
-        const Triangulation<3>& tri, NormalEncoding enc) :
-        BanConstraintBase(tri, enc) {
 }
 
 inline bool BanTorusBoundary::supported(NormalEncoding enc) {
