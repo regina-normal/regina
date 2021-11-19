@@ -131,7 +131,7 @@ int main(int argc, char* argv[]) {
 
                 std::cout << "# solutions = " << search.nSolns()
                     << std::endl;
-                std::cout << "# nodes visited = " << search.nVisited() 
+                std::cout << "# nodes visited = " << search.visited()
                     << std::endl;
             } catch (const ReginaException&) {
                 std::cerr << "ERROR: Constraints broken." << std::endl;
@@ -145,12 +145,12 @@ int main(int argc, char* argv[]) {
                         << std::endl;
                     search.dumpTypes(std::cout);
                     std::cout << std::endl;
-                    std::cout << "# nodes visited = " << search.nVisited()
+                    std::cout << "# nodes visited = " << search.visited()
                         << std::endl;
                 } else {
                     std::cout << "No non-trivial solution with Euler > 0"
                         << std::endl;
-                    std::cout << "# nodes visited = " << search.nVisited()
+                    std::cout << "# nodes visited = " << search.visited()
                         << std::endl;
                 }
             } catch (const ReginaException&) {

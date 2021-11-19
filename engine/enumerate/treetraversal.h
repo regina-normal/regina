@@ -255,7 +255,7 @@ class TreeTraversal : public BanConstraint {
                  The precise layout of the nextSlot_ array depends on the
                  order in which we process quadrilateral, triangle and/or
                  angle types. */
-        unsigned long nVisited_;
+        size_t nVisited_;
             /**< Counts the total number of nodes in the search tree that we
                  have visited thus far.  This may grow much faster than the
                  number of solutions, since it also counts traversals
@@ -314,7 +314,7 @@ class TreeTraversal : public BanConstraint {
          *
          * @return the number of nodes visited so far.
          */
-        unsigned long nVisited() const;
+        size_t visited() const;
 
         /**
          * Writes the current type vector to the given output stream.
@@ -1452,8 +1452,8 @@ inline bool TreeTraversal<LPConstraint, BanConstraint, IntType>::supported(
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-inline unsigned long TreeTraversal<LPConstraint, BanConstraint, IntType>::
-        nVisited() const {
+inline size_t TreeTraversal<LPConstraint, BanConstraint, IntType>::visited()
+        const {
     return nVisited_;
 }
 
