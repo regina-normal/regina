@@ -1478,6 +1478,9 @@ Version 7.0  [ TODO ]
               error instead of indicating this through return values.
             - Routine turaevViro() now always runs in the current thread,
               even if a progress tracker was passed.
+            - Both turaevViro() and turaevViroApprox() now use ALG_TREEWIDTH
+              as their default algorithm.  You can access the old algorithm
+              by passing ALG_BACKTRACK.
             - Routine connectedSumWith() now adds fewer tetrahedra (thanks
               to Adele Jackson).
             - Changed maximalForestInSkeleton() to return by value

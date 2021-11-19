@@ -1348,14 +1348,14 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 
     InitialData<false>::TVType ans;
     switch (alg) {
-        case ALG_TREEWIDTH:
-            ans = turaevViroTreewidth(*this, init, nullptr);
+        case ALG_BACKTRACK:
+            ans = turaevViroBacktrack(*this, init, nullptr);
             break;
         case ALG_NAIVE:
             ans = turaevViroNaive(*this, init, nullptr);
             break;
         default:
-            ans = turaevViroBacktrack(*this, init, nullptr);
+            ans = turaevViroTreewidth(*this, init, nullptr);
             break;
     }
     /*
@@ -1402,14 +1402,14 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
 
     InitialData<true>::TVType ans;
     switch (alg) {
-        case ALG_TREEWIDTH:
-            ans = turaevViroTreewidth(*this, init, tracker);
+        case ALG_BACKTRACK:
+            ans = turaevViroBacktrack(*this, init, tracker);
             break;
         case ALG_NAIVE:
             ans = turaevViroNaive(*this, init, tracker);
             break;
         default:
-            ans = turaevViroBacktrack(*this, init, tracker);
+            ans = turaevViroTreewidth(*this, init, tracker);
             break;
     }
 
