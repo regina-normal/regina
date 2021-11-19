@@ -594,7 +594,7 @@ class TreeTraversal {
  * operation, and so it does not support copying, moving or swapping.
  *
  * \pre The parameter LPConstraint must be a subclass of LPConstraintSubspace,
- * and BanConstraint must either BanNone or a subclass of BanConstraintBase.
+ * and BanConstraint must be either BanNone or a subclass of BanConstraintBase.
  * Note in particular that the base class LPConstraintBase is not enough here.
  * See the LPConstraintBase, LPConstraintSubspace and BanConstraintBase
  * class notes for further details.
@@ -941,7 +941,7 @@ class TreeEnumeration :
  * operation, and so it does not support copying, moving or swapping.
  *
  * \pre The parameter LPConstraint must be a subclass of LPConstraintSubspace,
- * and BanConstraint must either BanNone or a subclass of BanConstraintBase.
+ * and BanConstraint must be either BanNone or a subclass of BanConstraintBase.
  * Note in particular that the base class LPConstraintBase is not enough here.
  * See the LPConstraintBase, LPConstraintSubspace and BanConstraintBase
  * class notes for further details.
