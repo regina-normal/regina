@@ -170,7 +170,7 @@ class ProgressTracker;
  * \ingroup enumerate
  */
 template <class LPConstraint, typename BanConstraint, typename IntType>
-class TreeTraversal : public BanConstraint {
+class TreeTraversal {
     protected:
         // Global information about the search:
         const LPInitialTableaux<LPConstraint> origTableaux_;
@@ -182,6 +182,8 @@ class TreeTraversal : public BanConstraint {
                  that we are using for our enumeration task.
                  Note that the tableaux will \e not necessarily use this
                  same encoding; see LPInitialTableaux for details. */
+        BanConstraint ban_;
+            /**< Details of any banning/marking constraints that are in use. */
         const int nTets_;
             /**< The number of tetrahedra in the underlying triangulation. */
         const int nTypes_;
@@ -644,6 +646,7 @@ class TreeEnumeration :
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::ban_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::level_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::lp_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::lpSlot_;
@@ -977,6 +980,7 @@ class TautEnumeration :
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::ban_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::level_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::lp_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::lpSlot_;
@@ -1335,6 +1339,7 @@ class TreeSingleSoln :
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::typeString;
 
     protected:
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::ban_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::level_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::lp_;
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::lpSlot_;
@@ -1465,8 +1470,7 @@ template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeTraversal<LPConstraint, BanConstraint, IntType>::supported(
         NormalEncoding enc) {
     return enc.valid() &&
-        LPConstraint::supported(enc) &&
-        BanConstraint::supported(enc);
+        LPConstraint::supported(enc) && BanConstraint::supported(enc);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -1493,8 +1497,7 @@ inline std::string TreeTraversal<LPConstraint, BanConstraint, IntType>::
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline int TreeTraversal<LPConstraint, BanConstraint, IntType>::
         nextUnmarkedTriangleType(int startFrom) {
-    while (startFrom < nTypes_ &&
-            BanConstraint::marked(2 * nTets_ + startFrom))
+    while (startFrom < nTypes_ && ban_.marked(2 * nTets_ + startFrom))
         ++startFrom;
     return (startFrom == nTypes_ ? -1 : startFrom);
 }

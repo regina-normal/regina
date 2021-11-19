@@ -155,9 +155,9 @@ template <class LPConstraint, typename BanConstraint, typename IntType>
 TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
         const Triangulation<3>& tri, NormalEncoding enc,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
-        BanConstraint(tri, enc),
         origTableaux_(tri, enc, enumeration),
         enc_(enc),
+        ban_(tri, enc),
         nTets_(tri.size()),
         nTypes_(enc_.storesTriangles() ? 5 * nTets_ : nTets_),
         /* Each time we branch, one LP can be solved in-place:
@@ -192,7 +192,7 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
     nextSlot_[0] = lp_ + 1;
 
     // Set up the ban list.
-    BanConstraint::init(origTableaux_.columnPerm());
+    ban_.init(origTableaux_.columnPerm());
 
     // Reserve space for our additional temporary tableaux.
     tmpLP_[0].reserve(origTableaux_);
@@ -355,7 +355,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // Prepare the root node by finding an initial basis
         // from the original starting tableaux.
         lp_[0].initStart();
-        BanConstraint::enforceBans(lp_[0]);
+        ban_.enforceBans(lp_[0]);
         ++nVisited_;
 
         // Is the system feasible at the root node?
@@ -744,7 +744,7 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // final scaling coordinate be positive.
         lp_[0].constrainPositive(origTableaux_.coordinateColumns() - 1);
 
-        BanConstraint::enforceBans(lp_[0]);
+        ban_.enforceBans(lp_[0]);
         ++nVisited_;
 
         // Is the system feasible at the root node?
@@ -916,7 +916,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
     // Prepare the root node by finding an initial basis from
     // the original starting tableaux.
     lp_[0].initStart();
-    BanConstraint::enforceBans(lp_[0]);
+    ban_.enforceBans(lp_[0]);
 
     ++nVisited_;
     if (! lp_[0].isFeasible())
