@@ -75,7 +75,8 @@ print('Solutions:', tree.solutions())
 
 print()
 
-tab = LPInitialTableaux_NonSpun(Example3.trefoil(), NS_QUAD, True)
+t = Example3.trefoil()
+tab = LPInitialTableaux_NonSpun(t, NS_QUAD, True)
 sys = tab.system()
 print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
 print('Columns:', tab.coordinateColumns(), '->', tab.columns())
