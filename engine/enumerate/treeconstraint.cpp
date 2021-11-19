@@ -158,7 +158,7 @@ BanConstraintBase::BanConstraintBase(const Triangulation<3>& tri,
     std::fill(marked_, marked_ + nCols, false);
 }
 
-inline BanBoundary::BanBoundary(const Triangulation<3>& tri,
+BanBoundary::BanBoundary(const Triangulation<3>& tri,
         NormalEncoding enc) :
         BanConstraintBase(tri, enc) {
 }
@@ -204,7 +204,7 @@ void BanBoundary::init(const int* columnPerm) {
         }
 }
 
-inline BanTorusBoundary::BanTorusBoundary(
+BanTorusBoundary::BanTorusBoundary(
         const Triangulation<3>& tri, NormalEncoding enc) :
         BanConstraintBase(tri, enc) {
 }
