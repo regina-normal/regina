@@ -1015,6 +1015,8 @@ class LPInitialTableaux {
          *   must be grouped by tetrahedron and ordered by angle type,
          *   and the final scaling coordinate must remain last.
          *
+         * \ifacespython This routine returns a Python list.
+         *
          * @return details of the permutation describing how columns
          * were reordered.
          */
@@ -1659,6 +1661,9 @@ class LPData {
          * \tparam RayClass the class used to hold the output vector \a v.
          * This should be Vector<T> where \a T is one of Regina's own integer
          * types (Integer, LargeInteger or NativeInteger).
+         *
+         * \ifacespython The \a RayClass argument is taken to be
+         * Vector<Integer>.
          *
          * @param v the vector into which the values of the variables
          * will be placed.

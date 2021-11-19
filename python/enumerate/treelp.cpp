@@ -63,7 +63,14 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
         .def("rank", &Tableaux::rank)
         .def("columns", &Tableaux::columns)
         .def("coordinateColumns", &Tableaux::coordinateColumns)
-        // TODO: columnPerm
+        .def("columnPerm", [](const Tableaux& t) {
+            const int* perm = t.columnPerm();
+
+            pybind11::list ans();
+            for (size_t i = 0; i < t.columns(); ++i)
+                ans.append(perm[i]);
+            return ans;
+        })
         .def("multColByRow", &Tableaux::template multColByRow<Integer>)
         .def("multColByRowOct", &Tableaux::template multColByRowOct<Integer>)
         .def("fillInitialTableaux",
@@ -97,7 +104,8 @@ void addLPData(pybind11::module_& m, const char* name) {
             d.dump(out);
             return out.str();
         })
-        // TODO: extractSolution
+        .def("extractSolution",
+            &Data::template extractSolution<regina::Vector<Integer>>)
         ;
     regina::python::add_eq_operators(c);
 
