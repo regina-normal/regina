@@ -1945,6 +1945,9 @@ Equality type : EqualityType.BY_REFERENCE
 Tangle : class
 Equality type : EqualityType.BY_REFERENCE
 
+TautEnumeration : class
+Equality type : EqualityType.BY_REFERENCE
+
 Tetrahedron10 : typedef ->  Face10_3
 
 Tetrahedron11 : typedef ->  Face11_3
@@ -2005,6 +2008,96 @@ TreeBag : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeDecomposition : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerPositive : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerPositive_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerPositive_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_NonSpun : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerPositive : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerPositive_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerPositive_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_NonSpun : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerPositive : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerPositive_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerPositive_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero_BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_NonSpun : class
 Equality type : EqualityType.BY_REFERENCE
 
 TriSolidTorus : class
