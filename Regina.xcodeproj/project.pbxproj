@@ -1997,6 +1997,9 @@
 		05CAE68927469131007C93F3 /* sigutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE68727469130007C93F3 /* sigutils.cpp */; };
 		05CAE68B27472264007C93F3 /* treetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE68A27472263007C93F3 /* treetraversal.cpp */; };
 		05CAE68C27472264007C93F3 /* treetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE68A27472263007C93F3 /* treetraversal.cpp */; };
+		05CAE6922747E617007C93F3 /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6912747E617007C93F3 /* treeconstraint.cpp */; };
+		05CAE6932747E617007C93F3 /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6912747E617007C93F3 /* treeconstraint.cpp */; };
+		05CAE6952747E62C007C93F3 /* treeconstraint-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CAE6942747E62C007C93F3 /* treeconstraint-impl.h */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -4506,6 +4509,8 @@
 		05CAE68E2747227D007C93F3 /* treedecomp.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = treedecomp.test; sourceTree = "<group>"; };
 		05CAE68F2747227D007C93F3 /* treetraversal.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = treetraversal.test; sourceTree = "<group>"; };
 		05CAE6902747227D007C93F3 /* treedecomp.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = treedecomp.out; sourceTree = "<group>"; };
+		05CAE6912747E617007C93F3 /* treeconstraint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treeconstraint.cpp; sourceTree = "<group>"; };
+		05CAE6942747E62C007C93F3 /* treeconstraint-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "treeconstraint-impl.h"; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5786,6 +5791,7 @@
 				052F9C9A180600FA00FAE4DF /* ordering.h */,
 				052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */,
 				052F9C8F180600FA00FAE4DF /* treeconstraint.h */,
+				05CAE6942747E62C007C93F3 /* treeconstraint-impl.h */,
 				052F9C90180600FA00FAE4DF /* treelp-impl.h */,
 				052F9C91180600FA00FAE4DF /* treelp.cpp */,
 				052F9C92180600FA00FAE4DF /* treelp.h */,
@@ -7350,6 +7356,7 @@
 				05226DED27422C81000A45D5 /* hilbertprimal.cpp */,
 				05CAE60427427A8A007C93F3 /* maxadmissible.cpp */,
 				05CAE60327427A8A007C93F3 /* ordering.cpp */,
+				05CAE6912747E617007C93F3 /* treeconstraint.cpp */,
 				05772F15270CFBA900D26D8A /* treelp.cpp */,
 				05CAE68A27472263007C93F3 /* treetraversal.cpp */,
 				05772F16270CFBA900D26D8A /* typetrie.cpp */,
@@ -7873,6 +7880,7 @@
 				052F9F4D180600FB00FAE4DF /* ray.h in Headers */,
 				052F9F3E180600FB00FAE4DF /* matrix.h in Headers */,
 				05A0670B1DFA68190047872E /* blockedsfs.h in Headers */,
+				05CAE6952747E62C007C93F3 /* treeconstraint-impl.h in Headers */,
 				0583656218DB8876008B08D9 /* double_SnapPy.h in Headers */,
 				052F9F49180600FB00FAE4DF /* primes.h in Headers */,
 				052FA06B180600FB00FAE4DF /* homologicaldata.h in Headers */,
@@ -8946,6 +8954,7 @@
 				050F5E321B9BAB9C00C1F681 /* disc.cpp in Sources */,
 				05772EE5270CFAD200D26D8A /* trieset.cpp in Sources */,
 				05721F111F97162600A83FFC /* pylink.cpp in Sources */,
+				05CAE6922747E617007C93F3 /* treeconstraint.cpp in Sources */,
 				050F5DE81B9BAB9C00C1F681 /* pyfile.cpp in Sources */,
 				05226DF227422C82000A45D5 /* hilbertprimal.cpp in Sources */,
 				05CAFB511C4CEA160001C253 /* face13.cpp in Sources */,
@@ -9501,6 +9510,7 @@
 				05D1C17219C7F95100CF92F2 /* EditableTableViewController.mm in Sources */,
 				05249EB61DBC16C4001FE29E /* edge2.cpp in Sources */,
 				058FADAB19D38BFC0001B5B5 /* SnapPeaViewController.mm in Sources */,
+				05CAE6932747E617007C93F3 /* treeconstraint.cpp in Sources */,
 				0598030726683C9F002D5D57 /* xmlsnappeareader.cpp in Sources */,
 				0568743120C5D8D3001C435B /* tangle.cpp in Sources */,
 				059BC6941DC7F7A300AB4206 /* boundarycomponent13.cpp in Sources */,
