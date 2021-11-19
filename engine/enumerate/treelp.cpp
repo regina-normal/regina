@@ -47,89 +47,77 @@ template class LPInitialTableaux<LPConstraintEulerZero>;
 template class LPInitialTableaux<LPConstraintNonSpun>;
 
 template class LPData<LPConstraintNone, Integer>;
-template void LPData<LPConstraintNone, Integer>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintNone, Integer>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintNone, Integer>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintNone, Integer>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintNone, NativeLong>;
-template void LPData<LPConstraintNone, NativeLong>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintNone, NativeLong>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintNone, NativeLong>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintNone, NativeLong>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintEulerPositive, Integer>;
-template void LPData<LPConstraintEulerPositive, Integer>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintEulerPositive, Integer>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintEulerPositive, Integer>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintEulerPositive, Integer>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintEulerPositive, NativeLong>;
-template void LPData<LPConstraintEulerPositive, NativeLong>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintEulerPositive, NativeLong>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintEulerPositive, NativeLong>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintEulerPositive, NativeLong>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintEulerZero, Integer>;
-template void LPData<LPConstraintEulerZero, Integer>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintEulerZero, Integer>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintEulerZero, Integer>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintEulerZero, Integer>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintEulerZero, NativeLong>;
-template void LPData<LPConstraintEulerZero, NativeLong>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintEulerZero, NativeLong>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintEulerZero, NativeLong>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintEulerZero, NativeLong>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintNonSpun, Integer>;
-template void LPData<LPConstraintNonSpun, Integer>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintNonSpun, Integer>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintNonSpun, Integer>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintNonSpun, Integer>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintNonSpun, NativeLong>;
-template void LPData<LPConstraintNonSpun, NativeLong>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintNonSpun, NativeLong>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintNonSpun, NativeLong>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintNonSpun, NativeLong>::
+    extractSolution<VectorLarge>(const char*) const;
 
 #ifdef INT128_AVAILABLE
 template class LPData<LPConstraintNone, NativeInteger<16>>;
-template void LPData<LPConstraintNone, NativeInteger<16>>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintNone, NativeInteger<16>>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintNone, NativeInteger<16>>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintNone, NativeInteger<16>>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintEulerPositive, NativeInteger<16>>;
-template void LPData<LPConstraintEulerPositive, NativeInteger<16>>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintEulerPositive, NativeInteger<16>>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintEulerPositive, NativeInteger<16>>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintEulerPositive, NativeInteger<16>>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintEulerZero, NativeInteger<16>>;
-template void LPData<LPConstraintEulerZero, NativeInteger<16>>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintEulerZero, NativeInteger<16>>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintEulerZero, NativeInteger<16>>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintEulerZero, NativeInteger<16>>::
+    extractSolution<VectorLarge>(const char*) const;
 
 template class LPData<LPConstraintNonSpun, NativeInteger<16>>;
-template void LPData<LPConstraintNonSpun, NativeInteger<16>>::
-    extractSolution<VectorInt>(VectorInt&, const char*) const;
-template void LPData<LPConstraintNonSpun, NativeInteger<16>>::
-    extractSolution<Vector<LargeInteger>>(
-    Vector<LargeInteger>&, const char*) const;
+template VectorInt LPData<LPConstraintNonSpun, NativeInteger<16>>::
+    extractSolution<VectorInt>(const char*) const;
+template VectorLarge LPData<LPConstraintNonSpun, NativeInteger<16>>::
+    extractSolution<VectorLarge>(const char*) const;
 #endif
 
 } // namespace regina

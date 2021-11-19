@@ -660,6 +660,8 @@ Version 7.0  [ TODO ]
               fixes Euler characteristic to be zero.
         Class LPData:
             - Routine reserve() now takes the tableaux by reference.
+            - Routine extractSolution() now returns its vector by value,
+              instead of using a reference argument.
         Class LPInitialTableaux:
             - The constraintsBroken() routines are gone; instead the class
               constructor throws an exception on error.

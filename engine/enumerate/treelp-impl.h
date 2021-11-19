@@ -865,13 +865,18 @@ void LPData<LPConstraint, IntType>::dump(std::ostream& out) const {
 
 template <class LPConstraint, typename IntType>
 template <class RayClass>
-void LPData<LPConstraint, IntType>::extractSolution(
-        RayClass& v, const char* type) const {
+RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
+        const {
     static_assert(
         FaithfulAssignment<IntType, typename RayClass::Element>::value,
         "LPData::extractSolution() requires a RayClass template parameter "
         "whose elements can faithfully store integers of the template "
         "parameter IntType.");
+
+    // This next test is to ensure that RayClass zero-initialises its elements.
+    static_assert(IsReginaInteger<typename RayClass::Element>::value,
+        "LPData::extractSolution() requires a RayClass template parameter "
+        "that stores one of Regina's own integer types.");
 
     // Fetch details on how to undo the column permutation.
     const int* columnPerm = origTableaux_->columnPerm();
@@ -888,15 +893,16 @@ void LPData<LPConstraint, IntType>::extractSolution(
     for (i = 0; i < rank_; ++i)
         lcm = lcm.lcm(entry(i, basis_[i]));
 
+    RayClass v(origTableaux_->coordinateColumns());
+
     // Now compute (lcm * the solution vector).  We do not yet
     // take into account the change of variables x_i -> x_i - 1
     // that occurred each time we called constrainPositive(),
     // or the more complex changes of variables that occurred
     // each time we called constrainOct().
     //
-    // All non-basic variables will be zero (and so we do
-    // nothing, since the precondition states that they are
-    // already zero in \a v).
+    // All non-basic variables will be zero (and so we do nothing,
+    // since they will already have been initialised to zero in \a v).
     //
     // For basic variables, compute the values from the tableaux.
     // Because we are multiplying everything by lcm, the
@@ -926,11 +932,9 @@ void LPData<LPConstraint, IntType>::extractSolution(
             pos = 3 * origTableaux_->tri().size();
             v[pos] = v[pos] + lcm;
         } else {
-            // For strict angle structures, we pass type == 0, and we
+            // For strict angle structures, we pass type == nullptr, and we
             // constrain *all* coordinates as positive.
-            for (pos = 0;
-                    pos <= 3 * origTableaux_->tri().size();
-                    ++pos)
+            for (pos = 0; pos <= 3 * origTableaux_->tri().size(); ++pos)
                 v[pos] = v[pos] + lcm;
         }
     } else {
@@ -964,6 +968,7 @@ void LPData<LPConstraint, IntType>::extractSolution(
     // To finish, divide through by the gcd so we have the
     // smallest multiple that is an integer vector.
     v.scaleDown();
+    return v;
 }
 
 template <class LPConstraint, typename IntType>

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "enumerate/treelp.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -104,8 +105,17 @@ void addLPData(pybind11::module_& m, const char* name) {
             d.dump(out);
             return out.str();
         })
-        .def("extractSolution",
-            &Data::template extractSolution<regina::Vector<Integer>>)
+        .def("extractSolution", [](const Data& d, const std::vector<int>& t) {
+            // Currently LPData does not give us an easy way to extract the
+            // expected length of the type vector, and so we cannot sanity-check
+            // the size of t right now.  Probably we should add an access
+            // function to LPData that lets us view the original tableaux.
+            char* types = new char[t.size()];
+            std::copy(t.begin(), t.end(), types);
+            auto ans = d.template extractSolution<regina::VectorInt>(types);
+            delete[] types;
+            return ans;
+        })
         ;
     regina::python::add_eq_operators(c);
 

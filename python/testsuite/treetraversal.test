@@ -72,3 +72,44 @@ tree = TreeEnumeration_NonSpun(t, NS_QUAD)
 tree.run(dumpSurface)
 print('Visited:', tree.visited())
 print('Solutions:', tree.solutions())
+
+print()
+
+tab = LPInitialTableaux_NonSpun(Example3.trefoil(), NS_QUAD, True)
+sys = tab.system()
+print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
+print('Columns:', tab.coordinateColumns(), '->', tab.columns())
+print('Perm:', tab.columnPerm())
+m = LPMatrix(tab.rank(), tab.columns())
+tab.fillInitialTableaux(m)
+print(m)
+dat = LPData_NonSpun()
+dat.reserve(tab)
+dat.initStart()
+if dat.isFeasible():
+	print(dat.extractSolution([0, 0]))
+else:
+	print('Not feasible')
+dat.constrainPositive(2)
+if dat.isFeasible():
+	print(dat.extractSolution([0, 3])) # tetrahedra are permuted
+else:
+	print('Not feasible')
+dat.constrainZero(3) # already zero, should do nothing
+if dat.isFeasible():
+	print(dat.extractSolution([0, 3])) # tetrahedra are permuted
+else:
+	print('Not feasible')
+dat.constrainPositive(5)
+if dat.isFeasible():
+	print(dat.extractSolution([3, 3]))
+else:
+	print('Not feasible')
+dat.constrainZero(4)
+if dat.isFeasible():
+	print(dat.extractSolution([3, 3]))
+else:
+	print('Not feasible')
+
+print()
+

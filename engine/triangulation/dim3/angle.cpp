@@ -93,10 +93,8 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
     }
 
     // We have a strict angle structure: reconstruct it.
-    unsigned long len = 3 * simplices_.size() + 1;
-    VectorInt v(len);
-    lp.extractSolution(v, nullptr /* type vector */);
-    strictAngleStructure_ = AngleStructure(*this, std::move(v));
+    strictAngleStructure_ = AngleStructure(*this,
+        lp.extractSolution<VectorInt>(nullptr /* type vector */));
     return true;
 }
 

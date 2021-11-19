@@ -100,10 +100,8 @@ NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
     else
         dim = 3 * nTets_;
 
-    // Note that the vector constructors automatically set all
-    // elements to zero, as required by LPData::extractSolution().
-    Vector<LargeInteger> v(dim);
-    lpSlot_[nTypes_]->extractSolution(v, type_);
+    auto v = lpSlot_[nTypes_]->template extractSolution<Vector<LargeInteger>>(
+        type_);
 
     if (! enc_.storesOctagons())
         return NormalSurface(origTableaux_.tri(), enc_, std::move(v));
@@ -144,16 +142,13 @@ NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
 template <class LPConstraint, typename BanConstraint, typename IntType>
 AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildStructure() const {
-    // Note that the vector constructors automatically set all
-    // elements to zero, as required by LPData::extractSolution().
     if (! enc_.storesAngles())
         throw regina::FailedPrecondition(
             "TreeTraversal::buildStructure() requires "
             "angle structure coordinates");
 
-    VectorInt v(3 * nTets_ + 1);
-    lpSlot_[nTypes_]->extractSolution(v, type_);
-    return AngleStructure(origTableaux_.tri(), std::move(v));
+    return AngleStructure(origTableaux_.tri(),
+        lpSlot_[nTypes_]->template extractSolution<VectorInt>(type_));
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -1118,9 +1113,9 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 std::cout << " (" << idx << " -> " << (int)type_[idx]
                     << ")" << std::endl;
 
-                Vector<LargeInteger> v(7 * nTets_);
-                lpSlot_[level_ + 1]->extractSolution(v, type_);
-                NormalSurface f(origTableaux_.tri(), NS_STANDARD, std::move(v));
+                NormalSurface f(origTableaux_.tri(), NS_STANDARD,
+                    lpSlot_[level_ + 1]->
+                        extractSolution<Vector<LargeInteger>>(type_));
                 std::cout << f.str() << std::endl;
             }
 #endif

@@ -1496,6 +1496,9 @@ class LPData {
          *
          * @param pos the index of the variable to query.
          * This must be between 0 and origTableaux_->columns()-1 inclusive.
+         * The index should be with respect to this tableaux (i.e., it must
+         * take into account any permutation of columns from the original
+         * matching equations).
          */
         inline bool isActive(unsigned pos) const;
 
@@ -1513,6 +1516,9 @@ class LPData {
          *
          * @param pos the index of the variable to query.
          * This must be between 0 and origTableaux_->columns()-1 inclusive.
+         * The index should be with respect to this tableaux (i.e., it must
+         * take into account any permutation of columns from the original
+         * matching equations).
          * @return the sign of the variable as described above;
          * this will be either 1, 0 or -1.
          */
@@ -1533,9 +1539,11 @@ class LPData {
          * \e new variable, not the original, and so might not have the
          * intended effect.
          *
-         * @param pos the index of the variable that is to be set to
-         * zero.  This must be between 0 and origTableaux_->columns()-1
-         * inclusive.
+         * @param pos the index of the variable that is to be set to zero.
+         * This must be between 0 and origTableaux_->columns()-1 inclusive.
+         * The index should be with respect to this tableaux (i.e., it must
+         * take into account any permutation of columns from the original
+         * matching equations).
          */
         void constrainZero(unsigned pos);
 
@@ -1559,7 +1567,9 @@ class LPData {
          *
          * @param pos the index of the variable that is to be constrained as
          * positive.  This must be between 0 and origTableaux_->columns()-1
-         * inclusive.
+         * inclusive.  The index should be with respect to this tableaux
+         * (i.e., it must take into account any permutation of columns from
+         * the original matching equations).
          */
         void constrainPositive(unsigned pos);
 
@@ -1597,9 +1607,12 @@ class LPData {
          * intended effect.
          *
          * @param quad1 one of the two quadrilateral types that we
-         * combine to form the new octagon type.
+         * combine to form the new octagon type.  This should be a column index
+         * with respect to this tableaux (i.e., it must take into account any
+         * permutation of columns from the original matching equations).
          * @param quad2 the other of the two quadrilateral types that we
-         * combine to form the new octagon type.
+         * combine to form the new octagon type.  Again this should be a
+         * column index with respect to this tableaux.
          */
         void constrainOct(unsigned quad1, unsigned quad2);
 
@@ -1623,7 +1636,7 @@ class LPData {
         /**
          * Extracts the values of the individual variables from the
          * current basis, with some modifications (as described below).
-         * The values of the variables are store in the given vector \a v.
+         * The values of the variables will be returned in vector form.
          *
          * The modifications are as follows:
          *
@@ -1631,23 +1644,18 @@ class LPData {
          *   matching equations obtained from the underlying
          *   triangulation, \e not the current tableaux and \e not even
          *   the original starting tableaux stored in origTableaux_.
-         *   In other words, when we fill the vector \a v we undo the
+         *   In other words, when we fill the resulting vector, we undo the
          *   column permutation described by LPInitialTableaux::columnPerm(),
          *   and we undo any changes of variable that were caused by
          *   calls to constrainPositive() and/or constrainOct().
          *
          * - To ensure that the variables are all integers, we scale the
-         *   final vector by the smallest positive rational multiple
+         *   resulting vector by the smallest positive rational multiple
          *   for which all elements of the vector are integers.
          *
          * This routine is not used as an internal part of the tree traversal
          * algorithm; instead it is offered as a helper routine for
          * reconstructing the normal surfaces or angle structures that result.
-         *
-         * \pre The given vector \a v has been initialised to the zero vector
-         * of length origTableaux_->columns().  Note that the constructors
-         * for all types Vector<T> (where \a T is of Regina's own integer types)
-         * will automatically initialise all elements to zero as required.
          *
          * \pre No individual coordinate column has had more than one call
          * to either of constrainPositive() or constrainOct() (otherwise
@@ -1658,25 +1666,32 @@ class LPData {
          * \pre The precision of integers in \a RayClass is at least as
          * large as the precision of \a IntType (as used by LPData).
          *
-         * \tparam RayClass the class used to hold the output vector \a v.
+         * \tparam RayClass the class used to hold the output vector.
          * This should be Vector<T> where \a T is one of Regina's own integer
-         * types (Integer, LargeInteger or NativeInteger).
+         * types (Integer, LargeInteger or NativeInteger).  In particular,
+         * this ensures that all elements of a newly-created output vector
+         * will be automatically initialised to zero.
          *
-         * \ifacespython The \a RayClass argument is taken to be
-         * Vector<Integer>.
+         * \ifacespython The type vector should be passed as a Python list of
+         * integers (for example, in the enumeration of normal surfaces, there
+         * would be one integer per tetrahedron, each equal to 0, 1, 2 or 3).
+         * The \a RayClass argument is taken to be Vector<Integer>.
          *
-         * @param v the vector into which the values of the variables
-         * will be placed.
          * @param type the type vector corresponding to the current state of
          * this tableaux, indicating which variables were previously fixed as
          * positive via calls to constrainPositive().  This is necessary
          * because LPData does not keep such historical data on its own.
+         * The order of these types should be with respect to the permuted
+         * columns (i.e., it should reflect the columns as they are stored
+         * in this tableaux, not the original matching equations).
          * As a special case, when extracting a strict angle structure
          * one may pass \a type = \c null, in which case this routine will
          * assume that \e every coordinate was constrained as positive.
+         * @return a vector containing the values of all the variables.
+         * This vector will have length origTableaux_->coordinateColumns().
          */
         template <class RayClass>
-        void extractSolution(RayClass& v, const char* type) const;
+        RayClass extractSolution(const char* type) const;
 
         // Mark this class as non-copyable:
         LPData(const LPData&) = delete;
