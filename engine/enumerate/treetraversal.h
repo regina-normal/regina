@@ -651,7 +651,7 @@ class TreeEnumeration :
                  We wastefully allow for 7 possible types always (which
                  are required for almost normal surfaces); the
                  performance loss from changing 4 to 7 is negligible. */
-        unsigned long nSolns_;
+        size_t nSolns_;
             /**< The number of vertex surfaces found so far. */
 
         int lastNonZero_;
@@ -718,7 +718,7 @@ class TreeEnumeration :
          *
          * @return the number of solutions found so far.
          */
-        unsigned long nSolns() const;
+        size_t solutions() const;
 
         /**
          * Runs the complete tree traversal algorithm to enumerate
@@ -976,7 +976,7 @@ class TautEnumeration :
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext;
 
     private:
-        unsigned long nSolns_;
+        size_t nSolns_;
             /**< The number of taut angle structures found so far. */
 
     public:
@@ -1027,7 +1027,7 @@ class TautEnumeration :
          *
          * @return the number of solutions found so far.
          */
-        unsigned long nSolns() const;
+        size_t solutions() const;
 
         /**
          * Runs the complete tree traversal algorithm to enumerate
@@ -1485,8 +1485,8 @@ inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-inline unsigned long TreeEnumeration<LPConstraint, BanConstraint, IntType>::
-        nSolns() const {
+inline size_t TreeEnumeration<LPConstraint, BanConstraint, IntType>::solutions()
+        const {
     return nSolns_;
 }
 
@@ -1503,7 +1503,7 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::run(
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
         const TreeEnumeration& tree) {
-    std::cout << "SOLN #" << tree.nSolns() << ": ";
+    std::cout << "SOLN #" << tree.solutions() << ": ";
     tree.dumpTypes(std::cout);
     std::cout << std::endl;
     return false;
@@ -1512,7 +1512,7 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
         writeSurface(const TreeEnumeration& tree) {
-    std::cout << "SOLN #" << tree.nSolns() << ": ";
+    std::cout << "SOLN #" << tree.solutions() << ": ";
     std::cout << tree.buildSurface().str() << std::endl;
     return false;
 }
@@ -1528,8 +1528,8 @@ inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-inline unsigned long TautEnumeration<LPConstraint, BanConstraint, IntType>::
-        nSolns() const {
+inline size_t TautEnumeration<LPConstraint, BanConstraint, IntType>::
+        solutions() const {
     return nSolns_;
 }
 
@@ -1546,7 +1546,7 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::run(
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
         const TautEnumeration& tree) {
-    std::cout << "SOLN #" << tree.nSolns() << ": ";
+    std::cout << "SOLN #" << tree.solutions() << ": ";
     tree.dumpTypes(std::cout);
     std::cout << std::endl;
     return false;
@@ -1555,7 +1555,7 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
         writeStructure(const TautEnumeration& tree) {
-    std::cout << "SOLN #" << tree.nSolns() << ": ";
+    std::cout << "SOLN #" << tree.solutions() << ": ";
     std::cout << tree.buildStructure().str() << std::endl;
     return false;
 }

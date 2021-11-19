@@ -122,14 +122,14 @@ int main(int argc, char* argv[]) {
                 TreeEnumeration<> search(t, coords);
                 search.run([](const auto& /* tree */) {
                     /*
-                    std::cout << "SOLN #" << tree.nSolns() << ": ";
+                    std::cout << "SOLN #" << tree.solutions() << ": ";
                     tree.dumpTypes(std::cout);
                     std::cout << std::endl;
                     */
                     return false;
                 });
 
-                std::cout << "# solutions = " << search.nSolns()
+                std::cout << "# solutions = " << search.solutions()
                     << std::endl;
                 std::cout << "# nodes visited = " << search.visited()
                     << std::endl;

@@ -1381,8 +1381,8 @@ Version 7.0  [ TODO ]
               (which are intended as drop-in callbacks) no longer have a
               void pointer argument, and now return false instead of true
               according to the new callback requirements described above.
-            - Renamed nVisited() to visited().  The old name is removed
-              completely.
+            - Renamed nVisited() and nSolns() to visited() and solutions().
+              The old names have been removed completely.
         Class Triangulation<dim>:
             - New constructor that takes a link and builds its complement.
             - Now supports move construction and copy/move assignment.

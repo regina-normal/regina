@@ -71,7 +71,7 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
             LPConstraint, BanConstraint, Integer>>(m, name)
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding>())
-        .def("nSolns", &Tree::nSolns) // TODO
+        .def("solutions", &Tree::solutions)
         .def("run", &Tree::template run<Action>)
         .def("next", &Tree::next,
             pybind11::arg("tracker") = nullptr)
@@ -89,7 +89,7 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
             LPConstraint, BanConstraint, Integer>>(m, name)
         .def(pybind11::init<const Triangulation<3>&>())
-        .def("nSolns", &Tree::nSolns) // TODO
+        .def("solutions", &Tree::solutions)
         .def("run", &Tree::template run<Action>)
         .def("next", &Tree::next,
             pybind11::arg("tracker") = nullptr)
