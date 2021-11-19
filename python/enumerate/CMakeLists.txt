@@ -10,6 +10,7 @@ SET ( FILES
   ordering.cpp
   pyenumerate.cpp
   treelp.cpp
+  treetraversal.cpp
   typetrie.cpp
   validityconstraints.cpp
   )

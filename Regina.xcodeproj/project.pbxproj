@@ -1995,6 +1995,8 @@
 		05CAE6822745256E007C93F3 /* gluingperms10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6662745256E007C93F3 /* gluingperms10.cpp */; };
 		05CAE68827469131007C93F3 /* sigutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE68727469130007C93F3 /* sigutils.cpp */; };
 		05CAE68927469131007C93F3 /* sigutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE68727469130007C93F3 /* sigutils.cpp */; };
+		05CAE68B27472264007C93F3 /* treetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE68A27472263007C93F3 /* treetraversal.cpp */; };
+		05CAE68C27472264007C93F3 /* treetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE68A27472263007C93F3 /* treetraversal.cpp */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -4499,6 +4501,11 @@
 		05CAE6852746878C007C93F3 /* lookup.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = lookup.test; sourceTree = "<group>"; };
 		05CAE6862746878C007C93F3 /* lookup.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = lookup.out; sourceTree = "<group>"; };
 		05CAE68727469130007C93F3 /* sigutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sigutils.cpp; sourceTree = "<group>"; };
+		05CAE68A27472263007C93F3 /* treetraversal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treetraversal.cpp; sourceTree = "<group>"; };
+		05CAE68D2747227D007C93F3 /* treetraversal.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = treetraversal.out; sourceTree = "<group>"; };
+		05CAE68E2747227D007C93F3 /* treedecomp.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = treedecomp.test; sourceTree = "<group>"; };
+		05CAE68F2747227D007C93F3 /* treetraversal.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = treetraversal.test; sourceTree = "<group>"; };
+		05CAE6902747227D007C93F3 /* treedecomp.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = treedecomp.out; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5326,6 +5333,10 @@
 				050F5DA31B9BAB9C00C1F681 /* theta_in_solid_torus.orb */,
 				057B0CAE26A2AC4E0017F5EA /* tightencode.out */,
 				057B0CAD26A2AC4E0017F5EA /* tightencode.test */,
+				05CAE6902747227D007C93F3 /* treedecomp.out */,
+				05CAE68E2747227D007C93F3 /* treedecomp.test */,
+				05CAE68D2747227D007C93F3 /* treetraversal.out */,
+				05CAE68F2747227D007C93F3 /* treetraversal.test */,
 				050F5DA41B9BAB9C00C1F681 /* trigeneral.out */,
 				050F5DA51B9BAB9C00C1F681 /* trigeneral.test */,
 				0577E6EB1F97088000CBDF15 /* utf8.out */,
@@ -7340,6 +7351,7 @@
 				05CAE60427427A8A007C93F3 /* maxadmissible.cpp */,
 				05CAE60327427A8A007C93F3 /* ordering.cpp */,
 				05772F15270CFBA900D26D8A /* treelp.cpp */,
+				05CAE68A27472263007C93F3 /* treetraversal.cpp */,
 				05772F16270CFBA900D26D8A /* typetrie.cpp */,
 				05772F17270CFBA900D26D8A /* pyenumerate.cpp */,
 				05CAE6002741C871007C93F3 /* validityconstraints.cpp */,
@@ -9002,6 +9014,7 @@
 				05CAFB501C4CEA160001C253 /* face12.cpp in Sources */,
 				05721F081F97160A00A83FFC /* laurent2.cpp in Sources */,
 				050F5DE21B9BAB9C00C1F681 /* triangulation2.cpp in Sources */,
+				05CAE68B27472264007C93F3 /* treetraversal.cpp in Sources */,
 				050F5E061B9BAB9C00C1F681 /* packet.cpp in Sources */,
 				050F5E4D1B9BAB9C00C1F681 /* pytriangulation.cpp in Sources */,
 				050F5E0E1B9BAB9C00C1F681 /* progresstracker.cpp in Sources */,
@@ -9813,6 +9826,7 @@
 				052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */,
 				050C648A1DA1249B00C9420F /* globaldirs.cpp in Sources */,
 				05F0A0571DBF0B7000117BFC /* homology.cpp in Sources */,
+				05CAE68C27472264007C93F3 /* treetraversal.cpp in Sources */,
 				057B0CAA26A2ABF60017F5EA /* tightencoding.cpp in Sources */,
 				052FA239180612DD00FAE4DF /* transcendentals.c in Sources */,
 				052FA1A11806129B00FAE4DF /* primes.cpp in Sources */,

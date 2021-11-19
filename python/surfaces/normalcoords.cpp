@@ -75,5 +75,7 @@ void addNormalCoords(pybind11::module_& m) {
         .def_static("name", &NormalInfo::name)
         ;
     regina::python::no_eq_operators(i);
+
+    pybind11::implicitly_convertible<NormalCoords, NormalEncoding>();
 }
 

@@ -153,9 +153,19 @@ class ProgressTracker;
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \apinotfinal
+ * \ifacespython This is a heavily templated class; moreover, it only serves
+ * as a base class, and you will most likely not need to access this class
+ * directly.  Instead see the subclasses TreeEnumeration, TautEnumeration
+ * and TreeSingleSoln, each of which offers a more useful interface for
+ * solving different type of problems.  The variants of this TreeTraversal
+ * base class that are available in Python have Python names of the form
+ * TreeTraversal_<i>LPConstraint</i>_<i>BanConstraint</i>,
+ * where the suffixes \a LPConstraint and \a BanConstraint are abbreviated
+ * versions of the corresponding template parameters; these suffixes are
+ * omitted entirely for the common cases LPConstraintNone and BanNone.
+ * In all cases, the IntType parameter is taken to be regina::Integer.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -260,6 +270,11 @@ class TreeTraversal : public BanConstraint {
                  call to feasibleBranches() will overwrite them. */
 
     public:
+        /**
+         * Destroys this object.
+         */
+        ~TreeTraversal();
+
         /**
          * Indicates whether the given normal surface or angle structure
          * vector encoding is supported by this tree traversal infrastructure.
@@ -423,11 +438,6 @@ class TreeTraversal : public BanConstraint {
                 int branchesPerQuad, int branchesPerTri, bool enumeration);
 
         /**
-         * Destroys this object.
-         */
-        ~TreeTraversal();
-
-        /**
          * Rearranges the search tree so that \a nextType becomes the next
          * type that we process.
          *
@@ -589,9 +599,19 @@ class TreeTraversal : public BanConstraint {
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \apinotfinal
+ * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * are now made available to Python users.  Each class name is of the form
+ * TreeEnumeration_<i>LPConstraint</i>_<i>BanConstraint</i>, where the suffixes
+ * \a LPConstraint and \a BanConstraint are abbreviated versions of the
+ * corresponding template parameters; these suffixes are omitted entirely for
+ * the common cases LPConstraintNone and BanNone.  As an example, to enumerate
+ * non-spun normal surfaces in an ideal 3-manifold triangulation, you would
+ * use the Python class \c TreeEnumeration_NonSpun.  You are encouraged
+ * to look through the Regina namespace to see which combinations of
+ * constraint classes are supported under Python.  In all cases, the IntType
+ * parameter is taken to be regina::Integer.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -740,6 +760,11 @@ class TreeEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial TreeEnumeration object
+         * (and therefore the additional \a args list is omitted here).
+         *
          * @param action a function (or some other callable object) to
          * call for each vertex surface that is found.
          * @param args any additional arguments that should be passed to
@@ -839,6 +864,13 @@ class TreeEnumeration :
          * normal surface.  This is always the case any time after next()
          * returns \c true, or any time that run() calls its callback function.
          *
+         * \ifacespython This function is available and can be used directly,
+         * but you should not use it as a callback with run().  Currently this
+         * causes a crash in Python, most likely coming from some confusion
+         * in passing a C++ function as a C++ callback via a Python wrapper.
+         * Instead you can use a pure python function \a f as a callback,
+         * where <tt>f(tree)</tt> just calls <tt>tree.writeSurface()</tt>.
+         *
          * @param tree the tree traversal object from which we are
          * extracting the current vertex normal or almost normal surface.
          * @return \c false (which indicates to run() that we should
@@ -905,9 +937,13 @@ class TreeEnumeration :
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \apinotfinal
+ * \ifacespython This is a heavily templated class; however, the only
+ * \a LPConstraint and \a BanConstraint options currently offered for
+ * angle structures are the default LPConstraintNone and BanNone.
+ * Therefore Python offers just one instance of this class (with all template
+ * arguments set to their defaults), under the name \c TautEnumeration.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -1033,6 +1069,11 @@ class TautEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial TautEnumeration object
+         * (and therefore the additional \a args list is omitted here).
+         *
          * @param action a function (or some other callable object) to
          * call for each taut angle structure that is found.
          * @param args any additional arguments that should be passed to
@@ -1132,6 +1173,13 @@ class TautEnumeration :
          * feasible solution that represents a taut angle structure.
          * This is always the case any time after next() returns \c true,
          * or any time that run() calls its callback function.
+         *
+         * \ifacespython This function is available and can be used directly,
+         * but you should not use it as a callback with run().  Currently this
+         * causes a crash in Python, most likely coming from some confusion
+         * in passing a C++ function as a C++ callback via a Python wrapper.
+         * Instead you can use a pure python function \a f as a callback,
+         * where <tt>f(tree)</tt> just calls <tt>tree.writeStructure()</tt>.
          *
          * @param tree the tree traversal object from which we are
          * extracting the current taut angle structure.
@@ -1244,9 +1292,19 @@ class TautEnumeration :
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \apinotfinal
+ * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * are now made available to Python users.  Each class name is of the form
+ * TreeSingleSoln_<i>LPConstraint</i>_<i>BanConstraint</i>, where the suffixes
+ * \a LPConstraint and \a BanConstraint are abbreviated versions of the
+ * corresponding template parameters; these suffixes are omitted entirely for
+ * the common cases LPConstraintNone and BanNone.  As an example, to
+ * find a normal disc or sphere in a 3-manifold triangulation, you would
+ * use the Python class \c TreeSingleSoln_EulerPositive.  You are encouraged
+ * to look through the Regina namespace to see which combinations of
+ * constraint classes are supported under Python.  In all cases, the IntType
+ * parameter is taken to be regina::Integer.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */

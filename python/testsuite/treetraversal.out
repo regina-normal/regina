@@ -1,0 +1,19 @@
+Found: 0 0 0 0 ; 1 0 0 || 1 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 || 0 1 0 0 ; 0 0 0
+Visited: 23
+
+Found: 1 0 0 ; 1 0 0
+Found: 0 1 0 ; 0 0 1
+Found: 0 0 1 ; 0 1 0
+Visited: 13
+Solutions: 3
+
+Found: inf inf inf inf ; 0 2 0 || inf inf inf inf ; 1 0 0
+Found: inf inf inf inf ; 0 0 2 || inf inf inf inf ; 1 0 0
+Found: inf inf inf inf ; 1 0 0 || inf inf inf inf ; 0 2 0
+Found: inf inf inf inf ; 1 0 0 || inf inf inf inf ; 0 0 2
+Visited: 21
+Solutions: 4
+
+Found: 1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0
+Visited: 13
+Solutions: 1

@@ -41,6 +41,7 @@ void addHilbertDual(pybind11::module_& m);
 void addHilbertPrimal(pybind11::module_& m);
 void addMaxAdmissible(pybind11::module_& m);
 void addOrdering(pybind11::module_& m);
+void addTreeTraversal(pybind11::module_& m);
 
 void addEnumerateClasses(pybind11::module_& m) {
     addTreeLP(m);
@@ -52,5 +53,6 @@ void addEnumerateClasses(pybind11::module_& m) {
     addHilbertPrimal(m);
     addMaxAdmissible(m);
     addOrdering(m);
+    addTreeTraversal(m);
 }
 
