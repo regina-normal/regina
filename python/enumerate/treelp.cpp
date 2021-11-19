@@ -35,9 +35,43 @@
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
+using regina::Integer;
+using regina::LPMatrix;
 using regina::LPSystem;
 
 void addTreeLP(pybind11::module_& m) {
+    auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix")
+        .def(pybind11::init<>())
+        .def(pybind11::init<unsigned, unsigned>())
+        .def("swap", &LPMatrix<Integer>::swap)
+        .def("reserve", &LPMatrix<Integer>::reserve)
+        .def("initClone", &LPMatrix<Integer>::initClone)
+        .def("initIdentity", &LPMatrix<Integer>::initIdentity)
+        .def("entry",
+            overload_cast<unsigned, unsigned>(&LPMatrix<Integer>::entry),
+            pybind11::return_value_policy::reference_internal)
+        .def("set", [](LPMatrix<Integer>& m, unsigned row, unsigned col,
+                const regina::Integer& value){
+            m.entry(row, col) = value;
+        })
+        .def("rows", &LPMatrix<Integer>::rows)
+        .def("columns", &LPMatrix<Integer>::columns)
+        .def("swapRows", &LPMatrix<Integer>::swapRows)
+        .def("combRow", &LPMatrix<Integer>::combRow)
+        .def("combRowAndNorm", &LPMatrix<Integer>::combRowAndNorm)
+        .def("negateRow", &LPMatrix<Integer>::negateRow)
+        .def("__str__", [](const LPMatrix<Integer>& m) {
+            std::ostringstream out;
+            m.dump(out);
+            return out.str();
+        })
+        ;
+    regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(LPMatrix<Integer>&, LPMatrix<Integer>&))(regina::swap));
+
     auto s = pybind11::class_<LPSystem>(m, "LPSystem")
         .def(pybind11::init<regina::NormalEncoding>())
         .def(pybind11::init<const LPSystem&>())

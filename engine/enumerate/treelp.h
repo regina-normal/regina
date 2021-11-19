@@ -110,9 +110,10 @@ using MatrixInt = Matrix<Integer, true>;
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \apinotfinal
+ * \ifacespython The template argument \a IntType is taken to be
+ * regina::Integer.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -271,8 +272,17 @@ class LPMatrix {
         void initIdentity(unsigned size);
 
         /**
-         * Returns a read-write reference to the given element of this
-         * matrix.
+         * Returns a read-write reference to the given element of this matrix.
+         *
+         * \ifacespython The entry() routine gives direct read-write access
+         * to matrix elements, but does not allow them to be set using
+         * the assignment operator.  In other words, code such as
+         * <tt>matrix.entry(r, c).negate()</tt> will work, but
+         * <tt>matrix.entry(r, c) = value</tt> will not.
+         * To assign values to matrix elements, you should instead use the
+         * syntax <tt>matrix.set(row, column, value)</tt>.
+         * This set() routine returns nothing, and is provided for python
+         * only (i.e., it is not part of the C++ calculation engine).
          *
          * @param row the row of the requested element.  This must be
          * between 0 and rows()-1 inclusive.
@@ -282,8 +292,7 @@ class LPMatrix {
         inline IntType& entry(unsigned row, unsigned col);
 
         /**
-         * Returns a read-only reference to the given element of this
-         * matrix.
+         * Returns a read-only reference to the given element of this matrix.
          *
          * @param row the row of the requested element.  This must be
          * between 0 and rows()-1 inclusive.
@@ -346,7 +355,7 @@ class LPMatrix {
          * @param div the integer to divide the final row by.  This must
          * be non-zero.
          */
-        inline void combRow(const IntType& destCoeff, unsigned dest,
+        void combRow(const IntType& destCoeff, unsigned dest,
                 const IntType& srcCoeff, unsigned src,
                 const IntType& div);
 
@@ -375,7 +384,7 @@ class LPMatrix {
          * @return the positive gcd that row \a dest was scaled down by,
          * or 0 if row \a dest is entirely zero.
          */
-        inline IntType combRowAndNorm(const IntType& destCoeff,
+        IntType combRowAndNorm(const IntType& destCoeff,
                 unsigned dest, const IntType& srcCoeff, unsigned src);
 
         /**
@@ -391,6 +400,11 @@ class LPMatrix {
          * The output is "rough" and wasteful, and is intended for
          * debugging purposes only.  The precise output format is
          * subject to change in future versions of Regina.
+         *
+         * \ifacespython Not present; instead this C++ routine provides the
+         * Python string representation for an LPMatrix.  In other words,
+         * to access this functionality for a matrix \a m in Python,
+         * you can just call <tt>print(m)</tt>.
          *
          * @param out the output stream to write to.
          */
