@@ -321,9 +321,24 @@ class TreeTraversal : public BanConstraint {
          * There will be no spaces between the types, and there will be
          * no final newline.
          *
+         * This routine outputs the same information that typeString() returns.
+         *
+         * \ifacespython Not rpesent; instead use typeString(), which
+         * returns this same information as a string.
+         *
          * @param out the output stream to which to write.
          */
         void dumpTypes(std::ostream& out) const;
+
+        /**
+         * Returns the current type vector in string form.
+         * There will be no spaces between the types.
+         *
+         * This routine returns the same information that dumpTypes() writes.
+         *
+         * @param the type vector in string form.
+         */
+        std::string typeString() const;
 
         /**
          * Reconstructs the full normal surface that is represented by
@@ -622,6 +637,7 @@ class TreeEnumeration :
         public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::typeString;
 
     protected:
         // Since we have a template base class, we need to explicitly
@@ -954,6 +970,7 @@ class TautEnumeration :
         public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::typeString;
 
     protected:
         // Since we have a template base class, we need to explicitly
@@ -1272,8 +1289,8 @@ class TautEnumeration :
  * using ban constraints), and in such settings this class will still work
  * precisely as described.
  *
- * \warning If you examine the type vector (for instance, by calling
- * dumpTypes()), be aware that this class merges the old types 0 and 1
+ * \warning If you examine the type vector (e.g., by calling typeString()
+ * or dumpTypes()), be aware that this class merges the old types 0 and 1
  * together into a single branch of the search tree.  This means that
  * type 0 never appears, and that type 1 could indicate \e either positive
  * quadrilaterals in the first position, or else no quadrilaterals at all.
@@ -1315,6 +1332,7 @@ class TreeSingleSoln :
         public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::typeString;
 
     protected:
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::level_;
@@ -1462,6 +1480,14 @@ inline void TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes(
         std::ostream& out) const {
     for (unsigned i = 0; i < nTypes_; ++i)
         out << static_cast<int>(type_[i]);
+}
+
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline std::string TreeTraversal<LPConstraint, BanConstraint, IntType>::
+        typeString() const {
+    std::ostringstream out;
+    dumpTypes(out);
+    return out.str();
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>

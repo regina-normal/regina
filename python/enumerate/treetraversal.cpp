@@ -56,7 +56,7 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Tree>(m, name)
         .def_static("supported", &Tree::supported)
         .def("visited", &Tree::visited)
-        // TODO: dumpTypes
+        .def("typeString", &Tree::typeString)
         .def("buildSurface", &Tree::buildSurface)
         .def("buildStructure", &Tree::buildStructure)
     ;
