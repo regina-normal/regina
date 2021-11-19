@@ -32,13 +32,22 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/functional.h"
-#include "enumerate/treetraversal.h"
+#include "enumerate/treetraversal-impl.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using regina::Integer;
 using regina::NormalEncoding;
 using regina::Triangulation;
+
+using regina::LPConstraintNone;
+using regina::LPConstraintEulerPositive;
+using regina::LPConstraintEulerZero;
+using regina::LPConstraintNonSpun;
+
+using regina::BanNone;
+using regina::BanBoundary;
+using regina::BanTorusBoundary;
 
 template <class LPConstraint, typename BanConstraint>
 void addTreeTraversalBase(pybind11::module_& m, const char* name) {
@@ -104,34 +113,70 @@ void addTreeSingleSoln(pybind11::module_& m, const char* name) {
 }
 
 void addTreeTraversal(pybind11::module_& m) {
-    addTreeTraversalBase<regina::LPConstraintNone, regina::BanNone>(
+    addTreeTraversalBase<LPConstraintNone, BanNone>(
         m, "TreeTraversal");
-    addTreeTraversalBase<regina::LPConstraintEulerPositive, regina::BanNone>(
+    addTreeTraversalBase<LPConstraintEulerPositive, BanNone>(
         m, "TreeTraversal_EulerPositive");
-    addTreeTraversalBase<regina::LPConstraintNonSpun, regina::BanNone>(
+    addTreeTraversalBase<LPConstraintEulerZero, BanNone>(
+        m, "TreeTraversal_EulerZero");
+    addTreeTraversalBase<LPConstraintNonSpun, BanNone>(
         m, "TreeTraversal_NonSpun");
+    addTreeTraversalBase<LPConstraintNone, BanBoundary>(
+        m, "TreeTraversal_BanBoundary");
+    addTreeTraversalBase<LPConstraintEulerPositive, BanBoundary>(
+        m, "TreeTraversal_EulerPositive_BanBoundary");
+    addTreeTraversalBase<LPConstraintEulerZero, BanBoundary>(
+        m, "TreeTraversal_EulerZero_BanBoundary");
+    addTreeTraversalBase<LPConstraintNone, BanTorusBoundary>(
+        m, "TreeTraversal_BanTorusBoundary");
+    addTreeTraversalBase<LPConstraintEulerPositive, BanTorusBoundary>(
+        m, "TreeTraversal_EulerPositive_BanTorusBoundary");
+    addTreeTraversalBase<LPConstraintEulerZero, BanTorusBoundary>(
+        m, "TreeTraversal_EulerZero_BanTorusBoundary");
 
-    // TODO: Expand list
-    addTreeEnumeration<regina::LPConstraintNone, regina::BanNone>(
+    addTreeEnumeration<LPConstraintNone, BanNone>(
         m, "TreeEnumeration");
-    addTreeEnumeration<regina::LPConstraintNonSpun, regina::BanNone>(
+    addTreeEnumeration<LPConstraintEulerPositive, BanNone>(
+        m, "TreeEnumeration_EulerPositive");
+    addTreeEnumeration<LPConstraintEulerZero, BanNone>(
+        m, "TreeEnumeration_EulerZero");
+    addTreeEnumeration<LPConstraintNonSpun, BanNone>(
         m, "TreeEnumeration_NonSpun");
+    addTreeEnumeration<LPConstraintNone, BanBoundary>(
+        m, "TreeEnumeration_BanBoundary");
+    addTreeEnumeration<LPConstraintEulerPositive, BanBoundary>(
+        m, "TreeEnumeration_EulerPositive_BanBoundary");
+    addTreeEnumeration<LPConstraintEulerZero, BanBoundary>(
+        m, "TreeEnumeration_EulerZero_BanBoundary");
+    addTreeEnumeration<LPConstraintNone, BanTorusBoundary>(
+        m, "TreeEnumeration_BanTorusBoundary");
+    addTreeEnumeration<LPConstraintEulerPositive, BanTorusBoundary>(
+        m, "TreeEnumeration_EulerPositive_BanTorusBoundary");
+    addTreeEnumeration<LPConstraintEulerZero, BanTorusBoundary>(
+        m, "TreeEnumeration_EulerZero_BanTorusBoundary");
 
-    addTautEnumeration<regina::LPConstraintNone, regina::BanNone>(
+    addTautEnumeration<LPConstraintNone, BanNone>(
         m, "TautEnumeration");
 
-    // TODO: Expand list
-    addTreeSingleSoln<regina::LPConstraintEulerPositive, regina::BanNone>(
+    addTreeSingleSoln<LPConstraintNone, BanNone>(
+        m, "TreeSingleSoln");
+    addTreeSingleSoln<LPConstraintEulerPositive, BanNone>(
         m, "TreeSingleSoln_EulerPositive");
-
-    // TODO:
-    // Constraints:
-    // - EulerPositive (NS_STANDARD, NS_AN_STANDARD)
-    // - EulerZero (NS_STANDARD)
-    // - NonSpun (NS_QUAD, NS_AN_QUAD_OCT)
-    //
-    // Ban:
-    // - BanBoundary (NS_STANDARD, NS_AN_STANDARD)
-    // - BanTorusBoundary (NS_STANDARD, NS_AN_STANDARD)
+    addTreeSingleSoln<LPConstraintEulerZero, BanNone>(
+        m, "TreeSingleSoln_EulerZero");
+    addTreeSingleSoln<LPConstraintNonSpun, BanNone>(
+        m, "TreeSingleSoln_NonSpun");
+    addTreeSingleSoln<LPConstraintNone, BanBoundary>(
+        m, "TreeSingleSoln_BanBoundary");
+    addTreeSingleSoln<LPConstraintEulerPositive, BanBoundary>(
+        m, "TreeSingleSoln_EulerPositive_BanBoundary");
+    addTreeSingleSoln<LPConstraintEulerZero, BanBoundary>(
+        m, "TreeSingleSoln_EulerZero_BanBoundary");
+    addTreeSingleSoln<LPConstraintNone, BanTorusBoundary>(
+        m, "TreeSingleSoln_BanTorusBoundary");
+    addTreeSingleSoln<LPConstraintEulerPositive, BanTorusBoundary>(
+        m, "TreeSingleSoln_EulerPositive_BanTorusBoundary");
+    addTreeSingleSoln<LPConstraintEulerZero, BanTorusBoundary>(
+        m, "TreeSingleSoln_EulerZero_BanTorusBoundary");
 }
 
