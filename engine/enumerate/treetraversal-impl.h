@@ -157,7 +157,7 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         origTableaux_(tri, enc, enumeration),
         enc_(enc),
-        ban_(tri, enc),
+        ban_(origTableaux_),
         nTets_(tri.size()),
         nTypes_(enc_.storesTriangles() ? 5 * nTets_ : nTets_),
         /* Each time we branch, one LP can be solved in-place:
@@ -190,9 +190,6 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
     // Mark the location of the initial tableaux at the root node.
     lpSlot_[0] = lp_;
     nextSlot_[0] = lp_ + 1;
-
-    // Set up the ban list.
-    ban_.init(origTableaux_.columnPerm());
 
     // Reserve space for our additional temporary tableaux.
     tmpLP_[0].reserve(origTableaux_);

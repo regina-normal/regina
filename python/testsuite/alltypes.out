@@ -19,6 +19,15 @@ Equality type : EqualityType.BY_REFERENCE
 AugTriSolidTorus : class
 Equality type : EqualityType.BY_REFERENCE
 
+BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+BanNone : class
+Equality type : EqualityType.BY_REFERENCE
+
+BanTorusBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
 Base64SigEncoding : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 

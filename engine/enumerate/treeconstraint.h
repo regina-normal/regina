@@ -39,6 +39,7 @@
 #define __REGINA_TREECONSTRAINT_H
 #endif
 
+#include "enumerate/treelp.h" // for LPSystem
 #include "maths/integer.h"
 #include "surfaces/normalcoords.h"
 #include "surfaces/normalsurface.h"
@@ -735,10 +736,10 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  *
  * This base class provides limited functionality (as documented below).
  * Subclasses \e must implement a constructor (which, like this base
- * class, takes a triangulation and a coordinate system), must implement
- * init() which determines which coordinates are banned and/or marked,
- * and must implement supported(), which indicates which normal or angle
- * structure coordinate system this constraint class can work with.
+ * class, takes an initial tableaux and determines which coordinates are
+ * banned and/or marked), and must implement supported(), which indicates
+ * which normal or angle structure coordinate system this constraint class
+ * can work with.
  *
  * These ban constraint classes are designed mainly to act as C++ template
  * arguments, and end users will typically not need to construct their own
@@ -761,8 +762,9 @@ class BanConstraintBase {
     protected:
         const Triangulation<3>& tri_;
             /**< The triangulation with which we are working. */
-        NormalEncoding enc_;
-            /**< The vector encoding that our enumeration task is using. */
+        LPSystem system_;
+            /**< The broad class of vector encodings that our enumeration task
+                 is working with. */
         bool* banned_;
             /**< Indicates which columns of a tableaux correspond to banned
                  coordinates (e.g., banned normal disc types).
@@ -778,23 +780,22 @@ class BanConstraintBase {
 
     public:
         /**
-         * Constructs and initialises the \a banned_ and \a marked_ arrays
-         * to be entirely \c false.  The only purpose of passing the
-         * triangulation and vector encoding is to determine how many
-         * normal or angle structure coordinates we are dealing with.
+         * Constructs a new set of banning and marking constraints.
          *
-         * \warning Before you use this object, the routine init() must be
-         * called to fill in the \a banned_ and \a marked_ arrays with the
-         * correct data.  Otherwise you will have no banned or marked disc
-         * types at all.
+         * This base class constructor will create \a banned_ and \a marked_
+         * arrays of the correct size, and will initialise their contents to
+         * be entirely \c false.  This means that there will be no banned or
+         * marked disc types at all.
          *
-         * @param tri the triangulation with which we are working.
-         * @param enc the vector encoding being used for this enumeration task.
-         * This must be one of the vector encodings known to be supported by
-         * the generic TreeTraversal infrastructure, and in particular it
-         * may be the special angle structure encoding.
+         * Subclass constructors should identify which coordinates to ban and
+         * mark, and adjust the contents of the \a banned_ and \a marked_
+         * arrays accordingly.
+         *
+         * @param init the original starting tableaux being used for this
+         * enumeration task.
          */
-        BanConstraintBase(const Triangulation<3>& tri, NormalEncoding enc);
+        template <class LPConstraint>
+        BanConstraintBase(const LPInitialTableaux<LPConstraint>& init);
 
         /**
          * Destroys this object and all associated data.
@@ -826,22 +827,6 @@ class BanConstraintBase {
         bool marked(size_t column) const;
 
 #ifdef __DOXYGEN
-        /**
-         * Identifies which coordinates to ban and mark, and records the
-         * corresponding tableaux columns in the \a banned_ and \a marked_
-         * arrays respectively.
-         *
-         * \ifacespython The argument \a columnPerm should be passed as a
-         * Python list.
-         *
-         * @param columnPerm the permutation of columns that describes how
-         * columns of the tableaux correspond to normal or angle strutcure
-         * coordinates in the underlying triangulation.  Specifically, this
-         * permutation must be the same permutation returned by
-         * LPInitialTableaux::columnPerm().
-         */
-        void init(const int* columnPerm);
-
         /**
          * Indicates whether the given coordinate system is supported by
          * this constraint class.
@@ -886,10 +871,10 @@ class BanConstraintBase {
  * See the BanConstraintBase class notes for details on the interface
  * that this class adheres to.
  *
- * This class is designed to help TreeTraversal manage significant enumeration
- * and search operations, and objects of this class cannot be constructed
- * directly by end users.  To use this class, pass it as the BanConstraint
- * template parameter to one of the tree traversal subclasses
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
  * \ifacespython It is rare that you would need to access this class directly
@@ -907,13 +892,13 @@ class BanConstraintBase {
  */
 class BanNone {
     public:
-        BanNone(const Triangulation<3>&, NormalEncoding) {}
+        template <class LPConstraint>
+        BanNone(const LPInitialTableaux<LPConstraint>&) {}
 
         template <class LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>&) const {}
 
         bool marked(size_t) const { return false; }
-        void init(const int*) {}
         static bool supported(NormalEncoding) { return true; }
 };
 
@@ -936,11 +921,11 @@ class BanNone {
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
  *
- * This class is designed to help TreeTraversal manage significant enumeration
- * and search operations, and objects of this class cannot be constructed
- * directly by end users.  To use this class, pass it as the BanConstraint
- * template parameter to one of the tree traversal subclasses
- * (e.g., TreeEnumeration or TreeSingleSolution).
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
  * \ifacespython It is rare that you would need to access this class directly
  * through Python.  Instead, to use a ban constraint class, you would typically
@@ -955,24 +940,22 @@ class BanNone {
 class BanBoundary : public BanConstraintBase {
     public:
         /**
-         * Constructs and initialises the \a banned_ and \a marked_ arrays
-         * to be entirely \c false, as described in the BanConstraintBase
-         * superclass constructor.
+         * Constructs a new set of banning and marking constraints.
          *
-         * \warning Before you use this object, the routine init() must be
-         * called to fill in the \a banned_ and \a marked_ arrays with the
-         * correct data.  Otherwise you will have no banned or marked disc
-         * types at all.
+         * This base class constructor will construct the \a banned_ and
+         * \a marked_ arrays to be the correct size based on the given
+         * tableaux, and will initialise their contents to ban disc types
+         * that meet the triangulation boundary.
          *
-         * @param tri the triangulation with which we are working.
-         * @param enc the vector encoding being used for this enumeration task.
-         * This must be one of the normal or almost normal surface vector
-         * encodings known to be supported by the generic TreeTraversal
-         * infrastructure.
+         * No disc types will be marked.
+         *
+         * @param init the original starting tableaux being used for this
+         * enumeration task.  This tableaux must work with normal or almost
+         * normal surface coordinates (not angle structure coordinates).
          */
-        BanBoundary(const Triangulation<3>& tri, NormalEncoding enc);
+        template <class LPConstraint>
+        BanBoundary(const LPInitialTableaux<LPConstraint>& init);
 
-        void init(const int* columnPerm);
         static bool supported(NormalEncoding enc);
 };
 
@@ -1002,11 +985,11 @@ class BanBoundary : public BanConstraintBase {
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
  *
- * This class is designed to help TreeTraversal manage significant enumeration
- * and search operations, and objects of this class cannot be constructed
- * directly by end users.  To use this class, pass it as the BanConstraint
- * template parameter to one of the tree traversal subclasses
- * (e.g., TreeEnumeration or TreeSingleSolution).
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
  * \ifacespython It is rare that you would need to access this class directly
  * through Python.  Instead, to use a ban constraint class, you would typically
@@ -1021,24 +1004,21 @@ class BanBoundary : public BanConstraintBase {
 class BanTorusBoundary : public BanConstraintBase {
     public:
         /**
-         * Constructs and initialises the \a banned_ and \a marked_ arrays
-         * to be entirely \c false, as described in the BanConstraintBase
-         * superclass constructor.
+         * Constructs a new set of banning and marking constraints.
          *
-         * \warning Before you use this object, the routine init() must be
-         * called to fill in the \a banned_ and \a marked_ arrays with the
-         * correct data.  Otherwise you will have no banned or marked disc
-         * types at all.
+         * This base class constructor will construct the \a banned_ and
+         * \a marked_ arrays to be the correct size based on the given
+         * tableaux, and will initialise their contents to ban and mark
+         * disc types associated with torus boundary components, as
+         * described in the class notes.
          *
-         * @param tri the triangulation with which we are working.
-         * @param enc the vector encoding being used for this enumeration task.
-         * This must be one of the normal or almost normal surface vector
-         * encodings known to be supported by the generic TreeTraversal
-         * infrastructure.
+         * @param init the original starting tableaux being used for this
+         * enumeration task.  This tableaux must work with normal or almost
+         * normal surface coordinates (not angle structure coordinates).
          */
-        BanTorusBoundary(const Triangulation<3>& tri, NormalEncoding enc);
+        template <class LPConstraint>
+        BanTorusBoundary(const LPInitialTableaux<LPConstraint>& init);
 
-        void init(const int* columnPerm);
         static bool supported(NormalEncoding enc);
 };
 

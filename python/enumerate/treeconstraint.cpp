@@ -37,6 +37,7 @@
 #include "../helpers.h"
 
 using regina::Integer;
+using regina::LPInitialTableaux;
 using regina::NormalEncoding;
 using regina::Triangulation;
 
@@ -53,7 +54,11 @@ using regina::LPConstraintNonSpun;
 template <class BanConstraint>
 void addBanConstraint(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<BanConstraint>(m, name)
-        .def(pybind11::init<const Triangulation<3>&, NormalEncoding>())
+        .def(pybind11::init<const LPInitialTableaux<LPConstraintNone>&>())
+        .def(pybind11::init<
+            const LPInitialTableaux<LPConstraintEulerPositive>&>())
+        .def(pybind11::init<const LPInitialTableaux<LPConstraintEulerZero>&>())
+        .def(pybind11::init<const LPInitialTableaux<LPConstraintNonSpun>&>())
         .def("enforceBans",
             &BanConstraint::template enforceBans<LPConstraintNone, Integer>)
         .def("enforceBans",
@@ -65,9 +70,6 @@ void addBanConstraint(pybind11::module_& m, const char* name) {
         .def("enforceBans",
             &BanConstraint::template enforceBans<LPConstraintNonSpun, Integer>)
         .def("marked", &BanConstraint::marked)
-        .def("init", [](BanConstraint& c, const std::vector<int>& perm) {
-            c.init(perm.data());
-        })
         .def_static("supported", &BanConstraint::supported)
         ;
     regina::python::add_eq_operators(c);

@@ -182,7 +182,7 @@ class TreeTraversal {
                  that we are using for our enumeration task.
                  Note that the tableaux will \e not necessarily use this
                  same encoding; see LPInitialTableaux for details. */
-        BanConstraint ban_;
+        const BanConstraint ban_;
             /**< Details of any banning/marking constraints that are in use. */
         const int nTets_;
             /**< The number of tetrahedra in the underlying triangulation. */

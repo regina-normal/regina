@@ -30,12 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/treeconstraint.h"
-#include "enumerate/treelp.h" // for LPSystem
+#include "enumerate/treeconstraint-impl.h"
 #include "snappea/snappeatriangulation.h"
-#include "triangulation/dim3.h"
 
 namespace regina {
+
+// Instantiate all templates that we might need:
+template BanBoundary::BanBoundary(const LPInitialTableaux<LPConstraintNone>&);
+template BanBoundary::BanBoundary(
+    const LPInitialTableaux<LPConstraintEulerPositive>&);
+template BanBoundary::BanBoundary(
+    const LPInitialTableaux<LPConstraintEulerZero>&);
+template BanBoundary::BanBoundary(
+    const LPInitialTableaux<LPConstraintNonSpun>&);
+
+template BanTorusBoundary::BanTorusBoundary(
+    const LPInitialTableaux<LPConstraintNone>&);
+template BanTorusBoundary::BanTorusBoundary(
+    const LPInitialTableaux<LPConstraintEulerPositive>&);
+template BanTorusBoundary::BanTorusBoundary(
+    const LPInitialTableaux<LPConstraintEulerZero>&);
+template BanTorusBoundary::BanTorusBoundary(
+    const LPInitialTableaux<LPConstraintNonSpun>&);
 
 void LPConstraintEulerPositive::addRows(
         LPCol<regina::LPConstraintEulerPositive>* col,
@@ -147,139 +163,6 @@ void LPConstraintNonSpun::addRows(
         col[i].meridian = coeffs.entry(0, columnPerm[i]).longValue();
         col[i].longitude = coeffs.entry(1, columnPerm[i]).longValue();
     }
-}
-
-BanConstraintBase::BanConstraintBase(const Triangulation<3>& tri,
-        NormalEncoding enc) : tri_(tri), enc_(enc) {
-    const size_t nCols = LPSystem(enc).coords(tri.size());
-    banned_ = new bool[nCols];
-    marked_ = new bool[nCols];
-    std::fill(banned_, banned_ + nCols, false);
-    std::fill(marked_, marked_ + nCols, false);
-}
-
-BanBoundary::BanBoundary(const Triangulation<3>& tri,
-        NormalEncoding enc) :
-        BanConstraintBase(tri, enc) {
-}
-
-void BanBoundary::init(const int* columnPerm) {
-    unsigned n = tri_.size();
-    unsigned tet, type, i, k;
-
-    bool quadOnly = ! enc_.storesTriangles();
-
-    // The implementation here is a little inefficient (we repeat tests
-    // three or four times over), but this routine is only called at
-    // the beginning of the enumeration process so no need to worry.
-
-    // Ban quadrilaterals in tetrahedra that meet the boundary
-    // (every such quadrilateral meets a boundary face).
-    for (i = 0; i < 3 * n; ++i) {
-        if (quadOnly)
-            tet = columnPerm[i] / 3;
-        else
-            tet = columnPerm[i] / 7;
-
-        for (k = 0; k < 4; ++k)
-            if (! tri_.tetrahedron(tet)->adjacentTetrahedron(k)) {
-                banned_[i] = true;
-                break;
-            }
-    }
-
-    // Ban normal triangles in tetrahedra that meet the boundary (but
-    // only those normal triangles that meet the boundary faces).
-    if (! quadOnly)
-        for (i = 3 * n; i < 7 * n; ++i) {
-            tet = columnPerm[i] / 7;
-            type = columnPerm[i] % 7;
-
-            for (k = 0; k < 4; ++k)
-                if (k != type &&
-                        ! tri_.tetrahedron(tet)->adjacentTetrahedron(k)) {
-                    banned_[i] = true;
-                    break;
-                }
-        }
-}
-
-BanTorusBoundary::BanTorusBoundary(
-        const Triangulation<3>& tri, NormalEncoding enc) :
-        BanConstraintBase(tri, enc) {
-}
-
-void BanTorusBoundary::init(const int* columnPerm) {
-    unsigned n = tri_.size();
-    unsigned tet, type, i, k;
-
-    // Which boundary faces are we banning?
-    unsigned nTriangles = tri_.countTriangles();
-    bool* banTriangle = new bool[nTriangles];
-    std::fill(banTriangle, banTriangle + nTriangles, false);
-
-    // Which vertex links are we marking normal triangles around?
-    unsigned nVertices = tri_.countVertices();
-    bool* markVtx = new bool[nVertices];
-    std::fill(markVtx, markVtx + nVertices, false);
-
-    BoundaryComponent<3>* bc;
-    for (i = 0; i < tri_.countBoundaryComponents(); ++i) {
-        bc = tri_.boundaryComponent(i);
-        if ((! bc->isIdeal()) && bc->isOrientable() &&
-                bc->eulerChar() == 0) {
-            // We've found a real torus boundary.
-            for (k = 0; k < bc->countTriangles(); ++k)
-                banTriangle[bc->triangle(k)->markedIndex()] = true;
-            for (k = 0; k < bc->countVertices(); ++k)
-                markVtx[bc->vertex(k)->markedIndex()] = true;
-        }
-    }
-
-    bool quadOnly = ! enc_.storesTriangles();
-
-    // The implementation here is a little inefficient (we repeat tests
-    // three or four times over), but this routine is only called at
-    // the beginning of the enumeration process so no need to worry.
-
-    // Ban quadrilaterals that touch torus boundaries.
-    for (i = 0; i < 3 * n; ++i) {
-        if (quadOnly)
-            tet = columnPerm[i] / 3;
-        else
-            tet = columnPerm[i] / 7;
-
-        for (k = 0; k < 4; ++k)
-            if (banTriangle[tri_.tetrahedron(tet)->triangle(k)->
-                    markedIndex()]) {
-                banned_[i] = true;
-                break;
-            }
-    }
-
-    // Ban normal triangles that touch torus boundaries, and mark all
-    // normal triangles that surround vertices on torus boundaries
-    // (even if the normal triangles do not actually touch the boundary).
-    if (! quadOnly)
-        for (i = 3 * n; i < 7 * n; ++i) {
-            tet = columnPerm[i] / 7;
-            type = columnPerm[i] % 7;
-
-            if (markVtx[tri_.tetrahedron(tet)->vertex(type)->
-                    markedIndex()])
-                marked_[i] = true;
-
-            for (k = 0; k < 4; ++k)
-                if (k != type &&
-                        banTriangle[tri_.tetrahedron(tet)->triangle(k)->
-                        markedIndex()]) {
-                    banned_[i] = true;
-                    break;
-                }
-        }
-
-    delete[] banTriangle;
-    delete[] markVtx;
 }
 
 } // namespace regina

@@ -117,6 +117,9 @@ Version 7.0  [ TODO ]
             - Deprecated clone().  Just use the copy constructor instead.
         Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
             - All methods are now public, not protected.
+            - The init() routines are removed; instead these are now
+              rolled into the class constructors, which all now take a
+              single LPInitialTableaux as argument.
             - BanNone no longer derives from BanConstraintBase; instead this is
               intended as a trivial drop-in replacement.
         Class Base64SigEncoding:

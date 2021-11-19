@@ -28,6 +28,7 @@ if (${REGINA_INSTALL_DEV})
     maxadmissible-impl.h
     ordering.h
     treeconstraint.h
+    treeconstraint-impl.h
     treelp.h
     treelp-impl.h
     treetraversal.h
