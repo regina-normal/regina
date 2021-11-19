@@ -102,14 +102,12 @@ class LPConstraintNone;
 class LPConstraintBase {
 #ifdef __DOXYGEN
     public:
-        enum {
-            /**
-             * The number of additional linear constraints that we impose.
-             * Each constraint will generate one new variable (column)
-             * and one new equation (row) in the tableaux.
-             */
-            nConstraints
-        };
+        /**
+         * The number of additional linear constraints that we impose.
+         * Each constraint will generate one new variable (column)
+         * and one new equation (row) in the tableaux.
+         */
+        static constexpr int nConstraints = 0;
 
         /**
          * Stores the extra coefficients in a single column for the
@@ -432,7 +430,7 @@ class LPConstraintSubspace : public LPConstraintBase {
  */
 class LPConstraintNone : public LPConstraintSubspace {
     public:
-        enum { nConstraints = 0 };
+        static constexpr int nConstraints = 0;
 
         /**
          * Stores the extra coefficients in the tableaux associated
@@ -494,7 +492,7 @@ class LPConstraintNone : public LPConstraintSubspace {
  */
 class LPConstraintEulerPositive : public LPConstraintBase {
     public:
-        enum { nConstraints = 1 };
+        static constexpr int nConstraints = 1;
 
         /**
          * Stores the extra coefficients in the tableaux associated with this
@@ -569,7 +567,7 @@ using LPConstraintEuler [[deprecated]] = LPConstraintEulerPositive;
  */
 class LPConstraintEulerZero : public LPConstraintSubspace {
     public:
-        enum { nConstraints = 1 };
+        static constexpr int nConstraints = 1;
 
         /**
          * Stores the extra coefficients in the tableaux associated with this
@@ -645,7 +643,7 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  */
 class LPConstraintNonSpun : public LPConstraintSubspace {
     public:
-        enum { nConstraints = 2 };
+        static constexpr int nConstraints = 2;
 
         /**
          * Stores the extra coefficients in the tableaux associated with this
