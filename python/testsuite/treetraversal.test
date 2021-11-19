@@ -47,28 +47,28 @@ if tree.find():
 	print('Found:', tree.buildSurface())
 else:
 	print('No solution')
-print('Visited:', tree.nVisited())
+print('Visited:', tree.visited())
 
 print()
 
 t = Example3.figureEight()
 tree = TautEnumeration(t)
 tree.run(dumpStructure)
-print('Visited:', tree.nVisited())
-print('Solutions:', tree.nSolns())
+print('Visited:', tree.visited())
+print('Solutions:', tree.solutions())
 
 print()
 
 t = Example3.figureEight()
 tree = TreeEnumeration(t, NS_QUAD)
 tree.run(dumpSurface)
-print('Visited:', tree.nVisited())
-print('Solutions:', tree.nSolns())
+print('Visited:', tree.visited())
+print('Solutions:', tree.solutions())
 
 print()
 
 t = Example3.trefoil()
 tree = TreeEnumeration_NonSpun(t, NS_QUAD)
 tree.run(dumpSurface)
-print('Visited:', tree.nVisited())
-print('Solutions:', tree.nSolns())
+print('Visited:', tree.visited())
+print('Solutions:', tree.solutions())
