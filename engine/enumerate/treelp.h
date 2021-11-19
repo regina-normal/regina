@@ -754,9 +754,16 @@ class LPSystem {
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \apinotfinal
+ * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * are now made available to Python users.  Each class name is of the form
+ * LPInitialTableaux_<i>LPConstraint</i>, where the suffix \a LPConstraint
+ * is an abbreviated version of the \a LPConstraint template parameter;
+ * this suffix is omitted entirely for the common case LPConstraintNone.
+ * An example of such a Python class name is \c LPInitialTableaux_NonSpun.
+ * You are encouraged to look through the Regina namespace to see which
+ * constraint classes are supported under Python.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -1262,9 +1269,17 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \apinotfinal
+ * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * are now made available to Python users.  Each class name is of the form
+ * LPData_<i>LPConstraint</i>, where the suffix \a LPConstraint
+ * is an abbreviated version of the \a LPConstraint template parameter;
+ * this suffix is omitted entirely for the common case LPConstraintNone.
+ * An example of such a Python class name is \c LPData_EulerPositive.
+ * You are encouraged to look through the Regina namespace to see which
+ * constraint classes are supported under Python.  In all cases, the IntType
+ * parameter is taken to be regina::Integer.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -1593,6 +1608,11 @@ class LPData {
          *
          * The precise output is subject to change in future versions
          * of Regina.
+         *
+         * \ifacespython Not present; instead this C++ routine provides the
+         * Python string representation for an LPData object.  In other words,
+         * to access this functionality for a tableaux \a t in Python,
+         * you can just call <tt>print(t)</tt>.
          *
          * @param out the output stream to write to.
          */

@@ -37,8 +37,72 @@
 
 using pybind11::overload_cast;
 using regina::Integer;
+using regina::LPData;
+using regina::LPInitialTableaux;
 using regina::LPMatrix;
 using regina::LPSystem;
+using regina::NormalEncoding;
+using regina::Triangulation;
+
+using regina::LPConstraintNone;
+using regina::LPConstraintEulerPositive;
+using regina::LPConstraintEulerZero;
+using regina::LPConstraintNonSpun;
+
+template <class LPConstraint>
+void addLPInitialTableaux(pybind11::module_& m, const char* name) {
+    using Tableaux = LPInitialTableaux<LPConstraint>;
+
+    auto c = pybind11::class_<Tableaux>(m, name)
+        .def(pybind11::init<const Triangulation<3>&, NormalEncoding, bool>())
+        .def(pybind11::init<const Tableaux&>())
+        .def("swap", &Tableaux::swap)
+        .def("tri", &Tableaux::tri,
+            pybind11::return_value_policy::reference_internal)
+        .def("system", &Tableaux::system)
+        .def("rank", &Tableaux::rank)
+        .def("columns", &Tableaux::columns)
+        .def("coordinateColumns", &Tableaux::coordinateColumns)
+        // TODO: columnPerm
+        .def("multColByRow", &Tableaux::template multColByRow<Integer>)
+        .def("multColByRowOct", &Tableaux::template multColByRowOct<Integer>)
+        .def("fillInitialTableaux",
+            &Tableaux::template fillInitialTableaux<Integer>)
+        ;
+    regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(Tableaux&, Tableaux&))(regina::swap));
+}
+
+template <class LPConstraint>
+void addLPData(pybind11::module_& m, const char* name) {
+    using Data = LPData<LPConstraint, Integer>;
+
+    auto c = pybind11::class_<Data>(m, name)
+        .def(pybind11::init<>())
+        .def("swap", &Data::swap)
+        .def("reserve", &Data::reserve)
+        .def("initStart", &Data::initStart)
+        .def("initClone", &Data::initClone)
+        .def("columns", &Data::columns)
+        .def("coordinateColumns", &Data::coordinateColumns)
+        .def("isFeasible", &Data::isFeasible)
+        .def("isActive", &Data::isActive)
+        .def("sign", &Data::sign)
+        .def("constrainZero", &Data::constrainZero)
+        .def("constrainPositive", &Data::constrainPositive)
+        .def("constrainOct", &Data::constrainOct)
+        .def("__str__", [](const Data& d) {
+            std::ostringstream out;
+            d.dump(out);
+            return out.str();
+        })
+        // TODO: extractSolution
+        ;
+    regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(Data&, Data&))(regina::swap));
+}
 
 void addTreeLP(pybind11::module_& m) {
     auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix")
@@ -82,5 +146,17 @@ void addTreeLP(pybind11::module_& m) {
         .def("coords", &LPSystem::coords)
         ;
     regina::python::add_eq_operators(s);
+
+    addLPInitialTableaux<LPConstraintNone>(m, "LPInitialTableaux");
+    addLPInitialTableaux<LPConstraintEulerPositive>(m,
+        "LPInitialTableaux_EulerPositive");
+    addLPInitialTableaux<LPConstraintEulerZero>(m,
+        "LPInitialTableaux_EulerZero");
+    addLPInitialTableaux<LPConstraintNonSpun>(m, "LPInitialTableaux_NonSpun");
+
+    addLPData<LPConstraintNone>(m, "LPData");
+    addLPData<LPConstraintEulerPositive>(m, "LPData_EulerPositive");
+    addLPData<LPConstraintEulerZero>(m, "LPData_EulerZero");
+    addLPData<LPConstraintNonSpun>(m, "LPData_NonSpun");
 }
 
