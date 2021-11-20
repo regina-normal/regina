@@ -473,7 +473,8 @@ struct LPCol {
              The same row may appear in this list more than once
              (indicating a -2, -3 or -4 entry in the matrix). */
 
-    std::array<LPConstraint::Coefficient, LPConstraint::nConstraints> extra;
+    std::array<typename LPConstraint::Coefficient, LPConstraint::nConstraints>
+            extra;
         /**< The coefficients for this column that appear in each extra
              linear constraint defined by the LPConstraint class. */
 

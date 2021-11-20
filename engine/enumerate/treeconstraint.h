@@ -91,9 +91,20 @@ class LPConstraintNone;
  * they do not contain any member data, and it is unnecessary (but harmless) to
  * construct them.
  *
- * \apinotfinal
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
- * \ifacespython Not present.
+ * \ifacespython This base class is not present, but all of the "real" linear
+ * constraint subclasses are available.  However, as noted above, it is rare
+ * that you would need to access any of these constraint classes directly
+ * through Python.  Instead, to use a linear constraint class, you would
+ * typically create a tree traversal object with the appropriate class suffix
+ * (e.g., one such Python class is \c TreeEnumeration_NonSpun).
+ *
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -327,9 +338,11 @@ class LPConstraintBase {
  * This class does not provide any additional functionality.  It is
  * merely a convenience to help describe and enforce preconditions.
  *
- * \apinotfinal
+ * \ifacespython This base class is not present, but all of the "real" linear
+ * constraint subclasses are available.  See the LPConstraintBase class notes
+ * for further details on accessing linear constraints from within Python.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -340,10 +353,24 @@ class LPConstraintSubspace : public LPConstraintBase {
  * A do-nothing class that imposes no additional linear constraints on
  * the tableaux of normal surface or angle structure matching equations.
  *
- * See the LPConstraintBase class notes for details on all member
- * functions and structs.
+ * See the LPConstraintBase class notes for details on all member functions.
  *
- * \ifacespython Not present.
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use this do-nothing constraint class, you would
+ * typically create a tree traversal object with no linear constraint class
+ * suffix at all (since LPConstraintNone is the default behaviour).  For
+ * example, the Python classes \c TreeEnumeration, \c TreeSingleSoln_BanBoundary
+ * and \c TautEnumeration all use this do-nothing LPConstraintNone class.  See
+ * the LPConstraintBase class notes for further details on accessing other
+ * types of linear constraints from within Python.
+ *
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -378,16 +405,25 @@ class LPConstraintNone : public LPConstraintSubspace {
  * is used to ensure we do not have more than two octagons when searching for
  * a normal or almost normal sphere in the 3-sphere recognition algorithm).
  *
- * See the LPConstraintBase class notes for details on all member
- * functions and structs.
+ * See the LPConstraintBase class notes for details on all member functions.
+ *
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
  * \pre We are working with a normal or almost normal vector encoding
  * that includes triangle coordinates (i.e., the encoding for standard
  * normal or standard almost normal coordinates).
  *
- * \apinotfinal
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a linear constraint class, you would
+ * typically create a tree traversal object with the appropriate class suffix
+ * (e.g., one such Python class is \c TreeSingleSolution_EulerPositive).
+ * See the LPConstraintBase class notes for further details.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -425,6 +461,8 @@ class LPConstraintEulerPositive : public LPConstraintBase {
  * The old name LPConstraintEuler should no longer be used, since Regina
  * now provides multiple constraint types relating to Euler characteristic.
  *
+ * \ifacespython Not present; use LPConstraintEulerPositive instead.
+ *
  * \ingroup enumerate
  */
 using LPConstraintEuler [[deprecated]] = LPConstraintEulerPositive;
@@ -440,16 +478,25 @@ using LPConstraintEuler [[deprecated]] = LPConstraintEulerPositive;
  * This constraint currently only works with normal (and \e not almost normal)
  * coordinates.
  *
- * See the LPConstraintBase class notes for details on all member
- * functions and structs.
+ * See the LPConstraintBase class notes for details on all member functions.
+ *
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
  * \pre We are working with a normal vector encoding that includes triangle
  * coordinates, and that does \e not include octagon coordinates (i.e,
  * the encoding for standard normal coordinates).
  *
- * \apinotfinal
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a linear constraint class, you would
+ * typically create a tree traversal object with the appropriate class suffix
+ * (e.g., one such Python class is \c TreeEnumeration_EulerZero).
+ * See the LPConstraintBase class notes for further details.
  *
- * \ifacespython Not present.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
@@ -487,14 +534,17 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * This is \e not explicitly checked; instead it appears as a
  * precondition (see below).
  *
- * See the LPConstraintBase class notes for details on all member
- * functions and structs.
+ * See the LPConstraintBase class notes for details on all member functions.
+ *
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
  * \pre We are working with a normal or almost normal vector encoding that
  * does not include triangle coordinates (i.e., the encoding for quad or
  * quad-oct normal coordinates).
- *
- * \apinotfinal
  *
  * \exception InvalidArgument thrown by addRows() if the given triangulation
  * is not oriented with precisely one vertex, which must have a torus link.
@@ -504,7 +554,13 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * coefficients of the slope equations are too large to store in a native
  * C++ long integer.
  *
- * \ifacespython Not present.
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a linear constraint class, you would
+ * typically create a tree traversal object with the appropriate class suffix
+ * (e.g., one such Python class is \c TreeEnumeration_NonSpun).
+ * See the LPConstraintBase class notes for further details.
+ *
+ * \apinotfinal
  *
  * \ingroup enumerate
  */

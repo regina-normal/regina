@@ -36,6 +36,8 @@
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
+
 using regina::Integer;
 using regina::LPInitialTableaux;
 using regina::NormalEncoding;
@@ -50,6 +52,22 @@ using regina::LPConstraintNone;
 using regina::LPConstraintEulerPositive;
 using regina::LPConstraintEulerZero;
 using regina::LPConstraintNonSpun;
+
+template <class LPConstraint>
+void addLPConstraint(pybind11::module_& m, const char* name) {
+    auto c = pybind11::class_<LPConstraint>(m, name)
+        .def_readonly_static("nConstraints", &LPConstraint::nConstraints)
+        .def_readonly_static("octAdjustment", &LPConstraint::octAdjustment)
+        // TODO: addRows()
+        .def_static("constrain", &LPConstraint::template constrain<Integer>)
+        .def_static("verify", overload_cast<const regina::NormalSurface&>(
+            &LPConstraint::verify))
+        .def_static("verify", overload_cast<const regina::AngleStructure&>(
+            &LPConstraint::verify))
+        .def_static("supported", &LPConstraint::supported)
+        ;
+    regina::python::no_eq_operators(c);
+}
 
 template <class BanConstraint>
 void addBanConstraint(pybind11::module_& m, const char* name) {
@@ -76,6 +94,11 @@ void addBanConstraint(pybind11::module_& m, const char* name) {
 }
 
 void addTreeConstraint(pybind11::module_& m) {
+    addLPConstraint<LPConstraintNone>(m, "LPConstraintNone");
+    addLPConstraint<LPConstraintEulerPositive>(m, "LPConstraintEulerPositive");
+    addLPConstraint<LPConstraintEulerZero>(m, "LPConstraintEulerZero");
+    addLPConstraint<LPConstraintNonSpun>(m, "LPConstraintNonSpun");
+
     addBanConstraint<BanNone>(m, "BanNone");
     addBanConstraint<BanBoundary>(m, "BanBoundary");
     addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary");

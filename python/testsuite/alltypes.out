@@ -1459,6 +1459,18 @@ Equality type : EqualityType.BY_REFERENCE
 L31Pillow : class
 Equality type : EqualityType.BY_REFERENCE
 
+LPConstraintEulerPositive : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+LPConstraintEulerZero : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+LPConstraintNonSpun : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+LPConstraintNone : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 LPData : class
 Equality type : EqualityType.BY_REFERENCE
 
