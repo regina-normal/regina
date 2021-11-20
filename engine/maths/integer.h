@@ -45,6 +45,7 @@
 #include <tuple>
 #include <gmp.h>
 #include "regina-core.h"
+#include "utilities/exception.h"
 #include "utilities/tightencoding.h"
 
 /**
@@ -431,6 +432,20 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @return the value of this integer.
          */
         long longValue() const;
+        /**
+         * Returns the value of this integer as a long, or throws an
+         * exception if this is not possible.
+         *
+         * If this integer is within the required range, regardless of
+         * whether the underlying representation is a native or large integer,
+         * this routine will return the correct result.
+         *
+         * \exception NoSolution This integer is too large or small to fit
+         * into a long.
+         *
+         * @return the value of this integer.
+         */
+        long safeLongValue() const;
         /**
          * Returns the value of this integer as a native integer of some
          * fixed byte length.
@@ -2715,6 +2730,22 @@ inline void IntegerBase<false>::makeInfinite() {
 template <bool supportInfinity>
 inline long IntegerBase<supportInfinity>::longValue() const {
     return (large_ ? mpz_get_si(large_) : small_);
+}
+
+template <bool supportInfinity>
+inline long IntegerBase<supportInfinity>::safeLongValue() const {
+    if constexpr (supportInfinity)
+        if (isInfinite())
+            throw NoSolution();
+
+    if (large_) {
+        if (mpz_cmp_si(large_, LONG_MAX) <= 0 &&
+                mpz_cmp_si(large_, LONG_MIN) >= 0)
+            return mpz_get_si(large_);
+        else
+            throw NoSolution();
+    } else
+        return small_;
 }
 
 template <bool supportInfinity>

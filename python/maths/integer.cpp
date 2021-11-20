@@ -57,6 +57,7 @@ void addInteger(pybind11::module_& m) {
         .def("isInfinite", &Integer::isInfinite)
         .def("makeInfinite", &Integer::makeInfinite)
         .def("longValue", &Integer::longValue)
+        .def("safeLongValue", &Integer::safeLongValue)
         .def("stringValue", &Integer::stringValue,
             pybind11::arg("base") = 10)
         .def("swap", &Integer::swap)

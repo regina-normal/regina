@@ -516,6 +516,8 @@ Version 7.0  [ TODO ]
               instead of using reference arguments.
             - Changed divisionAlg() to return a pair instead of using
               reference arguments.  The old version is kept but deprecated.
+            - New routine safeLongValue(), which is like longValue() but
+              throws an exception on overflow.
         Class InvalidArgument, InvalidInput:
             - New exception classes.
         Class Isomorphism<dim>, IsomorphismBase<dim>:

@@ -489,6 +489,12 @@ class IntegerTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            if (x.safeLongValue() != value) {
+                std::ostringstream msg;
+                msg << name << " != " << value << " via safeLongValue().";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             if (x.stringValue() != str(value)) {
                 std::ostringstream msg;
                 msg << name << " != " << value << " as a string.";
@@ -932,6 +938,13 @@ class IntegerTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << name << " has the wrong sign.";
                 CPPUNIT_FAIL(msg.str());
+            }
+
+            try {
+                x.safeLongValue();
+                CPPUNIT_FAIL("Infinity.safeLongValue() does not throw an "
+                    "exception.");
+            } catch (const regina::NoSolution&) {
             }
 
             if (testCopy) {
@@ -2607,10 +2620,38 @@ class IntegerTest : public CppUnit::TestFixture {
                     if (! (x.isNative() && y.isNative() && z.isNative()))
                         CPPUNIT_FAIL("Integers are not native after "
                             "tryReduce() even though they are within range.");
+
+                    // Make sure safeLongValue() returns the correct answer.
+                    if (! (d.cases[a] == x.safeLongValue() &&
+                            d.cases[a] == y.safeLongValue() &&
+                            d.cases[a] == z.safeLongValue())) {
+                        CPPUNIT_FAIL("safeLongValue() does not return "
+                            "the correct value for an in-range integer.");
+                    }
                 } else {
                     if (x.isNative() || y.isNative() || z.isNative())
                         CPPUNIT_FAIL("Integers become native after "
                             "tryReduce() even though they are out of range.");
+
+                    // Make sure safeLongValue() throws an exception.
+                    try {
+                        x.safeLongValue();
+                        CPPUNIT_FAIL("safeLongValue() does not throw an "
+                            "exception for an out-of-range integer.");
+                    } catch (const regina::NoSolution&) {
+                    }
+                    try {
+                        y.safeLongValue();
+                        CPPUNIT_FAIL("safeLongValue() does not throw an "
+                            "exception for an out-of-range integer.");
+                    } catch (const regina::NoSolution&) {
+                    }
+                    try {
+                        z.safeLongValue();
+                        CPPUNIT_FAIL("safeLongValue() does not throw an "
+                            "exception for an out-of-range integer.");
+                    } catch (const regina::NoSolution&) {
+                    }
                 }
             }
         }

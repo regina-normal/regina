@@ -58,6 +58,7 @@ void addLargeInteger(pybind11::module_& m) {
         .def("isInfinite", &LargeInteger::isInfinite)
         .def("makeInfinite", &LargeInteger::makeInfinite)
         .def("longValue", &LargeInteger::longValue)
+        .def("safeLongValue", &LargeInteger::safeLongValue)
         .def("stringValue", &LargeInteger::stringValue,
             pybind11::arg("base") = 10)
         .def("swap", &LargeInteger::swap)
