@@ -134,17 +134,50 @@ dat = LPData()
 dat.reserve(tab)
 dat.initStart()
 if dat.isFeasible():
-	print(dat.extractSolution([0, 0, 0]))
+	print(dat.extractSolution([0, 0, 0] + [0] * 12))
 else:
 	print('Not feasible')
 dat.constrainPositive(0)
 if dat.isFeasible():
-	print(dat.extractSolution([1, 0, 0]))
+	print(dat.extractSolution([1, 0, 0] + [0] * 12))
 else:
 	print('Not feasible')
 ban = BanBoundary(tab)
 ban.enforceBans(dat)
 if dat.isFeasible():
-	print(dat.extractSolution([1, 0, 0]))
+	print(dat.extractSolution([1, 0, 0] + [0] * 12))
+else:
+	print('Not feasible')
+
+print()
+
+t = Triangulation3.fromIsoSig('gHLLOcbcdeffafwfss') # Solid torus # RP^3
+print(t.hasNonTrivialSphereOrDisc())
+tab = LPInitialTableaux(t, NS_STANDARD)
+sys = tab.system()
+print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
+print('Columns:', tab.coordinateColumns(), '->', tab.columns())
+print('Perm:', tab.columnPerm())
+dat = LPData()
+dat.reserve(tab)
+dat.initStart()
+if dat.isFeasible():
+	print(dat.extractSolution([0] * 30))
+else:
+	print('Not feasible')
+dat.constrainPositive(35) # should be the "real" triangle coordinate #1
+if dat.isFeasible():
+	print(dat.extractSolution([0] * 23 + [1] + [0] * 6))
+else:
+	print('Not feasible')
+ban = BanBoundary(tab)
+ban.enforceBans(dat)
+if dat.isFeasible():
+	print(dat.extractSolution([0] * 23 + [1] + [0] * 6))
+else:
+	print('Not feasible')
+dat.constrainPositive(36) # should be the "real" triangle coordinate #2
+if dat.isFeasible():
+	print(dat.extractSolution([0] * 23 + [1,1] + [0] * 5))
 else:
 	print('Not feasible')
