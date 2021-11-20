@@ -120,8 +120,8 @@ QString LinkHeaderUI::summaryInfo(const regina::Link& link) {
     QString signs;
     if (link.size() > 1) {
         size_t plus = 0, minus = 0;
-        for (size_t i = 0; i < link.size(); ++i)
-            if (link.crossing(i)->sign() > 0)
+        for (const regina::Crossing* c : link.crossings())
+            if (c->sign() > 0)
                 ++plus;
             else
                 ++minus;

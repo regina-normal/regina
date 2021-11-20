@@ -413,13 +413,11 @@ void LinkMoveDialog::fill() {
     int strand, side;
 
     // R1 twist moves on arcs are always valid.
-    for (i = 0; i < link->size(); ++i)
+    for (regina::Crossing* c : link->crossings())
         for (strand = 0; strand < 2; ++strand)
             for (side = 0; side < 2; ++side) {
-                options1up.emplace_back(
-                    link->crossing(i)->strand(strand), side, 1);
-                options1up.emplace_back(
-                    link->crossing(i)->strand(strand), side, -1);
+                options1up.emplace_back(c->strand(strand), side, 1);
+                options1up.emplace_back(c->strand(strand), side, -1);
             }
     if (link->r1(regina::StrandRef(), 0, 1, true, false)) {
         // We have unknot component(s) that we can use for R1 twists also.
@@ -429,31 +427,30 @@ void LinkMoveDialog::fill() {
     for (const auto& o : options1up)
         box1up->addItem(o.display());
 
-    for (i = 0; i < link->size(); ++i)
-        if (link->r1(link->crossing(i), true, false))
-            options1down.emplace_back(link->crossing(i));
+    for (regina::Crossing* c : link->crossings())
+        if (link->r1(c, true, false))
+            options1down.emplace_back(c);
     for (const auto& o : options1down)
         box1down->addItem(o.display());
 
     // R2 overlap moves can be done with any arc that is not the inside of a twist.
     // Note that, if you are the inside of a twist, then you cannot also be the outside of a twist.
-    for (i = 0; i < link->size(); ++i) {
-        regina::Crossing* crossing = link->crossing(i);
+    for (regina::Crossing* c : link->crossings()) {
         for (strand = 0; strand < 2; ++strand) {
-            if (crossing->next(strand).crossing() == crossing) {
+            if (c->next(strand).crossing() == c) {
                 // We are part of a twist.
-                if ((strand == 0 && crossing->sign() > 0) || (strand == 1 && crossing->sign() < 0)) {
+                if ((strand == 0 && c->sign() > 0) || (strand == 1 && c->sign() < 0)) {
                     // Left side is bad.
-                    options2upOver.emplace_back(crossing->strand(strand), 1);
+                    options2upOver.emplace_back(c->strand(strand), 1);
                 } else {
                     // Right side is bad.
-                    options2upOver.emplace_back(crossing->strand(strand), 0);
+                    options2upOver.emplace_back(c->strand(strand), 0);
                 }
             } else {
                 // We are not part of a twist.
                 // Both sides are usable.
                 for (side = 0; side < 2; ++side) {
-                    options2upOver.emplace_back(crossing->strand(strand), side);
+                    options2upOver.emplace_back(c->strand(strand), side);
                 }
             }
         }
@@ -471,17 +468,17 @@ void LinkMoveDialog::fill() {
     // Trigger a refill of the under-strand chooser.
     changedR2UpOver(-1);
 
-    for (i = 0; i < link->size(); ++i)
-        if (link->r2(link->crossing(i), true, false))
-            options2down.emplace_back(link->crossing(i));
+    for (regina::Crossing* c : link->crossings())
+        if (link->r2(c, true, false))
+            options2down.emplace_back(c);
     std::sort(options2down.begin(), options2down.end());
     for (const auto& o : options2down)
         box2down->addItem(o.display());
 
-    for (i = 0; i < link->size(); ++i)
+    for (regina::Crossing* c : link->crossings())
         for (side = 0; side < 2; ++side)
-            if (link->r3(link->crossing(i), side, true, false))
-                options3.emplace_back(link->crossing(i), side);
+            if (link->r3(c, side, true, false))
+                options3.emplace_back(c, side);
     std::sort(options3.begin(), options3.end());
     for (const auto& o : options3)
         box3->addItem(o.display());
@@ -510,12 +507,12 @@ void LinkMoveDialog::changedR2UpOver(int) {
     // instead of iterating through all potential strands.
 
     int i, strand, side;
-    for (i = 0; i < link->size(); ++i)
+    for (regina::Crossing* c : link->crossings())
         for (strand = 0; strand < 2; ++strand)
             for (side = 0; side < 2; ++side)
                 if (link->r2(over.strand, over.side,
-                        link->crossing(i)->strand(strand), side, true, false))
-                    options2upUnder.emplace_back(link->crossing(i)->strand(strand), side);
+                        c->strand(strand), side, true, false))
+                    options2upUnder.emplace_back(c->strand(strand), side);
     for (side = 0; side < 2; ++side)
         if (link->r2(over.strand, over.side, regina::StrandRef(), side,
                 true, false))

@@ -205,10 +205,7 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void sanity(const Link& l, const std::string& name) {
-            Crossing* c;
-            for (size_t i = 0; i < l.size(); ++i) {
-                c = l.crossing(i);
-
+            for (Crossing* c : l.crossings()) {
                 StrandRef lower(c, 0);
                 StrandRef upper(c, 1);
                 if (lower.next().prev() != lower ||
