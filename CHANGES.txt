@@ -652,6 +652,7 @@ Version 7.0  [ TODO ]
               now always run in the current thread, even if a progress
               tracker was passed.
             - New static routine homflyAZtoLM().
+            - New routines crossings() and components().
         Class ListOnCall:
             - Removed, since this class was not thread-safe and did not add
               anything non-trivial.
@@ -1365,6 +1366,7 @@ Version 7.0  [ TODO ]
               not pointer.
             - Routine fromOrientedGauss() now returns by value (not pointer),
               and throws an exception on error (instead of returning null).
+            - New routine crossings().
         Class Text:
             - Added a copy constructor and a copy assignment operator.
             - Added member and global swap() functions.

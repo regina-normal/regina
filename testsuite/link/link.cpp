@@ -490,8 +490,7 @@ class LinkTest : public CppUnit::TestFixture {
             // component.  We do this in quadratic time, so the code is simple
             // enough to be sure it's right.
             long writheSame = 0, absWritheSame = 0;
-            for (size_t i = 0; i < l.countComponents(); ++i) {
-                StrandRef start = l.component(i);
+            for (auto start : l.components()) {
                 if (! start)
                     continue;
 

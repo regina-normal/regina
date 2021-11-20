@@ -40,6 +40,7 @@
 #endif
 
 #include "link/link.h"
+#include "utilities/listview.h"
 
 namespace regina {
 
@@ -238,6 +239,38 @@ class Tangle : public Output<Tangle> {
          * @return the crossing at the given index.
          */
         Crossing* crossing(size_t index) const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all crossings within this tangle.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Crossing* c : tangle.crossings()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as the tangle exists: even as crossings are added and/or
+         * removed, it will always reflect the crossings that are currently in
+         * the tangle.  Nevertheless, it is recommended to treat this object as
+         * temporary only, and to call crossings() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the crossings when this function is called, and will
+         * \e not be kept up-to-date as the tangle changes.
+         *
+         * @return access to the list of all crossings.
+         */
+        auto crossings() const;
 
         /**
          * Returns the crossing closest to the beginning of the given string.
@@ -894,6 +927,10 @@ inline size_t Tangle::size() const {
 
 inline Crossing* Tangle::crossing(size_t index) const {
     return crossings_[index];
+}
+
+inline auto Tangle::crossings() const {
+    return ListView(crossings_);
 }
 
 inline StrandRef Tangle::begin(int string) const {

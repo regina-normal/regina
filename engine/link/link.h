@@ -53,6 +53,7 @@
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/exception.h"
+#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
@@ -891,6 +892,38 @@ class Link : public PacketData<Link>, public Output<Link> {
         Crossing* crossing(size_t index) const;
 
         /**
+         * Returns an object that allows iteration through and random access
+         * to all crossings within this link.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Crossing* c : link.crossings()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as the link exists: even as crossings are added and/or removed,
+         * it will always reflect the crossings that are currently in the link.
+         * Nevertheless, it is recommended to treat this object as temporary
+         * only, and to call crossings() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the crossings when this function is called, and will
+         * \e not be kept up-to-date as the link changes.
+         *
+         * @return access to the list of all crossings.
+         */
+        auto crossings() const;
+
+        /**
          * Returns a strand in the given component of this link.
          *
          * For each component of the link, this routine returns a
@@ -910,6 +943,41 @@ class Link : public PacketData<Link>, public Output<Link> {
          * has no crossings.
          */
         StrandRef component(size_t index) const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all components of this link.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Each element of the list will be
+         * a starting strand for some components; more precisely, iterating
+         * through this list is equivalent to calling <tt>component(0)</tt>,
+         * <tt>component(1)</tt>, ..., <tt>component(countComponents()-1)</tt>
+         * in turn.  As an example, your code might look like:
+         *
+         * \code{.cpp}
+         * for (const StrandRef& c : link.components()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as the link exists: even as components are added and/or removed,
+         * it will always reflect the components that are currently in the link.
+         * Nevertheless, it is recommended to treat this object as temporary
+         * only, and to call components() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the components when this function is called, and will
+         * \e not be kept up-to-date as the link changes.
+         *
+         * @return access to the list of all components.
+         */
+        auto components() const;
 
         /**
          * Returns the strand in the link with the given integer ID.
@@ -4763,8 +4831,16 @@ inline Crossing* Link::crossing(size_t index) const {
     return crossings_[index];
 }
 
+inline auto Link::crossings() const {
+    return ListView(crossings_);
+}
+
 inline StrandRef Link::component(size_t index) const {
     return components_[index];
+}
+
+inline auto Link::components() const {
+    return ListView(components_);
 }
 
 inline StrandRef Link::strand(int id) const {
