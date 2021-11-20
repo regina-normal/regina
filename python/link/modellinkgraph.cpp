@@ -101,9 +101,6 @@ void addModelLinkGraph(pybind11::module_& m) {
     regina::python::add_output(g);
     regina::python::add_eq_operators(g);
 
-    regina::python::BeginEndIterator<ModelLinkGraphCells::ArcIterator>::
-        addBindings(m, "ModelLinkGraphCells_ArcIterator");
-
     auto c = pybind11::class_<ModelLinkGraphCells>(m, "ModelLinkGraphCells")
         .def("isValid", &ModelLinkGraphCells::isValid)
         .def("countCells", &ModelLinkGraphCells::countCells)

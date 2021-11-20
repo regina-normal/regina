@@ -1570,9 +1570,6 @@ Equality type : EqualityType.BY_VALUE
 ModelLinkGraphCells : class
 Equality type : EqualityType.BY_REFERENCE
 
-ModelLinkGraphCells_ArcIterator : class
-Equality type : EqualityType.BY_VALUE
-
 ModelLinkGraphNode : class
 Equality type : EqualityType.BY_REFERENCE
 
