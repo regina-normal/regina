@@ -427,8 +427,9 @@ class FaceBase :
          * Returns one of the ways in which this face appears within a
          * top-dimensional simplex of the underlying triangluation.
          *
-         * For convenience, you can also use begin() and end() to
-         * iterate through all such appearances.
+         * For convenience, you can also use begin() and end() to iterate
+         * through all such appearances, or equivalently you can iterate
+         * over the lightweight object returned by embeddings().
          *
          * In most cases, the ordering of appearances is arbitrary.
          * The exception is for codimension 2, where these appearances
@@ -440,6 +441,57 @@ class FaceBase :
          * @return details of the requested appearance.
          */
         const FaceEmbedding<dim, subdim>& embedding(size_t index) const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all of the ways in which this face appears within a
+         * top-dimensional simplex of the underlying triangluation.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  The elements of the list will be
+         * read-only objects of type FaceEmbedding<dim, subdim>.  For
+         * example, your code might look like:
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (const auto& emb : face->embeddings()) { ... }
+         * \endcode
+         *
+         * In most cases, the ordering of appearances is arbitrary.
+         * The exception is for codimension 2, where these appearances
+         * are ordered in a way that follows the link around the face
+         * (which in codimension 2 is always a path or a cycle).
+         *
+         * Using embeddings() is equivalent to iterating over the face
+         * itself.  It generates a tiny amount of extra overhead, but also
+         * may be considered more readable.  In particular, the code
+         * above is equivalent to both of the following alternatives:
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (const auto& emb : *face) { ... }
+         * \endcode
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (size_t i = 0; i < face->degree(); ++i) {
+         *     const auto& emb = face->embedding(i);
+         *     ...
+         * }
+         * \endcode
+         *
+         * \ifacespython Instead of returning a lightweight object,
+         * this function will return a Python list of all appearances.
+         *
+         * @return access to the list of all appearances of this face
+         * within a top-dimensional simplex of the underlying triangulation.
+         */
+        auto embeddings() const;
 
         /**
          * A begin function for iterating through all appearances of
@@ -459,9 +511,33 @@ class FaceBase :
          * The precise C++ type of the iterator is subject to change, so
          * C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython Not present.  However, Python users can call
-         * the Python-only routine embeddings(), which will return all
-         * appearances (from begin() through to end()) in a Python sequence.
+         * Iterating from begin() to end() (that is, iterating directly over a
+         * face) is equivalent to iterating over embeddings().  Iterating
+         * directly over a face generates a tiny bit less overhead, but
+         * you may also find it to be less readable.  In particular, the
+         * following three blocks of code are all equivalent:
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (const auto& emb : *face) { ... }
+         * \endcode
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (const auto& emb : face->embeddings()) { ... }
+         * \endcode
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (size_t i = 0; i < face->degree(); ++i) {
+         *     const auto& emb = face->embedding(i);
+         *     ...
+         * }
+         * \endcode
+         *
+         * \ifacespython Not present.  Python users can still iterate over
+         * embeddings(); however, be aware that embeddings() returns an
+         * entire list of appearances, not a lightweight object.
          *
          * @return a iterator that points to the first appearance.
          */
@@ -471,22 +547,17 @@ class FaceBase :
          * this face within the various top-dimensional simplices of the
          * underlying triangulation.
          *
-         * In most cases, the ordering of appearances is arbitrary.
-         * The exception is for codimension 2, where these appearances
-         * are ordered in a way that follows the link around the face
-         * (which in codimension 2 is always a path or a cycle).
-         *
-         * An iteration from begin() to end() will run through
-         * degree() appearances in total.
+         * See begin() for full details on how this iteration works, and what
+         * other alternatives are available.
          *
          * The type that is returned will be a lightweight iterator type,
          * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
          * The precise C++ type of the iterator is subject to change, so
          * C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython Not present.  However, Python users can call
-         * the Python-only routine embeddings(), which will return all
-         * appearances (from begin() through to end()) in a Python sequence.
+         * \ifacespython Not present.  Python users can still iterate over
+         * embeddings(); however, be aware that embeddings() returns an
+         * entire list of appearances, not a lightweight object.
          *
          * @return a "beyond the end" iterator that comes immediately
          * after the last appearance.
@@ -869,6 +940,11 @@ template <int dim, int subdim>
 inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::embedding(
         size_t index) const {
     return embeddings_[index];
+}
+
+template <int dim, int subdim>
+inline auto FaceBase<dim, subdim>::embeddings() const {
+    return ListView(embeddings_);
 }
 
 template <int dim, int subdim>

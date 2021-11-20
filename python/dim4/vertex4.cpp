@@ -57,15 +57,8 @@ void addVertex4(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0")
         .def("index", &Vertex<4>::index)
-        // Make all embeddings functions return by value in Python, since
-        // embeddings are lightweight and we wish to enforce constness.
-        .def("embeddings", [](const Vertex<4>& v) {
-            pybind11::list ans;
-            for (const auto& emb : v)
-                ans.append(emb);
-            return ans;
-        })
         .def("embedding", &Vertex<4>::embedding)
+        .def("embeddings", &Vertex<4>::embeddings)
         .def("front", &Vertex<4>::front)
         .def("back", &Vertex<4>::back)
         .def("triangulation", &Vertex<4>::triangulation)

@@ -269,6 +269,8 @@ Version 7.0  [ TODO ]
               the old name is removed entirely.  This now returns just an
               isomorphism by value: the triangulation should be fetched via
               buildLink(), and the labelling option is gone.
+            - New routine embeddings(), as a more readable alternative to
+              iterating over the face itself.
         Class FaceEmbedding<dim, subdim>:
             - Local copies of these objects can now happily outlive their
               underlying faces.  This is because they now carry their entire
