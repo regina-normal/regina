@@ -452,10 +452,14 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  * column objects are cheap to move, cheap to copy, and cheap to swap via
  * std::swap().
  *
- * \apinotfinal
+ * \warning End users should not use this class at all.  It was designed purely
+ * for use as internal storage for LPInitialTableaux, and at some point in the
+ * future this class will most likely become private to LPInitialTableaux.
  *
  * \ifacespython Not present, since LPCol is only designed to be used
  * as part of the internal data storage for LPInitialTableaux.
+ *
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
