@@ -42,6 +42,7 @@
 #include <vector>
 #include "core/output.h"
 #include "utilities/exception.h"
+#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
@@ -534,6 +535,37 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * @return the node at the given index.
          */
         ModelLinkGraphNode* node(size_t index) const;
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all nodes in this graph.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (ModelLinkGraphNode* n : graph.nodes()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as the graph exists: even if nodes are added and/or removed,
+         * it will always reflect the nodes that are currently in the graph.
+         * Nevertheless, it is recommended to treat this object as temporary
+         * only, and to call nodes() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the nodes when this function is called, and will
+         * \e not be kept up-to-date as the graph changes.
+         *
+         * @return access to the list of all nodes.
+         */
+        auto nodes() const;
 
         /**
          * Sets this to be a (deep) copy of the given graph.
@@ -1400,6 +1432,10 @@ inline size_t ModelLinkGraph::size() const {
 
 inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
     return nodes_[index];
+}
+
+inline auto ModelLinkGraph::nodes() const {
+    return ListView(nodes_);
 }
 
 inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)

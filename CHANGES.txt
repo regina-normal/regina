@@ -746,6 +746,7 @@ Version 7.0  [ TODO ]
               an extra null call once the enumeration has finished.
             - Routines fromPlantri() and flype() now return by value (not
               pointer), and throw exceptions on error instead of returning null.
+            - New routine nodes().
         Class ModelLinkGraphCells:
             - New typedef ArcIterator, which is returned by begin() and end().
         Class NativeInteger<...>:

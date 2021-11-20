@@ -77,6 +77,8 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("size", &ModelLinkGraph::size)
         .def("node", &ModelLinkGraph::node,
             pybind11::return_value_policy::reference_internal)
+        .def("nodes", &ModelLinkGraph::nodes,
+            pybind11::return_value_policy::reference_internal)
         .def("swap", &ModelLinkGraph::swap)
         .def("swapContents", &ModelLinkGraph::swap) // deprecated
         .def("reflect", &ModelLinkGraph::reflect)
