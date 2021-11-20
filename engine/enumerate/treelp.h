@@ -454,7 +454,8 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since LPCol is only designed to be used
+ * as part of the internal data storage for LPInitialTableaux.
  *
  * \ingroup enumerate
  */

@@ -223,6 +223,9 @@ class LPConstraintBase {
          * throw exceptions in this way \e must describe this behaviour in its
          * own class documentation.
          *
+         * \ifacespython Not present, since LPCol is only designed to be used
+         * as part of the internal data storage for LPInitialTableaux.
+         *
          * @param col the array of columns as stored in the initial
          * tableaux (i.e., the data member LPInitialTableaux::col_).
          * @param columnPerm the corresponding permutation of columns
