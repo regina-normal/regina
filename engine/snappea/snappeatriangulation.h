@@ -150,21 +150,24 @@ class SnapPeaMemoryFull : public std::exception {
 };
 
 /**
- * Represents a single cusp of a SnapPea triangulation.
- * See the SnapPeaTriangulation class for further details.
+ * Used to return information about a single cusp of a SnapPea triangulation.
+ * See SnapPeaTriangulation::cusp() and SnapPeaTriangulation::cusps() for
+ * further details.
  *
- * Cusp objects should be considered temporary only.  They are preserved
- * if you change the fillings (via SnapPeaTriangulation::fill()
- * or SnapPeaTriangulation::unfill()).  However, if you change the SnapPea
- * triangulation itself (e.g., via randomise()), then all cusp objects will
- * be deleted and replaced with new ones (using fresh data re-fetched from
- * the SnapPea kernel).
+ * Cusp objects essentially package together information about a cusp as
+ * a standalone read-only object.  Unlike Triangulation<3>::Vertex and other
+ * skeletal objects, a Cusp object does not uniquely define a cusp (if you
+ * need a unique identifier, use Cusp::vertex() for this).  You can make
+ * many copies of the same Cusp object, and each copy will contain the same
+ * information and point to the same vertex of the underlying triangulation.
  *
- * Cusps do not support value semantics: they cannot be copied, swapped,
- * or manually constructed.  Their location in memory defines them, and
- * they are often passed and compared by pointer.  End users are never
- * responsible for their memory management; this is all taken care of by
- * the SnapPeaTriangulation to which they belong.
+ * Cusp objects should be considered temporary only; you should not
+ * hold onto references or pointers to them.  If you need to hold on to
+ * information about a cusp, you can simply copy the Cusp object by value
+ * (an operation that is both cheap and safe).
+ *
+ * Cusp objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  *
  * \ingroup snappea
  */
@@ -180,6 +183,18 @@ class Cusp : public ShortOutput<Cusp> {
                  cusp is complete. */
 
     public:
+        /**
+         * Creates a new copy of the given cusp information.
+         */
+        Cusp(const Cusp&) = default;
+
+        /**
+         * Sets this to be a copy of the given cusp information.
+         *
+         * @return a reference to this object.
+         */
+        Cusp& operator = (const Cusp&) = default;
+
         /**
          * Returns the corresponding vertex of the Regina triangulation
          * (i.e., of the Triangulation<3> structure that is inherited by
@@ -237,10 +252,6 @@ class Cusp : public ShortOutput<Cusp> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-
-        // Make this class non-copyable.
-        Cusp(const Cusp&) = delete;
-        Cusp& operator = (const Cusp&) = delete;
 
     private:
         /**
@@ -1121,12 +1132,15 @@ class SnapPeaTriangulation :
          * <tt>Manifold.cusp_info()[c]</tt>, though the set of
          * information returned about each cusp is different.
          *
-         * These Cusp objects should be considered temporary only.  They are
-         * preserved if you change the fillings (via fill() or unfill()).
-         * However, if you change the SnapPea triangulation itself
-         * (e.g., via randomise()), then all cusp objects will be deleted
-         * and replaced with new ones (using fresh data re-fetched from
-         * the SnapPea kernel).
+         * These Cusp objects should be considered temporary only; you
+         * should not hold onto references or pointers to them.
+         * If you need to hold on to information about a cusp, you can
+         * simply copy the Cusp object by value (an operation that is
+         * both cheap and safe).
+         *
+         * In older versions of Regina, this routine would explicitly
+         * check for a null triangulation.  Nowadays this is the
+         * responsibility of the user or programmer.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
@@ -1135,10 +1149,47 @@ class SnapPeaTriangulation :
          *
          * @param whichCusp the index of a cusp according to SnapPea;
          * this must be between 0 and countCusps()-1 inclusive.
-         * @return information about the given cusp, or \c nullptr if this is a
-         * null triangulation.
+         * @return information about the given cusp.
          */
-        const Cusp* cusp(unsigned whichCusp = 0) const;
+        const Cusp& cusp(unsigned whichCusp = 0) const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to information about all of the cusps of this manifold.
+         * This information includes the filling coefficients (if any),
+         * along with other combinatorial information.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  The elements of the list will be
+         * read-only objects of type Cusp.  For example, your code might look
+         * like:
+         *
+         * \code{.cpp}
+         * for (const Cusp& c : tri->cusps()) { ... }
+         * \endcode
+         *
+         * These Cusp objects should be considered temporary only; you
+         * should not hold onto references or pointers to them.
+         * If you need to hold on to information about a cusp, you can
+         * simply copy the Cusp object by value (an operation that is
+         * both cheap and safe).
+         *
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The Cusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * \ifacespython Instead of returning a lightweight object,
+         * this function will return a Python list of all cusps.
+         *
+         * @return access to the list of all cusps of this manifold.
+         */
+        auto cusps() const;
 
         /**
          * Assigns a Dehn filling to the given cusp.  This routine will
@@ -2108,8 +2159,12 @@ inline unsigned SnapPeaTriangulation::countFilledCusps() const {
     return filledCusps_;
 }
 
-inline const Cusp* SnapPeaTriangulation::cusp(unsigned whichCusp) const {
-    return (cusp_ ? cusp_ + whichCusp : nullptr);
+inline const Cusp& SnapPeaTriangulation::cusp(unsigned whichCusp) const {
+    return cusp_[whichCusp];
+}
+
+inline auto SnapPeaTriangulation::cusps() const {
+    return ListView(cusp_, countBoundaryComponents());
 }
 
 inline SnapPeaTriangulation SnapPeaTriangulation::protoCanonize() const {

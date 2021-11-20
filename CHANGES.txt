@@ -205,6 +205,10 @@ Version 7.0  [ TODO ]
         Class Container:
             - Added a trivial copy constructor and copy assignment operator.
             - Added trivial member and global swap() functions.
+        Class Cusp:
+            - These objects can now be passed around by value; their memory
+              locations are not intended to uniquely identify a cusp.
+            - Added a copy constructor and copy assignment operator.
         Class Cyclotomic:
             - Added member and global swap() functions.
             - Changed polynomial() to return by value, not by pointer.
@@ -749,6 +753,7 @@ Version 7.0  [ TODO ]
             - New routine nodes().
         Class ModelLinkGraphCells:
             - New typedef ArcIterator, which is returned by begin() and end().
+            - New routine arcs().
         Class NativeInteger<...>:
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
@@ -1265,6 +1270,10 @@ Version 7.0  [ TODO ]
             - New exception class used when Regina needs to convert a clean
               SnapPea returned-with-error into an exception.
         Class SnapPeaTriangulation:
+            - Routine cusp() now returns a const reference, and users are
+              encouraged to copy this if they wish to keep the information.
+              Cusps are not meant to be uniquely identified by Cusp pointers.
+            - New routine cusps().
             - New constructor that takes a link and builds its complement.
             - The filename-or-contents constructor now throws an exception on
               error, instead of creating a null SnapPea triangulation.

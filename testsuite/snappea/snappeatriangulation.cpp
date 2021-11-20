@@ -304,7 +304,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            const regina::Cusp* c0 = t.cusp(0);
+            const regina::Cusp* c0 = std::addressof(t.cusp(0));
             regina::Vertex<3>* v0 = t.vertex(0);
 
             SnapPeaTriangulation copy(t);
@@ -315,7 +315,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             }
 
             const regina::Cusp* c1 = (copy.countCusps() == 0 ? nullptr :
-                copy.cusp(0));
+                std::addressof(copy.cusp(0)));
             regina::Vertex<3>* v1 = (copy.countVertices() == 0 ? nullptr :
                 copy.vertex(0));
             if (c1 == c0) {
@@ -337,7 +337,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             }
 
             const regina::Cusp* c2 = (move.countCusps() == 0 ? nullptr :
-                move.cusp(0));
+                std::addressof(move.cusp(0)));
             regina::Vertex<3>* v2 = (move.countVertices() == 0 ? nullptr :
                 move.vertex(0));
             if (c2 != c1) {
@@ -363,7 +363,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             }
 
             const regina::Cusp* c3 = (copyAss.countCusps() == 0 ? nullptr :
-                copyAss.cusp(0));
+                std::addressof(copyAss.cusp(0)));
             regina::Vertex<3>* v3 = (copyAss.countVertices() == 0 ? nullptr :
                 copyAss.vertex(0));
             if (c3 == c0) {
@@ -387,7 +387,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             }
 
             const regina::Cusp* c4 = (moveAss.countCusps() == 0 ? nullptr :
-                moveAss.cusp(0));
+                std::addressof(moveAss.cusp(0)));
             regina::Vertex<3>* v4 = (moveAss.countVertices() == 0 ? nullptr :
                 moveAss.vertex(0));
             if (c4 != c3) {

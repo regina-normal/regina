@@ -109,11 +109,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("countCells", &ModelLinkGraphCells::countCells)
         .def("size", &ModelLinkGraphCells::size)
         .def("arc", &ModelLinkGraphCells::arc)
-        .def("arcs", [](const ModelLinkGraphCells& c, size_t cell) {
-            return regina::python::BeginEndIterator<
-                ModelLinkGraphCells::ArcIterator>(
-                c.begin(cell), c.end(cell), c);
-        })
+        .def("arcs", &ModelLinkGraphCells::arcs)
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
     ;

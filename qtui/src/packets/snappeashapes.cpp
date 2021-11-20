@@ -80,27 +80,27 @@ int CuspModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant CuspModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::Cusp* cusp = tri_->cusp(index.row());
+        const regina::Cusp& cusp = tri_->cusp(index.row());
         switch (index.column()) {
             case 0:
                 return QString::number(index.row());
             case 1:
-                return QString::number(cusp->vertex()->markedIndex());
+                return QString::number(cusp.vertex()->markedIndex());
             case 2:
-                if (cusp->complete())
+                if (cusp.complete())
                     return QString(QChar(0x2014 /* emdash */));
                 else
-                    return tr("%1, %2").arg(cusp->m()).arg(cusp->l());
+                    return tr("%1, %2").arg(cusp.m()).arg(cusp.l());
             default:
                 return QVariant();
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 2) {
-            const regina::Cusp* cusp = tri_->cusp(index.row());
-            if (cusp->complete())
+            const regina::Cusp& cusp = tri_->cusp(index.row());
+            if (cusp.complete())
                 return QString();
             else
-                return tr("%1, %2").arg(cusp->m()).arg(cusp->l());
+                return tr("%1, %2").arg(cusp.m()).arg(cusp.l());
         } else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -183,7 +183,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
                     "coefficients be relatively prime."));
             return false;
         }
-        if ((! tri_->cusp(index.row())->vertex()->isLinkOrientable()) &&
+        if ((! tri_->cusp(index.row()).vertex()->isLinkOrientable()) &&
                 l != 0) {
             ReginaSupport::sorry(nullptr,
                 tr("For non-orientable cusps, the filling coefficients "

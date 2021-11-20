@@ -1064,6 +1064,21 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
         size_t countCells() const;
 
         /**
+         * Returns the number of arcs aloung the boundary of the given 2-cell.
+         * If the given cell is a <i>k</i>-gon, then this routine returns the
+         * integer \a k.
+         *
+         * \pre The underlying ModelLinkGraph is non-empty, connected,
+         * and describes a planar graph embedding.  Note that connectivity
+         * is already required by the class constructor, and you can test
+         * the remaining conditions by calling isValid().
+         *
+         * @param cell indicates which cell to query; this must be
+         * between 0 and countCells()-1 inclusive.
+         * @return the size of the correpsonding 2-cell.
+         */
+        size_t size(size_t cell) const;
+        /**
          * Returns the given arc along the boundary of the given 2-cell.
          *
          * For each cell, the arcs along the boundary are given in order
@@ -1092,20 +1107,44 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          */
         const ModelLinkGraphArc& arc(size_t cell, size_t which) const;
         /**
-         * Returns the number of arcs aloung the boundary of the given 2-cell.
-         * If the given cell is a <i>k</i>-gon, then this routine returns the
-         * integer \a k.
+         * Returns an object that allows iteration through and random access
+         * to all arcs along the boundary of the given 2-cell.
          *
-         * \pre The underlying ModelLinkGraph is non-empty, connected,
-         * and describes a planar graph embedding.  Note that connectivity
-         * is already required by the class constructor, and you can test
-         * the remaining conditions by calling isValid().
+         * Suppose that the <i>i</i>th cell is a <i>k</i>-gon.  Then this
+         * object gives access to the \a k arcs along the boundary of the
+         * <i>i</i>th cell in the same order as described by arc(); that
+         * is, walking anticlockwise around the cell boundary with the
+         * cell to the left of each arc.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  The elements of the list will be
+         * read-only objects of type ModelLinkGraphArc, and so your code might
+         * look like:
+         *
+         * \code{.cpp}
+         * for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }
+         * \endcode
+         *
+         * Using <tt>arcs(cell)</tt> is equivalent to iterating over the
+         * iterator range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>).
+         * Using arcs() generates a tiny amount of extra overhead, but you may
+         * also find it more readable.
+         *
+         * \ifacespython Instead of returning a lightweight object,
+         * this function will return a Python list of all arcs along the
+         * cell boundary.
          *
          * @param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
-         * @return the size of the correpsonding 2-cell.
+         * @return access to the list of all arcs along the boundary of
+         * the given cell.
          */
-        size_t size(size_t cell) const;
+        auto arcs(size_t cell) const;
         /**
          * Returns the beginning of an iterator range for walking around the
          * boundary of the given 2-cell.
@@ -1118,25 +1157,18 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * cell to the left of each arc.
          *
          * Dereferencing the <i>j</i>th iterator in this range gives the
-         * same result as calling <tt>arc(cell, j)</tt>.
-         *
-         * In Python, begin(\a cell) and end(\a cell) are replaced by a
-         * single routine arcs(\a cell), which returns an iterable object:
-         *
-         * \code{.py}
-         * graph = ModelLinkGraph(...)
-         * cells = graph.cells()
-         * for i in range(cells.countCells()):
-         *     for a in cells.arcs(i):
-         *         ...
-         * \endcode
+         * same result as calling <tt>arc(cell, j)</tt>, and iterating
+         * over the entire range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>)
+         * is equivalent to iterating over <tt>arcs(cell)</tt>.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present; use arcs(\a cell) instead.
+         * \ifacespython Not present.  Python users can still iterate
+         * over arcs(\a cell); however, be aware that arcs() returns an
+         * entire list of arcs, not a lightweight object.
          *
          * @return the beginning of an iterator range for the boundary
          * of the given cell.
@@ -1156,18 +1188,18 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * cell to the left of each arc.
          *
          * Dereferencing the <i>j</i>th iterator in this range gives the
-         * same result as calling <tt>arc(cell, j)</tt>.
-         *
-         * In Python, begin(\a cell) and end(\a cell) are replaced by a
-         * single routine arcs(\a cell), which returns an iterable object;
-         * see the begin(\a cell) documentation for further details.
+         * same result as calling <tt>arc(cell, j)</tt>, and iterating
+         * over the entire range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>)
+         * is equivalent to iterating over <tt>arcs(cell)</tt>.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present; use arcs(\a cell) instead.
+         * \ifacespython Not present.  Python users can still iterate
+         * over arcs(\a cell); however, be aware that arcs() returns an
+         * entire list of arcs, not a lightweight object.
          *
          * @return the end of an iterator range for the boundary
          * of the given cell.
@@ -1494,6 +1526,10 @@ inline size_t ModelLinkGraphCells::size(size_t cell) const {
 inline const ModelLinkGraphArc& ModelLinkGraphCells::arc(size_t cell,
         size_t which) const {
     return arcs_[start_[cell] + which];
+}
+
+inline auto ModelLinkGraphCells::arcs(size_t cell) const {
+    return ListView(arcs_ + start_[cell], arcs_ + start_[cell + 1]);
 }
 
 inline ModelLinkGraphCells::ArcIterator ModelLinkGraphCells::begin(size_t cell)

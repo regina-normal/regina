@@ -53,7 +53,7 @@ namespace regina {
  * A filter function, used to determine whether a given cusp
  * should appear in the list.
  */
-using CuspFilterFunc = bool (*)(const regina::Cusp*);
+using CuspFilterFunc = bool (*)(const regina::Cusp&);
 
 /**
  * A widget through which a single cusp of some SnapPea triangulation
@@ -142,8 +142,8 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
         /**
          * Some ready-made cusp filters.
          */
-        static bool filterFilled(const regina::Cusp*);
-        static bool filterComplete(const regina::Cusp*);
+        static bool filterFilled(const regina::Cusp&);
+        static bool filterComplete(const regina::Cusp&);
 
     private:
         /**

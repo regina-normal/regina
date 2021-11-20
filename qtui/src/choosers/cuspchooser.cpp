@@ -82,7 +82,7 @@ QString CuspChooser::description(int option) {
 
     return tr("Cusp %1 — Vertex %2")
         .arg(option)
-        .arg(tri_->cusp(option)->vertex()->markedIndex());
+        .arg(tri_->cusp(option).vertex()->markedIndex());
 }
 
 void CuspChooser::fill() {
@@ -97,12 +97,12 @@ void CuspChooser::fill() {
         }
 }
 
-bool CuspChooser::filterFilled(const Cusp* c) {
-    return ! c->complete();
+bool CuspChooser::filterFilled(const Cusp& c) {
+    return ! c.complete();
 }
 
-bool CuspChooser::filterComplete(const Cusp* c) {
-    return c->complete();
+bool CuspChooser::filterComplete(const Cusp& c) {
+    return c.complete();
 }
 
 CuspDialog::CuspDialog(QWidget* parent,
