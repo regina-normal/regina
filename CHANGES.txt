@@ -678,6 +678,7 @@ Version 7.0  [ TODO ]
         Class LPInitialTableaux:
             - The constraintsBroken() routines are gone; instead the class
               constructor throws an exception on error.
+            - The enumeration constructor argument now defaults to true.
         Class LPSystem:
             - New class to translate coordinate systems into a layout
               for LPInitialTableaux.

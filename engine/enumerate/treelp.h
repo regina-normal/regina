@@ -861,7 +861,7 @@ class LPInitialTableaux {
          * a strict angle structure).
          */
         LPInitialTableaux(const Triangulation<3>& tri, NormalEncoding enc,
-            bool enumeration);
+            bool enumeration = true);
 
         /**
          * Creates a new copy of the given matrix.

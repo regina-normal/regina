@@ -55,7 +55,9 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     using Tableaux = LPInitialTableaux<LPConstraint>;
 
     auto c = pybind11::class_<Tableaux>(m, name)
-        .def(pybind11::init<const Triangulation<3>&, NormalEncoding, bool>())
+        .def(pybind11::init<const Triangulation<3>&, NormalEncoding, bool>(),
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("enumeration") = true)
         .def(pybind11::init<const Tableaux&>())
         .def("swap", &Tableaux::swap)
         .def("tri", &Tableaux::tri,

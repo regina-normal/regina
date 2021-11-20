@@ -76,7 +76,7 @@ print('Solutions:', tree.solutions())
 print()
 
 t = Example3.trefoil()
-tab = LPInitialTableaux_NonSpun(t, NS_QUAD, True)
+tab = LPInitialTableaux_NonSpun(t, NS_QUAD)
 sys = tab.system()
 print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
 print('Columns:', tab.coordinateColumns(), '->', tab.columns())
@@ -115,12 +115,36 @@ else:
 print()
 
 t = Example3.rp3rp3()
-tab = LPInitialTableaux(t, NS_STANDARD, True)
+tab = LPInitialTableaux(t, NS_STANDARD)
 print(LPConstraintNone.addRows(tab))
-tab = LPInitialTableaux_EulerPositive(t, NS_STANDARD, True)
+tab = LPInitialTableaux_EulerPositive(t, NS_STANDARD)
 print(LPConstraintEulerPositive.addRows(tab))
-tab = LPInitialTableaux_EulerZero(t, NS_STANDARD, True)
+tab = LPInitialTableaux_EulerZero(t, NS_STANDARD)
 print(LPConstraintEulerZero.addRows(tab))
 
 print()
 
+t = Example3.lst(3,4)
+tab = LPInitialTableaux(t, NS_STANDARD)
+sys = tab.system()
+print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
+print('Columns:', tab.coordinateColumns(), '->', tab.columns())
+print('Perm:', tab.columnPerm())
+dat = LPData()
+dat.reserve(tab)
+dat.initStart()
+if dat.isFeasible():
+	print(dat.extractSolution([0, 0, 0]))
+else:
+	print('Not feasible')
+dat.constrainPositive(0)
+if dat.isFeasible():
+	print(dat.extractSolution([1, 0, 0]))
+else:
+	print('Not feasible')
+ban = BanBoundary(tab)
+ban.enforceBans(dat)
+if dat.isFeasible():
+	print(dat.extractSolution([1, 0, 0]))
+else:
+	print('Not feasible')
