@@ -441,12 +441,16 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  * is greater than +1 or less than -1, we represent it using
  * multiple +1 or -1 entries in the same matrix location.
  *
- * For any additional rows that represent extra linear constraints,
- * we inherit the coefficients directly from LPConstraint::Coefficients.
+ * For any additional rows that represent extra linear constraints described
+ * by the \a LPConstraint class, an LPCol object stores the coefficients for
+ * those rows explicitly.  The number of such rows is assumed to be very small
+ * (at the time of writing, this is no larger than 2 for all of Regina's
+ * constraint classes).
  *
- * These column objects have full value semantics.  They are always cheap to
- * move, and cheap to swap via std::swap().  They can also be copied, but the
- * cost of copying will depend on the underlying LPConstraint class.
+ * These column objects have full value semantics.  Assuming the number of
+ * rows from any extra linear constraints is very small (as noted above), these
+ * column objects are cheap to move, cheap to copy, and cheap to swap via
+ * std::swap().
  *
  * \apinotfinal
  *
@@ -455,7 +459,7 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  * \ingroup enumerate
  */
 template <class LPConstraint>
-struct LPCol : public LPConstraint::Coefficients {
+struct LPCol {
     unsigned nPlus;
         /**< The total number of +1 entries in this column. */
     unsigned plus[4];
@@ -468,6 +472,10 @@ struct LPCol : public LPConstraint::Coefficients {
         /**< The rows containing these -1 entries, in any order.
              The same row may appear in this list more than once
              (indicating a -2, -3 or -4 entry in the matrix). */
+
+    std::array<LPConstraint::Coefficient, LPConstraint::nConstraints> extra;
+        /**< The coefficients for this column that appear in each extra
+             linear constraint defined by the LPConstraint class. */
 
     /**
      * Initialises an empty column.
@@ -1064,7 +1072,7 @@ class LPInitialTableaux {
          * column of this matrix.  We assume that the given column of
          * this matrix describes one of the two quadrilateral coordinates
          * in some tetrahedron that together form an octagon type, and
-         * (via the helper routine LPConstraint::Coefficients::innerProductOct)
+         * (via the information given by LPConstraint::octAdjustment)
          * we implicitly adjust the coefficients of our extra constraints
          * accordingly.
          *
@@ -1241,8 +1249,8 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  *   template parameter, the corresponding linear constraint functions
  *   may change their values (since the coefficients they use for
  *   octagon types need not be related to the coefficients for the two
- *   corresponding quadrilateral columns).  Any such changes are managed
- *   through the function LPConstraint::Coefficients::innerProductOct.
+ *   corresponding quadrilateral columns).  Any such changes, if necessary,
+ *   are encoded by the constant LPConstraint::octAdjustment.
  *
  * This class has been optimised to ensure that you only have one
  * octagon type declared at any given time (which is consistent with the
@@ -1988,6 +1996,17 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept {
 
 template <class LPConstraint>
 inline LPCol<LPConstraint>::LPCol() : nPlus(0), nMinus(0) {
+    if constexpr (LPConstraint::nConstraints > 0) {
+        // I'm not sure how well the compiler and std::array optimise this for
+        // us.  Hard-code the first couple of cases without using std::fill().
+        if constexpr (LPConstraint::nConstraints == 1) {
+            extra[0] = 0;
+        } else if constexpr (LPConstraint::nConstraints == 2) {
+            extra[0] = 0;
+            extra[1] = 0;
+        } else
+            std::fill(extra.begin(), extra.end(), 0);
+    }
 }
 
 template <class LPConstraint>
@@ -2142,13 +2161,15 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
     } else {
         // Just pick out individual coefficients using the sparse
         // representation of the column.
-        IntType ans = col_[thisCol].innerProduct(m, mRow);
-
+        IntType ans; // Initialised to 0, due to LPMatrix requirements.
         unsigned i;
         for (i = 0; i < col_[thisCol].nPlus; ++i)
             ans += m.entry(mRow, col_[thisCol].plus[i]);
         for (i = 0; i < col_[thisCol].nMinus; ++i)
             ans -= m.entry(mRow, col_[thisCol].minus[i]);
+        for (i = 0; i < LPConstraint::nConstraints; ++i)
+            ans += m.entry(mRow, m.rows() - LPConstraint::nConstraints + i) *
+                col_[thisCol].extra[i];
         return ans;
     }
 }
@@ -2160,13 +2181,15 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
     // By the preconditions of this routine, we must be working in some normal
     // or almost normal coordinate system, and so there is no scaling
     // coordinate to worry about.
-    IntType ans = col_[thisCol].innerProductOct(m, mRow);
-
+    IntType ans; // Initialised to 0, due to LPMatrix requirements.
     unsigned i;
     for (i = 0; i < col_[thisCol].nPlus; ++i)
         ans += m.entry(mRow, col_[thisCol].plus[i]);
     for (i = 0; i < col_[thisCol].nMinus; ++i)
         ans -= m.entry(mRow, col_[thisCol].minus[i]);
+    for (i = 0; i < LPConstraint::nConstraints; ++i)
+        ans += m.entry(mRow, m.rows() - LPConstraint::nConstraints + i) *
+            (col_[thisCol].extra[i] + LPConstraint::octAdjustment);
     return ans;
 }
 
@@ -2183,7 +2206,9 @@ inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
 
         // Don't forget any additional constraints that we added
         // as final rows to the matrix.
-        col_[c].fillFinalRows(m, c);
+        for (i = 0; i < LPConstraint::nConstraints; ++i)
+            m.entry(m.rows() - LPConstraint::nConstraints + i, c) =
+                col_[c].extra[i];
     }
 
     if (scaling_)

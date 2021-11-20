@@ -656,6 +656,11 @@ Version 7.0  [ TODO ]
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class LPConstraintBase and all subclasses:
+            - Changed nConstraints from an enum value to a static constexpr int.
+            - Simplified the way in which coefficients are stored.  The old
+              Coefficients structures are gone, replaced by a new Coefficient
+              type alias and a new octAdjustment constant.  Coefficients
+              are now stored directly within LPCol via the field LPCol::extra.
             - The verify() routines now take their arguments by reference,
               not by pointer.
         Class LPConstraintEuler, LPConstraintEulerPositive:

@@ -89,9 +89,7 @@ class LPConstraintNone;
  *
  * All constraint classes provide their functionality through static routines:
  * they do not contain any member data, and it is unnecessary (but harmless) to
- * construct them.  On the other hand, their inner Coefficients classes
- * do contain data, and must support value semantics; see the Coefficients
- * documentation for details.
+ * construct them.
  *
  * \apinotfinal
  *
@@ -110,136 +108,59 @@ class LPConstraintBase {
         static constexpr int nConstraints = 0;
 
         /**
-         * Stores the extra coefficients in a single column for the
-         * \a nConstraints additional rows that we add to the tableaux
-         * to describe the \a nConstraints additional linear equations
-         * or inequalities.
+         * The type used to store each coefficient for each of these
+         * additional linear constraints.
          *
-         * Subclasses may store these coefficients however they like
-         * (in particular, they may optimise for sparse coefficients,
-         * binary coefficients, and so on).  They will only ever be
-         * accessed through the member functions of this Coefficients class.
+         * The type should:
          *
-         * This Coefficients class must support value semantics: it \e must
-         * provide copy construction and assignment, and if it will help
-         * performance it \e may also provide move construction and assignment.
-         * It should not provide custom swap() functions: all swapping will
-         * be done via std::swap(), which uses move operations where possible.
+         * - be able to be constructed or assigned from the value 0;
+         *
+         * - support multiplication of the form <tt>IntType * Coefficient</tt>
+         *   and assignment of the form <tt>IntType = Coefficient</tt>,
+         *   where \a IntType is any integer type that could be used with
+         *   the LPData and LPMatrix classes that use these constraints.
          */
-        struct Coefficients {
-            /**
-             * Creates an uninitialised set of coefficients for a single
-             * column.  These cofficients must be initialised through a
-             * call to addRows() before they can be used.
-             */
-            Coefficients();
+        using Coefficient = int;
 
-            /**
-             * Creates a new copy of the given set of coefficients.
-             */
-            Coefficients(const Coefficients&);
-
-            /**
-             * Sets this to be a copy of the given set of coefficients.
-             *
-             * @return a reference to this set of coefficients.
-             */
-            Coefficients& operator = (const Coefficients&);
-
-            /**
-             * Explicitly fills the final row(s) of the given tableaux matrix 
-             * with the coefficients stored in this Coefficients structure.
-             * In essence, this routine simply copies this sparse and/or
-             * specialised representation of the final row(s) into a
-             * more standard dense matrix representation.
-             *
-             * This routine should only affect the final \a nConstraints
-             * entries in the given column of the matrix.  It may assume
-             * that these final row(s) have already been initialised to zero.
-             *
-             * \pre The given matrix has at least \a nConstraints rows
-             * and at least \a col + 1 columns.
-             * \pre The final \a nConstraints entries in column \a col
-             * of the given matrix have already been set to zero.
-             *
-             * @param m the matrix in which to place these column
-             * coefficients.
-             * @param col the column of the given matrix in which to
-             * place these coefficients.
-             */
-            template <typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-
-            /**
-             * Computes the inner product of (i) the final \a nConstraints
-             * entries in the given row of the given matrix with (ii) the
-             * \a nConstraints column coefficients stored in this data
-             * structure.
-             *
-             * \pre The given matrix has at least \a nConstraints columns
-             * and at least \a mRow + 1 rows.
-             *
-             * @param m the matrix whose row we will use in the inner product.
-             * @param mRow the row of the matrix \a m to use in the inner
-             * product.
-             * @return the resulting portion of the inner product.
-             */
-            template <typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>& m, unsigned mRow)
-                const;
-
-            /**
-             * A variant of innerProduct() that takes into account any
-             * adjustments to these linear constraint(s) that are required when
-             * this is a quadrilateral column being used to represent an
-             * octagon type.
-             *
-             * The LPData class offers support for octagonal almost normal
-             * surfaces, in which exactly one tetrahedron is allowed to have
-             * exactly one octagon type.  We represent such an octagon as a
-             * \e pair of incompatible quadrilaterals within the same
-             * tetrahedron.  See the LPData class notes for details on how
-             * this works.
-             *
-             * In some settings, our extra linear constraints must behave
-             * differently in the presence of octagons (i.e., the coefficient
-             * of the octagon type is not just the sum of coefficients of the
-             * two constituent quadrilateral types).  This routine effectively
-             * allows us to adjust the tableaux accordingly.
-             *
-             * Specifically: this routine computes the inner product of (i) the
-             * final \a nConstraints entries in the given row of the given
-             * matrix with (ii) the \a nConstraints column coefficients
-             * stored in this data structure.  We assume that this column
-             * in the underlying tableaux describes one of the two
-             * quadrilateral coordinates in some tetrahedron that together
-             * form an octagon type, and if necessary we implicitly adjust
-             * the coefficients stored in this data structure accordingly.
-             *
-             * This routine is not used with angle structure coordinates.
-             *
-             * \pre The given matrix has at least \a nConstraints columns
-             * and at least \a mRow + 1 rows.
-             *
-             * \pre This column of the underlying tableaux describes one
-             * of the two quadrilateral coordinates that are being
-             * combined to form an octagon type within some tetrahedron.
-             *
-             * @param m the matrix whose row we will use in the inner product.
-             * @param mRow the row of the matrix \a m to use in the inner
-             * product.
-             * @return the resulting portion of the inner product.
-             */
-            template <typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>& m, unsigned mRow)
-                const;
-        };
+        /**
+         * Indicates if/how to adjust the coefficients of these linear
+         * constraints when using two quadrilateral columns to represent an
+         * octagon type.
+         *
+         * The LPData class offers support for octagonal almost normal
+         * surfaces, in which exactly one tetrahedron is allowed to have
+         * exactly one octagon type.  We represent such an octagon as a
+         * \e pair of incompatible quadrilaterals within the same
+         * tetrahedron.  See the LPData class notes for details on how
+         * this works.
+         *
+         * In some settings, our extra linear constraints must behave
+         * differently in the presence of octagons (i.e., the coefficient
+         * of the octagon type is not just the sum of coefficients of the
+         * two constituent quadrilateral types).  This constant effectively
+         * allows us to adjust the tableaux accordingly.
+         *
+         * Specifically: for each of the two quadrilateral columns being
+         * used to represent an octagon type, the coefficient for each
+         * of these additional linear constraints will be adjusted by
+         * adding \a octAdjustment.
+         *
+         * This adjustment is not used with angle structure coordinates.
+         *
+         * Currently this is a \e very blunt mechanism: it assumes that
+         * the adjustment can be made by adding a compile-time constant,
+         * and it assumes that if there are multiple constraints (i.e.,
+         * \a nConstraints > 1) then they can all be adjusted in the same way.
+         * This mechanism will be made more flexible if/when this becomes
+         * necessary.
+         */
+        static constexpr Coefficient octAdjustment = 0;
 
         /**
          * Explicitly constructs equations for the linear function(s)
          * constrained by this class.  Specifically, this routine takes an
-         * array of Coefficients objects (one for each column of the initial
-         * tableaux) and fills in the necessary coefficient data.
+         * array of columns in the initial tableaux and fills in the necessary
+         * coefficient data.
          *
          * The precise form of the linear function(s) will typically
          * depend upon the underlying triangulation.  For this reason,
@@ -256,11 +177,10 @@ class LPConstraintBase {
          * column for the corresponding new variable.
          *
          * For each subclass \a S of LPConstraintBase, the array \a col
-         * must be an array of objects of type LPCol<S>.
-         * The class LPCol<S> is itself a larger subclass of
-         * the Coefficients class.  This exact type must be used because the
-         * compiler must know how large each column object is in
-         * order to correct access each element of the given array.
+         * must be an array of objects of type LPCol<S>.  This routine
+         * should only touch the coefficients stored in LPCol::extra.
+         * You may assume that these coefficients have all been
+         * initialised to zero by the LPCol() constructor.
          *
          * As described in the LPInitialTableaux class notes, it might
          * not be possible to construct the linear functions (since the
@@ -277,9 +197,8 @@ class LPConstraintBase {
          * implementation of this routine \e must ensure that your
          * linear constraints all have coefficient zero in this column.
          *
-         * \pre For all coefficients in the array \a col, the
-         * Coefficients substructures have all been initialised with the
-         * default constructor and not modified since.
+         * \pre For all columns in the array \a col, the members
+         * LPCol::extra have all been initialised to zero.
          *
          * \exception InvalidArgument it was not possible to create the
          * linear functions for these constraints, due to an error which
@@ -431,26 +350,8 @@ class LPConstraintSubspace : public LPConstraintBase {
 class LPConstraintNone : public LPConstraintSubspace {
     public:
         static constexpr int nConstraints = 0;
-
-        /**
-         * Stores the extra coefficients in the tableaux associated
-         * with this constraint class (which for this class is a no-op,
-         * since in this case there are no extra coefficients).
-         *
-         * See the LPConstraintBase::Coefficients notes for further details.
-         */
-        struct Coefficients {
-            Coefficients() = default;
-            Coefficients(const Coefficients&) = default;
-            Coefficients& operator = (const Coefficients&) = default;
-
-            template<typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-            template<typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>&, unsigned) const;
-            template<typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>&, unsigned) const;
-        };
+        using Coefficient = int;
+        static constexpr Coefficient octAdjustment = 0;
 
         static void addRows(LPCol<regina::LPConstraintNone>*,
             const int*, const Triangulation<3>&);
@@ -493,31 +394,18 @@ class LPConstraintNone : public LPConstraintSubspace {
 class LPConstraintEulerPositive : public LPConstraintBase {
     public:
         static constexpr int nConstraints = 1;
+        using Coefficient = int;
 
-        /**
-         * Stores the extra coefficients in the tableaux associated with this
-         * constraint class (in this case, one extra integer per column).
-         *
-         * See the LPConstraintBase::Coefficients notes for further details.
-         */
-        struct Coefficients {
-            int euler { 0 };
-                /**< The coefficient of the Euler characteristic
-                     function for the corresponding column of the matching
-                     equation matrix. */
-
-            Coefficients() = default;
-            Coefficients(const Coefficients&) = default;
-            Coefficients& operator = (const Coefficients&) = default;
-            template<typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-            template<typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-            template<typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-        };
+        // Suppose we are using two quad columns to represent a single octagon.
+        //
+        // The adjustment in this case is to subtract two from the overall
+        // Euler characteristic coefficient for this octagon type (-1 because
+        // an octagon has lower Euler characteristic than two quads, and
+        // -1 again because we are actually measuring Euler - #octagons).
+        //
+        // Happily we can do this by subtracting one from the coefficient in
+        // each of the two quad columns.
+        static constexpr Coefficient octAdjustment = -1;
 
         static void addRows(
             LPCol<regina::LPConstraintEulerPositive>* col,
@@ -568,31 +456,8 @@ using LPConstraintEuler [[deprecated]] = LPConstraintEulerPositive;
 class LPConstraintEulerZero : public LPConstraintSubspace {
     public:
         static constexpr int nConstraints = 1;
-
-        /**
-         * Stores the extra coefficients in the tableaux associated with this
-         * constraint class (in this case, one extra integer per column).
-         *
-         * See the LPConstraintBase::Coefficients notes for further details.
-         */
-        struct Coefficients {
-            int euler { 0 };
-                /**< The coefficient of the Euler characteristic
-                     function for the corresponding column of the matching
-                     equation matrix. */
-
-            Coefficients() = default;
-            Coefficients(const Coefficients&) = default;
-            Coefficients& operator = (const Coefficients&) = default;
-            template<typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-            template<typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-            template<typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-        };
+        using Coefficient = int;
+        static constexpr Coefficient octAdjustment = 0;
 
         static void addRows(
             LPCol<regina::LPConstraintEulerZero>* col,
@@ -635,7 +500,9 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * is not oriented with precisely one vertex, which must have a torus link.
  *
  * \exception UnsolvedCase thrown by addRows() if SnapPea retriangulates the
- * given triangulation, or produces a null triangulation.
+ * given triangulation or produces a null triangulation, or if the
+ * coefficients of the slope equations are too large to store in a native
+ * C++ long integer.
  *
  * \ifacespython Not present.
  *
@@ -644,33 +511,8 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
 class LPConstraintNonSpun : public LPConstraintSubspace {
     public:
         static constexpr int nConstraints = 2;
-
-        /**
-         * Stores the extra coefficients in the tableaux associated with this
-         * constraint class (in this case, two extra integers per column).
-         *
-         * See the LPConstraintBase::Coefficients notes for further details.
-         */
-        struct Coefficients {
-            int meridian { 0 };
-                /**< The coefficient of the meridian equation for the
-                     corresponding column of the matching equation matrix. */
-            int longitude { 0 };
-                /**< The coefficient of the longitude equation for the
-                     corresponding column of the matching equation matrix. */
-
-            Coefficients() = default;
-            Coefficients(const Coefficients&) = default;
-            Coefficients& operator = (const Coefficients&) = default;
-            template <typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-            template <typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-            template <typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-        };
+        using Coefficient = long;
+        static constexpr Coefficient octAdjustment = 0;
 
         static void addRows(
             LPCol<regina::LPConstraintNonSpun>* col,
@@ -1041,23 +883,6 @@ namespace regina {
 
 // Inline functions
 
-template <typename IntType>
-inline void LPConstraintNone::Coefficients::fillFinalRows(
-        LPMatrix<IntType>& m, unsigned col) const {
-}
-
-template <typename IntType>
-inline IntType LPConstraintNone::Coefficients::innerProduct(
-        const LPMatrix<IntType>&, unsigned) const {
-    return 0;
-}
-
-template <typename IntType>
-inline IntType LPConstraintNone::Coefficients::innerProductOct(
-        const LPMatrix<IntType>&, unsigned) const {
-    return 0;
-}
-
 inline void LPConstraintNone::addRows(
         LPCol<regina::LPConstraintNone>*,
         const int*, const Triangulation<3>&) {
@@ -1081,40 +906,6 @@ inline bool LPConstraintNone::supported(NormalEncoding) {
 }
 
 template <typename IntType>
-inline void LPConstraintEulerPositive::Coefficients::fillFinalRows(
-        LPMatrix<IntType>& m, unsigned col) const {
-    m.entry(m.rows() - 1, col) = euler;
-}
-
-template <typename IntType>
-inline IntType LPConstraintEulerPositive::Coefficients::innerProduct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    IntType ans(m.entry(mRow, m.rows() - 1));
-    ans *= euler;
-    return ans;
-}
-
-template <typename IntType>
-inline IntType LPConstraintEulerPositive::Coefficients::innerProductOct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    // This is called for *two* quad columns (the two quads
-    // that combine to give a single octagon).
-    //
-    // The adjustment in this case is to subtract two from
-    // the overall Euler characteristic coefficient for this
-    // octagon type (-1 because an octagon has lower Euler
-    // characteristic than two quads, and -1 again because
-    // we are measuring Euler - #octagons.
-    //
-    // Happily we can do this by subtracting one from the
-    // coefficient in each of the two columns, as
-    // implemented below.
-    IntType ans(m.entry(mRow, m.rows() - 1));
-    ans *= (euler - 1);
-    return ans;
-}
-
-template <typename IntType>
 inline void LPConstraintEulerPositive::constrain(
         LPData<regina::LPConstraintEulerPositive, IntType>& lp,
         unsigned numCols) {
@@ -1135,29 +926,6 @@ inline bool LPConstraintEulerPositive::supported(NormalEncoding enc) {
 }
 
 template <typename IntType>
-inline void LPConstraintEulerZero::Coefficients::fillFinalRows(
-        LPMatrix<IntType>& m, unsigned col) const {
-    m.entry(m.rows() - 1, col) = euler;
-}
-
-template <typename IntType>
-inline IntType LPConstraintEulerZero::Coefficients::innerProduct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    IntType ans(m.entry(mRow, m.rows() - 1));
-    ans *= euler;
-    return ans;
-}
-
-template <typename IntType>
-inline IntType LPConstraintEulerZero::Coefficients::innerProductOct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    // This should never be called, since we never use this
-    // constraint with almost normal surfaces.
-    // For compilation's sake though, just return the usual inner product.
-    return innerProduct(m, mRow);
-}
-
-template <typename IntType>
 inline void LPConstraintEulerZero::constrain(
         LPData<regina::LPConstraintEulerZero, IntType>& lp, unsigned numCols) {
     lp.constrainZero(numCols - 1);
@@ -1174,34 +942,6 @@ inline bool LPConstraintEulerZero::verify(const AngleStructure&) {
 inline bool LPConstraintEulerZero::supported(NormalEncoding enc) {
     // Note: storesTriangles() will ensure we are not using angle structures.
     return (enc.storesTriangles() && ! enc.storesOctagons());
-}
-
-template <typename IntType>
-inline void LPConstraintNonSpun::Coefficients::fillFinalRows(
-        LPMatrix<IntType>& m, unsigned col) const {
-    m.entry(m.rows() - 2, col) = meridian;
-    m.entry(m.rows() - 1, col) = longitude;
-}
-
-template <typename IntType>
-inline IntType LPConstraintNonSpun::Coefficients::innerProduct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    IntType ans1(m.entry(mRow, m.rows() - 2));
-    ans1 *= meridian;
-    IntType ans2(m.entry(mRow, m.rows() - 1));
-    ans2 *= longitude;
-    ans1 += ans2;
-    return ans1;
-}
-
-template <typename IntType>
-inline IntType LPConstraintNonSpun::Coefficients::innerProductOct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    // This should never be called, since we never use this
-    // constraint with almost normal surfaces.
-    // For compilation's sake though, just return the usual
-    // inner product.
-    return innerProduct(m, mRow);
 }
 
 template <typename IntType>

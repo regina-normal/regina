@@ -81,9 +81,9 @@ void LPConstraintEulerPositive::addRows(
     }
 
     for (i = 0; i < 7 * tri.size(); ++i)
-        col[i].euler = obj[columnPerm[i]];
+        col[i].extra[0] = obj[columnPerm[i]];
 
-    col[7 * tri.size()].euler = -1;
+    col[7 * tri.size()].extra[0] = -1;
 
     delete[] obj;
 }
@@ -116,9 +116,9 @@ void LPConstraintEulerZero::addRows(
     }
 
     for (i = 0; i < 7 * tri.size(); ++i)
-        col[i].euler = obj[columnPerm[i]];
+        col[i].extra[0] = obj[columnPerm[i]];
 
-    col[7 * tri.size()].euler = -1;
+    col[7 * tri.size()].extra[0] = -1;
 
     delete[] obj;
 }
@@ -127,8 +127,8 @@ void LPConstraintNonSpun::addRows(
         LPCol<regina::LPConstraintNonSpun>* col,
         const int* columnPerm, const Triangulation<3>& tri) {
     // Add the coefficients for the two new variables now.
-    col[3 * tri.size()].meridian = -1;
-    col[3 * tri.size() + 1].longitude = -1;
+    col[3 * tri.size()].extra[0] = -1;
+    col[3 * tri.size() + 1].extra[1] = -1;
 
     // For the time being we insist on one vertex, which must be
     // ideal with torus link.
@@ -157,11 +157,16 @@ void LPConstraintNonSpun::addRows(
     //
     // The coefficients here are differences of terms from
     // SnapPy's get_cusp_equation(), which works in native
-    // integers; therefore we will happily convert them back to
-    // native integers now.
-    for (int i = 0; i < 3 * tri.size(); ++i) {
-        col[i].meridian = coeffs.entry(0, columnPerm[i]).longValue();
-        col[i].longitude = coeffs.entry(1, columnPerm[i]).longValue();
+    // integers; therefore we *should* be able to happily convert them
+    // back to native integers now.  However, just in case:
+    try {
+        for (int i = 0; i < 3 * tri.size(); ++i) {
+            col[i].extra[0] = coeffs.entry(0, columnPerm[i]).safeLongValue();
+            col[i].extra[1] = coeffs.entry(1, columnPerm[i]).safeLongValue();
+        }
+    } catch (const NoSolution&) {
+        throw UnsolvedCase("The coefficients of the slope equations "
+            "do not fit into a native long integer");
     }
 }
 
