@@ -173,12 +173,6 @@ class LPConstraintBase {
          * array of columns in the initial tableaux and fills in the necessary
          * coefficient data.
          *
-         * The precise form of the linear function(s) will typically
-         * depend upon the underlying triangulation.  For this reason,
-         * the triangulation is explicitly passed, along with the
-         * permutation that indicates which columns of the initial tableaux
-         * correspond to which normal or angle structure coordinates.
-         *
          * More precisely: recall that, for each linear function, the initial
          * tableaux acquires one new variable \a x_i that evaluates this linear
          * function f(x).  This routine must create the corresponding row that
@@ -187,14 +181,8 @@ class LPConstraintBase {
          * coordinates, and it must also set a coefficient of -1 in the
          * column for the corresponding new variable.
          *
-         * For each subclass \a S of LPConstraintBase, the array \a col
-         * must be an array of objects of type LPCol<S>.  This routine
-         * should only touch the coefficients stored in LPCol::extra.
-         * You may assume that these coefficients have all been
-         * initialised to zero by the LPCol() constructor.
-         *
-         * As described in the LPInitialTableaux class notes, it might
-         * not be possible to construct the linear functions (since the
+         * As described in the LPInitialTableaux class notes, it might not be
+         * possible to construct the linear functions (since the underlying
          * triangulation might not satisfy the necessary requirements).
          * In such cases this routine should throw an exception, as
          * described below, and the corresponding constraint class
@@ -207,6 +195,27 @@ class LPConstraintBase {
          * the angle structure polytope into a polyhedral cone).  Your
          * implementation of this routine \e must ensure that your
          * linear constraints all have coefficient zero in this column.
+         *
+         * The precise form of the linear function(s) will typically depend
+         * upon the underlying triangulation, as well as the permutation that
+         * indicates which columns of the initial tableaux correspond to which
+         * normal or angle structure coordinates.  All of this information is
+         * read from the given initial tableaux \a init.
+         *
+         * Note that the tableaux \a init may still be under construction (and
+         * indeed, the column array \a col to be filled will typically be the
+         * internal column array from \a init itself).  This routine should not
+         * read any of the tableaux entries; it should only access the
+         * underlying triangulation (LPInitialTableaux.tri()) and the
+         * permutation of columns (LPInitialTableaux.columnPerm()).
+         *
+         * For each subclass \a S of LPConstraintBase, the array \a col
+         * must be an array of objects of type LPCol<S>, and the tableaux
+         * \a init must be of type LPInitialTableaux<S>.
+         *
+         * This routine should only write to the coefficients stored in
+         * LPCol::extra.  You may assume that these coefficients have all been
+         * initialised to zero by the LPCol constructor.
          *
          * \pre For all columns in the array \a col, the members
          * LPCol::extra have all been initialised to zero.
@@ -223,19 +232,21 @@ class LPConstraintBase {
          * throw exceptions in this way \e must describe this behaviour in its
          * own class documentation.
          *
-         * \ifacespython Not present, since LPCol is only designed to be used
-         * as part of the internal data storage for LPInitialTableaux.
+         * \ifacespython The argument \a col is not present, since LPCol is
+         * only designed to be used as part of the internal data storage for
+         * LPInitialTableaux.  Instead, this routine returns a Python list of
+         * constraints, where each constraint is presented as a Python list of
+         * coefficients.  Each of these inner lists will have size
+         * init.columns().
          *
          * @param col the array of columns as stored in the initial
          * tableaux (i.e., the data member LPInitialTableaux::col_).
-         * @param columnPerm the corresponding permutation of columns
-         * that describes how columns of the tableaux correspond to normal or
-         * angle structure coordinates in the underlying triangulation
-         * (i.e., the data member LPInitialTableaux::columnPerm_).
-         * @param tri the underlying triangulation.
+         * @param init the tableaux through which this routine can acces
+         * the underlying triangulation and permutation of columns.
+         * Typically this will be the tableaux holding the column array \a col.
          */
         static void addRows(LPCol<LPConstraintBase>* col,
-            const int* columnPerm, const Triangulation<3>& tri);
+            const LPInitialTableaux<LPConstraintBase>& init);
 
         /**
          * Explicitly constraints each of these linear functions to an
@@ -384,7 +395,7 @@ class LPConstraintNone : public LPConstraintSubspace {
         static constexpr Coefficient octAdjustment = 0;
 
         static void addRows(LPCol<regina::LPConstraintNone>*,
-            const int*, const Triangulation<3>&);
+            const LPInitialTableaux<LPConstraintNone>& init);
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNone, IntType>&, unsigned);
@@ -448,7 +459,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
 
         static void addRows(
             LPCol<regina::LPConstraintEulerPositive>* col,
-            const int* columnPerm, const Triangulation<3>& tri);
+            const LPInitialTableaux<LPConstraintEulerPositive>& init);
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintEulerPositive, IntType>& lp,
@@ -511,7 +522,7 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
 
         static void addRows(
             LPCol<regina::LPConstraintEulerZero>* col,
-            const int* columnPerm, const Triangulation<3>& tri);
+            const LPInitialTableaux<LPConstraintEulerZero>& init);
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintEulerZero, IntType>& lp,
@@ -549,11 +560,12 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * does not include triangle coordinates (i.e., the encoding for quad or
  * quad-oct normal coordinates).
  *
- * \exception InvalidArgument thrown by addRows() if the given triangulation
- * is not oriented with precisely one vertex, which must have a torus link.
+ * \exception InvalidArgument thrown by addRows() if the underlying
+ * triangulation is not oriented with precisely one vertex, which must have a
+ * torus link.
  *
  * \exception UnsolvedCase thrown by addRows() if SnapPea retriangulates the
- * given triangulation or produces a null triangulation, or if the
+ * underlying triangulation or produces a null triangulation, or if the
  * coefficients of the slope equations are too large to store in a native
  * C++ long integer.
  *
@@ -575,7 +587,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
 
         static void addRows(
             LPCol<regina::LPConstraintNonSpun>* col,
-            const int* columnPerm, const Triangulation<3>& tri);
+            const LPInitialTableaux<LPConstraintNonSpun>& init);
         template <typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNonSpun, IntType>& lp,
@@ -944,7 +956,7 @@ namespace regina {
 
 inline void LPConstraintNone::addRows(
         LPCol<regina::LPConstraintNone>*,
-        const int*, const Triangulation<3>&) {
+        const LPInitialTableaux<LPConstraintNone>& init) {
 }
 
 template <typename IntType>

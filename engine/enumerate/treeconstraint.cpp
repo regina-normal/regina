@@ -55,7 +55,9 @@ template BanTorusBoundary::BanTorusBoundary(
 
 void LPConstraintEulerPositive::addRows(
         LPCol<regina::LPConstraintEulerPositive>* col,
-        const int* columnPerm, const Triangulation<3>& tri) {
+        const LPInitialTableaux<LPConstraintEulerPositive>& init) {
+    const Triangulation<3>& tri = init.tri();
+
     int* obj = new int[7 * tri.size()];
     unsigned tet, i;
     Perm<4> p;
@@ -81,7 +83,7 @@ void LPConstraintEulerPositive::addRows(
     }
 
     for (i = 0; i < 7 * tri.size(); ++i)
-        col[i].extra[0] = obj[columnPerm[i]];
+        col[i].extra[0] = obj[init.columnPerm()[i]];
 
     col[7 * tri.size()].extra[0] = -1;
 
@@ -90,7 +92,9 @@ void LPConstraintEulerPositive::addRows(
 
 void LPConstraintEulerZero::addRows(
         LPCol<regina::LPConstraintEulerZero>* col,
-        const int* columnPerm, const Triangulation<3>& tri) {
+        const LPInitialTableaux<LPConstraintEulerZero>& init) {
+    const Triangulation<3>& tri = init.tri();
+
     int* obj = new int[7 * tri.size()];
     unsigned tet, i;
     Perm<4> p;
@@ -116,7 +120,7 @@ void LPConstraintEulerZero::addRows(
     }
 
     for (i = 0; i < 7 * tri.size(); ++i)
-        col[i].extra[0] = obj[columnPerm[i]];
+        col[i].extra[0] = obj[init.columnPerm()[i]];
 
     col[7 * tri.size()].extra[0] = -1;
 
@@ -125,7 +129,9 @@ void LPConstraintEulerZero::addRows(
 
 void LPConstraintNonSpun::addRows(
         LPCol<regina::LPConstraintNonSpun>* col,
-        const int* columnPerm, const Triangulation<3>& tri) {
+        const LPInitialTableaux<LPConstraintNonSpun>& init) {
+    const Triangulation<3>& tri = init.tri();
+
     // Add the coefficients for the two new variables now.
     col[3 * tri.size()].extra[0] = -1;
     col[3 * tri.size() + 1].extra[1] = -1;
@@ -161,8 +167,10 @@ void LPConstraintNonSpun::addRows(
     // back to native integers now.  However, just in case:
     try {
         for (int i = 0; i < 3 * tri.size(); ++i) {
-            col[i].extra[0] = coeffs.entry(0, columnPerm[i]).safeLongValue();
-            col[i].extra[1] = coeffs.entry(1, columnPerm[i]).safeLongValue();
+            col[i].extra[0] =
+                coeffs.entry(0, init.columnPerm()[i]).safeLongValue();
+            col[i].extra[1] =
+                coeffs.entry(1, init.columnPerm()[i]).safeLongValue();
         }
     } catch (const NoSolution&) {
         throw UnsolvedCase("The coefficients of the slope equations "

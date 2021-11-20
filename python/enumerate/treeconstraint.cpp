@@ -58,7 +58,27 @@ void addLPConstraint(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<LPConstraint>(m, name)
         .def_readonly_static("nConstraints", &LPConstraint::nConstraints)
         .def_readonly_static("octAdjustment", &LPConstraint::octAdjustment)
-        // TODO: addRows()
+        .def_static("addRows", [](const LPInitialTableaux<LPConstraint>& t) {
+            // The C++ version of this function is likely to change
+            // significantly, once we get rid of LPCol (or at least make
+            // it private to LPInitialTableaux).  So, for now, we just
+            // do a quick hack: we create a set of "fake" columns, fill
+            // them with addRows(), and then return the coefficients
+            // that came from these linear constraints.
+            std::array<std::vector<typename LPConstraint::Coefficient>,
+                LPConstraint::nConstraints> ans;
+
+            auto* col = new regina::LPCol<LPConstraint>[t.columns()];
+            LPConstraint::addRows(col, t);
+            for (int i = 0; i < LPConstraint::nConstraints; ++i) {
+                ans[i].reserve(t.columns());
+                for (size_t j = 0; j < t.columns(); ++j)
+                    ans[i].push_back(col[j].extra[i]);
+            }
+            delete[] col;
+
+            return ans;
+        })
         .def_static("constrain", &LPConstraint::template constrain<Integer>)
         .def_static("verify", overload_cast<const regina::NormalSurface&>(
             &LPConstraint::verify))

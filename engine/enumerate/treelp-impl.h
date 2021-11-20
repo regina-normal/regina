@@ -168,7 +168,7 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
                 col_[c].push(r, eqns_.entry(r, c).longValue());
 
     // Add in the final row(s) for any additional constraints.
-    LPConstraint::addRows(col_, columnPerm_, tri);
+    LPConstraint::addRows(col_, *this);
     rank_ += LPConstraint::nConstraints;
 }
 

@@ -114,3 +114,13 @@ else:
 
 print()
 
+t = Example3.rp3rp3()
+tab = LPInitialTableaux(t, NS_STANDARD, True)
+print(LPConstraintNone.addRows(tab))
+tab = LPInitialTableaux_EulerPositive(t, NS_STANDARD, True)
+print(LPConstraintEulerPositive.addRows(tab))
+tab = LPInitialTableaux_EulerZero(t, NS_STANDARD, True)
+print(LPConstraintEulerZero.addRows(tab))
+
+print()
+
