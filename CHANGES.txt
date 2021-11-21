@@ -103,6 +103,9 @@ Version 7.0  [ TODO ]
             - When cloning a packet tree, a cloned angle structure list
               will now refer back to the original triangulation, not a
               clone of the original triangulation.
+        Class ArcIterator:
+            - Moved into link/graph.h, since this is not used anywhere
+              outside the Boost Graph Library interface.
         Class Attachment:
             - New packet class that replaces and enhances the old PDF class.
         Class AugTriSolidTorus:
@@ -205,6 +208,9 @@ Version 7.0  [ TODO ]
         Class Container:
             - Added a trivial copy constructor and copy assignment operator.
             - Added trivial member and global swap() functions.
+        Class CrossingIterator:
+            - Moved into link/graph.h, since this is not used anywhere
+              outside the Boost Graph Library interface.
         Class Cusp:
             - These objects can now be passed around by value; their memory
               locations are not intended to uniquely identify a cusp.
