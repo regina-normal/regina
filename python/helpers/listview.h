@@ -40,10 +40,43 @@
 namespace regina::python {
 
 /**
- * TODO: Document
+ * Adds Python bindings for one of Regina's ListView classes.
+ *
+ * The type \a T must be of the form regina::ListView<T>.
+ *
+ * Typically you would not write out the full type explicitly (since this is
+ * an implementation detail that may change in future versions of Regina);
+ * instead you would access the type using an appropriate decltype() statement.
+ *
+ * The Python class corresponding to \a T will not be given a unique name;
+ * instead all such types will be called \c ListView, and will be put into
+ * their own unique namespaces to avoid clashes.
+ *
+ * Return value policies work as follows:
+ *
+ * - When accessing a list element (e.g., through front() or back(), or
+ *   via iteration or indexing), the relationship between the list element
+ *   and the ListView will be defined by the template argument \a Policy.
+ *   By default, list elements that are pointers (e.g., when calling
+ *   Triangulation::vertices()) will use a \c reference_internal policy,
+ *   and thus keep the ListView alive; list elements that are values
+ *   (e.g., when calling Vertex::embeddings()) will use a \c copy policy,
+ *   and thus will have independent lifespans.
+ *
+ * - If you need the list elements to keep the underlying container alive,
+ *   you will need to indicate this when wrapping whatever function returns a
+ *   ListView.  Since ListView objects are passed by value, you cannot
+ *   use \c reference_internal; instead you should pass an appropriate
+ *   \c keep_alive argument.  For example, Triangulation::vertices()
+ *   would use pybind11::keep_alive<0,1>().  Note that this assumes that the
+ *   list elements are pointers (or if not, the \a Policy argument has been set
+ *   appropriately): thus the list elements keep the ListView alive, and
+ *   in turn the ListView keeps the container alive.
  */
 template <class T, pybind11::return_value_policy Policy =
-    pybind11::return_value_policy::reference_internal>
+    (std::is_pointer<typename T::value_type>::value ?
+        pybind11::return_value_policy::reference_internal :
+        pybind11::return_value_policy::copy)>
 void addListView(pybind11::module_& m) {
     // Instead of naming these classes uniquely, just call them all ListView
     // and make them all local to their own unique Python namespaces.
@@ -64,10 +97,6 @@ void addListView(pybind11::module_& m) {
         ;
     regina::python::add_eq_operators(c);
 }
-
-// TODO: patient/nurse with list
-// TODO: Change the way we manage Policy
-// TODO: Get rid of BeginEndIterator
 
 } // namespace regina::python
 
