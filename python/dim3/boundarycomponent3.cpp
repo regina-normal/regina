@@ -88,5 +88,12 @@ void addBoundaryComponent3(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<BoundaryComponent<3>>().vertices())>(m);
+    regina::python::addListView<
+        decltype(std::declval<BoundaryComponent<3>>().edges())>(m);
+    regina::python::addListView<
+        decltype(std::declval<BoundaryComponent<3>>().triangles())>(m);
 }
 

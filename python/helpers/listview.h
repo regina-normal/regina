@@ -37,35 +37,37 @@
 
 #include "utilities/listview.h"
 
-namespace pybind11::detail {
+namespace regina::python {
 
 /**
- * Tell pybind11 how to convert a C++ ListView into a Python list.
- * This allows pybind11 to automagically convert the return values for
- * functions such as Triangulation<dim>::faces<subdim>().
+ * TODO: Document
  */
-template <class List>
-struct type_caster<regina::ListView<List>> {
-    private:
-        using ReginaType = regina::ListView<List>;
+template <class T, pybind11::return_value_policy Policy =
+    pybind11::return_value_policy::reference_internal>
+void addListView(pybind11::module_& m) {
+    // Instead of naming these classes uniquely, just call them all ListView
+    // and make them all local to their own unique Python namespaces.
+    // End users should not be constructing them anyway.
+    auto c = pybind11::class_<T>(pybind11::handle(), "ListView",
+            pybind11::module_local())
+        .def(pybind11::init<const T&>())
+        .def("__iter__", [](const T& view) {
+            return pybind11::make_iterator<Policy>(view.begin(), view.end());
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps ListView alive
+        .def("__getitem__", [](const T& view, size_t index) {
+            return view[index];
+        }, Policy)
+        .def("empty", &T::empty)
+        .def("size", &T::size)
+        .def("front", &T::front, Policy)
+        .def("back", &T::back, Policy)
+        ;
+    regina::python::add_eq_operators(c);
+}
 
-    public:
-        PYBIND11_TYPE_CASTER(ReginaType, _("ListView"));
+// TODO: patient/nurse with list
+// TODO: Change the way we manage Policy
+// TODO: Get rid of BeginEndIterator
 
-        bool load(handle, bool) {
-            // Never allow conversion from Python to a C++ ListView.
-            return false;
-        }
-
-        static handle cast(ReginaType src, return_value_policy policy,
-                handle parent) {
-            // Conversion from C++ to Python:
-            pybind11::list ans;
-            for (auto f : src)
-                ans.append(pybind11::cast(f, policy, parent));
-            return ans.release();
-        }
-};
-
-} // namespace pybind11::detail
+} // namespace regina::python
 

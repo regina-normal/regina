@@ -75,10 +75,6 @@ namespace regina {
  * ListView objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython Python will automatically translate any C++ ListView object
- * into an internal lightweight class that, like ListView, supports both
- * iteration and indexing at the Python level.
- *
  * \tparam Container the internal type of the list that this object grants
  * access to.  This type must support at least the same operations as this
  * class itself, except for the copy semantics.  In particular, both
@@ -148,7 +144,16 @@ class ListView {
          */
         ListView(const Container& list);
 
+        /**
+         * Creates a new copy of the given list view.
+         */
         ListView(const ListView&) = default;
+
+        /**
+         * Sets this to be a copy of the given list view.
+         *
+         * @return a reference to this list view.
+         */
         ListView& operator = (const ListView&) = default;
 
         /**
@@ -190,11 +195,17 @@ class ListView {
         /**
          * Returns an iterator pointing to the first element.
          *
+         * \ifacespython ListView is an iterable object: instead of providing
+         * begin() and end(), it implements the Python iterable interface.
+         *
          * @return an iterator at the beginning of this list.
          */
         const_iterator begin() const;
         /**
          * Returns an iterator pointing beyond the last element.
+         *
+         * \ifacespython ListView is an iterable object: instead of providing
+         * begin() and end(), it implements the Python iterable interface.
          *
          * @return an iterator beyond the end of this list.
          */

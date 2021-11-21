@@ -288,8 +288,6 @@ class BoundaryComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call facets() again each time you need it.
          *
-         * \ifacespython This routine returns a Python list.
-         *
          * @return access to the list of all (<i>dim</i>-1)-faces.
          */
         auto facets() const {
@@ -323,11 +321,7 @@ class BoundaryComponentBase :
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the boundary component.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the faces when this function is called, and will
-         * \e not be kept up-to-date as the triangulation changes.
+         * <tt>faces(subdim)</tt>.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim

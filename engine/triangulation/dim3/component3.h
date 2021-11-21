@@ -135,8 +135,7 @@ class Component<3> : public detail::ComponentBase<3>,
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the component.
+         * <tt>faces(subdim)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 0 and 2
          * inclusive.

@@ -144,8 +144,6 @@ class ComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call simplices() again each time you need it.
          *
-         * \ifacespython This routine returns a Python list.
-         *
          * @return access to the list of all top-dimensional simplices.
          */
         auto simplices() const;
@@ -192,8 +190,6 @@ class ComponentBase :
          * and others rebuilt in their place).
          * Therefore it is best to treat this object as temporary only,
          * and to call boundaryComponents() again each time you need it.
-         *
-         * \ifacespython This routine returns a Python list.
          *
          * @return access to the list of all boundary components.
          */

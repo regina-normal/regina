@@ -279,6 +279,15 @@ void addTriangulation4(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::addListView<decltype(Triangulation<4>().vertices())>(m);
+    regina::python::addListView<decltype(Triangulation<4>().edges())>(m);
+    regina::python::addListView<decltype(Triangulation<4>().triangles())>(m);
+    regina::python::addListView<decltype(Triangulation<4>().tetrahedra())>(m);
+    regina::python::addListView<decltype(Triangulation<4>().pentachora())>(m);
+    regina::python::addListView<decltype(Triangulation<4>().components())>(m);
+    regina::python::addListView<
+        decltype(Triangulation<4>().boundaryComponents())>(m);
+
     auto wrap = regina::python::add_packet_wrapper<Triangulation<4>>(
         m, "PacketOfTriangulation4");
     regina::python::add_packet_constructor<>(wrap);

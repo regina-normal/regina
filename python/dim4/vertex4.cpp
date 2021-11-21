@@ -92,6 +92,9 @@ void addVertex4(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::addListView<
+        decltype(std::declval<Vertex<4>>().embeddings())>(m);
+
     m.attr("VertexEmbedding4") = m.attr("FaceEmbedding4_0");
     m.attr("Vertex4") = m.attr("Face4_0");
 }

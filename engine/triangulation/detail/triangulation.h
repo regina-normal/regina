@@ -418,11 +418,6 @@ class TriangulationBase :
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call simplices() again each time you need it.
          *
-         * \ifacespython This routine returns a Python list.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the simplices when this function is called, and will
-         * \e not be kept up-to-date as the triangulation changes.
-         *
          * @return access to the list of all top-dimensional simplices.
          */
         auto simplices() const;
@@ -716,11 +711,6 @@ class TriangulationBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call components() again each time you need it.
          *
-         * \ifacespython This routine returns a Python list.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the components when this function is called, and will
-         * \e not be kept up-to-date as the triangulation changes.
-         *
          * @return access to the list of all components.
          */
         auto components() const;
@@ -754,11 +744,6 @@ class TriangulationBase :
          * deleted and replaced each time the triangulation changes.
          * Therefore it is best to treat this object as temporary only,
          * and to call boundaryComponents() again each time you need it.
-         *
-         * \ifacespython This routine returns a Python list.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the boundary components when this function is called,
-         * and will \e not be kept up-to-date as the triangulation changes.
          *
          * @return access to the list of all boundary components.
          */
@@ -822,11 +807,6 @@ class TriangulationBase :
          * \exception InvalidArgument the face dimension \a subdim is outside
          * the supported range (i.e., negative, or greater than or equal to
          * \a dim).
-         *
-         * \ifacespython Be warned that, unlike in C++, the Python list
-         * that is returned will be a snapshot of the faces when this
-         * function is called, and will \e not be kept up-to-date as the
-         * triangulation changes.
          *
          * @param subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.

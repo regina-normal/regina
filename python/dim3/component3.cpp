@@ -86,5 +86,12 @@ void addComponent3(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    // No need for lower-dimensional faces here, since these reuse the same
+    // ListView classes as Triangulation2.
+    regina::python::addListView<
+        decltype(std::declval<Component<3>>().tetrahedra())>(m);
+    regina::python::addListView<
+        decltype(std::declval<Component<3>>().boundaryComponents())>(m);
 }
 

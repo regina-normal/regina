@@ -98,6 +98,9 @@ void addTriangle3(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::addListView<
+        decltype(std::declval<Triangle<3>>().embeddings())>(m);
+
     // Embed this enum in the Triangle3 class.
     pybind11::enum_<regina::Triangle<3>::Type>(c, "Type")
         .value("UNKNOWN_TYPE", regina::Triangle<3>::UNKNOWN_TYPE)

@@ -60,5 +60,10 @@ void addComponent(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Component<dim>>().simplices())>(m);
+    regina::python::addListView<
+        decltype(std::declval<Component<dim>>().boundaryComponents())>(m);
 }
 

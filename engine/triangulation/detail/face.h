@@ -485,9 +485,6 @@ class FaceBase :
          * }
          * \endcode
          *
-         * \ifacespython Instead of returning a lightweight object,
-         * this function will return a Python list of all appearances.
-         *
          * @return access to the list of all appearances of this face
          * within a top-dimensional simplex of the underlying triangulation.
          */

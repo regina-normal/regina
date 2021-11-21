@@ -83,6 +83,9 @@ void addVertex2(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::addListView<
+        decltype(std::declval<Vertex<2>>().embeddings())>(m);
+
     m.attr("VertexEmbedding2") = m.attr("FaceEmbedding2_0");
     m.attr("Vertex2") = m.attr("Face2_0");
 }

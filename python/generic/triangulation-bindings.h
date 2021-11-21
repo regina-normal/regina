@@ -207,6 +207,12 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    // The ListView classes for faces() are wrapped in face-bindings.h,
+    // since this needs to be done for each subdimension.
+    regina::python::addListView<decltype(Triangulation<dim>().components())>(m);
+    regina::python::addListView<
+        decltype(Triangulation<dim>().boundaryComponents())>(m);
+
     auto wrap = regina::python::add_packet_wrapper<Triangulation<dim>>(
         m, (std::string("PacketOf") + name).c_str());
     regina::python::add_packet_constructor<>(wrap);

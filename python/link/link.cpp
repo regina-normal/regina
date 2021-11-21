@@ -321,6 +321,9 @@ void addLink(pybind11::module_& m) {
     regina::python::add_output(l);
     regina::python::add_eq_operators(l);
 
+    regina::python::addListView<decltype(Link().crossings())>(m);
+    regina::python::addListView<decltype(Link().components())>(m);
+
     auto wrap = regina::python::add_packet_wrapper<Link>(m, "PacketOfLink");
     regina::python::add_packet_constructor<>(wrap);
     regina::python::add_packet_constructor<size_t>(wrap);

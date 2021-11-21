@@ -96,6 +96,9 @@ void addTetrahedron4(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::addListView<
+        decltype(std::declval<Tetrahedron<4>>().embeddings())>(m);
+
     m.attr("TetrahedronEmbedding4") = m.attr("FaceEmbedding4_3");
     m.attr("Tetrahedron4") = m.attr("Face4_3");
 }

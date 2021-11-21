@@ -90,6 +90,9 @@ void addEdge2(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::addListView<
+        decltype(std::declval<Edge<2>>().embeddings())>(m);
+
     m.attr("EdgeEmbedding2") = m.attr("FaceEmbedding2_1");
     m.attr("Edge2") = m.attr("Face2_1");
 }

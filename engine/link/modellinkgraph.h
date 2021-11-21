@@ -558,11 +558,6 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call nodes() again each time you need it.
          *
-         * \ifacespython This routine returns a Python list.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the nodes when this function is called, and will
-         * \e not be kept up-to-date as the graph changes.
-         *
          * @return access to the list of all nodes.
          */
         auto nodes() const;
@@ -1134,10 +1129,6 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * iterator range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>).
          * Using arcs() generates a tiny amount of extra overhead, but you may
          * also find it more readable.
-         *
-         * \ifacespython Instead of returning a lightweight object,
-         * this function will return a Python list of all arcs along the
-         * cell boundary.
          *
          * @param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.

@@ -103,6 +103,9 @@ void addVertex3(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::addListView<
+        decltype(std::declval<Vertex<3>>().embeddings())>(m);
+
     pybind11::enum_<regina::Vertex<3>::LinkType>(c, "LinkType")
         .value("SPHERE", regina::Vertex<3>::SPHERE)
         .value("DISC", regina::Vertex<3>::DISC)

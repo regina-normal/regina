@@ -1184,9 +1184,6 @@ class SnapPeaTriangulation :
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * \ifacespython Instead of returning a lightweight object,
-         * this function will return a Python list of all cusps.
-         *
          * @return access to the list of all cusps of this manifold.
          */
         auto cusps() const;

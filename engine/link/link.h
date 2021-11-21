@@ -914,11 +914,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call crossings() again each time you need it.
          *
-         * \ifacespython This routine returns a Python list.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the crossings when this function is called, and will
-         * \e not be kept up-to-date as the link changes.
-         *
          * @return access to the list of all crossings.
          */
         auto crossings() const;
@@ -969,11 +964,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          * it will always reflect the components that are currently in the link.
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call components() again each time you need it.
-         *
-         * \ifacespython This routine returns a Python list.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the components when this function is called, and will
-         * \e not be kept up-to-date as the link changes.
          *
          * @return access to the list of all components.
          */

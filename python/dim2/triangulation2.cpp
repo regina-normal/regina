@@ -201,6 +201,13 @@ void addTriangulation2(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::addListView<decltype(Triangulation<2>().vertices())>(m);
+    regina::python::addListView<decltype(Triangulation<2>().edges())>(m);
+    regina::python::addListView<decltype(Triangulation<2>().triangles())>(m);
+    regina::python::addListView<decltype(Triangulation<2>().components())>(m);
+    regina::python::addListView<
+        decltype(Triangulation<2>().boundaryComponents())>(m);
+
     auto wrap = regina::python::add_packet_wrapper<Triangulation<2>>(
         m, "PacketOfTriangulation2");
     regina::python::add_packet_constructor<>(wrap);

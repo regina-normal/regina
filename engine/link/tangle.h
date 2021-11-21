@@ -263,11 +263,6 @@ class Tangle : public Output<Tangle> {
          * the tangle.  Nevertheless, it is recommended to treat this object as
          * temporary only, and to call crossings() again each time you need it.
          *
-         * \ifacespython This routine returns a Python list.
-         * Be warned that, unlike in C++, this Python list will be a
-         * snapshot of the crossings when this function is called, and will
-         * \e not be kept up-to-date as the tangle changes.
-         *
          * @return access to the list of all crossings.
          */
         auto crossings() const;

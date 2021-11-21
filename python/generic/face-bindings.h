@@ -218,5 +218,10 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
     regina::python::add_eq_operators(c);
     face_in_maximal_forest<dim, subdim, dim - subdim>::add(c);
     subface_aliases<dim, subdim, subdim - 1>::add(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Face<dim, subdim>>().embeddings())>(m);
+    regina::python::addListView<
+        decltype(regina::Triangulation<dim>().template faces<subdim>())>(m);
 }
 
