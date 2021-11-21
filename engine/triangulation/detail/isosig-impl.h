@@ -247,7 +247,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
 }
 
 template <int dim>
-template <class Encoding>
+template <class Algorithm, class Encoding>
 typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
         return Encoding::emptySig();
@@ -302,21 +302,23 @@ std::pair<typename Encoding::SigType, Isomorphism<dim>>
     // connected component.
     ComponentIterator it;
     size_t i;
-    size_t simp;
-    typename Perm<dim+1>::Index perm;
     typename Encoding::SigType curr;
 
     auto* comp = new typename Encoding::SigType[countComponents()];
-    for (it = components().begin(), i = 0; it != components().end(); ++it, ++i)
-        for (simp = 0; simp < (*it)->size(); ++simp)
-            for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
-                curr = isoSigFrom<Encoding>((*it)->simplex(simp)->index(),
-                    Perm<dim+1>::orderedSn[perm], &currRelabelling);
-                if ((simp == 0 && perm == 0) || (curr < comp[i])) {
-                    comp[i].swap(curr);
-                    ans.second.swap(currRelabelling);
-                }
+    for (it = components().begin(), i = 0;
+            it != components().end(); ++it, ++i) {
+        Algorithm sigIt(**it);
+        bool first = true;
+        do {
+            curr = isoSigFrom<Encoding>((*it)->simplex(sigIt.simplex())->index(),
+                sigIt.perm(), &currRelabelling);
+            if (first || curr < comp[i]) {
+                comp[i].swap(curr);
+                ans.second.swap(currRelabelling);
             }
+            first = false;
+        } while (sigIt.next());
+    }
 
     // Pack the components together.
     std::sort(comp, comp + countComponents());

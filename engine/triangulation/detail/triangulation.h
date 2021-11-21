@@ -69,6 +69,44 @@ namespace regina {
 template <int dim> class XMLTriangulationReader;
 
 /**
+ * The default algorithm to use for isomorphism signatures.
+ * This algorithm tries all possible simplices and all possible
+ * labellings of its vertices as potential starting points for a
+ * canonical labelling.
+ *
+ * This algorithm is consistent with the original isomorphism signatures
+ * that were implemented in Regina 4.90.
+ */
+template <int dim>
+class IsoSigClassic {
+    private:
+        size_t size_;
+        size_t simp_;
+        typename Perm<dim+1>::Index perm_;
+
+    public:
+        IsoSigClassic(const Component<dim>& comp) :
+                size_(comp.size()), simp_(0), perm_(0) {
+        }
+
+        size_t simplex() const {
+            return simp_;
+        }
+        Perm<dim+1> perm() const {
+            return Perm<dim+1>::orderedSn[perm_];
+        }
+
+        bool next() {
+            if (++perm_ == Perm<dim+1>::nPerms) {
+                perm_ = 0;
+                if (++simp_ == size_)
+                    return false;
+            }
+            return true;
+        }
+};
+
+/**
  * The default encoding to use for isomorphism signatures.
  * This encoding represents an isomorphism signature as a std::string,
  * using only printable characters from the 7-bit ASCII range.
@@ -1759,19 +1797,34 @@ class TriangulationBase :
          *
          * Regina supports several different variants of isomorphism signatures,
          * which are tailored to different computational needs; these are
-         * currently determined by the template parameter \a Encoding.
+         * currently determined by the template parameters \a Algorithm
+         * and \a Encoding.
          *
-         * - The default \a Encoding returns a std::string, consisting
-         *   entirely of printable characters in the 7-bit ASCII range.
-         *   Currently this is the only encoding from which Regina can
+         * - The \a Algorithm parameter controls how Regina decides which
+         *   labelling of a triangulation is "canonical".  The default
+         *   algorithm is slow (but still small polynomial time), but is
+         *   also consistent with the original implementation of isomorphism
+         *   signatures in Regina 4.90.
+         *
+         * - The \a Encoding parameter controls how Regina encodes a
+         *   "canonical" labelling into a final signature.  The default
+         *   returns a std::string consisting entirely of printable characters
+         *   in the 7-bit ASCII range.  Importantly, this default algorithm
+         *   is currently the only encoding from which Regina can
          *   \e reconstruct a triangulation from its isomorphism signature.
          *
-         * - You can, alternatively, pass your own encoding class.
-         *   Currently this is for internal use only, and the
-         *   class requirements may change in different versions of Regina;
-         *   at present such a class must offer a \a SigType type alias,
-         *   and static functions emptySig() and encode().  See the
-         *   implementation of IsoSigHelper for details.
+         * - You may instead pass your own algorithm class.  Currently
+         *   this is for internal use only, and the class requirements
+         *   may change in different versions of Regina.  At present, such
+         *   a class must be constructible from a componenent reference,
+         *   and must offer member functions simplex(), perm() and next();
+         *   see the implementation of IsoSigClassic for details.
+         *
+         * - Likewise, you may pass your own encoding class.  Again this is
+         *   for internal use only, and the class requirements may change in
+         *   different versions of Regina.  At present, such a class must
+         *   offer a \a SigType type alias, and static functions emptySig() and
+         *   encode().  See the implementation of IsoSigPrintable for details.
          *
          * The length of an isomorphism signature is proportional to
          * <tt>n log n</tt>, where \a n is the number of top-dimenisonal
@@ -1786,8 +1839,9 @@ class TriangulationBase :
          * (they depend on the particular labelling of tetrahedra).
          *
          * The routine fromIsoSig() can be used to recover a triangulation
-         * from an isomorphism signature (but only if the default encoding
-         * has been used).  The triangulation recovered might not be identical
+         * from an isomorphism signature (only if the default encoding has
+         * been used, but it does not matter which algorithm was selected).
+         * The triangulation recovered might not be identical
          * to the original, but it \e will be combinatorially isomorphic.
          * If you need the precise relabelling, you can call isoSigDetail()
          * instead.
@@ -1805,7 +1859,12 @@ class TriangulationBase :
          * minor dimension-specific adjustments.
          *
          * \ifacespython There are no template arguments: only the default
-         * encoding is supported.
+         * algorithm and encoding are supported.
+         *
+         * \pre If \a relabelling is non-null, then this triangulation
+         * must be non-empty and connected.  The facility to return a
+         * relabelling for disconnected triangulations may be added to
+         * Regina in a later release.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
@@ -1814,7 +1873,8 @@ class TriangulationBase :
          *
          * @return the isomorphism signature of this triangulation.
          */
-        template <class Encoding = IsoSigPrintable<dim>>
+        template <class Algorithm = IsoSigClassic<dim>,
+            class Encoding = IsoSigPrintable<dim>>
         typename Encoding::SigType isoSig() const;
 
         /**
