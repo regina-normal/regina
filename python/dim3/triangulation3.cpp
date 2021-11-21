@@ -45,6 +45,7 @@
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
+#include "../generic/isosig-bindings.h"
 
 using pybind11::overload_cast;
 using regina::Example;
@@ -517,5 +518,9 @@ void addTriangulation3(pybind11::module_& m) {
     // well-defined notion of "best match").  This means that, if we define
     // the Triangulation<3> swap() first, the SnapPeaTriangulation swap()
     // will never be called at all.
+
+    addIsoSigClassic<3>(m, "IsoSigClassic3");
+    addIsoSigEdgeDegrees<3>(m, "IsoSigEdgeDegrees3");
+    addIsoSigPrintable<3>(m, "IsoSigPrintable3");
 }
 

@@ -84,6 +84,10 @@ namespace regina {
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
+ * \ifacespython Python does not support templates.  Instead this class
+ * can be used by appending the dimension as a suffix (e.g.,
+ * IsoSigClassic2 and IsoSigClassic3 for dimensions 2 and 3).
+ *
  * \ingroup triangulation
  */
 template <int dim>
@@ -173,6 +177,10 @@ class IsoSigClassic {
  * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
+ *
+ * \ifacespython Python does not support templates.  Instead this class
+ * can be used by appending the dimension as a suffix (e.g.,
+ * IsoSigEdgeDegrees2 and IsoSigEdgeDegrees3 for dimensions 2 and 3).
  *
  * \ingroup triangulation
  */

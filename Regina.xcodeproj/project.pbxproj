@@ -2000,6 +2000,10 @@
 		05CAE6922747E617007C93F3 /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6912747E617007C93F3 /* treeconstraint.cpp */; };
 		05CAE6932747E617007C93F3 /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6912747E617007C93F3 /* treeconstraint.cpp */; };
 		05CAE6952747E62C007C93F3 /* treeconstraint-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CAE6942747E62C007C93F3 /* treeconstraint-impl.h */; };
+		05CAE69A274AA785007C93F3 /* isosigencoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CAE698274AA785007C93F3 /* isosigencoding.h */; };
+		05CAE69B274AA785007C93F3 /* isosigtype.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CAE699274AA785007C93F3 /* isosigtype.h */; };
+		05CAE69D274AA814007C93F3 /* isosigencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE69C274AA814007C93F3 /* isosigencoding.cpp */; };
+		05CAE69E274AA814007C93F3 /* isosigencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE69C274AA814007C93F3 /* isosigencoding.cpp */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -4512,6 +4516,9 @@
 		05CAE6942747E62C007C93F3 /* treeconstraint-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "treeconstraint-impl.h"; sourceTree = "<group>"; };
 		05CAE6962749F504007C93F3 /* listview.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = listview.out; sourceTree = "<group>"; };
 		05CAE6972749F505007C93F3 /* listview.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = listview.test; sourceTree = "<group>"; };
+		05CAE698274AA785007C93F3 /* isosigencoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isosigencoding.h; sourceTree = "<group>"; };
+		05CAE699274AA785007C93F3 /* isosigtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isosigtype.h; sourceTree = "<group>"; };
+		05CAE69C274AA814007C93F3 /* isosigencoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isosigencoding.cpp; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -6223,6 +6230,8 @@
 				056E071E1F994D9000DF136B /* graph.h */,
 				052F9E46180600FB00FAE4DF /* homologicaldata.cpp */,
 				052F9E47180600FB00FAE4DF /* homologicaldata.h */,
+				05CAE698274AA785007C93F3 /* isosigencoding.h */,
+				05CAE699274AA785007C93F3 /* isosigtype.h */,
 				055114CC1DCC476A00EC753C /* pachner.h */,
 			);
 			path = triangulation;
@@ -6771,6 +6780,7 @@
 				057EE4831C600A2400C4D155 /* isomorphism13.cpp */,
 				057EE4841C600A2400C4D155 /* isomorphism14.cpp */,
 				057EE4851C600A2400C4D155 /* isomorphism15.cpp */,
+				05CAE69C274AA814007C93F3 /* isosigencoding.cpp */,
 				05431FB31C40F5CA009BC072 /* pygeneric.cpp */,
 				057EE4441C6009E600C4D155 /* simplex-bindings.h */,
 				057EE4911C600A3000C4D155 /* simplex5.cpp */,
@@ -7874,6 +7884,7 @@
 				05F09FFB1DBF078800117BFC /* component4.h in Headers */,
 				050C646A1DA1019B00C9420F /* anglestructure.h in Headers */,
 				05F0A00A1DBF078800117BFC /* triangulation4.h in Headers */,
+				05CAE69B274AA785007C93F3 /* isosigtype.h in Headers */,
 				054208B61DF0D2740018AB24 /* graphtriple.h in Headers */,
 				054208BC1DF0D2740018AB24 /* manifold.h in Headers */,
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
@@ -8095,6 +8106,7 @@
 				05F0A0001DBF078800117BFC /* pentachoron4.h in Headers */,
 				057EE4351C6009A700C4D155 /* perm-impl.h in Headers */,
 				055114D41DCC71A700EC753C /* facenumbering.h in Headers */,
+				05CAE69A274AA785007C93F3 /* isosigencoding.h in Headers */,
 				0591E85F1C50D28700793A9C /* hyperflags.h in Headers */,
 				05721EE31F97153E00A83FFC /* data-impl.h in Headers */,
 				05A067091DFA68190047872E /* augtrisolidtorus.h in Headers */,
@@ -9184,6 +9196,7 @@
 				0591E8141C4F763B00793A9C /* edge4.cpp in Sources */,
 				057EE4581C6009F300C4D155 /* component7.cpp in Sources */,
 				05A066971DFA67D40047872E /* blockedsfs.cpp in Sources */,
+				05CAE69D274AA814007C93F3 /* isosigencoding.cpp in Sources */,
 				059BC6831DC7F7A200AB4206 /* boundarycomponent7.cpp in Sources */,
 				050F5E471B9BAB9C00C1F681 /* isomorphism3.cpp in Sources */,
 				05431FC41C40F5D4009BC072 /* pygeneric.cpp in Sources */,
@@ -10081,6 +10094,7 @@
 				05772EFE270CFB3D00D26D8A /* sigisomorphism.cpp in Sources */,
 				059BC68D1DC7F7A300AB4206 /* boundarycomponent6.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
+				05CAE69E274AA814007C93F3 /* isosigencoding.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
 				05F2033520A17C2500FC74ED /* dt.cpp in Sources */,
 				05249F0F1DBC16F9001FE29E /* triangulation8.cpp in Sources */,

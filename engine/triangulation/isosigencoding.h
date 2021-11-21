@@ -58,12 +58,9 @@ namespace regina {
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
- * \ifacespython Not present.  This is essentially part of the default
- * implementation of Triangulation<dim>::isoSig(), and users should have
- * no need to access this class directly.  It therefore seems unnecessary
- * to pollute Regina's Python namespace with 14 extra classes (one per
- * supported dimension) that nobody will use.  If you do need access to
- * this class in Python, please drop Ben an email.
+ * \ifacespython Python does not support templates.  Instead this class
+ * can be used by appending the dimension as a suffix (e.g.,
+ * IsoSigPrintable2 and IsoSigPrintable3 for dimensions 2 and 3).
  *
  * \ingroup triangulation
  */
@@ -102,6 +99,11 @@ class IsoSigPrintable : public Base64SigEncoding {
          * which facets/gluings is an implementation detail; the purpose
          * of this routine is simply to encode the given information.
          * See the isoSig() implementation for further details.
+         *
+         * \ifacespython The arrays \a facetAction, \a joinDest and
+         * \a joinGluing should each be passed as Python lists of integers.
+         * The arguments \a nFacetActions and \a nJoins are not present,
+         * since Python lists already know their own sizes.
          *
          * @param size the number of top-dimensional simplices in the component.
          * @param nFacetActions the size of the array \a facetAction.

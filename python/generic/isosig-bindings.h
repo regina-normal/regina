@@ -30,14 +30,59 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation-bindings.h"
-#include "isosig-bindings.h"
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
+#include "triangulation/forward.h"
+#include "triangulation/isosigencoding.h"
+#include "triangulation/isosigtype.h"
+#include "utilities/exception.h"
+#include "../helpers.h"
 
-void addTriangulations9(pybind11::module_& m) {
-    addTriangulation<9>(m, "Triangulation9");
+template <int dim>
+void addIsoSigClassic(pybind11::module_& m, const char* name) {
+    using Type = regina::IsoSigClassic<dim>;
+    auto s = pybind11::class_<Type>(m, name)
+        .def(pybind11::init<const regina::Component<dim>&>())
+        .def("simplex", &Type::simplex)
+        .def("perm", &Type::perm)
+        .def("next", &Type::next)
+        ;
+    regina::python::no_eq_operators(s);
+}
 
-    addIsoSigClassic<9>(m, "IsoSigClassic9");
-    addIsoSigEdgeDegrees<9>(m, "IsoSigEdgeDegrees9");
-    addIsoSigPrintable<9>(m, "IsoSigPrintable9");
+template <int dim>
+void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
+    using Type = regina::IsoSigEdgeDegrees<dim>;
+    auto s = pybind11::class_<Type>(m, name)
+        .def(pybind11::init<const regina::Component<dim>&>())
+        .def("simplex", &Type::simplex)
+        .def("perm", &Type::perm)
+        .def("next", &Type::next)
+        ;
+    regina::python::no_eq_operators(s);
+}
+
+using regina::Perm;
+
+template <int dim>
+void addIsoSigPrintable(pybind11::module_& m, const char* name) {
+    using Encoding = regina::IsoSigPrintable<dim>;
+    auto s = pybind11::class_<Encoding>(m, name)
+        .def_readonly_static("charsPerPerm", &Encoding::charsPerPerm)
+        .def_static("emptySig", &Encoding::emptySig)
+        .def_static("encode", [](
+                size_t size,
+                const std::vector<uint8_t>& facetActions,
+                const std::vector<size_t>& joinDest,
+                const std::vector<typename Perm<dim+1>::Index>& joinGluing) {
+            if (joinDest.size() != joinGluing.size())
+                throw regina::InvalidArgument("The arguments "
+                    "joinDest and joinGluing must be lists of the same size");
+            return Encoding::encode(size, facetActions.size(),
+                facetActions.data(), joinDest.size(), joinDest.data(),
+                joinGluing.data());
+        })
+        ;
+    regina::python::no_eq_operators(s);
 }
 

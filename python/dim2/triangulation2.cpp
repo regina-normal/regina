@@ -39,6 +39,7 @@
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
+#include "../generic/isosig-bindings.h"
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
@@ -222,5 +223,9 @@ void addTriangulation2(pybind11::module_& m) {
 
     m.def("swap",
         (void(*)(Triangulation<2>&, Triangulation<2>&))(regina::swap));
+
+    addIsoSigClassic<2>(m, "IsoSigClassic2");
+    addIsoSigEdgeDegrees<2>(m, "IsoSigEdgeDegrees2");
+    addIsoSigPrintable<2>(m, "IsoSigPrintable2");
 }
 

@@ -31,8 +31,13 @@
  **************************************************************************/
 
 #include "triangulation-bindings.h"
+#include "isosig-bindings.h"
 
 void addTriangulations11(pybind11::module_& m) {
     addTriangulation<11>(m, "Triangulation11");
+
+    addIsoSigClassic<11>(m, "IsoSigClassic11");
+    addIsoSigEdgeDegrees<11>(m, "IsoSigEdgeDegrees11");
+    addIsoSigPrintable<11>(m, "IsoSigPrintable11");
 }
 
