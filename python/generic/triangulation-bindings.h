@@ -35,6 +35,8 @@
 #include "../pybind11/stl.h"
 #include "../helpers.h"
 #include "triangulation/generic.h"
+#include "triangulation/isosigtype.h"
+#include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -195,7 +197,11 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("makeCanonical", &Triangulation<dim>::makeCanonical)
         .def("insertTriangulation", &Triangulation<dim>::insertTriangulation)
         .def("isoSig", &Triangulation<dim>::template isoSig<>)
+        .def("isoSig_EdgeDegrees", &Triangulation<dim>::
+            template isoSig<regina::IsoSigEdgeDegrees<dim>>)
         .def("isoSigDetail", &Triangulation<dim>::template isoSigDetail<>)
+        .def("isoSigDetail_EdgeDegrees", &Triangulation<dim>::
+            template isoSigDetail<regina::IsoSigEdgeDegrees<dim>>)
         .def_static("fromIsoSig", &Triangulation<dim>::fromIsoSig)
         .def_static("fromSig", &Triangulation<dim>::fromSig)
         .def_static("isoSigComponentSize",

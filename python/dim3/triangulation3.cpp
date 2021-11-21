@@ -42,6 +42,8 @@
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/normalsurface.h"
 #include "triangulation/example3.h"
+#include "triangulation/isosigtype.h"
+#include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -453,7 +455,11 @@ void addTriangulation3(pybind11::module_& m) {
         .def("dehydrate", &Triangulation<3>::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate)
         .def("isoSig", &Triangulation<3>::isoSig<>)
+        .def("isoSig_EdgeDegrees",
+            &Triangulation<3>::isoSig<regina::IsoSigEdgeDegrees<3>>)
         .def("isoSigDetail", &Triangulation<3>::isoSigDetail<>)
+        .def("isoSigDetail_EdgeDegrees",
+            &Triangulation<3>::isoSigDetail<regina::IsoSigEdgeDegrees<3>>)
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<4>>>& g) {
             return Triangulation<3>::fromGluings(size, g.begin(), g.end());

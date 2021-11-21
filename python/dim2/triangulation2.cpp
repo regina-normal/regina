@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "algebra/grouppresentation.h"
 #include "triangulation/dim2.h"
+#include "triangulation/isosigtype.h"
+#include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -190,7 +192,11 @@ void addTriangulation2(pybind11::module_& m) {
             &Triangulation<2>::barycentricSubdivision)
         .def("insertTriangulation", &Triangulation<2>::insertTriangulation)
         .def("isoSig", &Triangulation<2>::isoSig<>)
+        .def("isoSig_EdgeDegrees",
+            &Triangulation<2>::isoSig<regina::IsoSigEdgeDegrees<2>>)
         .def("isoSigDetail", &Triangulation<2>::isoSigDetail<>)
+        .def("isoSigDetail_EdgeDegrees",
+            &Triangulation<2>::isoSigDetail<regina::IsoSigEdgeDegrees<2>>)
         .def_static("fromIsoSig", &Triangulation<2>::fromIsoSig)
         .def_static("fromSig", &Triangulation<2>::fromSig)
         .def_static("isoSigComponentSize",

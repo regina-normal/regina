@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include "maths/perm.h"
 #include "utilities/sigutils.h"
 
 namespace regina {

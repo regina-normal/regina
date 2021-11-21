@@ -37,6 +37,8 @@
 #include "algebra/grouppresentation.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
+#include "triangulation/isosigtype.h"
+#include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -268,7 +270,11 @@ void addTriangulation4(pybind11::module_& m) {
         .def("idealToFinite", &Triangulation<4>::idealToFinite)
         .def("insertTriangulation", &Triangulation<4>::insertTriangulation)
         .def("isoSig", &Triangulation<4>::isoSig<>)
+        .def("isoSig_EdgeDegrees",
+            &Triangulation<4>::isoSig<regina::IsoSigEdgeDegrees<4>>)
         .def("isoSigDetail", &Triangulation<4>::isoSigDetail<>)
+        .def("isoSigDetail_EdgeDegrees",
+            &Triangulation<4>::isoSigDetail<regina::IsoSigEdgeDegrees<4>>)
         .def_static("fromIsoSig", &Triangulation<4>::fromIsoSig)
         .def_static("fromSig", &Triangulation<4>::fromSig)
         .def_static("isoSigComponentSize",

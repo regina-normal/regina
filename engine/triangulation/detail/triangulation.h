@@ -1759,8 +1759,15 @@ class TriangulationBase :
          * <tt>arXiv:1110.6080</tt>.  The format for other dimensions is
          * essentially the same, but with minor dimension-specific adjustments.
          *
-         * \ifacespython There are no template arguments: only the default
-         * type and encoding are supported.
+         * \ifacespython Although this is a templated function, all of the
+         * variants supplied with Regina are available to Python users.
+         * For the default type and encoding, you can simply call isoSig().
+         * For other signature types, you should call the function as
+         * isoSig_<i>Type</i>, where the suffix \a Type is an abbreviated
+         * version of the \a Type template parameter; one such example is
+         * \c isoSig_EdgeDegrees (for the case where \a Type is
+         * the class IsoSigEdgeDegrees).  Currently Regina only offers one
+         * encoding (the default), and so there are no suffixes for encodings.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
@@ -1798,8 +1805,15 @@ class TriangulationBase :
          * reconstructed from <tt>fromIsoSig(sig)</tt> will be identical to
          * <tt>relabelling.apply(this)</tt>.
          *
-         * \ifacespython There are no template arguments: only the default
-         * signature type and encoding are supported.
+         * \ifacespython Although this is a templated function, all of the
+         * variants supplied with Regina are available to Python users.  For
+         * the default type and encoding, you can simply call isoSigDetail().
+         * For other signature types, you should call the function as
+         * isoSigDetail_<i>Type</i>, where the suffix \a Type is an abbreviated
+         * version of the \a Type template parameter; one such example is
+         * \c isoSigDetail_EdgeDegrees (for the case where \a Type is
+         * the class IsoSigEdgeDegrees).  Currently Regina only offers one
+         * encoding (the default), and so there are no suffixes for encodings.
          *
          * \pre This triangulation must be non-empty and connected.  The
          * facility to return a relabelling for disconnected triangulations
