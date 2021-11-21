@@ -86,6 +86,6 @@ back = t.vertex(0).back()
 # Embeddings can outlive their faces, but currently this means we
 # don't ensure they do *not* outlive their triangulations.
 # t = None
-print(list)
+print([i for i in list])
 print(front, back)
 
