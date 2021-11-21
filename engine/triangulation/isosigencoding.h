@@ -69,7 +69,7 @@ class IsoSigPrintable : public Base64SigEncoding {
         /**
          * The data type used to store an isomorphism signature.
          */
-        using SigType = std::string;
+        using Signature = std::string;
 
         /**
          * The number of characters that we use in our encoding to
@@ -83,7 +83,7 @@ class IsoSigPrintable : public Base64SigEncoding {
          * Returns the isomorphism signature of an empty
          * <i>dim</i>-dimensional triangulation.
          */
-        static SigType emptySig() {
+        static Signature emptySig() {
             char c[2] = { encodeSingle(0), 0 };
             return c;
         }
@@ -111,7 +111,7 @@ class IsoSigPrintable : public Base64SigEncoding {
          * @param joinGluing an array of gluing permutations.
          * @return the encoding of the component being described.
          */
-        static SigType encode(size_t size,
+        static Signature encode(size_t size,
             size_t nFacetActions, const char* facetAction,
             size_t nJoins, const size_t* joinDest,
             const typename Perm<dim+1>::Index* joinGluing);

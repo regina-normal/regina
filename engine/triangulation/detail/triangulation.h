@@ -1749,7 +1749,7 @@ class TriangulationBase :
          *   IsoSigClassic for details.
          *
          * - The \a Encoding parameter should be a class that offers a
-         *   \a SigType type alias, and static functions emptySig() and
+         *   \a Signature type alias, and static functions emptySig() and
          *   encode().  See the implementation of IsoSigPrintable for details.
          *
          * For a full and precise description of the classic isomorphism
@@ -1771,7 +1771,7 @@ class TriangulationBase :
          */
         template <class Type = IsoSigClassic<dim>,
             class Encoding = IsoSigPrintable<dim>>
-        typename Encoding::SigType isoSig() const;
+        typename Encoding::Signature isoSig() const;
 
         /**
          * Constructs the isomorphism signature for this triangulation, along
@@ -1814,7 +1814,7 @@ class TriangulationBase :
          */
         template <class Type = IsoSigClassic<dim>,
             class Encoding = IsoSigPrintable<dim>>
-        std::pair<typename Encoding::SigType, Isomorphism<dim>> isoSigDetail()
+        std::pair<typename Encoding::Signature, Isomorphism<dim>> isoSigDetail()
             const;
 
         /**
@@ -2309,7 +2309,7 @@ class TriangulationBase :
          * @return the candidate isomorphism signature.
          */
         template <class Encoding>
-        typename Encoding::SigType isoSigFrom(size_t simp,
+        typename Encoding::Signature isoSigFrom(size_t simp,
             const Perm<dim+1>& vertices, Isomorphism<dim>* relabelling) const;
 
         /**

@@ -52,7 +52,7 @@
 namespace regina {
 
 template <int dim>
-typename IsoSigPrintable<dim>::SigType IsoSigPrintable<dim>::encode(
+typename IsoSigPrintable<dim>::Signature IsoSigPrintable<dim>::encode(
         size_t nCompSimp, size_t nFacetActions, const char* facetAction,
         size_t nJoins, const size_t* joinDest,
         const typename Perm<dim + 1>::Index *joinGluing) {
@@ -99,7 +99,7 @@ namespace detail {
 
 template <int dim>
 template <class Encoding>
-typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
+typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
         size_t simp, const Perm<dim+1>& vertices,
         Isomorphism<dim>* relabelling) const {
     // Only process the component that simp belongs to.
@@ -226,7 +226,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
     }
 
     // We have all we need.  Pack it all together into a string.
-    typename Encoding::SigType ans = Encoding::encode(simpImg,
+    typename Encoding::Signature ans = Encoding::encode(simpImg,
         facetPos, facetAction, joinPos, joinDest, joinGluing);
 
     // Record the canonical isomorphism if required.
@@ -249,7 +249,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
 
 template <int dim>
 template <class Type, class Encoding>
-typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
+typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
         return Encoding::emptySig();
 
@@ -257,9 +257,9 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
     // connected component.
     ComponentIterator it;
     size_t i;
-    typename Encoding::SigType curr;
+    typename Encoding::Signature curr;
 
-    auto* comp = new typename Encoding::SigType[countComponents()];
+    auto* comp = new typename Encoding::Signature[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
         Type type(**it);
@@ -277,7 +277,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
     // Pack the components together.
     std::sort(comp, comp + countComponents());
 
-    typename Encoding::SigType ans;
+    typename Encoding::Signature ans;
     for (i = 0; i < countComponents(); ++i)
         ans += comp[i];
 
@@ -287,7 +287,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
 
 template <int dim>
 template <class Type, class Encoding>
-std::pair<typename Encoding::SigType, Isomorphism<dim>>
+std::pair<typename Encoding::Signature, Isomorphism<dim>>
         TriangulationBase<dim>::isoSigDetail() const {
     // Make sure the user is not trying to do something illegal.
     if (isEmpty())
@@ -297,7 +297,7 @@ std::pair<typename Encoding::SigType, Isomorphism<dim>>
         throw FailedPrecondition(
             "isoSigDetail() requires a connected triangulation");
 
-    std::pair<typename Encoding::SigType, Isomorphism<dim>> ans(
+    std::pair<typename Encoding::Signature, Isomorphism<dim>> ans(
         std::piecewise_construct, std::forward_as_tuple(),
         std::forward_as_tuple(size()));
     Isomorphism<dim> currRelabelling(size());
@@ -306,9 +306,9 @@ std::pair<typename Encoding::SigType, Isomorphism<dim>>
     // connected component.
     ComponentIterator it;
     size_t i;
-    typename Encoding::SigType curr;
+    typename Encoding::Signature curr;
 
-    auto* comp = new typename Encoding::SigType[countComponents()];
+    auto* comp = new typename Encoding::Signature[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
         Type type(**it);
