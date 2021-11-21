@@ -53,7 +53,7 @@ namespace regina {
 
 template <int dim>
 typename IsoSigPrintable<dim>::Signature IsoSigPrintable<dim>::encode(
-        size_t nCompSimp, size_t nFacetActions, const char* facetAction,
+        size_t nCompSimp, size_t nFacetActions, const uint8_t* facetAction,
         size_t nJoins, const size_t* joinDest,
         const typename Perm<dim + 1>::Index *joinGluing) {
     // We need to encode:
@@ -120,7 +120,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // but only once for each facet (so we "skip" gluings that we've
     // already seen from the other direction).
     size_t nFacets = ((dim + 1) * size() + countBoundaryFacets()) / 2;
-    char* facetAction = new char[nFacets];
+    auto* facetAction = new uint8_t[nFacets];
 
     // What are the destination simplices and gluing permutations for
     // each facet under case #2 above?
@@ -387,7 +387,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
         }
 
         // Non-empty component; keep going.
-        char* facetAction = new char[(dim+1) * nSimp + 2];
+        auto* facetAction = new uint8_t[(dim+1) * nSimp + 2];
         size_t nFacets = 0;
         size_t facetPos = 0;
         size_t nJoins = 0;

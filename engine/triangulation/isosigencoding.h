@@ -116,7 +116,7 @@ class IsoSigPrintable : public Base64SigEncoding {
          * @return the encoding of the component being described.
          */
         static Signature encode(size_t size,
-            size_t nFacetActions, const char* facetAction,
+            size_t nFacetActions, const uint8_t* facetAction,
             size_t nJoins, const size_t* joinDest,
             const typename Perm<dim+1>::Index* joinGluing);
 
