@@ -50,6 +50,7 @@
 #include <boost/graph/properties.hpp>
 
 namespace regina {
+namespace graph {
 
 /**
  * Iterates through all crossings of a link.
@@ -61,8 +62,6 @@ namespace regina {
  * which is similar to the standard C++ forward iterator except that
  * the \a reference type may be the same as \a value_type (and so,
  * in particular, the dereference operator may return by value).
- *
- * \ifacespython Not present.
  *
  * \ingroup link
  */
@@ -178,8 +177,6 @@ class CrossingIterator {
  * the \a reference type may be the same as \a value_type (and so,
  * in particular, the dereference operator may return by value).
  *
- * \ifacespython Not present.
- *
  * \ingroup link
  */
 class ArcIterator {
@@ -289,8 +286,6 @@ class ArcIterator {
          */
         bool operator != (const ArcIterator& rhs) const;
 };
-
-namespace graph {
 
     /**
      * Iterates through the two directed arcs either entering or exiting a
@@ -830,6 +825,7 @@ namespace boost {
 } // namespace boost
 
 namespace regina {
+namespace graph {
 
     // Inline functions for CrossingIterator
 
@@ -903,8 +899,6 @@ namespace regina {
     inline bool ArcIterator::operator != (const ArcIterator& rhs) const {
         return (index_ != rhs.index_) || (upper_ != rhs.upper_);
     }
-
-namespace graph {
 
     // Inline functions for IncidentArcIterator
 
