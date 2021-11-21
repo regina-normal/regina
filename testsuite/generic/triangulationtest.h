@@ -33,6 +33,8 @@
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "packet/container.h"
+#include "triangulation/isosigtype.h"
+#include "triangulation/detail/isosig-impl.h"
 #include <cppunit/extensions/HelperMacros.h>
 
 using regina::Isomorphism;
@@ -777,9 +779,10 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyIsomorphismSignature(const Triangulation<dim>& tri,
-                const char* name) {
-            std::string sig = tri.isoSig();
+        template <template <int> class Type>
+        static void verifyIsomorphismSignatureUsing(
+                const Triangulation<dim>& tri, const char* name) {
+            std::string sig = tri.template isoSig<Type<dim>>();
 
             if (sig.empty()) {
                 std::ostringstream msg;
@@ -848,7 +851,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 Triangulation<dim> other =
                     Isomorphism<dim>::random(tri.size()).apply(tri);
 
-                otherSig = other.isoSig();
+                otherSig = other.template isoSig<Type<dim>>();
                 if (otherSig != sig) {
                     std::ostringstream msg;
                     msg << name << ": Random isomorphism gives different "
@@ -860,7 +863,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 Triangulation<dim> other(tri);
                 Isomorphism<dim>::random(tri.size()).applyInPlace(other);
 
-                otherSig = other.isoSig();
+                otherSig = other.template isoSig<Type<dim>>();
                 if (otherSig != sig) {
                     std::ostringstream msg;
                     msg << name << ": Random in-place isomorphism gives "
@@ -871,7 +874,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             if (tri.countComponents() == 1) {
-                auto detail = tri.isoSigDetail();
+                auto detail = tri.template isoSigDetail<Type<dim>>();
 
                 if (detail.first != sig) {
                     std::ostringstream msg;
@@ -893,6 +896,13 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
+        }
+
+        static void verifyIsomorphismSignature(const Triangulation<dim>& tri,
+                const char* name) {
+            verifyIsomorphismSignatureUsing<regina::IsoSigClassic>(tri, name);
+            verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(
+                tri, name);
         }
 
         static void verifyHomology(const Triangulation<dim>& tri,
