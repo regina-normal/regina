@@ -46,8 +46,6 @@ namespace regina {
 
 /**
  * The default signature type to use for isomorphism signatures.
- * This type can be used as a template parameter for
- * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
  *
  * This signature type is consistent with the original isomorphism signatures
  * that were implemented in Regina 4.90.
@@ -80,6 +78,11 @@ namespace regina {
  * This classic signature type is trivial, in that it considers \a all
  * possible simplices \a s and all <tt>(dim+1)!</tt> possible permutations \a p.
  *
+ * This class is designed to be used as a template parameter for
+ * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ * Typical users would have no need to create objects of this class or
+ * call any of its functions directly.
+ *
  * \ingroup triangulation
  */
 template <int dim>
@@ -107,9 +110,7 @@ class IsoSigClassic {
          *
          * @param comp the triangulation component that we are examining.
          */
-        IsoSigClassic(const Component<dim>& comp) :
-                size_(comp.size()), simp_(0), perm_(0) {
-        }
+        IsoSigClassic(const Component<dim>& comp);
 
         /**
          * Returns the current starting simplex \a s.
@@ -122,9 +123,7 @@ class IsoSigClassic {
          * necessarily the same as Simplex::index() (which gives the
          * index with respect to the overall triangulation).
          */
-        size_t simplex() const {
-            return simp_;
-        }
+        size_t simplex() const;
 
         /**
          * Returns the current starting labelling \a p of the vertices
@@ -136,9 +135,7 @@ class IsoSigClassic {
          * maps the current vertex labels of the starting simplex \a s
          * to the "canonical" labels 0,1,\ldots,\a dim.
          */
-        Perm<dim+1> perm() const {
-            return Perm<dim+1>::orderedSn[perm_];
-        }
+        Perm<dim+1> perm() const;
 
         /**
          * Advances this object to the next candidate pair (\a s, \a p).
@@ -149,20 +146,16 @@ class IsoSigClassic {
          * is no next candidate pair (i.e., the current candidate pair
          * is the last).
          */
-        bool next() {
-            if (++perm_ == Perm<dim+1>::nPerms) {
-                perm_ = 0;
-                if (++simp_ == size_)
-                    return false;
-            }
-            return true;
-        }
+        bool next();
+
+        // Make this class non-copyable and non-assignable, since users
+        // should not be creating objects of this class on their own.
+        IsoSigClassic(const IsoSigClassic&) = delete;
+        IsoSigClassic& operator = (const IsoSigClassic&) = delete;
 };
 
 /**
  * Defines an alternate type of isomorphism signature based on edge degrees.
- * This type can be used as a template parameter for
- * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
  *
  * See the IsoSigClassic documentation for details on what a signature type
  * class is required to provide.
@@ -174,6 +167,11 @@ class IsoSigClassic {
  *
  * The hope is that this eliminates a large number of potential starting
  * simplices without adding an enormous amount of computational overhead.
+ *
+ * This class is designed to be used as a template parameter for
+ * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ * Typical users would have no need to create objects of this class or
+ * call any of its functions directly.
  *
  * \ingroup triangulation
  */
@@ -270,9 +268,41 @@ class IsoSigEdgeDegrees {
          * is the last).
          */
         bool next();
+
+        // Make this class non-copyable and non-assignable, since users
+        // should not be creating objects of this class on their own.
+        IsoSigEdgeDegrees(const IsoSigEdgeDegrees&) = delete;
+        IsoSigEdgeDegrees& operator = (const IsoSigEdgeDegrees&) = delete;
 };
 
 /*@}*/
+
+// Inline functions for IsoSigClassic
+
+template <int dim>
+inline IsoSigClassic<dim>::IsoSigClassic(const Component<dim>& comp) :
+        size_(comp.size()), simp_(0), perm_(0) {
+}
+
+template <int dim>
+inline size_t IsoSigClassic<dim>::simplex() const {
+    return simp_;
+}
+
+template <int dim>
+inline Perm<dim+1> IsoSigClassic<dim>::perm() const {
+    return Perm<dim+1>::orderedSn[perm_];
+}
+
+template <int dim>
+inline bool IsoSigClassic<dim>::next() {
+    if (++perm_ == Perm<dim+1>::nPerms) {
+        perm_ = 0;
+        if (++simp_ == size_)
+            return false;
+    }
+    return true;
+}
 
 // Inline functions for IsoSigEdgeDegrees
 

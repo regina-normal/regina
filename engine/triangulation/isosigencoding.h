@@ -46,13 +46,16 @@ namespace regina {
 
 /**
  * The default encoding to use for isomorphism signatures.
- * This type can be used as a template parameter for
- * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
  *
- * This encoding is consistent with the original isomorphism signatures
- * that were implemented in Regina 4.90.  It represents an isomorphism
- * signature as a std::string, using only printable characters from the
- * 7-bit ASCII range.
+ * This printable encoding is consistent with the original isomorphism
+ * signatures that were implemented in Regina 4.90.  It represents an
+ * isomorphism signature as a std::string, using only printable characters
+ * from the 7-bit ASCII range.
+ *
+ * This class is designed to be used as a template parameter for
+ * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ * Typical users would have no need to create objects of this class or
+ * call any of its functions directly.
  *
  * \ifacespython Not present.  This is essentially part of the default
  * implementation of Triangulation<dim>::isoSig(), and users should have
@@ -115,6 +118,9 @@ class IsoSigPrintable : public Base64SigEncoding {
             size_t nFacetActions, const char* facetAction,
             size_t nJoins, const size_t* joinDest,
             const typename Perm<dim+1>::Index* joinGluing);
+
+        // Make this class non-constructible.
+        IsoSigPrintable() = delete;
 };
 
 /*@}*/
