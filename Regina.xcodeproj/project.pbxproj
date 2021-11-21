@@ -3878,7 +3878,6 @@
 		057B0CA326A2ABE90017F5EA /* tightencoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tightencoding.cpp; sourceTree = "<group>"; };
 		057B0CAD26A2AC4E0017F5EA /* tightencode.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tightencode.test; sourceTree = "<group>"; };
 		057B0CAE26A2AC4E0017F5EA /* tightencode.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tightencode.out; sourceTree = "<group>"; };
-		057B0CAF26A2AC670017F5EA /* iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iterators.h; sourceTree = "<group>"; };
 		057B0CB126A2B8B60017F5EA /* sighandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sighandler.h; sourceTree = "<group>"; };
 		057B0CB326A5064A0017F5EA /* dgt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dgt.cpp; sourceTree = "<group>"; };
 		057B0CB526A5067B0017F5EA /* covers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = covers.cpp; sourceTree = "<group>"; };
@@ -4511,6 +4510,8 @@
 		05CAE6902747227D007C93F3 /* treedecomp.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = treedecomp.out; sourceTree = "<group>"; };
 		05CAE6912747E617007C93F3 /* treeconstraint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treeconstraint.cpp; sourceTree = "<group>"; };
 		05CAE6942747E62C007C93F3 /* treeconstraint-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "treeconstraint-impl.h"; sourceTree = "<group>"; };
+		05CAE6962749F504007C93F3 /* listview.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = listview.out; sourceTree = "<group>"; };
+		05CAE6972749F505007C93F3 /* listview.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = listview.test; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5292,6 +5293,8 @@
 				050F5D951B9BAB9C00C1F681 /* knotted-Y.orb */,
 				05199A3225C63B7F0006B8FA /* listener.out */,
 				05199A3725C63B7F0006B8FA /* listener.test */,
+				05CAE6962749F504007C93F3 /* listview.out */,
+				05CAE6972749F505007C93F3 /* listview.test */,
 				05CAE6862746878C007C93F3 /* lookup.out */,
 				05CAE6852746878C007C93F3 /* lookup.test */,
 				0577E6E11F97087B00CBDF15 /* memory1.out */,
@@ -6801,7 +6804,6 @@
 			isa = PBXGroup;
 			children = (
 				05431FC81C40F607009BC072 /* equality.h */,
-				057B0CAF26A2AC670017F5EA /* iterators.h */,
 				05199A2C25C63AED0006B8FA /* listview.h */,
 				05D81A8B1C66B0E500DDCE64 /* output.h */,
 				05772EDD270CFAB300D26D8A /* packet.h */,
