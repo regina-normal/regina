@@ -69,33 +69,108 @@ namespace regina {
 template <int dim> class XMLTriangulationReader;
 
 /**
- * The default algorithm to use for isomorphism signatures.
- * This algorithm tries all possible simplices and all possible
- * labellings of its vertices as potential starting points for a
- * canonical labelling.
+ * The default signature type to use for isomorphism signatures.
+ * This type can be used as a template parameter for
+ * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
  *
- * This algorithm is consistent with the original isomorphism signatures
+ * This signature type is consistent with the original isomorphism signatures
  * that were implemented in Regina 4.90.
+ *
+ * A signature type class such as this works with a single component \a c of
+ * a <i>dim</i>-dimenensional triangulation.  The sole task of a type class
+ * is to iterate through a selection of combinations (\a s, \a p), each
+ * of which identifies a "starting simplex" and a "starting labelling"
+ * of its vertices.  Here \a s is a top-dimensional simplex in \a c that
+ * will act as the "starting simplex", and \a p is a permutation that maps
+ * the vertices of \a s to the "starting labelling" 0,1,...,\a dim.
+ *
+ * The properties that any signature type must satisfy are:
+ *
+ * - The selection of combinations (\a s, \a p) is always non-empty.
+ *
+ * - If we reorder the top-dimensional simplices of \a c and/or relabel
+ *   their individual vertices, then the combinations (\a s, \a p) that
+ *   this type class produces will be the same set, but modified
+ *   according to this reordering/relabelling.  In other words, the
+ *   starting simplices and their starting labellings can in theory
+ *   be completely deduced from an \e unlabelled triangulation component.
+ *
+ * An instance of a type class is like an iterator: it holds a
+ * single candidate combination (\a s, \a p).  The constructor must
+ * initialise the instance to store the first candidate combination; you
+ * can then query the current combination by calling simplex() and perm(),
+ * and you can advance to the next combination by calling next().
+ *
+ * This classic signature type is trivial, in that it considers \a all
+ * possible simplices \a s and all <tt>(dim+1)!</tt> possible permutations \a p.
  */
 template <int dim>
 class IsoSigClassic {
     private:
         size_t size_;
+            /**< The number of top-dimensional simplices in the
+                 triangulation component that we are working with. */
         size_t simp_;
+            /**< Identifies the top-dimensional simplex \a s in the current
+                 combination.  This index is relative to the component
+                 (not the overall triangulation). */
         typename Perm<dim+1>::Index perm_;
+            /**< Identifies the vertex labelling \a p in the current
+                 combination.  This is an index into Perm<dim+1>::orderedSn. */
 
     public:
+        /**
+         * Initialises this object to iterate through candidate
+         * "starting simplices" \a s and "starting labellings" \a p for the
+         * given triangulation component.  See the class notes for details.
+         *
+         * This object will initially be set to hold the first candidate pair
+         * (\a s, \a p).
+         *
+         * @param comp the triangulation component that we are examining.
+         */
         IsoSigClassic(const Component<dim>& comp) :
                 size_(comp.size()), simp_(0), perm_(0) {
         }
 
+        /**
+         * Returns the current starting simplex \a s.
+         *
+         * See the class notes for further details.
+         *
+         * @return the index of the current starting simplex with
+         * respect to the triangulation component under consideration.
+         * Note that, for a disconnected triangulation, this is \e not
+         * necessarily the same as Simplex::index() (which gives the
+         * index with respect to the overall triangulation).
+         */
         size_t simplex() const {
             return simp_;
         }
+
+        /**
+         * Returns the current starting labelling \a p of the vertices
+         * of the current starting simplex.
+         *
+         * See the class notes for further details.
+         *
+         * @return the starting labelling, given as a permutation that
+         * maps the current vertex labels of the starting simplex \a s
+         * to the "canonical" labels 0,1,\ldots,\a dim.
+         */
         Perm<dim+1> perm() const {
             return Perm<dim+1>::orderedSn[perm_];
         }
 
+        /**
+         * Advances this object to the next candidate pair (\a s, \a p).
+         *
+         * See the class notes for further details.
+         *
+         * @return \c true if this was successful, or \c false if there
+         * is no next candidate pair (i.e., the current candidate pair
+         * is the last).
+         */
         bool next() {
             if (++perm_ == Perm<dim+1>::nPerms) {
                 perm_ = 0;
@@ -1787,48 +1862,26 @@ class TriangulationBase :
         void writeTextLong(std::ostream& out) const;
 
         /**
-         * Constructs the isomorphism signature for this triangulation.
+         * Constructs the isomorphism signature of the given type for this
+         * triangulation.  Support for different \e types of signature is new
+         * to Regina 7.0 (see below for details); all isomorphism signatures
+         * created in Regina 6.0.1 or earlier are of the default type
+         * IsoSigClassic.
          *
          * An <i>isomorphism signature</i> is a compact representation
          * of a triangulation that uniquely determines the triangulation up to
-         * combinatorial isomorphism.  That is, two triangulations of
-         * dimension \a dim are combinatorially isomorphic if and only if
-         * their isomorphism signatures are the same.
-         *
-         * Regina supports several different variants of isomorphism signatures,
-         * which are tailored to different computational needs; these are
-         * currently determined by the template parameters \a Algorithm
-         * and \a Encoding.
-         *
-         * - The \a Algorithm parameter controls how Regina decides which
-         *   labelling of a triangulation is "canonical".  The default
-         *   algorithm is slow (but still small polynomial time), but is
-         *   also consistent with the original implementation of isomorphism
-         *   signatures in Regina 4.90.
-         *
-         * - The \a Encoding parameter controls how Regina encodes a
-         *   "canonical" labelling into a final signature.  The default
-         *   returns a std::string consisting entirely of printable characters
-         *   in the 7-bit ASCII range.  Importantly, this default algorithm
-         *   is currently the only encoding from which Regina can
-         *   \e reconstruct a triangulation from its isomorphism signature.
-         *
-         * - You may instead pass your own algorithm class.  Currently
-         *   this is for internal use only, and the class requirements
-         *   may change in different versions of Regina.  At present, such
-         *   a class must be constructible from a componenent reference,
-         *   and must offer member functions simplex(), perm() and next();
-         *   see the implementation of IsoSigClassic for details.
-         *
-         * - Likewise, you may pass your own encoding class.  Again this is
-         *   for internal use only, and the class requirements may change in
-         *   different versions of Regina.  At present, such a class must
-         *   offer a \a SigType type alias, and static functions emptySig() and
-         *   encode().  See the implementation of IsoSigPrintable for details.
+         * combinatorial isomorphism.  That is, for any fixed signature type
+         * \a T, two triangulations of dimension \a dim are combinatorially
+         * isomorphic if and only if their isomorphism signatures of
+         * type \a T are the same.
          *
          * The length of an isomorphism signature is proportional to
          * <tt>n log n</tt>, where \a n is the number of top-dimenisonal
-         * simplices.
+         * simplices.  The time required to construct it is worst-case
+         * <tt>O((dim!) n^2 log^2 n)</tt>.  Whilst this is fine for large
+         * triangulations, it becomes very slow for large \e dimensions;
+         * the main reason for introducing different signature types is that
+         * some alternative types can be much faster to compute in practice.
          *
          * Whilst the format of an isomorphism signature bears some
          * similarity to dehydration strings for 3-manifolds, they are more
@@ -1840,31 +1893,54 @@ class TriangulationBase :
          *
          * The routine fromIsoSig() can be used to recover a triangulation
          * from an isomorphism signature (only if the default encoding has
-         * been used, but it does not matter which algorithm was selected).
-         * The triangulation recovered might not be identical
-         * to the original, but it \e will be combinatorially isomorphic.
-         * If you need the precise relabelling, you can call isoSigDetail()
-         * instead.
+         * been used, but it does not matter which signature type was used).
+         * The triangulation recovered might not be identical to the original,
+         * but it \e will be combinatorially isomorphic.  If you need the
+         * precise relabelling, you can call isoSigDetail() instead.
          *
-         * The time required to construct the isomorphism signature of a
-         * triangulation is <tt>O((dim!) n^2 log^2 n)</tt>.  Whilst this
-         * is fine for large triangulation, it will be extremly slow for
-         * large \e dimensions.
+         * Regina supports several different variants of isomorphism signatures,
+         * which are tailored to different computational needs; these are
+         * currently determined by the template parameters \a Type and
+         * \a Encoding:
          *
-         * For a full and precise description of the isomorphism signature
-         * format for 3-manifold triangulations, see <i>Simplification paths
-         * in the Pachner graphs of closed orientable 3-manifold
-         * triangulations</i>, Burton, 2011, <tt>arXiv:1110.6080</tt>.
-         * The format for other dimensions is essentially the same, but with
-         * minor dimension-specific adjustments.
+         * - The \a Type parameter identifies which signature type is to be
+         *   constructed.  Essentially, different signature types use
+         *   different rules to determine which labelling of a triangulation
+         *   is "canonical".  The default type IsoSigClassic is slow
+         *   (it never does better than the worst-case time described above);
+         *   its main advantage is that it is consistent with the original
+         *   implementation of isomorphism signatures in Regina 4.90.
+         *
+         * - The \a Encoding parameter controls how Regina encodes a canonical
+         *   labelling into a final signature.  The default encoding
+         *   IsoSigPrintable returns a std::string consisting entirely of
+         *   printable characters in the 7-bit ASCII range.  Importantly, this
+         *   default encoding is currently the only encoding from which Regina
+         *   can \e reconstruct a triangulation from its isomorphism signature.
+         *
+         * You may instead pass your own type and/or encoding parameters as
+         * template arguments.  Currently this facility is for internal use
+         * only, and the requirements for type and encoding parameters may
+         * change in future versions of Regina.  At present:
+         *
+         * - The \a Type parameter should be a class that is constructible
+         *   from a componenent reference, and that offers the member functions
+         *   simplex(), perm() and next(); see the implementation of
+         *   IsoSigClassic for details.
+         *
+         * - The \a Encoding parameter should be a class that offers a
+         *   \a SigType type alias, and static functions emptySig() and
+         *   encode().  See the implementation of IsoSigPrintable for details.
+         *
+         * For a full and precise description of the classic isomorphism
+         * signature format for 3-manifold triangulations, see
+         * <i>Simplification paths in the Pachner graphs of closed orientable
+         * 3-manifold triangulations</i>, Burton, 2011,
+         * <tt>arXiv:1110.6080</tt>.  The format for other dimensions is
+         * essentially the same, but with minor dimension-specific adjustments.
          *
          * \ifacespython There are no template arguments: only the default
-         * algorithm and encoding are supported.
-         *
-         * \pre If \a relabelling is non-null, then this triangulation
-         * must be non-empty and connected.  The facility to return a
-         * relabelling for disconnected triangulations may be added to
-         * Regina in a later release.
+         * type and encoding are supported.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
@@ -1873,7 +1949,7 @@ class TriangulationBase :
          *
          * @return the isomorphism signature of this triangulation.
          */
-        template <class Algorithm = IsoSigClassic<dim>,
+        template <class Type = IsoSigClassic<dim>,
             class Encoding = IsoSigPrintable<dim>>
         typename Encoding::SigType isoSig() const;
 
@@ -1886,7 +1962,7 @@ class TriangulationBase :
          * of a triangulation that uniquely determines the triangulation up to
          * combinatorial isomorphism.  See isoSig() for much more detail on
          * isomorphism signatures as well as the support for different
-         * encodings.
+         * signature types and encodings.
          *
          * As described in the isoSig() notes, you can call fromIsoSig() to
          * recover a triangulation from an isomorphism signature (assuming
@@ -1903,7 +1979,7 @@ class TriangulationBase :
          * <tt>relabelling.apply(this)</tt>.
          *
          * \ifacespython There are no template arguments: only the default
-         * encoding is supported.
+         * signature type and encoding are supported.
          *
          * \pre This triangulation must be non-empty and connected.  The
          * facility to return a relabelling for disconnected triangulations
@@ -1916,7 +1992,8 @@ class TriangulationBase :
          * triangulation, and (ii) the isomorphism between this triangulation
          * and the triangulation that would be reconstructed from fromIsoSig().
          */
-        template <class Encoding = IsoSigPrintable<dim>>
+        template <class Type = IsoSigClassic<dim>,
+            class Encoding = IsoSigPrintable<dim>>
         std::pair<typename Encoding::SigType, Isomorphism<dim>> isoSigDetail()
             const;
 

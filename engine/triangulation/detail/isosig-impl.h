@@ -247,7 +247,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
 }
 
 template <int dim>
-template <class Algorithm, class Encoding>
+template <class Type, class Encoding>
 typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
         return Encoding::emptySig();
@@ -256,19 +256,22 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
     // connected component.
     ComponentIterator it;
     size_t i;
-    size_t simp;
-    typename Perm<dim+1>::Index perm;
     typename Encoding::SigType curr;
 
     auto* comp = new typename Encoding::SigType[countComponents()];
-    for (it = components().begin(), i = 0; it != components().end(); ++it, ++i)
-        for (simp = 0; simp < (*it)->size(); ++simp)
-            for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
-                curr = isoSigFrom<Encoding>((*it)->simplex(simp)->index(),
-                    Perm<dim+1>::orderedSn[perm], nullptr);
-                if ((simp == 0 && perm == 0) || (curr < comp[i]))
-                    comp[i].swap(curr);
+    for (it = components().begin(), i = 0;
+            it != components().end(); ++it, ++i) {
+        Type type(**it);
+        bool first = true;
+        do {
+            curr = isoSigFrom<Encoding>((*it)->simplex(type.simplex())->index(),
+                type.perm(), nullptr);
+            if (first || curr < comp[i]) {
+                comp[i].swap(curr);
+                first = false;
             }
+        } while (type.next());
+    }
 
     // Pack the components together.
     std::sort(comp, comp + countComponents());
@@ -282,7 +285,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig() const {
 }
 
 template <int dim>
-template <class Encoding>
+template <class Type, class Encoding>
 std::pair<typename Encoding::SigType, Isomorphism<dim>>
         TriangulationBase<dim>::isoSigDetail() const {
     // Make sure the user is not trying to do something illegal.
@@ -307,17 +310,17 @@ std::pair<typename Encoding::SigType, Isomorphism<dim>>
     auto* comp = new typename Encoding::SigType[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
-        Algorithm sigIt(**it);
+        Type type(**it);
         bool first = true;
         do {
-            curr = isoSigFrom<Encoding>((*it)->simplex(sigIt.simplex())->index(),
-                sigIt.perm(), &currRelabelling);
+            curr = isoSigFrom<Encoding>((*it)->simplex(type.simplex())->index(),
+                type.perm(), &currRelabelling);
             if (first || curr < comp[i]) {
                 comp[i].swap(curr);
                 ans.second.swap(currRelabelling);
+                first = false;
             }
-            first = false;
-        } while (sigIt.next());
+        } while (type.next());
     }
 
     // Pack the components together.
