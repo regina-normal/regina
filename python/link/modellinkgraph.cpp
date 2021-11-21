@@ -108,8 +108,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("countCells", &ModelLinkGraphCells::countCells)
         .def("size", &ModelLinkGraphCells::size)
         .def("arc", &ModelLinkGraphCells::arc)
-        .def("arcs", &ModelLinkGraphCells::arcs,
-            pybind11::keep_alive<0, 1>())
+        .def("arcs", &ModelLinkGraphCells::arcs)
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
     ;
