@@ -1157,9 +1157,8 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present.  Python users can still iterate
-         * over arcs(\a cell); however, be aware that arcs() returns an
-         * entire list of arcs, not a lightweight object.
+         * \ifacespython Not present; Python users can iterate over
+         * arcs(\a cell) instead.
          *
          * @return the beginning of an iterator range for the boundary
          * of the given cell.
@@ -1188,9 +1187,8 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present.  Python users can still iterate
-         * over arcs(\a cell); however, be aware that arcs() returns an
-         * entire list of arcs, not a lightweight object.
+         * \ifacespython Not present; Python users can iterate over
+         * arcs(\a cell) instead.
          *
          * @return the end of an iterator range for the boundary
          * of the given cell.

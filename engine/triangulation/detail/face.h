@@ -532,9 +532,8 @@ class FaceBase :
          * }
          * \endcode
          *
-         * \ifacespython Not present.  Python users can still iterate over
-         * embeddings(); however, be aware that embeddings() returns an
-         * entire list of appearances, not a lightweight object.
+         * \ifacespython Not present; Python users can iterate over
+         * embeddings() instead.
          *
          * @return a iterator that points to the first appearance.
          */
@@ -552,9 +551,8 @@ class FaceBase :
          * The precise C++ type of the iterator is subject to change, so
          * C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython Not present.  Python users can still iterate over
-         * embeddings(); however, be aware that embeddings() returns an
-         * entire list of appearances, not a lightweight object.
+         * \ifacespython Not present; Python users can iterate over
+         * embeddings() instead.
          *
          * @return a "beyond the end" iterator that comes immediately
          * after the last appearance.
