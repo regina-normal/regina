@@ -84,7 +84,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("cusp", &SnapPeaTriangulation::cusp,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("whichCusp") = 0)
-        .def("cusps", &SnapPeaTriangulation::cusps)
+        .def("cusps", &SnapPeaTriangulation::cusps,
+            pybind11::keep_alive<0, 1>())
         .def("fill", &SnapPeaTriangulation::fill,
             pybind11::arg(), pybind11::arg(), pybind11::arg("whichCusp")= 0)
         .def("unfill", &SnapPeaTriangulation::unfill,

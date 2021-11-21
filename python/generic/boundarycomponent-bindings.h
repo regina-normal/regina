@@ -61,19 +61,11 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
                 return (size_t)0;
             }
         })
-        .def("facets", [](const BoundaryComponent<dim>& b) {
-            pybind11::list ans;
-            for (auto f : b.facets())
-                ans.append(f); // Uses reference return value policy
-            return ans;
-        })
+        .def("facets", &BoundaryComponent<dim>::facets)
         .def("faces", [](const BoundaryComponent<dim>& b, int subdim) {
             if (subdim != dim - 1)
                 invalidFaceDimension("faces", dim - 1, dim - 1);
-            pybind11::list ans;
-            for (auto f : b.template faces<dim - 1>())
-                ans.append(f); // Uses reference return value policy
-            return ans;
+            return b.template faces<dim - 1>();
         })
         .def("facet", &BoundaryComponent<dim>::facet,
             pybind11::return_value_policy::reference)
@@ -106,17 +98,15 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
         c.def("countPentachora", &BoundaryComponent<dim>::size);
         c.def("pentachoron", &BoundaryComponent<dim>::facet,
             pybind11::return_value_policy::reference);
-        c.def("pentachora", [](const BoundaryComponent<dim>& b) {
-            pybind11::list ans;
-            for (auto f : b.facets())
-                ans.append(f); // Uses reference return value policy
-            return ans;
-        });
+        c.def("pentachora", &BoundaryComponent<dim>::pentachora);
     }
     if constexpr (dim == 6) {
         c.def("countPentachora", &BoundaryComponent<dim>::countRidges);
     }
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<BoundaryComponent<dim>>().facets())>(m);
 }
 

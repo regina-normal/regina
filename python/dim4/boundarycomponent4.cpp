@@ -51,17 +51,12 @@ void addBoundaryComponent4(pybind11::module_& m) {
         .def("countTriangles", &BoundaryComponent<4>::countTriangles)
         .def("countEdges", &BoundaryComponent<4>::countEdges)
         .def("countVertices", &BoundaryComponent<4>::countVertices)
-        .def("facets", &BoundaryComponent<4>::facets,
-            pybind11::return_value_policy::reference)
+        .def("facets", &BoundaryComponent<4>::facets)
         .def("faces", regina::python::faces<BoundaryComponent<4>, 4>)
-        .def("tetrahedra", &BoundaryComponent<4>::tetrahedra,
-            pybind11::return_value_policy::reference)
-        .def("triangles", &BoundaryComponent<4>::triangles,
-            pybind11::return_value_policy::reference)
-        .def("edges", &BoundaryComponent<4>::edges,
-            pybind11::return_value_policy::reference)
-        .def("vertices", &BoundaryComponent<4>::vertices,
-            pybind11::return_value_policy::reference)
+        .def("tetrahedra", &BoundaryComponent<4>::tetrahedra)
+        .def("triangles", &BoundaryComponent<4>::triangles)
+        .def("edges", &BoundaryComponent<4>::edges)
+        .def("vertices", &BoundaryComponent<4>::vertices)
         .def("facet", &BoundaryComponent<4>::facet,
             pybind11::return_value_policy::reference)
         .def("face", &regina::python::face<BoundaryComponent<4>, 4, size_t>)

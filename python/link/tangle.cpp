@@ -52,7 +52,7 @@ void addTangle(pybind11::module_& m) {
         .def("crossing", &Tangle::crossing,
             pybind11::return_value_policy::reference_internal)
         .def("crossings", &Tangle::crossings,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("begin", &Tangle::begin)
         .def("end", &Tangle::end)
         .def("translate", &Tangle::translate)

@@ -47,17 +47,12 @@ void addComponent2(pybind11::module_& m) {
         .def("countEdges", &Component<2>::countEdges)
         .def("countVertices", &Component<2>::countVertices)
         .def("countBoundaryComponents", &Component<2>::countBoundaryComponents)
-        .def("simplices", &Component<2>::simplices,
-            pybind11::return_value_policy::reference)
-        .def("triangles", &Component<2>::triangles,
-            pybind11::return_value_policy::reference)
+        .def("simplices", &Component<2>::simplices)
+        .def("triangles", &Component<2>::triangles)
         .def("faces", &regina::python::faces<Component<2>, 2>)
-        .def("vertices", &Component<2>::vertices,
-            pybind11::return_value_policy::reference)
-        .def("edges", &Component<2>::edges,
-            pybind11::return_value_policy::reference)
-        .def("boundaryComponents", &Component<2>::boundaryComponents,
-            pybind11::return_value_policy::reference)
+        .def("vertices", &Component<2>::vertices)
+        .def("edges", &Component<2>::edges)
+        .def("boundaryComponents", &Component<2>::boundaryComponents)
         .def("triangle", &Component<2>::triangle,
             pybind11::return_value_policy::reference)
         .def("simplex", &Component<2>::simplex,

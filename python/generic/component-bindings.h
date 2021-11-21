@@ -44,12 +44,10 @@ void addComponent(pybind11::module_& m, const char* name) {
         .def("size", &Component<dim>::size)
         .def("countBoundaryComponents",
             &Component<dim>::countBoundaryComponents)
-        .def("simplices", &Component<dim>::simplices,
-            pybind11::return_value_policy::reference)
+        .def("simplices", &Component<dim>::simplices)
         .def("simplex", &Component<dim>::simplex,
             pybind11::return_value_policy::reference)
-        .def("boundaryComponents", &Component<dim>::boundaryComponents,
-            pybind11::return_value_policy::reference)
+        .def("boundaryComponents", &Component<dim>::boundaryComponents)
         .def("boundaryComponent", &Component<dim>::boundaryComponent,
             pybind11::return_value_policy::reference)
         .def("isValid", &Component<dim>::isValid)

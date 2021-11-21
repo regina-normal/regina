@@ -76,7 +76,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("isReadOnlySnapshot", &Triangulation<dim>::isReadOnlySnapshot)
         .def("size", &Triangulation<dim>::size)
         .def("simplices", &Triangulation<dim>::simplices,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("simplex", overload_cast<size_t>(&Triangulation<dim>::simplex),
             pybind11::return_value_policy::reference_internal)
         .def("newSimplex",
@@ -105,12 +105,12 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::countFaces))
         .def("fVector", &Triangulation<dim>::fVector)
         .def("components", &Triangulation<dim>::components,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("boundaryComponents", &Triangulation<dim>::boundaryComponents,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("faces", (regina::python::facesFunc<Triangulation<dim>>)(
             &Triangulation<dim>::faces),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("component", &Triangulation<dim>::component,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<dim>::boundaryComponent,
@@ -124,15 +124,15 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("countTetrahedra", &Triangulation<dim>::countTetrahedra)
         .def("countPentachora", &Triangulation<dim>::countPentachora)
         .def("vertices", &Triangulation<dim>::vertices,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("edges", &Triangulation<dim>::edges,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("triangles", &Triangulation<dim>::triangles,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("tetrahedra", &Triangulation<dim>::tetrahedra,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("pentachora", &Triangulation<dim>::pentachora,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("vertex", &Triangulation<dim>::vertex,
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<dim>::edge,

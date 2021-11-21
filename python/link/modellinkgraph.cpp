@@ -78,7 +78,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("node", &ModelLinkGraph::node,
             pybind11::return_value_policy::reference_internal)
         .def("nodes", &ModelLinkGraph::nodes,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("swap", &ModelLinkGraph::swap)
         .def("swapContents", &ModelLinkGraph::swap) // deprecated
         .def("reflect", &ModelLinkGraph::reflect)
@@ -108,7 +108,8 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("countCells", &ModelLinkGraphCells::countCells)
         .def("size", &ModelLinkGraphCells::size)
         .def("arc", &ModelLinkGraphCells::arc)
-        .def("arcs", &ModelLinkGraphCells::arcs)
+        .def("arcs", &ModelLinkGraphCells::arcs,
+            pybind11::keep_alive<0, 1>())
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
     ;

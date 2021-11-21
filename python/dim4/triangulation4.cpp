@@ -54,9 +54,9 @@ void addTriangulation4(pybind11::module_& m) {
         .def("size", &Triangulation<4>::size)
         .def("countPentachora", &Triangulation<4>::countPentachora)
         .def("pentachora", &Triangulation<4>::pentachora,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<4>::simplices,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("pentachoron",
             overload_cast<size_t>(&Triangulation<4>::pentachoron),
             pybind11::return_value_policy::reference_internal)
@@ -107,20 +107,20 @@ void addTriangulation4(pybind11::module_& m) {
         .def("countTetrahedra", &Triangulation<4>::countTetrahedra)
         .def("fVector", &Triangulation<4>::fVector)
         .def("components", &Triangulation<4>::components,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("boundaryComponents", &Triangulation<4>::boundaryComponents,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("faces", (regina::python::facesFunc<Triangulation<4>>)(
             &Triangulation<4>::faces),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("vertices", &Triangulation<4>::vertices,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("edges", &Triangulation<4>::edges,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("triangles", &Triangulation<4>::triangles,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("tetrahedra", &Triangulation<4>::tetrahedra,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("component", &Triangulation<4>::component,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<4>::boundaryComponent,

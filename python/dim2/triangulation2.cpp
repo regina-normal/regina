@@ -53,9 +53,9 @@ void addTriangulation2(pybind11::module_& m) {
         .def("size", &Triangulation<2>::size)
         .def("countTriangles", &Triangulation<2>::countTriangles)
         .def("triangles", &Triangulation<2>::triangles,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<2>::simplices,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("triangle",
             overload_cast<size_t>(&Triangulation<2>::triangle),
             pybind11::return_value_policy::reference_internal)
@@ -104,16 +104,16 @@ void addTriangulation2(pybind11::module_& m) {
         .def("countEdges", &Triangulation<2>::countEdges)
         .def("fVector", &Triangulation<2>::fVector)
         .def("components", &Triangulation<2>::components,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("boundaryComponents", &Triangulation<2>::boundaryComponents,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("faces", (regina::python::facesFunc<Triangulation<2>>)(
             &Triangulation<2>::faces),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("vertices", &Triangulation<2>::vertices,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("edges", &Triangulation<2>::edges,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("component", &Triangulation<2>::component,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<2>::boundaryComponent,

@@ -98,9 +98,10 @@ void addLink(pybind11::module_& m) {
         .def("crossing", &Link::crossing,
             pybind11::return_value_policy::reference_internal)
         .def("crossings", &Link::crossings,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("component", &Link::component)
-        .def("components", &Link::components)
+        .def("components", &Link::components,
+            pybind11::keep_alive<0, 1>())
         .def("strand", &Link::strand)
         .def("translate", &Link::translate)
         // In the following overloads, we define functions twice because

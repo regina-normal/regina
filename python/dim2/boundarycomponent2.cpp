@@ -47,13 +47,10 @@ void addBoundaryComponent2(pybind11::module_& m) {
             &regina::python::countFaces<BoundaryComponent<2>, 2, 1>)
         .def("countEdges", &BoundaryComponent<2>::countEdges)
         .def("countVertices", &BoundaryComponent<2>::countVertices)
-        .def("facets", &BoundaryComponent<2>::facets,
-            pybind11::return_value_policy::reference)
+        .def("facets", &BoundaryComponent<2>::facets)
         .def("faces", &regina::python::faces<BoundaryComponent<2>, 2>)
-        .def("edges", &BoundaryComponent<2>::edges,
-            pybind11::return_value_policy::reference)
-        .def("vertices", &BoundaryComponent<2>::vertices,
-            pybind11::return_value_policy::reference)
+        .def("edges", &BoundaryComponent<2>::edges)
+        .def("vertices", &BoundaryComponent<2>::vertices)
         .def("facet", &BoundaryComponent<2>::facet,
             pybind11::return_value_policy::reference)
         .def("face", &regina::python::face<BoundaryComponent<2>, 2, size_t>)

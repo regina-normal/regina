@@ -113,9 +113,9 @@ void addTriangulation3(pybind11::module_& m) {
         .def("size", &Triangulation<3>::size)
         .def("countTetrahedra", &Triangulation<3>::countTetrahedra)
         .def("tetrahedra", &Triangulation<3>::tetrahedra,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<3>::simplices,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("tetrahedron",
             overload_cast<size_t>(&Triangulation<3>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
@@ -165,18 +165,18 @@ void addTriangulation3(pybind11::module_& m) {
         .def("countTriangles", &Triangulation<3>::countTriangles)
         .def("fVector", &Triangulation<3>::fVector)
         .def("components", &Triangulation<3>::components,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("boundaryComponents", &Triangulation<3>::boundaryComponents,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("faces", (regina::python::facesFunc<Triangulation<3>>)(
             &Triangulation<3>::faces),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("vertices", &Triangulation<3>::vertices,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("edges", &Triangulation<3>::edges,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("triangles", &Triangulation<3>::triangles,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::keep_alive<0, 1>())
         .def("component", &Triangulation<3>::component,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<3>::boundaryComponent,
