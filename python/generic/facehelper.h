@@ -30,6 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
+#ifndef __REGINA_PYTHON_FACEHELPER_H
+#define __REGINA_PYTHON_FACEHELPER_H
+
 #include "../pybind11/pybind11.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
@@ -255,3 +258,4 @@ Perm<permSize> faceMapping(const T& t, int subdimArg, int f) {
 
 } // namespace regina::python
 
+#endif

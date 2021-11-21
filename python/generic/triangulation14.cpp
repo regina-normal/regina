@@ -31,13 +31,21 @@
  **************************************************************************/
 
 #include "triangulation-bindings.h"
+#include "boundarycomponent-bindings.h"
+#include "component-bindings.h"
 #include "isosig-bindings.h"
+#include "simplex-bindings.h"
 
 void addTriangulations14(pybind11::module_& m) {
     addTriangulation<14>(m, "Triangulation14");
+    addComponent<14>(m, "Component14");
+    addBoundaryComponent<14>(m, "BoundaryComponent14");
+    addSimplex<14>(m, "Simplex14");
 
     addIsoSigClassic<14>(m, "IsoSigClassic14");
     addIsoSigEdgeDegrees<14>(m, "IsoSigEdgeDegrees14");
     addIsoSigPrintable<14>(m, "IsoSigPrintable14");
+
+    m.attr("Face14_14") = m.attr("Simplex14");
 }
 
