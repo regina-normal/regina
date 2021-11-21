@@ -50,9 +50,6 @@ void addNormalHypersurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
 
-    BeginEndIterator<NormalHypersurfaces::VectorIterator>::addBindings(m,
-        "NormalHypersurfaceVectorIterator");
-
     auto l = pybind11::class_<NormalHypersurfaces,
             std::shared_ptr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
         .def(pybind11::init<const Triangulation<4>&, HyperCoords,
@@ -98,9 +95,9 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             return pybind11::make_iterator(list);
         }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
         .def("vectors", [](const NormalHypersurfaces& list) {
-            return BeginEndIterator<NormalHypersurfaces::VectorIterator>(
-                list.beginVectors(), list.endVectors(), list);
-        })
+            return pybind11::make_iterator(
+                list.beginVectors(), list.endVectors());
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
     ;
     regina::python::add_output(l);
     regina::python::add_eq_operators(l);

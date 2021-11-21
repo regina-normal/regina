@@ -7,9 +7,6 @@ Equality type : EqualityType.BY_VALUE
 AngleStructure : class
 Equality type : EqualityType.BY_REFERENCE
 
-AngleStructureIterator : class
-Equality type : EqualityType.BY_VALUE
-
 AngleStructures : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1585,12 +1582,6 @@ Equality type : EqualityType.BY_VALUE
 NormalHypersurface : class
 Equality type : EqualityType.BY_REFERENCE
 
-NormalHypersurfaceIterator : class
-Equality type : EqualityType.BY_VALUE
-
-NormalHypersurfaceVectorIterator : class
-Equality type : EqualityType.BY_VALUE
-
 NormalHypersurfaces : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1602,12 +1593,6 @@ Equality type : EqualityType.BY_VALUE
 
 NormalSurface : class
 Equality type : EqualityType.BY_REFERENCE
-
-NormalSurfaceIterator : class
-Equality type : EqualityType.BY_VALUE
-
-NormalSurfaceVectorIterator : class
-Equality type : EqualityType.BY_VALUE
 
 NormalSurfaces : class
 Equality type : EqualityType.BY_REFERENCE

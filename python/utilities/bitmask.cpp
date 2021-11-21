@@ -33,6 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "utilities/bitmask.h"
+#include "utilities/exception.h"
 #include "utilities/intutils.h"
 #include "../helpers.h"
 

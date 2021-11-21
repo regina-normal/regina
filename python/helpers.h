@@ -54,7 +54,6 @@
 #include "pybind11/pybind11.h"
 #include "helpers/equality.h"
 #include "helpers/output.h"
-#include "helpers/iterators.h"
 #include "helpers/listview.h"
 #include "helpers/packet.h"
 

@@ -65,9 +65,6 @@ void addNormalSurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
 
-    BeginEndIterator<NormalSurfaces::VectorIterator>::addBindings(
-        m, "NormalSurfaceVectorIterator");
-
     auto l = pybind11::class_<NormalSurfaces,
             std::shared_ptr<NormalSurfaces>>(m, "NormalSurfaces")
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
@@ -233,9 +230,9 @@ void addNormalSurfaces(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("additionalFields") = regina::surfaceExportAll)
         .def("vectors", [](const NormalSurfaces& list) {
-            return BeginEndIterator<NormalSurfaces::VectorIterator>(
-                list.beginVectors(), list.endVectors(), list);
-        })
+            return pybind11::make_iterator(
+                list.beginVectors(), list.endVectors());
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
     ;
     regina::python::add_output(l);
     regina::python::add_eq_operators(l);
