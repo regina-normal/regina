@@ -53,7 +53,7 @@ namespace detail {
 /**
  * A traits class that deduces the type of the argument in a given position
  * for a callable object.  It can (amongst other things) work with
- * function pointers, function references, member functions,
+ * function pointers, function references, member function pointers,
  * std::function wrappers, and lambdas.
  *
  * This struct provides a single member type alias, named \a type, which is
@@ -87,18 +87,18 @@ template <typename Action, int pos>
 struct CallableArg : public CallableArg<decltype(&Action::operator()), pos> {
 };
 
-// Implementation for global function pointers/references:
+// Implementation for global function pointers and references:
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(*)(Args...), pos> {
     using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(&)(Args...), pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 
 
-// Implementation for member function pointers/references:
+// Implementation for member function pointers:
 template <typename Class, typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(Class::*)(Args...) const, pos> {
     using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
@@ -116,10 +116,6 @@ struct CallableArg<std::function<ReturnType(Args...)>&, pos> {
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
     using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
-};
-template <typename Class, typename ReturnType, typename... Args, int pos>
-struct CallableArg<ReturnType(Class::&)(Args...) const, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
 };
 
 #endif // __DOXYGEN
