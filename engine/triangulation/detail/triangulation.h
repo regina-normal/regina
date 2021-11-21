@@ -59,13 +59,14 @@
 #include "triangulation/generic/simplex.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/simplex.h"
-#include "triangulation/isosigtype.h"
+#include "triangulation/isosigencoding.h"
 #include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/snapshot.h"
 
 namespace regina {
 
+template <int dim> class IsoSigClassic;
 template <int dim> class XMLTriangulationReader;
 
 /**

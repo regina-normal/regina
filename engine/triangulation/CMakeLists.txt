@@ -44,6 +44,7 @@ if (${REGINA_INSTALL_DEV})
     generic.h
     graph.h
     homologicaldata.h
+    isosigencoding.h
     isosigtype.h
     pachner.h
     DESTINATION "${INCLUDEDIR}/triangulation" COMPONENT Development)
