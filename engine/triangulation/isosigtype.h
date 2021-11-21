@@ -160,10 +160,20 @@ class IsoSigClassic {
 };
 
 /**
- * An isomorphism signature where the first simplex must be one whose
- * set of edge degrees is lexicographically smallest.  Hopefully this
- * eliminates a large number of starting simplices without an enormous
- * amount of overhead in the tests that it needs to perform.
+ * Defines an alternate type of isomorphism signature based on edge degrees.
+ * This type can be used as a template parameter for
+ * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ *
+ * See the IsoSigClassic documentation for details on what a signature type
+ * class is required to provide.
+ *
+ * This is an alternate "proof of concept" type that shows how you might
+ * speed up isomorphism signature computations.  It requires that the
+ * starting simplex must be one whose set of edge degrees is lexicographically
+ * minimal amongst all top-dimensional simplices.
+ *
+ * The hope is that this eliminates a large number of potential starting
+ * simplices without adding an enormous amount of computational overhead.
  *
  * \ingroup triangulation
  */
@@ -207,12 +217,58 @@ class IsoSigEdgeDegrees {
         typename Perm<dim+1>::Index perm_;
 
     public:
+        /**
+         * Initialises this object to iterate through candidate
+         * "starting simplices" \a s and "starting labellings" \a p for the
+         * given triangulation component.
+         *
+         * See the IsoSigClassic class documentation notes for further details.
+         *
+         * This object will initially be set to hold the first candidate pair
+         * (\a s, \a p).
+         *
+         * @param comp the triangulation component that we are examining.
+         */
         IsoSigEdgeDegrees(const Component<dim>& comp);
+        /**
+         * Destroys this object and all of its internal data.
+         */
         ~IsoSigEdgeDegrees();
 
+        /**
+         * Returns the current starting simplex \a s.
+         *
+         * See the IsoSigClassic class documentation notes for further details.
+         *
+         * @return the index of the current starting simplex with
+         * respect to the triangulation component under consideration.
+         * Note that, for a disconnected triangulation, this is \e not
+         * necessarily the same as Simplex::index() (which gives the
+         * index with respect to the overall triangulation).
+         */
         size_t simplex() const;
+
+        /**
+         * Returns the current starting labelling \a p of the vertices
+         * of the current starting simplex.
+         *
+         * See the IsoSigClassic class documentation for further details.
+         *
+         * @return the starting labelling, given as a permutation that
+         * maps the current vertex labels of the starting simplex \a s
+         * to the "canonical" labels 0,1,\ldots,\a dim.
+         */
         Perm<dim+1> perm() const;
 
+        /**
+         * Advances this object to the next candidate pair (\a s, \a p).
+         *
+         * See the IsoSigClassic class documentation for further details.
+         *
+         * @return \c true if this was successful, or \c false if there
+         * is no next candidate pair (i.e., the current candidate pair
+         * is the last).
+         */
         bool next();
 };
 
