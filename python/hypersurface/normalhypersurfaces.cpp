@@ -50,8 +50,6 @@ void addNormalHypersurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
 
-    SafeIterator<NormalHypersurfaces>::addBindings(m,
-        "NormalHypersurfaceIterator");
     BeginEndIterator<NormalHypersurfaces::VectorIterator>::addBindings(m,
         "NormalHypersurfaceVectorIterator");
 
@@ -97,8 +95,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         .def("hypersurface", &NormalHypersurfaces::hypersurface,
             pybind11::return_value_policy::reference_internal)
         .def("__iter__", [](const NormalHypersurfaces& list) {
-            return SafeIterator(list);
-        })
+            return pybind11::make_iterator(list);
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
         .def("vectors", [](const NormalHypersurfaces& list) {
             return BeginEndIterator<NormalHypersurfaces::VectorIterator>(
                 list.beginVectors(), list.endVectors(), list);

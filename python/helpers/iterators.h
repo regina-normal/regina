@@ -39,54 +39,6 @@
 namespace regina::python {
 
 /**
- * Wraps an iterator over a C++ container.
- *
- * The iterator will store its own local Python reference to the container.
- * If the container is held using a shared pointer (as, for example, a normal
- * surface list is), then this will ensure that the container survives for the
- * entire iteration, even if the list was a temporary object.
- */
-template <class Container>
-class MATCH_PYBIND11_VISIBILITY SafeIterator {
-    private:
-        const Container& list_;
-        pybind11::object localRef_;
-        decltype(list_.begin()) it_;
-
-    public:
-        SafeIterator(const Container& list) :
-                list_(list), localRef_(pybind11::cast(list)),
-                it_(list.begin()) {
-        }
-
-        SafeIterator(const SafeIterator&) = default;
-
-        decltype(*it_) next() {
-            if (it_ == list_.end())
-                throw pybind11::stop_iteration();
-            return *it_++;
-        }
-
-        bool operator == (const SafeIterator& rhs) const {
-            return it_ == rhs.it_;
-        }
-
-        bool operator != (const SafeIterator& rhs) const {
-            return it_ != rhs.it_;
-        }
-
-        static void addBindings(pybind11::module_& m, const char* name) {
-            auto i = pybind11::class_<SafeIterator>(m, name)
-                .def("next", &SafeIterator::next, // for python 2
-                    pybind11::return_value_policy::reference_internal)
-                .def("__next__", &SafeIterator::next, // for python 3
-                    pybind11::return_value_policy::reference_internal)
-                ;
-            regina::python::add_eq_operators(i);
-        }
-};
-
-/**
  * A single Python object that implements the Python iterable/iterator
  * interface for a given C++ iterator pair.
  *

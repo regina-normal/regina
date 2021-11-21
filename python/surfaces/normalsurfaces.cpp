@@ -65,7 +65,6 @@ void addNormalSurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
 
-    SafeIterator<NormalSurfaces>::addBindings(m, "NormalSurfaceIterator");
     BeginEndIterator<NormalSurfaces::VectorIterator>::addBindings(
         m, "NormalSurfaceVectorIterator");
 
@@ -91,8 +90,8 @@ void addNormalSurfaces(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("size", &NormalSurfaces::size)
         .def("__iter__", [](const NormalSurfaces& list) {
-            return SafeIterator(list);
-        })
+            return pybind11::make_iterator(list);
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
         .def("surface", &NormalSurfaces::surface,
             pybind11::return_value_policy::reference_internal)
         .def_static("enumerate", [](Triangulation<3>& owner,

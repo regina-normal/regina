@@ -44,8 +44,6 @@ using regina::Triangulation;
 void addAngleStructures(pybind11::module_& m) {
     m.def("makeAngleEquations", regina::makeAngleEquations);
 
-    SafeIterator<AngleStructures>::addBindings(m, "AngleStructureIterator");
-
     auto l = pybind11::class_<AngleStructures,
             std::shared_ptr<AngleStructures>>(m, "AngleStructures")
         .def(pybind11::init<const Triangulation<3>&, bool, regina::AngleAlg,
@@ -64,8 +62,8 @@ void addAngleStructures(pybind11::module_& m) {
         .def("structure", &AngleStructures::structure,
             pybind11::return_value_policy::reference_internal)
         .def("__iter__", [](const AngleStructures& list) {
-            return SafeIterator(list);
-        })
+            return pybind11::make_iterator(list);
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
         .def("spansStrict", &AngleStructures::spansStrict)
         .def("spansTaut", &AngleStructures::spansTaut)
         .def_static("enumerate", [](Triangulation<3>& owner, bool tautOnly) {

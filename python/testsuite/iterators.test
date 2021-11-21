@@ -79,22 +79,16 @@ for i in a:
     print(i.label())
 
 print('Angle structure iteration:')
-tot = 0
 for a in AngleStructures(Example3.figureEight()):
-    tot = tot + 1
-print(tot)
+    print(a)
 
 print('Normal surface iteration:')
-tot = 0
 for s in NormalSurfaces(Example3.figureEight(), NS_QUAD):
-    tot = tot + 1
-print(tot)
+    print(s)
 
 print('Normal hypersurface iteration:')
-tot = 0
 for s in NormalHypersurfaces(Example4.rp4(), HS_STANDARD):
-    tot = tot + 1
-print(tot)
+    print(s)
 
 print('Model link graph cell arc iteration:')
 g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
