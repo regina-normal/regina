@@ -39,6 +39,7 @@
 #define __REGINA_ISOSIGTYPE_H
 #endif
 
+#include <array>
 #include "regina-core.h"
 #include "maths/perm.h"
 #include "utilities/sigutils.h"
@@ -122,6 +123,9 @@ class IsoSigClassic {
          *
          * See the class notes for further details.
          *
+         * \pre This object is holding a valid candidate pair (\a s, \a p);
+         * that is, next() has not yet returned \c false.
+         *
          * @return the index of the current starting simplex with
          * respect to the triangulation component under consideration.
          * Note that, for a disconnected triangulation, this is \e not
@@ -136,6 +140,9 @@ class IsoSigClassic {
          *
          * See the class notes for further details.
          *
+         * \pre This object is holding a valid candidate pair (\a s, \a p);
+         * that is, next() has not yet returned \c false.
+         *
          * @return the starting labelling, given as a permutation that
          * maps the current vertex labels of the starting simplex \a s
          * to the "canonical" labels 0,1,\ldots,\a dim.
@@ -146,6 +153,9 @@ class IsoSigClassic {
          * Advances this object to the next candidate pair (\a s, \a p).
          *
          * See the class notes for further details.
+         *
+         * \pre This object is holding a valid candidate pair (\a s, \a p);
+         * that is, next() has not yet returned \c false.
          *
          * @return \c true if this was successful, or \c false if there
          * is no next candidate pair (i.e., the current candidate pair
@@ -188,40 +198,64 @@ template <int dim>
 class IsoSigEdgeDegrees {
     private:
         static constexpr int nEdges = dim * (dim + 1) / 2;
+            /**< The number of edges in each top-dimensional simplex. */
 
+        /**
+         * Holds the edge degree sequence for a single top-dimensional
+         * simplex.  The edge degrees are sorted; that is, we forget all
+         * information about which degree corresponds to which edge.
+         */
         struct SimplexMarking {
-            unsigned edgeDegree[nEdges];
+            std::array<unsigned, nEdges> edgeDegree;
+                /**< The sorted list of edge degrees. */
 
+            /**
+             * Computes and stores the sorted edge degree sequence
+             * for the given top-dimensional simplex.
+             */
             void init(const Simplex<dim>& simplex) {
                 for (size_t i = 0; i < nEdges; ++i)
                     edgeDegree[i] = simplex.edge(i)->degree();
-                std::sort(edgeDegree, edgeDegree + nEdges);
+                std::sort(edgeDegree.begin(), edgeDegree.end());
             }
 
+            /**
+             * Tests whether this and the given sorted edge degree sequence
+             * are identical.
+             */
             bool operator == (const SimplexMarking& rhs) const {
-                for (size_t i = 0; i < nEdges; ++i)
-                    if (edgeDegree[i] != rhs.edgeDegree[i])
-                        return false;
-                return true;
+                return edgeDegree == rhs.edgeDegree;
             }
 
+            /**
+             * Lexicographically compares this with the given sorted
+             * edge degree sequence.
+             */
             bool operator < (const SimplexMarking& rhs) const {
-                for (size_t i = 0; i < nEdges; ++i) {
-                    if (edgeDegree[i] < rhs.edgeDegree[i])
-                        return true;
-                    if (edgeDegree[i] > rhs.edgeDegree[i])
-                        return false;
-                }
-                return false;
+                return edgeDegree < rhs.edgeDegree;
             }
         };
 
         size_t size_;
+            /**< The number of top-dimensional simplices in the
+                 triangulation component that we are working with. */
         SimplexMarking* marks_;
+            /**< The sorted edge degree sequence of every top-dimensional
+                 simplex in the component we are working with. */
         size_t smallest_;
+            /**< A top-dimensional simplex with the lexicographically smallest
+                 edge degree sequence.  Like \a simp_, this index is relative
+                 to the component (not the overall triangulation).  If there
+                 are many simplices with the same smallest edge degree
+                 sequence then this denotes the one with smallest index. */
 
         size_t simp_;
+            /**< Identifies the top-dimensional simplex \a s in the current
+                 combination.  This index is relative to the component
+                 (not the overall triangulation). */
         typename Perm<dim+1>::Index perm_;
+            /**< Identifies the vertex labelling \a p in the current
+                 combination.  This is an index into Perm<dim+1>::orderedSn. */
 
     public:
         /**
@@ -247,6 +281,9 @@ class IsoSigEdgeDegrees {
          *
          * See the IsoSigClassic class documentation notes for further details.
          *
+         * \pre This object is holding a valid candidate pair (\a s, \a p);
+         * that is, next() has not yet returned \c false.
+         *
          * @return the index of the current starting simplex with
          * respect to the triangulation component under consideration.
          * Note that, for a disconnected triangulation, this is \e not
@@ -261,6 +298,9 @@ class IsoSigEdgeDegrees {
          *
          * See the IsoSigClassic class documentation for further details.
          *
+         * \pre This object is holding a valid candidate pair (\a s, \a p);
+         * that is, next() has not yet returned \c false.
+         *
          * @return the starting labelling, given as a permutation that
          * maps the current vertex labels of the starting simplex \a s
          * to the "canonical" labels 0,1,\ldots,\a dim.
@@ -271,6 +311,9 @@ class IsoSigEdgeDegrees {
          * Advances this object to the next candidate pair (\a s, \a p).
          *
          * See the IsoSigClassic class documentation for further details.
+         *
+         * \pre This object is holding a valid candidate pair (\a s, \a p);
+         * that is, next() has not yet returned \c false.
          *
          * @return \c true if this was successful, or \c false if there
          * is no next candidate pair (i.e., the current candidate pair
