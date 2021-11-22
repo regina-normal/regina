@@ -648,12 +648,11 @@ namespace graph {
      * can be used directly as the underlying graph type.
      *
      * @param t the triangulation whose dual graph we are studying.
-     * @return the range of all dual vertices of \a t.
+     * @return the range of all dual vertices of \a t, presented as a
+     * std::pair of simplex iterators.
      */
     template <int dim>
-    std::pair<typename Triangulation<dim>::SimplexIterator,
-            typename Triangulation<dim>::SimplexIterator>
-        vertices(const Triangulation<dim>& t);
+    auto vertices(const Triangulation<dim>& t);
 
     /**
      * Returns an iterator range containing all edges of the
@@ -992,7 +991,7 @@ namespace boost {
                 public boost::bidirectional_graph_tag {
         };
         using vertex_iterator =
-            typename regina::Triangulation<dim>::SimplexIterator;
+            decltype(regina::Triangulation<dim>().simplices().begin());
         using edge_iterator = typename regina::graph::DualEdgeIterator<dim>;
         using adjacency_iterator =
             typename regina::graph::AdjacentDualVertexIterator<dim>;
@@ -1201,9 +1200,7 @@ namespace graph {
     // Inline BGL functions
 
     template <int dim>
-    inline std::pair<typename Triangulation<dim>::SimplexIterator,
-            typename Triangulation<dim>::SimplexIterator>
-            vertices(const Triangulation<dim>& t) {
+    inline auto vertices(const Triangulation<dim>& t) {
         return std::make_pair(t.simplices().begin(), t.simplices().end());
     }
 

@@ -1477,6 +1477,9 @@ Version 7.0  [ TODO ]
             - Add variants of countFaces(), faces() and face() that take
               the face dimension at runtime (this was already available
               in Python, but is now also available in C++).
+            - Removed all of the old iterator typedefs (SimplexIterator,
+              VertexIterator, EdgeIterator, etc.).  Just use auto or
+              (if necessary) decltype(...) instead.
         Class Triangulation<3>:
             - All of the changes listed for Triangulation<dim> above.
             - New routine generalAngleStructure().

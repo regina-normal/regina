@@ -108,20 +108,6 @@ template <int> class XMLTriangulationReader;
 template <>
 class Triangulation<3> : public detail::TriangulationBase<3> {
     public:
-        using TetrahedronIterator =
-                std::vector<Tetrahedron<3>*>::const_iterator;
-            /**< A dimension-specific alias for SimplexIterator,
-                 used to iterate through tetrahedra. */
-        using TriangleIterator =
-                decltype(detail::TriangulationBase<3>().faces<2>().begin());
-            /**< Used to iterate through triangles. */
-        using EdgeIterator =
-                decltype(detail::TriangulationBase<3>().faces<1>().begin());
-            /**< Used to iterate through edges. */
-        using VertexIterator =
-                decltype(detail::TriangulationBase<3>().faces<0>().begin());
-            /**< Used to iterate through vertices. */
-
         using TuraevViroSet =
                 std::map<std::pair<unsigned long, bool>, Cyclotomic>;
             /**< A map from (\a r, \a parity) pairs to Turaev-Viro invariants,

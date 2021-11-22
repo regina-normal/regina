@@ -240,15 +240,6 @@ class TriangulationBase :
                  This is std::nullopt if it has not yet been computed. */
 
     public:
-        using SimplexIterator = typename decltype(simplices_)::const_iterator;
-            /**< Used to iterate through top-dimensional simplices. */
-        using ComponentIterator =
-                typename decltype(components_)::const_iterator;
-            /**< Used to iterate through connected components. */
-        using BoundaryComponentIterator =
-                typename decltype(boundaryComponents_)::const_iterator;
-            /**< Used to iterate through boundary components. */
-
         /**
          * \name Constructors and Destructors
          */
@@ -2580,15 +2571,15 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
 
     simplices_.reserve(copy.simplices_.size());
 
-    SimplexIterator me, you;
-    for (you = copy.simplices_.begin(); you != copy.simplices_.end(); ++you)
-        simplices_.push_back(new Simplex<dim>((*you)->description(),
+    for (auto s : copy.simplices_)
+        simplices_.push_back(new Simplex<dim>(s->description(),
             static_cast<Triangulation<dim>*>(this)));
 
     // Copy the internal simplex data, including gluings.
     int f;
-    for (me = simplices_.begin(), you = copy.simplices_.begin();
-            me != simplices_.end(); ++me, ++you) {
+    auto me = simplices_.begin();
+    auto you = copy.simplices_.begin();
+    for ( ; me != simplices_.end(); ++me, ++you) {
         for (f = 0; f <= dim; ++f) {
             if ((*you)->adj_[f]) {
                 (*me)->adj_[f] = simplices_[(*you)->adj_[f]->index()];
@@ -2653,15 +2644,15 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 
     simplices_.reserve(src.simplices_.size());
 
-    SimplexIterator me, you;
-    for (you = src.simplices_.begin(); you != src.simplices_.end(); ++you)
-        simplices_.push_back(new Simplex<dim>((*you)->description(),
+    for (auto s : src.simplices_)
+        simplices_.push_back(new Simplex<dim>(s->description(),
             static_cast<Triangulation<dim>*>(this)));
 
     // Copy the internal simplex data, including gluings.
     int f;
-    for (me = simplices_.begin(), you = src.simplices_.begin();
-            me != simplices_.end(); ++me, ++you) {
+    auto me = simplices_.begin();
+    auto you = src.simplices_.begin();
+    for ( ; me != simplices_.end(); ++me, ++you) {
         for (f = 0; f <= dim; ++f) {
             if ((*you)->adj_[f]) {
                 (*me)->adj_[f] = simplices_[(*you)->adj_[f]->index()];
@@ -3059,10 +3050,10 @@ bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
     if (simplices_.size() != other.simplices_.size())
         return false;
 
-    SimplexIterator me, you;
     int f;
-    for (me = simplices_.begin(), you = other.simplices_.begin();
-            me != simplices_.end(); ++me, ++you) {
+    auto me = simplices_.begin();
+    auto you = other.simplices_.begin();
+    for ( ; me != simplices_.end(); ++me, ++you) {
         for (f = 0; f <= dim; ++f) {
             if ((*you)->adj_[f]) {
                 if ((*me)->adj_[f] != simplices_[(*you)->adj_[f]->index()])

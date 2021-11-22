@@ -89,24 +89,6 @@ template <int> class XMLTriangulationReader;
  */
 template <>
 class Triangulation<4> : public detail::TriangulationBase<4> {
-    public:
-        using PentachoronIterator =
-                std::vector<Pentachoron<4>*>::const_iterator;
-            /**< A dimension-specific alias for SimplexIterator, used to
-                 iterate through pentachora. */
-        using TetrahedronIterator =
-                decltype(detail::TriangulationBase<4>().faces<3>().begin());
-            /**< Used to iterate through tetrahedra. */
-        using TriangleIterator =
-                decltype(detail::TriangulationBase<4>().faces<2>().begin());
-            /**< Used to iterate through triangles. */
-        using EdgeIterator =
-                decltype(detail::TriangulationBase<4>().faces<1>().begin());
-            /**< Used to iterate through edges. */
-        using VertexIterator =
-                decltype(detail::TriangulationBase<4>().faces<0>().begin());
-            /**< Used to iterate through vertices. */
-
     private:
         bool knownSimpleLinks_;
             /**< Is it known that all vertex links are 3-spheres or 3-balls?
