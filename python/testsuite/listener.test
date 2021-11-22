@@ -47,21 +47,9 @@ class Watcher(PacketListener):
     def childWasAdded(self, packet, child):
         print('ADDED CHILD: ' + packet.label() + ' -> ' + child.label())
     def childToBeRemoved(self, packet, child):
-        if not packet:
-            print('REMOVING CHILD: from parent destructor -> ' + child.label())
-        elif not child:
-            # This case should be impossible to trigger from python.
-            print('REMOVING CHILD: from child destructor <- ' + packet.label())
-        else:
-            print('REMOVING CHILD: ' + packet.label() + ' -> ' + child.label())
+        print('REMOVING CHILD: ' + packet.label() + ' -> ' + child.label())
     def childWasRemoved(self, packet, child):
-        if not packet:
-            print('REMOVED CHILD: from parent destructor -> ' + child.label())
-        elif not child:
-            # This case should be impossible to trigger from python.
-            print('REMOVED CHILD: from child destructor <- ' + packet.label())
-        else:
-            print('REMOVED CHILD: ' + packet.label() + ' -> ' + child.label())
+        print('REMOVED CHILD: ' + packet.label() + ' -> ' + child.label())
     def childToBeRenamed(self, packet, child):
         print('RENAMING CHILD: ' + packet.label() + ' -> ' + child.label())
     def childWasRenamed(self, packet, child):

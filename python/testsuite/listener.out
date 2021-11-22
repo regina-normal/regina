@@ -24,8 +24,6 @@ REMOVING CHILD: c -> u
 REMOVED CHILD: c -> u
 DESTROYING: u
 Destroying parent...
-REMOVING CHILD: from parent destructor -> t2
-REMOVED CHILD: from parent destructor -> t2
 DESTROYING: c
 Destroying child t...
 DESTROYING: t2
@@ -38,14 +36,8 @@ ADDING CHILD: z1 -> y
 ADDED CHILD: z1 -> y
 Dropping children...
 Dropping root...
-REMOVING CHILD: from parent destructor -> z1
-REMOVED CHILD: from parent destructor -> z1
-REMOVING CHILD: from parent destructor -> y
-REMOVED CHILD: from parent destructor -> y
 DESTROYING: y
 DESTROYING: z1
-REMOVING CHILD: from parent destructor -> z2
-REMOVED CHILD: from parent destructor -> z2
 DESTROYING: z2
 DESTROYING: x
 Finished.
