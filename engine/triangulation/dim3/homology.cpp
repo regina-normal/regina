@@ -36,11 +36,11 @@
 namespace regina {
 
 const AbelianGroup& Triangulation<3>::homologyRel() const {
-    if (H1Rel_.has_value())
-        return *H1Rel_;
+    if (prop_.H1Rel_.has_value())
+        return *prop_.H1Rel_;
 
     if (countBoundaryComponents() == 0)
-        return *(H1Rel_ = homology());
+        return *(prop_.H1Rel_ = homology());
 
     // Calculate the relative first homology wrt the boundary.
 
@@ -115,12 +115,12 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     // Build the group from the presentation matrix and tidy up.
     AbelianGroup ans;
     ans.addGroup(pres);
-    return *(H1Rel_ = std::move(ans));
+    return *(prop_.H1Rel_ = std::move(ans));
 }
 
 const AbelianGroup& Triangulation<3>::homologyBdry() const {
-    if (H1Bdry_.has_value())
-        return *H1Bdry_;
+    if (prop_.H1Bdry_.has_value())
+        return *prop_.H1Bdry_;
 
     // Run through the individual boundary components and add the
     // appropriate pieces to the homology group.
@@ -144,15 +144,15 @@ const AbelianGroup& Triangulation<3>::homologyBdry() const {
     ans.addRank(rank);
     for (unsigned long i = 0; i < z2rank; ++i)
         ans.addTorsion(2);
-    return *(H1Bdry_ = std::move(ans));
+    return *(prop_.H1Bdry_ = std::move(ans));
 }
 
 const AbelianGroup& Triangulation<3>::homologyH2() const {
-    if (H2_.has_value())
-        return *H2_;
+    if (prop_.H2_.has_value())
+        return *prop_.H2_;
 
     if (isEmpty())
-        return *(H2_ = AbelianGroup());
+        return *(prop_.H2_ = AbelianGroup());
 
     // Calculations are different for orientable vs non-orientable
     // components.
@@ -182,7 +182,7 @@ const AbelianGroup& Triangulation<3>::homologyH2() const {
     ans.addRank(rank);
     for (long i = 0; i < z2rank; ++i)
         ans.addTorsion(2);
-    return *(H2_ = std::move(ans));
+    return *(prop_.H2_ = std::move(ans));
 }
 
 } // namespace regina

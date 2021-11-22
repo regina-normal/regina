@@ -75,7 +75,7 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() const {
         return std::nullopt;
 
     // Do we already know the answer?
-    if (zeroEfficient_.has_value() && *zeroEfficient_)
+    if (prop_.zeroEfficient_.has_value() && *prop_.zeroEfficient_)
         return std::nullopt;
 
     // Use combinatorial optimisation if we can.
@@ -203,28 +203,28 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere()
 }
 
 bool Triangulation<3>::isZeroEfficient() const {
-    if (! zeroEfficient_.has_value()) {
+    if (! prop_.zeroEfficient_.has_value()) {
         if (hasTwoSphereBoundaryComponents())
-            zeroEfficient_ = false;
+            prop_.zeroEfficient_ = false;
         else if (nonTrivialSphereOrDisc()) {
-            zeroEfficient_ = false;
+            prop_.zeroEfficient_ = false;
         } else {
-            zeroEfficient_ = true;
+            prop_.zeroEfficient_ = true;
 
             // Things implied by 0-efficiency:
             if (isValid() && isClosed() && isConnected())
-                irreducible_ = true;
+                prop_.irreducible_ = true;
         }
     }
-    return *zeroEfficient_;
+    return *prop_.zeroEfficient_;
 }
 
 bool Triangulation<3>::hasSplittingSurface() const {
-    if (splittingSurface_.has_value())
-        return *splittingSurface_;
+    if (prop_.splittingSurface_.has_value())
+        return *prop_.splittingSurface_;
 
     if (isEmpty())
-        return *(splittingSurface_ = false);
+        return *(prop_.splittingSurface_ = false);
 
     // In the main loop of this procedure, we assume the triangulation is
     // connected.  If it isn't connected, we see instead if each component
@@ -233,8 +233,8 @@ bool Triangulation<3>::hasSplittingSurface() const {
     if (!isConnected()) {
         for (const Triangulation<3>& comp : triangulateComponents())
             if (! comp.hasSplittingSurface())
-                return *(splittingSurface_ = false);
-        return *(splittingSurface_ = true);
+                return *(prop_.splittingSurface_ = false);
+        return *(prop_.splittingSurface_ = true);
     }
 
     // Now we can assume the triangulation is connected.
@@ -317,13 +317,13 @@ bool Triangulation<3>::hasSplittingSurface() const {
             // with two opposite disjoint edges per tetrahedron.
             // Thus there is a splitting surface.
             delete[] state;
-            return *(splittingSurface_ = true);
+            return *(prop_.splittingSurface_ = true);
         }
     } // End search for splitting surfaces along each edge of tri.
 
     // We found no splitting surfaces; there is none.
     delete[] state;
-    return *(splittingSurface_ = false);
+    return *(prop_.splittingSurface_ = false);
 }
 
 } // namespace regina

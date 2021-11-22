@@ -45,8 +45,7 @@
 
 namespace regina {
 
-Triangulation<3>::Triangulation(const std::string& description) :
-        strictAngleStructure_(false), generalAngleStructure_(false) {
+Triangulation<3>::Triangulation(const std::string& description) {
     try {
         *this = fromIsoSig(description);
         return;
@@ -74,28 +73,29 @@ void Triangulation<3>::clearAllProperties() {
     clearBaseProperties();
 
     // Properties of the triangulation:
-    zeroEfficient_.reset();
-    splittingSurface_.reset();
-    strictAngleStructure_ = false; // computation not attempted
-    generalAngleStructure_ = false; // computation not attempted
-    niceTreeDecomposition_.reset();
+    prop_.zeroEfficient_.reset();
+    prop_.splittingSurface_.reset();
+    prop_.niceTreeDecomposition_.reset();
 
     // Properties of the manifold:
     if (! topologyLock_) {
-        H1Rel_.reset();
-        H1Bdry_.reset();
-        H2_.reset();
-        twoSphereBoundaryComponents_.reset();
-        negativeIdealBoundaryComponents_.reset();
-        threeSphere_.reset();
-        threeBall_.reset();
-        solidTorus_.reset();
-        TxI_.reset();
-        irreducible_.reset();
-        compressingDisc_.reset();
-        haken_.reset();
-        turaevViroCache_.clear();
+        prop_.H1Rel_.reset();
+        prop_.H1Bdry_.reset();
+        prop_.H2_.reset();
+        prop_.twoSphereBoundaryComponents_.reset();
+        prop_.negativeIdealBoundaryComponents_.reset();
+        prop_.threeSphere_.reset();
+        prop_.threeBall_.reset();
+        prop_.solidTorus_.reset();
+        prop_.TxI_.reset();
+        prop_.irreducible_.reset();
+        prop_.compressingDisc_.reset();
+        prop_.haken_.reset();
+        prop_.turaevViroCache_.clear();
     }
+
+    strictAngleStructure_ = false; // computation not attempted
+    generalAngleStructure_ = false; // computation not attempted
 }
 
 void Triangulation<3>::swap(Triangulation<3>& other) {
@@ -113,31 +113,32 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     std::swap(standard_, other.standard_);
 
     // Properties stored using std::... helper classes:
-    H1Rel_.swap(other.H1Rel_);
-    H1Bdry_.swap(other.H1Bdry_);
-    H2_.swap(other.H2_);
+    prop_.H1Rel_.swap(other.prop_.H1Rel_);
+    prop_.H1Bdry_.swap(other.prop_.H1Bdry_);
+    prop_.H2_.swap(other.prop_.H2_);
 
-    twoSphereBoundaryComponents_.swap(other.twoSphereBoundaryComponents_);
-    negativeIdealBoundaryComponents_.swap(
-        other.negativeIdealBoundaryComponents_);
+    prop_.twoSphereBoundaryComponents_.swap(
+        other.prop_.twoSphereBoundaryComponents_);
+    prop_.negativeIdealBoundaryComponents_.swap(
+        other.prop_.negativeIdealBoundaryComponents_);
 
-    zeroEfficient_.swap(other.zeroEfficient_);
-    splittingSurface_.swap(other.splittingSurface_);
+    prop_.zeroEfficient_.swap(other.prop_.zeroEfficient_);
+    prop_.splittingSurface_.swap(other.prop_.splittingSurface_);
 
-    threeSphere_.swap(other.threeSphere_);
-    threeBall_.swap(other.threeBall_);
-    solidTorus_.swap(other.solidTorus_);
-    TxI_.swap(other.TxI_);
-    irreducible_.swap(other.irreducible_);
-    compressingDisc_.swap(other.compressingDisc_);
-    haken_.swap(other.haken_);
+    prop_.threeSphere_.swap(other.prop_.threeSphere_);
+    prop_.threeBall_.swap(other.prop_.threeBall_);
+    prop_.solidTorus_.swap(other.prop_.solidTorus_);
+    prop_.TxI_.swap(other.prop_.TxI_);
+    prop_.irreducible_.swap(other.prop_.irreducible_);
+    prop_.compressingDisc_.swap(other.prop_.compressingDisc_);
+    prop_.haken_.swap(other.prop_.haken_);
 
     strictAngleStructure_.swap(other.strictAngleStructure_);
     generalAngleStructure_.swap(other.generalAngleStructure_);
-    niceTreeDecomposition_.swap(other.niceTreeDecomposition_);
+    prop_.niceTreeDecomposition_.swap(other.prop_.niceTreeDecomposition_);
 
     // Properties stored using std::... containers:
-    turaevViroCache_.swap(other.turaevViroCache_);
+    prop_.turaevViroCache_.swap(other.prop_.turaevViroCache_);
 }
 
 Triangulation<3> Triangulation<3>::enterTextTriangulation(std::istream& in,
@@ -265,27 +266,12 @@ long Triangulation<3>::eulerCharManifold() const {
 }
 
 Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
-        TriangulationBase<3>(X, cloneProps),
-        strictAngleStructure_(false), generalAngleStructure_(false) {
+        TriangulationBase<3>(X, cloneProps) {
     if (! cloneProps)
         return;
 
     // Clone properties:
-    H1Rel_ = X.H1Rel_;
-    H1Bdry_ = X.H1Bdry_;
-    H2_ = X.H2_;
-
-    twoSphereBoundaryComponents_ = X.twoSphereBoundaryComponents_;
-    negativeIdealBoundaryComponents_ = X.negativeIdealBoundaryComponents_;
-    zeroEfficient_ = X.zeroEfficient_;
-    splittingSurface_ = X.splittingSurface_;
-    threeSphere_ = X.threeSphere_;
-    threeBall_ = X.threeBall_;
-    solidTorus_ = X.solidTorus_;
-    TxI_ = X.TxI_;
-    irreducible_ = X.irreducible_;
-    compressingDisc_ = X.compressingDisc_;
-    haken_ = X.haken_;
+    prop_ = X.prop_;
 
     // Any cached angle structures must be remade to live in this triangulation.
     if (std::holds_alternative<AngleStructure>(X.strictAngleStructure_))
@@ -299,7 +285,8 @@ Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
     else
         generalAngleStructure_ = std::get<bool>(X.generalAngleStructure_);
 
-    turaevViroCache_ = X.turaevViroCache_;
+    // We do not need to copy skeletal properties (e.g., ideal_ or standard_),
+    // since this is computed on demand with the rest of the skeleton.
 }
 
 std::string Triangulation<3>::snapPea() const {

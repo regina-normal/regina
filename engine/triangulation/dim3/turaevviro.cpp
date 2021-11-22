@@ -1389,8 +1389,8 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
     // Have we already calculated this invariant?
     std::pair<unsigned long, bool> tvParams(r, parity);
 #ifndef TV_IGNORE_CACHE
-    auto it = turaevViroCache_.find(tvParams);
-    if (it != turaevViroCache_.end()) {
+    auto it = prop_.turaevViroCache_.find(tvParams);
+    if (it != prop_.turaevViroCache_.end()) {
         if (tracker)
             tracker->setFinished();
         return (*it).second;
@@ -1418,12 +1418,12 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
             tracker->setFinished();
             return Cyclotomic();
         } else {
-            turaevViroCache_[tvParams] = ans;
+            prop_.turaevViroCache_[tvParams] = ans;
             tracker->setFinished();
             return ans;
         }
     } else
-        return (turaevViroCache_[tvParams] = std::move(ans));
+        return (prop_.turaevViroCache_[tvParams] = std::move(ans));
 }
 
 } // namespace regina

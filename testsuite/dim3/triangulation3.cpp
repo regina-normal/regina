@@ -473,6 +473,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                         static_cast<regina::PacketOf<Triangulation<3>>&>(p).
                             isSolidTorus() ?
                         1 : 0);
+                    ++events;
                 }
             };
 

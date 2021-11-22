@@ -164,55 +164,56 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
     using regina::xml::xmlValueTag;
 
     if constexpr (dim == 3) {
-        if (data_.H1Rel_.has_value()) {
+        if (data_.prop_.H1Rel_.has_value()) {
             out_ << "  <H1Rel>";
-            data_.H1Rel_->writeXMLData(out_);
+            data_.prop_.H1Rel_->writeXMLData(out_);
             out_ << "</H1Rel>\n";
         }
-        if (data_.H1Bdry_.has_value()) {
+        if (data_.prop_.H1Bdry_.has_value()) {
             out_ << "  <H1Bdry>";
-            data_.H1Bdry_->writeXMLData(out_);
+            data_.prop_.H1Bdry_->writeXMLData(out_);
             out_ << "</H1Bdry>\n";
         }
-        if (data_.H2_.has_value()) {
+        if (data_.prop_.H2_.has_value()) {
             out_ << "  <H2>";
-            data_.H2_->writeXMLData(out_);
+            data_.prop_.H2_->writeXMLData(out_);
             out_ << "</H2>\n";
         }
-        if (data_.twoSphereBoundaryComponents_.has_value())
+        if (data_.prop_.twoSphereBoundaryComponents_.has_value())
             out_ << "  " << xmlValueTag("twosphereboundarycomponents",
-                *data_.twoSphereBoundaryComponents_) << '\n';
-        if (data_.negativeIdealBoundaryComponents_.has_value())
+                *data_.prop_.twoSphereBoundaryComponents_) << '\n';
+        if (data_.prop_.negativeIdealBoundaryComponents_.has_value())
             out_ << "  " << xmlValueTag("negativeidealboundarycomponents",
-                *data_.negativeIdealBoundaryComponents_) << '\n';
-        if (data_.zeroEfficient_.has_value())
-            out_ << "  " << xmlValueTag("zeroeff", *data_.zeroEfficient_)
+                *data_.prop_.negativeIdealBoundaryComponents_) << '\n';
+        if (data_.prop_.zeroEfficient_.has_value())
+            out_ << "  " << xmlValueTag("zeroeff", *data_.prop_.zeroEfficient_)
                 << '\n';
-        if (data_.splittingSurface_.has_value())
-            out_ << "  " << xmlValueTag("splitsfce", *data_.splittingSurface_)
-                << '\n';
-        if (data_.threeSphere_.has_value())
-            out_ << "  " << xmlValueTag("threesphere", *data_.threeSphere_)
-                << '\n';
-        if (data_.threeBall_.has_value())
-            out_ << "  " << xmlValueTag("threeball", *data_.threeBall_) << '\n';
-        if (data_.solidTorus_.has_value())
-            out_ << "  " << xmlValueTag("solidtorus", *data_.solidTorus_)
-                << '\n';
-        if (data_.TxI_.has_value())
-            out_ << "  " << xmlValueTag("txi", *data_.TxI_) << '\n';
-        if (data_.irreducible_.has_value())
-            out_ << "  " << xmlValueTag("irreducible", *data_.irreducible_)
-                << '\n';
-        if (data_.compressingDisc_.has_value())
+        if (data_.prop_.splittingSurface_.has_value())
+            out_ << "  " << xmlValueTag("splitsfce",
+                *data_.prop_.splittingSurface_) << '\n';
+        if (data_.prop_.threeSphere_.has_value())
+            out_ << "  " << xmlValueTag("threesphere",
+                *data_.prop_.threeSphere_) << '\n';
+        if (data_.prop_.threeBall_.has_value())
+            out_ << "  " << xmlValueTag("threeball",
+                *data_.prop_.threeBall_) << '\n';
+        if (data_.prop_.solidTorus_.has_value())
+            out_ << "  " << xmlValueTag("solidtorus",
+                *data_.prop_.solidTorus_) << '\n';
+        if (data_.prop_.TxI_.has_value())
+            out_ << "  " << xmlValueTag("txi", *data_.prop_.TxI_) << '\n';
+        if (data_.prop_.irreducible_.has_value())
+            out_ << "  " << xmlValueTag("irreducible",
+                *data_.prop_.irreducible_) << '\n';
+        if (data_.prop_.compressingDisc_.has_value())
             out_ << "  " << xmlValueTag("compressingdisc",
-                *data_.compressingDisc_) << '\n';
-        if (data_.haken_.has_value())
-            out_ << "  " << xmlValueTag("haken", *data_.haken_) << '\n';
+                *data_.prop_.compressingDisc_) << '\n';
+        if (data_.prop_.haken_.has_value())
+            out_ << "  " << xmlValueTag("haken", *data_.prop_.haken_) << '\n';
     } else if constexpr (dim == 4) {
-        if (data_.H2_.has_value()) {
+        if (data_.prop_.H2_.has_value()) {
             out_ << "  <H2>";
-            data_.H2_->writeXMLData(out_);
+            data_.prop_.H2_->writeXMLData(out_);
             out_ << "</H2>\n";
         }
     }

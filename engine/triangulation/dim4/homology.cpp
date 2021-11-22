@@ -38,11 +38,11 @@
 namespace regina {
 
 const AbelianGroup& Triangulation<4>::homologyH2() const {
-    if (H2_.has_value())
-        return *H2_;
+    if (prop_.H2_.has_value())
+        return *prop_.H2_;
 
     if (isEmpty())
-        return *(H2_ = AbelianGroup());
+        return *(prop_.H2_ = AbelianGroup());
 
     ensureSkeleton();
 
@@ -189,7 +189,7 @@ const AbelianGroup& Triangulation<4>::homologyH2() const {
         }
 
     ans.addRank(-extra);
-    return *(H2_ = std::move(ans));
+    return *(prop_.H2_ = std::move(ans));
 }
 
 } // namespace regina
