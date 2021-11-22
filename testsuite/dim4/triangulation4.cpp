@@ -79,6 +79,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(pachner<4>);
 
     // Dimension-specific tests:
+    CPPUNIT_TEST(events);
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
@@ -337,6 +338,92 @@ class Triangulation4Test : public TriangulationTest<4> {
             runCensusAllBounded(verifyPachner<k>);
             runCensusAllNoBdry(verifyPachner<k>);
             verifyPachnerSimplicial<k>();
+        }
+
+        void events() {
+            /**
+             * A struct that watches for changes on a triangulation,
+             * and computes and stores rank(H2) immediately after a change.
+             *
+             * We use H2 because this is a property managed by the subclass
+             * Triangulation<4>, not the parent class TriangulationBase<4>.
+             *
+             * The main purpose of this test is to ensure that
+             * packetWasChanged is (a) fired, (b) fired only once, and
+             * (c) fired at the corret time (i.e., after the subclass data
+             * has been copied).
+             */
+            struct Watcher : public regina::PacketListener {
+                int rank { -1 };
+                int events { 0 };
+
+                void packetWasChanged(regina::Packet& p) {
+                    rank = static_cast<regina::PacketOf<Triangulation<4>>&>
+                        (p).homologyH2().rank();
+                    ++events;
+                }
+            };
+
+            {
+                auto p = regina::makePacket(
+                    Example<4>::doubleCone(Example<3>::s2xs1()));
+                Watcher w;
+                p->listen(&w);
+
+                if (p->homologyH2().rank() != 1) {
+                    CPPUNIT_FAIL("doubleCone(S2xS1) should have rank(H2) = 1.");
+                }
+
+                // Copy assignment that changes H2
+                *p = rp4;
+
+                if (w.events != 1) {
+                    std::ostringstream msg;
+                    msg << "Packet event packetWasChanged() was called "
+                        << w.events << " times during copy assignment.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (w.rank != 0) {
+                    CPPUNIT_FAIL("Triangulation should have rank(H2) = 0 "
+                        "in event handler after copy assignment.");
+                }
+                if (p->homologyH2().rank() != 0) {
+                    CPPUNIT_FAIL("Triangulation should have rank(H2) = 0"
+                        "after copy assignment.");
+                }
+            }
+            {
+                auto p = regina::makePacket(
+                    Example<4>::doubleCone(Example<3>::s2xs1()));
+                Watcher w;
+                p->listen(&w);
+
+                if (p->homologyH2().rank() != 1) {
+                    CPPUNIT_FAIL("doubleCone(S2xS1) should have rank(H2) = 1.");
+                }
+
+                // Move assignment that changes H2
+                // The extra insertTriangulation() is to ensure that the
+                // move is not optimised away.
+                Triangulation<4> t = rp4;
+                t.insertTriangulation(t);
+                *p = std::move(t);
+
+                if (w.events != 1) {
+                    std::ostringstream msg;
+                    msg << "Packet event packetWasChanged() was called "
+                        << w.events << " times during move assignment.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (w.rank != 0) {
+                    CPPUNIT_FAIL("Triangulation should have rank(H2) = 0 "
+                        "in event handler after move assignment.");
+                }
+                if (p->homologyH2().rank() != 0) {
+                    CPPUNIT_FAIL("Triangulation should have rank(H2) = 0"
+                        "after move assignment.");
+                }
+            }
         }
 
         void verifyInvalid(const Triangulation<4>& tri,
