@@ -141,7 +141,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
     headerLayout->addStretch(1);
 
     headerIcon = new QLabel();
-    headerIcon->setPixmap(PacketManager::icon(newPacket).pixmap(headerSize));
+    headerIcon->setPixmap(PacketManager::icon(*newPacket).pixmap(headerSize));
     headerIcon->setMargin(2); // Leave *some* space, however tiny.
     headerIcon->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
@@ -251,12 +251,12 @@ void PacketPane::deregisterEditOperations() {
     }
 }
 
-void PacketPane::packetWasChanged(regina::Packet*) {
+void PacketPane::packetWasChanged(regina::Packet&) {
     // Assume it's this packet.
     mainUI->refresh();
 }
 
-void PacketPane::packetWasRenamed(regina::Packet*) {
+void PacketPane::packetWasRenamed(regina::Packet&) {
     // Assume it's this packet.
     regina::Packet* packet = getPacket();
 

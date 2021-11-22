@@ -59,7 +59,7 @@ class PacketManager {
          * Returns an icon appropriate for the given packet.  This icon
          * may be rendered at various different sizes.
          */
-        static QIcon icon(regina::Packet* packet);
+        static QIcon icon(const regina::Packet& packet);
 
         /**
          * Returns a newly created interface appropriate for viewing or

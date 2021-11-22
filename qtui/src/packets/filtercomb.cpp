@@ -167,8 +167,8 @@ void FilterCombUI::refresh() {
     boolType->button(filter->usesAnd() ? ID_AND : ID_OR)->setChecked(true);
 }
 
-void FilterCombUI::packetWasRenamed(Packet* p) {
-    if (p->parent().get() == filter)
+void FilterCombUI::packetWasRenamed(Packet& p) {
+    if (p.parent().get() == filter)
         refreshChildList();
 }
 
@@ -182,8 +182,8 @@ void FilterCombUI::childWasRemoved(Packet* p, Packet*) {
         refreshChildList();
 }
 
-void FilterCombUI::childrenWereReordered(Packet* p) {
-    if (p == filter)
+void FilterCombUI::childrenWereReordered(Packet& p) {
+    if (std::addressof(p) == filter)
         refreshChildList();
 }
 
@@ -198,7 +198,7 @@ void FilterCombUI::refreshChildList() {
     // constructor puts new items at the front.
     for (auto p = filter->firstChild(); p; p = p->nextSibling())
         if (p->type() == regina::PACKET_SURFACEFILTER) {
-            new QListWidgetItem(PacketManager::icon(p.get()),
+            new QListWidgetItem(PacketManager::icon(*p),
                 p->humanLabel().c_str(), children);
 
             // Listen for renaming events.  We won't ever call

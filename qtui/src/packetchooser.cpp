@@ -116,15 +116,16 @@ void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
         unlisten();
 }
 
-void PacketChooser::packetWasRenamed(regina::Packet* renamed) {
+void PacketChooser::packetWasRenamed(regina::Packet& renamed) {
     // Just rename the item that was changed.
-    auto it = std::find(packets.begin(), packets.end(), renamed);
+    auto it = std::find(packets.begin(), packets.end(),
+        std::addressof(renamed));
     if (it != packets.end()) {
         // This may trigger a refreshContents(), but that's okay since
         // we're at the end of the routine.
         int index = it - packets.begin();
         setItemIcon(index, PacketManager::icon(renamed));
-        setItemText(index, renamed->humanLabel().c_str());
+        setItemText(index, renamed.humanLabel().c_str());
     }
 }
 
@@ -201,7 +202,7 @@ void PacketChooser::fill(bool allowNone, std::shared_ptr<Packet> select) {
     while (p && subtree->isAncestorOf(*p)) {
         if ((! filter) || (filter->accept(*p))) {
             if (p->parent())
-                addItem(PacketManager::icon(p.get()), p->humanLabel().c_str());
+                addItem(PacketManager::icon(*p), p->humanLabel().c_str());
             else switch (rootRole) {
                 case ROOT_AS_INSERTION_POINT:
                     // No icon for this role.
@@ -212,7 +213,7 @@ void PacketChooser::fill(bool allowNone, std::shared_ptr<Packet> select) {
                     addItem(tr("<Entire tree>"));
                     break;
                 case ROOT_AS_PACKET:
-                    addItem(PacketManager::icon(p.get()), tr("<Root packet>"));
+                    addItem(PacketManager::icon(*p), tr("<Root packet>"));
                     break;
             }
             packets.push_back(p.get());

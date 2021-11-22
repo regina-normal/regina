@@ -317,8 +317,8 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent,
         SLOT(clicked(QAbstractButton*)));
     connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
 
-    packetWasRenamed(link);
-    packetWasChanged(link);
+    packetWasRenamed(*link);
+    packetWasChanged(*link);
 
     link->listen(this);
 }
@@ -328,11 +328,11 @@ LinkMoveDialog::~LinkMoveDialog() {
     delete moveTypes;
 }
 
-void LinkMoveDialog::packetWasRenamed(regina::Packet*) {
+void LinkMoveDialog::packetWasRenamed(regina::Packet&) {
     name->setText(link->humanLabel().c_str());
 }
 
-void LinkMoveDialog::packetWasChanged(regina::Packet*) {
+void LinkMoveDialog::packetWasChanged(regina::Packet&) {
     if (link->size() == 1)
         overview->setText(tr("1 crossing"));
     else

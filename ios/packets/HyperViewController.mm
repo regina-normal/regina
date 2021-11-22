@@ -172,13 +172,13 @@
     }
 }
 
-- (void)packetWasRenamed:(regina::Packet*)packet
+- (void)packetWasRenamed:(regina::Packet&)packet
 {
     // Assume it is the underlying triangulation.
     [self updateTriangulationButton:self.tri];
 }
 
-- (void)packetWasChanged:(regina::Packet*)packet
+- (void)packetWasChanged:(regina::Packet&)packet
 {
     if (packet != std::addressof(self.packet->triangulation())) {
         // Our list has switched to use a local snapshot of the triangulation.

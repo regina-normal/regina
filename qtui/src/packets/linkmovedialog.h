@@ -169,8 +169,8 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
         /**
          * Update the overview information if the link changes.
          */
-        void packetWasRenamed(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
+        void packetWasRenamed(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
         void packetBeingDestroyed(regina::PacketShell) override;
 
     protected slots:

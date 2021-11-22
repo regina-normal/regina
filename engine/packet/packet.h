@@ -1776,7 +1776,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * @param event the member function of PacketListener to be called
          * for each listener.
          */
-        void fireEvent(void (PacketListener::*event)(Packet*));
+        void fireEvent(void (PacketListener::*event)(Packet&));
 
         /**
          * Calls the given PacketListener event for all registered
@@ -3288,7 +3288,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void packetToBeChanged(Packet* packet);
+        virtual void packetToBeChanged(Packet& packet);
         /**
          * Called after the contents of the packet have been changed.
          * Before the contents are changed, packetToBeChanged() will be
@@ -3298,7 +3298,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void packetWasChanged(Packet* packet);
+        virtual void packetWasChanged(Packet& packet);
         /**
          * Called before the packet label or tags are to be changed.
          * Once the label or tags are changed, packetWasRenamed() will be
@@ -3309,7 +3309,7 @@ class PacketListener {
          * @param packet the packet being listened to.
          * @see childToBeRenamed()
          */
-        virtual void packetToBeRenamed(Packet* packet);
+        virtual void packetToBeRenamed(Packet& packet);
         /**
          * Called after the packet label or tags have been changed.
          * Before the label or tags are changed, packetToBeRenamed() will be
@@ -3320,7 +3320,7 @@ class PacketListener {
          * @param packet the packet being listened to.
          * @see childWasRenamed()
          */
-        virtual void packetWasRenamed(Packet* packet);
+        virtual void packetWasRenamed(Packet& packet);
         /**
          * Called as the packet is being destroyed.
          *
@@ -3457,7 +3457,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void childrenToBeReordered(Packet* packet);
+        virtual void childrenToBeReordered(Packet& packet);
 
         /**
          * Called after the child packets directly beneath the packet
@@ -3469,7 +3469,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void childrenWereReordered(Packet* packet);
+        virtual void childrenWereReordered(Packet& packet);
         /**
          * Called before one of this packet's immediate children has its
          * label or tags changed.
@@ -3575,10 +3575,10 @@ inline PacketDescendants<const_>::PacketDescendants(
         std::shared_ptr<packet_type> subtree) : subtree_(std::move(subtree)) {
 }
 
-inline void PacketListener::packetToBeChanged(Packet*) {
+inline void PacketListener::packetToBeChanged(Packet&) {
 }
 
-inline void PacketListener::packetWasChanged(Packet*) {
+inline void PacketListener::packetWasChanged(Packet&) {
 }
 
 // Inline functions for Packet
@@ -3968,10 +3968,10 @@ inline void PacketListener::unregisterFromAllPackets() {
     unlisten();
 }
 
-inline void PacketListener::packetToBeRenamed(Packet*) {
+inline void PacketListener::packetToBeRenamed(Packet&) {
 }
 
-inline void PacketListener::packetWasRenamed(Packet*) {
+inline void PacketListener::packetWasRenamed(Packet&) {
 }
 
 inline void PacketListener::packetBeingDestroyed(PacketShell) {
@@ -3992,10 +3992,10 @@ inline void PacketListener::childToBeRemoved(Packet*, Packet*) {
 inline void PacketListener::childWasRemoved(Packet*, Packet*) {
 }
 
-inline void PacketListener::childrenToBeReordered(Packet*) {
+inline void PacketListener::childrenToBeReordered(Packet&) {
 }
 
-inline void PacketListener::childrenWereReordered(Packet*) {
+inline void PacketListener::childrenWereReordered(Packet&) {
 }
 
 inline void PacketListener::childToBeRenamed(Packet*, Packet*) {

@@ -304,7 +304,7 @@
 
 #pragma mark - Packet listener
 
-- (void)packetWasChanged:(regina::Packet *)packet
+- (void)packetWasChanged:(regina::Packet &)packet
 {
     [[ReginaHelper document] setDirty];
 
@@ -312,10 +312,10 @@
         [static_cast<id<PacketViewer> >(self.contents) reloadPacket];
 }
 
-- (void)packetWasRenamed:(regina::Packet *)packet
+- (void)packetWasRenamed:(regina::Packet &)packet
 {
     if (packet == self.packet)
-        self.title = [NSString stringWithUTF8String:packet->label().c_str()];
+        self.title = [NSString stringWithUTF8String:packet.label().c_str()];
 }
 
 - (void)packetBeingDestroyed:(regina::PacketShell)packet

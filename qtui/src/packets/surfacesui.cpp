@@ -213,22 +213,17 @@ void SurfacesHeaderUI::viewTriangulation() {
     }
 }
 
-void SurfacesHeaderUI::packetWasRenamed(regina::Packet*) {
+void SurfacesHeaderUI::packetWasRenamed(regina::Packet&) {
     // Assume it is the underlying triangulation.
     refresh();
 }
 
-void SurfacesHeaderUI::packetWasChanged(regina::Packet* packet) {
-    // Assume it is the underlying triangulation.
-    // Note: the following test should always be true, since any change
-    // in the triangulation *should* be preceded by taking a local snapshot.
-    if (dynamic_cast<regina::PacketOf<regina::Triangulation<3>>*>(packet) !=
-            std::addressof(surfaces->triangulation())) {
-        // Our list has switched to use a local snapshot of the triangulation.
-        // It will be read-only from now on.
-        packet->unlisten(this);
-        refresh();
-    }
+void SurfacesHeaderUI::packetWasChanged(regina::Packet& packet) {
+    // The underlying triangulation has changed.
+    // Any such change *should* be immediately preceded by taking a local
+    // snapshot, so the triangulation should be read-only from now on.
+    packet.unlisten(this);
+    refresh();
 }
 
 void SurfacesHeaderUI::packetBeingDestroyed(regina::PacketShell) {

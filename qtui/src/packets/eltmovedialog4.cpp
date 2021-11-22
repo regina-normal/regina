@@ -311,8 +311,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         SLOT(clicked(QAbstractButton*)));
     connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
 
-    packetWasRenamed(tri);
-    packetWasChanged(tri);
+    packetWasRenamed(*tri);
+    packetWasChanged(*tri);
 
     tri->listen(this);
 }
@@ -381,7 +381,7 @@ void EltMoveDialog4::updateApply() {
     buttons->button(QDialogButtonBox::Apply)->setEnabled(b && b->isEnabled());
 }
 
-void EltMoveDialog4::packetWasRenamed(regina::Packet*) {
+void EltMoveDialog4::packetWasRenamed(regina::Packet&) {
     name->setText(tri->humanLabel().c_str());
 }
 
@@ -396,7 +396,7 @@ void EltMoveDialog4::updateStates(ChooserClass* chooser, QRadioButton* button) {
     }
 }
 
-void EltMoveDialog4::packetWasChanged(regina::Packet*) {
+void EltMoveDialog4::packetWasChanged(regina::Packet&) {
     if (tri->size() == 1)
         overview->setText(tr("1 pentachoron"));
     else

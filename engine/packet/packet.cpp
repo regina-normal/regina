@@ -733,11 +733,11 @@ void Packet::writeXMLFile(std::ostream& out, FileFormat format) const {
     }
 }
 
-void Packet::fireEvent(void (PacketListener::*event)(Packet*)) {
+void Packet::fireEvent(void (PacketListener::*event)(Packet&)) {
     if (listeners_.get()) {
         auto it = listeners_->begin();
         while (it != listeners_->end())
-            ((*it++)->*event)(this);
+            ((*it++)->*event)(*this);
     }
 }
 

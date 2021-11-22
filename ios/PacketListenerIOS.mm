@@ -42,7 +42,7 @@ public:
     inline PacketListenerObjC(void* object, regina::Packet* listenChildrenOf) : _object(object), _listenChildrenOf(listenChildrenOf) {
     }
     
-    inline void packetToBeChanged(regina::Packet* packet) override {
+    inline void packetToBeChanged(regina::Packet& packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetToBeChanged:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetToBeChanged:packet];
@@ -53,7 +53,7 @@ public:
         }
     }
     
-    inline void packetWasChanged(regina::Packet* packet) override {
+    inline void packetWasChanged(regina::Packet& packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetWasChanged:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetWasChanged:packet];
@@ -64,7 +64,7 @@ public:
         }
     }
     
-    inline void packetToBeRenamed(regina::Packet* packet) override {
+    inline void packetToBeRenamed(regina::Packet& packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetToBeRenamed:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetToBeRenamed:packet];
@@ -75,7 +75,7 @@ public:
         }
     }
     
-    inline void packetWasRenamed(regina::Packet* packet) override {
+    inline void packetWasRenamed(regina::Packet& packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetWasRenamed:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetWasRenamed:packet];
@@ -143,7 +143,7 @@ public:
         }
     }
     
-    inline void childrenToBeReordered(regina::Packet* packet) override {
+    inline void childrenToBeReordered(regina::Packet& packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childrenToBeReordered:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childrenToBeReordered:packet];
@@ -154,7 +154,7 @@ public:
         }
     }
     
-    inline void childrenWereReordered(regina::Packet* packet) override {
+    inline void childrenWereReordered(regina::Packet& packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childrenWereReordered:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childrenWereReordered:packet];

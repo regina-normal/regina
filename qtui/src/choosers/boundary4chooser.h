@@ -129,8 +129,8 @@ class BoundaryComponent4Chooser :
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
+        void packetToBeChanged(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
         void packetBeingDestroyed(regina::PacketShell) override;
 
     private:
@@ -186,12 +186,12 @@ inline bool BoundaryComponent4Chooser::refresh() {
     return (count() > 0);
 }
 
-inline void BoundaryComponent4Chooser::packetToBeChanged(regina::Packet*) {
+inline void BoundaryComponent4Chooser::packetToBeChanged(regina::Packet&) {
     clear();
     options_.clear();
 }
 
-inline void BoundaryComponent4Chooser::packetWasChanged(regina::Packet*) {
+inline void BoundaryComponent4Chooser::packetWasChanged(regina::Packet&) {
     fill();
 }
 

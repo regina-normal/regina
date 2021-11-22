@@ -178,7 +178,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet) override;
+        void packetWasRenamed(regina::Packet& packet) override;
         void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:

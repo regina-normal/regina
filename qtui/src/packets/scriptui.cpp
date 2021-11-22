@@ -142,7 +142,7 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
             if (! p)
                 return QIcon();
             else
-                return PacketManager::icon(p.get());
+                return PacketManager::icon(*p);
         } else
             return QVariant();
     } else if (role == Qt::EditRole) {
@@ -421,7 +421,7 @@ void ScriptUI::refresh() {
     script->listenVariables(this);
 }
 
-void ScriptUI::packetWasRenamed(Packet*) {
+void ScriptUI::packetWasRenamed(Packet&) {
     // Do not call refresh(), since that changes our registered packets.
     model->rebuild();
     updateRemoveState();

@@ -40,19 +40,19 @@ using regina::PacketShell;
 
 class PyPacketListener : public PacketListener {
     public:
-        void packetToBeChanged(Packet* packet) override {
+        void packetToBeChanged(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetToBeChanged, packet);
         }
-        void packetWasChanged(Packet* packet) override {
+        void packetWasChanged(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetWasChanged, packet);
         }
-        void packetToBeRenamed(Packet* packet) override {
+        void packetToBeRenamed(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetToBeRenamed, packet);
         }
-        void packetWasRenamed(Packet* packet) override {
+        void packetWasRenamed(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetWasRenamed, packet);
         }
@@ -76,11 +76,11 @@ class PyPacketListener : public PacketListener {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childWasRemoved, packet, child);
         }
-        void childrenToBeReordered(Packet* packet) override {
+        void childrenToBeReordered(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childrenToBeReordered, packet);
         }
-        void childrenWereReordered(Packet* packet) override {
+        void childrenWereReordered(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childrenWereReordered, packet);
         }

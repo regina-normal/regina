@@ -132,8 +132,8 @@ class FaceChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
+        void packetToBeChanged(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
         void packetBeingDestroyed(regina::PacketShell) override;
 
     private:
@@ -280,13 +280,13 @@ inline bool FaceChooser<dim, subdim>::refresh() {
 }
 
 template <int dim, int subdim>
-inline void FaceChooser<dim, subdim>::packetToBeChanged(regina::Packet*) {
+inline void FaceChooser<dim, subdim>::packetToBeChanged(regina::Packet&) {
     clear();
     options_.clear();
 }
 
 template <int dim, int subdim>
-inline void FaceChooser<dim, subdim>::packetWasChanged(regina::Packet*) {
+inline void FaceChooser<dim, subdim>::packetWasChanged(regina::Packet&) {
     fill();
 }
 

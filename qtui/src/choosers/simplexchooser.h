@@ -129,8 +129,8 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
+        void packetToBeChanged(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
         void packetBeingDestroyed(regina::PacketShell) override;
 
     private:
@@ -189,13 +189,13 @@ inline bool SimplexChooser<dim>::refresh() {
 }
 
 template <int dim>
-inline void SimplexChooser<dim>::packetToBeChanged(regina::Packet*) {
+inline void SimplexChooser<dim>::packetToBeChanged(regina::Packet&) {
     clear();
     options_.clear();
 }
 
 template <int dim>
-inline void SimplexChooser<dim>::packetWasChanged(regina::Packet*) {
+inline void SimplexChooser<dim>::packetWasChanged(regina::Packet&) {
     fill();
 }
 

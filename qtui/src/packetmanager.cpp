@@ -68,15 +68,15 @@
 
 using namespace regina;
 
-QIcon PacketManager::icon(Packet* packet) {
+QIcon PacketManager::icon(const Packet& packet) {
     IconCache::IconID id;
 
-    switch (packet->type()) {
+    switch (packet.type()) {
         case PACKET_ANGLESTRUCTURES :
             id = IconCache::packet_angles;
             break;
         case PACKET_CONTAINER :
-            id = (packet->parent() ? IconCache::packet_container :
+            id = (packet.parent() ? IconCache::packet_container :
                 IconCache::regina);
             break;
         case PACKET_LINK:
@@ -86,7 +86,7 @@ QIcon PacketManager::icon(Packet* packet) {
             id = IconCache::packet_attachment;
             break;
         case PACKET_SURFACEFILTER :
-            switch (((SurfaceFilter*)packet)->filterType()) {
+            switch (((const SurfaceFilter&)packet).filterType()) {
                 case NS_FILTER_COMBINATION :
                     id = IconCache::filter_comb;
                     break;

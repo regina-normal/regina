@@ -143,13 +143,13 @@ void SkeletonWindow::refresh() {
     table->header()->resizeSections(QHeaderView::ResizeToContents);
 }
 
-void SkeletonWindow::packetWasChanged(regina::Packet* p) {
-    updateCaption(p->label());
+void SkeletonWindow::packetWasChanged(regina::Packet& p) {
+    updateCaption(p.label());
     refresh();
 }
 
-void SkeletonWindow::packetWasRenamed(regina::Packet* p) {
-    updateCaption(p->label());
+void SkeletonWindow::packetWasRenamed(regina::Packet& p) {
+    updateCaption(p.label());
 }
 
 void SkeletonWindow::packetBeingDestroyed(regina::PacketShell) {

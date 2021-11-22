@@ -340,8 +340,8 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent,
         SLOT(clicked(QAbstractButton*)));
     connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
 
-    packetWasRenamed(tri);
-    packetWasChanged(tri);
+    packetWasRenamed(*tri);
+    packetWasChanged(*tri);
 
     tri->listen(this);
 }
@@ -414,7 +414,7 @@ void EltMoveDialog3::updateApply() {
     buttons->button(QDialogButtonBox::Apply)->setEnabled(b && b->isEnabled());
 }
 
-void EltMoveDialog3::packetWasRenamed(regina::Packet*) {
+void EltMoveDialog3::packetWasRenamed(regina::Packet&) {
     name->setText(tri->humanLabel().c_str());
 }
 
@@ -429,7 +429,7 @@ void EltMoveDialog3::updateStates(ChooserClass* chooser, QRadioButton* button) {
     }
 }
 
-void EltMoveDialog3::packetWasChanged(regina::Packet*) {
+void EltMoveDialog3::packetWasChanged(regina::Packet&) {
     if (tri->size() == 1)
         overview->setText(tr("1 tetrahedron"));
     else

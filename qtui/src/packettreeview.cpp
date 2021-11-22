@@ -69,7 +69,7 @@ PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent,
 void PacketTreeItem::init() {
     packet->listen(this);
     refreshLabel();
-    setIcon(0, PacketManager::icon(packet));
+    setIcon(0, PacketManager::icon(*packet));
 }
 
 void PacketTreeItem::fill() {
@@ -105,11 +105,11 @@ void PacketTreeItem::ensureExpanded() {
         treeWidget()->collapseItem(this);
 }
 
-void PacketTreeItem::packetWasChanged(regina::Packet*) {
+void PacketTreeItem::packetWasChanged(regina::Packet&) {
     getMainWindow()->setModified(true);
 }
 
-void PacketTreeItem::packetWasRenamed(regina::Packet*) {
+void PacketTreeItem::packetWasRenamed(regina::Packet&) {
     refreshLabel();
     getMainWindow()->setModified(true);
 }
@@ -139,7 +139,7 @@ void PacketTreeItem::childWasRemoved(regina::Packet* p, regina::Packet*) {
     }
 }
 
-void PacketTreeItem::childrenWereReordered(regina::Packet*) {
+void PacketTreeItem::childrenWereReordered(regina::Packet&) {
     refreshSubtree();
     getMainWindow()->setModified(true);
 }
@@ -398,7 +398,7 @@ void PacketTreeView::childWasRemoved(regina::Packet*, regina::Packet*) {
     getMainWindow()->setModified(true);
 }
 
-void PacketTreeView::childrenWereReordered(regina::Packet*) {
+void PacketTreeView::childrenWereReordered(regina::Packet&) {
     refreshFullTree();
     getMainWindow()->setModified(true);
 }
