@@ -1791,24 +1791,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * for each listener.
          * @param arg2 the second argument to pass to the event function.
          */
-        void fireEvent(void (PacketListener::*event)(Packet*, Packet*),
-            Packet* arg2);
-
-        /**
-         * Calls the given PacketListener event for all registered
-         * packet listeners, passing \c null as the first argument to the
-         * event function.
-         *
-         * Calling this routine is better than iterating through listeners
-         * manually, since it behaves correctly even if listeners unregister
-         * themselves as they handle the event.
-         *
-         * @param event the member function of PacketListener to be called
-         * for each listener.
-         * @param arg2 the second argument to pass to the event function.
-         */
-        void fireEventAsNull(void (PacketListener::*event)(Packet*, Packet*),
-            Packet* arg2);
+        void fireEvent(void (PacketListener::*event)(Packet&, Packet&),
+            Packet& arg2);
 
         /**
          * Calls PacketListener::packetBeingDestroyed() for all registered
@@ -3288,7 +3272,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void packetToBeChanged(Packet& packet);
+        virtual void packetToBeChanged(Packet& packet) {};
         /**
          * Called after the contents of the packet have been changed.
          * Before the contents are changed, packetToBeChanged() will be
@@ -3298,7 +3282,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void packetWasChanged(Packet& packet);
+        virtual void packetWasChanged(Packet& packet) {};
         /**
          * Called before the packet label or tags are to be changed.
          * Once the label or tags are changed, packetWasRenamed() will be
@@ -3309,7 +3293,7 @@ class PacketListener {
          * @param packet the packet being listened to.
          * @see childToBeRenamed()
          */
-        virtual void packetToBeRenamed(Packet& packet);
+        virtual void packetToBeRenamed(Packet& packet) {};
         /**
          * Called after the packet label or tags have been changed.
          * Before the label or tags are changed, packetToBeRenamed() will be
@@ -3320,7 +3304,7 @@ class PacketListener {
          * @param packet the packet being listened to.
          * @see childWasRenamed()
          */
-        virtual void packetWasRenamed(Packet& packet);
+        virtual void packetWasRenamed(Packet& packet) {};
         /**
          * Called as the packet is being destroyed.
          *
@@ -3348,25 +3332,7 @@ class PacketListener {
          *
          * @param packet gives access to the packet being listened to.
          */
-        virtual void packetBeingDestroyed(PacketShell packet);
-        /**
-         * A placeholder for the old (and now unused) callback that was
-         * used in Regina 6.0.1 and earlier when a packet was being destroyed.
-         *
-         * In Regina 7.0 this was renamed to packetBeingDestroyed(), to
-         * emphasise the fact that we are already well inside the packet
-         * destructor when this is called.
-         *
-         * The main purpose for keeping this old function is so that we
-         * can mark it \c final, thus forcing a compiler error for any
-         * code that still attempts to reimplement it.
-         *
-         * The implementation of this function does nothing.
-         *
-         * \ifacespython Not present, since Python does not provide a mechanism
-         * such as \c final to prevent subclasses from overriding a function.
-         */
-        virtual void packetToBeDestroyed(PacketShell) final;
+        virtual void packetBeingDestroyed(PacketShell packet) {};
         /**
          * Called before a child packet is to be inserted directly beneath
          * the packet.
@@ -3378,7 +3344,7 @@ class PacketListener {
          * @param packet the packet being listened to.
          * @param child the child packet to be added.
          */
-        virtual void childToBeAdded(Packet* packet, Packet* child);
+        virtual void childToBeAdded(Packet& packet, Packet& child) {};
         /**
          * Called after a child packet has been inserted directly beneath
          * the packet.
@@ -3390,27 +3356,17 @@ class PacketListener {
          * @param packet the packet being listened to.
          * @param child the child packet that was added.
          */
-        virtual void childWasAdded(Packet* packet, Packet* child);
+        virtual void childWasAdded(Packet& packet, Packet& child) {};
         /**
          * Called before a child packet is to be removed from directly beneath
          * the packet.
-         *
          * Once the child is removed, childWasRemoved() will be called also.
          *
-         * Be warned: we could already be inside the parent packet's
-         * destructor.  Specifically: if a packet \a p is being destroyed,
-         * then it will orphan all of its children (which as a side-effect
-         * will cause the children be destroyed also, unless they are being
-         * mananged by other shared pointers also).  In such a situation, both
-         * listener functions childToBeRemoved() and childWasRemoved() will be
-         * called as each child \a c is orphaned, and before \a c is potentially
-         * destroyed.  For both these listener functions, the argument
-         * \a packet will be passed as \c null (since the parent \a p is
-         * already well into its destruction process).
-         *
-         * Since Regina 7.0 switched to using shared pointers for packets,
-         * it is now impossible for this routine to be called from within
-         * the child packet's destructor.
+         * Since Regina 7.0, this routine is no longer called from within
+         * either the parent or child packet's destructor.  In particular,
+         * when a parent packet is destroyed, although it orphans all of
+         * its children as part of the destruction process, it does not call
+         * childToBeRemoved() or childWasRemoved when this happens.
          *
          * The default implementation of this routine is to do nothing.
          *
@@ -3418,27 +3374,17 @@ class PacketListener {
          * this routine is being called from within this packet's destructor.
          * @param child the child packet to be removed.
          */
-        virtual void childToBeRemoved(Packet* packet, Packet* child);
+        virtual void childToBeRemoved(Packet& packet, Packet& child) {};
         /**
          * Called after a child packet has been removed from directly beneath
          * the packet.
-         *
          * Before the child is removed, childToBeRemoved() will be called also.
          *
-         * Be warned: we could already be inside the parent packet's
-         * destructor.  Specifically: if a packet \a p is being destroyed,
-         * then it will orphan all of its children (which as a side-effect
-         * will cause the children be destroyed also, unless they are being
-         * mananged by other shared pointers also).  In such a situation, both
-         * listener functions childToBeRemoved() and childWasRemoved() will be
-         * called as each child \a c is orphaned, and before \a c is potentially
-         * destroyed.  For both these listener functions, the argument
-         * \a packet will be passed as \c null (since the parent \a p is
-         * already well into its destruction process).
-         *
-         * Since Regina 7.0 switched to using shared pointers for packets,
-         * it is now impossible for this routine to be called from within
-         * the child packet's destructor.
+         * Since Regina 7.0, this routine is no longer called from within
+         * either the parent or child packet's destructor.  In particular,
+         * when a parent packet is destroyed, although it orphans all of
+         * its children as part of the destruction process, it does not call
+         * childToBeRemoved() or childWasRemoved when this happens.
          *
          * The default implementation of this routine is to do nothing.
          *
@@ -3446,7 +3392,7 @@ class PacketListener {
          * this routine is being called from within this packet's destructor.
          * @param child the child packet that was removed.
          */
-        virtual void childWasRemoved(Packet* packet, Packet* child);
+        virtual void childWasRemoved(Packet& packet, Packet& child) {};
         /**
          * Called before the child packets directly beneath the packet
          * are to be reordered.
@@ -3457,7 +3403,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void childrenToBeReordered(Packet& packet);
+        virtual void childrenToBeReordered(Packet& packet) {};
 
         /**
          * Called after the child packets directly beneath the packet
@@ -3469,7 +3415,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void childrenWereReordered(Packet& packet);
+        virtual void childrenWereReordered(Packet& packet) {};
         /**
          * Called before one of this packet's immediate children has its
          * label or tags changed.
@@ -3481,7 +3427,7 @@ class PacketListener {
          * @param child the child packet to be renamed.
          * @see packetToBeRenamed()
          */
-        virtual void childToBeRenamed(Packet* packet, Packet* child);
+        virtual void childToBeRenamed(Packet& packet, Packet& child) {};
         /**
          * Called after one of this packet's immediate children has its
          * label or tags changed.
@@ -3493,7 +3439,167 @@ class PacketListener {
          * @param child the child packet that was renamed.
          * @see packetWasRenamed()
          */
-        virtual void childWasRenamed(Packet* packet, Packet* child);
+        virtual void childWasRenamed(Packet& packet, Packet& child) {};
+
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the packetToBeChanged() callback now takes its
+         * argument by reference, not by pointer.
+         *
+         * \ifacespython In Python, packetToBeChanged() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void packetToBeChanged(Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the packetWasChanged() callback now takes its
+         * argument by reference, not by pointer.
+         *
+         * \ifacespython In Python, packetWasChanged() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void packetWasChanged(Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the packetToBeRenamed() callback now takes its
+         * argument by reference, not by pointer.
+         *
+         * \ifacespython In Python, packetToBeRenamed() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void packetToBeRenamed(Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the packetWasRenamed() callback now takes its
+         * argument by reference, not by pointer.
+         *
+         * \ifacespython In Python, packetWasRenamed() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void packetWasRenamed(Packet*) final {};
+        /**
+         * A placeholder for an old callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * This callback has been renamed to packetBeingDestroyed(), to
+         * emphasise the fact that we are already well inside the packet
+         * destructor when this is called.
+         *
+         * \ifacespython Not present, since Python does not provide a mechanism
+         * such as \c final to prevent subclasses from overriding a function.
+         */
+        virtual void packetToBeDestroyed(PacketShell) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the childToBeAdded() callback now takes its
+         * arguments by reference, not by pointer.
+         *
+         * \ifacespython In Python, childToBeAdded() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void childToBeAdded(Packet*, Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the childWasAdded() callback now takes its
+         * arguments by reference, not by pointer.
+         *
+         * \ifacespython In Python, childWasAdded() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void childWasAdded(Packet*, Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the childToBeRemoved() callback now takes its
+         * arguments by reference, not by pointer, and is no longer
+         * called from within either the child or parent destructor.
+         *
+         * \ifacespython In Python, childToBeRemoved() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void childToBeRemoved(Packet*, Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the childWasRemoved() callback now takes its
+         * arguments by reference, not by pointer, and is no longer
+         * called from within either the child or parent destructor.
+         *
+         * \ifacespython In Python, childWasRemoved() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void childWasRemoved(Packet*, Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the childrenToBeReordered() callback now takes its
+         * argument by reference, not by pointer.
+         *
+         * \ifacespython In Python, childrenToBeReordered() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void childrenToBeReordered(Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the childrenWereReordered() callback now takes its
+         * argument by reference, not by pointer.
+         *
+         * \ifacespython In Python, childrenWereReordered() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void childrenWereReordered(Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the childToBeRenamed() callback now takes its
+         * arguments by reference, not by pointer.
+         *
+         * \ifacespython In Python, childToBeRenamed() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void childToBeRenamed(Packet*, Packet*) final {};
+        /**
+         * A placeholder for an old form of a callback function that is no
+         * longer used.  This has been kept but marked \c final to force a
+         * compile error if any subclass attempts to remimplement it.
+         *
+         * The new form of the childWasRenamed() callback now takes its
+         * arguments by reference, not by pointer.
+         *
+         * \ifacespython In Python, childWasRenamed() refers to the new
+         * (reference-based) form of this callback.
+         */
+        virtual void childWasRenamed(Packet*, Packet*) final {};
 
         /*@}*/
 
@@ -3573,12 +3679,6 @@ inline PacketChildren<const_>::PacketChildren(
 template <bool const_>
 inline PacketDescendants<const_>::PacketDescendants(
         std::shared_ptr<packet_type> subtree) : subtree_(std::move(subtree)) {
-}
-
-inline void PacketListener::packetToBeChanged(Packet&) {
-}
-
-inline void PacketListener::packetWasChanged(Packet&) {
 }
 
 // Inline functions for Packet
@@ -3966,42 +4066,6 @@ inline bool PacketListener::isListening() const {
 
 inline void PacketListener::unregisterFromAllPackets() {
     unlisten();
-}
-
-inline void PacketListener::packetToBeRenamed(Packet&) {
-}
-
-inline void PacketListener::packetWasRenamed(Packet&) {
-}
-
-inline void PacketListener::packetBeingDestroyed(PacketShell) {
-}
-
-inline void PacketListener::packetToBeDestroyed(PacketShell) {
-}
-
-inline void PacketListener::childToBeAdded(Packet*, Packet*) {
-}
-
-inline void PacketListener::childWasAdded(Packet*, Packet*) {
-}
-
-inline void PacketListener::childToBeRemoved(Packet*, Packet*) {
-}
-
-inline void PacketListener::childWasRemoved(Packet*, Packet*) {
-}
-
-inline void PacketListener::childrenToBeReordered(Packet&) {
-}
-
-inline void PacketListener::childrenWereReordered(Packet&) {
-}
-
-inline void PacketListener::childToBeRenamed(Packet*, Packet*) {
-}
-
-inline void PacketListener::childWasRenamed(Packet*, Packet*) {
 }
 
 } // namespace regina

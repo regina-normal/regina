@@ -325,7 +325,7 @@
         self.packet = nil;
 }
 
-- (void)childWasAddedTo:(regina::Packet *)packet child:(regina::Packet *)child
+- (void)childWasAddedTo:(regina::Packet &)packet child:(regina::Packet &)child
 {
     if (packet == self.packet) {
         bool newEditability = packet->isPacketEditable();
@@ -338,7 +338,7 @@
     }
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child
+- (void)childWasRemovedFrom:(regina::Packet &)packet child:(regina::Packet &)child
 {
     if (packet == self.packet) {
         bool newEditability = packet->isPacketEditable();

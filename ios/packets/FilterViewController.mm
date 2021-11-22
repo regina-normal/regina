@@ -321,19 +321,19 @@ static NSMutableCharacterSet* eulerSeparators;
     [ReginaHelper viewPacket:static_cast<regina::Packet*>([_subfilters pointerAtIndex:indexPath.row])];
 }
 
-- (void)childWasAddedTo:(regina::Packet *)packet child:(regina::Packet *)child
+- (void)childWasAddedTo:(regina::Packet &)packet child:(regina::Packet &)child
 {
     // Be brutal for now: just reload the entire table.
     [self updateSubfilters];
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child
+- (void)childWasRemovedFrom:(regina::Packet &)packet child:(regina::Packet &)child
 {
     // Be brutal for now: just reload the entire table.
     [self updateSubfilters];
 }
 
-- (void)childWasRenamed:(regina::Packet *)packet child:(regina::Packet *)child
+- (void)childWasRenamed:(regina::Packet &)packet child:(regina::Packet &)child
 {
     // Be brutal for now: just reload the entire table.
     [self updateSubfilters];

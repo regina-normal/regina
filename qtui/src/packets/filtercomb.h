@@ -92,9 +92,9 @@ class FilterCombUI : public QObject, public PacketUI,
          * PacketListener overrides.
          */
         void packetWasRenamed(regina::Packet& packet) override;
-        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+        void childWasAdded(regina::Packet& packet, regina::Packet& child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+        void childWasRemoved(regina::Packet& packet, regina::Packet& child)
             override;
         void childrenWereReordered(regina::Packet& packet) override;
 

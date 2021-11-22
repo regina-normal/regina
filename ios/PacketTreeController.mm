@@ -332,7 +332,7 @@
     }
 }
 
-- (void)childWasAddedTo:(regina::Packet*)packet child:(regina::Packet*)child {
+- (void)childWasAddedTo:(regina::Packet&)packet child:(regina::Packet&)child {
     [[ReginaHelper document] setDirty];
 
     NSIndexPath* path;
@@ -369,7 +369,7 @@
      */
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child {
+- (void)childWasRemovedFrom:(regina::Packet &)packet child:(regina::Packet &)child {
     if (! packet) // are we in the parent's destructor?
         return;
 

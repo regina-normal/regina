@@ -53,8 +53,6 @@ Packet::~Packet() {
         // consistent state with respect to its other children (in case our
         // event listeners need this).
 
-        fireEventAsNull(&PacketListener::childToBeRemoved, tmp.get());
-
         if (tmp->nextTreeSibling_) {
             firstTreeChild_ = tmp->nextTreeSibling_;
             firstTreeChild_->prevTreeSibling_.reset();
@@ -65,8 +63,6 @@ Packet::~Packet() {
             lastTreeChild_.reset();
         }
         tmp->treeParent_.reset();
-
-        fireEventAsNull(&PacketListener::childWasRemoved, tmp.get());
 
         // If there are no other shared pointers to it, then the child
         // should now be destroyed as tmp goes out of scope.
@@ -96,13 +92,13 @@ void Packet::setLabel(const std::string& label) {
 
     auto parent = treeParent_.lock();
     if (parent)
-        parent->fireEvent(&PacketListener::childToBeRenamed, this);
+        parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
     label_ = label;
 
     fireEvent(&PacketListener::packetWasRenamed);
     if (parent)
-        parent->fireEvent(&PacketListener::childWasRenamed, this);
+        parent->fireEvent(&PacketListener::childWasRenamed, *this);
 }
 
 bool Packet::listen(PacketListener* listener) {
@@ -132,7 +128,7 @@ std::shared_ptr<Packet> Packet::root() const {
 }
 
 void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
-    fireEvent(&PacketListener::childToBeAdded, child.get());
+    fireEvent(&PacketListener::childToBeAdded, *child);
 
     child->treeParent_ = weak_from_this();
     child->prevTreeSibling_.reset();
@@ -146,11 +142,11 @@ void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
         lastTreeChild_ = child;
     }
 
-    fireEvent(&PacketListener::childWasAdded, child.get());
+    fireEvent(&PacketListener::childWasAdded, *child);
 }
 
 void Packet::insertChildLast(std::shared_ptr<Packet> child) {
-    fireEvent(&PacketListener::childToBeAdded, child.get());
+    fireEvent(&PacketListener::childToBeAdded, *child);
 
     child->treeParent_ = weak_from_this();
     child->prevTreeSibling_ = lastTreeChild_;
@@ -164,12 +160,12 @@ void Packet::insertChildLast(std::shared_ptr<Packet> child) {
         lastTreeChild_ = child;
     }
 
-    fireEvent(&PacketListener::childWasAdded, child.get());
+    fireEvent(&PacketListener::childWasAdded, *child);
 }
 
 void Packet::insertChildAfter(std::shared_ptr<Packet> newChild,
         std::shared_ptr<Packet> prevChild) {
-    fireEvent(&PacketListener::childToBeAdded, newChild.get());
+    fireEvent(&PacketListener::childToBeAdded, *newChild);
 
     if (! prevChild)
         insertChildFirst(newChild);
@@ -184,7 +180,7 @@ void Packet::insertChildAfter(std::shared_ptr<Packet> newChild,
             lastTreeChild_ = newChild;
     }
 
-    fireEvent(&PacketListener::childWasAdded, newChild.get());
+    fireEvent(&PacketListener::childWasAdded, *newChild);
 }
 
 void Packet::makeOrphan() {
@@ -196,7 +192,7 @@ void Packet::makeOrphan() {
     // out the shared_ptr that its old parent or previous sibling holds.
     auto guard = shared_from_this();
 
-    parent->fireEvent(&PacketListener::childToBeRemoved, this);
+    parent->fireEvent(&PacketListener::childToBeRemoved, *this);
 
     if (prevTreeSibling_.expired())
         parent->firstTreeChild_ = nextTreeSibling_;
@@ -212,7 +208,7 @@ void Packet::makeOrphan() {
     prevTreeSibling_.reset();
     nextTreeSibling_.reset();
 
-    parent->fireEvent(&PacketListener::childWasRemoved, this);
+    parent->fireEvent(&PacketListener::childWasRemoved, *this);
 }
 
 void Packet::reparent(std::shared_ptr<Packet> newParent, bool first) {
@@ -244,9 +240,9 @@ void Packet::transferChildren(std::shared_ptr<Packet> newParent) {
         auto start = firstTreeChild_;
 
         for (auto child = start; child; child = child->nextTreeSibling_)
-            fireEvent(&PacketListener::childToBeRemoved, child.get());
+            fireEvent(&PacketListener::childToBeRemoved, *child);
         for (auto child = start; child; child = child->nextTreeSibling_)
-            newParent->fireEvent(&PacketListener::childToBeAdded, child.get());
+            newParent->fireEvent(&PacketListener::childToBeAdded, *child);
 
         start->prevTreeSibling_ = newParent->lastTreeChild_;
         if (newParent->lastTreeChild_)
@@ -261,9 +257,9 @@ void Packet::transferChildren(std::shared_ptr<Packet> newParent) {
             child->treeParent_ = newParent;
 
         for (auto child = start; child; child = child->nextTreeSibling_)
-            fireEvent(&PacketListener::childWasRemoved, child.get());
+            fireEvent(&PacketListener::childWasRemoved, *child);
         for (auto child = start; child; child = child->nextTreeSibling_)
-            newParent->fireEvent(&PacketListener::childWasAdded, child.get());
+            newParent->fireEvent(&PacketListener::childWasAdded, *child);
     } else {
         // Orphan the children.
         // We do this carefully, one at a time, since each child may be
@@ -271,7 +267,7 @@ void Packet::transferChildren(std::shared_ptr<Packet> newParent) {
         // happen before the relevant child is destroyed, and to have
         // the packet tree in a consistent state.
         while (auto tmp = firstTreeChild_) {
-            fireEvent(&PacketListener::childToBeRemoved, tmp.get());
+            fireEvent(&PacketListener::childToBeRemoved, *tmp);
 
             if (tmp->nextTreeSibling_) {
                 firstTreeChild_ = tmp->nextTreeSibling_;
@@ -284,7 +280,7 @@ void Packet::transferChildren(std::shared_ptr<Packet> newParent) {
             }
             tmp->treeParent_.reset();
 
-            fireEvent(&PacketListener::childWasRemoved, tmp.get());
+            fireEvent(&PacketListener::childWasRemoved, *tmp);
 
             // If there are no other shared pointers to it, then the child
             // should now be destroyed as tmp goes out of scope.
@@ -663,7 +659,7 @@ bool Packet::addTag(const std::string& tag) {
 
     fireEvent(&PacketListener::packetToBeRenamed);
     if (parent)
-        parent->fireEvent(&PacketListener::childToBeRenamed, this);
+        parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
     if (! tags_.get())
         tags_ = std::make_unique<std::set<std::string>>();
@@ -671,7 +667,7 @@ bool Packet::addTag(const std::string& tag) {
 
     fireEvent(&PacketListener::packetWasRenamed);
     if (parent)
-        parent->fireEvent(&PacketListener::childWasRenamed, this);
+        parent->fireEvent(&PacketListener::childWasRenamed, *this);
 
     return ans;
 }
@@ -684,13 +680,13 @@ bool Packet::removeTag(const std::string& tag) {
 
     fireEvent(&PacketListener::packetToBeRenamed);
     if (parent)
-        parent->fireEvent(&PacketListener::childToBeRenamed, this);
+        parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
     bool ans = tags_->erase(tag);
 
     fireEvent(&PacketListener::packetWasRenamed);
     if (parent)
-        parent->fireEvent(&PacketListener::childWasRenamed, this);
+        parent->fireEvent(&PacketListener::childWasRenamed, *this);
 
     return ans;
 }
@@ -701,13 +697,13 @@ void Packet::removeAllTags() {
 
         fireEvent(&PacketListener::packetToBeRenamed);
         if (parent)
-            parent->fireEvent(&PacketListener::childToBeRenamed, this);
+            parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
         tags_->clear();
 
         fireEvent(&PacketListener::packetWasRenamed);
         if (parent)
-            parent->fireEvent(&PacketListener::childWasRenamed, this);
+            parent->fireEvent(&PacketListener::childWasRenamed, *this);
     }
 }
 
@@ -741,21 +737,12 @@ void Packet::fireEvent(void (PacketListener::*event)(Packet&)) {
     }
 }
 
-void Packet::fireEvent(void (PacketListener::*event)(Packet*, Packet*),
-        Packet* arg2) {
+void Packet::fireEvent(void (PacketListener::*event)(Packet&, Packet&),
+        Packet& arg2) {
     if (listeners_.get()) {
         auto it = listeners_->begin();
         while (it != listeners_->end())
-            ((*it++)->*event)(this, arg2);
-    }
-}
-
-void Packet::fireEventAsNull(void (PacketListener::*event)(Packet*, Packet*),
-        Packet* arg2) {
-    if (listeners_.get()) {
-        auto it = listeners_->begin();
-        while (it != listeners_->end())
-            ((*it++)->*event)(nullptr, arg2);
+            ((*it++)->*event)(*this, arg2);
     }
 }
 

@@ -60,19 +60,19 @@ class PyPacketListener : public PacketListener {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetBeingDestroyed, packet);
         }
-        void childToBeAdded(Packet* packet, Packet* child) override {
+        void childToBeAdded(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeAdded, packet, child);
         }
-        void childWasAdded(Packet* packet, Packet* child) override {
+        void childWasAdded(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childWasAdded, packet, child);
         }
-        void childToBeRemoved(Packet* packet, Packet* child) override {
+        void childToBeRemoved(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeRemoved, packet, child);
         }
-        void childWasRemoved(Packet* packet, Packet* child) override {
+        void childWasRemoved(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childWasRemoved, packet, child);
         }
@@ -84,11 +84,11 @@ class PyPacketListener : public PacketListener {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childrenWereReordered, packet);
         }
-        void childToBeRenamed(Packet* packet, Packet* child) override {
+        void childToBeRenamed(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeRenamed, packet, child);
         }
-        void childWasRenamed(Packet* packet, Packet* child) override {
+        void childWasRenamed(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childWasRenamed, packet, child);
         }

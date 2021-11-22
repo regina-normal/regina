@@ -124,19 +124,15 @@ void PacketTreeItem::packetBeingDestroyed(regina::PacketShell) {
     delete this;
 }
 
-void PacketTreeItem::childWasAdded(regina::Packet*, regina::Packet*) {
+void PacketTreeItem::childWasAdded(regina::Packet&, regina::Packet&) {
     // Be careful.  We might not be in the GUI thread.
     QApplication::postEvent(treeWidget(), new PacketTreeItemEvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
-void PacketTreeItem::childWasRemoved(regina::Packet* p, regina::Packet*) {
-    // If we're in the parent destructor, it's all going to be done in
-    // this->packetBeingDestroyed() anyway.
-    if (p) { // not in parent destructor
-        refreshSubtree();
-        getMainWindow()->setModified(true);
-    }
+void PacketTreeItem::childWasRemoved(regina::Packet&, regina::Packet&) {
+    refreshSubtree();
+    getMainWindow()->setModified(true);
 }
 
 void PacketTreeItem::childrenWereReordered(regina::Packet&) {
@@ -385,15 +381,13 @@ void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
     p->markShouldBeExpanded(false);
 }
 
-void PacketTreeView::childWasAdded(regina::Packet*, regina::Packet*) {
+void PacketTreeView::childWasAdded(regina::Packet&, regina::Packet&) {
     // Be careful.  We might not be in the GUI thread.
     QApplication::postEvent(this, new PacketTreeItemEvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), nullptr /* root */));
 }
 
-void PacketTreeView::childWasRemoved(regina::Packet*, regina::Packet*) {
-    // We can't be in the parent destructor, since the tree itself only
-    // listens on the root packet.
+void PacketTreeView::childWasRemoved(regina::Packet&, regina::Packet&) {
     refreshFullTree();
     getMainWindow()->setModified(true);
 }

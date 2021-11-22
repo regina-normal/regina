@@ -113,12 +113,11 @@ void ContainerUI::refresh() {
     descendants->setText(QString::number(container->countDescendants()));
 }
 
-void ContainerUI::childWasAdded(Packet*, Packet*) {
+void ContainerUI::childWasAdded(Packet&, Packet&) {
     refresh();
 }
 
-void ContainerUI::childWasRemoved(Packet* packet, Packet*) {
-    if (packet) // not in packet's destructor
-        refresh();
+void ContainerUI::childWasRemoved(Packet&, Packet&) {
+    refresh();
 }
 

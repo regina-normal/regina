@@ -46,14 +46,14 @@
 - (void)packetToBeRenamed:(regina::Packet&)packet;
 - (void)packetWasRenamed:(regina::Packet&)packet;
 - (void)packetBeingDestroyed:(regina::PacketShell)packet;
-- (void)childToBeAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childWasAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childToBeRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childWasRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;
+- (void)childToBeAddedTo:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childWasAddedTo:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childToBeRemovedFrom:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childWasRemovedFrom:(regina::Packet&)packet child:(regina::Packet&)child;
 - (void)childrenToBeReordered:(regina::Packet&)packet;
 - (void)childrenWereReordered:(regina::Packet&)packet;
-- (void)childToBeRenamed:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childWasRenamed:(regina::Packet*)packet child:(regina::Packet*)child;
+- (void)childToBeRenamed:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childWasRenamed:(regina::Packet&)packet child:(regina::Packet&)child;
 @end
 
 /**

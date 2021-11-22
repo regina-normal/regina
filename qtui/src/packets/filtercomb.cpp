@@ -172,13 +172,13 @@ void FilterCombUI::packetWasRenamed(Packet& p) {
         refreshChildList();
 }
 
-void FilterCombUI::childWasAdded(Packet* p, Packet*) {
-    if (p == filter)
+void FilterCombUI::childWasAdded(Packet& p, Packet&) {
+    if (std::addressof(p) == filter)
         refreshChildList();
 }
 
-void FilterCombUI::childWasRemoved(Packet* p, Packet*) {
-    if (p == filter)
+void FilterCombUI::childWasRemoved(Packet& p, Packet&) {
+    if (std::addressof(p) == filter)
         refreshChildList();
 }
 

@@ -987,6 +987,11 @@ Version 7.0  [ TODO ]
             - Renamed packetToBeDestroyed() to packetBeingDestroyed(), since
               it is called when the destructor is already in progress.  The old
               name is kept and marked final, to ensure it is not reimplemented.
+            - Callbacks childToBeRemoved() and childWasRemoved() are no longer
+              called from either the child or parent destructors.
+            - All callbacks now take their packets by reference, not pointer.
+              The old versions are again kept and marked as final, to ensure
+              they are not reimplemented.
         Enum PacketType:
             - New constant PACKET_NONE.
             - Renamed PACKET_PDF to PACKET_ATTACHMENT.  The old name is
