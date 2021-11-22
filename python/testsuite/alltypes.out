@@ -1411,6 +1411,132 @@ Exception type
 InvalidInput : class
 Exception type
 
+IsoSigClassic10 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic11 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic12 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic13 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic14 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic15 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic2 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic3 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic4 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic5 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic6 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic7 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic8 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigClassic9 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees10 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees11 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees12 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees13 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees14 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees15 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees2 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees3 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees4 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees5 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees6 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees7 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees8 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigEdgeDegrees9 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable10 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable11 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable12 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable13 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable14 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable15 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable2 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable3 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable4 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable5 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable6 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable7 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable8 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigPrintable9 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 Isomorphism10 : class
 Equality type : EqualityType.BY_REFERENCE
 
