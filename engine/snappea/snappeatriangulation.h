@@ -543,6 +543,10 @@ class SnapPeaTriangulation :
                  member so that shape() can still return a reference even when
                  no tetrahedron shapes have been computed. */
 
+        unsigned reginaChangeEventSpans_ { 0 };
+            /**< The number of change event spans currently registered
+                 on the inherited Triangulation<3> interface. */
+
     public:
         /**
          * \name Constructors and Destructors
@@ -2074,6 +2078,9 @@ class SnapPeaTriangulation :
                     tri_.Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
                 }
         };
+
+    // Ensure that Triangulation<3> can edit reginaChangeEventSpans_.
+    friend class Triangulation<3>;
 };
 
 /**

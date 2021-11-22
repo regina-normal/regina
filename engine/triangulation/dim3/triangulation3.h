@@ -3392,16 +3392,28 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
             /**< Internal to maximalForestInSkeleton(). */
 
         /**
-         * Nullifies this SnapPea triangulation.
+         * Called before changing the Regina data for a SnapPea triangulation.
+         *
+         * The functions snapPeaPreChange() and snapPeaPostChange() together
+         * manage change events on the SnapPea triangulation packet (if there
+         * is one), as well as the nullification of the SnapPea triangulation.
          *
          * \pre This Regina triangulation is in fact the inherited
          * Triangulation<3> data for the derived class SnapPeaTriangulation.
-         *
-         * \note This trivial function exists simply so that we can make some
-         * other Triangulation<3> functions inline without needing to include
-         * the full SnapPea triangulation headers here in this file.
          */
-        void nullifySnapPea();
+        void snapPeaPreChange();
+
+        /**
+         * Called after changing the Regina data for a SnapPea triangulation.
+         *
+         * The functions snapPeaPreChange() and snapPeaPostChange() together
+         * manage change events on the SnapPea triangulation packet (if there
+         * is one), as well as the nullification of the SnapPea triangulation.
+         *
+         * \pre This Regina triangulation is in fact the inherited
+         * Triangulation<3> data for the derived class SnapPeaTriangulation.
+         */
+        void snapPeaPostChange();
 
     friend class regina::Face<3, 3>;
     friend class regina::detail::SimplexBase<3>;
@@ -3416,9 +3428,7 @@ inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
         PacketData& data) : data_(data) {
     switch (data_.heldBy_) {
         case HELD_BY_SNAPPEA: {
-            // We will not nullify the triangulation until after the change,
-            // since the routine performing the change probably expects
-            // the original (non-empty) Triangulation<3> data.
+            static_cast<Triangulation<3>&>(data_).snapPeaPreChange();
             break;
         }
         case HELD_BY_PACKET: {
@@ -3437,7 +3447,7 @@ template <>
 inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
     switch (data_.heldBy_) {
         case HELD_BY_SNAPPEA: {
-            static_cast<Triangulation<3>&>(data_).nullifySnapPea();
+            static_cast<Triangulation<3>&>(data_).snapPeaPostChange();
             break;
         }
         case HELD_BY_PACKET: {

@@ -472,10 +472,42 @@ std::shared_ptr<const Packet> Triangulation<3>::inAnyPacket() const {
     }
 }
 
-void Triangulation<3>::nullifySnapPea() {
+void Triangulation<3>::snapPeaPreChange() {
     // This is in the .cpp file so we can keep snappeatriangulation.h
     // out of the main Triangulation<3> headers.
-    static_cast<SnapPeaTriangulation*>(this)->nullify();
+    auto* s = static_cast<SnapPeaTriangulation*>(this);
+
+    // We do not nullify the triangulation until after the change,
+    // since the routine performing the change probably expects
+    // the original (non-empty) Triangulation<3> data.
+    //
+    // However, if the SnapPeaTriangulation is held by a packet, we
+    // *should* be firing a packet pre-change event now to acknowledge that
+    // the triangulation will be nullified.  Unfortunately this requires us
+    // to read and edit the SnapPeaTriangulation's changeEventSpans_ member,
+    // which is private and inaccessible to Triangulation<3>.
+    //
+    // See the SnapPeaTriangulation class notes for more details on this issue,
+    // and why it is not enormously important.
+    //
+    // If this is ever fixed, we should also remember to put the corresponding
+    // packet post-change event code in snapPeaPostChange() also.
+
+    ++s->reginaChangeEventSpans_;
+}
+
+void Triangulation<3>::snapPeaPostChange() {
+    // This is in the .cpp file so we can keep snappeatriangulation.h
+    // out of the main Triangulation<3> headers.
+    auto* s = static_cast<SnapPeaTriangulation*>(this);
+    --s->reginaChangeEventSpans_;
+
+    // The triangulation changes might be nested.  Only nullify the SnapPea
+    // triangulation once all of them are finished, since we do not want to
+    // clear out the triangulation while a complex change set is still
+    // happening.
+    if (! s->reginaChangeEventSpans_)
+        static_cast<SnapPeaTriangulation*>(this)->nullify();
 }
 
 } // namespace regina
