@@ -390,6 +390,23 @@ class Cusp : public ShortOutput<Cusp> {
  *   packetWasChanged() are managed directly by the
  *   PacketOf<SnapPeaTriangulation> wrapper class.
  *
+ * Regarding the packet interface, there is currently a deficiency when
+ * listening for change events on a PacketOf<SnapPeaTriangulation>:
+ *
+ * - As described above, if you edit the triangulation using the inherited
+ *   Triangulation<3> interface, this will nullify the SnapPea triangulation.
+ *
+ * - As expected, this will fire a pair of change events.  However, the
+ *   packetToBeChanged() event will be fired too late: specifically, it will be
+ *   fired \e after the Triangulation<3> change is made but \e before the
+ *   SnapPea triangulation is nullifed.  In particular, it will already be
+ *   too late to take a copy of the original SnapPea triangulation.
+ *
+ * - Since fixing this will require non-trivial re-engineering of the code,
+ *   and since users should not be modifying SnapPea triangulations via the
+ *   inherited Triangulation<3> interface, this deficiency is being left to
+ *   stay for the time being.
+ *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.

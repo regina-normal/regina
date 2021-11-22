@@ -3437,6 +3437,10 @@ template <>
 inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
     switch (data_.heldBy_) {
         case HELD_BY_SNAPPEA: {
+            // Note: this call to nullifySnapPea() will fire a pair of
+            // change events on the SnapPea triangulation, but it is already
+            // too late for packetToBeChanged().  See the SnapPeaTriangulation
+            // class notes for further details.
             static_cast<Triangulation<3>&>(data_).nullifySnapPea();
             break;
         }
