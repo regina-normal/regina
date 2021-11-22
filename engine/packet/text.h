@@ -78,13 +78,6 @@ class Text : public Packet {
         Text(std::string text);
 
         /**
-         * Initialises the packet to the given string.
-         *
-         * @param text the new value for the packet.
-         */
-        Text(const char* text);
-
-        /**
          * Creates a new copy of the given text packet.
          *
          * Like all packet types, this only copies the text content, not
@@ -131,13 +124,6 @@ class Text : public Packet {
          */
         void setText(std::string text);
 
-        /**
-         * Sets the packet data to the given string.
-         *
-         * @param text the new value for the packet.
-         */
-        void setText(const char* text);
-
         void writeTextShort(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
 
@@ -165,9 +151,6 @@ void swap(Text& a, Text& b);
 inline Text::Text(std::string text) : text_(std::move(text)) {
 }
 
-inline Text::Text(const char* text) : text_(text) {
-}
-
 inline Text& Text::operator = (const Text& src) {
     ChangeEventSpan span(*this);
     text_ = src.text_;
@@ -190,14 +173,6 @@ inline void Text::setText(std::string text) {
 
     ChangeEventSpan span(*this);
     text_ = std::move(text);
-}
-
-inline void Text::setText(const char* text) {
-    if (text_ == text)
-        return; // No change event fired.
-
-    ChangeEventSpan span(*this);
-    text_ = text;
 }
 
 inline void Text::writeTextShort(std::ostream& o) const {
