@@ -34,6 +34,7 @@
 #include "packet/packet.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::Packet;
 using regina::PacketListener;
 using regina::PacketShell;
@@ -120,19 +121,31 @@ void addPacketListener(pybind11::module_& m) {
         .def("unlisten", &PacketListener::unlisten)
         .def("unregisterFromAllPackets", // deprecated
             &PacketListener::unlisten)
-        .def("packetToBeChanged", &PacketListener::packetToBeChanged)
-        .def("packetWasChanged", &PacketListener::packetWasChanged)
-        .def("packetToBeRenamed", &PacketListener::packetToBeRenamed)
-        .def("packetWasRenamed", &PacketListener::packetWasRenamed)
+        .def("packetToBeChanged", overload_cast<Packet&>(
+            &PacketListener::packetToBeChanged))
+        .def("packetWasChanged", overload_cast<Packet&>(
+            &PacketListener::packetWasChanged))
+        .def("packetToBeRenamed", overload_cast<Packet&>(
+            &PacketListener::packetToBeRenamed))
+        .def("packetWasRenamed", overload_cast<Packet&>(
+            &PacketListener::packetWasRenamed))
         .def("packetBeingDestroyed", &PacketListener::packetBeingDestroyed)
-        .def("childToBeAdded", &PacketListener::childToBeAdded)
-        .def("childWasAdded", &PacketListener::childWasAdded)
-        .def("childToBeRemoved", &PacketListener::childToBeRemoved)
-        .def("childWasRemoved", &PacketListener::childWasRemoved)
-        .def("childrenToBeReordered", &PacketListener::childrenToBeReordered)
-        .def("childrenWereReordered", &PacketListener::childrenWereReordered)
-        .def("childToBeRenamed", &PacketListener::childToBeRenamed)
-        .def("childWasRenamed", &PacketListener::childWasRenamed)
+        .def("childToBeAdded", overload_cast<Packet&, Packet&>(
+            &PacketListener::childToBeAdded))
+        .def("childWasAdded", overload_cast<Packet&, Packet&>(
+            &PacketListener::childWasAdded))
+        .def("childToBeRemoved", overload_cast<Packet&, Packet&>(
+            &PacketListener::childToBeRemoved))
+        .def("childWasRemoved", overload_cast<Packet&, Packet&>(
+            &PacketListener::childWasRemoved))
+        .def("childrenToBeReordered", overload_cast<Packet&>(
+            &PacketListener::childrenToBeReordered))
+        .def("childrenWereReordered", overload_cast<Packet&>(
+            &PacketListener::childrenWereReordered))
+        .def("childToBeRenamed", overload_cast<Packet&, Packet&>(
+            &PacketListener::childToBeRenamed))
+        .def("childWasRenamed", overload_cast<Packet&, Packet&>(
+            &PacketListener::childWasRenamed))
         ;
     regina::python::add_eq_operators(l);
 }
