@@ -40,8 +40,7 @@
 
 namespace regina {
 
-Triangulation<4>::Triangulation(const std::string& description) :
-        knownSimpleLinks_(false) {
+Triangulation<4>::Triangulation(const std::string& description) {
     try {
         *this = fromIsoSig(description);
         return;
@@ -70,12 +69,6 @@ long Triangulation<4>::eulerCharManifold() const {
     return ans;
 }
 
-Triangulation<4>::Triangulation(const Triangulation& X) :
-        TriangulationBase<4>(X),
-        knownSimpleLinks_(X.knownSimpleLinks_),
-        H2_(X.H2_) {
-}
-
 Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
         TriangulationBase<4>(X, cloneProps),
         knownSimpleLinks_(X.knownSimpleLinks_) /* always cloned */ {
@@ -83,7 +76,10 @@ Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
     if (! cloneProps)
         return;
 
-    H2_ = X.H2_;
+    prop_ = X.prop_;
+
+    // We do not need to copy skeletal properties (e.g., ideal_), since this
+    // is computed on demand with the rest of the skeleton.
 }
 
 void Triangulation<4>::clearAllProperties() {
@@ -91,7 +87,7 @@ void Triangulation<4>::clearAllProperties() {
 
     if (! topologyLock_) {
         knownSimpleLinks_ = false;
-        H2_.reset();
+        prop_.H2_.reset();
     }
 }
 
@@ -110,7 +106,7 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
     std::swap(ideal_, other.ideal_);
 
     // Properties stored using std::... helper classes:
-    H2_.swap(other.H2_);
+    prop_.H2_.swap(other.prop_.H2_);
 }
 
 } // namespace regina

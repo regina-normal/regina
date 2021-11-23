@@ -479,7 +479,7 @@ inline XMLElementReader*
 
     if constexpr (dim == 3 || dim == 4) {
         if (subTagName == "H2")
-            return new AbelianGroupPropertyReader(tri_->H2_);
+            return new AbelianGroupPropertyReader(tri_->prop_.H2_);
     }
 
     if constexpr (dim == 3) {
@@ -488,43 +488,43 @@ inline XMLElementReader*
         if (subTagName == "zeroeff") {
             bool b;
             if (valueOf(props.lookup("value"), b))
-                tri_->zeroEfficient_ = b;
+                tri_->prop_.zeroEfficient_ = b;
         } else if (subTagName == "splitsfce") {
             bool b;
             if (valueOf(props.lookup("value"), b))
-                tri_->splittingSurface_ = b;
+                tri_->prop_.splittingSurface_ = b;
         } else if (subTagName == "threesphere") {
             bool b;
             if (valueOf(props.lookup("value"), b))
-                tri_->threeSphere_ = b;
+                tri_->prop_.threeSphere_ = b;
         } else if (subTagName == "threeball") {
             bool b;
             if (valueOf(props.lookup("value"), b))
-                tri_->threeBall_ = b;
+                tri_->prop_.threeBall_ = b;
         } else if (subTagName == "solidtorus") {
             bool b;
             if (valueOf(props.lookup("value"), b))
-                tri_->solidTorus_ = b;
+                tri_->prop_.solidTorus_ = b;
         } else if (subTagName == "txi") {
             bool b;
             if (valueOf(props.lookup("value"), b))
-                tri_->TxI_ = b;
+                tri_->prop_.TxI_ = b;
         } else if (subTagName == "irreducible") {
             bool b;
             if (valueOf(props.lookup("value"), b))
-                tri_->irreducible_ = b;
+                tri_->prop_.irreducible_ = b;
         } else if (subTagName == "compressingdisc") {
             bool b;
             if (valueOf(props.lookup("compressingdisc"), b))
-                tri_->compressingDisc_ = b;
+                tri_->prop_.compressingDisc_ = b;
         } else if (subTagName == "haken") {
             bool b;
             if (valueOf(props.lookup("haken"), b))
-                tri_->haken_ = b;
+                tri_->prop_.haken_ = b;
         } else if (subTagName == "H1Rel")
-            return new AbelianGroupPropertyReader(tri_->H1Rel_);
+            return new AbelianGroupPropertyReader(tri_->prop_.H1Rel_);
         else if (subTagName == "H1Bdry")
-            return new AbelianGroupPropertyReader(tri_->H1Bdry_);
+            return new AbelianGroupPropertyReader(tri_->prop_.H1Bdry_);
     }
 
     return new XMLElementReader();

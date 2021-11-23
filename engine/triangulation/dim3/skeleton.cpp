@@ -197,8 +197,9 @@ void Triangulation<3>::calculateBoundaryProperties() const {
             break;
     }
 
-    twoSphereBoundaryComponents_ = localTwoSphereBoundaryComponents;
-    negativeIdealBoundaryComponents_ = localNegativeIdealBoundaryComponents;
+    prop_.twoSphereBoundaryComponents_ = localTwoSphereBoundaryComponents;
+    prop_.negativeIdealBoundaryComponents_ =
+        localNegativeIdealBoundaryComponents;
 }
 
 } // namespace regina

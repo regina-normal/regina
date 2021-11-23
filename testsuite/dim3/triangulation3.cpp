@@ -83,6 +83,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(edgeAccess);
 
     // Dimension-specific tests:
+    CPPUNIT_TEST(events);
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
@@ -447,6 +448,93 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void boundaryBuild() {
             testManualAll(verifyBoundaryBuild);
+        }
+
+        void events() {
+            /**
+             * A struct that watches for changes on a triangulation,
+             * and computes and stores rank(H2) immediately after a change.
+             *
+             * We use solidTorus because this is a property managed by the
+             * subclass Triangulation<3>, not the parent class
+             * TriangulationBase<3>.
+             *
+             * The main purpose of this test is to ensure that
+             * packetWasChanged is (a) fired, (b) fired only once, and
+             * (c) fired at the corret time (i.e., after the subclass data
+             * has been copied).
+             */
+            struct Watcher : public regina::PacketListener {
+                int solidTorus { -1 };
+                int events { 0 };
+
+                void packetWasChanged(regina::Packet& p) {
+                    solidTorus = (
+                        static_cast<regina::PacketOf<Triangulation<3>>&>(p).
+                            isSolidTorus() ?
+                        1 : 0);
+                    ++events;
+                }
+            };
+
+            {
+                auto p = regina::makePacket(Example<3>::lst(3,4));
+                Watcher w;
+                p->listen(&w);
+
+                if (! p->isSolidTorus()) {
+                    CPPUNIT_FAIL("LST(3,4,7) should be seen as a solid torus.");
+                }
+
+                // Copy assignment that changes solidTorus
+                *p = rp3_1;
+
+                if (w.events != 1) {
+                    std::ostringstream msg;
+                    msg << "Packet event packetWasChanged() was called "
+                        << w.events << " times during copy assignment.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (w.solidTorus != 0) {
+                    CPPUNIT_FAIL("Triangulation should not be seen as a "
+                        "solid torus in event handler after copy assignment.");
+                }
+                if (p->isSolidTorus()) {
+                    CPPUNIT_FAIL("Triangulation should not be seen as a "
+                        "solid torus after copy assignment.");
+                }
+            }
+            {
+                auto p = regina::makePacket(Example<3>::lst(3,4));
+                Watcher w;
+                p->listen(&w);
+
+                if (! p->isSolidTorus()) {
+                    CPPUNIT_FAIL("LST(3,4,7) should be seen as a solid torus.");
+                }
+
+                // Move assignment that changes solidTorus
+                // The extra insertTriangulation() is to ensure that the
+                // move is not optimised away.
+                Triangulation<3> t = rp3_1;
+                t.insertTriangulation(t);
+                *p = std::move(t);
+
+                if (w.events != 1) {
+                    std::ostringstream msg;
+                    msg << "Packet event packetWasChanged() was called "
+                        << w.events << " times during move assignment.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (w.solidTorus != 0) {
+                    CPPUNIT_FAIL("Triangulation should not be seen as a "
+                        "solid torus in event handler after move assignment.");
+                }
+                if (p->isSolidTorus()) {
+                    CPPUNIT_FAIL("Triangulation should not be seen as a "
+                        "solid torus after move assignment.");
+                }
+            }
         }
 
         void validity() {

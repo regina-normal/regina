@@ -255,13 +255,12 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
-    ComponentIterator it;
     size_t i;
     typename Encoding::Signature curr;
 
     auto* comp = new typename Encoding::Signature[countComponents()];
-    for (it = components().begin(), i = 0;
-            it != components().end(); ++it, ++i) {
+    auto it = components().begin();
+    for (i = 0; it != components().end(); ++it, ++i) {
         Type type(**it);
         bool first = true;
         do {
@@ -304,13 +303,12 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
-    ComponentIterator it;
     size_t i;
     typename Encoding::Signature curr;
 
     auto* comp = new typename Encoding::Signature[countComponents()];
-    for (it = components().begin(), i = 0;
-            it != components().end(); ++it, ++i) {
+    auto it = components().begin();
+    for (i = 0; it != components().end(); ++it, ++i) {
         Type type(**it);
         bool first = true;
         do {

@@ -4418,6 +4418,8 @@
 		05CAE698274AA785007C93F3 /* isosigencoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isosigencoding.h; sourceTree = "<group>"; };
 		05CAE699274AA785007C93F3 /* isosigtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isosigtype.h; sourceTree = "<group>"; };
 		05CAE6A2274B0FC2007C93F3 /* isosig-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "isosig-bindings.h"; sourceTree = "<group>"; };
+		05CAE6A3274B94C9007C93F3 /* snappea.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = snappea.out; sourceTree = "<group>"; };
+		05CAE6A4274B94C9007C93F3 /* snappea.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = snappea.test; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5233,6 +5235,8 @@
 				05CAE60E27429B19007C93F3 /* sets.test */,
 				05431FD41C40F67C009BC072 /* skeleton.out */,
 				05431FD51C40F67C009BC072 /* skeleton.test */,
+				05CAE6A3274B94C9007C93F3 /* snappea.out */,
+				05CAE6A4274B94C9007C93F3 /* snappea.test */,
 				05772F06270CFB6000D26D8A /* snapshot.out */,
 				05772F07270CFB6000D26D8A /* snapshot.test */,
 				05CAE617274470DF007C93F3 /* sort.out */,

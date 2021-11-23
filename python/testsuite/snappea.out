@@ -1,0 +1,31 @@
+2 Z
+Z + Z_5
+2 Z
+True
+
+2 Z
+Z + Z_5
+2 Z
+True
+
+2 Z
+To be changed:
+    Size: 4
+    Homology: 2 Z
+Was changed:
+    Size: 4
+    Homology: Z + Z_5
+Z + Z_5
+To be changed:
+    Size: 4
+    Homology: Z + Z_5
+Was changed:
+    Size: 4
+    Homology: 2 Z
+2 Z
+To be changed:
+    Size: 5
+    Homology: 2 Z
+Was changed:
+    Null
+True

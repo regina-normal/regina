@@ -108,20 +108,6 @@ template <int> class XMLTriangulationReader;
 template <>
 class Triangulation<3> : public detail::TriangulationBase<3> {
     public:
-        using TetrahedronIterator =
-                std::vector<Tetrahedron<3>*>::const_iterator;
-            /**< A dimension-specific alias for SimplexIterator,
-                 used to iterate through tetrahedra. */
-        using TriangleIterator =
-                decltype(detail::TriangulationBase<3>().faces<2>().begin());
-            /**< Used to iterate through triangles. */
-        using EdgeIterator =
-                decltype(detail::TriangulationBase<3>().faces<1>().begin());
-            /**< Used to iterate through edges. */
-        using VertexIterator =
-                decltype(detail::TriangulationBase<3>().faces<0>().begin());
-            /**< Used to iterate through vertices. */
-
         using TuraevViroSet =
                 std::map<std::pair<unsigned long, bool>, Cyclotomic>;
             /**< A map from (\a r, \a parity) pairs to Turaev-Viro invariants,
@@ -133,79 +119,84 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool standard_;
             /**< Is the triangulation standard? */
 
-        mutable std::optional<AbelianGroup> H1Rel_;
-            /**< Relative first homology group of the triangulation
-                 with respect to the boundary.
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<AbelianGroup> H1Bdry_;
-            /**< First homology group of the boundary.
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<AbelianGroup> H2_;
-            /**< Second homology group of the triangulation.
-                 This is std::nullopt if it has not yet been computed. */
+        /**
+         * A struct that holds all of our calculated properties.
+         * This is a convenience so we can use its implicitly defined
+         * assignment operators and copy constructors.  It is mutable so that
+         * expensive read-only calculations can cache their results.
+         *
+         * All std::optional properties are std::nullopt if they have
+         * not yet been computed.
+         */
+        mutable struct {
+            std::optional<AbelianGroup> H1Rel_;
+                /**< Relative first homology group of the triangulation
+                     with respect to the boundary. */
+            std::optional<AbelianGroup> H1Bdry_;
+                /**< First homology group of the boundary. */
+            std::optional<AbelianGroup> H2_;
+                /**< Second homology group of the triangulation. */
 
-        mutable std::optional<bool> twoSphereBoundaryComponents_;
-            /**< Does the triangulation contain any 2-sphere boundary
-                 components?
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<bool> negativeIdealBoundaryComponents_;
-            /**< Does the triangulation contain any boundary components
-                 that are ideal and have negative Euler characteristic?
-                 This is std::nullopt if it has not yet been computed. */
+            std::optional<bool> twoSphereBoundaryComponents_;
+                /**< Does the triangulation contain any 2-sphere boundary
+                     components? */
+            std::optional<bool> negativeIdealBoundaryComponents_;
+                /**< Does the triangulation contain any boundary components
+                     that are ideal and have negative Euler characteristic? */
 
-        mutable std::optional<bool> zeroEfficient_;
-            /**< Is the triangulation zero-efficient?
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<bool> splittingSurface_;
-            /**< Does the triangulation have a normal splitting surface?
-                 This is std::nullopt if it has not yet been computed. */
+            std::optional<bool> zeroEfficient_;
+                /**< Is the triangulation zero-efficient? */
+            std::optional<bool> splittingSurface_;
+                /**< Does the triangulation have a normal splitting surface? */
 
-        mutable std::optional<bool> threeSphere_;
-            /**< Is this a triangulation of a 3-sphere?
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<bool> threeBall_;
-            /**< Is this a triangulation of a 3-dimensional ball?
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<bool> solidTorus_;
-            /**< Is this a triangulation of the solid torus?
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<bool> TxI_;
-            /**< Is this a triangulation of the product TxI?
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<bool> irreducible_;
-            /**< Is this 3-manifold irreducible?
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<bool> compressingDisc_;
-            /**< Does this 3-manifold contain a compressing disc?
-                 This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<bool> haken_;
-            /**< Is this 3-manifold Haken?
-                 This property must only be stored for triangulations
-                 that are known to represent closed, connected,
-                 orientable, irreducible 3-manifolds.
-                 This is std::nullopt if it has not yet been computed. */
+            std::optional<bool> threeSphere_;
+                /**< Is this a triangulation of a 3-sphere? */
+            std::optional<bool> threeBall_;
+                /**< Is this a triangulation of a 3-dimensional ball? */
+            std::optional<bool> solidTorus_;
+                /**< Is this a triangulation of the solid torus? */
+            std::optional<bool> TxI_;
+                /**< Is this a triangulation of the product TxI? */
+            std::optional<bool> irreducible_;
+                /**< Is this 3-manifold irreducible? */
+            std::optional<bool> compressingDisc_;
+                /**< Does this 3-manifold contain a compressing disc? */
+            std::optional<bool> haken_;
+                /**< Is this 3-manifold Haken?
+                     This property must only be stored for triangulations
+                     that are known to represent closed, connected,
+                     orientable, irreducible 3-manifolds. */
 
-        mutable std::variant<bool, AngleStructure> strictAngleStructure_;
-            /**< A strict angle structure on this triangulation, or a
-                 boolean if we do not have one.  The boolean will be \c false
-                 if the computation has not yet been attempted, or \c true if
-                 it is confirmed that no such angle structure exists. */
+            std::optional<TreeDecomposition> niceTreeDecomposition_;
+                /**< A nice tree decomposition of the face pairing graph of
+                     this triangulation. */
 
-        mutable std::variant<bool, AngleStructure> generalAngleStructure_;
-            /**< A generalised angle structure on this triangulation, or a
-                 boolean if we do not have one.  The boolean will be \c false
-                 if the computation has not yet been attempted, or \c true if
-                 it is confirmed that no such angle structure exists. */
+            TuraevViroSet turaevViroCache_;
+                /**< The set of Turaev-Viro invariants that have already
+                     been calculated.  See allCalculatedTuraevViro() for
+                     details. */
+        } prop_;
 
-        mutable std::optional<TreeDecomposition> niceTreeDecomposition_;
-            /**< A nice tree decomposition of the face pairing graph of
-                 this triangulation.
-                 This is std::nullopt if it has not yet been computed. */
+        // Regarding cached normal surfaces and angle structures:
+        // When move constructing/assigning triangulations, we do *not* need to
+        // adjust the triangulation references in these surfaces/structures.
+        // This is because surfaces/structures reference their triangulations
+        // via a SnapshotRef, and the triangulation's inherited Snapshottable
+        // move construction/assignment preserves the underlying Snapshot.
 
-        mutable TuraevViroSet turaevViroCache_;
-            /**< The set of Turaev-Viro invariants that have already
-                 been calculated.  See allCalculatedTuraevViro() for
-                 details. */
+        mutable std::variant<bool, AngleStructure>
+            strictAngleStructure_ { false };
+                /**< A strict angle structure on this triangulation, or a
+                     bool if we do not have one.  The bool will be \c false
+                     if the computation has not yet been attempted, or \c true
+                     if it is confirmed that no such angle structure exists. */
+
+        mutable std::variant<bool, AngleStructure>
+            generalAngleStructure_ { false };
+                /**< A generalised angle structure on this triangulation, or a
+                     bool if we do not have one.  The bool will be \c false
+                     if the computation has not yet been attempted, or \c true
+                     if it is confirmed that no such angle structure exists. */
 
     public:
         /**
@@ -218,7 +209,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Creates an empty triangulation.
          */
-        Triangulation();
+        Triangulation() = default;
         /**
          * Creates a new copy of the given triangulation.
          *
@@ -477,9 +468,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
+         * @param src the triangulation to copy.
          * @return a reference to this triangulation.
          */
-        Triangulation& operator = (const Triangulation&) = default;
+        Triangulation& operator = (const Triangulation& src);
 
         /**
          * Moves the contents of the given triangulation into this
@@ -507,7 +499,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @param src the triangulation to move.
          * @return a reference to this triangulation.
          */
-        Triangulation& operator = (Triangulation&& src) = default;
+        Triangulation& operator = (Triangulation&& src);
 
         /**
          * Swaps the contents of this and the given triangulation.
@@ -3392,16 +3384,28 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
             /**< Internal to maximalForestInSkeleton(). */
 
         /**
-         * Nullifies this SnapPea triangulation.
+         * Called before changing the Regina data for a SnapPea triangulation.
+         *
+         * The functions snapPeaPreChange() and snapPeaPostChange() together
+         * manage change events on the SnapPea triangulation packet (if there
+         * is one), as well as the nullification of the SnapPea triangulation.
          *
          * \pre This Regina triangulation is in fact the inherited
          * Triangulation<3> data for the derived class SnapPeaTriangulation.
-         *
-         * \note This trivial function exists simply so that we can make some
-         * other Triangulation<3> functions inline without needing to include
-         * the full SnapPea triangulation headers here in this file.
          */
-        void nullifySnapPea();
+        void snapPeaPreChange();
+
+        /**
+         * Called after changing the Regina data for a SnapPea triangulation.
+         *
+         * The functions snapPeaPreChange() and snapPeaPostChange() together
+         * manage change events on the SnapPea triangulation packet (if there
+         * is one), as well as the nullification of the SnapPea triangulation.
+         *
+         * \pre This Regina triangulation is in fact the inherited
+         * Triangulation<3> data for the derived class SnapPeaTriangulation.
+         */
+        void snapPeaPostChange();
 
     friend class regina::Face<3, 3>;
     friend class regina::detail::SimplexBase<3>;
@@ -3416,9 +3420,7 @@ inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
         PacketData& data) : data_(data) {
     switch (data_.heldBy_) {
         case HELD_BY_SNAPPEA: {
-            // We will not nullify the triangulation until after the change,
-            // since the routine performing the change probably expects
-            // the original (non-empty) Triangulation<3> data.
+            static_cast<Triangulation<3>&>(data_).snapPeaPreChange();
             break;
         }
         case HELD_BY_PACKET: {
@@ -3437,11 +3439,7 @@ template <>
 inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
     switch (data_.heldBy_) {
         case HELD_BY_SNAPPEA: {
-            // Note: this call to nullifySnapPea() will fire a pair of
-            // change events on the SnapPea triangulation, but it is already
-            // too late for packetToBeChanged().  See the SnapPeaTriangulation
-            // class notes for further details.
-            static_cast<Triangulation<3>&>(data_).nullifySnapPea();
+            static_cast<Triangulation<3>&>(data_).snapPeaPostChange();
             break;
         }
         case HELD_BY_PACKET: {
@@ -3473,10 +3471,6 @@ inline Triangulation<3>::~Triangulation() {
 namespace regina {
 
 // Inline functions for Triangulation<3>
-
-inline Triangulation<3>::Triangulation() :
-        strictAngleStructure_(false), generalAngleStructure_(false) {
-}
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
@@ -3511,20 +3505,68 @@ inline void Triangulation<3>::removeAllTetrahedra() {
     removeAllSimplices();
 }
 
+inline Triangulation<3>& Triangulation<3>::operator = (
+        const Triangulation<3>& src) {
+    // We need to implement copy assignment ourselves because it all
+    // needs to be wrapped in a ChangeEventSpan.  This is so that the
+    // final packetWasChanged event is fired *after* we modify the
+    // properties specific to dimension 3.
+
+    ChangeEventSpan span(*this);
+
+    TriangulationBase<3>::operator = (src);
+
+    ideal_ = src.ideal_;
+    standard_ = src.standard_;
+    prop_ = src.prop_;
+
+    // Any cached angle structures must be remade to live in this triangulation.
+    if (std::holds_alternative<AngleStructure>(src.strictAngleStructure_))
+        strictAngleStructure_ = AngleStructure(
+            std::get<AngleStructure>(src.strictAngleStructure_), *this);
+    else
+        strictAngleStructure_ = std::get<bool>(src.strictAngleStructure_);
+    if (std::holds_alternative<AngleStructure>(src.generalAngleStructure_))
+        generalAngleStructure_ = AngleStructure(
+            std::get<AngleStructure>(src.generalAngleStructure_), *this);
+    else
+        generalAngleStructure_ = std::get<bool>(src.generalAngleStructure_);
+
+    return *this;
+}
+
+inline Triangulation<3>& Triangulation<3>::operator = (Triangulation<3>&& src) {
+    // Like copy assignment, we implement this ourselves because it all
+    // needs to be wrapped in a ChangeEventSpan.
+
+    ChangeEventSpan span(*this);
+
+    TriangulationBase<3>::operator = (std::move(src));
+
+    ideal_ = src.ideal_;
+    standard_ = src.standard_;
+    prop_ = std::move(src.prop_);
+
+    strictAngleStructure_ = std::move(src.strictAngleStructure_);
+    generalAngleStructure_ = std::move(src.generalAngleStructure_);
+
+    return *this;
+}
+
 inline void Triangulation<3>::swapContents(Triangulation<3>& other) {
     swap(other);
 }
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
-    if (! twoSphereBoundaryComponents_.has_value())
+    if (! prop_.twoSphereBoundaryComponents_.has_value())
         calculateBoundaryProperties();
-    return *twoSphereBoundaryComponents_;
+    return *prop_.twoSphereBoundaryComponents_;
 }
 
 inline bool Triangulation<3>::hasNegativeIdealBoundaryComponents() const {
-    if (! negativeIdealBoundaryComponents_.has_value())
+    if (! prop_.negativeIdealBoundaryComponents_.has_value())
         calculateBoundaryProperties();
-    return *negativeIdealBoundaryComponents_;
+    return *prop_.negativeIdealBoundaryComponents_;
 }
 
 inline bool Triangulation<3>::isIdeal() const {
@@ -3551,7 +3593,7 @@ inline bool Triangulation<3>::knowsThreeSphere() const {
 }
 
 inline bool Triangulation<3>::knowsZeroEfficient() const {
-    return zeroEfficient_.has_value();
+    return prop_.zeroEfficient_.has_value();
 }
 
 inline std::optional<NormalSurface>
@@ -3595,7 +3637,7 @@ inline unsigned long Triangulation<3>::homologyH2Z2() const {
 
 inline const Triangulation<3>::TuraevViroSet&
         Triangulation<3>::allCalculatedTuraevViro() const {
-    return turaevViroCache_;
+    return prop_.turaevViroCache_;
 }
 
 template <typename Action, typename... Args>
@@ -3650,14 +3692,14 @@ inline bool Triangulation<3>::minimizeBoundary() {
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
         const {
-    if (niceTreeDecomposition_)
-        return *niceTreeDecomposition_;
+    if (prop_.niceTreeDecomposition_)
+        return *prop_.niceTreeDecomposition_;
 
     TreeDecomposition ans(*this, TD_UPPER);
     ans.makeNice();
-    niceTreeDecomposition_ = ans;
+    prop_.niceTreeDecomposition_ = ans;
 
-    return *niceTreeDecomposition_;
+    return *prop_.niceTreeDecomposition_;
 }
 
 inline void Triangulation<3>::recognizer(std::ostream& out) const {

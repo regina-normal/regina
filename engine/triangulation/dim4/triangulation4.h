@@ -89,26 +89,8 @@ template <int> class XMLTriangulationReader;
  */
 template <>
 class Triangulation<4> : public detail::TriangulationBase<4> {
-    public:
-        using PentachoronIterator =
-                std::vector<Pentachoron<4>*>::const_iterator;
-            /**< A dimension-specific alias for SimplexIterator, used to
-                 iterate through pentachora. */
-        using TetrahedronIterator =
-                decltype(detail::TriangulationBase<4>().faces<3>().begin());
-            /**< Used to iterate through tetrahedra. */
-        using TriangleIterator =
-                decltype(detail::TriangulationBase<4>().faces<2>().begin());
-            /**< Used to iterate through triangles. */
-        using EdgeIterator =
-                decltype(detail::TriangulationBase<4>().faces<1>().begin());
-            /**< Used to iterate through edges. */
-        using VertexIterator =
-                decltype(detail::TriangulationBase<4>().faces<0>().begin());
-            /**< Used to iterate through vertices. */
-
     private:
-        bool knownSimpleLinks_;
+        bool knownSimpleLinks_ { false };
             /**< Is it known that all vertex links are 3-spheres or 3-balls?
                  This may be \c true even if the skeleton has not yet been
                  calculated (thereby allowing us to avoid costly 3-sphere or
@@ -120,9 +102,19 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool ideal_;
             /**< Is the triangulation ideal? */
 
-        mutable std::optional<AbelianGroup> H2_;
-            /**< Second homology group of the triangulation.
-                 This is std::nullopt if it has not yet been computed. */
+        /**
+         * A struct that holds all of our calculated properties.
+         * This is a convenience so we can use its implicitly defined
+         * assignment operators and copy constructors.  It is mutable so that
+         * expensive read-only calculations can cache their results.
+         *
+         * All std::optional properties are std::nullopt if they have
+         * not yet been computed.
+         */
+        mutable struct {
+            std::optional<AbelianGroup> H2_;
+                /**< Second homology group of the triangulation. */
+        } prop_;
 
     public:
         /**
@@ -135,7 +127,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * Creates an empty triangulation.
          */
-        Triangulation();
+        Triangulation() = default;
         /**
          * Creates a copy of the given triangulation.
          *
@@ -146,7 +138,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * @param copy the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy);
+        Triangulation(const Triangulation& copy) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
@@ -268,9 +260,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
+         * @param src the triangulation to copy.
          * @return a reference to this triangulation.
          */
-        Triangulation& operator = (const Triangulation&) = default;
+        Triangulation& operator = (const Triangulation& src);
 
         /**
          * Moves the contents of the given triangulation into this
@@ -298,7 +291,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * @param src the triangulation to move.
          * @return a reference to this triangulation.
          */
-        Triangulation& operator = (Triangulation&& src) = default;
+        Triangulation& operator = (Triangulation&& src);
 
         /**
          * Swaps the contents of this and the given triangulation.
@@ -995,9 +988,6 @@ namespace regina {
 
 // Inline functions for Triangulation<4>
 
-inline Triangulation<4>::Triangulation() : knownSimpleLinks_(false) {
-}
-
 inline Triangulation<4>::~Triangulation() {
     Snapshottable<Triangulation<4>>::takeSnapshot();
     clearAllProperties();
@@ -1031,6 +1021,39 @@ inline void Triangulation<4>::removePentachoronAt(size_t index) {
 
 inline void Triangulation<4>::removeAllPentachora() {
     removeAllSimplices();
+}
+
+inline Triangulation<4>& Triangulation<4>::operator = (
+        const Triangulation<4>& src) {
+    // We need to implement copy assignment ourselves because it all
+    // needs to be wrapped in a ChangeEventSpan.  This is so that the
+    // final packetWasChanged event is fired *after* we modify the
+    // properties specific to dimension 4.
+
+    ChangeEventSpan span(*this);
+
+    TriangulationBase<4>::operator = (src);
+
+    knownSimpleLinks_ = src.knownSimpleLinks_;
+    ideal_ = src.ideal_;
+    prop_ = src.prop_;
+
+    return *this;
+}
+
+inline Triangulation<4>& Triangulation<4>::operator = (Triangulation<4>&& src) {
+    // Like copy assignment, we implement this ourselves because it all
+    // needs to be wrapped in a ChangeEventSpan.
+
+    ChangeEventSpan span(*this);
+
+    TriangulationBase<4>::operator = (std::move(src));
+
+    knownSimpleLinks_ = src.knownSimpleLinks_;
+    ideal_ = src.ideal_;
+    prop_ = std::move(src.prop_);
+
+    return *this;
 }
 
 inline bool Triangulation<4>::isIdeal() const {

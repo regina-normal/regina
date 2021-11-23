@@ -2020,6 +2020,33 @@ class PacketOf : public Packet, public Held {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
         }
         /**
+         * Sets the content of this packet to be a copy of the given data.
+         *
+         * @param data the object to copy.
+         * @return a reference to this packet.
+         */
+        PacketOf<Held>& operator = (const Held& src) {
+            // We assume that Held takes care of the necessary change events.
+            Held::operator = (src);
+            return *this;
+        }
+        /**
+         * Moves the given data into the content of this packet.
+         *
+         * This will typically be much faster than a deep copy, since it uses
+         * the move assignment operator for \a Held.
+         *
+         * The object that is passed (\a data) will no longer be usable.
+         *
+         * @param data the object to move.
+         * @return a reference to this packet.
+         */
+        PacketOf<Held>& operator = (Held&& src) {
+            // We assume that Held takes care of the necessary change events.
+            Held::operator = (std::move(src));
+            return *this;
+        }
+        /**
          * Sets this to be a copy of the given packet.
          *
          * Like all packet types, this only copies the mathematical content, not
