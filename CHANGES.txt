@@ -541,6 +541,10 @@ Version 7.0  [ TODO ]
               arguments by reference, not pointer, and throw exceptions in some
               cases if input requirements are not met.  Moreover, apply() now
               returns by value, not by newly allocated pointer.
+        Class IsoSigPrintable<dim>, IsoSigClassic<dim>,
+                IsoSigDegrees<dim, subdim>, IsoSigEdgeDegree<dim>,
+                IsoSigRidgeDegree<dim>:
+            - New types and encodings for working with isomorphism signatures.
         Class IsReginaArbitraryPrecisionInteger:
             - New type trait to identify Regina's arbitrary precision integer
               types.
