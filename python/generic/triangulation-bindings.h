@@ -199,9 +199,13 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("isoSig", &Triangulation<dim>::template isoSig<>)
         .def("isoSig_EdgeDegrees", &Triangulation<dim>::
             template isoSig<regina::IsoSigEdgeDegrees<dim>>)
+        .def("isoSig_RidgeDegrees", &Triangulation<dim>::
+            template isoSig<regina::IsoSigRidgeDegrees<dim>>)
         .def("isoSigDetail", &Triangulation<dim>::template isoSigDetail<>)
         .def("isoSigDetail_EdgeDegrees", &Triangulation<dim>::
             template isoSigDetail<regina::IsoSigEdgeDegrees<dim>>)
+        .def("isoSigDetail_RidgeDegrees", &Triangulation<dim>::
+            template isoSigDetail<regina::IsoSigRidgeDegrees<dim>>)
         .def_static("fromIsoSig", &Triangulation<dim>::fromIsoSig)
         .def_static("fromSig", &Triangulation<dim>::fromSig)
         .def_static("isoSigComponentSize",

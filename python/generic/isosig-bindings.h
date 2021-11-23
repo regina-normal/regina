@@ -38,6 +38,8 @@
 #include "utilities/exception.h"
 #include "../helpers.h"
 
+using regina::Perm;
+
 template <int dim>
 void addIsoSigClassic(pybind11::module_& m, const char* name) {
     using Type = regina::IsoSigClassic<dim>;
@@ -62,7 +64,17 @@ void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
     regina::python::no_eq_operators(s);
 }
 
-using regina::Perm;
+template <int dim>
+void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
+    using Type = regina::IsoSigRidgeDegrees<dim>;
+    auto s = pybind11::class_<Type>(m, name)
+        .def(pybind11::init<const regina::Component<dim>&>())
+        .def("simplex", &Type::simplex)
+        .def("perm", &Type::perm)
+        .def("next", &Type::next)
+        ;
+    regina::python::no_eq_operators(s);
+}
 
 template <int dim>
 void addIsoSigPrintable(pybind11::module_& m, const char* name) {

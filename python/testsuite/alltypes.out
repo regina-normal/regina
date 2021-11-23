@@ -1537,6 +1537,47 @@ Equality type : EqualityType.NEVER_INSTANTIATED
 IsoSigPrintable9 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
+IsoSigRidgeDegrees10 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees11 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees12 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees13 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees14 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees15 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees2 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees3 : typedef ->  IsoSigEdgeDegrees3
+
+IsoSigRidgeDegrees4 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees5 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees6 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees7 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees8 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
+IsoSigRidgeDegrees9 : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 Isomorphism10 : class
 Equality type : EqualityType.BY_REFERENCE
 

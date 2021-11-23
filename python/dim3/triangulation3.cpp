@@ -458,9 +458,13 @@ void addTriangulation3(pybind11::module_& m) {
         .def("isoSig", &Triangulation<3>::isoSig<>)
         .def("isoSig_EdgeDegrees",
             &Triangulation<3>::isoSig<regina::IsoSigEdgeDegrees<3>>)
+        .def("isoSig_RidgeDegrees",
+            &Triangulation<3>::isoSig<regina::IsoSigRidgeDegrees<3>>)
         .def("isoSigDetail", &Triangulation<3>::isoSigDetail<>)
         .def("isoSigDetail_EdgeDegrees",
             &Triangulation<3>::isoSigDetail<regina::IsoSigEdgeDegrees<3>>)
+        .def("isoSigDetail_RidgeDegrees",
+            &Triangulation<3>::isoSigDetail<regina::IsoSigRidgeDegrees<3>>)
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<4>>>& g) {
             return Triangulation<3>::fromGluings(size, g.begin(), g.end());
@@ -521,6 +525,8 @@ void addTriangulation3(pybind11::module_& m) {
 
     addIsoSigClassic<3>(m, "IsoSigClassic3");
     addIsoSigEdgeDegrees<3>(m, "IsoSigEdgeDegrees3");
+    // IsoSigEdgeDegrees<3> and IsoSigRidgeDegrees<3> are the same type.
+    m.attr("IsoSigRidgeDegrees3") = m.attr("IsoSigEdgeDegrees3");
     addIsoSigPrintable<3>(m, "IsoSigPrintable3");
 }
 

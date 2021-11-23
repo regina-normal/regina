@@ -51,6 +51,7 @@ constexpr int NO_HEIGHT = -1000;
 int argHeight = NO_HEIGHT;
 int argThreads = 1;
 int flavour = FLAVOUR_DIM3;
+int internalSig = 0;
 
 template <int dim>
 void process(const regina::Triangulation<dim>& tri) {
@@ -64,17 +65,34 @@ void process(const regina::Triangulation<dim>& tri) {
             if (t.size() > tri.size())
                 return false;
 
-            std::lock_guard<std::mutex> lock(mutex);
-            std::cout << sig << std::endl;
+            if (internalSig) {
+                std::lock_guard<std::mutex> lock(mutex);
+                std::cout << sig << std::endl;
 
-            if (t.size() < tri.size()) {
-                nonMinimal = true;
-                simpler = sig;
-                return true;
+                if (t.size() < tri.size()) {
+                    nonMinimal = true;
+                    simpler = sig;
+                    return true;
+                }
+
+                ++nSolns;
+                return false;
+            } else {
+                // Recompute the signature using the default type IsoSigClassic.
+                std::string classic = t.isoSig();
+
+                std::lock_guard<std::mutex> lock(mutex);
+                std::cout << classic << std::endl;
+
+                if (t.size() < tri.size()) {
+                    nonMinimal = true;
+                    simpler = std::move(classic);
+                    return true;
+                }
+
+                ++nSolns;
+                return false;
             }
-
-            ++nSolns;
-            return false;
         });
 
     if (nonMinimal) {
@@ -130,6 +148,8 @@ int main(int argc, const char* argv[]) {
             "Input is a 4-manifold signature", nullptr },
         { "knot", 'k', POPT_ARG_VAL, &flavour, FLAVOUR_KNOT,
             "Input is a knot signature", nullptr },
+        { "anysig", 'a', POPT_ARG_NONE, &internalSig, 0,
+            "Output does not need to use classic signature(s)", nullptr },
         POPT_AUTOHELP
         { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };

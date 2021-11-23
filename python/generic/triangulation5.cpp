@@ -45,6 +45,7 @@ void addTriangulations5(pybind11::module_& m) {
 
     addIsoSigClassic<5>(m, "IsoSigClassic5");
     addIsoSigEdgeDegrees<5>(m, "IsoSigEdgeDegrees5");
+    addIsoSigRidgeDegrees<5>(m, "IsoSigRidgeDegrees5");
     addIsoSigPrintable<5>(m, "IsoSigPrintable5");
 
     m.attr("Face5_5") = m.attr("Simplex5");

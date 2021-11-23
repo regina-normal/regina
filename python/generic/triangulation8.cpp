@@ -44,6 +44,7 @@ void addTriangulations8(pybind11::module_& m) {
 
     addIsoSigClassic<8>(m, "IsoSigClassic8");
     addIsoSigEdgeDegrees<8>(m, "IsoSigEdgeDegrees8");
+    addIsoSigRidgeDegrees<8>(m, "IsoSigRidgeDegrees8");
     addIsoSigPrintable<8>(m, "IsoSigPrintable8");
 
     m.attr("Face8_8") = m.attr("Simplex8");

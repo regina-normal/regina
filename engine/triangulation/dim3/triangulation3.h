@@ -1471,9 +1471,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   type is discussed below), representing the triangluation that has
          *   been found; or else (b) the first two arguments must be of types
          *   const std::string& followed by a triangulation, representing both
-         *   the triangulation and its isomorphism signature.
-         *   The second form is offered in order to avoid unnecessarily
-         *   recomputation within the \a action function.
+         *   the triangulation and \e an isomorphism signature.
+         *   The second form is offered in order to avoid unnecessary
+         *   recomputation within the \a action function; however, note that
+         *   the signature might not be of the IsoSigClassic type (i.e., it
+         *   might not match the output from the default version of isoSig()).
          *   If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
@@ -1540,7 +1542,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you call it as retriangulate(height, threads, action).
          * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Triangulation<3>&&) representing the signature
+         * (const std::string&, Triangulation<3>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
          * @param height the maximum number of \e additional tetrahedra to

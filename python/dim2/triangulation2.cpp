@@ -195,9 +195,13 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isoSig", &Triangulation<2>::isoSig<>)
         .def("isoSig_EdgeDegrees",
             &Triangulation<2>::isoSig<regina::IsoSigEdgeDegrees<2>>)
+        .def("isoSig_RidgeDegrees",
+            &Triangulation<2>::isoSig<regina::IsoSigRidgeDegrees<2>>)
         .def("isoSigDetail", &Triangulation<2>::isoSigDetail<>)
         .def("isoSigDetail_EdgeDegrees",
             &Triangulation<2>::isoSigDetail<regina::IsoSigEdgeDegrees<2>>)
+        .def("isoSigDetail_RidgeDegrees",
+            &Triangulation<2>::isoSigDetail<regina::IsoSigRidgeDegrees<2>>)
         .def_static("fromIsoSig", &Triangulation<2>::fromIsoSig)
         .def_static("fromSig", &Triangulation<2>::fromSig)
         .def_static("isoSigComponentSize",
@@ -226,6 +230,7 @@ void addTriangulation2(pybind11::module_& m) {
 
     addIsoSigClassic<2>(m, "IsoSigClassic2");
     addIsoSigEdgeDegrees<2>(m, "IsoSigEdgeDegrees2");
+    addIsoSigRidgeDegrees<2>(m, "IsoSigRidgeDegrees2");
     addIsoSigPrintable<2>(m, "IsoSigPrintable2");
 }
 

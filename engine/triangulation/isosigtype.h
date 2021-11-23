@@ -170,15 +170,16 @@ class IsoSigClassic {
 };
 
 /**
- * Defines an alternate type of isomorphism signature based on edge degrees.
+ * Defines an alternate type of isomorphism signature based on degree
+ * sequences of <i>subdim</i>-faces.
  *
  * See the IsoSigClassic documentation for details on what a signature type
  * class is required to provide.
  *
  * This is an alternate "proof of concept" type that shows how you might
  * speed up isomorphism signature computations.  It requires that the
- * starting simplex must be one whose set of edge degrees is lexicographically
- * minimal amongst all top-dimensional simplices.
+ * starting simplex must be one whose set of <i>subdim</i>-face degrees is
+ * lexicographically minimal amongst all top-dimensional simplices.
  *
  * The hope is that this eliminates a large number of potential starting
  * simplices without adding an enormous amount of computational overhead.
@@ -188,51 +189,56 @@ class IsoSigClassic {
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
- * \ifacespython Python does not support templates.  Instead this class
- * can be used by appending the dimension as a suffix (e.g.,
- * IsoSigEdgeDegrees2 and IsoSigEdgeDegrees3 for dimensions 2 and 3).
+ * \ifacespython Python does not support templates, and there are far
+ * too many of these classes to wrap.  Currently Python supports only
+ * the cases where \a subdim is 1 or <i>dim</i>-2, using the type aliases
+ * IsoSigEdgeDegrees and IsoSigRidgeDegrees respectively (these cover
+ * all the variants that Regina currently uses internally).
+ * You can access the corresponding classes by appending the appending the
+ * dimension as a suffix to the type alias (e.g., you can use
+ * IsoSigEdgeDegrees3 to work with edge degrees in 3-manifold triangulations).
  *
  * \ingroup triangulation
  */
-template <int dim>
-class IsoSigEdgeDegrees {
+template <int dim, int subdim>
+class IsoSigDegrees {
     private:
-        static constexpr int nEdges = dim * (dim + 1) / 2;
-            /**< The number of edges in each top-dimensional simplex. */
+        static constexpr auto nFaces = FaceNumbering<dim, subdim>::nFaces;
+            /**< The number of subdim-faces in each top-dimensional simplex. */
 
         /**
-         * Holds the edge degree sequence for a single top-dimensional
-         * simplex.  The edge degrees are sorted; that is, we forget all
-         * information about which degree corresponds to which edge.
+         * Holds the subdim-face degree sequence for a single top-dimensional
+         * simplex.  The degrees are sorted; that is, we forget all
+         * information about which degree corresponds to which subdim-face.
          */
         struct SimplexMarking {
-            std::array<unsigned, nEdges> edgeDegree;
-                /**< The sorted list of edge degrees. */
+            std::array<unsigned, nFaces> degree;
+                /**< The sorted list of subdim-face degrees. */
 
             /**
-             * Computes and stores the sorted edge degree sequence
+             * Computes and stores the sorted subdim-face degree sequence
              * for the given top-dimensional simplex.
              */
             void init(const Simplex<dim>& simplex) {
-                for (size_t i = 0; i < nEdges; ++i)
-                    edgeDegree[i] = simplex.edge(i)->degree();
-                std::sort(edgeDegree.begin(), edgeDegree.end());
+                for (size_t i = 0; i < nFaces; ++i)
+                    degree[i] = simplex.template face<subdim>(i)->degree();
+                std::sort(degree.begin(), degree.end());
             }
 
             /**
-             * Tests whether this and the given sorted edge degree sequence
+             * Tests whether this and the given sorted degree sequence
              * are identical.
              */
             bool operator == (const SimplexMarking& rhs) const {
-                return edgeDegree == rhs.edgeDegree;
+                return degree == rhs.degree;
             }
 
             /**
              * Lexicographically compares this with the given sorted
-             * edge degree sequence.
+             * degree sequence.
              */
             bool operator < (const SimplexMarking& rhs) const {
-                return edgeDegree < rhs.edgeDegree;
+                return degree < rhs.degree;
             }
         };
 
@@ -240,14 +246,14 @@ class IsoSigEdgeDegrees {
             /**< The number of top-dimensional simplices in the
                  triangulation component that we are working with. */
         SimplexMarking* marks_;
-            /**< The sorted edge degree sequence of every top-dimensional
+            /**< The sorted subdim-face degree sequence of every top-dimensional
                  simplex in the component we are working with. */
         size_t smallest_;
             /**< A top-dimensional simplex with the lexicographically smallest
-                 edge degree sequence.  Like \a simp_, this index is relative
+                 degree sequence.  Like \a simp_, this index is relative
                  to the component (not the overall triangulation).  If there
-                 are many simplices with the same smallest edge degree
-                 sequence then this denotes the one with smallest index. */
+                 are many simplices with the same smallest degree sequence
+                 then this denotes the one with smallest index. */
 
         size_t simp_;
             /**< Identifies the top-dimensional simplex \a s in the current
@@ -270,11 +276,11 @@ class IsoSigEdgeDegrees {
          *
          * @param comp the triangulation component that we are examining.
          */
-        IsoSigEdgeDegrees(const Component<dim>& comp);
+        IsoSigDegrees(const Component<dim>& comp);
         /**
          * Destroys this object and all of its internal data.
          */
-        ~IsoSigEdgeDegrees();
+        ~IsoSigDegrees();
 
         /**
          * Returns the current starting simplex \a s.
@@ -323,9 +329,35 @@ class IsoSigEdgeDegrees {
 
         // Make this class non-copyable and non-assignable, since users
         // should not be creating objects of this class on their own.
-        IsoSigEdgeDegrees(const IsoSigEdgeDegrees&) = delete;
-        IsoSigEdgeDegrees& operator = (const IsoSigEdgeDegrees&) = delete;
+        IsoSigDegrees(const IsoSigDegrees&) = delete;
+        IsoSigDegrees& operator = (const IsoSigDegrees&) = delete;
 };
+
+/**
+ * Defines an alternate type of isomorphism signature based on edge degree
+ * sequences.
+ *
+ * \ifacespython Python does not support templates.  You can access these
+ * classes by appending the appending the dimension as a suffix (e.g., use
+ * IsoSigEdgeDegrees3 to use edge degrees in 3-manifold triangulations).
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
+
+/**
+ * Defines an alternate type of isomorphism signature based on degree
+ * sequences of (<i>dim</i>-2)-faces.
+ *
+ * \ifacespython Python does not support templates.  You can access these
+ * classes by appending the appending the dimension as a suffix (e.g., use
+ * IsoSigRidgeDegrees4 to use triangle degrees in 4-manifold triangulations).
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+using IsoSigRidgeDegrees = IsoSigDegrees<dim, dim - 2>;
 
 /*@}*/
 
@@ -356,14 +388,14 @@ inline bool IsoSigClassic<dim>::next() {
     return true;
 }
 
-// Inline functions for IsoSigEdgeDegrees
+// Inline functions for IsoSigDegrees
 
-template <int dim>
-IsoSigEdgeDegrees<dim>::IsoSigEdgeDegrees(const Component<dim>& comp) :
+template <int dim, int subdim>
+IsoSigDegrees<dim, subdim>::IsoSigDegrees(const Component<dim>& comp) :
         size_(comp.size()), perm_(0) {
     marks_ = new SimplexMarking[size_];
 
-    // We set smallest_ to the first simplex with minimal edge degrees
+    // We set smallest_ to the first simplex with minimal subdim-face degrees
     // (which will then be the initial choice of starting simplex simp_).
     smallest_ = 0;
     for (size_t i = 0; i < size_; ++i) {
@@ -375,26 +407,26 @@ IsoSigEdgeDegrees<dim>::IsoSigEdgeDegrees(const Component<dim>& comp) :
     simp_ = smallest_;
 }
 
-template <int dim>
-inline IsoSigEdgeDegrees<dim>::~IsoSigEdgeDegrees() {
+template <int dim, int subdim>
+inline IsoSigDegrees<dim, subdim>::~IsoSigDegrees() {
     delete[] marks_;
 }
 
-template <int dim>
-inline size_t IsoSigEdgeDegrees<dim>::simplex() const {
+template <int dim, int subdim>
+inline size_t IsoSigDegrees<dim, subdim>::simplex() const {
     return simp_;
 }
 
-template <int dim>
-inline Perm<dim+1> IsoSigEdgeDegrees<dim>::perm() const {
+template <int dim, int subdim>
+inline Perm<dim+1> IsoSigDegrees<dim, subdim>::perm() const {
     return Perm<dim+1>::orderedSn[perm_];
 }
 
-template <int dim>
-bool IsoSigEdgeDegrees<dim>::next() {
+template <int dim, int subdim>
+bool IsoSigDegrees<dim, subdim>::next() {
     if (++perm_ == Perm<dim+1>::nPerms) {
         perm_ = 0;
-        // Advance to the next simplex with minimal edge degrees.
+        // Advance to the next simplex with minimal degree sequence.
         for (++simp_; simp_ < size_ && ! (marks_[simp_] == marks_[smallest_]);
                 ++simp_)
             ;

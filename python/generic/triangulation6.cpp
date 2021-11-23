@@ -44,6 +44,7 @@ void addTriangulations6(pybind11::module_& m) {
 
     addIsoSigClassic<6>(m, "IsoSigClassic6");
     addIsoSigEdgeDegrees<6>(m, "IsoSigEdgeDegrees6");
+    addIsoSigRidgeDegrees<6>(m, "IsoSigRidgeDegrees6");
     addIsoSigPrintable<6>(m, "IsoSigPrintable6");
 
     m.attr("Face6_6") = m.attr("Simplex6");

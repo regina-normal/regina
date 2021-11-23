@@ -31,6 +31,8 @@
  **************************************************************************/
 
 #include "triangulation/dim3.h"
+#include "triangulation/isosigtype.h"
+#include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/retriangulate-impl.h"
 
 // NOLINTNEXTLINE(modernize-concat-nested-namespaces)
@@ -40,7 +42,7 @@ namespace detail {
     template <>
     struct RetriangulateParams<Triangulation<3>> {
         static std::string sig(const Triangulation<3>& tri) {
-            return tri.isoSig();
+            return tri.isoSig<IsoSigEdgeDegrees<3>>();
         }
 
         static constexpr const char* progressStage = "Exploring triangulations";
