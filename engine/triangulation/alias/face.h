@@ -46,7 +46,23 @@ namespace regina {
     template <int> class Perm;
 }
 
+/**
+ * Contains helper classes that provide dimension-specific aliases for
+ * generic functions.
+ *
+ * For example, this namespace provides aliases such as vertex() and edge()
+ * for the functions face<0>() and face<1>() in the Simplex class.
+ *
+ * Regina's main classes (such as Triangulation, Simplex and Face) acquire
+ * these aliases through inheritance.  There is typically no need for
+ * end users to explicitly refer to the namespace regina::alias.
+ */
 namespace regina::alias {
+
+/**
+ * \defgroup alias Dimension-Specific Aliases
+ * Dimension-specific aliases for generic code
+ */
 
 /**
  * Helper class that provides dimension-specific aliases for
@@ -532,6 +548,86 @@ class FacesOfTriangulation<Derived, dim, 0> {
          */
         auto vertices() const {
             return static_cast<const Derived*>(this)->template faces<0>();
+        }
+};
+
+/**
+ * Helper class that provides a dimension-specific alias for simplex(),
+ * where reasonable.
+ *
+ * This is inherited by the class \a Derived, which must provide a
+ * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ *
+ * The name of the alias is determined by the dimension \a dim, and
+ * the alias is only provided for those dimensions \a dim that are
+ * sufficiently small.
+ *
+ * \ingroup alias
+ */
+template <class Derived, int dim>
+class SimplexVoid {
+};
+
+/**
+ * Helper class that provides a dimension-specific alias for simplex().
+ *
+ * This is inherited by the class \a Derived, which must provide a
+ * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ *
+ * \ingroup alias
+ */
+template <class Derived>
+class SimplexVoid<Derived, 2> {
+    public:
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        regina::Simplex<2>* triangle() const {
+            return static_cast<const Derived*>(this)->simplex();
+        }
+};
+
+/**
+ * Helper class that provides a dimension-specific alias for simplex().
+ *
+ * This is inherited by the class \a Derived, which must provide a
+ * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ *
+ * \ingroup alias
+ */
+template <class Derived>
+class SimplexVoid<Derived, 3> {
+    public:
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        regina::Simplex<3>* tetrahedron() const {
+            return static_cast<const Derived*>(this)->simplex();
+        }
+};
+
+/**
+ * Helper class that provides a dimension-specific alias for simplex().
+ *
+ * This is inherited by the class \a Derived, which must provide a
+ * routine of the form <tt>Simplex<dim>* simplex() const</tt>.
+ *
+ * \ingroup alias
+ */
+template <class Derived>
+class SimplexVoid<Derived, 4> {
+    public:
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        regina::Simplex<4>* pentachoron() const {
+            return static_cast<const Derived*>(this)->simplex();
         }
 };
 

@@ -58,7 +58,6 @@
 #include "triangulation/generic/isomorphism.h"
 #include "triangulation/generic/simplex.h"
 #include "triangulation/alias/face.h"
-#include "triangulation/alias/simplex.h"
 #include "triangulation/isosigencoding.h"
 #include "utilities/exception.h"
 #include "utilities/listview.h"
@@ -134,7 +133,6 @@ class TriangulationBase :
         public Snapshottable<Triangulation<dim>>,
         public PacketData<Triangulation<dim>>,
         public Output<Triangulation<dim>>,
-        public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
         public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");

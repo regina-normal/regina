@@ -42,8 +42,6 @@
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
-#include "triangulation/alias/face.h"
-#include "triangulation/alias/simplex.h"
 #include "triangulation/forward.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
@@ -78,7 +76,6 @@ template <int> class TriangulationBase;
 template <int dim>
 class ComponentBase :
         public Output<ComponentBase<dim>>,
-        public alias::Simplices<ComponentBase<dim>, dim>,
         public MarkedElement {
     public:
         static constexpr int dimension = dim;

@@ -87,6 +87,20 @@ class Component<3> : public detail::ComponentBase<3>,
 
     public:
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTetrahedra() const;
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto tetrahedra() const;
+
+        /**
          * A dimension-specific alias for simplex().
          *
          * See simplex() for further information.
@@ -174,6 +188,20 @@ class Component<3> : public detail::ComponentBase<3>,
         Face<3, subdim>* face(size_t index) const;
 
         /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTriangles() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTriangles() const;
+
+        /**
          * Determines if this component is ideal.
          * This is the case if and only if it contains an ideal vertex
          * as described by Vertex<3>::isIdeal().
@@ -206,6 +234,14 @@ class Component<3> : public detail::ComponentBase<3>,
 // Inline functions for Component<3>
 
 inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
+}
+
+inline size_t Component<3>::countTetrahedra() const {
+    return size();
+}
+
+inline auto Component<3>::tetrahedra() const {
+    return simplices();
 }
 
 inline Tetrahedron<3>* Component<3>::tetrahedron(size_t index) const {
@@ -267,6 +303,14 @@ inline Vertex<3>* Component<3>::face<0>(size_t index) const {
     return vertices_[index];
 }
 #endif // ! __DOXYGEN
+
+inline bool Component<3>::hasBoundaryTriangles() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Component<3>::countBoundaryTriangles() const {
+    return countBoundaryFacets();
+}
 
 inline bool Component<3>::isIdeal() const {
     return ideal_;

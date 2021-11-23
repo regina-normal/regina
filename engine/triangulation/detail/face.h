@@ -45,7 +45,6 @@
 #include "triangulation/facenumbering.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/facenumber.h"
-#include "triangulation/alias/simplex.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"

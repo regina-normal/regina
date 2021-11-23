@@ -172,6 +172,18 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         /*@{*/
 
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTriangles() const;
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto triangles() const;
+        /**
          * A dimension-specific alias for simplex().
          *
          * See simplex() for further information.
@@ -299,6 +311,26 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
 
         /*@}*/
         /**
+         * \name Skeletal Queries
+         */
+        /*@{*/
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryEdges() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryEdges() const;
+
+        /*@}*/
+        /**
          * \name Basic Properties
          */
         /*@{*/
@@ -420,6 +452,14 @@ inline Triangulation<2>::~Triangulation() {
     clearAllProperties();
 }
 
+inline size_t Triangulation<2>::countTriangles() const {
+    return size();
+}
+
+inline auto Triangulation<2>::triangles() const {
+    return simplices();
+}
+
 inline Triangle<2>* Triangulation<2>::triangle(size_t index) {
     return simplex(index);
 }
@@ -468,6 +508,14 @@ inline long Triangulation<2>::eulerChar() const {
     return static_cast<long>(countVertices())
         - static_cast<long>(countEdges())
         + static_cast<long>(simplices_.size());
+}
+
+inline bool Triangulation<2>::hasBoundaryEdges() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Triangulation<2>::countBoundaryEdges() const {
+    return countBoundaryFacets();
 }
 
 inline bool Triangulation<2>::isClosed() const {

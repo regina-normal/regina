@@ -89,6 +89,20 @@ class Component<4> : public detail::ComponentBase<4>,
 
     public:
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countPentachora() const;
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto pentachora() const;
+
+        /**
          * A dimension-specific alias for simplex().
          *
          * See simplex() for further information.
@@ -176,6 +190,20 @@ class Component<4> : public detail::ComponentBase<4>,
         Face<4, subdim>* face(size_t index) const;
 
         /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTetrahedra() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTetrahedra() const;
+
+        /**
          * Determines if this component is ideal.
          * This is the case if and only if it contains an ideal vertex
          * as described by Vertex<4>::isIdeal().
@@ -212,6 +240,14 @@ class Component<4> : public detail::ComponentBase<4>,
 // Inline functions for Component<4>
 
 inline Component<4>::Component() : detail::ComponentBase<4>(), ideal_(false) {
+}
+
+inline size_t Component<4>::countPentachora() const {
+    return size();
+}
+
+inline auto Component<4>::pentachora() const {
+    return simplices();
 }
 
 inline Pentachoron<4>* Component<4>::pentachoron(size_t index) const {
@@ -286,6 +322,14 @@ inline Vertex<4>* Component<4>::face<0>(size_t index) const {
 }
 
 #endif // __DOXYGEN
+
+inline bool Component<4>::hasBoundaryTetrahedra() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Component<4>::countBoundaryTetrahedra() const {
+    return countBoundaryFacets();
+}
 
 inline bool Component<4>::isIdeal() const {
     return ideal_;

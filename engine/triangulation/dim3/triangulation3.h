@@ -422,6 +422,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTetrahedra() const;
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto tetrahedra() const;
+        /**
          * A dimension-specific alias for simplex().
          *
          * See simplex() for further information.
@@ -553,6 +565,20 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \name Skeletal Queries
          */
         /*@{*/
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTriangles() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTriangles() const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3490,6 +3516,14 @@ inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
 }
 
+inline size_t Triangulation<3>::countTetrahedra() const {
+    return size();
+}
+
+inline auto Triangulation<3>::tetrahedra() const {
+    return simplices();
+}
+
 inline Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) {
     return simplex(index);
 }
@@ -3577,6 +3611,14 @@ inline Triangulation<3>& Triangulation<3>::operator = (Triangulation<3>&& src) {
 
 inline void Triangulation<3>::swapContents(Triangulation<3>& other) {
     swap(other);
+}
+
+inline bool Triangulation<3>::hasBoundaryTriangles() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Triangulation<3>::countBoundaryTriangles() const {
+    return countBoundaryFacets();
 }
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {

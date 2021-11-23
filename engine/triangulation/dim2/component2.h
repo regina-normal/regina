@@ -82,6 +82,20 @@ class Component<2> : public detail::ComponentBase<2>,
 
     public:
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTriangles() const;
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto triangles() const;
+
+        /**
          * A dimension-specific alias for simplex().
          *
          * See simplex() for further information.
@@ -167,6 +181,20 @@ class Component<2> : public detail::ComponentBase<2>,
         Face<2, subdim>* face(size_t index) const;
 
         /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryEdges() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryEdges() const;
+
+        /**
          * Determines if this component is closed.
          * This is the case if and only if it has no boundary.
          *
@@ -185,6 +213,14 @@ class Component<2> : public detail::ComponentBase<2>,
 };
 
 // Inline functions for Component<2>
+
+inline size_t Component<2>::countTriangles() const {
+    return size();
+}
+
+inline auto Component<2>::triangles() const {
+    return simplices();
+}
 
 inline Triangle<2>* Component<2>::triangle(size_t index) const {
     return simplex(index);
@@ -230,6 +266,14 @@ inline Vertex<2>* Component<2>::face<0>(size_t index) const {
     return vertices_[index];
 }
 #endif // ! __DOXYGEN
+
+inline bool Component<2>::hasBoundaryEdges() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Component<2>::countBoundaryEdges() const {
+    return countBoundaryFacets();
+}
 
 inline bool Component<2>::isClosed() const {
     return (boundaryComponents().empty());

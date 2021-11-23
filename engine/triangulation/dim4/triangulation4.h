@@ -214,6 +214,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /*@{*/
 
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countPentachora() const;
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto pentachora() const;
+        /**
          * A dimension-specific alias for simplex().
          *
          * See simplex() for further information.
@@ -339,6 +351,26 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * swapped with this.
          */
         [[deprecated]] void swapContents(Triangulation<4>& other);
+
+        /*@}*/
+        /**
+         * \name Skeletal Queries
+         */
+        /*@{*/
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTetrahedra() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTetrahedra() const;
 
         /*@}*/
         /**
@@ -1007,6 +1039,14 @@ inline Triangulation<4>::~Triangulation() {
     clearAllProperties();
 }
 
+inline size_t Triangulation<4>::countPentachora() const {
+    return size();
+}
+
+inline auto Triangulation<4>::pentachora() const {
+    return simplices();
+}
+
 inline Pentachoron<4>* Triangulation<4>::pentachoron(size_t index) {
     return simplex(index);
 }
@@ -1076,6 +1116,14 @@ inline Triangulation<4>& Triangulation<4>::operator = (Triangulation<4>&& src) {
     prop_ = std::move(src.prop_);
 
     return *this;
+}
+
+inline bool Triangulation<4>::hasBoundaryTetrahedra() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Triangulation<4>::countBoundaryTetrahedra() const {
+    return countBoundaryFacets();
 }
 
 inline bool Triangulation<4>::isIdeal() const {
