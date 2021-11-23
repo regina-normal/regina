@@ -87,6 +87,13 @@ class Component<3> : public detail::ComponentBase<3>,
 
     public:
         /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Tetrahedron<3>* tetrahedron(size_t index) const;
+
+        /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
          * For convenience, this routine explicitly supports the case
@@ -199,6 +206,10 @@ class Component<3> : public detail::ComponentBase<3>,
 // Inline functions for Component<3>
 
 inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
+}
+
+inline Tetrahedron<3>* Component<3>::tetrahedron(size_t index) const {
+    return simplex(index);
 }
 
 // Hide specialisations from doxygen, since it cannot handle them.

@@ -135,7 +135,6 @@ class TriangulationBase :
         public PacketData<Triangulation<dim>>,
         public Output<Triangulation<dim>>,
         public alias::Simplices<TriangulationBase<dim>, dim>,
-        public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
         public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");

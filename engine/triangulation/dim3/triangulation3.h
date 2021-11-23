@@ -422,6 +422,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Tetrahedron<3>* tetrahedron(size_t index);
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        const Tetrahedron<3>* tetrahedron(size_t index) const;
+        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -3476,6 +3488,14 @@ namespace regina {
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
+}
+
+inline Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) {
+    return simplex(index);
+}
+
+inline const Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) const {
+    return simplex(index);
 }
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {

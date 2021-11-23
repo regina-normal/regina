@@ -172,6 +172,18 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         /*@{*/
 
         /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Triangle<2>* triangle(size_t index);
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        const Triangle<2>* triangle(size_t index) const;
+        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -406,6 +418,14 @@ inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
 inline Triangulation<2>::~Triangulation() {
     Snapshottable<Triangulation<2>>::takeSnapshot();
     clearAllProperties();
+}
+
+inline Triangle<2>* Triangulation<2>::triangle(size_t index) {
+    return simplex(index);
+}
+
+inline const Triangle<2>* Triangulation<2>::triangle(size_t index) const {
+    return simplex(index);
 }
 
 inline Triangle<2>* Triangulation<2>::newTriangle() {

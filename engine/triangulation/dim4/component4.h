@@ -89,6 +89,13 @@ class Component<4> : public detail::ComponentBase<4>,
 
     public:
         /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Pentachoron<4>* pentachoron(size_t index) const;
+
+        /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
          * For convenience, this routine explicitly supports the case
@@ -205,6 +212,10 @@ class Component<4> : public detail::ComponentBase<4>,
 // Inline functions for Component<4>
 
 inline Component<4>::Component() : detail::ComponentBase<4>(), ideal_(false) {
+}
+
+inline Pentachoron<4>* Component<4>::pentachoron(size_t index) const {
+    return simplex(index);
 }
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.

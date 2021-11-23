@@ -79,7 +79,6 @@ template <int dim>
 class ComponentBase :
         public Output<ComponentBase<dim>>,
         public alias::Simplices<ComponentBase<dim>, dim>,
-        public alias::SimplexAt<ComponentBase<dim>, dim, false>,
         public MarkedElement {
     public:
         static constexpr int dimension = dim;

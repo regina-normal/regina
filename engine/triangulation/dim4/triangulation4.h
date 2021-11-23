@@ -214,6 +214,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /*@{*/
 
         /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Pentachoron<4>* pentachoron(size_t index);
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        const Pentachoron<4>* pentachoron(size_t index) const;
+        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -993,6 +1005,14 @@ namespace regina {
 inline Triangulation<4>::~Triangulation() {
     Snapshottable<Triangulation<4>>::takeSnapshot();
     clearAllProperties();
+}
+
+inline Pentachoron<4>* Triangulation<4>::pentachoron(size_t index) {
+    return simplex(index);
+}
+
+inline const Pentachoron<4>* Triangulation<4>::pentachoron(size_t index) const {
+    return simplex(index);
 }
 
 inline Pentachoron<4>* Triangulation<4>::newPentachoron() {
