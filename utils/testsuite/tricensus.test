@@ -30,6 +30,6 @@
 # --- tricensus with errors:
 tricensus
 # --- tricensus with signature output
-tricensus -t2 -i -s @TEST_OUT@
+tricensus -t2 -i -s @TESTOUT@
 # --- using tricensus to generate pairings:
 tricensus -t4 -i -p
