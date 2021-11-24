@@ -1,36 +1,36 @@
 Poincare homology sphere -> display, height = 1, threads = 1
     fvPQcdecedekrsnrs 5
-    gvLQQcdfeeffnjqsspp 6
+    gvLQQcdfefefjwawtbi 6
 Poincare homology sphere -> display, height = 1, threads = 2
     fvPQcdecedekrsnrs 5
-    gvLQQcdfeeffnjqsspp 6
+    gvLQQcdfefefjwawtbi 6
 Poincare homology sphere -> stop after 10, height = 1, threads = 1
     search ran to completion, count: 2
 Poincare homology sphere -> stop after 10, height = 1, threads = 2
     search ran to completion, count: 2
 Poincare homology sphere -> collect, height = 1, threads = 1
     fvPQcdecedekrsnrs
-    gvLQQcdfeeffnjqsspp
+    gvLQQcdfefefjwawtbi
 Poincare homology sphere -> collect, height = 1, threads = 2
     fvPQcdecedekrsnrs
-    gvLQQcdfeeffnjqsspp
+    gvLQQcdfefefjwawtbi
 Poincare homology sphere vs Poincare homology sphere -> isomorphisms, stop after 5
     search terminated early, count: 5
 Poincare homology sphere vs Poincare homology sphere -> subcomplexes, stop after 5
     search terminated early, count: 5
 
 Weeks manifold -> display, height = 0, threads = 1
-    jLvAMPQadfgghhiiijaqgjqxims 9
+    jvLPLQQefghghifiigaxxhdingk 9
 Weeks manifold -> display, height = 0, threads = 2
-    jLvAMPQadfgghhiiijaqgjqxims 9
+    jvLPLQQefghghifiigaxxhdingk 9
 Weeks manifold -> stop after 10, height = 1, threads = 1
     search terminated early, count: 10
 Weeks manifold -> stop after 10, height = 1, threads = 2
     search terminated early, count: 10
 Weeks manifold -> collect, height = 0, threads = 1
-    jLvAMPQadfgghhiiijaqgjqxims
+    jvLPLQQefghghifiigaxxhdingk
 Weeks manifold -> collect, height = 0, threads = 2
-    jLvAMPQadfgghhiiijaqgjqxims
+    jvLPLQQefghghifiigaxxhdingk
 Weeks manifold vs Weeks manifold -> isomorphisms, display
 0 -> 0 (0123)
 1 -> 1 (0123)
@@ -68,24 +68,24 @@ Cappell-Shaneson knot complement -> stop after 10, height = 2, threads = 2
     search ran to completion, count: 9
 Cappell-Shaneson knot complement -> collect, height = 2, threads = 1
     cMkabbb+aAa3blb
-    eLAQcabcdddd1azayajbVbVbVb
-    eLAQcabcdddd5asbCbRb3b3b3b
-    eLAQcabcdddd5asbCblaObObOb
-    eLAQcabcddddGavb6aia8a8a8a
-    eLMQcbbcdddd0bRb+aPbwawawa
+    eLMQcbbccdddaaaa+axbcbvaGa
+    eLMQcbbccdddaaaa1aHbCbvaYa
+    eLMQcbbccdddaaaa1aHbKavapb
+    eLMQcbbccdddaaaaHbka2avawa
+    eLMQcbbcddddaaaa+aJa2aGava
     eLMQcbbdccddaaaa1bHbibvafb
-    eLMQcbccddddHaJbyaXbPbSava
-    eLMQcbccddddMaobya1bPbRava
+    eLMQcbccddddMaobyayaPbKava
+    eLMQcbccddddObJbxbtb5albva
 Cappell-Shaneson knot complement -> collect, height = 2, threads = 2
     cMkabbb+aAa3blb
-    eLAQcabcdddd1azayajbVbVbVb
-    eLAQcabcdddd5asbCbRb3b3b3b
-    eLAQcabcdddd5asbCblaObObOb
-    eLAQcabcddddGavb6aia8a8a8a
-    eLMQcbbcdddd0bRb+aPbwawawa
+    eLMQcbbccdddaaaa+axbcbvaGa
+    eLMQcbbccdddaaaa1aHbCbvaYa
+    eLMQcbbccdddaaaa1aHbKavapb
+    eLMQcbbccdddaaaaHbka2avawa
+    eLMQcbbcddddaaaa+aJa2aGava
     eLMQcbbdccddaaaa1bHbibvafb
-    eLMQcbccddddHaJbyaXbPbSava
-    eLMQcbccddddMaobya1bPbRava
+    eLMQcbccddddMaobyayaPbKava
+    eLMQcbccddddObJbxbtb5albva
 Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> isomorphisms, display
 0 -> 0 (01234)
 1 -> 1 (01234)
