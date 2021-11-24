@@ -55,7 +55,7 @@ except FailedPrecondition:
     pass
 t.fill(1,2,0)
 t.fill(3,4,1)
-print(t.filledAll())
+print(t.filledAll().homology())
 t.pachner(t.triangle(0))
 try:
     print(t.filledAll())
@@ -71,7 +71,7 @@ except UnsolvedCase:
     pass
 
 s = SFSpace()
-print(s.construct())
+print(s.construct().homology())
 s.addPuncture()
 try:
     print(s.construct())
