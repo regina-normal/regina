@@ -3682,7 +3682,6 @@
 		05685FEB1F97110500085B44 /* data-packet-dim4triangulation.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-dim4triangulation.docbook"; sourceTree = "<group>"; };
 		05685FEC1F97110500085B44 /* data-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-surface.docbook"; sourceTree = "<group>"; };
 		05685FEF1F9713D900085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		05685FF01F9713D900085B44 /* testutils.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testutils.sh; sourceTree = "<group>"; };
 		0568741F20C5D868001C435B /* tangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tangle.h; sourceTree = "<group>"; };
 		0568742020C5D868001C435B /* algebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = algebra.cpp; sourceTree = "<group>"; };
 		0568742120C5D869001C435B /* gauss-tangle-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gauss-tangle-impl.h"; sourceTree = "<group>"; };
@@ -4420,6 +4419,10 @@
 		05CAE6A2274B0FC2007C93F3 /* isosig-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "isosig-bindings.h"; sourceTree = "<group>"; };
 		05CAE6A3274B94C9007C93F3 /* snappea.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = snappea.out; sourceTree = "<group>"; };
 		05CAE6A4274B94C9007C93F3 /* snappea.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = snappea.test; sourceTree = "<group>"; };
+		05CAE6A5274E1E6C007C93F3 /* deprecated.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = deprecated.test; sourceTree = "<group>"; };
+		05CAE6A6274E1E6C007C93F3 /* deprecated.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = deprecated.out; sourceTree = "<group>"; };
+		05CAE6A7274E1E6C007C93F3 /* exception.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = exception.test; sourceTree = "<group>"; };
+		05CAE6A8274E1E6C007C93F3 /* exception.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = exception.out; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5159,6 +5162,8 @@
 				05A0251E25D48E500091372D /* constructors.out */,
 				05A0251D25D48E500091372D /* constructors.test */,
 				050F5D861B9BAB9C00C1F681 /* cube.orb */,
+				05CAE6A6274E1E6C007C93F3 /* deprecated.out */,
+				05CAE6A5274E1E6C007C93F3 /* deprecated.test */,
 				05CAE60F2743F1ED007C93F3 /* discs.out */,
 				05CAE6102743F1ED007C93F3 /* discs.test */,
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
@@ -5170,6 +5175,8 @@
 				05431FD31C40F67C009BC072 /* equality.test */,
 				050F5D881B9BAB9C00C1F681 /* euler.out */,
 				050F5D891B9BAB9C00C1F681 /* euler.test */,
+				05CAE6A8274E1E6C007C93F3 /* exception.out */,
+				05CAE6A7274E1E6C007C93F3 /* exception.test */,
 				0577E6E61F97087E00CBDF15 /* facenumbering.out */,
 				0577E6E31F97087C00CBDF15 /* facenumbering.test */,
 				05772F05270CFB6000D26D8A /* faces.out */,
@@ -7091,7 +7098,6 @@
 			isa = PBXGroup;
 			children = (
 				05685FEF1F9713D900085B44 /* README.txt */,
-				05685FF01F9713D900085B44 /* testutils.sh */,
 			);
 			path = testsuite;
 			sourceTree = "<group>";
