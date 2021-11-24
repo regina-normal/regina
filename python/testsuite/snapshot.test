@@ -63,3 +63,18 @@ a = None
 # packet wrapper we cannot observe its destruction here.
 print('Step 3')
 
+print()
+
+# Test that snapshotting happens when we nullify a SnapPea triangulation.
+
+t = ExampleSnapPea.whiteheadLink()
+print(t.isoSig(), t.isReadOnlySnapshot())
+
+a = AngleStructures(t)
+print(a)
+print(a.triangulation().isoSig())
+
+a.triangulation().pachner(t.tetrahedron(0))
+print(t.isoSig(), t.isReadOnlySnapshot()) # should be an empty triangulation
+print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
+
