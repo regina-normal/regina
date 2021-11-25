@@ -784,6 +784,15 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                     << h1.str() << ", not " << expectedH1 << ".";
                 CPPUNIT_FAIL(msg.str());
             }
+
+            const regina::GroupPresentation& fg = s.fundamentalGroupFilled();
+            if (fg.abelianisation().str() != expectedH1) {
+                std::ostringstream msg;
+                msg << "Filling (" << m << ", " << l << ") for "
+                    << name << " gives fundamental group " << fg.str()
+                    << ", which does not abelianise to " << expectedH1 << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 
         void filling() {
