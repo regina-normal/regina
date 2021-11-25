@@ -100,6 +100,17 @@ void AbelianGroup::addGroup(const AbelianGroup& group) {
     // Work out the torsion elements.
     if (revInvFactors_.empty()) {
         revInvFactors_ = group.revInvFactors_;
+    } else if (std::addressof(group) == this) {
+        // Be careful with self-addition: we do not want to iterate over
+        // the same set of factors that we are inserting into.
+        // However: in this case we know exactly what will happen - the
+        // set of invariant factors is duplicated.
+        std::vector<Integer> ans;
+        for (const Integer& i : revInvFactors_) {
+            ans.push_back(i);
+            ans.push_back(i);
+        }
+        revInvFactors_ = std::move(ans);
     } else {
         for (const Integer& i : group.revInvFactors_)
             addTorsion(i);
