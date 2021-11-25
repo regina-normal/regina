@@ -8767,7 +8767,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\n# The rpath points to the executable directory, but\n# the executable may be a symlink which means that\n# libtokyocabinet cannot be found.\n#\n# This issue is (in particular) seen when creating an archive.\n#\n# Put libtokyocabinet explicitly on the LD_LIBRARY_PATH.\nexport LD_LIBRARY_PATH=\"${BUILT_PRODUCTS_DIR}\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.zsig \"$output\"/$i.tdb\ndone\n";
+			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\n# The rpath points to the executable directory, but\n# the executable may be a symlink which means that\n# libtokyocabinet cannot be found.\n#\n# This issue is (in particular) seen when creating an archive.\n#\n# Put libtokyocabinet explicitly on the DYLD_LIBRARY_PATH.\nexport DYLD_LIBRARY_PATH=\"${BUILT_PRODUCTS_DIR}\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.zsig \"$output\"/$i.tdb\ndone\n";
 		};
 		05DADB1021926A2300DC80E1 /* Copy Databases and Handbook */ = {
 			isa = PBXShellScriptBuildPhase;
